@@ -28,6 +28,7 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.main.AddressbookInterface;
@@ -124,7 +125,7 @@ public class RemoveCardAction extends DefaultTableAction implements
 			folder.removeFromParent();
 
 			// notify model
-			AddressbookInterface.addressbookTreeModel
+			AddressbookTreeModel.getInstance()
 					.nodeStructureChanged(parent);
 
 			

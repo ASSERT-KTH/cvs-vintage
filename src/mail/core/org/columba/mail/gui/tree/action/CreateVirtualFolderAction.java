@@ -33,6 +33,7 @@ import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.main.MailInterface;
@@ -92,7 +93,7 @@ public class CreateVirtualFolderAction extends AbstractColumbaAction implements
 						.getInstance().createChild(r.getFolder(), name,
 								"VirtualFolder");
 
-				MailInterface.treeModel.nodeStructureChanged(r.getFolder());
+				TreeModel.getInstance().nodeStructureChanged(r.getFolder());
 
 				// set parent folder uid
 				vfolder.getConfiguration().set("property", "source_uid",

@@ -20,6 +20,7 @@ package org.columba.mail.facade;
 import java.util.Enumeration;
 
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 
 /**
@@ -37,7 +38,7 @@ public class FolderFacade {
 	 * @return folder
 	 */
 	public AbstractFolder getFolder(int uid) {
-		return MailInterface.treeModel.getFolder(uid);
+		return TreeModel.getInstance().getFolder(uid);
 	}
 
 	/**
@@ -48,8 +49,8 @@ public class FolderFacade {
 	 * @return folder
 	 */
 	public AbstractFolder getFolder(String name) {
-		return MailInterface.treeModel.findFolder(
-				(AbstractFolder) MailInterface.treeModel.getRoot(), name);
+		return TreeModel.getInstance().findFolder(
+				(AbstractFolder) TreeModel.getInstance().getRoot(), name);
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class FolderFacade {
 	 * @return	breadth-first enumeration of folders
 	 */
 	public Enumeration getBreadthFirstEnumeration() {
-		AbstractFolder root = (AbstractFolder) MailInterface.treeModel
+		AbstractFolder root = (AbstractFolder) TreeModel.getInstance()
 				.getRoot();
 		return root.breadthFirstEnumeration();
 	}
@@ -69,7 +70,7 @@ public class FolderFacade {
 	 * @return	depth-first enumeration of folders
 	 */
 	public Enumeration getDepthFirstEnumeration() {
-		AbstractFolder root = (AbstractFolder) MailInterface.treeModel
+		AbstractFolder root = (AbstractFolder) TreeModel.getInstance()
 				.getRoot();
 		return root.depthFirstEnumeration();
 	}
@@ -80,7 +81,7 @@ public class FolderFacade {
 	 * @return		inbox folder
 	 */
 	public AbstractFolder getLocalInboxFolder() {
-		return MailInterface.treeModel.getFolder(101);
+		return TreeModel.getInstance().getFolder(101);
 	}
 
 	/**
@@ -89,7 +90,7 @@ public class FolderFacade {
 	 * @return		trash folder
 	 */
 	public AbstractFolder getLocalTrashFolder() {
-		return MailInterface.treeModel.getFolder(105);
+		return TreeModel.getInstance().getFolder(105);
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class FolderFacade {
 	 * @return	drafts folder
 	 */
 	public AbstractFolder getLocalDraftsFolder() {
-		return MailInterface.treeModel.getFolder(102);
+		return TreeModel.getInstance().getFolder(102);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class FolderFacade {
 	 * @return		templates folder
 	 */
 	public AbstractFolder getLocalTemplatesFolder() {
-		return MailInterface.treeModel.getFolder(107);
+		return TreeModel.getInstance().getFolder(107);
 	}
 
 	
@@ -117,7 +118,7 @@ public class FolderFacade {
 	 * @return		outbox folder
 	 */
 	public AbstractFolder getLocalOutboxFolder() {
-		return MailInterface.treeModel.getFolder(103);
+		return TreeModel.getInstance().getFolder(103);
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class FolderFacade {
 	 * @return		sent folder
 	 */
 	public AbstractFolder getLocalSentFolder() {
-		return MailInterface.treeModel.getFolder(104);
+		return TreeModel.getInstance().getFolder(104);
 	}
 
 }

@@ -42,6 +42,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.HeaderItem;
@@ -116,7 +117,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
 		layoutComponents();
 
-		AbstractFolder folder = (AbstractFolder) AddressbookInterface.addressbookTreeModel
+		AbstractFolder folder = (AbstractFolder) AddressbookTreeModel.getInstance()
 				.getFolder(101);
 		try {
 			addressbook.setHeaderItemList(folder.getHeaderItemList());
@@ -462,7 +463,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 			}
 		} else if (command.equals("CHOOSE")) { //$NON-NLS-1$
 
-			SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel
+			SelectAddressbookFolderDialog dialog = AddressbookTreeModel.getInstance()
 					.getSelectAddressbookFolderDialog();
 
 			AbstractFolder selectedFolder = dialog.getSelectedFolder();

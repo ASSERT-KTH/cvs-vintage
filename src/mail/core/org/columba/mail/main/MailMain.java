@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.main;
 
-import java.util.Enumeration;
-
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
@@ -24,15 +22,10 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
-import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
@@ -40,76 +33,18 @@ import org.columba.ristretto.composer.MimeTreeRenderer;
 
 
 /**
- * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Main entrypoint for mail component.
+ * 
+ * @author fdietz
  */
 public class MailMain extends DefaultMain {
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
-     */
-    public void handleCommandLineParameters(String[] args) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initConfiguration()
-     */
-    public void initConfiguration() {
-    	/*
-        System.setProperty("java.protocol.handler.pkgs",
-            System.getProperty("java.protocol.handler.pkgs", "") +
-            "|org.columba.mail.url");
-            */
-        MailInterface.config = new MailConfig(MainInterface.config);
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initGui()
-     */
-    public void initGui() {
-        MailInterface.popServerCollection = new POP3ServerCollection();
-
-        MailInterface.mailCheckingManager = new MailCheckingManager();
-
-        MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
-
-        //TODO (@author karlpeder): move this to TreeModel constructor
-        ShutdownManager.getShutdownManager().register(new Runnable() {
-                public void run() {
-                    saveFolder((AbstractFolder) MailInterface.treeModel.getRoot());
-                }
-
-                protected void saveFolder(AbstractFolder parentFolder) {
-                    AbstractFolder child;
-
-                    for (Enumeration e = parentFolder.children();
-                            e.hasMoreElements();) {
-                        child = (AbstractFolder) e.nextElement();
-
-                        if (child instanceof MessageFolder) {
-                            try {
-                                ((MessageFolder) child).save();
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-
-                        saveFolder(child);
-                    }
-                }
-            });
-
-        if (MailInterface.config.getAccountList().count() == 0) {
-            new AccountWizardLauncher().launchWizard(true);
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initPlugins()
-     */
-    public void initPlugins() {
-        // Init PGP
+	
+    private static MailMain instance = new MailMain();
+	
+	public MailMain() {
+		MailInterface.config = new MailConfig(MainInterface.config);
+		
+		 // Init PGP
         MimeTreeRenderer renderer = MimeTreeRenderer.getInstance();
         renderer.addMimePartRenderer(new MultipartSignedRenderer());
         renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
@@ -139,5 +74,27 @@ public class MailMain extends DefaultMain {
         // initialize cached headers which can be configured by the user
         // -> see documentation in class
         CachedHeaderfields.addConfiguration();
+        
+	}
+	
+	public static MailMain getInstance() {
+		return instance;
+	}
+	
+	/**
+     * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
+     */
+    public void handleCommandLineParameters(String[] args) {
+    	
+    	if (MailInterface.config.getAccountList().count() == 0) {
+            new AccountWizardLauncher().launchWizard(true);
+        }
+    	
+    	 ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+         try {
+             cmdLineParser.parseCmdLine(args);
+         } catch (IllegalArgumentException e) {
+         }
     }
+
 }

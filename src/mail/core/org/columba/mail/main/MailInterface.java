@@ -16,9 +16,6 @@
 package org.columba.mail.main;
 
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.mailchecking.MailCheckingManager;
-import org.columba.mail.pop3.POP3ServerCollection;
 
 
 /**
@@ -28,16 +25,6 @@ import org.columba.mail.pop3.POP3ServerCollection;
  * @author fdietz
  */
 public class MailInterface {
-    // POP3 servers 
-    public static POP3ServerCollection popServerCollection;
-
-    // mailfolder treemodel
-    public static TreeModel treeModel;
-
-    // PGP encryption package
-    //public static PGPController pgpController;
-    // mailchecking manager
-    public static MailCheckingManager mailCheckingManager;
 
     // mail configuration
     public static MailConfig config;

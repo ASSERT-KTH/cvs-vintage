@@ -23,6 +23,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 
 
@@ -38,7 +39,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
     private static final Logger LOG = Logger.getLogger("org.columba.mail.shutdown");
 
     public void run() {
-        AbstractFolder rootFolder = (AbstractFolder) MailInterface.treeModel.getRoot();
+        AbstractFolder rootFolder = (AbstractFolder) TreeModel.getInstance().getRoot();
         saveFolder(rootFolder);
     }
 

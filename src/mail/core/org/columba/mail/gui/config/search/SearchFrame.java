@@ -57,6 +57,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
@@ -302,7 +303,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			int uid = destFolder.getConfiguration().getInteger("property",
 					"source_uid");
 
-			MessageFolder f = (MessageFolder) MailInterface.treeModel
+			MessageFolder f = (MessageFolder) TreeModel.getInstance()
 					.getFolder(uid);
 
 			// If f==null because of deleted MessageFolder fallback to Inbox
@@ -310,7 +311,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 				uid = 101;
 				destFolder.getConfiguration()
 						.set("property", "source_uid", uid);
-				f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
+				f = (MessageFolder) TreeModel.getInstance().getFolder(uid);
 			}
 
 			selectButton.setText(f.getTreePath());
@@ -337,7 +338,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			String path = selectButton.getText();
 			TreeNodeList list = new TreeNodeList(path);
-			MessageFolder folder = (MessageFolder) MailInterface.treeModel
+			MessageFolder folder = (MessageFolder) TreeModel.getInstance()
 					.getFolder(list);
 			int uid = folder.getUid();
 			destFolder.getConfiguration().set("property", "source_uid", uid);

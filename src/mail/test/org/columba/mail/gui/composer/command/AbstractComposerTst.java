@@ -74,9 +74,6 @@ public class AbstractComposerTst extends AbstractFolderTst {
         // init background manager (needed by ShutdownManager)
         MainInterface.backgroundTaskManager = new BackgroundTaskManager();
         
-        // create default config-files
-        MainInterface.config.init();
-        
         AccountList list = MailInterface.config.getAccountList();
         list.addEmptyAccount("pop3");
     }

@@ -46,6 +46,7 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -86,7 +87,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		TableUpdater.add(this);
 
-		treeController = new TreeController(this, MailInterface.treeModel);
+		treeController = new TreeController(this, TreeModel.getInstance());
 		tableController = new TableController(this);
 		folderInfoPanel = new FolderInfoPanel();
 

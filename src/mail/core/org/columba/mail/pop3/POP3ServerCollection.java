@@ -34,6 +34,8 @@ public class POP3ServerCollection { //implements ActionListener
     private List serverList;
     private POP3Server popServer;
     private List listeners;
+    
+    private static POP3ServerCollection instance = new POP3ServerCollection();
 
     public POP3ServerCollection() {
         serverList = new Vector();
@@ -48,6 +50,10 @@ public class POP3ServerCollection { //implements ActionListener
                 add(accountItem);
             }
         }
+    }
+    
+    public static POP3ServerCollection getInstance() {
+    	return instance;
     }
 
     public ListIterator getServerIterator() {

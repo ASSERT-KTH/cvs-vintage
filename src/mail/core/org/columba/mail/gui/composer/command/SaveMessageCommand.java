@@ -31,6 +31,7 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -58,7 +59,7 @@ public class SaveMessageCommand extends FolderCommand {
 
         TableUpdater.tableChanged(ev);
 
-        MailInterface.treeModel.nodeChanged(folder);
+        TreeModel.getInstance().nodeChanged(folder);
     }
 
     /**

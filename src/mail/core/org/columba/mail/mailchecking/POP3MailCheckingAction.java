@@ -18,8 +18,8 @@ package org.columba.mail.mailchecking;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3Server;
+import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 
 
@@ -47,7 +47,7 @@ public class POP3MailCheckingAction extends AbstractMailCheckingAction {
  * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
  */
     public void check() {
-        POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
+        POP3Server controller = POP3ServerCollection.getInstance().uidGet(accountUid);
         
         setEnabled( false );
         
@@ -61,7 +61,7 @@ public class POP3MailCheckingAction extends AbstractMailCheckingAction {
 	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#isCheckAll()
 	 */
 	public boolean isCheckAll() {
-        POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
+        POP3Server controller = POP3ServerCollection.getInstance().uidGet(accountUid);
 
         return !controller.getAccountItem().getPopItem()
         .getBoolean("exclude_from_checkall",

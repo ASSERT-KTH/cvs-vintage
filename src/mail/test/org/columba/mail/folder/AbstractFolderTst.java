@@ -33,7 +33,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginManager;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.main.MailMain;
 
@@ -109,15 +108,10 @@ public class AbstractFolderTst extends TestCase {
         // init background manager (needed by ShutdownManager)
         MainInterface.backgroundTaskManager = new BackgroundTaskManager();
         
-        // create default config-files
-        MainInterface.config.init();
-        
         MainInterface.pluginManager = new PluginManager();
         
-        new MailMain().initPlugins();
-        
-    	 MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
-    	
+        MailMain.getInstance();
+      
     	 MainInterface.DEBUG = true;
     	 ColumbaLogger.createDefaultHandler();
     	 

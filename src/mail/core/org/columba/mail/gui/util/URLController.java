@@ -23,6 +23,7 @@ import java.net.URL;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
@@ -116,7 +117,7 @@ public class URLController implements ActionListener {
     public void contact(String address) {
         //TODO (@author fdietz): remove dependency to addressbook here
         SelectAddressbookFolderDialog dialog = 
-            AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+        	AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
 
         org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
 

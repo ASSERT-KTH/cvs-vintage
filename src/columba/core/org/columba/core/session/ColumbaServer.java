@@ -16,24 +16,24 @@
 
 package org.columba.core.session;
 
-import org.columba.core.main.CmdLineArgumentHandler;
-import org.columba.core.main.ColumbaCmdLineParser;
-import org.columba.core.shutdown.ShutdownManager;
-import org.columba.core.util.GlobalResourceLoader;
-
-import java.io.*;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.main.Main;
+import org.columba.core.shutdown.ShutdownManager;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
@@ -214,26 +214,13 @@ public class ColumbaServer {
                 String tok = (String) st.nextToken();
                 list.add(tok);
             }
-            handleCommandLineParameters((String[]) list.toArray(new String[0]));
+            Main.handleCommandLineParameters((String[]) list.toArray(new String[0]));
         } catch (IOException ioe) {
             ioe.printStackTrace();
         } finally {
             try {
                 client.close();
             } catch (IOException ioe) { }
-        }
-    }
-
-    /**
-     * Uses the command line parser to validate the passed arguments
-     * and invokes handlers to process the detected options.
-     */
-    public void handleCommandLineParameters(String[] args) {
-        ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-        try {
-            cmdLineParser.parseCmdLine(args);
-            new CmdLineArgumentHandler(cmdLineParser);
-        } catch (IllegalArgumentException e) {
         }
     }
 

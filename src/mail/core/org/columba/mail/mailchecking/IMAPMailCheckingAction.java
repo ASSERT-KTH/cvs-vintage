@@ -20,6 +20,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 
 /**
@@ -48,7 +49,7 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 	 */
 	public void check() {
 		setEnabled(false);
-		IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel
+		IMAPRootFolder imapRootFolder = (IMAPRootFolder) TreeModel.getInstance()
 				.getImapFolder(accountUid);
 		FolderCommandReference r = new FolderCommandReference(imapRootFolder);
 
@@ -59,7 +60,7 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#isCheckAll()
 	 */
 	public boolean isCheckAll() {
-		IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel
+		IMAPRootFolder imapRootFolder = (IMAPRootFolder) TreeModel.getInstance()
 				.getImapFolder(accountUid);
 		return !imapRootFolder.getAccountItem().getImapItem().getBoolean(
 				"exclude_from_checkall", false);

@@ -22,6 +22,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 
@@ -48,7 +49,7 @@ public abstract class AbstractFilter implements Filter {
      */
     public FolderCommandReference filter(MessageFolder folder, Object uid, ColumbaMessage message) throws Exception {
 //      map selection to this temporary message
-        TempFolder tempFolder = MailInterface.treeModel.getTempFolder();
+        TempFolder tempFolder = TreeModel.getInstance().getTempFolder();
 
         // add message to temporary folder
         uid = tempFolder.addMessage(message);

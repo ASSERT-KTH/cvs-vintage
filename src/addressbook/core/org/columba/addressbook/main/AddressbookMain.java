@@ -16,7 +16,6 @@
 package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
@@ -27,47 +26,18 @@ import org.columba.core.shutdown.ShutdownManager;
 
 
 /**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Main entrypoint for addressbook component
+ * 
+ * @author fdietz
  */
 public class AddressbookMain extends DefaultMain {
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
-     */
-    public void handleCommandLineParameters(String[] args) {
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initConfiguration()
-     */
-    public void initConfiguration() {
-        AddressbookInterface.config = new AddressbookConfig(MainInterface.config);
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initGui()
-     */
-    public void initGui() {
-        AddressbookInterface.addressbookTreeModel = new AddressbookTreeModel(AddressbookInterface.config.get(
-                    "tree").getElement("/tree"));
-
-        /*
-        MainInterface.addressbookModel =
-                new AddressbookFrameModel(
-                        AddressbookInterface.config.get("options").getElement(
-                                "/options/gui/viewlist"));
-        */
-    }
-
-    /* (non-Javadoc)
-     * @see org.columba.core.main.DefaultMain#initPlugins()
-     */
-    public void initPlugins() {
-        // init addressbook plugin handlers
+    
+	private static AddressbookMain instance = new AddressbookMain(); 
+	
+	public AddressbookMain() {
+		AddressbookInterface.config = new AddressbookConfig(MainInterface.config);
+		
+		 // init addressbook plugin handlers
         MainInterface.pluginManager.addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
        
         try {
@@ -80,5 +50,16 @@ public class AddressbookMain extends DefaultMain {
         TaskInterface plugin = new SaveAllAddressbooksPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
+		
+	}
+	
+	public static AddressbookMain getInstance() {
+		return instance;
+	}
+	
+	/** (non-Javadoc)
+     * @see org.columba.core.main.DefaultMain#handleCommandLineParameters(java.lang.String[])
+     */
+    public void handleCommandLineParameters(String[] args) {
     }
 }

@@ -17,6 +17,7 @@ package org.columba.addressbook.main;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
 import java.util.Enumeration;
 
@@ -27,7 +28,7 @@ public class AddressbookExitWorker {
 
     public void saveAllAddressbooks() {
         //mainInterface.addressbookInterface.
-        AbstractFolder rootFolder = (AbstractFolder) AddressbookInterface.addressbookTreeModel.getRoot();
+        AbstractFolder rootFolder = (AbstractFolder) AddressbookTreeModel.getInstance().getRoot();
 
         //timer.start();
         saveAddressbookFolder(rootFolder);

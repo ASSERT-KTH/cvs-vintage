@@ -24,7 +24,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveMessagesAction extends AbstractColumbaAction {
@@ -41,6 +41,6 @@ public class ReceiveMessagesAction extends AbstractColumbaAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		MailInterface.mailCheckingManager.checkAll();
+		MailCheckingManager.getInstance().checkAll();
 	}
 }

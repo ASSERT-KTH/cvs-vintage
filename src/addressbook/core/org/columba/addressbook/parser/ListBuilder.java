@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.columba.addressbook.folder.ContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
@@ -55,7 +56,7 @@ public class ListBuilder {
 	
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String s = (String) it.next();
-			GroupFolder groupFolder = AddressbookInterface.addressbookTreeModel
+			GroupFolder groupFolder = AddressbookTreeModel.getInstance()
 					.getGroupFolder(s);
 			// if its a group item
 			if (groupFolder != null) {
@@ -94,9 +95,9 @@ public class ListBuilder {
 				// -> if so, retrieve email address from contact folder
 				
 				// look into both folders
-				ContactStorage personal = (ContactStorage) AddressbookInterface.addressbookTreeModel
+				ContactStorage personal = (ContactStorage) AddressbookTreeModel.getInstance()
 						.getFolder(101);
-				ContactStorage collected = (ContactStorage) AddressbookInterface.addressbookTreeModel
+				ContactStorage collected = (ContactStorage) AddressbookTreeModel.getInstance()
 						.getFolder(102);
 	
 				// try to find a matching contact item

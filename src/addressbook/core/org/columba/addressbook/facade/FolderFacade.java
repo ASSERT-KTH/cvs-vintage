@@ -36,7 +36,7 @@ public class FolderFacade {
      * @return Folder
      */
     public static AbstractFolder getAddressbook(int uid) {
-        return (AbstractFolder) AddressbookInterface.addressbookTreeModel
+        return (AbstractFolder) AddressbookTreeModel.getInstance()
                 .getFolder(uid);
     }
 
@@ -48,7 +48,7 @@ public class FolderFacade {
      * @return Folder
      */
     public static AbstractFolder getCollectedAddresses() {
-        AddressbookTreeModel model = AddressbookInterface.addressbookTreeModel;
+        AddressbookTreeModel model = AddressbookTreeModel.getInstance();
         if (model != null) return (AbstractFolder) model.getFolder(102);
 
         return null;

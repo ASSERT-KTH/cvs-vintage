@@ -43,9 +43,6 @@ public class PluginFinderTest extends TestCase {
 
         // initialize configuration - core
         MainInterface.config = new Config(file);
-
-        // create default config-files
-        MainInterface.config.init();
     }
    
 

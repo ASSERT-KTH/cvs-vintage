@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
@@ -50,7 +51,7 @@ public class AddressCollector implements ItemProvider {
 		HeaderItemList list = null;
 
 		try {
-			AbstractFolder folder = (AbstractFolder) AddressbookInterface.addressbookTreeModel
+			AbstractFolder folder = (AbstractFolder) AddressbookTreeModel.getInstance()
 					.getFolder(uid);
 			list = folder.getHeaderItemList();
 		} catch (Exception e) {

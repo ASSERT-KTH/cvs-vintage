@@ -24,14 +24,17 @@ import javax.swing.tree.DefaultTreeModel;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -48,6 +51,8 @@ public class TreeModel extends DefaultTreeModel {
     protected TempFolder tempFolder;
     private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
+    private static TreeModel instance = new TreeModel(MailInterface.config.getFolderConfig());
+    
     public TreeModel(FolderXmlConfig folderConfig) {
         super(new Root(folderConfig.getRoot().getElement("tree")));
         this.folderXmlConfig = folderConfig;
@@ -58,6 +63,37 @@ public class TreeModel extends DefaultTreeModel {
 
         createDirectories(((AbstractFolder) getRoot()).getConfiguration().getRoot(),
             (AbstractFolder) getRoot());
+        
+        // register at shutdownmanager
+        // -> when closing Columba, this will automatically save all folder data
+        ShutdownManager.getShutdownManager().register(new Runnable() {
+            public void run() {
+                saveFolder((AbstractFolder) getRoot());
+            }
+
+            protected void saveFolder(AbstractFolder parentFolder) {
+                AbstractFolder child;
+
+                for (Enumeration e = parentFolder.children();
+                        e.hasMoreElements();) {
+                    child = (AbstractFolder) e.nextElement();
+
+                    if (child instanceof MessageFolder) {
+                        try {
+                            ((MessageFolder) child).save();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    saveFolder(child);
+                }
+            }
+        });
+    }
+    
+    public static TreeModel getInstance() {
+    	return instance;
     }
 
     public void createDirectories(XmlElement parentTreeNode,

@@ -40,14 +40,14 @@ public class FetchMessageSubMenu extends IMenu implements Observer {
         createMenu();
 
         // register interest on account changes
-        MailInterface.mailCheckingManager.addObserver(this);
+        MailCheckingManager.getInstance().addObserver(this);
     }
 
     protected void createMenu() {
         // remove all items
         removeAll();
 
-        MailCheckingManager mailCheckingManager = MailInterface.mailCheckingManager;
+        MailCheckingManager mailCheckingManager = MailCheckingManager.getInstance();
         AbstractColumbaAction[] actions = mailCheckingManager.getActions();
 
         for (int i = 0; i < actions.length; i++) {

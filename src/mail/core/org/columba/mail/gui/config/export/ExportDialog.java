@@ -59,6 +59,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -115,7 +116,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 		selectAllButton.setActionCommand("SELECTALL");
 		selectAllButton.addActionListener(this);
 
-		AbstractFolder parent = (AbstractFolder) MailInterface.treeModel
+		AbstractFolder parent = (AbstractFolder) TreeModel.getInstance()
 				.getRoot();
 		CheckableTreeNode root = new CheckableTreeNode(parent.getName());
 		root.setNode(parent);

@@ -27,6 +27,7 @@ import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -154,7 +155,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				parent.add(subFolder);
 				parent.getConfiguration().getRoot().addElement(
 						subFolder.getConfiguration().getRoot());
-				MailInterface.treeModel.insertNodeInto(subFolder, parent,
+				TreeModel.getInstance().insertNodeInto(subFolder, parent,
 						parent.getIndex(subFolder));
 
 				((IMAPFolder) subFolder).existsOnServer = true;
@@ -184,7 +185,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 				parent.add(subFolder);
 				parent.getConfiguration().getRoot().addElement(
 						subFolder.getConfiguration().getRoot());
-				MailInterface.treeModel.insertNodeInto(subFolder, parent,
+				TreeModel.getInstance().insertNodeInto(subFolder, parent,
 						parent.getIndex(subFolder));
 			}
 			((IMAPFolder) subFolder).existsOnServer = true;
@@ -236,7 +237,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		// maybe remove this folder
 		if (parent instanceof IMAPFolder) {
 			if (!((IMAPFolder) parent).existsOnServer) {
-				MailInterface.treeModel.removeNodeFromParent(parent);
+				TreeModel.getInstance().removeNodeFromParent(parent);
 				parent.removeFolder();
 			}
 		}
@@ -372,7 +373,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 
 		// has the imap account no trash folder using the default trash folder
 		if (ret == null) {
-			ret = MailInterface.treeModel.getTrashFolder();
+			ret = TreeModel.getInstance().getTrashFolder();
 		}
 
 		return ret;

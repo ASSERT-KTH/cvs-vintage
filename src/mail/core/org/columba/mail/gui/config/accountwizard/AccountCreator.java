@@ -26,7 +26,10 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.ristretto.message.Address;
 
 class AccountCreator implements WizardModelListener {
@@ -53,7 +56,7 @@ class AccountCreator implements WizardModelListener {
             PopItem pop = account.getPopItem();
             pop.set("host", (String) data.getData("IncomingServer.host"));
             pop.set("user", (String) data.getData("IncomingServer.login"));
-            MailInterface.popServerCollection.add(account);
+            POP3ServerCollection.getInstance().add(account);
         } else {
             ImapItem imap = account.getImapItem();
             imap.set("host", (String) data.getData("IncomingServer.host"));
@@ -67,12 +70,12 @@ class AccountCreator implements WizardModelListener {
             String path = MailInterface.config.getConfigDirectory().getPath();
 
             IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
-            ((AbstractFolder) MailInterface.treeModel.getRoot()).add(parentFolder);
-            ((AbstractFolder) MailInterface.treeModel.getRoot())
+            ((AbstractFolder) TreeModel.getInstance().getRoot()).add(parentFolder);
+            ((AbstractFolder) TreeModel.getInstance().getRoot())
                     .getConfiguration().getRoot().addElement(
                             parentFolder.getConfiguration().getRoot());
 
-            MailInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
+            TreeModel.getInstance().nodeStructureChanged(parentFolder.getParent());
 
             try {
                 AbstractFolder inbox = new IMAPFolder("INBOX", "IMAPFolder",
@@ -86,10 +89,10 @@ class AccountCreator implements WizardModelListener {
         }
 
         // add account to mail-checking manager
-        MailInterface.mailCheckingManager.add(account);
+        MailCheckingManager.getInstance().add(account);
 
         // notify all observers
-        MailInterface.mailCheckingManager.update();
+        MailCheckingManager.getInstance().update();
 
         account.getSmtpItem().set("host",
             (String) data.getData("OutgoingServer.host"));

@@ -39,7 +39,7 @@ public class TreeView extends JTree {
     public TreeView(AddressbookFrameController frameController) {
         this.frameController = frameController;
 
-        model = AddressbookInterface.addressbookTreeModel;
+        model = AddressbookTreeModel.getInstance();
 
         setModel(model);
 

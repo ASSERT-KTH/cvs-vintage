@@ -18,7 +18,7 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.MainInterface;
@@ -58,7 +58,7 @@ public final class ContactFacade {
 		
 		System.out.println("address:" + address);
 
-		AbstractFolder selectedFolder = (AbstractFolder) AddressbookInterface.addressbookTreeModel
+		AbstractFolder selectedFolder = (AbstractFolder) AddressbookTreeModel.getInstance()
 				.getFolder(uid);
 		try {
 			if (selectedFolder.exists(adr.getMailAddress()) == null) {

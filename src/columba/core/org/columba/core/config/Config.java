@@ -68,7 +68,7 @@ public class Config {
     protected File optionsFile;
 
     protected File toolsFile;
-
+    
     /**
      * Creates a new configuration from the default directory.
      */
@@ -88,19 +88,15 @@ public class Config {
         path.mkdir();
         optionsFile = new File(path, "options.xml");
         toolsFile = new File(path, "external_tools.xml");
-    }
+        
+        registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
+                optionsFile));
 
-    /**
-     * Returns the directory the configuration is located in.
-     */
-    public File getConfigDirectory() {
-        return path;
-    }
-
-    /**
-     * Method init.
-     */
-    public void init() {
+        registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
+                toolsFile));
+        
+        // register at shutdown-manager
+        // -> this will save all configuration data, when closing Columba
         ShutdownManager.getShutdownManager().register(new Runnable() {
 
             public void run() {
@@ -111,16 +107,13 @@ public class Config {
                 }
             }
         });
+    }
 
-        LOG.info("Loading configuration from " + path.toString());
-
-        registerPlugin(CORE_STR, optionsFile.getName(), new OptionsXmlConfig(
-                optionsFile));
-
-        registerPlugin(CORE_STR, toolsFile.getName(), new DefaultXmlConfig(
-                toolsFile));
-
-        load();
+    /**
+     * Returns the directory the configuration is located in.
+     */
+    public File getConfigDirectory() {
+        return path;
     }
 
     /**
@@ -157,6 +150,9 @@ public class Config {
         }
 
         addPlugin(moduleName, id, configPlugin);
+        
+        // load config-file from disk
+        configPlugin.load();
     }
 
     /**

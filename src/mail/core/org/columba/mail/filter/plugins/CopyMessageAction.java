@@ -22,6 +22,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 
 /**
@@ -36,7 +37,7 @@ public class CopyMessageAction extends AbstractFilterAction {
 			MessageFolder srcFolder, Object[] uids) throws Exception {
 		int uid = filterAction.getUid();
 
-		MessageFolder destFolder = (MessageFolder) MailInterface.treeModel
+		MessageFolder destFolder = (MessageFolder) TreeModel.getInstance()
 				.getFolder(uid);
 
 		if (destFolder == null) {

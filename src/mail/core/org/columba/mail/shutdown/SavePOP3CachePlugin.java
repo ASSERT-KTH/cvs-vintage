@@ -16,7 +16,7 @@
 package org.columba.mail.shutdown;
 
 import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.POP3ServerCollection;
 
 
 /**
@@ -32,6 +32,6 @@ public class SavePOP3CachePlugin implements TaskInterface {
  * @see org.columba.core.gui.ShutdownPlugin#run()
  */
     public void run() {
-        MailInterface.popServerCollection.saveAll();
+    	POP3ServerCollection.getInstance().saveAll();
     }
 }

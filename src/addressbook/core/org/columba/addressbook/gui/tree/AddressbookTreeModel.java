@@ -26,6 +26,7 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
@@ -39,11 +40,18 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
+	private static AddressbookTreeModel instance = new AddressbookTreeModel(
+			AddressbookInterface.config.get("tree").getElement("/tree"));
+
 	public AddressbookTreeModel(XmlElement root) {
 		super(new Root(root));
 
 		createDirectories(((AddressbookTreeNode) getRoot()).getNode(),
 				(AddressbookTreeNode) getRoot());
+	}
+
+	public static AddressbookTreeModel getInstance() {
+		return instance;
 	}
 
 	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
@@ -88,9 +96,9 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		//XmlElement.printNode(item.getRoot(), "");
 		int uid = item.getInteger("uid");
 
-		if ( AddressbookTreeNode.getNextFolderUid() <= uid)
-			AddressbookTreeNode.setNextFolderUid(uid+1);
-		
+		if (AddressbookTreeNode.getNextFolderUid() <= uid)
+			AddressbookTreeNode.setNextFolderUid(uid + 1);
+
 		// now instanciate the folder classes
 		String type = item.get("type");
 
@@ -139,22 +147,22 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
 		return null;
 	}
-	
+
 	public GroupFolder getGroupFolder(String name) {
 		AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
 
 		for (Enumeration e = root.breadthFirstEnumeration(); e
 				.hasMoreElements();) {
 			AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
-			
-				if  (node instanceof GroupFolder) {
-					GroupFolder groupFolder = (GroupFolder) node;
-					if ( groupFolder.getName().equals(name))
-						return groupFolder;
-				}
+
+			if (node instanceof GroupFolder) {
+				GroupFolder groupFolder = (GroupFolder) node;
+				if (groupFolder.getName().equals(name))
+					return groupFolder;
 			}
-			
-			return null;
+		}
+
+		return null;
 	}
 
 }

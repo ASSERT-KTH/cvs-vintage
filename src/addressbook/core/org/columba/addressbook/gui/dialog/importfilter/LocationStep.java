@@ -20,6 +20,7 @@ import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -112,7 +113,7 @@ class LocationStep extends AbstractStep implements ActionListener {
                 updateCanFinish();
             }
         } else if (source == destinationButton) {
-            SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+            SelectAddressbookFolderDialog dialog = AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
 
             if (dialog.success()) {
                 destinationFolder = dialog.getSelectedFolder();

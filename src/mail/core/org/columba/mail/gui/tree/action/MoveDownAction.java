@@ -24,6 +24,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -62,7 +63,7 @@ public class MoveDownAction extends AbstractMoveFolderAction {
         newIndex = newIndex + 1;
         ((AbstractFolder) folder.getParent()).insert(folder, newIndex);
 
-        MailInterface.treeModel.nodeStructureChanged(folder.getParent());
+        TreeModel.getInstance().nodeStructureChanged(folder.getParent());
     }
 
     /** {@inheritDoc} */

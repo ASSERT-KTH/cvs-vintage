@@ -32,6 +32,7 @@ import org.columba.core.util.Mutex;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.gui.table.model.TableModelChangedListener;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 
 /**
@@ -247,14 +248,14 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			AbstractFolder lastFolder = (AbstractFolder) ((FolderEvent) folderAddedList[swap]
 					.get(0)).getSource();
 
-			MailInterface.treeModel.nodeStructureChanged(lastFolder);
+			TreeModel.getInstance().nodeStructureChanged(lastFolder);
 
 			// Process the events
 			for (int i = 1; i < folderAddedList[swap].size(); i++) {
 				FolderEvent next = (FolderEvent) folderAddedList[swap].get(i);
 				if (next.getSource() != lastFolder) {
 					lastFolder = (AbstractFolder) next.getSource();
-					MailInterface.treeModel.nodeStructureChanged(lastFolder);
+					TreeModel.getInstance().nodeStructureChanged(lastFolder);
 				}
 			}
 		}
@@ -268,7 +269,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 			AbstractFolder lastFolder = (AbstractFolder) ((FolderEvent) folderPropertyChangedList[swap]
 					.get(0)).getSource();
 
-			MailInterface.treeModel.nodeChanged(lastFolder);
+			TreeModel.getInstance().nodeChanged(lastFolder);
 
 			// Process the events
 			for (int i = 1; i < folderPropertyChangedList[swap].size(); i++) {
@@ -276,7 +277,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 						.get(i);
 				if (next.getSource() != lastFolder) {
 					lastFolder = (AbstractFolder) next.getSource();
-					MailInterface.treeModel.nodeChanged(lastFolder);
+					TreeModel.getInstance().nodeChanged(lastFolder);
 				}
 			}
 		}
@@ -289,7 +290,7 @@ public class FolderEventDelegator implements ActionListener, FolderListener {
 				FolderEvent next = (FolderEvent) folderRemovedList[swap].get(i);
 
 				lastFolder = (AbstractFolder) next.getSource();
-				MailInterface.treeModel.removeNodeFromParent(lastFolder);
+				TreeModel.getInstance().removeNodeFromParent(lastFolder);
 
 			}
 		}

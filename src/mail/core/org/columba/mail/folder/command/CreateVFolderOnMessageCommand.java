@@ -30,6 +30,7 @@ import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.message.Header;
 
@@ -87,7 +88,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
-        MailInterface.treeModel.nodeStructureChanged(parentFolder);
+    	TreeModel.getInstance().nodeStructureChanged(parentFolder);
 
         if (vfolder != null) {
             //vfolder.showFilterDialog((AbstractMailFrameController) getFrameMediator());

@@ -37,8 +37,10 @@ import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pop3.POP3Server;
+import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -242,7 +244,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 
             if (accountItem.isPopAccount()) {
                 int uid = accountItem.getUid();
-                POP3Server server = MailInterface.popServerCollection.uidGet(uid);
+                POP3Server server = POP3ServerCollection.getInstance().uidGet(uid);
                 // update configuration
                 server.updateConfig();
                 
@@ -250,17 +252,17 @@ public class AccountDialog extends JDialog implements ActionListener {
                 // update tree label
                 int uid = accountItem.getUid();
 
-                IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel
+                IMAPRootFolder folder = (IMAPRootFolder) TreeModel.getInstance()
                         .getImapFolder(uid);
                 folder.updateConfiguration();
             }
 
             // restart timer
-            MailInterface.mailCheckingManager
+            MailCheckingManager.getInstance()
                     .restartTimer(accountItem.getUid());
 
             // notify all observers
-            MailInterface.mailCheckingManager.update();
+            MailCheckingManager.getInstance().update();
 
             setVisible(false);
         } else if (action.equals("CANCEL")) {

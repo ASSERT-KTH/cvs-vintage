@@ -41,6 +41,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -140,7 +141,7 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 		}
 
 		tree.setSelectionPath(new TreePath(
-				AddressbookInterface.addressbookTreeModel.getFolder(101)
+				AddressbookTreeModel.getInstance().getFolder(101)
 						.getPath()));
 	}
 

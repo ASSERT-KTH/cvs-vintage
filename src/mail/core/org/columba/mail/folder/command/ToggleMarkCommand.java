@@ -32,6 +32,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
@@ -235,7 +236,7 @@ public class ToggleMarkCommand extends FolderCommand {
 			if (item.getSpamItem().isMoveTrashSelected() == false) {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
-				AbstractFolder destFolder = MailInterface.treeModel
+				AbstractFolder destFolder = TreeModel.getInstance()
 						.getFolder(item.getSpamItem().getMoveCustomFolder());
 
 				// create reference

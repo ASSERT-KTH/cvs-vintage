@@ -29,7 +29,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.mail.main.MailInterface;
+import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ReceiveSendAction extends AbstractColumbaAction {
@@ -63,7 +63,7 @@ public class ReceiveSendAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		// check for new messages
-		MailInterface.mailCheckingManager.checkAll();
+		MailCheckingManager.getInstance().checkAll();
 
 		try {
 			// send all unsent messages found in Outbox

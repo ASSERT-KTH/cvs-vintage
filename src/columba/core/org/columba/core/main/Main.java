@@ -34,7 +34,6 @@ import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
-import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
@@ -88,14 +87,6 @@ public class Main {
 				"java.protocol.handler.pkgs", "")
 				+ "|org.columba.core.url");
 
-		AddressbookMain addressbook = new AddressbookMain();
-		addressbook.initConfiguration();
-
-		MailMain mail = new MailMain();
-		mail.initConfiguration();
-
-		MainInterface.config.init();
-
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
 
@@ -112,8 +103,11 @@ public class Main {
 
 		MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 
-		addressbook.initPlugins();
-		mail.initPlugins();
+		// init addressbook component
+		AddressbookMain.getInstance();
+
+		// init mail component
+		MailMain.getInstance();
 
 		MainInterface.pluginManager.initPlugins();
 
@@ -125,20 +119,14 @@ public class Main {
 		// set application wide font
 		FontProperties.setFont();
 
-		//MainInterface.frameModelManager = new FrameModelManager();
-		addressbook.initGui();
-
-		mail.initGui();
-
 		MainInterface.frameModel = new FrameModel();
 
-		ColumbaServer.getColumbaServer().handleCommandLineParameters(args);
+		// handle commandline parameters
+		handleCommandLineParameters(args);
 
 		if (frame != null) {
 			frame.setVisible(false);
 		}
-
-		//new DefaultContainer();
 
 		if (MainInterface.frameModel.getOpenFrames().length == 0) {
 			MainInterface.frameModel.openStoredViews();
@@ -152,5 +140,22 @@ public class Main {
 
 	public static void setShowStartUpFrame(boolean show) {
 		showStartUpFrame = show;
+	}
+
+	/**
+     * Uses the command line parser to validate the passed arguments
+     * and invokes handlers to process the detected options.
+     */
+	public static void handleCommandLineParameters(String[] args) {
+
+		// handle core framework arguments
+		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+		try {
+			cmdLineParser.parseCmdLine(args);
+		} catch (IllegalArgumentException e) {
+		}
+
+		AddressbookMain.getInstance().handleCommandLineParameters(args);
+		MailMain.getInstance().handleCommandLineParameters(args);
 	}
 }

@@ -20,6 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.action.AbstractColumbaAction;
@@ -62,7 +63,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction
  * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
  */
     public void actionPerformed(ActionEvent evt) {
-        SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+        SelectAddressbookFolderDialog dialog = AddressbookTreeModel.getInstance().getSelectAddressbookFolderDialog();
 
         org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
 

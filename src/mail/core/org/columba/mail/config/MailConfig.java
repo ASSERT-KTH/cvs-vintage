@@ -50,7 +50,7 @@ public class MailConfig {
     protected File popManageOptionsFile;
 
     protected File composerOptionsFile;
-
+ 
     /**
      * @see java.lang.Object#Object()
      */
@@ -91,6 +91,7 @@ public class MailConfig {
 
     }
 
+    
     public File getConfigDirectory() {
         return path;
     }

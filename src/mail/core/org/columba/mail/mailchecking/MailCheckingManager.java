@@ -40,6 +40,8 @@ import org.columba.mail.main.MailInterface;
 public class MailCheckingManager extends Observable {
     private List list;
 
+    private static MailCheckingManager instance = new MailCheckingManager();
+    
     public MailCheckingManager() {
         super();
 
@@ -56,6 +58,10 @@ public class MailCheckingManager extends Observable {
         }
     }
 
+    public static MailCheckingManager getInstance() {
+    	return instance;
+    }
+    
     /**
      * Return array of actions to create the mail-checking
      * menu.

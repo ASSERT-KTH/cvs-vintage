@@ -35,6 +35,7 @@ import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -117,7 +118,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
 		if (header.getMimeType().getType().equals("message")) {
 
-			tempFolder = MailInterface.treeModel.getTempFolder();
+			tempFolder = TreeModel.getInstance().getTempFolder();
 			try {
 				tempMessageUid = tempFolder.addMessage(bodyStream);
 			} catch (Exception e) {

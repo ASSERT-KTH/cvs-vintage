@@ -37,6 +37,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
@@ -74,7 +75,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
     protected String getPath(String uid) {
         Integer u = new Integer(uid);
 
-        MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(u.intValue());
+        MessageFolder f = (MessageFolder) TreeModel.getInstance().getFolder(u.intValue());
 
         if (f == null) {
             return ""; //$NON-NLS-1$
@@ -85,7 +86,7 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
     protected String getUid(String treePath) {
         TreeNodeList list = new TreeNodeList(treePath);
-        MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(list);
+        MessageFolder f = (MessageFolder) TreeModel.getInstance().getFolder(list);
 
         if (f == null) {
             return ""; //$NON-NLS-1$

@@ -24,6 +24,7 @@ import org.columba.addressbook.folder.FolderFactory;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Group;
@@ -85,7 +86,7 @@ public class AddGroupCardAction extends DefaultTreeAction {
 					.getParent();
 
 			// notify model
-			AddressbookInterface.addressbookTreeModel
+			AddressbookTreeModel.getInstance()
 					.nodeStructureChanged(parent);
 
 		}

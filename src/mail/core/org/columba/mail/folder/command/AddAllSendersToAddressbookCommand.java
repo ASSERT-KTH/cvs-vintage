@@ -18,6 +18,7 @@
 package org.columba.mail.folder.command;
 
 import org.columba.addressbook.facade.ContactFacade;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultCommandReference;
@@ -76,7 +77,7 @@ public class AddAllSendersToAddressbookCommand extends FolderCommand {
 		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
 		// open addressbook selection dialog
-		SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel
+		SelectAddressbookFolderDialog dialog = AddressbookTreeModel.getInstance()
 				.getSelectAddressbookFolderDialog();
 
 		selectedFolder = dialog.getSelectedFolder();

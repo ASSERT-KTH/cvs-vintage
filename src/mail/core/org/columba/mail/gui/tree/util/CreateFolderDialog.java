@@ -49,6 +49,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.swing.SortedJTree;
@@ -158,14 +159,14 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 					.getModel();
 			Comparator c = treemodel.getSortingComparator();
 
-			tree = new SortedJTree(MailInterface.treeModel);
+			tree = new SortedJTree(TreeModel.getInstance());
 			// apply sorting state
 			SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
 					.getModel();
 			m.setSortingComparator(c);
 		} else {
 			// sorting is disabled
-			tree = new SortedJTree(MailInterface.treeModel);
+			tree = new SortedJTree(TreeModel.getInstance());
 		}
 
 		tree.setCellRenderer(new FolderTreeCellRenderer());

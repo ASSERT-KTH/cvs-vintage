@@ -35,6 +35,7 @@ import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpamItem;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
@@ -187,7 +188,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             incomingCheckBox.setSelected(spam.isMoveIncomingJunkMessagesEnabled());
             
             MessageFolder folder = (MessageFolder)
-                MailInterface.treeModel.getFolder(spam.getIncomingCustomFolder());
+TreeModel.getInstance().getFolder(spam.getIncomingCustomFolder());
             String treePath = folder.getTreePath();
             incomingChooseFolderButton.setText(treePath);
             
@@ -197,7 +198,7 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             
             markCheckBox.setSelected(spam.isMoveMessageWhenMarkingEnabled());
             
-            folder = (MessageFolder) MailInterface.treeModel.getFolder(
+            folder = (MessageFolder) TreeModel.getInstance().getFolder(
                 spam.getMoveCustomFolder());
             treePath = folder.getTreePath();
             markChooseFolderButton.setText(treePath);
@@ -219,24 +220,24 @@ public class SpamPanel extends DefaultPanel implements ActionListener {
             TreeNodeList list = new TreeNodeList(
                 incomingChooseFolderButton.getText());
             MessageFolder folder = (MessageFolder)
-                MailInterface.treeModel.getFolder(list);
+TreeModel.getInstance().getFolder(list);
             
             if (folder == null) {
                 // user didn't select any folder
                 // -> make Inbox the default folder
-                folder = (MessageFolder) MailInterface.treeModel.getFolder(101);
+                folder = (MessageFolder) TreeModel.getInstance().getFolder(101);
             }
             
             int uid = folder.getUid();
             spam.setIncomingCustomFolder(uid);
             
             list = new TreeNodeList(markChooseFolderButton.getText());
-            folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
+            folder = (MessageFolder) TreeModel.getInstance().getFolder(list);
             
             if (folder == null) {
                 // user didn't select any folder
                 // -> make Inbox the default folder
-                folder = (MessageFolder) MailInterface.treeModel.getFolder(101);
+                folder = (MessageFolder) TreeModel.getInstance().getFolder(101);
             }
             
             uid = folder.getUid();

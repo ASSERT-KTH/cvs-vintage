@@ -29,6 +29,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
+import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.MimePart;
@@ -105,7 +106,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
 	private String getTemplateBody() throws Exception,
 			CommandCancelledException, IOException {
 		// template folder has uid=107
-		MessageFolder templateFolder = (MessageFolder) MailInterface.treeModel
+		MessageFolder templateFolder = (MessageFolder) TreeModel.getInstance()
 				.getFolder(107);
 
 		// retrieve headerlist of tempate folder
