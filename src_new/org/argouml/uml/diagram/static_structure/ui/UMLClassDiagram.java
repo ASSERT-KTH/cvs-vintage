@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.44 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: UMLClassDiagram.java,v 1.45 2004/01/29 22:28:03 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.44 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: UMLClassDiagram.java,v 1.45 2004/01/29 22:28:03 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -50,7 +50,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
     ////////////////
     // actions for toolbar
-    // TODO: should these be static?
+    // TODO: These should not be static.
 
     protected static Action _actionClass = new RadioAction(
 	new CmdCreateNode(ModelFacade.CLASS, "Class"));
