@@ -64,6 +64,8 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListManager;
 
 /**
  * This valve clears any stale data out of the user due to aborted wizards.  
@@ -84,6 +86,9 @@ public class FreshenUserValve
         xmitScreens.put("AdvancedQuery.vm", null);
         xmitScreens.put("IssueList.vm", null);
         xmitScreens.put("ViewIssue.vm", null);
+        xmitScreens.put("QueryList.vm", null);
+        xmitScreens.put("SaveQuery.vm", null);
+        xmitScreens.put("EditQuery.vm", null);
         //xmitScreens.put(, null);
     }
 
@@ -118,7 +123,7 @@ public class FreshenUserValve
             user.setCurrentReport(reportKey, null);
         }
 
-        // remove the current module/issuetype list
+        // remove the current module/issuetype list, if needed
         String removeMitKey = data.getParameters()
             .getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
         if (removeMitKey != null 
@@ -126,6 +131,24 @@ public class FreshenUserValve
         {
             user.setThreadKey(null);
             user.setCurrentMITList(null);
+        }
+
+        // override the current module/issuetype list if one is given
+        // in the url.
+        String mitid = data.getParameters()
+            .getString(ScarabConstants.CURRENT_MITLIST_ID);
+        if (mitid != null) 
+        {
+            MITList mitList = null;
+            try
+            {
+                mitList = MITListManager.getInstance(new NumberKey(mitid));
+            }
+            catch (TorqueException e)
+            {
+                throw new TurbineException(e);
+            }
+            user.setCurrentMITList(mitList);
         }
 
         // should add the currently reporting issue here as well

@@ -79,6 +79,7 @@ import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Scope;
+import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
@@ -91,7 +92,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.80 2002/07/01 23:01:22 jmcnally Exp $
+ * @version $Id: Search.java,v 1.81 2002/07/03 16:22:38 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -172,9 +173,22 @@ public class Search extends RequireLoginFirstAction
         if (intake.isAllValid()) 
         {
             queryGroup.setProperties(query);
-            query.setUserId(user.getUserId());
-            query.setIssueType(scarabR.getCurrentIssueType());
-
+            query.setScarabUser(user);
+            if (user.getCurrentMITList() == null) 
+            {
+                query.setIssueType(scarabR.getCurrentIssueType());    
+            }
+            else 
+            {
+                MITList currentList = user.getCurrentMITList();
+                query.setMITList(currentList);
+                if (!currentList.isSingleModule()) 
+                {
+                    query.setModule(null);
+                    query.setScopeId(Scope.PERSONAL__PK);                    
+                }
+            }
+            
             ScarabUser[] userList = 
                 module.getUsers(ScarabSecurity.ITEM__APPROVE);
             if (Scope.MODULE__PK.equals(query.getScopeId()) &&

@@ -102,9 +102,19 @@ public class QueryPeer
         else if ( obj == null ) 
         {
             Criteria crit = new Criteria()
-                .add(QueryPeer.MODULE_ID, me.getModuleId())
-                .add(QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId())
                 .add(QueryPeer.DELETED, 0);
+
+            Criteria.Criterion moduleCrit = crit.getNewCriterion(
+                QueryPeer.MODULE_ID, me.getModuleId(), Criteria.EQUAL);
+            Criteria.Criterion issueTypeCrit = crit.getNewCriterion(
+                QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId(), 
+                Criteria.EQUAL);
+            moduleCrit.and(issueTypeCrit);
+            
+            Criteria.Criterion listCrit = crit.getNewCriterion(
+                QueryPeer.LIST_ID, null, Criteria.NOT_EQUAL);
+            listCrit.or(moduleCrit);
+            crit.add(listCrit);
 
             Criteria.Criterion cGlob = crit.getNewCriterion(
                 QueryPeer.SCOPE_ID, Scope.MODULE__PK, 

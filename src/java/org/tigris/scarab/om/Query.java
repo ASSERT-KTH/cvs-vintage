@@ -84,6 +84,39 @@ public class Query
         "getRQueryUser";
 
     /**
+     * A local reference, so that getScarabUser is guaranteed to return
+     * the same instance as was passed to setScarabUser
+     */
+    private ScarabUser scarabUser;
+    
+    /**
+     * Get the value of scarabUser.
+     * @return value of scarabUser.
+     */
+    public ScarabUser getScarabUser() 
+        throws TorqueException
+    {
+        ScarabUser user = this.scarabUser;
+        if (user == null) 
+        {
+            user = super.getScarabUser();
+        }
+        
+        return user;
+    }
+    
+    /**
+     * Set the value of scarabUser.
+     * @param v  Value to assign to scarabUser.
+     */
+    public void setScarabUser(ScarabUser  v) 
+        throws TorqueException
+    {
+        this.scarabUser = v;
+        super.setScarabUser(v);
+    }
+    
+    /**
      * Throws UnsupportedOperationException.  Use
      * <code>getModule()</code> instead.
      *
@@ -112,13 +145,20 @@ public class Query
     public void setModule(Module me)
         throws TorqueException
     {
-        NumberKey id = me.getModuleId();
-        if (id == null) 
+        if (me == null) 
         {
-            throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+            setModuleId((NumberKey)null);            
         }
-        setModuleId(id);
+        else 
+        {
+            NumberKey id = me.getModuleId();
+            if (id == null) 
+            {
+                throw new TorqueException("Modules must be saved prior to " +
+                    "being associated with other objects.");
+            }
+            setModuleId(id);
+        }        
     }
 
     /**
@@ -186,6 +226,13 @@ public class Query
                 }
             }
         }
+        if (getMITList() != null) 
+        {
+            getMITList().save();
+            // it would be good if this updated our list id, but it doesn't
+            // happen automatically so reset it.
+            setMITList(getMITList());            
+        }
         save();
         return success;
     }
@@ -195,9 +242,16 @@ public class Query
      */
     public String getExecuteLink(String link) 
     {
-       return link 
+       link = link 
           + "/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search" 
           + "&resultsperpage=25&pagenum=1" + getValue();
+
+       NumberKey listId = getListId();
+       if (listId != null) 
+       {
+           link += "&" + ScarabConstants.CURRENT_MITLIST_ID + "=" + listId;
+       }
+       return link;
     }
 
     /**
@@ -205,8 +259,15 @@ public class Query
      */
     public String getEditLink(String link) 
     {
-        return link + "/template/EditQuery.vm?queryId=" + getQueryId()
+        link = link + "/template/EditQuery.vm?queryId=" + getQueryId()
                     + getValue();
+
+       NumberKey listId = getListId();
+       if (listId != null) 
+       {
+           link += "&" + ScarabConstants.CURRENT_MITLIST_ID + "=" + listId;
+       }
+       return link;
     }
 
     /**
@@ -340,6 +401,7 @@ public class Query
          newQuery.setValue(getValue());
          newQuery.setModuleId(getModuleId());
          newQuery.setIssueTypeId(getIssueTypeId());
+         newQuery.setListId(getListId());
          newQuery.setApproved(getApproved());
          newQuery.setCreatedDate(new Date());
          newQuery.setUserId(getUserId());
