@@ -64,9 +64,9 @@
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
 		<th nowrap="nowrap"><a href="#"><img 
-            src="scarab/images/icon_uparrow.gif" width="13" height="8" 
+            src="/scarab/images/icon_uparrow.gif" width="13" height="8" 
             alt="sort" border="0" /></a><a href="#"><img 
-            src="scarab/images/icon_downarrow.gif" width="13" height="8" 
+            src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
             alt="sort" border="0" /></a></th>
 		<th><a href="#" class="header" title="sort">issue ID:</a></th>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
