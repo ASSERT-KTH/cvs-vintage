@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -528,6 +528,7 @@ public class ProxyFactory
       log.debug("seting invoker proxy binding for stateful session: " + invokerMetaData.getName());
       context.setInvokerProxyBinding(invokerMetaData.getName());
       context.setValue(InvocationKey.EJB_HOME, home);
+      context.setValue("InvokerID", Invoker.ID);
 
       ClientContainer client = new ClientContainer(context);
       try
