@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.89 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: Main.java,v 1.90 2003/11/07 18:37:36 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,6 +320,9 @@ public class Main {
 
         st.mark("make empty project");
 
+        Designer.disableCritiquing();
+        Designer.clearCritiquing();
+
         Project p = null;
 
         if (urlToOpen != null) {
@@ -334,8 +337,6 @@ public class Main {
         // Touch the trash
         Trash.SINGLETON.getSize();
 
-        Designer.disableCritiquing();
-        Designer.clearCritiquing();
         ProjectManager.getManager().setCurrentProject(p);
         Designer.enableCritiquing();
 
