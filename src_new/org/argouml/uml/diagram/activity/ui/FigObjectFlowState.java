@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.5 2004/08/09 20:18:50 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.6 2004/08/10 19:29:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyVetoException;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
+import org.argouml.application.api.Notation;
+import org.argouml.model.ModelFacade;
+import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.generator.ParserDisplay;
 
@@ -228,19 +232,27 @@ public class FigObjectFlowState extends FigNodeModelElement {
     public int getLineWidth() {
         return cover.getLineWidth();
     }
+
     
     /**
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#textEdited(org.tigris.gef.presentation.FigText)
      */
     protected void textEdited(FigText ft) throws PropertyVetoException {
-        if (ft == getNameFig() && this.getOwner() != null) {  
-            ParserDisplay.SINGLETON.parseObjectFlowState1(ft.getText(), 
+        try {
+            if (ft == getNameFig() && this.getOwner() != null) { 
+                ParserDisplay.SINGLETON.parseObjectFlowState1(ft.getText(), 
                     this.getOwner());
-        } else if (ft == state && this.getOwner() != null) {  
-            ParserDisplay.SINGLETON.parseObjectFlowState2(state.getText(), 
-                    this.getOwner());
+            } else if (ft == state && this.getOwner() != null) {  
+                ParserDisplay.SINGLETON.parseObjectFlowState2(state.getText(), 
+                        this.getOwner());
+            }
+            ProjectBrowser.getInstance().getStatusBar().showStatus("");
+            //updateNameText();
+        } catch (ParseException pe) {
+            ProjectBrowser.getInstance().getStatusBar()
+                .showStatus("Error: " + pe + " at " + pe.getErrorOffset());
         }
-        super.textEdited(ft);
+        //super.textEdited(ft);
     } 
 
 } /* end class FigObjectFlowState */
