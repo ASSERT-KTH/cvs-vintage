@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.88 2002/05/31 06:52:16 spestov Exp $
+ * @version $Id: Buffer.java,v 1.89 2002/06/02 03:23:13 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1754,7 +1754,7 @@ public class Buffer implements EBComponent
 
 		DefaultTokenHandler tokens = new DefaultTokenHandler();
 		markTokens(line,tokens);
-		Token token = TextUtilities.getTokenAtOffset(tokens.getFirstToken(),offset);
+		Token token = TextUtilities.getTokenAtOffset(tokens.getTokens(),offset);
 		return token.rules;
 	} //}}}
 
@@ -2453,6 +2453,10 @@ loop:		for(int i = 0; i < seg.count; i++)
 	 */
 	public static class TokenList extends DefaultTokenHandler
 	{
+		public Token getFirstToken()
+		{
+			return getTokens();
+		}
 	}
 
 	/**

@@ -27,7 +27,7 @@ package org.gjt.sp.jedit.syntax;
  * builds a linked list of tokens.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.8 2002/05/29 11:19:57 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.9 2002/06/02 03:23:14 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -46,7 +46,7 @@ public class DefaultTokenHandler implements TokenHandler
 	 * Returns the first syntax token.
 	 * @since jEdit 4.1pre1
 	 */
-	public Token getFirstToken()
+	public Token getTokens()
 	{
 		return firstToken;
 	} //}}}

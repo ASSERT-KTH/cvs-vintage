@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.127 2002/06/01 06:06:25 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.128 2002/06/02 03:23:14 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -585,8 +585,6 @@ public class JEditTextArea extends JComponent
 			point = offsetToXY(line,offset,returnValue);
 			if(rect.contains(point))
 				return;
-
-			System.err.println("not in rect: " + rect + " (" + point + ")");
 		}
 		else
 			point = null;

@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.32 2002/05/26 07:38:43 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.33 2002/06/02 03:23:13 spestov Exp $
  */
 public class TextUtilities
 {
@@ -114,7 +114,7 @@ public class TextUtilities
 		// Get the syntax token at 'offset'
 		// only tokens with the same type will be checked for
 		// the corresponding bracket
-		byte idOfBracket = getTokenAtOffset(tokenHandler.getFirstToken(),offset).id;
+		byte idOfBracket = getTokenAtOffset(tokenHandler.getTokens(),offset).id;
 
 		boolean haveTokens = true;
 
@@ -136,7 +136,7 @@ public class TextUtilities
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
-						if(getTokenAtOffset(tokenHandler.getFirstToken(),i).id == idOfBracket)
+						if(getTokenAtOffset(tokenHandler.getTokens(),i).id == idOfBracket)
 							count++;
 					}
 					else if(ch == cprime)
@@ -147,7 +147,7 @@ public class TextUtilities
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
-						if(getTokenAtOffset(tokenHandler.getFirstToken(),i).id == idOfBracket)
+						if(getTokenAtOffset(tokenHandler.getTokens(),i).id == idOfBracket)
 						{
 							count--;
 							if(count == 0)
@@ -184,7 +184,7 @@ public class TextUtilities
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
-						if(getTokenAtOffset(tokenHandler.getFirstToken(),i).id == idOfBracket)
+						if(getTokenAtOffset(tokenHandler.getTokens(),i).id == idOfBracket)
 							count++;
 					}
 					else if(ch == cprime)
@@ -195,7 +195,7 @@ public class TextUtilities
 							buffer.markTokens(line,tokenHandler);
 							haveTokens = true;
 						}
-						if(getTokenAtOffset(tokenHandler.getFirstToken(),i).id == idOfBracket)
+						if(getTokenAtOffset(tokenHandler.getTokens(),i).id == idOfBracket)
 						{
 							count--;
 							if(count == 0)
