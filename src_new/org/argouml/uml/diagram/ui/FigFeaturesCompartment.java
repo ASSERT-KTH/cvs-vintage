@@ -1,4 +1,4 @@
-// $Id: FigFeaturesCompartment.java,v 1.2 2004/09/10 20:05:30 mvw Exp $
+// $Id: FigFeaturesCompartment.java,v 1.3 2004/12/24 18:04:12 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,18 @@ public abstract class FigFeaturesCompartment extends FigCompartment {
         setFilled(true);
         setLineWidth(1);
         addFig(bigPort);
+    }
+    
+    /**
+     * USED BY PGML.tee
+     * @see org.tigris.gef.presentation.Fig#getNameAndBounds()
+     */
+    public String classNameAndBounds() {
+        if (isVisible()) {
+            return super.classNameAndBounds();
+        } else {
+            return getClass().getName() + "[]";
+        }
     }
     
     /**

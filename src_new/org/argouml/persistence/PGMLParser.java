@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.2 2004/12/24 18:04:12 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,7 +352,9 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
      * @return if the XML denotes a hidden Fig.
      */
     private boolean isHiddenXml(String text) {
-        return text.endsWith("[0, 0, 0, 0]") || text.endsWith("[0,0,0,0]");
+        return text.endsWith("[0, 0, 0, 0]")
+               || text.endsWith("[0,0,0,0]")
+               || text.endsWith("[]");
     }
 
     /**
