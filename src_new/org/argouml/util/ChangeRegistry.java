@@ -24,11 +24,13 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.2 2001/12/05 16:06:22 thierrylach Exp $
+// $Id: ChangeRegistry.java,v 1.3 2003/04/16 16:03:30 alexb Exp $
 
 package org.argouml.util;
 
 import org.tigris.gef.graph.*;
+
+import org.argouml.kernel.ProjectManager;
 
 /** This class holds the information about the saving state of the current project.
  *  The state is changed by every change made to its diagrams.
@@ -42,8 +44,18 @@ public class ChangeRegistry implements GraphListener
 
 	public ChangeRegistry() { changeFlag = false; }
 
+        /**
+         * changes save state / notifies gui.
+         */
 	public void setChangeFlag( boolean newValue ) {
-		changeFlag = newValue;
+		
+            if(changeFlag != newValue){
+                // notify the gui to put a * on the title bar (swing gui):
+                ProjectManager.getManager().notifySavePropertyChanged(newValue);
+            }
+                
+                changeFlag = newValue;
+                
 	}
 
 	public boolean hasChanged() {
