@@ -10,6 +10,11 @@
      define subcomponents such as "Valves" or "Loggers" at this level.
  -->
 
+<!-- 
+     The port number that the webserver listens on
+     is specified further below. It is not specified here.
+     Look for 8080 further down in the file.
+-->
 <Server port="8005" shutdown="SHUTDOWN" debug="0">
 
 
