@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.ejb.EJBMetaData;
 import javax.management.ObjectName;
@@ -32,6 +33,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ActivationConfigPropertyMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
@@ -51,20 +53,18 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
    implements EJBProxyFactory, MessageEndpointFactory, JBossMessageEndpointFactoryMBean
 {
-   private static final Logger log = Logger.getLogger(JBossMessageEndpointFactory.class);
-   
    // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------
 
    /** Whether trace is enabled */
-   private boolean trace = log.isTraceEnabled();
+   protected boolean trace = log.isTraceEnabled();
    
    /** Our container */
    protected MessageDrivenContainer container;
@@ -78,11 +78,17 @@ public class JBossMessageEndpointFactory
    /** The invoker meta data */
    protected InvokerProxyBindingMetaData invokerMetaData;
    
+   /** The activation properties */
+   protected HashMap properties = new HashMap();
+   
    /** The proxy factory */
    protected GenericProxyFactory proxyFactory = new GenericProxyFactory();
    
    /** The messaging type class */
    protected Class messagingTypeClass;
+   
+   /** The resource adapter name */
+   protected String resourceAdapterName;
    
    /** The resource adapter object name */
    protected ObjectName resourceAdapterObjectName;
@@ -127,6 +133,18 @@ public class JBossMessageEndpointFactory
    public MessageDrivenContainer getContainer()
    {
       return container;
+   }
+   
+   /**
+    * Display the configuration
+    * 
+    * @jmx:managed-attribute
+    * 
+    * @return the configuration
+    */
+   public String getConfig()
+   {
+      return toString();
    }
    
    // MessageEndpointFactory implementation -------------------------
@@ -266,7 +284,7 @@ public class JBossMessageEndpointFactory
       buffer.append(super.toString());
       buffer.append("{ resourceAdapter=").append(resourceAdapterObjectName);
       buffer.append(", messagingType=").append(messagingTypeClass.getName());
-      buffer.append(", activationConfig=").append(metaData.getActivationConfigProperties());
+      buffer.append(", activationConfig=").append(properties.values());
       buffer.append(", activationSpec=").append(activationSpec);
       buffer.append("}");
       return buffer.toString();
@@ -293,13 +311,24 @@ public class JBossMessageEndpointFactory
    }
 
    /**
+    * Resolve the resource adapter name
+    * 
+    * @return the resource adapter name
+    * @throws DeploymentException for any error
+    */
+   protected String resolveResourceAdapterName() throws DeploymentException
+   {
+      return metaData.getResourceAdapterName();
+   }
+
+   /**
     * Resolve the resource adapter
     * 
     * @throws DeploymentException for any error
     */
    protected void resolveResourceAdapter() throws DeploymentException
    {
-      String resourceAdapterName = metaData.getResourceAdapterName();
+      resourceAdapterName = resolveResourceAdapterName();
       try
       {
          resourceAdapterObjectName = new ObjectName("jboss.jca:service=RARDeployment,name='" + resourceAdapterName + "'");
@@ -354,16 +383,43 @@ public class JBossMessageEndpointFactory
    }
    
    /**
+    * Add activation config properties
+    * 
+    * @throws DeploymentException for any error
+    */
+   protected void augmentActivationConfigProperties() throws DeploymentException
+   {
+      // Allow activation config properties from invoker proxy binding
+      Element proxyConfig = invokerMetaData.getProxyFactoryConfig();
+      Element activationConfig = MetaData.getOptionalChild(proxyConfig, "activation-config");
+      if (activationConfig != null)
+      {
+         Iterator iterator = MetaData.getChildrenByTagName(activationConfig, "activation-config-property");
+         while (iterator.hasNext())
+         {
+            Element resourceRef = (Element) iterator.next();
+            ActivationConfigPropertyMetaData metaData = new ActivationConfigPropertyMetaData();
+            metaData.importXml(resourceRef);
+            if (properties.containsKey(metaData.getName()) == false)
+               properties.put(metaData.getName(), metaData);
+         }
+      }
+   }   
+   
+   /**
     * Create the activation spec
     * 
     * @throws DeploymentException for any error
     */
    protected void createActivationSpec() throws DeploymentException
    {
+      properties = new HashMap(metaData.getActivationConfigProperties());
+      augmentActivationConfigProperties();
+      
       Object[] params = new Object[] 
       {
          messagingTypeClass,
-         metaData.getActivationConfigProperties()
+         properties.values()
       };
       try
       {

@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * It is a name/value pair
  * 
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ActivationConfigPropertyMetaData extends MetaData
 {
@@ -33,6 +33,25 @@ public class ActivationConfigPropertyMetaData extends MetaData
 
    // Constructors --------------------------------------------------
 
+   /**
+    * Create a new Activation Config Property MetaData object
+    */
+   public ActivationConfigPropertyMetaData()
+   {
+   }
+
+   /**
+    * Create a new Activation Config Property MetaData object
+    *
+    * @param name the name
+    * @param value the value 
+    */
+   public ActivationConfigPropertyMetaData(String name, String value)
+   {
+      this.name = name;
+      this.value = value;
+   }
+   
    // Public --------------------------------------------------------
 
    /**
@@ -51,7 +70,7 @@ public class ActivationConfigPropertyMetaData extends MetaData
       return value;
    }
 
-   public void importEjbJarXml(Element element) throws DeploymentException
+   public void importXml(Element element) throws DeploymentException
    {
       name = getElementContent(getUniqueChild(element, "activation-config-property-name"));
       value = getElementContent(getUniqueChild(element, "activation-config-property-value"));

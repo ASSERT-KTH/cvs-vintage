@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -223,9 +223,9 @@ public class MessageDrivenMetaData
     * 
     * @return a collection of ActivationConfigPropertyMetaData elements
     */
-   public Collection getActivationConfigProperties()
+   public HashMap getActivationConfigProperties()
    {
-      return activationConfigProperties.values();
+      return activationConfigProperties;
    }
    
    /**
@@ -354,7 +354,7 @@ public class MessageDrivenMetaData
          {
             Element resourceRef = (Element) iterator.next();
             ActivationConfigPropertyMetaData metaData = new ActivationConfigPropertyMetaData();
-            metaData.importEjbJarXml(resourceRef);
+            metaData.importXml(resourceRef);
             if (activationConfigProperties.containsKey(metaData.getName()))
                throw new DeploymentException("Duplicate activation-config-property-name: " + metaData.getName());
             activationConfigProperties.put(metaData.getName(), metaData);
@@ -373,6 +373,20 @@ public class MessageDrivenMetaData
       clientId = getOptionalChildContent(element,"mdb-client-id");
       subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
       resourceAdapterName = getOptionalChildContent(element,"resource-adapter-name");
+      
+      // Allow activation config properties to be overriden in jboss.xml
+      Element activationConfig = getOptionalChild(element, "activation-config");
+      if (activationConfig != null)
+      {
+         Iterator iterator = getChildrenByTagName(activationConfig, "activation-config-property");
+         while (iterator.hasNext())
+         {
+            Element resourceRef = (Element) iterator.next();
+            ActivationConfigPropertyMetaData metaData = new ActivationConfigPropertyMetaData();
+            metaData.importXml(resourceRef);
+            activationConfigProperties.put(metaData.getName(), metaData);
+         }
+      }
    }
    
    public void defaultInvokerBindings()   

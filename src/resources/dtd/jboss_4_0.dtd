@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.15 2004/08/10 13:58:46 tdiesler Exp $
+$Id: jboss_4_0.dtd,v 1.16 2004/08/11 20:29:41 ejort Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -262,7 +262,7 @@ the ejb container configurations.
 and other configuration options to use for the various EJB proxies.
 -->
 <!ELEMENT proxy-factory-config (client-interceptors?, endpoint-interceptors? , web-class-loader? ,
-JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
+activation-config?, JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
 KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
 jnp-context?)>
 
@@ -422,7 +422,7 @@ jnp-context?)>
 
   Used in: enterprise-beans
 -->
-<!ELEMENT message-driven (ejb-name , destination-jndi-name ,
+<!ELEMENT message-driven (ejb-name , activation-config?, destination-jndi-name? ,
  mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? , resource-adapter-name? ,
  configuration-name? , invoker-bindings?,
  security-proxy? , ejb-ref* ,  ejb-local-ref*, service-ref*, security-identity?, resource-ref*,
@@ -1541,3 +1541,33 @@ Example :
 
 -->
 <!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!--
+Activation config
+
+used in message-driven and proxy-factory-config
+-->
+<!ELEMENT activation-config ( activation-config-property* )>
+
+<!--
+Activation config properties 
+
+used in activation-config
+-->
+<!ELEMENT activation-config-property ( activation-config-property-name, 
+                                       activation-config-property-value )>
+
+<!--
+Activation config property name
+
+used in activation-config-property
+-->
+<!ELEMENT activation-config-property-name ( #PCDATA )>
+
+<!--
+Activation config property value
+
+used in activation-config-property
+-->
+<!ELEMENT activation-config-property-value ( #PCDATA )>
+                                       
