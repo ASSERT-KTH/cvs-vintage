@@ -119,8 +119,8 @@
 	 <separator/>
 	 <extensionpoint name="mail_bottom" />	
 	 <separator/>
-	 <menuitem action="MailImport"/>
 	 <menuitem action="ExportDialog"/>
+	 <menuitem action="MailImport"/>
 	</menu>
 	
 	</menubar>

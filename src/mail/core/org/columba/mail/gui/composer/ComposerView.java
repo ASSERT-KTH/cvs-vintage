@@ -95,14 +95,14 @@ public class ComposerView extends AbstractFrameView {
 		FormLayout layout =
 			new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",
 			// 2 columns
-	"fill:pref, 3dlu, fill:pref, 3dlu, fill:pref, 3dlu"); // 3 row 
+	"fill:pref, 3dlu,fill:pref, 3dlu, fill:pref, 3dlu, fill:pref, 3dlu"); // 3 row 
 
 		PanelBuilder builder = new PanelBuilder(topPanel, layout);
 		CellConstraints cc = new CellConstraints();
 
 		layout.setColumnGroups(new int[][] { { 1 }
 		});
-		layout.setRowGroups(new int[][] { { 1, 3, 5 }
+		layout.setRowGroups(new int[][] { { 1, 5, 7 }
 		});
 
 		builder.add(smtpLabel, cc.xy(1, 1));
@@ -118,80 +118,16 @@ public class ComposerView extends AbstractFrameView {
 		b.add(controller.getPriorityController().view, c.xy(5, 1));
 
 		builder.add(smtpPanel, cc.xy(3, 1));
+		
+		builder.add(rightSplitPane, cc.xywh(1,3,4,1));
 
-		builder.add(subjectLabel, cc.xy(1, 3));
-		/*
-		JPanel subjectPanel = new JPanel();
-		l = new FormLayout("fill:default, 3dlu", "default");
-		b = new PanelBuilder(subjectPanel, l);
-		c = new CellConstraints();
-		b.add(controller.getSubjectController().view, c.xy(1, 1));
+		builder.add(subjectLabel, cc.xy(1, 5));
 		
-		builder.add(subjectPanel, cc.xy(3,3));
-		*/
-		builder.add(controller.getSubjectController().view, cc.xy(3,3));
-		/*
+		builder.add(controller.getSubjectController().view, cc.xy(3,5));
 		
-		*/
 		// add JPanel with useful HTML related actions.
 		HtmlToolbar htmlToolbar = new HtmlToolbar(controller, builder);
 
-		//builder.add(htmlToolbar, cc.xywh(1, 5, 7, 1));
-		/*
-		GridBagLayout gridbag = new GridBagLayout();
-		
-		topPanel.setLayout(gridbag);
-		
-		GridBagConstraints c = new GridBagConstraints();
-		
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = 0.0;
-		c.insets = new Insets(0, 0, 5, 5);
-		gridbag.setConstraints(smtpLabel, c);
-		topPanel.add(smtpLabel);
-		
-		c.gridx = 1;
-		c.weightx = 1.0;
-		gridbag.setConstraints(controller.getAccountController().view, c);
-		topPanel.add(controller.getAccountController().view);
-		
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		c.gridx = 2;
-		c.weightx = 0.0;
-		gridbag.setConstraints(priorityLabel, c);
-		topPanel.add(priorityLabel);
-		
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridx = 3;
-		gridbag.setConstraints(controller.getPriorityController().view, c);
-		topPanel.add(controller.getPriorityController().view);
-		
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		gridbag.setConstraints(subjectLabel, c);
-		topPanel.add(subjectLabel);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 1;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 1.0;
-		gridbag.setConstraints(controller.getSubjectController().view, c);
-		topPanel.add(controller.getSubjectController().view);
-		
-		
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.weightx = 1.0;
-		gridbag.setConstraints(htmlToolbar, c);
-		topPanel.add(htmlToolbar);
-		*/
 
 		editorPanel = new JPanel();
 		editorPanel.setBorder(null);
@@ -211,13 +147,15 @@ public class ComposerView extends AbstractFrameView {
 		centerPanel.add(topPanel, BorderLayout.NORTH);
 		centerPanel.add(editorPanel, BorderLayout.CENTER);
 
+		/*
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 
 		mainPanel.add(rightSplitPane, BorderLayout.NORTH);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
-
-		contentPane.add(mainPanel, BorderLayout.CENTER);
+		*/
+		
+		contentPane.add(centerPanel, BorderLayout.CENTER);
 
 		pack();
 	}

@@ -225,8 +225,8 @@ public abstract class AbstractMenuGenerator {
 								next.getAttribute("checkboxaction"),
 								frameController);
 						if (action != null) {
-							JCheckBoxMenuItem menuitem =
-								new JCheckBoxMenuItem(action);
+							CCheckBoxMenuItem menuitem =
+								new CCheckBoxMenuItem(action);
 							// display tooltip in statusbar
 							menuitem.addMouseListener( frameController.getMouseTooltipHandler() );
 							menu.add(menuitem);

@@ -25,7 +25,6 @@ import javax.swing.text.StyleConstants;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
@@ -87,19 +86,8 @@ public class UnderlineFormatAction extends CheckBoxAction implements Observer {
 		AttributeSet attr = info.getTextAttributes();
 		boolean isUnderline = StyleConstants.isUnderline(attr);		
 
-		// TODO: Find some way to set the state of the toggle button
-		//       and -menu, i.e. whether it is pressed or not
-
-		/*
-		Boolean isSelected = (Boolean) arg1;
-		if (isSelected.equals(Boolean.TRUE)) {
-			// text is selected
-			setEnabled(true);
-		} else {
-			// no selection
-			setEnabled(false);
-		}
-		*/
+		// notify all observers to change their selection state
+		getObservable().setSelected(isUnderline);
 	}
 
 	/* (non-Javadoc)

@@ -22,21 +22,25 @@ import javax.swing.KeyStroke;
 import org.columba.core.gui.frame.AbstractFrameController;
 
 /**
- * @author frd
+ * Adds an Observable/Observer to {@link BasicAction}. 
+ * <p>
+ * This makes it possible to notify gui-elements like
+ * JCheckBoxMenuItem and JToogleButton, which are created using this
+ * action when their selection state changes.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class CheckBoxAction extends FrameAction {
 
 	private JCheckBoxMenuItem checkBoxMenuItem;
+	SelectionStateObservable observable;
 
 	public CheckBoxAction(
 		AbstractFrameController frameController,
 		String name) {
 		super(frameController, name);
+		
+		observable = new SelectionStateObservable();
 	}
 	
 	/**
@@ -107,9 +111,9 @@ public class CheckBoxAction extends FrameAction {
 	}
 
 	/**
-		 * Returns the checkBoxMenuItem.
-		 * @return JCheckBoxMenuItem
-		 */
+	 * Returns the checkBoxMenuItem.
+	 * @return JCheckBoxMenuItem
+	 */
 	public JCheckBoxMenuItem getCheckBoxMenuItem() {
 		return checkBoxMenuItem;
 	}
@@ -117,22 +121,46 @@ public class CheckBoxAction extends FrameAction {
 	/**
 	 * Sets the checkBoxMenuItem.
 	 * @param checkBoxMenuItem The checkBoxMenuItem to set
+	 * 
+	 * @deprecated Use Observable instead.
 	 */
 	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
 		this.checkBoxMenuItem = checkBoxMenuItem;
 		checkBoxMenuItem.setState(getInitState());
 	}
 
+	/**
+	 * @return
+	 * 
+	 * @deprecated Use Observable instead.
+	 */
 	public boolean getState() {
 		return checkBoxMenuItem.getState();
 	}
 
+	/**
+	 * @param value
+	 * 
+	 * @deprecated Use Observable instead.
+	 */
 	public void setState(boolean value) {
 		checkBoxMenuItem.setState(value);
 	}
 
+	/**
+	 * @return
+	 * 
+	 * @deprecated Use Observable instead.
+	 */
 	protected boolean getInitState() {
 		return false;
+	}
+
+	/**
+	 * @return	selection state observable
+	 */
+	public SelectionStateObservable getObservable() {
+		return observable;
 	}
 
 }

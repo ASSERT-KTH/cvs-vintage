@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
 
-import org.columba.core.action.FrameAction;
+import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
@@ -25,7 +25,7 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
-public class RightJustifyAction extends FrameAction {
+public class RightJustifyAction extends CheckBoxAction {
 
 	/**
 	 * @param frameController

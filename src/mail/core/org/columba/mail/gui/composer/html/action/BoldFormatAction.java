@@ -85,20 +85,9 @@ public class BoldFormatAction extends CheckBoxAction implements Observer {
 		AttributeSet attr = info.getTextAttributes();
 		boolean isBold = StyleConstants.isBold(attr);		
 
-		// TODO: Find some way to set the state of the toggle button
-		//       and -menu, i.e. whether it is pressed or not
-		////this.setState(isBold); // THIS DOESN'T WORK!
+		// notify all observers to change their selection state
+		getObservable().setSelected(isBold);
 
-		/*
-		Boolean isSelected = (Boolean) arg1;
-		if (isSelected.equals(Boolean.TRUE)) {
-			// text is selected
-			setEnabled(true);
-		} else {
-			// no selection
-			setEnabled(false);
-		}
-		*/
 	}
 
 	/* (non-Javadoc)

@@ -55,16 +55,7 @@ public class HtmlToolbar implements ActionListener {
 	}
 
 	protected void initComponents(PanelBuilder builder) throws Exception {
-		/*
-		//		Create a FormLayout instance. 
-		FormLayout layout =
-			new FormLayout(
-				"max(20dlu;pref), 3dlu, default, 3dlu, default, 3dlu, default, 6dlu, default, 3dlu, default, 3dlu, default, 3dlu, default, 6dlu, default, 3dlu, default, 3dlu, default, 3dlu",
-			// columns
-		"pref"); // 1 row 
 		
-		PanelBuilder builder = new PanelBuilder(this, layout);
-		*/
 		CellConstraints cc = new CellConstraints();
 
 		// we generate most buttons using the actions already instanciated
@@ -84,13 +75,16 @@ public class HtmlToolbar implements ActionListener {
 		paragraphComboBox = new JComboBox(ParagraphMenu.STYLES);
 		paragraphComboBox.setActionCommand("PARA");
 		paragraphComboBox.addActionListener(this);
+		paragraphComboBox.setFocusable(false);
+		
 		// TODO: localize
 		JLabel sizeLabel = new JLabel("Size:");
 		sizeComboBox = new JComboBox(FontSizeMenu.SIZES);
 		sizeComboBox.setActionCommand("SIZE");
 		sizeComboBox.addActionListener(this);
 		sizeComboBox.setSelectedIndex(2);
-
+		sizeComboBox.setFocusable(false);
+		
 		ToggleToolbarButton boldFormatButton =
 			new ToggleToolbarButton(
 				handler.getAction("BoldFormatAction", getFrameController()));
@@ -118,7 +112,7 @@ public class HtmlToolbar implements ActionListener {
 			new ToggleToolbarButton(
 				handler.getAction("RightJustifyAction", getFrameController()));
 
-		builder.add(paraLabel, cc.xy(1, 5));
+		builder.add(paraLabel, cc.xy(1, 7));
 
 		// nested panel
 		JPanel panel = new JPanel();
@@ -141,7 +135,7 @@ public class HtmlToolbar implements ActionListener {
 		b.add(centerJustifyButton, cc.xy(17, 1));
 		b.add(rightJustifyButton, cc.xy(19, 1));
 
-		builder.add(panel, cc.xy(3, 5));
+		builder.add(panel, cc.xy(3, 7));
 	}
 
 	/**
