@@ -71,16 +71,18 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.25 $
+ *      @version $Revision: 1.26 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
    implements ContainerRemote, ContainerInvoker, XmlLoadable
 {
    // Constants -----------------------------------------------------
+   protected final static int ANONYMOUS_PORT = -5;
 
    // Attributes ----------------------------------------------------
    protected boolean optimize = false;
+   protected int unicastObjectPort = ANONYMOUS_PORT;
    protected Container container;
    protected String jndiName;
    protected EJBMetaDataImpl ejbMetaData;
@@ -128,8 +130,8 @@ public abstract class JRMPContainerInvoker
    public MarshalledObject invokeHome(MarshalledObject mimo)
       throws Exception
    {
-	   
-	 
+
+
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
 
@@ -147,9 +149,9 @@ public abstract class JRMPContainerInvoker
         //if (tx == null)
          // tx = container.getTransactionManager().getTransaction();
 
-                                
+
 //DEBUG	 Logger.debug("JRMPCI:invokeHome "+rmi.getMethod().getName());
-	 
+
          return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
         rmi.getPrincipal(), rmi.getCredential() ));
       } catch (Exception e)
@@ -183,7 +185,7 @@ public abstract class JRMPContainerInvoker
 
 
 	   //DEBUG Logger.debug("JRMPCI:invoke "+m.getName());
-	 
+
          return new MarshalledObject(invoke(id, m, args, tx,
           rmi.getPrincipal(), rmi.getCredential()));
       } finally
@@ -198,11 +200,11 @@ public abstract class JRMPContainerInvoker
    {
 	   //DEBUG
 //DEBUG       Logger.debug("JRMPCI (local) :invokeHome "+m.getName());
-//DEBUG       if (tx != null) 
+//DEBUG       if (tx != null)
 //DEBUG		 	Logger.debug("Tx is "+tx.toString());
-//DEBUG       else 
+//DEBUG       else
 //DEBUG		 	Logger.debug("Tx is null");
-		  
+
 	   //DEBUG
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
         identity, credential));
@@ -214,9 +216,9 @@ public abstract class JRMPContainerInvoker
    {
 	   // DEBUG
 //DEBUG	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
-//DEBUG       if (tx != null) 
+//DEBUG       if (tx != null)
 //DEBUG		 	Logger.debug("Tx is "+tx.toString());
-//DEBUG       else 
+//DEBUG       else
 //DEBUG		 	Logger.debug("Tx is null");
 		//DEBUG
        return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
@@ -342,7 +344,10 @@ public abstract class JRMPContainerInvoker
             new SecureSocketFactory());
             */
 
-            UnicastRemoteObject.exportObject(this,4444);
+            if(unicastObjectPort == ANONYMOUS_PORT)
+                UnicastRemoteObject.exportObject(this);
+            else
+                UnicastRemoteObject.exportObject(this,unicastObjectPort);
             GenericProxy.addLocal(container.getBeanMetaData().getJndiName(), this);
 
             InitialContext context = new InitialContext();
@@ -397,6 +402,15 @@ public abstract class JRMPContainerInvoker
    public void importXml(Element element) throws DeploymentException {
        String opt = MetaData.getElementContent(MetaData.getUniqueChild(element, "Optimized"));
        optimize = Boolean.valueOf(opt).booleanValue();
+       try {
+          String port = MetaData.getElementContent(MetaData.getUniqueChild(element, "RMIObjectPort"));
+          unicastObjectPort = Integer.parseInt(port);
+       } catch(NumberFormatException e) {
+          unicastObjectPort = ANONYMOUS_PORT;
+       } catch(DeploymentException e) {
+          unicastObjectPort = ANONYMOUS_PORT;
+       }
+       Logger.debug("Container Invoker RMI Port='"+(unicastObjectPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(unicastObjectPort))+"'");
        Logger.debug("Container Invoker Optimize='"+optimize+"'");
    }
 
