@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.12 2001/12/05 11:28:49 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.13 2001/12/31 22:30:25 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -2389,6 +2389,9 @@ module.</p>
 <p>Generates the response for requests that map to static files or 
 directories.  The display of directory listings may be disabled.</p>
 
+<p>In Tomcat 3.3.1, some additional attributes were added to allow control
+of locale and character encoding of directory listings.</p>
+
 <h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -2402,12 +2405,33 @@ directories.  The display of directory listings may be disabled.</p>
     <td>Enables the display of directory listings when requested.</td>
     <td>true</td>
   </tr>
+  <tr valign="top">
+    <td>useAcceptLanguage<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Enables the use of an Accept-Language header in the request to determine
+        the locale. If <code>false</code>, then the system default locale (i.e.
+        Locale.getDefault()) is used.</td>
+    <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>useCharset<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Specfies the desired character set to use for encoding the directory
+        listings. If unset, the default ISO-8859-1 is used.  If set to
+        &quot;locale&quot;, then the locale established by the
+        <code>useAcceptLanguage</code> attribute is used.</td>
+    <td><i>not specified</i></td>
+  </tr>
 </table>
 
 <h4>Example(s)</h4>
 
 <pre>
 &lt;StaticInterceptor listing=&quot;false&quot; /&gt;
+&lt;StaticInterceptor listing=&quot;true&quot;
+        useAcceptLanguag=&quot;true&quot; useCharset=&quot;locale&quot;/&gt;
+&lt;StaticInterceptor listing=&quot;true&quot;
+        useAcceptLanguag=&quot;true&quot; useCharset=&quot;UTF-8&quot;/&gt;
+&lt;StaticInterceptor listing=&quot;true&quot;
+        useAcceptLanguag=&quot;false&quot; useCharset=&quot;locale&quot;/&gt;
 </pre>
 
 <hr size="5">
