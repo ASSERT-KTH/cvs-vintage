@@ -478,7 +478,7 @@
 
     <!-- XXX extract only the run-time component of jasper -->
     <copy file ="${tomcat.build}/lib/servlet.jar"
-        todir="${tomcat.build}/lib/shared" />
+        todir="${tomcat.build}/lib/common" />
     <copy file ="${tomcat.build}/lib/jasper.jar"
         todir="${tomcat.build}/lib/shared" />
     <copy file ="${tomcat.build}/lib/tomcat_util.jar"
