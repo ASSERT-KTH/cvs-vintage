@@ -99,6 +99,9 @@
   <property name="commons-logging.home" location="${jakarta-commons}/commons-logging-1.0.2" />
   <property name="commons-logging.lib" location="${commons-logging.home}" />
   <property name="commons-logging.jar" location="${commons-logging.lib}/commons-logging-api.jar" />
+  
+  <property name="regexp.home" location="${ws}/jakarta-regexp" />
+  <property name="regexp.jar" location="${regexp.home}/jakarta-regexp.jar" />
 
   <property name="commons-collections.home" location="${jakarta-commons}/collections"/>
   <property name="commons-collections.lib" location="${commons-collections.home}/dist"/>
@@ -413,6 +416,7 @@
             <property name="commons-logging.jar" value="${commons-logging.jar}"/>
             <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
             <property name="jmx.jar" value="${jmx.jar}"/>
+            <property name="regexp.jar" value="${regexp.jar}" />
         </ant>
             
         <ant dir="${jtc.jk.home}" target="build-jk">
