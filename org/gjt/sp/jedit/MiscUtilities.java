@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.4 2001/10/16 07:04:21 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.5 2001/10/31 08:51:53 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -542,6 +542,15 @@ loop:		for(int i = 0; i < str.length(); i++)
 			}
 		}
 		return buf.toString();
+	} //}}}
+
+	//{{{ compareVersions() method
+	/**
+	 * @deprecated Call <code>compareStrings()</code> instead
+	 */
+	public int compareVersions(String v1, String v2)
+	{
+		return compareStrings(v1,v2,false);
 	} //}}}
 
 	//{{{ compareStrings() method
