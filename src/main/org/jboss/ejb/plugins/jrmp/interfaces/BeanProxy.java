@@ -19,7 +19,7 @@ import javax.naming.NamingException;
  * An abstract base proxy class from which all bean proxys extend from.
  *
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class BeanProxy
    extends GenericProxy
@@ -133,7 +133,7 @@ public abstract class BeanProxy
       throws RemoteException
    {
       if( a == null )
-         return false;
+         return Boolean.FALSE;
 
       final EJBObject ejb = (EJBObject)a;
       final Object pk = ejb.getPrimaryKey();
