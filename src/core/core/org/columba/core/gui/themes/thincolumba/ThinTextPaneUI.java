@@ -24,7 +24,7 @@ public class ThinTextPaneUI extends BasicTextPaneUI {
 	}
 
 	protected void paintSafely(Graphics g) {
-		if (UIManager.get("antialiasing").equals("2")) {
+		if (UIManager.get("antialiasing").equals( new Integer(2))) {
 			Graphics2D g2 = (Graphics2D) g;
 
 			g2.setRenderingHint(
@@ -34,7 +34,7 @@ public class ThinTextPaneUI extends BasicTextPaneUI {
 			g2.setRenderingHint(
 				RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		} else if (UIManager.get("antialiasing").equals("1")) {
+		} else if (UIManager.get("antialiasing").equals(new Integer(1))) {
 
 			ThinUtilities.enableAntiAliasing(g);
 		}

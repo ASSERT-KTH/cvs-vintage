@@ -14,6 +14,8 @@
 
 package org.columba.core.gui.util;
 
+import java.awt.Insets;
+
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
@@ -32,6 +34,10 @@ public class CButton extends JButton
 	public CButton(BasicAction a)
 	{
 		super(a);
+		
+		setFocusable(false);
+		
+		setMargin( new Insets(1,1,1,1) );
 		
 		WindowItem item = MailConfig.getMainFrameOptionsConfig().getWindowItem();
 	

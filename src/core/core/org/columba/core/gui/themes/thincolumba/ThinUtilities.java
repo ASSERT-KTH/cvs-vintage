@@ -17,7 +17,7 @@ import javax.swing.UIManager;
 public class ThinUtilities {
 
 	public static void enableAntiAliasing(Graphics g) {
-		if (UIManager.get("antialiasing").equals("1")) {
+		if (UIManager.get("antialiasing").equals(new Integer(1))) {
 			Graphics2D g2 = (Graphics2D) g;
 
 			g2.setRenderingHint(

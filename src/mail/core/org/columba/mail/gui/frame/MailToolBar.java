@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.Box;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.CButton;
 
@@ -41,6 +40,10 @@ public class MailToolBar extends JToolBar {
 
 		addCButtons();
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
+		
+		
+		//setMargin( new Insets(0,0,0,0) );
+		
 		setFloatable(false);
 	}
 
@@ -103,6 +106,12 @@ public class MailToolBar extends JToolBar {
 
 		add(Box.createHorizontalGlue());
 
+		/*
+		Dimension d = new Dimension( 16,16 );
+		System.out.println("dim="+d);
+				
+		frame.getStatusBar().getImageSequenceTimer().setScaling(d);
+		*/
 		add(frame.getStatusBar().getImageSequenceTimer());
 
 	}

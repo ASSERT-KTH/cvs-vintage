@@ -14,18 +14,17 @@
 
 package org.columba.core.gui.statusbar;
 
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
@@ -40,8 +39,7 @@ import org.columba.core.gui.util.ImageLoader;
  * @author
  * @version 1.0
  */
-public class ImageSequenceTimer extends JPanel implements ActionListener
-{
+public class ImageSequenceTimer extends JButton implements ActionListener {
 	private javax.swing.Timer timer;
 	private ImageIcon[] images;
 	private ImageIcon restImage;
@@ -49,122 +47,130 @@ public class ImageSequenceTimer extends JPanel implements ActionListener
 	private int frameCount;
 
 	private Dimension scale;
-	
+
 	private static int DELAY = 50;
 
 	private int imageWidth;
 	private int imageHeight;
 
-	public ImageSequenceTimer()
-	{
+	public ImageSequenceTimer() {
+		super();
+
 		timer = new javax.swing.Timer(DELAY, this);
 		timer.setInitialDelay(0);
 		timer.setCoalesce(true);
+		setMargin(new Insets(0, 0, 0, 0));
+		setRolloverEnabled(true);
+		setBorder(null);
+		setContentAreaFilled(false);
+		setFocusable(false);
 
 		init();
-		
-	
+
 	}
 
-	protected void initDefault()
-	{
+	protected void initDefault() {
 		frameCount = 60;
 		frameNumber = 1;
 
 		imageWidth = 36;
 		imageHeight = 36;
 
-		
-		setPreferredSize(new Dimension(imageWidth, imageHeight));
+		//setPreferredSize(new Dimension(imageWidth, imageHeight));
 		/*
 		setMinimumSize(new Dimension(width, height));
 		*/
-		setMaximumSize(new Dimension(imageWidth, imageHeight));
-		
-		
+		//setMaximumSize(new Dimension(imageWidth, imageHeight));
+
 		images = new ImageIcon[frameCount];
 
-		for ( int i=0; i<frameCount; i++ )
-		{
+		for (int i = 0; i < frameCount; i++) {
 			StringBuffer buf = new StringBuffer();
-			
-			
-			if ( i<10 ) buf.append("00");
-			if ( ( i>=10 ) && ( i<100) ) buf.append("0");
-			
-			buf.append( Integer.toString(i) );
-			
+
+			if (i < 10)
+				buf.append("00");
+			if ((i >= 10) && (i < 100))
+				buf.append("0");
+
+			buf.append(Integer.toString(i));
+
 			buf.append(".png");
-			
-			images[i] = ImageLoader.getImageIcon( buf.toString() );
+
+			images[i] = ImageLoader.getImageIcon(buf.toString());
 		}
-		
+
 		restImage = ImageLoader.getImageIcon("rest.png");
-		
+
+		setIcon(restImage);
+
 	}
 
-	protected void init()
-	{
+	protected void init() {
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
 		String pulsator = item.getPulsator();
 
 		if (pulsator.toLowerCase().equals("default"))
 			initDefault();
-		else
-		{
-			try
-			{
-			File zipFile =
-				new File(
-					ConfigPath.getConfigDirectory() + "/pulsators/" + pulsator + ".jar");
-
-			String zipFileEntry = new String(pulsator + "/pulsator.properties");
-			//System.out.println("zipfileentry:"+zipFileEntry );
-
-			Properties properties = ImageLoader.loadProperties(zipFile, zipFileEntry);
-
-			String frameCountStr = (String) properties.getProperty("count");
-			frameCount = Integer.parseInt(frameCountStr);
-
-			String widthStr = (String) properties.getProperty("width");
-			imageWidth = Integer.parseInt(widthStr);
-
-			String heightStr = (String) properties.getProperty("height");
-			imageHeight = Integer.parseInt(heightStr);
-
-			/*
-			setPreferredSize(new Dimension(width, height));
-			setMinimumSize(new Dimension(width, height));
-			setMaximumSize(new Dimension(width, height));
-			*/
-			
-			images = new ImageIcon[frameCount];
-			for (int i = 0; i < frameCount; i++)
-			{
-				String istr = (new Integer(i)).toString();
-				String image = (String) properties.getProperty(istr);
-
-				zipFile =
+		else {
+			try {
+				File zipFile =
 					new File(
-						ConfigPath.getConfigDirectory() + "/pulsators/" + pulsator + ".jar");
+						ConfigPath.getConfigDirectory()
+							+ "/pulsators/"
+							+ pulsator
+							+ ".jar");
 
+				String zipFileEntry =
+					new String(pulsator + "/pulsator.properties");
+				//System.out.println("zipfileentry:"+zipFileEntry );
+
+				Properties properties =
+					ImageLoader.loadProperties(zipFile, zipFileEntry);
+
+				String frameCountStr = (String) properties.getProperty("count");
+				frameCount = Integer.parseInt(frameCountStr);
+
+				String widthStr = (String) properties.getProperty("width");
+				imageWidth = Integer.parseInt(widthStr);
+
+				String heightStr = (String) properties.getProperty("height");
+				imageHeight = Integer.parseInt(heightStr);
+
+				/*
+				setPreferredSize(new Dimension(width, height));
+				setMinimumSize(new Dimension(width, height));
+				setMaximumSize(new Dimension(width, height));
+				*/
+
+				images = new ImageIcon[frameCount];
+				for (int i = 0; i < frameCount; i++) {
+					String istr = (new Integer(i)).toString();
+					String image = (String) properties.getProperty(istr);
+
+					zipFile =
+						new File(
+							ConfigPath.getConfigDirectory()
+								+ "/pulsators/"
+								+ pulsator
+								+ ".jar");
+
+					zipFileEntry = new String(pulsator + "/" + image);
+
+					//System.out.println("zuifileentry:"+zipFileEntry);
+					images[i] =
+						new ImageIcon(
+							ImageLoader.loadImage(zipFile, zipFileEntry));
+				}
+
+				String image = (String) properties.getProperty("rest");
 				zipFileEntry = new String(pulsator + "/" + image);
 
-				//System.out.println("zuifileentry:"+zipFileEntry);
-				images[i] = new ImageIcon(ImageLoader.loadImage(zipFile, zipFileEntry));
-			}
-
-			String image = (String) properties.getProperty("rest");
-			zipFileEntry = new String(pulsator + "/" + image);
-
-			restImage = new ImageIcon(ImageLoader.loadImage(zipFile, zipFileEntry));
-			}
-			catch ( Exception ex )
-			{
+				restImage =
+					new ImageIcon(ImageLoader.loadImage(zipFile, zipFileEntry));
+			} catch (Exception ex) {
 				StringBuffer buf = new StringBuffer();
 				buf.append("Error while loading pulsator icons!");
-				JOptionPane.showMessageDialog(null, buf.toString() );
-
+				JOptionPane.showMessageDialog(null, buf.toString());
 
 				Config.getOptionsConfig().getThemeItem().setPulsator("default");
 
@@ -174,64 +180,32 @@ public class ImageSequenceTimer extends JPanel implements ActionListener
 
 	}
 
-	public void start()
-	{
+	public void start() {
 		if (!timer.isRunning())
 			timer.start();
 	}
 
-	public void stop()
-	{
+	public void stop() {
 		if (timer.isRunning())
 			timer.stop();
 
 		frameNumber = 0;
 
-		repaint();
+		setIcon(restImage);
 	}
 
-	public void actionPerformed(ActionEvent ev)
-	{
+	public void actionPerformed(ActionEvent ev) {
 		String action = ev.getActionCommand();
 
 		frameNumber++;
 
-		repaint();
-	}
-	
-	public void setScaling( Dimension d )
-	{
-		scale = d;
-		/*
-		int width = d.width;
-		int height = d.height;
-		
-		setPreferredSize(new Dimension(width, height));
-			setMinimumSize(new Dimension(width, height));
-			setMaximumSize(new Dimension(width, height));
-			*/
-	}
-
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		
-		/*
-		g.setColor( Color.BLACK );
-		Rectangle r = g.getClipBounds();
-		
-		g.fillRect( r.x, r.y, r.width, r.height );
-		*/
-		
-		int x=0; 
-		int y=0;
-				
-		
 		if (timer.isRunning())
-			g.drawImage(images[frameNumber % frameCount].getImage(), x, y, this);
+			setIcon(new ImageIcon(images[frameNumber % frameCount].getImage()));
 		else
-			g.drawImage(restImage.getImage(), x, y, this);
+			setIcon(restImage);
 
 	}
+
+	
 
 }

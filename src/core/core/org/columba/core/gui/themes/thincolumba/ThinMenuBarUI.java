@@ -17,6 +17,8 @@ import javax.swing.plaf.basic.BasicMenuBarUI;
 public class ThinMenuBarUI extends BasicMenuBarUI {
 
 	public static ComponentUI createUI(JComponent c) {
+		
+		
 		return new ThinMenuBarUI();
 	}
 

@@ -22,6 +22,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -29,6 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import org.columba.mail.gui.header.util.HeaderFieldTree;
 import org.columba.mail.gui.message.SecurityIndicator;
@@ -57,7 +60,12 @@ public class HeaderView extends JPanel implements ActionListener
 		securityIndicator = new SecurityIndicator();
 
 		//setBorder( BorderFactory.createEmptyBorder( 0,0,5,0 ) );
-		setBorder(UIManager.getBorder("HeaderView.border"));
+		//setBorder(UIManager.getBorder("HeaderView.border"));
+		
+		Border border = BorderFactory.createEtchedBorder();
+		Border margin = new EmptyBorder(2, 2, 2, 2);
+		setBorder( new CompoundBorder(border,margin) );
+		
 		setLayout(new BorderLayout());
 
 		add(securityIndicator, BorderLayout.EAST);
@@ -267,9 +275,11 @@ public class HeaderView extends JPanel implements ActionListener
 
 		font = UIManager.getFont("Label.font");
 
+		/*
 		Border border = UIManager.getBorder("HeaderView.border");
 		if (border != null)
 			setBorder(border);
+		*/
 	}
 
 	private JPanel createHeaderPanel(int index, int row)

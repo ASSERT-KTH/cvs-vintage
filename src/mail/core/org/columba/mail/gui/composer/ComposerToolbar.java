@@ -14,11 +14,11 @@
 
 package org.columba.mail.gui.composer;
 
+import java.awt.Insets;
+
 import javax.swing.JToolBar;
 
-import org.columba.core.config.WindowItem;
 import org.columba.core.gui.util.CButton;
-import org.columba.mail.config.MailConfig;
 
 /**
  * @author frd
@@ -34,6 +34,7 @@ public class ComposerToolbar extends JToolBar{
 	{
 		super();
 		
+		
 		/*
 		WindowItem item =
 			MailConfig
@@ -48,7 +49,7 @@ public class ComposerToolbar extends JToolBar{
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 		setFloatable(false);
 
-		addSeparator();
+		
 
 		toolButton =
 			new CButton(
