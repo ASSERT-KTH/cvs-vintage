@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.60 2002/05/08 19:55:32 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.61 2002/06/06 01:55:56 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -275,6 +275,9 @@ public interface ScarabUser extends User
      * @return a <code>Module[]</code> value
      */
     public Module[] getModules(String[] permissions, boolean showDeleted) 
+        throws Exception;
+
+    public List getCopyToModules(Module currentModule)
         throws Exception;
 
     /**

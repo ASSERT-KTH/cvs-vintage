@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.63 2002/05/23 17:10:58 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.64 2002/06/06 01:55:56 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -182,6 +182,13 @@ public class ScarabUserImpl
                 }
                 return Arrays.asList(modules);
             }
+            /**
+             * @see org.tigris.scarab.om.ScarabUser#getModules(String)
+             */
+            public Module[] getModules(String permission)
+            {
+                return getPrivateModules(permission);
+            }
         };
     }
     
@@ -217,9 +224,10 @@ public class ScarabUserImpl
     {
         return hasPermission(perm, module);
     }
-    private Module[] getPrivateModules(String[] permissions)
+    private Module[] getPrivateModules(String permission)
     {        
-        return getModules(permissions);
+        String[] perms = {permission};
+        return getModules(perms);
     }
     private Module[] getPrivateModules(String[] permissions, boolean showDeletedModules)
     {        
@@ -380,15 +388,12 @@ public class ScarabUserImpl
         return internalUser.getModules(showDeletedModules);
     }
 
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#getModules(String)
-     */
-    public Module[] getModules(String permission)
+
+    public Module[] getModules(String permission) throws Exception
     {
-        String[] perms = {permission};
-        return getModules(perms);
+        return internalUser.getModules(permission);
     }
-    
+
     private static final String GET_MODULES = 
         "getModules";
 
@@ -400,6 +405,14 @@ public class ScarabUserImpl
         return getModules(permissions, false);
     }
     
+    /**
+     * Get modules that user can move or copy an issue to.
+     */
+    public List getCopyToModules(Module currentModule) throws Exception
+    {        
+         return internalUser.getCopyToModules(currentModule);
+    }
+   
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[], boolean)
      */
