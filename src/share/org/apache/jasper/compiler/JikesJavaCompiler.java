@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.8 2001/03/25 13:33:45 nacho Exp $
- * $Revision: 1.8 $
- * $Date: 2001/03/25 13:33:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JikesJavaCompiler.java,v 1.9 2001/05/15 18:53:33 larryi Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/05/15 18:53:33 $
  *
  * ====================================================================
  *
@@ -77,14 +77,9 @@ public class JikesJavaCompiler implements JavaCompiler {
 
     static final int OUTPUT_BUFFER_SIZE = 1024;
     static final int BUFFER_SIZE = 512;
-    static final String q;
-    static {
-        if( System.getProperty("file.separator").equals("\\") ){
-            q="\"";
-        } else {
-            q="";
-        }
-    }
+    static final String q =
+            "\\".equals(System.getProperty("file.separator")) ? "\"" : "";
+
     /*
      * Contains extra classpath for Jikes use from Microsoft systems:
      * Microsoft does not report it's internal classpath in

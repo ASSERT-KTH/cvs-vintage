@@ -938,7 +938,7 @@ public class JspParseEventListener extends BaseJspListener {
         // if we haven't added a tag pool generator for this tag, then add one
         String tagPoolVarName = TagPoolGenerator.getPoolName(tli, ti, attrs);
         if (! tagPools.contains(tagPoolVarName)) {
-            tagPools.add(tagPoolVarName);
+            tagPools.addElement(tagPoolVarName);
             TagPoolGenerator tpg = new TagPoolGenerator(prefix, shortTagName, attrs, tli, ti);
             gen = new GeneratorWrapper(tpg, start, stop);
             addGenerator(gen);
