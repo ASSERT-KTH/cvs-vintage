@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import org.columba.addressbook.folder.AddressbookFolder;
@@ -33,7 +34,6 @@ import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.EditGroupDialog;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
-import org.columba.addressbook.gui.util.AddAddressbookDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.VCardParser;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -337,22 +337,20 @@ public class AddressbookActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		String command;
-
-		command = e.getActionCommand();
+		String command = e.getActionCommand();
 
 		if (command.equals(closeAction.getActionCommand())) {
 			addressbookInterface.frame.setVisible(false);
 		} else if (command.equals(addAddressbookAction.getActionCommand())) {
-			AddAddressbookDialog dialog =
-				new AddAddressbookDialog(addressbookInterface.frame);
-			dialog.showDialog("New Addressbook");
+			String name = JOptionPane.showInputDialog(
+					addressbookInterface.frame,
+					null, AddressbookResourceLoader.getString(
+						"menu", "mainframe", "add_addressbook_title"),
+					JOptionPane.PLAIN_MESSAGE);
 
-			if (dialog.success()) {
-				// Ok
-
-				String name = dialog.getName();
+			if (name != null) {
 				System.out.println("name:" + name);
+				
 			}
 		} else if (command.equals(addContactAction.getActionCommand())) {
 			ContactDialog dialog =
