@@ -31,11 +31,11 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class StatefulSessionContainer
    extends Container
-	implements ContainerInvokerContainer, InstancePoolContainer
+    implements ContainerInvokerContainer, InstancePoolContainer
 {
    // Constants -----------------------------------------------------
     
@@ -51,13 +51,13 @@ public class StatefulSessionContainer
    
    // This is the first interceptor in the chain. The last interceptor must be provided by the container itself
    protected Interceptor interceptor;
-	
+    
    // This is the instancepool that is to be used
    protected InstancePool instancePool;
-	
+    
    // This is the persistence manager for this container
    protected StatefulSessionPersistenceManager persistenceManager;
-	
+    
    protected InstanceCache instanceCache;
    
    // Static --------------------------------------------------------
@@ -68,17 +68,17 @@ public class StatefulSessionContainer
    public void setContainerInvoker(ContainerInvoker ci) 
    { 
       if (ci == null) 
-      	throw new IllegalArgumentException("Null invoker");
-   		
+        throw new IllegalArgumentException("Null invoker");
+        
       this.containerInvoker = ci; 
       ci.setContainer(this);
    }
 
    public ContainerInvoker getContainerInvoker() 
    { 
-   	return containerInvoker; 
+    return containerInvoker; 
    }
-	
+    
    public void setInstanceCache(InstanceCache ic)
    { 
       this.instanceCache = ic; 
@@ -93,17 +93,17 @@ public class StatefulSessionContainer
    public void setInstancePool(InstancePool ip) 
    { 
       if (ip == null)
-      	throw new IllegalArgumentException("Null pool");
-   		
+        throw new IllegalArgumentException("Null pool");
+        
       this.instancePool = ip; 
       ip.setContainer(this);
    }
 
    public InstancePool getInstancePool() 
    { 
-   	return instancePool; 
+    return instancePool; 
    }
-	
+    
    public StatefulSessionPersistenceManager getPersistenceManager() 
    { 
       return persistenceManager; 
@@ -135,9 +135,9 @@ public class StatefulSessionContainer
    
    public Interceptor getInterceptor() 
    { 
-   	return interceptor; 
+    return interceptor; 
    }
-	
+    
    public Class getHomeClass()
    {
       return homeInterface;
@@ -147,40 +147,40 @@ public class StatefulSessionContainer
    {
       return remoteInterface;
    }
-	
+    
    // Container implementation --------------------------------------
    public void init()
       throws Exception
    {
-   	  // Associate thread with classloader
+      // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
-	  // Acquire classes from CL
-	  homeInterface = classLoader.loadClass(metaData.getHome());
-	  remoteInterface = classLoader.loadClass(metaData.getRemote());
-		  
-  	  // Call default init
+      // Acquire classes from CL
+      homeInterface = classLoader.loadClass(metaData.getHome());
+      remoteInterface = classLoader.loadClass(metaData.getRemote());
+          
+      // Call default init
      super.init();
-	  
-	  // Map the bean methods
-	  setupBeanMapping();
-	  
-	  // Map the home methods
+      
+      // Map the bean methods
+      setupBeanMapping();
+      
+      // Map the home methods
      setupHomeMapping();
       
      // Init container invoker
      containerInvoker.init();
-	  
-	  // Init instance cache
+      
+      // Init instance cache
      instanceCache.init();
-		
+        
      // Initialize pool 
      instancePool.init();
-	  
+      
      // Init persistence
      persistenceManager.init();
-   	
+    
      // Initialize the interceptor by calling the chain
      Interceptor in = interceptor;
      while (in != null)
@@ -189,7 +189,7 @@ public class StatefulSessionContainer
         in.init();
         in = in.getNext();
      }
-	  
+      
      // Reset classloader  
      Thread.currentThread().setContextClassLoader(oldCl);
    }
@@ -197,11 +197,11 @@ public class StatefulSessionContainer
    public void start()
       throws Exception
    {
-	  // Associate thread with classloader
+      // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
       
-	  // Call default start
+      // Call default start
       super.start();
       
       // Start container invoker
@@ -212,96 +212,96 @@ public class StatefulSessionContainer
       
       // Start pool 
       instancePool.start();
-		
+        
       // Start persistence
       persistenceManager.start();
       
-		// Start all interceptors in the chain		
-		Interceptor in = interceptor;
-		while (in != null)
-		{
-		   in.start();
-		   in = in.getNext();
-		}
-		
-		// Reset classloader
+        // Start all interceptors in the chain      
+        Interceptor in = interceptor;
+        while (in != null)
+        {
+           in.start();
+           in = in.getNext();
+        }
+        
+        // Reset classloader
       Thread.currentThread().setContextClassLoader(oldCl);
       
    }
    
-	public void stop() 
-	{
-		// Associate thread with classloader
-		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(getClassLoader());
+    public void stop() 
+    {
+        // Associate thread with classloader
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClassLoader());
 
-		// Call default stop
-		super.stop();
+        // Call default stop
+        super.stop();
 
-		// Stop container invoker
-		containerInvoker.stop();
+        // Stop container invoker
+        containerInvoker.stop();
 
-		// Stop instance cache
-		instanceCache.stop();
+        // Stop instance cache
+        instanceCache.stop();
 
-		// Stop pool 
-		instancePool.stop();
-		
-		// Stop persistence
-		persistenceManager.stop();
+        // Stop pool 
+        instancePool.stop();
+        
+        // Stop persistence
+        persistenceManager.stop();
 
-		// Stop the instance pool
-		instancePool.stop();
+        // Stop the instance pool
+        instancePool.stop();
 
-		// Stop all interceptors in the chain		
-		Interceptor in = interceptor;
-		while (in != null)
-		{
-			in.stop();
-			in = in.getNext();
-		}
+        // Stop all interceptors in the chain       
+        Interceptor in = interceptor;
+        while (in != null)
+        {
+            in.stop();
+            in = in.getNext();
+        }
 
-		// Reset classloader
-		Thread.currentThread().setContextClassLoader(oldCl);
+        // Reset classloader
+        Thread.currentThread().setContextClassLoader(oldCl);
    }
    
     public void destroy()
    {
-	   // Associate thread with classloader
-	   ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-	   Thread.currentThread().setContextClassLoader(getClassLoader());
-	   
-	   // Call default destroy
-	   super.destroy();
-	   
-	   // Destroy container invoker
-	   containerInvoker.destroy();
-	   
-	   // Destroy instance cache
-	   instanceCache.destroy();
-	   
-	   // Destroy pool 
-	   instancePool.destroy();
-		
-	   // Destroy persistence
-	   persistenceManager.destroy();
-	   
-	   // Destroy all the interceptors in the chain		
-	   Interceptor in = interceptor;
-	   while (in != null)
-	   {
-	      in.destroy();
-	      in = in.getNext();
-	   }
-		
-	   // Reset classloader
-	   Thread.currentThread().setContextClassLoader(oldCl);
+       // Associate thread with classloader
+       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+       Thread.currentThread().setContextClassLoader(getClassLoader());
+       
+       // Call default destroy
+       super.destroy();
+       
+       // Destroy container invoker
+       containerInvoker.destroy();
+       
+       // Destroy instance cache
+       instanceCache.destroy();
+       
+       // Destroy pool 
+       instancePool.destroy();
+        
+       // Destroy persistence
+       persistenceManager.destroy();
+       
+       // Destroy all the interceptors in the chain     
+       Interceptor in = interceptor;
+       while (in != null)
+       {
+          in.destroy();
+          in = in.getNext();
+       }
+        
+       // Reset classloader
+       Thread.currentThread().setContextClassLoader(oldCl);
    }
    
    public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-	   return getInterceptor().invokeHome(mi);
+       return getInterceptor().invokeHome(mi);
    }
 
    /**
@@ -344,7 +344,7 @@ public class StatefulSessionContainer
    public EJBHome getEJBHome(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
-	   
+       
       return containerInvoker.getEJBHome();
    }
    
@@ -358,34 +358,34 @@ public class StatefulSessionContainer
    public EJBObject createHome(MethodInvocation mi)
       throws java.rmi.RemoteException, CreateException
    {
-	  getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
 
    // EJBHome implementation ----------------------------------------
    public void removeHome(Handle handle)
-   	throws java.rmi.RemoteException, RemoveException
+    throws java.rmi.RemoteException, RemoveException
    {
-   	// TODO
+    // TODO
    }
    
    public void removeHome(Object primaryKey)
-   	throws java.rmi.RemoteException, RemoveException
+    throws java.rmi.RemoteException, RemoveException
    {
-   	// TODO
+    // TODO
    }
    
    public EJBMetaData getEJBMetaDataHome()
-   	throws java.rmi.RemoteException
+    throws java.rmi.RemoteException
    {
-   	return getContainerInvoker().getEJBMetaData();
+    return getContainerInvoker().getEJBMetaData();
    }
    
    public HomeHandle getHomeHandleHome()
-   	throws java.rmi.RemoteException   
+    throws java.rmi.RemoteException   
    {
-   	// TODO
-   	return null;
+    // TODO
+    return null;
    }
       
    // Private -------------------------------------------------------
@@ -398,7 +398,7 @@ public class StatefulSessionContainer
       for (int i = 0; i < m.length; i++)
       {
          // Implemented by container
-         map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
+         map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
       }
       
       homeMapping = map;
@@ -412,20 +412,20 @@ public class StatefulSessionContainer
       Method[] m = remoteInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
-         if (!m[i].getDeclaringClass().equals(EJBObject.class))
+         if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
          {
             // Implemented by bean
             map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-		 
-		 }
+         
+         }
          else
          {
             try
             {
                // Implemented by container
-               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Method.class, Object[].class , StatefulSessionEnterpriseContext.class}));
+               map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
             
-			} catch (NoSuchMethodException e)
+            } catch (NoSuchMethodException e)
             {
                System.out.println(m[i].getName() + " in bean has not been mapped");
             }
