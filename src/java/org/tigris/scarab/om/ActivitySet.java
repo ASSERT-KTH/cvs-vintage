@@ -50,6 +50,8 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria; 
@@ -71,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.4 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.5 2002/12/20 04:46:05 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -147,8 +149,18 @@ public class ActivitySet
         // add data to context
         context.put("issue", issue);
         context.put("attachment", getAttachment());
-        context.put("activityList", getActivityList());
-                
+
+        List activityList = getActivityList();
+        context.put("activityList", activityList);
+        Iterator itr = activityList.iterator();
+        Set set = new HashSet(activityList.size());
+        while (itr.hasNext())
+        {
+            Activity activity = (Activity) itr.next();
+            set.add(activity.getDescription());
+        }
+        context.put("uniqueActivityDescriptions", set);
+
         if (subject == null)
         {
             subject = Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
