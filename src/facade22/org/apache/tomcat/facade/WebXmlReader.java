@@ -37,35 +37,35 @@ public class WebXmlReader extends BaseInterceptor {
 	validate=b;
     }
 
-    private Handler addServlet( Context ctx, String name, String classN )
-	throws TomcatException
-    {
-	ServletWrapper sw=new ServletWrapper(); // ctx.createHandler();
-	sw.setContext(ctx);
-	sw.setServletName( name );
-	sw.setServletClassName( classN);
-	ctx.addServlet( sw );
-	sw.setLoadOnStartUp( -2147483646 );
-	return sw;
-    }
+//     private Handler addServlet( Context ctx, String name, String classN )
+// 	throws TomcatException
+//     {
+// 	ServletInfo sw=new ServletInfo(); // ctx.createHandler();
+// 	sw.setContext(ctx);
+// 	sw.setServletName( name );
+// 	sw.setServletClassName( classN);
+// 	ctx.addServlet( sw.getHandler() );
+// 	sw.setLoadOnStartUp( -2147483646 );
+// 	return sw.getHandler();
+//     }
     
-    private void setDefaults( Context ctx )
-	throws TomcatException
-    {
-	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
-	// 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
-	//	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
-	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
+//     private void setDefaults( Context ctx )
+// 	throws TomcatException
+//     {
+// 	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
+// 	// 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
+// 	//	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
+// 	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
 
-// 	ctx.addServletMapping( "/servlet/*", "invoker");
-	ctx.addServletMapping( "*.jsp", "jsp");
+// // 	ctx.addServletMapping( "/servlet/*", "invoker");
+// 	ctx.addServletMapping( "*.jsp", "jsp");
 	
-	ctx.setSessionTimeOut( 30 );
+// 	ctx.setSessionTimeOut( 30 );
 
-	// mime-mapping - are build into MimeMap.
-	// Note that default mappings are based on existing registered types.
+// 	// mime-mapping - are build into MimeMap.
+// 	// Note that default mappings are based on existing registered types.
 
-    }
+//     }
 
 
     private void readDefaultWebXml( Context ctx ) throws TomcatException {
@@ -92,8 +92,9 @@ public class WebXmlReader extends BaseInterceptor {
 	ContextManager cm=ctx.getContextManager();
 	
 	try {
-	    // Default init
-	    setDefaults( ctx );
+	    // Defaults 
+	    ctx.addServletMapping( "*.jsp", "jsp");
+	    ctx.setSessionTimeOut( 30 );
 
 	    // We may read a "default" web.xml from INSTALL/conf/web.xml -
 	    // the code is commented out right now because we want to
@@ -185,14 +186,14 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/session-config/session-timeout", xh.methodParam(0));
 
 	    // Servlet
-	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.facade.ServletWrapper") ); // servlet-wrapper
+	    xh.addRule("web-app/servlet", xh.objectCreate("org.apache.tomcat.facade.ServletInfo") ); // servlet-wrapper
 	    xh.addRule("web-app/servlet", xh.setParent( "setContext") ); // remove it from stack when done
 	    //	    xh.addRule("web-app/servlet", xh.addChild("addServlet", "org.apache.tomcat.core.Handler") );
 
 	    xh.addRule("web-app/servlet", new XmlAction() {
 			   public void end( SaxContext xctx)
 			       throws Exception {
-			       ServletWrapper sw=(ServletWrapper)
+			       ServletInfo sw=(ServletInfo)
 				   xctx.currentObject();
 			       Context cctx=(Context)xctx.previousObject();
 			       sw.addServlet(cctx);
@@ -201,7 +202,7 @@ public class WebXmlReader extends BaseInterceptor {
 		   );
 	    // remove it from stack when done
 	    xh.addRule("web-app/servlet/servlet-name", xh.methodSetter("setServletName",0) );
-	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClass",0));
+	    xh.addRule("web-app/servlet/servlet-class", xh.methodSetter("setServletClassName",0));
 	    xh.addRule("web-app/servlet/jsp-file",xh.methodSetter("setPath",0));
 
 	    xh.addRule("web-app/servlet/security-role-ref", xh.methodSetter("addSecurityMapping", 3) );

@@ -73,7 +73,7 @@ import org.apache.jasper.runtime.*;
 import org.apache.jasper.compiler.*;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.ServletWrapper;
+import org.apache.tomcat.facade.ServletHandler;
 
 /**
  * Plug in the JSP engine (a.k.a Jasper)! 
@@ -128,30 +128,63 @@ public class JspInterceptor extends BaseInterceptor {
     public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
-	if( ! (sw instanceof ServletWrapper) )
+	if( ! (sw instanceof ServletHandler) )
 	    return;
-	Servlet theServlet = ((ServletWrapper)sw).getServlet();
-	if (theServlet instanceof HttpJspBase)  {
-	    if( debug > 0 )
-		log( "PreServletInit: HttpJspBase.setParentClassLoader" + sw );
-	    HttpJspBase h = (HttpJspBase) theServlet;
-	    h.setClassLoader(ctx.getClassLoader());
+	try {
+	    Servlet theServlet = ((ServletHandler)sw).getServlet();
+	    if (theServlet instanceof HttpJspBase)  {
+		if( debug > 0 )
+		    log( "PreServletInit: HttpJspBase.setParentClassLoader" +
+			 sw );
+		HttpJspBase h = (HttpJspBase) theServlet;
+		h.setClassLoader(ctx.getClassLoader());
+	    }
+	} catch(Exception ex ) {
+	    throw new TomcatException( ex );
 	}
     }
 
+    /** Detect if the request is for a JSP page and if it is find
+	the associated servlet name and compile if needed.
+
+	That insures that init() will take place on the equivalent
+	servlet - and behave exactly like a servlet.
+
+	A request is for a JSP if:
+	- the handler is a ServletHandler ( i.e. defined in web.xml
+	or dynamically loaded servlet ) and it has a "path" instead of
+	class name
+	- the handler has a special name "jsp". That means a *.jsp -> jsp
+	needs to be defined. This is a tomcat-specific mechanism ( not
+	part of the standard ) and allow users to associate other extensions
+	with JSP by using the "fictious" jsp handler.
+
+	An (cleaner?) alternative for mapping other extensions would be
+	to set them on JspInterceptor.
+    */
     public int requestMap( Request req ) {
-	Handler wrapper=(Handler)req.getHandler();
+	Handler wrapper=req.getHandler();
 
-	//	log( "Try: " + req );
-	
-	if( wrapper!=null && ! "jsp".equals( wrapper.getName())
-	    && wrapper.getPath() == null)
-	    return 0;
-
-	// XXX jsp handler is still needed
 	if( wrapper==null )
 	    return 0;
-	
+
+	// That's equivalent with the previous behavior
+	// of tomcat, where a special "jsp" handler was defined.
+
+	// we should change that - but we need a way to map
+	// other extensions, and that is backward compatible
+
+	// the condition is: continue if the request is mapped to
+	// the special "jsp" handler ( as result of *.jsp ) or
+	// to a named handler that has a path ( <servlet> defined with path)
+	if( ! ( "jsp".equals( wrapper.getName()) ||
+		( wrapper instanceof ServletHandler &&
+		  ((ServletHandler)wrapper).getServletInfo().getPath()
+		  != null)
+		)) {
+	    return 0;
+	}
+
 	Context ctx= req.getContext();
 
 	// If this Wrapper was already used, we have all the info
@@ -200,22 +233,24 @@ public class JspInterceptor extends BaseInterceptor {
 		     String servletName, String classN )
     {
 	Context ctx=req.getContext();
-	ServletWrapper wrapper=null;
+	Handler wrapper=null;
 	String servletPath=servletName;
 	// add the mapping - it's a "invoker" map ( i.e. it
 	// can be removed to keep memory under control.
 	// The memory usage is smaller than JspSerlvet anyway, but
 	// can be further improved.
 	try {
-	    wrapper=(ServletWrapper)ctx.getServletByName( servletName );
+	    wrapper=ctx.getServletByName( servletName );
 	    // We may want to replace the class and reset it if changed
 	    
 	    if( wrapper==null ) {
-		wrapper=new ServletWrapper();
+		wrapper=new ServletHandler();
 		wrapper.setContext(ctx);
-		wrapper.setServletName(servletName);
-		wrapper.setPath( servletPath );
+		wrapper.setName(servletName);
 		wrapper.setOrigin( Handler.ORIGIN_INVOKER );
+
+		((ServletHandler)wrapper).getServletInfo().
+		    setPath( servletPath );
 		ctx.addServlet( wrapper );
 		
 		ctx.addServletMapping( servletPath ,
@@ -224,7 +259,7 @@ public class JspInterceptor extends BaseInterceptor {
 		    log( "Added mapping " + servletPath +
 			 " path=" + servletPath );
 	    }
-	    wrapper.setServletClassName( classN );
+	    ((ServletHandler)wrapper).setServletClassName( classN );
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
 	    // set initial exception on the servlet if one is present
 	    if ( jspInfo.isExceptionPresent() ) {
@@ -232,11 +267,14 @@ public class JspInterceptor extends BaseInterceptor {
 		wrapper.setState(Handler.STATE_DISABLED);
 	    }
 	} catch( TomcatException ex ) {
-	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);
+	    log("mapJspPage: request=" + req +
+		", jspInfo=" + jspInfo +
+		", servletName=" + servletName +
+		", classN=" + classN, ex);
 	    return ;
 	}
 	req.setHandler( wrapper );
-	if( debug>0) log("Wrapper " + wrapper);
+	if( debug>0) log("Handler " + wrapper);
     }
 
     /** Convert the .jsp file to a java file, then compile it to class

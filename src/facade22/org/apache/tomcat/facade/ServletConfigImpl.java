@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/ServletConfigImpl.java,v 1.2 2000/09/24 18:10:57 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/24 18:10:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/ServletConfigImpl.java,v 1.3 2000/12/12 20:21:22 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/12/12 20:21:22 $
  *
  * ====================================================================
  *
@@ -79,9 +79,9 @@ import javax.servlet.http.*;
  */
 final class ServletConfigImpl implements ServletConfig {
 
-    ServletWrapper servletW;
+    ServletInfo servletW;
     
-    ServletConfigImpl( ServletWrapper sw) {
+    ServletConfigImpl( ServletInfo sw) {
 	servletW=sw;
     }
 

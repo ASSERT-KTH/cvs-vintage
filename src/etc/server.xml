@@ -226,7 +226,7 @@
 
         <!-- Loaded last since JSP's that load-on-startup use request handling -->
         <ContextInterceptor 
-            className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+            className="org.apache.tomcat.modules.facade22.LoadOnStartupInterceptor" />
 
         <!-- Loaded last since JSP's that load-on-startup use request handling -->
         <RequestInterceptor 

@@ -182,24 +182,16 @@ public class Handler {
 
     private int state=STATE_NEW;
     
-    Hashtable initArgs=null;
-
     // who creates the servlet definition
     protected int origin;
 
     protected String path;
-
-    protected String servletName;
-
-    protected int loadOnStartup=-1;
-    protected boolean loadingOnStartup=false;
 
     protected Exception errorException=null;
     
     // Debug
     protected int debug=0;
     protected Log logger=null;
-    protected String debugHead=null;
 
     private Counters cntr=new Counters( ACCOUNTS );
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
@@ -268,22 +260,6 @@ public class Handler {
     }
 
     // -------------------- Common servlet attributes
-    public void setLoadOnStartUp( int level ) {
-	loadOnStartup=level;
-    }
-
-    public int getLoadOnStartUp() {
-	return loadOnStartup;
-    }
-
-    public void setLoadingOnStartUp( boolean load ) {
-	loadingOnStartup=load;
-    }
-
-    public boolean getLoadingOnStartUp() {
-	return loadingOnStartup;
-    }
-
     /** Sets an exception that relates to the ability of the
 	servlet to execute.  An exception may be set by an
 	interceptor if there is an error during the creation
@@ -300,46 +276,17 @@ public class Handler {
 	return errorException;
     }
 
-    // -------------------- Jsp specific code
+//     // -------------------- Jsp specific code
     
-    public String getPath() {
-        return this.path;
-    }
+//     public String getPath() {
+//         return this.path;
+//     }
 
-    public void setPath(String path) {
-        this.path = path;
-	if( name==null )
-	    name=path; // the path will serve as servlet name if not set
-    }
-
-    // -------------------- Init params
-
-    /** Add configuration properties associated with this handler.
-     *  This is a non-final method, handler may override it with an
-     *  improved/specialized version.
-     */
-    public void addInitParam( String name, String value ) {
-	if( initArgs==null) {
-	    initArgs=new Hashtable();
-	}
-	initArgs.put( name, value );
-    }
-
-    public String getInitParameter(String name) {
-	if (initArgs != null) {
-            return (String)initArgs.get(name);
-        } else {
-            return null;
-        }
-    }
-    
-    public Enumeration getInitParameterNames() {
-        if (initArgs != null) {
-            return initArgs.keys();
-        } else {
-	    return EmptyEnumeration.getEmptyEnumeration();
-	}
-    }
+//     public void setPath(String path) {
+//         this.path = path;
+// 	if( name==null )
+// 	    name=path; // the path will serve as servlet name if not set
+//     }
 
     // -------------------- Methods --------------------
 

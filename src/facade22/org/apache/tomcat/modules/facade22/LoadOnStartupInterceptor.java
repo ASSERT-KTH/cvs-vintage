@@ -58,10 +58,11 @@
  */ 
 
 
-package org.apache.tomcat.context;
+package org.apache.tomcat.modules.facade22;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
@@ -127,9 +128,13 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 			servletName, Logger.WARNING);
 		else {
 		    try {
-			if( result.getPath() != null )
+			// special case for JSP - should be dealed with in
+			// ServletHandler !
+			if( result instanceof ServletHandler &&
+			    ((ServletHandler)result).getServletInfo().
+			    getPath() != null ) {
 			    loadJsp( ctx, result );
-			else {
+			} else {
 			    result.init();
 			}
 		    } catch (Exception ee) {
@@ -151,7 +156,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	
 	// Ugly code to trick JSPServlet into loading this.
 	ContextManager cm=context.getContextManager();
-	String path=result.getPath();
+	String path=((ServletHandler)result).getServletInfo().getPath();
 	Request request = new Request();
 	Response response = new Response();
 	request.recycle();
@@ -174,9 +179,13 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	Enumeration enum=ctx.getServletNames();
 	while(enum.hasMoreElements()) {
 	    String name=(String)enum.nextElement();
-	    Handler sw= ctx.getServletByName( name );
-	    if( sw.getLoadingOnStartUp() ) {
-		Integer level=new Integer(sw.getLoadOnStartUp());
+	    Handler h=ctx.getServletByName( name );
+	    if( ! ( h instanceof ServletHandler ) )
+		continue;
+	    ServletHandler sw= (ServletHandler)h;
+	    if( sw.getServletInfo().getLoadingOnStartUp() ) {
+		Integer level=new Integer(sw.getServletInfo().
+					  getLoadOnStartUp());
 		Vector v;
 		if( loadableServlets.get(level) != null ) 
 		    v=(Vector)loadableServlets.get(level);

@@ -353,7 +353,8 @@ public class EmbededTomcat { // extends WebService
 	addInterceptor( wdI );
 
 	
-	LoadOnStartupInterceptor loadOnSI=new LoadOnStartupInterceptor();
+	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.modules.facade22.LoadOnStartupInterceptor");
+	//	LoadOnStartupInterceptor loadOnSI=new LoadOnStartupInterceptor();
 	addInterceptor( loadOnSI );
 
 	// Debug
