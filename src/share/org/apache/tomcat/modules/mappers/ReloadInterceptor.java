@@ -190,7 +190,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		// save the ones with the same context, they are local
 		eI=ctx.getContainer().getInterceptors();
 		for(int i=0; i < eI.length ; i++)
-		    if(ctx == eI[i].getContext()) sI.add(eI[i]);
+		    if(ctx == eI[i].getContext()) sI.addElement(eI[i]);
                 
 		Enumeration e;
 		// Need to find all the "config" that
