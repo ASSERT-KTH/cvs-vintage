@@ -58,9 +58,9 @@ import org.apache.torque.om.NumberKey;
 /** 
  * This class manages Attachment objects.  
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttachmentManager.java,v 1.4 2002/06/20 22:03:54 jon Exp $
+ * @version $Id: AttachmentManager.java,v 1.5 2002/10/15 20:54:39 jon Exp $
  */
 public class AttachmentManager
     extends BaseAttachmentManager

@@ -60,9 +60,9 @@ import org.tigris.scarab.services.cache.ScarabCache;
 /** 
  * This class manages ActivitySetType objects.  
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetTypeManager.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
+ * @version $Id: ActivitySetTypeManager.java,v 1.2 2002/10/15 20:54:39 jon Exp $
  */
 public class ActivitySetTypeManager
     extends BaseActivitySetTypeManager

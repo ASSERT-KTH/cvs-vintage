@@ -60,10 +60,10 @@ import org.tigris.scarab.util.ScarabException;
 /** 
  * This class represents a Dependency object from the SCARAB_DEPEND table.
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.13 2002/10/04 01:51:32 jon Exp $
+ * @version $Id: Depend.java,v 1.14 2002/10/15 20:54:39 jon Exp $
  */
 public class Depend 
     extends BaseDepend

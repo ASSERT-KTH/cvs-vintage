@@ -58,9 +58,9 @@ import org.apache.torque.om.Persistent;
 /** 
  * This class manages ActivitySet objects.
  *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
+ * @version $Id: ActivitySetManager.java,v 1.2 2002/10/15 20:54:39 jon Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager

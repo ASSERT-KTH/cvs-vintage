@@ -52,10 +52,10 @@ import org.apache.torque.om.Persistent;
 /** 
  * This class represents a DependType
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependType.java,v 1.11 2002/08/21 23:09:16 jon Exp $
+ * @version $Id: DependType.java,v 1.12 2002/10/15 20:54:39 jon Exp $
  */
 public class DependType 
     extends BaseDependType

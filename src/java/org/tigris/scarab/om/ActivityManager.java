@@ -57,9 +57,9 @@ import org.apache.torque.om.Persistent;
 /** 
  * This class manages Activity objects.  
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.7 2002/10/04 01:50:19 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.8 2002/10/15 20:54:39 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
