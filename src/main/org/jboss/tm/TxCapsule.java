@@ -7,8 +7,6 @@
 package org.jboss.tm;
 
 import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -37,7 +35,6 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  TxCapsule holds all the information relevant to a transaction.
  *  Callbacks and synchronizations are held here.
  *
- *  TODO: Implement timeouts.
  *  TODO: Implement persistent storage and recovery.
  *
  *  @see TxManager
@@ -46,23 +43,21 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
 class TxCapsule implements TimeoutTarget
 {
    // Constants -----------------------------------------------------
 
+   // Trace enabled flag
+   static private final boolean trace = true;
+
    // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
    static private final int HEUR_NONE     = XAException.XA_RETRY;
 
    // Attributes ----------------------------------------------------
-   
+
    // Static --------------------------------------------------------
-
-   static private int nextId = 0;
-   static private synchronized int getNextId() { return nextId++; }
-
-   private static String hostName;
 
    // Constructors --------------------------------------------------
 
@@ -90,10 +85,39 @@ class TxCapsule implements TimeoutTarget
     */
    private TxCapsule(TxManager tm)
    {
-      int hashCode = getNextId();
-      xid = new XidImpl((getHostName()+"/"+hashCode).getBytes(), null);
-      transaction = new TransactionImpl(tm, hashCode, xid);
+      xid = new XidImpl();
       this.tm = tm;
+   }
+
+   /**
+    *  Create a new front for this transaction.
+    */
+   TransactionImpl createTransactionImpl()
+   {
+      TransactionImpl tx = new TransactionImpl(this, xid);
+      addTransaction(tx);
+
+      return tx;
+   }
+
+   /**
+    *  Prepare this instance for reuse.
+    */
+   void reUse(int timeout)
+   {
+      if (!done)
+        throw new IllegalStateException();
+
+      done = false;
+      resourcesEnded = false;
+
+      xid = new XidImpl();
+
+      status = Status.STATUS_ACTIVE;
+      heuristicCode = HEUR_NONE;
+
+      start = System.currentTimeMillis();
+      this.timeout = TimeoutFactory.createTimeout(start+timeout, this);
    }
 
    // Public --------------------------------------------------------
@@ -139,7 +163,7 @@ class TxCapsule implements TimeoutTarget
             status = Status.STATUS_MARKED_ROLLBACK;
             // fall through..
          case Status.STATUS_MARKED_ROLLBACK:
-            suspendedResourcesDone();
+            endResources();
             rollbackResources();
             doAfterCompletion();
             gotHeuristic(null, XAException.XA_HEURRB);
@@ -166,10 +190,17 @@ class TxCapsule implements TimeoutTarget
    // Package protected ---------------------------------------------
 
    /**
-    *  Return the transaction encapsulated here.
+    *  Import a transaction encapsulated here.
     */
-   Transaction getTransaction() {
-      return transaction;
+   void importTransaction(TransactionImpl tx) {
+      try {
+         lock();
+
+         tx.setTxCapsule(this);
+         addTransaction(tx);
+      } finally {
+        unlock();
+      }
    }
 
    /**
@@ -186,10 +217,12 @@ class TxCapsule implements TimeoutTarget
              SystemException
    {
       try {
-         //DEBUG Logger.debug("TxCapsule before lock");
-		 lock();
-         //DEBUG Logger.debug("TxCapsule after lock status is "+getStringStatus(status));
-		 
+         lock();
+
+         if (trace)
+            Logger.debug("TxCapsule.commit(): Entered, status=" +
+                         getStringStatus(status));
+
          switch (status) {
          case Status.STATUS_PREPARING:
             throw new IllegalStateException("Already started preparing.");
@@ -198,11 +231,13 @@ class TxCapsule implements TimeoutTarget
          case Status.STATUS_ROLLING_BACK:
             throw new IllegalStateException("Already started rolling back.");
          case Status.STATUS_ROLLEDBACK:
+            instanceDone();
             checkHeuristics();
             throw new IllegalStateException("Already rolled back.");
          case Status.STATUS_COMMITTING:
             throw new IllegalStateException("Already started committing.");
          case Status.STATUS_COMMITTED:
+            instanceDone();
             checkHeuristics();
             throw new IllegalStateException("Already committed.");
          case Status.STATUS_NO_TRANSACTION:
@@ -210,37 +245,42 @@ class TxCapsule implements TimeoutTarget
          case Status.STATUS_UNKNOWN:
             throw new IllegalStateException("Unknown state");
          case Status.STATUS_MARKED_ROLLBACK:
-            suspendedResourcesDone();
+            endResources();
             rollbackResources();
             doAfterCompletion();
+            cancelTimeout();
+            instanceDone();
+            checkHeuristics();
             throw new RollbackException("Already marked for rollback");
          case Status.STATUS_ACTIVE:
-			 //DEBUG Logger.debug("Commiting tx with status Active");
             break;
          default:
             throw new IllegalStateException("Illegal status: " + status);
          }
 
-         suspendedResourcesDone();
-
          doBeforeCompletion();
 
-		 Logger.debug("Before completion is done status is "+getStringStatus(status));
-		 
+         if (trace)
+            Logger.debug("TxCapsule.commit(): Before completion done, " +
+                         "status=" + getStringStatus(status));
+
+         endResources();
+
          if (status == Status.STATUS_ACTIVE) {
-            if (resources.size() == 0) {
-				//DEBUG Logger.debug("no resources 0 phi commit");
+            if (resourceCount == 0) {
                // Zero phase commit is really fast ;-)
+               if (trace)
+                  Logger.debug("TxCapsule.commit(): No resources.");
                status = Status.STATUS_COMMITTED;
-            } else if (resources.size() == 1) {
-               // DEBUG Logger.debug("1 resource 1 phi commit");
-			   // One phase commit
-			   
+            } else if (resourceCount == 1) {
+               // One phase commit
+               if (trace)
+                  Logger.debug("TxCapsule.commit(): One resource.");
                commitResources(true);
             } else {
-				
-				// DEBUG Logger.debug("many resources 2 phi commit");
                // Two phase commit
+               if (trace)
+                  Logger.debug("TxCapsule.commit(): Many resources.");
 
                if (!prepareResources()) {
                   boolean commitDecision =
@@ -262,48 +302,24 @@ class TxCapsule implements TimeoutTarget
             rollbackResources();
             doAfterCompletion();
             cancelTimeout();
-            throw new RollbackException("Unable to commit transaction has status. "+getStringStatus(status));
+            instanceDone();
+            throw new RollbackException("Unable to commit, status=" +
+                                        getStringStatus(status));
          }
 
          cancelTimeout();
-
          doAfterCompletion();
-
+         instanceDone();
          checkHeuristics();
+
+         if (trace)
+            Logger.debug("TxCapsule.commit(): Committed OK.");
+
       } finally {
         unlock();
       }
    }
 
-	private String getStringStatus(int status) {
-		
-		 switch (status) {
-         case Status.STATUS_PREPARING:
-            return "STATUS_PREPARING";
-         case Status.STATUS_PREPARED:
-            return "STATUS_PREPARED";
-         case Status.STATUS_ROLLING_BACK:
-            return "STATUS_ROLLING_BACK";
-         case Status.STATUS_ROLLEDBACK:
-            return "STATUS_ROLLEDBACK";
-         case Status.STATUS_COMMITTING:
-            return "STATUS_COMMITING";
-         case Status.STATUS_COMMITTED:
-            return "STATUS_COMMITED";
-         case Status.STATUS_NO_TRANSACTION:
-            return "STATUS_NO_TRANSACTION";
-         case Status.STATUS_UNKNOWN:
-            return "STATUS_UNKNOWN";
-         case Status.STATUS_MARKED_ROLLBACK:
-            return "STATUS_MARKED_ROLLBACK";
-         case Status.STATUS_ACTIVE:
-			return "STATUS_ACTIVE"; 
-          
-         default:
-		 	return "STATUS_UNKNOWN";
-		}
-            
-	}
    /**
     *  Rollback the transaction encapsulated here.
     *  Should not be called directly, use <code>TxManager.rollback()</code>
@@ -317,13 +333,18 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
+         if (trace)
+            Logger.debug("TxCapsule.rollback(): Entered, status=" +
+                         getStringStatus(status));
+
          switch (status) {
          case Status.STATUS_ACTIVE:
          case Status.STATUS_MARKED_ROLLBACK:
-            suspendedResourcesDone();
+            endResources();
             rollbackResources();
             cancelTimeout();
             doAfterCompletion();
+            instanceDone();
             // Cannot throw heuristic exception, so we just have to
             // clear the heuristics without reporting.
             heuristicCode = HEUR_NONE;
@@ -333,7 +354,8 @@ class TxCapsule implements TimeoutTarget
             status = Status.STATUS_MARKED_ROLLBACK;
             return; // commit() will do rollback.
          default:
-            throw new IllegalStateException("Cannot rollback()");
+            throw new IllegalStateException("Cannot rollback(), status=" +
+                                            getStringStatus(status));
          }
       } finally {
          unlock();
@@ -352,6 +374,10 @@ class TxCapsule implements TimeoutTarget
    {
       try {
          lock();
+
+         if (trace)
+            Logger.debug("TxCapsule.setRollbackOnly(): Entered, status=" +
+                         getStringStatus(status));
 
          switch (status) {
          case Status.STATUS_ACTIVE:
@@ -404,7 +430,13 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
-         if (!resources.contains(xaRes))
+         if (trace)
+            Logger.debug("TxCapsule.delistResource(): Entered, status=" +
+                         getStringStatus(status));
+
+         int idx = findResource(xaRes);
+
+         if (idx == -1)
            throw new IllegalArgumentException("xaRes not enlisted");
 
          switch (status) {
@@ -434,9 +466,12 @@ class TxCapsule implements TimeoutTarget
          try {
             endResource(xaRes, flag);
             if (flag == XAResource.TMSUSPEND)
-               suspendedResources.add(xaRes);
-            else if (flag == XAResource.TMFAIL)
-               status = Status.STATUS_MARKED_ROLLBACK;
+               resourceState[idx] = RS_SUSPENDED;
+            else {
+               if (flag == XAResource.TMFAIL)
+                  status = Status.STATUS_MARKED_ROLLBACK;
+               resourceState[idx] = RS_ENDED;
+            }
             return true;
          } catch(XAException e) {
             Logger.exception(e);
@@ -466,6 +501,10 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
+         if (trace)
+            Logger.debug("TxCapsule.enlistResource(): Entered, status=" +
+                         getStringStatus(status));
+
          switch (status) {
          case Status.STATUS_ACTIVE:
          case Status.STATUS_PREPARING:
@@ -490,17 +529,29 @@ class TxCapsule implements TimeoutTarget
             throw new IllegalStateException("Illegal status: " + status);
          }
 
+         if (resourcesEnded)
+            throw new IllegalStateException("Too late to enlist resources");
+
          // Add resource
          try {
-            if (suspendedResources.contains(xaRes)) {
-               startResource(xaRes, XAResource.TMRESUME);
-               suspendedResources.remove(xaRes);
-               return true;
-            }
-            for (int i = 0; i < resources.size(); ++i) {
-               if (xaRes.isSameRM((XAResource)resources.get(i))) {
+            int idx = findResource(xaRes);
+
+            if (idx != -1) {
+               if (resourceState[idx] == RS_SUSPENDED) {
+                  startResource(xaRes, XAResource.TMRESUME);
+                  resourceState[idx] = RS_ENLISTED;
+                  return true;
+               } else if (resourceState[idx] == RS_ENDED) {
                   startResource(xaRes, XAResource.TMJOIN);
-                  resources.add(xaRes);
+                  resourceState[idx] = RS_ENLISTED;
+                  return true;
+               } else
+                  return false; // already enlisted
+            }
+            for (int i = 0; i < resourceCount; ++i) {
+               if (xaRes.isSameRM(resources[i])) {
+                  startResource(xaRes, XAResource.TMJOIN);
+                  addResource(xaRes);
                   return true;
                }
             }
@@ -508,7 +559,7 @@ class TxCapsule implements TimeoutTarget
             // According to the JTA spec we should create a new
             // transaction branch here.
             startResource(xaRes, XAResource.TMNOFLAGS);
-            resources.add(xaRes);
+            addResource(xaRes);
             return true;
          } catch(XAException e) {
             Logger.exception(e);
@@ -543,6 +594,10 @@ class TxCapsule implements TimeoutTarget
       try {
          lock();
 
+         if (trace)
+            Logger.debug("TxCapsule.registerSynchronization(): Entered, " +
+                         "status=" + getStringStatus(status));
+
          switch (status) {
          case Status.STATUS_ACTIVE:
          case Status.STATUS_PREPARING:
@@ -570,7 +625,15 @@ class TxCapsule implements TimeoutTarget
             throw new IllegalStateException("Illegal status: " + status);
          }
 
-         sync.add(s);
+         if (syncCount == syncAllocSize) {
+            // expand table
+            syncAllocSize = 2 * syncAllocSize;
+
+            Synchronization[] sy = new Synchronization[syncAllocSize];
+            System.arraycopy(sync, 0, sy, 0, syncCount);
+            sync = sy;
+         }
+         sync[syncCount++] = s;
       } finally {
          unlock();
       }
@@ -578,65 +641,175 @@ class TxCapsule implements TimeoutTarget
 
    // Protected -----------------------------------------------------
 
-   /**
-    *  Return the host name of this host.
-    *  This is used for building globally unique transaction identifiers.
-    *  It would be safer to use the IP address, but a host name is better
-    *  for humans to read and will do for now.
-    */
-   protected String getHostName()
-   {
-      if (hostName == null) {
-         try {
-            hostName = InetAddress.getLocalHost().getHostName();
-         } catch (UnknownHostException e) {
-            hostName = "localhost";
-         }
-      }
-
-      return hostName;
-   }
 
    // Private -------------------------------------------------------
 
-   // A list of synchronizations to call back on commit (before and after)
-   private ArrayList sync = new ArrayList();
+   /**
+    *  The public faces of this capsule are JTA Transaction implementations.
+    */
+   private TransactionImpl[] transactions = new TransactionImpl[1];
 
-   // A list of the XARessources to 2phi commit (prepare and commit)
-   private ArrayList resources = new ArrayList();
+   /**
+    *  Size of allocated transaction frontend array.
+    */
+   private int transactionAllocSize = 1;
 
-   // Suspended XAResources are in this set
-   private Set suspendedResources = new HashSet();
+   /**
+    *  Count of transaction frontends for this transaction.
+    */
+   private int transactionCount = 0;
 
-   private Xid xid; // XA legacy
-   private int status; // status code
-   private int heuristicCode = HEUR_NONE; // heuristics status
+
+   /**
+    *  The synchronizations to call back.
+    */
+   private Synchronization[] sync = new Synchronization[1];
+
+   /**
+    *  Size of allocated synchronization array.
+    */
+   private int syncAllocSize = 1;
+
+   /**
+    *  Count of ynchronizations for this transaction.
+    */
+   private int syncCount = 0;
+
+
+   /**
+    *  A list of the XARessources that have participated in this transaction.
+    */
+   private XAResource[] resources = new XAResource[1];
+
+   /**
+    *  The state of the resources.
+    */
+   private int[] resourceState = new int[1];
+
+   private final static int RS_ENLISTED      = 1; // enlisted
+   private final static int RS_SUSPENDED     = 2; // suspended
+   private final static int RS_ENDED         = 3; // not associated
+   private final static int RS_VOTE_READONLY = 4; // voted read-only
+   private final static int RS_VOTE_OK       = 5; // voted ok
+
+   /**
+    *  Size of allocated resource arrays.
+    */
+   private int resourceAllocSize = 1;
+
+   /**
+    *  Count of resources that have participated in this transaction.
+    */
+   private int resourceCount = 0;
+
+
+   /**
+    *  Flags that it is too late to enlist new resources.
+    */
+   private boolean resourcesEnded = false;
+
+   /**
+    *  The ID of this transaction.
+    */
+   private XidImpl xid; // Transaction id
+
+   /**
+    *  Status of this transaction.
+    */
+   private int status;
+
+   /**
+    *  The heuristics status of this transaction.
+    */
+   private int heuristicCode = HEUR_NONE;
+
+   /**
+    *  The time when this transaction was started.
+    */
    private long start;
+
+   /**
+    *  The timeout handle for this transaction.
+    */
    private Timeout timeout;
 
-   // The public face of the capsule a JTA implementation
-   private Transaction transaction;
+   /**
+    *  The incarnation count of this transaction. This is incremented
+    *  whenever this instance is done so that nobody is waiting for the
+    *  lock across incarnations.
+    */
+   private long incarnationCount = 1;
 
-   // My manager
+   /**
+    *  The transaction manager for this transaction.
+    */
    private TxManager tm;
 
-   // Mutex for thread-safety
+   /**
+    *  Mutex for thread-safety. This should only be changed in the
+    *  <code>lock()</code> and <code>unlock()</code> methods.
+    */
    private boolean locked = false;
+
+   /**
+    *  Flags that we are done with this transaction and that it can be reused.
+    */
+   private boolean done = false;
+
+
+   /**
+    *  Return a string representation of the given status code.
+    */
+   private String getStringStatus(int status) {
+      switch (status) {
+         case Status.STATUS_PREPARING:
+            return "STATUS_PREPARING";
+         case Status.STATUS_PREPARED:
+            return "STATUS_PREPARED";
+         case Status.STATUS_ROLLING_BACK:
+            return "STATUS_ROLLING_BACK";
+         case Status.STATUS_ROLLEDBACK:
+            return "STATUS_ROLLEDBACK";
+         case Status.STATUS_COMMITTING:
+            return "STATUS_COMMITING";
+         case Status.STATUS_COMMITTED:
+            return "STATUS_COMMITED";
+         case Status.STATUS_NO_TRANSACTION:
+            return "STATUS_NO_TRANSACTION";
+         case Status.STATUS_UNKNOWN:
+            return "STATUS_UNKNOWN";
+         case Status.STATUS_MARKED_ROLLBACK:
+            return "STATUS_MARKED_ROLLBACK";
+         case Status.STATUS_ACTIVE:
+            return "STATUS_ACTIVE";
+ 
+         default:
+            return "STATUS_UNKNOWN(" + status + ")";
+      }
+   }
 
    /**
     *  Lock this instance.
     */
    private synchronized void lock()
    {
+      if (done)
+         throw new IllegalStateException("No transaction");
+
       if (locked) {
          Logger.warning("TxCapsule: Lock contention."); // Good for debugging.
          Thread.currentThread().dumpStack();
-      }
 
-      while (locked) {
-         try {
-            wait();
-         } catch (InterruptedException ex) {}
+         long myIncarnation = incarnationCount;
+
+         while (locked) {
+            try {
+               wait();
+            } catch (InterruptedException ex) {}
+
+            if (done || myIncarnation != incarnationCount)
+              throw new IllegalStateException("No transaction");
+         }
       }
 
       locked = true;
@@ -673,17 +846,73 @@ class TxCapsule implements TimeoutTarget
    }
 
    /**
+    *  Return index of XAResource, or <code>-1</code> if not found.
+    */
+   private int findResource(XAResource xaRes)
+   {
+      for (int i = 0; i < resourceCount; ++i)
+         if (resources[i] == xaRes)
+            return i;
+
+      return -1;
+   }
+
+   /**
+    *  Add a resource, expanding tables if needed.
+    */
+   private void addResource(XAResource xaRes)
+   {
+      if (resourceCount == resourceAllocSize) {
+         // expand tables
+         resourceAllocSize = 2 * resourceAllocSize;
+
+         XAResource[] res = new XAResource[resourceAllocSize];
+         System.arraycopy(resources, 0, res, 0, resourceCount);
+         resources = res;
+
+         int[] stat = new int[resourceAllocSize];
+         System.arraycopy(resourceState, 0, stat, 0, resourceCount);
+         resourceState = stat;
+      }
+      resources[resourceCount] = xaRes;
+      resourceState[resourceCount] = RS_ENLISTED;
+      ++resourceCount;
+   }
+
+   /**
+    *  Add a transaction frontend, expanding the table if needed.
+    */
+   private void addTransaction(TransactionImpl tx)
+   {
+      if (transactionCount == transactionAllocSize) {
+         // expand table
+         transactionAllocSize = 2 * transactionAllocSize;
+
+         TransactionImpl[] tr = new TransactionImpl[transactionAllocSize];
+         System.arraycopy(transactions, 0, tr, 0, transactionCount);
+         transactions = tr;
+      }
+      transactions[transactionCount++] = tx;
+   }
+
+   /**
     *  Call <code>start()</code> on the XAResource.
     *  This will release the lock while calling out.
     */
    private void startResource(XAResource xaRes, int flags)
       throws XAException
    {
+System.err.println("TxCapsule.startResource(" + xid.toString() +
+                   ") entered: " + xaRes.toString() +
+                   " flags=" + flags);
       unlock();
       try {
          xaRes.start(xid, flags);
       } finally {
          lock();
+System.err.println("TxCapsule.startResource(" + xid.toString() +
+                   ") leaving: " + xaRes.toString() +
+                   " flags=" + flags);
       }
    }
 
@@ -694,37 +923,58 @@ class TxCapsule implements TimeoutTarget
    private void endResource(XAResource xaRes, int flag)
       throws XAException
    {
+System.err.println("TxCapsule.endResource(" + xid.toString() +
+                   ") entered: " + xaRes.toString() +
+                   " flag=" + flag);
       unlock();
       try {
          xaRes.end(xid, flag);
       } finally {
          lock();
+System.err.println("TxCapsule.endResource(" + xid.toString() +
+                   ") leaving: " + xaRes.toString() +
+                   " flag=" + flag);
       }
    }
 
    /**
-    *  End Tx association for all suspended resources.
+    *  End Tx association for all resources.
     */
-   private void suspendedResourcesDone()
+   private void endResources()
    {
-      try {
-         while (!suspendedResources.isEmpty()) {
-            Iterator iter = suspendedResources.iterator();
-
-            try {
-               while (iter.hasNext()) {
-                  XAResource xaRes = (XAResource)iter.next();
-
-                  iter.remove();
-                  endResource(xaRes, XAResource.TMSUCCESS);
-               }
-            } catch (ConcurrentModificationException e) { }
+      for (int i = 0; i < resourceCount; i++) {
+         try {
+            if (resourceState[i] == RS_SUSPENDED) {
+               // This is mad, but JTA 1.0.1 spec says on page 41:
+               // "If TMSUSPEND is specified in flags, the transaction
+               // branch is temporarily suspended in incomplete state.
+               // The transaction context is in suspened state and must
+               // be resumed via start with TMRESUME specified."
+               // Note the _must_ above: It does not say _may_.
+               // The above citation also seem to contradict the XA resource
+               // state table on pages 17-18 where it is legal to do both
+               // end(TMSUCCESS) and end(TMFAIL) when the resource is in
+               // a suspended state.
+               // But the Minerva XA pool does not like that we call end()
+               // two times in a row, so we resume before ending.
+               startResource(resources[i], XAResource.TMRESUME);
+               resourceState[i] = RS_ENLISTED;
+            }
+            if (resourceState[i] == RS_ENLISTED) {
+System.err.println("endresources("+i+"): state="+resourceState[i]);
+              endResource(resources[i], XAResource.TMSUCCESS);
+              resourceState[i] = RS_ENDED;
+            }
+         } catch(XAException e) {
+System.err.println("endresources: XAException: " + e);
+System.err.println("endresources: XAException: errorCode=" + e.errorCode);
+            Logger.exception(e);
+            status = Status.STATUS_MARKED_ROLLBACK;
          }
-      } catch(XAException e) {
-         Logger.exception(e);
-         status = Status.STATUS_MARKED_ROLLBACK;
       }
+      resourcesEnded = true; // Too late to enlist new resources.
    }
+
 
    /**
     *  Call synchronization <code>beforeCompletion()</code>.
@@ -734,12 +984,8 @@ class TxCapsule implements TimeoutTarget
    {
       unlock();
       try {
-         for (int i = 0; i < sync.size(); i++) {
-			//DEBUG Logger.debug("calling beforeCompletion on synch status is "+getStringStatus(status));
-            ((Synchronization)sync.get(i)).beforeCompletion();
-			//DEBUG Logger.debug("Done calling beforeCompletion on synch status is "+getStringStatus(status));
-            
-		}
+         for (int i = 0; i < syncCount; i++)
+            sync[i].beforeCompletion();
       } finally {
          lock();
       }
@@ -754,8 +1000,8 @@ class TxCapsule implements TimeoutTarget
       // Assert: Status indicates: Too late to add new synchronizations.
       unlock();
       try {
-         for (int i = 0; i < sync.size(); i++)
-            ((Synchronization)sync.get(i)).afterCompletion(status);
+         for (int i = 0; i < syncCount; i++)
+            sync[i].afterCompletion(status);
       } finally {
          lock();
       }
@@ -821,9 +1067,15 @@ class TxCapsule implements TimeoutTarget
       case XAException.XA_HEURHAZ:
       case XAException.XA_HEURMIX:
          heuristicCode = HEUR_NONE;
+         if (trace)
+            Logger.debug("TxCapsule: Throwing HeuristicMixedException, " +
+                         "status=" + getStringStatus(status));
          throw new HeuristicMixedException();
       case XAException.XA_HEURRB:
          heuristicCode = HEUR_NONE;
+         if (trace)
+            Logger.debug("TxCapsule: Throwing HeuristicRollbackException, " +
+                         "status=" + getStringStatus(status));
          throw new HeuristicRollbackException();
       case XAException.XA_HEURCOM:
          heuristicCode = HEUR_NONE;
@@ -831,8 +1083,41 @@ class TxCapsule implements TimeoutTarget
          // And why define something that is not used ?
          // For now we just have to ignore this failure, even if it happened
          // on rollback.
+         if (trace)
+            Logger.debug("TxCapsule: NOT Throwing HeuristicCommitException, " +
+                         "status=" + getStringStatus(status));
          return;
       }
+   }
+
+   /**
+    *  Prepare this instance for reuse.
+    */
+   private void instanceDone()
+   {
+      synchronized (this) {
+         // Done with this incarnation.
+         ++incarnationCount;
+
+         // Set done flag so we get no more frontends waiting for
+         // the lock.
+         done = true;
+
+         // Wake up anybody waiting for the lock.
+         notifyAll();
+      }
+
+      // Notify transaction fronts that we are done.
+      for (int i = 0; i < transactionCount; ++i)
+        transactions[i].setDone();
+
+      // Clear content of collections.
+      syncCount = 0;
+      transactionCount = 0;
+      resourceCount = 0;
+
+      // This instance is now ready for reuse (when we release the lock).
+      tm.releaseTxCapsule(this);
    }
 
    /**
@@ -851,46 +1136,47 @@ class TxCapsule implements TimeoutTarget
       boolean readOnly = true;
 
       status = Status.STATUS_PREPARING;
-      Logger.debug("Status Preparing: "+status);
 
-      for (int i = 0; i < resources.size(); i++) {
+      for (int i = 0; i < resourceCount; i++) {
          // Abort prepare on state change.
          if (status != Status.STATUS_PREPARING)
             return false;
 
-         XAResource resource = (XAResource)resources.get(i);
+         XAResource resource = resources[i];
 
          try {
             int vote;
 
             unlock();
             try {
-			   vote = resource.prepare(xid);
-			   
-               Logger.debug("resource vote is "+vote);
-			   
+               vote = resources[i].prepare(xid);
             } finally {
                lock();
             }
 
-            if (vote != XAResource.XA_RDONLY)
+            if (vote == XAResource.XA_OK) {
                readOnly = false;
+               resourceState[i] = RS_VOTE_OK;
+            } else if (vote == XAResource.XA_RDONLY)
+               resourceState[i] = RS_VOTE_READONLY;
             else {
-               // Resource voted read-only: Can forget about resource.
-               resources.remove(i);
-               --i; // undo future increment
+               // Illegal vote: rollback.
+               status = Status.STATUS_MARKED_ROLLBACK;
+               return false;
             }
          } catch (XAException e) {
+            readOnly = false;
+
             switch (e.errorCode) {
             case XAException.XA_HEURCOM:
                // Heuristic commit is not that bad when preparing.
                // But it means trouble if we have to rollback.
-               gotHeuristic(resource, e.errorCode);
+               gotHeuristic(resources[i], e.errorCode);
                break;
             case XAException.XA_HEURRB:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resource, e.errorCode);
+               gotHeuristic(resources[i], e.errorCode);
                if (status == Status.STATUS_PREPARING)
                   status = Status.STATUS_MARKED_ROLLBACK;
                break;
@@ -917,17 +1203,19 @@ class TxCapsule implements TimeoutTarget
    {
       status = Status.STATUS_COMMITTING;
 
-      for (int i = 0; i < resources.size(); i++) {
+      for (int i = 0; i < resourceCount; i++) {
+System.err.println("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
+         if (!onePhase && resourceState[i] != RS_VOTE_OK)
+           continue;
+
          // Abort commit on state change.
          if (status != Status.STATUS_COMMITTING)
             return;
 
-         XAResource resource = (XAResource)resources.get(i);
-
          try {
             unlock();
             try {
-               resource.commit(xid, onePhase);
+               resources[i].commit(xid, onePhase);
             } finally {
                lock();
             }
@@ -937,7 +1225,7 @@ class TxCapsule implements TimeoutTarget
             case XAException.XA_HEURCOM:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resource, e.errorCode);
+               gotHeuristic(resources[i], e.errorCode);
                break;
             default:
                Logger.exception(e);
@@ -958,13 +1246,14 @@ class TxCapsule implements TimeoutTarget
    {
       status = Status.STATUS_ROLLING_BACK;
 
-      for (int i = 0; i < resources.size(); i++) {
-         XAResource resource = (XAResource)resources.get(i);
+      for (int i = 0; i < resourceCount; i++) {
+         if (resourceState[i] == RS_VOTE_READONLY)
+           continue;
 
          try {
             unlock();
             try {
-               resource.rollback(xid);
+               resources[i].rollback(xid);
             } finally {
                lock();
             }
@@ -972,12 +1261,12 @@ class TxCapsule implements TimeoutTarget
             switch (e.errorCode) {
             case XAException.XA_HEURRB:
                // Heuristic rollback is not that bad when rolling back.
-               gotHeuristic(resource, e.errorCode);
+               gotHeuristic(resources[i], e.errorCode);
                break;
             case XAException.XA_HEURCOM:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resource, e.errorCode);
+               gotHeuristic(resources[i], e.errorCode);
                break;
             default:
                Logger.exception(e);

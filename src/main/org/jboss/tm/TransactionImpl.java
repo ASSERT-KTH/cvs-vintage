@@ -25,15 +25,17 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
 
 /**
- *	A light weight transaction.
+ *  A light weight transaction.
  *
- * It is the public face of the TxCapsule.  Many of these "transactions" can coexist representing the TxCap
- * Access to the underlying txCap is done through the TransactionManager
+ *  It is the public face of the TxCapsule.
+ *  Many of these "transactions" can coexist representing the TxCap.
+ *  Access to the underlying txCap is done through the TransactionManager.
  *
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @see TxCapsule
+ *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ *  @version $Revision: 1.9 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -41,54 +43,63 @@ public class TransactionImpl
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   int hash;
-   Xid xid; // XA legacy
+
+   XidImpl xid; // Transaction ID.
    
-   // Static --------------------------------------------------------
-   public transient TxManager tm;
-
-   static String hostName;
-
    // Constructors --------------------------------------------------
    
-   public TransactionImpl(TxManager tm,int hash, Xid xid)
+   TransactionImpl(TxCapsule txCapsule, XidImpl xid)
    {
-      this.tm = tm;
-      this.hash = hash;
+      this.txCapsule = txCapsule;
       this.xid = xid; 
+      travelled = false;
    }
    
-   /*
-   * setTxManager()
-   *
-   * used for propagated Tx
-   */
-   public void setTxManager(TxManager tm) {
-       
-       this.tm= tm;
-   }
-   
-   
-        
-
    // Public --------------------------------------------------------
+
+   // In the following methods we synchronize to avoid races with transaction
+   // termination. The travelled flag is not checked, as we assume that the
+   // transaction has already been imported.
+
    public void commit()
-            throws RollbackException,
-                   HeuristicMixedException,
-                   HeuristicRollbackException,
-                   java.lang.SecurityException,
-                   java.lang.IllegalStateException,
-                   SystemException
+      throws RollbackException,
+             HeuristicMixedException,
+             HeuristicRollbackException,
+             java.lang.SecurityException,
+             java.lang.IllegalStateException,
+             SystemException
    {
-       
-      tm.commit(this);
+      synchronized (this) {
+        if (done)
+           throw new IllegalStateException("No transaction.");
+
+        txCapsule.commit();
+      }
+   }
+
+   public void rollback()
+      throws java.lang.IllegalStateException,
+             java.lang.SecurityException,
+             SystemException
+   {
+      synchronized (this) {
+         if (done)
+            throw new IllegalStateException("No transaction.");
+
+         txCapsule.rollback();
+      }
    }
 
    public boolean delistResource(XAResource xaRes, int flag)
       throws java.lang.IllegalStateException,
              SystemException
    {
-       return tm.delistResource(this, xaRes, flag);
+      synchronized (this) {
+         if (done)
+            throw new IllegalStateException("No transaction.");
+
+         return txCapsule.delistResource(xaRes, flag);
+      }
    }
 
    public boolean enlistResource(XAResource xaRes)
@@ -96,73 +107,131 @@ public class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-       return tm.enlistResource(this, xaRes);
+      synchronized (this) {
+         if (done)
+            throw new IllegalStateException("No transaction.");
+
+         return txCapsule.enlistResource(xaRes);
+      }
    }
 
    public int getStatus()
-              throws SystemException
+      throws SystemException
    {
-      return tm.getStatus(this);
+      synchronized (this) {
+         if (done)
+            return Status.STATUS_NO_TRANSACTION;
+
+         return txCapsule.getStatus();
+      }
    }
 
    public void registerSynchronization(Synchronization s)
-    throws RollbackException,
-           java.lang.IllegalStateException,
-           SystemException
+      throws RollbackException,
+             java.lang.IllegalStateException,
+             SystemException
    {
-       tm.registerSynchronization(this, s);
-   }
+      synchronized (this) {
+         if (done)
+            throw new IllegalStateException("No transaction.");
 
-   public void rollback()
-              throws java.lang.IllegalStateException,
-                     java.lang.SecurityException,
-                     SystemException
-   {
-      
-       tm.rollback(this);
+         txCapsule.registerSynchronization(s);
+      }
    }
 
    public void setRollbackOnly()
-                     throws java.lang.IllegalStateException,
-                            SystemException
+      throws java.lang.IllegalStateException,
+             SystemException
    {
-     
-       tm.setRollbackOnly(this); 
-    }
+      synchronized (this) {
+         if (done)
+            throw new IllegalStateException("No transaction.");
 
-   public boolean equals(Object obj)
-   {
-      return ((TransactionImpl)obj).hash == hash;
+         txCapsule.setRollbackOnly();
+      }
    }
 
    public int hashCode()
    {
-      return hash;
+      return xid.hash;
+   }
+
+   public String toString()
+   {
+      return "TransactionImpl:" + xid.toString();
+   }
+
+   public boolean equals(Object obj)
+   {
+      if (obj != null && obj instanceof TransactionImpl)
+         return xid.equals(((TransactionImpl)obj).xid);
+      return false;
    }
 
    // Package protected ---------------------------------------------
 
-   // Protected -----------------------------------------------------
-   protected String getHostName()
+   /**
+    *  Setter for property txCapsule.
+    *
+    *  This is needed when a propagated transaction is imported into the
+    *  current transaction manager.
+    */
+   synchronized void setTxCapsule(TxCapsule txCapsule)
    {
-      if (hostName == null)
-      {
-         try
-         {
-            hostName = InetAddress.getLocalHost().getHostName();
-         } catch (UnknownHostException e)
-         {
-            hostName = "localhost";
-         }
-      }
-
-      return hostName;
+      if (done)
+         // Shouldn't happen.
+         throw new IllegalStateException("Transaction " + toString() +
+                                         " is done.");
+      this.txCapsule = txCapsule;
+      travelled = false;
    }
 
-    public String toString() {
-        return "tx:Xid:"+hash;
-    }
+   /**
+    *  Setter for property done.
+    *  No argument for this mutator; we can only set to false.
+    *  This will also clear the txCapsule reference.
+    */
+   synchronized void setDone()
+   {
+      done = true;
+      txCapsule = null;
+   }
+
+   /**
+    *  Getter for property done.
+    */
+   boolean isDone()
+   {
+      return done;
+   }
+
+   /**
+    *  Returns true iff this transaction needs to be imported into the
+    *  local transaction manager.
+    */
+   boolean importNeeded()
+   {
+      return !done && travelled;
+   }
 
    // Private -------------------------------------------------------
+
+   private transient TxCapsule txCapsule; // The real implementation.
+   private boolean done; // Flags that the transaction has terminated.
+   transient boolean travelled; // Flags that the transaction has travelled.
+
+   private void writeObject(java.io.ObjectOutputStream stream)
+      throws java.io.IOException
+   {
+      stream.defaultWriteObject();
+   }
+
+   private void readObject(java.io.ObjectInputStream stream)
+      throws java.io.IOException, ClassNotFoundException
+   {
+      stream.defaultReadObject();
+      travelled = true;
+   }
+
    // Inner classes -------------------------------------------------
 }
