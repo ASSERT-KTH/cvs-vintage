@@ -17,9 +17,7 @@ public abstract class AbstractMessage {
 	protected MimePart bodyPart;
 	
 	public AbstractMessage()
-	{
-		mimePartCollection = new MimePartTree();
-	}
+	{}
 	
 	public abstract HeaderInterface getHeader();
 	public abstract void setHeader( HeaderInterface h );
@@ -72,7 +70,9 @@ public abstract class AbstractMessage {
 	}
 
 	public int getMimePartCount() {
+		if( mimePartCollection != null )
 		return mimePartCollection.count();
+		else return 0;
 	}
 
 	public MimePartTree getMimePartTree() {

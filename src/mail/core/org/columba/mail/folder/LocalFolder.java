@@ -24,6 +24,7 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;
@@ -33,7 +34,7 @@ public abstract class LocalFolder extends Folder {
 	protected int nextMessageUid;
 	protected AbstractMessage aktMessage;
 	protected DataStorageInterface dataStorage;
-	protected LocalSearchEngine searchEngine;
+	protected SearchEngineInterface searchEngine;
 
 	public LocalFolder(FolderItem item) {
 		super(item);
@@ -85,6 +86,7 @@ public abstract class LocalFolder extends Folder {
 		getHeaderList(worker);
 
 		Object newUid = generateNextMessageUid();
+		message.setUID(newUid);
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
@@ -93,26 +95,30 @@ public abstract class LocalFolder extends Folder {
 		getDataStorageInstance().saveMessage(source, newUid);
 
 		getMessageFolderInfo().incExists();
+		
+		getSearchEngineInstance().messageAdded(message);
 
 		return newUid;
-	}
+	}	
 
 	public Object addMessage(String source, WorkerStatusController worker)
 		throws Exception {
-		Object newUid = generateNextMessageUid();
+		Rfc822Parser parser = new Rfc822Parser();
 
-		ColumbaLogger.log.debug("new UID=" + newUid);
+		ColumbaHeader header = parser.parseHeader(source);
+		int size = Math.round(source.length() / 1024);
+		header.set("columba.size", new Integer(size));
 
-		getDataStorageInstance().saveMessage(source, newUid);
+		AbstractMessage m = new Message(header);
+		m.setSource(source);
 
-		getMessageFolderInfo().incExists();
-
-		return newUid;
+		return addMessage(m, worker);
 	}
 
 	public void removeMessage(Object uid, WorkerStatusController worker)
 		throws Exception {
 		getDataStorageInstance().removeMessage(uid);
+		getSearchEngineInstance().messageRemoved(uid);
 
 		getMessageFolderInfo().decExists();
 	}
@@ -195,8 +201,10 @@ public abstract class LocalFolder extends Folder {
 	/********************** searching/filtering ***********************/
 
 	public SearchEngineInterface getSearchEngineInstance() {
-		if (searchEngine == null)
+		if (searchEngine == null){
+			//searchEngine = new LuceneSearchEngine(this);
 			searchEngine = new LocalSearchEngine(this);
+		}
 
 		return searchEngine;
 	}

@@ -10,7 +10,6 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.Message;
 import org.columba.mail.parser.Rfc822Parser;
 
 /**
@@ -77,37 +76,6 @@ public class CachedMHFolder extends MHFolder {
 		aktMessage = message;
 
 		return message;
-	}
-
-	public Object addMessage(String source, WorkerStatusController worker)
-		throws Exception {
-
-		getHeaderList(worker);
-
-		Object newUid = super.addMessage(source, worker);
-
-		Rfc822Parser parser = new Rfc822Parser();
-
-		ColumbaHeader header = parser.parseHeader(source);
-
-		AbstractMessage m = new Message(header);
-		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-
-		parser.addColumbaHeaderFields(h);
-
-		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
-			getMessageFolderInfo().incRecent();
-		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
-			getMessageFolderInfo().incUnseen();
-		Integer sizeInt = new Integer(source.length());
-		int size = Math.round(sizeInt.intValue() / 1024);
-		h.set("columba.size", new Integer(size));
-
-		h.set("columba.uid", newUid);
-
-		cache.add(h);
-
-		return newUid;
 	}
 
 	public Object addMessage(

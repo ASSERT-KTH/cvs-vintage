@@ -9,6 +9,7 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.message.AbstractMessage;
 
 /**
  * @author freddy
@@ -370,6 +371,18 @@ public class RemoteSearchEngine implements SearchEngineInterface {
 			.search(uids, generateSearchString( filter), ((IMAPFolder) folder).getImapPath(), worker)
 			.toArray();
 
+	}
+
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
+	 */
+	public void messageAdded(AbstractMessage message) {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
+	 */
+	public void messageRemoved(Object uid) {
 	}
 
 }

@@ -12,6 +12,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
+import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 
 /**
@@ -566,4 +567,16 @@ public class LocalSearchEngine implements SearchEngineInterface {
 		return result;
 	}
 	*/
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
+	 */
+	public void messageAdded(AbstractMessage message) {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
+	 */
+	public void messageRemoved(Object uid) {
+	}
+
 }

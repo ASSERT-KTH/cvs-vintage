@@ -2,6 +2,7 @@ package org.columba.mail.folder;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.Filter;
+import org.columba.mail.message.AbstractMessage;
 
 /**
  * @author freddy
@@ -22,4 +23,8 @@ public interface SearchEngineInterface {
 		Filter filter,
 		WorkerStatusController worker)
 		throws Exception;
+		
+	public void messageAdded( AbstractMessage message);
+	
+	public void messageRemoved( Object uid);
 }

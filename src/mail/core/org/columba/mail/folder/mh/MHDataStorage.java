@@ -154,9 +154,15 @@ public class MHDataStorage implements DataStorageInterface {
 				
 				if ( h.get("columba.flags.recent").equals(Boolean.TRUE) ) folder.getMessageFolderInfo().incRecent();
 				if ( h.get("columba.flags.seen").equals(Boolean.FALSE)  ) folder.getMessageFolderInfo().incUnseen();
+				
+				m.setSource(source);
+				
 				folder.getMessageFolderInfo().incExists();
 			
 				headerList.add(header, new Integer(i));
+				folder.getSearchEngineInstance().messageAdded(m);
+				
+				m.freeMemory();
 				
 				worker.incProgressBarValue();
 
@@ -174,8 +180,10 @@ public class MHDataStorage implements DataStorageInterface {
 	
 	
 	public int getMessageCount() {
-		File[] list = folder.getDirectoryFile().listFiles();
-		return list.length - 1;
+		File[] list = folder.getDirectoryFile().listFiles(MHMessageFileFilter.getInstance());
+		
+		return list.length;
 	}
-
+	
 }
+
