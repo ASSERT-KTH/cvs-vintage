@@ -113,6 +113,10 @@ import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetTypePeer;
+import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
@@ -816,6 +820,43 @@ try{
         return depend;
     }
 
+    /**
+     * Get reason for modification.
+     */
+    public String getActivityReason(ActivitySet activitySet, Activity activity)
+     throws Exception
+    {
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        String reason = null;
+        Attachment attachment = activitySet.getAttachment();
+        if (attachment != null)
+        {
+             String data = attachment.getData();
+             if (attachment.getTypeId().equals(AttachmentTypePeer.COMMENT_PK))
+             {
+                 reason = activity.getNewValue();
+             }
+             else if (data != null && data.length() > 0)
+             {
+                reason = data;
+             }
+             else
+             {
+                reason = l10n.get("NotProvided");
+             }
+         } 
+         else if (activitySet.getTypeId().equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
+         {
+             reason = l10n.get("InitialEntry");
+         }
+         else
+         {
+             reason = l10n.get("NotProvided");
+         }
+         return reason;
+    }
+            
+        
     /**
      * A Attachment object for use within the Scarab API.
      */
