@@ -48,6 +48,7 @@ package org.tigris.scarab.tools;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 // Turbine
 import org.apache.torque.om.NumberKey;
@@ -56,8 +57,11 @@ import org.apache.torque.om.ComboKey;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.pool.RecyclableSupport;
+import org.apache.fulcrum.util.parser.StringValueParser;
+import org.apache.commons.util.SequencedHashtable;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
@@ -76,6 +80,7 @@ import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributePeer;
+import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -604,6 +609,54 @@ try{
         return search;
     }
 
+    public Intake getConditionalIntake(String parameter)
+    {
+        Intake intake = null;
+        String param = data.getParameters().getString(parameter);
+        if ( param == null ) 
+        {            
+            intake = getIntakeTool();
+System.out.println(parameter + "was null");
+        }
+        else 
+        {
+            intake = new Intake();
+            StringValueParser parser = new StringValueParser();
+            parser.parse(param, '&', '=', true);
+            intake.init(parser);
+System.out.println(parameter + "was NOT null: " + parser);
+        }
+
+        return intake;
+    }
+
+    public List getCurrentSearchResults()
+        throws Exception
+    {
+        Intake intake = getConditionalIntake(ScarabConstants.CURRENT_QUERY);
+        
+        IssueSearch search = new IssueSearch();
+        Group searchGroup = intake.get("SearchIssue", 
+                                       getSearch().getQueryKey() );
+        searchGroup.setProperties(search);
+        
+        search.setModuleCast(getCurrentModule());
+        SequencedHashtable avMap = search.getModuleAttributeValuesMap();
+        Iterator i = avMap.iterator();
+        while (i.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)avMap.get(i.next());
+            Group group = intake.get("AttributeValue", aval.getQueryKey());
+            if ( group != null ) 
+            {
+                group.setProperties(aval);
+            }                
+        }
+        
+        return search.getMatchingIssues();
+    }
+
+
     /**
      * The id may be a primary key or an issue id.
      *
@@ -651,16 +704,7 @@ try{
      */
     public List getIssueList() throws Exception
     {
-        List issueList = new ArrayList();
-        ScarabUser user = (ScarabUser)data.getUser();
-        List issueIdList = (List)(user.getTemp(ScarabConstants.ISSUE_ID_LIST));
-        for (int i = 0;i<issueIdList.size();i++)
-        {
-           Issue issue = (Issue)IssuePeer
-              .retrieveByPK((NumberKey)issueIdList.get(i));
-           issueList.add(issue);
-        }
-        return issueList;
+        return getCurrentSearchResults();
     }
 
     /**
