@@ -15,9 +15,9 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public interface CMRMessage {
+public interface CMRMessage extends NonentrantMessage {
    public Object getRelatedId(EntityEnterpriseContext myCtx, JDBCCMRFieldBridge cmrField);
    public void addRelation(EntityEnterpriseContext myCtx, Object relatedId);
    public void removeRelation(EntityEnterpriseContext myCtx, Object relatedId);
