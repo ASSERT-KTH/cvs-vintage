@@ -7,7 +7,7 @@
     <table cellpadding="3" cellspacing="0" border="0">
     <tr>
     <td><a href="$link.setPage("admin,GlobalAttributeShow.vm")" title="#">Global attributes</a></td>
-    <th>User attributes</th>
+    <th>Global user attributes</th>
     </tr>
     </table>
 </div>
@@ -53,12 +53,12 @@
   #paginate ($resultsPerPage $pageNum $sortColumn $sortPolarity)
 #end
 
-<h3>User attributes</h3>
+<h3>Global user attributes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">&#160;</th>
-<th>#sort("name" "Attribute name")</th>
+<th nowrap="nowrap">Select</th>
+<th>#sort("name" "Name")</th>
 <th>#sort("desc" "Description")</th>
 <th>Email action</th>
 <th>Base permission</th>
