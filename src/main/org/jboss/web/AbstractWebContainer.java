@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.management.JMException;
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -53,9 +52,6 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.management.j2ee.J2EEApplication;
-import org.jboss.management.j2ee.J2EEManagedObject;
-import org.jboss.management.j2ee.J2EEServer;
 import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
@@ -159,9 +155,9 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
-   
+
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.53 $
+@version $Revision: 1.54 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -209,154 +205,45 @@ public abstract class AbstractWebContainer
    public synchronized boolean init(DeploymentInfo di) 
       throws DeploymentException 
    {
-      if (!super.init(di)) 
+      if( super.init(di) == false )
       {
          return false;
-      } // end of if ()
-      
+      }
+
       log.debug("Begin init");
       try 
       {
-         // Is this a sub-deployment if so it probably does come from a EAR deployment and we can get 
-         // the context
-         if (di.parent != null && di.parent.metaData instanceof J2eeApplicationMetaData) 
-         {
-            J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.parent.metaData;
-            log.debug("found parent metadata: " + di.parent.url);
-            J2eeModuleMetaData mod;
-            for (Iterator it = app.getModules(); it.hasNext(); )
-            {
-               // iterate the war modules
-               mod = (J2eeModuleMetaData) it.next();
-               if( mod.isWeb() )
-               {
-                  /* Careful, if the place/file the war gets copied to changes, 
-                     this will need changing too maybe.
-                   */
-                  if (di.shortName.equals(mod.getFileName()))
-                  {
-                     di.webContext = mod.getWebContext();
-                  }
-               }
-            }
-         }
-
          // resolve the watch
-         if (di.url.getProtocol().equals("file"))
-         {
-            File file = new File (di.url.getFile());
-            
-            // If not directory we watch the package
-            if (!file.isDirectory()) di.watch = di.url;
-               
-            // If directory we watch the xml files
-            else di.watch = new URL(di.url, "WEB-INF/web.xml"); 
-         }   
-         else
+         if (di.url.getProtocol().startsWith("http"))
          {
             // We watch the top only, no directory support
             di.watch = di.url;
          }         
-
+         else if(di.url.getProtocol().startsWith("file"))
+         {
+            File file = new File (di.url.getFile());
+            
+            // If not directory we watch the package
+            if( file.isDirectory() == false )
+            {
+               di.watch = di.url;
+            }
+            // If directory we watch the web.xml descriptor
+            else
+            {
+               di.watch = new URL(di.url, "WEB-INF/web.xml"); 
+            }
+         }
          // No, we do not want to look into the war
          // parseWEBINFClasses(di);
       }
       catch (Exception e)
       {
-         throw new DeploymentException("Init failed", e);
+         log.error("Problem in init ", e); throw new DeploymentException(e);
       }
       
       log.debug("End init");
       return true;
-   }
-
-   protected void processNestedDeployments(DeploymentInfo di)
-   {
-      //presumably some of init could be moved here
-   }
-
-   /**
-    * Describe <code>parseWEBINFClasses</code> method here.
-    *
-    * @param di a <code>DeploymentInfo</code> value
-    * @exception DeploymentException if an error occurs
-    * @todo THIS HAS NO BUSINESS DUPLICATING MAINDEPLOYER FUNCTIONALITY!!!
-    */
-   public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
-   {
-      File systemTmpDir = ServerConfigLocator.locate().getServerTempDir();
-      File tmpDeployDir = new File(systemTmpDir, "deploy");
-      
-      JarFile jarFile = null;
-      // Do we have a jar file jar:<theURL>!/..
-      try
-      {
-         jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();
-      }
-      catch (Exception e)
-      {
-         log.warn("could not extract webinf classes", e);
-         return;
-      }
-
-      boolean uclCreated = false;
-      for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
-      {
-         JarEntry entry = (JarEntry)e.nextElement();
-         String name = entry.getName();
-         if (name.lastIndexOf("WEB-INF/classes") != -1 && name.endsWith("class") )
-         {
-            try
-            {
-               // We use the name of the entry as the name of the file under deploy 
-               File outFile =
-                  new File(tmpDeployDir, di.shortName+".webinf"+File.separator+name);
-                                       
-               outFile.getParentFile().mkdirs();
-               if (!uclCreated) 
-               {
-                  DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), 
-                                                          di, 
-                                                          server);
-                  // There is no copying over, just use the url for the UCL
-                  sub.localUrl = sub.url;
-
-                  // Create a URL for the sub
-                  sub.createClassLoaders();
-                  uclCreated = true;  
-                  di.subDeployments.add(sub);
-               }
-               
-               // Copy in and out 
-               OutputStream out = new FileOutputStream(outFile); 
-               InputStream in = jarFile.getInputStream(entry);
-               
-               try
-               {
-                  copy(in, out);
-               }   
-               finally
-               {
-                  out.close();
-               }
-            }
-            catch (Exception ignore)
-            {
-               log.error("Error in webinf "+name, ignore);
-            }
-         }
-      }
-   }
-   
-   protected void copy(InputStream in, OutputStream out)
-      throws IOException
-   {
-      byte[] buffer = new byte[1024];
-      int read;
-      while ((read = in.read(buffer)) > 0)
-      {
-         out.write(buffer, 0, read);
-      }
    }
 
    public void create(DeploymentInfo di) throws DeploymentException
@@ -369,7 +256,7 @@ public abstract class AbstractWebContainer
    returned WebApplication in the deployment map. The steps performed are:
    
       ClassLoader appClassLoader = thread.getContextClassLoader();
-      URLClassLoader warLoader = URLClassLoader.newInstance(empty, di.ucl);
+      URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
       thread.setContextClassLoader(warLoader);
       WebDescriptorParser webAppParser = ...;
       WebMetaData metaData = parseMetaData(ctxPath, warUrl);
@@ -418,63 +305,15 @@ public abstract class AbstractWebContainer
          // Parse the web.xml and jboss-web.xml descriptors
          WebMetaData metaData = parseMetaData(webContext, warURL);
          WebApplication warInfo = new WebApplication(metaData);
-         //AS Lookup the parent management Object and set it in the WebApplication
-         try {
-            ObjectName lServerQuery = new ObjectName(
-               J2EEManagedObject.getDomainName() + ":" +
-               J2EEManagedObject.TYPE + "=" + J2EEServer.J2EE_TYPE + "," +
-               "*"
-            );
-            Set lServers = server.queryNames( lServerQuery, null );
-            if( lServers.size() == 1 )
-            {
-               ObjectName lServer = (ObjectName) lServers.iterator().next();
-               String lServerName = lServer.getKeyPropertyList().get( J2EEManagedObject.TYPE ) + "=" +
-                                    lServer.getKeyPropertyList().get( "name" );
-               String lApplicationName = di.parent == null ? null : di.parent.shortName;
-               // if pName is null then this is a standalone module
-               if( lApplicationName == null )
-               {
-                  warInfo.setManagementParent( lServer );
-               } else {
-                  ObjectName lApplicationQuery =  new ObjectName(
-                     J2EEManagedObject.getDomainName() + ":" +
-                     J2EEManagedObject.TYPE + "=" + J2EEApplication.J2EE_TYPE + "," +
-                     "name=" + lApplicationName + "," +
-                     lServerName + "," +
-                     "*"
-                  );
-                  Set lApplications = server.queryNames( lApplicationQuery, null );
-                  if( lApplications.isEmpty() ) {
-                     warInfo.setManagementParent( lServer );
-                  } else
-                  if( lApplications.size() == 1 ) {
-                     warInfo.setManagementParent( (ObjectName) lApplications.iterator().next() );
-                  } else
-                  {
-                     log.error( "Wrong number of applications found, should be 1: " + lApplications.size() );
-                  }
-               }
-            }
-            else
-            {
-               log.error( "Wrong number of servers found, should be 1: " + lServers.size() );
-            }
-         }
-         catch( JMException jme ) {
-            log.error( "Could not find server or applications", jme );
-         }
-         //AS End
          performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
       }
       catch(DeploymentException e)
       {
-         throw (DeploymentException) e.fillInStackTrace();
+         throw e;
       }
       catch(Exception e)
       {
-         log.error("Error during deploy", e);
          throw new DeploymentException("Error during deploy", e);
       }
       finally
@@ -517,7 +356,7 @@ public abstract class AbstractWebContainer
       }
       catch(DeploymentException e)
       {
-         throw (DeploymentException) e.fillInStackTrace();
+         throw e;
       }
       catch(Exception e)
       {
@@ -534,11 +373,9 @@ public abstract class AbstractWebContainer
    */
    protected abstract void performUndeploy(String warUrl) throws Exception;
    
-   /**
-    * See if a war is deployed.
-    *
-    * @jmx:managed-attribute
-    */
+   /** See if a war is deployed.
+     @jmx:managed-attribute
+   */
    public boolean isDeployed(String warUrl)
    {
       return deploymentMap.containsKey(warUrl);
@@ -555,37 +392,29 @@ public abstract class AbstractWebContainer
       return appInfo;
    }
    
-   /**
-    * Returns the applications deployed by the web container subclasses.
-    *
-    * @jmx:managed-attribute
-    * 
-    * @return An Iterator of WebApplication objects for the deployed wars.
-    */
+   /** Returns the applications deployed by the web container subclasses.
+   @jmx:managed-attribute
+   @return An Iterator of WebApplication objects for the deployed wars.
+   */
    public Iterator getDeployedApplications()
    {
       return deploymentMap.values().iterator();
    }
    
-   /**
-    * An accessor for any configuration element set via setConfig. This
-    * method always returns null and must be overriden by subclasses to
-    * return a valid value.
-    *
-    * @jmx:managed-attribute
-    */
+   /** An accessor for any configuration element set via setConfig. This
+   method always returns null and must be overriden by subclasses to
+   return a valid value.
+   @jmx:managed-attribute
+   */
    public Element getConfig()
    {
       return null;
    }
-   
-   /**
-    * This method is invoked to import an arbitrary XML configuration tree.
-    * Subclasses should override this method if they support such a configuration
-    * capability. This implementation does nothing.
-    *
-    * @jmx:managed-attribute
-    */
+   /** This method is invoked to import an arbitrary XML configuration tree.
+   Subclasses should override this method if they support such a configuration
+   capability. This implementation does nothing.
+   @jmx:managed-attribute
+   */
    public void setConfig(Element config)
    {
    }
@@ -997,6 +826,7 @@ public abstract class AbstractWebContainer
       should be installed as the default web context.
     */
    protected WebMetaData parseMetaData(String ctxPath, URL warURL)
+      throws DeploymentException
    {
       WebMetaData metaData = new WebMetaData();
       InputStream jbossWebIS = null;
@@ -1048,15 +878,22 @@ public abstract class AbstractWebContainer
             zipIS.close();
          }
 
+         XmlFileLoader xmlLoader = new XmlFileLoader();
          try
          {
-            XmlFileLoader xmlLoader = new XmlFileLoader();
             if( webIS != null )
             {
                Document webDoc = xmlLoader.getDocument(webIS, "WEB-INF/web.xml");
                Element web = webDoc.getDocumentElement();
                metaData.importXml(web);
             }
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Failed to parse WEB-INF/web.xml", e);
+         }
+         try
+         {
             if( jbossWebIS != null )
             {
                Document jbossWebDoc = xmlLoader.getDocument(jbossWebIS, "WEB-INF/jboss-web.xml");
@@ -1066,6 +903,7 @@ public abstract class AbstractWebContainer
          }
          catch(Exception e)
          {
+            throw new DeploymentException("Failed to parse WEB-INF/jboss-web.xml", e);
          }
 
       }
