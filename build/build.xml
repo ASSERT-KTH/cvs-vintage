@@ -170,6 +170,7 @@
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
+        <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
