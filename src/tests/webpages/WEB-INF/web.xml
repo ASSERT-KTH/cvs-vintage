@@ -69,4 +69,55 @@
             *.bop
         </url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>
+            servletParam1
+        </servlet-name>
+        <servlet-class>
+            ServletParam
+        </servlet-class>
+        <init-param>
+            <param-name>
+                param1
+            </param-name>
+            <param-value>
+                value1
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>
+                param2
+            </param-name>
+            <param-value>
+                value2
+            </param-value>
+        </init-param>
+    </servlet>          
+
+    <servlet>
+        <servlet-name>
+            servletParam2
+        </servlet-name>
+        <servlet-class>
+            ServletParam
+        </servlet-class>
+        <init-param>
+            <param-name>
+                param3
+            </param-name>
+            <param-value>
+                value3
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>
+                param4
+            </param-name>
+            <param-value>
+                value4
+            </param-value>
+        </init-param>
+    </servlet>          
+
 </web-app>
