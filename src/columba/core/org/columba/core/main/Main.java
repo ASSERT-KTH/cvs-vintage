@@ -44,6 +44,7 @@ import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.main.MailMain;
 
 public class Main {
+    private static boolean showStartUpFrame = true;
     private Main() {}
     
     public static void main(String[] args) {
@@ -66,9 +67,11 @@ public class Main {
         ColumbaLogger.createDefaultFileHandler();
         
         SessionController.passToRunningSessionAndExit(args);
-		
+
         StartUpFrame frame = new StartUpFrame();
-        frame.setVisible(true);
+        if(showStartUpFrame) {
+            frame.setVisible(true);
+        }
         
         AddressbookMain addressbook = new AddressbookMain();
         addressbook.initConfiguration();
@@ -133,5 +136,9 @@ public class Main {
         if (MainInterface.frameModel.getOpenFrames().length == 0) {
             MainInterface.frameModel.openStoredViews();
         }
+    }
+    
+    public static void setShowStartUpFrame(boolean show) {
+        showStartUpFrame = show;
     }
 }
