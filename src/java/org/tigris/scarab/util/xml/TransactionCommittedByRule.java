@@ -85,8 +85,8 @@ public class TransactionCommittedByRule extends BaseRule
     {
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
         TransactionType transactionType = getImportBean().getTransactionType();
-        Transaction transaction = getImportBean().getTransaction();
-        transaction.create(transactionType.getTypeId(), user, null);
+//        Transaction transaction = getImportBean().getTransaction();
+//        transaction.create(transactionType.getTypeId(), user, null);
     }
     
     protected void doValidationAtBody(String committedByName)
