@@ -1,6 +1,5 @@
-You have been assigned to issue: '$issue.UniqueId'
+$action
 
-<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.getUniqueId()).setAbsolute(true).setEncodeUrlOff()>
 
-Comment:
-$!comment
+<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>
+
