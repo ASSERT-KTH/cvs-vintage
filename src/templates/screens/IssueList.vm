@@ -110,7 +110,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").addPathInfo("sortColumn", ""))
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
         #end
-     Issue Id
+     $l10n.IssueId
      #else
         #prepIssueListPageLink()
         #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortColumn","").setPathInfo("sortPolarity", $sortPolarity))
