@@ -94,7 +94,8 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.33 $
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.34 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -382,8 +383,11 @@ public class EjbModule
          for (Iterator i = containers.values().iterator(); i.hasNext();)
          {
             Container con = (Container)i.next();
-            
             ObjectName jmxName= con.getJmxName();
+            /* Add the container mbean to the deployment mbeans so the state
+             of the deployment can be tracked.
+            */
+            deploymentInfo.mbeans.add(jmxName);
             server.registerMBean(con, jmxName);
             BeanMetaData metaData = con.getBeanMetaData();
             Collection depends = metaData.getDepends();
@@ -401,9 +405,7 @@ public class EjbModule
                lType,
                metaData.getJndiName()
                );
-            if (debug) {
-               log.debug( "Application.start(), EJB: " + lEJB );
-            }
+            log.debug( "Application.start(), EJB: " + lEJB );
             if( lEJB != null ) {
                con.mEJBObjectName = lEJB.toString();
             }
