@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.295 2003/05/01 22:34:04 jon Exp $
+ * @version $Id: Issue.java,v 1.296 2003/05/02 00:15:37 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -628,6 +628,20 @@ public class Issue
         ActivityManager
             .createTextActivity(this, activitySet,
                                 comment, attachment);
+
+        if (!activitySet.sendEmail(this))
+        {
+            String commentSaved = Localization.getString(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                getLocale(),
+                "CommentSaved");
+            String emailError = Localization.getString(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                getLocale(),
+                "CouldNotSendEmail");
+            throw new ScarabException(commentSaved + " " + emailError);
+        }
+
         return activitySet;
     }
 
