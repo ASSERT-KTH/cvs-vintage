@@ -1,21 +1,29 @@
 #set ($userModules = $data.User.Modules)
 #set ($currentModule = $scarabR.CurrentModule)
 
-<h3>Module Selection Page</h3>
+<div id="selectmodule" class="app">
+
+<div class="grouper">
+<h3>Current Module</h3>
 
 #if ($currentModule)
-<table border="0">
+<div class="axial">
+<div class="datatable">
+<table cellpadding="3" cellspacing="2" border="1">
 <tr>
-    <td><b>Current Module Name:</b></td>
+    <th>Current Module Name:</th>
     <td>$currentModule.Name</td>
 </tr>
 <tr>
-    <td><b>Current Module Desc:</b></td>
+    <th>Current Module Desc:</th>
     <td>$currentModule.Description</td>
 </tr>
 </table>
+</div>
+</div>
 #end
-<br/>
+
+<h3>New Module Selection</h3>
 
 #if ($userModules.size() > 0)
 <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
@@ -24,19 +32,38 @@
 #else 
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
 #end
-<select name="newmodule">
+
+<div class="axial">
+<div class="datatable">
+<table border="1" cellspacing="2" cellpadding="3">
+<tr>
+    <th>Module Name:</th>
+    <th>Module Desc:</th>
+</tr>
+
 #foreach ($module in $userModules)
+#indexedRows($velocityCount)
+<td>
  #if ($module.Name.equals($currentModule.Name))
- <option selected="true" value="$module.ModuleId">$module.Name
+<input type="radio" name="newmodule" value="$module.ModuleId" checked="true"/>$module.Name
  #else
- <option value="$module.ModuleId">$module.Name
+<input type="radio" name="newmodule" value="$module.ModuleId"/>$module.Name
  #end
- <br>
+</td>
+<td>
+$module.Description
+</td>
+</tr>
 #end
-</select>
+
+</table>
+</div>
+</div>
+
 <p>
 <input type="submit" name="eventSubmit_doSelect" value="Select Module">
 </p>
+
 </form>
 #else
 <p><strong class="alert">
@@ -45,3 +72,8 @@ Sorry, you do not have access to select any other modules. Please
 has permissions to select a Module.
 </strong></p>
 #end
+
+</div>
+
+
+</div>
