@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionPointListModel.java,v 1.11 2005/01/03 18:21:20 linus Exp $
+// $Id: TestUMLExtendExtensionPointListModel.java,v 1.12 2005/01/08 15:36:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
-
-import ru.novosoft.uml.behavior.use_cases.MExtend;
-import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 
 /**
  * @since Oct 29, 2002
@@ -64,10 +61,10 @@ public class TestUMLExtendExtensionPointListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
     protected Object[] fillModel() {
-        MExtensionPoint[] points = new MExtensionPoint[10];
+        Object[] points = new Object[10];
         for (int i = 0; i < 10; i++) {
             points[i] = Model.getUseCasesFactory().createExtensionPoint();
-            ((MExtend) getElem()).addExtensionPoint(points[i]);
+            ModelFacade.addExtensionPoint(getElem(), points[i]);
         }
         return points;
     }
@@ -77,8 +74,7 @@ public class TestUMLExtendExtensionPointListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MExtend) getElem()).removeExtensionPoint(
-                    (MExtensionPoint) elements[i]);
+            ModelFacade.removeExtensionPoint(getElem(),  elements[i]);
         }
     }
 
