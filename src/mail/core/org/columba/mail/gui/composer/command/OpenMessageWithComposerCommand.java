@@ -16,11 +16,15 @@
 
 package org.columba.mail.gui.composer.command;
 
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -29,7 +33,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
-
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -41,137 +44,144 @@ import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.TempSourceFactory;
 import org.columba.ristretto.parser.MessageParser;
 
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Open message in composer.
- *
+ * 
  * @author fdietz
  */
 public class OpenMessageWithComposerCommand extends FolderCommand {
-    protected ComposerController controller;
-    protected ComposerModel model;
+	protected ComposerController controller;
+	protected ComposerModel model;
+	protected MessageFolder folder;
+	protected Object uid;
 
-    /**
-         * Constructor for OpenMessageInComposerCommand.
-         *
-         * @param frameMediator
-         * @param references
-         */
-    public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for OpenMessageInComposerCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void updateGUI() throws Exception {
-        // open composer frame
-        controller = (ComposerController)
-                MainInterface.frameModel.openView("Composer");
+	public void updateGUI() throws Exception {
+		// open composer frame
+		controller = (ComposerController) MainInterface.frameModel
+				.openView("Composer");
 
-        // apply model
-        controller.setComposerModel(model);
+		// apply model
+		controller.setComposerModel(model);
 
-        // model->view update
-        controller.updateComponents(true);
-    }
+		// model->view update
+		controller.updateComponents(true);
+	}
 
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        model = new ComposerModel();
+	public void execute(WorkerStatusController worker) throws Exception {
+		model = new ComposerModel();
 
-        // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		// get selected folder
+		folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+				.getFolder();
 
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		// get selected messages
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        //TODO keep track of progress here
+		// we only need the first message
+		uid = uids[0];
 
-        InputStream messageSourceStream = folder.getMessageSourceStream(uids[0]);
-        Source tempSource = TempSourceFactory.createTempSource(messageSourceStream, -1, null);
-        messageSourceStream.close();
+		//TODO keep track of progress here
 
-        Message message = MessageParser.parse(tempSource);
+		InputStream messageSourceStream = folder.getMessageSourceStream(uid);
+		Source tempSource = TempSourceFactory.createTempSource(
+				messageSourceStream, -1, null);
+		messageSourceStream.close();
 
-        initHeader(message);
+		Message message = MessageParser.parse(tempSource);
 
-        // select the account this mail was received from
-        Integer accountUid = (Integer) folder.getAttribute(uids[0],
-                "columba.accountuid");
-        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid);
-        model.setAccountItem(accountItem);
+		initHeader(message);
 
-        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
-                                              .getRoot().getElement("/options/html");
+		// select the account this mail was received from
+		Integer accountUid = (Integer) folder.getAttribute(uids[0],
+				"columba.accountuid");
+		AccountItem accountItem = MessageBuilderHelper
+				.getAccountItem(accountUid);
+		model.setAccountItem(accountItem);
 
-        boolean preferHtml = Boolean.valueOf(html.getAttribute("prefer"))
-                                    .booleanValue();
+		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
 
-        initBody(message, preferHtml);
-    }
+		boolean preferHtml = Boolean.valueOf(html.getAttribute("prefer"))
+				.booleanValue();
 
-    private void initBody(Message message, boolean preferHtml) {
-        MimeTree mimeTree = message.getMimePartTree();
+		initBody(message, preferHtml);
+	}
 
-        // Which Bodypart shall be shown? (html/plain)
-        LocalMimePart bodyPart = null;
+	private void initBody(Message message, boolean preferHtml) throws Exception {
+		MimeTree mimeTree = message.getMimePartTree();
 
-        if (preferHtml) {
-            bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("html");
-        } else {
-            bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("plain");
-        }
+		// Which Bodypart shall be shown? (html/plain)
+		LocalMimePart bodyPart = null;
 
-        if (bodyPart != null) {
-            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-                // html
-                model.setHtml(true);
-            } else {
-                model.setHtml(false);
-            }
+		if (preferHtml) {
+			bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("html");
+		} else {
+			bodyPart = (LocalMimePart) mimeTree.getFirstTextPart("plain");
+		}
 
-            model.setBodyText(bodyPart.getBody().toString());
-        }
+		if (bodyPart != null) {
+			if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+				// html
+				model.setHtml(true);
+			} else {
+				model.setHtml(false);
+			}
 
-        initAttachments(mimeTree, bodyPart);
-    }
+			model.setBodyText(StreamUtils.readInString(
+					folder.getMimePartBodyStream(uid, bodyPart.getAddress()))
+					.toString());
 
-    private void initHeader(Message message) {
-        Header header = message.getHeader();
+		}
 
-        BasicHeader rfcHeader = new BasicHeader(header);
+		initAttachments(mimeTree, bodyPart);
+	}
 
-        // set subject
-        model.setSubject(rfcHeader.getSubject());
+	private void initHeader(Message message) {
+		Header header = message.getHeader();
 
-        model.setTo(rfcHeader.getTo());
+		BasicHeader rfcHeader = new BasicHeader(header);
 
-        // copy every headerfield the original message contains
-        model.setHeader(header);
-    }
+		// set subject
+		model.setSubject(rfcHeader.getSubject());
 
-    private void initAttachments(MimeTree collection, MimePart bodyPart) {
-        // Get all MimeParts
-        List displayedMimeParts = collection.getAllLeafs();
+		model.setTo(rfcHeader.getTo());
 
-        if (bodyPart != null) {
-            MimePart bodyParent = bodyPart.getParent();
+		// copy every headerfield the original message contains
+		model.setHeader(header);
+	}
 
-            if (bodyParent != null) {
-                if (bodyParent.getHeader().getMimeType().getSubtype().equals("alternative")) {
-                    List bodyParts = bodyParent.getChilds();
-                    displayedMimeParts.removeAll(bodyParts);
-                } else {
-                    displayedMimeParts.remove(bodyPart);
-                }
-            }
+	private void initAttachments(MimeTree collection, MimePart bodyPart) {
+		// Get all MimeParts
+		List displayedMimeParts = collection.getAllLeafs();
 
-            Iterator it = displayedMimeParts.iterator();
+		if (bodyPart != null) {
+			MimePart bodyParent = bodyPart.getParent();
 
-            while (it.hasNext()) {
-                model.addMimePart((StreamableMimePart) it.next());
-            }
-        }
-    }
+			if (bodyParent != null) {
+				if (bodyParent.getHeader().getMimeType().getSubtype().equals(
+						"alternative")) {
+					List bodyParts = bodyParent.getChilds();
+					displayedMimeParts.removeAll(bodyParts);
+				} else {
+					displayedMimeParts.remove(bodyPart);
+				}
+			}
+
+			Iterator it = displayedMimeParts.iterator();
+
+			while (it.hasNext()) {
+				model.addMimePart((StreamableMimePart) it.next());
+			}
+		}
+	}
 }
