@@ -24,7 +24,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrNodesOverlap.java,v 1.3 2002/03/01 11:16:56 mkl Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -64,6 +64,12 @@ public class CrNodesOverlap extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Diagram)) return NO_PROBLEM;
     Diagram d = (Diagram) dm;
+
+    // fixes bug #669. Sequencediagrams always overlap, so there is 
+    // always a problem
+    if (dm instanceof org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram)
+        return NO_PROBLEM;
+
     VectorSet offs = computeOffenders(d);
     if (offs == null) return NO_PROBLEM;
     return PROBLEM_FOUND;
