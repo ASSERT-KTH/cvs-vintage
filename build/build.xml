@@ -459,9 +459,9 @@
               tofile="${torque.dir.scarab}/build.properties"
               filtering="true" overwrite="true"/>
 
+        <!-- move the generated .sql files into the target directory -->
         <ant antfile="build-torque.xml"
              dir="${torque.dir.scarab}" target="sql"
-        <!-- move the generated .sql files into the target directory -->
              inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
