@@ -75,6 +75,10 @@ class LocationStep extends AbstractStep implements ActionListener {
                                     "dialog",
                                     "mailboximport",
                                     "source"));
+                sourceLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
+                                    "dialog",
+                                    "mailboximport",
+                                    "source"));
 		middlePanel.addLabel(sourceLabel);
 		sourceButton = new JButton("...");
                 sourceLabel.setLabelFor(sourceButton);
@@ -82,6 +86,10 @@ class LocationStep extends AbstractStep implements ActionListener {
 		middlePanel.addTextField(sourceButton);
 		middlePanel.addExample(new JLabel());
 		JLabel destinationLabel = new JLabel(MailResourceLoader.getString(
+                                    "dialog",
+                                    "mailboximport",
+                                    "destination"));
+                destinationLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
                                     "dialog",
                                     "mailboximport",
                                     "destination"));
