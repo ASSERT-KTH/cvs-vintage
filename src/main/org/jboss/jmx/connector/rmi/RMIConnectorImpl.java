@@ -43,7 +43,6 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.MBeanServer;
 import javax.management.MBeanInfo;
-import javax.management.loading.ClassLoaderRepository;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceAlreadyExistsException;
@@ -57,6 +56,7 @@ import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
+import javax.management.loading.ClassLoaderRepository;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -82,8 +82,8 @@ import org.jboss.util.NestedRuntimeException;
  *
  * @jmx:mbean extends="org.jboss.jmx.connector.RemoteMBeanServer"
  *
- * @version <tt>$Revision: 1.12 $</tt>
- * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Ã–berg</a>
+ * @version <tt>$Revision: 1.13 $</tt>
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
  */
 public class RMIConnectorImpl
@@ -105,7 +105,7 @@ public class RMIConnectorImpl
    {
       super();
    }
-   
+
    /**
     * AS For evaluation purposes
     * Creates a Connector based on an already found Adaptor
@@ -117,26 +117,26 @@ public class RMIConnectorImpl
       mRemoteAdaptor = pAdaptor;
       mServer = "Dummy";
    }
-   
+
    public RMIConnectorImpl(int pNotificationType,
                            String[] pOptions,
                            String pServerName)
       throws Exception
    {
       mEventType = pNotificationType;
-      
+
       if( pOptions == null ) {
          mOptions = new String[ 0 ];
       } else {
          mOptions = pOptions;
       }
-      
+
       start( pServerName );
    }
-   
+
    // RemoteMBeanServer implementation -------------------------------------
 
-   public Object instantiate(String className) 
+   public Object instantiate(String className)
       throws ReflectionException, MBeanException
    {
       try {
@@ -147,7 +147,7 @@ public class RMIConnectorImpl
       }
    }
 
-   public Object instantiate(String className, ObjectName loaderName) 
+   public Object instantiate(String className, ObjectName loaderName)
       throws ReflectionException, MBeanException, InstanceNotFoundException
    {
       try {
@@ -157,7 +157,7 @@ public class RMIConnectorImpl
          throw new MBeanException(e);
       }
    }
-   
+
    public Object instantiate(String className, Object[] params, String[] signature)
       throws ReflectionException, MBeanException
    {
@@ -166,9 +166,9 @@ public class RMIConnectorImpl
       }
       catch (RemoteException e) {
          throw new MBeanException(e);
-      }      
+      }
    }
-   
+
    public Object instantiate(String className,
                              ObjectName loaderName,
                              Object[] params,
@@ -180,7 +180,7 @@ public class RMIConnectorImpl
       }
       catch (RemoteException e) {
          throw new MBeanException(e);
-      }      
+      }
    }
 
    public ObjectInstance createMBean(String pClassName, ObjectName pName)
@@ -254,7 +254,7 @@ public class RMIConnectorImpl
       }
    }
 
-   public ObjectInstance registerMBean(Object object, ObjectName name) 
+   public ObjectInstance registerMBean(Object object, ObjectName name)
       throws InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException
    {
       try {
@@ -264,7 +264,7 @@ public class RMIConnectorImpl
          throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
-   
+
    public void unregisterMBean(ObjectName pName)
       throws InstanceNotFoundException,
              MBeanRegistrationException
@@ -451,7 +451,7 @@ public class RMIConnectorImpl
                   this
                );
                break;
-               
+
             case NOTIFICATION_TYPE_JMS:
                lListener = new JMSClientNotificationListener(
                   pName,
@@ -463,7 +463,7 @@ public class RMIConnectorImpl
                   this
                );
                break;
-               
+
             case NOTIFICATION_TYPE_POLLING:
                lListener = new PollingClientNotificationListener(
                   pName,
@@ -475,7 +475,7 @@ public class RMIConnectorImpl
                   this
                );
          }
-         
+
          // Add this listener on the client to remove it when the client goes down
          mListeners.addElement( lListener );
       }
@@ -504,6 +504,26 @@ public class RMIConnectorImpl
       }
    }
 
+    public void removeNotificationListener(ObjectName pName,
+                                           ObjectName pListener,
+                                           NotificationFilter filter,
+                                           Object handback)
+       throws InstanceNotFoundException,
+              ListenerNotFoundException
+    {
+       throw new RuntimeException("NYI");
+    }
+
+    public void removeNotificationListener(ObjectName pName,
+                                           NotificationListener pListener,
+                                           NotificationFilter filter,
+                                           Object handback)
+       throws InstanceNotFoundException,
+              ListenerNotFoundException
+    {
+       throw new RuntimeException("NYI");
+    }
+
    public void removeNotificationListener(ObjectName pName, ObjectName pListener)
       throws InstanceNotFoundException,
              ListenerNotFoundException
@@ -515,6 +535,16 @@ public class RMIConnectorImpl
          throw new RuntimeMBeanException(new NestedRuntimeException(e));
       }
    }
+
+    public String[] getDomains()
+    {
+       try {
+          return mRemoteAdaptor.getDomains();
+       }
+       catch( RemoteException e ) {
+          throw new RuntimeMBeanException(new NestedRuntimeException(e));
+       }
+    }
 
    public MBeanInfo getMBeanInfo(ObjectName pName)
       throws InstanceNotFoundException,
@@ -534,18 +564,18 @@ public class RMIConnectorImpl
     *
     * @throws UnsupportedOperationException
     */
-   public ObjectInputStream deserialize(ObjectName name, byte[] data) 
+   public ObjectInputStream deserialize(ObjectName name, byte[] data)
       throws InstanceNotFoundException, OperationsException
    {
       throw new UnsupportedOperationException();
    }
- 
+
    /**
     * Always throws {@link java.lang.UnsupportedOperationException}.
     *
     * @throws UnsupportedOperationException
     */
-   public ObjectInputStream deserialize(String className, byte[] data) 
+   public ObjectInputStream deserialize(String className, byte[] data)
       throws OperationsException, ReflectionException
    {
       throw new UnsupportedOperationException();
@@ -562,37 +592,6 @@ public class RMIConnectorImpl
       throw new UnsupportedOperationException();
    }
 
-   // MBeanServer JMX 1.2 implementation ------------------------------
-
-   public String[] getDomains()
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public void removeNotificationListener(ObjectName target, ObjectName listener, NotificationFilter filter, Object handback)
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public void removeNotificationListener(ObjectName target, NotificationListener listener, NotificationFilter filter, Object handback)
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public ClassLoaderRepository getClassLoaderRepository()
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public ClassLoader getClassLoader(ObjectName name)
-   {
-      throw new UnsupportedOperationException();
-   }
-
-   public ClassLoader getClassLoaderFor(ObjectName name)
-   {
-      throw new UnsupportedOperationException();
-   }
    // JMXClientConnector implementation -------------------------------
 
    /**
@@ -601,19 +600,19 @@ public class RMIConnectorImpl
    public void start(Object pServer) throws Exception
    {
       log.debug( "Starting");
-      
+
       if( pServer == null ) {
          throw new IllegalArgumentException( "Server cannot be null. "
                                              + "To close the connection use stop()" );
       }
 
       InitialContext ctx = new InitialContext();
-      
-      try {   
+
+      try {
          log.debug("Using Naming Context: " + ctx +
                    ", environment: " + ctx.getEnvironment() +
                    ", name in namespace: " + ctx.getNameInNamespace());
-         
+
          // This has to be adjusted later on to reflect the given parameter
          mRemoteAdaptor = (RMIAdaptor)ctx.lookup( "jmx:" + pServer + ":rmi" );
          log.error( "Using remote adaptor: " + mRemoteAdaptor );
@@ -631,7 +630,7 @@ public class RMIConnectorImpl
     */
    public void stop() {
       log.debug( "Stopping");
-      
+
       // First go through all the reistered listeners and remove them
       if( mRemoteAdaptor != null ) {
          // Loop through all the listeners and remove them
@@ -646,17 +645,49 @@ public class RMIConnectorImpl
             i.remove();
          }
       }
-      
+
       mRemoteAdaptor = null;
       mServer = "";
    }
-   
+
    public boolean isAlive() {
       return mRemoteAdaptor != null;
    }
 
    public String getServerDescription() {
       return String.valueOf(mServer);
-   }   
-}   
+   }
+
+    /**
+     * Always throws {@link java.lang.UnsupportedOperationException}.
+     *
+     * @throws UnsupportedOperationException
+     */
+    public ClassLoaderRepository getClassLoaderRepository()
+    {
+       throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Always throws {@link java.lang.UnsupportedOperationException}.
+     *
+     * @throws UnsupportedOperationException
+     */
+    public ClassLoader getClassLoader(ObjectName loaderName)
+       throws InstanceNotFoundException
+    {
+       throw new UnsupportedOperationException();
+    }
+
+   /**
+    * Always throws {@link java.lang.UnsupportedOperationException}.
+    *
+    * @throws UnsupportedOperationException
+    */
+   public ClassLoader getClassLoaderFor(ObjectName loaderName)
+      throws InstanceNotFoundException
+   {
+      throw new UnsupportedOperationException();
+   }
+}
 

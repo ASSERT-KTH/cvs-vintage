@@ -29,7 +29,7 @@ as the WebClassLoader constructor.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
 @author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class WebClassLoader extends LoaderRepositoryClassLoader
 {
