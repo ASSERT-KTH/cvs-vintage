@@ -2,13 +2,24 @@
 
 <HTML>
   <HEAD>
-    <TITLE></TITLE>
+    <title>Scoped J2ee Deployment</title></TITLE>
   </HEAD>
   <BODY>
-    This package hosts an extension to the J2eeDeployer that is able to
-    virtually merge J2EE applications into a so-called scope. These
-    scoped applications are able to share classes and resources. The dependencies 
-    between the applications are logged and used to coherently undeploy parts
-    of the scope.
+		<h2>Introduction</h2>
+    <p>This package hosts an extension to the J2eeDeployer that is able to
+    "virtually" merge J2EE applications in the jboss runtime within a so-called "scope". Scoped 
+		applications are able to share classes and resources which allows to remove
+		redundancies from your ears/jars (management impact) and introduces additional runtime 
+		optimisations (performance impact).
+		</p>
+		<h2>The Global Scope Deployer </h2>
+		<p>
+		We provide a default "global scope" deployer that merges all applications in a single
+		scope. It comes with an appropriate deployment/undeployment logic that analyses 
+		Class-Path annotations in your ears Manifest - Marc: this is not necessary to 
+		get the resource sharing effect, but it is useful if deploying mutually dependent ears. 
+		The classloading scheme prefers local resources to dispatching to the scope 
+		such that you may still have the advantage of including redundant class files.
+		</p>
   </BODY>
 </HTML>
