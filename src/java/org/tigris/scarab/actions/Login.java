@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.47 2003/05/20 14:49:19 jmcnally Exp $
+ * @version $Id: Login.java,v 1.48 2003/05/20 16:28:11 dlr Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -156,24 +156,23 @@ public class Login extends ScarabTemplateAction
         catch (UnknownEntityException e)
         {
             scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
-            Log.get().info("org.tigris.scarab.actions.Login UEE: " 
-                           + e.getMessage());
+            Log.get().info("Invalid login attempted: " + e.getMessage());
             return failAction(data, "Login.vm");            
         }
         catch (PasswordMismatchException e)
         {
             scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
-            Log.get().info("org.tigris.scarab.actions.Login PME: " 
+            Log.get().debug("Password mis-match during login attempt: "
                            + e.getMessage());
             return failAction(data, "Login.vm");            
         }
         catch (TurbineSecurityException e)
         {
             scarabR.setAlertMessage(l10n.get("InvalidUsernameOrPassword"));
-            Log.get().error ("Login: ", e);
+            Log.get().error("Error while attempting to log in", e);
             return failAction(data, "Login.vm");
         }
-        
+
         try
         {
             // check the CONFIRM_VALUE
