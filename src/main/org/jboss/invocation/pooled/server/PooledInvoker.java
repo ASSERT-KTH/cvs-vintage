@@ -50,7 +50,7 @@ import org.jboss.tm.TransactionPropagationContextUtil;
  * 
  *
  * @author    <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -260,7 +260,7 @@ public class PooledInvoker extends ServiceMBeanSupport
                thread.wakeup(socket, timeout);
             }
          }
-         catch (Exception ex)
+         catch (Throwable ex)
          {
             if (running)
                log.error("Failed to accept socket connection", ex);

@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Log4jSocketServer
@@ -237,7 +237,7 @@ public class Log4jSocketServer
             {
                doRun();
             }
-            catch (Exception e)
+            catch (Throwable e)
             {
                log.error("Exception caught from main loop; ignoring", e);
             }
