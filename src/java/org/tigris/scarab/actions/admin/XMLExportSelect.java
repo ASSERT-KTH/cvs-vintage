@@ -67,7 +67,7 @@ import org.tigris.scarab.util.xml.XMLExport;
  * XML.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExportSelect.java,v 1.2 2001/12/13 23:57:40 jon Exp $
+ * @version $Id: XMLExportSelect.java,v 1.3 2001/12/14 17:33:39 kminshull Exp $
  */
 public class XMLExportSelect extends RequireLoginFirstAction
 {
@@ -93,13 +93,12 @@ public class XMLExportSelect extends RequireLoginFirstAction
                 List exportList = exporter.parseIssueList(fids);
                 context.put("federatedIds", exportList);
                 context.put("sdf", new SimpleDateFormat(format));
-                setTarget(data, template);
             }
             catch (Exception e)
             {
                 data.setMessage(e.getMessage());
-                setTarget(data, template);
             }
+            setTarget(data, template);
         }
     }
     
