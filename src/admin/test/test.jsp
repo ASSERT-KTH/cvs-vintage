@@ -1,13 +1,15 @@
 <html><title>Tomcat Self-Test</title>
 <body bgcolor="#FFFFFF">
 <h1>Tomcat Self-test</h1> 
-
+<%@ page import="java.util.*" %>
 <%@ taglib uri="http://jakarta.apache.org/taglibs/tomcat_admin-1.0" 
            prefix="adm" %>
 <%@ taglib uri="http://jakarta.apache.org/taglibs/ant-1.0" 
            prefix="ant" %>
 
 This page will show the result of executing the sanity test suite. 
+
+<%! Date d ; %>
 
 <%@ include file="sanity-form.jsp" %>
 
@@ -31,7 +33,7 @@ This page will show the result of executing the sanity test suite.
 %>
 
 <ant:gtest />
-
+<% d = new Date(); %>
 <ant:ant>
   <ant:target param="target" />
   
@@ -48,13 +50,14 @@ This page will show the result of executing the sanity test suite.
   <ant:property name="http.protocol" param="server.proto" />
   <ant:property name="host" param="host" />
 </ant:ant>
-
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
    // it's done ), use 'html' for "interactive" results
 %>
 
 <h1>Test <%= antProperties.getProperty("revision") %></h1>
+
+Executed in <%= (new Date()).getTime() - d.getTime() %> Milliseconds.<br>
 
 <% // -------------------- Failures -------------------- %>
 <h1>FAILED Tests</h1>
