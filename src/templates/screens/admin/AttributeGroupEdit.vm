@@ -44,6 +44,10 @@
  </table>
 </div>
 
+<div class="functnbar3">
+<input type="submit" value="Save" name="eventSubmit_doSaveinfo" />&#160;
+</div>
+
 <h3>Attributes in this group</h3>
 #if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
