@@ -100,21 +100,23 @@ public class AddressbookTableModel extends AbstractTableModel {
 	}
 
 	public void addItem(HeaderItem item) throws Exception {
+		ColumbaLogger.log.debug("item="+item.toString());
+		
 		int count = 0;
 
 		if (getHeaderList() != null)
 			count = getHeaderList().count();
 
 		if (count == 0) {
-			System.out.println("count == 0");
+			
 
 			rows = new HeaderItemList();
 
 			// first message
 			getHeaderList().add(item);
 
-			fireTableRowsInserted(0, 0);
-			//update();
+			//fireTableRowsInserted(0, 0);
+			update();
 		} else {
 
 			setSelectedItem(item);

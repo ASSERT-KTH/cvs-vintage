@@ -43,7 +43,7 @@ import org.columba.mail.message.MimePart;
 public class AttachmentView extends JScrollPane implements ListDataListener {
 
 	private AttachmentController controller;
-		
+
 	//private IconPanel attachment;
 	private DefaultListModel listModel;
 
@@ -62,7 +62,7 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 
 	}
 
-	public void installListener( AttachmentController c ) {
+	public void installListener(AttachmentController c) {
 		listModel.addListDataListener(this);
 		list.addKeyListener(c);
 	}
@@ -78,14 +78,12 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 	public void remove(int index) {
 		listModel.remove(index);
 	}
-	
-	public void remove(MimePart mp )
-	{
+
+	public void remove(MimePart mp) {
 		listModel.removeElement(mp);
 	}
-	
-	public MimePart get( int index )
-	{
+
+	public MimePart get(int index) {
 		return (MimePart) listModel.get(index);
 	}
 
@@ -115,8 +113,7 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 
 	class ListRenderer extends JLabel implements ListCellRenderer {
 
-		ImageIcon image1 =
-			ImageLoader.getSmallImageIcon("attachment.png");
+		ImageIcon image1 = ImageLoader.getSmallImageIcon("attachment.png");
 
 		public ListRenderer() {
 			setOpaque(true);
@@ -138,25 +135,27 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 			}
 
 			MimePart mp = (MimePart) value;
-			if ( mp == null ) return this;
-			
+			if (mp == null)
+				return this;
+
 			MimeHeader header = mp.getHeader();
 			String type = header.contentType;
 			String subtype = header.contentSubtype;
-			
+
 			StringBuffer buf = new StringBuffer();
-			
-			buf.append( (String) mp.getHeader().getFileName() );
-			
-			/*
-			buf.append(" (");
-			buf.append( type );
-			buf.append("/");
-			buf.append( subtype );
-			buf.append(")");
-			*/
-			
-			setText( buf.toString() );
+
+			if (mp.getHeader().getFileName() != null)
+				buf.append((String) mp.getHeader().getFileName());
+			else {
+
+				buf.append(" (");
+				buf.append(type);
+				buf.append("/");
+				buf.append(subtype);
+				buf.append(")");
+			}
+
+			setText(buf.toString());
 			setIcon(image1);
 			return this;
 		}

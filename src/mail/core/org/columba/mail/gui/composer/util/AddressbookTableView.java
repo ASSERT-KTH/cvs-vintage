@@ -112,6 +112,9 @@ public class AddressbookTableView extends JTable {
 				.getEditorComponent())
 				.setNextFocusableComponent(
 			c);
+			
+		addressEditor.setNextFocusableComponent(
+		c);
 	}
 
 	public AddressbookTableModel getAddressbookTableModel() {

@@ -107,12 +107,16 @@ public class DisplaynameHeaderColumn extends JLabel implements HeaderColumnInter
 		
 		HeaderItem item = (HeaderItem) object;
 		
+		/*
 		String name = (String) item.get("displayname");
 		
 		if ( name == null ) 
 			name = (String) item.get("email;internet");
-			
+		
 		setText( name );
+		*/
+		
+		setText( item.toString() );
 		
 		if ( item.isContact() )
 			setIcon( contactIcon );

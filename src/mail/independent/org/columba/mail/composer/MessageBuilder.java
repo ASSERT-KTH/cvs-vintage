@@ -188,6 +188,7 @@ public class MessageBuilder {
 		String replyTo = (String) header.get("Reply-To");
 		String from = (String) header.get("From");
 		String to = (String) header.get("To");
+		String cc = (String) header.get("Cc");
 
 		// if Reply-To headerfield isn't specified, try to use from
 		if (replyTo == null) {
@@ -198,8 +199,16 @@ public class MessageBuilder {
 		// create To headerfield
 		StringBuffer buf = new StringBuffer();
 		buf.append(sender);
-		buf.append(",");
-		buf.append(to);
+		if (to != null) {
+
+			buf.append(",");
+			buf.append(to);
+		}
+		if (cc != null) {
+
+			buf.append(",");
+			buf.append(cc);
+		}
 
 		return buf.toString();
 	}
@@ -246,8 +255,11 @@ public class MessageBuilder {
 
 			sender = list.toString();
 		} else
-			sender = (String) header.get("Reply-To");
+			sender = (String) header.get("To");
 
+		if ( sender == null )
+			sender = (String) header.get("Reply-To");
+			
 		if (sender == null)
 			sender = (String) header.get("From");
 
@@ -277,8 +289,9 @@ public class MessageBuilder {
 		ColumbaHeader header,
 		ComposerModel model) {
 		String messageId = (String) header.get("Message-ID");
-		if  (messageId == null ) messageId = (String) header.get("Message-Id");
-		
+		if (messageId == null)
+			messageId = (String) header.get("Message-Id");
+
 		if (messageId != null) {
 			model.setHeaderField("In-Reply-To", messageId);
 
@@ -460,6 +473,8 @@ public class MessageBuilder {
 			}
 
 		}
+		
+		model.setTo( (String) header.get("To"));
 
 		AccountItem accountItem = getAccountItem(header);
 		model.setAccountItem(accountItem);
@@ -599,25 +614,26 @@ public class MessageBuilder {
 
 		if (sender != null) {
 			if (sender.length() > 0) {
-				
-				org.columba.addressbook.folder.Folder selectedFolder = AddressbookFacade.getCollectedAddresses();
-								
+
+				org.columba.addressbook.folder.Folder selectedFolder =
+					AddressbookFacade.getCollectedAddresses();
+
 				String address = AddressParser.getAddress(sender);
 				System.out.println("address:" + address);
-				
+
 				if (!selectedFolder.exists(address)) {
 					ContactCard card = new ContactCard();
-				
+
 					String fn = AddressParser.getDisplayname(sender);
 					System.out.println("fn=" + fn);
-				
+
 					card.set("fn", fn);
 					card.set("displayname", fn);
 					card.set("email", "internet", address);
-				
+
 					selectedFolder.add(card);
 				}
-				
+
 			}
 		}
 

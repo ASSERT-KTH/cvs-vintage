@@ -55,7 +55,7 @@ public class ReplyCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		controller.updateComponents(true);
+		//controller.updateComponents(true);
 	}
 
 	/**

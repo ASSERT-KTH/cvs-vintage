@@ -86,7 +86,16 @@ public class ComposerController
 
 		getView().loadWindowPosition();
 		
+		headerController.view.getTable().initFocus(subjectController.view);
+		
 		getView().setVisible(true);
+		
+		
+		initAddressCompletion();
+		
+		//headerController.appendRow();
+		
+		
 	}
 
 	public ComposerController(
@@ -179,9 +188,9 @@ public class ComposerController
 
 		headerController.updateComponents(b);
 
-		headerController.view.getTable().initFocus(subjectController.view);
-		initAddressCompletion();
-		headerController.appendRow();
+		
+		
+		//headerController.appendRow();
 	}
 
 	/*
@@ -505,6 +514,8 @@ public class ComposerController
 	 */
 	public void setComposerModel(ComposerModel model) {
 		composerModel = model;
+		
+		updateComponents(true);
 	}
 
 	/* (non-Javadoc)

@@ -182,4 +182,13 @@ public class HeaderItem {
 
 		return item;
 	}
+	
+	public String toString()
+		{
+			String str = (String) get("displayname");
+		
+			if ( str == null ) str = (String) get("email;internet");
+				
+			return str;
+		}
 }

@@ -18,7 +18,9 @@ package org.columba.mail.gui.composer;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.Message;
@@ -71,17 +73,21 @@ public class ComposerModel {
 	}
 
 	public void setTo(String s) {
+
+		ColumbaLogger.log.debug("to-headerfield:" + s);
+
 		if (s == null)
 			return;
 
 		if (s.length() == 0)
 			return;
 
+		/*
 		int index = s.indexOf(",");
 		if (index != -1) {
 			String to = s;
 			Vector v = ListParser.parseString(to);
-
+		
 			for (int i = 0; i < v.size(); i++) {
 				System.out.println("model add:" + v.get(i));
 				HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
@@ -93,6 +99,19 @@ public class ComposerModel {
 			HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
 			item.add("displayname", s);
 			item.add("field", "To");
+			getToList().add(item);
+		}
+		*/
+
+		Vector v = ListParser.parseString(s);
+		for (int i = 0; i < v.size(); i++) {
+			String str = (String) v.get(i);
+
+			HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
+			item.add("displayname", AddressParser.getDisplayname(str));
+			item.add("email;internet", AddressParser.getAddress(str));
+			item.add("field", "To");
+
 			getToList().add(item);
 		}
 

@@ -35,6 +35,7 @@ import org.columba.addressbook.gui.table.AddressbookTableModel;
 import org.columba.addressbook.gui.util.HeaderItemDNDManager;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -120,7 +121,10 @@ public class HeaderController
 	protected void addVectorToTable(Vector v, int index) {
 		for (int i = 0; i < v.size(); i++) {
 			try {
+				
 				HeaderItem item = (HeaderItem) v.get(i);
+				ColumbaLogger.log.debug("item="+item.toString());
+				
 				String field = (String) item.get("field");
 
 				if (field == null) {
@@ -229,7 +233,9 @@ public class HeaderController
 		String columnName = model.getColumnName(column);
 		Object data = model.getValueAt(row, column);
 		*/
-/*
+
+		ComposerModel model = controller.getModel();
+		/*
 		model.getToList().clear();
 		model.getCcList().clear();
 		model.getBccList().clear();
@@ -247,8 +253,8 @@ public class HeaderController
 				model.getBccList().add(item);
 			}
 		}
+		
 		*/
-
 	}
 
 	public void removeSelected() {

@@ -76,8 +76,9 @@ public class DisplayNameRenderer extends JLabel implements TableCellRenderer
 
         String name = (String) value;
 
-
-          
+		if ( name==null) name = "<no displayname available!>";
+		if ( name.length() == 0) name = "<no displayname available!>";
+		
         if ( name.equals(" ") )
             setIcon( image1 );
         if ( name.indexOf(" ") != -1  )
