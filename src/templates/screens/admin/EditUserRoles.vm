@@ -34,9 +34,9 @@ Modifying roles for <b><a href="mailto:$user.Email">$!user.Name</a></b>
   
   </tr>
 
-  <form method="post" action="admin,EditUserRoles.vm">
+  <form method="post" action="admin,ManageUserSearch.vm">
     <input type="hidden" name="action" value="admin.ManageUser" />
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,EditUser.vm" />
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
     <input type="hidden" name="state" value="showedituser" />
 
   #foreach ($group in $securityAdmin.Groups)
