@@ -169,9 +169,10 @@ public class Query
                     getString("scarab.email.requireapproval.template",
                               "email/RequireApproval.vm");
 
-                ScarabUser[] toUsers = module.getUsers(ScarabSecurity.MODULE__EDIT);
+                ScarabUser[] toUsers = module
+                    .getUsers(ScarabSecurity.MODULE__EDIT);
                 Email.sendEmail(context, module, null, Arrays.asList(toUsers), 
-                    null, subject, template);
+                                null, subject, template);
             }
         }
         save();

@@ -65,10 +65,10 @@ import org.tigris.scarab.services.module.ModuleEntity;
 public class Email
 {
     public static boolean sendEmail( TemplateContext context, 
-				     ModuleEntity module, Object fromUser,
-				     List toUsers, List ccUsers,
-				     String subject, String template )
-         throws Exception
+                                     ModuleEntity module, Object fromUser,
+                                     List toUsers, List ccUsers,
+                                     String subject, String template )
+        throws Exception
     {
         boolean success = true;
         TemplateEmail te = new TemplateEmail();
@@ -77,48 +77,48 @@ public class Email
             context = new DefaultTemplateContext();
         }        
         te.setContext(context);
-
+        
         if (fromUser instanceof ScarabUser)
         {
-	    ScarabUser u = (ScarabUser)fromUser;
+            ScarabUser u = (ScarabUser)fromUser;
             te.setFrom(u.getFirstName() + u.getLastName(), u.getEmail());
         }
-	else
-	{
-	    // assume string
-	    String key = (String)fromUser;	    
-	    if (fromUser == null)
-	    {
-		key = "scarab.email.default";
-	    } 
-	    
-	    te.setFrom(Turbine.getConfiguration().getString
-		       (key + ".fromName", "Scarab System"), 
-		       Turbine.getConfiguration().getString
-		       (key + ".fromAddress",
-			"help@scarab.tigris.org"));
-	}
-
+        else
+        {
+            // assume string
+            String key = (String)fromUser;	    
+            if (fromUser == null)
+            {
+                key = "scarab.email.default";
+            } 
+            
+            te.setFrom(Turbine.getConfiguration().getString
+                       (key + ".fromName", "Scarab System"), 
+                       Turbine.getConfiguration().getString
+                       (key + ".fromAddress",
+                        "help@scarab.tigris.org"));
+        }
+        
         if (subject == null)
         {
             te.setSubject((Turbine.getConfiguration().
-               getString("scarab.email.default.subject")));
+                           getString("scarab.email.default.subject")));
         }
         else
         {
             te.setSubject(subject);
         }
-
+        
         if (template == null)
         {
-           te.setTemplate(Turbine.getConfiguration().
-               getString("scarab.email.default.template"));
+            te.setTemplate(Turbine.getConfiguration().
+                           getString("scarab.email.default.template"));
         }
         else
         {
-           te.setTemplate(template);
+            te.setTemplate(template);
         }
-
+        
         Iterator iter = toUsers.iterator();
         while ( iter.hasNext() ) 
         {
@@ -126,24 +126,24 @@ public class Email
             te.addTo(toUser.getEmail(),
                      toUser.getFirstName() + " " + toUser.getLastName());
         }
-
-	if (ccUsers != null)
-	{
-	    iter = ccUsers.iterator();
-	    while ( iter.hasNext() ) 
-	    {
-		ScarabUser ccUser = (ScarabUser)iter.next();
-		te.addCc(ccUser.getEmail(),
-			 ccUser.getFirstName() + " " + ccUser.getLastName());
-	    }
-	}
-
-	String archiveEmail = module.getArchiveEmail();
-	if (archiveEmail != null && archiveEmail.trim().length() > 0)
-	{
+        
+        if (ccUsers != null)
+        {
+            iter = ccUsers.iterator();
+            while ( iter.hasNext() ) 
+            {
+                ScarabUser ccUser = (ScarabUser)iter.next();
+                te.addCc(ccUser.getEmail(),
+                         ccUser.getFirstName() + " " + ccUser.getLastName());
+            }
+        }
+        
+        String archiveEmail = module.getArchiveEmail();
+        if (archiveEmail != null && archiveEmail.trim().length() > 0)
+        {
             te.addCc(archiveEmail, null);
-	}
-
+        }
+        
         try
         {
             te.sendMultiple();
@@ -157,16 +157,14 @@ public class Email
 
     /**
      * Single user recipient.
-    */ 
+     */ 
     public static void sendEmail( TemplateContext context, ModuleEntity module,
-				  ScarabUser fromUser, ScarabUser toUser, 
-				  String subject, String template )
-         throws Exception
+                                  ScarabUser fromUser, ScarabUser toUser, 
+                                  String subject, String template )
+        throws Exception
     {
         List toUsers = new LinkedList();
         toUsers.add(toUser);
         sendEmail( context, module, fromUser, toUsers, null, subject, template);
     }
-
-
 }

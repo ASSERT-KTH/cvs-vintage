@@ -169,53 +169,53 @@ public class Transaction
         context.put("issue", issue);
         context.put("attachment", aAttachment);
         context.put("activityList", getActivityList());
-
-	String fromUser = "scarab.email.modifyissue";
-
+        
+        String fromUser = "scarab.email.modifyissue";
+        
         if (subject == null)
         {
             subject = "[" + issue.getModule().getRealName().toUpperCase() + 
-		"] Issue #" + issue.getUniqueId() + " modified";
+                "] Issue #" + issue.getUniqueId() + " modified";
         }
-
+        
         if (template == null)
         {
-           template = Turbine.getConfiguration().
-               getString("scarab.email.modifyissue.template");
+            template = Turbine.getConfiguration().
+                getString("scarab.email.modifyissue.template");
         }
-
+        
         // Get users for "to" field of email
-	List toUsers = new LinkedList();
+        List toUsers = new LinkedList();
         // First add created User
         ScarabUser createdByUser = issue.getCreatedBy();
         if (createdByUser != null)
         {
-	    toUsers.add(createdByUser);
+            toUsers.add(createdByUser);
         }
-
+        
         // Then add users who are assigned to "email-to" attributes
         List users = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         Iterator iter = users.iterator();
         while ( iter.hasNext() ) 
         {
-	    toUsers.add(iter.next());
+            toUsers.add(iter.next());
         }
-
+        
         // add users to cc field of email
         List ccUsers = null;
-	users = issue.getUsersToEmail(AttributePeer.CC_TO);
-	if (users != null)
-	{
-	    ccUsers = new LinkedList();
-	    iter = users.iterator();
-	    while ( iter.hasNext() ) 
-	    {
-		ccUsers.add(iter.next());
-	    }
+        users = issue.getUsersToEmail(AttributePeer.CC_TO);
+        if (users != null)
+        {
+            ccUsers = new LinkedList();
+            iter = users.iterator();
+            while ( iter.hasNext() ) 
+            {
+                ccUsers.add(iter.next());
+            }
         }
-
-	return Email.sendEmail( context, issue.getModule(), fromUser, toUsers,
-				ccUsers, subject, template);
+        
+        return Email.sendEmail( context, issue.getModule(), fromUser, toUsers,
+                                ccUsers, subject, template);
     }
 
     /** 
@@ -225,24 +225,24 @@ public class Transaction
         @throws Exception
     */
     public boolean sendEmail(TemplateContext context, Issue issue)
-         throws Exception
+        throws Exception
     {
         return sendEmail(context, issue, null, null);
     }
-
+    
     public boolean sendEmail(Issue issue)
-         throws Exception
+        throws Exception
     {
         return sendEmail(null, issue, null, null);
     }
-
-
+    
+    
     /** 
         Convenience method for emails that require no extra context info. 
         @throws Exception
     */
     public boolean sendEmail(Issue issue, String subject, String template)
-         throws Exception
+        throws Exception
     {
         return sendEmail(null, issue, subject, template);
     }

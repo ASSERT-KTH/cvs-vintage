@@ -102,7 +102,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.89 2002/02/08 00:12:31 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.90 2002/02/08 18:18:20 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -446,8 +446,8 @@ public class ScarabModule
      */
     public String getArchiveEmail()
     {
-	return Turbine.getConfiguration()
-	    .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
+        return Turbine.getConfiguration()
+            .getString(ScarabConstants.ARCHIVE_EMAIL_ADDRESS);
     }
 
     public String toString()
