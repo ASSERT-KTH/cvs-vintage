@@ -18,6 +18,7 @@ package org.columba.core.gui;
 import java.awt.event.MouseAdapter;
 
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.menu.*;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;

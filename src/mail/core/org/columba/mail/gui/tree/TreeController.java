@@ -30,7 +30,6 @@ import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
-import org.columba.mail.gui.tree.menu.FolderTreeMenu;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -38,14 +37,13 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 
-public class TreeController
-implements /*TreeSelectionListener,*/
-		TreeWillExpandListener //, TreeNodeChangeListener
+public class TreeController implements /*TreeSelectionListener,*/
+TreeWillExpandListener //, TreeNodeChangeListener
 {
 	private TreeView folderTree;
 	private boolean b = false;
 	private TreePath treePath;
-	private JPopupMenu popup;
+	//private JPopupMenu popup;
 
 	private FolderInfoPanel messageFolderInfoPanel;
 
@@ -55,7 +53,7 @@ implements /*TreeSelectionListener,*/
 
 	private FolderTreeNode oldSelection;
 
-	private FolderTreeMenu menu;
+	//private FolderTreeMenu menu;
 
 	private FolderTreeMouseListener mouseListener;
 
@@ -68,6 +66,8 @@ implements /*TreeSelectionListener,*/
 	private TreeView view;
 
 	private MailFrameController mailFrameController;
+
+	protected TreeMenu menu;
 
 	public TreeController(
 		MailFrameController mailFrameController,
@@ -95,12 +95,11 @@ implements /*TreeSelectionListener,*/
 
 		//scrollPane = new JScrollPane(getFolderTree().getTree());
 
-		menu = new FolderTreeMenu(this);
+		//menu = new FolderTreeMenu(this);
+		menu = new TreeMenu(mailFrameController);
 
-		FolderTreeCellRenderer renderer =
-			new FolderTreeCellRenderer(true);
+		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
-
 
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
 	}
@@ -122,7 +121,8 @@ implements /*TreeSelectionListener,*/
 		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
 	}
 
-	public void treeWillCollapse(TreeExpansionEvent e) {}
+	public void treeWillCollapse(TreeExpansionEvent e) {
+	}
 
 	public TreeModel getModel() {
 		return model;
@@ -163,26 +163,26 @@ implements /*TreeSelectionListener,*/
 
 	/*
 	// this method is called when the user selects another folder
-
+	
 	public void valueChanged(TreeSelectionEvent e) {
-
+	
 		// BUGFIX but don't know why that bug occurs 
 		if (view.getLastSelectedPathComponent() == null)
 			return;
-
+	
 		treeSelectionManager.fireFolderSelectionEvent(
 			selectedFolder,
 			(FolderTreeNode) view.getLastSelectedPathComponent());
-
+	
 		selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
-
+	
 		getActionListener().changeActions();
-
+	
 		//if (selectedFolder == null) return;
 	}
-*/
+	*/
 	public JPopupMenu getPopupMenu() {
-		return menu.getPopupMenu();
+		return menu;
 	}
 
 	public FolderTreeNode getSelected() {
@@ -190,18 +190,18 @@ implements /*TreeSelectionListener,*/
 	}
 
 	public void selectFolder() {
-/*
-		if ( view.getLastSelectedPathComponent() == null ) return;
-		
-		if (  !getSelected().equals(oldSelection))
-		{
-		MainInterface.processor.addOp(
-			new ViewHeaderListCommand(
-				getMailFrameController(),
-				treeSelectionManager.getSelection()));
-			oldSelection = getSelected();
-		}
-*/
+		/*
+				if ( view.getLastSelectedPathComponent() == null ) return;
+				
+				if (  !getSelected().equals(oldSelection))
+				{
+				MainInterface.processor.addOp(
+					new ViewHeaderListCommand(
+						getMailFrameController(),
+						treeSelectionManager.getSelection()));
+					oldSelection = getSelected();
+				}
+		*/
 	}
 
 	/**

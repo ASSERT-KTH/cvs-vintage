@@ -13,28 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui;
+package org.columba.core.gui.menu;
 
 import java.awt.event.MouseAdapter;
-import java.util.List;
-import java.util.ListIterator;
 
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
-import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
-import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
 import org.columba.mail.pop3.POP3ServerController;
-import org.columba.mail.util.MailResourceLoader;
 
 public class Menu extends JMenuBar {
 
@@ -51,24 +43,47 @@ public class Menu extends JMenuBar {
 	private JMenu messageMenu;
 	private JMenu utilitiesMenu;
 	private JMenu helpMenu;
-	
-	XmlElement menuRoot;
+
+	//XmlElement menuRoot;
 
 	private FrameController frameController;
+
+	protected MenuBarGenerator menuGenerator;
+
 	public Menu(FrameController frameController) {
 		super();
 
 		this.frameController = frameController;
 
+		menuGenerator =
+			new MenuBarGenerator(
+				frameController,
+				"org/columba/core/action/menu.xml");
+		menuGenerator.createMenuBar(this);
+
+		/*
 		XmlIO menuXml = new XmlIO();
 		menuXml.setURL(
 			DiskIO.getResourceURL("org/columba/core/action/menu.xml"));
 		menuXml.load();
-
+		
 		menuRoot = menuXml.getRoot().getElement("menubar");
 		initFromXML();
-		
-		((MenuPluginHandler) MainInterface.pluginManager.getHandler("menu")).insertPlugins(this);
+		*/
+
+		(
+			(MenuPluginHandler) MainInterface.pluginManager.getHandler(
+				"menu")).insertPlugins(
+			this);
+	}
+
+	public void extendMenuFromFile(String path) {
+		menuGenerator.extendMenuFromFile(path);
+		menuGenerator.createMenuBar(this);
+	}
+	
+	public void extendMenu(XmlElement menuExtension) {
+		menuGenerator.extendMenu(menuExtension);
 	}
 
 	public void updatePopServerMenu() {
@@ -91,176 +106,202 @@ public class Menu extends JMenuBar {
 
 	}
 
-	private void initFromXML() {
+	/*
+	protected void initFromXML() {
 		removeAll();
 		ListIterator it = menuRoot.getElements().listIterator();
 		while (it.hasNext()) {
 			add(createMenu((XmlElement) it.next()));
 		}
 	}
-
-	private JMenu createMenu(XmlElement menuElement) {
+	
+	protected JMenu createMenu(XmlElement menuElement) {
 		List childs = menuElement.getElements();
 		ListIterator it = childs.listIterator();
-
+	
 		JMenu menu =
 			new JMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
 					menuElement.getAttribute("name")));
-
+	
 		while (it.hasNext()) {
 			XmlElement next = (XmlElement) it.next();
 			String name = next.getName();
 			if (name.equals("menuitem")) {
-
+	
 				if (next.getAttribute("action") != null) {
 					try {
-						/*
-						Class actionClass =
-							Class.forName(next.getAttribute("action"));
-						Constructor actionConstructor =
-							actionClass.getConstructor(
-								new Class[] {
-									Class.forName(
-										"org.columba.core.gui.FrameController")});
+	
 						menu.add(
-							(DefaultAction) actionConstructor.newInstance(
-								new Object[] { frameController }));
-								*/
-						menu.add( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("action")).getAction(next.getAttribute("action"),frameController));
+							(
+								(
+									ActionPluginHandler) MainInterface
+										.pluginManager
+										.getHandler(
+									"action")).getAction(
+								next.getAttribute("action"),
+								frameController));
 					} catch (Exception e) {
 						ColumbaLogger.log.error(e);
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
-						try {
-							CheckBoxAction action = (CheckBoxAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler("action")).getAction(next.getAttribute("checkboxaction"),frameController);
-							JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem( action ); 
-							menu.add( menuitem );							
-							action.setCheckBoxMenuItem(menuitem);							
-						} catch (Exception e) {
-							ColumbaLogger.log.error(e);
-						}
+					try {
+						CheckBoxAction action =
+							(CheckBoxAction)
+								(
+									(
+										ActionPluginHandler) MainInterface
+											.pluginManager
+											.getHandler(
+										"action")).getAction(
+								next.getAttribute("checkboxaction"),
+								frameController);
+						JCheckBoxMenuItem menuitem =
+							new JCheckBoxMenuItem(action);
+						menu.add(menuitem);
+						action.setCheckBoxMenuItem(menuitem);
+					} catch (Exception e) {
+						ColumbaLogger.log.error(e);
+					}
 				} else if (next.getAttribute("imenu") != null) {
-				try {
-					menu.add( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("action")).getIMenu(next.getAttribute("imenu"),frameController));
-				} catch (Exception e) {
-					ColumbaLogger.log.error(e);
+					try {
+						menu.add(
+							(
+								(
+									ActionPluginHandler) MainInterface
+										.pluginManager
+										.getHandler(
+									"action")).getIMenu(
+								next.getAttribute("imenu"),
+								frameController));
+					} catch (Exception e) {
+						ColumbaLogger.log.error(e);
+					}
 				}
-			}
-
+	
 			} else if (name.equals("separator")) {
 				menu.addSeparator();
 			} else if (name.equals("menu")) {
 				menu.add(createMenu(next));
 			}
 		}
-
+	
 		return menu;
 	}
 	
 	public void extendMenuFromFile(String path) {
 		XmlIO menuXml = new XmlIO();
-		menuXml.setURL(
-			DiskIO.getResourceURL(path));
+		menuXml.setURL(DiskIO.getResourceURL(path));
 		menuXml.load();
-
-		ListIterator iterator = menuXml.getRoot().getElement("menubar").getElements().listIterator();
-		while( iterator.hasNext()) {
-			extendMenu((XmlElement)iterator.next());
+	
+		ListIterator iterator =
+			menuXml
+				.getRoot()
+				.getElement("menubar")
+				.getElements()
+				.listIterator();
+		while (iterator.hasNext()) {
+			extendMenu((XmlElement) iterator.next());
 		}
-		
+	
 		initFromXML();
 	}
-
-	public void extendMenu( XmlElement menuExtension ) {
+	
+	public void extendMenu(XmlElement menuExtension) {
 		XmlElement menu, extension;
 		String menuName = menuExtension.getAttribute("name");
 		String extensionName = menuExtension.getAttribute("extensionpoint");
-		if ( extensionName == null )
-		{
+		if (extensionName == null) {
 			// new menu
-			menuRoot.insertElement((XmlElement)menuExtension.clone(), menuRoot.count()-1);	
+			menuRoot.insertElement(
+				(XmlElement) menuExtension.clone(),
+				menuRoot.count() - 1);
 			return;
 		}
-
+	
 		ListIterator iterator = menuRoot.getElements().listIterator();
-		
+	
 		int insertIndex = 0;
-		
-		while( iterator.hasNext() ) {
+	
+		while (iterator.hasNext()) {
 			menu = ((XmlElement) iterator.next());
-			if( menu.getAttribute("name").equals(menuName)) {
-				
+			if (menu.getAttribute("name").equals(menuName)) {
+	
 				iterator = menu.getElements().listIterator();
-				while( iterator.hasNext() ) {
-					extension = ((XmlElement)iterator.next());
-					if( extension.getName().equals("extensionpoint")) {
-						if( extension.getAttribute("name").equals(extensionName)) {
+				while (iterator.hasNext()) {
+					extension = ((XmlElement) iterator.next());
+					if (extension.getName().equals("extensionpoint")) {
+						if (extension
+							.getAttribute("name")
+							.equals(extensionName)) {
 							int size = menuExtension.count();
-							for( int i=0; i<size; i++) {
-								menu.insertElement(menuExtension.getElement(0), insertIndex+i);
+							for (int i = 0; i < size; i++) {
+								menu.insertElement(
+									menuExtension.getElement(0),
+									insertIndex + i);
 							}
 							return;
 						}
 					}
 					insertIndex++;
 				}
-			}			
+			}
 		}
-		
+	
 	}
+	*/
 
 	// create the menu
 	private void init() {
 		/*
 		handler = frameController.getMouseTooltipHandler();
-
+		
 		JMenu menu, subMenu;
 		JMenuItem menuItem;
 		JRadioButtonMenuItem rbMenuItem;
 		ButtonGroup group;
-
+		
 		fileMenu =
 			new JMenu(
 				MailResourceLoader.getString("menu", "mainframe", "menu_file"));
 		fileMenu.setActionCommand("FILE");
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		add(fileMenu);
-
+		
 		
 		//fileMenu.add(new OpenNewWindow(frameController));
-
+		
 		fileMenu.addSeparator();
-
+		
 		fetchMessageSubmenu =
 			new CMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
 					"menu_file_checkmessage"));
-
+		
 		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
 			fetchMessageSubmenu.add(
 				new CMenuItem(
 					MainInterface.popServerCollection.get(i).getCheckAction()));
 		}
-
-		fileMenu.add(fetchMessageSubmenu);
-
-		fileMenu.addSeparator();
-
 		
-
+		fileMenu.add(fetchMessageSubmenu);
+		
+		fileMenu.addSeparator();
+		
+		
+		
 		menuItem =
 			new CMenuItem(
 				frameController.globalActionCollection.receiveSendAction);
 		menuItem.addMouseListener(handler);
 		fileMenu.add(menuItem);
-
+		
 		//menu.addSeparator();
-
+		
 		JMenuItem item =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -272,7 +313,7 @@ public class Menu extends JMenuBar {
 		item.setActionCommand("RECEIVE");
 		item.addActionListener(frameController.getActionListener());
 		fileMenu.add(item);
-
+		
 		item =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -282,16 +323,16 @@ public class Menu extends JMenuBar {
 		item.setActionCommand("SEND");
 		item.addActionListener(frameController.getActionListener());
 		fileMenu.add(item);
-
+		
 		fileMenu.addSeparator();
-
+		
 		manageSubmenu =
 			new CMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
 					"menu_file_manage"));
-
+		
 		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
 			menuItem =
 				new CMenuItem(
@@ -299,11 +340,11 @@ public class Menu extends JMenuBar {
 			menuItem.setEnabled(true);
 			manageSubmenu.add(menuItem);
 		}
-
+		
 		fileMenu.add(manageSubmenu);
-
+		
 		fileMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -312,79 +353,79 @@ public class Menu extends JMenuBar {
 					.printAction);
 		menuItem.addMouseListener(handler);
 		fileMenu.add(menuItem);
-
+		
 		fileMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(frameController.getActionListener().exitAction);
 		menuItem.addMouseListener(handler);
 		fileMenu.add(menuItem);
-
+		
 		editMenu =
 			new JMenu(
 				MailResourceLoader.getString("menu", "mainframe", "menu_edit"));
 		editMenu.setMnemonic(KeyEvent.VK_E);
 		editMenu.setActionCommand("EDIT");
 		add(editMenu);
-
+		
 		menuItem =
 			new CMenuItem(MainInterface.processor.getUndoManager().undoAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(MainInterface.processor.getUndoManager().redoAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		editMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(frameController.globalActionCollection.cutAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(frameController.globalActionCollection.copyAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(frameController.globalActionCollection.pasteAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(frameController.globalActionCollection.deleteAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.globalActionCollection.selectAllAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		editMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(frameController.getActionListener().findAction);
 		editMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(frameController.getActionListener().findAgainAction);
 		editMenu.add(menuItem);
-
+		
 		editMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.globalActionCollection.searchMessageAction);
 		menuItem.addMouseListener(handler);
 		editMenu.add(menuItem);
-
+		
 		editMenu.addSeparator();
-
+		
 		menuItem =
 			new JMenuItem(
 				MailResourceLoader.getString(
@@ -396,30 +437,30 @@ public class Menu extends JMenuBar {
 		menuItem.setActionCommand("ACCOUNT_PREFERENCES");
 		menuItem.addActionListener(frameController.getActionListener());
 		editMenu.add(menuItem);
-
-		editMenu.addSeparator();
-
 		
-
+		editMenu.addSeparator();
+		
+		
+		
 		menuItem =
 			new CMenuItem(
 				frameController.getActionListener().generalOptionsAction);
 		editMenu.add(menuItem);
-
+		
 		viewMenu =
 			new JMenu(
 				MailResourceLoader.getString("menu", "mainframe", "menu_view"));
 		viewMenu.setMnemonic(KeyEvent.VK_V);
 		viewMenu.setActionCommand("VIEW");
 		add(viewMenu);
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
 					"menu",
 					"mainframe",
 					"menu_view_show_hide"));
-
+		
 		JCheckBoxMenuItem cbMenuItem =
 			new JCheckBoxMenuItem(
 				frameController.globalActionCollection.viewToolbarAction);
@@ -430,7 +471,7 @@ public class Menu extends JMenuBar {
 		if (viewItem.getBoolean("toolbars", "main"))
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
-
+		
 		cbMenuItem =
 			new JCheckBoxMenuItem(
 				frameController.globalActionCollection.viewFilterToolbarAction);
@@ -439,7 +480,7 @@ public class Menu extends JMenuBar {
 		if (viewItem.getBoolean("toolbars", "filter"))
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
-
+		
 		cbMenuItem =
 			new JCheckBoxMenuItem(
 				frameController.globalActionCollection.viewFolderInfoAction);
@@ -448,25 +489,25 @@ public class Menu extends JMenuBar {
 		if (viewItem.getBoolean("toolbars", "folderinfo"))
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
-
+		
 		menuItem =
 			new CMenuItem(frameController.getStatusBar().getCancelAction());
-
+		
 		viewMenu.add(menuItem);
-
+		
 		menuItem = new CMenuItem("Refresh");
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		menuItem.setIcon(ImageLoader.getSmallImageIcon("stock_refresh-16.png"));
-
+		
 		viewMenu.add(menuItem);
-
-		viewMenu.addSeparator();
-
-		viewMenu.add(subMenu);
-
+		
 		viewMenu.addSeparator();
 		
-
+		viewMenu.add(subMenu);
+		
+		viewMenu.addSeparator();
+		
+		
 		sortSubMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -475,9 +516,9 @@ public class Menu extends JMenuBar {
 					"menu_view_sort"));
 		updateSortMenu();
 		viewMenu.add(sortSubMenu);
-
+		
 		subMenu = new CMenu("Messages Filter");
-
+		
 		group = new ButtonGroup();
 		menuItem = new JRadioButtonMenuItem("Show All Messages");
 		menuItem.setSelected(true);
@@ -492,11 +533,11 @@ public class Menu extends JMenuBar {
 		menuItem.addActionListener(
 			frameController.tableController.getFilterActionListener());
 		subMenu.add(menuItem);
-
+		
 		viewMenu.add(subMenu);
-
+		
 		viewMenu.addSeparator();
-
+		
 		cbMenuItem =
 			new CCheckBoxMenuItem(
 				frameController
@@ -504,13 +545,13 @@ public class Menu extends JMenuBar {
 					.getActionListener()
 					.viewThreadedAction);
 		cbMenuItem.setSelected(true);
-
 		
-
+		
+		
 		viewMenu.add(cbMenuItem);
-
+		
 		viewMenu.addSeparator();
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -519,7 +560,7 @@ public class Menu extends JMenuBar {
 					"menu_view_next"));
 		subMenu.setIcon(ImageLoader.getSmallImageIcon("stock_right-16.png"));
 		subMenu.setMnemonic(KeyEvent.VK_N);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.tableController.getActionListener().nextAction);
@@ -533,7 +574,7 @@ public class Menu extends JMenuBar {
 					.nextUnreadAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -556,9 +597,9 @@ public class Menu extends JMenuBar {
 		menuItem.setAccelerator(KeyStroke.getKeyStroke("T"));
 		menuItem.setMnemonic(KeyEvent.VK_T);
 		subMenu.add(menuItem);
-
+		
 		viewMenu.add(subMenu);
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -567,7 +608,7 @@ public class Menu extends JMenuBar {
 					"menu_view_prev"));
 		subMenu.setIcon(ImageLoader.getSmallImageIcon("stock_left-16.png"));
 		subMenu.setMnemonic(KeyEvent.VK_P);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.tableController.getActionListener().prevAction);
@@ -581,7 +622,7 @@ public class Menu extends JMenuBar {
 					.prevUnreadAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -603,14 +644,14 @@ public class Menu extends JMenuBar {
 		menuItem.setMnemonic(KeyEvent.VK_T);
 		menuItem.setEnabled(false);
 		subMenu.add(menuItem);
-
+		
 		viewMenu.add(subMenu);
 		viewMenu.addSeparator();
-
+		
 		viewMenu.add(MainInterface.charsetManager.createMenu(handler));
-
+		
 		viewMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -619,7 +660,7 @@ public class Menu extends JMenuBar {
 					.viewSourceAction);
 		menuItem.addMouseListener(handler);
 		viewMenu.add(menuItem);
-
+		
 		folderMenu =
 			new JMenu(
 				MailResourceLoader.getString(
@@ -629,12 +670,12 @@ public class Menu extends JMenuBar {
 		folderMenu.setMnemonic(KeyEvent.VK_F);
 		folderMenu.setActionCommand("FOLDER");
 		add(folderMenu);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.treeController.getActionListener().addAction);
 		menuItem.addMouseListener(handler);
-
+		
 		folderMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
@@ -643,7 +684,7 @@ public class Menu extends JMenuBar {
 					.getActionListener()
 					.addVirtualAction);
 		menuItem.addMouseListener(handler);
-
+		
 		folderMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
@@ -652,7 +693,7 @@ public class Menu extends JMenuBar {
 					.getActionListener()
 					.renameAction);
 		menuItem.addMouseListener(handler);
-
+		
 		folderMenu.add(menuItem);
 		menuItem =
 			new CMenuItem(
@@ -661,11 +702,11 @@ public class Menu extends JMenuBar {
 					.getActionListener()
 					.removeAction);
 		menuItem.addMouseListener(handler);
-
+		
 		folderMenu.add(menuItem);
-
+		
 		folderMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -679,9 +720,9 @@ public class Menu extends JMenuBar {
 				frameController.treeController.getActionListener().emptyAction);
 		menuItem.addMouseListener(handler);
 		folderMenu.add(menuItem);
-
+		
 		folderMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -707,7 +748,7 @@ public class Menu extends JMenuBar {
 					.subscribeAction);
 		menuItem.addMouseListener(handler);
 		folderMenu.add(menuItem);
-
+		
 		messageMenu =
 			new JMenu(
 				MailResourceLoader.getString(
@@ -717,13 +758,13 @@ public class Menu extends JMenuBar {
 		messageMenu.setMnemonic(KeyEvent.VK_M);
 		messageMenu.setActionCommand("MESSAGE");
 		add(messageMenu);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.globalActionCollection.newMessageAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -732,15 +773,15 @@ public class Menu extends JMenuBar {
 					.openMessageWithComposerAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.tableController.getActionListener().saveAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		messageMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -749,7 +790,7 @@ public class Menu extends JMenuBar {
 					.replyAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -758,7 +799,7 @@ public class Menu extends JMenuBar {
 					.replyToAllAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -767,7 +808,7 @@ public class Menu extends JMenuBar {
 					.replyToAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -776,7 +817,7 @@ public class Menu extends JMenuBar {
 					.replyAsAttachmentAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -785,7 +826,7 @@ public class Menu extends JMenuBar {
 					.forwardAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -794,7 +835,7 @@ public class Menu extends JMenuBar {
 					.forwardInlineAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		// for the bounce Action make a new Menu-entry
 		// bounce meanse reply with an error-message
 		menuItem =
@@ -805,9 +846,9 @@ public class Menu extends JMenuBar {
 					.bounceAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		messageMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -816,7 +857,7 @@ public class Menu extends JMenuBar {
 					.moveMessageAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -825,7 +866,7 @@ public class Menu extends JMenuBar {
 					.copyMessageAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -834,9 +875,9 @@ public class Menu extends JMenuBar {
 					.deleteMessageAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		messageMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -845,7 +886,7 @@ public class Menu extends JMenuBar {
 					.addSenderAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -854,9 +895,9 @@ public class Menu extends JMenuBar {
 					.addAllSendersAction);
 		menuItem.addMouseListener(handler);
 		messageMenu.add(menuItem);
-
+		
 		messageMenu.addSeparator();
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -864,7 +905,7 @@ public class Menu extends JMenuBar {
 					"mainframe",
 					"menu_message_mark"));
 		subMenu.setMnemonic(KeyEvent.VK_K);
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -909,13 +950,13 @@ public class Menu extends JMenuBar {
 					.markAsExpungedAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-
+		
 		messageMenu.add(subMenu);
-
+		
 		//menu.addSeparator();
-
+		
 		messageMenu.add(subMenu);
-
+		
 		utilitiesMenu =
 			new JMenu(
 				MailResourceLoader.getString(
@@ -925,7 +966,7 @@ public class Menu extends JMenuBar {
 		utilitiesMenu.setMnemonic('U');
 		utilitiesMenu.setActionCommand("UTILITIES");
 		add(utilitiesMenu);
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -956,9 +997,9 @@ public class Menu extends JMenuBar {
 					.filterToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-
+		
 		utilitiesMenu.add(subMenu);
-
+		
 		subMenu =
 			new CMenu(
 				MailResourceLoader.getString(
@@ -989,19 +1030,19 @@ public class Menu extends JMenuBar {
 					.vFolderToAction);
 		menuItem.addMouseListener(handler);
 		subMenu.add(menuItem);
-
+		
 		utilitiesMenu.add(subMenu);
-
+		
 		utilitiesMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController.globalActionCollection.addressbookAction);
 		menuItem.addMouseListener(handler);
 		utilitiesMenu.add(menuItem);
-
+		
 		utilitiesMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				frameController
@@ -1010,37 +1051,37 @@ public class Menu extends JMenuBar {
 					.dictAction);
 		menuItem.addMouseListener(handler);
 		utilitiesMenu.add(menuItem);
-
+		
 		utilitiesMenu.addSeparator();
-
+		
 		menuItem = new CMenuItem("Forget PGP Passphrase");
 		menuItem.setEnabled(false);
 		utilitiesMenu.add(menuItem);
-
+		
 		utilitiesMenu.addSeparator();
-
+		
 		menuItem = new CMenuItem("Import Mailbox...");
 		menuItem.setIcon(ImageLoader.getImageIcon("stock_convert-16.png"));
 		menuItem.setActionCommand("IMPORT");
 		menuItem.addActionListener(frameController.getActionListener());
 		menuItem.setEnabled(true);
 		utilitiesMenu.add(menuItem);
-
-	
-
+		
+		
+		
 		//menu.addSeparator();
-
+		
 		//menu.addSeparator();
-
+		
 		//menu.addSeparator();
-
+		
 		helpMenu =
 			new JMenu(
 				MailResourceLoader.getString("menu", "mainframe", "menu_help"));
 		helpMenu.setMnemonic('H');
 		helpMenu.setActionCommand("HELP");
 		add(helpMenu);
-
+		
 		menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -1096,7 +1137,7 @@ public class Menu extends JMenuBar {
 		menuItem.addActionListener(frameController.getActionListener());
 		menuItem.setActionCommand("LICENSE");
 		helpMenu.add(menuItem);
-
+		
 		menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString(
@@ -1108,9 +1149,9 @@ public class Menu extends JMenuBar {
 		menuItem.addActionListener(frameController.getActionListener());
 		menuItem.setActionCommand("SOURCEFORGE");
 		helpMenu.add(menuItem);
-
+		
 		helpMenu.addSeparator();
-
+		
 		menuItem =
 			new CMenuItem(
 				MailResourceLoader.getString(

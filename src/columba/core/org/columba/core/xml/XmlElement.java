@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.7  2003/03/12 12:21:46  fdietz
+// [intern]added context menus for table and tree component, fix selection problems
+//
 // Revision 1.6  2003/03/11 18:50:31  tstich
 // [intern]new menus can be added through extension
 //
@@ -52,7 +55,6 @@ package org.columba.core.xml;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;

@@ -52,7 +52,7 @@ public class ViewMessageAction extends InternAction implements SelectionListener
 		*/
 		
 		MainInterface.processor.addOp(
-			new ViewMessageCommand(getFrameController(),getFrameController().getSelectionManager().getSelection("mail.headertable")));
+			new ViewMessageCommand(getFrameController(),getFrameController().getSelectionManager().getSelection("mail.table")));
 
 			
 		}

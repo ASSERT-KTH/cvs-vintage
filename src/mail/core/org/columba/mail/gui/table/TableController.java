@@ -34,7 +34,6 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
-import org.columba.mail.gui.table.menu.HeaderTableMenu;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
@@ -50,7 +49,7 @@ import org.columba.mail.message.HeaderList;
 public class TableController
 	implements TreeSelectionListener {
 
-	private HeaderTableMenu menu;
+	//private HeaderTableMenu menu;
 
 	private TableView headerTable;
 	private HeaderTableModel headerTableModel;
@@ -97,6 +96,7 @@ public class TableController
 	
 	protected Vector tableChangedListenerList;
 
+	protected TableMenu menu;
 	public TableController(MailFrameController mailFrameController) {
 
 		this.mailFrameController = mailFrameController;
@@ -122,8 +122,10 @@ public class TableController
 		
 		actionListener = new HeaderTableActionListener(this);
 
-		menu = new HeaderTableMenu(this);
+		//menu = new HeaderTableMenu(this);
 
+		menu = new TableMenu( mailFrameController );
+		
 		headerTableDnd = new HeaderTableDnd(view);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
@@ -449,7 +451,7 @@ public class TableController
 	 * return the PopupMenu for the table
 	 */
 	public JPopupMenu getPopupMenu() {
-		return menu.getPopupMenu();
+		return menu;
 	}
 
 	/************************** actions ********************************/

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<menu name="table_menu">
+	<menuitem action="NewMessage"/>
+ 	<menuitem action="OpenMessageWithComposer"/>
+ 	<menuitem action="Print"/>
+ 	<separator/>
+ 	<menuitem action="Reply" />
+ 	<menuitem action="ReplyToAll" />
+ 	<menuitem action="ReplyToList" />
+ 	<menuitem action="ReplyAsAttachment"/>
+	<menuitem action="Forward" />
+	<menuitem action="ForwardInline" />
+	<menuitem action="Bounce" />
+	<separator />
+	<menuitem action="CopyMessage" />
+	<menuitem action="MoveMessage" />
+	<menuitem action="DeleteMessage" />
+	<separator/>
+	<menuitem action="AddSenderToAddressbook"/>
+	<menuitem action="AddAllSendersToAddressbook"/>
+	<separator/>
+	<menu name="menu_message_mark">
+		<menuitem action="MarkAsRead"/>
+		<menuitem action="MarkAsFlagged"/>
+		<menuitem action="MarkAsExpunged"/>
+	</menu>	
+</menu>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menu>
+ <menuitem action="CreateSubFolder"/>
+	 <menuitem action="CreateVirtualFolder"/>
+	 <separator/>
+	 <menuitem action="RenameFolder"/>
+	 <menuitem action="RemoveFolder"/>
+	 <separator/>
+	 <menuitem action="ExpungeFolder"/>
+	 <menuitem action="EmptyFolder"/>
+	 <separator/>
+	 <menuitem action="ApplyFilter"/>
+	 <menuitem action="FilterPreferences"/>
+	 <separator/>
+	 <menuitem action="SubscribeFolder"/>
+</menu>

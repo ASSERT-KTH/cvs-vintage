@@ -36,7 +36,7 @@ import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
-import org.columba.core.gui.MenuPluginHandler;
+import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
