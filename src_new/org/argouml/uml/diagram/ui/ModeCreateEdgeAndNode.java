@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.24 2004/09/10 20:05:30 mvw Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.25 2004/09/11 06:34:51 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.24 2004/09/10 20:05:30 mvw Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.25 2004/09/11 06:34:51 mvw Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -129,10 +129,11 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    public void setup(FigNode fn, Object port, int x, int y, boolean reverse) {
+    public void setup(FigNode fignode, Object port, int x, int y, 
+            boolean reverse) {
         start();
-        sourceFigNode = fn;
-        startPortFig = fn.getPortFig(port);
+        sourceFigNode = fignode;
+        startPortFig = fignode.getPortFig(port);
         startPort = port;
         _newItem = createNewItem(null, x, y);
         destToSource = reverse;

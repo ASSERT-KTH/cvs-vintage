@@ -1,4 +1,4 @@
-// $Id: PropPanelString.java,v 1.11 2004/09/10 20:05:31 mvw Exp $
+// $Id: PropPanelString.java,v 1.12 2004/09/11 06:34:51 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,9 +111,12 @@ public class PropPanelString
     /**
      * @see org.argouml.ui.TabTarget#shouldBeEnabled(java.lang.Object)
      */
-    public boolean shouldBeEnabled(Object target) { return false; }
+    public boolean shouldBeEnabled(Object theTarget) { return false; }
 
 
+    /**
+     * Set the target name.
+     */
     protected void setTargetName() {
     }
 

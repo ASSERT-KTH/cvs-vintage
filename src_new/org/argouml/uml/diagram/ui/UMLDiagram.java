@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.48 2004/08/05 19:27:14 mvw Exp $
+// $Id: UMLDiagram.java,v 1.49 2004/09/11 06:34:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public abstract class UMLDiagram
     // actions for toolbar
     
     /**
-     * Tool to add a comment node.<p>
+     * Tool to add a comment node.
      */
     protected static Action _actionComment =
 	new RadioAction(new CmdCreateNode(ModelFacade.COMMENT, "Note"));
@@ -447,7 +447,8 @@ public abstract class UMLDiagram
      * Set all toolbar buttons to unselected other then the toolbar button
      * with the supplied action.
      *
-     * @param otherThanAction
+     * @param otherThanAction the action of the button 
+     *                        that is NOT to be deselected
      */
     public void deselectOtherTools(Action otherThanAction) {
         //cat.debug("Looking for action " + otherThanAction);

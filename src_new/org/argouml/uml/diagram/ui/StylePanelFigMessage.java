@@ -1,4 +1,4 @@
-// $Id: StylePanelFigMessage.java,v 1.10 2004/09/01 18:48:04 mvw Exp $
+// $Id: StylePanelFigMessage.java,v 1.11 2004/09/11 06:34:51 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,6 +87,9 @@ public class StylePanelFigMessage extends StylePanelFigNodeModelElement {
                 .elementAt(direction));
     }
 
+    /**
+     * Set the arrow direction for the target.
+     */
     public void setTargetArrow() {
         String ad = (String) arrowField.getSelectedItem();
         int arrowDirection = FigMessage.getArrowDirections().indexOf(ad);
