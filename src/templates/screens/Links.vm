@@ -14,7 +14,6 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a></li>
 <li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue (one-step)</a></li>
 <li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
-<li><a href="$link.setPage("AssignIssue.vm").addPathInfo("issue_0id","1").addPathInfo("intake-grp","issue").addPathInfo("issue","_0")">Assign Issue</a></li>
 <li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
 </ul>
