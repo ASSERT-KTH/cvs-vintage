@@ -183,8 +183,8 @@ public abstract class AbstractMenuGenerator {
 							lastWasSeparator = false;
 						}
 
-					} catch (Exception e) {
-						ColumbaLogger.log.error(e);
+					} catch (Exception e) {						
+						ColumbaLogger.log.error(e + ": "+ next.getAttribute("action"));
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {

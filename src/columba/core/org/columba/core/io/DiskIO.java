@@ -106,7 +106,7 @@ public class DiskIO {
 					new FileInputStream(fromFile),
 					"ISO-8859-1"));
 		String str;
-		strbuf = new StringBuffer();
+		strbuf = new StringBuffer((int)fromFile.length());
 
 		while ((str = in.readLine()) != null) {
 			strbuf.append(str + "\n");
