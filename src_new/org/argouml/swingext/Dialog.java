@@ -1,4 +1,4 @@
-// $Id: Dialog.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: Dialog.java,v 1.7 2003/12/17 16:07:19 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,6 +169,17 @@ public abstract class Dialog extends JDialog implements ActionListener {
     public void addButton(JButton button) {
         _buttonPanel.add(button);
     }
+    
+    /**
+     * Adds a new button to the set of available option buttons on the dialog.
+     * The button will appear at the specified index.
+     * 
+     * @param button the button to add to the dialog.
+     * @param index  index at which to insert new button (0 for first button)
+     **/
+    public void addButton(JButton button, int index) {
+        _buttonPanel.add(button, index);
+    }    
     
     protected JButton getOkButton() {
         return _okButton;
