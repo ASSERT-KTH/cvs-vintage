@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.1 2000/09/04 12:50:17 1sturm Exp $
+// $Id: FigEdgeModelElement.java,v 1.2 2001/06/25 13:31:06 andreas Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -49,6 +49,7 @@ import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.cognitive.*;
 import org.argouml.uml.*;
+import org.argouml.uml.ui.*;
 import org.argouml.uml.generator.*;
 import org.argouml.uml.diagram.ui.*;
 
@@ -147,7 +148,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
       }
       popUpActions.insertElementAt(critiques, 0);
     }
-    popUpActions.addElement(Actions.Properties);
+    popUpActions.addElement(ActionProperties.SINGLETON);
     return popUpActions;
   }
 

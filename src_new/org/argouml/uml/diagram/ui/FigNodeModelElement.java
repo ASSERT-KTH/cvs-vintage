@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.6 2000/11/29 14:55:55 toby Exp $
+// $Id: FigNodeModelElement.java,v 1.7 2001/06/25 13:31:06 andreas Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -48,6 +48,7 @@ import org.argouml.kernel.*;
 import org.argouml.ui.*;
 import org.argouml.cognitive.*;
 import org.argouml.uml.*;
+import org.argouml.uml.ui.*;
 import org.argouml.uml.generator.*;
 import org.argouml.uml.diagram.ui.*;
 
@@ -147,7 +148,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
       }
       popUpActions.insertElementAt(critiques, 0);
     }
-    popUpActions.addElement(Actions.Properties);
+    popUpActions.addElement(ActionProperties.SINGLETON);
     return popUpActions;
   }
 

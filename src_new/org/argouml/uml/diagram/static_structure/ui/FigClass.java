@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.7 2001/06/18 09:28:16 toby Exp $
+// $Id: FigClass.java,v 1.8 2001/06/25 13:31:06 andreas Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -148,19 +148,19 @@ public class FigClass extends FigNodeModelElement {
 				 popUpActions.size() - 1);
     JMenu showMenu = new JMenu("Show");
     if(_attr.isDisplayed() && _oper.isDisplayed())
-      showMenu.add(Actions.HideAllCompartments);
+      showMenu.add(ActionCompartmentDisplay.HideAllCompartments);
     else if(!_attr.isDisplayed() && !_oper.isDisplayed())
-      showMenu.add(Actions.ShowAllCompartments);
+      showMenu.add(ActionCompartmentDisplay.ShowAllCompartments);
 
     if (_attr.isDisplayed())
-      showMenu.add(Actions.HideAttrCompartment);
+      showMenu.add(ActionCompartmentDisplay.HideAttrCompartment);
     else
-      showMenu.add(Actions.ShowAttrCompartment);
+      showMenu.add(ActionCompartmentDisplay.ShowAttrCompartment);
 
     if (_oper.isDisplayed())
-      showMenu.add(Actions.HideOperCompartment);
+      showMenu.add(ActionCompartmentDisplay.HideOperCompartment);
     else
-      showMenu.add(Actions.ShowOperCompartment);
+      showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
 
     popUpActions.insertElementAt(showMenu, popUpActions.size() - 1);
     return popUpActions;
