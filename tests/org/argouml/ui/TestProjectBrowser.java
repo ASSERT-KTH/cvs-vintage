@@ -1,4 +1,4 @@
-// $Id: TestProjectBrowser.java,v 1.4 2003/01/09 19:53:20 kataka Exp $
+// $Id: TestProjectBrowser.java,v 1.5 2003/04/28 08:31:23 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,8 +68,8 @@ public class TestProjectBrowser extends TestCase {
             // Some problem caused by the lack of display system.
             // The test is inconclusive
         }
-
     }
+    
 
     /**
      * @see junit.framework.TestCase#setUp()

@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.7 2003/01/31 20:42:32 kataka Exp $
+// $Id: TestUMLElementOwnershipSpecificationCheckBox.java,v 1.8 2003/04/28 08:31:24 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.uml.ui.foundation.core;
 
 import junit.framework.TestCase;
 
-import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
+import org.argouml.application.security.ArgoSecurityManager;
 
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.foundation.core.MClassImpl;
@@ -78,6 +78,7 @@ public class TestUMLElementOwnershipSpecificationCheckBox extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        ArgoSecurityManager.getInstance().setAllowExit(true);
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         elem = new MClassImpl();
         

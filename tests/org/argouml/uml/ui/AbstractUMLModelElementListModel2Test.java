@@ -21,11 +21,12 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractUMLModelElementListModel2Test.java,v 1.4 2002/12/31 09:57:05 kataka Exp $
+// $Id: AbstractUMLModelElementListModel2Test.java,v 1.5 2003/04/28 08:31:23 kataka Exp $
 package org.argouml.uml.ui;
 
 import junit.framework.TestCase;
 
+import org.argouml.application.security.ArgoSecurityManager;
 import org.argouml.model.uml.UmlFactory;
 
 import ru.novosoft.uml.MBase;
@@ -56,6 +57,7 @@ public abstract class AbstractUMLModelElementListModel2Test extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        ArgoSecurityManager.getInstance().setAllowExit(true);
         buildElement();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);       

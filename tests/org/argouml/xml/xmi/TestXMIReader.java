@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestXMIReader.java,v 1.1 2003/01/30 22:28:50 kataka Exp $
+// $Id: TestXMIReader.java,v 1.2 2003/04/28 08:31:24 kataka Exp $
 package org.argouml.xml.xmi;
 
 import java.io.File;
@@ -55,6 +55,11 @@ public class TestXMIReader extends TestCase {
     public TestXMIReader(String arg0) {
         super(arg0);
     }
+    
+    protected void setUp() {
+        
+           ArgoSecurityManager.getInstance().setAllowExit(true); 
+       }
 
     /**
      * This is a regression test for issue 1504. Unfortunately this test does
@@ -85,7 +90,7 @@ public class TestXMIReader extends TestCase {
         p = ProjectManager.getManager().makeEmptyProject();
         try {
             URL url = file.toURL();
-            Project.loadProject(url);
+            ProjectManager.getManager().loadProject(url);
         } catch (IOException io) {
             fail(io.getMessage());
         } catch (Exception ex) {
