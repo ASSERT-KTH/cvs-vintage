@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -56,6 +56,7 @@ public class ObjectPool implements PoolEventListener {
     private boolean trackLastUsed = false;
     private boolean invalidateOnError = false;
     private PrintWriter logWriter = null;
+    private Object resizeLock = new Object();
 
     /**
      * Creates a new pool.  It cannot be used until you specify a name and
@@ -639,7 +640,7 @@ public class ObjectPool implements PoolEventListener {
                 ((PooledObject)object).removePoolEventListener(this);
             factory.returnObject(object);
             if(deadObjects.contains(object)) {
-                objects.remove(pooled);
+                removeObject(pooled);
                 try {
                     factory.deleteObject(pooled);
                 } catch(Exception e) {
@@ -756,7 +757,7 @@ public class ObjectPool implements PoolEventListener {
                     ObjectRecord rec = (ObjectRecord)it.next();
                     rec.setInUse(true);  // Don't let someone use it while we destroy it
                     Object pooled = rec.getObject();
-                    objects.remove(pooled);
+                    removeObject(pooled);
                     try {
                         factory.deleteObject(pooled);
                     } catch(Exception e) {
@@ -775,6 +776,16 @@ public class ObjectPool implements PoolEventListener {
     }
 
     /**
+     * Removes an object from the pool.  Only one thread can add or remove
+     * an object at a time.
+     */
+    private void removeObject(Object pooled) {
+        synchronized(resizeLock) {
+            objects.remove(pooled);
+        }
+    }
+
+    /**
      * Creates a new Object.
      * @param forImmediateUse If <b>true</b>, then the object is locked and
      *          translated by the factory, and the resulting object
@@ -785,12 +796,13 @@ public class ObjectPool implements PoolEventListener {
         Object ob = null;
         String message = null;
         // Serialize creating new objects
-        synchronized(objects) {  // Don't let 2 threads add at the same time
+        synchronized(resizeLock) {  // Don't let 2 threads add at the same time
             if(maxSize == 0 || objects.size() < maxSize) {
                 ob = factory.createObject();
                 if (ob != null) { // if factory can create object
                     ObjectRecord rec = new ObjectRecord(ob, forImmediateUse);
-                    objects.put(ob, rec);
+                    HashMap newMap = (HashMap)objects.clone();
+                    newMap.put(ob, rec);
                     if(forImmediateUse) {
                         Object result = factory.prepareObject(ob);
                         if(result != ob) rec.setClientObject(result);
@@ -799,6 +811,7 @@ public class ObjectPool implements PoolEventListener {
                         message = "Pool "+this+" gave out new object: "+result;
                         ob = result;
                     } else message = "Pool "+poolName+" created a new object: "+ob;
+                    objects = newMap;
                 } else message = "Pool "+poolName+" factory "+factory+" unable to create new object!";
             } else message = "Pool "+poolName+" is full ("+objects.size()+"/"+maxSize+")!";
         }
