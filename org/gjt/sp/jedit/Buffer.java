@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.189 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: Buffer.java,v 1.190 2003/07/03 21:06:33 spestov Exp $
  */
 public class Buffer
 {
@@ -3828,6 +3828,8 @@ loop:		for(int i = 0; i < seg.count; i++)
 			int pos = marker.getPosition();
 			if(pos > getLength())
 				marker.setPosition(getLength());
+			else if(pos < 0)
+				marker.setPosition(0);
 			marker.createPosition();
 		}
 	} //}}}
