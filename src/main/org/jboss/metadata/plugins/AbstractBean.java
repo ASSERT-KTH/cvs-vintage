@@ -59,7 +59,11 @@ public abstract class AbstractBean extends AbstractMetaData implements BeanMetaD
         fields.add(field);
     }
 
-    public MethodMetaData getMethod(String name, Class[] paramTypes) {
+    public MethodMetaData getMethod(String name, Class[] params) {
+        return getMethod(name, getClassNames(params));
+    }
+
+    public MethodMetaData getMethod(String name, String[] paramTypes) {
         Iterator it = methods.iterator();
         while(it.hasNext()) {
             MethodMetaData mmd = (MethodMetaData)it.next();
@@ -69,7 +73,11 @@ public abstract class AbstractBean extends AbstractMetaData implements BeanMetaD
         throw new IllegalArgumentException("No such method!");
     }
 
-    public MethodMetaData getHomeMethod(String name, Class[] paramTypes) {
+    public MethodMetaData getHomeMethod(String name, Class[] params) {
+        return getHomeMethod(name, getClassNames(params));
+    }
+
+    public MethodMetaData getHomeMethod(String name, String[] paramTypes) {
         Iterator it = homeMethods.iterator();
         while(it.hasNext()) {
             MethodMetaData mmd = (MethodMetaData)it.next();
@@ -89,11 +97,18 @@ public abstract class AbstractBean extends AbstractMetaData implements BeanMetaD
         throw new IllegalArgumentException("No such field!");
     }
 
-    private boolean sameParams(Class[] list1, Class[] list2) {
+    private boolean sameParams(String[] list1, String[] list2) {
         if(list1.length != list2.length) return false;
         for(int i=0; i<list1.length; i++)
             if(!list1[i].equals(list2[i]))
                 return false;
         return true;
+    }
+
+    private static String[] getClassNames(Class[] source) {
+        String out[] = new String[source.length];
+        for(int i=0; i<out.length; i++)
+            out[i] = source[i].getName();
+        return out;
     }
 }

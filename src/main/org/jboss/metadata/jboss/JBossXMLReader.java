@@ -16,14 +16,9 @@ public class JBossXMLReader extends HandlerBase implements XMLReader {
     private String currentElement;
     private String contents;
     private Vector containers;
-    private ClassLoader loader;
 
     public JBossXMLReader() {
         containers = new Vector();
-    }
-
-    public void setClassLoader(ClassLoader loader) {
-        this.loader = loader;
     }
 
     public String getFileName() {
@@ -58,11 +53,7 @@ public class JBossXMLReader extends HandlerBase implements XMLReader {
             server = new JBossServer();
         } else if(name.equals("container-configuration")) {
             container = new JBossContainer();
-            try {
-                container.configurationClass = loadClass(atts.getValue("configuration-class"));
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+atts.getValue("configuration-class")+"'.");
-            }
+            container.configurationClass = atts.getValue("configuration-class");
         } else if(name.equals("entity") || name.equals("session"))
             bean = new JBossBean();
     }
@@ -95,42 +86,22 @@ public class JBossXMLReader extends HandlerBase implements XMLReader {
             container.name = contents;
         else if(name.equals("call-logging"))
             container.callLogging = new Boolean(contents).booleanValue();
-        else if(name.equals("container-invoker"))
-            try {
+        else if(name.equals("container-invoker")) {
                 if(contents != null && contents.length() > 0)
-                    container.containerInvoker = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+contents+"'.");
-            }
-        else if(name.equals("instance-pool"))
-            try {
+                    container.containerInvokerClass = contents;
+        } else if(name.equals("instance-pool")) {
+            if(contents != null && contents.length() > 0)
+                container.instancePoolClass = contents;
+        } else if(name.equals("instance-cache")) {
+            if(contents != null && contents.length() > 0)
+                container.instanceCacheClass = contents;
+        } else if(name.equals("persistence-manager")) {
+            if(contents != null && contents.length() > 0)
+                container.persistenceManagerClass = contents;
+        } else if(name.equals("transaction-manager")) {
                 if(contents != null && contents.length() > 0)
-                    container.instancePool = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+contents+"'.");
-            }
-        else if(name.equals("instance-cache"))
-            try {
-                if(contents != null && contents.length() > 0)
-                    container.instanceCache = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+contents+"'.");
-            }
-        else if(name.equals("persistence-manager"))
-            try {
-                if(contents != null && contents.length() > 0)
-                    container.persistenceManager = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+contents+"'.");
-            }
-        else if(name.equals("transaction-manager"))
-            try {
-                if(contents != null && contents.length() > 0)
-                    container.transactionManager = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to load class '"+contents+"'.");
-            }
-        else if(name.equals("Optmized"))
+                    container.transactionManagerClass = contents;
+        } else if(name.equals("Optmized"))
             container.invokerOptimized = new Boolean(contents).booleanValue();
         else if(name.equals("MaximumSize"))
             container.poolMaximum = Integer.parseInt(contents);
@@ -138,12 +109,5 @@ public class JBossXMLReader extends HandlerBase implements XMLReader {
             container.poolMinimum = Integer.parseInt(contents);
         else if(name.equals("commit-option"))
             container.commitOption = contents.charAt(0);
-    }
-
-    private Class loadClass(String name) throws ClassNotFoundException {
-        if(loader == null)
-            return Class.forName(name);
-        else
-            return loader.loadClass(name);
     }
 }

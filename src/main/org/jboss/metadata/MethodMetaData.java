@@ -17,8 +17,9 @@ public interface MethodMetaData extends MetaData {
     public String getName();
 
     /**
-     * Gets the parameter types of this method.  The name and parameter class
-     * types of a method together are the unique identifier.
+     * Gets the names of the classes of the parameter types of this method.
+     * The name and parameter class types of a method together are the
+     * unique identifier.
      */
-    public Class[] getParameterTypes();
+    public String[] getParameterTypes();
 }

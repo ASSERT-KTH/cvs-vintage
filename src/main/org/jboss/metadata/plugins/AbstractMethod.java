@@ -5,10 +5,10 @@ import org.jboss.metadata.*;
 
 public abstract class AbstractMethod extends AbstractMetaData implements MethodMetaData {
     private String name;
-    private Class[] paramTypes;
+    private String[] paramTypes;
 
     public AbstractMethod() {
-        paramTypes = new Class[0];
+        paramTypes = new String[0];
     }
 
     public String getName() {
@@ -19,11 +19,11 @@ public abstract class AbstractMethod extends AbstractMetaData implements MethodM
         this.name = name;
     }
 
-    public Class[] getParameterTypes() {
+    public String[] getParameterTypes() {
         return paramTypes;
     }
 
-    public void setParameterTypes(Class[] paramTypes) {
+    public void setParameterTypes(String[] paramTypes) {
         this.paramTypes = paramTypes;
     }
 }

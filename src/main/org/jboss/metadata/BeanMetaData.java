@@ -16,7 +16,16 @@ import java.util.Set;
 public interface BeanMetaData extends MetaData {
     /**
      * Gets the metadata for a method of this bean.  The method is identified
-     * by its name and arguments.
+     * by its name and argument class names.
+     * @throws java.lang.IllegalArgumentException
+     *      Occurs when no method with the specified name and arguments can be
+     *      found.
+     */
+    public MethodMetaData getMethod(String name, String[] args);
+
+    /**
+     * Gets the metadata for a method of this bean.  The method is identified
+     * by its name and argument classes.
      * @throws java.lang.IllegalArgumentException
      *      Occurs when no method with the specified name and arguments can be
      *      found.
@@ -25,7 +34,16 @@ public interface BeanMetaData extends MetaData {
 
     /**
      * Gets the metadata for a method of this bean's home interface.  The
-     * method is identified by its name and arguments.
+     * method is identified by its name and argument class names.
+     * @throws java.lang.IllegalArgumentException
+     *      Occurs when no method with the specified name and arguments can be
+     *      found.
+     */
+    public MethodMetaData getHomeMethod(String name, String[] args);
+
+    /**
+     * Gets the metadata for a method of this bean's home interface.  The
+     * method is identified by its name and argument classes.
      * @throws java.lang.IllegalArgumentException
      *      Occurs when no method with the specified name and arguments can be
      *      found.

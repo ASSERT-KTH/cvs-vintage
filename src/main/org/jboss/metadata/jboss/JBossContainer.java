@@ -5,17 +5,17 @@ import org.jboss.metadata.plugins.*;
 
 public class JBossContainer extends AbstractContainer {
     public boolean secure;
-    public Class configurationClass;
+    public String configurationClass;
     public String name;
     public boolean callLogging;
-    public Class containerInvoker;
+    public String containerInvokerClass;
     public boolean invokerOptimized;
-    public Class instancePool;
+    public String instancePoolClass;
     public int poolMinimum;
     public int poolMaximum;
-    public Class instanceCache;
-    public Class persistenceManager;
-    public Class transactionManager;
+    public String instanceCacheClass;
+    public String persistenceManagerClass;
+    public String transactionManagerClass;
     public char commitOption;
 
     public JBossContainer() {

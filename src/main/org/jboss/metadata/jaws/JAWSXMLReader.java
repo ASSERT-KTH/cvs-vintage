@@ -17,13 +17,8 @@ public class JAWSXMLReader extends HandlerBase implements XMLReader {
     private JAWSField field = null;
     private String currentElement;
     private String contents;
-    private ClassLoader loader;
 
     public JAWSXMLReader() {
-    }
-
-    public void setClassLoader(ClassLoader loader) {
-        this.loader = loader;
     }
 
     public String getFileName() {
@@ -72,7 +67,6 @@ public class JAWSXMLReader extends HandlerBase implements XMLReader {
         if(name.equals("entity")) {
             bean.setContainerMetaData((ContainerMetaData)container.clone());
             server.addBean(bean);
-System.out.println("Added bean with "+bean.getFields().size()+" fields.");
             bean = null;
         } else if(name.equals("cmp-field")) {
             bean.addField(field);
@@ -106,13 +100,6 @@ System.out.println("Added bean with "+bean.getFields().size()+" fields.");
             container.cmpDataSource = contents;
         else if(name.equals("type-mapping") && container.cmpDBType == null)
             container.cmpDBType = contents;
-    }
-
-    private Class loadClass(String name) throws ClassNotFoundException {
-        if(loader == null)
-            return Class.forName(name);
-        else
-            return loader.loadClass(name);
     }
 
     private int getJDBCType(String source) throws SAXException {

@@ -32,7 +32,7 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
         container.addPlugin(plugin.getContainer());
     }
 
-    private static MethodMetaData getMethod(Set source, String name, Class[] args) {
+    private static MethodMetaData getMethod(Set source, String name, String[] args) {
         Iterator it = source.iterator();
         while(it.hasNext()) {
             MethodMetaData mmd = (MethodMetaData)it.next();
@@ -56,7 +56,7 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
     private static AggregateMethod[] mergeMethods(Set incoming, AggregateMethod[] existing, MetaDataPlugin manager) {
         for(int i=0; i<existing.length; i++) {
             String name = existing[i].getName();
-            Class[] args = existing[i].getParameterTypes();
+            String[] args = existing[i].getParameterTypes();
             try {
                 MethodMetaData mmd = getMethod(incoming, name, args);
                 existing[i].addPlugin(mmd);
@@ -77,7 +77,7 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
         for(Iterator it = incoming.iterator(); it.hasNext();) {
             MethodMetaData mmd = (MethodMetaData)it.next();
             String name = mmd.getName();
-            Class[] args = mmd.getParameterTypes();
+            String[] args = mmd.getParameterTypes();
             MethodMetaData[] list = new MethodMetaData[MetaDataFactory.getPluginCount()];
             for(int i=0; i<list.length; i++) {
                 Class cls = MetaDataFactory.getPlugin(i).getMethodClass();
@@ -142,6 +142,10 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
     }
 
     public MethodMetaData getMethod(String name, Class[] args) {
+        return getMethod(name, getClassNames(args));
+    }
+
+    public MethodMetaData getMethod(String name, String[] args) {
         for(int i=0; i<methods.length; i++)
             if(methods[i].getName().equals(name) &&
                paramsMatch(methods[i].getParameterTypes(), args))
@@ -150,6 +154,10 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
     }
 
     public MethodMetaData getHomeMethod(String name, Class[] args) {
+        return getHomeMethod(name, getClassNames(args));
+    }
+
+    public MethodMetaData getHomeMethod(String name, String[] args) {
         for(int i=0; i<homeMethods.length; i++)
             if(homeMethods[i].getName().equals(name) &&
                paramsMatch(homeMethods[i].getParameterTypes(), args))
@@ -184,12 +192,19 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
         return container;
     }
 
-    private static boolean paramsMatch(Class[] one, Class[] two) {
+    private static boolean paramsMatch(String[] one, String[] two) {
         if(one.length != two.length)
             return false;
         for(int i=0; i<one.length; i++)
             if(!one[i].equals(two[i]))
                 return false;
         return true;
+    }
+
+    private static String[] getClassNames(Class[] source) {
+        String out[] = new String[source.length];
+        for(int i=0; i<out.length; i++)
+            out[i] = source[i].getName();
+        return out;
     }
 }

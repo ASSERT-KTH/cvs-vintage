@@ -5,14 +5,14 @@ import java.util.*;
 
 public class AggregateMethod extends AggregateMetaData implements MethodMetaData {
     private String name;
-    private Class[] params;
+    private String[] params;
 
-    public AggregateMethod(String name, Class[] paramTypes) {
+    public AggregateMethod(String name, String[] paramTypes) {
         this.name = name;
         params = paramTypes;
     }
 
-    public AggregateMethod(String name, Class[] paramTypes, MethodMetaData[] plugins) {
+    public AggregateMethod(String name, String[] paramTypes, MethodMetaData[] plugins) {
         super(plugins);
         this.name = name;
         params = paramTypes;
@@ -26,7 +26,7 @@ public class AggregateMethod extends AggregateMetaData implements MethodMetaData
         return name;
     }
 
-    public Class[] getParameterTypes() {
+    public String[] getParameterTypes() {
         return params;
     }
 }

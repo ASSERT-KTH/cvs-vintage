@@ -110,10 +110,10 @@ public class MetaDataFactory {
             while(itm.hasNext()) {
                 MethodMetaData mmd = (MethodMetaData)itm.next();
                 System.out.print("    Method '"+mmd.getName()+"(");
-                Class[] args = mmd.getParameterTypes();
+                String[] args = mmd.getParameterTypes();
                 for(int i=0; i<args.length; i++) {
                     if(i > 0) System.out.print(", ");
-                    System.out.print(args[i].getName());
+                    System.out.print(args[i]);
                 }
                 System.out.println(")'");
                 dumpMetaData("      ", mmd);
@@ -125,10 +125,10 @@ public class MetaDataFactory {
             while(itm.hasNext()) {
                 MethodMetaData mmd = (MethodMetaData)itm.next();
                 System.out.print("    Home Method '"+mmd.getName()+"(");
-                Class[] args = mmd.getParameterTypes();
+                String[] args = mmd.getParameterTypes();
                 for(int i=0; i<args.length; i++) {
                     if(i > 0) System.out.print(", ");
-                    System.out.print(args[i].getName());
+                    System.out.print(args[i]);
                 }
                 System.out.println(")'");
                 dumpMetaData("      ", mmd);

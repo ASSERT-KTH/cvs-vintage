@@ -35,7 +35,7 @@ import org.jboss.metadata.ejbjar.EJBXMLReader;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -114,7 +114,6 @@ public class jBossFileManager
 
          in = new BufferedReader(new InputStreamReader(file.openStream()));
          EJBXMLReader xml = new EJBXMLReader();
-         xml.setClassLoader(cl);
          ServerMetaData ejbContainer = xml.readXML(in);
          in.close();
          metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
@@ -165,7 +164,6 @@ public class jBossFileManager
          ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
          in = new BufferedReader(new InputStreamReader(ejbXml));
          EJBXMLReader xml = new EJBXMLReader();
-         xml.setClassLoader(cl);
          ServerMetaData ejbContainer = xml.readXML(in);
          in.close();
          metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
@@ -207,7 +205,6 @@ public class jBossFileManager
          ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
          in = new BufferedReader(new InputStreamReader(ejbXml));
          EJBXMLReader xml = new EJBXMLReader();
-         xml.setClassLoader(cl);
          ServerMetaData ejbContainer = xml.readXML(in);
          in.close();
          metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
