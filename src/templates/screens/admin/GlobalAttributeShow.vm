@@ -32,7 +32,6 @@ This page is for editing the Global Attributes.
 <th>Creation Date:</th>
 </tr>
 
-#* #set ($attgroup = $intake.Attribute.Default) *#
 #set ($allAttributes = $scarabG.AllAttributes)
 
 #foreach( $attribute in $allAttributes )
