@@ -39,7 +39,7 @@ import java.awt.Component;
  * @see ActionSet
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.16 2003/02/11 02:31:05 spestov Exp $
+ * @version $Id: EditAction.java,v 1.17 2003/03/22 21:44:36 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -144,6 +144,17 @@ public abstract class EditAction
 	 * @since jEdit 2.7pre2
 	 */
 	public boolean noRecord()
+	{
+		return false;
+	} //}}}
+
+	//{{{ noRememberLast() method
+	/**
+	 * Returns if this edit action should not be remembered as the most
+	 * recently invoked action.
+	 * @since jEdit 4.2pre1
+	 */
+	public boolean noRememberLast()
 	{
 		return false;
 	} //}}}

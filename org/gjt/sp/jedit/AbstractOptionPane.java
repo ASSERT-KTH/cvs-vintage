@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.14 2003/02/18 22:03:19 spestov Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.15 2003/03/22 21:44:36 spestov Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -228,8 +228,7 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	 */
 	public void addSeparator()
 	{
-		if(y != 0)
-			addComponent(Box.createVerticalStrut(6));
+		addComponent(Box.createVerticalStrut(6));
 
 		JSeparator sep = new JSeparator(JSeparator.HORIZONTAL);
 
@@ -240,10 +239,12 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 		cons.fill = GridBagConstraints.BOTH;
 		cons.anchor = GridBagConstraints.WEST;
 		cons.weightx = 1.0f;
-		cons.insets = new Insets(1,0,1,0);
+		//cons.insets = new Insets(1,0,1,0);
 
 		gridBag.setConstraints(sep,cons);
 		add(sep);
+
+		addComponent(Box.createVerticalStrut(6));
 	} //}}}
 
 	//{{{ addSeparator() method

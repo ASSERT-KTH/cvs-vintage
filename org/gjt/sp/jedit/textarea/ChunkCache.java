@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.59 2003/03/22 20:00:49 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.60 2003/03/22 21:44:37 spestov Exp $
  */
 class ChunkCache
 {
@@ -151,7 +151,6 @@ class ChunkCache
 	{
 		this.buffer = buffer;
 		this.firstLine = 0;
-		invalidateAll();
 	} //}}}
 
 	//{{{ setFirstLine() method

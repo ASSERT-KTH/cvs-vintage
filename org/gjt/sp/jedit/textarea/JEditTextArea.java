@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.203 2003/03/22 20:00:50 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.204 2003/03/22 21:44:38 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -155,6 +155,16 @@ public class JEditTextArea extends JComponent
 	public FoldVisibilityManager getFoldVisibilityManager()
 	{
 		return foldVisibilityManager;
+	} //}}}
+
+	//{{{ getDisplayManager() method
+	/**
+	 * Returns the display manager used by this text area.
+	 * @since jEdit 4.2pre1
+	 */
+	public DisplayManager getDisplayManager()
+	{
+		return displayManager;
 	} //}}}
 
 	//{{{ isCaretBlinkEnabled() method
@@ -259,18 +269,22 @@ public class JEditTextArea extends JComponent
 				caretLine = caret = caretScreenLine = 0;
 				bracketLine = bracketPosition = -1;
 
+				// OBSOLETE
 				this.buffer._releaseFoldVisibilityManager(foldVisibilityManager);
+
+				displayManager.dispose();
 				this.buffer.removeBufferChangeListener(bufferHandler);
 			}
 			this.buffer = buffer;
 
+			// OBSOLETE
 			foldVisibilityManager = buffer._getFoldVisibilityManager(this);
+			displayManager = new DisplayManager(buffer,this);
 
 			buffer.addBufferChangeListener(bufferHandler);
 			bufferHandlerInstalled = true;
 
 			firstLine = 0;
-			maxHorizontalScrollWidth = 0;
 			physFirstLine = foldVisibilityManager.getFirstVisibleLine();
 			chunkCache.setBuffer(buffer);
 
@@ -279,10 +293,10 @@ public class JEditTextArea extends JComponent
 			if(buffer.isLoaded())
 				recalculateLastPhysicalLine();
 
-			painter.repaint();
-			gutter.repaint();
+			maxHorizontalScrollWidth = 0;
 
-			updateScrollBars();
+			repaint();
+
 			fireScrollEvent(true);
 		}
 		finally
@@ -5039,6 +5053,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	private boolean bufferChanging;
 	private Buffer buffer;
 	private FoldVisibilityManager foldVisibilityManager;
+	private DisplayManager displayManager;
 	private BufferChangeHandler bufferHandler;
 	private boolean bufferHandlerInstalled;
 
