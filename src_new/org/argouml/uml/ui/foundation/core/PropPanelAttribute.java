@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.44 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.45 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.44 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.45 2004/09/16 20:56:06 mvw Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -90,11 +90,10 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         add(getChangeabilityRadioButtonPanel());
         add(getOwnerScopeCheckbox());
 
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        buttonPanel.add(new PropPanelButton2(this, new ActionAddAttribute()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionAddAttribute()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
     /**

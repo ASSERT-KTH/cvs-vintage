@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.47 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelUseCase.java,v 1.48 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.47 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelUseCase.java,v 1.48 2004/09/16 20:56:06 mvw Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -116,20 +116,19 @@ public class PropPanelUseCase extends PropPanelClassifier {
         addField(Translator.localize("UMLMenu", "label.association-ends"), 
             getAssociationEndScroll());
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, buttonPanel, useCaseIcon,
+        new PropPanelButton(this, getButtonPanel(), useCaseIcon,
                 Translator.localize("UMLMenu", "button.new-usecase"), 
                 "newUseCase", null);
-        new PropPanelButton(this, buttonPanel, extensionPointIcon,
+        new PropPanelButton(this, getButtonPanel(), extensionPointIcon,
                 localize("New Extension Point"),
                 "newExtensionPoint",
                 null);
-        new PropPanelButton(this, buttonPanel, receptionIcon, 
+        new PropPanelButton(this, getButtonPanel(), receptionIcon, 
                 Translator.localize("UMLMenu", "button.new-reception"), 
                 getActionNewReception());
-        buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
 
     }
 

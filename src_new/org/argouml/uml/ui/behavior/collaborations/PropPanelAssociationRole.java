@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.28 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelAssociationRole.java,v 1.29 2004/09/16 20:56:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,10 +78,9 @@ public class PropPanelAssociationRole extends PropPanelAssociation {
         addField(Translator.localize("UMLMenu", "label.messages"),
 		 new JScrollPane(messageList));
 
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelAssociationRole */

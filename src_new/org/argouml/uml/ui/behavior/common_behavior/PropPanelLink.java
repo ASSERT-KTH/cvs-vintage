@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.32 2004/09/12 16:47:12 mvw Exp $
+// $Id: PropPanelLink.java,v 1.33 2004/09/16 20:56:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.32 2004/09/12 16:47:12 mvw Exp $
+// $Id: PropPanelLink.java,v 1.33 2004/09/16 20:56:01 mvw Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -72,9 +72,9 @@ public class PropPanelLink extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.connections"), 
                 connectionScroll);
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionRemoveFromModel()));
 	
     }

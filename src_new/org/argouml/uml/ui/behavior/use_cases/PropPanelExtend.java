@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.35 2004/09/12 09:54:02 mvw Exp $
+// $Id: PropPanelExtend.java,v 1.36 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,14 +124,13 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         // Add the toolbar.
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, buttonPanel, extensionPointIcon,
+        new PropPanelButton(this, getButtonPanel(), extensionPointIcon,
                             localize("New Extension Point"),
                             "newExtensionPoint",
                             null);
-        buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 

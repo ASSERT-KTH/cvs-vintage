@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.49 2004/09/12 09:54:00 mvw Exp $
+// $Id: PropPanelPackage.java,v 1.50 2004/09/16 20:56:07 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,12 +128,12 @@ public class PropPanelPackage extends PropPanelNamespace  {
         addField(Translator.localize("UMLMenu", "label.owned-elements"), 
                 getOwnedElementsScroll());
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, buttonPanel, packageIcon, 
+        new PropPanelButton(this, getButtonPanel(), packageIcon, 
                 Translator.localize("UMLMenu", "button.new-package"), 
                 "addPackage", null);
-	buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelAction.java,v 1.5 2004/09/12 16:47:12 mvw Exp $
+// $Id: PropPanelAction.java,v 1.6 2004/09/16 20:56:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,10 +91,9 @@ public abstract class PropPanelAction extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.language"), 
                 new UMLExpressionLanguageField(expressionModel, true));
 
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelCallAction */

@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.27 2004/08/14 21:47:20 mvw Exp $
+// $Id: PropPanelTransition.java,v 1.28 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.27 2004/08/14 21:47:20 mvw Exp $
+// $Id: PropPanelTransition.java,v 1.28 2004/09/16 20:56:06 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -95,10 +95,9 @@ public class PropPanelTransition extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.effect"),
                 new JScrollPane(effectList));
 
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelTransition */

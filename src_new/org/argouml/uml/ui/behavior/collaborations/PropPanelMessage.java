@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.45 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.46 2004/09/16 20:56:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.45 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.46 2004/09/16 20:56:05 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -115,16 +115,16 @@ public class PropPanelMessage extends PropPanelModelElement {
 	addField(Translator.localize("UMLMenu", "label.predecessor"),
 		 predecessorScroll);
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, buttonPanel, actionIcon,
+        new PropPanelButton(this, getButtonPanel(), actionIcon,
 	    Translator.localize("UMLMenu", "button.new-action"),
 	    "addAction",
 	    "isAddActionEnabled");
 	// ActionNewAction.SINGLETON.setTarget((MModelElement)getTarget());
 	// buttonPanel.add(new PropPanelButton2(this,
 	//     ActionNewAction.SINGLETON));
-	buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));    
     }
 

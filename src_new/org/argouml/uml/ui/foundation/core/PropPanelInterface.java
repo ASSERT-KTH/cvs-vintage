@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.42 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelInterface.java,v 1.43 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,9 +99,9 @@ public class PropPanelInterface extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.operations"), 
             getFeatureScroll());
 
-	buttonPanel.add(new PropPanelButton2(this, 
+	addButton(new PropPanelButton2(this, 
             new ActionNavigateNamespace()));
-	new PropPanelButton(this, buttonPanel, addOpIcon, Translator.localize(
+	new PropPanelButton(this, getButtonPanel(), addOpIcon, Translator.localize(
             "UMLMenu", "button.new-operation"), "addOperation", null);
 	//new PropPanelButton(this,buttonPanel,generalizationIcon, 
 	//    Translator.localize("UMLMenu", "button.new-generalization"),
@@ -109,11 +109,10 @@ public class PropPanelInterface extends PropPanelClassifier {
 	//new PropPanelButton(this,buttonPanel,realizationIcon, 
         //    Translator.localize("UMLMenu", "button.new-realization"),
         //    "addRealization",null);
-	new PropPanelButton(this, buttonPanel, receptionIcon, 
+	new PropPanelButton(this, getButtonPanel(), receptionIcon, 
             Translator.localize("UMLMenu", "button.new-reception"), 
             getActionNewReception());
-	buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
     /**

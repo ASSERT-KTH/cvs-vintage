@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.14 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelComment.java,v 1.15 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,10 +60,9 @@ public class PropPanelComment extends PropPanelModelElement {
         text.setRows(5);
         JScrollPane pane = new JScrollPane(text);
         addField("Text: ", pane);
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 }

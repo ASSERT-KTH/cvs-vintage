@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.38 2004/09/12 16:47:12 mvw Exp $
+// $Id: PropPanelObject.java,v 1.39 2004/09/16 20:55:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,9 +93,9 @@ public class PropPanelObject extends PropPanelInstance {
             classifierScroll);
 
 
-	buttonPanel.add(new PropPanelButton2(this, 
+	addButton(new PropPanelButton2(this, 
             new ActionNavigateNamespace()));	
-	buttonPanel.add(new PropPanelButton2(this, 
+	addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));
 	
     }

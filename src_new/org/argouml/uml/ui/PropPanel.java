@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.90 2004/09/12 16:47:16 mvw Exp $
+// $Id: PropPanel.java,v 1.91 2004/09/16 20:56:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public abstract class PropPanel
      */
     private JPanel center;
 
-    protected JToolBar buttonPanel;
+    private JToolBar buttonPanel;
     private JPanel buttonPanelWithFlowLayout = new JPanel();
 
     private JLabel titleLabel;
@@ -170,6 +170,13 @@ public abstract class PropPanel
         super.setOrientation(orientation);
     }
 
+    /**
+     * @param button the button to be added to the button panel
+     */
+    protected void addButton(Component button) {
+        buttonPanel.add(button);
+    }
+    
     /**
      * Add a component with the specified label.<p>
      *
@@ -710,5 +717,16 @@ public abstract class PropPanel
      */
     protected JLabel getTitleLabel() {
         return titleLabel;
+    }
+
+    /**
+     * @return Returns the buttonPanel.
+     * 
+     * @deprecated As of V0.17.1. Reason: Nobody has any business 
+     * poking around in my Panels. 
+     * Use {@link addButton(Component)} instead.
+     */
+    protected JToolBar getButtonPanel() {
+        return buttonPanel;
     }
 } /* end class PropPanel */

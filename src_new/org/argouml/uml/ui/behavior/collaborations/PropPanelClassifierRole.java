@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.40 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.41 2004/09/16 20:56:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.40 2004/09/12 16:47:13 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.41 2004/09/16 20:56:02 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -120,12 +120,12 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.available-features"),
 		 new JScrollPane(availableFeaturesList));
 
-	buttonPanel.add(new PropPanelButton2(this,
+	addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-	new PropPanelButton(this, buttonPanel, receptionIcon, 
+	new PropPanelButton(this, getButtonPanel(), receptionIcon, 
             Translator.localize("UMLMenu", "button.new-reception"), 
             getActionNewReception());
-	buttonPanel.add(new PropPanelButton2(this, 
+	addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.36 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelStereotype.java,v 1.37 2004/09/16 20:56:07 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,12 +104,12 @@ public class PropPanelStereotype extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.specializations"),
                 getSpecializationScroll());
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, buttonPanel, stereotypeIcon, Translator
+        new PropPanelButton(this, getButtonPanel(), stereotypeIcon, Translator
                 .localize("UMLMenu", "button.new-stereotype"), "newStereotype",
                 null);
-	buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
             new ActionRemoveFromModel()));
     }
 

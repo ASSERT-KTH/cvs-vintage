@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.39 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelActor.java,v 1.40 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.39 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelActor.java,v 1.40 2004/09/16 20:56:06 mvw Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -100,16 +100,15 @@ public class PropPanelActor extends PropPanelClassifier {
             getAssociationEndScroll());
         // The toolbar buttons that go at the top.
 
-        buttonPanel.add(new PropPanelButton2(this, 
+        addButton(new PropPanelButton2(this, 
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, buttonPanel, actorIcon,
+        new PropPanelButton(this, getButtonPanel(), actorIcon,
                 Translator.localize("UMLMenu", "button.new-actor"), "newActor",
                             null);
-        new PropPanelButton(this, buttonPanel, receptionIcon, 
+        new PropPanelButton(this, getButtonPanel(), receptionIcon, 
                 Translator.localize("UMLMenu", "button.new-reception"), 
                 getActionNewReception());
-        buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.23 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.24 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.23 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.24 2004/09/16 20:56:06 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -94,10 +94,9 @@ public class PropPanelGuard extends PropPanelModelElement {
         //addField(Translator.localize("UMLMenu", "label.language"), 
         // new UMLExpressionLanguageField(expressionModel, true));
 
-	new PropPanelButton(this, buttonPanel, navUpIcon, Translator.localize(
+	new PropPanelButton(this, getButtonPanel(), navUpIcon, Translator.localize(
             "UMLMenu", "button.go-up"), "navigateUp", null);
-	buttonPanel
-        .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 } /* end class PropPanelState */

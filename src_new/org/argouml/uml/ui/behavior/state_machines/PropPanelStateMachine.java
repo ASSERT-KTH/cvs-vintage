@@ -1,4 +1,4 @@
-// $Id: PropPanelStateMachine.java,v 1.17 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelStateMachine.java,v 1.18 2004/09/16 20:56:06 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStateMachine.java,v 1.17 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelStateMachine.java,v 1.18 2004/09/16 20:56:06 mvw Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
@@ -105,10 +105,9 @@ public class PropPanelStateMachine extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.submachinestate"),
                 new JScrollPane(submachineStateList));
 
-        buttonPanel.add(new PropPanelButton2(this,
+        addButton(new PropPanelButton2(this,
                 new ActionNavigateNamespace()));
-        buttonPanel
-                .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
 }
