@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectInvokerImpl.java,v 1.4 2004/04/22 01:49:22 patriot1burke Exp $
+// $Id: TimedObjectInvokerImpl.java,v 1.5 2004/08/08 23:06:07 starksm Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -57,10 +57,9 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
    public void callTimeout(Timer timer)
            throws Exception
    {
-      ClassLoader cl = Thread.currentThread().getContextClassLoader();
+      TCLStack.push(container.getClassLoader());
       try
       {
-         Thread.currentThread().setContextClassLoader(container.getClassLoader());
          Invocation inv = new Invocation(timedObjectId.getInstancePk(), method, new Object[]{timer}, null, null, null);
          inv.setValue(InvocationKey.INVOKER_PROXY_BINDING, null, PayloadKey.AS_IS);
          inv.setType(InvocationType.LOCAL);
@@ -68,7 +67,7 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
       }
       finally
       {
-         Thread.currentThread().setContextClassLoader(cl);
+         TCLStack.pop();
       }
    }
 }

@@ -44,7 +44,7 @@ public class JDBCInformixCreateCommand extends JDBCIdentityColumnCreateCommand
       super.init(manager);
       try
       {
-         Class psClass = Thread.currentThread().getContextClassLoader().loadClass(className);
+         Class psClass = GetTCLAction.getContextClassLoader().loadClass(className);
          method = psClass.getMethod(methodName, null);
       }
       catch(ClassNotFoundException e)

@@ -52,7 +52,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.124 $
+ * @version $Revision: 1.125 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -229,8 +229,8 @@ public class EntityContainer
    protected void createService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -310,15 +310,15 @@ public class EntityContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void startService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -353,15 +353,15 @@ public class EntityContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -400,15 +400,15 @@ public class EntityContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -472,7 +472,7 @@ public class EntityContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 

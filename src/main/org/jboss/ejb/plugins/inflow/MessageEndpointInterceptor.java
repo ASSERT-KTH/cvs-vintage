@@ -6,7 +6,6 @@
 */
 package org.jboss.ejb.plugins.inflow;
 
-import javax.ejb.EJBException;
 import javax.resource.ResourceException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
@@ -15,7 +14,6 @@ import javax.transaction.xa.XAResource;
 
 import org.jboss.ejb.MessageDrivenContainer;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationContext;
 import org.jboss.logging.Logger;
 import org.jboss.proxy.Interceptor;
 
@@ -25,7 +23,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedBoolean;
  * Implements the application server message endpoint requirements.
  * 
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MessageEndpointInterceptor extends Interceptor
 {
@@ -161,8 +159,8 @@ public class MessageEndpointInterceptor extends Interceptor
       // Set the classloader
       JBossMessageEndpointFactory mef = (JBossMessageEndpointFactory) mi.getInvocationContext().getValue(MESSAGE_ENDPOINT_FACTORY);
       MessageDrivenContainer container = mef.getContainer();
-      oldClassLoader = inUseThread.getContextClassLoader();
-      inUseThread.setContextClassLoader(container.getClassLoader());
+      oldClassLoader = GetTCLAction.getContextClassLoader(inUseThread);
+      SetTCLAction.setContextClassLoader(inUseThread, container.getClassLoader());
       if (trace)
          log.trace("MessageEndpoint " + getProxyString(mi) + " set context classloader to " + container.getClassLoader());
 
@@ -385,7 +383,7 @@ public class MessageEndpointInterceptor extends Interceptor
    {
       if (trace)
          log.trace("MessageEndpoint " + getProxyString(mi) + " reset classloader " + oldClassLoader);
-      inUseThread.setContextClassLoader(oldClassLoader);
+      SetTCLAction.setContextClassLoader(inUseThread, oldClassLoader);
       oldClassLoader = null;
    }
 

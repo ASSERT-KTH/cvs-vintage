@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * This immutable class contains information about entity command
  *
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCEntityCommandMetaData
 {
@@ -55,7 +55,7 @@ public final class JDBCEntityCommandMetaData
       {
          try
          {
-            commandClass = Thread.currentThread().
+            commandClass = GetTCLAction.
                getContextClassLoader().loadClass( commandClassStr );
          } catch (ClassNotFoundException e) {
             throw new DeploymentException( "Could not load class: "
@@ -106,7 +106,7 @@ public final class JDBCEntityCommandMetaData
       {
          try
          {
-            commandClass = Thread.currentThread().
+            commandClass = GetTCLAction.
                getContextClassLoader().loadClass( commandClassStr );
          } catch (ClassNotFoundException e) {
             throw new DeploymentException( "Could not load class: "

@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Audit field meta data
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class JDBCAuditMetaData
 {
@@ -139,7 +139,7 @@ public final class JDBCAuditMetaData
       {
          try
          {
-            fieldType = Thread.currentThread().getContextClassLoader().loadClass(fieldTypeStr);
+            fieldType = GetTCLAction.getContextClassLoader().loadClass(fieldTypeStr);
          }
          catch(ClassNotFoundException e)
          {

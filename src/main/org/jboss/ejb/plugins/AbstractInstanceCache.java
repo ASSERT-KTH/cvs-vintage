@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  * @jmx:mbean
  */
 public abstract class AbstractInstanceCache
@@ -250,7 +250,7 @@ public abstract class AbstractInstanceCache
       String p = MetaData.getElementContent(MetaData.getUniqueChild(element, "cache-policy"));
       try
       {
-         Class cls = Thread.currentThread().getContextClassLoader().loadClass(p);
+         Class cls = SecurityActions.getContextClassLoader().loadClass(p);
          Constructor ctor = cls.getConstructor(new Class[] {AbstractInstanceCache.class});
          m_cache = (CachePolicy)ctor.newInstance(new Object[] {this});
       }

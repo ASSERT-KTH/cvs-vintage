@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Optimistick locking metadata
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCOptimisticLockingMetaData
 {
@@ -183,7 +183,7 @@ public final class JDBCOptimisticLockingMetaData
       {
          try
          {
-            fieldType = Thread.currentThread().
+            fieldType = GetTCLAction.
                getContextClassLoader().loadClass(fieldTypeStr);
          }
          catch(ClassNotFoundException e)

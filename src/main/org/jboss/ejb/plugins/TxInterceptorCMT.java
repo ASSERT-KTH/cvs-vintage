@@ -45,7 +45,7 @@ import java.util.ArrayList;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- *  @version $Revision: 1.43 $
+ *  @version $Revision: 1.44 $
  */
 public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadable
 {
@@ -81,7 +81,7 @@ public class TxInterceptorCMT extends AbstractTxInterceptor implements XmlLoadab
          {
             Element handler = (Element)handlers.next();
             String className = MetaData.getElementContent(handler).trim();
-            Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+            Class clazz = SecurityActions.getContextClassLoader().loadClass(className);
             list.add(clazz.newInstance());
          }
          retryHandlers = (TxRetryExceptionHandler[])list.toArray(new TxRetryExceptionHandler[list.size()]);

@@ -6,10 +6,9 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.10 2004/06/22 22:36:55 ejort Exp $
+// $Id: SessionContainer.java,v 1.11 2004/08/08 23:06:08 starksm Exp $
 
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.SessionMetaData;
 
@@ -38,7 +37,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -125,8 +124,8 @@ public abstract class SessionContainer extends Container
    protected void createService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -169,7 +168,7 @@ public abstract class SessionContainer extends Container
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
@@ -373,8 +372,8 @@ public abstract class SessionContainer extends Container
    protected void startService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -394,7 +393,7 @@ public abstract class SessionContainer extends Container
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
@@ -443,8 +442,8 @@ public abstract class SessionContainer extends Container
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -464,7 +463,7 @@ public abstract class SessionContainer extends Container
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
@@ -509,8 +508,8 @@ public abstract class SessionContainer extends Container
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -532,7 +531,7 @@ public abstract class SessionContainer extends Container
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 

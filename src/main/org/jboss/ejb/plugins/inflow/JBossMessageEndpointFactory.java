@@ -51,7 +51,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -284,7 +284,7 @@ public class JBossMessageEndpointFactory
       String messagingType = metaData.getMessagingType();
       try
       {
-         messagingTypeClass = Thread.currentThread().getContextClassLoader().loadClass(messagingType);
+         messagingTypeClass = GetTCLAction.getContextClassLoader().loadClass(messagingType);
       }
       catch (Exception e)
       {

@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public final class JDBCTypeFactory
 {
@@ -213,7 +213,7 @@ public final class JDBCTypeFactory
       {
          try
          {
-            Class implClass = Thread.currentThread().getContextClassLoader().loadClass(implClassName);
+            Class implClass = TCLStack.getContextClassLoader().loadClass(implClassName);
             stateFactory = (CMPFieldStateFactory)implClass.newInstance();
          }
          catch(ClassNotFoundException e)
@@ -515,7 +515,7 @@ public final class JDBCTypeFactory
          String mappedTypeStr = userTypeMapping.getMappedType();
          try
          {
-            final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+            final ClassLoader contextClassLoader = TCLStack.getContextClassLoader();
             Class mapperClass = contextClassLoader.loadClass(userTypeMapping.getMapper());
             mapper = (Mapper)mapperClass.newInstance();
             javaType = contextClassLoader.loadClass(mappedTypeStr);
@@ -854,7 +854,7 @@ public final class JDBCTypeFactory
    {
       try
       {
-         final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+         final ClassLoader contextClassLoader = TCLStack.getContextClassLoader();
          return contextClassLoader.loadClass(className);
       }
       catch(ClassNotFoundException e)

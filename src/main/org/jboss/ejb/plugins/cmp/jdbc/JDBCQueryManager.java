@@ -33,12 +33,12 @@ import org.w3c.dom.Element;
  * Maintains a map from a query method to query command.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCQueryManager
 {
@@ -69,7 +69,7 @@ public final class JDBCQueryManager
       {
          try
          {
-            impl = Thread.currentThread().getContextClassLoader().loadClass(compiler);
+            impl = TCLStack.getContextClassLoader().loadClass(compiler);
          }
          catch(ClassNotFoundException e)
          {

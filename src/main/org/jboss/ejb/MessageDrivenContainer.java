@@ -41,7 +41,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -150,8 +150,8 @@ public class MessageDrivenContainer
    protected void createService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -228,15 +228,15 @@ public class MessageDrivenContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void startService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -265,15 +265,15 @@ public class MessageDrivenContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -302,15 +302,15 @@ public class MessageDrivenContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
-      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      Thread.currentThread().setContextClassLoader(getClassLoader());
+      ClassLoader oldCl = SecurityActions.getContextClassLoader();
+      SecurityActions.setContextClassLoader(getClassLoader());
 
       try
       {
@@ -365,7 +365,7 @@ public class MessageDrivenContainer
       finally
       {
          // Reset classloader
-         Thread.currentThread().setContextClassLoader(oldCl);
+         SecurityActions.setContextClassLoader(oldCl);
       }
    }
 

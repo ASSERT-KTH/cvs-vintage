@@ -40,7 +40,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
         extends EntitySynchronizationInterceptor
@@ -107,8 +107,8 @@ public class EntityMultiInstanceSynchronizationInterceptor
 
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
-         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-         Thread.currentThread().setContextClassLoader(container.getClassLoader());
+         ClassLoader oldCl = SecurityActions.getContextClassLoader();
+         SecurityActions.setContextClassLoader(container.getClassLoader());
 
          ctx.hasTxSynchronization(false);
          ctx.setTransaction(null);
@@ -153,7 +153,7 @@ public class EntityMultiInstanceSynchronizationInterceptor
          } // synchronized(lock)
          finally
          {
-            Thread.currentThread().setContextClassLoader(oldCl);
+            SecurityActions.setContextClassLoader(oldCl);
          }
       }
 

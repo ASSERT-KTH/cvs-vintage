@@ -38,8 +38,14 @@ public class JDBCMySQLCreateCommand extends JDBCIdentityColumnCreateCommand
    public void init(JDBCStoreManager manager) throws DeploymentException
    {
       super.init(manager);
+<<<<<<< JDBCMySQLCreateCommand.java
+      try
+      {
+         Class psClass = GetTCLAction.getContextClassLoader().loadClass(className);
+=======
       try {
          Class psClass = Thread.currentThread().getContextClassLoader().loadClass(className);
+>>>>>>> 1.4
          method = psClass.getMethod(methodName, null);
       } catch (ClassNotFoundException e) {
          throw new DeploymentException("Could not load driver class: "+className, e);

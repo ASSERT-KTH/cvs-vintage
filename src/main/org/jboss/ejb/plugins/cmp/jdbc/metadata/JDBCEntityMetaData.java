@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public final class JDBCEntityMetaData
 {
@@ -674,7 +674,7 @@ public final class JDBCEntityMetaData
       {
          try
          {
-            qlCompiler = Thread.currentThread().getContextClassLoader().loadClass(compiler);
+            qlCompiler = GetTCLAction.getContextClassLoader().loadClass(compiler);
          }
          catch(ClassNotFoundException e)
          {
