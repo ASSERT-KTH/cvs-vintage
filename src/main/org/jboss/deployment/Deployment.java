@@ -13,10 +13,12 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.Date;
 
+import java.util.jar.Manifest;
+
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
 *
 *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*  @version $Revision: 1.7 $
+*  @version $Revision: 1.8 $
 */
 public class Deployment
    implements java.io.Serializable
@@ -43,6 +45,13 @@ public class Deployment
    /** the WEB Modules */
    protected Vector webModules;
 
+   /** the manifest entry of the deployment (if any)
+    *  manifest is not serializable ... is only needed
+    *  at deployment time, so we mark it transient 
+    *  @author cgjung
+    */
+   protected transient Manifest manifest;
+   
    /** Creates a new Deployment object. */
    Deployment ()
    {
@@ -103,6 +112,13 @@ public class Deployment
     return webModules;
    }
 
+   /** returns the manifest entry of the deployment 
+    *  @autor cgjung
+    */
+   public Manifest getManifest() {
+       return manifest;
+   }
+   
    /** returns all files (URLs) that are needed to run this deployment properly */
 	public Vector getAllFiles()
 	{
