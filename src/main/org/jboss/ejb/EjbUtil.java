@@ -28,7 +28,7 @@ import org.jboss.util.Strings;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author Scott.Stark@jboss.org
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class EjbUtil
 {
@@ -206,7 +206,7 @@ public final class EjbUtil
    {
       if( log.isTraceEnabled() )
       {
-         log.trace( "Resolving absolute link" );
+         log.trace("Resolving absolute link, di: "+di);
       }
 
       String ejbName = null;
@@ -225,6 +225,17 @@ public final class EjbUtil
             }
 
             return ejbName;
+         }
+         else if( log.isTraceEnabled() )
+         {
+            log.trace("No match for ejb-link: "+link);
+            Iterator iter = appMD.getEnterpriseBeans();
+            while( iter.hasNext() )
+            {
+               beanMD = (BeanMetaData) iter.next();
+               ejbName = getJndiName(beanMD, isLocal);
+               log.trace("... Has ejbName: "+ejbName);
+            }
          }
       }
 
@@ -264,3 +275,4 @@ public final class EjbUtil
 /*
 vim:ts=3:sw=3:et
 */
+
