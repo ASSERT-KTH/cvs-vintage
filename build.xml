@@ -10,34 +10,34 @@
 
   <!-- Directories -->
   <!-- Where source packages are located -->
-  <property name="ws" value=".." /> 
+  <property name="ws" value=".." />
 
   <!-- work.dir is the place where build places the work
        files created in the build process, including the
-       build/ and dist/ dirs. 
-       Set it to ".." ( -D work.dir=.. ) to get the 
-       previous behavior. 
+       build/ and dist/ dirs.
+       Set it to ".." ( -D work.dir=.. ) to get the
+       previous behavior.
     -->
-  <property name="work.dir" value="." /> 
+  <property name="work.dir" value="." />
 
   <property name="tomcat.build" value="${work.dir}/build/tomcat"/>
   <property name="tomcat.dist" value="${work.dir}/dist/tomcat"/>
 
   <!-- Location where various binaries are installed.
-       It can be "c:\Program Files" or /usr/share/java or 
+       It can be "c:\Program Files" or /usr/share/java or
        /opt/java. The default is .. ( assuming jakarta-tomcat
        is installed in the same directory ) ( backward compat ).
-       
+
        Note that this assumes binary packages ( i.e. dists )
    -->
-  <property name="install.dir" value=".." /> 
+  <property name="install.dir" value=".." />
 
   <!-- External repositories -->
-  <property name="jakarta-tomcat-connectors" 
-	    location="${ws}/jakarta-tomcat-connectors" /> 
+  <property name="jakarta-tomcat-connectors"
+            location="${ws}/jakarta-tomcat-connectors" />
 
-  <property name="jakarta-tomcat-jasper" 
-	    location="${ws}/jakarta-tomcat-jasper" /> 
+  <property name="jakarta-tomcat-jasper"
+            location="${ws}/jakarta-tomcat-jasper" />
 
   <!-- External packages we depend on -->
   <!-- Tomcat depends on:
@@ -47,32 +47,47 @@
     -->
 
   <!-- set by default if "ant" command is used -->
-  <property name="ant.home" value="${install.dir}/jakarta-ant-1.3"/>
+  <property name="ant.home" value="${install.dir}/jakarta-ant"/>
   <property name="jsse.home" value="${install.dir}/jsse1.0.2"/>
   <property name="jaxp.home" value="${install.dir}/jaxp1.0.1"/>
   <property name="ant.bin" value="${ant.home}/bin"/>
   <property name="ant.lib" value="${ant.home}/lib"/>
   <property name="jsse.lib" value="${jsse.home}/lib"/>
 
-  <!-- Binaries checked in ( servlet.jar is not likely to change, 
+  <path id="commons-dbcp">
+    <fileset dir="../jakarta-commons/dbcp">
+        <include name="**/build/*.jar"/>
+    </fileset>
+    <fileset dir="../jakarta-commons/pool">
+        <include name="**/build/*.jar"/>
+    </fileset>
+    <fileset dir="../jakarta-commons/collections">
+        <include name="**/build/*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
 
   <!-- We can assume tomcat.build will hold a working tomcat -->
   <property name="tomcat.home" value="${tomcat.build}"/>
- 
+
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="detect">
-    <available property="jsse.present.runtime" 
-	       classname="javax.net.ssl.SSLServerSocket"/>
-    <available property="jsse.present" 
-	       file="${jsse.lib}/jsse.jar"/>
-    <available property="jdk12.present" 
-	       classname="java.security.PrivilegedAction"/>
-    <available property="jakarta-tomcat-connectors-present" 
-	       file="${jakarta-tomcat-connectors}"/>
-    <available property="jakarta-tomcat-jasper-present" 
-	       file="${jakarta-tomcat-jasper}" />
+    <available property="jsse.present.runtime"
+               classname="javax.net.ssl.SSLServerSocket"/>
+    <available property="jsse.present"
+               file="${jsse.lib}/jsse.jar"/>
+    <available property="commons-dbcp.present"
+               classname="org.apache.commons.dbcp.DriverManagerConnectionFactory"
+               classpathref="commons-dbcp"/>
+    <available property="jdk12.present"
+               classname="java.security.PrivilegedAction"/>
+    <available property="jakarta-tomcat-connectors-present"
+               file="${jakarta-tomcat-connectors}"/>
+    <available property="jakarta-tomcat-jasper-present"
+               file="${jakarta-tomcat-jasper}" />
   </target>
 
   <target name="msg.jdk12" if="jdk12.present" >
@@ -83,6 +98,10 @@
     <echo message="Detected JSSE"/>
   </target>
 
+  <target name="msg.commons-dbcp" if="commons-dbcp.present" >
+    <echo message="Detected commons-DBCP"/>
+  </target>
+
   <target name="msg.jtc" unless="jakarta-tomcat-connectors-present" >
     <fail message="Can't find jakarta-tomcat-connectors repository, you must check it out before building tomcat" />
   </target>
@@ -90,8 +109,7 @@
   <target name="msg.jtj" unless="jakarta-tomcat-jasper-present" >
     <fail message="Can't find jakarta-tomcat-jasper repository, you must check it out before building tomcat" />
   </target>
-
-  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.jtc,msg.jtj" >
+  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.jtc,msg.jtj,msg.commons-dbcp" >
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -128,31 +146,35 @@
     <copy tofile="${tomcat.build}/LICENSE" file="LICENSE"/>
 
     <!-- include ant, it is used for testing and will be used for
-    configuration and few other tasks 
+    configuration and few other tasks
     <copy todir="${tomcat.build}/bin">
             <fileset dir="${ant.bin}"/>
     </copy>
     -->
 
-    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${jaxp.home}/jaxp.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/parser.jar" 
-	  file="${jaxp.home}/parser.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
+          file="${jaxp.home}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/parser.jar"
+          file="${jaxp.home}/parser.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/jaxp.jar"
+          file="${jaxp.home}/jaxp.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/crimson.jar"
+          file="${jaxp.home}/crimson.jar"/>
     <copy file ="src/build/readme/readme.container"
-	  tofile="${tomcat.build}/lib/container/README" />
+          tofile="${tomcat.build}/lib/container/README" />
 
     <copy file ="src/build/readme/readme.shared"
-	  tofile="${tomcat.build}/lib/apps/README" />
+          tofile="${tomcat.build}/lib/apps/README" />
 
     <copy file ="src/build/readme/readme.common"
-	  tofile="${tomcat.build}/lib/common/README" />
+          tofile="${tomcat.build}/lib/common/README" />
 
-    
+
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
      -->
-    <copy tofile="${tomcat.build}/lib/common/servlet.jar" 
-	  file="${servlet22.jar}"/>
+    <copy tofile="${tomcat.build}/lib/common/servlet.jar"
+          file="${servlet22.jar}"/>
 
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.sh" cr="remove"/>
     <fixcrlf srcdir="${tomcat.build}/bin" includes="**/*.bat" cr="add"/>
@@ -167,28 +189,28 @@
   <!-- Independent ( stand alone ) utilities -->
 
   <target name="connector_util" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="${jakarta-tomcat-connectors}/util/java">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="${jakarta-tomcat-connectors}/util/java">
       <classpath>
       </classpath>
-      <include name="org/apache/tomcat/util/**"/>    
+      <include name="org/apache/tomcat/util/**"/>
     </javac>
 
     <copy todir="${tomcat.build}/classes">
       <fileset dir="${jakarta-tomcat-connectors}/util/java">
-	<include name="**/*.properties"/>
-	<include name="**/*.dtd"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.dtd"/>
       </fileset>
     </copy>
 
-    <jar jarfile="${tomcat.build}/lib/common/connector_util.jar" 
-	 basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/util/collections/**"/>    
-      <include name="org/apache/tomcat/util/http/**"/>    
-      <include name="org/apache/tomcat/util/res/**"/>    
+    <jar jarfile="${tomcat.build}/lib/common/connector_util.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/util/collections/**"/>
+      <include name="org/apache/tomcat/util/http/**"/>
+      <include name="org/apache/tomcat/util/res/**"/>
       <include name="org/apache/tomcat/util/buf/**"/>
     </jar>
 
@@ -198,66 +220,68 @@
   <!-- Independent ( stand alone ) utilities -->
 
   <target name="tomcat_util" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
       <classpath>
-	<pathelement location="${jsse.lib}/jsse.jar"/>
-	<pathelement location="${jsse.lib}/jnet.jar"/>
-	<pathelement location="${jsse.lib}/jcert.jar"/>
+        <pathelement location="${jsse.lib}/jsse.jar"/>
+        <pathelement location="${jsse.lib}/jnet.jar"/>
+        <pathelement location="${jsse.lib}/jcert.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/util/**"/>    
+      <include name="org/apache/tomcat/util/**"/>
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
       <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
     </javac>
 
-    <jar jarfile="${tomcat.build}/lib/common/core_util.jar" 
-	 basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/util/hooks/**"/>    
-      <include name="org/apache/tomcat/util/log/**"/>    
+    <jar jarfile="${tomcat.build}/lib/common/core_util.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/util/hooks/**"/>
+      <include name="org/apache/tomcat/util/log/**"/>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar" 
-	 basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/util/**"/>    
+    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/util/**"/>
     </jar>
   </target>
 
   <!-- ==================== Tomcat.jar ( starter )  ==================== -->
 
   <target name="tomcat.jar" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
       <!-- no dependencies -->
-      <include name="org/apache/tomcat/startup/Main.java"/>    
-      <include name="org/apache/tomcat/util/compat/**"/>    
+      <include name="org/apache/tomcat/startup/Main.java"/>
+      <include name="org/apache/tomcat/util/compat/**"/>
+      <include name="org/apache/tomcat/util/depend/**"/>
       <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
-      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
+      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
-	 basedir="${tomcat.build}/classes" 
-	 manifest="src/build/manifests/manifest"> 
-      <include name="org/apache/tomcat/startup/Main.class"/> 
-      <include name="org/apache/tomcat/startup/Main$*.class"/> 
-      <include name="org/apache/tomcat/util/compat/**"/> 
-      <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
+    <jar jarfile="${tomcat.build}/lib/tomcat.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest">
+      <include name="org/apache/tomcat/startup/Main.class"/>
+      <include name="org/apache/tomcat/startup/Main$*.class"/>
+      <include name="org/apache/tomcat/util/depend/**"/>
+      <include name="org/apache/tomcat/util/compat/**"/>
+      <include name="org/apache/tomcat/util/IntrospectionUtils**"/>
     </jar>
   </target>
 
   <target name="stop-tomcat.jar" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
       <!-- no dependencies -->
-      <include name="org/apache/tomcat/startup/StopTomcat.java"/>    
-      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
+      <include name="org/apache/tomcat/startup/StopTomcat.java"/>
+      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/tomcat/resources">
             <fileset dir="src/share/org/apache/tomcat/resources">
@@ -266,29 +290,29 @@
             </fileset>
     </copy>
 
-    <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar" 
-	 basedir="${tomcat.build}/classes" 
-	 manifest="src/build/manifests/manifest.stop-tomcat"> 
-      <include name="org/apache/tomcat/startup/StopTomcat.class"/> 
-      <include name="org/apache/tomcat/util/res/StringManager.class"/> 
-      <include name="org/apache/tomcat/resources/LocalStrings*"/> 
-      <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
+    <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.stop-tomcat">
+      <include name="org/apache/tomcat/startup/StopTomcat.class"/>
+      <include name="org/apache/tomcat/util/res/StringManager.class"/>
+      <include name="org/apache/tomcat/resources/LocalStrings*"/>
+      <include name="org/apache/tomcat/util/IntrospectionUtils**"/>
     </jar>
   </target>
 
   <!-- ==================== Tomcat core ==================== -->
 
   <target name="tomcat_core" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/core/**"/>    
+      <include name="org/apache/tomcat/core/**"/>
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/tomcat">
             <fileset dir="src/share/org/apache/tomcat">
@@ -296,107 +320,132 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/common/tomcat_core.jar" 
-	 basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/core/**"/>    
-      <include name="org/apache/tomcat/resources/**"/>    
+    <jar jarfile="${tomcat.build}/lib/common/tomcat_core.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/core/**"/>
+      <include name="org/apache/tomcat/resources/**"/>
     </jar>
   </target>
 
   <!-- ==================== Tomcat config ==================== -->
 
   <target name="tomcat-startup" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/share">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
- 	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/startup/**"/>    
+      <include name="org/apache/tomcat/startup/**"/>
       <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar" 
-	 basedir="${tomcat.build}/classes"
-	 manifest="src/build/manifests/manifest.startup"> 
-      <include name="org/apache/tomcat/startup/**"/>    
+    <jar jarfile="${tomcat.build}/lib/container/tomcat-startup.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.startup">
+      <include name="org/apache/tomcat/startup/**"/>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/etomcat.jar" 
-	 basedir="${tomcat.build}/classes"
-	 manifest="src/build/manifests/manifest.embedded"> 
-      <include name="org/apache/tomcat/startup/**"/>    
+    <jar jarfile="${tomcat.build}/lib/etomcat.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.embedded">
+      <include name="org/apache/tomcat/startup/**"/>
     </jar>
   </target>
 
   <!-- ==================== Servlet 22 (default) implementation ========== -->
   <target name="facade22" depends="init">
-    <javac 
-	   destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="src/facade22">
+    <javac
+           destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="src/facade22">
       <classpath>
-	<pathelement location="${servlet22.jar}"/>
-	<pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
+        <pathelement location="${servlet22.jar}"/>
+        <pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/facade/**"/>    
+      <include name="org/apache/tomcat/facade/**"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/container/facade22.jar" 
-	 basedir="${tomcat.build}/classes"
-	 manifest="src/build/manifests/manifest.facade22"> 
-      <include name="org/apache/tomcat/facade/**"/> 
+    <jar jarfile="${tomcat.build}/lib/container/facade22.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.facade22">
+      <include name="org/apache/tomcat/facade/**"/>
     </jar>
   </target>
 
+
+  <target name="commons-prepare" if="commons-dbcp.present" >
+<!--
+    <ant antfile="../jakarta-commons/collections/build.xml" target="dist"/>
+    <ant antfile="../jakarta-commons/pool/build.xml" target="dist"/>
+    <ant antfile="../jakarta-commons/dbcp/build.xml" target="dist"/>
+-->
+        <copy todir="${tomcat.build}/lib/container" flatten="yes">
+            <fileset dir="../jakarta-commons/dbcp">
+                <include name="**/build/*.jar"/>
+            </fileset>
+            <fileset dir="../jakarta-commons/pool">
+                <include name="**/build/*.jar"/>
+            </fileset>
+            <fileset dir="../jakarta-commons/collections">
+                <include name="**/build/*.jar"/>
+            </fileset>
+        </copy>
+  </target>
+
   <!-- ====================  "Standard" interceptors  ========== -->
-  <target name="tomcat_modules" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   srcdir="src/share" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off">
+  <target name="tomcat_modules" depends="init,commons-prepare">
+    <javac destdir="${tomcat.build}/classes"
+           srcdir="src/share"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off">
       <classpath>
-	<pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
-	<pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/connector_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/container/tomcat_util.jar"/>
+        <pathelement location="${tomcat.build}/lib/common/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/modules/**"/>    
-      <exclude 
-	  name="org/apache/tomcat/modules/config/LoaderInterceptor12.java" 
+      <classpath refid="commons-dbcp"/>
+      <include name="org/apache/tomcat/modules/**"/>
+      <exclude
+          name="org/apache/tomcat/modules/config/LoaderInterceptor12.java"
           unless="jdk12.present"/>
-      <exclude 
-	  name="org/apache/tomcat/modules/config/PolicyInterceptor.java" 
-	  unless="jdk12.present"/>
+
+      <exclude
+          name="org/apache/tomcat/modules/aaa/PooledJDBCRealm.java"
+          unless="commons-dbcp.present"/>
+      <exclude
+          name="org/apache/tomcat/modules/config/PolicyInterceptor.java"
+          unless="jdk12.present"/>
     </javac>
 
-    <jar 
-        jarfile="${tomcat.build}/lib/container/tomcat_modules.jar" 
-        basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/modules/**"/> 
+    <jar
+        jarfile="${tomcat.build}/lib/container/tomcat_modules.jar"
+        basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/modules/**"/>
     </jar>
   </target>
 
   <target name="connector" depends="init">
-    <javac destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" 
-	   srcdir="${jakarta-tomcat-connectors}/jk/java">
+    <javac destdir="${tomcat.build}/classes"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off"
+           srcdir="${jakarta-tomcat-connectors}/jk/java">
       <classpath>
       </classpath>
-      <include name="org/apache/ajp/tomcat33/**"/>    
+      <include name="org/apache/ajp/tomcat33/**"/>
     </javac>
 
-    <jar jarfile="${tomcat.build}/lib/container/jk_connector.jar" 
-	 basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/ajp/tomcat33/**"/>    
+    <jar jarfile="${tomcat.build}/lib/container/jk_connector.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/ajp/tomcat33/**"/>
     </jar>
 
   </target>
@@ -404,18 +453,18 @@
 
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="init">
-    <javac 
-	   destdir="${tomcat.build}/classes" 
-	   srcdir="src/share" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off">
+    <javac
+           destdir="${tomcat.build}/classes"
+           srcdir="src/share"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="off">
       <classpath>
-	<pathelement location="${servlet22.jar}"/>
+        <pathelement location="${servlet22.jar}"/>
       </classpath>
-      <include name="org/apache/jasper/**"/>    
-      <exclude name="org/apache/jasper/servlet/JasperLoader12.java" 
-	unless="jdk12.present"/>
+      <include name="org/apache/jasper/**"/>
+      <exclude name="org/apache/jasper/servlet/JasperLoader12.java"
+        unless="jdk12.present"/>
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/jasper">
             <fileset dir="src/share/org/apache/jasper">
@@ -423,34 +472,33 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/common/jasper-runtime.jar" 
-	 basedir="${tomcat.build}/classes" >
-      <include name="org/apache/jasper/Constants.class"/> 
-      <include name="org/apache/jasper/JasperException.class"/> 
-      <include name="org/apache/jasper/Options.class"/> 
-      <include name="org/apache/jasper/runtime/**"/> 
-      <include name="org/apache/jasper/resources/**"/> 
+    <jar jarfile="${tomcat.build}/lib/common/jasper-runtime.jar"
+         basedir="${tomcat.build}/classes" >
+      <include name="org/apache/jasper/Constants.class"/>
+      <include name="org/apache/jasper/JasperException.class"/>
+      <include name="org/apache/jasper/Options.class"/>
+      <include name="org/apache/jasper/runtime/**"/>
+      <include name="org/apache/jasper/resources/**"/>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/container/jasper.jar" 
-	 basedir="${tomcat.build}/classes" 
-	 manifest="src/build/manifests/manifest.jspc" >
-      <include name="org/apache/jasper/**"/> 
-      <!-- 
-      <exclude name="org/apache/jasper/Constants.class"/> 
-      <exclude name="org/apache/jasper/JasperException.class"/> 
-      <exclude name="org/apache/jasper/Options.class"/> 
-      <exclude name="org/apache/jasper/runtime/**"/> 
-      <exclude name="org/apache/jasper/resources/**"/> 
+    <jar jarfile="${tomcat.build}/lib/container/jasper.jar"
+         basedir="${tomcat.build}/classes"
+         manifest="src/build/manifests/manifest.jspc" >
+      <include name="org/apache/jasper/**"/>
+      <!--
+      <exclude name="org/apache/jasper/Constants.class"/>
+      <exclude name="org/apache/jasper/JasperException.class"/>
+      <exclude name="org/apache/jasper/Options.class"/>
+      <exclude name="org/apache/jasper/runtime/**"/>
+      <exclude name="org/apache/jasper/resources/**"/>
        -->
     </jar>
   </target>
 
   <target name="jasper34" if="jakarta-tomcat-jasper-present">
     <ant antfile="${jakarta-tomcat-jasper}/jasper34/build.xml"
-	 target="install"/>
+         target="install"/>
   </target>
-
 
   <target name="tomcat-jars" depends="prepare,connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,connector,tomcat_modules,facade22,tomcat-startup,jasper34">
   </target>
@@ -471,13 +519,13 @@
     <copy todir="${tomcat.build}/webapps/examples">
       <fileset dir="src/examples"/>
     </copy>
-    <javac srcdir="src/examples/WEB-INF/classes" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/examples/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-    <javac srcdir="src/examples/jsp/plugin/applet" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+    <javac srcdir="src/examples/WEB-INF/classes"
+           optimize="${optimize}"
+           destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
+           classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <javac srcdir="src/examples/jsp/plugin/applet"
+           optimize="${optimize}"
+           destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
 
       <!-- Root context -->
@@ -488,35 +536,35 @@
     <copy todir="${tomcat.build}/webapps/ROOT/doc">
       <fileset dir="src/doc"/>
     </copy>
-    <javac srcdir="src/webpages/WEB-INF/classes" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
-      
+    <javac srcdir="src/webpages/WEB-INF/classes"
+           optimize="${optimize}"
+           destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
+           classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
-	<mkdir dir="${tomcat.build}/webapps/admin/WEB-INF/lib"/>
+        <mkdir dir="${tomcat.build}/webapps/admin/WEB-INF/lib"/>
     <copy todir="${tomcat.build}/webapps/admin">
       <fileset dir="src/admin"/>
     </copy>
-    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar" 
-	  file="${ant.lib}/ant.jar"/>
-    <javac srcdir="src/admin/WEB-INF/classes" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes;${servlet22.jar}"/>
+    <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar"
+          file="${ant.lib}/ant.jar"/>
+    <javac srcdir="src/admin/WEB-INF/classes"
+           optimize="${optimize}"
+           destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
+           classpath="${tomcat.build}/classes;${servlet22.jar}"/>
 
     <!-- build local jar containing org.apache.tomcat.util.test classes -->
-    <javac srcdir="src/share/org/apache/tomcat/util/test" 
-	   optimize="${optimize}" 
-	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
-	   classpath="${tomcat.build}/classes"/>
-    <jar jarfile="${tomcat.build}/webapps/admin/WEB-INF/lib/tomcat_test_util.jar" 
-	 basedir="${tomcat.build}/webapps/admin/WEB-INF/classes"> 
-      <include name="org/apache/tomcat/util/test/**"/>    
+    <javac srcdir="src/share/org/apache/tomcat/util/test"
+           optimize="${optimize}"
+           destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
+           classpath="${tomcat.build}/classes"/>
+    <jar jarfile="${tomcat.build}/webapps/admin/WEB-INF/lib/tomcat_test_util.jar"
+         basedir="${tomcat.build}/webapps/admin/WEB-INF/classes">
+      <include name="org/apache/tomcat/util/test/**"/>
     </jar>
     <!-- delete dir="${tomcat.build}/webapps/admin/WEB-INF/classes/org" / -->
-      
+
   </target>
 
   <!-- ==================== Build the internal test app =================== -->
@@ -530,28 +578,28 @@
   </target>
 
   <target name="tests" depends="main,sanity-test,watchdog-web-based" />
-  
+
   <target name="test.war">
-    <jar jarfile="${tomcat.dist}/webapps/test.war" 
-	 basedir="${tomcat.build}/webapps/test" 
-	 includes="**"/>
+    <jar jarfile="${tomcat.dist}/webapps/test.war"
+         basedir="${tomcat.build}/webapps/test"
+         includes="**"/>
   </target>
 
   <target name="tests.dist" depends="tests" >
-    <jar jarfile="${tomcat.dist}/webapps/test.war" 
-	 basedir="${tomcat.build}/webapps/test" 
-	 includes="**"/>
+    <jar jarfile="${tomcat.dist}/webapps/test.war"
+         basedir="${tomcat.build}/webapps/test"
+         includes="**"/>
     <jar jarfile="${tomcat.dist}/webapps/jsp-tests.war"
-	 basedir="${tomcat.build}/webapps/jsp-tests" 
-	 includes="**"/>
+         basedir="${tomcat.build}/webapps/jsp-tests"
+         includes="**"/>
     <jar jarfile="${tomcat.dist}/webapps/servlet-tests.war"
-	 basedir="${tomcat.build}/webapps/servlet-tests" 
-	 includes="**"/>
+         basedir="${tomcat.build}/webapps/servlet-tests"
+         includes="**"/>
   </target>
 
   <!-- ==================== Copy the files to distribution format ======== -->
   <target name="dist" depends="dist.prepare,javadoc,dist.war">
-  </target> 
+  </target>
 
   <target name="dist.prepare" depends="main,webapps,tomcat-jars">
 
@@ -559,7 +607,7 @@
     <mkdir dir="${tomcat.dist}/webapps"/>
     <copy todir="${tomcat.dist}">
       <fileset dir="${tomcat.build}" >
-	<exclude name="classes/**"/>
+        <exclude name="classes/**"/>
         <exclude name="webapps/**"/>
       </fileset>
     </copy>
@@ -574,93 +622,93 @@
   <target name="javadoc" depends="main,webapps,tomcat-jars">
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.build}/webapps/ROOT/javadoc"/>
-    <javadoc packagenames="org.apache.*" 
-             sourcepath="src/share;src/facade22" 
-             destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-             author="true" 
-             version="true" 
-             use="true" 
-             windowtitle="Tomcat and Jasper Internal API" 
-             doctitle="Tomcat and Jasper Internal API" 
+    <javadoc packagenames="org.apache.*"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat and Jasper Internal API"
+             doctitle="Tomcat and Jasper Internal API"
              bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."
              />
   </target>
   <target name="javadoc.tomcat" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.*" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat API" 
-	     doctitle="Tomcat API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.*"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat API"
+             doctitle="Tomcat API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.core" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.core" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat Core API" 
-	     doctitle="Tomcat Core API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.core"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat Core API"
+             doctitle="Tomcat Core API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.facade" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.facade" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat Facade API" 
-	     doctitle="Tomcat Facade API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.facade"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat Facade API"
+             doctitle="Tomcat Facade API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.modules" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.modules.*" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat Modules API" 
-	     doctitle="Tomcat Modules API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.modules.*"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat Modules API"
+             doctitle="Tomcat Modules API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.startup" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.startup" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat Startup API" 
-	     doctitle="Tomcat Startup API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.startup"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat Startup API"
+             doctitle="Tomcat Startup API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.tomcat.util" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.tomcat.util.*" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Tomcat Utilities API" 
-	     doctitle="Tomcat Utilities API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.tomcat.util.*"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Tomcat Utilities API"
+             doctitle="Tomcat Utilities API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
   <target name="javadoc.jasper" depends="main,webapps,tomcat-jars">
-    <javadoc packagenames="org.apache.jasper.*" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.build}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" 
-	     use="true" 
-	     windowtitle="Jasper API" 
-	     doctitle="Jasper API" 
-	     bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
+    <javadoc packagenames="org.apache.jasper.*"
+             sourcepath="src/share;src/facade22"
+             destdir="${tomcat.build}/webapps/ROOT/javadoc"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="Jasper API"
+             doctitle="Jasper API"
+             bottom="Copyright © 2000 Apache Software Foundation. All Rights Reserved."/>
   </target>
 
   <target name="dist.war" depends="dist.prepare" >
@@ -668,18 +716,18 @@
     <delete dir="${tomcat.dist}/webapps/admin" />
     <delete dir="${tomcat.dist}/webapps/ROOT" />
     <!-- create webapp WARS -->
-    <jar jarfile="${tomcat.dist}/webapps/examples.war" 
-	 basedir="${tomcat.build}/webapps/examples" 
-	 excludes="jsp/snp/snoop.jsp" 
-	 includes="**"/> 
+    <jar jarfile="${tomcat.dist}/webapps/examples.war"
+         basedir="${tomcat.build}/webapps/examples"
+         excludes="jsp/snp/snoop.jsp"
+         includes="**"/>
 
     <jar jarfile="${tomcat.dist}/webapps/admin.war"
-	 basedir="${tomcat.build}/webapps/admin" 
-	 includes="**"/> 
+         basedir="${tomcat.build}/webapps/admin"
+         includes="**"/>
 
-    <jar jarfile="${tomcat.dist}/webapps/ROOT.war" 
-	 basedir="${tomcat.build}/webapps/ROOT" 
-	 includes="**"/>
+    <jar jarfile="${tomcat.dist}/webapps/ROOT.war"
+         basedir="${tomcat.build}/webapps/ROOT"
+         includes="**"/>
   </target>
 
   <target name="dist.nojavadoc" depends="dist.war">
@@ -691,14 +739,14 @@
   <target name="dist-zip" depends="dist">
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
-  
+
   <target name="main" depends="tomcat,webapps">
   </target>
 
 
   <!-- ==================== Admin & agreagate ==================== -->
-   
-  <!-- The self-test app should be removed in the release, but it's 
+
+  <!-- The self-test app should be removed in the release, but it's
        useful to have it builded by default -->
   <target name="tomcat" depends="prepare,tomcat-jars"
           description="Build tomcat core only" >
@@ -714,5 +762,5 @@
   </target>
 
   <target name="all" depends="clean,dist"/>
-    
+
 </project>
