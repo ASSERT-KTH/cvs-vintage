@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.153 2004/05/20 11:41:52 linus Exp $
+<!-- $Id: build.xml,v 1.154 2004/06/19 11:26:47 bobtarling Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -732,6 +732,25 @@ Property files to be searched:
                    value="org.apache.xerces.parsers.SAXParser"/-->
       <!-- sysproperty key="log4j.configuration"
                    value="org/argouml/resource/configuration.lcf"/-->
+        <classpath>
+	  <pathelement location="${argo.build.classes}"/>
+	  <path refid="argo.runtime.classpath"/>
+        </classpath>
+    </java>
+  </target>
+
+  <target name="debug" depends="compile"
+          description="Compile and run the newly compiled ArgoUML with debug level logging.">
+    <echo message="--- Executing ${Name} ---"/>
+    <!-- Uncomment the sysproperty and change the value if you want -->
+    <java classname="org.argouml.application.Main"
+          classpath="${argo.build.classes};${classpath}"
+          fork="yes"
+          taskname="argouml">
+      <!--sysproperty key="javax.xml.parsers.SAXParserFactory"
+                   value="org.apache.xerces.parsers.SAXParser"/-->
+        <sysproperty key="log4j.configuration"
+                   value="org/argouml/resource/full_console.lcf"/>
         <classpath>
 	  <pathelement location="${argo.build.classes}"/>
 	  <path refid="argo.runtime.classpath"/>
