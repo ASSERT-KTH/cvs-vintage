@@ -14,13 +14,12 @@
 
 package org.columba.mail.gui.tree;
 
-import java.lang.reflect.Constructor;
 import java.util.Enumeration;
 import java.util.MissingResourceException;
 
-import javax.swing.JFrame;
 import javax.swing.tree.DefaultTreeModel;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
@@ -29,6 +28,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
+import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -42,7 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
 public class TreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
 
-	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class};
+	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
 	public TreeModel(FolderXmlConfig folderConfig) {
 		super(new Root(folderConfig.getRoot().getElement("tree")));
@@ -63,7 +63,7 @@ public class TreeModel extends DefaultTreeModel {
 		XmlElement parentTreeNode,
 		FolderTreeNode parentFolder) {
 		int count = parentTreeNode.count();
-	
+
 		XmlElement child;
 
 		if (count > 0) {
@@ -93,7 +93,7 @@ public class TreeModel extends DefaultTreeModel {
 		}
 	}
 
-			public FolderTreeNode add(
+	public FolderTreeNode add(
 		XmlElement childNode,
 		FolderTreeNode parentFolder) {
 
@@ -144,21 +144,31 @@ public class TreeModel extends DefaultTreeModel {
 
 		// now instanciate the folder classes
 
-		String className = item.get("class");
+		String type = item.get("type");
+
+		FolderPluginHandler handler =
+			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+				"folder");
+
+		Object[] args = { item };
+
+		FolderTreeNode folder = null;
+		try {
+
+			folder = (FolderTreeNode) handler.getPlugin(type, args);
+			parentFolder.add(folder);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return folder;
+
+		/*
 		ClassLoader loader = ClassLoader.getSystemClassLoader();
 		try {
 			Class actClass = loader.loadClass(className);
 			//System.out.println("superclass="+actClass.getSuperclass().getName());
 			
-			/*
-			if (actClass
-				.getSuperclass()
-				.getName()
-				.equals("org.columba.mail.folder.Folder")) {
-
-				Folder folder = (Folder) actClass.newInstance();
-			}
-			*/
+			
 			
 			Constructor c = actClass.getConstructor(FOLDER_ITEM_ARG);
 			
@@ -173,6 +183,7 @@ public class TreeModel extends DefaultTreeModel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		*/
 		/*
 		if (item.getType().equals("columba")) {
 			//ColumbaFolder f = new ColumbaFolder(childNode, item);
@@ -230,7 +241,7 @@ public class TreeModel extends DefaultTreeModel {
 			return f;
 		}
 		*/
-		return null;
+		
 	}
 
 	public FolderTreeNode getFolder(int uid) {
@@ -341,11 +352,9 @@ public class TreeModel extends DefaultTreeModel {
 
 		return null;
 	}
-	
-	
-	public SelectFolderDialog getSelectFolderDialog()
-	{
+
+	public SelectFolderDialog getSelectFolderDialog() {
 		return new SelectFolderDialog();
 	}
-	
+
 }

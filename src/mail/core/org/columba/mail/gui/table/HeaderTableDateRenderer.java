@@ -41,7 +41,7 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 	private Font plainFont, boldFont;
 
 	public HeaderTableDateRenderer(JTree tree, boolean isBordered) {
-		super();
+		super(tree);
 		this.tree = tree;
 
 		//setOpaque(true); //MUST do this for background to show up.
@@ -78,13 +78,7 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
+		
 
 		if (value == null) {
 			setText("");
@@ -114,7 +108,13 @@ public class HeaderTableDateRenderer extends DefaultLabelRenderer {
 		else
 			setText(dfCommon.format(date));
 
-		return this;
+		return super.getTableCellRendererComponent(
+		table,
+		value,
+		isSelected,
+		hasFocus,
+		row,
+		column);
 
 	}
 }

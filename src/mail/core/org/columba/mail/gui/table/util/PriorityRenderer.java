@@ -18,6 +18,7 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import javax.swing.JTree;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.DefaultLabelRenderer;
@@ -31,8 +32,8 @@ public class PriorityRenderer extends DefaultLabelRenderer {
 	private ImageIcon image4 =
 		ImageLoader.getSmallImageIcon("priority-low.png");
 
-	public PriorityRenderer(boolean isBordered) {
-		super();
+	public PriorityRenderer(JTree tree, boolean isBordered) {
+		super(tree);
 
 		//setOpaque(true); //MUST do this for background to show up.
 

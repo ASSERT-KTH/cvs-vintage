@@ -92,8 +92,8 @@ public class IMAPFolder extends RemoteFolder {
 		return getSearchEngineInstance().searchMessages(filter, worker);
 	}
 
-	public Class getDefaultChild() {
-		return IMAPFolder.class;
+	public String getDefaultChild() {
+		return "IMAPFolder";
 	}
 
 	public void addFolder(String name) throws Exception {
@@ -513,7 +513,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
 	 */
-	public static XmlElement getDefaultProperties() {
+	public static  XmlElement getDefaultProperties() {
 		XmlElement props = new XmlElement("property");
 		props.addAttribute("accessrights", "user");
 		props.addAttribute("subfolder", "true");

@@ -232,6 +232,7 @@ public class AccountWizard implements ActionListener {
 			imap.set("host", incomingServerPanel.getHost());
 			imap.set("user", incomingServerPanel.getLogin());
 
+			
 			IMAPRootFolder parentFolder = new IMAPRootFolder(item);
 
 			MainInterface.treeModel.nodeStructureChanged(

@@ -194,8 +194,8 @@ public class CachedMHFolder extends MHFolder {
 		}
 	}
 
-	public Class getDefaultChild() {
-		return CachedMHFolder.class;
+	public String getDefaultChild() {
+		return "MHFolder";
 	}
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {

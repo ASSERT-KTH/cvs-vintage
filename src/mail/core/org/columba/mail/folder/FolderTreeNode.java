@@ -10,9 +10,11 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.plugin.FolderPluginHandler;
 
 /**
  * @author freddy
@@ -44,10 +46,10 @@ public abstract class FolderTreeNode
 	}
 
 	public final static FolderItem getDefaultItem(
-		String className,
+		String type,
 		XmlElement props) {
 		XmlElement defaultElement = new XmlElement("folder");
-		defaultElement.addAttribute("class", className);
+		defaultElement.addAttribute("type", type);
 		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
 
 		if (props != null)
@@ -227,7 +229,7 @@ public abstract class FolderTreeNode
 	}
 	*/
 
-	public abstract Class getDefaultChild();
+	public abstract String getDefaultChild();
 
 	final public Hashtable getAttributes() {
 		return node.getElement("property").getAttributes();
@@ -235,21 +237,53 @@ public abstract class FolderTreeNode
 
 	public abstract void createChildren(WorkerStatusController worker);
 
-	public void addFolder(String name, Class childClass) throws Exception {
+	public void addFolder(String name, String type) throws Exception {
+		FolderPluginHandler handler =
+					(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+						"folder");
+		
+		Class childClass = handler.getPluginClass(type);
+		
 		Method m_getDefaultProperties =
 			childClass.getMethod("getDefaultProperties", null);
 
 		XmlElement props =
 			(XmlElement) m_getDefaultProperties.invoke(null, null);
-		FolderItem childNode = getDefaultItem(childClass.getName(), props);
 
+		/*			
+		XmlElement props = getDefaultProperties();
+		*/
+		//XmlElement props = new XmlElement("property");
+		props.addAttribute("name", name);
+
+		FolderItem childNode = getDefaultItem(type, props);
+
+		Object[] args = { childNode };
+
+		FolderTreeNode folder = null;
+		try {
+
+			folder = (FolderTreeNode) handler.getPlugin(type, args);
+			addWithXml(folder);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		/*
+		Method m_getDefaultProperties =
+			childClass.getMethod("getDefaultProperties", null);
+		
+		XmlElement props =
+			(XmlElement) m_getDefaultProperties.invoke(null, null);
+		FolderItem childNode = getDefaultItem(childClass.getName(), props);
+		
 		childNode.set("property", "name", name);
 		// Put properties that should be copied from parent here
-
+		
 		Folder subFolder =
 			(Folder) childClass.getConstructor(FOLDER_ITEM_ARG).newInstance(
 				new Object[] { childNode });
 		addWithXml(subFolder);
+		*/
 	}
 
 	public void addFolder(String name) throws Exception {

@@ -157,7 +157,7 @@ public class LocalRootFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
 	 */
-	public Class getDefaultChild() {
+	public String getDefaultChild() {
 		return null;
 	}
 

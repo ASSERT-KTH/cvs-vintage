@@ -221,7 +221,7 @@ public class TableView extends JTreeTable {
 
 				registerRenderer(
 					"Status",
-					new StatusRenderer(),
+					new StatusRenderer(getTree()),
 					new BooleanHeaderRenderer(
 						true,
 						name,
@@ -232,7 +232,7 @@ public class TableView extends JTreeTable {
 			} else if (name.equalsIgnoreCase("Flagged")) {
 				registerRenderer(
 					"Flagged",
-					new FlaggedRenderer(),
+					new FlaggedRenderer(getTree()),
 					new BooleanHeaderRenderer(
 						true,
 						name,
@@ -243,7 +243,7 @@ public class TableView extends JTreeTable {
 			} else if (name.equalsIgnoreCase("Attachment")) {
 				registerRenderer(
 					"Attachment",
-					new BooleanRenderer(
+					new BooleanRenderer(getTree(),
 						true,
 						ImageLoader.getSmallImageIcon("attachment.png")),
 					new BooleanHeaderRenderer(
@@ -268,7 +268,7 @@ public class TableView extends JTreeTable {
 			} else if (name.equalsIgnoreCase("Priority")) {
 				registerRenderer(
 					"Priority",
-					new PriorityRenderer(true),
+					new PriorityRenderer(getTree(),true),
 					new BooleanHeaderRenderer(
 						true,
 						name,

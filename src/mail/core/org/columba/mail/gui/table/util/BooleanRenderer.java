@@ -18,6 +18,7 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.columba.mail.gui.table.DefaultLabelRenderer;
@@ -28,8 +29,9 @@ public class BooleanRenderer extends DefaultLabelRenderer {
 	//String str;
 	ImageIcon image;
 
-	public BooleanRenderer(boolean bool, ImageIcon image) {
-		super();
+	public BooleanRenderer(JTree tree, boolean bool, ImageIcon image) {
+		super(tree);
+	
 		this.bool = bool;
 		//this.str = str;
 		this.image = image;

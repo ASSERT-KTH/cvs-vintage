@@ -28,7 +28,7 @@ public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 	private Font plainFont, boldFont;
 
 	public HeaderTableSizeRenderer(JTree tree) {
-		super();
+		super(tree);
 		this.tree = tree;
 
 		setHorizontalAlignment(SwingConstants.RIGHT);
@@ -58,13 +58,7 @@ public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
+		
 
 		if (value == null) {
 			setText("");
@@ -73,6 +67,12 @@ public class HeaderTableSizeRenderer extends DefaultLabelRenderer {
 
 		setText(value.toString() + "KB");
 
-		return this;
+		return super.getTableCellRendererComponent(
+		table,
+		value,
+		isSelected,
+		hasFocus,
+		row,
+		column);
 	}
 }

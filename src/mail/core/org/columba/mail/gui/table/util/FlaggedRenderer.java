@@ -18,6 +18,7 @@ import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
@@ -28,8 +29,8 @@ public class FlaggedRenderer extends DefaultLabelRenderer {
 	boolean bool;
 	ImageIcon image1;
 
-	public FlaggedRenderer() {
-		super();
+	public FlaggedRenderer(JTree tree) {
+		super(tree);
 
 		//this.str = str;
 		//this.image = image;

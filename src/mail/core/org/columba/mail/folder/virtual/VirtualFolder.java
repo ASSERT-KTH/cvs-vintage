@@ -28,7 +28,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
@@ -375,7 +374,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
 	 */
-	public Class getDefaultChild() {
+	public String getDefaultChild() {
 		return null;
 	}
 

@@ -15,39 +15,29 @@
 package org.columba.mail.gui.table;
 
 import java.awt.Component;
-import java.awt.Font;
 
 import javax.swing.JTable;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 
 public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 
 	
 	private JTree tree;
 
-	private Font plainFont, boldFont;
+	
 
 	
 
 	public HeaderTableCommonRenderer(JTree tree) {
-		super();
+		super(tree);
 		this.tree = tree;
 		
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
-
-		plainFont = UIManager.getFont("Tree.font");
 
 	}
 
 	public void updateUI() {
 		super.updateUI();
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
-
-		plainFont = UIManager.getFont("Tree.font");
 	}
 
 	public Component getTableCellRendererComponent(
@@ -58,13 +48,7 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 		int row,
 		int column) {
 
-		super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
+		
 
 		if (value == null) {
 			setText("");
@@ -80,7 +64,14 @@ public class HeaderTableCommonRenderer extends DefaultLabelRenderer {
 		}
 
 		setText(str);
-		return this;
+		//return this;
+		return super.getTableCellRendererComponent(
+					table,
+					value,
+					isSelected,
+					hasFocus,
+					row,
+					column);
 	}
 
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <tree>
- <folder class="org.columba.mail.folder.LocalRootFolder" uid="100" >
+ <folder type="LocalRootFolder" uid="100" >
   <property name="Local Folders" accessrights="system" subfolder="true" />
   
-  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="101">
+  <folder type="MHFolder" uid="101">
    <property name="Inbox" accessrights="system" subfolder="true" />
    <filterlist>
     <filter description="new filter" enabled="true">
@@ -16,7 +16,7 @@
 	 </actionlist>
     </filter>
    </filterlist>
-   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="19">
+   <folder type="VirtualFolder" uid="19">
     <property name="Recent Messages" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />	
     <filter>
      <rules condition="match_all">
@@ -25,7 +25,7 @@
     </filter>
    </folder>
    
-   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="20">
+   <folder type="VirtualFolder" uid="20">
     <property name="Subject contains Columba" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
  	<filter>
 	 <rules condition="match_all">
@@ -36,32 +36,32 @@
    
   </folder> <!-- inbox -->
   
-  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="102">
+  <folder type="MHFolder" uid="102">
    <property name="Drafts" accessrights="system" subfolder="true" />
    <filterlist/>
   </folder>
   
-  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="107">
+  <folder type="MHFolder" uid="107">
    <property name="Templates" accessrights="system" subfolder="true" />
    <filterlist/>
   </folder>
   
-  <folder class="org.columba.mail.folder.outbox.OutboxFolder" uid="103">
+  <folder type="OutboxFolder" uid="103">
    <property name="Outbox" accessrights="system" subfolder="true" />
    <filterlist/>
   </folder>
   
-  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="104">
+  <folder type="MHFolder" uid="104">
    <property name="Sent" accessrights="system" subfolder="true" />
    <filterlist/>
   </folder>
   
-  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="105">
+  <folder type="MHFolder" uid="105">
    <property name="Trash" accessrights="system" subfolder="true" />
    <filterlist/>
   </folder>
   
-  <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="106">
+  <folder type="VirtualFolder" uid="106">
     <property name="Search Result" accessrights="system" subfolder="true" include_subfolders="true" source_uid="101" />
 	<filter>
 	 <rules condition="match_all">

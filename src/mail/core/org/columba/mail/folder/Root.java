@@ -19,7 +19,7 @@ public class Root extends FolderTreeNode {
 	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
 	 */
-	public Class getDefaultChild() {
+	public String getDefaultChild() {
 		return null;
 	}
 

@@ -55,6 +55,7 @@ import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.plugin.LocalFilterPluginHandler;
 import org.columba.mail.plugin.RemoteFilterPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
@@ -211,6 +212,8 @@ public class Main {
 					new LocalFilterPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new RemoteFilterPluginHandler());
+				MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
+				
 
 				MainInterface.pluginManager.initPlugins();
 

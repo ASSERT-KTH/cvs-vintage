@@ -370,7 +370,7 @@ public class FolderTreeActionListener implements ActionListener {
 				
 				try
 				{
-					treeController.getTreeSelectionManager().getFolder().addFolder( name, VirtualFolder.class );
+					treeController.getTreeSelectionManager().getFolder().addFolder( name, "VirtualFolder" );
 					MainInterface.treeModel.nodeStructureChanged( treeController.getTreeSelectionManager().getFolder() );
 					
 				}

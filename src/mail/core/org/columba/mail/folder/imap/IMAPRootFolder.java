@@ -75,11 +75,12 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 	
 	
 
+	
 	public IMAPRootFolder(AccountItem accountItem) {
 		//super(node, folderItem);
 		super(
 			getDefaultItem(
-				"org.columba.mail.folder.imap.IMAPRootFolder",
+				"IMAPRootFolder",
 				getDefaultProperties()));
 
 		getFolderItem().set("account_uid", accountItem.getInteger("uid"));
@@ -90,7 +91,8 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		store = new IMAPStore(accountItem.getImapItem(), this);
 
 	}
-
+	
+	
 	public ImageIcon getCollapsedIcon() {
 		return imapRootIcon;
 	}
@@ -119,8 +121,8 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 	}
 	*/
 	
-	public Class getDefaultChild() {
-		return IMAPFolder.class;
+	public String getDefaultChild() {
+		return "IMAPFolder";
 	}
 
 	protected void addIMAPSubFolder(FolderTreeNode folder, String name)

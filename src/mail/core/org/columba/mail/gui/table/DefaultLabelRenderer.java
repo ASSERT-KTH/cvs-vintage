@@ -3,11 +3,13 @@ package org.columba.mail.gui.table;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
@@ -19,10 +21,11 @@ import org.columba.mail.message.HeaderInterface;
 /**
  * @author frd
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * The is basic class every renderer should inherite
+ * 
+ * It is responsible for paint the background/foreground and borders
+ * and gives us a central place for optimization
+ * 
  */
 public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 
@@ -33,6 +36,8 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 	private Color foreground;
 
 	private Font plainFont, boldFont;
+
+	private JTree tree;
 
 	private boolean isBordered = true;
 
@@ -83,9 +88,10 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 	/**
 	 * Constructor for DefaultLabelRenderer.
 	 */
-	public DefaultLabelRenderer() {
+	public DefaultLabelRenderer(JTree tree) {
 		super();
 
+		this.tree = tree;
 		boldFont = UIManager.getFont("Tree.font");
 		boldFont = boldFont.deriveFont(Font.BOLD);
 
@@ -134,9 +140,6 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 			}
 		}
 
-		//MessageNode messageNode = ((HeaderTableModel)table.getModel()).getMessageNode(row);
-		
-		/*
 		TreePath path = tree.getPathForRow(row);
 		MessageNode messageNode = (MessageNode) path.getLastPathComponent();
 
@@ -155,7 +158,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 				setFont(plainFont);
 			}
 		}
-		*/
+
 		return this;
 	}
 
@@ -200,6 +203,17 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 		Object oldValue,
 		Object newValue) {
 		// this is only needed when using HTML text labels
+	}
+
+	/*************** optimization *****************/
+
+	// if graphics doesn't seem to work correctly
+	//  -> comment the following lines
+
+	public void paint(Graphics g) {
+		ui.update(g, this);
+	}
+	public void repaint() {
 	}
 
 }

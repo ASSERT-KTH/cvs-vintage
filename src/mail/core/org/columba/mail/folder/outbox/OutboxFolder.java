@@ -239,8 +239,8 @@ public class OutboxFolder extends MHFolder {
 		return cache.getHeaderList(worker);
 	}
 
-	public Class getDefaultChild() {
-		return OutboxFolder.class;
+	public String getDefaultChild() {
+		return "MHFolder";
 	}
 
 	/*
