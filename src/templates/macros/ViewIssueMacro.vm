@@ -480,15 +480,21 @@
 
 #if ($currentIssue.isHistoryLong())
   #if ($fullHistory.equals("true"))
-    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false").addPathInfo("resultsPerPage", $resultsPerPage))
+    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false"))
     #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
       #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
     #end
+    #if ($resultsPerPage)
+      #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
+    #end
     <p><a href="$historyLink">Hide complete history</a></p>
   #else
-    #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("resultsPerPage", $resultsPerPage).addPathInfo("fullhistory", "true"))
+    #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true"))
     #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
       #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
+    #end
+    #if ($resultsPerPage)
+      #set ($historyLink = $historyLink.addPathInfo("resultsPerPage", $resultsPerPage))
     #end
     <p><a href="$historyLink">Show complete history</a></p>
   #end
