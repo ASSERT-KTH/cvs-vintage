@@ -66,7 +66,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-/** Log all Context events
+/** Log all hook events during tomcat execution.
+ *  Use debug>0 to log addContainer ( since this generates a lot of
+ *  output )
  */
 public class LogEvents extends BaseInterceptor {
     
@@ -75,74 +77,110 @@ public class LogEvents extends BaseInterceptor {
 
     // -------------------- Request notifications --------------------
     public int requestMap(Request request ) {
-	request.getContext().log( "Request map " + request);
+	log( "requestMap " + request);
 	return 0;
     }
 
     public int contextMap( Request request ) {
+	log( "contextMap " + request);
 	return 0;
     }
 
     public int preService(Request request, Response response) {
-	request.getContext().log( "Pre service " + request);
+	log( "preService " + request);
+	return 0;
+    }
+
+    public int authenticate(Request request, Response response) {
+	log( "authenticate " + request);
+	return 0;
+    }
+
+    public int authorize(Request request, Response response,
+			 String reqRoles[])
+    {
+	StringBuffer sb=new StringBuffer();
+	appendSA( sb, reqRoles, " ");
+	log( "authorize " + request + " " + sb.toString() );
 	return 0;
     }
 
     public int beforeBody( Request request, Response response ) {
-	request.getContext().log( "Before body " + request);
+	log( "beforeBody " + request);
 	return 0;
     }
 
     public int beforeCommit( Request request, Response response) {
-	request.getContext().log( "Before commit " + request);
+	log( "beforeCommit " + request);
 	return 0;
     }
 
 
     public int afterBody( Request request, Response response) {
-	request.getContext().log( "After Body " + request);
+	log( "afterBody " + request);
+	return 0;
+    }
+
+    public int postRequest( Request request, Response response) {
+	log( "postRequest " + request);
+	return 0;
+    }
+
+    public int handleError( Request request, Response response, Throwable t) {
+	log( "handleError " + request +  " " + t);
 	return 0;
     }
 
     public int postService(Request request, Response response) {
-	request.getContext().log( "Post service " + request);
+	log( "postService " + request);
 	return 0;
     }
 
+    public int newSessionRequest( Request req, Response res ) {
+	log( "newSessionRequest " + req );
+	return 0;
+    }
+    
     // -------------------- Context notifications --------------------
     public void contextInit(Context ctx) throws TomcatException {
-	ctx.log( "Context Init ");
+	log( "contextInit " + ctx);
     }
 
     public void contextShutdown(Context ctx) throws TomcatException {
-	ctx.log( "Context Shutdown ");
+	log( "contextShutdown " + ctx);
     }
 
     /** Notify when a new servlet is added
      */
     public void addServlet( Context ctx, Handler sw) throws TomcatException {
-	ctx.log( "Add servlet " + sw);
+	log( "addServlet " + ctx + " " + sw );
     }
     
     /** Notify when a servlet is removed from context
      */
     public void removeServlet( Context ctx, Handler sw) throws TomcatException {
-	ctx.log( "Remove servlet " + sw);
+	log( "removeServlet " + ctx + " " + sw);
     }
 
     public void addMapping( Context ctx, String path, Handler servlet)
 	throws TomcatException
     {
-	ctx.log( "Add mapping " + path + "->" + servlet);
+	log( "addMapping " + ctx + " " + path + "->" + servlet);
     }
 
 
     public void removeMapping( Context ctx, String path )
 	throws TomcatException
     {
-	ctx.log( "Remove mapping ");
+	log( "removeMapping " + ctx + " " + path);
     }
 
+    private void appendSA( StringBuffer sb, String s[], String sep) {
+	for( int i=0; i<s.length; i++ ) {
+	    sb.append( sep ).append( s[i] );
+	}
+    }
+    
     /** 
      */
     public void addSecurityConstraint( Context ctx, String path[],
@@ -151,40 +189,45 @@ public class LogEvents extends BaseInterceptor {
 	throws TomcatException
     {
 	StringBuffer sb=new StringBuffer();
-	sb.append("Add security constraint ");
+	sb.append("addSecurityConstraint " + ctx + " " );
 	if( methods!=null ) {
 	    sb.append("Methods: ");
-	    for( int i=0; i< methods.length; i++ ) {
-		sb.append(" " + methods[i]);
-	    }
+	    appendSA( sb, methods, " " );
 	}
 	if( path!=null) {
 	    sb.append(" Paths: ");
-	    for( int i=0; i< path.length; i++ ) {
-		sb.append(" " + path[i]);
-	    }
+	    appendSA( sb, path, " " );
 	}
 	if( roles!=null) {
 	    sb.append(" Roles: ");
-	    for( int i=0; i< roles.length; i++ ) {
-		sb.append(" " + roles[i]);
-	    }
+	    appendSA( sb, roles, " " );
 	}
 	sb.append(" Transport " + transport );
-	ctx.log(sb.toString());
+	log(sb.toString());
     }
 
+    public void addInterceptor( ContextManager cm, Context ctx,
+				BaseInterceptor i )
+	throws TomcatException
+    {
+	if( ctx==null)
+	    log( "addInterceptor " + i );
+	else {
+	    log( "addInterceptor " + ctx + " " + i);
+	}
+    }
+    
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-	cm.log( "Engine init");
+	log( "engineInit ");
     }
 
     /** Called before the ContextManager is stoped.
      *  You need to stop any threads and remove any resources.
      */
     public void engineShutdown(ContextManager cm) throws TomcatException {
-	cm.log( "Engine shutdown");
+	log( "engineShutdown ");
     }
 
 
@@ -193,7 +236,26 @@ public class LogEvents extends BaseInterceptor {
     public void addContext( ContextManager cm, Context ctx )
 	throws TomcatException
     {
-	ctx.log( "Add context");
+	log( "addContext " + ctx );
+    }
+
+    public void addContainer( Container ct )
+	throws TomcatException
+    {
+	if( debug > 0 )
+	    log( "addContainer " + ct.getContext() + " " + ct );
+    }
+
+    public void engineState( ContextManager cm , int state )
+	throws TomcatException
+    {
+	log( "engineState " + state );
+    }
+
+    public void engineStart( ContextManager cm )
+	throws TomcatException
+    {
+	log( "engineStart " );
     }
 
     /** Called when a context is removed from a CM
@@ -201,7 +263,7 @@ public class LogEvents extends BaseInterceptor {
     public void removeContext( ContextManager cm, Context ctx )
 	throws TomcatException
     {
-	ctx.log( "Remove context");
+	log( "removeContext" + ctx);
     }
 
     /** Servlet Init  notification
@@ -209,14 +271,14 @@ public class LogEvents extends BaseInterceptor {
     public void preServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
-	ctx.log( "Pre servlet init " + sw);
+	log( "preServletInit " + ctx + " " + sw);
     }
 
     
     public void postServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
-	ctx.log( "Post servlet init " + sw);
+	log( "postServletInit " + ctx + " " + sw);
     }
 
     /** Servlet Destroy  notification
@@ -224,14 +286,14 @@ public class LogEvents extends BaseInterceptor {
     public void preServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
-	ctx.log( "Pre servlet destroy " + sw);
+	log( "preServletDestroy " + ctx + " " + sw);
     }
 
     
     public void postServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
-	ctx.log( "Post servlet destroy " + sw);
+	log( "postServletDestroy " + ctx +  " " + sw);
     }
 
 }

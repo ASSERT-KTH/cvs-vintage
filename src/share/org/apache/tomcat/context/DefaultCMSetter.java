@@ -101,7 +101,7 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	if( home!= null ) {
 	    home=FileUtil.getCanonicalPath( home );
 	    cm.setHome( home );
-	    log( "Setting server home to " + home );
+	    log( "engineInit: home= " + home );
 	}
 	
 	
@@ -109,7 +109,7 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	if( installDir!= null ) {
 	    installDir=FileUtil.getCanonicalPath( installDir );
 	    cm.setInstallDir( installDir );
-	    log( "Setting server install dir to " + installDir );
+	    log( "engineInit: install= " + installDir );
 	}
 
 	// if only one is set home==installDir
@@ -186,7 +186,9 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	}
 	if( debug > 0 ) {
 	    String h=ctx.getHost();
-	    log( ((h==null) ? "":h) + ":" + ctx.getPath() + " " + docBase + " " + absPath + " " +cm.getHome());
+	    log( "addContext: " + ((h==null) ? "":h) + ":" +
+		 ctx.getPath() + " " + docBase + " " + absPath + " " +
+		 cm.getHome());
 	}
 	
 	// this would belong to a logger interceptor ?
