@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.145 2002/05/10 16:42:33 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.146 2002/05/10 20:38:02 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -42,6 +42,10 @@
                 <li>Fileupload of zip mimetype was not possible due to
                     artificially small size constraints in the database.
                     This size limitation has been increased.(JDM)</li>
+                <li>When downloading a file attachment, if the file was smaller
+                    than 4kB, the ContentType header was set to text/html, 
+                    regardless of the actual content type. (JDM)</li>
+
             </ul>
          </td>
     </tr>
