@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.29 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: IssueType.java,v 1.30 2002/10/24 23:09:06 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -325,15 +325,10 @@ public  class IssueType
             ag.setDedupe(true);
             ag.setOrder(groups.size() +1);
         }
-        else if (groups.size() == 1)
+        else 
         {
             ag.setDedupe(false);
             ag.setOrder(groups.size() +2);
-        }
-        else
-        {
-            ag.setDedupe(false);
-            ag.setOrder(groups.size() +1);
         }
         ag.save();
         groups.add(ag);

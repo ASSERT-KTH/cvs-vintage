@@ -122,7 +122,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.60 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.61 2002/10/24 23:09:06 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -357,10 +357,18 @@ public abstract class AbstractScarabModule
 
         // Make default group name 'attribute group x' where x is size + 1
         ag.setName("Attribute group " + Integer.toString(groups.size()+1));
-        ag.setOrder(groups.size() +2);
         ag.setActive(true);
-        ag.setModuleId(getModuleId());
         ag.setIssueTypeId(issueType.getIssueTypeId());
+        if (groups.size() == 0)
+        {
+            ag.setDedupe(true);
+            ag.setOrder(groups.size() +1);
+        }
+        else 
+        {
+            ag.setDedupe(false);
+            ag.setOrder(groups.size() +2);
+        }
         ag.save();
         groups.add(ag);
         return ag;
@@ -512,7 +520,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         int sequence = 1;
-        List groups = getAttributeGroups(issueType);
+        List groups = getAttributeGroups(issueType, false);
         for (int i=1; i<=groups.size(); i++)
         {
             int order;
