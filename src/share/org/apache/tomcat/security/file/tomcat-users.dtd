@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: tomcat-users.dtd,v 1.1 1999/10/18 03:34:06 craigmcc Exp $ -->
+<!-- $Id: tomcat-users.dtd,v 1.2 1999/10/22 08:14:19 craigmcc Exp $ -->
 
 <!-- The "tomcat-users" element contains all of the defined users and groups
      within a specific security domain (realm), as well as the roles assigned
@@ -47,6 +47,8 @@
      "anyone" that declares all named users to be assigned this role.  -->
 
 <!ELEMENT role ((user-member|group-member)+|anyone)>
+<!ATTLIST role
+     name       ID    #REQUIRED>
 
 <!-- The "anyone" element declares all defined users in this security domain
      (realm) to be members of the containing group, or assigned the

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmDatabase.java,v 1.1 1999/10/18 03:34:04 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/18 03:34:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmDatabase.java,v 1.2 1999/10/22 08:14:16 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 08:14:16 $
  *
  * ====================================================================
  *
@@ -67,9 +67,11 @@ package org.apache.tomcat.security.file;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.apache.tomcat.util.StringManager;
 import org.apache.tomcat.util.XMLParser;
 import org.apache.tomcat.util.XMLTree;
 import org.xml.sax.SAXException;
@@ -81,7 +83,7 @@ import org.xml.sax.SAXParseException;
  * <code>tomcat-users.dtd</code> file in this directory.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/18 03:34:04 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/22 08:14:16 $
  */
 
 public final class FileRealmDatabase {
@@ -98,6 +100,13 @@ public final class FileRealmDatabase {
      * The value objects are arbitrary.
      */
     private Hashtable roles = new Hashtable();
+
+
+    /**
+     * The internationalized string constants for this package.
+     */
+    private StringManager sm =
+	StringManager.getManager(Constants.Package);
 
 
     /**
@@ -187,12 +196,9 @@ public final class FileRealmDatabase {
      */
     public FileRealmGroup createGroup(String name) {
 
-	if (getGroup(name) != null) {
-	    // XXX Internationalization
-	    throw new IllegalArgumentException("createGroup:  " +
-					       "Group " + name +
-					       " already exists");
-	}
+	if (getGroup(name) != null)
+	    throw new IllegalArgumentException(
+                sm.getString("file.createGroup.exists", name));
 
 	return (new FileRealmGroup(this, name));
 
@@ -209,12 +215,9 @@ public final class FileRealmDatabase {
      */
     public FileRealmUser createUser(String name, String password) {
 
-	if (getUser(name) != null) {
-	    // XXX Internationalization
-	    throw new IllegalArgumentException("createUser:  " +
-					       "User " + name +
-					       " already exists");
-	}
+	if (getUser(name) != null)
+	    throw new IllegalArgumentException(
+	        sm.getString("file.createUser.exists", name));
 
 	return (new FileRealmUser(this, name, password));
 
@@ -231,12 +234,9 @@ public final class FileRealmDatabase {
      */
     public FileRealmUser createUser(String name, byte[] password) {
 
-	if (getUser(name) != null) {
-	    // XXX Internationalization
-	    throw new IllegalArgumentException("createUser:  " +
-					       "User " + name +
-					       " already exists");
-	}
+	if (getUser(name) != null)
+	    throw new IllegalArgumentException(
+	        sm.getString("file.createUser.exists", name));
 
 	return (new FileRealmUser(this, name, password));
 
@@ -492,7 +492,63 @@ public final class FileRealmDatabase {
      */
     public void write(OutputStream stream) throws IOException {
 
-	;	// XXX write() needs to build a DOM tree and write it out
+	// XXX - Yes, this should really create a DOM tree and ask it to
+	// output itself.  At this time, however, that approach would introduce
+	// another dependency on which XML parser is being used.  Once
+	// a standardized XML interface is selected, this will be modified.
+	// XXX - Does not support "<anyone/>" membership in groups or roles.
+	PrintWriter writer = new PrintWriter(stream);
+	writer.println("<tomcat-users>");
+
+	// Render user elements for all defined users
+	Enumeration users = getUsers();
+	while (users.hasMoreElements()) {
+	    FileRealmUser user = (FileRealmUser) users.nextElement();
+	    writer.println("  <user name=\"" + user.getName() +
+			   "\" password=\"" + user.getPassword() + "\" />");
+	}
+
+	// Render group elements for all defined groups
+	Enumeration groups = getGroups();
+	while (groups.hasMoreElements()) {
+	    FileRealmGroup group = (FileRealmGroup) groups.nextElement();
+	    writer.println("  <group name=\"" + group.getName() + "\" />");
+	    users = group.getUsers();
+	    while (users.hasMoreElements()) {
+		FileRealmUser user = (FileRealmUser) users.nextElement();
+		writer.println("    <user-member name=\"" +
+			       user.getName() + "\" />");
+	    }
+	    writer.println("  </group>");
+	}
+
+	// Render role elements for all defined roles
+	Enumeration roles = getRoles();
+	while (roles.hasMoreElements()) {
+	    String role = (String) roles.nextElement();
+	    writer.println("  <role name=\"" + role + "\" />");
+	    users = getUsers();
+	    while (users.hasMoreElements()) {
+		FileRealmUser user = (FileRealmUser) users.nextElement();
+		if (!user.hasRole(role))
+		    continue;
+		writer.println("    <user-member name=\"" +
+			       user.getName() + "\" />");
+	    }
+	    groups = getGroups();
+	    while (groups.hasMoreElements()) {
+		FileRealmGroup group = (FileRealmGroup) groups.nextElement();
+		if (!group.hasRole(role))
+		    continue;
+		writer.println("    <group-member name=\"" +
+			       group.getName() + "\" />");
+	    }
+	    writer.println("  </role>");
+	}
+
+	// Finish the output of this XML file
+	writer.println("</tomcat-users>");
+	writer.flush();
 
     }
 
