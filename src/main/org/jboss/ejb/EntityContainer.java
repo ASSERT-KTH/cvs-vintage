@@ -77,7 +77,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.92 $
+ * @version $Revision: 1.93 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer,
@@ -87,6 +87,7 @@ public class EntityContainer
 
    private Class primaryKeyClass;
 
+   private OptionDInvalidator optionDInvalidator;
 
    // These members contains statistics variable
    private long createCount = 0;
@@ -246,6 +247,14 @@ public class EntityContainer
          // Start the instance pool
          getInstancePool().start();
 
+         // Creat and start the OptionDInvalidator if necessary
+         ConfigurationMetaData configuration = getBeanMetaData().getContainerConfiguration();
+         if(configuration.getCommitOption() == ConfigurationMetaData.D_COMMIT_OPTION)
+         {
+            optionDInvalidator = new OptionDInvalidator(
+                  configuration.getOptionDRefreshRate());
+            optionDInvalidator.start();
+         }
       }
       finally
       {
@@ -262,6 +271,12 @@ public class EntityContainer
 
       try
       {
+         if(optionDInvalidator != null)
+         {
+            optionDInvalidator.die();
+            optionDInvalidator = null;
+         }
+         
          //Stop items in reverse order from start
          //This assures that CachedConnectionInterceptor will get removed
          //from in between this and the pm before the pm is stopped.
@@ -670,5 +685,47 @@ public class EntityContainer
       //Set the bean Lock Manager
       setLockManager(createBeanLockManager(((EntityMetaData)getBeanMetaData()).isReentrant(),conf.getLockConfig(), cl));
 
+   }
+
+   private class OptionDInvalidator extends Thread
+   {
+      private long refreshRate;
+      private volatile boolean shouldRun = true;
+  
+      public OptionDInvalidator(long refreshRate)
+      {
+         super("Option D Invalidator");
+         this.refreshRate = refreshRate;
+      }
+  
+      public void die()
+      {
+         shouldRun = false;
+         interrupt();
+      }
+
+      public void run()
+      {
+         while(shouldRun)
+         {
+            try
+            {
+               sleep(refreshRate);
+            }
+            catch (InterruptedException  e)
+            {
+               interrupted();
+            }
+
+            if(shouldRun)
+            {
+               if(log.isTraceEnabled())
+               {
+                  log.trace("Flushing the valid contexts");
+               }
+               ((EntityCache)getInstanceCache()).flush();
+            }
+         }
+      }
    }
 }
