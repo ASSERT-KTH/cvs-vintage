@@ -15,10 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.temp;
 
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.config.ConfigPath;
+import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
@@ -28,6 +31,7 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
@@ -56,7 +60,21 @@ public class TempFolder extends Folder {
 	 * @param name
 	 */
 	public TempFolder() {
-		super("temp");
+		super();
+
+		// FIXME: why is this needed?
+		// children is already initialised by DefaultMutableTreeNode
+		//children = new Vector();
+
+		messageFolderInfo = new MessageFolderInfo();
+
+		changed = false;
+				
+		String dir = ConfigPath.getConfigDirectory() + "/mail/" + "temp";
+		if (DiskIO.ensureDirectory(dir))
+			directoryFile = new File(dir);
+			
+		observable = new StatusObservableImpl();
 
 		headerList = new HeaderList();
 		messageList = new Hashtable();

@@ -31,7 +31,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.ristretto.message.HeaderInterface;
@@ -152,8 +152,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 		// create virtual folder
 		VirtualFolder vfolder;
 		try {
-			FolderTreeNode node = parent.addFolder(folderName, "VirtualFolder");
-			vfolder = new VirtualFolder(node.getFolderItem());
+			vfolder = (VirtualFolder) FolderFactory.getInstance().createChild( parent, folderName, "VirtualFolder");
 		} catch (Exception e) {
 			ColumbaLogger.log.error("Error creating new virtual folder", e);
 			return null;

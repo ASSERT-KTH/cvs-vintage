@@ -48,6 +48,12 @@ public class ColumbaHeader implements HeaderInterface {
 	protected Attributes attributes;
 	protected Flags flags;
 
+	public ColumbaHeader( ColumbaHeader header ) {
+		this.header = header.getHeader();
+		this.attributes = header.getAttributes();
+		this.flags = header.getFlags();
+	}
+
 	public ColumbaHeader() {
 		this(new Header());
 	}

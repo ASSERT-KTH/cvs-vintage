@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import java.lang.reflect.Method;
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
@@ -25,11 +24,9 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.plugin.FolderPluginHandler;
 
 /**
  * @author freddy
@@ -40,8 +37,7 @@ import org.columba.mail.plugin.FolderPluginHandler;
  * Window>Preferences>Java>Code Generation.
  */
 public abstract class FolderTreeNode
-	extends DefaultMutableTreeNode
-	implements TreeNodeInterface {
+	extends DefaultMutableTreeNode {
 
 	protected final static ImageIcon collapsedIcon =
 		ImageLoader.getSmallImageIcon("folder-closed.png");
@@ -57,31 +53,31 @@ public abstract class FolderTreeNode
 	//private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 	//private final Class[] STRING_ARG = new Class[] { String.class };
 
+	public FolderTreeNode(String name, String type) {
+		super();
+		
+		XmlElement defaultElement = new XmlElement("folder");
+		defaultElement.addAttribute("type", type);
+		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
+		defaultElement.addElement(new XmlElement("property"));
+		
+		setNode( new FolderItem(defaultElement));
+		setName(name);
+
+		myLock = new Lock();
+	}
+
+	public FolderTreeNode() {
+		super();
+
+		myLock = new Lock();
+	}
+
 	public FolderTreeNode(FolderItem node) {
 		super();
 		if (node != null)
 			setNode(node);
 		myLock = new Lock();
-	}
-
-	public final static FolderItem getDefaultItem(
-		String type,
-		XmlElement props) {
-		XmlElement defaultElement = new XmlElement("folder");
-		defaultElement.addAttribute("type", type);
-		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
-
-		if (props != null)
-			defaultElement.addElement(props);
-
-		// FAILURE!!! 
-
-		/*
-		XmlElement filter = new XmlElement("filter");
-		defaultElement.addElement(filter);
-		*/
-
-		return new FolderItem(defaultElement);
 	}
 
 	/**
@@ -103,10 +99,6 @@ public abstract class FolderTreeNode
 		return new TreePath(getPathToRoot(this, 0));
 	}
 
-	public static XmlElement getDefaultProperties() {
-		return null;
-	}
-
 	public int getUid() {
 		return node.getInteger("uid");
 	}
@@ -117,32 +109,6 @@ public abstract class FolderTreeNode
 
 	public ImageIcon getExpandedIcon() {
 		return expandedIcon;
-	}
-
-	public CapabilityList getSupportedActions() {
-		CapabilityList v = CapabilityList.getDefaultFolderCapabilities();
-
-		Hashtable table = getAttributes();
-
-		if (table.contains("accessrights")) {
-			String accessrights = (String) table.get("accessrights");
-
-			if (accessrights.equals("user")) {
-				v.add(CapabilityList.RENAME_FOLDER_ACTION);
-				v.add(CapabilityList.REMOVE_FOLDER_ACTION);
-			}
-		}
-
-		if (table.contains("messagefolder")) {
-			String messagefolder = (String) table.get("messagefolder");
-
-			if (messagefolder.equals("true")) {
-				v.add(CapabilityList.FOLDER_SHOW_HEADERLIST_ACTION);
-			}
-		}
-
-		return v;
-
 	}
 
 	public boolean tryToGetLock(Object locker) {
@@ -159,18 +125,6 @@ public abstract class FolderTreeNode
 
 	public FolderItem getFolderItem() {
 		return node;
-	}
-
-	public String getName() {
-		return toString();
-	}
-
-	public void setName(String s) {
-		this.setUserObject(s);
-	}
-
-	public String toString() {
-		return (String) this.getUserObject();
 	}
 
 	public void insert(FolderTreeNode newFolder, int newIndex) {
@@ -233,6 +187,11 @@ public abstract class FolderTreeNode
 		// remove DefaultMutableTreeNode
 		removeFromParent();
 	}
+	
+	public void addSubfolder(FolderTreeNode child) throws Exception {
+		add(child);
+		getNode().addElement(child.getNode());		
+	}
 
 	/*
 	public void remove(FolderTreeNode childNode) {
@@ -245,128 +204,6 @@ public abstract class FolderTreeNode
 		//fireTreeNodeStructureUpdate();
 	
 		//return childFolder;
-	}
-	*/
-
-	public abstract String getDefaultChild();
-
-	final public Hashtable getAttributes() {
-		return node.getElement("property").getAttributes();
-	}
-
-	public abstract void createChildren();
-
-	public FolderTreeNode addFolder(String name, String type)
-		throws Exception {
-		FolderPluginHandler handler =
-			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.folder");
-
-		Class childClass = handler.getPluginClass(type);
-
-		Method m_getDefaultProperties =
-			childClass.getMethod("getDefaultProperties", null);
-
-		XmlElement props =
-			(XmlElement) m_getDefaultProperties.invoke(null, null);
-
-		/*			
-		XmlElement props = getDefaultProperties();
-		*/
-		//XmlElement props = new XmlElement("property");
-		props.addAttribute("name", name);
-
-		FolderItem childNode = getDefaultItem(type, props);
-
-		Object[] args = { childNode };
-
-		FolderTreeNode folder = null;
-		try {
-
-			folder = (FolderTreeNode) handler.getPlugin(type, args);
-			addWithXml(folder);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		return folder;
-		/*
-		Method m_getDefaultProperties =
-			childClass.getMethod("getDefaultProperties", null);
-		
-		XmlElement props =
-			(XmlElement) m_getDefaultProperties.invoke(null, null);
-		FolderItem childNode = getDefaultItem(childClass.getName(), props);
-		
-		childNode.set("property", "name", name);
-		// Put properties that should be copied from parent here
-		
-		Folder subFolder =
-			(Folder) childClass.getConstructor(FOLDER_ITEM_ARG).newInstance(
-				new Object[] { childNode });
-		addWithXml(subFolder);
-		*/
-	}
-
-	public FolderTreeNode addFolder(String name) throws Exception {
-		return addFolder(name, getDefaultChild());
-	}
-
-	public void addWithXml(FolderTreeNode folder) {
-		add(folder);
-		this.getNode().addElement(folder.getNode());
-	}
-
-	/*
-	public void removeFromParent()
-	{
-		
-		Folder parentFolder = (Folder) getParent();
-		parentFolder.remove(this);
-		
-	}
-	*/
-
-	/*
-	public void moveUp()
-	{
-		Folder parentFolder = (Folder) getParent();
-		if (parentFolder == null)
-			return;
-	
-		AdapterNode parentNode = parentFolder.getNode();
-	
-		int childCount = parentFolder.getChildCount();
-	
-		int childIndex = parentFolder.getIndex((Folder) this);
-		if (childIndex == -1)
-			return;
-		if (childIndex == 0)
-			return;
-	
-		parentFolder.insert(this, childIndex - 1);
-	
-	}
-	*/
-
-	/*
-	public void moveDown()
-	{
-		Folder parentFolder = (Folder) getParent();
-		if (parentFolder == null)
-			return;
-	
-		AdapterNode parentNode = parentFolder.getNode();
-	
-		int childCount = parentFolder.getChildCount();
-	
-		int childIndex = parentFolder.getIndex((Folder) this);
-		if (childIndex == -1)
-			return;
-		if (childIndex >= childCount - 1)
-			return;
-	
-		parentFolder.insert(this, childIndex + 1);
 	}
 	*/
 
@@ -467,6 +304,28 @@ public abstract class FolderTreeNode
 		// do the same for the XmlElement of child
 		getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
 
+	}
+
+	/**
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
+	 */
+	public String getName() {
+		String name = null;
+	
+		FolderItem item = getFolderItem();
+		name = item.get("property", "name");
+	
+		return name;
+	}
+
+	/**
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+	 */
+	public void setName(String newName) {
+	
+		FolderItem item = getFolderItem();
+		item.set("property", "name", newName);
+	
 	}
 
 	/*

@@ -40,7 +40,7 @@ public class FolderTreeCellRenderer
 	Border unselectedBorder = null;
 	Border selectedBorder = null;
 	boolean isBordered = true;
-	boolean bool;
+	
 	//TreeController treeController;
 
 	private ImageIcon defaultIcon, localhostIcon, remotehostIcon, virtualfolderIcon;
@@ -50,14 +50,11 @@ public class FolderTreeCellRenderer
 	/**
 	 * Generates a new CellRenderer. In this contructor font and images are set to local variables. The fonts are
 	 * depended on the current UIManager.
-	 * @param bool i don't know (waffel)
 	 */
-	public FolderTreeCellRenderer(boolean bool) {
+	public FolderTreeCellRenderer() {
 		super();
 
 		//this.treeController = treeController;
-
-		this.bool = bool;
 
 		boldFont = UIManager.getFont("Tree.font");
 		boldFont = boldFont.deriveFont(Font.BOLD);

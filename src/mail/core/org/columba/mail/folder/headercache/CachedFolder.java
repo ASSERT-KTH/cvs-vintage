@@ -458,4 +458,14 @@ public abstract class CachedFolder extends LocalFolder {
 		return headerCache;
 	}
 
+	/**
+	 * @param type
+	 */
+	public CachedFolder(String name, String type) {
+		super(name, type);
+		
+		mutex = new Mutex(getName());
+		
+	}
+
 }

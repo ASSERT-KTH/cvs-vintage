@@ -37,9 +37,6 @@ public class Root extends FolderTreeNode {
 		return null;
 	}
 
-	public void createChildren() {
-	}
-
 
 
 }

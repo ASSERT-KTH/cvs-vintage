@@ -42,21 +42,14 @@ public class CachedMHFolder extends CachedFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
+	 * @param type
 	 */
-	public static XmlElement getDefaultProperties() {
-		XmlElement props = new XmlElement("property");
-		props.addAttribute("accessrights", "user");
-		props.addAttribute("subfolder", "true");
-
-		return props;
-	}
-
-	/**
-		 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
-		 */
-	public String getDefaultChild() {
-		return "MHFolder";
+	public CachedMHFolder(String name, String type) {
+		super(name, type);
+		
+		FolderItem item = getFolderItem();
+		item.set("property", "accessrights", "user");
+		item.set("property", "subfolder", "true");		
 	}
 
 }

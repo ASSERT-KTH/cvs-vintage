@@ -143,33 +143,9 @@ public abstract class Folder extends FolderTreeNode {
 	}
 	
 	
-	/**
-	 * Constructor for creating temporary-folders or other types
-	 * which work only in memory and aren't visible in the <class>
-	 * TreeView</class>
-	 * 
-	 * @param name Name of the folder
-	 */
-	public Folder(String name) {
-		super(null);
-
-		// FIXME: why is this needed?
-	    // children is already initialised by DefaultMutableTreeNode
-		//children = new Vector();
-
-		messageFolderInfo = new MessageFolderInfo();
-
-		changed = false;
-				
-		String dir = ConfigPath.getConfigDirectory() + "/mail/" + name;
-		if (DiskIO.ensureDirectory(dir))
-			directoryFile = new File(dir);
-			
-		observable = new StatusObservableImpl();
-
-	}
-
-	
+	protected Folder() {
+		super();
+	}	
 	
 	/**
 	 * Show Filter Editing Dialog.
@@ -241,12 +217,6 @@ public abstract class Folder extends FolderTreeNode {
 	 */
 	public File getDirectoryFile() {
 		return directoryFile;
-	}
-
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#createChildren()
-	 */
-	public void createChildren() {
 	}
 
 	/**
@@ -463,28 +433,6 @@ public abstract class Folder extends FolderTreeNode {
 
 
 	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
-	 */
-	public String getName() {
-		String name = null;
-
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
-
-		return name;
-	}
-
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-	 */
-	public void setName(String newName) {
-
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
-
-	}
-
-	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
@@ -621,6 +569,27 @@ public abstract class Folder extends FolderTreeNode {
 	 */
 	public StatusObservable getObservable() {
 		return observable;
+	}
+
+	/**
+	 * @param type
+	 */
+	public Folder(String name, String type) {
+		super(name, type);
+
+		messageFolderInfo = new MessageFolderInfo();
+
+		changed = false;
+
+		String dir = ConfigPath.getConfigDirectory() + "/mail/" + getUid();
+		if (DiskIO.ensureDirectory(dir))
+			directoryFile = new File(dir);
+			
+		
+		loadMessageFolderInfo();
+		
+		observable = new StatusObservableImpl();
+
 	}
 
 }

@@ -76,7 +76,7 @@ public class TreeController implements TreeWillExpandListener {
 
 		view.addMouseListener(mouseListener);
 
-		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
+		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
 		view.setCellRenderer(renderer);
 
 		getView().setTransferHandler(

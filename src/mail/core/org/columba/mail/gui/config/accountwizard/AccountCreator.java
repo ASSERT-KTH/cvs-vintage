@@ -26,6 +26,8 @@ import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 
 class AccountCreator implements WizardModelListener {
@@ -56,9 +58,14 @@ class AccountCreator implements WizardModelListener {
             imap.set("host", (String)data.getData("IncomingServer.host"));
             imap.set("user", (String)data.getData("IncomingServer.login"));
             IMAPRootFolder parentFolder = new IMAPRootFolder(account);
+            ((FolderTreeNode)MainInterface.treeModel.getRoot()).add(parentFolder);
+			((FolderTreeNode)MainInterface.treeModel.getRoot()).getNode().addElement(parentFolder.getNode());
+
             MainInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
             try {
-                    parentFolder.addFolder("INBOX");
+                    FolderTreeNode inbox = new IMAPFolder("INBOX", "IMAPFolder");
+                    parentFolder.add(inbox);
+                    parentFolder.getNode().addElement(inbox.getNode());
             } catch (Exception ex) {
                     ex.printStackTrace();
             }

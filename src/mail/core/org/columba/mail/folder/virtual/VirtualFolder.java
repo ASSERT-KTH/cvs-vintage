@@ -32,11 +32,12 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MimePart;
@@ -123,17 +124,17 @@ public class VirtualFolder extends Folder {
 
 	public void addSearchToHistory() throws Exception {
 
-		VirtualFolder folder =
+		VirtualFolder searchFolder =
 			(VirtualFolder) MainInterface.treeModel.getFolder(106);
 
 		// only create new subfolders if we used the default "Search Folder"
-		if (!folder.equals(this))
+		if (!searchFolder.equals(this))
 			return;
 
 		// we only want 10 subfolders
 		// -> if more children exist remove them
-		if (folder.getChildCount() >= 10) {
-			Folder child = (Folder) folder.getChildAt(0);
+		if (searchFolder.getChildCount() >= 10) {
+			Folder child = (Folder) searchFolder.getChildAt(0);
 			child.removeFromParent();
 		}
 
@@ -142,7 +143,7 @@ public class VirtualFolder extends Folder {
 		VirtualFolder newFolder = null;
 		try {
 
-			newFolder = (VirtualFolder) addFolder(name, "VirtualFolder");
+			newFolder = (VirtualFolder) FolderFactory.getInstance().createChild(searchFolder, name, "VirtualFolder");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 
@@ -224,7 +225,7 @@ public class VirtualFolder extends Folder {
 		newFolder.renameFolder(buf.toString());
 
 		// update tree-view
-		MainInterface.treeModel.nodeStructureChanged(folder);
+		MainInterface.treeModel.nodeStructureChanged(searchFolder);
 
 		// update tree-node (for renaming the new folder)
 		MainInterface.treeModel.nodeChanged(newFolder);
@@ -602,6 +603,45 @@ public class VirtualFolder extends Folder {
 		}
 
 		return uids;
+	}
+
+	/**
+	 * @param type
+	 */
+	public VirtualFolder(String name, String type) {
+		super(name, type);
+
+		FolderItem item = getFolderItem();
+		item.set("property", "accessrights", "user");
+		item.set("property", "subfolder", "true");		
+		item.set("property", "include_subfolders", "true");		
+		item.set("property", "source_uid", "101");
+		
+		headerList = new HeaderList();
+
+		XmlElement filterElement = node.getElement("filter");
+		if (filterElement == null) {
+			/*
+			filterElement = new XmlElement("filter");
+			*/
+			XmlElement filter = new XmlElement("filter");
+			filter.addAttribute("description", "new filter");
+			filter.addAttribute("enabled", "true");
+			XmlElement rules = new XmlElement("rules");
+			rules.addAttribute("condition", "matchall");
+			XmlElement criteria = new XmlElement("criteria");
+			criteria.addAttribute("type", "Subject");
+			criteria.addAttribute("headerfield", "Subject");
+			criteria.addAttribute("criteria", "contains");
+			criteria.addAttribute("pattern", "pattern");
+			rules.addElement(criteria);
+			filter.addElement(rules);
+
+			Filter f = new Filter(filter);
+
+			getFolderItem().getRoot().addElement(f.getRoot());
+		}
+		
 	}
 
 }

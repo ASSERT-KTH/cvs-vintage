@@ -18,9 +18,10 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.gui.tree.util.EditFolderDialog;
+import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -77,7 +78,7 @@ public class CreateVirtualFolderAction
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		EditFolderDialog dialog = new EditFolderDialog("New Folder");
+		CreateFolderDialog dialog = new CreateFolderDialog(null);
 		dialog.showDialog();
 
 		String name;
@@ -92,7 +93,7 @@ public class CreateVirtualFolderAction
 						.getSelectionManager()
 						.getSelection(
 						"mail.tree");
-				r[0].getFolder().addFolder(name, "VirtualFolder");
+				FolderFactory.getInstance().createChild( r[0].getFolder(), name, "VirtualFolder");
 
 				FolderCommandReference[] reference =
 					(FolderCommandReference[])

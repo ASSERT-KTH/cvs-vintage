@@ -64,7 +64,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
 		treeNode = (FolderTreeNode) r[0].getFolder();
 		
 		if ( treeNode instanceof IMAPRootFolder )
-			treeNode.createChildren();
+			((IMAPRootFolder)treeNode).syncSubscribedFolders();
 		
 	}
 

@@ -88,7 +88,7 @@ public class SelectFolderDialog
 		tree.setRootVisible(false);
 		tree.addTreeSelectionListener(this);
 				
-		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
+		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
 		tree.setCellRenderer(renderer);
 		
 		contentPane.add(new JScrollPane(tree));
@@ -157,7 +157,7 @@ public class SelectFolderDialog
 
 			dialog.dispose();
 		} else if (action.equals("NEW")) {
-			EditFolderDialog dialog = new EditFolderDialog(MailResourceLoader.getString("dialog", "folder", "new_folder_name"));
+			CreateFolderDialog dialog = new CreateFolderDialog(tree.getSelectionPath());
 			dialog.showDialog();
 
 			String name;

@@ -82,14 +82,6 @@ public abstract class LocalFolder extends Folder {
 	} // constructor
 
 	/**
-	 * @param name	<class>String</class> with name of folder
-	 */
-	// use this constructor only with tempfolders
-	public LocalFolder(String name) {
-		super(name);
-	} // constructor
-
-	/**
 	 * Remove folder from tree
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#removeFolder()
@@ -363,6 +355,25 @@ public abstract class LocalFolder extends Folder {
 
 		// return number of messages
 		return getDataStorageInstance().getMessageCount();
+	}
+
+	/**
+	 * @param type
+	 */
+	public LocalFolder(String name, String type) {
+		super(name, type);
+		
+		// create filterlist datastructure
+		XmlElement filterListElement = node.getElement("filterlist");
+		if (filterListElement == null) {
+			// no filterlist treenode found 
+			// -> create a new one
+			filterListElement = new XmlElement("filterlist");
+			getFolderItem().getRoot().addElement(filterListElement);
+		}
+
+		filterList = new FilterList(filterListElement);
+		
 	}
 
 }

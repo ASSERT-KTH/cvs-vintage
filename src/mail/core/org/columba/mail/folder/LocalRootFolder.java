@@ -20,8 +20,8 @@ import javax.swing.ImageIcon;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -36,12 +36,13 @@ import org.columba.ristretto.message.MimeTree;
  */
 public class LocalRootFolder extends Folder {
 
+	protected final static ImageIcon rootIcon =
+		ImageLoader.getSmallImageIcon("localhost.png");
+
 	public LocalRootFolder(FolderItem item) {
 		super(item);	
 	}
 
-	protected final static ImageIcon rootIcon =
-		ImageLoader.getSmallImageIcon("localhost.png");
 
 	public ImageIcon getCollapsedIcon() {
 		return rootIcon;

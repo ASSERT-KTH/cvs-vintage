@@ -17,6 +17,7 @@ package org.columba.mail.folder.virtual;
 
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
 
 /**
@@ -31,17 +32,15 @@ public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
 
 	protected Folder srcFolder;
 	protected Object srcUid;
-	protected ColumbaHeader srcHeader;
 
 	public VirtualHeader(
 		ColumbaHeader header,
 		Folder srcFolder,
 		Object srcUid) {
-		super();
+		super(header);
 		
 		this.srcFolder = srcFolder;
 		this.srcUid = srcUid;
-		this.srcHeader = header;
 	}
 
 	/**

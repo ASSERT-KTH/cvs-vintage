@@ -23,6 +23,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
 
 /**
@@ -71,11 +72,11 @@ public class CreateSubFolderCommand extends Command {
 		attributes.put("name", name);
 		*/
 		try {
-			FolderTreeNode folder = parentFolder.addFolder(name);
+			FolderTreeNode subFolder = FolderFactory.getInstance().createDefaultChild(parentFolder, name);
 			
 			// if folder creation failed
 			//  -> don't update tree ui
-			if (folder==null) success = false;
+			if (subFolder==null) success = false;
 			
 		} catch (Exception ex) {
 			success = false;

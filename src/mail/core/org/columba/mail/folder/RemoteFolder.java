@@ -36,12 +36,11 @@ public abstract class RemoteFolder extends Folder {
 
 	}
 
-	/*
-	public AbstractSearchEngine getSearchEngine() {
-		if (searchEngine == null)
-			searchEngine = new RemoteSearchEngine(this);
-
-		return searchEngine;
+	/**
+	 * @param type
+	 */
+	public RemoteFolder(String name, String type) {
+		super(name, type);
 	}
-	*/
+
 }

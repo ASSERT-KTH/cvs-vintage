@@ -140,7 +140,6 @@ public class TreeModel extends DefaultTreeModel {
 
 		FolderPluginHandler handler = null;
 		try {
-
 			handler =
 				(FolderPluginHandler) MainInterface.pluginManager.getHandler(
 					"org.columba.mail.folder");
