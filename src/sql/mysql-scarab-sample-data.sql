@@ -8,7 +8,7 @@ insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
     values (4, 'jmcnally@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'John', 'McNally', 'jmcnally@collab.net', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (5, 'elicia@collab.net', '', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
+    values (5, 'elicia@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
 
 
 /*
@@ -102,7 +102,7 @@ insert into SCARAB_R_MODULE_USER_ROLE(USER_ID, MODULE_ID, ROLE_ID)
  * Sample Issues
  */
 
-insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (1, 2, 'PACD', 1);
+insert into SCARAB_ISSUE(ISSUE_ID, MODULE_ID, ID_PREFIX, ID_COUNT) values (1, 5, 'PACD', 1);
 
 /* description */
 insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, VALUE) values (1, 1, 'Documents are not as current as they should be.');
@@ -127,6 +127,7 @@ insert into SCARAB_ISSUE_ATTRIBUTE_VALUE(ISSUE_ID, ATTRIBUTE_ID, OPTION_ID, VALU
 insert into  SCARAB_ACTIVITY values (1, 4, 1, 1, 8,9);
 insert into SCARAB_TRANSACTION values (1, 2, "2001-05-21");
 insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_mime_type, modified_date, created_date) values (1, 1, 2, "updated the docs", ".txt", "2001-06-01", "2001-05-05");
+insert into SCARAB_ATTACHMENT (attachment_id, issue_id, attachment_type_id, attachment_data, attachment_name, attachment_mime_type, modified_date, created_date) values (3, 1, 3, "http://www.collab.net", "project url", ".txt", "2001-06-01", "2001-05-05");
 
 
 
