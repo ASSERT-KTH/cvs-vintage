@@ -279,7 +279,8 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param credentials Password or other credentials to use in
      *  authenticating this username
      */
-    public synchronized boolean authenticate(String username, String credentials) {
+    public synchronized boolean authenticate(String username
+            , String credentials) {
         try {
 
             // Establish the database connection if necessary

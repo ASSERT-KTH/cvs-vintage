@@ -306,16 +306,17 @@ class FileHandler extends ServletWrapper  {
 	    log("Ends with \\/. " + absPath);
 	    return null;
 	}
+    if (absPath.length() > base.length())
+	{
+		String relPath=absPath.substring( base.length() + 1);
+		if( debug>0) log( "RelPath = " + relPath );
 
-	String relPath=absPath.substring( base.length());
-	if( debug>0) log( "RelPath = " + relPath );
-
-	String relPathU=relPath.toUpperCase();
-        if ( relPathU.startsWith("WEB-INF") ||
-	     relPathU.startsWith("META-INF")) {
-	    return null;
-        }
-
+		String relPathU=relPath.toUpperCase();
+		if ( relPathU.startsWith("WEB-INF") ||
+				relPathU.startsWith("META-INF")) {
+			return null;
+		}
+	}
 	return absPath;
     }
 
@@ -361,7 +362,18 @@ class DirHandler extends ServletWrapper  {
 	String absPath=ctx.getRealPath( pathInfo );
 	File file = new File( absPath );
 	String requestURI=subReq.getRequestURI();
-	
+	String base = ctx.getAbsolutePath();
+	if (absPath.length() > base.length())
+	{
+		String relPath=absPath.substring( base.length() + 1);
+		String relPathU=relPath.toUpperCase();
+		if ( relPathU.startsWith("WEB-INF") ||
+				relPathU.startsWith("META-INF")) {
+			context.getContextManager().handleStatus( req, res, 404);
+			return;
+		}
+	}
+
 	StringBuffer buf = new StringBuffer();
 	
 	if (! inInclude) {
@@ -421,11 +433,11 @@ class DirHandler extends ServletWrapper  {
 	    String fileName = fileNames[i];
 
             // Don't display special dirs at top level
-	    if( "/".equals(pathInfo) &&
-		"WEB-INF".equalsIgnoreCase(fileName) ||
-		"META-INF".equalsIgnoreCase(fileName) )
-		continue;
-	    
+	    if( (pathInfo.length() == 0 || "/".equals(pathInfo)) &&
+     		"WEB-INF".equalsIgnoreCase(fileName) ||
+ 	    	"META-INF".equalsIgnoreCase(fileName) )
+    		continue;
+
 	    File f = new File(file, fileName);
 
 	    if (f.isDirectory()) {
