@@ -45,8 +45,7 @@
 
 #foreach ($attribute in $attributes)
  #indexedRows($velocityCount)
-  <label for="radio_$attribute.AttributeId">
-  <td><input type="radio" name="$attGroup.Id.Key" value="$attribute.AttributeId" id="radio_$attribute.AttributeId" /></td>
+  <td><input type="checkbox" name="attribute_ids" value="$attribute.AttributeId" /></td>
   <td>$attribute.Name</td>
   <td>$attribute.Description</td>
   <td>$attribute.AttributeType.Name</td>
