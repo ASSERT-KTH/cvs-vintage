@@ -1,3 +1,4 @@
+// $Id: ImportDummy.java,v 1.2 2003/06/29 23:16:08 linus Exp $
  // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: ImportDummy.java,v 1.1 2003/03/19 14:54:20 lepekhine Exp $
+//$Id: ImportDummy.java,v 1.2 2003/06/29 23:16:08 linus Exp $
 
 package org.argouml.language.dummylanguage.reveng;
 
@@ -39,28 +40,28 @@ import java.io.*;
  */
 public class ImportDummy extends FileImportSupport {
 
-	/**
-	 * Provides an array of suffix filters for the module.
-	 * @return SuffixFilter[] files with these suffixes will be processed.
-	 */
-	public SuffixFilter[] getSuffixFilters() {
-		SuffixFilter[] result = {new SuffixFilter("dummy", "Dummy files")};
-		return result;
-	}
+    /**
+     * Provides an array of suffix filters for the module.
+     * @return SuffixFilter[] files with these suffixes will be processed.
+     */
+    public SuffixFilter[] getSuffixFilters() {
+	SuffixFilter[] result = {new SuffixFilter("dummy", "Dummy files")};
+	return result;
+    }
 
-		/** Display name of the module. */
-		public String getModuleName() {
-			return "Dummy";
-		}
+    /** Display name of the module. */
+    public String getModuleName() {
+	return "Dummy";
+    }
 
-		/** Textual description of the module. */
-		public String getModuleDescription() {
-			return "Dummy import from files";
-		}
+    /** Textual description of the module. */
+    public String getModuleDescription() {
+	return "Dummy import from files";
+    }
 
-		public String getModuleKey() {
-			return "module.import.dummy-files";
-		}
+    public String getModuleKey() {
+	return "module.import.dummy-files";
+    }
 
 }
 

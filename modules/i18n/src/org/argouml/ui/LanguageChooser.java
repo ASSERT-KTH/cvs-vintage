@@ -1,3 +1,4 @@
+// $Id: LanguageChooser.java,v 1.2 2003/06/29 23:16:08 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +115,9 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
     }
 
     public Object[] buildContext(JMenuItem a, String b) {
-        return new Object[] { a, b };
+        return new Object[] {
+	    a, b 
+	};
     }
 
     /** 

@@ -1,4 +1,4 @@
-// $Id: ByteToken.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: ByteToken.java,v 1.2 2003/06/29 23:16:07 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,7 @@ public class ByteToken extends Token {
      * @return The byte value of this token as a masked sort.
      */
     final short getShortValue() {
-	return (short)((short)_val & (short)0xff);
+	return (short) ((short) _val & (short) 0xff);
     }
 
     /**
@@ -95,7 +95,7 @@ public class ByteToken extends Token {
      * @return The byte value of this token as a masked int.
      */
     final int getIntValue() {
-	return (int)_val & 0xff;
+	return (int) _val & 0xff;
     }
 }
 

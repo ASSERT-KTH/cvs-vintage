@@ -1,4 +1,4 @@
-// $Id: ObjectAST.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: ObjectAST.java,v 1.2 2003/06/29 23:16:07 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,7 +82,7 @@ class ObjectAST extends CommonAST {
      * @return The value of the buffer as a int.
      */
     final int getIntegerValue() {
-	return ((Integer)_object).intValue();
+	return ((Integer) _object).intValue();
     }
 
     /**
@@ -91,7 +91,7 @@ class ObjectAST extends CommonAST {
      * @return The value of the buffer as a long.
      */
     final long getLongValue() {
-	return ((Long)_object).longValue();
+	return ((Long) _object).longValue();
     }
 
     /**
@@ -100,7 +100,7 @@ class ObjectAST extends CommonAST {
      * @return The value of the buffer as a float.
      */
     final float getFloatValue() {
-	return ((Float)_object).shortValue();
+	return ((Float) _object).shortValue();
     }
 
     /**
@@ -109,6 +109,6 @@ class ObjectAST extends CommonAST {
      * @return The value of the buffer as a double.
      */
     final double getDoubleValue() {
-	return ((Double)_object).doubleValue();
+	return ((Double) _object).doubleValue();
     }
 }

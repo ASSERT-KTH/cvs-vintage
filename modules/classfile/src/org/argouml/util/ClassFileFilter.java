@@ -1,4 +1,4 @@
-// $Id: ClassFileFilter.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: ClassFileFilter.java,v 1.2 2003/06/29 23:16:07 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ public class ClassFileFilter extends FileFilter {
     ////////////////////////////////////////////////////////////////
     // instance varaibles
 
-    private final String [] _suffixes = {"class","jar"};
+    private final String [] _suffixes = {"class", "jar"};
     private final String    _desc     = "Java classfiles (*.class, *.jar)";
 
 
@@ -50,7 +50,7 @@ public class ClassFileFilter extends FileFilter {
 	if (f == null) return false;
 	if (f.isDirectory()) return true;
 	String extension = getExtension(f.getName());
-	for(int i=0; i < _suffixes.length; i++) {
+	for (int i = 0; i < _suffixes.length; i++) {
 	    if (_suffixes[i].equalsIgnoreCase(extension)) return true;
 	}
 	return false;
@@ -65,8 +65,8 @@ public class ClassFileFilter extends FileFilter {
      */
     private String getExtension(String filename) {
 	int i = filename.lastIndexOf('.');
-	if (i>0 && i<filename.length()-1) {
-	    return filename.substring(i+1).toLowerCase();
+	if (i > 0 && i < filename.length() - 1) {
+	    return filename.substring(i + 1).toLowerCase();
 	}
 	return null;
     }

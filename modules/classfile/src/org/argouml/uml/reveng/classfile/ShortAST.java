@@ -1,4 +1,4 @@
-// $Id: ShortAST.java,v 1.1 2002/12/31 09:23:40 mkl Exp $
+// $Id: ShortAST.java,v 1.2 2003/06/29 23:16:07 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ class ShortAST extends CommonAST {
     // Instance vars.
 
     // The short buffer.
-    private short _shortValue=0;
+    private short _shortValue = 0;
 
     
     ///////////////
