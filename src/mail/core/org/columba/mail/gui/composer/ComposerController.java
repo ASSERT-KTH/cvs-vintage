@@ -55,11 +55,8 @@ public class ComposerController
 	private EditorController editorController;
 	private HeaderController headerController;
 	//private MessageComposer messageComposer;
-	//private CharsetManager charsetManager;
 	private ComposerSpellCheck composerSpellCheck;
-
 	private ComposerModel composerModel;
-
 	protected CharsetManager charsetManager;
 
 	/*
@@ -251,17 +248,6 @@ public class ComposerController
 	}
 
 	/**
-	 * @return CharsetManager
-	 */
-
-	// FIXME
-	/*
-	public CharsetManager getCharsetManager() {
-		return charsetManager;
-	}
-	*/
-
-	/**
 	 * @return ComposerSpellCheck
 	 */
 	public ComposerSpellCheck getComposerSpellCheck() {
@@ -361,8 +347,8 @@ public class ComposerController
 	}
 
 	/**
-			 * @return
-			 */
+	 * @return CharsetManager
+	 */
 	public CharsetManager getCharsetManager() {
 		return charsetManager;
 	}
