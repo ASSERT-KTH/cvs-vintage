@@ -28,9 +28,9 @@ import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.ristretto.coder.EncodedWord;
@@ -42,6 +42,10 @@ import org.columba.ristretto.coder.EncodedWord;
  * @version 1.0
  */
 public class EudoraMailImportFilter extends DefaultMailboxImporter {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail");
+
 	/** Time zone, e.g. "+0100", used for new Date headers (= host default) */
 	private static final String TIME_ZONE =
 		(new SimpleDateFormat("Z")).format(new Date());
@@ -100,7 +104,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 		WorkerStatusController worker,
 		Folder destFolder)
 		throws Exception {
-		ColumbaLogger.log.fine(
+		LOG.fine(
 			"Starting to import Eudora mbox file: " + file.getAbsolutePath());
 
 		StringBuffer strbuf = new StringBuffer();
@@ -154,7 +158,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			}
 		}
 
-		ColumbaLogger.log.fine(
+		LOG.fine(
 			"Import of Eudora mbox file completed. "
 				+ msgCounter
 				+ " messages imported");
@@ -200,7 +204,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			//		+ dateStr
 			//		+ "\" to create Date: header. Returning null",
 			//	e);
-			ColumbaLogger.log.severe("Not enough tokens in \""
+			LOG.severe("Not enough tokens in \""
 					+ dateStr + "\" to create Date: header. Returning null");
 			return null;
 		}
@@ -232,7 +236,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 		// divide message into headers and body
 		String[] divided = divideMessage(msg);
 		if (divided == null) {
-			ColumbaLogger.log.severe(
+			LOG.severe(
 				"Error splitting message into headers and body");
 			return false;
 		}
@@ -283,7 +287,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 							.equalsIgnoreCase("alternative")) {
 							// just convert it to text/plain or text/html
 							header = guessBodyContentType(body);
-							ColumbaLogger.log.fine(
+							LOG.fine(
 								"Content-Type: multipart/alternative replaced with "
 									+ header);
 						} else {
@@ -301,7 +305,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 								// no attachements found - just convert it to
 								// text/plain or text/html
 								header = guessBodyContentType(body);
-								ColumbaLogger.log.fine(
+								LOG.fine(
 									"Content-Type: multipart/"
 										+ conType.getSubType()
 										+ " replaced by "
@@ -314,7 +318,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 									createBodyFromParts(
 										split,
 										conType.getBoundary());
-								ColumbaLogger.log.fine(
+								LOG.fine(
 									"Content-Type: multipart/mixed. Boundaries added to msg body");
 							}
 						}
@@ -342,7 +346,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 							// replaced
 							header = guessBodyContentType(body);
 							contentTypeFound = true;
-							ColumbaLogger.log.fine(
+							LOG.fine(
 								"X-Attachments header replaced by Content-Type: "
 									+ header);
 						} else {
@@ -358,7 +362,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 							contentTypeFound = true; // we have now added
 							// such a header
 							body = createBodyFromParts(split, unique);
-							ColumbaLogger.log.fine(
+							LOG.fine(
 								"X-Attachments header replaced by Content-Type: multipart/mixed");
 						}
 					}
@@ -376,7 +380,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 		 * (this is the case for outgoing messages from Eudora)
 		 */
 		if (!dateFound) {
-			ColumbaLogger.log.fine(
+			LOG.fine(
 				"Date header missing - constructing new one");
 			String dateHeader = getNewDateHeader(replacementDate, TIME_ZONE);
 			if (dateHeader != null)
@@ -390,7 +394,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 		 * html msg is not shown correctly).
 		 */
 		if (!contentTypeFound) {
-			ColumbaLogger.log.fine(
+			LOG.fine(
 				"Content-Type header missing - constructing new one");
 			String contHeader = "Content-Type: " + guessBodyContentType(body);
 			headerBuf.append("MIME-Version: 1.0\n");
@@ -435,7 +439,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			return true;
 		} catch (Exception e) {
 			//ColumbaLogger.log.severe("Error saving converted message", e);
-			ColumbaLogger.log.severe("Error saving converted message: " 
+			LOG.severe("Error saving converted message: " 
 					+ e.getMessage());
 			return false;
 		}
@@ -566,7 +570,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 				line = reader.readLine();
 			} catch (IOException e) {
 				//ColumbaLogger.log.severe("Error while looking for charset", e);
-				ColumbaLogger.log.severe("Error while looking for charset: "
+				LOG.severe("Error while looking for charset: "
 						+ e.getMessage());
 			}
 			String charset = null;
@@ -615,7 +619,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 					//ColumbaLogger.log.severe(
 					//	"Error while looking for charset",
 					//	e);
-					ColumbaLogger.log.severe("Error while looking for charset: "
+					LOG.severe("Error while looking for charset: "
 							+ e.getMessage());
 					line = null; // this will terminate the loop
 				}
@@ -770,7 +774,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			}
 		} catch (IOException e) {
 			//ColumbaLogger.log.severe("Error parsing body for attachments", e);
-			ColumbaLogger.log.severe("Error parsing body for attachments: "
+			LOG.severe("Error parsing body for attachments: "
 					+ e.getMessage());
 			return null;
 		}

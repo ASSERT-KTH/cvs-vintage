@@ -1,7 +1,6 @@
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
@@ -12,6 +11,7 @@ import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
 import java.io.InputStream;
+import java.util.logging.Logger;
 
 
 /**
@@ -21,6 +21,10 @@ import java.io.InputStream;
  *
  */
 public class MarkMessageAsHamCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getAnonymousLogger();
+
     Folder srcFolder;
     protected FolderCommandAdapter adapter;
 
@@ -104,23 +108,23 @@ public class MarkMessageAsHamCommand extends FolderCommand {
 
         IPCHelper ipcHelper = new IPCHelper();
 
-        ColumbaLogger.log.info("creating process..");
+        LOG.info("creating process..");
         ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
             " --no-rebuild --ham --single");
 
-        ColumbaLogger.log.info("sending to stdin..");
+        LOG.info("sending to stdin..");
 
         ipcHelper.send(rawMessageSource);
 
         int exitVal = ipcHelper.waitFor();
 
-        ColumbaLogger.log.info("exitcode=" + exitVal);
+        LOG.info("exitcode=" + exitVal);
 
-        ColumbaLogger.log.info("retrieving output..");
+        LOG.info("retrieving output..");
 
         String result = ipcHelper.getOutputString();
 
-        ColumbaLogger.log.info("output=" + result);
+        LOG.info("output=" + result);
 
         ipcHelper.waitForThreads();
 

@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
@@ -24,11 +24,12 @@ import org.columba.core.facade.DialogFacade;
 
 /**
  * @author frd
- * 
- * To change this generated comment go to Window>Preferences>Java>Code
- * Generation>Code and Comments
  */
 public class MozillaMailImportFilter extends DefaultMailboxImporter {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail");
+
 
 	public MozillaMailImportFilter() {
 		super();
@@ -121,7 +122,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 
 		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
-			ColumbaLogger.log.fine("mailbox=" + file.getPath());
+			LOG.fine("mailbox=" + file.getPath());
 
 			if (file == null)
 				continue;
@@ -169,7 +170,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 				}
 			}
 
-			ColumbaLogger.log.fine(
+			LOG.fine(
 				"found mailbox="
 					+ file.getPath()
 					+ " - importing to folder="

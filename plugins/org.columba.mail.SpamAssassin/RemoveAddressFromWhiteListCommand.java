@@ -13,10 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -31,6 +32,10 @@ import org.columba.ristretto.message.Header;
 
  */
 public class RemoveAddressFromWhiteListCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getAnonymousLogger();
+
     /**
      *
      * @param references
@@ -80,7 +85,7 @@ public class RemoveAddressFromWhiteListCommand extends FolderCommand {
                 int exitVal = -1;
 
                 try {
-                    ColumbaLogger.log.info("creating process..");
+                    LOG.info("creating process..");
 
                     String cmd = "spamassassin -a --remove-addr-from-whitelist=\"" +
                         sender + "\"";
@@ -88,7 +93,7 @@ public class RemoveAddressFromWhiteListCommand extends FolderCommand {
 
                     exitVal = ipcHelper.waitFor();
 
-                    ColumbaLogger.log.info("exitcode=" + exitVal);
+                    LOG.info("exitcode=" + exitVal);
 
                     ipcHelper.waitForThreads();
                 } catch (Exception ex) {

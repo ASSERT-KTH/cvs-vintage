@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,15 +9,15 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -33,6 +32,10 @@ import org.columba.ristretto.message.Header;
  *
  */
 public class AddAddressToWhiteListCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getAnonymousLogger();
+
     /**
      * @param references
      */
@@ -78,7 +81,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
             int exitVal = -1;
 
             try {
-                ColumbaLogger.log.info("creating process..");
+                LOG.info("creating process..");
 
                 String cmd = "spamassassin -a --add-addr-to-whitelist=\"" +
                     sender + "\"";
@@ -86,7 +89,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
 
                 exitVal = ipcHelper.waitFor();
 
-                ColumbaLogger.log.info("exitcode=" + exitVal);
+                LOG.info("exitcode=" + exitVal);
 
                 ipcHelper.waitForThreads();
             } catch (Exception ex) {

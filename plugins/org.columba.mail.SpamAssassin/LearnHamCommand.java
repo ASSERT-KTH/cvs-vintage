@@ -1,7 +1,8 @@
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
@@ -25,6 +26,10 @@ import org.columba.mail.folder.Folder;
  *
  */
 public class LearnHamCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getAnonymousLogger();
+
     /**
 
              * @param references
@@ -59,19 +64,19 @@ public class LearnHamCommand extends FolderCommand {
 
         String path = srcFolder.getDirectoryFile().getAbsolutePath();
 
-        ColumbaLogger.log.info("creating process..");
+        LOG.info("creating process..");
         ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
             " --ham --dir " + path);
 
         int exitCode = ipcHelper.waitFor();
-        ColumbaLogger.log.info("exitcode=" + exitCode);
+        LOG.info("exitcode=" + exitCode);
 
         String output = ipcHelper.getOutputString();
-        ColumbaLogger.log.info("retrieving output: " + output);
+        LOG.info("retrieving output: " + output);
 
         worker.setDisplayText("SpamAssassin: " + output);
 
-        ColumbaLogger.log.info("wait for threads to join..");
+        LOG.info("wait for threads to join..");
         ipcHelper.waitForThreads();
     }
 }

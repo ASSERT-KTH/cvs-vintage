@@ -144,7 +144,6 @@ public class PluginManager {
 
         LOG.fine("id: " + id);
 
-        //ColumbaLogger.log.info("type: " + type);
         LOG.fine("jar: " + jar);
 
         XmlElement extension;

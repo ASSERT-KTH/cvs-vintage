@@ -4,7 +4,8 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-import org.columba.core.logging.ColumbaLogger;
+import java.util.logging.Logger;
+
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
@@ -18,6 +19,10 @@ import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
  */
 public class SpamAssassinPOP3PreProcessingFilterPlugin
     extends AbstractPOP3PreProcessingFilter {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getAnonymousLogger();
+
     protected IPCHelper ipcHelper;
 
     public SpamAssassinPOP3PreProcessingFilterPlugin(XmlElement rootElement) {
@@ -41,19 +46,19 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
         int exitVal = -1;
 
         try {
-            ColumbaLogger.log.info("creating process..");
+            LOG.info("creating process..");
 
             ipcHelper.executeCommand(cmd);
 
-            ColumbaLogger.log.info("sending to stdin..");
+            LOG.info("sending to stdin..");
 
             ipcHelper.send(rawString);
 
             exitVal = ipcHelper.waitFor();
 
-            ColumbaLogger.log.info("exitcode=" + exitVal);
+            LOG.info("exitcode=" + exitVal);
 
-            ColumbaLogger.log.info("retrieving output..");
+            LOG.info("retrieving output..");
             result = ipcHelper.getOutputString();
 
             ipcHelper.waitForThreads();
