@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -276,6 +276,17 @@ public final class JDBCEntityMetaData {
       // the table name may be overridden in importXml(jbosscmp-jdbc.xml)
       tableName = entityName.replace('.', '_');
       
+      // Warn: readTimeOut should be setup before cmp fields are created
+      // otherwise readTimeOut in cmp fields will be set to 0 by default
+      dataSourceName = null;
+      datasourceMapping = null;
+      createTable = false;
+      removeTable = false;
+      rowLocking = false;
+      primaryKeyConstraint = false;
+      readOnly = false;
+      readTimeOut = -1;
+
       // build the metadata for the cmp fields now in case there is
       // no jbosscmp-jdbc.xml
       List nonPkFieldNames = new ArrayList();
@@ -324,15 +335,6 @@ public final class JDBCEntityMetaData {
       // by the relation meta data
 
 
-      // other default values
-      dataSourceName = null;
-      datasourceMapping = null;
-      createTable = false;
-      removeTable = false;
-      rowLocking = false;
-      primaryKeyConstraint = false;
-      readOnly = false;
-      readTimeOut = -1;
       readAhead = JDBCReadAheadMetaData.DEFAULT;
       entityCommand = null;
    }
