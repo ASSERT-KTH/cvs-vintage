@@ -337,19 +337,11 @@ public class TableView extends TreeTable {
 					position);
 
 			} else {
-				String str = new String();
-				try {
-					str =
-						MailResourceLoader.getString(
+				String str = MailResourceLoader.getString(
 							"header",
 							name.toLowerCase());
 
-				} catch (MissingResourceException ex) {
-					System.out.println(ex.getMessage());
-
-				}
-
-				if (str.length() == 0)
+				if (str.equals("FIX ME!")) {
 					registerRenderer(
 						name,
 						new HeaderTableCommonRenderer(getTree(), name),
@@ -360,8 +352,7 @@ public class TableView extends TreeTable {
 						size,
 						false,
 						position);
-
-				else
+                                } else {
 					registerRenderer(
 						name,
 						new HeaderTableCommonRenderer(getTree(), str),
@@ -372,10 +363,9 @@ public class TableView extends TreeTable {
 						size,
 						false,
 						position);
-
+                                }
 			}
 		}
-
 	}
 
 	public void registerRenderer(
@@ -495,7 +485,6 @@ public class TableView extends TreeTable {
 	}
 	*/
 	public MessageNode[] getSelectedNodes() {
-
 		int[] rows = null;
 		MessageNode[] nodes = null;
 
@@ -507,9 +496,7 @@ public class TableView extends TreeTable {
 			nodes[i] = (MessageNode) treePath.getLastPathComponent();
 
 		}
-
 		return nodes;
-
 	}
 
 	public MessageNode getMessagNode(Object uid) {
@@ -519,5 +506,4 @@ public class TableView extends TreeTable {
 	protected MouseInputListener createMouseInputListener() {
 		return null;
 	}
-
 }
