@@ -36,6 +36,7 @@
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
 
+#set ($queryString = $data.Parameters.getString("queryString",""))
 #if ($queryString)
   <input type="hidden" name="queryString" value="$queryString" />
 #end
