@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.83 2003/09/04 20:18:13 thierrylach Exp $
+// $Id: Main.java,v 1.84 2003/09/21 13:16:11 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,7 @@ import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionOpenProject;
 import org.argouml.uml.ui.ActionExit;
 import org.argouml.util.FileConstants;
@@ -349,9 +350,10 @@ public class Main {
         }
 
         pb.setVisible(true);
-        Object model = p.getUserDefinedModels().elementAt(0);
-        Object diag = p.getDiagrams().elementAt(0);       
-        NavigatorPane.getInstance().setSelection(model, diag);
+        
+        // set the initial target
+        Object diag = p.getDiagrams().elementAt(0); 
+        TargetManager.getInstance().setTarget(diag);
             
         st.mark("close splash");
         if (doSplash) {
