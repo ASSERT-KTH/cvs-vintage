@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.5 2000/04/03 11:12:10 mode Exp $
- * $Revision: 1.5 $
- * $Date: 2000/04/03 11:12:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.6 2000/04/05 12:16:26 nacho Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/04/05 12:16:26 $
  *
  * ====================================================================
  * 
@@ -222,11 +222,12 @@ public class PluginGenerator
 	writer.indent ();
 	writer.print ("String [][] _jspxNSString = null;"); 
 	writer.println ();
+	writer.indent ();
+	writer.print ("int i = 0;");
+	writer.println ();
 	if (param != null) {
 	    e = param.keys ();
 	    writer.indent ();
-	    writer.print ("int i = 0;");
-	    writer.println ();
 	    writer.indent ();
 	    writer.print ("_jspxNSString = new String [");
 	    Integer temp = new Integer (param.size ());
