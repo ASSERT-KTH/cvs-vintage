@@ -22,14 +22,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 
-import org.columba.core.gui.config.themes.*;
-
+import org.columba.core.gui.config.themes.FontPanel;
+import org.columba.core.gui.config.themes.ThemePanel;
+import org.columba.core.gui.themes.ThemeSwitcher;
+import org.columba.core.gui.util.FontProperties;
 import org.columba.mail.util.MailResourceLoader;
 
-public class GeneralOptionsDialog extends JDialog implements ActionListener
-{
+public class GeneralOptionsDialog extends JDialog implements ActionListener {
 	JTabbedPane centerPane;
 	GeneralPanel generalPanel;
 	ComposerPanel composerPanel;
@@ -40,50 +48,47 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 	JButton cancelButton;
 	boolean result;
 
-	public GeneralOptionsDialog( JFrame frame )
-	{
-		super( frame, MailResourceLoader.getString(
-                                    "dialog",
-                                    "general",
-                                    "dialog_title"), true );
+	public GeneralOptionsDialog(JFrame frame) {
+		super(
+			frame,
+			MailResourceLoader.getString("dialog", "general", "dialog_title"),
+			true);
 		initComponents();
+		
+		updateComponents(true);
+		
 		pack();
 		setLocationRelativeTo(null);
 	}
 
-	public void updateComponents( boolean b )
-	{
-		generalPanel.updateComponents( b );
-		composerPanel.updateComponents( b );
-		themePanel.updateComponents( b );
-		fontPanel.updateComponents( b );
+	public void updateComponents(boolean b) {
+		generalPanel.updateComponents(b);
+		composerPanel.updateComponents(b);
+		themePanel.updateComponents(b);
+		fontPanel.updateComponents(b);
 	}
 
-	protected void initComponents()
-	{
+	protected void initComponents() {
 		JPanel contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout(0,0));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		centerPane = new JTabbedPane();
 		generalPanel = new GeneralPanel();
-		centerPane.add(generalPanel, MailResourceLoader.getString(
-                                    "dialog",
-                                    "general",
-                                    "general"));
+		centerPane.add(
+			generalPanel,
+			MailResourceLoader.getString("dialog", "general", "general"));
 		composerPanel = new ComposerPanel();
 		//LOCALIZE
-		centerPane.add( composerPanel, "Composer" );
+		centerPane.add(composerPanel, "Composer");
 		themePanel = new ThemePanel();
-		centerPane.add(themePanel, MailResourceLoader.getString(
-                                    "dialog",
-                                    "general",
-                                    "themes_icons"));
+		centerPane.add(
+			themePanel,
+			MailResourceLoader.getString("dialog", "general", "themes_icons"));
 		fontPanel = new FontPanel();
-		centerPane.add(fontPanel, MailResourceLoader.getString(
-                                    "dialog",
-                                    "general",
-                                    "fonts"));
+		centerPane.add(
+			fontPanel,
+			MailResourceLoader.getString("dialog", "general", "fonts"));
 		contentPane.add(centerPane, BorderLayout.CENTER);
-		JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
+		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
@@ -91,7 +96,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		JButton cancelButton =
+			new JButton(MailResourceLoader.getString("global", "cancel"));
 		//mnemonic
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
@@ -100,31 +106,34 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 		setContentPane(contentPane);
 		getRootPane().setDefaultButton(okButton);
-		getRootPane().registerKeyboardAction(this,"CANCEL",
-						KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),
-						JComponent.WHEN_IN_FOCUSED_WINDOW);
+		getRootPane().registerKeyboardAction(
+			this,
+			"CANCEL",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
-	public void actionPerformed(ActionEvent event)
-	{
+	public void actionPerformed(ActionEvent event) {
 		String action = event.getActionCommand();
 
-		if (action.equals("OK"))
-		{
+		if (action.equals("OK")) {
 			result = true;
 			setVisible(false);
 
-		}
-		else if (action.equals("CANCEL"))
-		{
+			updateComponents(false);
+
+			ThemeSwitcher.setTheme();
+			FontProperties.setFont();
+			
+
+		} else if (action.equals("CANCEL")) {
 			result = false;
 			setVisible(false);
 
 		}
 	}
 
-	public boolean getResult()
-	{
+	public boolean getResult() {
 		return result;
 	}
 }

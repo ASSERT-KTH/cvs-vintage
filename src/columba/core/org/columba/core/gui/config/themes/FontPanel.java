@@ -26,19 +26,20 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class FontPanel extends JPanel implements ActionListener
-{
-        private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
-        
+public class FontPanel extends JPanel implements ActionListener {
+	private static final String RESOURCE_PATH = "org.columba.mail.i18n.dialog";
+
 	private JLabel mainFontLabel;
 	private JTextField mainFontTextField;
 	private JButton mainFontButton;
@@ -47,60 +48,58 @@ public class FontPanel extends JPanel implements ActionListener
 	private JTextField textFontTextField;
 	private JButton textFontButton;
 
+	private JCheckBox overwriteCheckBox;
+
 	private Font mainFont;
 	private Font textFont;
 
-	public FontPanel()
-	{
+	public FontPanel() {
 		initComponent();
 	}
 
-	public Font getMainFont()
-	{
+	public Font getMainFont() {
 		return mainFontTextField.getFont();
 	}
 
-	public Font getTextFont()
-	{
+	public Font getTextFont() {
 		return textFontTextField.getFont();
 	}
 
-
-	public void updateComponents( boolean b )
-	{
+	public void updateComponents(boolean b) {
 		GuiItem item = Config.getOptionsConfig().getGuiItem();
 
 		mainFont = item.getMainFont();
 		textFont = item.getTextFont();
 
-		if (b)
-		{
+		if (b) {
 			mainFontTextField.setFont(mainFont);
 			mainFontTextField.setText(mainFont.getFontName());
 
 			textFontTextField.setFont(textFont);
 			textFontTextField.setText(textFont.getFontName());
-		}
-		else
-		{
-			item.set("textfont","name", getTextFont().getName());
-			item.set("textfont","size", getTextFont().getSize());
-			item.set("mainfont","name", getMainFont().getName());
-			item.set("mainfont","size", getMainFont().getSize());
-			
+
+			overwriteCheckBox.setSelected(
+				item.getBoolean("mainfont", "overwrite"));
+
+		} else {
+			item.set("textfont", "name", getTextFont().getName());
+			item.set("textfont", "size", getTextFont().getSize());
+			item.set("mainfont", "name", getMainFont().getName());
+			item.set("mainfont", "size", getMainFont().getSize());
+
+			item.set("mainfont", "overwrite", overwriteCheckBox.isSelected());
 		}
 	}
 
-	protected void initComponent()
-	{
-		setLayout( new BorderLayout() );
-		setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
+	protected void initComponent() {
+		setLayout(new BorderLayout());
+		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
 		JPanel fontPanel = new JPanel();
-		fontPanel.setLayout( layout );
+		fontPanel.setLayout(layout);
 
 		/*
 		JPanel mainFontPanel = new JPanel();
@@ -111,49 +110,74 @@ public class FontPanel extends JPanel implements ActionListener
 
 		c.gridx = 0;
 		c.gridy = 0;
+		c.insets = new Insets(0, 10, 0, 0);
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 3;
+		c.weightx = 1.0;
+
+		overwriteCheckBox =
+			new JCheckBox(
+				GlobalResourceLoader.getString(
+					RESOURCE_PATH,
+					"general",
+					"overwrite_main_font"));
+
+		fontPanel.add(overwriteCheckBox);
+
+		c.gridx = 0;
+		c.gridy = 1;
+		c.insets = new Insets(0, 0, 0, 0);
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		//c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
 
-		mainFontLabel = new JLabel(GlobalResourceLoader.getString(
-                                            RESOURCE_PATH,
-                                            "general",
-                                            "main_font"));
+		mainFontLabel =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_PATH,
+					"general",
+					"main_font"));
+		//fontPanel.add(mainFontLabel);
+		layout.setConstraints(mainFontLabel, c);
 		fontPanel.add(mainFontLabel);
-		layout.setConstraints( mainFontLabel, c );
-		fontPanel.add( mainFontLabel );
 
 		//mainFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
 		mainFontTextField = new JTextField(30);
-		c.insets = new Insets(0,10,0,0);
+		c.insets = new Insets(0, 10, 0, 0);
 		c.gridx = 1;
+		c.gridy = 1;
 		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		layout.setConstraints( mainFontTextField, c );
+		//c.gridwidth = GridBagConstraints.RELATIVE;
+		c.gridwidth = 1;
+		layout.setConstraints(mainFontTextField, c);
 		fontPanel.add(mainFontTextField);
-
 
 		//mainFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		mainFontButton = new JButton(GlobalResourceLoader.getString(
-                                            RESOURCE_PATH,
-                                            "general",
-                                            "choose"));
+		mainFontButton =
+			new JButton(
+				GlobalResourceLoader.getString(
+					RESOURCE_PATH,
+					"general",
+					"choose"));
 		mainFontButton.setActionCommand("MAINFONT");
 		mainFontButton.addActionListener(this);
 		c.gridx = 2;
+		c.gridy = 1;
 		c.weightx = 0.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints( mainFontButton, c );
-		fontPanel.add( mainFontButton );
+		//c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridwidth = 1;
+		layout.setConstraints(mainFontButton, c);
+		fontPanel.add(mainFontButton);
 		//mainFontPanel.add(mainFontButton);
 
 		//mainFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
 		//fontPanel.add(mainFontPanel);
-
 
 		/*
 		JPanel textFontPanel = new JPanel();
@@ -162,77 +186,85 @@ public class FontPanel extends JPanel implements ActionListener
 		//textFontPanel.setAlignmentX(0);
 		 * */
 
-		textFontLabel = new JLabel(GlobalResourceLoader.getString(
-                                            RESOURCE_PATH,
-                                            "general",
-                                            "text_font"));
+		textFontLabel =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_PATH,
+					"general",
+					"text_font"));
 		c = new GridBagConstraints();
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 1;
 		c.weightx = 0.0;
 
-		layout.setConstraints( textFontLabel, c );
+		layout.setConstraints(textFontLabel, c);
 		fontPanel.add(textFontLabel);
 
 		//textFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
 		textFontTextField = new JTextField(30);
 		c.gridx = 1;
+		c.gridy = 2;
 		c.weightx = 1.0;
-		c.insets = new Insets(0,10,0,0);
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		layout.setConstraints( textFontTextField, c );
+		c.insets = new Insets(0, 10, 0, 0);
+		//c.gridwidth = GridBagConstraints.RELATIVE;
+		c.gridwidth = 1;
+		layout.setConstraints(textFontTextField, c);
 		fontPanel.add(textFontTextField);
 
 		//textFontPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		textFontButton = new JButton(GlobalResourceLoader.getString(
-                                            RESOURCE_PATH,
-                                            "general",
-                                            "choose"));
+		textFontButton =
+			new JButton(
+				GlobalResourceLoader.getString(
+					RESOURCE_PATH,
+					"general",
+					"choose"));
 		textFontButton.setActionCommand("TEXTFONT");
 		textFontButton.addActionListener(this);
 		c.gridx = 2;
+		c.gridy = 2;
 		c.weightx = 0.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
+		//c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridwidth = 1;
 		c.gridheight = GridBagConstraints.REMAINDER;
-		layout.setConstraints( textFontButton, c );
+		layout.setConstraints(textFontButton, c);
 		fontPanel.add(textFontButton);
 
 		//textFontPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
 
 		//fontPanel.add(textFontPanel);
 
-		add(fontPanel, BorderLayout.NORTH );
+		add(fontPanel, BorderLayout.NORTH);
+
+		JLabel restartLabel =
+			new JLabel(
+				"You have to restart for the changes to take effect.",
+				SwingConstants.CENTER);
+		add(restartLabel, BorderLayout.SOUTH);
 	}
 
-	public void actionPerformed( ActionEvent ev )
-	{
+	public void actionPerformed(ActionEvent ev) {
 		String command = ev.getActionCommand();
 
-		if (command.equals("MAINFONT"))
-		{
+		if (command.equals("MAINFONT")) {
 			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
 			fontDialog.showDialog();
 
-			if (fontDialog.getStatus() == 0)
-			{
+			if (fontDialog.getStatus() == 0) {
 				mainFont = fontDialog.getSelectedFont();
 				mainFontTextField.setFont(mainFont);
 				mainFontTextField.setText(mainFont.getFontName());
 			}
 
-		}
-		else if (command.equals("TEXTFONT"))
-		{
+		} else if (command.equals("TEXTFONT")) {
 			FontSelectionDialog fontDialog = new FontSelectionDialog(null);
 			fontDialog.showDialog();
 
-			if (fontDialog.getStatus() == 0)
-			{
+			if (fontDialog.getStatus() == 0) {
 				textFont = fontDialog.getSelectedFont();
 				textFontTextField.setFont(textFont);
 				textFontTextField.setText(textFont.getFontName());

@@ -27,6 +27,7 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.themes.ThemeSwitcher;
+import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
@@ -130,6 +131,12 @@ public class Main {
     MainInterface.pluginManager.initPlugins();
     
 	ThemeSwitcher.setTheme();
+	
+	// init font configuration
+	new FontProperties();
+	
+	// set application wide font
+	FontProperties.setFont();
 
     frame.advance();
 
