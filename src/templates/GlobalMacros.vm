@@ -65,7 +65,7 @@
 #macro ( attrValueErrorMsg $attrValue $fieldName )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #if ( !$attrInput.get($fieldName).isValid() )
-        <font color="red">$attrInput.get($fieldName).Message</font>
+        <p><font color="red">$attrInput.get($fieldName).Message</font></p>
     #end
 #end
 
