@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.116 2002/06/06 20:45:20 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.117 2002/06/06 20:55:57 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -307,26 +307,7 @@ public class ScarabModule
     public List getRModuleIssueTypes()
         throws TorqueException
     {
-        List result = null;
-        Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
-        if ( obj == null ) 
-        {
-            Criteria crit = new Criteria();
-            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-                .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                         IssueTypePeer.ISSUE_TYPE_ID)
-                .add(IssueTypePeer.PARENT_ID, 0)
-                .add(IssueTypePeer.DELETED, 0)
-                .addAscendingOrderByColumn(
-                    RModuleIssueTypePeer.PREFERRED_ORDER);
-            result = super.getRModuleIssueTypes(crit);
-            ScarabCache.put(result, this, GET_R_MODULE_ISSUE_TYPES);
-        }
-        else 
-        {
-            result = (List) obj;
-        }
-        return result;
+        return super.getRModuleIssueTypes("preferredOrder","asc");
     }
 
     /**
