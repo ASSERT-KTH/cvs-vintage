@@ -73,14 +73,25 @@ import java.net.*;
  *  
  */
 public class HttpClient {
-    static String CRLF="\r\n";
-    String host="localhost";
-    int port=8080;
+    // Defaults
+    static String defaultHost="localhost";
+    static int defaultPort=8080;
+    static int defaultDebug=0;
+    static String defaultProtocol="HTTP/1.0";
 
-    int debug=0;
+    static Hashtable clients=new Hashtable();
+    
+    // Instance variables
+
+    String id;
+    // Instance variables
+    String host=defaultHost;
+    int port=defaultPort;
+
+    int debug=defaultDebug;
 
     String method="GET";
-    String protocol="HTTP/1.0";
+    String protocol=defaultProtocol;
     String path;
     
     String requestLine;
@@ -92,8 +103,23 @@ public class HttpClient {
     
     // Response resulted from this request
     Response response=new Response();
+    static String CRLF="\r\n";
 
     public HttpClient() {
+    }
+
+    /** Return one of the "named" clients that have been executed so far.
+     */
+    public static Hashtable getHttpClients() {
+	return clients;
+    }
+
+    /** Set an unique id to this request. This allows it to be
+     *  referenced later, for complex tests/matchers that look
+     * 	at multiple requests.
+     */
+    public void setId(String id) {
+	this.id=id;
     }
 
     /** Server that will receive the request
@@ -173,6 +199,14 @@ public class HttpClient {
     }
     
     public String getRequestLine( ) {
+	if( requestLine==null ) {
+	    prepareRequest(); 
+	    int idx=fullRequest.indexOf("\r");
+	    if( idx<0 )
+		requestLine=fullRequest;
+	    else
+		requestLine=fullRequest.substring(0, idx );
+	}
 	return requestLine;
     }
     
@@ -206,12 +240,13 @@ public class HttpClient {
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
 	}
+	if( id!=null )
+	    clients.put( id, this );
     }
 
     /** 
      */
     private void prepareRequest() 
-	throws Exception
     {
 	// explicitely set
 	if( fullRequest != null ) return;

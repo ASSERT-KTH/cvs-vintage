@@ -161,6 +161,18 @@ public class DefaultMatcher {
        Header.parseHeadersAsString( s, expectHeaders );
     }
 
+    public Hashtable getExpectHeaders() {
+	if( headerVector.size() > 0 ) {
+	    Enumeration en=headerVector.elements();
+	    while( en.hasMoreElements()) {
+		Header rh=(Header)en.nextElement();
+		expectHeaders.put( rh.getName(), rh );
+	    }
+	    headerVector=new Vector();
+	}
+	return expectHeaders;
+    }
+    
     /** Verify that response match the string
      */
     public void setResponseMatch( String s ) {
@@ -171,6 +183,51 @@ public class DefaultMatcher {
      */
     public void setReturnCode( String s ) {
 	this.returnCode=s;
+    }
+
+    /** A test description of the test beeing made
+     */
+    public String getTestDescription() {
+	StringBuffer desc=new StringBuffer();
+	boolean needAND=false;
+	if( returnCode != null ) {
+	    desc.append("( returnCode matches '" + returnCode + "') ");
+	    needAND=true;
+	}
+
+	if( getExpectHeaders().size() > 0 ) {
+	    Enumeration e=expectHeaders.keys();
+	    while( e.hasMoreElements()) {
+		if( ! needAND ) needAND=true;
+		if( needAND ) desc.append( " && " );
+		String key=(String)e.nextElement();
+		Header h=(Header)expectHeaders.get(key);
+		desc.append("( responseHeader '" + h.getName() +
+			    ": " + h.getValue() + "' ) ");
+	    }
+	}
+
+	if( responseMatch != null ) {
+	    if( ! needAND ) needAND=true;
+	    if( needAND ) desc.append( " && " );
+
+	    desc.append("( responseBody matches '"+ responseMatch + "') ");
+	}
+
+	if( goldenFile != null ) {
+	    if( ! needAND ) needAND=true;
+	    if( needAND ) desc.append( " && " );
+
+	    desc.append("( responseBody " );
+	    if( exactMatch )
+		desc.append( "equals file '" );
+	    else
+		desc.append( "like file '");
+	    desc.append( goldenFile + "') ");
+	}
+
+	desc.append( " == " ).append( magnitude );
+	return desc.toString();
     }
 
     // -------------------- Execute the request --------------------
@@ -207,12 +264,7 @@ public class DefaultMatcher {
 	    }
 	}
 
-	Enumeration en=headerVector.elements();
-	while( en.hasMoreElements()) {
-	    Header rh=(Header)en.nextElement();
-	    expectHeaders.put( rh.getName(), rh );
-	}
-
+	getExpectHeaders();
 	if( expectHeaders.size() > 0 ) {
 	    // Check if we got the expected headers
 	    if(headers==null) {

@@ -45,5 +45,62 @@ Debug: <input type="checkbox" name="debug" value="10"><br>
 <adm:gtest testFile="WEB-INF/test-tomcat.xml" 
 	   testApp="/test" 
 	   target='<%= request.getParameter("target") %>' 
-           debug='<%= request.getParameter("debug") %>' />
+           debug='<%= request.getParameter("debug") %>' 
+           outputType='none' />
 
+<% // Test completed, display the results ( outType=none means
+   // Gtest doesn't generate any output ( but we have to wait untill
+   // it's done ), use 'html' for "interactive" results
+%>
+
+<% // -------------------- Failures -------------------- %>
+<h1>FAILED Tests</h1>
+
+<adm:iterate name="failures" enumeration="<%= gtestTestFailures.elements() %>" 
+               type="org.apache.tomcat.util.test.GTest" >
+<% // Need more tags - if, etc 
+%>
+<a href='<%= failures.getHttpClient().getURI() %>'> 
+<font color='red'> FAIL </font></a> ( <%= failures.getDescription() %> )
+    <%= failures.getHttpClient().getRequestLine() %>
+<br>
+TEST: <%= failures.getMatcher().getTestDescription() %>
+<br>
+<b>Request: </b>
+<pre>
+  <%= failures.getHttpClient().getFullRequest() %>
+</pre>
+
+<b>Message: </b>
+<pre>
+  <%= failures.getMatcher().getMessage() %>
+</pre>
+
+<b>Response status: </b> 
+<%= failures.getHttpClient().getResponse().getResponseLine() %>
+<br>
+<b>Response headers: </b>
+ (I'm not sure how to do embeded iterations, need JSP expert )
+<br>
+
+<b>Response body: </b>
+<pre>
+<%= failures.getHttpClient().getResponse().getResponseBody() %>
+</pre>
+
+</adm:iterate>
+
+<% // -------------------- Success story -------------------- %>
+
+<h1>PASSED Tests</h1>
+
+<adm:iterate name="success" enumeration="<%= gtestTestSuccess.elements() %>" 
+               type="org.apache.tomcat.util.test.GTest" >
+
+<a href='<%= success.getHttpClient().getURI() %>'> 
+OK</a> ( <%= success.getDescription() %> ) 
+    <%= success.getHttpClient().getRequestLine() %>
+<br>
+TEST: <%= success.getMatcher().getTestDescription() %>
+<br>
+</adm:iterate>

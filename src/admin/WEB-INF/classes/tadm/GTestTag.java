@@ -36,7 +36,17 @@ public class GTestTag extends TagSupport {
 	    String base=targetCtx.getRealPath("/");
 	    
 	    runTest( base );
-	    //pageContext.setAttribute("cm", cm);
+
+	    pageContext.setAttribute("gtestTestResults",
+				     GTest.getTestResults());
+	    pageContext.setAttribute("gtestTestFailures",
+				     GTest.getTestFailures());
+	    pageContext.setAttribute("gtestTestSuccess",
+				     GTest.getTestSuccess());
+	    pageContext.setAttribute("gtestTestProperties",
+				     GTest.getTestProperties());
+	    pageContext.setAttribute("gtestHttpClients",
+				     HttpClient.getHttpClients());
 
 	} catch (Exception ex ) {
 	    ex.printStackTrace();
@@ -64,7 +74,8 @@ public class GTestTag extends TagSupport {
     String target;
     String testApp;
     String debug;
-    
+    String outputType="html";
+
     /** Set the name of the test.xml, relative to the base dir.
      *  For example, /WEB-INF/test-tomcat.xml
      */
@@ -75,7 +86,7 @@ public class GTestTag extends TagSupport {
     /** Set the target - a subset of tests to be run
      */
     public void setTarget( String s ) {
-	System.out.println("Setting target " + s );
+	//	System.out.println("Setting target " + s );
 	target=s;
     }
 
@@ -89,6 +100,10 @@ public class GTestTag extends TagSupport {
     public void setDebug( String s ) {
 	debug=s;
     }
+
+    public void setOutputType( String s ) {
+	outputType=s;
+    }
     
     // -------------------- Implementation methods --------------------
     
@@ -96,17 +111,24 @@ public class GTestTag extends TagSupport {
 	PrintWriter out=pageContext.getResponse().getWriter();
 	try {
 	    out.flush();
-	    out.println("Running test " + base + " " + testFileName + " "
-			       + target + "</br>" );
+	    // 	  out.println("Running test " + base + " " + testFileName + " "
+	    // 			       + target + "</br>" );
 	    File testFile=new File( base + testFileName);
 
 
-	    // old task
-	    org.apache.tomcat.task.GTest.setDefaultWriter( out );
-	    org.apache.tomcat.task.GTest.setHtmlMode( true );
+	    // reset test repositories
+	    GTest.getTestResults().setSize(0);
+	    GTest.getTestFailures().setSize(0);
+	    GTest.getTestSuccess().setSize(0);
+	    GTest.getTestProperties().clear();
+	    HttpClient.getHttpClients().clear();
+	    
+	    // 	    // old task
+	    // 	    org.apache.tomcat.task.GTest.setDefaultWriter( out );
+	    // 	    org.apache.tomcat.task.GTest.setHtmlMode( true );
 	    // new one
 	    GTest.setDefaultWriter(out);
-	    GTest.setDefaultOutput("html");
+	    GTest.setDefaultOutput("none"); // external formatting
 	    if(debug!=null)
 		GTest.setDefaultDebug(Integer.valueOf( debug ).intValue());
 	    
@@ -133,7 +155,7 @@ public class GTestTag extends TagSupport {
 	    ex.printStackTrace(out);
 	    if( ex instanceof BuildException ) {
 		Throwable ex1=((BuildException)ex).getException();
-		System.out.println("Root cause: " );
+		out.println("Root cause: " );
 		if( ex1!=null)
 		    ex1.printStackTrace(out);
 	    }

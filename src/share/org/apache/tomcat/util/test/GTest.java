@@ -71,20 +71,29 @@ import java.net.*;
     This class is using the well-known ant patterns.
 */
 public class GTest  {
+    // Defaults
+    static PrintWriter defaultOutput=new PrintWriter(System.out);
+    static String defaultOutType="text";
+    static int defaultDebug=0;
+    static boolean failureOnly=false;
 
+    // all test results will be available
+    static Vector testResults=new Vector();
+    static Vector testFailures=new Vector();
+    static Vector testSuccess=new Vector();
+    static Hashtable testProperties=new Hashtable();
+
+    // Instance variables
+    
     HttpClient httpClient=new HttpClient();
     DefaultMatcher matcher=new DefaultMatcher();
     
     String description="No description";
 
-    static PrintWriter defaultOutput=new PrintWriter(System.out);
-    static String defaultOutType="text";
-    static int defaultDebug=0;
-    
     PrintWriter out=defaultOutput;
     String outType=defaultOutType;
     int debug=defaultDebug;
-    boolean failureOnly=false;
+    boolean result=false;
     
     public GTest() {
 	matcher.setDebug( debug );
@@ -101,8 +110,39 @@ public class GTest  {
 	defaultOutput=pw;
     }
 
+    /** @deprecated. Output will be text or none, with external
+	formater ( or event ? - it would be nice, but too serious, it's
+	still a simple test runner )
+    */
     public static void setDefaultOutput( String s ) {
 	defaultOutType=s;
+    }
+
+    /** Vector of GTest elements, containing all test instances
+     *  that were run.
+     */
+    public static Vector getTestResults() {
+	return testResults;
+    }
+
+    /** Vector of GTest elements, containing all test instances
+     *  that were run and failed.
+     */
+    public static Vector getTestFailures() {
+	return testFailures;
+    }
+
+    /** Vector of GTest elements, containing all test instances
+     *  that were run and failed.
+     */
+    public static Vector getTestSuccess() {
+	return testSuccess;
+    }
+
+    /** Various global test propertis
+     */
+    public static Hashtable getTestProperties() {
+	return testProperties;
     }
 
     // -------------------- GTest behavior --------------------
@@ -134,6 +174,15 @@ public class GTest  {
 
     public void addDefaultMatcher( DefaultMatcher m ) {
 	matcher=m;
+    }
+    // -------------------- Getters --------------------
+
+    public HttpClient getHttpClient() {
+	return httpClient;
+    }
+    
+    public DefaultMatcher getMatcher() {
+	return matcher;
     }
     
     // -------------------- Local properties --------------------
@@ -236,7 +285,7 @@ public class GTest  {
 
 	    matcher.setResponse( resp );
 	    matcher.execute();
-	    boolean result=matcher.getResult();
+	    result=matcher.getResult();
 
 	    // don't print OKs
 	    if( result && failureOnly ) return;
@@ -251,6 +300,13 @@ public class GTest  {
 	    // no exception should be thrown in normal operation
 	    ex.printStackTrace();
 	}
+
+	// after execute() is done, add the test result to the list
+	testResults.addElement( this );
+	if( !result )
+	    testFailures.addElement( this );
+	else
+	    testSuccess.addElement( this );
     }
 
     
