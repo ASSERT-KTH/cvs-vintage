@@ -139,6 +139,7 @@
 			<exclude name="run_source_jdk13.bat"/>
 			<exclude name="run_source_jdk13.sh"/>
 			<exclude name="**/*.zip"/>
+			<exclude name="docs/**"/>
 			<exclude name="res/**"/>
 			<exclude name="src/**"/>
 			<manifest>
