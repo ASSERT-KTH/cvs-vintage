@@ -30,14 +30,12 @@ public class AddressbookFrameController extends AbstractFrameController {
 	protected TreeController tree;
 	protected TableController table;
 
+
 	/**
 	 * Constructor for AddressbookController.
 	 */
 	public AddressbookFrameController(ViewItem viewItem) {
 		super( "Addressbook", viewItem);
-		
-		
-		
 	}
 	
 	/* (non-Javadoc)
