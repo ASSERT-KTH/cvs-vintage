@@ -46,7 +46,7 @@
 <td> <select name="$moveIssueGroup.Action.Key" >
 <option value="copy"
      #if ($moveIssueGroup.Action.Value.equals("copy")) selected="selected" #end >Copy</option>
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ITEM__DELETE, $scarabR.CurrentModule)))
 <option value="move" 
      #if ($moveIssueGroup.Action.Value.equals("move")) selected="selected" #end >Move</option>
 #end

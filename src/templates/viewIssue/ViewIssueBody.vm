@@ -14,7 +14,7 @@
 <input type="hidden" name="tab" value="$tab" />
 
 <div class="functnbar">
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ITEM__DELETE, $scarabR.CurrentModule)))
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
 #if ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule))
@@ -52,7 +52,7 @@
 #end
 
 <div class="functnbar2">
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ITEM__DELETE, $scarabR.CurrentModule)))
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
 #if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
