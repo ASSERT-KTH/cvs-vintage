@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import org.columba.mail.filter.plugins.AbstractFilter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy
@@ -130,8 +132,7 @@ public abstract class AbstractSearchEngine {
 			attributes[j] = criteria.get((String) args[j]);
 		}
 
-		boolean b = instance.process(attributes, folder, uid, worker);
-		return b;
+		return instance.process(attributes, folder, uid, worker);
 	}
 
 	protected LinkedList processCriteria(
@@ -394,7 +395,10 @@ public abstract class AbstractSearchEngine {
 		WorkerStatusController worker)
 		throws Exception {
 
-		worker.setDisplayText("Searching...");
+		worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "search"));
 		
 		return searchMessages(filter, null, worker);
 	}
