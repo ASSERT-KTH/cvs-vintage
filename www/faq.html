@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.18 2003/02/01 02:02:58 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.19 2003/02/13 00:41:29 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -204,6 +204,42 @@ How: Please see our <a href="http://scarab.tigris.org/project_members.html">Gett
 <p>
 Why: Because the need for a first class issue tracking system that 
 is open source is badly needed.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>How do I hook Scarab up to (or behind) Apache?</strong>
+</p>
+
+<p>
+Here is my configuration for the 
+<a href="http://issues.whichever.com/">Scarab Live Server</a>:
+</p>
+
+<pre>
+NameVirtualHost 157.22.245.3
+&lt;VirtualHost 157.22.245.3&gt;
+    ServerName issues.whichever.com
+    RewriteEngine on
+    RewriteRule /(.+) http://issues.whichever.com:8081/$1 [P]
+    ProxyPassReverse / http://issues.whichever.com:8081/s/
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>
+The above might not be optimal or even correct, but it works for
+me. You will need to have mod_rewrite and mod_proxy enabled on your
+server. A 'faster' method of doing the same thing would be to use
+Tomcat's mod_jk/mod_webapp with some rewrite rules (to get the short
+url's), but I'm not doing that, so I don't have configuration to show
+for it. Contributions welcome.
+</p>
+
+<p>
+For hiding Scarab behind Apache SSL, a similar setup as above would
+work, you would just want to make sure to listen to the https port 443
+in the VirtualHost declaration.
 </p>
 
 <hr noshade="noshade" size="1" />
