@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.47 2001/09/25 05:22:44 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.48 2001/09/25 19:24:23 jon Exp $ -->
 
 <app-data>
 <database>
@@ -494,7 +494,7 @@
 </table>
 
 <!--
-    Modification information for table.
+    Modification information for table. Not currently used.
 -->
 <table name="SCARAB_MODIFICATION" idMethod="idbroker" javaName="Modification">
     <!--
