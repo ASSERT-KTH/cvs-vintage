@@ -45,8 +45,6 @@ import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.jms.asf.ServerSessionPoolFactory;
 
-import org.exolab.jms.client.JmsServerSessionPool;
-
 import org.w3c.dom.Element;
 
 import javax.management.MBeanServerFactory;
@@ -62,7 +60,7 @@ import javax.management.ObjectName;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.11 $
+ *      @version $Revision: 1.12 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
