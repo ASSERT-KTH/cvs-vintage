@@ -24,7 +24,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -126,13 +126,22 @@ public abstract class BeanMetaData extends MetaData {
 	}
 	
 	public byte getMethodTransactionType(String methodName, Class[] params, boolean remote) {
+		
+		// default value
+		byte result = TX_UNKNOWN;
+
 		Iterator iterator = getTransactionMethods();
 		while (iterator.hasNext()) {
 			MethodMetaData m = (MethodMetaData)iterator.next();
-			if (m.patternMatches(methodName, params, remote)) return m.getTransactionType();
+			if (m.patternMatches(methodName, params, remote)) {
+				result = m.getTransactionType();
+				
+				// if it is an exact match, break, if it is the wildcard continue to look for a finer match
+				if (!"*".equals(m.getMethodName())) break;
+			}
 		}
-		// not found
-		return TX_UNKNOWN;
+
+		return result;
 	}
 
    // d.s.> PERFORMANCE !!! 
