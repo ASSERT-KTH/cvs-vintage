@@ -1,5 +1,5 @@
 
-// $Id: TableModelAttr.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: TableModelAttr.java,v 1.7 2003/08/31 15:19:41 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,16 @@ import java.beans.*;
 import ru.novosoft.uml.foundation.core.*;
 
 import org.argouml.model.ModelFacade;
+
+/**
+ * @deprecated this class is deprecated since 0.15.1 and should be removed
+ *             in 0.15.2, due to the fact that the TableModel classes
+ *             have never been used, and are not maintained,
+ *
+ *             There is no reason why someone cannot try to complete the
+ *             TableModel implementation, however, a higher priority
+ *             at the moment is to clean argouml of un maintained code.
+ */
 
 public class TableModelAttr extends TableModelComposite {
     ////////////////
