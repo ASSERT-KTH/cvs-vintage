@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.61 2005/01/10 19:22:23 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.62 2005/01/24 22:39:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * @see org.argouml.uml.diagram.ui.UMLDiagram#getLabelName()
      */
     public String getLabelName() {
-        return Translator.localize("label.colaboration-diagram");
+        return Translator.localize("label.collaboration-diagram");
     }
 
     /**
