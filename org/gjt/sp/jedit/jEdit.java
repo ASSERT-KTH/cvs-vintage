@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.31 2001/12/23 05:37:00 spestov Exp $
+ * @version $Id: jEdit.java,v 1.32 2001/12/25 03:06:50 spestov Exp $
  */
 public class jEdit
 {
@@ -3228,16 +3228,6 @@ loop:		for(int i = 0; i < list.length; i++)
 			{
 				pluginError(path,"plugin-error.obsolete",null);
 				continue;
-			}
-
-			if(plugin.equals("jaxp.jar"))
-			{
-				if(System.getProperty("java.version").compareTo("1.4") >= 0)
-				{
-					Log.log(Log.NOTICE,jEdit.class,"Running on Java 1.4. Ignoring "
-						+ path);
-					continue;
-				}
 			}
 
 			try

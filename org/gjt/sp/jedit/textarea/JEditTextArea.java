@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.52 2001/12/24 07:30:24 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.53 2001/12/25 03:06:50 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -705,7 +705,7 @@ public class JEditTextArea extends JComponent
 	{
 		getLineText(line,lineSegment);
 
-		TextAreaPainter.Chunk chunks = painter.lineToChunkList(lineSegment,
+		TextUtilities.Chunk chunks = painter.lineToChunkList(lineSegment,
 			buffer.markTokens(line).getFirstToken());
 
 		float x = 0.0f;
@@ -757,7 +757,7 @@ public class JEditTextArea extends JComponent
 
 		getLineText(line,lineSegment);
 
-		TextAreaPainter.Chunk chunks = painter.lineToChunkList(lineSegment,
+		TextUtilities.Chunk chunks = painter.lineToChunkList(lineSegment,
 			buffer.markTokens(line).getFirstToken());
 
 		while(chunks != null)

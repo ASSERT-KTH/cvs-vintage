@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.16 2001/12/03 10:52:27 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.17 2001/12/25 03:06:50 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -768,6 +768,10 @@ public class FoldVisibilityManager
 	 */
 	public void narrow(int start, int end)
 	{
+		// ideally, this should somehow be rolled into the below loop.
+		if(!buffer._isLineVisible(start + 1,index))
+			expandFold(start,false);
+
 		int virtualLineCount = buffer._getVirtualLineCount(index);
 		for(int i = 0; i < start; i++)
 		{
