@@ -289,40 +289,33 @@ public  class AttributeGroup
     public void addAttribute( Attribute attribute )
          throws Exception
     {                
-                IssueType issueType = getIssueType();
-                ModuleEntity module = getModule();
+        IssueType issueType = getIssueType();
+        ModuleEntity module = getModule();
 
-                // add module-attribute groupings
-                RModuleAttribute rma = module.addRModuleAttribute(issueType);
-                rma.setAttributeId(attribute.getAttributeId());
-                rma.save();
+        // add attribute group-attribute mapping
+        RAttributeAttributeGroup raag =
+            addRAttributeAttributeGroup(attribute);
+        raag.save();          
 
-                // add module-attribute mappings to template type
-                IssueType templateType = (IssueType)IssueTypePeer.
-                      retrieveByPK(issueType.getTemplateId());
-                RModuleAttribute rma2 = module
-                   .addRModuleAttribute(templateType);
-                rma2.setAttributeId(attribute.getAttributeId());
-                rma2.save();
+        // add module-attribute groupings
+        module.addRModuleAttribute(issueType, attribute);
 
-                // add module-attributeoption mappings
-                List options = attribute.getAttributeOptions();
-                for (int j=0;j < options.size();j++)
-                {
-                    AttributeOption option = (AttributeOption)options.get(j);
-                    RModuleOption rmo = module.addRModuleOption(issueType, 
-                                                                option);
-                    rmo.save();
+        // add module-attributeoption mappings
+        List options = attribute.getAttributeOptions();
+        for (int j=0;j < options.size();j++)
+        {
+            AttributeOption option = (AttributeOption)options.get(j);
+            RModuleOption rmo = module.addRModuleOption(issueType, 
+                                                        option);
+            rmo.save();
 
-                    // add module-attributeoption mappings to template type
-                    RModuleOption rmo2 = module.
-                         addRModuleOption(templateType, option);
-                    rmo2.save();
-                }
-
-                // attribute group-attribute mapping
-                RAttributeAttributeGroup raag =  
-                    addRAttributeAttributeGroup(attribute);
-                raag.save();
+            // add module-attributeoption mappings to template type
+            IssueType templateType = (IssueType)IssueTypePeer.
+                                      retrieveByPK(issueType.getTemplateId());
+            RModuleOption rmo2 = module.
+                 addRModuleOption(templateType, option);
+            rmo2.save();
+        }
     }
+
 }
