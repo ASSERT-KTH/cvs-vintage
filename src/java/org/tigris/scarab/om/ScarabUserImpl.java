@@ -46,14 +46,17 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Vector;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -81,7 +84,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.122 2004/12/29 00:29:48 jorgeuriarte Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.123 2005/01/05 21:00:59 dabbous Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -503,6 +506,39 @@ public class ScarabUserImpl
         throws Exception
     {
         return getRoles(module).size() != 0;
+    }
+    
+    /**
+     * eturn the list of currently active roles.
+     * If no roles are active, reuturn an empty list.
+     * @return
+     */
+    public List getCurrentRoleNames()
+    {
+        Module module = getCurrentModule();
+        
+        List roles=null;
+        try
+        {
+            roles = getRoles(module);
+        }
+        catch (Exception e){}
+
+        List result = new ArrayList();
+        if(roles!=null)
+        {
+            int size = roles.size();
+            if(size>0)
+            {
+                for(int index=0; index< size; index++)
+                {
+                    Role role = (Role)roles.get(index);
+                    result.add (role.getName());
+                }
+            }
+        }
+        return result;
+        
     }
     
     private static final String GET_ROLES = 

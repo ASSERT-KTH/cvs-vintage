@@ -215,10 +215,15 @@ function initializeAll() {
   <div align="right">
    <div>
     #if ($data.User.isUserAnonymous())
-    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Login")
+     $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Login")
     #else
-    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
-    <strong class="username">$!data.User.FirstName $!data.User.LastName</strong>
+     $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
+     <strong class="username">$!data.User.FirstName $!data.User.LastName 
+      #set ($roleNames = $!data.User.currentRoleNames)
+      #if ($roleNames.size() >0)
+      (#foreach ($roleName in $roleNames) $roleName #end)
+      #end
+     </strong>
     #end    
    </div>
   </div>
