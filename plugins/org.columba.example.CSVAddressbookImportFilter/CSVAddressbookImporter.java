@@ -30,6 +30,12 @@ import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
  * @author 	   fdietz
  */
 public class CSVAddressbookImporter extends DefaultAddressbookImporter {
+	
+	public CSVAddressbookImporter()
+	{
+		super();
+	}
+	
 	public CSVAddressbookImporter(
 		File sourceFile,
 		Folder destinationFolder) {

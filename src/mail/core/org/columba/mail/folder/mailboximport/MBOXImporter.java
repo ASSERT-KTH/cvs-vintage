@@ -24,6 +24,12 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.util.MailResourceLoader;
 
 public class MBOXImporter extends DefaultMailboxImporter {
+	
+	public MBOXImporter()
+	{
+		super();
+	}
+	
 	public MBOXImporter(Folder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}

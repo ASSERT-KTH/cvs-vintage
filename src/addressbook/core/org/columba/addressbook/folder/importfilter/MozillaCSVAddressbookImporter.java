@@ -28,6 +28,13 @@ import org.columba.addressbook.folder.Folder;
  * @author
  */
 public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
+	
+	public MozillaCSVAddressbookImporter()
+	 {
+		super();
+	 }
+	
+
 	public MozillaCSVAddressbookImporter(
 		File sourceFile,
 		Folder destinationFolder) {

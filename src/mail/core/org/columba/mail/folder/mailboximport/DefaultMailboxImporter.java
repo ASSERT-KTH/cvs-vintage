@@ -44,6 +44,17 @@ public abstract class DefaultMailboxImporter {
 
 		init();
 	}
+	
+	/**
+	 * Default constructor
+	 * <p>
+	 * Note that plugins have to use both constructors.
+	 *
+	 */
+	public DefaultMailboxImporter()
+	{
+		
+	}
 
 	public void init() {
 		counter = 0;

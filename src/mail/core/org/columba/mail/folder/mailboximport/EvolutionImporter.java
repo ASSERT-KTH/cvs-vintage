@@ -28,6 +28,11 @@ import org.columba.mail.folder.Folder;
  */
 public class EvolutionImporter extends DefaultMailboxImporter {
 
+	public EvolutionImporter()
+	{
+		super();
+	}
+	
 	public EvolutionImporter(Folder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}

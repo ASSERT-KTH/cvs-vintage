@@ -22,6 +22,11 @@ import org.columba.mail.folder.mh.MHMessageFileFilter;
  */
 public class MHImporter extends DefaultMailboxImporter {
 
+	public MHImporter()
+	{
+		super();
+	}
+	
 	/**
 	 * @param destinationFolder
 	 * @param sourceFile

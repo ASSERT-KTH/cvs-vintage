@@ -26,19 +26,17 @@ package org.columba.mail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.StringReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.StringReader;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.StringTokenizer;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
-import org.columba.mail.coder.EncodedWordDecoder;
+import org.columba.ristretto.coder.EncodedWord;
 
 /**
  * Class used to import Eudora mail boxes.
@@ -53,6 +51,11 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter
     private static final String TIME_ZONE = (new SimpleDateFormat("Z")).format(new Date());
     /** Charset, e.g. "iso-8859-1", when nothing else is specified (= host default) */
     private static final String DEFAULT_CHARSET = System.getProperty("file.encoding");
+    
+    public EudoraMailImportFilter()
+    {
+    	super();
+    }
     
     /**
      * Creates a new EudoraMailImportFilter object
@@ -72,6 +75,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter
     {
         return TYPE_FILE;
     }
+    
 	
     /**
      * Imports a single mailbox file. This one is called from importMailbox
@@ -213,7 +217,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter
         
         // loop over headers and modify them as needed
         HeaderTokenizer tokenizer = new HeaderTokenizer(headers);
-        EncodedWordDecoder decoder = new EncodedWordDecoder();
+        EncodedWord decoder = new EncodedWord();
         StringBuffer headerBuf = new StringBuffer();
         boolean dateFound = false;
         boolean contentTypeFound = false;
@@ -224,7 +228,7 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter
             {
                 // a header
                 String key    = line.substring(0, line.indexOf(':'));
-                String header = decoder.decode(line.substring(line.indexOf(':') + 1).trim());
+                String header = decoder.decode((CharSequence)line.substring(line.indexOf(':') + 1).trim()).toString();
 
                 // handle header
                 if      (key.equalsIgnoreCase("Date"))

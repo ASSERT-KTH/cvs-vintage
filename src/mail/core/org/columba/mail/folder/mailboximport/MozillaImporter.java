@@ -27,6 +27,12 @@ import org.columba.mail.folder.Folder;
  * @author
  */
 public class MozillaImporter extends DefaultMailboxImporter {
+	
+	public MozillaImporter()
+	{
+		super();
+	}
+	
 	public MozillaImporter(Folder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}

@@ -62,8 +62,8 @@ public class MarkMessageAsSpamCommand extends FolderCommand {
 
 	public static void markMessage(Folder srcFolder, Object uid, Worker worker)
 		throws Exception {
-		ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
-		String rawString = srcFolder.getMessageSource(uid, worker);
+		ColumbaHeader header = srcFolder.getMessageHeader(uid);
+		String rawString = srcFolder.getMessageSource(uid);
 
 		IPCHelper ipcHelper = new IPCHelper();
 

@@ -68,8 +68,8 @@ public class AnalyzeMessageCommand extends FolderCommand {
 
 	public static void addHeader(Folder srcFolder, Object uid, Worker worker)
 		throws Exception {
-		ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
-		String rawString = srcFolder.getMessageSource(uid, worker);
+		ColumbaHeader header = srcFolder.getMessageHeader(uid);
+		String rawString = srcFolder.getMessageSource(uid);
 
 		IPCHelper ipcHelper = new IPCHelper();
 

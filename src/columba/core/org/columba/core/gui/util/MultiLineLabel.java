@@ -49,6 +49,9 @@ public class MultiLineLabel extends JTextArea {
 	}
 
 	private String createSizedString(final String message, final int pixels) {
+		if ( message==null ) return "";
+		if ( message.length() == 0) return "";
+		
 		FontMetrics fm = getFontMetrics(getFont());
 		StringTokenizer st = new StringTokenizer(message);
 		String word;

@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -30,7 +32,7 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.plugin.PluginInterface;
 
 /**
- * @version 	1.0
+ * @version 1.0
  * @author
  */
 public abstract class DefaultAddressbookImporter implements PluginInterface {
@@ -47,6 +49,9 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
 
 	protected int counter;
 
+	public DefaultAddressbookImporter() {
+	}
+
 	public DefaultAddressbookImporter(
 		File sourceFile,
 		Folder destinationFolder) {
@@ -61,14 +66,21 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
 		//tempFolder = new AddressbookFolder(null,addressbookInterface);
 	}
 
-	/*********** overwrite the following messages **************************/
+	/** ********* overwrite the following messages ************************* */
 
 	/**
-	 * overwrite this method to specify type
-	 * the wizard dialog will open the correct file/directory dialog automatically
+	 * overwrite this method to specify type the wizard dialog will open the
+	 * correct file/directory dialog automatically
 	 */
 	public int getType() {
 		return TYPE_FILE;
+	}
+
+	/**
+	 * enter a description which will be shown to the user here
+	 */
+	public String getDescription() {
+		return "";
 	}
 
 	/**
@@ -76,7 +88,7 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
 	 */
 	public abstract void importAddressbook(File file) throws Exception;
 
-	/*********** intern methods (no need to overwrite these) ****************/
+	/** ********* intern methods (no need to overwrite these) *************** */
 
 	public void setAddressbookInterface(AddressbookInterface i) {
 		this.addressbookInterface = i;
@@ -94,15 +106,15 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
 	}
 
 	/**
-	 *  counter for successfully imported messages
+	 * counter for successfully imported messages
 	 */
 	public int getCount() {
 		return counter;
 	}
 
 	/**
-	 *  this method calls your overwritten importMailbox(File)-method
-	 *  and handles exceptions
+	 * this method calls your overwritten importMailbox(File)-method and
+	 * handles exceptions
 	 */
 	public void run() {
 

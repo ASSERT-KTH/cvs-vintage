@@ -54,7 +54,7 @@ public class AnalyzeFolderCommand extends FolderCommand {
 		worker.setDisplayText(
 			"Applying analyzer to" + srcFolder.getName() + "...");
 
-		Object[] uids = srcFolder.getUids(worker);
+		Object[] uids = srcFolder.getUids();
 
 		for (int i = 0; i < uids.length; i++) {
 			AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);

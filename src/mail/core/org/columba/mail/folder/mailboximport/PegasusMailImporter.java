@@ -29,6 +29,11 @@ import org.columba.mail.folder.Folder;
  */
 public class PegasusMailImporter extends DefaultMailboxImporter {
 
+	public PegasusMailImporter()
+	{
+		super();
+	}
+	
 	public PegasusMailImporter(Folder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}

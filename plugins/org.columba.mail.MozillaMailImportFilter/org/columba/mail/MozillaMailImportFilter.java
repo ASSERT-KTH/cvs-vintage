@@ -27,6 +27,11 @@ import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
  */
 public class MozillaMailImportFilter extends DefaultMailboxImporter {
 
+	public MozillaMailImportFilter()
+	{
+		super();
+	}
+	
 	/**
 	 * @param destinationFolder
 	 * @param sourceFiles
@@ -130,7 +135,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 						file.getName().substring(
 							0,
 							file.getName().indexOf(".sbd"));
-
+					
 					if (destinationFolder.getChild(filename) == null) {
 						/*
 						// folder doesn't exist -> create it

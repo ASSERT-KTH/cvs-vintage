@@ -3,7 +3,7 @@ package org.columba.mail.filter.plugins;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.HeaderInterface;
+import org.columba.mail.message.ColumbaHeader;
 
 /**
  * @author freddy
@@ -47,7 +47,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 		throws Exception {
 
 		// get the header of the message
-		HeaderInterface header = folder.getMessageHeader(uid, worker);
+		ColumbaHeader header = folder.getMessageHeader(uid);
 		if ( header == null ) return false;
 		
 		// convert the condition string to an int which is easier to handle

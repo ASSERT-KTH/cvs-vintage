@@ -23,10 +23,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.Message;
-import org.columba.mail.message.MimePartTree;
-import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
+import org.columba.ristretto.message.Message;
+import org.columba.ristretto.smtp.SMTPException;
 
 /**
  * @author frd
@@ -65,15 +64,15 @@ public class BounceCommand extends FolderCommand {
 
 		// copy header of message we want to bounce
 		ColumbaHeader header =
-			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+			(ColumbaHeader) folder.getMessageHeader(uids[0]);
 		message.setHeader(header);
 
 		// copy mimeparts of bounce message
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
+		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 
 		// copy message-source of bounce message
-		String source = folder.getMessageSource(uids[0], worker);
+		String source = folder.getMessageSource(uids[0]);
 		message.setSource(source);
 
 		// create composer-model
