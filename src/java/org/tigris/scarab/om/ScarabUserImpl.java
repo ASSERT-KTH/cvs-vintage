@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.99 2003/04/10 17:50:04 dlr Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.100 2003/04/10 20:24:12 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -989,13 +989,13 @@ public class ScarabUserImpl
      * No need to call user.save() as this method will save the
      * preferences for us.
      */
-    public void setLocale(String acceptLanguage)
+    public void setLocale(String language)
         throws Exception
     {
         UserPreference up = UserPreferenceManager.getInstance(getUserId());
-        up.setAcceptLanguage(acceptLanguage);
+        up.setLanguage(language);
         up.save();
-        locale = Localization.getLocale(acceptLanguage);
+        locale = Localization.getLocale(language);
     }
 
     /**

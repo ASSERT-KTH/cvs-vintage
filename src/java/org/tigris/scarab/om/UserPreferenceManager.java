@@ -52,7 +52,7 @@ import org.apache.torque.TorqueException;
  * This is the manager for the UserPreferences
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserPreferenceManager.java,v 1.6 2003/04/10 17:50:04 dlr Exp $
+ * @version $Id: UserPreferenceManager.java,v 1.7 2003/04/10 20:24:12 elicia Exp $
  */
 public class UserPreferenceManager
     extends BaseUserPreferenceManager
@@ -84,7 +84,7 @@ public class UserPreferenceManager
         UserPreference up = null;
         try
         {
-            up = UserPreferenceManager.getInstance(userid);
+            up = BaseUserPreferenceManager.getInstance(userid);
         }
         catch (TorqueException te)
         {
