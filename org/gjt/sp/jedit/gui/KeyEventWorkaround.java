@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.28 2003/07/17 23:49:44 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.29 2003/07/21 19:49:29 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -219,7 +219,6 @@ public class KeyEventWorkaround
 			{
 			case KeyEvent.VK_ALT:
 				modifiers &= ~InputEvent.ALT_MASK;
-				last = LAST_ALT;
 				lastKeyTime = System.currentTimeMillis();
 				return null;
 			case KeyEvent.VK_ALT_GRAPH:
@@ -234,6 +233,13 @@ public class KeyEventWorkaround
 			case KeyEvent.VK_META:
 				modifiers &= ~InputEvent.META_MASK;
 				return null;
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_RIGHT:
+				/* workaround for A+LEFT/RIGHT producing
+				 * garbage on Windows */
+				if(modifiers == InputEvent.ALT_MASK)
+					last = LAST_ALT;
+				break;
 			}
 			return evt;
 		//}}}

@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.14 2003/07/14 23:00:54 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.15 2003/07/21 19:49:29 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -268,21 +268,37 @@ public class KeyEventTranslator
 	//{{{ modifiersToString() method
 	public static String modifiersToString(int mods)
 	{
-		if(mods == 0)
-			return null;
-
-		StringBuffer buf = new StringBuffer();
+		StringBuffer buf = null;
 
 		if((mods & InputEvent.CTRL_MASK) != 0)
+		{
+			if(buf == null)
+				buf = new StringBuffer();
 			buf.append(getSymbolicModifierName(InputEvent.CTRL_MASK));
+		}
 		if((mods & InputEvent.ALT_MASK) != 0)
+		{
+			if(buf == null)
+				buf = new StringBuffer();
 			buf.append(getSymbolicModifierName(InputEvent.ALT_MASK));
+		}
 		if((mods & InputEvent.META_MASK) != 0)
+		{
+			if(buf == null)
+				buf = new StringBuffer();
 			buf.append(getSymbolicModifierName(InputEvent.META_MASK));
+		}
 		if((mods & InputEvent.SHIFT_MASK) != 0)
+		{
+			if(buf == null)
+				buf = new StringBuffer();
 			buf.append(getSymbolicModifierName(InputEvent.SHIFT_MASK));
+		}
 
-		return buf.toString();
+		if(buf == null)
+			return null;
+		else
+			return buf.toString();
 	} //}}}
 
 	//{{{ getModifierString() method
