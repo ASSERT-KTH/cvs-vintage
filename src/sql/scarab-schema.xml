@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.18 2001/05/24 02:17:25 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.19 2001/05/24 23:44:21 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -569,13 +569,13 @@
     <!--
         Flag, which marks that module attribute is not used.
     -->
-    <column name="ACTIVE" required="false" type="BOOLEANINT" 
+    <column name="ACTIVE" required="true" type="BOOLEANINT" 
         default="1" size="1"></column>
     <!--
         Flag, which marks that issues entered for this module must have
         this attribute set.
     -->
-    <column name="REQUIRED" required="false" type="BOOLEANINT" 
+    <column name="REQUIRED" required="true" type="BOOLEANINT" 
         default="0" size="1"></column>
     <!--
         Allows the template engineer and module owner some means to 
@@ -585,12 +585,12 @@
     <!--
         Flag, which marks this attribute as being useful for deduping.
     -->
-    <column name="DEDUPE" required="false" type="BOOLEANINT" 
+    <column name="DEDUPE" required="true" type="BOOLEANINT" 
         default="0" size="1"/>
     <!--
         Flag, which marks this attribute as being eligible for quick search.
     -->
-    <column name="QUICK_SEARCH" required="false" type="BOOLEANINT" 
+    <column name="QUICK_SEARCH" required="true" type="BOOLEANINT" 
         default="0" size="1"/>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
@@ -635,7 +635,7 @@
     <!--
         Flag, which marks that option has been deleted within the module.
     -->
-    <column name="ACTIVE" required="false" type="BOOLEANINT" 
+    <column name="ACTIVE" required="true" type="BOOLEANINT" 
         default="1" size="1"></column>
     <!--
         Allows the template engineer and module owner some means to 
@@ -790,7 +790,7 @@
     <column name="RATING" required="true" type="INTEGER"/>
     <!-- set to one to ignore the word when indexing. this should be 1 for 
          words like "is", "it", "on" etc...-->
-    <column name="IGNORED" default="0" type="BOOLEANINT"/>
+    <column name="IGNORED" required="true" default="0" type="BOOLEANINT"/>
     <index name="IX_IGNORED">
         <index-column name="IGNORED"/>
     </index>
