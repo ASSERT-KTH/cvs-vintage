@@ -36,6 +36,7 @@ import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.CacheKey;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.logging.Logger;
+import org.jboss.util.Sync;
 
 /**
 *   This container acquires the given instance. 
@@ -44,7 +45,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -89,24 +90,12 @@ extends AbstractInterceptor
             // Always unlock, no matter what
             ctx.unlock();
             
-            synchronized (ctx) {
-                
-                // Still free? Not free if create() was called successfully
-                if (ctx.getId() == null)
-                {
-                    container.getInstancePool().free(ctx);
-                
-                    // the pool will notify all everyone
-                } 
-                else
-                {
-                    // DEBUG           Logger.debug("Entity was created; not returned to pool");
-                    
-                    //Let one waiter know
-                    ctx.notify();
-                    
-                }
-            }
+            // Still free? Not free if create() was called successfully
+            if (ctx.getId() == null)
+            {
+                container.getInstancePool().free(ctx);
+                // the pool will notify all everyone
+            } 
         }
     }
     
@@ -114,11 +103,11 @@ extends AbstractInterceptor
     throws Exception
     {
         // The id store is a CacheKey in the case of Entity 
-        CacheKey key = (CacheKey) mi.getId();
+        CacheKey key = (CacheKey)mi.getId();
         
         // Get cache
-        EnterpriseInstanceCache cache = (EnterpriseInstanceCache)container.getInstanceCache();
-        Object mutex = cache.getLock(key);
+        AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
+        Sync mutex = (Sync)cache.getLock(key);
         
         EnterpriseContext ctx = null;
         
@@ -128,16 +117,14 @@ extends AbstractInterceptor
             {
                 if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK) 
                     throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-                
-                synchronized(this) 
-                {
-                    
+  
+				try 
+				{
+				
+					mutex.acquire();
+				
                     // Get context
                     ctx = cache.get(key);
-                }
-                
-                synchronized(ctx) 
-                {
                     
                     // Do we have a running transaction with the context
                     Transaction tx = ctx.getTransaction();
@@ -148,15 +135,10 @@ extends AbstractInterceptor
                         // Let's put the thread to sleep a lock release will wake the thread
                         // Possible deadlock
                         Logger.debug("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
-                        
-                        try {
-                            ctx.wait(5000);
-                        } catch (InterruptedException ie) {}
-                        
+  
                         // Try your luck again
                         ctx = null;
                         continue;
-                    
                     }
                     else 
                     {
@@ -176,10 +158,6 @@ extends AbstractInterceptor
                                 // Possible deadlock
                                 Logger.debug("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
                                 
-                                try{
-                                    ctx.wait(5000);
-                                } catch (InterruptedException ie) {}
-                                
                                 // Try your luck again
                                 ctx = null;
                                 continue;
@@ -194,6 +172,11 @@ extends AbstractInterceptor
                         }
                     }
                 }
+				catch (InterruptedException ignored) {}
+				finally 
+				{
+					mutex.release();
+				}
             
             } while (ctx == null);
                 
@@ -228,84 +211,87 @@ extends AbstractInterceptor
         } finally
         {
             //         Logger.debug("Release instance for "+id);
-            if (ctx != null)
-            {
-                // unlock the context
-                ctx.unlock();
+			try 
+			{
+				mutex.acquire();
+				
+				// unlock the context
+				ctx.unlock();
                 
-                if (ctx.getId() == null)                             
-                {
-                    
-                    // Work only if no transaction was encapsulating this remove()
-                    if (ctx.getTransaction() == null) {
-                        
-                        // Remove from cache
-                        cache.remove(key);
-                        
-                        // It has been removed -> send to the pool
-                        container.getInstancePool().free(ctx);
-                        
-                        // The pool will notify everyone waiting on this
-                        
-                    }
-                }
-                
-                else {
-                 
-                    // MF FIXME for speed reason I use notify
-                    // however we would need to lock on the tx and ctx so we can 
-                    // notify the right population, slightly more complicated...
-                    
-                    // notify the next thread waiting on ctx
-                    synchronized (ctx) { ctx.notify();}
-                }
+				if (ctx.getId() == null)                             
+				{
+					    
+				    // Work only if no transaction was encapsulating this remove()
+					if (ctx.getTransaction() == null) 
+					{
+						// Here we arrive if the bean has been removed and no 
+						// transaction was associated with the remove, or if 
+						// the bean has been passivated
+
+						// Remove from cache
+						cache.remove(key);
+					        
+						// It has been removed -> send to the pool
+						container.getInstancePool().free(ctx);
+					        
+						// The pool will notify everyone waiting on this
+				    }
+				}
+				else 
+				{
+					// Yeah, do nothing
+				}
             }
+			catch (InterruptedException ignored) {}
+			finally 
+			{
+				mutex.release();
+			}
         }
     }
 
+	// Private --------------------------------------------------------
 
-// Private --------------------------------------------------------
+	private static Method getEJBHome;
+	private static Method getHandle;
+	private static Method getPrimaryKey;
+	private static Method isIdentical;
+	private static Method remove;
+	static 
+	{
+	    try 
+	    {
+	        Class[] noArg = new Class[0];
+	        getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
+	        getHandle = EJBObject.class.getMethod("getHandle", noArg);
+	        getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
+	        isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
+	        remove = EJBObject.class.getMethod("remove", noArg);
+	    }
+	    catch (Exception x) {x.printStackTrace();}
+	}
 
-private static Method getEJBHome;
-private static Method getHandle;
-private static Method getPrimaryKey;
-private static Method isIdentical;
-private static Method remove;
-static 
-{
-    try 
-    {
-        Class[] noArg = new Class[0];
-        getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-        getHandle = EJBObject.class.getMethod("getHandle", noArg);
-        getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-        isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-        remove = EJBObject.class.getMethod("remove", noArg);
-    }
-    catch (Exception x) {x.printStackTrace();}
-}
-
-private boolean isCallAllowed(MethodInvocation mi) 
-{
-    boolean reentrant = ((EntityMetaData)container.getBeanMetaData()).isReentrant();
-    
-    if (reentrant)
-    {
-        return true;
-    }
-    else
-    {
-        Method m = mi.getMethod();
-        if (m.equals(getEJBHome) ||
-            m.equals(getHandle) ||
-            m.equals(getPrimaryKey) ||
-            m.equals(isIdentical) ||
-            m.equals(remove))
-        {
-            return true;
-        }
-    }
-    
-    return false;
-}
+	private boolean isCallAllowed(MethodInvocation mi) 
+	{
+	    boolean reentrant = ((EntityMetaData)container.getBeanMetaData()).isReentrant();
+	    
+	    if (reentrant)
+	    {
+	        return true;
+	    }
+	    else
+	    {
+	        Method m = mi.getMethod();
+	        if (m.equals(getEJBHome) ||
+	            m.equals(getHandle) ||
+	            m.equals(getPrimaryKey) ||
+	            m.equals(isIdentical) ||
+	            m.equals(remove))
+	        {
+	            return true;
+	        }
+	    }
+	    
+	    return false;
+	}
 }
