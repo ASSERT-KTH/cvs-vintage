@@ -20,7 +20,7 @@
  *
  * Initial developer: Florent BENOIT
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.2 2005/02/08 09:45:46 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.3 2005/02/14 15:08:43 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.omg.CORBA.ORB;
@@ -261,8 +262,8 @@ public class JacORBCosNaming implements NameService {
     private boolean isRemoteNameServiceStarted() {
 
         Properties prop = new Properties();
-        prop.put("java.naming.factory.initial", "com.sun.jndi.cosnaming.CNCtxFactory");
-        prop.put("java.naming.provider.url", "corbaloc:iiop:localhost:" + Integer.toString(port)
+        prop.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.cosnaming.CNCtxFactory");
+        prop.put(Context.PROVIDER_URL, "corbaloc:iiop:localhost:" + Integer.toString(port)
                 + "/StandardNS/NameServer-POA/_root");
 
         if (orb == null) {
