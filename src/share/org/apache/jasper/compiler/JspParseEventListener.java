@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.12 2000/03/28 04:29:47 akv Exp $
- * $Revision: 1.12 $
- * $Date: 2000/03/28 04:29:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.13 2000/03/31 19:43:52 mandar Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/03/31 19:43:52 $
  *
  * ====================================================================
  * 
@@ -297,9 +297,14 @@ public class JspParseEventListener extends BaseJspListener {
         writer.println("}");
         
 	writer.println("_jspxFactory = JspFactory.getDefaultFactory();");
-	writer.println("response.setContentType("
-				+ writer.quoteString(servletContentType)
-				+ ");");
+	if (this.contentTypeDir == true)
+	    writer.println("response.setContentType(" +
+			   writer.quoteString(servletContentType)
+			   + ");");
+	else
+	    writer.println("response.setContentType(\"" +
+			   servletContentType +
+			   ";charset=8859_1\");");	    
 	writer.println("pageContext = _jspxFactory.getPageContext(this, request, response,\n"
 					+ "\t\t\t"
 					+ writer.quoteString(error) + ", "

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.9 2000/03/28 19:16:12 akv Exp $
- * $Revision: 1.9 $
- * $Date: 2000/03/28 19:16:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.10 2000/03/31 19:43:52 mandar Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/03/31 19:43:52 $
  *
  * ====================================================================
  * 
@@ -236,7 +236,7 @@ public class JspUtil {
 	    return null;
 	
 	String escString    = "";
-	String shellSpChars = "&;`'\"|*?~<>^()[]{}$\\\n";
+	String shellSpChars = "\\\"";
 	
 	for(int index=0; index<unescString.length(); index++) {
 	    char nextChar = unescString.charAt(index);
