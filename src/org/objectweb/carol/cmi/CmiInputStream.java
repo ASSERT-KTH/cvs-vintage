@@ -25,8 +25,8 @@ import java.io.ObjectStreamClass;
 import java.io.StreamCorruptedException;
 import java.rmi.server.RMIClassLoader;
 
-public class MulticastInputStream extends ObjectInputStream {
-    public MulticastInputStream(InputStream in)
+public class CmiInputStream extends ObjectInputStream {
+    public CmiInputStream(InputStream in)
         throws IOException, StreamCorruptedException {
         super(in);
     }

@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
@@ -30,7 +29,6 @@ import java.net.SocketException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,13 +48,13 @@ import org.objectweb.carol.util.configuration.TraceCarol;
 class ExportMsg implements Serializable {
     public transient ClusterId id;
     public transient Serializable key;
-    public transient Remote stub;
+    public transient byte[] stub;
     public transient int factor;
 
     public ExportMsg(
         ClusterId serverId,
         Serializable key,
-        Remote stub,
+        byte[] stub,
         int factor) {
         this.id = serverId;
         this.key = key;
@@ -76,7 +74,7 @@ class ExportMsg implements Serializable {
         throws IOException, ClassNotFoundException {
         id = ClusterId.read(in);
         key = (Serializable) in.readObject();
-        stub = (Remote) in.readObject();
+        stub = (byte[]) in.readObject();
         factor = in.readInt();
     }
 }
@@ -107,7 +105,7 @@ class UnexportMsg implements Serializable {
 }
 
 /**
- * TODO Should be used instead of the loop on localExports. To rewrite and test. 
+ * Should be used instead of the loop on localExports. To rewrite and test. 
  * @author nieuviar
  */
 //class ExportsMsg implements Serializable {
@@ -154,7 +152,7 @@ class GlobalExports {
     public synchronized void put(
         ClusterId serverId,
         Serializable key,
-        Remote stub,
+        byte[] stub,
         int factor)
         throws RemoteException {
         ClusterStubData csd = (ClusterStubData) table.get(key);
@@ -197,12 +195,9 @@ class GlobalExports {
         }
     }
 
-    public ClusterStub getClusterStub(Serializable key) throws RemoteException {
+    public ClusterStubData getClusterStubData(Serializable key) throws RemoteException {
         synchronized (this) {
-            ClusterStubData csd = (ClusterStubData) table.get(key);
-            if (csd == null)
-                return null;
-            return csd.getClusterStub();
+            return (ClusterStubData) table.get(key);
         }
     }
 
@@ -221,7 +216,7 @@ class LocalExports {
     //    private ByteArrayOutputStream outs = new ByteArrayOutputStream();
     private byte[] buf = null;
 
-    public synchronized void put(Serializable key, Remote obj) {
+    public synchronized void put(Serializable key, byte[] obj) {
         if ((key == null) || (obj == null))
             throw new NullPointerException();
         map.put(key, obj);
@@ -399,28 +394,10 @@ class DistributedEquivSystem {
         if (s == null) {
             return null;
         }
-        LinkedList l = new LinkedList();
+        LinkedList l;
         try {
             InetMask m = new InetMask(s);
-            Enumeration enum;
-            Class cl;
-            Method getInet;
-            Object[] obj0 = {
-            };
-            cl = Class.forName("java.net.NetworkInterface");
-            Method meth = cl.getMethod("getNetworkInterfaces", new Class[0]);
-            getInet = cl.getMethod("getInetAddresses", new Class[0]);
-            enum = (Enumeration) meth.invoke(cl, obj0);
-            while (enum.hasMoreElements()) {
-                Object o = enum.nextElement();
-                Enumeration enum2 = (Enumeration) getInet.invoke(o, obj0);
-                while (enum2.hasMoreElements()) {
-                    InetAddress a = (InetAddress) enum2.nextElement();
-                    if (m.match(a)) {
-                        l.add(a);
-                    }
-                }
-            }
+            l = m.filterLocal();
         } catch (Exception e) {
             return null;
         }
@@ -436,7 +413,7 @@ class DistributedEquivSystem {
             ClusterException,
             org.javagroups.ChannelException,
             org.javagroups.ChannelClosedException {
-        ClusterIdFactory.generate();
+        ClusterIdFactory.start();
         String mcast_addr = Config.getMulticastAddress();
         int mcast_port = Config.getMulticastPort();
         String bind_addr = chooseBindAddress();
@@ -472,7 +449,6 @@ class DistributedEquivSystem {
         chan = new JChannel(chan_props);
         chan.connect(groupname);
         my_addr = chan.getLocalAddress();
-
         my_id = ClusterIdFactory.getLocalId();
         idmap.put(my_addr, my_id);
 
@@ -496,14 +472,15 @@ class DistributedEquivSystem {
                     + "/"
                     + Config.getMulticastGroupName()
                     + ", cluster Id "
-                    + ClusterIdFactory.getLocalId());
+                    + my_id);
     }
 
     private void broadcast(Serializable msg) {
         ByteArrayOutputStream outs = new ByteArrayOutputStream();
         try {
-            MulticastOutputStream out = new MulticastOutputStream(outs);
+            CmiOutputStream out = new CmiOutputStream(outs);
             out.writeObject(msg);
+            out.flush();
             Message m = new Message(null, my_addr, outs.toByteArray());
             chan.send(m);
             if (TraceCarol.isDebugCmiDes()) {
@@ -624,7 +601,7 @@ class DistributedEquivSystem {
         } else {
             try {
                 ByteArrayInputStream in_stream = new ByteArrayInputStream(buf);
-                MulticastInputStream in = new MulticastInputStream(in_stream);
+                CmiInputStream in = new CmiInputStream(in_stream);
                 o = in.readObject();
             } catch (Exception e) {
                 if (TraceCarol.isDebugCmiDes())
@@ -661,7 +638,7 @@ class DistributedEquivSystem {
                         + pm.key);
             if (!self(id)) {
                 try {
-                    Remote stub = pm.stub;
+                    byte[] stub = pm.stub;
                     if (stub != null)
                         globalExports.put(id, pm.key, stub, pm.factor);
                 } catch (RemoteException e) {
@@ -684,16 +661,18 @@ class DistributedEquivSystem {
             if (TraceCarol.isDebugCmiDes())
                 TraceCarol.debugCmiDes("sending local exports");
 
-            HashMap h = localExports.getmap();
-            Iterator i = h.entrySet().iterator();
-            while (i.hasNext()) {
-                Map.Entry e = (Map.Entry) i.next();
-                broadcast(
-                    new ExportMsg(
-                        my_id,
-                        (String) e.getKey(),
-                        (Remote) e.getValue(),
-                        Config.getLoadFactor()));
+            synchronized (localExports) {
+                HashMap h = localExports.getmap();
+                Iterator i = h.entrySet().iterator();
+                while (i.hasNext()) {
+                    Map.Entry e = (Map.Entry) i.next();
+                    broadcast(
+                        new ExportMsg(
+                            my_id,
+                            (String) e.getKey(),
+                            (byte[]) e.getValue(),
+                            Config.getLoadFactor()));
+                }
             }
 
             //	    broadcast(new ExportsMsg(my_id, localExports));
@@ -710,7 +689,7 @@ class DistributedEquivSystem {
     /*
      * DistributedExports interface
      */
-    boolean exportObject(Serializable key, Remote obj) throws RemoteException {
+    boolean exportObject(Serializable key, byte[] obj) throws RemoteException {
         if (TraceCarol.isDebugCmiDes())
             TraceCarol.debugCmiDes(
                 "exportObject(" + key + ", " + obj.getClass().getName() + ")");
@@ -722,8 +701,8 @@ class DistributedEquivSystem {
             localExports.put(key, obj);
             factor = Config.getLoadFactor();
             globalExports.put(my_id, key, obj, factor);
+            broadcast(new ExportMsg(my_id, key, obj, factor));
         }
-        broadcast(new ExportMsg(my_id, key, obj, factor));
         return true;
     }
 
@@ -736,8 +715,8 @@ class DistributedEquivSystem {
                 return false;
             localExports.remove(key);
             globalExports.remove(my_id, key);
+            broadcast(new UnexportMsg(my_id, key));
         }
-        broadcast(new UnexportMsg(my_id, key));
         return true;
     }
 
@@ -745,13 +724,12 @@ class DistributedEquivSystem {
      * Get a cluster stub (stub of all equivalent objects).
      * @return <code>null<code> if not exported.
      */
-    ClusterStub getGlobal(Serializable key) throws RemoteException {
+    ClusterStubData getGlobal(Serializable key) throws RemoteException {
         if (TraceCarol.isDebugCmiDes())
             TraceCarol.debugCmiDes("getGlobal(" + key + ")");
 
         ClusterStub cs;
-        cs = globalExports.getClusterStub(key);
-        return cs;
+        return globalExports.getClusterStubData(key);
     }
 
     /**

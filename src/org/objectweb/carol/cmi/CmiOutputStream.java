@@ -21,14 +21,15 @@ package org.objectweb.carol.cmi;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.rmi.server.RMIClassLoader;
 
-public class MulticastOutputStream extends ObjectOutputStream {
-    public MulticastOutputStream(OutputStream out) throws IOException {
+public class CmiOutputStream extends ObjectOutputStream {
+    public CmiOutputStream(OutputStream out) throws IOException {
         super(out);
     }
 
     protected void annotateClass(Class cl) throws IOException {
-        writeLocation(java.rmi.server.RMIClassLoader.getClassAnnotation(cl));
+        writeLocation(RMIClassLoader.getClassAnnotation(cl));
     }
 
     protected void annotateProxyClass(Class cl) throws IOException {

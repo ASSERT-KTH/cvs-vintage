@@ -28,11 +28,13 @@ public final class Naming {
     private Naming() {
     }
 
-    public static ClusterRegistry getRegistry(String host, int port)
+    private static ClusterRegistryInternal getRegistry(String host, int port)
         throws RemoteException {
-        ClusterRegistry r =
-            (ClusterRegistry) LowerOrb.getRegistryStub(
-                "org.objectweb.carol.cmi.ClusterRegistryImpl", host, port);
+        ClusterRegistryInternal r =
+            (ClusterRegistryInternal) LowerOrb.getRegistryStub(
+                "org.objectweb.carol.cmi.ClusterRegistryImpl",
+                host,
+                port);
         return r;
     }
 
@@ -40,20 +42,20 @@ public final class Naming {
         throws RemoteException {
         int n = hp.length;
         if (n == 0) return null;
-        ClusterRegistry r = getRegistry(hp[0].host, hp[0].port);
-        if (n == 1) return r;
+        ClusterRegistryInternal r = getRegistry(hp[0].host, hp[0].port);
+        if (n == 1) return new ClusterRegistryClient(r);
         ClusterStubData csd = new ClusterStubData(r);
         for (int i = 1; i < n; i++) {
             csd.setStub(getRegistry(hp[i].host, hp[i].port));
         }
-        return (ClusterRegistry) csd.getClusterStub();
+        return new ClusterRegistryClient((ClusterRegistryInternal) csd.getClusterStub());
     }
 
     public static ClusterRegistry getLocalRegistry(NamingContextHostPort[] hp)
         throws MalformedURLException, RemoteException {
-        ClusterRegistry creg = getRegistry(hp);
-        if (creg instanceof ClusterStub)
+        if (hp.length > 1)
             throw new MalformedURLException("Can not bind or unbind in multiple machines");
+        ClusterRegistry creg = getRegistry(hp);
         return creg;
     }
 

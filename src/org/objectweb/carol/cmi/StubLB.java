@@ -18,17 +18,14 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
-
-
 /**
  * @author nieuviar
  *
  */
 public abstract class StubLB {
     abstract void add(StubData sd);
-    abstract void remove(StubData sd);
-    public abstract Remote get() throws NoMoreStubException;
-    public abstract Remote get(StubLBFilter f) throws NoMoreStubException;
-    public abstract void remove(Remote stub);
+    abstract void removeCallback(StubData sd);
+    public abstract StubData get() throws NoMoreStubException;
+    public abstract StubData get(StubLBFilter f) throws NoMoreStubException;
+    public abstract void remove(StubData sd);
 }

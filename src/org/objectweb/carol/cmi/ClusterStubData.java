@@ -25,13 +25,11 @@ import java.lang.reflect.Constructor;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
-//TODO Rewrite comments, they are completely wrong
 /**
- * Stubs to clustered objects extend this class. They may contain several
+ * Stubs to clustered objects use this class. They may contain several
  * stubs to regular objects.
  * @author Simon Nieuviarts
  */
@@ -48,11 +46,11 @@ public class ClusterStubData {
 
     private boolean stubDebug = false;
 
-    private Class clusterStubClass;
+    private StubData firstSD;
 
     // Updates on these variables have to be done with the lock on this
     private HashMap idMap;
-    private HashMap stubMap;
+    private HashSet stubs;
     private volatile ClusterStub clusterStub;
 
     private WeakList lbList = new WeakList();
@@ -65,25 +63,22 @@ public class ClusterStubData {
     }
 
     /**
-     * Construct a new cluster stub, containing a regular stub.
+     * Construct a new cluster stub data, containing a regular stub.
      * @param serverId the cluster id of the server where the remote object is
      * running.
-     * @param stub the regular stub.
+     * @param stubSer the regular stub, serialized.
+     * @param factor factor for round robin load lalancing.
      */
-    public ClusterStubData(ClusterId serverId, Remote stub, int factor)
+    public ClusterStubData(ClusterId serverId, byte[] stubSer, int factor)
         throws RemoteException {
-        StubData sd = new StubData(serverId, stub, factor);
+        StubData sd = new StubData(serverId, stubSer, factor);
+        firstSD = sd;
         idMap = new HashMap();
         idMap.put(serverId, sd);
-        stubMap = new HashMap();
-        stubMap.put(stub, sd);
+        stubs = new HashSet();
+        stubs.add(sd);
         randomSeed = SecureRandom.getLong();
         stubDebug = Config.isStubDebug();
-        try {
-            clusterStubClass = ClusterObject.getClusterStubClass(stub.getClass());
-        } catch (ClassNotFoundException e) {
-            throw new RemoteException("No valid cluster stub class for " + stub.getClass().getName());
-        }
     }
 
     /**
@@ -91,40 +86,43 @@ public class ClusterStubData {
      * Can be used only for the cluster registry.
      * @param stub a stub to the registry.
      */
-    public ClusterStubData(Remote stub) throws RemoteException {
-        StubData sd = new StubData(null, stub, Config.DEFAULT_RR_FACTOR);
-        stubMap = new HashMap();
-        stubMap.put(stub, sd);
+    ClusterStubData(ClusterRegistryInternal stub) throws RemoteException {
+        StubData sd = new StubData(stub);
+        firstSD = sd;
+        idMap = null;
+        stubs = new HashSet();
+        stubs.add(sd);
         randomSeed = SecureRandom.getLong();
         stubDebug = Config.isStubDebug();
-        try {
-            clusterStubClass = ClusterObject.getClusterStubClass(stub.getClass());
-        } catch (ClassNotFoundException e) {
-            throw new RemoteException("No valid cluster stub class for " + stub.getClass().getName());
-        }
     }
 
-    private static Class[] cnstr_params = new Class[] { ClusterStubData.class };
-
-    private ClusterStub generateClusterStub(Class cl) throws RemoteException {
-        Constructor cnstr;
-        try {
-            cnstr = clusterStubClass.getConstructor(cnstr_params);
-            return (ClusterStub) cnstr.newInstance(new Object[] { this });
-        } catch (Exception e) {
-            throw new RemoteException("Can not instanciate cluster stub" + e.toString());
-        }
-    }
+    private static Class[] cnstrParams = new Class[] { ClusterStubData.class };
 
     public ClusterStub getClusterStub() throws RemoteException {
         ClusterStub cs = clusterStub;
         if (cs == null) {
-            cs = generateClusterStub(clusterStubClass);
+            Remote stub;
+            stub = firstSD.getStub();
+            Class clusterStubClass;
+            try {
+                clusterStubClass =
+                    ClusterObject.getClusterStubClass(stub.getClass());
+            } catch (ClassNotFoundException e1) {
+                throw new RemoteException("No valid cluster stub class for " + stub.getClass().getName());
+            }
+            Constructor cnstr;
+            try {
+                cnstr = clusterStubClass.getConstructor(cnstrParams);
+                cs = (ClusterStub) cnstr.newInstance(new Object[] { this });
+            } catch (Exception e) {
+                throw new RemoteException("Can not instanciate cluster stub" + e.toString());
+            }
             clusterStub = cs;
         }
         return cs;
     }
 
+/*
     public boolean isValidRemote(Remote r) {
         try {
             return clusterStubClass.getName().equals(
@@ -133,6 +131,7 @@ public class ClusterStubData {
             return false;
         }
     }
+*/
 
     /**
      * Add a regular stub in this cluster stub.
@@ -142,22 +141,24 @@ public class ClusterStubData {
      * @return false if the class of the stub is not the same the other objects
      * in the stub, or if factor is < 1.
      */
-    public boolean setStub(ClusterId serverId, Remote stub, int factor) {
+    public boolean setStub(ClusterId serverId, byte[] stubSer, int factor) {
         if (idMap == null) {
             return false;
         }
+/*
         if (!isValidRemote(stub)) {
             return false;
         }
-        StubData sd;
+*/
+                StubData sd;
         try {
-            sd = new StubData(serverId, stub, factor);
+            sd = new StubData(serverId, stubSer, factor);
         } catch (RemoteException e) {
             return false;
         }
         synchronized (this) {
             idMap.put(serverId, sd);
-            stubMap.put(stub, sd);
+            stubs.add(sd);
         }
         return true;
     }
@@ -169,21 +170,13 @@ public class ClusterStubData {
      * @return false if the class of the stub is not the same the other objects
      * in the stub.
      */
-    public boolean setStub(Remote stub) {
+    public boolean setStub(ClusterRegistryInternal stub) {
         if (idMap != null) {
             return false;
         }
-        if (!isValidRemote(stub)) {
-            return false;
-        }
-        StubData sd;
-        try {
-            sd = new StubData(null, stub, Config.DEFAULT_RR_FACTOR);
-        } catch (RemoteException e) {
-            return false;
-        }
+        StubData sd = new StubData(stub);
         synchronized (this) {
-            stubMap.put(stub, sd);
+            stubs.add(sd);
         }
         return true;
     }
@@ -196,24 +189,32 @@ public class ClusterStubData {
     public void write(ObjectOutput out) throws IOException {
         out.writeObject(cfg);
         synchronized (this) {
-            Iterator it = stubMap.entrySet().iterator();
-            int l = stubMap.size();
+            Iterator it = stubs.iterator();
+            int l = stubs.size();
             if (idMap == null) {
                 out.writeInt(-l);
                 for (int i = 0; i < l; i++) {
-                    Map.Entry e = (Entry) it.next();
-                    StubData sd = (StubData) e.getValue();
+                    StubData sd = (StubData) it.next();
                     out.writeInt(sd.getFactor());
-                    out.writeObject(sd.getStub());
+                    Object o = sd.getStubOrException();
+                    if (o instanceof Remote) {
+                        out.writeObject(o);
+                    } else {
+                        out.writeObject(sd.getSerializedStub());
+                    }
                 }
             } else {
                 out.writeInt(l);
                 for (int i = 0; i < l; i++) {
-                    Map.Entry e = (Entry) it.next();
-                    StubData sd = (StubData) e.getValue();
+                    StubData sd = (StubData) it.next();
                     sd.getId().write(out);
                     out.writeInt(sd.getFactor());
-                    out.writeObject(sd.getStub());
+                    Object o = sd.getStubOrException();
+                    if (o instanceof Remote) {
+                        out.writeObject(o);
+                    } else {
+                        out.writeObject(sd.getSerializedStub());
+                    }
                 }
             }
         }
@@ -230,6 +231,7 @@ public class ClusterStubData {
     public static ClusterStubData read(ObjectInput in, ClusterStub cs)
         throws IOException, ClassNotFoundException {
         ClusterStubData csd = new ClusterStubData();
+        StubData first = null;
         try {
             csd.cfg = (ClusterConfig) in.readObject();
             int l = in.readInt();
@@ -237,36 +239,55 @@ public class ClusterStubData {
                 throw new IOException("invalid serialized stub : 0 stubs");
             }
             HashMap idm = null;
-            HashMap stubm = new HashMap();
+            HashSet stubs = new HashSet();
             if (l < 0) {
                 l = -l;
                 for (int i = 0; i < l; i++) {
                     int f = in.readInt();
-                    Remote r = (Remote) in.readObject();
-                    StubData sd = new StubData(null, r, f);
-                    stubm.put(r, sd);
+                    Object obj = in.readObject();
+                    System.err.println(obj.getClass().getName());
+                    StubData sd;
+                    if (obj instanceof Remote) {
+                        sd = new StubData(null, (Remote) obj, f);
+                    } else {
+                        sd = new StubData(null, (byte[]) obj, f);
+                    }
+                    stubs.add(sd);
+                    if (first == null) {
+                        first = sd;
+                    }
                 }
             } else {
                 idm = new HashMap(l);
                 for (int i = 0; i < l; i++) {
                     ClusterId id = ClusterId.read(in);
                     int f = in.readInt();
-                    Remote r = (Remote) in.readObject();
-                    StubData sd = new StubData(id, r, f);
-                    stubm.put(r, sd);
+
+                    Object obj = in.readObject();
+                    StubData sd;
+                    if (obj instanceof Remote) {
+                        sd = new StubData(id, (Remote) obj, f);
+                    } else {
+                        sd = new StubData(id, (byte[]) obj, f);
+                    }
+                    stubs.add(sd);
                     idm.put(id, sd);
+                    if (first == null) {
+                        first = sd;
+                    }
                 }
             }
             csd.idMap = idm;
-            csd.stubMap = stubm;
+            csd.stubs = stubs;
             SecureRandom.setSeed(
                 csd.randomSeed = in.readLong() ^ System.currentTimeMillis());
             csd.stubDebug = in.readBoolean();
         } catch (ClassCastException ce) {
-            throw new IOException("invalid serialized stub" + ce.toString());
+            ce.printStackTrace();
+            throw new IOException("invalid serialized stub " + ce.toString());
         }
         csd.clusterStub = cs;
-        csd.clusterStubClass = cs.getClass();
+        csd.firstSD = first;
         return csd;
     }
 
@@ -293,7 +314,7 @@ public class ClusterStubData {
                 idMap.put(serverId, sd);
                 return false;
             }
-            stubMap.remove(sd.getStub());
+            stubs.remove(sd);
             removeFromLB(sd);
         }
         return true;
@@ -302,15 +323,13 @@ public class ClusterStubData {
     /**
      * This function fails if and only if the stub to remove is the last one.
      */
-    public boolean removeStub(Remote stub) {
-        StubData sd; 
+    public boolean removeStubData(StubData sd) {
         synchronized (this) {
-            sd = (StubData) stubMap.remove(stub);
-            if (sd == null) {
+            if (!stubs.remove(sd)) {
                 return true;
             }
-            if (stubMap.size() == 0) {
-                stubMap.put(stub, sd);
+            if (stubs.size() == 0) {
+                stubs.add(sd);
                 return false;
             }
             idMap.remove(sd.getId());
@@ -319,22 +338,20 @@ public class ClusterStubData {
         return true;
     }
 
-    //TODO Why not an addInLB ?
     private void removeFromLB(StubData sd) {
         Iterator it = lbList.iterator();
         while (it.hasNext()) {
             StubLB lb = (StubLB) it.next();
-            lb.remove(sd);
+            lb.removeCallback(sd);
         }
     }
 
-    //TODO Who calls this ?
     public void setClusterConfig(ClusterConfig cfg) {
         this.cfg = cfg;
     }
 
     /**
-     * You can safely assume it returns a non null structure if it is not
+     * You can assume it returns a non null structure if it is not
      * a stub to a cluster registry. cfg should have been initialized by
      * the constructor
      */
@@ -346,7 +363,7 @@ public class ClusterStubData {
         StubLB lb;
         // Synchronize to avoid Exceptions for concurrent modifications
         synchronized (this) {
-            lb = new RoundRobin(this, stubMap.values());
+            lb = new RoundRobin(this, stubs);
         }
         lbList.put(lb);
         return lb;
@@ -356,10 +373,21 @@ public class ClusterStubData {
         StubLB lb;
         // Synchronize to avoid Exceptions for concurrent modifications
         synchronized (this) {
-            lb = new Random(this, stubMap.values());
+            lb = new Random(this, stubs);
         }
         lbList.put(lb);
         return lb;
+    }
+
+    public StubData getLocal() throws NoLocalStubException {
+        synchronized (this) {
+            Iterator it = stubs.iterator();
+            while (it.hasNext()) {
+                StubData sd = (StubData)it.next();
+                System.out.println(sd.getStubOrException());
+            }
+        }
+        throw new NoLocalStubException();
     }
 
     public boolean isStubDebug() {
@@ -368,5 +396,24 @@ public class ClusterStubData {
 
     public void debug(String mesg) {
         System.out.println("ClusterStub: " + mesg);
+    }
+
+    public String toContentsString() {
+        synchronized (this) {
+            Iterator it = stubs.iterator();
+            if (!it.hasNext()) {
+                return "[]";
+            }
+            String str = "[ " + it.next().toString();
+            while (it.hasNext()) {
+                str = str + ", " + it.next().toString();
+            }
+            str = str + " ]";
+            return str;
+        }
+    }
+
+    public String toString() {
+        return this.getClass().getName() + toContentsString();
     }
 }

@@ -18,7 +18,6 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -46,8 +45,6 @@ public class RoundRobin extends StubLB {
         }
 
         /* a random start choice
-         * TODO A fairer choice is a number form 0.0 to 1.0, and simulate a load where
-         * each stub has just passed this value
          */
         for (int i = 0; i<SecureRandom.getInt(len); i++) {
             load[i] = sd[i].getLoadIncr();
@@ -86,7 +83,7 @@ public class RoundRobin extends StubLB {
      * between this load balancer and the cluster stub.
      * @see org.objectweb.carol.cmi.lb.StubLB#remove(org.objectweb.carol.cmi.StubData)
      */
-    synchronized void remove(StubData s) {
+    synchronized void removeCallback(StubData s) {
         for (int i=0; i<len; i++) {
             if (sd[i] == s) {
                 len--;
@@ -100,18 +97,18 @@ public class RoundRobin extends StubLB {
 
     private static StubLBFilter emptyFilter = new StubLBFilter();
 
-    public synchronized Remote get() throws NoMoreStubException {
+    public synchronized StubData get() throws NoMoreStubException {
         return get(emptyFilter);
     }
 
-    public synchronized Remote get(StubLBFilter f) throws NoMoreStubException {
+    public synchronized StubData get(StubLBFilter f) throws NoMoreStubException {
         double min = Double.MAX_VALUE;
         double minOk = Double.MAX_VALUE;
         int index = -1;
         for (int i=0; i<len; i++) {
             double l = load[i];
             if (l < minOk) {
-                if (!f.contains(sd[i].getStub())) {
+                if (!f.contains(sd[i])) {
                     minOk = l;
                     index = i;
                 }
@@ -135,13 +132,13 @@ public class RoundRobin extends StubLB {
 
         StubData s = sd[index];
         load[index] += s.getLoadIncr();
-        return s.getStub();
+        return s;
     }
 
     /**
-     * @see org.objectweb.carol.cmi.StubLB#remove(java.rmi.Remote)
+     * @see org.objectweb.carol.cmi.StubLB#remove(java.rmi.StubData)
      */
-    public void remove(Remote stub) {
-        csd.removeStub(stub);
+    public void remove(StubData s) {
+        csd.removeStubData(s);
     }
 }

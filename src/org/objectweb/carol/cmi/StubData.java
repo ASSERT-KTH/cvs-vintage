@@ -18,6 +18,9 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -27,25 +30,76 @@ import java.rmi.RemoteException;
  */
 public class StubData {
     private ClusterId id;
-    private Remote stub;
+    private byte[] serializedStub;
+    private Object stub;
     private int factor;
     private double loadIncr; // Is lower or equal to 1.0
+
+    public StubData(ClusterId id, byte[] serStub, int factor) throws RemoteException {
+        if (factor < 1) {
+            throw new RemoteException("bad load factor : " + factor);
+        }
+        this.id = id;
+        this.serializedStub = serStub;
+        this.stub = null;
+        this.factor = factor;
+        this.loadIncr = 1.0 / (double)factor;
+    }
 
     public StubData(ClusterId id, Remote stub, int factor) throws RemoteException {
         if (factor < 1) {
             throw new RemoteException("bad load factor : " + factor);
         }
         this.id = id;
+        this.serializedStub = null;
         this.stub = stub;
         this.factor = factor;
         this.loadIncr = 1.0 / (double)factor;
+    }
+
+    StubData(Remote stub) {
+        this.id = null;
+        this.serializedStub = null;
+        this.stub = stub;
+        this.factor = Config.DEFAULT_RR_FACTOR;
+        this.loadIncr = 1.0 / (double)Config.DEFAULT_RR_FACTOR;
     }
 
     public ClusterId getId() {
         return id;
     }
 
-    public Remote getStub() {
+    public byte[] getSerializedStub() throws IOException {
+        if (serializedStub == null) {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            CmiOutputStream out = new CmiOutputStream(outStream);
+            out.writeObject(stub);
+            out.flush();
+            serializedStub = outStream.toByteArray();
+        }
+        return serializedStub;
+    }
+
+    public Remote getStub() throws RemoteException {
+        Object s = getStubOrException();
+        if (s instanceof Remote) {
+            return (Remote)s;
+        }
+        throw (RemoteException)s;
+    }
+
+    public Object getStubOrException() {
+        if (stub == null) {
+            ByteArrayInputStream inStream = new ByteArrayInputStream(serializedStub);
+            try {
+                CmiInputStream in = new CmiInputStream(inStream);
+                stub = (Remote)in.readObject();
+            } catch (IOException e) {
+                stub = new RemoteException(e.toString());
+            } catch (ClassNotFoundException e) {
+                stub = new RemoteException(e.toString());
+            }
+        }
         return stub;
     }
 
@@ -55,5 +109,15 @@ public class StubData {
 
     public int getFactor() {
         return factor;
+    }
+
+    public String toString() {
+        String str = "[id:" + id + ",stub:";
+        Object o = getStubOrException();
+        if (o instanceof Remote) {
+            return str + o.toString() + "]";
+        } else {
+            return str + "serialized]";
+        }
     }
 }

@@ -18,8 +18,11 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.LinkedList;
 
 /**
  * @author nieuviar
@@ -66,5 +69,40 @@ public class InetMask {
             if (b[i] != bits[i]) return false;
         }
         return false;
+    }
+
+    /**
+     * Use JDK 1.4 methods.
+     * @return List of local addresses (java.net.InetAddress) matching this InetMask.
+     */
+    public LinkedList filterLocal() {
+        LinkedList l = new LinkedList();
+        try {
+            Enumeration enum;
+            Class cl;
+            Object[] obj0 = {
+            };
+            cl = Class.forName("java.net.NetworkInterface");
+            Method meth = cl.getMethod("getNetworkInterfaces", new Class[0]);
+            Method getInet = cl.getMethod("getInetAddresses", new Class[0]);
+            enum = (Enumeration) meth.invoke(cl, obj0);
+            while (enum.hasMoreElements()) {
+                Object o = enum.nextElement();
+                Enumeration enum2 = (Enumeration) getInet.invoke(o, obj0);
+                while (enum2.hasMoreElements()) {
+                    InetAddress a = (InetAddress) enum2.nextElement();
+                    if (match(a)) {
+                        l.add(a);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            if (l.isEmpty()) {
+                return l;
+            } else {
+                return new LinkedList();
+            }
+        }
+        return l;
     }
 }

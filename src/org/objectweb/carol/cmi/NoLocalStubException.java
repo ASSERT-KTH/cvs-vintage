@@ -18,33 +18,10 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.rmi.RemoteException;
 
-/**
- * @author nieuviar
- *
- */
-public class StubLBFilter {
-    private HashSet hs;
-    /**
-     * 
-     */
-    public StubLBFilter() {
-        hs = new HashSet();
-    }
-
-    /**
-     * @param c
-     */
-    public StubLBFilter(Collection c) {
-        hs = new HashSet(c);
-    }
-
-    public boolean add(StubData sd) {
-        return hs.add(sd);
-    }
-    public boolean contains(StubData sd) {
-        return hs.contains(sd);
+public class NoLocalStubException extends RemoteException {
+    public NoLocalStubException() {
+        super();
     }
 }

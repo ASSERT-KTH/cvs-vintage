@@ -63,7 +63,7 @@ public final class DistributedEquiv {
     /**
      * @return true if succesfully exported
      */
-    static boolean exportObject(Serializable key, Remote obj)
+    static boolean exportObject(Serializable key, byte[] obj)
         throws ConfigException, RemoteException {
         DistributedEquivSystem d = des;
         if (d == null)
@@ -84,7 +84,7 @@ public final class DistributedEquiv {
     /**
      * @return <code>null<code> if not exported.
      */
-    static ClusterStub getGlobal(Serializable key)
+    static ClusterStubData getGlobal(Serializable key)
         throws ConfigException, RemoteException {
         DistributedEquivSystem d = des;
         if (d == null)

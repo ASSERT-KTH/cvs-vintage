@@ -18,15 +18,18 @@
  */
 package org.objectweb.carol.cmi;
 
+import java.rmi.AlreadyBoundException;
 import java.rmi.ConnectException;
 import java.rmi.ConnectIOException;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
  * Cluster standard stub for ClusterRegistryImpl
  */
 public class ClusterRegistryImpl_Cluster
-    implements ClusterStub, ClusterRegistry {
+    implements ClusterStub, ClusterRegistryInternal {
     private ClusterStubData csd;
     private StubLB lb;
 
@@ -37,16 +40,16 @@ public class ClusterRegistryImpl_Cluster
         lb = csd.getRandom();
     }
 
-    //TODO remove
     private void setLB() {
         if (lb == null) {
             lb = csd.getRandom();
         }
     }
 
-    public java.lang.String[] list() throws java.rmi.RemoteException {
+    public String[] list() throws RemoteException {
         setLB();
-        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubData sd = lb.get();
+        ClusterRegistryInternal stub = (ClusterRegistryInternal) sd.getStub();
         StubLBFilter filter = null;
         do {
             try {
@@ -63,17 +66,19 @@ public class ClusterRegistryImpl_Cluster
                 if (filter == null) {
                     filter = new StubLBFilter();
                 }
-                filter.add(stub);
-                stub = (ClusterRegistry) lb.get(filter);
+                filter.add(sd);
+                sd = lb.get(filter);
+                stub = (ClusterRegistryInternal) sd.getStub();
             }
         } while (true);
     }
 
     /* Used only to test if a registry is started.
      */
-    public void test() throws java.rmi.RemoteException {
+    public void test() throws RemoteException {
         setLB();
-        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubData sd = lb.get();
+        ClusterRegistryInternal stub = (ClusterRegistryInternal) sd.getStub();
         StubLBFilter filter = null;
         do {
             try {
@@ -89,21 +94,22 @@ public class ClusterRegistryImpl_Cluster
                 if (filter == null) {
                     filter = new StubLBFilter();
                 }
-                filter.add(stub);
-                stub = (ClusterRegistry) lb.get(filter);
+                filter.add(sd);
+                sd = lb.get(filter);
+                stub = (ClusterRegistryInternal) sd.getStub();
             }
         } while (true);
     }
 
-    public java.rmi.Remote lookup(java.lang.String name)
-        throws java.rmi.NotBoundException, java.rmi.RemoteException {
+    public Object lookup(String name)
+        throws NotBoundException, RemoteException {
         setLB();
-        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubData sd = lb.get();
+        ClusterRegistryInternal stub = (ClusterRegistryInternal) sd.getStub();
         StubLBFilter filter = null;
         do {
             try {
-                java.rmi.Remote result = stub.lookup(name);
-                return result;
+                return stub.lookup(name);
             } catch (RemoteException e) {
                 if (!(e instanceof ConnectException)
                     && !(e instanceof ConnectIOException)) {
@@ -115,30 +121,44 @@ public class ClusterRegistryImpl_Cluster
                 if (filter == null) {
                     filter = new StubLBFilter();
                 }
-                filter.add(stub);
-                stub = (ClusterRegistry) lb.get(filter);
+                filter.add(sd);
+                sd = lb.get(filter);
+                stub = (ClusterRegistryInternal) sd.getStub();
             }
         } while (true);
     }
 
-    public void bind(java.lang.String name, java.rmi.Remote obj)
-        throws java.rmi.AlreadyBoundException, java.rmi.RemoteException {
+    public void bindSingle(String name, Remote obj)
+        throws AlreadyBoundException, RemoteException {
         throw new RemoteException("Can't bind into multiple servers");
-        //        ClusterRegistry stub = (ClusterRegistry) getFirst();
+    }
+
+    public void rebindSingle(String name, Remote obj)
+        throws RemoteException {
+        throw new RemoteException("Can't rebind into multiple servers");
+    }
+
+    public void bindCluster(String name, byte[] obj)
+        throws AlreadyBoundException, RemoteException {
+        csd.getLocal();
+        throw new RemoteException("Can't bind into multiple servers");
+        //        ClusterRegistryInternal stub = (ClusterRegistryInternal) getFirst();
         //        stub.bind(name, obj);
     }
 
-    public void rebind(java.lang.String name, java.rmi.Remote obj)
-        throws java.rmi.RemoteException {
+    public void rebindCluster(String name, byte[] obj)
+        throws RemoteException {
+        csd.getLocal();
         throw new RemoteException("Can't rebind into multiple servers");
-        //        ClusterRegistry stub = (ClusterRegistry) getFirst();
+        //        ClusterRegistryInternal stub = (ClusterRegistryInternal) getFirst();
         //        stub.rebind(name, obj);
     }
 
     public void unbind(java.lang.String name)
-        throws java.rmi.NotBoundException, java.rmi.RemoteException {
+        throws NotBoundException, RemoteException {
+        csd.getLocal();
         throw new RemoteException("Can't unbind from multiple servers");
-        //        ClusterRegistry stub = (ClusterRegistry) getFirst();
+        //        ClusterRegistryInternal stub = (ClusterRegistryInternal) getFirst();
         //        stub.unbind(name);
     }
 }

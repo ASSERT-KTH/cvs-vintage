@@ -18,10 +18,10 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
 import java.util.Collection;
 import java.util.Iterator;
 
+//TODO synchronization ?
 public class Random extends StubLB {
     private ClusterStubData csd;
     private int len;
@@ -70,7 +70,7 @@ public class Random extends StubLB {
      * between this load balancer and the cluster stub.
      * @see org.objectweb.carol.cmi.lb.StubLB#remove(org.objectweb.carol.cmi.StubData)
      */
-    void remove(StubData s) {
+    void removeCallback(StubData s) {
         for (int i = 0; i < len; i++) {
             if (sd[i] == s) {
                 len--;
@@ -81,18 +81,18 @@ public class Random extends StubLB {
         }
     }
 
-    public synchronized Remote get() throws NoMoreStubException {
+    public synchronized StubData get() throws NoMoreStubException {
         if (len <= 0) {
             throw new NoMoreStubException();
         }
         int choice = SecureRandom.getInt(len);
-        return sd[choice].getStub();
+        return sd[choice];
     }
 
-    public synchronized Remote get(StubLBFilter f) throws NoMoreStubException {
+    public synchronized StubData get(StubLBFilter f) throws NoMoreStubException {
         int n = SecureRandom.getInt(len);
         for (int i=0; i<len; i++) {
-            Remote s = sd[n].getStub();
+            StubData s = sd[n];
             if (!f.contains(s)) {
                 return s;
             }
@@ -104,7 +104,7 @@ public class Random extends StubLB {
     /**
      * @see org.objectweb.carol.cmi.StubLB#remove(java.rmi.Remote)
      */
-    public void remove(Remote stub) {
-        csd.removeStub(stub);
+    public void remove(StubData s) {
+        csd.removeStubData(s);
     }
 }
