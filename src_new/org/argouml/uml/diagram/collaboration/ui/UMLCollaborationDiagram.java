@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.10 2002/08/19 16:11:53 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.11 2002/08/19 16:41:22 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -63,7 +63,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
 
   protected static Action _actionClassifierRole =
-  new CmdCreateNode(MClassifierRoleImpl.class, "ClassifierRole");
+  new CmdCreateNode(MClassifierRole.class, "ClassifierRole");
 
   protected static Action _actionAssoc =
   new CmdSetMode(ModeCreatePolyEdge.class,

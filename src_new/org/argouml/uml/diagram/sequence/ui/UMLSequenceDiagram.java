@@ -26,7 +26,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.7 2002/08/19 16:11:53 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.8 2002/08/19 16:41:22 kataka Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -59,7 +59,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
 
 
   protected static Action _actionObject =
-  new CmdCreateNode(MObjectImpl.class, "Object");
+  new CmdCreateNode(MObject.class, "Object");
 
   protected static Action _actionLinkWithStimulusCall =
   new ActionAddLink(MCallActionImpl.class, "StimulusCall");
