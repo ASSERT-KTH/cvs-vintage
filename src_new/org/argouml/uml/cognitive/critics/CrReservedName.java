@@ -26,7 +26,7 @@
 // File: CrReservedName.java
 // Classes: CrReservedName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.2 2001/11/09 03:43:49 mkl Exp $
+// $Id: CrReservedName.java,v 1.3 2001/11/12 15:21:37 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -216,7 +216,8 @@ public class CrReservedName extends CrUML {
         // have those "reserved" names.
         Project p = ProjectBrowser.TheInstance.getProject();
         Hashtable definedTypes = p.getDefinedTypes();
-        if (definedTypes.get(nameStr).equals(nameStr)) return NO_PROBLEM;
+        if (definedTypes.get(nameStr)!=null &&
+            definedTypes.get(nameStr).equals(nameStr)) return NO_PROBLEM;
 
         java.util.Enumeration enum = _umlReserved.elements();
         while (enum.hasMoreElements()) {
