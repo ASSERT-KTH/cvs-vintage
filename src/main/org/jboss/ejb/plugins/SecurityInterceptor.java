@@ -27,7 +27,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.29 $
+@version $Revision: 1.30 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -148,6 +148,14 @@ public class SecurityInterceptor extends AbstractInterceptor
     {
         Principal principal = mi.getPrincipal();
         Object credential = mi.getCredential();
+
+        if(mi.getMethod() == null) {
+            // Allow for the progatation of caller info to other beans
+            SecurityAssociation.setPrincipal( principal );
+            SecurityAssociation.setCredential( credential );
+            return;
+        }
+
         // If there is not a security manager then there is no authentication required
         if (securityManager == null)
         {
