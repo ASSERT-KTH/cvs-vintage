@@ -940,7 +940,7 @@ public final class ContextManager implements LogAware{
     //     public final String getRandomClass() {
     // XXX XXX @deprecated - use  interceptor properties
     public final void setRandomClass(String randomClass) {
-        System.setProperty(RANDOM_CLASS_PROPERTY, randomClass);
+        System.getProperties().put(RANDOM_CLASS_PROPERTY, randomClass);
     }
 
 

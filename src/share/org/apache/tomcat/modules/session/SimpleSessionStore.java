@@ -115,7 +115,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 
     public final void setRandomClass(String randomClass) {
 	this.randomClass=randomClass;
-	System.setProperty(ContextManager.RANDOM_CLASS_PROPERTY, randomClass);
+	System.getProperties().
+	    put(ContextManager.RANDOM_CLASS_PROPERTY, randomClass);
     }
 
     

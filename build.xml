@@ -206,7 +206,7 @@
   </target>
 
   <!-- ==================== Webdav ========== -->
-  <target name="dav" depends="init">
+  <target depends="init" if="jdk12.present" name="dav">
     <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/webdav">
       <classpath>
 	<pathelement location="${servlet22.jar}"/>
@@ -238,6 +238,7 @@
       <include name="org/apache/tomcat/modules/**"/>    
       <exclude name="org/apache/tomcat/request/Jdk12Interceptor.java" unless="jdk12.present"/>
       <exclude name="org/apache/tomcat/context/LoaderInterceptor1.java" unless="jdk12.present"/>
+      <exclude name="org/apache/tomcat/context/LoaderInterceptor12.java" unless="jdk12.present"/>
       <exclude name="org/apache/tomcat/context/PolicyInterceptor.java" unless="jdk12.present"/>
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat_modules.jar" basedir="${tomcat.build}/classes"> 
@@ -256,6 +257,8 @@
 	<pathelement location="${servlet22.jar}"/>
       </classpath>
       <include name="org/apache/jasper/**"/>    
+      <exclude name="org/apache/jasper/servlet/JasperLoader12.java" 
+	unless="jdk12.present"/>
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/jasper">
             <fileset dir="src/share/org/apache/jasper">
@@ -352,15 +355,15 @@
     <copy todir="${tomcat.dist}">
             <fileset dir="${tomcat.build}"/>
         </copy>
-    <copy todir="${tomcat.dist}/src/org">
+    <!-- copy todir="${tomcat.dist}/src/org">
             <fileset dir="src/share/org"/>
-        </copy>
+       </copy -->
     <copy tofile="${tomcat.dist}/lib/jaxp.jar" file="${jaxp}/jaxp.jar"/>
     <copy tofile="${tomcat.dist}/lib/parser.jar" file="${jaxp}/parser.jar"/>
     <copy tofile="${tomcat.dist}/lib/servlet.jar" file="${servlet.jar}"/>
-    <copy todir="${tomcat.dist}/src/org">
+    <!-- copy todir="${tomcat.dist}/src/org">
             <fileset dir="src/facade22/org"/>
-        </copy>
+        </copy -->
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc"/>

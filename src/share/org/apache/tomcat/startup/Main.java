@@ -159,7 +159,7 @@ public class Main {
 		    //    log( "Path2 " + f1 );
 		    h = f1.getCanonicalPath();
 		    //log( "Guessed " + h + " from " + path );
-		    System.setProperty( "tomcat.home", h );
+		    System.getProperties().put( "tomcat.home", h );
 		    return h;
 		} catch( Exception ex ) {
 		    ex.printStackTrace();
