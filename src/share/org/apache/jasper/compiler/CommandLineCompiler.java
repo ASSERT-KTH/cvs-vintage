@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.4 2000/02/23 17:47:36 rubys Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/23 17:47:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.5 2000/02/25 20:10:46 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/25 20:10:46 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -259,6 +259,10 @@ public class CommandLineCompiler extends Compiler implements Mangler {
     }
 
     private static final String mangleChar(char ch) {
+	
+        if(ch == File.separatorChar) {
+	    ch = '/';
+	}
 	String s = Integer.toHexString(ch);
 	int nzeros = 5 - s.length();
 	char[] result = new char[6];

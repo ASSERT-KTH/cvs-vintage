@@ -233,6 +233,10 @@ public class JspCompiler extends Compiler implements Mangler {
     }
 
     private static final String mangleChar(char ch) {
+
+        if(ch == File.separatorChar) {
+	    ch = '/';
+	}	
 	String s = Integer.toHexString(ch);
 	int nzeros = 5 - s.length();
 	char[] result = new char[6];
