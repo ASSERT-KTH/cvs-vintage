@@ -62,7 +62,7 @@ import org.tigris.scarab.baseom.*;
 /** 
  * All attributes must extend this class. All attributes have a name.
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2001/01/23 22:33:44 $
+ * @version $Revision: 1.3 $ $Date: 2001/02/16 19:35:16 $
  */
 public abstract class Attribute
 {
@@ -369,6 +369,7 @@ public abstract class Attribute
         return false;
     }
 
+    /*    
     public static Vector getAttributes(ParameterParser pp) 
         throws Exception
     {
@@ -382,4 +383,5 @@ public abstract class Attribute
         }
         return attValues;
     }
+    */
 }
