@@ -65,56 +65,67 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.10 2002/02/19 22:16:13 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.11 2002/02/27 22:04:14 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
 
     /**
-     * creates new global artifact type
+     * creates or edits global artifact type
      */
     public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        IssueType issueType = new IssueType();
+        IssueType issueType = getScarabRequestTool(context).getIssueType();
         Group group = intake.get("IssueType", issueType.getQueryKey());
         String lastTemplate = getLastTemplate(data);
 
         if ( intake.isAllValid() ) 
         {
-            // make sure name is unique
-            Field field = group.get("Name");
-            String name = field.toString();
-            if ( IssueTypePeer.isUnique(name, null) ) 
+            if (issueType.getIssueTypeId() == null)
             {
-                group.setProperties(issueType);
-                issueType.setParentId(new NumberKey("0"));
-                issueType.save();
-                
-                // Create template type.
-                IssueType template = new IssueType();
-                template.setName(issueType.getName() + " Template");
-                template.setParentId(issueType.getIssueTypeId());
-                template.save();
-                doCancel(data ,context);
-
-                // If they came from the manage issue types page
-                // Cancel back one more time to skip extra step
-                if (lastTemplate != null && 
-                    lastTemplate.equals("admin,ArtifactTypeSelect.vm"))
+                // Create new issue type
+                // make sure name is unique
+                Field field = group.get("Name");
+                String name = field.toString();
+                if ( IssueTypePeer.isUnique(name, null) ) 
                 {
-                    getScarabRequestTool(context)
-                       .getCurrentModule().addRModuleIssueType(issueType);
-                    data.setMessage("The issue type has been added to "
-                                     + "the module.");
+                    group.setProperties(issueType);
+                    issueType.setParentId(new NumberKey("0"));
+                    issueType.save();
+                    
+                    // Create template type.
+                    IssueType template = new IssueType();
+                    template.setName(issueType.getName() + " Template");
+                    template.setParentId(issueType.getIssueTypeId());
+                    template.save();
                     doCancel(data ,context);
+
+                    // If they came from the manage issue types page
+                    // Cancel back one more time to skip extra step
+                    if (lastTemplate != null && 
+                        lastTemplate.equals("admin,ArtifactTypeSelect.vm"))
+                    {
+                        getScarabRequestTool(context)
+                           .getCurrentModule().addRModuleIssueType(issueType);
+                        data.setMessage("The issue type has been added to "
+                                         + "the module.");
+                        doCancel(data ,context);
+                    }
+                }
+                else 
+                {
+                    data.setMessage("Issue type by that name already exists");
                 }
             }
-            else 
+            else
             {
-                data.setMessage("Issue type by that name already exists");
+                // Edit existing issue type
+                group.setProperties(issueType);
+                issueType.save();
             }
+
         }
         else
         {
