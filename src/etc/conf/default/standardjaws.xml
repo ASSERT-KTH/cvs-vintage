@@ -809,6 +809,11 @@
               <sql-type>TIMESTAMP</sql-type>
           </mapping>
           <mapping>
+              <java-type>java.sql.Date</java-type>
+              <jdbc-type>DATE</jdbc-type>
+              <sql-type>DATETIME</sql-type>
+          </mapping>
+          <mapping>
               <java-type>java.util.Date</java-type>
               <jdbc-type>DATE</jdbc-type>
               <sql-type>DATETIME</sql-type>
