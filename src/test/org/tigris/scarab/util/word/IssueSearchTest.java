@@ -48,7 +48,6 @@ package org.tigris.scarab.util.word;
 
 
 import org.tigris.scarab.test.BaseTestCase;
-import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.AttributeValue;
@@ -61,7 +60,7 @@ import org.tigris.scarab.util.IteratorWithSize;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.7 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: IssueSearchTest.java,v 1.8 2004/02/01 14:08:39 dep4b Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {

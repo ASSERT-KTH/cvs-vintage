@@ -58,13 +58,27 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.19 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.20 2004/02/01 14:08:38 dep4b Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
-    private ScarabModule newModule = null;
-
-
+    ScarabModule newModule;
+    public void setUp() throws Exception{
+        super.setUp();
+        newModule = (ScarabModule)ModuleManager.getInstance();
+        newModule.setRealName("New Module");
+        newModule.setOwnerId(new Integer(1));
+        newModule.setParentId(new Integer(1));
+        newModule.setDescription("This is the new module description");
+        newModule.save();
+        
+    }
+    
+    public void tearDown() throws Exception{
+        
+        ScarabModulePeer.doDelete(newModule);
+        super.tearDown();
+    }
 
 
     public void testGetParents() throws Exception
@@ -80,16 +94,7 @@ public class ScarabModuleTest extends BaseTestCase
         }
         System.out.println ("parents=" + parents.size());
     }
-    public void testCreateNew() throws Exception
-    {
-        Module me = ModuleManager.getInstance();
-        me.setRealName("New Module");
-        me.setOwnerId(new Integer(1));
-        me.setParentId(new Integer(1));
-        me.setDescription("This is the new module description");
-        me.save();
-        newModule = (ScarabModule)me;
-    }
+   
 
     public void testIssueTypes() throws Exception
     {
@@ -183,4 +188,6 @@ public class ScarabModuleTest extends BaseTestCase
         }
         return expectedSize;
     }
+    
+    
 }

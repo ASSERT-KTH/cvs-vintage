@@ -50,6 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.turbine.Turbine;
 import org.tigris.scarab.test.BaseTestCase;
 
 /**
@@ -60,6 +61,11 @@ import org.tigris.scarab.test.BaseTestCase;
 public class AttributeAccessTest
     extends BaseTestCase
 {    
+    public void setUp() throws Exception{
+        super.setUp();
+        Turbine.getConfiguration().setProperty("dataaccess.AttributeAccess.classname","org.tigris.scarab.da.AttributeAccess");
+        assertNotNull(Turbine.getConfiguration().getString("dataaccess.AttributeAccess.classname"));
+    }
  
 
  

@@ -54,13 +54,13 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.11 2004/01/31 18:15:39 dep4b Exp $
+ * @version $Id: AttributeValueTest.java,v 1.12 2004/02/01 14:08:38 dep4b Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
-    private AttributeValue attVal = null;
-    private AttributeValue attVal2 = null;
-    private AttributeValue newAttVal = null;
+    private AttributeValue attValSeverity = null;
+    private AttributeValue attValDescription = null;
+    private AttributeValue attValSeverityCopy = null;
     private Issue issue = null;
 
    
@@ -69,21 +69,15 @@ public class AttributeValueTest extends BaseTestCase
     	super.setUp();
         issue = getIssue0();
         // severity
-        attVal = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("9")));
+        attValSeverity = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("9")));
         // description
-        attVal2 = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("1")));
-        newAttVal = attVal.copy();
+        attValDescription = issue.getAttributeValue(AttributeManager.getInstance(new NumberKey("1")));
+        attValSeverityCopy = attValSeverity.copy();
     }
+    
 
 
-    public void ftestCopy() throws Exception
-    {
-        System.out.println("\ntestCopy()");
-        
-       
-    }
-
-    public void testSave() throws Exception
+    public void testSaveAndDelete() throws Exception
     {
         System.out.println("\ntestSave()");
         Attachment attachment = AttachmentManager.getInstance();
@@ -94,54 +88,51 @@ public class AttributeValueTest extends BaseTestCase
         ActivitySet trans = 
         	ActivitySetManager.getInstance(new Integer(1), getUser1(), attachment);
         trans.save();
-        newAttVal.startActivitySet(trans);
-        newAttVal.setOptionId(new Integer(70));
-        newAttVal.setUserId(new Integer(1));
-        newAttVal.save();
+        attValSeverityCopy.startActivitySet(trans);
+        attValSeverityCopy.setOptionId(new Integer(70));
+        attValSeverityCopy.setUserId(new Integer(1));
+        attValSeverityCopy.save();
+        assertEquals(attValSeverityCopy.getValueId().toString(), attValSeverityCopy.getQueryKey());
+        
+        AttributeValuePeer.doDelete(attValSeverityCopy);
     }
 
     public void testGetOptionIdAsString() throws Exception
     {
         System.out.println("\ntestGetOptionIdAsString()");
-        assertEquals("70", newAttVal.getOptionIdAsString());
+        //assertEquals("70", attValSeverityCopy.getOptionIdAsString());
+        assertEquals("66", attValSeverityCopy.getOptionIdAsString());
     }
 
-    public void testGetQueryKey() throws Exception
-    {
-        System.out.println("\ntestGetQueryKey()");
-        assertEquals(newAttVal.getValueId().toString(), newAttVal.getQueryKey());
-        System.out.println("query key= " + newAttVal.getQueryKey());
-    }
 
     public void testIsRequired() throws Exception
     {
         System.out.println("\ntestIsRequired()");
-//        assertEquals(false, attVal.isRequired());
-        assertEquals(false, newAttVal.isRequired());
+        assertEquals(false, attValSeverityCopy.isRequired());
     }
 
     public void testIsSet() throws Exception
     {
         System.out.println("\ntestIsSet()");
-        assertEquals(true, newAttVal.isSet());
+        assertEquals(true, attValSeverityCopy.isSet());
     }
 
     public void testIsSet2() throws Exception
     {
         System.out.println("\ntestIsSet2()");
-        attVal2.setValue("description");
-        assertEquals(true, attVal2.isSet());
+        attValDescription.setValue("description");
+        assertEquals(true, attValDescription.isSet());
     }
 
     public void testGetRModuleAttribute() throws Exception
     {
         System.out.println("\ntestGetRModuleAttribute()");
-        assertEquals(attVal.getAttributeId(), newAttVal.getRModuleAttribute().getAttributeId());
+        assertEquals(attValSeverity.getAttributeId(), attValSeverityCopy.getRModuleAttribute().getAttributeId());
     }
 
     public void testGetAttributeOption() throws Exception
     {
         System.out.println("\ntestGetAttributeOption()");
-        System.out.println("get att opt = " + newAttVal.getAttributeOption());
+        System.out.println("get att opt = " + attValSeverityCopy.getAttributeOption());
     }
 }

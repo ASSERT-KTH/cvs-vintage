@@ -59,11 +59,11 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.32 2004/01/31 18:15:38 dep4b Exp $
+ * @version $Id: IssueTest.java,v 1.33 2004/02/01 14:08:38 dep4b Exp $
  */
 public class IssueTest extends BaseTestCase {
 	private List issueList = new ArrayList();
-	;
+	
 
 	public void setUp() throws Exception {
 		super.setUp();
