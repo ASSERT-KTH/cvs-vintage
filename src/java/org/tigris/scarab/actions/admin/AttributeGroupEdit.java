@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.22 2002/05/03 00:54:13 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.23 2002/05/09 00:31:26 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -136,7 +136,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 String defaultTextKey = data.getParameters()
                     .getString("default_text");
                 if ( defaultTextKey != null && 
-                     defaultTextKey.equals(rma.getQueryKey()) ) 
+                     defaultTextKey.equals(rma.getAttributeId().toString()) ) 
                 {
                     rma.setIsDefaultText(true);
                 }
