@@ -61,7 +61,12 @@
 
 #macro ( attrValueText $attrValue $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
-<input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
+        #if ($attVal.Attribute.AttributeType.Name == "long-string")
+           <textarea name="$attrInput.Value.Key" cols="40"
+               rows="5">$!attrInput.Value</textarea>
+        #else
+           <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
+        #end
 #end
 
 #macro ( templateAttrValueText $attrValue $size $value)
@@ -72,7 +77,13 @@
 #elseif ($templAttrInput.Value.toString().length() > 0)
      #set ($currentValue = $templAttrInput.Value)
 #end
-<input type="text" name="$attrInput.Value.Key" value="$!currentValue"#if($size.length()) size="$size"#end />
+
+#if ($attVal.Attribute.AttributeType.Name == "long-string")
+   <textarea name="$attrInput.Value.Key" cols="40"
+       rows="5">$!currentValue</textarea>
+#else
+   <input type="text" name="$attrInput.Value.Key" value="$!currentValue"#if($size.length()) size="$size"#end />
+#end
 #end
 
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size)
