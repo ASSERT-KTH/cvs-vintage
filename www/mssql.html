@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - MSSQL</h2>
-<h4>$Id: mssql.html,v 1.1 2003/05/27 16:12:48 jmcnally Exp $</h4>
+<h4>$Id: mssql.html,v 1.2 2003/07/08 15:56:29 jmcnally Exp $</h4>
 
 <p>
 Scarab has been developed with database independence in mind, however
@@ -20,8 +20,8 @@ document will help improve things for others.
 </p>
 
 <p>The following instructions were supplied by Slobodan Mumovic who says
-the only problem was the default jdbc connection pool configuration does 
-not work with MSSQL.</p>
+the one of the problems was the default jdbc connection pool configuration
+does not work with MSSQL.</p>
 
 <pre>
 1. Override the default build properties by creating and editing the
@@ -69,6 +69,42 @@ step 1. as the DBO
 according to the order in the LoadOrder.lst (or LoadOrder-Empty.lst) file
 
 6. Start scarab.
+
+A later email states Scarab is still not usable on MSSQL:
+
+... So we never actually used Scarab on MSSQL due to the following problems:
+
+1. Several tables are created with fields of type TEXT and IMAGE. This by
+itself would not be a problem but the code (I believe torque) uses "SELECT
+DISTINCT" on fields that contain TEXT and/or IMAGE. This could be fixed with
+a clever and insightful remapping of the JDBC to MSSQL data types in torque
+(/target/webapps/scarab/WEB-INF/src/torque/templates/sql/base/mssql/db.props
+). But when I replaced IMAGE and TEXT with VARCHAR(xxxx) (where xxxx were
+several experimental values chosen not to overflow over the allowed limit
+for a data row) the result was that inserts of new issues simply hanged
+without any log or debug message of the reason. 
+
+
+I don't know on which of the following TABLES.FIELDS the SELECT DISTINCT
+occurs, but here they are:
+        TURBINE_USER.OBJECTDATA - has type IMAGE
+        TURBINE_SCHEDULER_JOB.JOB_PROPERTY - has type IMAGE
+        SCARAB_ACTIVITY.OLD_VALUE - type TEXT
+        SCARAB_ACTIVITY.NEW_VALUE - type TEXT
+        SCARAB_ATTACHMENT.ATTACHMENT_DATA - type TEXT
+        SCARAB_ISSUE_ATTRIBUTE_VALUE.VALUE - type TEXT
+        SCARAB_QUERY.VALUE - type TEXT
+        SCARAB_REPORT.QUERY_STRING - type TEXT
+
+2. The CONCAT SQL function is used in org.tigris.scarab.om.Issue in the
+parseIssueList method. The CONCAT function is not supported by MSSQL and in
+order to use a user defined function the function must be called with the
+database user (eg. scarab.CONCAT) instead of just CONCAT. The problem is
+solvable by editing the code and replacing CONCAT( x, y) with x + y (the
+operator + is a concatenator in MSSQL). But that is far from elegant and it
+certainly is not portable. So a better solution should be implemented. I
+noticed this when trying to export issues to xml.
+
 </pre>
 
 
