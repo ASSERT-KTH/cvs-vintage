@@ -35,7 +35,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *	@see <related>
 *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.5 $
+*	@version $Revision: 1.6 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -117,14 +117,15 @@ implements EntityPersistenceManager {
             ctx.setId(id);
             
             // Create a new CacheKey
-	   	    Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
+               Object cacheKey = ((EntityInstanceCache) con.getInstanceCache()).createCacheKey( id );
         
-			// Give it to the context
-			ctx.setCacheKey(cacheKey);
-			
-			// Lock instance in cache
-			((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
-			
+         	// Give it to the context
+         	ctx.setCacheKey(cacheKey);
+         
+         
+         	// insert instance in cache, it is safe
+         	((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+         
             // Create EJBObject
             ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
             
@@ -145,29 +146,29 @@ implements EntityPersistenceManager {
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, FinderException {
       
-	  	// The store will find the entity and return the primaryKey
-		Object id = store.findEntity(finderMethod, args, ctx);
-		
-		// We return the cache key
-	    return ((EntityInstanceCache) con.getInstanceCache()).createCacheKey(id);
+       // The store will find the entity and return the primaryKey
+       Object id = store.findEntity(finderMethod, args, ctx);
+       
+       // We return the cache key
+        return ((EntityInstanceCache) con.getInstanceCache()).createCacheKey(id);
     }
     
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
     throws RemoteException, FinderException {
 
-		// The store will find the id and return a collection of PrimaryKeys
-		Collection ids = store.findEntities(finderMethod, args, ctx);
-		
-		// Build a collection of cacheKeys
-		ArrayList list = new ArrayList(ids.size());
-      	Iterator idEnum = ids.iterator();
-     	while(idEnum.hasNext()) {
-			
-			// Get a cache key for it
-			list.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(idEnum.next()));
+       // The store will find the id and return a collection of PrimaryKeys
+       Collection ids = store.findEntities(finderMethod, args, ctx);
+       
+       // Build a collection of cacheKeys
+       ArrayList list = new ArrayList(ids.size());
+        Iterator idEnum = ids.iterator();
+        while(idEnum.hasNext()) {
+         
+         // Get a cache key for it
+         list.add(((EntityInstanceCache) con.getInstanceCache()).createCacheKey(idEnum.next()));
          }
-      	
-		return list;		 
+        
+       return list;		 
     }
     
     /*
