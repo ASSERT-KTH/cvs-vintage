@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.68 2003/04/30 14:59:57 kataka Exp $
+// $Id: Main.java,v 1.69 2003/05/01 13:11:21 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -91,13 +90,8 @@ public class Main {
         String directory = Argo.getDirectory();
         org.tigris.gef.base.Globals.setLastDirectory(directory);
 
-        // Set default locale
-        Locale.setDefault(
-            new Locale(
-                System.getProperty("user.language", "en"),
-                System.getProperty(
-                    "user.country",
-                    System.getProperty("user.region", "CA"))));
+        // load i18n bundles
+        Translator.init();
 
         // then, print out some version info for debuggers...
 
@@ -190,9 +184,7 @@ public class Main {
                 }
             }
         }
-        
-        Translator.init();
-        
+                
         initializeGUI(st, doSplash, themeMemory);
 
         if (reloadRecent && projectName == null) {
