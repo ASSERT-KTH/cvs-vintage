@@ -20,7 +20,7 @@ package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.io.BufferedReader;
@@ -37,7 +37,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter {
         super();
     }
 
-    public PegasusMailImporter(Folder destinationFolder, File[] sourceFiles) {
+    public PegasusMailImporter(MessageFolder destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
 
@@ -46,7 +46,7 @@ public class PegasusMailImporter extends DefaultMailboxImporter {
     }
 
     public void importMailboxFile(File file, WorkerStatusController worker,
-        Folder destFolder) throws Exception {
+        MessageFolder destFolder) throws Exception {
         int count = 0;
         boolean sucess = false;
 

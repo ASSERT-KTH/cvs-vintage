@@ -8,7 +8,7 @@ package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.mh.MHMessageFileFilter;
 
 import java.io.BufferedReader;
@@ -31,7 +31,7 @@ public class MHImporter extends DefaultMailboxImporter {
  * @param destinationFolder
  * @param sourceFile
  */
-    public MHImporter(Folder destinationFolder, File[] sourceFiles) {
+    public MHImporter(MessageFolder destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
 
@@ -43,7 +43,7 @@ public class MHImporter extends DefaultMailboxImporter {
  * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
  */
     public void importMailboxFile(File directory,
-        WorkerStatusController worker, Folder destFolder)
+        WorkerStatusController worker, MessageFolder destFolder)
         throws Exception {
         File[] list = directory.listFiles(MHMessageFileFilter.getInstance());
 

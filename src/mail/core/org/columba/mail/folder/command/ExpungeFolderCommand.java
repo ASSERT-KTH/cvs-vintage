@@ -25,7 +25,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
@@ -100,7 +100,7 @@ public class ExpungeFolderCommand extends FolderCommand {
 
         // for each folder
         for (int i = 0; i < r.length; i++) {
-            Folder srcFolder = (Folder) r[i].getFolder();
+            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
             // register for status events
             ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

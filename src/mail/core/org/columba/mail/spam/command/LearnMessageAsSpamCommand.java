@@ -24,7 +24,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.spam.SpamController;
 
 import org.columba.ristretto.message.Header;
@@ -70,7 +70,7 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
             Object[] uids = r[i].getUids();
 
             // get source folder
-            Folder srcFolder = (Folder) r[i].getFolder();
+            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
             //	update status message
             worker.setDisplayText("Training messages...");

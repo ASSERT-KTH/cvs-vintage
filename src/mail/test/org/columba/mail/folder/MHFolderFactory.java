@@ -36,7 +36,7 @@ public class MHFolderFactory implements MailboxTestFactory {
     /**
      * @see org.columba.mail.folder.MailboxTestFactory#createSourceFolder()
      */
-    public Folder createFolder(int folderId) {
+    public MessageFolder createFolder(int folderId) {
         return new CachedMHFolder("test" + folderId, "CachedMHFolder",
                 FolderTestHelper.homeDirectory + "/folders/");
 

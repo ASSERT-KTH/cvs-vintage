@@ -22,8 +22,8 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
@@ -50,9 +50,9 @@ public class TreeController implements TreeWillExpandListener {
     private TreePath treePath;
     private FolderInfoPanel messageFolderInfoPanel;
     public JScrollPane scrollPane;
-    private FolderTreeNode oldSelection;
+    private AbstractFolder oldSelection;
     private FolderTreeMouseListener mouseListener;
-    private FolderTreeNode selectedFolder;
+    private AbstractFolder selectedFolder;
     private TreeModel model;
     private TreeView view;
     private FrameMediator frameController;
@@ -94,7 +94,7 @@ getView().getActionMap().put("RENAME", action);
         return view;
     }
 
-    public void setSelected(Folder folder) {
+    public void setSelected(MessageFolder folder) {
         view.clearSelection();
 
         TreePath path = folder.getSelectionTreePath();
@@ -119,7 +119,7 @@ getView().getActionMap().put("RENAME", action);
         return menu;
     }
 
-    public FolderTreeNode getSelected() {
+    public AbstractFolder getSelected() {
         return selectedFolder;
     }
 
@@ -135,7 +135,7 @@ getView().getActionMap().put("RENAME", action);
     public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
         LOG.info("treeWillExpand=" + e.getPath().toString());
 
-        FolderTreeNode treeNode = (FolderTreeNode) e.getPath()
+        AbstractFolder treeNode = (AbstractFolder) e.getPath()
                                                     .getLastPathComponent();
 
         if (treeNode == null) {
@@ -157,7 +157,7 @@ MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
     }
 
     public void treeWillCollapse(TreeExpansionEvent e) {
-        FolderTreeNode treeNode = (FolderTreeNode) e.getPath()
+        AbstractFolder treeNode = (AbstractFolder) e.getPath()
                                                     .getLastPathComponent();
 
         if (treeNode == null) {
@@ -168,7 +168,7 @@ MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
         saveExpandedState(treeNode, e.getPath());
     }
 
-    private void saveExpandedState(FolderTreeNode folder, TreePath path) {
+    private void saveExpandedState(AbstractFolder folder, TreePath path) {
         FolderItem item = folder.getFolderItem();
 
         XmlElement property = item.getElement("property");

@@ -34,7 +34,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.plugins.AddressbookFilter;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
@@ -57,7 +57,7 @@ public class ScoreMessageCommand extends FolderCommand {
 
     private Object[] uids;
 
-    private Folder srcFolder;
+    private MessageFolder srcFolder;
 
     private WorkerStatusController worker;
 
@@ -128,7 +128,7 @@ public class ScoreMessageCommand extends FolderCommand {
             uids = r[i].getUids();
 
             // get source folder
-            srcFolder = (Folder) r[i].getFolder();
+            srcFolder = (MessageFolder) r[i].getFolder();
 
             // register for status events
             ((StatusObservableImpl) srcFolder.getObservable())

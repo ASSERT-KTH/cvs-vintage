@@ -30,7 +30,7 @@ import org.columba.mail.filter.FilterList;
  *
  *  @author fdietz
  */
-public abstract class RemoteFolder extends Folder {
+public abstract class RemoteFolder extends MessageFolder {
     //protected RemoteSearchEngine searchEngine;
 
     /**
@@ -40,7 +40,7 @@ public abstract class RemoteFolder extends Folder {
     public RemoteFolder(FolderItem item, String path) {
         super(item, path);
 
-        // TODO: move this to Folder constructor
+        // TODO: move this to MessageFolder constructor
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
         if (filterListElement == null) {

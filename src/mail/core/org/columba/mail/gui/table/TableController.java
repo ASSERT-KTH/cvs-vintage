@@ -22,8 +22,8 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -62,7 +62,7 @@ import javax.swing.tree.TreePath;
  * <p>
  * Folder-specific configuration options are handled by
  * {@link FolderOptionsController} and can be configured
- * by the user in the Folder Options Dialog.
+ * by the user in the MessageFolder Options Dialog.
  *
  * @author fdietz
  */
@@ -144,7 +144,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
     /**
      * previously selected folder
      */
-    private Folder previouslySelectedFolder;
+    private MessageFolder previouslySelectedFolder;
 
     /**
      * tooltip mouse handler
@@ -311,7 +311,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         previouslySelectedRows = view.getSelectedRows();
 
         // folder in which the update occurs
-        FolderTreeNode folder = event.getSrcFolder();
+        AbstractFolder folder = event.getSrcFolder();
 
         if (folder == null) {
             return;
@@ -322,7 +322,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // get current selection
         FolderCommandReference[] r = (FolderCommandReference[]) frameController.getSelectionManager()
                                                                                    .getSelection("mail.table");
-        Folder srcFolder = (Folder) r[0].getFolder();
+        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
 
         // its always possible that no folder is currenlty selected
         if (srcFolder != null) {
@@ -416,7 +416,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
     /**
      * @see org.columba.mail.gui.frame.ViewHeaderListInterface#showHeaderList(org.columba.mail.folder.Folder, org.columba.mail.message.HeaderList)
      */
-    public void showHeaderList(Folder folder, HeaderList headerList)
+    public void showHeaderList(MessageFolder folder, HeaderList headerList)
         throws Exception {
         // save previously selected folder options
         if (previouslySelectedFolder != null) {

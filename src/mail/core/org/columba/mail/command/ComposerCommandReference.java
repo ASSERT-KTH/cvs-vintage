@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.message.ColumbaMessage;
 
@@ -36,7 +36,7 @@ public class ComposerCommandReference extends FolderCommandReference {
  * @param folder
  */
     public ComposerCommandReference(ComposerController composerController,
-        FolderTreeNode folder) {
+        AbstractFolder folder) {
         super(folder);
         this.composerController = composerController;
     }
@@ -46,7 +46,7 @@ public class ComposerCommandReference extends FolderCommandReference {
  * @param folder
  * @param message
  */
-    public ComposerCommandReference(FolderTreeNode folder,
+    public ComposerCommandReference(AbstractFolder folder,
         ColumbaMessage message) {
         super(folder, message);
     }
@@ -56,7 +56,7 @@ public class ComposerCommandReference extends FolderCommandReference {
  * @param folder
  * @param uids
  */
-    public ComposerCommandReference(FolderTreeNode folder, Object[] uids) {
+    public ComposerCommandReference(AbstractFolder folder, Object[] uids) {
         super(folder, uids);
     }
 
@@ -66,7 +66,7 @@ public class ComposerCommandReference extends FolderCommandReference {
  * @param uids
  * @param address
  */
-    public ComposerCommandReference(FolderTreeNode folder, Object[] uids,
+    public ComposerCommandReference(AbstractFolder folder, Object[] uids,
         Integer[] address) {
         super(folder, uids, address);
     }

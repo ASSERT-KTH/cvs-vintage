@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.message.ColumbaMessage;
 
 
@@ -32,7 +32,7 @@ public class SMTPCommandReference extends FolderCommandReference {
  * Constructor for SMTPCommandReference.
  * @param folder
  */
-    public SMTPCommandReference(FolderTreeNode folder) {
+    public SMTPCommandReference(AbstractFolder folder) {
         super(folder);
     }
 
@@ -41,7 +41,7 @@ public class SMTPCommandReference extends FolderCommandReference {
  * @param folder
  * @param message
  */
-    public SMTPCommandReference(FolderTreeNode folder, ColumbaMessage message) {
+    public SMTPCommandReference(AbstractFolder folder, ColumbaMessage message) {
         super(folder, message);
     }
 
@@ -50,7 +50,7 @@ public class SMTPCommandReference extends FolderCommandReference {
  * @param folder
  * @param uids
  */
-    public SMTPCommandReference(FolderTreeNode folder, Object[] uids) {
+    public SMTPCommandReference(AbstractFolder folder, Object[] uids) {
         super(folder, uids);
     }
 
@@ -60,7 +60,7 @@ public class SMTPCommandReference extends FolderCommandReference {
  * @param uids
  * @param address
  */
-    public SMTPCommandReference(FolderTreeNode folder, Object[] uids,
+    public SMTPCommandReference(AbstractFolder folder, Object[] uids,
         Integer[] address) {
         super(folder, uids, address);
     }

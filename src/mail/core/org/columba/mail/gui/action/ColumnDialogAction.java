@@ -20,8 +20,8 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.columns.ColumnConfigDialog;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
@@ -49,7 +49,7 @@ public class ColumnDialogAction extends AbstractColumbaAction {
         FolderCommandReference[] r = ((MailFrameMediator) getFrameMediator()).getTreeSelection();
 
         if (r.length != 0) {
-            FolderTreeNode folder = r[0].getFolder();
+            AbstractFolder folder = r[0].getFolder();
 
             if (folder == null) {
                 return;
@@ -58,7 +58,7 @@ public class ColumnDialogAction extends AbstractColumbaAction {
             // check if we should use the folder-based configuration
             // or the global table configuration
             XmlElement columns = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
-                                  .getConfigNode((Folder) folder,
+                                  .getConfigNode((MessageFolder) folder,
                     "ColumnOptions");
 
             new ColumnConfigDialog((MailFrameMediator) getFrameMediator(),

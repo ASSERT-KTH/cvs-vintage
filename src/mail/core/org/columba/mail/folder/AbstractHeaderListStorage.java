@@ -204,7 +204,7 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
      * for the first time before we do any operation.
      * 
      * This is a speciality of the headercache implementation which has nothing
-     * to do with our Folder locking system and is put here for this reason.
+     * to do with our MessageFolder locking system and is put here for this reason.
      * 
      * @return <class>HeaderList </class>
      * @throws Exception

@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -54,7 +54,7 @@ public final class CommandHelper {
      * @return inputstream of message bodypart
      * @throws Exception
      */
-    public static InputStream getBodyPart(Folder folder, Object uid)
+    public static InputStream getBodyPart(MessageFolder folder, Object uid)
             throws Exception {
         MimeTree mimePartTree = folder.getMimePartTree(uid);
         XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
@@ -112,7 +112,7 @@ public final class CommandHelper {
      * @return					account item
      * @throws Exception
      */
-    public static AccountItem retrieveAccountItem(Folder folder, Object uid)
+    public static AccountItem retrieveAccountItem(MessageFolder folder, Object uid)
             throws Exception {
         AccountItem item = null;
 

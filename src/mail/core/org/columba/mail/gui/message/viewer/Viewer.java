@@ -19,7 +19,7 @@ package org.columba.mail.gui.message.viewer;
 
 import javax.swing.JComponent;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 
 
@@ -43,7 +43,7 @@ public interface Viewer {
      * @param mediator			top-level mediator
      * @throws Exception
      */
-    void view(Folder folder, Object uid, MailFrameMediator mediator) throws Exception;
+    void view(MessageFolder folder, Object uid, MailFrameMediator mediator) throws Exception;
  
     /**
      * Return view of component.

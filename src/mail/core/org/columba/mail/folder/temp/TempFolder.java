@@ -20,7 +20,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
-public class TempFolder extends Folder {
+public class TempFolder extends MessageFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.temp");

@@ -82,7 +82,7 @@ public class FolderFactory {
  * @param parent
  * @return a list that contains Strings of foldertypes
  */
-    public List getPossibleChilds(FolderTreeNode parent) {
+    public List getPossibleChilds(AbstractFolder parent) {
         List list = new LinkedList();
 
         // which parents are possible ?
@@ -120,7 +120,7 @@ public class FolderFactory {
  * @return the childfolder
  * @throws Exception
  */
-    public FolderTreeNode createDefaultChild(FolderTreeNode parent, String name)
+    public AbstractFolder createDefaultChild(AbstractFolder parent, String name)
         throws Exception {
         List possibleChilds = getPossibleChilds(parent);
 
@@ -141,9 +141,9 @@ public class FolderFactory {
  * @return the childfolder
  * @throws Exception
  */
-    public FolderTreeNode createChild(FolderTreeNode parent, String name,
+    public AbstractFolder createChild(AbstractFolder parent, String name,
         String childType) throws Exception {
-        FolderTreeNode child = (FolderTreeNode) handler.getPlugin(childType,
+        AbstractFolder child = (AbstractFolder) handler.getPlugin(childType,
                 new Object[] { name, childType, path });
 
         // Add child to parent

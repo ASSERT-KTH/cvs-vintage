@@ -21,8 +21,8 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 
 
@@ -32,7 +32,7 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  */
 public class RenameFolderCommand extends Command {
-    private FolderTreeNode parentFolder;
+    private AbstractFolder parentFolder;
 
     /**
  * Constructor for RenameFolderCommand.
@@ -63,6 +63,6 @@ public class RenameFolderCommand extends Command {
         String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
 
         // rename folder
-        ((Folder) parentFolder).renameFolder(name);
+        ((MessageFolder) parentFolder).renameFolder(name);
     }
 }

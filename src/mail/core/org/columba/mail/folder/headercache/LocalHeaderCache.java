@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;

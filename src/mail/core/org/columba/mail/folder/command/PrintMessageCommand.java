@@ -35,7 +35,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
@@ -192,7 +192,7 @@ public class PrintMessageCommand extends FolderCommand {
 
         Object[] uids = r[0].getUids(); // uid for messages to print
 
-        Folder srcFolder = (Folder) r[0].getFolder();
+        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
 
         //register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

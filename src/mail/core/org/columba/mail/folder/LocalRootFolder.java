@@ -27,7 +27,7 @@ import org.columba.mail.config.FolderItem;
  *
  *  @author fdietz
  */
-public class LocalRootFolder extends FolderTreeNode implements RootFolder {
+public class LocalRootFolder extends AbstractFolder implements RootFolder {
 
     /**
  * Constructor
@@ -46,19 +46,19 @@ public class LocalRootFolder extends FolderTreeNode implements RootFolder {
     /* (non-Javadoc)
  * @see org.columba.mail.folder.RootFolder#getTrashFolder()
  */
-    public FolderTreeNode getTrashFolder() {
+    public AbstractFolder getTrashFolder() {
         return findChildWithUID(105, false);
     }
 
     /* (non-Javadoc)
  * @see org.columba.mail.folder.RootFolder#getInbox()
  */
-    public FolderTreeNode getInboxFolder() {
+    public AbstractFolder getInboxFolder() {
         return findChildWithUID(101, false);
     }
 
     /** {@inheritDoc} */
-    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+    public boolean supportsAddFolder(AbstractFolder newFolder) {
         return true;
     }
 }

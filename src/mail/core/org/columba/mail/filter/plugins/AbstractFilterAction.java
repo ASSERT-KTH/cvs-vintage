@@ -19,7 +19,7 @@ import org.columba.core.command.Command;
 import org.columba.core.plugin.PluginInterface;
 
 import org.columba.mail.filter.FilterAction;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -46,5 +46,5 @@ public abstract class AbstractFilterAction implements PluginInterface {
  * @throws Exception        exception is just passed to the upper-level
  */
     public abstract Command getCommand(FilterAction filterAction,
-        Folder srcFolder, Object[] uids) throws Exception;
+        MessageFolder srcFolder, Object[] uids) throws Exception;
 }

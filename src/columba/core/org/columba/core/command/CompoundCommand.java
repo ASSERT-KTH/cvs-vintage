@@ -13,15 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.command;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 
 /**
  * Special type of {@link Command} which is used for a set
@@ -129,7 +129,7 @@ public class CompoundCommand extends Command {
         FolderCommandReference[] refs = new FolderCommandReference[referenceList.size()];
 
         for (int i = 0; i < referenceList.size(); i++) {
-            refs[i] = new FolderCommandReference((FolderTreeNode) referenceList.get(
+            refs[i] = new FolderCommandReference((AbstractFolder) referenceList.get(
                         i));
         }
 

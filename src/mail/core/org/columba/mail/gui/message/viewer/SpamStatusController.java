@@ -24,7 +24,7 @@ import javax.swing.JComponent;
 
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
@@ -54,7 +54,7 @@ public class SpamStatusController implements Viewer, ActionListener {
     /**
      * @see org.columba.mail.gui.message.status.Status#show(org.columba.mail.folder.Folder, java.lang.Object)
      */
-    public void view(Folder folder, Object uid, MailFrameMediator mediator) throws Exception {
+    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator) throws Exception {
         Boolean spam = (Boolean) folder.getAttribute(uid, "columba.spam");
         
         visible = spam.booleanValue();

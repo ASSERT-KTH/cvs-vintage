@@ -18,7 +18,7 @@ package org.columba.mail.gui.message.viewer;
 
 import javax.swing.JComponent;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.filter.SecurityStatusEvent;
 import org.columba.mail.gui.message.filter.SecurityStatusListener;
@@ -60,7 +60,7 @@ public class SecurityInformationController implements Viewer,
      * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.Folder,
      *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
      */
-    public void view(Folder folder, Object uid, MailFrameMediator mediator)
+    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator)
             throws Exception {
 
     }

@@ -22,8 +22,8 @@ import org.columba.core.gui.selection.SelectionListener;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -64,15 +64,15 @@ public class RenameFolderAction extends AbstractColumbaAction
     public void actionPerformed(ActionEvent evt) {
         FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-        new FolderOptionsDialog((Folder) r[0].getFolder(), true,
+        new FolderOptionsDialog((MessageFolder) r[0].getFolder(), true,
             (AbstractMailFrameController) frameMediator);
     }
 
     public void selectionChanged(SelectionChangedEvent evt) {
         if (((TreeSelectionChangedEvent) evt).getSelected().length > 0) {
-            FolderTreeNode folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
+            AbstractFolder folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
 
-            if ((folder != null) && folder instanceof Folder) {
+            if ((folder != null) && folder instanceof MessageFolder) {
                 FolderItem item = folder.getFolderItem();
 
                 if (item.get("property", "accessrights").equals("user")) {

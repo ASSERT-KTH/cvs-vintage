@@ -36,10 +36,10 @@ import junit.framework.TestCase;
 public abstract class AbstractFolderTest extends TestCase {
 
     /** A source folder. */
-    protected Folder sourceFolder;
+    protected MessageFolder sourceFolder;
 
     /** A destination folder. */
-    protected Folder destFolder;
+    protected MessageFolder destFolder;
 
     /** A set with all created folders. */
     private Set folders;
@@ -68,8 +68,8 @@ public abstract class AbstractFolderTest extends TestCase {
         folders.add(destFolder);
     }
 
-    public Folder createFolder() {
-        Folder folder = factory.createFolder(folderId++);
+    public MessageFolder createFolder() {
+        MessageFolder folder = factory.createFolder(folderId++);
         folders.add(folder);
         
         return folder;
@@ -79,7 +79,7 @@ public abstract class AbstractFolderTest extends TestCase {
      */
     protected void tearDown() throws Exception {
         for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
-            Folder folder = (Folder) iterator.next();
+            MessageFolder folder = (MessageFolder) iterator.next();
             File f = folder.getDirectoryFile();
 
             // delete all mails in folder
@@ -98,14 +98,14 @@ public abstract class AbstractFolderTest extends TestCase {
     /**
      * @return Returns the folder.
      */
-    public Folder getSourceFolder() {
+    public MessageFolder getSourceFolder() {
         return sourceFolder;
     }
 
     /**
      * @return Returns the destFolder.
      */
-    public Folder getDestFolder() {
+    public MessageFolder getDestFolder() {
         return destFolder;
     }
 }

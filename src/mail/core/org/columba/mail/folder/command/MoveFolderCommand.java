@@ -20,8 +20,8 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 
 import javax.swing.tree.TreeNode;
@@ -64,11 +64,11 @@ public class MoveFolderCommand extends Command {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get folder that is going to be moved
-        Folder movedFolder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder movedFolder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
         parentSourceFolder = movedFolder.getParent();
 
         // get destination folder
-        FolderTreeNode destFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
+        AbstractFolder destFolder = ((FolderCommandReference) getReferences()[1]).getFolder();
         parentDestFolder = destFolder.getParent();
 
         //System.out.println("Removing leaf from parent. Leaf=" + movedFolder.getName() +", parent=" + parentSourceFolder);

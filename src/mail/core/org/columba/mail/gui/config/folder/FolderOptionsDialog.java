@@ -30,7 +30,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
@@ -79,7 +79,7 @@ import javax.swing.event.ListSelectionListener;
 
 
 /**
- * Folder Options Dialog.
+ * MessageFolder Options Dialog.
  *
  * @author fdietz
  */
@@ -90,7 +90,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
     };
     private JPanel generalPanel;
     private JPanel advPanel;
-    private Folder folder;
+    private MessageFolder folder;
     private JLabel nameLabel;
     private JTextField nameTextField;
     private JLabel totalLabel;
@@ -123,7 +123,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
  * @param folder                        selected folder
  * @param renameFolder                this is a "rename folder" operation
  */
-    public FolderOptionsDialog(Folder folder, boolean renameFolder,
+    public FolderOptionsDialog(MessageFolder folder, boolean renameFolder,
         MailFrameMediator mediator) {
         super((JFrame)mediator.getFrame(), true);
 
@@ -155,7 +155,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
  *
  * @param folder                selected folder
  */
-    public FolderOptionsDialog(Folder folder, MailFrameMediator mediator) {
+    public FolderOptionsDialog(MessageFolder folder, MailFrameMediator mediator) {
         super((JFrame)mediator.getFrame(), true);
 
         this.folder = folder;
@@ -493,7 +493,7 @@ if (property.getAttribute("overwrite_default_settings", "false")
                 boolean bool = enableTextIndexingCheckBox.isSelected();
                 item.set("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
 
-                // cast to Local Folder is safe here
+                // cast to Local MessageFolder is safe here
                 LocalFolder localFolder = (LocalFolder) folder;
 
                 DefaultSearchEngine engine = null;

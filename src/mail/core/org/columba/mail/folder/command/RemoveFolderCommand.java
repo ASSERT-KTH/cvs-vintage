@@ -21,8 +21,8 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 
 
@@ -32,7 +32,7 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  */
 public class RemoveFolderCommand extends Command {
-    private FolderTreeNode parentFolder;
+    private AbstractFolder parentFolder;
     private boolean success;
 
     /**
@@ -60,10 +60,10 @@ public class RemoveFolderCommand extends Command {
     public void execute(WorkerStatusController worker)
         throws Exception {
         // get source folder
-        Folder childFolder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder childFolder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get parent of source folder
-        parentFolder = (FolderTreeNode) childFolder.getParent();
+        parentFolder = (AbstractFolder) childFolder.getParent();
 
         // remove source folder
         childFolder.removeFolder();

@@ -19,7 +19,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
 
@@ -58,7 +58,7 @@ public class TableSelectionHandler extends SelectionHandler
     private final static MessageNode[] messageNodeArray = { null };
     private TableView view;
     private LinkedList messages;
-    private Folder folder;
+    private MessageFolder folder;
 
     // if this is set to true, we use the local selection, instead
     // of using the table selection
@@ -100,7 +100,7 @@ public class TableSelectionHandler extends SelectionHandler
     public void setSelection(DefaultCommandReference[] selection) {
         FolderCommandReference ref = (FolderCommandReference) selection[0];
 
-        folder = (Folder) ref.getFolder();
+        folder = (MessageFolder) ref.getFolder();
 
         useLocalSelection = false;
     }
@@ -109,7 +109,7 @@ public class TableSelectionHandler extends SelectionHandler
  * Sets the folder.
  * @param folder The folder to set
  */
-    public void setFolder(Folder folder) {
+    public void setFolder(MessageFolder folder) {
         this.folder = folder;
     }
 

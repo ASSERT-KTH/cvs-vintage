@@ -29,7 +29,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
@@ -99,7 +99,7 @@ public class SendMessageCommand extends FolderCommand {
         AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
 
         // sent folder
-        Folder sentFolder = (Folder) MailInterface.treeModel.getFolder(item.getSpecialFoldersItem()
+        MessageFolder sentFolder = (MessageFolder) MailInterface.treeModel.getFolder(item.getSpecialFoldersItem()
                                                                            .getInteger("sent"));
 
         // get the SendableMessage object

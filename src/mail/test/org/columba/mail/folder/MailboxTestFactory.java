@@ -24,5 +24,5 @@ package org.columba.mail.folder;
  */
 public interface MailboxTestFactory {
 
-    Folder createFolder(int folderId);
+    MessageFolder createFolder(int folderId);
 }

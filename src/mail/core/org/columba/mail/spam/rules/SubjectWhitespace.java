@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam.rules;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.ristretto.message.Header;
 
 
@@ -39,7 +39,7 @@ public class SubjectWhitespace extends AbstractRule{
     /**
      * @see org.columba.mail.spam.rules.Rule#score(org.columba.mail.folder.Folder, java.lang.Object)
      */
-    public float score(Folder folder, Object uid) throws Exception {
+    public float score(MessageFolder folder, Object uid) throws Exception {
         Header header = folder.getHeaderFields(uid, new String[]{"Subject"});
         String subject = header.get("Subject");
         if ( subject == null ) return 0.1f;

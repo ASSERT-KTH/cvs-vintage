@@ -23,7 +23,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folderoptions.ColumnOptionsPlugin;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
@@ -320,7 +320,7 @@ public class ColumnConfigDialog implements ActionListener,
 
             // make sure this configuration is also visually working immediately
             FolderCommandReference[] r = mediator.getTreeSelection();
-            plugin.loadOptionsFromXml((Folder) r[0].getFolder());
+            plugin.loadOptionsFromXml((MessageFolder) r[0].getFolder());
         } else if (action.equals("CANCEL")) {
             dialog.setVisible(false);
         } else if (action.equals("SHOW")) {

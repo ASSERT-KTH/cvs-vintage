@@ -23,7 +23,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -45,7 +45,7 @@ import javax.swing.SwingUtilities;
 
 class LocationStep extends AbstractStep implements ActionListener {
     protected File[] sourceFiles;
-    protected Folder destinationFolder;
+    protected MessageFolder destinationFolder;
     protected JButton sourceButton;
     protected JButton destinationButton;
 

@@ -18,7 +18,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.message.Flags;
 
@@ -46,7 +46,7 @@ public class FlagsFilter extends AbstractFilter {
  *      org.columba.mail.folder.Folder, java.lang.Object,
  *      org.columba.core.command.WorkerStatusController)
  */
-    public boolean process(Folder folder, Object uid) throws Exception {
+    public boolean process(MessageFolder folder, Object uid) throws Exception {
         boolean result = false;
 
         String headerField = pattern;

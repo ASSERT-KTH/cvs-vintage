@@ -18,7 +18,7 @@ package org.columba.mail.folder.headercache;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
@@ -51,7 +51,7 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
      *
      * @param folder
      */
-    public RemoteHeaderCache(Folder folder) {
+    public RemoteHeaderCache(MessageFolder folder) {
         super(folder);
 
         configurationChanged = false;

@@ -25,7 +25,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
@@ -105,7 +105,7 @@ public class OpenAttachmentCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Folder folder = (Folder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r[0].getFolder();
         Object[] uids = r[0].getUids();
 
         Integer[] address = r[0].getAddress();

@@ -27,7 +27,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
@@ -82,7 +82,7 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();

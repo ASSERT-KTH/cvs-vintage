@@ -29,7 +29,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.MessageViewOwner;
@@ -51,7 +51,7 @@ public class ViewMessageCommand extends FolderCommand {
     StreamableMimePart bodyPart;
     MimeTree mimePartTree;
     ColumbaHeader header;
-    Folder srcFolder;
+    MessageFolder srcFolder;
     Object uid;
     Object[] uids;
     String pgpMessage = "";
@@ -112,7 +112,7 @@ public class ViewMessageCommand extends FolderCommand {
      */
     public void execute(WorkerStatusController wsc) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        srcFolder = (Folder) r[0].getFolder();
+        srcFolder = (MessageFolder) r[0].getFolder();
 
         //		register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);

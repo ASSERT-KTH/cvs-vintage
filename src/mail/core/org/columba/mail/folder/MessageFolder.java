@@ -45,7 +45,7 @@ import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimeHeader;
 
 /**
- * Abstract Basic Folder class. It is subclassed by every folder class
+ * Abstract Basic MessageFolder class. It is subclassed by every folder class
  * containing messages and therefore offering methods to alter the mailbox.
  * <p>
  * Folders are plugins and therefore dynamically created. This should make it
@@ -72,7 +72,7 @@ import org.columba.ristretto.message.MimeHeader;
  * 
  * @author freddy @created 19. Juni 2001
  */
-public abstract class Folder extends FolderTreeNode implements MailboxInterface {
+public abstract class MessageFolder extends AbstractFolder implements MailboxInterface {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger
@@ -130,7 +130,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      *            <class>FolderItem </class> contains information about the
      *            folder
      */
-    public Folder(FolderItem item, String path) {
+    public MessageFolder(FolderItem item, String path) {
         super(item);
 
         String dir = path + getUid();
@@ -142,14 +142,14 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         loadMessageFolderInfo();
     }
 
-    protected Folder() {
+    protected MessageFolder() {
         super();
     }
 
     /**
      * @param type
      */
-    public Folder(String name, String type, String path) {
+    public MessageFolder(String name, String type, String path) {
         super(name, type);
 
         String dir = path + getUid();
@@ -257,7 +257,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * Propagates an event to all registered listeners notifying them that a
      * subfolder has been added to this folder.
      */
-    protected void fireFolderAdded(Folder folder) {
+    protected void fireFolderAdded(MessageFolder folder) {
         FolderEvent e = new FolderEvent(this, folder);
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
@@ -276,7 +276,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * folder has been removed from its parent folder. This method removes all
      * registered listeners.
      */
-    protected void fireFolderRemoved(Folder folder) {
+    protected void fireFolderRemoved(MessageFolder folder) {
         FolderEvent e = new FolderEvent(this, folder);
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
@@ -300,8 +300,8 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * 
      * @return root parent folder of this folder
      */
-    public FolderTreeNode getRootFolder() {
-        FolderTreeNode parent = (FolderTreeNode) getParent();
+    public AbstractFolder getRootFolder() {
+        AbstractFolder parent = (AbstractFolder) getParent();
 
         // There is no parent
         if (parent == null) { return this; }
@@ -309,7 +309,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         if (parent instanceof RootFolder) {
             return parent;
         } else {
-            return ((Folder) parent).getRootFolder();
+            return ((MessageFolder) parent).getRootFolder();
         }
     }
 
@@ -402,7 +402,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         StringBuffer path = new StringBuffer();
 
         for (int i = 1; i < treeNode.length; i++) {
-            FolderTreeNode folder = (FolderTreeNode) treeNode[i];
+            AbstractFolder folder = (AbstractFolder) treeNode[i];
             path.append("/" + folder.getName());
         }
 

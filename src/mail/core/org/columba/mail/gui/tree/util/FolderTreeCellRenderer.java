@@ -19,8 +19,8 @@ package org.columba.mail.gui.tree.util;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
@@ -101,12 +101,12 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
         setFont(plainFont);
         setToolTipText("");
 
-        FolderTreeNode treeNode = (FolderTreeNode) value;
+        AbstractFolder treeNode = (AbstractFolder) value;
         setText(treeNode.getName());
         setIcon(getFolderIcon(treeNode, expanded));
 
-        if (value instanceof Folder) {
-            Folder folder = (Folder) value;
+        if (value instanceof MessageFolder) {
+            MessageFolder folder = (MessageFolder) value;
 
             // getting folder info
             MessageFolderInfo info = folder.getMessageFolderInfo();
@@ -155,15 +155,15 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
     /**
      * Returns an icon suitable for the given folder.
      */
-    public static Icon getFolderIcon(FolderTreeNode node, boolean expanded) {
+    public static Icon getFolderIcon(AbstractFolder node, boolean expanded) {
         if (node instanceof LocalRootFolder) {
             return localRootFolderIcon;
         } else if (node instanceof IMAPRootFolder) {
             return imapRootFolderIcon;
         } else if (node instanceof VirtualFolder) {
             return virtualFolderIcon;
-        } else if (node instanceof Folder) {
-            Folder folder = (Folder)node;
+        } else if (node instanceof MessageFolder) {
+            MessageFolder folder = (MessageFolder)node;
             if (folder.isInboxFolder()) {
                 return inboxIcon;
             } else if (folder.getUid() == 103) {

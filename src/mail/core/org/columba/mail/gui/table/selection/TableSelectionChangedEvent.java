@@ -17,14 +17,14 @@ package org.columba.mail.gui.table.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 public class TableSelectionChangedEvent extends SelectionChangedEvent {
-    private Folder folder;
+    private MessageFolder folder;
     private Object[] uids;
 
-    public TableSelectionChangedEvent(Folder folder, Object[] uids) {
+    public TableSelectionChangedEvent(MessageFolder folder, Object[] uids) {
         this.folder = folder;
         this.uids = uids;
     }
@@ -32,7 +32,7 @@ public class TableSelectionChangedEvent extends SelectionChangedEvent {
     /**
  * @return Folder
  */
-    public Folder getFolder() {
+    public MessageFolder getFolder() {
         return folder;
     }
 

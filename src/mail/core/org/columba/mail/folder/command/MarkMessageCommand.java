@@ -27,8 +27,8 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
@@ -129,7 +129,7 @@ public class MarkMessageCommand extends FolderCommand {
             Object[] uids = r[i].getUids();
 
             // get source folder
-            Folder srcFolder = (Folder) r[i].getFolder();
+            MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
             // register for status events
             ((StatusObservableImpl) srcFolder.getObservable())
@@ -168,7 +168,7 @@ public class MarkMessageCommand extends FolderCommand {
      * @throws Exception
      */
     private void processSpamFilter(
-            Object[] uids, Folder srcFolder, int markVariant) throws Exception {
+            Object[] uids, MessageFolder srcFolder, int markVariant) throws Exception {
         // mark as/as not spam
         // for each message
         for (int j = 0; j < uids.length; j++) {
@@ -208,7 +208,7 @@ public class MarkMessageCommand extends FolderCommand {
             if (item.getSpamItem().isMoveTrashSelected() == false) {
                 // move message to user-configured folder (generally "Junk"
                 // folder)
-                FolderTreeNode destFolder = MailInterface.treeModel.getFolder(item
+                AbstractFolder destFolder = MailInterface.treeModel.getFolder(item
                         .getSpamItem().getMoveCustomFolder());
 
                 // create reference
@@ -220,7 +220,7 @@ public class MarkMessageCommand extends FolderCommand {
 
             } else {
                 // move message to trash
-                Folder trash = (Folder) ((RootFolder) srcFolder.getRootFolder())
+                MessageFolder trash = (MessageFolder) ((RootFolder) srcFolder.getRootFolder())
                         .getTrashFolder();
 
                 // create reference

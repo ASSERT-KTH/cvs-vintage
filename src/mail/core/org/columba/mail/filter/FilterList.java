@@ -28,7 +28,7 @@ public class FilterList extends DefaultItem {
     public static final String XML_NAME = "filterlist";
 
     //private Vector list;
-    // private Folder folder;
+    // private MessageFolder folder;
 
     /**
      * Creates a FilterList with the specified element as the root.

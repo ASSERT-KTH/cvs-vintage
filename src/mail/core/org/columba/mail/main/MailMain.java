@@ -24,8 +24,8 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
 
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.tree.TreeModel;
@@ -85,19 +85,19 @@ public class MailMain extends DefaultMain {
         //TODO: move this to TreeModel constructor
         ShutdownManager.getShutdownManager().register(new Runnable() {
                 public void run() {
-                    saveFolder((FolderTreeNode) MailInterface.treeModel.getRoot());
+                    saveFolder((AbstractFolder) MailInterface.treeModel.getRoot());
                 }
 
-                protected void saveFolder(FolderTreeNode parentFolder) {
-                    FolderTreeNode child;
+                protected void saveFolder(AbstractFolder parentFolder) {
+                    AbstractFolder child;
 
                     for (Enumeration e = parentFolder.children();
                             e.hasMoreElements();) {
-                        child = (FolderTreeNode) e.nextElement();
+                        child = (AbstractFolder) e.nextElement();
 
-                        if (child instanceof Folder) {
+                        if (child instanceof MessageFolder) {
                             try {
-                                ((Folder) child).save();
+                                ((MessageFolder) child).save();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }

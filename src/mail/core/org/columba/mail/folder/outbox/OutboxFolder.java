@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
@@ -119,7 +119,7 @@ public class OutboxFolder extends CachedMHFolder {
  * @param newFolder folder to check..
  * @return false always.
  */
-    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+    public boolean supportsAddFolder(AbstractFolder newFolder) {
         return false;
     }
 

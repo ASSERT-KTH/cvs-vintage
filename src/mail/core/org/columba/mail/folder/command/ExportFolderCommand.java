@@ -22,7 +22,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.io.BufferedInputStream;
@@ -87,7 +87,7 @@ public class ExportFolderCommand extends FolderCommand {
                         r[0].getDestFile()));
 
             int counter = 0;
-            Folder srcFolder;
+            MessageFolder srcFolder;
             Object[] uids;
             InputStream in;
             int read;
@@ -96,7 +96,7 @@ public class ExportFolderCommand extends FolderCommand {
             // for each source folder
             for (int i = 0; (i < r.length) && !worker.cancelled(); i++) {
                 // get source folder
-                srcFolder = (Folder) r[i].getFolder();
+                srcFolder = (MessageFolder) r[i].getFolder();
 
                 // update status message
                 worker.setDisplayText(MessageFormat.format(

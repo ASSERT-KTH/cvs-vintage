@@ -18,7 +18,7 @@ package org.columba.mail.gui.tree;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
@@ -70,7 +70,7 @@ public class TreeView extends JTree {
         setRootVisible(false);
 
         //setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
-        FolderTreeNode root = (FolderTreeNode) treeModel.getRoot();
+        AbstractFolder root = (AbstractFolder) treeModel.getRoot();
 
         expand(root);
 
@@ -86,7 +86,7 @@ public class TreeView extends JTree {
  * Expands the specified node so it corresponds to the expanded attribute in the configuration.
  * @param parent node to check if it should be expanded or not.
  */
-    public final void expand(FolderTreeNode parent) {
+    public final void expand(AbstractFolder parent) {
         // get configuration from tree.xml file
         FolderItem item = parent.getFolderItem();
 
@@ -109,7 +109,7 @@ public class TreeView extends JTree {
 
         // recursivly expand all children
         for (int i = 0; i < parent.getChildCount(); i++) {
-            FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
+            AbstractFolder child = (AbstractFolder) parent.getChildAt(i);
             expand(child);
         }
     }
@@ -120,11 +120,11 @@ public class TreeView extends JTree {
  * there is no guarantee what it will return.
  * @return the folder tree node that is targeted for the drop action; null otherwise.
  */
-    public FolderTreeNode getDropTargetFolder() {
-        FolderTreeNode node = null;
+    public AbstractFolder getDropTargetFolder() {
+        AbstractFolder node = null;
 
         if (dropTargetPath != null) {
-            node = (FolderTreeNode) dropTargetPath.getLastPathComponent();
+            node = (AbstractFolder) dropTargetPath.getLastPathComponent();
         }
 
         return node;
@@ -145,11 +145,11 @@ public class TreeView extends JTree {
  * there is no guarantee what it will return.
  * @return the folder that is being dragged; null if it wasnt initiated in this component.
  */
-    public FolderTreeNode getSelectedNodeBeforeDragAction() {
-        FolderTreeNode node = null;
+    public AbstractFolder getSelectedNodeBeforeDragAction() {
+        AbstractFolder node = null;
 
         if (selectedPathBeforeDrag != null) {
-            node = (FolderTreeNode) selectedPathBeforeDrag.getLastPathComponent();
+            node = (AbstractFolder) selectedPathBeforeDrag.getLastPathComponent();
         }
 
         return node;

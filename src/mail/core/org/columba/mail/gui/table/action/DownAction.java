@@ -20,7 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -115,7 +115,7 @@ public class DownAction extends AbstractColumbaAction {
             tableController.setSelected(nextUids);
 
             // saving the last selection for the current folder
-            ((Folder) ref.getFolder()).setLastSelection(nextUids[0]);
+            ((MessageFolder) ref.getFolder()).setLastSelection(nextUids[0]);
 
             int row = tableController.getView().getSelectedRow();
             tableController.getView().scrollRectToVisible(tableController.getView()

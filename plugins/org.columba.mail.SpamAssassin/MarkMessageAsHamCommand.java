@@ -7,7 +7,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
@@ -24,7 +24,7 @@ public class MarkMessageAsHamCommand extends FolderCommand {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getAnonymousLogger();
 
-    Folder srcFolder;
+    MessageFolder srcFolder;
     protected FolderCommandAdapter adapter;
 
     /**
@@ -86,7 +86,7 @@ public class MarkMessageAsHamCommand extends FolderCommand {
         // this could also happen while using a virtual folder
         // -> loop through all available source references
         for (int j = 0; j < adapter.getSourceFolderReferences().length; j++) {
-            srcFolder = (Folder) adapter.getSourceFolderReferences()[j].getFolder();
+            srcFolder = (MessageFolder) adapter.getSourceFolderReferences()[j].getFolder();
 
             Object[] uids = adapter.getSourceFolderReferences()[j].getUids();
             worker.setDisplayText("Applying analyzer to " +
@@ -101,7 +101,7 @@ public class MarkMessageAsHamCommand extends FolderCommand {
         }
     }
 
-    public static void markMessage(Folder srcFolder, Object uid, WorkerStatusController worker)
+    public static void markMessage(MessageFolder srcFolder, Object uid, WorkerStatusController worker)
         throws Exception {
         InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
 

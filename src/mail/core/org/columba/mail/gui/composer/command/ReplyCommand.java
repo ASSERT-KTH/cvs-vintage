@@ -32,7 +32,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
@@ -94,7 +94,7 @@ public class ReplyCommand extends FolderCommand {
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0])
+        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
                 .getFolder();
 
         // get first selected message
@@ -151,7 +151,7 @@ public class ReplyCommand extends FolderCommand {
         }
     }
 
-    protected void initHeader(Folder folder, Object[] uids) throws Exception {
+    protected void initHeader(MessageFolder folder, Object[] uids) throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
@@ -183,7 +183,7 @@ public class ReplyCommand extends FolderCommand {
         model.setAccountItem(accountItem);
     }
 
-    protected String createQuotedBody(Folder folder, Object[] uids,
+    protected String createQuotedBody(MessageFolder folder, Object[] uids,
             Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 

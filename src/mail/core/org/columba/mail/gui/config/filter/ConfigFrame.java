@@ -25,7 +25,7 @@ import org.columba.core.xml.XmlIO;
 
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
@@ -106,13 +106,13 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
     private JButton movedownButton;
     private JButton importButton;
     private JButton exportButton;
-    private Folder folder;
+    private MessageFolder folder;
 
     /**
      * Constructs a ConfigFrame for the specified folder.
      * @param messageFolder folder to set filter actions for.
      */
-    public ConfigFrame(Folder messageFolder) {
+    public ConfigFrame(MessageFolder messageFolder) {
         super();
         folder = messageFolder;
 

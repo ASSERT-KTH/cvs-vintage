@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -41,13 +41,13 @@ public class FolderTransfer implements Transferable {
         }
     }
 
-    private Folder folderReference;
+    private MessageFolder folderReference;
 
     /**
  * Creates a transferable for transfering folders.
  * @param folder the folder that is being transfered.
  */
-    public FolderTransfer(Folder folder) {
+    public FolderTransfer(MessageFolder folder) {
         folderReference = folder;
     }
 
@@ -55,7 +55,7 @@ public class FolderTransfer implements Transferable {
  * Returns the folder reference for this transfer.
  * @return a Folder
  */
-    public Folder getFolderReference() {
+    public MessageFolder getFolderReference() {
         return folderReference;
     }
 

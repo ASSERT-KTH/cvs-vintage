@@ -36,7 +36,7 @@ public class TempFolderFactory implements MailboxTestFactory {
     /**
      * @see org.columba.mail.folder.MailboxTestFactory#createSourceFolder(int)
      */
-    public Folder createFolder(int folderId) {
+    public MessageFolder createFolder(int folderId) {
         return new TempFolder(FolderTestHelper.homeDirectory + "/folders/"
                 + folderId);
     }

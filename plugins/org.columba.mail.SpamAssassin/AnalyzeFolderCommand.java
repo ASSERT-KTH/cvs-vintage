@@ -4,7 +4,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -20,7 +20,7 @@ import org.columba.mail.folder.Folder;
  *
  */
 public class AnalyzeFolderCommand extends FolderCommand {
-    Folder srcFolder;
+    MessageFolder srcFolder;
 
     /**
 
@@ -47,7 +47,7 @@ public class AnalyzeFolderCommand extends FolderCommand {
         FolderCommandAdapter adapter = new FolderCommandAdapter(r);
 
         // there can be only one reference for this command
-        srcFolder = (Folder) adapter.getSourceFolderReferences()[0].getFolder();
+        srcFolder = (MessageFolder) adapter.getSourceFolderReferences()[0].getFolder();
 
         worker.setDisplayText("Applying analyzer to " + srcFolder.getName() +
             "...");

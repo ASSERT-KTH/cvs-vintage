@@ -23,7 +23,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.mail.main.MailInterface;
@@ -80,9 +80,9 @@ public class ExportDialog extends JDialog implements ActionListener {
         setVisible(true);
     }
 
-    private void createChildNodes(CheckableTreeNode root, FolderTreeNode parent) {
+    private void createChildNodes(CheckableTreeNode root, AbstractFolder parent) {
         for (int i = 0; i < parent.getChildCount(); i++) {
-            FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
+            AbstractFolder child = (AbstractFolder) parent.getChildAt(i);
 
             CheckableTreeNode c = new CheckableTreeNode(child.getName());
             c.setIcon(FolderTreeCellRenderer.getFolderIcon(child, false));
@@ -108,7 +108,7 @@ public class ExportDialog extends JDialog implements ActionListener {
         selectAllButton.setActionCommand("SELECTALL");
         selectAllButton.addActionListener(this);
 
-        FolderTreeNode parent = (FolderTreeNode) MailInterface.treeModel.getRoot();
+        AbstractFolder parent = (AbstractFolder) MailInterface.treeModel.getRoot();
         CheckableTreeNode root = new CheckableTreeNode(parent.getName());
         root.setNode(parent);
         createChildNodes(root, parent);
@@ -264,7 +264,7 @@ public class ExportDialog extends JDialog implements ActionListener {
             FolderCommandReference[] r = new FolderCommandReference[v.size()];
 
             for (int i = 0; i < v.size(); i++) {
-                FolderTreeNode node = (FolderTreeNode) ((CheckableTreeNode) v.get(i)).getNode();
+                AbstractFolder node = (AbstractFolder) ((CheckableTreeNode) v.get(i)).getNode();
 
                 r[i] = new FolderCommandReference(node);
                 r[i].setDestFile(destFile);

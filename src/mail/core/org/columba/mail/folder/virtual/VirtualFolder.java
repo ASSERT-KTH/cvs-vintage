@@ -33,9 +33,9 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
@@ -64,7 +64,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  *
  */
-public class VirtualFolder extends Folder {
+public class VirtualFolder extends MessageFolder {
     protected int nextUid;
     protected HeaderList headerList;
 
@@ -178,7 +178,7 @@ public class VirtualFolder extends Folder {
         // we only want 10 subfolders
         // -> if more children exist remove them
         if (searchFolder.getChildCount() >= 10) {
-            Folder child = (Folder) searchFolder.getChildAt(0);
+            MessageFolder child = (MessageFolder) searchFolder.getChildAt(0);
             child.removeFromParent();
         }
 
@@ -267,7 +267,7 @@ public class VirtualFolder extends Folder {
 
     protected void applySearch() throws Exception {
         int uid = getFolderItem().getInteger("property", "source_uid");
-        Folder srcFolder = (Folder) MailInterface.treeModel.getFolder(uid);
+        MessageFolder srcFolder = (MessageFolder) MailInterface.treeModel.getFolder(uid);
 
         XmlElement filter = getFolderItem().getRoot().getElement("filter");
 
@@ -296,9 +296,9 @@ public class VirtualFolder extends Folder {
         VirtualFolder folder = (VirtualFolder) MailInterface.treeModel.getFolder(106);
     }
 
-    protected void applySearch(Folder parent, Filter filter)
+    protected void applySearch(MessageFolder parent, Filter filter)
         throws Exception {
-        Folder folder = parent;
+        MessageFolder folder = parent;
 
         Object[] resultUids = folder.searchMessages(filter);
         String[] headerfields = CachedHeaderfields.getCachedHeaderfields();
@@ -328,7 +328,7 @@ public class VirtualFolder extends Folder {
 
         if (isInclude) {
             for (Enumeration e = parent.children(); e.hasMoreElements();) {
-                folder = (Folder) e.nextElement();
+                folder = (MessageFolder) e.nextElement();
 
                 if (folder instanceof VirtualFolder) {
                     continue;
@@ -347,13 +347,13 @@ public class VirtualFolder extends Folder {
         return new Filter(getFolderItem().getRoot().getElement("filter"));
     }
 
-    public Object getVirtualUid(Folder parent, Object uid)
+    public Object getVirtualUid(MessageFolder parent, Object uid)
         throws Exception {
         for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
             Object virtualUid = e.nextElement();
             VirtualHeader virtualHeader = (VirtualHeader) headerList.get(virtualUid);
 
-            Folder srcFolder = virtualHeader.getSrcFolder();
+            MessageFolder srcFolder = virtualHeader.getSrcFolder();
             Object srcUid = virtualHeader.getSrcUid();
 
             if (srcFolder.equals(parent)) {
@@ -366,7 +366,7 @@ public class VirtualFolder extends Folder {
         return null;
     }
 
-    public void add(ColumbaHeader header, Folder f, Object uid)
+    public void add(ColumbaHeader header, MessageFolder f, Object uid)
         throws Exception {
         Object newUid = generateNextUid();
 
@@ -496,7 +496,7 @@ public class VirtualFolder extends Folder {
 
         for (int i = 0; i < uids.length; i++) {
             VirtualHeader virtualHeader = (VirtualHeader) headerList.get(uids[i]);
-            Folder srcFolder = virtualHeader.getSrcFolder();
+            MessageFolder srcFolder = virtualHeader.getSrcFolder();
             Object srcUid = virtualHeader.getSrcUid();
 
             if (list.containsKey(srcFolder)) {
@@ -515,7 +515,7 @@ public class VirtualFolder extends Folder {
         int i = 0;
 
         for (Enumeration e = list.keys(); e.hasMoreElements();) {
-            Folder srcFolder = (Folder) e.nextElement();
+            MessageFolder srcFolder = (MessageFolder) e.nextElement();
             List v = (Vector) list.get(srcFolder);
 
             /*
@@ -536,7 +536,7 @@ public class VirtualFolder extends Folder {
         }
 
         if (r.length > 1) {
-            newReference[i] = new FolderCommandReference((Folder) r[1].getFolder());
+            newReference[i] = new FolderCommandReference((MessageFolder) r[1].getFolder());
         } else {
             newReference[i] = null;
         }
@@ -658,7 +658,7 @@ public class VirtualFolder extends Folder {
  * @param newFolder a folder to check if it is a Virtual folder.
  * @return true if the folder is a VirtualFolder; false otherwise.
  */
-    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+    public boolean supportsAddFolder(AbstractFolder newFolder) {
         return (newFolder instanceof VirtualFolder);
     }
 

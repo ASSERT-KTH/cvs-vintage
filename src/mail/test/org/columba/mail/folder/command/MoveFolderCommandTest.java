@@ -17,7 +17,7 @@ package org.columba.mail.folder.command;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.MailboxTestFactory;
 
 /**
@@ -35,12 +35,12 @@ public class MoveFolderCommandTest extends AbstractFolderTest {
      * @throws Exception thrown for any bad reason if the command goes wrong.
      */
     public void testExecute() throws Exception {
-        Folder rootFolder = createFolder();
+        MessageFolder rootFolder = createFolder();
 
-        Folder folderToBeMoved = createFolder();
+        MessageFolder folderToBeMoved = createFolder();
         rootFolder.append(folderToBeMoved);
 
-        Folder destinationFolder = createFolder();
+        MessageFolder destinationFolder = createFolder();
         rootFolder.append(destinationFolder);
 
         FolderCommandReference[] references = new FolderCommandReference[2];

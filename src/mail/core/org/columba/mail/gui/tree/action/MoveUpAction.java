@@ -24,8 +24,8 @@ import org.columba.core.gui.selection.SelectionListener;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.main.MailInterface;
@@ -69,11 +69,11 @@ public class MoveUpAction extends AbstractColumbaAction
     public void actionPerformed(ActionEvent arg0) {
         FolderCommandReference[] r = (FolderCommandReference[]) ((MailFrameMediator) frameMediator).getTreeSelection();
 
-        FolderTreeNode folder = r[0].getFolder();
+        AbstractFolder folder = r[0].getFolder();
 
         int newIndex = folder.getParent().getIndex(folder);
         newIndex = newIndex - 1;
-        ((FolderTreeNode) folder.getParent()).insert(folder, newIndex);
+        ((AbstractFolder) folder.getParent()).insert(folder, newIndex);
 
         MailInterface.treeModel.nodeStructureChanged(folder.getParent());
     }
@@ -83,9 +83,9 @@ public class MoveUpAction extends AbstractColumbaAction
  */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+            AbstractFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
-            if ((folder != null) && folder instanceof Folder) {
+            if ((folder != null) && folder instanceof MessageFolder) {
                 FolderItem item = folder.getFolderItem();
 
                 if (item.get("property", "accessrights").equals("user")) {

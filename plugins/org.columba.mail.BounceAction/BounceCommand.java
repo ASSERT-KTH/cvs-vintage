@@ -28,7 +28,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
@@ -64,7 +64,8 @@ public class BounceCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder folder = (MessageFolder)
+                ((FolderCommandReference) getReferences()[0]).getFolder();
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
         // create new message
@@ -98,8 +99,9 @@ public class BounceCommand extends FolderCommand {
 
         // get user-configurable Sent-Folder
         AccountItem item = model.getAccountItem();
-        Folder sentFolder = (Folder) MailInterface.treeModel.getFolder(item.getSpecialFoldersItem()
-                                                                           .getInteger("sent"));
+        MessageFolder sentFolder = (MessageFolder) 
+                MailInterface.treeModel.getFolder(
+                        item.getSpecialFoldersItem().getInteger("sent"));
 
         // the following code should be better put somewhere else
         // because it could be shared with SendMessageCommand

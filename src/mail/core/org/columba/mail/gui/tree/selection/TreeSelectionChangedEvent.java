@@ -17,20 +17,20 @@ package org.columba.mail.gui.tree.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 
 
 public class TreeSelectionChangedEvent extends SelectionChangedEvent {
-    private FolderTreeNode[] selected;
+    private AbstractFolder[] selected;
 
-    public TreeSelectionChangedEvent(FolderTreeNode[] n) {
+    public TreeSelectionChangedEvent(AbstractFolder[] n) {
         selected = n;
     }
 
     /**
  * @return FolderTreeNode
  */
-    public FolderTreeNode[] getSelected() {
+    public AbstractFolder[] getSelected() {
         return selected;
     }
 }

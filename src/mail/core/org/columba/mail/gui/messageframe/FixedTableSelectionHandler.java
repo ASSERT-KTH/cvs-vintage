@@ -10,7 +10,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 
@@ -45,7 +45,7 @@ public class FixedTableSelectionHandler extends SelectionHandler {
         this.tableReference = (FolderCommandReference[]) selection;
 
         fireSelectionChanged(new TableSelectionChangedEvent(
-                (Folder) tableReference[0].getFolder(),
+                (MessageFolder) tableReference[0].getFolder(),
                 tableReference[0].getUids()));
     }
 }

@@ -24,7 +24,7 @@ import java.util.Vector;
 
 
 /**
- * Folder specific options.
+ * MessageFolder specific options.
  *
  * @author fdietz
  */

@@ -13,17 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.message.Header;
 
-
 /**
- *
- *
  * This FilterPlugin searches every To and Cc headerfield
  * of an occurence of a search string and combines the result
  * with an logical OR operation
@@ -35,7 +33,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
     private String pattern;
 
     /** {@inheritDoc} */
-    public boolean process(Folder folder, Object uid) throws Exception {
+    public boolean process(MessageFolder folder, Object uid) throws Exception {
         // get the header of the message
         Header header = folder.getHeaderFields(uid, new String[] {"To", "Cc"});
 

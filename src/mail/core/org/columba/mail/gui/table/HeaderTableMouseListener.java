@@ -16,7 +16,7 @@
 package org.columba.mail.gui.table;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
@@ -83,7 +83,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
                 FolderCommandReference[] ref = ((MailFrameMediator)headerTableViewer.getFrameController())
                                                                 .getTableSelection();
-                ((Folder) ref[0].getFolder()).setLastSelection(node.getUid());
+                ((MessageFolder) ref[0].getFolder()).setLastSelection(node.getUid());
                 viewMessageAction.actionPerformed(null);
             }
         }

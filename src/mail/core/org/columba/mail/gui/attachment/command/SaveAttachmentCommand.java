@@ -26,7 +26,7 @@ import org.columba.core.util.cFileFilter;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.EncodedWord;
@@ -76,7 +76,7 @@ public class SaveAttachmentCommand extends FolderCommand {
     public void execute(WorkerStatusController worker)
         throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-        Folder folder = (Folder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r[0].getFolder();
         Object[] uids = r[0].getUids();
 
         Integer[] address = r[0].getAddress();

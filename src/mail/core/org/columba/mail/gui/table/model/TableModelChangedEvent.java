@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.message.HeaderList;
 
 
@@ -32,7 +32,7 @@ public class TableModelChangedEvent {
     public final static int SET = 1;
     public final static int REMOVE = 2;
     public final static int MARK = 3;
-    protected FolderTreeNode srcFolder;
+    protected AbstractFolder srcFolder;
     protected Object[] uids;
     protected int markVariant;
     protected int eventType;
@@ -45,26 +45,26 @@ public class TableModelChangedEvent {
         this.eventType = eventType;
     }
 
-    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder) {
+    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
     }
 
-    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
         Object[] uids) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
         this.uids = uids;
     }
 
-    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
         HeaderList headerList) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
         this.headerList = headerList;
     }
 
-    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+    public TableModelChangedEvent(int eventType, AbstractFolder srcFolder,
         Object[] uids, int markVariant) {
         this.eventType = eventType;
         this.srcFolder = srcFolder;
@@ -84,7 +84,7 @@ public class TableModelChangedEvent {
  * Returns the srcFolder.
  * @return FolderTreeNode
  */
-    public FolderTreeNode getSrcFolder() {
+    public AbstractFolder getSrcFolder() {
         return srcFolder;
     }
 

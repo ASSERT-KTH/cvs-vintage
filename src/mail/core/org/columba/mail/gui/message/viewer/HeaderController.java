@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 import javax.swing.JComponent;
 
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
@@ -61,7 +61,7 @@ public class HeaderController implements Viewer {
      * @see org.columba.mail.gui.message.viewer.Viewer#view(org.columba.mail.folder.Folder,
      *      java.lang.Object, org.columba.mail.gui.frame.MailFrameMediator)
      */
-    public void view(Folder folder, Object uid, MailFrameMediator mediator)
+    public void view(MessageFolder folder, Object uid, MailFrameMediator mediator)
             throws Exception {
         header = folder.getMessageHeader(uid);
 

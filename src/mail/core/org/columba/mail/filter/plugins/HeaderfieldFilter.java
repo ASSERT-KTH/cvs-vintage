@@ -18,7 +18,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.message.Header;
 
@@ -59,7 +59,7 @@ public class HeaderfieldFilter extends AbstractFilter {
  * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
  *      java.lang.Object, org.columba.mail.filter.Filter)
  */
-    public boolean process(Folder folder, Object uid) throws Exception {
+    public boolean process(MessageFolder folder, Object uid) throws Exception {
         // get message header
         Header header = folder.getHeaderFields(uid, new String[] { headerfield });
 

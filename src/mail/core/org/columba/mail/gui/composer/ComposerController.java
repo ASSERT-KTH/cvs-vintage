@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer;
 
 import org.columba.addressbook.folder.Folder;
@@ -51,7 +52,6 @@ import java.util.Observer;
 import java.util.logging.Logger;
 
 import javax.swing.event.EventListenerList;
-
 
 /**
  * @author frd

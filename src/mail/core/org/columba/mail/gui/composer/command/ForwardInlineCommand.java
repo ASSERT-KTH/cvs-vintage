@@ -24,7 +24,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.main.MailInterface;
@@ -74,7 +74,7 @@ public class ForwardInlineCommand extends ForwardCommand {
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
@@ -135,7 +135,7 @@ public class ForwardInlineCommand extends ForwardCommand {
         }
     }
 
-    private void initHeader(Folder folder, Object[] uids)
+    private void initHeader(MessageFolder folder, Object[] uids)
         throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0],
@@ -148,7 +148,7 @@ public class ForwardInlineCommand extends ForwardCommand {
                 rfcHeader.getSubject()));
     }
 
-    protected String createQuotedBody(Folder folder, Object[] uids,
+    protected String createQuotedBody(MessageFolder folder, Object[] uids,
         Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 

@@ -21,7 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.util.IconPanelSelectionListener;
 
 
@@ -31,7 +31,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment");
 
-    private Folder folder;
+    private MessageFolder folder;
     private Object messageUid;
     private AttachmentView view;
     private Integer[] address;
@@ -62,7 +62,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
         LOG.warning("Not yet implemented!");
     }
 
-    public void setMessage(Folder folder, Object messageUid) {
+    public void setMessage(MessageFolder folder, Object messageUid) {
         this.folder = folder;
         this.messageUid = messageUid;
     }
@@ -85,7 +85,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
 
     public void setLocalReference(FolderCommandReference[] r) {
         // set selection
-        setMessage((Folder) r[0].getFolder(), r[0].getUids()[0]);
+        setMessage((MessageFolder) r[0].getFolder(), r[0].getUids()[0]);
         useLocalSelection = true;
     }
 }

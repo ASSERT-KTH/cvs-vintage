@@ -21,7 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
@@ -51,7 +51,7 @@ public class ReplyToMailingListCommand extends ReplyCommand {
         super(references);
     }
 
-    protected void initHeader(Folder folder, Object[] uids)
+    protected void initHeader(MessageFolder folder, Object[] uids)
         throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);

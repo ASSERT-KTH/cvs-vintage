@@ -27,7 +27,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -42,7 +42,7 @@ import org.columba.mail.message.HeaderList;
  */
 public class ViewHeaderListCommand extends Command {
     private HeaderList headerList;
-    private Folder folder;
+    private MessageFolder folder;
 
     public ViewHeaderListCommand(FrameMediator frame,
         DefaultCommandReference[] references) {
@@ -74,7 +74,7 @@ public class ViewHeaderListCommand extends Command {
         throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-        folder = (Folder) r[0].getFolder();
+        folder = (MessageFolder) r[0].getFolder();
 
         //		register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

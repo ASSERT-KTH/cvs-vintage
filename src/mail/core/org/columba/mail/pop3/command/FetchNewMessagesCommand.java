@@ -24,7 +24,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.util.MailResourceLoader;
@@ -146,7 +146,7 @@ r[0].getPOP3ServerController().enableActions(true);
         message.getHeader().getFlags().setSeen(false);
 
         //get inbox-folder from pop3-server preferences
-        Folder inboxFolder = server.getFolder();
+        MessageFolder inboxFolder = server.getFolder();
 
         // start command which adds message to folder
         // and calls apply-filter on this specific message

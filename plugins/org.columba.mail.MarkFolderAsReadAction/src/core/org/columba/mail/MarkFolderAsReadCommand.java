@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail;
 
 import org.columba.core.command.Command;
@@ -20,7 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.main.MailInterface;
 
@@ -40,7 +41,7 @@ import org.columba.mail.main.MailInterface;
 public class MarkFolderAsReadCommand extends Command {
 
     /** The folder that is supposed to be marked as read. */
-    private Folder folderToBeRead;
+    private MessageFolder folderToBeRead;
 
     /**
      * @param references folder references
@@ -52,7 +53,7 @@ public class MarkFolderAsReadCommand extends Command {
     /** {@inheritDoc} */
     public void execute(WorkerStatusController worker) throws Exception {
         // get folder that is going to be moved
-        folderToBeRead = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        folderToBeRead = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         worker.setDisplayText("Marking folder '" + folderToBeRead.getName() + "' as read");
         worker.clearDisplayTextWithDelay();

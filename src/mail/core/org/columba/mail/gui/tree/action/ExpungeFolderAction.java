@@ -23,7 +23,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -79,7 +79,7 @@ public class ExpungeFolderAction extends AbstractColumbaAction
          */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+            AbstractFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
             if (folder != null) {
                 FolderItem item = folder.getFolderItem();

@@ -21,7 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerModel;
 
 import org.columba.ristretto.message.InputStreamMimePart;
@@ -52,7 +52,7 @@ public class ReplyAsAttachmentCommand extends ReplyCommand {
         model = new ComposerModel();
 
         // get selected folder
-        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();

@@ -26,7 +26,7 @@ package org.columba.mail.folder;
  * @author fdietz
  */
 public interface RootFolder {
-    public FolderTreeNode getTrashFolder();
+    public AbstractFolder getTrashFolder();
 
-    public FolderTreeNode getInboxFolder();
+    public AbstractFolder getInboxFolder();
 }

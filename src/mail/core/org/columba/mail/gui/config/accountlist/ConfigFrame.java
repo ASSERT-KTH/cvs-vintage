@@ -24,7 +24,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailInterface;
@@ -334,10 +334,10 @@ public class ConfigFrame implements ActionListener,
             if (item.isPopAccount()) {
                 MailInterface.popServerCollection.removePopServer(item.getUid());
             } else {
-                FolderTreeNode folder = (FolderTreeNode) MailInterface.treeModel.getImapFolder(item.getUid());
+                AbstractFolder folder = (AbstractFolder) MailInterface.treeModel.getImapFolder(item.getUid());
 
                 try {
-                    FolderTreeNode parentFolder = (FolderTreeNode) folder.getParent();
+                    AbstractFolder parentFolder = (AbstractFolder) folder.getParent();
                     folder.removeFolder();
                     MailInterface.treeModel.nodeStructureChanged(parentFolder);
                 } catch (Exception ex) {

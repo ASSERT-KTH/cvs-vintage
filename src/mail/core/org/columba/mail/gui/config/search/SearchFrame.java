@@ -26,7 +26,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -81,12 +81,12 @@ public class SearchFrame extends JDialog implements ActionListener {
     private CriteriaList criteriaList;
     private VirtualFolder destFolder;
 
-    //private FolderTreeNode folderTreeNode;
+    //private AbstractFolder folderTreeNode;
     private JComboBox condList;
     private FrameMediator frameController;
 
     public SearchFrame(FrameMediator frameController,
-        Folder folder) {
+        MessageFolder folder) {
         super();
         this.frameController = frameController;
         setTitle(MailResourceLoader.getString("dialog", "filter",
@@ -271,13 +271,13 @@ public class SearchFrame extends JDialog implements ActionListener {
             int uid = destFolder.getFolderItem().getInteger("property",
                     "source_uid");
 
-            Folder f = (Folder) MailInterface.treeModel.getFolder(uid);
+            MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
 
-            // If f==null because of deleted Folder fallback to Inbox
+            // If f==null because of deleted MessageFolder fallback to Inbox
             if (f == null) {
                 uid = 101;
                 destFolder.getFolderItem().set("property", "source_uid", uid);
-                f = (Folder) MailInterface.treeModel.getFolder(uid);
+                f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
             }
 
             selectButton.setText(f.getTreePath());
@@ -304,7 +304,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 
             String path = selectButton.getText();
             TreeNodeList list = new TreeNodeList(path);
-            Folder folder = (Folder) MailInterface.treeModel.getFolder(list);
+            MessageFolder folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
             int uid = folder.getUid();
             destFolder.getFolderItem().set("property", "source_uid", uid);
 
@@ -312,7 +312,7 @@ public class SearchFrame extends JDialog implements ActionListener {
         }
     }
 
-    public void setSourceFolder(Folder f) {
+    public void setSourceFolder(MessageFolder f) {
         selectButton.setText(f.getTreePath());
     }
 
@@ -328,7 +328,7 @@ public class SearchFrame extends JDialog implements ActionListener {
             SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
 
             if (dialog.success()) {
-                Folder folder = dialog.getSelectedFolder();
+                MessageFolder folder = dialog.getSelectedFolder();
                 String path = folder.getTreePath();
 
                 selectButton.setText(path);

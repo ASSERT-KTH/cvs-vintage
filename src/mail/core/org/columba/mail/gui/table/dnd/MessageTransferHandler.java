@@ -18,7 +18,7 @@ package org.columba.mail.gui.table.dnd;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
@@ -99,7 +99,7 @@ if (source.equals(target))
 */
 
         // do the work here
-        Folder destFolder = (Folder) target.getSelectionPath()
+        MessageFolder destFolder = (MessageFolder) target.getSelectionPath()
                                            .getLastPathComponent();
 
         FolderCommandReference[] result = new FolderCommandReference[2];

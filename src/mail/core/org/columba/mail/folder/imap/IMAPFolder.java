@@ -153,13 +153,13 @@ public class IMAPFolder extends RemoteFolder {
     /**
      * @see org.columba.mail.folder.Folder#getRootFolder()
      */
-    public FolderTreeNode getRootFolder() {
-        FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
+    public AbstractFolder getRootFolder() {
+        AbstractFolder folderTreeNode = (AbstractFolder) getParent();
 
         while (folderTreeNode != null) {
             if (folderTreeNode instanceof IMAPRootFolder) { return (IMAPRootFolder) folderTreeNode; }
 
-            folderTreeNode = (FolderTreeNode) folderTreeNode.getParent();
+            folderTreeNode = (AbstractFolder) folderTreeNode.getParent();
         }
 
         return null;
@@ -519,10 +519,10 @@ public class IMAPFolder extends RemoteFolder {
         StringBuffer path = new StringBuffer();
         path.append(getName());
 
-        FolderTreeNode child = this;
+        AbstractFolder child = this;
 
         while (true) {
-            child = (FolderTreeNode) child.getParent();
+            child = (AbstractFolder) child.getParent();
 
             if (child instanceof IMAPRootFolder) {
                 break;
@@ -554,7 +554,7 @@ public class IMAPFolder extends RemoteFolder {
     public boolean tryToGetLock(Object locker) {
         // IMAP Folders have no own lock ,but share the lock from the Root
         // to ensure that only one operation can be processed simultanous
-        FolderTreeNode root = getRootFolder();
+        AbstractFolder root = getRootFolder();
 
         if (root != null) {
             return root.tryToGetLock(locker);
@@ -567,7 +567,7 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
      */
     public void releaseLock(Object locker) {
-        FolderTreeNode root = getRootFolder();
+        AbstractFolder root = getRootFolder();
 
         if (root != null) {
             root.releaseLock(locker);
@@ -579,7 +579,7 @@ public class IMAPFolder extends RemoteFolder {
      *
      * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
      */
-    public void addSubfolder(FolderTreeNode child) throws Exception {
+    public void addSubfolder(AbstractFolder child) throws Exception {
         if (child instanceof IMAPFolder) {
             String path = getImapPath() + getStore().getDelimiter()
                     + child.getName();

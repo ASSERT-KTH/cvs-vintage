@@ -26,7 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -55,7 +55,7 @@ public class ApplyFilterCommand extends Command {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
         // get source folder
-        Folder srcFolder = (Folder) r[0].getFolder();
+        MessageFolder srcFolder = (MessageFolder) r[0].getFolder();
 
         // register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);

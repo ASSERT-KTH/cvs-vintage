@@ -22,7 +22,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.main.MailInterface;
@@ -34,7 +34,7 @@ import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
+public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
@@ -125,7 +125,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
         return observable;
     }
 
-    protected void syncFolder(FolderTreeNode parent, String name, ListInfo info)
+    protected void syncFolder(AbstractFolder parent, String name, ListInfo info)
         throws Exception {
         LOG.info("creating folder=" + name);
 
@@ -136,7 +136,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
             //  -> the final folder
             String subchild = name.substring(0,
                     name.indexOf(store.getDelimiter()));
-            FolderTreeNode subFolder = (FolderTreeNode) parent.findChildWithName(subchild,
+            AbstractFolder subFolder = (AbstractFolder) parent.findChildWithName(subchild,
                     false);
 
             // if folder doesn't exist already
@@ -167,7 +167,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
             // no delimiter found
             //  -> this is already the final folder
             // if folder doesn't exist already
-            FolderTreeNode subFolder = (FolderTreeNode) parent.findChildWithName(name,
+            AbstractFolder subFolder = (AbstractFolder) parent.findChildWithName(name,
                     false);
 
             if (subFolder == null) {
@@ -190,12 +190,12 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
         }
     }
 
-    protected void markAllSubfoldersAsExistOnServer(FolderTreeNode parent,
+    protected void markAllSubfoldersAsExistOnServer(AbstractFolder parent,
         boolean value) {
-        FolderTreeNode child;
+        AbstractFolder child;
 
         for (int i = 0; i < parent.getChildCount(); i++) {
-            child = (FolderTreeNode) parent.getChildAt(i);
+            child = (AbstractFolder) parent.getChildAt(i);
 
             if (child instanceof IMAPFolder) {
                 ((IMAPFolder) child).existsOnServer = value;
@@ -204,13 +204,13 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
         }
     }
 
-    protected void removeNotMarkedSubfolders(FolderTreeNode parent)
+    protected void removeNotMarkedSubfolders(AbstractFolder parent)
         throws Exception {
-        FolderTreeNode child;
+        AbstractFolder child;
 
         // first remove all subfolders recursively
         for (int i = 0; i < parent.getChildCount(); i++) {
-            child = (FolderTreeNode) parent.getChildAt(i);
+            child = (AbstractFolder) parent.getChildAt(i);
 
             if (child instanceof IMAPFolder) {
                 removeNotMarkedSubfolders(child);
@@ -237,7 +237,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
             if (this.findChildWithUID(specialUid, true) == null) {
                 // search for a folder thats on the IMAP account
                 // first try to find the local translation of special
-                FolderTreeNode specialFolder = this.findChildWithName(MailResourceLoader.getString(
+                AbstractFolder specialFolder = this.findChildWithName(MailResourceLoader.getString(
                             "tree", SPECIAL_FOLDER_NAMES[i]), true);
 
                 if (specialFolder == null) {
@@ -326,7 +326,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
      *
      * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
      */
-    public void addSubfolder(FolderTreeNode child) throws Exception {
+    public void addSubfolder(AbstractFolder child) throws Exception {
         if (child instanceof IMAPFolder) {
             String path = child.getName();
             boolean result = getStore().createFolder(path);
@@ -355,8 +355,8 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
      *
      * @see org.columba.mail.folder.RootFolder#getTrashFolder()
      */
-    public FolderTreeNode getTrashFolder() {
-        FolderTreeNode ret = findChildWithUID(accountItem.getSpecialFoldersItem()
+    public AbstractFolder getTrashFolder() {
+        AbstractFolder ret = findChildWithUID(accountItem.getSpecialFoldersItem()
                                                          .getInteger("trash"),
                 true);
 
@@ -373,7 +373,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
      *
      * @see org.columba.mail.folder.RootFolder#getInbox()
      */
-    public FolderTreeNode getInboxFolder() {
+    public AbstractFolder getInboxFolder() {
         return (IMAPFolder) this.findChildWithName("INBOX", false);
     }
 

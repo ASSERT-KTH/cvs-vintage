@@ -18,7 +18,7 @@ package org.columba.mail.folderoptions;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -100,7 +100,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
  * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
  */
-    public void saveOptionsToXml(Folder folder) {
+    public void saveOptionsToXml(MessageFolder folder) {
         XmlElement columns = getConfigNode(folder);
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
@@ -132,7 +132,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     /**
  * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
  */
-    public void loadOptionsFromXml(Folder folder) {
+    public void loadOptionsFromXml(MessageFolder folder) {
         XmlElement columns = getConfigNode(folder);
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();

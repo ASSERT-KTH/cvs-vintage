@@ -23,7 +23,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.Root;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -58,12 +58,12 @@ public class TreeModel extends DefaultTreeModel {
         tempFolder = new TempFolder(MainInterface.config.getConfigDirectory() +
                 "/mail/");
 
-        createDirectories(((FolderTreeNode) getRoot()).getNode(),
-            (FolderTreeNode) getRoot());
+        createDirectories(((AbstractFolder) getRoot()).getNode(),
+            (AbstractFolder) getRoot());
     }
 
     public void createDirectories(XmlElement parentTreeNode,
-        FolderTreeNode parentFolder) {
+        AbstractFolder parentFolder) {
         int count = parentTreeNode.count();
         XmlElement child;
 
@@ -74,7 +74,7 @@ public class TreeModel extends DefaultTreeModel {
                 String name = child.getName();
 
                 if (name.equals("folder")) {
-                    FolderTreeNode folder = add(child, parentFolder);
+                    AbstractFolder folder = add(child, parentFolder);
 
                     if (folder != null) {
                         createDirectories(child, folder);
@@ -84,7 +84,7 @@ public class TreeModel extends DefaultTreeModel {
         }
     }
 
-    public FolderTreeNode add(XmlElement childNode, FolderTreeNode parentFolder) {
+    public AbstractFolder add(XmlElement childNode, AbstractFolder parentFolder) {
         FolderItem item = new FolderItem(childNode);
 
         if (item == null) {
@@ -139,10 +139,10 @@ public class TreeModel extends DefaultTreeModel {
         // for example: ".columba/mail/"
         String path = MainInterface.config.getConfigDirectory() + "/mail/";
         Object[] args = { item, path };
-        FolderTreeNode folder = null;
+        AbstractFolder folder = null;
 
         try {
-            folder = (FolderTreeNode) handler.getPlugin(type, args);
+            folder = (AbstractFolder) handler.getPlugin(type, args);
             parentFolder.add(folder);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -151,12 +151,12 @@ public class TreeModel extends DefaultTreeModel {
         return folder;
     }
 
-    public FolderTreeNode getFolder(int uid) {
-        FolderTreeNode root = (FolderTreeNode) getRoot();
+    public AbstractFolder getFolder(int uid) {
+        AbstractFolder root = (AbstractFolder) getRoot();
 
         for (Enumeration e = root.breadthFirstEnumeration();
                 e.hasMoreElements();) {
-            FolderTreeNode node = (FolderTreeNode) e.nextElement();
+            AbstractFolder node = (AbstractFolder) e.nextElement();
             int id = node.getUid();
 
             if (uid == id) {
@@ -167,16 +167,16 @@ public class TreeModel extends DefaultTreeModel {
         return null;
     }
 
-    public FolderTreeNode getTrashFolder() {
+    public AbstractFolder getTrashFolder() {
         return getFolder(105);
     }
 
-    public FolderTreeNode getImapFolder(int accountUid) {
-        FolderTreeNode root = (FolderTreeNode) getRoot();
+    public AbstractFolder getImapFolder(int accountUid) {
+        AbstractFolder root = (AbstractFolder) getRoot();
 
         for (Enumeration e = root.breadthFirstEnumeration();
                 e.hasMoreElements();) {
-            FolderTreeNode node = (FolderTreeNode) e.nextElement();
+            AbstractFolder node = (AbstractFolder) e.nextElement();
             FolderItem item = node.getFolderItem();
 
             if (item == null) {
@@ -198,14 +198,14 @@ public class TreeModel extends DefaultTreeModel {
         return null;
     }
 
-    public FolderTreeNode getFolder(TreeNodeList list) {
-        FolderTreeNode parentFolder = (FolderTreeNode) getRoot();
+    public AbstractFolder getFolder(TreeNodeList list) {
+        AbstractFolder parentFolder = (AbstractFolder) getRoot();
 
         if ((list == null) || (list.count() == 0)) {
             return parentFolder;
         }
 
-        FolderTreeNode child = parentFolder;
+        AbstractFolder child = parentFolder;
 
         for (int i = 0; i < list.count(); i++) {
             String str = list.get(i);
@@ -215,11 +215,11 @@ public class TreeModel extends DefaultTreeModel {
         return child;
     }
 
-    public FolderTreeNode findFolder(FolderTreeNode parentFolder, String str) {
-        FolderTreeNode child;
+    public AbstractFolder findFolder(AbstractFolder parentFolder, String str) {
+        AbstractFolder child;
 
         for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-            child = (FolderTreeNode) e.nextElement();
+            child = (AbstractFolder) e.nextElement();
 
             if (child.getName().equals(str)) {
                 return child;

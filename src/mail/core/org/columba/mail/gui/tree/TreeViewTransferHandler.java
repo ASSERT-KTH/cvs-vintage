@@ -19,8 +19,8 @@ import org.columba.core.facade.DialogFacade;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveFolderCommand;
 import org.columba.mail.gui.table.MessageReferencesTransfer;
@@ -93,8 +93,8 @@ public class TreeViewTransferHandler extends TransferHandler {
         FolderTransfer transferable) {
         boolean dataWasImported = false;
 
-        FolderTreeNode destFolder = treeView.getDropTargetFolder();
-        Folder draggedFolder = transferable.getFolderReference();
+        AbstractFolder destFolder = treeView.getDropTargetFolder();
+        MessageFolder draggedFolder = transferable.getFolderReference();
 
         if ((destFolder != null) && (draggedFolder != null)) {
             // We're always doing a MOVE
@@ -118,7 +118,7 @@ public class TreeViewTransferHandler extends TransferHandler {
         MessageReferencesTransfer transferable) {
         boolean dataWasImported = false;
 
-        Folder destFolder = (Folder) treeView.getDropTargetFolder();
+        MessageFolder destFolder = (MessageFolder) treeView.getDropTargetFolder();
 
         FolderCommandReference[] result = new FolderCommandReference[2];
         result[0] = transferable.getFolderReferences()[0];
@@ -137,7 +137,7 @@ public class TreeViewTransferHandler extends TransferHandler {
             TreeView treeView = (TreeView) source;
 
             if (data instanceof FolderTransfer) {
-                Folder draggedFolder = ((FolderTransfer) data).getFolderReference();
+                MessageFolder draggedFolder = ((FolderTransfer) data).getFolderReference();
                 exportFolder(treeView, draggedFolder);
             }
         }
@@ -150,7 +150,7 @@ public class TreeViewTransferHandler extends TransferHandler {
  * @param treeView the treeview that has dragged folder
  * @param folder the folder to move.
  */
-    private void exportFolder(TreeView treeView, Folder folder) {
+    private void exportFolder(TreeView treeView, MessageFolder folder) {
         FolderCommandReference[] commandRef = new FolderCommandReference[2];
         commandRef[0] = new FolderCommandReference(folder);
         commandRef[1] = new FolderCommandReference(treeView.getDropTargetFolder());
@@ -178,10 +178,10 @@ public class TreeViewTransferHandler extends TransferHandler {
             TreeView treeView = (TreeView) c;
             TreePath path = treeView.getSelectionModel().getSelectionPath();
 
-            FolderTreeNode folderNode = (FolderTreeNode) path.getLastPathComponent();
+            AbstractFolder folderNode = (AbstractFolder) path.getLastPathComponent();
 
             if (folderNode.supportsMove()) {
-                exportObject = new FolderTransfer((Folder) folderNode);
+                exportObject = new FolderTransfer((MessageFolder) folderNode);
             }
         }
 
@@ -195,7 +195,7 @@ public class TreeViewTransferHandler extends TransferHandler {
         if (comp instanceof TreeView) {
             TreeView treeView = (TreeView) comp;
 
-            FolderTreeNode dropTarget = treeView.getDropTargetFolder();
+            AbstractFolder dropTarget = treeView.getDropTargetFolder();
 
             if (dropTarget != null) {
                 for (int k = 0;
@@ -223,10 +223,10 @@ public class TreeViewTransferHandler extends TransferHandler {
  * @return true if the dragged folder can be imported to the dropped folder.
  */
     private boolean canHandleFolderImport(TreeView treeView,
-        FolderTreeNode dropTarget) {
+        AbstractFolder dropTarget) {
         boolean canImport = false;
 
-        FolderTreeNode dragTarget = treeView.getSelectedNodeBeforeDragAction();
+        AbstractFolder dragTarget = treeView.getSelectedNodeBeforeDragAction();
 
         if ((dragTarget != null) && (!dragTarget.isNodeDescendant(dropTarget)) &&
                 (dragTarget != dropTarget)) {
@@ -243,10 +243,10 @@ public class TreeViewTransferHandler extends TransferHandler {
  * @return true if the dragged messages can be imported to the dropped folder.
  */
     private boolean canHandleMessageImport(TreeView treeView,
-        FolderTreeNode dropTarget) {
+        AbstractFolder dropTarget) {
         boolean canImport = false;
 
-        FolderTreeNode dragTarget = treeView.getSelectedNodeBeforeDragAction();
+        AbstractFolder dragTarget = treeView.getSelectedNodeBeforeDragAction();
 
         if (dragTarget != dropTarget) {
             canImport = dropTarget.supportsAddMessage();

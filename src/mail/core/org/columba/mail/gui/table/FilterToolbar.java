@@ -27,7 +27,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.ToolbarToggleButton;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.main.MailInterface;
@@ -195,9 +195,9 @@ public class FilterToolbar extends JPanel implements ActionListener {
             TableModelFilter model = tableController.getTableModelFilteredView();
 
             if (action.equals("ADVANCED")) {
-                Folder searchFolder = (Folder) MailInterface.treeModel.getFolder(106);
+                MessageFolder searchFolder = (MessageFolder) MailInterface.treeModel.getFolder(106);
 
-                Folder folder = (Folder) ((MailFrameMediator)tableController.getFrameController())
+                MessageFolder folder = (MessageFolder) ((MailFrameMediator)tableController.getFrameController())
                                                         .getTableSelection()[0].getFolder();
 
                 if (folder == null) {

@@ -25,7 +25,7 @@ import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.UIFSplitPane;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.menu.MailMenu;
@@ -230,7 +230,7 @@ public void showFolderInfo(boolean b) {
         FolderCommandReference[] r = ((MailFrameMediator) getViewController()).getTreeSelection();
 
         if (r.length > 0) {
-            FolderTreeNode folder = r[0].getFolder();
+            AbstractFolder folder = r[0].getFolder();
 
             // folder-based configuration
             ((MailFrameMediator) frameController).getFolderOptionsController()

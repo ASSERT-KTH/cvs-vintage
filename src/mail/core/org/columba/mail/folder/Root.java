@@ -30,7 +30,7 @@ import org.columba.mail.config.FolderItem;
  *
  * @author Timo Stich (tstich@users.sourceforge.net)
  */
-public class Root extends FolderTreeNode {
+public class Root extends AbstractFolder {
     FolderItem item;
 
     public Root(XmlElement node) {

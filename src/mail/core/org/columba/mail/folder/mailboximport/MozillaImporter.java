@@ -19,7 +19,7 @@ package org.columba.mail.folder.mailboximport;
 
 import org.columba.core.command.WorkerStatusController;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.io.BufferedReader;
@@ -36,7 +36,7 @@ public class MozillaImporter extends DefaultMailboxImporter {
         super();
     }
 
-    public MozillaImporter(Folder destinationFolder, File[] sourceFiles) {
+    public MozillaImporter(MessageFolder destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
 
@@ -45,7 +45,7 @@ public class MozillaImporter extends DefaultMailboxImporter {
     }
 
     public void importMailboxFile(File file, WorkerStatusController worker,
-        Folder destFolder) throws Exception {
+        MessageFolder destFolder) throws Exception {
         int count = 0;
         boolean sucess = false;
 

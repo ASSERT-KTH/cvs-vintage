@@ -22,8 +22,8 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -78,7 +78,7 @@ public class ThreadedViewAction extends AbstractSelectableAction
 
         FolderCommandReference[] r = (FolderCommandReference[]) ((MailFrameMediator) frameMediator).getTreeSelection();
 
-        Folder folder = (Folder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r[0].getFolder();
 
         boolean enableThreadedView = item.isSelected();
 
@@ -111,15 +111,15 @@ public class ThreadedViewAction extends AbstractSelectableAction
      * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent e) {
-        FolderTreeNode[] selection = ((TreeSelectionChangedEvent) e).getSelected();
+        AbstractFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 
-        if (!(selection[0] instanceof Folder)) {
+        if (!(selection[0] instanceof MessageFolder)) {
             return;
         }
 
         if (selection.length == 1) {
             XmlElement threadedview = ((MailFrameMediator) getFrameMediator()).getFolderOptionsController()
-                                       .getConfigNode((Folder) selection[0],
+                                       .getConfigNode((MessageFolder) selection[0],
                     "ThreadedViewOptions");
             String attribute = threadedview.getAttribute("enabled");
             setState(Boolean.valueOf(attribute).booleanValue());

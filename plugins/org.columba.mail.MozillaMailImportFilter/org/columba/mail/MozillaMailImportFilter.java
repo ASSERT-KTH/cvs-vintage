@@ -26,9 +26,9 @@ import java.util.logging.Logger;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.core.facade.DialogFacade;
 
@@ -40,7 +40,6 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail");
 
-
 	public MozillaMailImportFilter() {
 		super();
 	}
@@ -50,10 +49,9 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 	 * @param sourceFiles
 	 */
 	public MozillaMailImportFilter(
-		Folder destinationFolder,
+		MessageFolder destinationFolder,
 		File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
-
 	}
 
 	public String getDescription() {
@@ -69,7 +67,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 	public void importMailboxFile(
 		File file,
 		WorkerStatusController worker,
-		Folder destFolder)
+		MessageFolder destFolder)
 		throws Exception {
 
 		int count = 0;
@@ -125,7 +123,7 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 	protected void generateDirectoryListing(
 		File parentFolder,
 		Vector v,
-		Folder destinationFolder,
+		MessageFolder destinationFolder,
 		WorkerStatusController worker) {
 		// list all files
 		File[] list = parentFolder.listFiles();
@@ -193,14 +191,14 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 					== null) {
 
 					// folder doesn't exist -> create it
-					FolderTreeNode child = FolderFactory.getInstance().createDefaultChild(
+					AbstractFolder child = FolderFactory.getInstance().createDefaultChild(
 						destinationFolder,
 						file.getName());
 
 					importMailboxFile(
 						file,
 						worker,
-						(Folder) child);
+						(MessageFolder) child);
 				} else
 					importMailboxFile(file, worker, destinationFolder);
 
@@ -240,5 +238,4 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 			worker);
 
 	}
-
 }

@@ -20,7 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
@@ -45,7 +45,7 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
                                                                              .getSelection("mail.tree");
 
         if (references.length == 1) {
-            if ((references[0].getFolder() instanceof Folder)) {
+            if ((references[0].getFolder() instanceof MessageFolder)) {
                 MainInterface.processor.addOp(new ViewHeaderListCommand(
                         getFrameMediator(), references));
             } else {

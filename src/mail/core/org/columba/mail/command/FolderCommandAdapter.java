@@ -6,7 +6,7 @@
  */
 package org.columba.mail.command;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -57,8 +57,8 @@ public class FolderCommandAdapter {
  *
  * @return                destination reference
  */
-    public Folder getDestinationFolder() {
-        return (Folder) c[length - 2].getFolder();
+    public MessageFolder getDestinationFolder() {
+        return (MessageFolder) c[length - 2].getFolder();
     }
 
     /**

@@ -21,7 +21,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.CInfoPanel;
 
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -131,14 +131,14 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
         initComponents();
     }
 
-    public void setFolder(Folder newFolder) {
+    public void setFolder(MessageFolder newFolder) {
         item = newFolder.getFolderItem();
 
         if (item == null) {
             return;
         }
 
-        info = ((Folder) newFolder).getMessageFolderInfo();
+        info = ((MessageFolder) newFolder).getMessageFolderInfo();
 
         if (info == null) {
             return;
@@ -165,11 +165,11 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
  * @see org.columba.mail.gui.tree.selection.TreeSelectionListener#folderSelectionChanged(org.columba.mail.folder.FolderTreeNode)
  */
     /*
-public void folderSelectionChanged(FolderTreeNode newFolder) {
+public void folderSelectionChanged(AbstractFolder newFolder) {
         if (newFolder == null)
                 return;
 
-        setFolder((Folder) newFolder);
+        setFolder((MessageFolder) newFolder);
 
 }
 */
@@ -177,10 +177,10 @@ public void folderSelectionChanged(FolderTreeNode newFolder) {
         TreeSelectionChangedEvent treeEvent = (TreeSelectionChangedEvent) e;
 
         // we are only interested in folders containing messages 
-        // meaning of instance Folder and not of instance FolderTreeNode
+        // meaning of instance MessageFolder and not of instance FolderTreeNode
         // -> casting here to Folder
         if (treeEvent.getSelected()[0] != null) {
-            setFolder((Folder) treeEvent.getSelected()[0]);
+            setFolder((MessageFolder) treeEvent.getSelected()[0]);
         }
     }
 }

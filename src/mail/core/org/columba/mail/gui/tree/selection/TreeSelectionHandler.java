@@ -19,7 +19,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.tree.TreeView;
 
 import java.util.LinkedList;
@@ -49,7 +49,7 @@ public class TreeSelectionHandler extends SelectionHandler
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.tree.selection");
 
-    private static final FolderTreeNode[] FOLDER_ARRAY = {null};
+    private static final AbstractFolder[] FOLDER_ARRAY = {null};
     private TreeView view;
     private LinkedList selectedFolders;
 
@@ -69,7 +69,7 @@ public class TreeSelectionHandler extends SelectionHandler
         int i = 0;
 
         while (it.hasNext()) {
-            references[i++] = new FolderCommandReference((FolderTreeNode) it.next());
+            references[i++] = new FolderCommandReference((AbstractFolder) it.next());
         }
 
         return references;
@@ -91,8 +91,8 @@ public class TreeSelectionHandler extends SelectionHandler
         }
 
         for (int i = 0; i < e.getPaths().length; i++) {
-            if (e.getPaths()[i].getLastPathComponent() instanceof FolderTreeNode) {
-                FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
+            if (e.getPaths()[i].getLastPathComponent() instanceof AbstractFolder) {
+                AbstractFolder folder = (AbstractFolder) e.getPaths()[i].getLastPathComponent();
 
                 if (e.isAddedPath(i)) {
                     LOG.info("Folder added to Selection= " + folder.getName());
@@ -105,7 +105,7 @@ public class TreeSelectionHandler extends SelectionHandler
         }
 
         fireSelectionChanged(new TreeSelectionChangedEvent(
-                (FolderTreeNode[]) selectedFolders.toArray(FOLDER_ARRAY)));
+                (AbstractFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
     }
 
     public void setSelection(DefaultCommandReference[] selection) {

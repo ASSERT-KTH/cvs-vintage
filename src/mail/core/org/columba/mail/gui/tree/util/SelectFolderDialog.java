@@ -20,8 +20,8 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -57,7 +57,7 @@ public class SelectFolderDialog implements ActionListener,
 
     //private TreeController treeController;
     //private TreeModel treeModel;
-    private FolderTreeNode selectedFolder;
+    private AbstractFolder selectedFolder;
 
     //private JFrame frame;
     protected JDialog dialog;
@@ -126,8 +126,8 @@ public class SelectFolderDialog implements ActionListener,
         return bool;
     }
 
-    public Folder getSelectedFolder() {
-        return (Folder) selectedFolder;
+    public MessageFolder getSelectedFolder() {
+        return (MessageFolder) selectedFolder;
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -166,14 +166,14 @@ public class SelectFolderDialog implements ActionListener,
 
     /******************************* tree selection listener ********************************/
     public void valueChanged(TreeSelectionEvent e) {
-        FolderTreeNode node = (FolderTreeNode) tree.getLastSelectedPathComponent();
+        AbstractFolder node = (AbstractFolder) tree.getLastSelectedPathComponent();
 
         if (node == null) {
             return;
         }
 
-        if (node instanceof Folder) {
-            selectedFolder = (Folder) node;
+        if (node instanceof MessageFolder) {
+            selectedFolder = (MessageFolder) node;
         }
 
         if (node.supportsAddMessage()) {

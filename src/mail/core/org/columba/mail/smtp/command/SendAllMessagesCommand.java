@@ -26,7 +26,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
@@ -93,7 +93,7 @@ public class SendAllMessagesCommand extends FolderCommand {
         List sentList = new Vector();
         boolean open = false;
         SMTPServer smtpServer = null;
-        Folder sentFolder = null;
+        MessageFolder sentFolder = null;
 
         // send all messages 
         while (sendListManager.hasMoreMessages()) {
@@ -107,7 +107,7 @@ public class SendAllMessagesCommand extends FolderCommand {
                                                               .uidGet(actAccountUid);
 
                 // Sent folder
-                sentFolder = (Folder) MailInterface.treeModel.getFolder(Integer.parseInt(
+                sentFolder = (MessageFolder) MailInterface.treeModel.getFolder(Integer.parseInt(
                             accountItem.getSpecialFoldersItem().get("sent")));
 
                 // open connection to SMTP server
@@ -152,7 +152,7 @@ public class SendAllMessagesCommand extends FolderCommand {
      *
      * @param sentFolder        Sent folder
      */
-    protected void moveToSentFolder(List v, Folder sentFolder) {
+    protected void moveToSentFolder(List v, MessageFolder sentFolder) {
         FolderCommandReference[] r = new FolderCommandReference[2];
 
         // source folder

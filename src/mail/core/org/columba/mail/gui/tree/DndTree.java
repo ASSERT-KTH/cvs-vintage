@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
@@ -143,7 +143,7 @@ public class DndTree extends JTree implements DragSourceListener,
             return; // Ignore user trying to drag the root node
         }
 
-        FolderTreeNode source = (FolderTreeNode) path.getLastPathComponent();
+        AbstractFolder source = (AbstractFolder) path.getLastPathComponent();
 
         if (source instanceof IMAPFolder) {
             return;
@@ -547,11 +547,11 @@ public class DndTree extends JTree implements DragSourceListener,
                         javax.swing.tree.TreeModel model = getModel();
                         TreePath pathNewChild = null;
 
-                        FolderTreeNode dest = (FolderTreeNode) pathTarget.getLastPathComponent();
-                        FolderTreeNode destParent = (FolderTreeNode) dest.getParent();
-                        FolderTreeNode source = (FolderTreeNode) pathSource.getLastPathComponent();
+                        AbstractFolder dest = (AbstractFolder) pathTarget.getLastPathComponent();
+                        AbstractFolder destParent = (AbstractFolder) dest.getParent();
+                        AbstractFolder source = (AbstractFolder) pathSource.getLastPathComponent();
 
-                        FolderTreeNode sourceParent = (FolderTreeNode) source.getParent();
+                        AbstractFolder sourceParent = (AbstractFolder) source.getParent();
 
                         if (isExpanded(pathTarget)) {
                             //source.removeFromParent();

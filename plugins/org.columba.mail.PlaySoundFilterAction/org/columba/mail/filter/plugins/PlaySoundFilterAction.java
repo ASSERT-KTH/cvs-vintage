@@ -28,7 +28,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.filter.plugins.AbstractFilterAction;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 /**
  * @author freddy
@@ -45,7 +45,7 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	 */
 	public Command getCommand(
 		FilterAction filterAction,
-		Folder srcFolder,
+		MessageFolder srcFolder,
 		Object[] uids)
 		throws Exception {
 

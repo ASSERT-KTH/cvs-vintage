@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.spam.rules;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -38,7 +38,7 @@ public interface Rule {
      * 						(0. - 1.0)
      * @throws Exception
      */
-    float score(Folder folder, Object uid) throws Exception;
+    float score(MessageFolder folder, Object uid) throws Exception;
     
     String getName();
 }

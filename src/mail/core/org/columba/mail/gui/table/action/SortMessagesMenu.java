@@ -25,8 +25,8 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.SortingStateObservable;
@@ -52,7 +52,7 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
     private JRadioButtonMenuItem ascendingMenuItem;
     private JRadioButtonMenuItem descendingMenuItem;
     private Observable observable;
-    private Folder selectedFolder;
+    private MessageFolder selectedFolder;
 
     public SortMessagesMenu(FrameMediator controller) {
         super(controller,
@@ -193,14 +193,14 @@ public class SortMessagesMenu extends IMenu implements ActionListener, Observer,
     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
     */
     public void selectionChanged(SelectionChangedEvent e) {
-        FolderTreeNode[] selection = ((TreeSelectionChangedEvent) e).getSelected();
+        AbstractFolder[] selection = ((TreeSelectionChangedEvent) e).getSelected();
 
         if (selection.length == 1) {
-            if (!(selection[0] instanceof Folder)) {
+            if (!(selection[0] instanceof MessageFolder)) {
                 return;
             }
 
-            selectedFolder = (Folder) selection[0];
+            selectedFolder = (MessageFolder) selection[0];
 
             createSubMenu();
 

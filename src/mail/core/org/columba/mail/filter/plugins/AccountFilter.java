@@ -16,7 +16,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -36,7 +36,7 @@ public class AccountFilter extends AbstractFilter {
     }
 
     /** {@inheritDoc} */
-    public boolean process(Folder folder, Object uid) throws Exception {
+    public boolean process(MessageFolder folder, Object uid) throws Exception {
         boolean result = false;
 
         Integer messageAccountUid = (Integer) folder.getAttribute(uid,

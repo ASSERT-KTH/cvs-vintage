@@ -16,7 +16,7 @@
 package org.columba.mail.gui.config.subscribe;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 
 
 public class SubscribeCommandReference extends FolderCommandReference {
@@ -26,7 +26,7 @@ public class SubscribeCommandReference extends FolderCommandReference {
     /**
  * @param folder
  */
-    public SubscribeCommandReference(FolderTreeNode folder,
+    public SubscribeCommandReference(AbstractFolder folder,
         SubscribeDialog dialog) {
         super(folder);
 
@@ -36,7 +36,7 @@ public class SubscribeCommandReference extends FolderCommandReference {
     /**
  * @param folder
  */
-    public SubscribeCommandReference(FolderTreeNode folder,
+    public SubscribeCommandReference(AbstractFolder folder,
         SubscribeDialog dialog, String mailbox) {
         super(folder);
 

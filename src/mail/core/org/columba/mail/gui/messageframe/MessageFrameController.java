@@ -12,7 +12,7 @@ import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
@@ -54,7 +54,7 @@ public class MessageFrameController extends AbstractMailFrameController {
     }
 
     public void selectInbox() {
-        Folder inboxFolder = (Folder) MailInterface.treeModel.getFolder(101);
+        MessageFolder inboxFolder = (MessageFolder) MailInterface.treeModel.getFolder(101);
 
         try {
             Object[] uids = inboxFolder.getUids();

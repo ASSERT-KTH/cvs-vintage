@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.export;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 
 import org.frappucino.checkabletree.CheckableItemImpl;
 
@@ -24,7 +24,7 @@ import org.frappucino.checkabletree.CheckableItemImpl;
  * @author fdietz
  */
 public class CheckableTreeNode extends CheckableItemImpl {
-    private FolderTreeNode node;
+    private AbstractFolder node;
 
     /**
  * 
@@ -36,14 +36,14 @@ public class CheckableTreeNode extends CheckableItemImpl {
     /**
  * @return
  */
-    public FolderTreeNode getNode() {
+    public AbstractFolder getNode() {
         return node;
     }
 
     /**
  * @param node
  */
-    public void setNode(FolderTreeNode node) {
+    public void setNode(AbstractFolder node) {
         this.node = node;
     }
 }

@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.mail.config.PGPItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
@@ -101,7 +101,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @see org.columba.mail.gui.message.filter.Filter#filter(org.columba.mail.folder.Folder,
      *      java.lang.Object)
      */
-    public void filter(Folder folder, Object uid) throws Exception {
+    public void filter(MessageFolder folder, Object uid) throws Exception {
 
         mimePartTree = folder.getMimePartTree(uid);
 
@@ -146,7 +146,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @throws Exception
      * @throws IOException
      */
-    private void decrypt(Folder folder, Object uid) throws Exception,
+    private void decrypt(MessageFolder folder, Object uid) throws Exception,
             IOException {
         PGPItem pgpItem = null;
         // we need the pgpItem, to extract the path to gpg
@@ -238,7 +238,7 @@ public class PGPMessageFilter extends AbstractFilter {
      * @throws Exception
      * @throws IOException
      */
-    private void verify(Folder folder, Object uid) throws Exception,
+    private void verify(MessageFolder folder, Object uid) throws Exception,
             IOException {
         MimePart signedMultipart = mimePartTree.getRootMimeNode();
 

@@ -67,7 +67,7 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
         c.setTableSelection(r);
 
         /*
-        c.treeController.setSelected((Folder) r[0].getFolder());
+        c.treeController.setSelected((MessageFolder) r[0].getFolder());
         c.setTreeSelection(r);
 
 

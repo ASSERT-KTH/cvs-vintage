@@ -59,7 +59,7 @@ import org.columba.ristretto.parser.ParserException;
  *
  * @author fdietz
  */
-public abstract class LocalFolder extends Folder {
+public abstract class LocalFolder extends MessageFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
@@ -88,7 +88,7 @@ public abstract class LocalFolder extends Folder {
     public LocalFolder(FolderItem item, String path) {
         super(item, path);
 
-        // TODO: move this to Folder constructor
+        // TODO: move this to MessageFolder constructor
         // create filterlist datastructure
         XmlElement filterListElement = node.getElement(FilterList.XML_NAME);
 
@@ -335,7 +335,7 @@ public abstract class LocalFolder extends Folder {
     }
 
     /** {@inheritDoc} */
-    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+    public boolean supportsAddFolder(AbstractFolder newFolder) {
         return ((newFolder instanceof LocalFolder) || (newFolder instanceof VirtualFolder));
     }
 

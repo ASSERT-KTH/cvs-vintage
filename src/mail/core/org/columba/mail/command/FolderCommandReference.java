@@ -17,7 +17,7 @@ package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.message.ColumbaMessage;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import java.lang.reflect.Array;
  * @author fdietz
  */
 public class FolderCommandReference extends DefaultCommandReference {
-    private FolderTreeNode folder;
+    private AbstractFolder folder;
     private Object[] uids;
     private Integer[] address;
     private ColumbaMessage message;
@@ -50,11 +50,11 @@ public class FolderCommandReference extends DefaultCommandReference {
      * Constructor for FolderCommandReference.
      * @param folder
      */
-    public FolderCommandReference(FolderTreeNode folder) {
+    public FolderCommandReference(AbstractFolder folder) {
         this.folder = folder;
     }
 
-    public FolderCommandReference(FolderTreeNode folder, ColumbaMessage message) {
+    public FolderCommandReference(AbstractFolder folder, ColumbaMessage message) {
         this.folder = folder;
         this.message = message;
     }
@@ -64,7 +64,7 @@ public class FolderCommandReference extends DefaultCommandReference {
      * @param folder
      * @param uids
      */
-    public FolderCommandReference(FolderTreeNode folder, Object[] uids) {
+    public FolderCommandReference(AbstractFolder folder, Object[] uids) {
         this.folder = folder;
         this.uids = uids;
     }
@@ -75,18 +75,18 @@ public class FolderCommandReference extends DefaultCommandReference {
      * @param uids
      * @param address
      */
-    public FolderCommandReference(FolderTreeNode folder, Object[] uids,
+    public FolderCommandReference(AbstractFolder folder, Object[] uids,
         Integer[] address) {
         this.folder = folder;
         this.uids = uids;
         this.address = address;
     }
 
-    public FolderTreeNode getFolder() {
+    public AbstractFolder getFolder() {
         return folder;
     }
 
-    public void setFolder(FolderTreeNode folder) {
+    public void setFolder(AbstractFolder folder) {
         this.folder = folder;
     }
 

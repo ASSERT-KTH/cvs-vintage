@@ -16,8 +16,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -41,7 +41,7 @@ import org.columba.ristretto.message.io.SourceInputStream;
  */
 public class AddPOP3MessageCommand extends FolderCommand {
 
-    Folder inboxFolder;
+    MessageFolder inboxFolder;
 
     /**
      * @param references
@@ -67,7 +67,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
     public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-        inboxFolder = (Folder) r[0].getFolder();
+        inboxFolder = (MessageFolder) r[0].getFolder();
 
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
@@ -112,7 +112,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
         if (item.getSpamItem().isMoveIncomingJunkMessagesEnabled()) {
             if (item.getSpamItem().isIncomingTrashSelected()) {
                 // move message to trash
-                Folder trash = (Folder) ((RootFolder) inboxFolder
+                MessageFolder trash = (MessageFolder) ((RootFolder) inboxFolder
                         .getRootFolder()).getTrashFolder();
 
                 // create reference
@@ -125,7 +125,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
             } else {
                 // move message to user-configured folder (generally "Junk"
                 // folder)
-                FolderTreeNode destFolder = MailInterface.treeModel
+                AbstractFolder destFolder = MailInterface.treeModel
                         .getFolder(item.getSpamItem().getMoveCustomFolder());
 
                 // create reference

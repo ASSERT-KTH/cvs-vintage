@@ -22,7 +22,7 @@ import net.javaprog.ui.wizard.WizardModelListener;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.ImportFolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.mail.plugin.ImportPluginHandler;
@@ -56,7 +56,7 @@ class MailboxImporter implements WizardModelListener {
         }
 
         ImportFolderCommandReference[] r = new ImportFolderCommandReference[] {
-                new ImportFolderCommandReference((FolderTreeNode) args[0],
+                new ImportFolderCommandReference((AbstractFolder) args[0],
                     (File[]) args[1], importer)
             };
         MainInterface.processor.addOp(new ImportMessageCommand(r));

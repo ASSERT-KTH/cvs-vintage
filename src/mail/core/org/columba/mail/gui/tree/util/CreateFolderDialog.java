@@ -23,7 +23,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.DialogStore;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -175,8 +175,8 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
         return name;
     }
 
-    public FolderTreeNode getSelected() {
-        return (FolderTreeNode) tree.getSelectionPath().getLastPathComponent();
+    public AbstractFolder getSelected() {
+        return (AbstractFolder) tree.getSelectionPath().getLastPathComponent();
     }
 
     public boolean success() {

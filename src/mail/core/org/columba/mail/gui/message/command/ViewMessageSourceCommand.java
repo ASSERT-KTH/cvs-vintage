@@ -24,7 +24,7 @@ import org.columba.core.io.TempFileStore;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 
@@ -80,7 +80,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
         Object[] uids = r[0].getUids();
 
-        Folder folder = (Folder) r[0].getFolder();
+        MessageFolder folder = (MessageFolder) r[0].getFolder();
 
         //		register for status events
         ((StatusObservableImpl) folder.getObservable()).setWorker(worker);

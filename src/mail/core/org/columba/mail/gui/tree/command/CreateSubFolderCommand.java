@@ -22,7 +22,7 @@ import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
 
 import java.util.Hashtable;
@@ -33,7 +33,7 @@ import java.util.Hashtable;
  *
  */
 public class CreateSubFolderCommand extends Command {
-    private FolderTreeNode parentFolder;
+    private AbstractFolder parentFolder;
     private boolean success;
     private Hashtable attributes;
 
@@ -73,7 +73,7 @@ attributes = parentFolder.getAttributes();
 attributes.put("name", name);
 */
         try {
-            FolderTreeNode subFolder = FolderFactory.getInstance()
+            AbstractFolder subFolder = FolderFactory.getInstance()
                                                     .createDefaultChild(parentFolder,
                     name);
 

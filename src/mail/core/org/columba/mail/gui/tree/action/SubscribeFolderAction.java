@@ -21,7 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.subscribe.SubscribeDialog;
@@ -80,7 +80,7 @@ public class SubscribeFolderAction extends AbstractColumbaAction
  */
     public void selectionChanged(SelectionChangedEvent e) {
         if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            FolderTreeNode selected = ((TreeSelectionChangedEvent) e).getSelected()[0];
+            AbstractFolder selected = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
             if (selected instanceof IMAPFolder) {
                 rootFolder = (IMAPRootFolder) ((IMAPFolder) selected).getRootFolder();

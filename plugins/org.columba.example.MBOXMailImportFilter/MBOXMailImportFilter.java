@@ -16,13 +16,12 @@
 //
 //All Rights Reserved.
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 
 public class MBOXMailImportFilter extends DefaultMailboxImporter {
@@ -31,7 +30,7 @@ public class MBOXMailImportFilter extends DefaultMailboxImporter {
 		super();
 	}
 
-	public MBOXMailImportFilter(Folder destinationFolder, File[] sourceFiles) {
+	public MBOXMailImportFilter(MessageFolder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
 
@@ -42,7 +41,7 @@ public class MBOXMailImportFilter extends DefaultMailboxImporter {
 	public void importMailboxFile(
 		File file,
 		WorkerStatusController worker,
-		Folder destFolder)
+		MessageFolder destFolder)
 		throws Exception {
 
 		boolean success = false;
@@ -91,6 +90,7 @@ public class MBOXMailImportFilter extends DefaultMailboxImporter {
 
 		in.close();
 	}
+        
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -99,5 +99,4 @@ public class MBOXMailImportFilter extends DefaultMailboxImporter {
 	public String getDescription() {
 		return "Example MBOX import filter";
 	}
-
 }

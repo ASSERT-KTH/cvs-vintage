@@ -20,7 +20,7 @@ import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SourceInputStream;
@@ -34,13 +34,13 @@ import javax.swing.JOptionPane;
 public abstract class DefaultMailboxImporter {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
-    protected Folder destinationFolder;
+    protected MessageFolder destinationFolder;
     protected File[] sourceFiles;
 
     //protected TempFolder tempFolder;
     protected int counter;
 
-    public DefaultMailboxImporter(Folder destinationFolder, File[] sourceFiles) {
+    public DefaultMailboxImporter(MessageFolder destinationFolder, File[] sourceFiles) {
         this.destinationFolder = destinationFolder;
         this.sourceFiles = sourceFiles;
 
@@ -75,7 +75,7 @@ public abstract class DefaultMailboxImporter {
      * this method does all the import work
      */
     public abstract void importMailboxFile(File file,
-        WorkerStatusController worker, Folder destFolder)
+        WorkerStatusController worker, MessageFolder destFolder)
         throws Exception;
 
     /**
@@ -94,7 +94,7 @@ public abstract class DefaultMailboxImporter {
     /**
      * set destination folder
      */
-    public void setDestinationFolder(Folder folder) {
+    public void setDestinationFolder(MessageFolder folder) {
         destinationFolder = folder;
     }
 
@@ -164,7 +164,7 @@ public abstract class DefaultMailboxImporter {
      * use this method to save a message to the specified destination folder
      */
     protected void saveMessage(String rawString, WorkerStatusController worker,
-        Folder destFolder) throws Exception {
+        MessageFolder destFolder) throws Exception {
         /*
          * *20031231, karlpeder* Using InputStream instead of rawString
          * directly. Ensures size is set correctly by addMessage (bug #843657)
@@ -183,7 +183,7 @@ public abstract class DefaultMailboxImporter {
     /**
      * @return Folder
      */
-    public Folder getDestinationFolder() {
+    public MessageFolder getDestinationFolder() {
         return destinationFolder;
     }
 

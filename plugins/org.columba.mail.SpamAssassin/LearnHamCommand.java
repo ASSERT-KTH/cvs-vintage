@@ -6,7 +6,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 
 
 /**
@@ -54,7 +54,7 @@ public class LearnHamCommand extends FolderCommand {
         FolderCommandAdapter adapter = new FolderCommandAdapter(r);
 
         // there can be only one reference for this command
-        Folder srcFolder = (Folder) adapter.getSourceFolderReferences()[0].getFolder();
+        MessageFolder srcFolder = (MessageFolder) adapter.getSourceFolderReferences()[0].getFolder();
 
         worker.setDisplayText("Learning ham from " + srcFolder.getName() +
             "...");

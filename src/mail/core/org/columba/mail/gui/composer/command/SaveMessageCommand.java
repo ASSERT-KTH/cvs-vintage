@@ -26,7 +26,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -44,7 +44,7 @@ import org.columba.ristretto.message.HeaderInterface;
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class SaveMessageCommand extends FolderCommand {
-    protected Folder folder;
+    protected MessageFolder folder;
     protected HeaderInterface[] headerList = new HeaderInterface[1];
 
     /**
@@ -84,7 +84,7 @@ public class SaveMessageCommand extends FolderCommand {
             message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
         }
 
-        folder = (Folder) r[0].getFolder();
+        folder = (MessageFolder) r[0].getFolder();
 
         folder.addMessage(message.getSourceStream(),
             message.getHeader().getAttributes());

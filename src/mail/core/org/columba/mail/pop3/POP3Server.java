@@ -24,7 +24,7 @@ import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
-import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -78,13 +78,13 @@ public class POP3Server {
         return accountItem;
     }
 
-    public Folder getFolder() {
+    public MessageFolder getFolder() {
         SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
         String inboxStr = foldersItem.get("inbox");
 
         int inboxInt = Integer.parseInt(inboxStr);
 
-        Folder f = (Folder) MailInterface.treeModel.getFolder(inboxInt);
+        MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(inboxInt);
 
         return f;
     }

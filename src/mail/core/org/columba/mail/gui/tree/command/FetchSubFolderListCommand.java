@@ -24,7 +24,7 @@ import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
 
@@ -37,7 +37,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.tree.command");
 
-    FolderTreeNode treeNode;
+    AbstractFolder treeNode;
 
     /**
      * Constructor for FetchSubFolderListCommand.
@@ -66,7 +66,7 @@ public class FetchSubFolderListCommand extends FolderCommand {
             return;
         }
 
-        treeNode = (FolderTreeNode) r[0].getFolder();
+        treeNode = (AbstractFolder) r[0].getFolder();
 
         if (treeNode instanceof IMAPRootFolder) {
             ((IMAPRootFolder) treeNode).syncSubscribedFolders();
