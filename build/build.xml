@@ -1580,6 +1580,7 @@ diff -u -r1.5 project.xml
                 <exclude name="**/build/nightly.sh"/>
                 <exclude name="**/build/run-tests*"/>
                 <exclude name="**/build/velocity.log*"/>
+                <exclude name="**/lib/jakarta-turbine-*.gz"/>
                 <exclude name="**/src/sql/${scarab.database.type}-scarab.sql"/>
                 <exclude name="**/src/sql/report.scarab.sql.generation"/>
                 <exclude name="**/src/sql/project-schema.sql"/>
