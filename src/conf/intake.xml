@@ -29,8 +29,8 @@
            <rule mask="([0-9]|:)+">badIdMessage</rule>
         </field>
         <field name="OptionId" key="optionid" type="NumberKey"
-               mapToObject="attribute.ComboBoxAttribute">
-           <rule mask="[0-9]+">badIdMessage</rule>
+               mapToObject="om.AttributeValue">
+           <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
         <field name="UserId" key="visid" type="NumberKey">
            <rule mask="[0-9]+">badIdMessage</rule>
@@ -39,8 +39,13 @@
             <rule minLength="1">Cannot be empty</rule>
             <rule maxLength="255">Value length cannot be &gt; 255</rule>
         </field>
+        <field name="Url" key="url" type="String" mapToProperty="Value">
+            <rule maxLength="255">Url length cannot be &gt; 255</rule>
+            <rule mask="http.+">Please enter an url starting with "http"</rule>
+        </field>
         <field name="Deleted" key="del" type="boolean" />
 </group>
+
 <group class="Issue" key="issue" mapToObject="om.Issue">
         <field name="Id" key="id" type="NumberKey" mapToProperty="PrimaryKey">
            <rule mask="[0-9]+">badIdMessage</rule>
