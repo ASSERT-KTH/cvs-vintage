@@ -31,7 +31,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.6 2001/11/30 11:40:15 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.7 2001/12/01 05:48:47 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -262,7 +262,7 @@ public class JARClassLoader extends ClassLoader
 			if(plugins[i].getClass().getName().equals(name))
 			{
 				jEdit.pluginError(jar.getPath(),
-					"plugin.already-loaded",null);
+					"plugin-error.already-loaded",null);
 				return;
 			}
 		}

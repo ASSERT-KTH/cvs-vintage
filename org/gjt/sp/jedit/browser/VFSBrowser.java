@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.16 2001/11/30 11:40:16 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.17 2001/12/01 05:48:47 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -68,6 +68,31 @@ public class VFSBrowser extends JPanel implements EBComponent
 	 */
 	public static final int BROWSER = 2;
 	//}}}
+
+	//{{{ browseDirectory() method
+	/**
+	 * Opens the specified directory in a file system browser.
+	 * @param view The view
+	 * @param path The directory's path
+	 * @since jEdit 4.0pre3
+	 */
+	public static void browseDirectory(View view, String path)
+	{
+		DockableWindowManager wm = view.getDockableWindowManager();
+		VFSBrowser browser = (VFSBrowser)wm.getDockable(NAME);
+		if(browser != null)
+			browser.setDirectory(path);
+		else
+		{
+			if(path != null)
+			{
+				// this is such a bad way of doing it, but oh well...
+				jEdit.setTemporaryProperty("vfs.browser.path.tmp",path);
+			}
+			wm.addDockableWindow("vfs.browser");
+			jEdit.unsetProperty("vfs.browser.path.tmp");
+		}
+	} //}}}
 
 	//{{{ VFSBrowser constructor
 	/**
@@ -211,6 +236,10 @@ public class VFSBrowser extends JPanel implements EBComponent
 		filterField.addCurrentToHistory();
 
 		updateFilterEnabled();
+
+		// see VFSBrowser.browseDirectory()
+		if(path == null)
+			path = jEdit.getProperty("vfs.browser.path.tmp");
 
 		if(path == null)
 		{
@@ -538,7 +567,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 			if(file.type == VFS.DirectoryEntry.DIRECTORY)
 			{
 				path = file.path;
-				filter = null;
+				filter = getFilenameFilter();
 			}
 			else
 			{
@@ -554,7 +583,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 		else
 		{
 			path = this.path;
-			filter = jEdit.getProperty("vfs.browser.default-filter");
+			filter = getFilenameFilter();
 		}
 
 		if(!(VFSManager.getVFSForPath(path) instanceof FileVFS))

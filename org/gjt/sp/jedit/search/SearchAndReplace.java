@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.12 2001/11/25 03:42:15 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.13 2001/12/01 05:48:48 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -756,6 +756,7 @@ loop:			for(;;)
 		// Tags plugin likes to call this method at times other than
 		// startup; so we need to fire a SearchSettingsChanged to
 		// notify the search bar and so on.
+		matcher = null;
 		EditBus.send(new SearchSettingsChanged(null));
 	} //}}}
 

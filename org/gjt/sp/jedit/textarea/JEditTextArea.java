@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.40 2001/11/30 11:40:16 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.41 2001/12/01 05:48:48 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3653,7 +3653,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	 */
 	public void lineComment()
 	{
-		String comment = buffer.getStringProperty("lineComment");
+		String comment = buffer.getContextSensitiveProperty(caret,"lineComment");
 		if(!buffer.isEditable() || comment == null || comment.length() == 0)
 		{
 			getToolkit().beep();
@@ -3692,8 +3692,8 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 	 */
 	public void rangeComment()
 	{
-		String commentStart = buffer.getStringProperty("commentStart");
-		String commentEnd = buffer.getStringProperty("commentEnd");
+		String commentStart = buffer.getContextSensitiveProperty(caret,"commentStart");
+		String commentEnd = buffer.getContextSensitiveProperty(caret,"commentEnd");
 		if(!buffer.isEditable() || commentStart == null || commentEnd == null
 			|| commentStart.length() == 0 || commentEnd.length() == 0)
 		{
