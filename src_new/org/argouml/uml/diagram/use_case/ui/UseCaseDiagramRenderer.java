@@ -24,7 +24,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.3 2002/04/04 14:56:03 jeremybennett Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.4 2002/08/15 16:57:07 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -129,7 +129,8 @@ public class UseCaseDiagramRenderer
 
         if (edge instanceof MAssociation) {
             MAssociation   asc         = (MAssociation) edge;
-            FigAssociation ascFig      = new FigAssociation(asc);
+            FigAssociation ascFig      = new FigAssociation(asc, lay);
+            /*
             Vector         connections = new Vector(asc.getConnections());
 
             // Print out a rude message if the association isn't connected to
@@ -168,6 +169,7 @@ public class UseCaseDiagramRenderer
 
             ascFig.setDestPortFig(toFN);
             ascFig.setDestFigNode(toFN);
+            */
 
             return ascFig;
         }

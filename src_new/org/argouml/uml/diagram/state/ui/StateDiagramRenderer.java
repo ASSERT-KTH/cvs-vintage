@@ -24,7 +24,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.2 2002/01/07 15:07:41 psager Exp $
+// $Id: StateDiagramRenderer.java,v 1.3 2002/08/15 16:57:08 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -117,17 +117,7 @@ public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRendere
     //System.out.println("making figedge for " + edge);
     if (edge instanceof MTransition) {
       MTransition tr = (MTransition) edge;
-      FigTransition trFig = new FigTransition(tr);
-      // set source and dest
-      // set any arrowheads, labels, or colors
-      MStateVertex sourceSV = tr.getSource();
-      MStateVertex destSV = tr.getTarget();
-      FigNode sourceFN = (FigNode) lay.presentationFor(sourceSV);
-      FigNode destFN = (FigNode) lay.presentationFor(destSV);
-      trFig.setSourcePortFig(sourceFN);
-      trFig.setSourceFigNode(sourceFN);
-      trFig.setDestPortFig(destFN);
-      trFig.setDestFigNode(destFN);
+      FigTransition trFig = new FigTransition(tr, lay);
       return trFig;
     }
 

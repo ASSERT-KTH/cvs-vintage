@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.3 2001/04/02 14:28:41 5heyden Exp $
+// $Id: ClassDiagramRenderer.java,v 1.4 2002/08/15 16:57:08 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -78,7 +78,8 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
     //System.out.println("making figedge for " + edge);
     if (edge instanceof MAssociation) {
       MAssociation asc = (MAssociation) edge;
-      FigAssociation ascFig = new FigAssociation(asc);
+      FigAssociation ascFig = new FigAssociation(asc, lay);
+      /*
       Collection connections = asc.getConnections();
       if (connections == null) System.out.println("null connections....");
 	  Object[] connArray = connections.toArray();
@@ -93,6 +94,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       ascFig.setDestPortFig(toFN);
       ascFig.setDestFigNode(toFN);
       ascFig.getFig().setLayer(lay);
+      */
       return ascFig;
     }
     if (edge instanceof MLink) {
