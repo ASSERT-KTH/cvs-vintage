@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.2 2004/04/26 19:49:50 thn Exp $
+// $Id: GeneratorPHP4.java,v 1.3 2004/06/04 00:54:33 kscr Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -746,6 +746,22 @@ public class GeneratorPHP4
         return "";
     }
 
+    /**
+     * Generates the String representation for an Event.
+     *
+     * @param modelElement Model element to generate notation for.
+     *
+     * @return Generated notation for model element.
+     */
+    public String generateEvent(Object modelElement) {
+        if (!ModelFacade.isAEvent(modelElement)) {
+            throw new ClassCastException(modelElement.getClass()
+                    + " has wrong object type, Event required");
+        }
+
+        return "";
+    }
+
     // --- org.argouml.uml.generator.FileGenerator -----------------------------
 
     /**
@@ -1024,6 +1040,7 @@ public class GeneratorPHP4
         if (sName.equals("char"))    return "string";
 
         if (sName.equals("boolean")) return "bool";
+        if (sName.equals("bool"))    return "bool";
 
         if (sName.equals("int"))     return "int";
         if (sName.equals("byte"))    return "int";
@@ -1078,14 +1095,18 @@ public class GeneratorPHP4
             }
         } else if (sType.equals("bool")) {
             String sReturn = bCast ? "(bool) " : "";
-            sDefault = sDefault.trim();
-            if (sDefault != null && sDefault.length() > 0) {
-                if (sDefault == "0") {
-                    return sReturn + "false";
-                } else if (sDefault == "false") {
-                    return sReturn + "false";
+            if (sDefault != null) {
+            	sDefault = sDefault.trim();
+                if (sDefault.length() > 0) {
+                	if (sDefault == "0") {
+                		return sReturn + "false";
+                	} else if (sDefault == "false") {
+                		return sReturn + "false";
+                	} else {
+                		return sReturn + "true";
+                	}
                 } else {
-                    return sReturn + "true";
+                	return sReturn + "false";
                 }
             } else {
                 return sReturn + "false";
