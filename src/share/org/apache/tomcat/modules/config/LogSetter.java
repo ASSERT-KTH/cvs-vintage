@@ -261,6 +261,18 @@ public class LogSetter extends  BaseInterceptor {
 
     }
 
+    /** Set default ServletLog for Context if necessary
+     */
+
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+	if( "org/apache/tomcat/facade".equals( name ) &&
+		    ctx.getServletLog() == null ) {
+	    ctx.setServletLog( Log.getLog( name, ctx.getId() ) );
+	}
+    }
+
     /** Adapter and registry for QueueLoggers
      */
     static class TomcatLogManager extends LogManager {
