@@ -42,7 +42,7 @@ import org.jboss.metadata.EntityMetaData;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -252,12 +252,25 @@ implements EntityPersistenceManager {
 
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
     throws Exception {
+       // For now only optimize fBPK
+       if (finderMethod.getName().equals("findByPrimaryKey"))
+       {
+          Object key = ctx.getCacheKey();
+          if (key == null)
+          {
+             key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
+          }
+          if (con.getInstanceCache().isActive(key))
+          {
+             return key; // Object is active -> it exists -> no need to call finder
+          }
+       }
 
        // The store will find the entity and return the primaryKey
        Object id = store.findEntity(finderMethod, args, ctx);
 
        // We return the cache key
-        return ((EntityCache) con.getInstanceCache()).createCacheKey(id);
+       return ((EntityCache) con.getInstanceCache()).createCacheKey(id);
     }
 
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
