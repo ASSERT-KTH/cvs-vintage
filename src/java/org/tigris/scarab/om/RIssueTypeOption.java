@@ -69,30 +69,33 @@ public  class RIssueTypeOption
     {                
         if (user.hasPermission(ScarabSecurity.DOMAIN__EDIT, module))
         {
-            List rios = getIssueType().getRIssueTypeOptions(getAttributeOption().getAttribute(), false);
+            List rios = getIssueType().getRIssueTypeOptions(
+                                      getAttributeOption().getAttribute(), false);
             Criteria c = new Criteria()
                 .add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RIssueTypeOptionPeer.OPTION_ID, getOptionId());
             RIssueTypeOptionPeer.doDelete(c);
             rios.remove(this);
-            // Correct the ordering of the remaining options
-            ArrayList optIds = new ArrayList();
-            for (int i=0; i<rios.size();i++)
+            if (rios.size() > 0)
             {
-                RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
-                optIds.add(rio.getOptionId());
-            }
-            Criteria c2 = new Criteria()
-                .addIn(RIssueTypeOptionPeer.OPTION_ID, optIds)
-                .add(RIssueTypeOptionPeer.PREFERRED_ORDER, getOrder(), Criteria.GREATER_THAN);
-            List adjustRios = RIssueTypeOptionPeer.doSelect(c2);
-            for (int j=0; j<adjustRios.size();j++)
-            {
-                RIssueTypeOption rio = (RIssueTypeOption)adjustRios.get(j);
-                //rmos.remove(rmo);
-                rio.setOrder(rio.getOrder() -1);
-                rio.save();
-                //rmos.add(rmo);
+                // Correct the ordering of the remaining options
+                ArrayList optIds = new ArrayList();
+                for (int i=0; i<rios.size();i++)
+                {
+                    RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
+                    optIds.add(rio.getOptionId());
+                }
+                Criteria c2 = new Criteria()
+                    .addIn(RIssueTypeOptionPeer.OPTION_ID, optIds)
+                    .add(RIssueTypeOptionPeer.PREFERRED_ORDER, getOrder(), 
+                         Criteria.GREATER_THAN);
+                List adjustRios = RIssueTypeOptionPeer.doSelect(c2);
+                for (int j=0; j<adjustRios.size();j++)
+                {
+                    RIssueTypeOption rio = (RIssueTypeOption)adjustRios.get(j);
+                    rio.setOrder(rio.getOrder() -1);
+                    rio.save();
+                }
             }
         }
         else

@@ -74,6 +74,8 @@ public class AttributePeer
     public static final NumberKey TOTAL_VOTES__PK = new NumberKey("13");
     public static final String EMAIL_TO = "to";
     public static final String CC_TO = "cc";
+    public static final String USER = "user";
+    public static final String NON_USER = "non-user";
 
     private static final String ATTRIBUTE_PEER = 
         "AttributePeer";
@@ -81,8 +83,6 @@ public class AttributePeer
         "getDataAttributes";
     private static final String GET_USER_ATTRIBUTES = 
         "getUserAttributes";
-    private static final String USER = "user";
-    private static final String NON_USER = "non-user";
 
     /**
      *  Gets a List of all of the Attribute objects in the database.

@@ -423,10 +423,10 @@ public  class AttributeGroup
             {
                 // This is a global attribute group
                 // Remove attribute - issue type mapping
-                List rias = issueType.getRIssueTypeAttributes(false, "data");    
+                List rias = issueType.getRIssueTypeAttributes
+                                     (false, AttributePeer.NON_USER);
                 ria.delete(user);
                 rias.remove(ria);
-
             }
             else
             {
@@ -440,17 +440,17 @@ public  class AttributeGroup
                 {
                     // Remove attribute - module mapping
                     List rmas = module.getRModuleAttributes(issueType, false,
-                                                            "data");    
+                                                            AttributePeer.NON_USER);    
                     RModuleAttribute rma = module
                         .getRModuleAttribute(attribute, issueType);
                     rma.delete(user);
-                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, 
-                                                 module, issueType);
+                    WorkflowFactory.getInstance().deleteWorkflowsForAttribute
+                                                  (attribute, module, issueType);
                     rmas.remove(rma);
 
                     // Remove attribute - module mapping from template type
                     RModuleAttribute rma2 = module
-                    .getRModuleAttribute(attribute, template);
+                                   .getRModuleAttribute(attribute, template);
                     rma2.delete(user);
                     rmas.remove(rma2);
                 }
