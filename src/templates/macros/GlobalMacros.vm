@@ -377,12 +377,12 @@
 #macro (navigate)
  <p class="paginate">
  #if($scarabR.PrevIssue)
-  #set ($prevLink = $link.setPathInfo("id", "$scarabR.PrevIssue").setPage($scarabR.getCurrentTemplate()))
+  #set ($prevLink = $link.setPathInfo("id", "$scarabR.PrevIssue").setPage($scarabR.getCurrentTemplate()).setPathInfo("issueList", "true"))
   <a href="$prevLink">&laquo; previous</a> |
  #end
 $scarabR.IssuePosInList of $scarabR.CurrentSearchResults.size()
  #if ($scarabR.NextIssue)
-  #set ($nextLink = $link.setPathInfo("id", "$scarabR.NextIssue").setPage($scarabR.getCurrentTemplate()))
+  #set ($nextLink = $link.setPathInfo("id", "$scarabR.NextIssue").setPage($scarabR.getCurrentTemplate()).setPathInfo("issueList", "true"))
   | <a href="$nextLink">&raquo; next</a>
  #end
  </p>

@@ -114,7 +114,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 #foreach ($issueId in $issueList)
  #set ($issue = $scarabR.getIssue($issueId))
- #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()))
+ #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
  #indexedRows($velocityCount)
   <td><input type="checkbox" name="selected_$issue.UniqueId" /></td>
   <td><a href="$issueLink">$issue.UniqueId</a></td>

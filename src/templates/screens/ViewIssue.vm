@@ -12,9 +12,9 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
 #end
 
 #printCollisionInfo()
-
 #if ($currentIssue)
 
+ #set ($issueList = $data.Parameters.getString("issueList", "false"))
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
  <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
@@ -32,12 +32,12 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
 
 #if ($tab.equals("all"))
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as tabs</a></small></div>
-    #if ($scarabR.CurrentQuery && !$multiple.equals("true"))
+    #if ($scarabR.CurrentQuery && $issueList.equals("true"))
         #navigate()
     #end
 #elseif (!$multiple.equals("true"))
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as single screen</a></small></div>
-    #if ($scarabR.CurrentQuery && !$multiple.equals("true"))
+    #if ($scarabR.CurrentQuery && $issueList.equals("true"))
         #navigate()
     #end
 
@@ -74,7 +74,7 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
 </div>
 #end
 
- #viewIssue($currentIssue)
+#viewIssue($currentIssue)
 
  $intake.declareGroups()
  </form>
