@@ -30,7 +30,7 @@ import javax.resource.spi.ConnectionEvent;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JmsSession
    implements QueueSession, TopicSession
@@ -172,7 +172,7 @@ public class JmsSession
       getSession().rollback();
    }
 
-   public synchronized void recover() throws JMSException
+   public void recover() throws JMSException
    {
       getSession().recover();
    }
