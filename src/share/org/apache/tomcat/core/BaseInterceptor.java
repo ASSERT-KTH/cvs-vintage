@@ -176,16 +176,6 @@ public class BaseInterceptor
 	return 0;
     }
 
-//     /** New Session notification - called when the servlet
-// 	asks for a new session. You can do all kind of stuff with
-// 	this notification - the most important is create a session
-// 	object. This will be the base for controling the
-// 	session allocation.
-//     */
-//     public int newSessionRequest( Request request, Response response) {
-// 	return 0;
-//     }
-
     /** The hook for session managers. It'll be called to
      *  find or create a ServerSession object associated with a request.
      *
@@ -263,6 +253,13 @@ public class BaseInterceptor
 	return 0;
     }
 
+    public Object getNote( Request request, int id ) {
+	return null;
+    }
+
+    public int setNote( Request request, int id, Object obj ) {
+	return DECLINED;
+    }
 
     /** This callback is called whenever an exception happen.
      *  If t is null assume this is a "status" report ( 500, 404, etc).

@@ -704,7 +704,7 @@ public final class ContextManager {
 	    handleError( req, res, ex );
 	}
 	finally {
-	    BaseInterceptor reqI[]= req.getContainer().
+	    BaseInterceptor reqI[]= req.getContext().getContainer().
 		getInterceptors(Container.H_postRequest);
 
 	    for( int i=0; i< reqI.length; i++ ) {
@@ -807,7 +807,8 @@ public final class ContextManager {
 	    handleStatus( req, req.getResponse(), 503 ); // service unavailable
 	}
 	
-	ri=defaultContainer.getInterceptors(Container.H_requestMap);
+	ri=req.getContext().getContainer().
+	    getInterceptors(Container.H_requestMap);
 	for( int i=0; i< ri.length; i++ ) {
 	    if( debug > 1 )
 		log( "RequestMap " + ri[i] );
@@ -913,7 +914,8 @@ public final class ContextManager {
 	
 	BaseInterceptor ri[];
 	int status;
-	ri=req.getContainer().getInterceptors( Container.H_handleError );
+	ri=req.getContext().getContainer().
+	    getInterceptors( Container.H_handleError );
 	
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, null );
@@ -927,7 +929,8 @@ public final class ContextManager {
     public final void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];
 	int status;
-	ri=req.getContainer().getInterceptors( Container.H_handleError );
+	ri=req.getContext().getContainer().
+	    getInterceptors( Container.H_handleError );
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, t );
 	    if( status!=0 ) return;
