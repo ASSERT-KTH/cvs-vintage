@@ -72,7 +72,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.53 2004/05/01 19:04:22 dabbous Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.54 2004/05/07 05:48:09 dabbous Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {

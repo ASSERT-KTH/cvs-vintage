@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.36 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: ModifyModule.java,v 1.37 2004/05/07 05:48:08 dabbous Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {

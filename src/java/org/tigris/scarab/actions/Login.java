@@ -73,7 +73,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.50 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: Login.java,v 1.51 2004/05/07 05:48:08 dabbous Exp $
  */
 public class Login extends ScarabTemplateAction
 {

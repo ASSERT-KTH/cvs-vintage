@@ -83,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.44 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: Approval.java,v 1.45 2004/05/07 05:48:09 dabbous Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {

@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSessionValidator.java,v 1.7 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: ScarabSessionValidator.java,v 1.8 2004/05/07 05:48:09 dabbous Exp $
  */
 public class ScarabSessionValidator extends TemplateSessionValidator
 {

@@ -78,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.66 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.67 2004/05/07 05:48:09 dabbous Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {

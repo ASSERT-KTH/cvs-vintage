@@ -85,7 +85,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.58 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.59 2004/05/07 05:48:09 dabbous Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {

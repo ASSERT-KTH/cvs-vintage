@@ -56,7 +56,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.13 $ $Date: 2004/05/01 19:04:22 $
+ * @version $Revision: 1.14 $ $Date: 2004/05/07 05:48:09 $
  */
 public class StringAttribute extends FreeFormAttribute
 {

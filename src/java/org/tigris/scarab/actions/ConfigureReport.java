@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.31 2004/05/01 19:04:22 dabbous Exp $
+ * @version $Id: ConfigureReport.java,v 1.32 2004/05/07 05:48:08 dabbous Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
