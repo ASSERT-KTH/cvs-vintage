@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.15 2005/03/05 10:37:22 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.16 2005/03/11 09:48:35 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.critics.CrUML;
 import org.argouml.uml.cognitive.critics.WizCueCards;
 
@@ -44,8 +45,8 @@ public class CrMultipleInheritance extends CrUML {
      */
     public CrMultipleInheritance() {
         setupHeadAndDesc();;
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
-	addSupportedDecision(CrUML.DEC_CODE_GEN);
+	addSupportedDecision(UMLDecision.INHERITANCE);
+	addSupportedDecision(UMLDecision.CODE_GEN);
 	addTrigger("generalization");
     }
 

@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.13 2005/02/19 23:22:43 mvw Exp $
+// $Id: CrMultipleRealization.java,v 1.14 2005/03/11 09:48:36 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
+import org.argouml.uml.cognitive.UMLDecision;
 import org.argouml.uml.cognitive.critics.CrUML;
 
 // related to issue 570
@@ -44,8 +45,8 @@ public class CrMultipleRealization extends CrUML {
      */
     public CrMultipleRealization() {
         setupHeadAndDesc();;
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
-	addSupportedDecision(CrUML.DEC_CODE_GEN);
+	addSupportedDecision(UMLDecision.INHERITANCE);
+	addSupportedDecision(UMLDecision.CODE_GEN);
 	addTrigger("generalization");
     }
 
