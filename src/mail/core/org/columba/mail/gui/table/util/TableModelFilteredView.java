@@ -137,33 +137,24 @@ public class TableModelFilteredView extends TableModelPlugin {
 	}
 
 	protected boolean testString(HeaderInterface header) {
-		Object o = header.get("Subject");
-		if (o != null) {
-			if (o instanceof String) {
-				String item = (String) o;
-				
-				
-				String pattern = getPatternString().toLowerCase();
+		String subject = (String) header.get("Subject");
+		if (subject != null) {
 
-				if (item.indexOf(pattern) != -1)
-					return true;
+			String pattern = getPatternString().toLowerCase();
 
-			}
+			if (subject.toLowerCase().indexOf(pattern.toLowerCase()) != -1)
+				return true;
+
 		}
 
-		o = header.get("From");
-		if (o != null) {
-			if (o instanceof String) {
-				
-				String item = (String) o;
-				
-				
-				String pattern = getPatternString().toLowerCase();
+		String from = (String) header.get("From");
+		if (from != null) {
 
-				if (item.indexOf(pattern) != -1)
-					return true;
+			String pattern = getPatternString().toLowerCase();
 
-			}
+			if (from.toLowerCase().indexOf(pattern.toLowerCase()) != -1)
+				return true;
+
 		}
 
 		return false;
@@ -257,14 +248,13 @@ public class TableModelFilteredView extends TableModelPlugin {
 							) {
 							Object uid = e.nextElement();
 							header = (ColumbaHeader) headerList.get(uid);
-							
+
 							boolean result = addItem(header);
-						
+
 							//ystem.out.println("item: "+i+" - result: "+result);
-						
+
 							if (result) {
-						
-								
+
 								MessageNode childNode =
 									new MessageNode(header, uid);
 								rootNode.add(childNode);
