@@ -1562,8 +1562,6 @@ public class Issue
             if ( rma.getDefaultTextFlag() ) 
             {
                     attributeId = rma.getAttributeId();
-                    // System.out.println("Default was set in db to " + rma.getAttribute().getName());
-                    
                     break;
             }
         }
@@ -1577,7 +1575,6 @@ public class Issue
                 if ( rma.getAttribute().isTextAttribute() ) 
                 {
                     attributeId = rma.getAttributeId();
-                    // System.out.println("Default is highest text: " + rma.getAttribute().getName());
                     break;
                 }
             }
@@ -1587,7 +1584,6 @@ public class Issue
         if ( attributeId != null ) 
         {
             List avs = getAttributeValues();
-            // System.out.println("Checking values for attribute size=: " + avs.size());
             for ( int i=0; i<avs.size(); i++ ) 
             {
                 AttributeValue testAV = (AttributeValue)avs.get(i);
