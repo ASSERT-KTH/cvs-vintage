@@ -192,7 +192,7 @@ public class QueryParameter {
                   "a primay key field");
          }
 
-         // get the jdbc typ object
+         // get the jdbc type object
          type = field.getJDBCType();
       } else {
          // get jdbc type from type manager

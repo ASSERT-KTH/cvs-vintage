@@ -44,13 +44,14 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
    private JDBCQueryMetaData queryMetaData;
    private Logger log;
 
+   private JDBCStoreManager selectManager;
    private JDBCEntityBridge selectEntity;
    private JDBCCMPFieldBridge selectField;
    private List preloadFields = new ArrayList(0);
@@ -69,7 +70,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
             q.getMethod().getName());
 
       queryMetaData = q;
-      selectEntity = manager.getEntityBridge();
+      setSelectEntity(manager.getEntityBridge());
    }
 
    public Collection execute(
@@ -77,10 +78,8 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          Object[] args,
          EntityEnterpriseContext ctx) throws FinderException {
 
-      JDBCStoreManager selectManager = null;
       ReadAheadCache selectReadAheadCache = null;
       if(selectEntity != null) {
-         selectManager = selectEntity.getManager();
          selectReadAheadCache = selectManager.getReadAheadCache();
       }
 
@@ -209,6 +208,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    protected void setSelectEntity(JDBCEntityBridge selectEntity) {
       this.selectField = null;
       this.selectEntity = selectEntity;
+      this.selectManager = selectEntity.getManager();
    }
    
    protected JDBCCMPFieldBridge getSelectField() {
@@ -218,6 +218,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    protected void setSelectField(JDBCCMPFieldBridge selectField) {
       this.selectEntity = null;
       this.selectField = selectField;
+      this.selectManager = selectField.getManager();
    }
  
    protected List getPreloadFields() {
@@ -253,7 +254,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
                token = tokens.nextToken();
                if(Character.isDigit(token.charAt(0))) {
                   QueryParameter parameter = new QueryParameter(
-                        manager,
+                        selectManager,
                         queryMetaData.getMethod(),
                         token);
                   
