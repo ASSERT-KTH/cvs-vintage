@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.13 2001/07/03 23:50:32 costin Exp $
+/* $Id: ApacheConfig.java,v 1.14 2001/07/03 23:55:27 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -105,7 +105,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.13 $ $Date: 2001/07/03 23:50:32 $
+	@version $Revision: 1.14 $ $Date: 2001/07/03 23:55:27 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -142,6 +142,8 @@ public class ApacheConfig  extends BaseInterceptor {
     private String jkProto = null;
     private int portInt=0;
     String tomcatHome;
+
+    private String jkDebug=null;
     
     // default is true until we can map all web.xml directives
     // Or detect only portable directives were used.
@@ -259,6 +261,14 @@ public class ApacheConfig  extends BaseInterceptor {
         jkProto = protocol;
     }
 
+
+    /** Set the verbosity level for mod_jk.
+	( use debug, error, etc )
+     */
+    public void setJkDebug( String level ) {
+	jkDebug=level;
+    }
+    
     // -------------------- Initialize/guess defaults --------------------
 
     /** Initialize defaults for properties that are not set
@@ -396,13 +406,12 @@ public class ApacheConfig  extends BaseInterceptor {
 		       + jkLog.toString().replace('\\', '/') 
 		       + "\"");
 	mod_jk.println();
-	mod_jk.println("#");        
-	mod_jk.println("# Log level to be used by mod_jk");
-	mod_jk.println("#");
 
 	// XXX Make it configurable 
-	mod_jk.println("JkLogLevel error");
-	mod_jk.println();
+	if( jkDebug != null ) {
+	    mod_jk.println("JkLogLevel " + jkDebug);
+	    mod_jk.println();
+	}
 
     }
 
