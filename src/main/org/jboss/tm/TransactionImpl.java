@@ -31,7 +31,7 @@ import javax.transaction.xa.XAException;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 class TransactionImpl
    implements Transaction
@@ -60,9 +60,6 @@ class TransactionImpl
    // to null, and this is used as an indicator that the methods here
    // should throw an exception.
    // To avoid too much optimization, txCapsule is declared volatile.
-   // The NPE catches below are meant to catch a null txCapsule. It is
-   // possible that the NPE might come from the method call, but that
-   // would be an error in TxCapsule.
 
    public void commit()
       throws RollbackException,
@@ -72,11 +69,9 @@ class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      try {
-         txCapsule.commit();
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      txCapsule.commit();
    }
 
    public void rollback()
@@ -84,22 +79,18 @@ class TransactionImpl
              java.lang.SecurityException,
              SystemException
    {
-      try {
-         txCapsule.rollback();
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      txCapsule.rollback();
    }
 
    public boolean delistResource(XAResource xaRes, int flag)
       throws java.lang.IllegalStateException,
              SystemException
    {
-      try {
-         return txCapsule.delistResource(xaRes, flag);
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      return txCapsule.delistResource(xaRes, flag);
    }
 
    public boolean enlistResource(XAResource xaRes)
@@ -107,21 +98,18 @@ class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      try {
-         return txCapsule.enlistResource(xaRes);
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      return txCapsule.enlistResource(xaRes);
    }
 
    public int getStatus()
       throws SystemException
    {
-      try {
-         return txCapsule.getStatus();
-      } catch (NullPointerException ex) {
-         return Status.STATUS_NO_TRANSACTION;
-      }
+      int status = Status.STATUS_NO_TRANSACTION;
+      if( txCapsule != null )
+         status = txCapsule.getStatus();
+      return status;
    }
 
    public void registerSynchronization(Synchronization s)
@@ -129,22 +117,18 @@ class TransactionImpl
              java.lang.IllegalStateException,
              SystemException
    {
-      try {
-         txCapsule.registerSynchronization(s);
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      txCapsule.registerSynchronization(s);
    }
 
    public void setRollbackOnly()
       throws java.lang.IllegalStateException,
              SystemException
    {
-      try {
-         txCapsule.setRollbackOnly();
-      } catch (NullPointerException ex) {
+      if( txCapsule == null )
          throw new IllegalStateException("No transaction.");
-      }
+      txCapsule.setRollbackOnly();
    }
 
    public int hashCode()
