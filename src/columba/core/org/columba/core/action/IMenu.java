@@ -16,11 +16,10 @@
 
 package org.columba.core.action;
 
-import javax.swing.JMenu;
-
 import org.columba.core.gui.FrameController;
+import org.columba.core.gui.util.CMenu;
 
-public class IMenu extends JMenu {
+public class IMenu extends CMenu {
 	
 	protected FrameController controller;
 	

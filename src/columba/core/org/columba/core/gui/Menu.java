@@ -15,34 +15,24 @@
 //All Rights Reserved.
 package org.columba.core.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
-import org.columba.core.config.ViewItem;
-import org.columba.core.gui.util.CCheckBoxMenuItem;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
