@@ -19,6 +19,7 @@ package org.columba.addressbook.gui.table;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -81,6 +82,8 @@ public class TableController implements TreeSelectionListener, FolderListener,
 
 		addMouseListenerToHeaderInTable();
 
+		view.addMouseListener(new TableMouseListener(this));
+		
 		//view.setModel(addressbookModel);
 		// TODO: move outside TableController
 		//toolbar = new FilterToolbar(this);
