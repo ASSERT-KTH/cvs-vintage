@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.31 2002/09/08 09:00:21 d00mst Exp $
+// $Id: FigClass.java,v 1.32 2002/09/12 18:58:26 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -830,6 +830,7 @@ public class FigClass extends FigNodeModelElement {
           _stereo.setDisplayed(false);
         rect.y      += STEREOHEIGHT;
         rect.height -= STEREOHEIGHT;
+         setBounds(rect.x, rect.y, rect.width, rect.height);
       }
     }
     else {
@@ -847,7 +848,9 @@ public class FigClass extends FigNodeModelElement {
         if( !_newlyCreated ) {
           rect.y      -= STEREOHEIGHT;
           rect.height += STEREOHEIGHT;
+          setBounds(rect.x, rect.y, rect.width, rect.height);
         }
+         
       }
     }
 
@@ -855,7 +858,8 @@ public class FigClass extends FigNodeModelElement {
     // flag. Then set the bounds for the rectangle we have defined.
 
     _newlyCreated = false;
-    setBounds(rect.x, rect.y, rect.width, rect.height);
+    
+   
   }
 
   /**
