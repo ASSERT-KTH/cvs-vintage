@@ -21,6 +21,7 @@ import javax.naming.Context;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.SubDeployerSupport;
+import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.MetaData;
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.77 $
+ @version $Revision: 1.78 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
