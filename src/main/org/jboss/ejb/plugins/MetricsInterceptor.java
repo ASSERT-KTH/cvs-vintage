@@ -128,9 +128,6 @@ public class MetricsInterceptor extends AbstractInterceptor {
 
     private void sendMessage(long time, Message msg) {        
 
-        if ((metricsPub == null) || (msg == null))
-            return;
-            
         try {
             msg.setStringProperty("TIME",  String.valueOf(time));
             metricsPub.publish(metricsTopic, msg);
@@ -143,30 +140,18 @@ public class MetricsInterceptor extends AbstractInterceptor {
     
     private Message createMessage(MethodInvocation mi, String checkpoint) {
         
-        if (metricsSession == null)
-            return null;
-
         try {            
             Message  msg    =  metricsSession.createMessage();
             Transaction tx  =  mi.getTransaction();
             Principal principal = mi.getPrincipal();
             
             msg.setStringProperty("CHECKPOINT",  checkpoint);
-            msg.setStringProperty("APPLICATION", applicationName);
+            //msg.setStringProperty("APPLICATION", applicationName);
             msg.setStringProperty("BEAN",   beanName);
-            msg.setObjectProperty("METHOD", mi.getMethod().toString());    
+            msg.setObjectProperty("METHOD", mi.getMethod().getName());    
             
-            if (tx == null) {
-                // This is a workaround for SpyMessage throwing NPE if
-                // getIntProperty(..) is called on a non-existant key.
-                // javax.jms.MessageFormatException would seem more
-                // appropriate (it's checked exception)
-                msg.setIntProperty("STATUS", Status.STATUS_UNKNOWN);
-            }
-            else {
+            if (tx != null) 
                 msg.setStringProperty("ID",  String.valueOf(tx.hashCode()));
-                msg.setIntProperty("STATUS", tx.getStatus());
-            }
                         
             if (principal != null)
                 msg.setStringProperty("PRINCIPAL", principal.getName());
