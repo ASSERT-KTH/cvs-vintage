@@ -76,6 +76,7 @@ public class Main {
 	}
 
 	public void run(String args[]) {
+		ColumbaLogger.createDefaultHandler();
 		registerCommandLineArguments();
 
 		// handle commandline parameters
@@ -238,6 +239,7 @@ public class Main {
 
 		if (commandLine.hasOption("debug")) {
 			DEBUG = true;
+			ColumbaLogger.setDebugging(true);			
 		}
 
 		if (commandLine.hasOption("nosplash")) {
