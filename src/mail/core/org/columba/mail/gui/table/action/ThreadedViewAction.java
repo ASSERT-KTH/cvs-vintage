@@ -83,7 +83,7 @@ public class ThreadedViewAction extends AbstractSelectableAction
         boolean enableThreadedView = item.isSelected();
 
         /*
-        folder.getFolderItem().set("property", "enable_threaded_view",
+        folder.getConfiguration().set("property", "enable_threaded_view",
             enableThreadedView);
         */
         updateTable(enableThreadedView);

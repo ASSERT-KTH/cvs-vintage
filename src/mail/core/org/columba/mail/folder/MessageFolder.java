@@ -350,7 +350,7 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     protected void saveMessageFolderInfo() {
         MessageFolderInfo info = getMessageFolderInfo();
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
 
         XmlElement property = item.getElement("property");
 
@@ -368,7 +368,7 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
      *  
      */
     protected void loadMessageFolderInfo() {
-        XmlElement property = getFolderItem().getElement("property");
+        XmlElement property = getConfiguration().getElement("property");
 
         if (property == null) { return; }
 

@@ -86,7 +86,7 @@ public class FolderFactory {
         List list = new LinkedList();
 
         // which parents are possible ?
-        FolderItem item = parent.getFolderItem();
+        FolderItem item = parent.getConfiguration();
         String parentType = item.get("type");
 
         // the group of the given parent

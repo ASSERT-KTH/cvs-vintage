@@ -45,7 +45,7 @@ public abstract class RemoteFolder extends MessageFolder {
 
         if (filterListElement == null) {
             filterListElement = new XmlElement(FilterList.XML_NAME);
-            getFolderItem().getRoot().addElement(filterListElement);
+            getConfiguration().getRoot().addElement(filterListElement);
         }
 
         filterList = new FilterList(filterListElement);

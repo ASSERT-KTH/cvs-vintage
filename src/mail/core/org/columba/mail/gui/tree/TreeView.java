@@ -88,7 +88,7 @@ public class TreeView extends JTree {
  */
     public final void expand(AbstractFolder parent) {
         // get configuration from tree.xml file
-        FolderItem item = parent.getFolderItem();
+        FolderItem item = parent.getConfiguration();
 
         XmlElement property = item.getElement("property");
 

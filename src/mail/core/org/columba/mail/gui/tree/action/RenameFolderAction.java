@@ -73,7 +73,7 @@ public class RenameFolderAction extends AbstractColumbaAction
             AbstractFolder folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
 
             if ((folder != null) && folder instanceof MessageFolder) {
-                FolderItem item = folder.getFolderItem();
+                FolderItem item = folder.getConfiguration();
 
                 if (item.get("property", "accessrights").equals("user")) {
                     setEnabled(true);

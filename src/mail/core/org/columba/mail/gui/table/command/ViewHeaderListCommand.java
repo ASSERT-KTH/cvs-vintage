@@ -84,7 +84,7 @@ public class ViewHeaderListCommand extends Command {
 
         // this is a little hack !!
         // check if this is an imap folder
-        FolderItem folderItem = folder.getFolderItem();
+        FolderItem folderItem = folder.getConfiguration();
 
         if (folderItem.get("type").equals("IMAPFolder")) {
             IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();

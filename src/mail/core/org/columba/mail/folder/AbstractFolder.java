@@ -161,15 +161,17 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         return new TreePath(getPathToRoot(this, 0));
     }
 
+    /**
+     * Returns the folder's UID.
+     */
     public int getUid() {
         return node.getInteger("uid");
     }
 
-    public XmlElement getNode() {
-        return node.getRoot();
-    }
-
-    public FolderItem getFolderItem() {
+    /**
+     * Returns the folder's configuration.
+     */
+    public FolderItem getConfiguration() {
         return node;
     }
 
@@ -179,7 +181,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     public String getName() {
         String name = null;
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         name = item.get("property", "name");
 
         return name;
@@ -189,7 +191,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
      * Sets the folder's name. This method notifies registered FolderListeners.
      */
     public void setName(String newName) {
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         item.set("property", "name", newName);
         fireFolderRenamed(newName);
     }
@@ -220,14 +222,14 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         int oldIndex = oldParent.getIndex(newFolder);
         oldParent.remove(oldIndex);
 
-        XmlElement oldParentNode = oldParent.getFolderItem().getRoot();
-        XmlElement newChildNode = newFolder.getFolderItem().getRoot();
+        XmlElement oldParentNode = oldParent.getConfiguration().getRoot();
+        XmlElement newChildNode = newFolder.getConfiguration().getRoot();
         oldParentNode.removeElement(newChildNode);
 
         newFolder.setParent(this);
         children.insertElementAt(newFolder, newIndex);
 
-        XmlElement newParentNode = getFolderItem().getRoot();
+        XmlElement newParentNode = getConfiguration().getRoot();
 
         int j = -1;
         boolean inserted = false;
@@ -259,7 +261,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
      */
     public void removeFolder() throws Exception {
         // remove XmlElement
-        getFolderItem().getRoot().getParent().removeElement(getFolderItem()
+        getConfiguration().getRoot().getParent().removeElement(getConfiguration()
                                                                 .getRoot());
 
         // remove DefaultMutableTreeNode
@@ -273,7 +275,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
      */
     public void addSubfolder(AbstractFolder child) throws Exception {
         add(child);
-        getNode().addElement(child.getNode());
+        getConfiguration().getRoot().addElement(child.getConfiguration().getRoot());
         fireFolderAdded(child);
     }
 
@@ -345,15 +347,15 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
 
         // do the same for the XmlElement node
         LOG.info("Appending xmlelement="
-                + child.getFolderItem().getRoot().getName());
+                + child.getConfiguration().getRoot().getName());
 
-        child.getFolderItem().getRoot().removeFromParent();
+        child.getConfiguration().getRoot().removeFromParent();
 
         // add child to this node
         add(child);
 
         // do the same for the XmlElement of child
-        getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
+        getConfiguration().getRoot().addElement(child.getConfiguration().getRoot());
         fireFolderAdded(child);
     }
 

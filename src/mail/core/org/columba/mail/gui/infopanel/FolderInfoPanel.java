@@ -132,7 +132,7 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
     }
 
     public void setFolder(MessageFolder newFolder) {
-        item = newFolder.getFolderItem();
+        item = newFolder.getConfiguration();
 
         if (item == null) {
             return;

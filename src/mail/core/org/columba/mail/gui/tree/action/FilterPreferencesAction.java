@@ -67,7 +67,7 @@ public class FilterPreferencesAction extends AbstractColumbaAction implements
 
         if (folder == null) { return; }
 
-        FolderItem item = folder.getFolderItem();
+        FolderItem item = folder.getConfiguration();
 
         if (item == null) { return; }
 

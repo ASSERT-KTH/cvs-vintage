@@ -169,7 +169,7 @@ MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
     }
 
     private void saveExpandedState(AbstractFolder folder, TreePath path) {
-        FolderItem item = folder.getFolderItem();
+        FolderItem item = folder.getConfiguration();
 
         XmlElement property = item.getElement("property");
 

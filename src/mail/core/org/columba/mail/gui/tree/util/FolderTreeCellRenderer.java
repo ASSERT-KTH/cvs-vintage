@@ -120,7 +120,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
                 setFont(boldFont);
             }
 
-            FolderItem item = folder.getFolderItem();
+            FolderItem item = folder.getConfiguration();
 
             if (item != null) {
                 String name;

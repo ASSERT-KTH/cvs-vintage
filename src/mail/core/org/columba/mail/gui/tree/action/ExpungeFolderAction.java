@@ -82,7 +82,7 @@ public class ExpungeFolderAction extends AbstractColumbaAction
             AbstractFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
             if (folder != null) {
-                FolderItem item = folder.getFolderItem();
+                FolderItem item = folder.getConfiguration();
 
                 if (folder instanceof VirtualFolder) {
                     setEnabled(false);

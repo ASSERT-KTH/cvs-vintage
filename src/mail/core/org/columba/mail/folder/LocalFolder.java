@@ -96,7 +96,7 @@ public abstract class LocalFolder extends MessageFolder {
             // no filterlist treenode found
             // -> create a new one
             filterListElement = new XmlElement(FilterList.XML_NAME);
-            getFolderItem().getRoot().addElement(filterListElement);
+            getConfiguration().getRoot().addElement(filterListElement);
         }
 
         filterList = new FilterList(filterListElement);
@@ -116,7 +116,7 @@ public abstract class LocalFolder extends MessageFolder {
             // no filterlist treenode found
             // -> create a new one
             filterListElement = new XmlElement(FilterList.XML_NAME);
-            getFolderItem().getRoot().addElement(filterListElement);
+            getConfiguration().getRoot().addElement(filterListElement);
         }
 
         filterList = new FilterList(filterListElement);

@@ -133,7 +133,7 @@ public abstract class AbstractFolderOptionsPlugin implements PluginInterface {
         }
 
         // use folder specific options
-        XmlElement parent = folder.getFolderItem().getFolderOptions();
+        XmlElement parent = folder.getConfiguration().getFolderOptions();
 
         XmlElement child = parent.getElement(getName());
 

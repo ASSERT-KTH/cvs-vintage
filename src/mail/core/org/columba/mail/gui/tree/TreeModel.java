@@ -58,7 +58,7 @@ public class TreeModel extends DefaultTreeModel {
         tempFolder = new TempFolder(MainInterface.config.getConfigDirectory() +
                 "/mail/");
 
-        createDirectories(((AbstractFolder) getRoot()).getNode(),
+        createDirectories(((AbstractFolder) getRoot()).getConfiguration().getRoot(),
             (AbstractFolder) getRoot());
     }
 
@@ -177,7 +177,7 @@ public class TreeModel extends DefaultTreeModel {
         for (Enumeration e = root.breadthFirstEnumeration();
                 e.hasMoreElements();) {
             AbstractFolder node = (AbstractFolder) e.nextElement();
-            FolderItem item = node.getFolderItem();
+            FolderItem item = node.getConfiguration();
 
             if (item == null) {
                 continue;

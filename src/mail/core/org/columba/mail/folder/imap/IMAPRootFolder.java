@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.imap;
 
 import org.columba.core.command.StatusObservable;
@@ -34,6 +35,9 @@ import org.columba.ristretto.imap.protocol.IMAPProtocol;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * Root folder for IMAP folders.
+ */
 public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
@@ -98,7 +102,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
         this.accountItem = accountItem;
 
-        getFolderItem().set("account_uid", accountItem.getInteger("uid"));
+        getConfiguration().set("account_uid", accountItem.getInteger("uid"));
 
         updateConfiguration();
     }
@@ -109,7 +113,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
     public IMAPRootFolder(String name, String type) {
         super(name, type);
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         item.set("property", "accessrights", "system");
         item.set("property", "subfolder", "true");
     }
@@ -144,19 +148,20 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
                 subFolder = new IMAPFolder(subchild, "IMAPFolder",
                         getParentPath());
                 parent.add(subFolder);
-                parent.getNode().addElement(subFolder.getNode());
+                parent.getConfiguration().getRoot().addElement(
+                        subFolder.getConfiguration().getRoot());
                 MailInterface.treeModel.insertNodeInto(subFolder, parent,
                     parent.getIndex(subFolder));
 
                 ((IMAPFolder) subFolder).existsOnServer = true;
-                subFolder.getFolderItem().set("selectable", "false");
+                subFolder.getConfiguration().set("selectable", "false");
 
                 // this is the final folder
                 //subFolder = addIMAPChildFolder(parent, info, subchild);
             } else {
                 if (!((IMAPFolder) subFolder).existsOnServer) {
                     ((IMAPFolder) subFolder).existsOnServer = true;
-                    subFolder.getFolderItem().set("selectable", "false");
+                    subFolder.getConfiguration().set("selectable", "false");
                 }
             }
 
@@ -173,19 +178,17 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
             if (subFolder == null) {
                 subFolder = new IMAPFolder(name, "IMAPFolder", getParentPath());
                 parent.add(subFolder);
-                parent.getNode().addElement(subFolder.getNode());
+                parent.getConfiguration().getRoot().addElement(
+                        subFolder.getConfiguration().getRoot());
                 MailInterface.treeModel.insertNodeInto(subFolder, parent,
                     parent.getIndex(subFolder));
-
-                ((IMAPFolder) subFolder).existsOnServer = true;
-            } else {
-                ((IMAPFolder) subFolder).existsOnServer = true;
             }
+            ((IMAPFolder) subFolder).existsOnServer = true;
 
             if (info.getParameter(ListInfo.NOSELECT)) {
-                subFolder.getFolderItem().set("selectable", "false");
+                subFolder.getConfiguration().set("selectable", "false");
             } else {
-                subFolder.getFolderItem().set("selectable", "true");
+                subFolder.getConfiguration().set("selectable", "true");
             }
         }
     }
@@ -284,7 +287,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
         // This fixes the strange behaviour of the courier imapserver
         // which sets the \Noselect flag on INBOX
-        inbox.getFolderItem().set("selectable", "true");
+        inbox.getConfiguration().set("selectable", "true");
 
         findSpecialFolders();
     }

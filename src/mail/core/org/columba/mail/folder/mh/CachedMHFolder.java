@@ -37,7 +37,7 @@ public class CachedMHFolder extends LocalFolder {
         super(item, path);
 
         DefaultSearchEngine engine = new DefaultSearchEngine(this);
-        boolean enableLucene = getFolderItem().getBoolean("property",
+        boolean enableLucene = getConfiguration().getBoolean("property",
                 "enable_lucene", false);
         if (enableLucene) {
             engine.setNonDefaultEngine(new LuceneQueryEngine(this));
@@ -51,7 +51,7 @@ public class CachedMHFolder extends LocalFolder {
     public CachedMHFolder(String name, String type, String path) {
         super(name, type, path);
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         item.set("property", "accessrights", "user");
         item.set("property", "subfolder", "true");
     }

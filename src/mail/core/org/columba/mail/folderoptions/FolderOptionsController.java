@@ -189,7 +189,7 @@ public class FolderOptionsController {
             global = true;
         } else {
             // use folder specific options
-            parent = folder.getFolderItem().getFolderOptions();
+            parent = folder.getConfiguration().getFolderOptions();
             global = false;
         }
 
@@ -228,7 +228,7 @@ public class FolderOptionsController {
      * @param folder                selected folder
      */
     public void createDefaultSettings(MessageFolder folder) {
-        FolderItem item = folder.getFolderItem();
+        FolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
 
         // use global settings
@@ -248,7 +248,7 @@ public class FolderOptionsController {
      * @return                                true, if any option is overridden. False, otherwise.
      */
     private boolean isOverwritingDefaults(MessageFolder folder) {
-        FolderItem item = folder.getFolderItem();
+        FolderItem item = folder.getConfiguration();
         XmlElement parent = item.getElement("property");
         boolean result = false;
 

@@ -86,7 +86,7 @@ public class MoveUpAction extends AbstractColumbaAction
             AbstractFolder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
             if ((folder != null) && folder instanceof MessageFolder) {
-                FolderItem item = folder.getFolderItem();
+                FolderItem item = folder.getConfiguration();
 
                 if (item.get("property", "accessrights").equals("user")) {
                     int index = folder.getParent().getIndex(folder);

@@ -427,7 +427,7 @@ overwriteOptionsCheckBox.setActionCommand("OVERWRITE");
 
             locationLabel2.setText(folder.getDirectoryFile().getPath());
 
-            FolderItem item = folder.getFolderItem();
+            FolderItem item = folder.getConfiguration();
             XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
             CheckableItemListTableModel model = new CheckableItemListTableModel();
@@ -452,7 +452,7 @@ if (property.getAttribute("overwrite_default_settings", "false")
 
             // only local folders have an full-text indexing capability
             if (folder instanceof LocalFolder) {
-                item = folder.getFolderItem();
+                item = folder.getConfiguration();
 
                 boolean bool = item.getBoolean("property", "enable_lucene"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -471,7 +471,7 @@ if (property.getAttribute("overwrite_default_settings", "false")
                 }
             }
 
-            FolderItem item = folder.getFolderItem();
+            FolderItem item = folder.getConfiguration();
             XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
             // remove all old elements
@@ -488,7 +488,7 @@ if (property.getAttribute("overwrite_default_settings", "false")
 
             //	only local folders have an full-text indexing capability
             if (folder instanceof LocalFolder) {
-                item = folder.getFolderItem();
+                item = folder.getConfiguration();
 
                 boolean bool = enableTextIndexingCheckBox.isSelected();
                 item.set("property", "enable_lucene", bool); //$NON-NLS-1$ //$NON-NLS-2$
@@ -558,7 +558,7 @@ if (property.getAttribute("overwrite_default_settings", "false")
             MainInterface.processor.addOp(new ExportFolderCommand(r));
         } else if (action.equals("RESET")) { //$NON-NLS-1$
 
-            FolderItem item = folder.getFolderItem();
+            FolderItem item = folder.getConfiguration();
             XmlElement property = item.getElement("property"); //$NON-NLS-1$
 
             // remove all options 

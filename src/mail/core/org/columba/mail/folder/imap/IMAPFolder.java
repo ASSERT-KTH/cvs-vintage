@@ -105,7 +105,7 @@ public class IMAPFolder extends RemoteFolder {
     public IMAPFolder(String name, String type, String path) throws Exception {
         super(name, type, path);
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         item.set("property", "accessrights", "user");
         item.set("property", "subfolder", "true");
     }

@@ -73,8 +73,9 @@ class AccountCreator implements WizardModelListener {
 
             IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
             ((AbstractFolder) MailInterface.treeModel.getRoot()).add(parentFolder);
-            ((AbstractFolder) MailInterface.treeModel.getRoot()).getNode()
-             .addElement(parentFolder.getNode());
+            ((AbstractFolder) MailInterface.treeModel.getRoot())
+                    .getConfiguration().getRoot().addElement(
+                            parentFolder.getConfiguration().getRoot());
 
             MailInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
 
@@ -82,7 +83,8 @@ class AccountCreator implements WizardModelListener {
                 AbstractFolder inbox = new IMAPFolder("INBOX", "IMAPFolder",
                         path);
                 parentFolder.add(inbox);
-                parentFolder.getNode().addElement(inbox.getNode());
+                parentFolder.getConfiguration().getRoot().addElement(
+                        inbox.getConfiguration().getRoot());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

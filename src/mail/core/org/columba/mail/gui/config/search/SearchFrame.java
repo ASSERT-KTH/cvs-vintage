@@ -263,12 +263,12 @@ public class SearchFrame extends JDialog implements ActionListener {
                 condList.setSelectedIndex(1);
             }
 
-            boolean isInclude = Boolean.valueOf(destFolder.getFolderItem().get("property",
+            boolean isInclude = Boolean.valueOf(destFolder.getConfiguration().get("property",
                         "include_subfolders")).booleanValue();
 
             includeSubfolderButton.setSelected(isInclude);
 
-            int uid = destFolder.getFolderItem().getInteger("property",
+            int uid = destFolder.getConfiguration().getInteger("property",
                     "source_uid");
 
             MessageFolder f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
@@ -276,7 +276,7 @@ public class SearchFrame extends JDialog implements ActionListener {
             // If f==null because of deleted MessageFolder fallback to Inbox
             if (f == null) {
                 uid = 101;
-                destFolder.getFolderItem().set("property", "source_uid", uid);
+                destFolder.getConfiguration().set("property", "source_uid", uid);
                 f = (MessageFolder) MailInterface.treeModel.getFolder(uid);
             }
 
@@ -295,10 +295,10 @@ public class SearchFrame extends JDialog implements ActionListener {
             }
 
             if (includeSubfolderButton.isSelected()) {
-                destFolder.getFolderItem().set("property",
+                destFolder.getConfiguration().set("property",
                     "include_subfolders", "true");
             } else {
-                destFolder.getFolderItem().set("property",
+                destFolder.getConfiguration().set("property",
                     "include_subfolders", "false");
             }
 
@@ -306,7 +306,7 @@ public class SearchFrame extends JDialog implements ActionListener {
             TreeNodeList list = new TreeNodeList(path);
             MessageFolder folder = (MessageFolder) MailInterface.treeModel.getFolder(list);
             int uid = folder.getUid();
-            destFolder.getFolderItem().set("property", "source_uid", uid);
+            destFolder.getConfiguration().set("property", "source_uid", uid);
 
             criteriaList.updateComponents(b);
         }

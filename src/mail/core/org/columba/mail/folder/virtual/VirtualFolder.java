@@ -98,7 +98,7 @@ public class VirtualFolder extends MessageFolder {
 
             Filter f = new Filter(filter);
 
-            getFolderItem().getRoot().addElement(f.getRoot());
+            getConfiguration().getRoot().addElement(f.getRoot());
         }
 
         //searchFilter = new Search(this);
@@ -107,7 +107,7 @@ public class VirtualFolder extends MessageFolder {
     public VirtualFolder(String name, String type, String path) {
         super(name, type, path);
 
-        FolderItem item = getFolderItem();
+        FolderItem item = getConfiguration();
         item.set("property", "accessrights", "user");
         item.set("property", "subfolder", "true");
         item.set("property", "include_subfolders", "true");
@@ -138,7 +138,7 @@ public class VirtualFolder extends MessageFolder {
 
             Filter f = new Filter(filter);
 
-            getFolderItem().getRoot().addElement(f.getRoot());
+            getConfiguration().getRoot().addElement(f.getRoot());
         }
     }
 
@@ -201,28 +201,28 @@ public class VirtualFolder extends MessageFolder {
         }
 
         // copy all properties to the subfolder
-        int uid = getFolderItem().getInteger("property", "source_uid");
-        boolean includes = getFolderItem().getBoolean("property",
+        int uid = getConfiguration().getInteger("property", "source_uid");
+        boolean includes = getConfiguration().getBoolean("property",
                 "include_subfolders");
 
-        FolderItem newFolderItem = newFolder.getFolderItem();
+        FolderItem newFolderItem = newFolder.getConfiguration();
         newFolderItem.set("property", "source_uid", uid);
         newFolderItem.set("property", "include_subfolders", includes);
 
         newFolderItem.getElement("filter").removeFromParent();
-        newFolderItem.getRoot().addElement((XmlElement) getFolderItem()
+        newFolderItem.getRoot().addElement((XmlElement) getConfiguration()
                                                             .getElement("filter")
                                                             .clone());
 
-        FilterCriteria newc = new Filter(getFolderItem().getElement("filter")).getFilterRule()
+        FilterCriteria newc = new Filter(getConfiguration().getElement("filter")).getFilterRule()
                                                                               .get(0);
 
         /*
- * FilterCriteria c = new Filter(getFolderItem().getElement("filter"))
+ * FilterCriteria c = new Filter(getConfiguration().getElement("filter"))
  * .getFilterRule() .get( 0);
  *
  * FilterCriteria newc = new
- * Filter(getFolderItem().getElement("filter")) .getFilterRule() .get(
+ * Filter(getConfiguration().getElement("filter")) .getFilterRule() .get(
  * 0); newc.setCriteria(c.getCriteriaString());
  * newc.setHeaderItem(c.getHeaderItemString());
  * newc.setPattern(c.getPattern()); newc.setType(c.getType());
@@ -266,10 +266,10 @@ public class VirtualFolder extends MessageFolder {
     }
 
     protected void applySearch() throws Exception {
-        int uid = getFolderItem().getInteger("property", "source_uid");
+        int uid = getConfiguration().getInteger("property", "source_uid");
         MessageFolder srcFolder = (MessageFolder) MailInterface.treeModel.getFolder(uid);
 
-        XmlElement filter = getFolderItem().getRoot().getElement("filter");
+        XmlElement filter = getConfiguration().getRoot().getElement("filter");
 
         if (filter == null) {
             filter = new XmlElement("filter");
@@ -286,10 +286,10 @@ public class VirtualFolder extends MessageFolder {
             criteria.addAttribute("pattern", "pattern");
             rules.addElement(criteria);
             filter.addElement(rules);
-            getFolderItem().getRoot().addElement(filter);
+            getConfiguration().getRoot().addElement(filter);
         }
 
-        Filter f = new Filter(getFolderItem().getRoot().getElement("filter"));
+        Filter f = new Filter(getConfiguration().getRoot().getElement("filter"));
 
         applySearch(srcFolder, f);
 
@@ -323,7 +323,7 @@ public class VirtualFolder extends MessageFolder {
             }
         }
 
-        boolean isInclude = Boolean.valueOf(getFolderItem().get("property",
+        boolean isInclude = Boolean.valueOf(getConfiguration().get("property",
                     "include_subfolders")).booleanValue();
 
         if (isInclude) {
@@ -344,7 +344,7 @@ public class VirtualFolder extends MessageFolder {
     }
 
     public Filter getFilter() {
-        return new Filter(getFolderItem().getRoot().getElement("filter"));
+        return new Filter(getConfiguration().getRoot().getElement("filter"));
     }
 
     public Object getVirtualUid(MessageFolder parent, Object uid)
