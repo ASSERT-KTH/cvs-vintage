@@ -7,7 +7,7 @@ Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 $issue.UniqueId Summary:  $attVal.Value 
 
 You can view the report at the following URL:
-<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setAbsolute(true).setEncodeURLOff()>
+<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>
 
 $issue.UniqueId Report 
 
