@@ -1186,6 +1186,22 @@ try{
         Group searchGroup = intake.get("SearchIssue", 
                                        getSearch().getQueryKey() );
         searchGroup.setProperties(search);
+
+        // If user set attribute to sort by, sort by it
+        String sortAttrId = data.getParameters()
+                            .getString("sortAttrId");
+        if (sortAttrId != null && sortAttrId.length() >0)
+        {
+            search.setInitialSortAttributeId(new NumberKey(sortAttrId));
+        }
+        // Set sort polarity
+        String sortPolarity = data.getParameters()
+                              .getString("sortPolarity");
+        if (sortPolarity != null && sortPolarity.length() >0)
+        {
+            search.setInitialSortPolarity(sortPolarity);
+        }
+
         SequencedHashtable avMap = search.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 

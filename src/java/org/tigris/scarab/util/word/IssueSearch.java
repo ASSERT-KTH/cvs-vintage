@@ -50,6 +50,7 @@ package org.tigris.scarab.util.word;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
@@ -64,6 +65,7 @@ import org.apache.commons.util.StringUtils;
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
@@ -541,11 +543,7 @@ public class IssueSearch
     public String getInitialSortPolarity() 
     {
         String polarity = null;
-        if ( initialSortPolarity == null ) 
-        {
-            polarity = null;
-        }
-        else if ( DESC.equals(initialSortPolarity) ) 
+        if ( DESC.equals(initialSortPolarity) ) 
         {
             polarity = DESC;
         }        
@@ -1224,31 +1222,8 @@ public class IssueSearch
             // state change query
             addStateChangeQuery(crit);
             
-            // Add any order by clause
-            addInitialSortCriteria(crit);
-            
-            // get matching issues
-            matchingIssues = IssuePeer.doSelect(crit);
-            
-            // text search can lead to an ordered list according to search 
-            // engine's ranking mechanism, so sort the results according to 
-            // this list unless another sorting criteria has been specified.
-            if ( getInitialSortAttributeId() == null 
-                 && matchingIssueIds != null ) 
-            {
-                matchingIssues = sortByIssueIdList(
-                    matchingIssueIds, matchingIssues, limitResults);
-            }
-            // no sorting
-            else
-            {
-                int maxIssues = matchingIssues.size();
-                if ( limitResults > 0 && maxIssues > limitResults )
-                {
-                    maxIssues = limitResults;
-                }
-                matchingIssues = matchingIssues.subList(0, maxIssues);
-            }
+            // Get matching issues, with sort criteria
+            matchingIssues = sortIssues(crit);
         }
         else 
         {
@@ -1258,9 +1233,24 @@ public class IssueSearch
     }
 
     /**
+     * Sorts on issue unique id (default)
+     */
+    private List sortByUniqueId(Criteria crit) throws Exception
+    {
+        if (getInitialSortPolarity().equals("desc"))
+        {
+            crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
+        } 
+        else
+        {
+            crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
+        }
+        return IssuePeer.doSelect(crit);
+    }
+
+    /**
      * Takes a List of Issues and an array of IDs and sorts the Issues in
      * the list to the order given in the ID array
-     */
     private List sortByIssueIdList(NumberKey[] ids, List issues, 
                                    int limitResults)
     {
@@ -1286,5 +1276,104 @@ public class IssueSearch
         }
      
         return sortedIssues;
+    }
+   */
+
+    private List sortIssues(Criteria crit)
+        throws Exception
+    {
+        List matchingIssues = null;
+        NumberKey sortAttrId =  getInitialSortAttributeId();
+        if (sortAttrId == null)
+        {
+            //sort by unique id
+            if (getInitialSortPolarity().equals("desc"))
+            {
+                crit.addDescendingOrderByColumn(IssuePeer.ID_COUNT);
+            } 
+            else
+            {
+                crit.addAscendingOrderByColumn(IssuePeer.ID_COUNT);
+            }
+            crit.setDistinct();
+            matchingIssues =  IssuePeer.doSelect(crit);
+        }
+        else
+        {
+            // sort by selected attribute
+            Vector attSet = new Vector();
+            Vector attNotSet = new Vector();
+            List unSortedIssues = IssuePeer.doSelect(crit);
+            List sortedIssues = new ArrayList(unSortedIssues.size());
+            Attribute att = Attribute.getInstance(sortAttrId);
+
+            for (int j=0; j<unSortedIssues.size(); j++)
+            {
+                Issue issue =  (Issue)unSortedIssues.get(j);
+                AttributeValue sortAttVal = (AttributeValue)issue
+                   .getModuleAttributeValuesMap()
+                   .get(att.getName().toUpperCase());
+                Object sortValue = null;
+                if ( sortAttVal instanceof OptionAttribute)
+                {
+                    sortValue = sortAttVal.getAttributeOption();
+                }
+                else 
+                {
+                    sortValue = sortAttVal.getValue();
+                }
+                if (sortValue == null)
+                {
+                    attNotSet.add(issue);
+                }
+                else
+                {
+                    attSet.add(issue.getIssueId());
+                }
+            } 
+            if (attSet.size() > 0)
+            {
+                String sortColumn = null;  
+                Criteria crit2 = new Criteria();
+                if ( att.isOptionAttribute())
+                {
+                    crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
+                    crit2.add(AttributeOptionPeer.ATTRIBUTE_ID, sortAttrId);
+                    crit2.addJoin(AttributeOptionPeer.OPTION_ID,
+                                  RModuleOptionPeer.OPTION_ID);
+                    crit2.addJoin(AttributeValuePeer.OPTION_ID,
+                                  RModuleOptionPeer.OPTION_ID);
+                    crit2.addJoin(AttributeValuePeer.ISSUE_ID,
+                                  IssuePeer.ISSUE_ID);
+                    crit2.addJoin(IssuePeer.MODULE_ID, 
+                                  RModuleOptionPeer.MODULE_ID);
+                    crit2.addJoin(IssuePeer.TYPE_ID, 
+                                  RModuleOptionPeer.ISSUE_TYPE_ID);
+                    sortColumn = RModuleOptionPeer.WEIGHT;
+                    crit2.setDistinct();
+                }
+                else
+                {
+                    crit2.addIn(AttributeValuePeer.ISSUE_ID, attSet);
+                    crit2.add(AttributeValuePeer.ATTRIBUTE_ID, sortAttrId);
+                    crit2.addJoin(AttributeValuePeer.ISSUE_ID,
+                                  IssuePeer.ISSUE_ID);
+                    crit2.setDistinct();
+                    sortColumn = AttributeValuePeer.VALUE; 
+                }
+                if (getInitialSortPolarity().equals("desc"))
+                {
+                    crit2.addDescendingOrderByColumn(sortColumn);
+                }
+                else
+                {
+                    crit2.addAscendingOrderByColumn(sortColumn);
+                }
+                sortedIssues.addAll(IssuePeer.doSelect(crit2));
+           }
+           sortedIssues.addAll(attNotSet);
+           matchingIssues = sortedIssues;
+        }
+        return matchingIssues;
     }
 }
