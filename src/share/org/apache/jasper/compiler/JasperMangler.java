@@ -165,7 +165,7 @@ public class JasperMangler implements Mangler{
     public String getJspFilePath() {
         // lazy evaluation of full path
         if( jspFilePath == null )
-            jspFilePath=FileUtil.safePath( docBase, jspFile);
+            jspFilePath=FileUtil.safePath( docBase, jspFile, false);
         return jspFilePath;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.9 2002/09/13 05:43:48 billbarker Exp $
- * $Revision: 1.9 $
- * $Date: 2002/09/13 05:43:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.10 2003/09/14 04:17:47 billbarker Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/14 04:17:47 $
  *
  * ====================================================================
  *
@@ -136,6 +136,14 @@ public class FileUtil {
 
     */
     public static String safePath( String base, String path ) {
+	return safePath(base, path, true);
+    }
+
+    /** All the safety checks from getRealPath() and
+	DefaultServlet.
+
+    */
+    public static String safePath( String base, String path, boolean caseSf ) {
 	// Hack for Jsp ( and other servlets ) that use rel. paths 
 	// if( ! path.startsWith("/") ) path="/"+ path;
 	if( path==null || path.equals("") ) return base;
@@ -202,9 +210,8 @@ public class FileUtil {
 	if (File.separatorChar  == '\\') {
 	    // On Windows check ignore case....
 	    if (!realPath.equals(canPath)){
-            int ls=realPath.lastIndexOf('\\');
-            if ( (ls > 0) && !realPath.substring(0,ls).equals(canPath) )
-        		return null;
+		if(caseSf || !realPath.equalsIgnoreCase(canPath))
+		    return null;
 	    }
 	}
 
