@@ -327,6 +327,12 @@
     </field>
 </group>
 
+<group name="EditPermission" key="editpermission">
+    <field name="PermissionName" key="r" type="String">
+        <rule name="required" value="true">Please enter a name for the permission</rule>
+    </field>
+</group>
+
 <group name="EditRole" key="editrole">
     <field name="RoleName" key="r" type="String">
         <rule name="required" value="true">Please enter a name for the role</rule>
