@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.7 2000/12/23 20:36:43 jon Exp $
+$Id: README.txt,v 1.8 2001/01/04 00:00:15 jon Exp $
 
 Welcome to Scarab!
 
@@ -73,42 +73,47 @@ of the files in the /lib or /src directory, then you should simply re-run the
 build.sh compile script and it will deal with copying and compiling the changed 
 files.
 
-If you already have an existing Tomcat installation and prefer to run Scarab 
-from there, create a file called .ant.properties in the build directory or in 
-your $HOME directory. The contents of this file should be a single line 
-equating the variable build.dir to the path to Tomcat. For example:
+NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
+      the Tomcat that comes with Scarab, you can safely undefine it and follow 
+      the directions below for running the sandbox.
 
-build.dir=/usr/local/jakarta-tomcat
+NOTE: If you already have an existing Tomcat installation and prefer to run 
+      Scarab from there, create a file called .ant.properties in the build 
+      directory or in your $HOME directory. The contents of this file should be 
+      a single line equating the variable build.dir to the path to Tomcat. For 
+      example:
+
+      build.dir=/usr/local/jakarta-tomcat
 
 NOTE: There may be problems building and running Scarab with Tomcat 3.2.1. 
-If your current Tomcat installation is not 4.0, you can either compile to 
-the default target/ directory or wait until 4.0 is formally released.
+      If your current Tomcat installation is not 4.0, you can either compile to 
+      the default target/ directory or wait until 4.0 is formally released.
 
 
 -------------------------------------------------------------------------
 | I N S T A L L I N G  T H E  D A T A B A S E                           |
 -------------------------------------------------------------------------
 
-To install the database schema's, right now, you will need to install
-MySQL and put the path to the mysqladmin and mysql binaries into 
-your PATH environment variable. Once you have done that and you have
-MySQL up and running with no username/password for localhost access, 
-you can simply execute the following:
+To install the database schema's, right now, you will need to install MySQL and 
+put the path to the mysqladmin and mysql binaries into your PATH environment 
+variable. Once you have done that and you have MySQL up and running with no 
+username/password for localhost access, you can simply execute the following:
 
 cd src/sql
 ./create-database.sh   <-- Unix
 create-database.bat    <-- Win32
 
-Caution: This will attempt to first drop a database called "scarab" and 
-then re-create it. If you execute this script, all of your previous
-data will be lost without warning!
+NOTE: This will attempt to first drop a database called "scarab" and 
+      then re-create it. If you execute this script, all of your previous data 
+      will be lost without warning!
 
 
 -------------------------------------------------------------------------
 | R U N N I N G  T H E  S A N D B O X                                   |
 -------------------------------------------------------------------------
 
-To run Tomcat from within the target directory, all you need to do is:
+To run Tomcat from within the target directory that was created by following the 
+steps above under building the sandbox, all you need to do is:
 
 cd target
 ./bin/catalina.sh run
@@ -117,13 +122,9 @@ Then, in your web browser, go to:
 
 <http://localhost:8080/scarab/servlet/scarab>
 
-Please note: There will be a very long (up to a minute) delay for the first 
-request to return a response. This is due to the way that Tomcat 4.0 is 
-generating the session id. The Random Number Generator (RNG) takes forever to 
-seed itself. After the RNG has seeded itself, further requests should be quite 
-fast. We are working with the Tomcat team on providing an alternative way to 
-have a not so secure RNG for development purposes that loads very quickly.
-
+NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
+      the Tomcat that comes with Scarab, you can safely undefine it and follow 
+      the directions below for running the sandbox.
 
 -------------------------------------------------------------------------
 | Q U E S T I O N S  /  P R O B L E M S                                 |
