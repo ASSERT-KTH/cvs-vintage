@@ -123,6 +123,7 @@ public class RModuleAttribute
         {
             Criteria c = new Criteria()
                 .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleAttributePeer.doDelete(c);
         } 
