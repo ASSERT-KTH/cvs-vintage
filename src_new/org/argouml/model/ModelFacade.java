@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.59 2003/06/20 06:44:33 kataka Exp $
+// $Id: ModelFacade.java,v 1.60 2003/06/20 06:50:38 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,7 @@ import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 import ru.novosoft.uml.behavior.common_behavior.MAction;
+import ru.novosoft.uml.behavior.common_behavior.MActionSequence;
 import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
 import ru.novosoft.uml.behavior.common_behavior.MInstance;
@@ -198,6 +199,15 @@ public class ModelFacade {
      */
     public static boolean isAAction(Object handle) {
         return handle instanceof MAction;
+    }
+    
+    /**
+     * Recognizer for ActionSequence
+     * @param handle
+     * @return
+     */
+    public static boolean isAActionSequence(Object handle) {
+        return handle instanceof MActionSequence;
     }
 
     /** Recognizer for Association.
