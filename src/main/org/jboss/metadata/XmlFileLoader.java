@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -163,6 +163,7 @@ public class XmlFileLoader {
 
 		public LocalResolver() {
 			registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
+			registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
 		}
 
 		public void registerDTD(String publicId, String dtdFileName) {
