@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a buffer-related change occurs.
  * @author Slava Pestov
- * @version $Id: BufferUpdate.java,v 1.2 2001/10/11 11:44:27 spestov Exp $
+ * @version $Id: BufferUpdate.java,v 1.3 2001/12/25 08:07:14 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -86,6 +86,12 @@ public class BufferUpdate extends EBMessage.NonVetoable
 	 * Buffer saving.
 	 */
 	public static final Object SAVING = "SAVING";
+
+	/**
+	 * Buffer saved.
+	 * @since jEdit 4.0pre4
+	 */
+	public static final Object SAVED = "SAVED";
 	//}}}
 
 	//{{{ BufferUpdate constructor
