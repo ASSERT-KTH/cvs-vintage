@@ -66,7 +66,7 @@ To unbind the object, use the following code snippet:
 @see #rebind(Context, String, Object)
 
 @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
@@ -172,14 +172,37 @@ public class NonSerializableFactory implements ObjectFactory
    @param name, the name to use as JNDI path name. The key into the
     NonSerializableFactory map is obtained from the toString() value of name.
     The name parameter cannot be a 0 length name.
-    Any subcontexts between the root and the name.
+    Any subcontexts between the root and the name must exist.
    @param target, the non-Serializable object to bind.
    @throws NamingException, thrown on failure to rebind key into ctx.
    */
    public static synchronized void rebind(Name name, Object target) throws NamingException
    {
+      rebind(name, target, false);
+   }
+
+   /** A convience method that simplifies the process of rebinding a
+    non-zerializable object into a JNDI context. This version binds the
+    target object into the default IntitialContext using name path.
+
+   @param name, the name to use as JNDI path name. The key into the
+    NonSerializableFactory map is obtained from the toString() value of name.
+    The name parameter cannot be a 0 length name.
+   @param target, the non-Serializable object to bind.
+   @param createSubcontexts, a flag indicating if subcontexts of name should
+    be created if they do not already exist.
+   @throws NamingException, thrown on failure to rebind key into ctx.
+   */
+   public static synchronized void rebind(Name name, Object target,
+      boolean createSubcontexts) throws NamingException
+   {
        String key = name.toString();
        InitialContext ctx = new InitialContext();
+       if( createSubcontexts == true && name.size() > 1 )
+       {
+          int size = name.size() - 1;
+          Util.createSubcontext(ctx, name.getPrefix(size));
+       }
        rebind(ctx, key, target);
    }
 
