@@ -7,23 +7,20 @@
 
 package org.jboss.proxy.ejb.handle;
 
+import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.lang.reflect.Method;
-
-import java.util.Hashtable;
-
-import javax.ejb.Handle;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
 import javax.ejb.EJBObject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
+import javax.ejb.Handle;
 
-import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.Invoker;
+import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.security.SecurityAssociation;
 
@@ -33,16 +30,19 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class StatefulHandleImpl
-      implements Handle
+   implements Handle
 {
    /** Serial Version Identifier. */
    static final long serialVersionUID = -6324520755180597156L;
 
    /** A reference to {@link Handle#getEJBObject}. */
    protected static final Method GET_EJB_OBJECT;
+
+   /** The value of our local Invoker.ID to detect when we are local. */
+   private Object invokerID = null;
 
    /**
     * Initialize <tt>Handle</tt> method references.
@@ -53,7 +53,7 @@ public class StatefulHandleImpl
       {
          GET_EJB_OBJECT = Handle.class.getMethod("getEJBObject", new Class[0]);
       }
-      catch (Exception e)
+      catch(Exception e)
       {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
@@ -67,27 +67,27 @@ public class StatefulHandleImpl
    public Invoker invoker;
    public Object id;
 
-   /**
-    * Construct a <tt>StatefulHandleImpl</tt>.
-    *
-    * @param handle    The initial context handle that will be used
-    *                  to restore the naming context or null to use
-    *                  a fresh InitialContext object.
-    * @param name      JNDI name.
-    * @param id        Identity of the bean.
-    */
+   /** Create an ejb handle for a stateful session bean.
+    * @param objectName - the session container jmx name
+    * @param jndiName - the session home ejb name
+    * @param invoker - the invoker to request the EJBObject from
+    * @param invokerProxyBinding - the type of invoker binding
+    * @param id - the session id
+    */ 
    public StatefulHandleImpl(
-         int objectName,
-         String jndiName,
-         Invoker invoker,
-         String invokerProxyBinding,
-         Object id)
+      int objectName,
+      String jndiName,
+      Invoker invoker,
+      String invokerProxyBinding,
+      Object id,
+      Object invokerID)
    {
       this.objectName = objectName;
       this.jndiName = jndiName;
       this.invoker = invoker;
       this.id = id;
       this.invokerProxyBinding = invokerProxyBinding;
+      this.invokerID = invokerID;
    }
 
    /**
@@ -128,20 +128,19 @@ public class StatefulHandleImpl
    {
       try
       {
-         Invocation invocation =
-               new Invocation(
-                     null,
-                     GET_EJB_OBJECT,
-                     new Object[]{id},
-                     //No transaction set up in here? it will get picked up in the proxy
-                     null,
-                     // fix for bug 474134 from Luke Taylor
-                     SecurityAssociation.getPrincipal(),
-                     SecurityAssociation.getCredential());
+         Invocation invocation = new Invocation(
+               null,
+               GET_EJB_OBJECT,
+               new Object[]{id},
+               //No transaction set up in here? it will get picked up in the proxy
+               null,
+               // fix for bug 474134 from Luke Taylor
+               GetPrincipalAction.getPrincipal(),
+               GetCredentialAction.getCredential());
 
          invocation.setObjectName(new Integer(objectName));
          invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
-               invokerProxyBinding, PayloadKey.AS_IS);
+            invokerProxyBinding, PayloadKey.AS_IS);
 
          // It is a home invocation
          invocation.setType(InvocationType.HOME);
@@ -149,12 +148,58 @@ public class StatefulHandleImpl
          // Get the invoker to the target server (cluster or node)
 
          // Ship it
-         return (EJBObject) invoker.invoke(invocation);
+         if (isLocal())
+            return (EJBObject) InvokerInterceptor.getLocal().invoke(invocation);
+         else
+            return (EJBObject) invoker.invoke(invocation);
       }
-      catch (Exception e)
+      catch(Exception e)
       {
          throw new ServerException("Could not get EJBObject", e);
       }
    }
+
+   /**
+    * Returns wether we are local to the originating container or not. 
+    */
+   protected boolean isLocal()
+   {
+      return invokerID != null && invokerID.equals(Invoker.ID);
+   }
+
+   private static class GetPrincipalAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetPrincipalAction();
+
+      public Object run()
+      {
+         Principal principal = SecurityAssociation.getPrincipal();
+         return principal;
+      }
+
+      static Principal getPrincipal()
+      {
+         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
+         return principal;
+      }
+   }
+
+   private static class GetCredentialAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetCredentialAction();
+
+      public Object run()
+      {
+         Object credential = SecurityAssociation.getCredential();
+         return credential;
+      }
+
+      static Object getCredential()
+      {
+         Object credential = AccessController.doPrivileged(ACTION);
+         return credential;
+      }
+   }
+
 }
 
