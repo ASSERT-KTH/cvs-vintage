@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.85 2004/11/26 03:19:21 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.86 2004/12/05 04:37:06 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -945,7 +945,8 @@ public class GUIUtilities
 		Rectangle desired = new Rectangle(x,y,width,height);
 		try
 		{
-			adjustForScreenBounds(desired);
+			if(!Debug.DISABLE_MULTIHEAD)
+				adjustForScreenBounds(desired);
 		}
 		catch(Exception e)
 		{
