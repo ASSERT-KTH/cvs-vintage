@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.71 2004/03/18 11:31:45 tdiesler Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.72 2004/04/08 15:18:47 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -189,6 +189,19 @@
             <TimeToLive>0</TimeToLive>
           </DLQConfig>
         </MDBConfig>
+      </proxy-factory-config>
+    </invoker-proxy-binding>
+
+    <invoker-proxy-binding>
+      <name>message-inflow-driven-bean</name>
+      <invoker-mbean>default</invoker-mbean>
+      <proxy-factory>org.jboss.ejb.plugins.inflow.JBossMessageEndpointFactory</proxy-factory>
+      <proxy-factory-config>
+        <endpoint-interceptors>
+          <interceptor>org.jboss.proxy.ClientMethodInterceptor</interceptor>
+          <interceptor>org.jboss.proxy.TransactionInterceptor</interceptor>
+          <interceptor>org.jboss.invocation.InvokerInterceptor</interceptor>
+        </endpoint-interceptors>
       </proxy-factory-config>
     </invoker-proxy-binding>
 
@@ -799,6 +812,30 @@
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
         <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
         <interceptor transaction="Bean" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
+        <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
+      </container-interceptors>
+      <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>
+      <instance-cache></instance-cache>
+      <persistence-manager></persistence-manager>
+      <container-pool-conf>
+        <MaximumSize>100</MaximumSize>
+      </container-pool-conf>
+    </container-configuration>
+
+    <container-configuration>
+      <container-name>Standard Message Inflow Driven Bean</container-name>
+      <call-logging>false</call-logging>
+      <invoker-proxy-binding-name>message-inflow-driven-bean</invoker-proxy-binding-name>
+      <container-interceptors>
+        <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
+        <interceptor>org.jboss.ejb.plugins.RunAsSecurityInterceptor</interceptor>
+        <!-- CMT -->
+        <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
+        <interceptor transaction="Container">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
+        <!-- BMT -->
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenInstanceInterceptor</interceptor>
+        <interceptor transaction="Bean">org.jboss.ejb.plugins.MessageDrivenTxInterceptorBMT</interceptor>
         <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.MessageDrivenInstancePool</instance-pool>

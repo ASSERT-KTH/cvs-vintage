@@ -32,7 +32,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -320,6 +320,8 @@ public abstract class BeanMetaData
       {
          String configName = getConfigurationName();
          configuration = application.getConfigurationMetaDataByName(configName);
+         if (configuration == null)
+            throw new IllegalStateException("Container config not found " + configName);
       }
       return configuration;
    }

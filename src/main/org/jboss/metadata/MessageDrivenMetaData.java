@@ -6,7 +6,10 @@
  */
 package org.jboss.metadata;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+
 import javax.jms.Message;
 import javax.jms.Session;
 
@@ -24,11 +27,11 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- *
- * @version $Revision: 1.29 $
+ * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
+ * @version $Revision: 1.30 $
  */
 public class MessageDrivenMetaData
-extends BeanMetaData
+   extends BeanMetaData
 {
    // Constants -----------------------------------------------------
    
@@ -55,6 +58,10 @@ extends BeanMetaData
    private String passwd;
    private String clientId;
    private String subscriptionId;
+   /** The activation config properties */
+   private HashMap activationConfigProperties = new HashMap();
+   /** The resource adapter name */
+   private String resourceAdapterName;
    
    // Static --------------------------------------------------------
    
@@ -157,41 +164,39 @@ extends BeanMetaData
    {
       if (methodTransactionType == TX_UNSET)
       {
-         if (isContainerManagedTx())
-         {
-            //
-            // Here we should have a way of looking up wich message class
-            // the MessageDriven bean implements, by doing this we might
-            // be able to use other MOM systems, aka XmlBlaser. TODO!
-            // The MessageDrivenContainer needs this too!!
-            //
-            Class[] sig = { Message.class };
-            if (super.getMethodTransactionType("onMessage", sig, null) == MetaData.TX_REQUIRED)
-            {
-               methodTransactionType = TX_REQUIRED;
-            }
-            else
-            {
-               methodTransactionType = TX_NOT_SUPPORTED;
-            }
-         }
-         else
-         {
-            methodTransactionType = TX_UNKNOWN;
-         }
+         Class[] sig = { Message.class };
+         methodTransactionType = getMethodTransactionType("onMessage", sig);
       }
       return methodTransactionType;
+   }
+   
+   /**
+    * Check MDB methods TX type, is cached here
+    */
+   public byte getMethodTransactionType(String methodName, Class[] signature)
+   {
+      if (isContainerManagedTx())
+      {
+         if (super.getMethodTransactionType(methodName, signature, null) == MetaData.TX_NOT_SUPPORTED)
+            return TX_NOT_SUPPORTED;
+         else
+            return TX_REQUIRED;
+      }
+      else
+         return TX_UNKNOWN;
    }
 
    /**
     * Overide here, since a message driven bean only ever have one method,
     * which we might cache.
     */
-   public byte getMethodTransactionType(String methodName, Class[] params,
-      InvocationType iface)
+   public byte getMethodTransactionType(String methodName, Class[] params, InvocationType iface)
    {
-      // An MDB may only ever have on method
-      return getMethodTransactionType();
+      // A JMS MDB may only ever have one method
+      if (isJMSMessagingType())
+         return getMethodTransactionType();
+      else
+         return getMethodTransactionType(methodName, params);
    }
 
    /**
@@ -207,7 +212,41 @@ extends BeanMetaData
    
    public String getDefaultConfigurationName()
    {
-      return ConfigurationMetaData.MESSAGE_DRIVEN_13;
+      if (activationConfigProperties.size() != 0 || isJMSMessagingType() == false)
+         return ConfigurationMetaData.MESSAGE_INFLOW_DRIVEN;
+      else
+         return ConfigurationMetaData.MESSAGE_DRIVEN_13;
+   }
+
+   /**
+    * Get all the activation config properties
+    * 
+    * @return a collection of ActivationConfigPropertyMetaData elements
+    */
+   public Collection getActivationConfigProperties()
+   {
+      return activationConfigProperties.values();
+   }
+   
+   /**
+    * Get a particular activation config property
+    * 
+    * @param name the name of the property
+    * @return the ActivationConfigPropertyMetaData or null if not found
+    */
+   public ActivationConfigPropertyMetaData getActivationConfigProperty(String name)
+   {
+      return (ActivationConfigPropertyMetaData) activationConfigProperties.get(name);
+   }
+
+   /**
+    * Get the resource adapter name
+    * 
+    * @return the resource adapter name or null if none specified
+    */
+   public String getResourceAdapterName()
+   {
+      return resourceAdapterName;
    }
    
    public void importEjbJarXml(Element element) throws DeploymentException
@@ -305,6 +344,22 @@ extends BeanMetaData
          throw new DeploymentException
          ("transaction type should be 'Bean' or 'Container'");
       }
+      
+      // Set the activation config properties
+      Element activationConfig = getOptionalChild(element, "activation-config");
+      if (activationConfig != null)
+      {
+         Iterator iterator = getChildrenByTagName(element, "activation-config-property");
+         while (iterator.hasNext())
+         {
+            Element resourceRef = (Element) iterator.next();
+            ActivationConfigPropertyMetaData metaData = new ActivationConfigPropertyMetaData();
+            metaData.importEjbJarXml(resourceRef);
+            if (activationConfigProperties.containsKey(metaData.getName()))
+               throw new DeploymentException("Duplicate activation-config-property-name: " + metaData.getName());
+            activationConfigProperties.put(metaData.getName(), metaData);
+         }
+      }
    }
 
    public void importJbossXml(Element element) throws DeploymentException
@@ -317,6 +372,7 @@ extends BeanMetaData
       passwd = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
       subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
+      resourceAdapterName = getOptionalChildContent(element,"resource-adapter-name");
    }
    
    public void defaultInvokerBindings()   
