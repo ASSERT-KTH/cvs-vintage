@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.7 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ActivitySet.java,v 1.8 2003/02/14 18:28:20 jon Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -88,8 +88,7 @@ public class ActivitySet
     public void setActivityList(List activityList)
         throws Exception
     {
-        Iterator itr = activityList.iterator();
-        while (itr.hasNext())
+        for (Iterator itr = activityList.iterator();itr.hasNext();)
         {
             Activity activity = (Activity) itr.next();
             activity.setActivitySet(this);
@@ -104,18 +103,19 @@ public class ActivitySet
     public List getActivityList() throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_ACTIVITY_LIST); 
-        if (obj == null) 
-        {        
+//        Object obj = ScarabCache.get(this, GET_ACTIVITY_LIST); 
+//        if (obj == null) 
+//        {        
             Criteria crit = new Criteria()
                 .add(ActivityPeer.TRANSACTION_ID, getActivitySetId());
             result = ActivityPeer.doSelect(crit);
             ScarabCache.put(result, this, GET_ACTIVITY_LIST);
-        }
+/*        }
         else 
         {
             result = (List)obj;
         }
+*/
         return result;
     }
 
@@ -160,12 +160,13 @@ public class ActivitySet
 
         List activityList = getActivityList();
         context.put("activityList", activityList);
-        Iterator itr = activityList.iterator();
         Set set = new HashSet(activityList.size());
-        while (itr.hasNext())
+        for (Iterator itr = activityList.iterator();itr.hasNext();)
         {
             Activity activity = (Activity) itr.next();
-            set.add(activity.getDescription());
+            String desc = activity.getDescription();
+            System.out.println("id: " + activity.getActivityId() + " desc: " + desc);
+            set.add(desc);
         }
         context.put("uniqueActivityDescriptions", set);
 
