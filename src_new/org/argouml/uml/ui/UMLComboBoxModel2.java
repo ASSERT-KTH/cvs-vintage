@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.41 2004/07/31 22:30:23 kataka Exp $
+// $Id: UMLComboBoxModel2.java,v 1.42 2004/08/20 23:18:12 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -419,7 +419,7 @@ public abstract class UMLComboBoxModel2
 
     public void removeAllElements() {
         int startIndex = 0;
-        int endIndex = _objects.size() - 1;
+        int endIndex = Math.max(0, _objects.size() - 1);
         // if (!_objects.isEmpty()) {
         _objects.clear();
         _selectedObject = null;
