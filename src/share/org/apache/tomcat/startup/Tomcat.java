@@ -122,6 +122,23 @@ public class Tomcat extends Logger.Helper {
 		    xh.methodParam(0, "name") );
 	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodParam(1, "value") );
+
+	// Connector as ContextInterceptor - experimental
+	xh.addRule( "ContextManager/Connector1",
+		    xh.objectCreate(null, "className"));
+	xh.addRule( "ContextManager/Connector1",
+		    xh.setParent( "setContextManager",
+				  "org.apache.tomcat.core.ContextManager") );
+	xh.addRule( "ContextManager/Connector1",
+		    xh.addChild( "addContextInterceptor",
+				 "org.apache.tomcat.core.ContextInterceptor"));
+
+	xh.addRule( "ContextManager/Connector1/Parameter",
+		    xh.methodSetter("setProperty",2) );
+	xh.addRule( "ContextManager/Connector1/Parameter",
+		    xh.methodParam(0, "name") );
+	xh.addRule( "ContextManager/Connector1/Parameter",
+		    xh.methodParam(1, "value") );
     }
 
 
