@@ -16,7 +16,7 @@ package org.jboss.util;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class FastKey
     implements java.io.Externalizable
@@ -42,7 +42,9 @@ public class FastKey
     
     // Constructors --------------------------------------------------
     
-    // Public --------------------------------------------------------
+    public FastKey() {
+        // For externalization    
+    }
     
     public FastKey(Object id) {
         
@@ -50,6 +52,10 @@ public class FastKey
         
         this.id = id;
     }
+    
+    
+    // Public --------------------------------------------------------
+    
     
     
     // Z implementation ----------------------------------------------
