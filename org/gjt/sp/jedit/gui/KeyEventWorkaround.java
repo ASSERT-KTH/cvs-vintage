@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.20 2003/06/16 02:40:20 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.21 2003/06/16 05:02:19 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -148,7 +148,8 @@ public class KeyEventWorkaround
 		case KeyEvent.KEY_TYPED:
 			// need to let \b through so that backspace will work
 			// in HistoryTextFields
-			if((ch < 0x20 || ch == 0x7f || ch == 0xff) && ch != '\b' && ch != '\t' && ch != '\n')
+			if((ch < 0x20 || ch == 0x7f || ch == 0xff)
+				&& ch != '\b' && ch != '\t' && ch != '\n')
 				return null;
 
 			if(System.currentTimeMillis() - lastKeyTime < 750)
@@ -159,6 +160,13 @@ public class KeyEventWorkaround
 						^ (modifiers & InputEvent.ALT_MASK) != 0
 						|| (modifiers & InputEvent.META_MASK) != 0)
 						return null;
+					System.err.println(evt.getModifiers()
+						+ "::" + modifiers);
+					if((modifiers & InputEvent.SHIFT_MASK) != 0)
+					{
+						System.err.println("do i know");
+						
+					}
 				}
 
 				// if the last key was a numeric keypad key
@@ -175,7 +183,20 @@ public class KeyEventWorkaround
 				}
 			}
 			else
+			{
+				if((modifiers & InputEvent.SHIFT_MASK) != 0)
+				{
+					switch(ch)
+					{
+					case '\n':
+					case '\t':
+					case ' ':
+						return null;
+					}
+				}
+				System.err.println("too long");
 				modifiers = 0;
+			}
 
 			return evt;
 		//}}}

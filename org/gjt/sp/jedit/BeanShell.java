@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.41 2003/05/30 00:49:52 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.42 2003/06/16 05:02:18 spestov Exp $
  */
 public class BeanShell
 {
@@ -583,10 +583,6 @@ public class BeanShell
 		global.importPackage("org.gjt.sp.util");
 
 		interpForMethods = createInterpreter(global);
-
-		Log.log(Log.DEBUG,BeanShell.class,
-			"BeanShell interpreter version "
-			+ Interpreter.VERSION);
 	} //}}}
 
 	//{{{ resetClassManager() method
