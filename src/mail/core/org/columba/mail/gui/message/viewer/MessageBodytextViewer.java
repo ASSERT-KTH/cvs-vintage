@@ -306,7 +306,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				// get URL of file
 				url = inputFile.toURL();
 				setPage(url);
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -338,11 +338,6 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 				LOG.finest("validated bodytext:\n" + body);
 
-				//		setup base url in order to be able to display images
-				// in html-component
-				URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-				LOG.info(baseUrl.toString());
-				((HTMLDocument) getDocument()).setBase(baseUrl);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -423,7 +418,13 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			// display bodytext
 			setText(body);
 		}
-		
+
+		// setup base url in order to be able to display images
+		// in html-component
+		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+		LOG.info(baseUrl.toString());
+		((HTMLDocument) getDocument()).setBase(baseUrl);
+
 		// scroll window to the beginning
 		setCaretPosition(0);
 	}
