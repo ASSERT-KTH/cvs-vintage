@@ -16,36 +16,34 @@ import org.jboss.ejb.plugins.cmp.jdbc.ejbql.EJBQLParser;
 import org.jboss.ejb.plugins.cmp.jdbc.ejbql.SQLTarget;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
-import org.jboss.logging.Logger;
 
 /**
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
    public JDBCEJBQLQuery(
-         JDBCStoreManager manager,
+         JDBCStoreManager manager, 
          JDBCQueryMetaData q) throws DeploymentException {
 
       super(manager, q);
 
       JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
-      Logger log = getLog();
-      if (log.isDebugEnabled())
-         log.debug("EQL-QL: "+metadata.getEjbQl());
-
+      getLog().debug("EQL-QL: "+metadata.getEjbQl());
+      
       // get a parser
       Parser ejbql = new EJBQLParser().ejbqlQuery();
       
       // initialize the assembly
       Assembly a = new Assembly(metadata.getEjbQl());
       a.setTarget(new SQLTarget(
-               q.getMethod(),
-               manager.getJDBCTypeFactory(),
-               manager.getContainer().getApplication()));
+            q.getMethod(),
+            manager.getJDBCTypeFactory(),
+            manager.getContainer().getApplication(),
+            q.getReadAhead()));
       
       // match the query
       a = ejbql.soleMatch(a);
