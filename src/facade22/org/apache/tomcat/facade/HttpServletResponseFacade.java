@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.20 2001/04/22 18:56:03 costin Exp $
- * $Revision: 1.20 $
- * $Date: 2001/04/22 18:56:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.21 2001/11/08 03:48:02 billbarker Exp $
+ * $Revision: 1.21 $
+ * $Date: 2001/11/08 03:48:02 $
  *
  * ====================================================================
  *
@@ -67,8 +67,9 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.net.URL;
 import java.io.*;
-import java.net.*;
+import java.net.MalformedURLException;
 import java.util.*;
 import java.lang.IllegalArgumentException;
 import javax.servlet.*;
