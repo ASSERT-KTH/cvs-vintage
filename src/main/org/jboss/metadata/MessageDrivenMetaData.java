@@ -19,10 +19,10 @@ import org.jboss.ejb.DeploymentException;
  *
  * Have to add changes ApplicationMetaData and ConfigurationMetaData
  *   @see <related>
-' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
-
- *   @version $Revision: 1.8 $
+ *
+ *   @version $Revision: 1.9 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -33,7 +33,6 @@ public class MessageDrivenMetaData extends BeanMetaData {
     public static final byte NON_DURABLE_SUBSCRIPTION = 1;
     
     // Attributes ----------------------------------------------------
-    private boolean containerManagedTx;
     private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
     private String destinationType;
     private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
@@ -46,13 +45,12 @@ public class MessageDrivenMetaData extends BeanMetaData {
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
-    public MessageDrivenMetaData(ApplicationMetaData app) {
+    public MessageDrivenMetaData(ApplicationMetaData app)
+    {
     	super(app, BeanMetaData.MDB_TYPE);
-	}
+    }
 	
     // Public --------------------------------------------------------
-    public boolean isContainerManagedTx() { return containerManagedTx; }
-    public boolean isBeanManagedTx() { return !containerManagedTx; }
     /**
      * returns MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
      * MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE
@@ -70,83 +68,84 @@ public class MessageDrivenMetaData extends BeanMetaData {
      */
     public byte getSubscriptionDurability() {return subscriptionDurability;}
     
-    public String getDefaultConfigurationName() {
+    public String getDefaultConfigurationName()
+    {
 	return jdk13Enabled() ? ConfigurationMetaData.MESSAGE_DRIVEN_13 : ConfigurationMetaData.MESSAGE_DRIVEN_12;
-
     }
 	
-	public void importEjbJarXml(Element element) throws DeploymentException {
-		super.importEjbJarXml(element);
+    public void importEjbJarXml(Element element) throws DeploymentException
+    {
+        super.importEjbJarXml(element);
 		
-		messageSelector = getElementContent(getOptionalChild(element, "message-selector"));
+        messageSelector = getElementContent(getOptionalChild(element, "message-selector"));
 
-		// set 
-		Element destination = getUniqueChild(element, "message-driven-destination");
-		destinationType = getElementContent(getUniqueChild(destination
+        // set 
+        Element destination = getUniqueChild(element, "message-driven-destination");
+        destinationType = getElementContent(getUniqueChild(destination
 , "destination-type"));
 		 
-		if (destinationType.equals("javax.jms.Topic")) {
-			String subscr = getElementContent(getUniqueChild(destination, "subscription-durability"));
-			// Should we do sanity check??
-			if (subscr.equals("Durable"))
-			    subscriptionDurability = DURABLE_SUBSCRIPTION;
-			else
-			    subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
-		}
-		/* Skipp check of dest type, for flexibility
-		} else if (destinationType.equals("javax.jms.Queue")) {
-			//Noop
-		} else {
-			throw new DeploymentException("session type should be 'Stateful' or 'Stateless'");
-		}
-		*/
-		// set the transaction type
-		String transactionType = getElementContent(getUniqueChild(element, "transaction-type"));
-		if (transactionType.equals("Bean")) {
-			containerManagedTx = false;
-			String ack = getElementContent(getUniqueChild(element, "acknowledge-mode"));
-			if ( ack.equals("Auto-acknowledge") || ack.equals("AUTO_ACKNOWLEDGE"))
-			    acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
-			else
-			    acknowledgeMode = DUPS_OK_ACKNOWLEDGE_MODE;
-			// else defaults to AUTO
-		} else if (transactionType.equals("Container")) {
-			containerManagedTx = true;
-			/* My interpretation of the EJB and JMS spec leads
-			   me to that CLIENT_ACK is the only possible
-			   solution. A transaction is per session in JMS, and
-			   it is not possible to get access to the transaction.
-			   According to the JMS spec it is possible to 
-			   multithread handling of messages (but not session),
-			   but there is NO transaction support for this.
-			   I,e, we can not use the JMS transaction for
-			   message ack: hence we must use manual ack.
+        if (destinationType.equals("javax.jms.Topic")) {
+            String subscr = getElementContent(getUniqueChild(destination, "subscription-durability"));
+            // Should we do sanity check??
+            if (subscr.equals("Durable"))
+                subscriptionDurability = DURABLE_SUBSCRIPTION;
+            else
+                subscriptionDurability = NON_DURABLE_SUBSCRIPTION;//Default
+        }
+        /* Skipp check of dest type, for flexibility
+        } else if (destinationType.equals("javax.jms.Queue")) {
+            //Noop
+        } else {
+            throw new DeploymentException("session type should be 'Stateful' or 'Stateless'");
+        }
+        */
+        // set the transaction type
+        String transactionType = getElementContent(getUniqueChild(element, "transaction-type"));
+        if (transactionType.equals("Bean")) {
+            containerManagedTx = false;
+            String ack = getElementContent(getUniqueChild(element, "acknowledge-mode"));
+            if ( ack.equals("Auto-acknowledge") || ack.equals("AUTO_ACKNOWLEDGE"))
+                acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
+            else
+                acknowledgeMode = DUPS_OK_ACKNOWLEDGE_MODE;
+            // else defaults to AUTO
+        } else if (transactionType.equals("Container")) {
+            containerManagedTx = true;
+            /* My interpretation of the EJB and JMS spec leads
+               me to that CLIENT_ACK is the only possible
+               solution. A transaction is per session in JMS, and
+               it is not possible to get access to the transaction.
+               According to the JMS spec it is possible to 
+               multithread handling of messages (but not session),
+               but there is NO transaction support for this.
+               I,e, we can not use the JMS transaction for
+               message ack: hence we must use manual ack.
 
-			   But for NOT_SUPPORTED this is not true here we 
-			   should have AUTO_ACKNOWLEDGE_MODE
+               But for NOT_SUPPORTED this is not true here we 
+               should have AUTO_ACKNOWLEDGE_MODE
 
-			   This is not true for now. For JBossMQ we relly 
-			   completely on transaction handling. For JBossMQ, the
-			   ackmode is actually not relevant. We keep it here
-			   anyway, if we find that this is needed for other
-			   JMS provider, or is not good.
-			   
-			*/
+               This is not true for now. For JBossMQ we relly 
+               completely on transaction handling. For JBossMQ, the
+               ackmode is actually not relevant. We keep it here
+               anyway, if we find that this is needed for other
+               JMS provider, or is not good.
+            */
 
-			/*
-			 * Here we should have a way of looking up wich message class
-			 * the MessageDriven bean implements, by doing this we might
-			 * be able to use other MOM systems, aka XmlBlaser. TODO!
-			 * The MessageDrivenContainer needs this too!!
-			 */
-			if(getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED)
-			    acknowledgeMode = CLIENT_ACKNOWLEDGE_MODE;
-		} else {
-		    throw new DeploymentException("transaction type should be 'Bean' or 'Container'");
-		}
-	}
-    public void importJbossXml(Element element) throws DeploymentException {
-	
+            /*
+             * Here we should have a way of looking up wich message class
+             * the MessageDriven bean implements, by doing this we might
+             * be able to use other MOM systems, aka XmlBlaser. TODO!
+             * The MessageDrivenContainer needs this too!!
+             */
+            if (getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED)
+                acknowledgeMode = CLIENT_ACKNOWLEDGE_MODE;
+        } else {
+            throw new DeploymentException("transaction type should be 'Bean' or 'Container'");
+        }
+    }
+
+    public void importJbossXml(Element element) throws DeploymentException
+    {
 	super.importJbossXml(element);
 	// set the jndi name, (optional)		
 	destinationJndiName = getElementContent(getUniqueChild(element, "destination-jndi-name"));
@@ -154,6 +153,7 @@ public class MessageDrivenMetaData extends BeanMetaData {
 	passwd = getElementContent(getOptionalChild(element,"mdb-passwd"));
 	clientId = getElementContent(getOptionalChild(element,"mdb-client-id"));
     }	
+
     // Package protected ---------------------------------------------
     
     // Protected -----------------------------------------------------
