@@ -9,7 +9,7 @@
  *				http://www.opensource.org/licenses/lgpl-license.html
  */
 
-package CH.ifa.draw.contrib;
+package CH.ifa.draw.contrib.dnd;
 
 import java.awt.dnd.DnDConstants;
 import java.awt.datatransfer.*;
@@ -23,16 +23,20 @@ import java.awt.datatransfer.*;
  * drops from extra-JVM sources according to the conditions the Component
  * specifies.
  *
- * @author  SourceForge(dnoyeb) aka C.L.Gilbert
+ * @author  C.L.Gilbert <dnoyeb@sourceforge.net>
  * @version <$CURRENT_VERSION$>
  */
 public interface DNDInterface {
+
+	public boolean setDragSourceActive(boolean state);
+	public boolean setDropTargetActive(boolean state);
+
 	/**
 	 * This method returns the set of DND actions which are accepted by this
 	 * Component.
 	 * @see java.awt.dnd.DnDConstants
 	 */
-	public int getDefaultDNDActions();
+//	public int getDefaultDNDActions();
 
 	/**
 	 * This method returns the set of gestures which can be initiated by this
@@ -40,7 +44,7 @@ public interface DNDInterface {
 	 *
 	 * @see java.awt.dnd.DnDConstants
 	 */
-	public int getDragGestures();
+//	public int getDragGestures();
 
 	/**
 	 * This method returns the set of DataFlavors accepted by this component.
@@ -50,7 +54,7 @@ public interface DNDInterface {
 	 * @see DragNDropTool#getDataFlavors
 	 * @see java.awt.datatransfer.DataFlavor
 	 */
-	public DataFlavor[] getTransferDataFlavors();
+//	public DataFlavor[] getTransferDataFlavors();
 
 	/**
 	 * This method returns true if the parameter flavor is a supported
@@ -59,7 +63,7 @@ public interface DNDInterface {
 	 * DataFlavors depending on what they implement that the formats the
 	 * Transferable can provide from its contained data.
 	 */
-	public boolean isDataFlavorSupported(DataFlavor flavor);
+//	public boolean isDataFlavorSupported(DataFlavor flavor);
 	/**
 	 * When data is received which implements one of the acceptable DataFlavors
 	 * for this component and is an acceptable drop action, the Transferable
@@ -67,5 +71,5 @@ public interface DNDInterface {
 	 * If successfully processed, the user should return true.  return false
 	 * otherwise.
 	 */
-	public boolean acceptDrop(Transferable trans);
+//	public boolean acceptDrop(Transferable trans);
 }
