@@ -27,11 +27,11 @@ import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.mail.config.AccountItem;
@@ -62,10 +62,14 @@ public class AccountDialog extends JDialog implements ActionListener {
     private JPanel selected = null;
 
     private JTabbedPane tp;
+    private FrameMediator mediator;
 
-    public AccountDialog(JFrame parent, AccountItem item) {
-        super(parent, true);
+    
+    public AccountDialog(FrameMediator mediator, AccountItem item) {
+        super(mediator.getView().getFrame(), true);
 
+
+        this.mediator = mediator;
         setTitle(MailResourceLoader.getString("dialog", "account",
                 "preferences_for")
                 + " " + item.getName());
@@ -90,7 +94,7 @@ public class AccountDialog extends JDialog implements ActionListener {
 
         securityPanel = new SecurityPanel(accountItem.getPGPItem());
 
-        spamPanel = new SpamPanel(this, accountItem);
+        spamPanel = new SpamPanel(mediator, accountItem);
     }
 
     protected void initComponents() {

@@ -15,6 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -22,18 +28,15 @@ import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-
 
 public class FolderChooserActionRow extends DefaultActionRow
     implements ActionListener {
     private JButton treePathButton;
+    
 
-    public FolderChooserActionRow(ActionList list, FilterAction action) {
-        super(list, action);
+    public FolderChooserActionRow(FrameMediator mediator, ActionList list, FilterAction action) {
+        super(mediator, list, action);
+        
     }
 
     public void updateComponents(boolean b) {
@@ -77,7 +80,7 @@ public class FolderChooserActionRow extends DefaultActionRow
         String action = e.getActionCommand();
 
         if (action.equals("TREEPATH")) {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+            SelectFolderDialog dialog = new SelectFolderDialog(getMediator());
 
             if (dialog.success()) {
                 MessageFolder folder = dialog.getSelectedFolder();

@@ -23,174 +23,130 @@ import org.columba.ristretto.message.Flags;
 import java.awt.Component;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-
 /**
- * Renderer for the JTree in the JTable, which is responsible for
- * displaying the Subject: headerfield.
+ * Renderer for the JTree in the JTable, which is responsible for displaying the
+ * Subject: headerfield.
  * <p>
- * I'm still not convinced which method to calculate the bounds
- * of the table column is faster.<br> 
- * The first one overwrites paint() and layout(), the other just
- * overwrites setBounds() only, using the passed JTableColumn.
- * Personally, I prefer the second version, because it should be
- * much faster than calculating the column size, based on the 
- * text and font settings.
+ * I'm still not convinced which method to calculate the bounds of the table
+ * column is faster. <br>
+ * The first one overwrites paint() and layout(), the other just overwrites
+ * setBounds() only, using the passed JTableColumn. Personally, I prefer the
+ * second version, because it should be much faster than calculating the column
+ * size, based on the text and font settings.
  * 
- *
+ * 
  * @author fdietz
  */
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
-    private Font plainFont;
-    private Font boldFont;
-    private Font underlinedFont;
-    private JTable table;
-    private TableColumn tc;
+	private Font plainFont;
+	private Font boldFont;
+	private Font underlinedFont;
+	private JTable table;
+	private TableColumn tc;
 
-    /**
- * @param table
- */
-    public SubjectTreeRenderer(JTable table) {
-        super();
+	/**
+	 * @param table
+	 */
+	public SubjectTreeRenderer(JTable table) {
+		super();
 
-        this.table = table;
+		this.table = table;
 
-        boldFont = UIManager.getFont("Label.font");
-        boldFont = boldFont.deriveFont(Font.BOLD);
+		boldFont = UIManager.getFont("Label.font");
+		boldFont = boldFont.deriveFont(Font.BOLD);
 
-        plainFont = UIManager.getFont("Label.font");
+		plainFont = UIManager.getFont("Label.font");
 
-        underlinedFont = UIManager.getFont("Tree.font");
-        underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
+		underlinedFont = UIManager.getFont("Tree.font");
+		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
 
-        setOpaque(true);
+		setOpaque(true);
 
-        setBackground(null);
-        setBackgroundNonSelectionColor(null);
-    }
+		setBackground(null);
+		setBackgroundNonSelectionColor(null);
+	}
 
-    public void setBounds(int x, int y, int w, int h) {
-        if (tc == null) {
-            tc = table.getColumn("Subject");
-        }
+	public void setBounds(int x, int y, int w, int h) {
+		if (tc == null) {
+			tc = table.getColumn("Subject");
+		}
 
-        super.setBounds(x, y, tc.getWidth() - x, h);
-    }
+		super.setBounds(x, y, tc.getWidth() - x, h);
+	}
 
-    /* (non-Javadoc)
- * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
- */
-    public Component getTreeCellRendererComponent(JTree tree, Object value,
-        boolean selected, boolean expanded, boolean leaf, int row,
-        boolean hasFocus) {
-        super.getTreeCellRendererComponent(tree, value, selected, expanded,
-            leaf, row, hasFocus);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
+	 *      java.lang.Object, boolean, boolean, int, int)
+	 */
+	public Component getTreeCellRendererComponent(JTree tree, Object value,
+			boolean selected, boolean expanded, boolean leaf, int row,
+			boolean hasFocus) {
+		super.getTreeCellRendererComponent(tree, value, selected, expanded,
+				leaf, row, hasFocus);
 
-        MessageNode messageNode = (MessageNode) value;
+		MessageNode messageNode = (MessageNode) value;
 
-        if (messageNode.getUserObject().equals("root")) {
-            setText("...");
-            setIcon(null);
+		if (messageNode.getUserObject().equals("root")) {
+			setText("...");
+			setIcon(null);
 
-            return this;
-        }
+			return this;
+		}
 
-        ColumbaHeader header = messageNode.getHeader();
+		ColumbaHeader header = messageNode.getHeader();
 
-        if (header == null) {
-            return this;
-        }
+		if (header == null) {
+			return this;
+		}
 
-        //if (getFont() != null) {
-        Flags flags = ((ColumbaHeader) header).getFlags();
+		/*
+		if (selected) {
+			setBackground(table.getSelectionBackground());
+			setForeground(table.getSelectionForeground());
+		} else {
+			setBackground(table.getBackground());
+			setForeground(table.getForeground());
+		}
+		*/
 
-        if (flags != null) {
-            if (!flags.getSeen()) {
-                if (!getFont().equals(boldFont)) {
-                    setFont(boldFont);
-                }
-            } else if (messageNode.isHasRecentChildren()) {
-                if (!getFont().equals(underlinedFont)) {
-                    setFont(underlinedFont);
-                }
-            } else {
-                if (!getFont().equals(plainFont)) {
-                    setFont(plainFont);
-                }
-            }
-        }
+		Flags flags = ((ColumbaHeader) header).getFlags();
 
-        //}
-        String subject = (String) header.get("columba.subject");
+		if (flags != null) {
+			if (!flags.getSeen()) {
+				if (!getFont().equals(boldFont)) {
+					setFont(boldFont);
+				}
+			} else if (messageNode.isHasRecentChildren()) {
+				if (!getFont().equals(underlinedFont)) {
+					setFont(underlinedFont);
+				}
+			} else {
+				if (!getFont().equals(plainFont)) {
+					setFont(plainFont);
+				}
+			}
+		}
 
-        if (subject != null) {
-            setText(subject);
-        } else {
-            setText("null");
-        }
+		String subject = (String) header.get("columba.subject");
 
-        setIcon(null);
+		if (subject != null) {
+			setText(subject);
+		} else {
+			setText("null");
+		}
 
-        /*
-return super.getTreeCellRendererComponent(
-tree,
-value,
-selected,
-expanded,
-leaf,
-row,
-hasFocus);
-*/
-        return this;
-    }
+		setIcon(null);
 
-    /*
-public void paint(Graphics g) {
-        Rectangle bounds= g.getClipBounds();
-        Font font= getFont();
-        FontMetrics fontMetrics= g.getFontMetrics(font);
+		return this;
+	}
 
-        int textWidth= fontMetrics.stringWidth(getText());
-
-        int iconOffset= 0;
-
-        //int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
-
-        if ((bounds.x == 0) && (bounds.y == 0)) {
-                bounds.width -= iconOffset;
-
-                String labelStr= layout(this, fontMetrics, getText(), bounds);
-                setText(labelStr);
-        }
-
-        super.paint(g);
-}
-
-private String layout(
-        JLabel label,
-        FontMetrics fontMetrics,
-        String text,
-        Rectangle viewR) {
-        Rectangle iconR= new Rectangle();
-        Rectangle textR= new Rectangle();
-
-        return SwingUtilities.layoutCompoundLabel(
-                fontMetrics,
-                text,
-                null,
-                SwingConstants.RIGHT,
-                SwingConstants.RIGHT,
-                SwingConstants.RIGHT,
-                SwingConstants.RIGHT,
-                viewR,
-                iconR,
-                textR,
-                0);
-}
-*/
 }

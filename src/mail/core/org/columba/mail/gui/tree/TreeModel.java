@@ -229,9 +229,6 @@ public class TreeModel extends DefaultTreeModel {
         return null;
     }
 
-    public SelectFolderDialog getSelectFolderDialog() {
-        return new SelectFolderDialog();
-    }
 
     public TempFolder getTempFolder() {
         return tempFolder;

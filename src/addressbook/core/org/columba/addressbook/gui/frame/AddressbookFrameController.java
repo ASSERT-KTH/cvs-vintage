@@ -85,7 +85,7 @@ public class AddressbookFrameController extends AbstractFrameController
     }
 
     /**
- * @see org.columba.core.gui.FrameController#init()
+ * @see org.columba.core.gui.FrameController#initComponents()
  */
     protected void init() {
         tree = new TreeController(this);

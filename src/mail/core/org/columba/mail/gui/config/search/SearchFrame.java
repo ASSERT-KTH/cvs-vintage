@@ -325,7 +325,7 @@ public class SearchFrame extends JDialog implements ActionListener {
         } else if (action.equals("ADD_CRITERION")) {
             criteriaList.add();
         } else if (action.equals("SELECT")) {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+            SelectFolderDialog dialog = new SelectFolderDialog(frameController);
 
             if (dialog.success()) {
                 MessageFolder folder = dialog.getSelectedFolder();

@@ -39,6 +39,7 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -49,234 +50,235 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class FilterDialog extends JDialog implements ActionListener {
 
-    private JTextField nameTextField;
+	private JTextField nameTextField;
 
-    private JButton addActionButton;
+	private JButton addActionButton;
 
-    private Filter filter;
+	private Filter filter;
 
-    private JFrame frame;
+	private JFrame frame;
 
-    private CriteriaList criteriaList;
+	private CriteriaList criteriaList;
 
-    private ActionList actionList;
+	private ActionList actionList;
 
-    private JComboBox condList;
+	private JComboBox condList;
 
-    /**
-     * Boolean stating whetever the dialog was cancelled or not. Default value
-     * is <code>true</code>.
-     */
-    private boolean dialogWasCancelled = true;
+	private FrameMediator mediator;
+	/**
+	 * Boolean stating whetever the dialog was cancelled or not. Default value
+	 * is <code>true</code>.
+	 */
+	private boolean dialogWasCancelled = true;
 
-    public FilterDialog(JFrame parent, Filter filter) {
-        super(parent, true);
+	public FilterDialog(FrameMediator mediator, Filter filter) {
+		super(mediator.getView().getFrame(), true);
 
-        setTitle(MailResourceLoader.getString("dialog", "filter",
-                "dialog_title"));
-        this.filter = filter;
+		setTitle(MailResourceLoader.getString("dialog", "filter",
+				"dialog_title"));
+		this.filter = filter;
 
-        //System.out.println("filternode name: " + filter.getName());
-        initComponents();
-        updateComponents(true);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-    }
+		//System.out.println("filternode name: " + filter.getName());
+		initComponents();
+		updateComponents(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
 
-    private void initComponents() {
-        JPanel namePanel = new JPanel();
-        namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
+	private void initComponents() {
+		JPanel namePanel = new JPanel();
+		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
 
-        JLabel nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                "dialog", "filter", "filter_description"));
-        namePanel.add(nameLabel);
-        namePanel.add(Box.createHorizontalStrut(5));
-        nameTextField = new JTextField(22);
-        nameLabel.setLabelFor(nameTextField);
-        namePanel.add(nameTextField);
-        getContentPane().add(namePanel, BorderLayout.NORTH);
+		JLabel nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "filter_description"));
+		namePanel.add(nameLabel);
+		namePanel.add(Box.createHorizontalStrut(5));
+		nameTextField = new JTextField(22);
+		nameLabel.setLabelFor(nameTextField);
+		namePanel.add(nameTextField);
+		getContentPane().add(namePanel, BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new BorderLayout(0, 0));
-        centerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
-                .createEmptyBorder(0, 12, 10, 11), BorderFactory
-                .createCompoundBorder(BorderFactory
-                        .createTitledBorder(MailResourceLoader.getString(
-                                "dialog", "filter", "if")), BorderFactory
-                        .createEmptyBorder(10, 10, 10, 10))));
+		JPanel centerPanel = new JPanel(new BorderLayout(0, 0));
+		centerPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory
+				.createEmptyBorder(0, 12, 10, 11), BorderFactory
+				.createCompoundBorder(BorderFactory
+						.createTitledBorder(MailResourceLoader.getString(
+								"dialog", "filter", "if")), BorderFactory
+						.createEmptyBorder(10, 10, 10, 10))));
 
-        JPanel middleIfPanel = new JPanel(new BorderLayout());
-        centerPanel.add(middleIfPanel, BorderLayout.CENTER);
+		JPanel middleIfPanel = new JPanel(new BorderLayout());
+		centerPanel.add(middleIfPanel, BorderLayout.CENTER);
 
-        JPanel ifPanel = new JPanel();
-        ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
-        ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
+		JPanel ifPanel = new JPanel();
+		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
-        ifPanel.add(Box.createHorizontalGlue());
+		ifPanel.add(Box.createHorizontalGlue());
 
-        nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                "dialog", "filter", "execute_actions"));
+		nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "execute_actions"));
 
-        ifPanel.add(nameLabel);
+		ifPanel.add(nameLabel);
 
-        ifPanel.add(Box.createHorizontalStrut(5));
+		ifPanel.add(Box.createHorizontalStrut(5));
 
-        String[] cond = {
-                MailResourceLoader
-                        .getString("dialog", "filter", "all_criteria"),
-                MailResourceLoader
-                        .getString("dialog", "filter", "any_criteria")};
-        condList = new JComboBox(cond);
-        nameLabel.setLabelFor(condList);
-        ifPanel.add(condList);
+		String[] cond = {
+				MailResourceLoader
+						.getString("dialog", "filter", "all_criteria"),
+				MailResourceLoader
+						.getString("dialog", "filter", "any_criteria")};
+		condList = new JComboBox(cond);
+		nameLabel.setLabelFor(condList);
+		ifPanel.add(condList);
 
-        middleIfPanel.add(ifPanel, BorderLayout.NORTH);
+		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
 
-        //middleIfPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
-        // 10)));
-        criteriaList = new CriteriaList(filter);
+		//middleIfPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
+		// 10)));
+		criteriaList = new CriteriaList(filter);
 
-        //JScrollPane scrollPane = new JScrollPane( criteriaList );
-        middleIfPanel.add(criteriaList, BorderLayout.CENTER);
+		//JScrollPane scrollPane = new JScrollPane( criteriaList );
+		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
 
-        //rootPanel.add(middleIfPanel);
-        //rootPanel.add( Box.createRigidArea( new java.awt.Dimension(0,10) ) );
-        JPanel middleThenPanel = new JPanel(new BorderLayout());
-        centerPanel.add(middleThenPanel, BorderLayout.SOUTH);
+		//rootPanel.add(middleIfPanel);
+		//rootPanel.add( Box.createRigidArea( new java.awt.Dimension(0,10) ) );
+		JPanel middleThenPanel = new JPanel(new BorderLayout());
+		centerPanel.add(middleThenPanel, BorderLayout.SOUTH);
 
-        //middleThenPanel.setBorder(border);
-        //middleThenPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5)
-        // ) );
-        JPanel thenPanel = new JPanel();
-        thenPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-        thenPanel.setLayout(new BoxLayout(thenPanel, BoxLayout.X_AXIS));
+		//middleThenPanel.setBorder(border);
+		//middleThenPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5)
+		// ) );
+		JPanel thenPanel = new JPanel();
+		thenPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		thenPanel.setLayout(new BoxLayout(thenPanel, BoxLayout.X_AXIS));
 
-        addActionButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                "dialog", "filter", "add_action"));
-        addActionButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
-        addActionButton.addActionListener(this);
-        addActionButton.setActionCommand("ADD_ACTION");
+		addActionButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+				"dialog", "filter", "add_action"));
+		addActionButton.setIcon(ImageLoader.getImageIcon("stock_add_16.png"));
+		addActionButton.addActionListener(this);
+		addActionButton.setActionCommand("ADD_ACTION");
 
-        //thenPanel.add(addActionButton);
-        //thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
-        JLabel actionLabel = new LabelWithMnemonic(MailResourceLoader
-                .getString("dialog", "filter", "action_list"));
-        thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
-        thenPanel.add(actionLabel);
+		//thenPanel.add(addActionButton);
+		//thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
+		JLabel actionLabel = new LabelWithMnemonic(MailResourceLoader
+				.getString("dialog", "filter", "action_list"));
+		thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+		thenPanel.add(actionLabel);
 
-        thenPanel.add(Box.createHorizontalGlue());
+		thenPanel.add(Box.createHorizontalGlue());
 
-        middleThenPanel.add(thenPanel, BorderLayout.NORTH);
+		middleThenPanel.add(thenPanel, BorderLayout.NORTH);
 
-        //middleThenPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
-        // 10)));
-        actionList = new ActionList(filter, frame);
-        middleThenPanel.add(actionList);
+		//middleThenPanel.add(Box.createRigidArea(new java.awt.Dimension(0,
+		// 10)));
+		actionList = new ActionList(mediator, filter, frame);
+		middleThenPanel.add(actionList);
 
-        getContentPane().add(centerPanel);
+		getContentPane().add(centerPanel);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader
-                .getString("global", "ok"));
-        okButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-        okButton.addActionListener(this);
-        buttonPanel.add(okButton);
+		ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader
+				.getString("global", "ok"));
+		okButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		okButton.addActionListener(this);
+		buttonPanel.add(okButton);
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "cancel"));
-        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
-        cancelButton.addActionListener(this);
-        buttonPanel.add(cancelButton);
+		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
+		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-                MailResourceLoader.getString("global", "help"));
-        buttonPanel.add(helpButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(okButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL",
-                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(okButton);
+		getRootPane().registerKeyboardAction(this, "CANCEL",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-                "organizing_and_managing_your_email_3");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
-                "organizing_and_managing_your_email_3");
-    }
+		// associate with JavaHelp
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+				"organizing_and_managing_your_email_3");
+		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+				"organizing_and_managing_your_email_3");
+	}
 
-    public void updateComponents(boolean b) {
-        if (b) {
-            // set component values
-            criteriaList.updateComponents(b);
-            actionList.updateComponents(b);
+	public void updateComponents(boolean b) {
+		if (b) {
+			// set component values
+			criteriaList.updateComponents(b);
+			actionList.updateComponents(b);
 
-            // filter description JTextField
-            nameTextField.setText(filter.getName());
-            nameTextField.selectAll();
+			// filter description JTextField
+			nameTextField.setText(filter.getName());
+			nameTextField.selectAll();
 
-            // all / match any JComboBox
-            FilterRule filterRule = filter.getFilterRule();
-            String value = filterRule.getCondition();
+			// all / match any JComboBox
+			FilterRule filterRule = filter.getFilterRule();
+			String value = filterRule.getCondition();
 
-            if (value.equals("matchall")) {
-                condList.setSelectedIndex(0);
-            } else {
-                condList.setSelectedIndex(1);
-            }
-        } else {
-            // get values from components
-            criteriaList.updateComponents(b);
-            actionList.updateComponents(b);
+			if (value.equals("matchall")) {
+				condList.setSelectedIndex(0);
+			} else {
+				condList.setSelectedIndex(1);
+			}
+		} else {
+			// get values from components
+			criteriaList.updateComponents(b);
+			actionList.updateComponents(b);
 
-            filter.setName(nameTextField.getText());
+			filter.setName(nameTextField.getText());
 
-            int index = condList.getSelectedIndex();
-            FilterRule filterRule = filter.getFilterRule();
+			int index = condList.getSelectedIndex();
+			FilterRule filterRule = filter.getFilterRule();
 
-            if (index == 0) {
-                filterRule.setCondition("matchall");
-            } else {
-                filterRule.setCondition("matchany");
-            }
-        }
-    }
+			if (index == 0) {
+				filterRule.setCondition("matchall");
+			} else {
+				filterRule.setCondition("matchany");
+			}
+		}
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-        if (action.equals("CLOSE")) {
-            updateComponents(false);
-            setVisible(false);
+		if (action.equals("CLOSE")) {
+			updateComponents(false);
+			setVisible(false);
 
-            //frame.listView.update();
-            dialogWasCancelled = false;
-        } else if (action.equals("CANCEL")) {
-            setVisible(false);
-            dialogWasCancelled = true;
-        } else if (action.equals("ADD_CRITERION")) {
-            criteriaList.add();
-        } else if (action.equals("ADD_ACTION")) {
-            //System.out.println( "add" );
-            actionList.add();
-        }
-    }
+			//frame.listView.update();
+			dialogWasCancelled = false;
+		} else if (action.equals("CANCEL")) {
+			setVisible(false);
+			dialogWasCancelled = true;
+		} else if (action.equals("ADD_CRITERION")) {
+			criteriaList.add();
+		} else if (action.equals("ADD_ACTION")) {
+			//System.out.println( "add" );
+			actionList.add();
+		}
+	}
 
-    /**
-     * Returns if the dialog was cancelled or not. The dialog is cancelled if
-     * the user presses the <code>Cancel</code> button or presses the
-     * <code>Escape</code> key.
-     * 
-     * @return true if the user pressed the cancel button or escape; false
-     *         otherwise.
-     */
-    public boolean wasCancelled() {
-        return dialogWasCancelled;
-    }
+	/**
+	 * Returns if the dialog was cancelled or not. The dialog is cancelled if
+	 * the user presses the <code>Cancel</code> button or presses the
+	 * <code>Escape</code> key.
+	 * 
+	 * @return true if the user pressed the cancel button or escape; false
+	 *         otherwise.
+	 */
+	public boolean wasCancelled() {
+		return dialogWasCancelled;
+	}
 }

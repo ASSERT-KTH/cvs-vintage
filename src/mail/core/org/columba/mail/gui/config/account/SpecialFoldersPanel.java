@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
 
@@ -57,10 +58,12 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
     private JCheckBox defaultAccountCheckBox;
     private SpecialFoldersItem item;
     private AccountItem accountItem;
+    private FrameMediator mediator;
 
-    public SpecialFoldersPanel(AccountItem accountItem, SpecialFoldersItem item) {
+    public SpecialFoldersPanel(FrameMediator mediator, AccountItem accountItem, SpecialFoldersItem item) {
         super();
 
+        this.mediator = mediator;
         this.item = item;
         this.accountItem = accountItem;
 
@@ -327,7 +330,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
 
         if (action.equals("TRASH")) //$NON-NLS-1$
          {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        	SelectFolderDialog dialog = new SelectFolderDialog(mediator);
+
 
             if (dialog.success()) {
                 MessageFolder selectedFolder = dialog.getSelectedFolder();
@@ -340,7 +344,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             }
         } else if (action.equals("INBOX")) //$NON-NLS-1$
          {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        	SelectFolderDialog dialog = new SelectFolderDialog(mediator);
+
 
             if (dialog.success()) {
                 MessageFolder selectedFolder = dialog.getSelectedFolder();
@@ -353,7 +358,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             }
         } else if (action.equals("DRAFTS")) //$NON-NLS-1$
          {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        	SelectFolderDialog dialog = new SelectFolderDialog(mediator);
+
 
             if (dialog.success()) {
                 MessageFolder selectedFolder = dialog.getSelectedFolder();
@@ -366,7 +372,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             }
         } else if (action.equals("TEMPLATES")) //$NON-NLS-1$
          {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        	SelectFolderDialog dialog = new SelectFolderDialog(mediator);
+
 
             if (dialog.success()) {
                 MessageFolder selectedFolder = dialog.getSelectedFolder();
@@ -379,7 +386,8 @@ public class SpecialFoldersPanel extends DefaultPanel implements ActionListener 
             }
         } else if (action.equals("SENT")) //$NON-NLS-1$
          {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        	SelectFolderDialog dialog = new SelectFolderDialog(mediator);
+
 
             if (dialog.success()) {
                 MessageFolder selectedFolder = dialog.getSelectedFolder();

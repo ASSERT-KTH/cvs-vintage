@@ -52,6 +52,6 @@ public class ImportAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        new ImportWizardLauncher().launchWizard();
+        new ImportWizardLauncher(getFrameMediator()).launchWizard();
     }
 }

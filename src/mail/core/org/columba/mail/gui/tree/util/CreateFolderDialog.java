@@ -15,18 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.util;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.DialogStore;
-
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -51,6 +39,17 @@ import javax.swing.SwingConstants;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.layout.FormLayout;
+
 
 public class CreateFolderDialog extends JDialog implements ActionListener {
     protected boolean bool = false;
@@ -62,11 +61,14 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
     protected JTree tree;
     protected String name;
     protected TreePath selected;
-
-    public CreateFolderDialog(TreePath selected) {
-        super(DialogStore.getOwner(),
+    protected FrameMediator mediator;
+    
+    public CreateFolderDialog(FrameMediator mediator, TreePath selected) {
+        super(mediator.getView().getFrame(),
             MailResourceLoader.getString("dialog", "folder", "edit_name"), true);
 
+        this.mediator = mediator;
+        
         name = MailResourceLoader.getString("dialog", "folder",
                 "new_folder_name");
 
@@ -74,6 +76,10 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
 
         initComponents();
         layoutComponents();
+        
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     protected void layoutComponents() {
@@ -92,7 +98,6 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
         // skip the first column
         //builder.setLeadingColumnOffset(1);
         // Add components to the panel:
-        // TODO: LOCALIZE
         builder.append(new JLabel(MailResourceLoader.getString("dialog",
                     "folder", "name")));
         builder.append(textField);
@@ -163,12 +168,6 @@ public class CreateFolderDialog extends JDialog implements ActionListener {
                     "global", "help"));
         helpButton.setActionCommand("HELP");
         helpButton.addActionListener(this);
-    }
-
-    public void showDialog() {
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     public String getName() {

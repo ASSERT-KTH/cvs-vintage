@@ -1,20 +1,23 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -48,196 +51,197 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-
 public class ActionList extends JPanel implements ActionListener {
-    private Filter filter;
-    private List list;
-    private JPanel panel;
-    protected GridBagLayout gridbag = new GridBagLayout();
-    protected GridBagConstraints c = new GridBagConstraints();
+	private Filter filter;
+	private List list;
+	private JPanel panel;
+	protected GridBagLayout gridbag = new GridBagLayout();
+	protected GridBagConstraints c = new GridBagConstraints();
+	protected FrameMediator mediator;
 
-    public ActionList(Filter filter, JFrame frame) {
-        super();
+	public ActionList(FrameMediator mediator, Filter filter, JFrame frame) {
+		super();
 
-        this.filter = filter;
+		this.mediator = mediator;
 
-        list = new Vector();
+		this.filter = filter;
 
-        panel = new JPanel();
+		list = new Vector();
 
-        JScrollPane scrollPane = new JScrollPane(panel);
+		panel = new JPanel();
 
-        setLayout(new BorderLayout());
+		JScrollPane scrollPane = new JScrollPane(panel);
 
-        scrollPane.setPreferredSize(new Dimension(500, 50));
-        add(scrollPane, BorderLayout.CENTER);
+		setLayout(new BorderLayout());
 
-        update();
-    }
+		scrollPane.setPreferredSize(new Dimension(500, 50));
+		add(scrollPane, BorderLayout.CENTER);
 
-    public void initComponents() {
-    }
+		update();
+	}
 
-    public void updateComponents(boolean b) {
-        if (!b) {
-            for (Iterator it = list.iterator(); it.hasNext();) {
-                DefaultActionRow row = (DefaultActionRow) it.next();
-                row.updateComponents(false);
-            }
+	public void initComponents() {
+	}
 
-            //			for (int i = 0; i < list.size(); i++) {
-            //				DefaultActionRow row = (DefaultActionRow) list.get(i);
-            //				row.updateComponents(false);
-            //			}
-        }
-    }
+	public void updateComponents(boolean b) {
+		if (!b) {
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				DefaultActionRow row = (DefaultActionRow) it.next();
+				row.updateComponents(false);
+			}
 
-    public void add() {
-        boolean allowed = true;
+			//			for (int i = 0; i < list.size(); i++) {
+			//				DefaultActionRow row = (DefaultActionRow) list.get(i);
+			//				row.updateComponents(false);
+			//			}
+		}
+	}
 
-        FilterActionList actionList = filter.getFilterActionList();
+	public void add() {
+		boolean allowed = true;
 
-        for (int i = 0; i < actionList.getChildCount(); i++) {
-            FilterAction action = actionList.get(i);
-            String name = action.getAction();
+		FilterActionList actionList = filter.getFilterActionList();
 
-            if ((action.equals("move")) || (action.equals("delete"))) {
-                allowed = false;
-            }
-        }
+		for (int i = 0; i < actionList.getChildCount(); i++) {
+			FilterAction action = actionList.get(i);
+			String name = action.getAction();
 
-        if (allowed) {
-            updateComponents(false);
-            actionList.addEmptyAction();
-        }
+			if ((action.equals("move")) || (action.equals("delete"))) {
+				allowed = false;
+			}
+		}
 
-        update();
-    }
+		if (allowed) {
+			updateComponents(false);
+			actionList.addEmptyAction();
+		}
 
-    public void remove(int i) {
-        FilterActionList actionList = filter.getFilterActionList();
+		update();
+	}
 
-        if (actionList.getChildCount() > 1) {
-            updateComponents(false);
+	public void remove(int i) {
+		FilterActionList actionList = filter.getFilterActionList();
 
-            actionList.remove(i);
+		if (actionList.getChildCount() > 1) {
+			updateComponents(false);
 
-            update();
-        }
-    }
+			actionList.remove(i);
 
-    public void update() {
-        panel.removeAll();
-        list.clear();
+			update();
+		}
+	}
 
-        panel.setLayout(gridbag);
+	public void update() {
+		panel.removeAll();
+		list.clear();
 
-        FilterActionPluginHandler pluginHandler = null;
+		panel.setLayout(gridbag);
 
-        try {
-            pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.mail.filteraction");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
+		FilterActionPluginHandler pluginHandler = null;
 
-        FilterActionList actionList = filter.getFilterActionList();
+		try {
+			pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.mail.filteraction");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
-        for (int i = 0; i < actionList.getChildCount(); i++) {
-            FilterAction action = actionList.get(i);
+		FilterActionList actionList = filter.getFilterActionList();
 
-            //int type = action.getActionInt();
-            String name = action.getAction();
-            DefaultActionRow row = null;
+		for (int i = 0; i < actionList.getChildCount(); i++) {
+			FilterAction action = actionList.get(i);
 
-            Object[] args = { this, action };
+			//int type = action.getActionInt();
+			String name = action.getAction();
+			DefaultActionRow row = null;
 
-            try {
-                row = (DefaultActionRow) ((AbstractFilterPluginHandler) pluginHandler).getGuiPlugin(name,
-                        args);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+			Object[] args = {mediator, this, action};
 
-                // this probably means that the configuration 
-                // is wrong
-                // -> change this to a sane default value
-                action.setAction("Mark Message");
-                action.setMarkVariant("read");
-                row = null;
-            }
+			try {
+				row = (DefaultActionRow) ((AbstractFilterPluginHandler) pluginHandler)
+						.getGuiPlugin(name, args);
+			} catch (Exception ex) {
+				ex.printStackTrace();
 
-            if (row == null) {
-                // maybe the plugin wasn't loaded correctly
-                //  -> use default
-                //row = new MarkActionRow(this,action);
-                row = new MarkActionRow(this, action);
-            }
+				// this probably means that the configuration
+				// is wrong
+				// -> change this to a sane default value
+				action.setAction("Mark Message");
+				action.setMarkVariant("read");
+				row = null;
+			}
 
-            if (row != null) {
-                c.fill = GridBagConstraints.NONE;
-                c.gridx = GridBagConstraints.RELATIVE;
-                c.gridy = i;
-                c.weightx = 1.0;
-                c.anchor = GridBagConstraints.NORTHWEST;
-                gridbag.setConstraints(row.getContentPane(), c);
+			if (row == null) {
+				// maybe the plugin wasn't loaded correctly
+				//  -> use default
+				//row = new MarkActionRow(this,action);
+				row = new MarkActionRow(mediator, this, action);
+			}
 
-                list.add(row);
-                panel.add(row.getContentPane());
+			if (row != null) {
+				c.fill = GridBagConstraints.NONE;
+				c.gridx = GridBagConstraints.RELATIVE;
+				c.gridy = i;
+				c.weightx = 1.0;
+				c.anchor = GridBagConstraints.NORTHWEST;
+				gridbag.setConstraints(row.getContentPane(), c);
 
-                JButton addButton = new JButton(ImageLoader.getSmallImageIcon(
-                            "stock_add_16.png"));
-                addButton.setActionCommand("ADD");
-                addButton.setMargin(new Insets(0, 0, 0, 0));
-                addButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            add();
-                        }
-                    });
+				list.add(row);
+				panel.add(row.getContentPane());
 
-                JButton removeButton = new JButton(ImageLoader.getSmallImageIcon(
-                            "stock_remove_16.png"));
-                removeButton.setActionCommand(Integer.toString(i));
-                removeButton.setMargin(new Insets(0, 0, 0, 0));
+				JButton addButton = new JButton(ImageLoader
+						.getSmallImageIcon("stock_add_16.png"));
+				addButton.setActionCommand("ADD");
+				addButton.setMargin(new Insets(0, 0, 0, 0));
+				addButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						add();
+					}
+				});
 
-                final int index = i;
-                removeButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            remove(index);
-                        }
-                    });
+				JButton removeButton = new JButton(ImageLoader
+						.getSmallImageIcon("stock_remove_16.png"));
+				removeButton.setActionCommand(Integer.toString(i));
+				removeButton.setMargin(new Insets(0, 0, 0, 0));
 
-                /*
-                    c.gridx = GridBagConstraints.REMAINDER;
-                    c.anchor = GridBagConstraints.NORTHEAST;
-                    gridbag.setConstraints( removeButton, c );
-                    panel.add( removeButton );
-                 */
-                JPanel buttonPanel = new JPanel();
-                buttonPanel.setLayout(new GridLayout(0, 2, 2, 2));
-                buttonPanel.add(removeButton);
-                buttonPanel.add(addButton);
+				final int index = i;
+				removeButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						remove(index);
+					}
+				});
 
-                c.insets = new Insets(2, 2, 2, 2);
-                c.gridx = GridBagConstraints.REMAINDER;
-                c.anchor = GridBagConstraints.NORTHEAST;
-                gridbag.setConstraints(buttonPanel, c);
-                panel.add(buttonPanel);
-            }
-        }
+				/*
+				 * c.gridx = GridBagConstraints.REMAINDER; c.anchor =
+				 * GridBagConstraints.NORTHEAST; gridbag.setConstraints(
+				 * removeButton, c ); panel.add( removeButton );
+				 */
+				JPanel buttonPanel = new JPanel();
+				buttonPanel.setLayout(new GridLayout(0, 2, 2, 2));
+				buttonPanel.add(removeButton);
+				buttonPanel.add(addButton);
 
-        c.weighty = 1.0;
+				c.insets = new Insets(2, 2, 2, 2);
+				c.gridx = GridBagConstraints.REMAINDER;
+				c.anchor = GridBagConstraints.NORTHEAST;
+				gridbag.setConstraints(buttonPanel, c);
+				panel.add(buttonPanel);
+			}
+		}
 
-        Component box = Box.createVerticalGlue();
-        gridbag.setConstraints(box, c);
-        panel.add(box);
+		c.weighty = 1.0;
 
-        validate();
-        repaint();
-    }
+		Component box = Box.createVerticalGlue();
+		gridbag.setConstraints(box, c);
+		panel.add(box);
 
-    public void actionPerformed(ActionEvent e) {
-        updateComponents(false);
-        update();
-    }
+		validate();
+		repaint();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		updateComponents(false);
+		update();
+	}
 }

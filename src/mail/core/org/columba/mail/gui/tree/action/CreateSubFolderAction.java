@@ -34,69 +34,70 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class CreateSubFolderAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public CreateSubFolderAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_newfolder"));
+		implements
+			SelectionListener {
+	public CreateSubFolderAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"menu_folder_newfolder"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_newfolder").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "menu_folder_newfolder").replaceAll("&", ""));
 
-        // icons
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder.png"));
-        putValue(LARGE_ICON, ImageLoader.getImageIcon("folder.png"));
+		// icons
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder.png"));
+		putValue(LARGE_ICON, ImageLoader.getImageIcon("folder.png"));
 
-        // shortcut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.ALT_MASK));
+		// shortcut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N,
+				ActionEvent.ALT_MASK));
 
-        setEnabled(false);
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] selection = (FolderCommandReference[]) getFrameMediator()
-                                                                            .getSelectionManager()
-                                                                            .getSelection("mail.tree");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference[] selection = (FolderCommandReference[]) getFrameMediator()
+				.getSelectionManager().getSelection("mail.tree");
 
-        CreateFolderDialog dialog = new CreateFolderDialog(selection[0].getFolder()
-                                                                       .getSelectionTreePath());
-        dialog.showDialog();
+		CreateFolderDialog dialog = new CreateFolderDialog(getFrameMediator(),
+				selection[0].getFolder().getSelectionTreePath());
 
-        String name;
+		String name;
 
-        if (dialog.success()) {
-            // ok pressed
-            selection[0].setFolder(dialog.getSelected());
-            selection[0].setFolderName(dialog.getName());
+		if (dialog.success()) {
+			// ok pressed
+			selection[0].setFolder(dialog.getSelected());
+			selection[0].setFolderName(dialog.getName());
 
-            MainInterface.processor.addOp(new CreateSubFolderCommand(selection));
-        }
-    }
+			MainInterface.processor
+					.addOp(new CreateSubFolderCommand(selection));
+		}
+	}
 
-    /* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 }

@@ -75,6 +75,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
  */
     public Component getTableCellRendererComponent(JTable table, Object value,
         boolean isSelected, boolean hasFocus, int row, int column) {
+    	
         if (isBordered) {
             if (isSelected) {
                 if (selectedBorder == null) {
@@ -85,6 +86,7 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
                 //setBorder(selectedBorder);
                 setBackground(table.getSelectionBackground());
                 setForeground(table.getSelectionForeground());
+              
             } else {
                 if (unselectedBorder == null) {
                     unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
@@ -97,7 +99,8 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
                 setForeground(table.getForeground());
             }
         }
-
+        
+    	
         //TreePath path = tree.getPathForRow(row);
         MessageNode messageNode = (MessageNode) value;
 

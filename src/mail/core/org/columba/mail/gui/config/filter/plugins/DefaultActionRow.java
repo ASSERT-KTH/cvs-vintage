@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -42,10 +43,12 @@ public class DefaultActionRow implements Plugin {
     protected GridBagConstraints c = new GridBagConstraints();
     protected ActionList actionList;
     protected int count;
+    private FrameMediator mediator;
 
-    public DefaultActionRow(ActionList list, FilterAction action) {
+    public DefaultActionRow(FrameMediator mediator, ActionList list, FilterAction action) {
         this.filterAction = action;
         this.actionList = list;
+        this.mediator = mediator;
 
         panel = new JPanel();
 
@@ -131,4 +134,10 @@ for ( int i=0; i<names.length; i++ )
     public void setFilterAction(FilterAction filterAction) {
         this.filterAction = filterAction;
     }
+	/**
+	 * @return Returns the mediator.
+	 */
+	public FrameMediator getMediator() {
+		return mediator;
+	}
 }

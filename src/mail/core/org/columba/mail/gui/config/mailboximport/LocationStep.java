@@ -15,22 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.mailboximport;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataLookup;
-import net.javaprog.ui.wizard.DataModel;
-
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
-
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.File;
 
 import javax.swing.Box;
@@ -42,17 +28,32 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataLookup;
+import net.javaprog.ui.wizard.DataModel;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.WizardTextField;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.util.MailResourceLoader;
+
 
 class LocationStep extends AbstractStep implements ActionListener {
     protected File[] sourceFiles;
     protected MessageFolder destinationFolder;
     protected JButton sourceButton;
     protected JButton destinationButton;
-
-    public LocationStep(DataModel data) {
+    protected FrameMediator mediator;
+    
+    public LocationStep(FrameMediator mediator, DataModel data) {
         super(MailResourceLoader.getString("dialog", "mailboximport", "location"),
             MailResourceLoader.getString("dialog", "mailboximport",
                 "location_description"));
+        this.mediator = mediator;
+        
         data.registerDataLookup("Location.source",
             new DataLookup() {
                 public Object lookupData() {
@@ -138,7 +139,7 @@ class LocationStep extends AbstractStep implements ActionListener {
                 updateCanFinish();
             }
         } else if (source == destinationButton) {
-            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+            SelectFolderDialog dialog = new SelectFolderDialog(mediator);
 
             if (dialog.success()) {
                 destinationFolder = dialog.getSelectedFolder();

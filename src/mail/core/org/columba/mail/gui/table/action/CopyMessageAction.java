@@ -74,7 +74,7 @@ public class CopyMessageAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
+        SelectFolderDialog dialog = new SelectFolderDialog(getFrameMediator());
 
         if (dialog.success()) {
             MessageFolder destFolder = dialog.getSelectedFolder();
