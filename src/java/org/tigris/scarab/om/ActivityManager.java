@@ -59,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.9 2002/11/01 00:08:55 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.10 2002/12/08 21:21:53 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -125,15 +125,43 @@ public class ActivityManager
     
     public static Activity createAddDependencyActivity(Issue issue,
                                                  ActivitySet activitySet, 
-                                                 String description,
-                                                 String newTextValue)
+                                                 Depend depend,
+                                                 String description)
         throws TorqueException
     {
-        return create(issue,null,activitySet,description,null,
+        return create(issue,null,activitySet,description,null,depend,
                       0, 0,
                       null, null,
                       null, null,
-                      null, newTextValue);
+                      null, null, null);
+    }
+
+    public static Activity createChangeDependencyActivity(Issue issue,
+                                                 ActivitySet activitySet, 
+                                                 Depend depend,
+                                                 String description,
+                                                 String oldTextValue,
+                                                 String newTextValue)
+        throws TorqueException
+    {
+        return create(issue,null,activitySet,description,null,depend,
+                      0, 0,
+                      null, null,
+                      null, null,
+                      oldTextValue, newTextValue, null);
+    }
+    
+    public static Activity createDeleteDependencyActivity(Issue issue,
+                                                 ActivitySet activitySet, 
+                                                 Depend depend,
+                                                 String description)
+        throws TorqueException
+    {
+        return create(issue,null,activitySet,description,null,depend,
+                      0, 0,
+                      null, null,
+                      null, null,
+                      null, null, null);
     }
     
     public static Activity createOptionActivity(Issue issue, Attribute attribute,
@@ -205,7 +233,7 @@ public class ActivityManager
                        String oldTextValue, String newTextValue)
          throws TorqueException
     {
-        return create(issue,attribute,activitySet,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,null,
                       oldNumericValue, newNumericValue,
                       oldUserId, newUserId,
                       oldOptionId, newOptionId,
@@ -218,6 +246,26 @@ public class ActivityManager
     public static Activity create(Issue issue, Attribute attribute, 
                        ActivitySet activitySet, String description, 
                        Attachment attachment, 
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
+                       NumberKey oldOptionId, NumberKey newOptionId,
+                       String oldTextValue, String newTextValue,
+                       Connection dbCon)
+         throws TorqueException
+    {
+        return create(issue,attribute,activitySet,description,attachment,null,
+                      oldNumericValue, newNumericValue,
+                      oldUserId, newUserId,
+                      oldOptionId, newOptionId,
+                      oldTextValue, newTextValue, dbCon);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public static Activity create(Issue issue, Attribute attribute, 
+                       ActivitySet activitySet, String description, 
+                       Attachment attachment, Depend depend,
                        int oldNumericValue, int newNumericValue,
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
@@ -242,6 +290,7 @@ public class ActivityManager
         activity.setNewOptionId(newOptionId);
         activity.setOldValue(oldTextValue);
         activity.setNewValue(newTextValue);
+        activity.setDepend(depend);
         if (attachment != null)
         {
             activity.setAttachment(attachment);
