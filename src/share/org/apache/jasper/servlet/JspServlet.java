@@ -500,7 +500,8 @@ public class JspServlet extends HttpServlet {
 		    jasperLog.log("\t      RequestURI: "+request.getRequestURI());
 		    jasperLog.log("\t     QueryString: "+request.getQueryString());
 		    jasperLog.log("\t  Request Params: ");
-                    if ( request.getMethod().equals("POST") )
+                    // If not precompiling and method is POST, avoid reading POST data.
+                    if ( !precompile && request.getMethod().equals("POST") )
                         jasperLog.log("Parameters not read because method is POST");
                     else {
                         Enumeration e = request.getParameterNames();
