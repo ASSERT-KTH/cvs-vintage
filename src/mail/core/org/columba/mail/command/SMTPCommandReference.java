@@ -29,37 +29,37 @@ import org.columba.mail.message.ColumbaMessage;
  */
 public class SMTPCommandReference extends FolderCommandReference {
     /**
-     * Constructor for SMTPCommandReference.
-     * @param folder
-     */
+ * Constructor for SMTPCommandReference.
+ * @param folder
+ */
     public SMTPCommandReference(FolderTreeNode folder) {
         super(folder);
     }
 
     /**
-     * Constructor for SMTPCommandReference.
-     * @param folder
-     * @param message
-     */
+ * Constructor for SMTPCommandReference.
+ * @param folder
+ * @param message
+ */
     public SMTPCommandReference(FolderTreeNode folder, ColumbaMessage message) {
         super(folder, message);
     }
 
     /**
-     * Constructor for SMTPCommandReference.
-     * @param folder
-     * @param uids
-     */
+ * Constructor for SMTPCommandReference.
+ * @param folder
+ * @param uids
+ */
     public SMTPCommandReference(FolderTreeNode folder, Object[] uids) {
         super(folder, uids);
     }
 
     /**
-     * Constructor for SMTPCommandReference.
-     * @param folder
-     * @param uids
-     * @param address
-     */
+ * Constructor for SMTPCommandReference.
+ * @param folder
+ * @param uids
+ * @param address
+ */
     public SMTPCommandReference(FolderTreeNode folder, Object[] uids,
         Integer[] address) {
         super(folder, uids, address);

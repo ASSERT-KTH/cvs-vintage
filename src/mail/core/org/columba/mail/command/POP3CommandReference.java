@@ -16,7 +16,9 @@
 package org.columba.mail.command;
 
 import org.columba.core.command.DefaultCommandReference;
+
 import org.columba.mail.pop3.POP3Server;
+
 
 /**
  * @author freddy
@@ -27,33 +29,31 @@ import org.columba.mail.pop3.POP3Server;
  * Window>Preferences>Java>Code Generation.
  */
 public class POP3CommandReference extends DefaultCommandReference {
-	protected POP3Server server;
+    protected POP3Server server;
 
+    public POP3CommandReference(POP3Server server) {
+        this.server = server;
+    }
 
-	public POP3CommandReference(POP3Server server) {
-		this.server= server;
-	}
-
-	/**
-	 * Returns the server.
-	 * @return POP3Server
-	 */
-	public POP3Server getServer() {
-		return server;
-	}
-	
     /**
-     * @see org.columba.core.command.DefaultCommandReference#releaseLock(java.lang.Object)
-     */
+ * Returns the server.
+ * @return POP3Server
+ */
+    public POP3Server getServer() {
+        return server;
+    }
+
+    /**
+ * @see org.columba.core.command.DefaultCommandReference#releaseLock(java.lang.Object)
+ */
     public void releaseLock(Object locker) {
         server.releaseLock(locker);
     }
 
     /**
-     * @see org.columba.core.command.DefaultCommandReference#tryToGetLock(java.lang.Object)
-     */
+ * @see org.columba.core.command.DefaultCommandReference#tryToGetLock(java.lang.Object)
+ */
     public boolean tryToGetLock(Object locker) {
         return server.tryToGetLock(locker);
     }
-
 }

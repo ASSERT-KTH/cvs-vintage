@@ -27,40 +27,39 @@ package org.columba.mail.folder;
  */
 public class FolderInconsistentException extends Exception {
     /**
-     * Constructs the FolderInconsistentException.java.
-     * 
-     * 
-     */
+ * Constructs the FolderInconsistentException.java.
+ * 
+ * 
+ */
     public FolderInconsistentException() {
         super();
     }
 
     /**
-     * Constructs the FolderInconsistentException.java.
-     * 
-     * @param arg0
-     */
+ * Constructs the FolderInconsistentException.java.
+ * 
+ * @param arg0
+ */
     public FolderInconsistentException(String arg0) {
         super(arg0);
     }
 
     /**
-     * Constructs the FolderInconsistentException.java.
-     * 
-     * @param arg0
-     * @param arg1
-     */
+ * Constructs the FolderInconsistentException.java.
+ * 
+ * @param arg0
+ * @param arg1
+ */
     public FolderInconsistentException(String arg0, Throwable arg1) {
         super(arg0, arg1);
     }
 
     /**
-     * Constructs the FolderInconsistentException.java.
-     * 
-     * @param arg0
-     */
+ * Constructs the FolderInconsistentException.java.
+ * 
+ * @param arg0
+ */
     public FolderInconsistentException(Throwable arg0) {
         super(arg0);
     }
-
 }

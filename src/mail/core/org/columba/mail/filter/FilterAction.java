@@ -34,22 +34,22 @@ import org.columba.core.xml.XmlElement;
 // </actionlist>
 public class FilterAction extends DefaultItem {
     /**
-     * Constructor for FilterAction
-     *
-     * XmlElement root is "actionlist"
-     *
-     * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
-     */
+ * Constructor for FilterAction
+ *
+ * XmlElement root is "actionlist"
+ *
+ * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
+ */
     public FilterAction(XmlElement root) {
         super(root);
     }
 
     /**
-     *
-     * get folder uid
-     *
-     * @return int
-     */
+ *
+ * get folder uid
+ *
+ * @return int
+ */
     public int getUid() {
         if (contains("uid") == false) {
             // folder uid doesn't exist 
@@ -63,49 +63,49 @@ public class FilterAction extends DefaultItem {
     }
 
     /**
-     * set folder uid
-     *
-     * @param i
-     */
+ * set folder uid
+ *
+ * @param i
+ */
     public void setUid(int i) {
         set("uid", i);
     }
 
     /**
-     *
-     * get type of action
-     *
-     * @return String
-     */
+ *
+ * get type of action
+ *
+ * @return String
+ */
     public String getAction() {
         return get("type");
     }
 
     /**
-     *
-     * set type of action
-     *
-     * @param s
-     */
+ *
+ * set type of action
+ *
+ * @param s
+ */
     public void setAction(String s) {
         set("type", s);
     }
 
     /**
-     * Mark message variant can be of value:<br>
-     * <ul>
-     *  <li>read</li>
-     *  <li>unread</li>
-     *  <li>flagged</li>
-     *  <li>not_flagged</li>
-     *  <li>expunged</li>
-     *  <li>not_expunged</li>
-     *  <li>answered</li>
-     *  <li>spam</li>
-     *  <li>no_spam</li>
-     * </ul>
-     * @param s
-     */
+ * Mark message variant can be of value:<br>
+ * <ul>
+ *  <li>read</li>
+ *  <li>unread</li>
+ *  <li>flagged</li>
+ *  <li>not_flagged</li>
+ *  <li>expunged</li>
+ *  <li>not_expunged</li>
+ *  <li>answered</li>
+ *  <li>spam</li>
+ *  <li>no_spam</li>
+ * </ul>
+ * @param s
+ */
     public void setMarkVariant(String s) {
         set("markvariant", s);
     }

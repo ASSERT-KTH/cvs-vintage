@@ -18,17 +18,18 @@ package org.columba.mail.filter;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+
 /**
  * A list of filters.
  *
  */
 public class FilterList extends DefaultItem {
-
     /** The name of this object when stored in a XML document. */
     public static final String XML_NAME = "filterlist";
 
     //private Vector list;
     // private Folder folder;
+
     /**
      * Creates a FilterList with the specified element as the root.
      * @param root the element to use as the root.

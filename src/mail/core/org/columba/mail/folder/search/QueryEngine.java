@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.search;
 
+import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.message.ColumbaMessage;
 
@@ -28,67 +29,67 @@ import java.util.List;
  */
 public interface QueryEngine {
     /**
-     * Get list of capabilities.
-     * <p>
-     * All supported search requests as for example:
-     * "Body", "Subject", etc.
-     *
-     * @return                capability list
-     */
-   String[] getCaps();
+ * Get list of capabilities.
+ * <p>
+ * All supported search requests as for example:
+ * "Body", "Subject", etc.
+ *
+ * @return                capability list
+ */
+    String[] getCaps();
 
     /**
-     * Sync engine with folder data.
-     * <p>
-     * This can become necessary if the folder data is
-     * inconsistent.
-     *
-     * @throws Exception
-     */
-   void sync() throws Exception;
+ * Sync engine with folder data.
+ * <p>
+ * This can become necessary if the folder data is
+ * inconsistent.
+ *
+ * @throws Exception
+ */
+    void sync() throws Exception;
 
     /**
-     * Execute a list of {@link FilterCriteria}.
-     *
-     * @param filter                list of filter criteria
-     * @return                                list of matching message UIDs
-     * @throws Exception
-     */
+ * Execute a list of {@link FilterCriteria}.
+ *
+ * @param filter                list of filter criteria
+ * @return                                list of matching message UIDs
+ * @throws Exception
+ */
     List queryEngine(FilterRule filter) throws Exception;
 
     /**
-     * Execute a list of {@link FilterCriteria}.
-     * <p>
-     * Perform search request on a subset of messages only.
-     *
-     * @param filter                list of filter criteria
-     * @param uids                        list of UIDs to perform search request
-     * @return                                list of matching message UIDs
-     * @throws Exception
-     */
+ * Execute a list of {@link FilterCriteria}.
+ * <p>
+ * Perform search request on a subset of messages only.
+ *
+ * @param filter                list of filter criteria
+ * @param uids                        list of UIDs to perform search request
+ * @return                                list of matching message UIDs
+ * @throws Exception
+ */
     List queryEngine(FilterRule filter, Object[] uids)
         throws Exception;
 
     /**
-     * Notify search engine that a message was added.
-     *
-     * @param message                message
-     * @throws Exception
-     */
+ * Notify search engine that a message was added.
+ *
+ * @param message                message
+ * @throws Exception
+ */
     void messageAdded(ColumbaMessage message) throws Exception;
 
     /**
-     * Notify search engine that a message was removed
-     *
-     * @param uid                        message UID
-     * @throws Exception
-     */
+ * Notify search engine that a message was removed
+ *
+ * @param uid                        message UID
+ * @throws Exception
+ */
     void messageRemoved(Object uid) throws Exception;
 
     /**
-     * Reset search engine.
-     *
-     * @throws Exception
-     */
+ * Reset search engine.
+ *
+ * @throws Exception
+ */
     void reset() throws Exception;
 }

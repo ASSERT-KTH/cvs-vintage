@@ -33,18 +33,18 @@ public class PriorityFilter extends AbstractFilter {
     private String searchPattern;
 
     /**
-     * Constructor for PriorityFilter.
-     */
+ * Constructor for PriorityFilter.
+ */
     public PriorityFilter() {
         super();
     }
 
     /**
-     * Transform priority to integer value.
-     *
-     * @param pattern       priority string
-     * @return              integer representation of string
-     */
+ * Transform priority to integer value.
+ *
+ * @param pattern       priority string
+ * @return              integer representation of string
+ */
     protected Integer transformPriority(String pattern) {
         Integer searchPatternInt = new Integer(3);
 
@@ -66,10 +66,10 @@ public class PriorityFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *      org.columba.mail.folder.Folder, java.lang.Object,
-     *      org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+ *      org.columba.mail.folder.Folder, java.lang.Object,
+ *      org.columba.core.command.WorkerStatusController)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
@@ -105,9 +105,9 @@ public class PriorityFilter extends AbstractFilter {
     }
 
     /**
-     *
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ *
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         // is/is not
         criteria = f.get("criteria");

@@ -43,22 +43,22 @@ public class HeaderfieldFilter extends AbstractFilter {
     private String pattern;
 
     /**
-     * Constructor for HeaderfieldFilter.
-     *
-     * @param filter
-     */
+ * Constructor for HeaderfieldFilter.
+ *
+ * @param filter
+ */
     public HeaderfieldFilter() {
         super();
     }
 
     /**
-     *
-     * Check if the requested headerfield contains the search string and return
-     * true if match was found, otherwise return false
-     *
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
-     *      java.lang.Object, org.columba.mail.filter.Filter)
-     */
+ *
+ * Check if the requested headerfield contains the search string and return
+ * true if match was found, otherwise return false
+ *
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder,
+ *      java.lang.Object, org.columba.mail.filter.Filter)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
         // get message header
         Header header = folder.getHeaderFields(uid, new String[] { headerfield });
@@ -80,18 +80,18 @@ public class HeaderfieldFilter extends AbstractFilter {
     }
 
     /**
-     *
-     * check if a match exists in the requested headerfield
-     *
-     * @param headerItem
-     *            String to specify headerfield (example:Subject)
-     * @param condition
-     *            contains, contains not
-     * @param pattern
-     *            search string
-     *
-     * @return boolean return true if match was found, otherwise return false
-     */
+ *
+ * check if a match exists in the requested headerfield
+ *
+ * @param headerItem
+ *            String to specify headerfield (example:Subject)
+ * @param condition
+ *            contains, contains not
+ * @param pattern
+ *            search string
+ *
+ * @return boolean return true if match was found, otherwise return false
+ */
     protected boolean match(String headerItem, int condition, String pattern) {
         boolean result = false;
 
@@ -154,8 +154,8 @@ public class HeaderfieldFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         // contains/contains not
         criteria = f.get("criteria");

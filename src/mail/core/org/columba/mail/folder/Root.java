@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import org.columba.addressbook.config.AdapterNode;
+
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
@@ -36,15 +38,15 @@ public class Root extends FolderTreeNode {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
-     */
+ * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
+ */
     public String getDefaultChild() {
         return null;
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.FolderTreeNode#getName()
-     */
+ * @see org.columba.mail.folder.FolderTreeNode#getName()
+ */
     public String getName() {
         return "Root";
     }

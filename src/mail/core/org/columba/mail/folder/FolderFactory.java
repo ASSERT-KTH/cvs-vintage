@@ -43,10 +43,10 @@ public class FolderFactory {
     private static FolderFactory instance;
     private FolderPluginHandler handler;
     private XmlElement folderlistElement;
-    
+
     // parent directory for mail folders
-	// for example: ".columba/mail/"
-	private String path = MainInterface.config.getConfigDirectory() + "/mail/";
+    // for example: ".columba/mail/"
+    private String path = MainInterface.config.getConfigDirectory() + "/mail/";
 
     protected FolderFactory() {
         // Get the handler
@@ -63,10 +63,10 @@ public class FolderFactory {
     }
 
     /**
-     * Singleton - pattern
-     *
-     * @return the instance of the factory
-     */
+ * Singleton - pattern
+ *
+ * @return the instance of the factory
+ */
     public static FolderFactory getInstance() {
         if (instance == null) {
             instance = new FolderFactory();
@@ -76,11 +76,11 @@ public class FolderFactory {
     }
 
     /**
-     * Gets a list of all possible child foldertypes.
-     *
-     * @param parent
-     * @return a list that contains Strings of foldertypes
-     */
+ * Gets a list of all possible child foldertypes.
+ *
+ * @param parent
+ * @return a list that contains Strings of foldertypes
+ */
     public List getPossibleChilds(FolderTreeNode parent) {
         List list = new LinkedList();
 
@@ -113,12 +113,12 @@ public class FolderFactory {
     }
 
     /**
-     * Creates the default child for the given parent.
-     *
-     * @param parent the parent folder
-     * @return the childfolder
-     * @throws Exception
-     */
+ * Creates the default child for the given parent.
+ *
+ * @param parent the parent folder
+ * @return the childfolder
+ * @throws Exception
+ */
     public FolderTreeNode createDefaultChild(FolderTreeNode parent, String name)
         throws Exception {
         List possibleChilds = getPossibleChilds(parent);
@@ -133,16 +133,15 @@ public class FolderFactory {
     }
 
     /**
-     * Creates a subfolder for the given folder with the given type.
-     *
-     * @param parent the parentfolder
-     * @param childType the type of the child (e.g. CachedMHFolder )
-     * @return the childfolder
-     * @throws Exception
-     */
+ * Creates a subfolder for the given folder with the given type.
+ *
+ * @param parent the parentfolder
+ * @param childType the type of the child (e.g. CachedMHFolder )
+ * @return the childfolder
+ * @throws Exception
+ */
     public FolderTreeNode createChild(FolderTreeNode parent, String name,
         String childType) throws Exception {
-    	
         FolderTreeNode child = (FolderTreeNode) handler.getPlugin(childType,
                 new Object[] { name, childType, path });
 

@@ -17,9 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import java.io.InputStream;
-import java.util.List;
-
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.FolderTreeNode;
@@ -30,7 +27,12 @@ import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
+
 import org.columba.ristretto.message.Attributes;
+
+import java.io.InputStream;
+
+import java.util.List;
 
 
 /**
@@ -65,9 +67,10 @@ public class OutboxFolder extends CachedMHFolder {
         return headerCache;
     }
 
-    public SendableMessage getSendableMessage(Object uid) throws Exception {
+    public SendableMessage getSendableMessage(Object uid)
+        throws Exception {
         ColumbaMessage message = getMessage(uid);
-        
+
         SendableMessage sendableMessage = new SendableMessage(message);
 
         return sendableMessage;
@@ -75,8 +78,8 @@ public class OutboxFolder extends CachedMHFolder {
 
     private void swapListManagers() throws Exception {
         // copy lost Messages
-        System.out.println("Sizes : " + sendListManager[actSender].count()
-            + " - " + sendListManager[1 - actSender].count());
+        System.out.println("Sizes : " + sendListManager[actSender].count() +
+            " - " + sendListManager[1 - actSender].count());
 
         while (sendListManager[actSender].hasMoreMessages()) {
             sendListManager[1 - actSender].add((SendableMessage) getMessage(
@@ -86,8 +89,8 @@ public class OutboxFolder extends CachedMHFolder {
         // swap
         actSender = 1 - actSender;
 
-        System.out.println("Sizes : " + sendListManager[actSender].count()
-            + " - " + sendListManager[1 - actSender].count());
+        System.out.println("Sizes : " + sendListManager[actSender].count() +
+            " - " + sendListManager[1 - actSender].count());
     }
 
     public void stoppedSending() {
@@ -103,31 +106,43 @@ public class OutboxFolder extends CachedMHFolder {
     }
 
     /**
-     *
-     * OutboxFolder doesn't allow adding messages, in comparison to other
-     * regular mailbox folders.
-     *
-     * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
-     */
+ *
+ * OutboxFolder doesn't allow adding messages, in comparison to other
+ * regular mailbox folders.
+ *
+ * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
+ */
     public boolean supportsAddMessage() {
         return false;
     }
 
     /**
-     * The outbox folder doesnt allow adding folders to it.
-     * @param newFolder folder to check..
-     * @return false always.
-     */
+ * The outbox folder doesnt allow adding folders to it.
+ * @param newFolder folder to check..
+ * @return false always.
+ */
     public boolean supportsAddFolder(FolderTreeNode newFolder) {
         return false;
     }
 
     /**
-     * Returns if this folder type can be moved.
-     * @return false always.
-     */
+ * Returns if this folder type can be moved.
+ * @return false always.
+ */
     public boolean supportsMove() {
         return false;
+    }
+
+    /**
+ * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+ */
+    public Object addMessage(InputStream in, Attributes attributes)
+        throws Exception {
+        Object uid = super.addMessage(in, attributes);
+        setAttribute(uid, "columba.recipients",
+            attributes.get("columba.recipients"));
+
+        return uid;
     }
 
     class OutboxHeaderCache extends LocalHeaderCache {
@@ -143,10 +158,11 @@ public class OutboxFolder extends CachedMHFolder {
             super.loadHeader(h);
 
             Integer accountUid = (Integer) reader.readObject();
-            h.getAttributes().put("columba.accountuid",accountUid);
+            h.getAttributes().put("columba.accountuid", accountUid);
 
             List recipients = (List) reader.readObject();
-            h.getAttributes().put("columba.recipients",recipients);;
+            h.getAttributes().put("columba.recipients", recipients);
+            ;
         }
 
         protected void saveHeader(ColumbaHeader h) throws Exception {
@@ -157,16 +173,4 @@ public class OutboxFolder extends CachedMHFolder {
             writer.writeObject(h.getAttributes().get("columba.recipients"));
         }
     }
-
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
-     */
-    public Object addMessage(InputStream in, Attributes attributes)
-        throws Exception {
-        Object uid = super.addMessage(in, attributes);
-        setAttribute(uid, "columba.recipients", attributes.get("columba.recipients"));
-        
-        return uid;
-    }
-
 }

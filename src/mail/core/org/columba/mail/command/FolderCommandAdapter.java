@@ -39,10 +39,10 @@ public class FolderCommandAdapter {
     }
 
     /**
-     * Get array of source references.
-     *
-     * @return                source references
-     */
+ * Get array of source references.
+ *
+ * @return                source references
+ */
     public FolderCommandReference[] getSourceFolderReferences() {
         FolderCommandReference[] result = new FolderCommandReference[length -
             2];
@@ -53,28 +53,28 @@ public class FolderCommandAdapter {
     }
 
     /**
-     * Get destination reference
-     *
-     * @return                destination reference
-     */
+ * Get destination reference
+ *
+ * @return                destination reference
+ */
     public Folder getDestinationFolder() {
         return (Folder) c[length - 2].getFolder();
     }
 
     /**
-     * Get destination reference
-     *
-     * @return                destination reference
-     */
+ * Get destination reference
+ *
+ * @return                destination reference
+ */
     public FolderCommandReference getDestinationFolderReference() {
         return c[length - 2];
     }
 
     /**
-     * Get update reference
-     *
-     * @return                update reference
-     */
+ * Get update reference
+ *
+ * @return                update reference
+ */
     public FolderCommandReference getUpdateReferences() {
         // shouldn't this be <=2 ?
         // -> this fixes the VirtualFolder doesn't update bug for me

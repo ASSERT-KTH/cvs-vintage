@@ -15,19 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.headercache;
-
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
@@ -35,11 +28,21 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
+
+import java.io.InputStream;
+
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
 
 /**
  *
@@ -68,7 +71,7 @@ public abstract class CachedFolder extends LocalFolder {
      * @param type
      */
     public CachedFolder(String name, String type, String path) {
-        super(name, type,  path);
+        super(name, type, path);
 
         mutex = new Mutex(getName());
     }
@@ -223,8 +226,9 @@ public abstract class CachedFolder extends LocalFolder {
                 return aktMessage;
             }
         }
-        
+
         ColumbaMessage message;
+
         try {
             message = super.getMessage(uid);
         } catch (FolderInconsistentException e) {
@@ -241,16 +245,16 @@ public abstract class CachedFolder extends LocalFolder {
 
             // remove message from headercache
             getHeaderCacheInstance().remove(uid);
-            
+
             throw e;
         }
-        
+
         //We use the attributes and flags from the cache
         //but the parsed header from the parsed message
         ColumbaHeader header = (ColumbaHeader) getCachedHeaderList().get(uid);
         header.setHeader(message.getHeader().getHeader());
-        message.setHeader( header );
-        
+        message.setHeader(header);
+
         return message;
     }
 
@@ -287,7 +291,6 @@ public abstract class CachedFolder extends LocalFolder {
 
             return (ColumbaHeader) h;
         } else {
-
             // message isn't cached
             // -> just return header from cache
             return (ColumbaHeader) getCachedHeaderList().get(uid);
@@ -325,8 +328,11 @@ public abstract class CachedFolder extends LocalFolder {
         throws Exception {
         ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
         Flags flags = getFlags(uid);
-        if ( flags == null ) return;
-        
+
+        if (flags == null) {
+            return;
+        }
+
         switch (variant) {
         case MarkMessageCommand.MARK_AS_READ: {
             if (flags.getRecent()) {
@@ -467,7 +473,8 @@ public abstract class CachedFolder extends LocalFolder {
      *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
      */
-    public Object addMessage(InputStream in, Attributes attributes ) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes)
+        throws Exception {
         // get headerlist before adding a message
         getHeaderList();
 
@@ -485,10 +492,11 @@ public abstract class CachedFolder extends LocalFolder {
 
         Header header = HeaderParser.parse(source);
         ColumbaHeader h = new ColumbaHeader(header);
-        if( attributes == null ) {
-        	h.getAttributes().put("columba.size", new Integer(size / 1024));
+
+        if (attributes == null) {
+            h.getAttributes().put("columba.size", new Integer(size / 1024));
         } else {
-        	h.setAttributes((Attributes)attributes.clone());
+            h.setAttributes((Attributes) attributes.clone());
         }
 
         // decode all headerfields:
@@ -571,33 +579,34 @@ public abstract class CachedFolder extends LocalFolder {
      *
      */
     public Header getHeaderFields(Object uid, String[] keys)
-        throws Exception {        	
-            // cached headerfield list
-            List cachedList = Arrays.asList(CachedHeaderfields.getCachedHeaderfields());
+        throws Exception {
+        // cached headerfield list
+        List cachedList = Arrays.asList(CachedHeaderfields.getCachedHeaderfields());
 
-            LinkedList keyList = new LinkedList(Arrays.asList(keys));
+        LinkedList keyList = new LinkedList(Arrays.asList(keys));
 
-            ListTools.substract(keyList, cachedList);
+        ListTools.substract(keyList, cachedList);
 
-            if (keyList.size() == 0) {
-                    // all wanted headers are cached
-                    // get header with UID
-                    ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+        if (keyList.size() == 0) {
+            // all wanted headers are cached
+            // get header with UID
+            ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
-                    // copy fields
-                    Header result = new Header();
-                    for (int i = 0; i < keys.length; i++) {
-                            if (header.get(keys[i]) != null) {
-                                    // headerfield found
-                                    result.set(keys[i], header.get(keys[i]));
-                            }
-                    }
+            // copy fields
+            Header result = new Header();
 
-                    return result;
-            } else {
-                    // We need to parse
-                    return super.getHeaderFields(uid, keys);
+            for (int i = 0; i < keys.length; i++) {
+                if (header.get(keys[i]) != null) {
+                    // headerfield found
+                    result.set(keys[i], header.get(keys[i]));
+                }
             }
+
+            return result;
+        } else {
+            // We need to parse
+            return super.getHeaderFields(uid, keys);
+        }
     }
 
     public Flags getFlags(Object uid) throws Exception {
@@ -608,20 +617,18 @@ public abstract class CachedFolder extends LocalFolder {
         }
     }
 
-	public Attributes getAttributes(Object uid) throws Exception {
-		if (getHeaderList().containsKey(uid)) {
-			return getHeaderList().get(uid).getAttributes();
-		} else {
-			return null;
-		}
-	}
+    public Attributes getAttributes(Object uid) throws Exception {
+        if (getHeaderList().containsKey(uid)) {
+            return getHeaderList().get(uid).getAttributes();
+        } else {
+            return null;
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
      */
-    public Object addMessage(InputStream in)
-        throws Exception {
-        	
+    public Object addMessage(InputStream in) throws Exception {
         return addMessage(in, null);
     }
 }

@@ -18,35 +18,32 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
+
 /**
  * Simple filter matching all messages.
  *
  * @author fdietz
  */
 public class MatchAllFilter extends AbstractFilter {
+    /**
+ * 
+ */
+    public MatchAllFilter() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public MatchAllFilter() {
-		super();
-		
-	}
+    /**
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
+    public void setUp(FilterCriteria f) {
+        // we don't need any configuration here
+    }
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-	 */
-	public void setUp(FilterCriteria f) {
-		// we don't need any configuration here
-
-	}
-
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder, java.lang.Object)
-	 */
-	public boolean process(Folder folder, Object uid) throws Exception {
-		// match all matches
-		return true;
-	}
-
+    /**
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(org.columba.mail.folder.Folder, java.lang.Object)
+ */
+    public boolean process(Folder folder, Object uid) throws Exception {
+        // match all matches
+        return true;
+    }
 }

@@ -34,8 +34,8 @@ public class CachedMHFolder extends CachedFolder {
     }
 
     /**
-     * @param type
-     */
+ * @param type
+ */
     public CachedMHFolder(String name, String type, String path) {
         super(name, type, path);
 

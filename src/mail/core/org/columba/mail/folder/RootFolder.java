@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import org.columba.mail.folder.imap.IMAPRootFolder;
+
 
 /**
  * Root folders like {@link LocalRootFolder} and {@link IMAPRootFolder} should

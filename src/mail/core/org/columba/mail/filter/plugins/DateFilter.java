@@ -36,8 +36,8 @@ public class DateFilter extends AbstractFilter {
     private String pattern;
 
     /**
-     * Constructor for DateFilter.
-     */
+ * Constructor for DateFilter.
+ */
     public DateFilter() {
         super();
     }
@@ -59,10 +59,10 @@ public class DateFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *      org.columba.mail.folder.Folder, java.lang.Object,
-     *      org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+ *      org.columba.mail.folder.Folder, java.lang.Object,
+ *      org.columba.core.command.WorkerStatusController)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
         // convert criteria into int-value
         int condition = FilterCriteria.getCriteria(criteria);
@@ -103,8 +103,8 @@ public class DateFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         // before/after
         criteria = f.get("criteria");

@@ -22,8 +22,8 @@ public abstract class IMAPFolderCommand extends FolderCommand {
     protected IMAPRootFolder rootFolder;
 
     /**
-     * @param references
-     */
+ * @param references
+ */
     public IMAPFolderCommand(IMAPRootFolder rootFolder,
         DefaultCommandReference[] references) {
         super(references);
@@ -31,17 +31,17 @@ public abstract class IMAPFolderCommand extends FolderCommand {
     }
 
     /**
-     * @param frame
-     * @param references
-     */
+ * @param frame
+ * @param references
+ */
     public IMAPFolderCommand(FrameMediator frame,
         DefaultCommandReference[] references) {
         super(frame, references);
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public IMAPRootFolder getIMAPRootFolder() {
         return rootFolder;
     }

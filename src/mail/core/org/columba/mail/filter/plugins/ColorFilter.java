@@ -31,8 +31,8 @@ public class ColorFilter extends AbstractFilter {
     private int criteriaCondition;
 
     /**
-     * @param f filter containing the configuration.
-     */
+ * @param f filter containing the configuration.
+ */
     public ColorFilter() {
         super();
 
@@ -62,8 +62,8 @@ public class ColorFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         criteriaRGB = f.getInteger("rgb");
         criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());

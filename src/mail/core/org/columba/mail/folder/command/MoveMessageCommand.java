@@ -23,7 +23,6 @@ import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 
-import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
@@ -87,7 +86,8 @@ public class MoveMessageCommand extends CopyMessageCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // calling CopyMessageCommand.execute() here!
         super.execute(worker);
 

@@ -32,10 +32,11 @@ import org.columba.mail.filter.FilterList;
  */
 public abstract class RemoteFolder extends Folder {
     //protected RemoteSearchEngine searchEngine;
+
     /**
-     * Constructs a RemoteFolder.
-     * @param item information about the folder.
-     */
+ * Constructs a RemoteFolder.
+ * @param item information about the folder.
+ */
     public RemoteFolder(FolderItem item, String path) {
         super(item, path);
 
@@ -50,10 +51,10 @@ public abstract class RemoteFolder extends Folder {
     }
 
     /**
-     * Constructs a Remote Folder.
-     * @param name the name of the folder.
-     * @param type the type of a folder.
-     */
+ * Constructs a Remote Folder.
+ * @param name the name of the folder.
+ * @param type the type of a folder.
+ */
     public RemoteFolder(String name, String type, String path) {
         super(name, type, path);
     }

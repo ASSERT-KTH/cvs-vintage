@@ -27,407 +27,407 @@ public class FolderXmlConfig extends DefaultXmlConfig {
     }
 
     /*
-            // create uid list from all accounts
-            protected void getUids(Vector v, AdapterNode parent) {
+        // create uid list from all accounts
+        protected void getUids(Vector v, AdapterNode parent) {
 
-                    int childCount = parent.getChildCount();
+                int childCount = parent.getChildCount();
 
-                    if (childCount > 0) {
-                            for (int i = 0; i < childCount; i++) {
+                if (childCount > 0) {
+                        for (int i = 0; i < childCount; i++) {
 
-                                    AdapterNode child = parent.getChild(i);
+                                AdapterNode child = parent.getChild(i);
 
-                                    getUids(v, child);
+                                getUids(v, child);
 
-                                    //System.out.println("name: "+ child.getName() );
+                                //System.out.println("name: "+ child.getName() );
 
-                                    if (child.getName().equals("folder")) {
-                                            AdapterNode uidNode = child.getChild("uid");
+                                if (child.getName().equals("folder")) {
+                                        AdapterNode uidNode = child.getChild("uid");
 
-                                            Integer j = new Integer(uidNode.getValue());
+                                        Integer j = new Integer(uidNode.getValue());
 
-                                            v.add(j);
-                                    }
+                                        v.add(j);
+                                }
 
-                            }
-                    }
-            }
-            */
+                        }
+                }
+        }
+        */
     /*
-    // find a free uid for a new account
-    protected String createUid() {
-            Vector v = new Vector();
+// find a free uid for a new account
+protected String createUid() {
+        Vector v = new Vector();
 
-            AdapterNode rootNode = new AdapterNode(getDocument());
-            AdapterNode treeNode = rootNode.getChild(0);
+        AdapterNode rootNode = new AdapterNode(getDocument());
+        AdapterNode treeNode = rootNode.getChild(0);
 
-            getUids(v, treeNode);
+        getUids(v, treeNode);
 
-            int result = -1;
-            boolean hit;
-            boolean exit = false;
+        int result = -1;
+        boolean hit;
+        boolean exit = false;
 
-            while (exit == false) {
-                    hit = false;
-                    result++;
-                    for (int i = 0; i < v.size(); i++) {
-                            Integer j = (Integer) v.get(i);
+        while (exit == false) {
+                hit = false;
+                result++;
+                for (int i = 0; i < v.size(); i++) {
+                        Integer j = (Integer) v.get(i);
 
-                            if (j.intValue() == result) {
-                                    hit = true;
-                            }
-                    }
-                    if (hit == false)
-                            exit = true;
-            }
+                        if (j.intValue() == result) {
+                                hit = true;
+                        }
+                }
+                if (hit == false)
+                        exit = true;
+        }
 
-            Integer newUid = new Integer(result);
+        Integer newUid = new Integer(result);
 
-            return newUid.toString();
-    }
-    */
+        return newUid.toString();
+}
+*/
     /*
-    public AdapterNode addVirtualFolderNode( AdapterNode parentNode,
-                                             int uid,
-                                             String name,
-                                             String headerItem,
-                                             String pattern )
+public AdapterNode addVirtualFolderNode( AdapterNode parentNode,
+                                         int uid,
+                                         String name,
+                                         String headerItem,
+                                         String pattern )
+{
+    Element parentElement = createElementNode("folder");
+
+    Element childElement = createTextElementNode("name",name);
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("accessrights","user");
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("messagefolder", "true");
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("subfolder","false");
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("add", "false");
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("remove", "true");
+    addElement( parentElement, childElement );
+    childElement = createTextElementNode("uid", createUid() );
+    addElement( parentElement, childElement );
+
+
+    childElement = createTextElementNode("type","virtual");
+        addElement( parentElement, childElement );
+
+        Element searchElement = createElementNode("search");
+
+        childElement = createTextElementNode("include","false");
+
+        addElement( searchElement, childElement );
+
+        Integer newUid = new Integer(uid);
+
+        Element treePathNode = createTextElementNode("uid", newUid.toString() );
+
+
+        addElement( searchElement, treePathNode );
+
+
+
+
+          // create filter
+
+        Element filterParent = createElementNode("filter");
+
+        Element child = createElementNode("filterrule");
+
+        Element subChild = createElementNode( "filtercriteria" );
+
+        Element subNode = createTextElementNode("headeritem", headerItem);
+        addElement( subChild, subNode );
+        subNode = createTextElementNode("criteria", "contains" );
+        addElement( subChild, subNode );
+        subNode = createTextElementNode("pattern", pattern );
+        addElement( subChild, subNode );
+
+        addElement( child, subChild );
+
+        subNode = createTextElementNode("condition", "matchall" );
+        addElement( child, subNode );
+
+        addElement( filterParent, child );
+
+        addElement( searchElement, filterParent );
+
+        addElement( parentElement, searchElement );
+
+
+        AdapterNode childNode=null;
+
+    if ( parentNode == null )
     {
+        AdapterNode node = getRootNode();
+        childNode =  node.addElement( parentElement );
+
+        System.out.println("parent node == null ");
+        System.out.println("childnode: "+ childNode );
+
+    }
+    else
+        childNode = parentNode.addElement( parentElement );
+
+    return childNode;
+
+
+}
+*/
+    /*
+public AdapterNode addFolderNode(
+        AdapterNode parentNode,
+        String name,
+        String access,
+        String messagefolder,
+        String type,
+        String subfolder,
+        String add,
+        String remove,
+        Integer uid) {
         Element parentElement = createElementNode("folder");
 
-        Element childElement = createTextElementNode("name",name);
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("accessrights","user");
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("messagefolder", "true");
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("subfolder","false");
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("add", "false");
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("remove", "true");
-        addElement( parentElement, childElement );
-        childElement = createTextElementNode("uid", createUid() );
-        addElement( parentElement, childElement );
 
+        Element childElement = createTextElementNode("name", name);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("accessrights", access);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("messagefolder", messagefolder);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("subfolder", subfolder);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("add", add);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("remove", remove);
+        addElement(parentElement, childElement);
+        childElement = createTextElementNode("uid", createUid());
+        addElement(parentElement, childElement);
 
-        childElement = createTextElementNode("type","virtual");
-            addElement( parentElement, childElement );
+        if (type.equals("columba")) {
+                childElement = createTextElementNode("type", type);
+                addElement(parentElement, childElement);
+        } else if (type.equals("virtual")) {
+                childElement = createTextElementNode("type", type);
+                addElement(parentElement, childElement);
 
-            Element searchElement = createElementNode("search");
+                Element searchElement = createElementNode("search");
 
-            childElement = createTextElementNode("include","false");
+                childElement = createTextElementNode("include", "false");
 
-            addElement( searchElement, childElement );
+                addElement(searchElement, childElement);
 
-            Integer newUid = new Integer(uid);
-
-            Element treePathNode = createTextElementNode("uid", newUid.toString() );
-
-
-            addElement( searchElement, treePathNode );
-
+                Element treePathNode = createTextElementNode("uid", "101");
 
 
 
-              // create filter
+                addElement(searchElement, treePathNode);
 
-            Element filterParent = createElementNode("filter");
+                // create filter
 
-            Element child = createElementNode("filterrule");
+                Element filterParent = createElementNode("filter");
 
-            Element subChild = createElementNode( "filtercriteria" );
+                Element child = createElementNode("filterrule");
 
-            Element subNode = createTextElementNode("headeritem", headerItem);
-            addElement( subChild, subNode );
-            subNode = createTextElementNode("criteria", "contains" );
-            addElement( subChild, subNode );
-            subNode = createTextElementNode("pattern", pattern );
-            addElement( subChild, subNode );
+                Element subChild = createElementNode("filtercriteria");
 
-            addElement( child, subChild );
-
-            subNode = createTextElementNode("condition", "matchall" );
-            addElement( child, subNode );
-
-            addElement( filterParent, child );
-
-            addElement( searchElement, filterParent );
-
-            addElement( parentElement, searchElement );
+                Element subNode = createTextElementNode("headeritem", "Subject");
+                addElement(subChild, subNode);
+                subNode = createTextElementNode("criteria", "contains");
+                addElement(subChild, subNode);
 
 
-            AdapterNode childNode=null;
+                subNode = createTextElementNode("pattern", "pattern");
+                addElement(subChild, subNode);
+                subNode = createTextElementNode("type", "Subject");
+                addElement(subChild, subNode);
 
-        if ( parentNode == null )
-        {
-            AdapterNode node = getRootNode();
-            childNode =  node.addElement( parentElement );
+                addElement(child, subChild);
 
-            System.out.println("parent node == null ");
-            System.out.println("childnode: "+ childNode );
+                subNode = createTextElementNode("condition", "matchall");
+                addElement(child, subNode);
 
+                addElement(filterParent, child);
+
+                addElement(searchElement, filterParent);
+
+                addElement(parentElement, searchElement);
+
+        } else if (type.equals("outbox")) {
+                childElement = createTextElementNode("type", type);
+                addElement(parentElement, childElement);
+
+        } else if ((type.equals("imap")) || (type.equals("imaproot"))) {
+                childElement = createTextElementNode("type", type);
+                addElement(parentElement, childElement);
+
+                String uidString = (uid).toString();
+
+                childElement = createTextElementNode("accountuid", uidString);
+                addElement(parentElement, childElement);
         }
-        else
-            childNode = parentNode.addElement( parentElement );
+
+        AdapterNode childNode = null;
+
+        if (parentNode == null) {
+                AdapterNode node = getRootNode();
+                childNode = node.addElement(parentElement);
+
+                System.out.println("parent node == null ");
+                System.out.println("childnode: " + childNode);
+
+        } else
+                childNode = parentNode.addElement(parentElement);
 
         return childNode;
-
-
-    }
-    */
+}
+*/
     /*
-    public AdapterNode addFolderNode(
-            AdapterNode parentNode,
-            String name,
-            String access,
-            String messagefolder,
-            String type,
-            String subfolder,
-            String add,
-            String remove,
-            Integer uid) {
-            Element parentElement = createElementNode("folder");
+public FolderItem getFolderItem(AdapterNode node) {
+        if (node != null) {
+                if (node.getName().equals("folder")) {
+                        FolderItem folderItem = new FolderItem(getDocument());
+
+                        folderItem.setNameNode(node.getChild("name"));
+
+                        //System.out.println("folder found: "+ node.getChild("name").getValue() );
+                        folderItem.setAccessRightsNode(node.getChild("accessrights"));
+                        folderItem.setMessageFolderNode(node.getChild("messagefolder"));
+                        folderItem.setTypeNode(node.getChild("type"));
+                        folderItem.setSubfolderNode(node.getChild("subfolder"));
+                        folderItem.setAddNode(node.getChild("add"));
+                        folderItem.setRemoveNode(node.getChild("remove"));
+                        folderItem.setUidNode(node.getChild("uid"));
+
+                        String type = node.getChild("type").getValue();
+
+                        if ((type.equals("imap")) || (type.equals("imaproot")))
+                                folderItem.setAccountUidNode(node.getChild("accountuid"));
+
+                        AdapterNode filterNode = node.getChild("filterlist");
+                        if (filterNode != null) {
+                                folderItem.setFilterListNode(filterNode);
 
 
-            Element childElement = createTextElementNode("name", name);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("accessrights", access);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("messagefolder", messagefolder);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("subfolder", subfolder);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("add", add);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("remove", remove);
-            addElement(parentElement, childElement);
-            childElement = createTextElementNode("uid", createUid());
-            addElement(parentElement, childElement);
+                        } else {
+                                AdapterNode searchNode = node.getChild("search");
+                                if (searchNode != null) {
+                                        //System.out.println("search node found");
 
-            if (type.equals("columba")) {
-                    childElement = createTextElementNode("type", type);
-                    addElement(parentElement, childElement);
-            } else if (type.equals("virtual")) {
-                    childElement = createTextElementNode("type", type);
-                    addElement(parentElement, childElement);
+                                        folderItem.setSearchNode(searchNode);
+                                }
 
-                    Element searchElement = createElementNode("search");
+                        }
 
-                    childElement = createTextElementNode("include", "false");
+                        return folderItem;
+                }
 
-                    addElement(searchElement, childElement);
+        }
 
-                    Element treePathNode = createTextElementNode("uid", "101");
-
-
-
-                    addElement(searchElement, treePathNode);
-
-                    // create filter
-
-                    Element filterParent = createElementNode("filter");
-
-                    Element child = createElementNode("filterrule");
-
-                    Element subChild = createElementNode("filtercriteria");
-
-                    Element subNode = createTextElementNode("headeritem", "Subject");
-                    addElement(subChild, subNode);
-                    subNode = createTextElementNode("criteria", "contains");
-                    addElement(subChild, subNode);
-
-
-                    subNode = createTextElementNode("pattern", "pattern");
-                    addElement(subChild, subNode);
-                    subNode = createTextElementNode("type", "Subject");
-                    addElement(subChild, subNode);
-
-                    addElement(child, subChild);
-
-                    subNode = createTextElementNode("condition", "matchall");
-                    addElement(child, subNode);
-
-                    addElement(filterParent, child);
-
-                    addElement(searchElement, filterParent);
-
-                    addElement(parentElement, searchElement);
-
-            } else if (type.equals("outbox")) {
-                    childElement = createTextElementNode("type", type);
-                    addElement(parentElement, childElement);
-
-            } else if ((type.equals("imap")) || (type.equals("imaproot"))) {
-                    childElement = createTextElementNode("type", type);
-                    addElement(parentElement, childElement);
-
-                    String uidString = (uid).toString();
-
-                    childElement = createTextElementNode("accountuid", uidString);
-                    addElement(parentElement, childElement);
-            }
-
-            AdapterNode childNode = null;
-
-            if (parentNode == null) {
-                    AdapterNode node = getRootNode();
-                    childNode = node.addElement(parentElement);
-
-                    System.out.println("parent node == null ");
-                    System.out.println("childnode: " + childNode);
-
-            } else
-                    childNode = parentNode.addElement(parentElement);
-
-            return childNode;
-    }
-    */
+        return null;
+}
+*/
     /*
-    public FolderItem getFolderItem(AdapterNode node) {
-            if (node != null) {
-                    if (node.getName().equals("folder")) {
-                            FolderItem folderItem = new FolderItem(getDocument());
+public AdapterNode addEmptyFilterCriteria(AdapterNode filterRuleNode) {
+        Element child = createElementNode("filtercriteria");
 
-                            folderItem.setNameNode(node.getChild("name"));
-
-                            //System.out.println("folder found: "+ node.getChild("name").getValue() );
-                            folderItem.setAccessRightsNode(node.getChild("accessrights"));
-                            folderItem.setMessageFolderNode(node.getChild("messagefolder"));
-                            folderItem.setTypeNode(node.getChild("type"));
-                            folderItem.setSubfolderNode(node.getChild("subfolder"));
-                            folderItem.setAddNode(node.getChild("add"));
-                            folderItem.setRemoveNode(node.getChild("remove"));
-                            folderItem.setUidNode(node.getChild("uid"));
-
-                            String type = node.getChild("type").getValue();
-
-                            if ((type.equals("imap")) || (type.equals("imaproot")))
-                                    folderItem.setAccountUidNode(node.getChild("accountuid"));
-
-                            AdapterNode filterNode = node.getChild("filterlist");
-                            if (filterNode != null) {
-                                    folderItem.setFilterListNode(filterNode);
+        Element subNode = createTextElementNode("headeritem", "Subject");
+        addElement(child, subNode);
+        subNode = createTextElementNode("criteria", "contains");
+        addElement(child, subNode);
+        subNode = createTextElementNode("pattern", "pattern");
+        addElement(child, subNode);
+        subNode = createTextElementNode("type", "Subject");
+        addElement(child, subNode);
 
 
-                            } else {
-                                    AdapterNode searchNode = node.getChild("search");
-                                    if (searchNode != null) {
-                                            //System.out.println("search node found");
+        filterRuleNode.domNode.appendChild(child);
 
-                                            folderItem.setSearchNode(searchNode);
-                                    }
-
-                            }
-
-                            return folderItem;
-                    }
-
-            }
-
-            return null;
-    }
-    */
+        return new AdapterNode(child);
+}
+*/
     /*
-    public AdapterNode addEmptyFilterCriteria(AdapterNode filterRuleNode) {
-            Element child = createElementNode("filtercriteria");
+public AdapterNode addEmptyFilterAction(AdapterNode filterActionNode) {
+        Element actionNode = createElementNode("action");
 
-            Element subNode = createTextElementNode("headeritem", "Subject");
-            addElement(child, subNode);
-            subNode = createTextElementNode("criteria", "contains");
-            addElement(child, subNode);
-            subNode = createTextElementNode("pattern", "pattern");
-            addElement(child, subNode);
-            subNode = createTextElementNode("type", "Subject");
-            addElement(child, subNode);
+        Element nameNode = createTextElementNode("name", "move");
+        addElement(actionNode, nameNode);
 
+        Element uidNode = createTextElementNode("uid", "101");
+        addElement(actionNode, uidNode);
 
-            filterRuleNode.domNode.appendChild(child);
+        filterActionNode.domNode.appendChild(actionNode);
 
-            return new AdapterNode(child);
-    }
-    */
-    /*
-    public AdapterNode addEmptyFilterAction(AdapterNode filterActionNode) {
-            Element actionNode = createElementNode("action");
+        return new AdapterNode(actionNode);
+}
 
-            Element nameNode = createTextElementNode("name", "move");
-            addElement(actionNode, nameNode);
+public AdapterNode addEmptyFilterNode(AdapterNode folderNode) {
 
-            Element uidNode = createTextElementNode("uid", "101");
-            addElement(actionNode, uidNode);
+        Element parent = createElementNode("filter");
 
-            filterActionNode.domNode.appendChild(actionNode);
+        Element child = createTextElementNode("enabled", "true");
+        addElement(parent, child);
+        child = createTextElementNode("description", "new filter");
+        addElement(parent, child);
 
-            return new AdapterNode(actionNode);
-    }
+        addElement(parent, child);
 
-    public AdapterNode addEmptyFilterNode(AdapterNode folderNode) {
+        // create filterrule-node
+        child = createElementNode("filterrule");
 
-            Element parent = createElementNode("filter");
+        Element subChild = createElementNode("filtercriteria");
 
-            Element child = createTextElementNode("enabled", "true");
-            addElement(parent, child);
-            child = createTextElementNode("description", "new filter");
-            addElement(parent, child);
+        Element subNode = createTextElementNode("headeritem", "Subject");
+        addElement(subChild, subNode);
+        subNode = createTextElementNode("criteria", "contains");
+        addElement(subChild, subNode);
+        subNode = createTextElementNode("pattern", "pattern");
+        addElement(subChild, subNode);
+        subNode = createTextElementNode("type", "Subject");
+        addElement(subChild, subNode);
 
-            addElement(parent, child);
+        addElement(child, subChild);
 
-            // create filterrule-node
-            child = createElementNode("filterrule");
+        subNode = createTextElementNode("condition", "matchall");
+        addElement(child, subNode);
 
-            Element subChild = createElementNode("filtercriteria");
+        addElement(parent, child);
 
-            Element subNode = createTextElementNode("headeritem", "Subject");
-            addElement(subChild, subNode);
-            subNode = createTextElementNode("criteria", "contains");
-            addElement(subChild, subNode);
-            subNode = createTextElementNode("pattern", "pattern");
-            addElement(subChild, subNode);
-            subNode = createTextElementNode("type", "Subject");
-            addElement(subChild, subNode);
+        // create actionlist-node
+        Element actionNode = createElementNode("actionlist");
 
-            addElement(child, subChild);
+        Element subActionNode = createElementNode("action");
 
-            subNode = createTextElementNode("condition", "matchall");
-            addElement(child, subNode);
+        Element nameNode = createTextElementNode("name", "move");
+        addElement(subActionNode, nameNode);
+        Element uidNode = createTextElementNode("uid", "101");
+        addElement(subActionNode, uidNode);
 
-            addElement(parent, child);
+        addElement(actionNode, subActionNode);
 
-            // create actionlist-node
-            Element actionNode = createElementNode("actionlist");
+        addElement(parent, actionNode);
 
-            Element subActionNode = createElementNode("action");
+        AdapterNode filterListNode = folderNode.getChild("filterlist");
 
-            Element nameNode = createTextElementNode("name", "move");
-            addElement(subActionNode, nameNode);
-            Element uidNode = createTextElementNode("uid", "101");
-            addElement(subActionNode, uidNode);
+        if (filterListNode == null) {
+                Element listNode = createElementNode("filterlist");
 
-            addElement(actionNode, subActionNode);
+                addElement(listNode, parent);
 
-            addElement(parent, actionNode);
+                Node node = folderNode.domNode.appendChild(listNode);
 
-            AdapterNode filterListNode = folderNode.getChild("filterlist");
+                AdapterNode result = new AdapterNode(parent);
 
-            if (filterListNode == null) {
-                    Element listNode = createElementNode("filterlist");
+                return result;
+        } else {
 
-                    addElement(listNode, parent);
+                Node node = filterListNode.domNode.appendChild(parent);
+                AdapterNode result = new AdapterNode(node);
 
-                    Node node = folderNode.domNode.appendChild(listNode);
+                return result;
+        }
 
-                    AdapterNode result = new AdapterNode(parent);
-
-                    return result;
-            } else {
-
-                    Node node = filterListNode.domNode.appendChild(parent);
-                    AdapterNode result = new AdapterNode(node);
-
-                    return result;
-            }
-
-    }
-    */
+}
+*/
 }

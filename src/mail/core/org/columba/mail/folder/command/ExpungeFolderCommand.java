@@ -43,18 +43,18 @@ public class ExpungeFolderCommand extends FolderCommand {
     protected FolderCommandAdapter adapter;
 
     /**
-     * Constructor for ExpungeFolderCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for ExpungeFolderCommand.
+ *
+ * @param frameMediator
+ * @param references
+ */
     public ExpungeFolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         // get source references
         FolderCommandReference[] r = adapter.getSourceFolderReferences();
@@ -88,9 +88,10 @@ public class ExpungeFolderCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // use wrapper for references
         adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
 

@@ -21,6 +21,7 @@ import org.columba.mail.message.ColumbaMessage;
 
 import java.util.List;
 
+
 /**
  * Performes search requests on the IMAP server-side.
  * <p>
@@ -34,25 +35,22 @@ import java.util.List;
  */
 public class IMAPQueryEngine implements QueryEngine {
     /**
-     * list of supported search requests
-     */
-    
+ * list of supported search requests
+ */
+
     //  This list is reduced, because most search requests can be 
     // answered anyway, using locally cached headerfields
     private static final String[] CAPABILITY_LIST = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield",
         "Date", "Flags", "Priority"
     };
-    
-
-
     private IMAPFolder folder;
 
     /**
-     * Contructor
-     *
-     * @param f                IMAPFolder
-     */
+ * Contructor
+ *
+ * @param f                IMAPFolder
+ */
     public IMAPQueryEngine(IMAPFolder f) {
         this.folder = f;
     }

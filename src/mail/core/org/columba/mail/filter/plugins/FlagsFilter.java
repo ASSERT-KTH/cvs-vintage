@@ -35,17 +35,17 @@ public class FlagsFilter extends AbstractFilter {
     private String pattern;
 
     /**
-     * Constructor for FlagsFilter.
-     */
+ * Constructor for FlagsFilter.
+ */
     public FlagsFilter() {
         super();
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *      org.columba.mail.folder.Folder, java.lang.Object,
-     *      org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+ *      org.columba.mail.folder.Folder, java.lang.Object,
+ *      org.columba.core.command.WorkerStatusController)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
@@ -80,8 +80,8 @@ public class FlagsFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         //  is/is not
         criteria = f.get("criteria");

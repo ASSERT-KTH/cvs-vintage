@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -102,7 +101,8 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
      * @param worker
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get references to selected folder and message
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Object[] uids = r[0].getUids(); // uid for messages to save
@@ -161,7 +161,9 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
             vfolder = (VirtualFolder) FolderFactory.getInstance().createChild(parent,
                     folderName, "VirtualFolder");
         } catch (Exception e) {
-            ColumbaLogger.log.severe("Error creating new virtual folder: " + e.getMessage());
+            ColumbaLogger.log.severe("Error creating new virtual folder: " +
+                e.getMessage());
+
             return null;
         }
 

@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.headercache;
 
 import org.columba.core.xml.XmlElement;
@@ -27,6 +26,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 
 /**
  *
@@ -41,28 +41,11 @@ public class CachedHeaderfields {
 
     static {
         // initialize user-defined element as empty 
-    	// -> this is necessary to also work with testcases
-    	// -> which don't use Columba's configuration
-    	headercache = new XmlElement("headercache");
+        // -> this is necessary to also work with testcases
+        // -> which don't use Columba's configuration
+        headercache = new XmlElement("headercache");
     }
-    
-    /**
-     * Call this from MailMain to add user-defined headerfields
-     *
-     */
-    public static void addConfiguration() {
-        // see if we have to cache additional headerfields
-        // which are added by the user
-        XmlElement options = MailInterface.config.get("options").getElement("/options");
-        headercache = options.getElement("headercache");
 
-        if (headercache == null) {
-            // create xml-node
-            headercache = new XmlElement("headercache");
-            options.addElement(headercache);
-        }
-    }
-    
     // internally used headerfields
     // these are all boolean values, which are saved using
     // a single int value
@@ -72,6 +55,7 @@ public class CachedHeaderfields {
         "columba.flags.seen", "columba.flags.recent", "columba.flags.answered",
         "columba.flags.flagged", "columba.flags.expunged", "columba.flags.draft",
         
+
         //	true, if message has attachments, false otherwise
         "columba.attachment", 
         //	true/false
@@ -84,33 +68,43 @@ public class CachedHeaderfields {
         
         // priority as integer value
         "columba.priority",
+        
 
         // short from, containing only name of person
         "columba.from",
+        
 
         // host from which this message was downloaded
         "columba.host",
+        
 
         // date
         "columba.date",
+        
 
         // size of message
         "columba.size",
+        
 
         // properly decoded subject
         "columba.subject",
+        
 
         // message color
         "columba.color",
+        
 
         // account ID
         "columba.accountuid",
         
+
         // to
         "columba.to",
         
+
         // Cc
         "columba.cc",
+        
 
         // from
         "columba.from"
@@ -126,30 +120,49 @@ public class CachedHeaderfields {
         "Subject", "From", "To", "Cc", "Date", "Message-Id", "In-Reply-To",
         "References", "Content-Type"
     };
-    
     public static final String[] POP3_HEADERFIELDS = {
         "Subject", "From", "columba.date", "columba.size",
         
+
         // POP3 message UID
         "columba.pop3uid",
+        
 
         // was this message already fetched from the server?
         "columba.alreadyfetched"
     };
 
     /**
-     * No need for creating instances of this class.
-     */
-    private CachedHeaderfields() {}
+ * No need for creating instances of this class.
+ */
+    private CachedHeaderfields() {
+    }
 
     /**
-     *
-     * create new header which only contains headerfields needed by Columba
-     * (meaning they also get cached)
-     *
-     * @param h
-     * @return
-     */
+ * Call this from MailMain to add user-defined headerfields
+ *
+ */
+    public static void addConfiguration() {
+        // see if we have to cache additional headerfields
+        // which are added by the user
+        XmlElement options = MailInterface.config.get("options").getElement("/options");
+        headercache = options.getElement("headercache");
+
+        if (headercache == null) {
+            // create xml-node
+            headercache = new XmlElement("headercache");
+            options.addElement(headercache);
+        }
+    }
+
+    /**
+ *
+ * create new header which only contains headerfields needed by Columba
+ * (meaning they also get cached)
+ *
+ * @param h
+ * @return
+ */
     public static ColumbaHeader stripHeaders(ColumbaHeader h) {
         //return h;
         ColumbaHeader strippedHeader = new ColumbaHeader();
@@ -185,13 +198,14 @@ public class CachedHeaderfields {
     }
 
     /**
-     * @return array containing all user defined headerfields
-     */
+ * @return array containing all user defined headerfields
+ */
     public static String[] getUserDefinedHeaderfields() {
         List list = new LinkedList();
         String additionalHeaderfields = headercache.getAttribute("headerfields");
-        if (additionalHeaderfields != null &&
-                additionalHeaderfields.length() > 0) {
+
+        if ((additionalHeaderfields != null) &&
+                (additionalHeaderfields.length() > 0)) {
             StringTokenizer tok = new StringTokenizer(additionalHeaderfields,
                     " ");
 
@@ -200,12 +214,13 @@ public class CachedHeaderfields {
                 list.add(s);
             }
         }
-        return (String[])list.toArray(new String[0]);
+
+        return (String[]) list.toArray(new String[0]);
     }
 
     /**
-     * @return array containing default + user-defined headerfields
-     */
+ * @return array containing default + user-defined headerfields
+ */
     public static String[] getCachedHeaderfields() {
         List list = new LinkedList(Arrays.asList(DEFAULT_HEADERFIELDS));
 
@@ -215,7 +230,7 @@ public class CachedHeaderfields {
             list.addAll(Arrays.asList(userList));
         }
 
-        return (String[])list.toArray(new String[0]);
+        return (String[]) list.toArray(new String[0]);
     }
 
     public static String[] getDefaultHeaderfields() {

@@ -46,11 +46,11 @@ public class AddMessageCommand extends Command {
     protected Folder folder;
 
     /**
-     * Constructor for AddMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for AddMessageCommand.
+ *
+ * @param frameMediator
+ * @param references
+ */
     public AddMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -67,9 +67,10 @@ public class AddMessageCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get reference
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

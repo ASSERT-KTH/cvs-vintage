@@ -76,7 +76,8 @@ public class CopyMessageCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get references
         FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
 
@@ -117,7 +118,6 @@ public class CopyMessageCommand extends FolderCommand {
             } else {
                 for (int j = 0; (j < uids.length) && !worker.cancelled();
                         j++) {
-
                     if (!srcFolder.exists(uids[j])) {
                         continue;
                     }

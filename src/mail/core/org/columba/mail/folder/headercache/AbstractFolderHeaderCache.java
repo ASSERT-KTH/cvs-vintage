@@ -32,8 +32,8 @@ public abstract class AbstractFolderHeaderCache extends AbstractHeaderCache {
     protected Folder folder;
 
     /**
-     * @param folder
-     */
+ * @param folder
+ */
     public AbstractFolderHeaderCache(Folder folder) {
         super(new File(folder.getDirectoryFile(), ".header"));
         this.folder = folder;

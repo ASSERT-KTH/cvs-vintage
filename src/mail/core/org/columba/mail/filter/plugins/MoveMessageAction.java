@@ -36,10 +36,10 @@ import javax.swing.JOptionPane;
  */
 public class MoveMessageAction extends AbstractFilterAction {
     /**
-     * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
-     *
-     * move message from source- to destination-folder
-     */
+ * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
+ *
+ * move message from source- to destination-folder
+ */
     public Command getCommand(FilterAction filterAction, Folder srcFolder,
         Object[] uids) throws Exception {
         int uid = filterAction.getUid();

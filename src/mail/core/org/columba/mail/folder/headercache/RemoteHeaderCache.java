@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.headercache;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -35,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
+
 
 /**
  * IMAP-specific implementation of a header cache.

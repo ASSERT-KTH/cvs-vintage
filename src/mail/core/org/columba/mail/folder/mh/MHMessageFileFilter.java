@@ -48,8 +48,8 @@ public class MHMessageFileFilter implements FileFilter {
     }
 
     /**
-     * @see java.io.FileFilter#accept(java.io.File)
-     */
+ * @see java.io.FileFilter#accept(java.io.File)
+ */
     public boolean accept(File arg0) {
         matcher.reset(arg0.getName());
 

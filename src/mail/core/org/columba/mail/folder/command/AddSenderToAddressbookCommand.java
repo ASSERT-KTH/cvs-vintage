@@ -24,10 +24,8 @@ import org.columba.addressbook.parser.AddressParser;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -47,29 +45,30 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
     org.columba.addressbook.folder.Folder selectedFolder;
 
     /**
-     * Constructor for AddSenderToAddressbookCommand.
-     *
-     * @param references
-     */
+ * Constructor for AddSenderToAddressbookCommand.
+ *
+ * @param references
+ */
     public AddSenderToAddressbookCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * Constructor for AddSenderToAddressbookCommand.
-     *
-     * @param frame
-     * @param references
-     */
+ * Constructor for AddSenderToAddressbookCommand.
+ *
+ * @param frame
+ * @param references
+ */
     public AddSenderToAddressbookCommand(FrameMediator frame,
         DefaultCommandReference[] references) {
         super(frame, references);
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get reference
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
@@ -106,13 +105,13 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
     }
 
     /**
-     * Add sender to selected addressbook.
-     * <p>
-     * TODO: This code should most probably moved to the addressbook component
-     *
-     * @param sender
-     *            email address of sender
-     */
+ * Add sender to selected addressbook.
+ * <p>
+ * TODO: This code should most probably moved to the addressbook component
+ *
+ * @param sender
+ *            email address of sender
+ */
     public void addSender(String sender) {
         if (sender == null) {
             return;

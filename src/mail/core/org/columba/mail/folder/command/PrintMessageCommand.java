@@ -15,18 +15,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
@@ -40,9 +39,9 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
@@ -74,16 +73,16 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
 
+
 /**
  * Print the selected message.
- * 
+ *
  * @author karlpeder
  */
 public class PrintMessageCommand extends FolderCommand {
@@ -91,18 +90,17 @@ public class PrintMessageCommand extends FolderCommand {
     private cPrintObject mailFooter;
     private DateFormat mailDateFormat;
     private String[] headerKeys = { "From", "To", "Date", "Subject" };
-    private String dateHeaderKey = "Date";	// the header key for date field
+    private String dateHeaderKey = "Date"; // the header key for date field
     private String attHeaderKey = "attachment";
     private Charset charset;
 
     /**
-	 * Constructor for PrintMessageCommdn.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-    public PrintMessageCommand(
-        DefaultCommandReference[] references,
+         * Constructor for PrintMessageCommdn.
+         *
+         * @param frameMediator
+         * @param references
+         */
+    public PrintMessageCommand(DefaultCommandReference[] references,
         Charset charset) {
         super(references);
         this.charset = charset;
@@ -116,8 +114,7 @@ public class PrintMessageCommand extends FolderCommand {
         cParagraph link = new cParagraph();
         link.setText(" - http://sourceforge.columba.net");
         link.setTextAlignment(cParagraph.LEFT);
-        link.setLeftMargin(
-            columbaParagraph.getSize(new cCmUnit(100)).getWidth());
+        link.setLeftMargin(columbaParagraph.getSize(new cCmUnit(100)).getWidth());
         link.setColor(Color.lightGray);
 
         cPrintVariable date = new cPrintVariable();
@@ -153,8 +150,8 @@ public class PrintMessageCommand extends FolderCommand {
         mailFooter = footer;
 
         // DateFormat
-        mailDateFormat =
-            DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+        mailDateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                DateFormat.MEDIUM);
     }
 
     public cPrintObject getMailHeader() {
@@ -174,22 +171,23 @@ public class PrintMessageCommand extends FolderCommand {
     }
 
     /**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
+         * @see org.columba.core.command.Command#updateGUI()
+         */
     public void updatedGUI() throws Exception {
     }
 
     /**
-	 * This method executes the print action, i.e. it prints the selected
-	 * messages.
-	 * 
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-    public void execute(WorkerStatusController worker) throws Exception {
+         * This method executes the print action, i.e. it prints the selected
+         * messages.
+         *
+         * @see org.columba.core.command.Command#execute(Worker)
+         */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         /*
-		 * *20030604, karlpeder* Fixed minor flaws to be able to print text
-		 * messages. Further more added support for html messages.
-		 */
+                 * *20030604, karlpeder* Fixed minor flaws to be able to print text
+                 * messages. Further more added support for html messages.
+                 */
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
         Object[] uids = r[0].getUids(); // uid for messages to print
@@ -197,7 +195,7 @@ public class PrintMessageCommand extends FolderCommand {
         Folder srcFolder = (Folder) r[0].getFolder();
 
         //		register for status events
-         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
         // Print each message
         for (int j = 0; j < uids.length; j++) {
@@ -210,11 +208,10 @@ public class PrintMessageCommand extends FolderCommand {
             MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
             // Does the user prefer html or plain text?
-            XmlElement html =
-                MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-                    "/options/html");
-            boolean viewhtml =
-                Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+            XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+                                                  .getRoot().getElement("/options/html");
+            boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer"))
+                                      .booleanValue();
 
             // Which Bodypart shall be shown? (html/plain)
             MimePart bodyPart = null;
@@ -227,8 +224,8 @@ public class PrintMessageCommand extends FolderCommand {
 
             if (bodyPart == null) {
                 bodyPart = new LocalMimePart(new MimeHeader(header));
-                ((LocalMimePart) bodyPart).setBody(
-                    new CharSequenceSource("<No Message-Text>"));
+                ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
+                        "<No Message-Text>"));
             } else {
                 bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
             }
@@ -249,49 +246,45 @@ public class PrintMessageCommand extends FolderCommand {
                 hKey = new cParagraph();
 
                 // *20030531, karlpeder* setting headerKeys to lowercase for
-				// lookup!
-                hKey.setText(
-                    MailResourceLoader.getString(
-                        "header",
+                // lookup!
+                hKey.setText(MailResourceLoader.getString("header",
                         headerKeys[i].toLowerCase()));
                 hKey.setFontStyle(Font.BOLD);
 
                 hValue = new cParagraph();
 
-				/* 
-				 * *20031216, karlpeder* Changed handling of dates.
-				 * Previously columba.date header was used. Now we
-				 * use the Date header instead
-				 */
+                /*
+                 * *20031216, karlpeder* Changed handling of dates.
+                 * Previously columba.date header was used. Now we
+                 * use the Date header instead
+                 */
                 //if (headerKeys[i].equalsIgnoreCase("date")) {
                 //    value = header.get("columba.date");
                 //} else {
-				//	value = header.get(headerKeys[i]);
+                //	value = header.get(headerKeys[i]);
                 //}
                 value = header.get(headerKeys[i]);
 
-				if (headerKeys[i].equalsIgnoreCase(dateHeaderKey)) {
-					// special handling for dates
-					SimpleDateFormat formatter = 
-							new SimpleDateFormat("d MMM yyyy HH:mm:ss Z");
-					String dateStr = (String) value;
-					
-					// ignore leading weekday name (e.g. "Mon,"), since this
-					// seems to give problems during parsing 
-					ParsePosition pos = 
-							new ParsePosition(dateStr.indexOf(',') + 1);
-					Date d = formatter.parse((String) value, pos);
-					
-					if (d != null) {
-						hValue.setText(getMailDateFormat().format(d));
-					} else {
-						// fall back to use the Date header contents directly
-						hValue.setText((String) value);
-					}
+                if (headerKeys[i].equalsIgnoreCase(dateHeaderKey)) {
+                    // special handling for dates
+                    SimpleDateFormat formatter = new SimpleDateFormat(
+                            "d MMM yyyy HH:mm:ss Z");
+                    String dateStr = (String) value;
 
+                    // ignore leading weekday name (e.g. "Mon,"), since this
+                    // seems to give problems during parsing 
+                    ParsePosition pos = new ParsePosition(dateStr.indexOf(',') +
+                            1);
+                    Date d = formatter.parse((String) value, pos);
+
+                    if (d != null) {
+                        hValue.setText(getMailDateFormat().format(d));
+                    } else {
+                        // fall back to use the Date header contents directly
+                        hValue.setText((String) value);
+                    }
                 } else {
                     hValue.setText((String) value);
-                    
                 }
 
                 hValue.setLeftMargin(new cCmUnit(3.0));
@@ -312,15 +305,14 @@ public class PrintMessageCommand extends FolderCommand {
             for (int i = 0; i < attachments.size(); i++) {
                 StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
                 String contenttype = mp.getHeader().getMimeType().getType();
-                String contentSubtype =
-                    mp.getHeader().getMimeType().getSubtype();
+                String contentSubtype = mp.getHeader().getMimeType().getSubtype();
 
                 if (mp.getHeader().getFileName() != null) {
                     // one line is added to the header for each attachment
                     // (which has a filename defined)
                     hKey = new cParagraph();
-                    hKey.setText(
-                        MailResourceLoader.getString("header", attHeaderKey));
+                    hKey.setText(MailResourceLoader.getString("header",
+                            attHeaderKey));
                     hKey.setFontStyle(Font.BOLD);
 
                     hValue = new cParagraph();
@@ -336,33 +328,33 @@ public class PrintMessageCommand extends FolderCommand {
             }
 
             // Add body of message to print
-            String mimesubtype =
-                bodyPart.getHeader().getMimeType().getSubtype();
+            String mimesubtype = bodyPart.getHeader().getMimeType().getSubtype();
 
             if (mimesubtype.equals("html")) {
-                messageDoc.appendPrintObject(
-                    getHTMLBodyPrintObject((StreamableMimePart) bodyPart));
+                messageDoc.appendPrintObject(getHTMLBodyPrintObject(
+                        (StreamableMimePart) bodyPart));
             } else {
-                messageDoc.appendPrintObject(
-                    getPlainBodyPrintObject((StreamableMimePart) bodyPart));
+                messageDoc.appendPrintObject(getPlainBodyPrintObject(
+                        (StreamableMimePart) bodyPart));
             }
 
             // print the print document (i.e. the message)
             messageDoc.print();
         }
+
         // end of for loop over uids to print
     }
 
     /**
-	 * Private utility to create a print object representing the body of a
-	 * plain text message. The messagebody is decoded according to present
-	 * charset. <br>Precondition: Mime subtype is "plain".
-	 * 
-	 * @param bodyPart
-	 *            Body part of message
-	 * @return Print object ready to be appended to the print document
-	 * @author Karl Peder Olesen (karlpeder), 20030531
-	 */
+         * Private utility to create a print object representing the body of a
+         * plain text message. The messagebody is decoded according to present
+         * charset. <br>Precondition: Mime subtype is "plain".
+         *
+         * @param bodyPart
+         *            Body part of message
+         * @return Print object ready to be appended to the print document
+         * @author Karl Peder Olesen (karlpeder), 20030531
+         */
     private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart)
         throws IOException {
         // decode message body with respect to charset
@@ -377,10 +369,10 @@ public class PrintMessageCommand extends FolderCommand {
     }
 
     /**
-	 * retrieve printer options from configuration file
-	 * 
-	 * @return true, if scaling is allowed false, otherwise
-	 */
+         * retrieve printer options from configuration file
+         *
+         * @return true, if scaling is allowed false, otherwise
+         */
     protected boolean isScalingAllowed() {
         XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement printer = null;
@@ -404,20 +396,19 @@ public class PrintMessageCommand extends FolderCommand {
             }
         }
 
-        return Boolean
-            .valueOf(printer.getAttribute("allow_scaling", "true"))
-            .booleanValue();
+        return Boolean.valueOf(printer.getAttribute("allow_scaling", "true"))
+                      .booleanValue();
     }
 
     /**
-	 * Private utility to create a print object representing the body of a html
-	 * message. <br>Precondition: Mime subtype is "html".
-	 * 
-	 * @param bodyPart
-	 *            Body part of message
-	 * @return Print object ready to be appended to the print document
-	 * @author Karl Peder Olesen (karlpeder), 20030531
-	 */
+         * Private utility to create a print object representing the body of a html
+         * message. <br>Precondition: Mime subtype is "html".
+         *
+         * @param bodyPart
+         *            Body part of message
+         * @return Print object ready to be appended to the print document
+         * @author Karl Peder Olesen (karlpeder), 20030531
+         */
     private cPrintObject getHTMLBodyPrintObject(StreamableMimePart bodyPart)
         throws IOException {
         // decode message body with respect to charset
@@ -442,29 +433,28 @@ public class PrintMessageCommand extends FolderCommand {
 
             return htmlBody;
         } catch (MalformedURLException e) {
-            ColumbaLogger.log.severe(
-                "Error loading html for print: " + e.getMessage());
+            ColumbaLogger.log.severe("Error loading html for print: " +
+                e.getMessage());
 
             return null;
         } catch (IOException e) {
-            ColumbaLogger.log.severe(
-                "Error loading html for print: " + e.getMessage());
+            ColumbaLogger.log.severe("Error loading html for print: " +
+                e.getMessage());
 
             return null;
         }
     }
 
     /**
-	 * Private utility to decode the message body with the proper charset
-	 * 
-	 * @param bodyPart
-	 *            The body of the message
-	 * @return Decoded message body
-	 * @author Karl Peder Olesen (karlpeder), 20030601
-	 */
+         * Private utility to decode the message body with the proper charset
+         *
+         * @param bodyPart
+         *            The body of the message
+         * @return Decoded message body
+         * @author Karl Peder Olesen (karlpeder), 20030601
+         */
     private String getDecodedMessageBody(StreamableMimePart bodyPart)
         throws IOException {
-        
         MimeHeader header = bodyPart.getHeader();
 
         // Decode message according to charset
@@ -472,36 +462,36 @@ public class PrintMessageCommand extends FolderCommand {
         int encoding = header.getContentTransferEncoding();
 
         switch (encoding) {
-            case MimeHeader.QUOTED_PRINTABLE :
-                {
-                    bodyStream =
-                        new QuotedPrintableDecoderInputStream(bodyStream);
-                    break;
-                }
+        case MimeHeader.QUOTED_PRINTABLE: {
+            bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
 
-            case MimeHeader.BASE64 :
-                {
-                    bodyStream = new Base64DecoderInputStream(bodyStream);
-                    break;
-                }
+            break;
+        }
+
+        case MimeHeader.BASE64: {
+            bodyStream = new Base64DecoderInputStream(bodyStream);
+
+            break;
+        }
         }
 
         // First determine which charset to use
         if (charset == null) {
             // get charset from message
             try {
-                charset = Charset.forName(bodyPart.getHeader().getContentParameter("charset"));
+                charset = Charset.forName(bodyPart.getHeader()
+                                                  .getContentParameter("charset"));
             } catch (UnsupportedCharsetException ex) {
                 // decode using default charset
-                ColumbaLogger.log.severe("The charset " + 
-                		ex.getCharsetName() +
-						" is not supported. " + 
-						"System default encoding will be used.");
+                ColumbaLogger.log.severe("The charset " + ex.getCharsetName() +
+                    " is not supported. " +
+                    "System default encoding will be used.");
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }
         }
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+
         return StreamUtils.readInString(bodyStream).toString();
     }
 }

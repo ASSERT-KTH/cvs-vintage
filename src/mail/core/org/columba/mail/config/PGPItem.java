@@ -42,15 +42,15 @@ public class PGPItem extends DefaultItem {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getDigestAlgorithm() {
         return digestAlgorithm;
     }
 
     /**
-     * @param digestAlgorithm
-     */
+ * @param digestAlgorithm
+ */
     public void setDigestAlgorithm(String digestAlgorithm) {
         this.digestAlgorithm = digestAlgorithm;
     }

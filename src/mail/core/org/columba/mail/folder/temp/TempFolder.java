@@ -17,14 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.folder.temp;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.Hashtable;
-
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
@@ -33,6 +30,7 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
@@ -43,6 +41,11 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
+
+import java.io.File;
+import java.io.InputStream;
+
+import java.util.Hashtable;
 
 
 /**
@@ -63,7 +66,7 @@ public class TempFolder extends Folder {
     /**
      * Constructor for TempFolder.
      *
-     * @param path		example: /home/donald/mail/
+     * @param path                example: /home/donald/mail/
      */
     public TempFolder(String path) {
         super();
@@ -88,7 +91,7 @@ public class TempFolder extends Folder {
     public Object[] getUids() throws Exception {
         return messageList.keySet().toArray();
     }
-    
+
     public void expungeFolder() throws Exception {
         Object[] uids = getUids();
 
@@ -263,7 +266,8 @@ public class TempFolder extends Folder {
         }
     }
 
-    public Object addMessage(InputStream in, Attributes attributes) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes)
+        throws Exception {
         // FIXME: Directly pass the InputStream to the MessageParser,
         // DO NOT READ THE EMAIL INTO A STRING!!!!
         StringBuffer source = StreamUtils.readInString(in);
@@ -274,9 +278,11 @@ public class TempFolder extends Folder {
         ColumbaLogger.log.info("new UID=" + newUid);
 
         ColumbaHeader h = new ColumbaHeader(message.getHeader());
-        if( attributes != null ) {
-        	h.setAttributes((Attributes) attributes.clone());
+
+        if (attributes != null) {
+            h.setAttributes((Attributes) attributes.clone());
         }
+
         h.set("columba.uid", newUid);
 
         headerList.add(h, newUid);
@@ -306,14 +312,13 @@ public class TempFolder extends Folder {
         return ((ColumbaHeader) headerList.get(uid)).getFlags();
     }
 
-	public Attributes getAttributes(Object uid) throws Exception {
-		if (getHeaderList().containsKey(uid)) {
-			return getHeaderList().get(uid).getAttributes();
-		} else {
-			return null;
-		}
-	}
-
+    public Attributes getAttributes(Object uid) throws Exception {
+        if (getHeaderList().containsKey(uid)) {
+            return getHeaderList().get(uid).getAttributes();
+        } else {
+            return null;
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -388,12 +393,11 @@ public class TempFolder extends Folder {
 
         header.getAttributes().put(key, value);
     }
+
     /* (non-Javadoc)
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
      */
-    public Object addMessage(InputStream in)
-        throws Exception {
+    public Object addMessage(InputStream in) throws Exception {
         return addMessage(in, null);
     }
-
 }

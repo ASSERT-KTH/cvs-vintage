@@ -15,21 +15,25 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import org.columba.core.command.StatusObservable;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.io.DiskIO;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
+import org.columba.mail.folder.headercache.CachedFolder;
+import org.columba.mail.gui.config.filter.ConfigFrame;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+
+import org.columba.ristretto.message.MessageFolderInfo;
+
 import java.io.File;
 
 import javax.swing.JDialog;
 import javax.swing.tree.TreeNode;
 
-import org.columba.core.command.StatusObservable;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.io.DiskIO;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
-import org.columba.mail.gui.config.filter.ConfigFrame;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
  *
@@ -60,9 +64,7 @@ import org.columba.ristretto.message.MessageFolderInfo;
  * @author       freddy
  * @created      19. Juni 2001
  */
-public abstract class Folder
-    extends FolderTreeNode
-    implements MailboxInterface {
+public abstract class Folder extends FolderTreeNode implements MailboxInterface {
     /**
      * total/unread/recent count of messages in this folder
      */
@@ -100,10 +102,10 @@ public abstract class Folder
      * accessing the folder.
      */
     protected StatusObservable observable;
-    
+
     /**
      * parent directory for mail folders
-     * 
+     *
      * for example: "/home/donald/.columba/mail/"
      */
     private String parentPath;
@@ -127,7 +129,7 @@ public abstract class Folder
         // remember parent path 
         // (this is necessary for IMAPRootFolder sync operations)
         parentPath = path;
-        
+
         String dir = path + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
@@ -162,7 +164,7 @@ public abstract class Folder
         // remember parent path 
         // (this is necessary for IMAPFolder sync operations)
         parentPath = path;
-        
+
         String dir = path + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
@@ -200,8 +202,10 @@ public abstract class Folder
         FolderTreeNode parent = (FolderTreeNode) getParent();
 
         // There is no parent
-        if( parent == null ) return this;
-        
+        if (parent == null) {
+            return this;
+        }
+
         if (parent instanceof RootFolder) {
             return parent;
         } else {
@@ -350,7 +354,8 @@ public abstract class Folder
      * @return Object[]                array of matched messages as UIDs
      * @throws Exception
      */
-    public abstract Object[] searchMessages(Filter filter) throws Exception;
+    public abstract Object[] searchMessages(Filter filter)
+        throws Exception;
 
     /**
      * save messagefolderinfo to xml-configuration
@@ -363,15 +368,9 @@ public abstract class Folder
 
         XmlElement property = item.getElement("property");
 
-        property.addAttribute(
-            "exists",
-            new Integer(info.getExists()).toString());
-        property.addAttribute(
-            "unseen",
-            new Integer(info.getUnseen()).toString());
-        property.addAttribute(
-            "recent",
-            new Integer(info.getRecent()).toString());
+        property.addAttribute("exists", new Integer(info.getExists()).toString());
+        property.addAttribute("unseen", new Integer(info.getUnseen()).toString());
+        property.addAttribute("recent", new Integer(info.getRecent()).toString());
     }
 
     /**
@@ -462,15 +461,15 @@ public abstract class Folder
     public boolean isTrashFolder() {
         return false;
     }
-    
-	/**
-	 * Parent directory for mail folders.
-	 * <p>
-	 * For example: /home/donald/.columba/mail
-	 * 
-	 * @return Returns the parentPath.
-	 */
-	public String getParentPath() {
-		return parentPath;
-	}
+
+    /**
+     * Parent directory for mail folders.
+     * <p>
+     * For example: /home/donald/.columba/mail
+     *
+     * @return Returns the parentPath.
+     */
+    public String getParentPath() {
+        return parentPath;
+    }
 }

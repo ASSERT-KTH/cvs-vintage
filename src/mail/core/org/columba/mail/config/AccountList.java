@@ -13,12 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.main.MailInterface;
+
 
 public class AccountList extends DefaultItem {
     int nextUid;

@@ -35,26 +35,27 @@ public class RenameFolderCommand extends Command {
     private FolderTreeNode parentFolder;
 
     /**
-     * Constructor for RenameFolderCommand.
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for RenameFolderCommand.
+ * @param frameMediator
+ * @param references
+ */
     public RenameFolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @see org.columba.core.command.Command#updateGUI()
-     */
+ * @see org.columba.core.command.Command#updateGUI()
+ */
     public void updateGUI() throws Exception {
         // update treemodel
         MailInterface.treeModel.nodeStructureChanged(parentFolder);
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get source folder
         parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
 

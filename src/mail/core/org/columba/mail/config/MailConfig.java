@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.config;
 
 import org.columba.core.config.Config;
@@ -22,6 +21,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
+
 
 /**
  * @author frd
@@ -33,7 +33,6 @@ import java.io.File;
  */
 public class MailConfig {
     public static final String MODULE_NAME = "mail";
-    
     protected Config config;
     protected File path;
     protected File accountFile;
@@ -49,14 +48,15 @@ public class MailConfig {
     //private static File remoteFilterFile;
 
     /**
-     * @see java.lang.Object#Object()
-     */
+ * @see java.lang.Object#Object()
+ */
     public MailConfig(Config config) {
         this.config = config;
         path = new File(config.getConfigDirectory(), MODULE_NAME);
         DiskIO.ensureDirectory(path);
-        
+
         pop3Directory = new File(path, "pop3server");
+
         if (!pop3Directory.exists() || !pop3Directory.isDirectory()) {
             pop3Directory.mkdir();
         }
@@ -79,75 +79,72 @@ public class MailConfig {
         registerPlugin(mainToolBarFile.getName(),
             new DefaultXmlConfig(mainToolBarFile));
 
-        File composerToolBarFile = new File(path,
-                "composer_toolbar.xml");
+        File composerToolBarFile = new File(path, "composer_toolbar.xml");
         registerPlugin(composerToolBarFile.getName(),
             new DefaultXmlConfig(composerToolBarFile));
 
-        File messageframeToolBarFile = new File(path,
-                "messageframe_toolbar.xml");
+        File messageframeToolBarFile = new File(path, "messageframe_toolbar.xml");
         registerPlugin(messageframeToolBarFile.getName(),
             new DefaultXmlConfig(messageframeToolBarFile));
 
         /*
-        popManageOptionsFile =
-                new File(path, "popmanageoptions.xml");
-        registerPlugin(
-                popManageOptionsFile.getName(),
-                new PopManageOptionsXmlConfig(popManageOptionsFile));
-        */
+popManageOptionsFile =
+        new File(path, "popmanageoptions.xml");
+registerPlugin(
+        popManageOptionsFile.getName(),
+        new PopManageOptionsXmlConfig(popManageOptionsFile));
+*/
         composerOptionsFile = new File(path, "composer_options.xml");
         registerPlugin(composerOptionsFile.getName(),
             new ComposerOptionsXmlConfig(composerOptionsFile));
 
         /*
-        filterActionFile = new File(path, "filter_actions.xml");
-        registerPlugin(
-                filterActionFile.getName(),
-                new FilterActionXmlConfig(filterActionFile));
-        */
+filterActionFile = new File(path, "filter_actions.xml");
+registerPlugin(
+        filterActionFile.getName(),
+        new FilterActionXmlConfig(filterActionFile));
+*/
         /*
-        localFilterFile = new File(path, "filter_local.xml");
-        registerPlugin(
-                localFilterFile.getName(),
-                new LocalFilterXmlConfig(localFilterFile));
-        remoteFilterFile = new File(path, "filter_remote.xml");
-        registerPlugin(
-                remoteFilterFile.getName(),
-                new LocalFilterXmlConfig(remoteFilterFile));
-        */
+localFilterFile = new File(path, "filter_local.xml");
+registerPlugin(
+        localFilterFile.getName(),
+        new LocalFilterXmlConfig(localFilterFile));
+remoteFilterFile = new File(path, "filter_remote.xml");
+registerPlugin(
+        remoteFilterFile.getName(),
+        new LocalFilterXmlConfig(remoteFilterFile));
+*/
     }
-    
+
     public File getConfigDirectory() {
         return path;
     }
 
     /**
-     * Returns the POP3 directory.
-     */
+ * Returns the POP3 directory.
+ */
     public File getPOP3Directory() {
         return pop3Directory;
     }
 
     /**
-     * Method registerPlugin.
-     * @param id
-     * @param plugin
-     */
+ * Method registerPlugin.
+ * @param id
+ * @param plugin
+ */
     protected void registerPlugin(String id, DefaultXmlConfig plugin) {
         config.registerPlugin(MODULE_NAME, id, plugin);
     }
 
-    protected void registerTemplatePlugin(String id,
-        DefaultXmlConfig plugin) {
+    protected void registerTemplatePlugin(String id, DefaultXmlConfig plugin) {
         config.registerTemplatePlugin(MODULE_NAME, id, plugin);
     }
 
     /**
-     * Method getPlugin.
-     * @param id
-     * @return DefaultXmlConfig
-     */
+ * Method getPlugin.
+ * @param id
+ * @return DefaultXmlConfig
+ */
     protected DefaultXmlConfig getPlugin(String id) {
         return config.getPlugin(MODULE_NAME, id);
     }
@@ -157,9 +154,9 @@ public class MailConfig {
     }
 
     /**
-     * Method getAccountList.
-     * @return AccountList
-     */
+ * Method getAccountList.
+ * @return AccountList
+ */
     public AccountList getAccountList() {
         return getAccountConfig().getAccountList();
     }
@@ -175,50 +172,50 @@ public class MailConfig {
     }
 
     /**
-     * Method getAccountConfig.
-     * @return AccountXmlConfig
-     */
+ * Method getAccountConfig.
+ * @return AccountXmlConfig
+ */
     public AccountXmlConfig getAccountConfig() {
         //return accountConfig;
         return (AccountXmlConfig) getPlugin(accountFile.getName());
     }
 
     /*
-    public static FilterActionXmlConfig getFilterActionConfig() {
-            return (FilterActionXmlConfig) getPlugin(filterActionFile.getName());
-    }
-    */
+public static FilterActionXmlConfig getFilterActionConfig() {
+        return (FilterActionXmlConfig) getPlugin(filterActionFile.getName());
+}
+*/
     /*
-    public static LocalFilterXmlConfig getLocalFilterConfig() {
-            return (LocalFilterXmlConfig) getPlugin(localFilterFile.getName());
-    }
-    public static RemoteFilterXmlConfig getRemoteFilterConfig() {
-            return (RemoteFilterXmlConfig) getPlugin(remoteFilterFile.getName());
-    }
-    */
+public static LocalFilterXmlConfig getLocalFilterConfig() {
+        return (LocalFilterXmlConfig) getPlugin(localFilterFile.getName());
+}
+public static RemoteFilterXmlConfig getRemoteFilterConfig() {
+        return (RemoteFilterXmlConfig) getPlugin(remoteFilterFile.getName());
+}
+*/
 
     /**
-     * Method getFolderConfig.
-     * @return FolderXmlConfig
-     */
+ * Method getFolderConfig.
+ * @return FolderXmlConfig
+ */
     public FolderXmlConfig getFolderConfig() {
         //return folderConfig;
         return (FolderXmlConfig) getPlugin(folderFile.getName());
     }
 
     /**
-     * Method getMainFrameOptionsConfig.
-     * @return MainFrameOptionsXmlConfig
-     */
+ * Method getMainFrameOptionsConfig.
+ * @return MainFrameOptionsXmlConfig
+ */
     public MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
         //return mainFrameOptionsConfig;
         return (MainFrameOptionsXmlConfig) getPlugin(mainFrameOptionsFile.getName());
     }
 
     /**
-     * Method getComposerOptionsConfig.
-     * @return ComposerOptionsXmlConfig
-     */
+ * Method getComposerOptionsConfig.
+ * @return ComposerOptionsXmlConfig
+ */
     public ComposerOptionsXmlConfig getComposerOptionsConfig() {
         //return composerOptionsConfig;
         return (ComposerOptionsXmlConfig) getPlugin(composerOptionsFile.getName());

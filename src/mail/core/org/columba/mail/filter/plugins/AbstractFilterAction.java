@@ -35,17 +35,16 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public abstract class AbstractFilterAction implements PluginInterface {
-    
     /**
-     * 
-     * @param filterAction      filterAction containing the filter actoin configuration
-     * @param srcFolder         selected folder
-     * @param uids              message UIDs
-     * @return                  return null for simple tasks, all other tasks have to implement
-     *                          their own {@link Command}
-     * 
-     * @throws Exception        exception is just passed to the upper-level
-     */
+ * 
+ * @param filterAction      filterAction containing the filter actoin configuration
+ * @param srcFolder         selected folder
+ * @param uids              message UIDs
+ * @return                  return null for simple tasks, all other tasks have to implement
+ *                          their own {@link Command}
+ * 
+ * @throws Exception        exception is just passed to the upper-level
+ */
     public abstract Command getCommand(FilterAction filterAction,
         Folder srcFolder, Object[] uids) throws Exception;
 }

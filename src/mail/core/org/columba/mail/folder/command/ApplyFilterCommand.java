@@ -38,18 +38,19 @@ import org.columba.mail.folder.Folder;
  */
 public class ApplyFilterCommand extends Command {
     /**
-     * Constructor for ApplyFilterCommand.
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for ApplyFilterCommand.
+ * @param frameMediator
+ * @param references
+ */
     public ApplyFilterCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get references
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

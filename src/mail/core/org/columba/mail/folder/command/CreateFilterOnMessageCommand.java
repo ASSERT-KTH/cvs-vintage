@@ -102,7 +102,8 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * @param worker
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get references to selected folder and message
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Object[] uids = r[0].getUids(); // uid for messages to save

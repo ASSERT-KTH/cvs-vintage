@@ -32,9 +32,9 @@ public class ComposerCommandReference extends FolderCommandReference {
     protected ComposerController composerController;
 
     /**
-     * Constructor for ComposerCommandReference.
-     * @param folder
-     */
+ * Constructor for ComposerCommandReference.
+ * @param folder
+ */
     public ComposerCommandReference(ComposerController composerController,
         FolderTreeNode folder) {
         super(folder);
@@ -42,39 +42,39 @@ public class ComposerCommandReference extends FolderCommandReference {
     }
 
     /**
-     * Constructor for ComposerCommandReference.
-     * @param folder
-     * @param message
-     */
+ * Constructor for ComposerCommandReference.
+ * @param folder
+ * @param message
+ */
     public ComposerCommandReference(FolderTreeNode folder,
         ColumbaMessage message) {
         super(folder, message);
     }
 
     /**
-     * Constructor for ComposerCommandReference.
-     * @param folder
-     * @param uids
-     */
+ * Constructor for ComposerCommandReference.
+ * @param folder
+ * @param uids
+ */
     public ComposerCommandReference(FolderTreeNode folder, Object[] uids) {
         super(folder, uids);
     }
 
     /**
-     * Constructor for ComposerCommandReference.
-     * @param folder
-     * @param uids
-     * @param address
-     */
+ * Constructor for ComposerCommandReference.
+ * @param folder
+ * @param uids
+ * @param address
+ */
     public ComposerCommandReference(FolderTreeNode folder, Object[] uids,
         Integer[] address) {
         super(folder, uids, address);
     }
 
     /**
-     * Returns the composerController.
-     * @return ComposerController
-     */
+ * Returns the composerController.
+ * @return ComposerController
+ */
     public ComposerController getComposerController() {
         return composerController;
     }

@@ -23,16 +23,16 @@ public class ImportFolderCommandReference extends FolderCommandReference {
     DefaultMailboxImporter importer;
 
     /**
-     * @param folder
-     */
+ * @param folder
+ */
     public ImportFolderCommandReference(FolderTreeNode folder) {
         super(folder);
     }
 
     /**
-     * @param folder
-     * @param message
-     */
+ * @param folder
+ * @param message
+ */
     public ImportFolderCommandReference(FolderTreeNode folder,
         File[] sourceFiles, DefaultMailboxImporter importer) {
         super(folder);
@@ -41,8 +41,8 @@ public class ImportFolderCommandReference extends FolderCommandReference {
     }
 
     /**
-     * @return DefaultMailboxImporter
-     */
+ * @return DefaultMailboxImporter
+ */
     public DefaultMailboxImporter getImporter() {
         return importer;
     }

@@ -28,9 +28,9 @@ public class MHImporter extends DefaultMailboxImporter {
     }
 
     /**
-     * @param destinationFolder
-     * @param sourceFile
-     */
+ * @param destinationFolder
+ * @param sourceFile
+ */
     public MHImporter(Folder destinationFolder, File[] sourceFiles) {
         super(destinationFolder, sourceFiles);
     }
@@ -40,8 +40,8 @@ public class MHImporter extends DefaultMailboxImporter {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#importMailbox(java.io.File, org.columba.core.command.WorkerStatusController)
+ */
     public void importMailboxFile(File directory,
         WorkerStatusController worker, Folder destFolder)
         throws Exception {

@@ -50,85 +50,85 @@ import org.columba.mail.plugin.FilterActionPluginHandler;
 //
 public class Filter extends DefaultItem {
     /**
-     *
-     * Constructor for Filter
-     *
-     * XmlElement should be "filter" in this case
-     *
-     * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
-     */
+ *
+ * Constructor for Filter
+ *
+ * XmlElement should be "filter" in this case
+ *
+ * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
+ */
     public Filter(XmlElement root) {
         super(root);
     }
 
     /**
-     *
-     * @return FilterActionList         this is also a simple wrapper
-     */
+ *
+ * @return FilterActionList         this is also a simple wrapper
+ */
     public FilterActionList getFilterActionList() {
         return new FilterActionList(getRoot().getElement("actionlist"));
     }
 
     /**
-     *
-     *
-     * @return FilterRule        this is also a simple wrapper
-     */
+ *
+ *
+ * @return FilterRule        this is also a simple wrapper
+ */
     public FilterRule getFilterRule() {
         return new FilterRule(getRoot().getElement("rules"));
     }
 
     /**
-     * Is filter enabled?
-     *
-     * @return boolean        true if enabled
-     */
+ * Is filter enabled?
+ *
+ * @return boolean        true if enabled
+ */
     public boolean getEnabled() {
         return getBoolean("enabled", true);
     }
 
     /**
-     *
-     * enable Filter
-     *
-     * @param bool        if true enable filter otherwise disable filter
-     */
+ *
+ * enable Filter
+ *
+ * @param bool        if true enable filter otherwise disable filter
+ */
     public void setEnabled(boolean bool) {
         set("enabled", bool);
     }
 
     /**
-     * Set filter name
-     *
-     * @param s                new filter name
-     */
+ * Set filter name
+ *
+ * @param s                new filter name
+ */
     public void setName(String s) {
         set("description", s);
     }
 
     /**
-     *
-     *  return Name of Filter
-     *
-     * @return String
-     */
+ *
+ *  return Name of Filter
+ *
+ * @return String
+ */
     public String getName() {
         return get("description");
     }
 
     /**
-     * if filter matches we need to execute all actions
-     *
-     * For efficiency reasons all commands are packaged in
-     * a compound command object. This compound command uses
-     * only one worker to execute all commands, instead of
-     * creating new workers for every command
-     *
-     * @param srcFolder                                source folder
-     * @param uids                                        message uid array
-     * @return CompoundCommand                return Collection of Commands
-     * @throws Exception
-     */
+ * if filter matches we need to execute all actions
+ *
+ * For efficiency reasons all commands are packaged in
+ * a compound command object. This compound command uses
+ * only one worker to execute all commands, instead of
+ * creating new workers for every command
+ *
+ * @param srcFolder                                source folder
+ * @param uids                                        message uid array
+ * @return CompoundCommand                return Collection of Commands
+ * @throws Exception
+ */
     public CompoundCommand getCommand(Folder srcFolder, Object[] uids)
         throws Exception {
         // instanciate CompoundCommand

@@ -29,8 +29,8 @@ public class AccountFilter extends AbstractFilter {
     int criteriaAccountUid;
 
     /**
-     * @param f the filter criteria
-     */
+ * @param f the filter criteria
+ */
     public AccountFilter() {
         super();
     }
@@ -58,8 +58,8 @@ public class AccountFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         criteriaCondition = FilterCriteria.getCriteria(f.getCriteriaString());
         criteriaAccountUid = f.getInteger("account.uid", -1);

@@ -16,6 +16,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.io.StreamUtils;
+
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
@@ -26,25 +27,23 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public class BodyFilter extends AbstractFilter {
-    
     private String pattern;
     private String criteria;
-    
+
     /**
-     * Constructor for BodyFilter.
-     */
+ * Constructor for BodyFilter.
+ */
     public BodyFilter() {
         super();
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
-        
-
         // get message body
-        StringBuffer body = StreamUtils.readInString(folder.getMessageSourceStream(uid));
+        StringBuffer body = StreamUtils.readInString(folder.getMessageSourceStream(
+                    uid));
 
         // convert criteria into int-value
         int condition = FilterCriteria.getCriteria(criteria);
@@ -73,16 +72,15 @@ public class BodyFilter extends AbstractFilter {
 
         return result;
     }
+
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         // contains/contains not
         criteria = f.get("criteria");
 
         // string to search
         pattern = f.get("pattern");
-
     }
-
 }

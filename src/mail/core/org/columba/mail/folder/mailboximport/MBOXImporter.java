@@ -81,8 +81,8 @@ public class MBOXImporter extends DefaultMailboxImporter {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
-     */
+ * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
+ */
     public String getDescription() {
         return MailResourceLoader.getString("dialog", "mailboximport",
             "MBOX_description");

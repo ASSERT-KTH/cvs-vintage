@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import java.io.InputStream;
-
 import org.columba.ristretto.message.io.Source;
+
+import java.io.InputStream;
 
 
 /**
@@ -38,52 +38,52 @@ import org.columba.ristretto.message.io.Source;
  */
 public interface DataStorageInterface {
     /**
-     * Remove message from datastorage
-     *
-     * @param uid                        UID of message
-     * @throws Exception
-     */
+ * Remove message from datastorage
+ *
+ * @param uid                        UID of message
+ * @throws Exception
+ */
     public void removeMessage(Object uid) throws Exception;
 
     /**
-     * Get message source from data storage
-     *
-     * @param uid                        UID of message
-     * @return                                source of message
-     * @throws Exception
-     */
+ * Get message source from data storage
+ *
+ * @param uid                        UID of message
+ * @return                                source of message
+ * @throws Exception
+ */
     public Source getMessageSource(Object uid) throws Exception;
 
     /**
-     * Save message in data storage.
-     *
-     * @param uid                        UID of message
-     * @param source                message source as stream
-     * @throws Exception
-     */
+ * Save message in data storage.
+ *
+ * @param uid                        UID of message
+ * @param source                message source as stream
+ * @throws Exception
+ */
     public void saveMessage(Object uid, InputStream source)
         throws Exception;
 
     /**
-     * Gets the total message count.
-     *
-     * @return                                return message count
-     */
+ * Gets the total message count.
+ *
+ * @return                                return message count
+ */
     public int getMessageCount();
 
     /**
-     * Check if message with UID exists in data storage
-     *
-     * @param uid                        UID of message
-     * @return                                true, if message exists. false, otherwise
-     * @throws Exception
-     */
+ * Check if message with UID exists in data storage
+ *
+ * @param uid                        UID of message
+ * @return                                true, if message exists. false, otherwise
+ * @throws Exception
+ */
     public boolean exists(Object uid) throws Exception;
 
     /**
-     * Get list of message UIDs managed by this data storage
-     *
-     * @return                array containing message UIDs
-     */
+ * Get list of message UIDs managed by this data storage
+ *
+ * @return                array containing message UIDs
+ */
     public Object[] getMessageUids();
 }

@@ -84,9 +84,9 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Method getSelectionTreePath.
-     * @return TreePath
-     */
+ * Method getSelectionTreePath.
+ * @return TreePath
+ */
     public TreePath getSelectionTreePath() {
         return new TreePath(getPathToRoot(this, 0));
     }
@@ -112,8 +112,8 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-             * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
-             */
+         * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
+         */
     public String getName() {
         String name = null;
 
@@ -124,19 +124,19 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-     */
+ * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+ */
     public void setName(String newName) {
         FolderItem item = getFolderItem();
         item.set("property", "name", newName);
     }
 
     /**
-     * Method getCommandReference.
-     *
-     * @param r
-     * @return FolderCommandReference[]
-     */
+ * Method getCommandReference.
+ *
+ * @param r
+ * @return FolderCommandReference[]
+ */
     public FolderCommandReference[] getCommandReference(
         FolderCommandReference[] r) {
         return r;
@@ -245,9 +245,9 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * Sets the node.
-     * @param node The node to set
-     */
+ * Sets the node.
+ * @param node The node to set
+ */
     public void setNode(FolderItem node) {
         this.node = node;
 
@@ -261,11 +261,11 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     /**
-     *
-     * FolderTreeNode wraps XmlElement
-     *
-     * all treenode manipulation is passed to the corresponding XmlElement
-     */
+ *
+ * FolderTreeNode wraps XmlElement
+ *
+ * all treenode manipulation is passed to the corresponding XmlElement
+ */
     public void append(FolderTreeNode child) {
         ColumbaLogger.log.info("child=" + child);
 
@@ -273,8 +273,8 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
         child.removeFromParent();
 
         // do the same for the XmlElement node
-        ColumbaLogger.log.info("xmlelement="
-            + child.getFolderItem().getRoot().getName());
+        ColumbaLogger.log.info("xmlelement=" +
+            child.getFolderItem().getRoot().getName());
 
         child.getFolderItem().getRoot().removeFromParent();
 
@@ -287,28 +287,28 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
 
     /********************* capabilities **************************************/
     /**
-     * Does this treenode support adding messages?
-     *
-     * @return        true, if this folder is able to contain messages, false otherwise
-     *
-     */
+ * Does this treenode support adding messages?
+ *
+ * @return        true, if this folder is able to contain messages, false otherwise
+ *
+ */
     public boolean supportsAddMessage() {
         return false;
     }
 
     /**
-     * Returns true if this folder can have sub folders of the specified type; false otherwise.
-     * @param newFolder the folder that is going to be inserted as a child.
-     * @return true if this folder can have sub folders; false otherwise.
-     */
+ * Returns true if this folder can have sub folders of the specified type; false otherwise.
+ * @param newFolder the folder that is going to be inserted as a child.
+ * @return true if this folder can have sub folders; false otherwise.
+ */
     public boolean supportsAddFolder(FolderTreeNode newFolder) {
         return false;
     }
 
     /**
-     * Returns true if this folder type can be moved around in the folder tree.
-     * @return true if this folder type can be moved around in the folder tree.
-     */
+ * Returns true if this folder type can be moved around in the folder tree.
+ * @return true if this folder type can be moved around in the folder tree.
+ */
     public boolean supportsMove() {
         return false;
     }

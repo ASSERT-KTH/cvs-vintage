@@ -16,7 +16,6 @@
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
 
@@ -51,25 +50,26 @@ public class ExportFolderCommand extends FolderCommand {
     protected Object[] destUids;
 
     /**
-     * @param references
-     */
+ * @param references
+ */
     public ExportFolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @param frame
-     * @param references
-     */
+ * @param frame
+ * @param references
+ */
     public ExportFolderCommand(FrameMediator frame,
         DefaultCommandReference[] references) {
         super(frame, references);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get references
         FolderCommandReference[] references = (FolderCommandReference[]) getReferences();
 

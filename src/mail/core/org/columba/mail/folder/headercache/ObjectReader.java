@@ -52,21 +52,28 @@ public class ObjectReader {
         int classCode = ois.readInt();
 
         switch (classCode) {
-        case NULL:return null;
+        case NULL:
+            return null;
 
-        case STRING:return ois.readUTF();
+        case STRING:
+            return ois.readUTF();
 
-        case INTEGER:return new Integer(ois.readInt());
+        case INTEGER:
+            return new Integer(ois.readInt());
 
-        case BOOLEAN:return Boolean.valueOf(ois.readBoolean());
+        case BOOLEAN:
+            return Boolean.valueOf(ois.readBoolean());
 
-        case DATE:return new Date(ois.readLong());
+        case DATE:
+            return new Date(ois.readLong());
 
-        case COLOR:// ColorFactory makes sure that only one instance
+        case COLOR: // ColorFactory makes sure that only one instance
+
             // of the same color exists
             return ColorFactory.getColor(ois.readInt());
 
-        default:// some unspecified Object
+        default: // some unspecified Object
+
             return ois.readObject();
         }
     }

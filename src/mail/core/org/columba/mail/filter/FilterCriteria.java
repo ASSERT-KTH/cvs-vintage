@@ -48,35 +48,35 @@ public class FilterCriteria extends DefaultItem {
     // criteria: contains = 0, contains not=1, is=2, is not=3, begins with=4 , ends with=5
 
     /*
-    private AdapterNode criteriaNode;
-    private AdapterNode headerItemNode;
-    private AdapterNode patternNode;
-    private AdapterNode typeNode;
+private AdapterNode criteriaNode;
+private AdapterNode headerItemNode;
+private AdapterNode patternNode;
+private AdapterNode typeNode;
 
-    private AdapterNode node;
-    */
+private AdapterNode node;
+*/
     public FilterCriteria(XmlElement root) {
         super(root);
     }
 
     /*
-    protected void parseNode() {
-            AdapterNode child;
+protected void parseNode() {
+        AdapterNode child;
 
-            for (int i = 0; i < node.getChildCount(); i++) {
-                    child = node.getChild(i);
+        for (int i = 0; i < node.getChildCount(); i++) {
+                child = node.getChild(i);
 
-                    if (child.getName().equals("headeritem"))
-                            headerItemNode = child;
-                    else if (child.getName().equals("criteria"))
-                            criteriaNode = child;
-                    else if (child.getName().equals("pattern"))
-                            patternNode = child;
-                    else if (child.getName().equals("type"))
-                            typeNode = child;
-            }
-    }
-    */
+                if (child.getName().equals("headeritem"))
+                        headerItemNode = child;
+                else if (child.getName().equals("criteria"))
+                        criteriaNode = child;
+                else if (child.getName().equals("pattern"))
+                        patternNode = child;
+                else if (child.getName().equals("type"))
+                        typeNode = child;
+        }
+}
+*/
     public String getCriteriaString() {
         return getRoot().getAttribute("criteria");
 
@@ -91,30 +91,23 @@ public class FilterCriteria extends DefaultItem {
 
         if (condition.equalsIgnoreCase("contains")) {
             c = CONTAINS;
-        }
-        else if (condition.equalsIgnoreCase("contains not")) {
+        } else if (condition.equalsIgnoreCase("contains not")) {
             c = CONTAINS_NOT;
-        }
-        else if (condition.equalsIgnoreCase("is")) {
+        } else if (condition.equalsIgnoreCase("is")) {
             c = IS;
-        }
-        else if (condition.equalsIgnoreCase("is not")) {
+        } else if (condition.equalsIgnoreCase("is not")) {
             c = IS_NOT;
-        }
-        else if (condition.equalsIgnoreCase("begins with")) {
+        } else if (condition.equalsIgnoreCase("begins with")) {
             c = BEGINS_WITH;
-        }
-        else if (condition.equalsIgnoreCase("ends with")) {
+        } else if (condition.equalsIgnoreCase("ends with")) {
             c = ENDS_WITH;
         } else if (condition.equalsIgnoreCase("before")) {
             c = DATE_BEFORE;
-        }
-        else if (condition.equalsIgnoreCase("after")) {
+        } else if (condition.equalsIgnoreCase("after")) {
             c = DATE_AFTER;
         } else if (condition.equalsIgnoreCase("smaller")) {
             c = SIZE_SMALLER;
-        }
-        else if (condition.equalsIgnoreCase("bigger")) {
+        } else if (condition.equalsIgnoreCase("bigger")) {
             c = SIZE_BIGGER;
         }
 
@@ -126,30 +119,23 @@ public class FilterCriteria extends DefaultItem {
 
         if (condition.equalsIgnoreCase("contains")) {
             c = CONTAINS;
-        }
-        else if (condition.equalsIgnoreCase("contains not")) {
+        } else if (condition.equalsIgnoreCase("contains not")) {
             c = CONTAINS_NOT;
-        }
-        else if (condition.equalsIgnoreCase("is")) {
+        } else if (condition.equalsIgnoreCase("is")) {
             c = IS;
-        }
-        else if (condition.equalsIgnoreCase("is not")) {
+        } else if (condition.equalsIgnoreCase("is not")) {
             c = IS_NOT;
-        }
-        else if (condition.equalsIgnoreCase("begins with")) {
+        } else if (condition.equalsIgnoreCase("begins with")) {
             c = BEGINS_WITH;
-        }
-        else if (condition.equalsIgnoreCase("ends with")) {
+        } else if (condition.equalsIgnoreCase("ends with")) {
             c = ENDS_WITH;
         } else if (condition.equalsIgnoreCase("before")) {
             c = DATE_BEFORE;
-        }
-        else if (condition.equalsIgnoreCase("after")) {
+        } else if (condition.equalsIgnoreCase("after")) {
             c = DATE_AFTER;
         } else if (condition.equalsIgnoreCase("smaller")) {
             c = SIZE_SMALLER;
-        }
-        else if (condition.equalsIgnoreCase("bigger")) {
+        } else if (condition.equalsIgnoreCase("bigger")) {
             c = SIZE_BIGGER;
         }
 
@@ -188,8 +174,8 @@ public class FilterCriteria extends DefaultItem {
         } else if (h.equalsIgnoreCase("Priority")) {
             result = PRIORITY;
         } else if (h.equalsIgnoreCase("Custom Headerfield")) {
-        result = CUSTOM_HEADERFIELD;
-    }
+            result = CUSTOM_HEADERFIELD;
+        }
 
         return result;
     }

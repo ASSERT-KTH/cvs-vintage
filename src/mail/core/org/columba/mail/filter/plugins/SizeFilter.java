@@ -31,19 +31,19 @@ public class SizeFilter extends AbstractFilter {
     private String pattern;
 
     /**
-     * Constructor for SizeFilter.
-     */
+ * Constructor for SizeFilter.
+ */
     public SizeFilter() {
         super();
     }
 
     /**
-     * Transform string to integer representation
-     *
-     * @param p             string containing priority
-     *
-     * @return              integer representation of string
-     */
+ * Transform string to integer representation
+ *
+ * @param p             string containing priority
+ *
+ * @return              integer representation of string
+ */
     protected Integer transformSize(String p) {
         Integer searchPattern = Integer.valueOf(p);
 
@@ -51,10 +51,10 @@ public class SizeFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-     *      org.columba.mail.folder.Folder, java.lang.Object,
-     *      org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+ *      org.columba.mail.folder.Folder, java.lang.Object,
+ *      org.columba.core.command.WorkerStatusController)
+ */
     public boolean process(Folder folder, Object uid) throws Exception {
         boolean result = false;
 
@@ -89,8 +89,8 @@ public class SizeFilter extends AbstractFilter {
     }
 
     /**
-     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
-     */
+ * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+ */
     public void setUp(FilterCriteria f) {
         //      bigger/smaller
         criteria = f.get("criteria");

@@ -13,18 +13,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+
 
 /**
  * Save folder configuration including MessageFolderInfo and
@@ -34,18 +33,19 @@ import org.columba.mail.folder.FolderTreeNode;
  */
 public class SaveFolderConfigurationCommand extends FolderCommand {
     /**
-     * @param references
-     */
+ * @param references
+ */
     public SaveFolderConfigurationCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // skip if no reference available
-        if (getReferences().length == 0 || getReferences()[0] == null) {
+        if ((getReferences().length == 0) || (getReferences()[0] == null)) {
             return;
         }
 

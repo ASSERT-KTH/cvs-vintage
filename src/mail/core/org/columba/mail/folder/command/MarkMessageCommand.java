@@ -53,11 +53,11 @@ public class MarkMessageCommand extends FolderCommand {
     protected FolderCommandAdapter adapter;
 
     /**
-     * Constructor for MarkMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for MarkMessageCommand.
+ *
+ * @param frameMediator
+ * @param references
+ */
     public MarkMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -94,9 +94,10 @@ public class MarkMessageCommand extends FolderCommand {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // use wrapper class for easier handling of references array
         adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
 

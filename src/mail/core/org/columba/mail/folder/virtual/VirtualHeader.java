@@ -41,17 +41,17 @@ public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
     }
 
     /**
-     * Returns the srcFolder.
-     * @return Folder
-     */
+ * Returns the srcFolder.
+ * @return Folder
+ */
     public Folder getSrcFolder() {
         return srcFolder;
     }
 
     /**
-     * Returns the srcUid.
-     * @return Object
-     */
+ * Returns the srcUid.
+ * @return Object
+ */
     public Object getSrcUid() {
         return srcUid;
     }

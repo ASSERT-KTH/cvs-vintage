@@ -16,8 +16,10 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.plugin.PluginInterface;
+
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+
 
 /**
  * A filter is used to find a set of messages, which
@@ -30,41 +32,32 @@ import org.columba.mail.folder.Folder;
  * @author fdietz
  */
 public abstract class AbstractFilter implements PluginInterface {
-
-   
-    
-    
     /**
-     * Constructor for AbstractFilter
-  
-     */
+ * Constructor for AbstractFilter
+
+ */
     public AbstractFilter() {
-        
     }
 
+    /**
+ * 
+ * @param f    filter containing the configuration
+ */
+    public abstract void setUp(FilterCriteria f);
 
     /**
-     * 
-     * @param f    filter containing the configuration
-     */
-    public abstract void setUp(FilterCriteria f);
-    
-    /**
-      *
-      * Execute the plugin
-      *
-      *
-      * @param folder        Folder on which the filter gets applied
-      * @param uid           uid of Message object
-      *                      on the Statusbar
-      * @return boolean      true if match, otherwise false
-      *
-      * @throws Exception    pass exception one level higher to handle it in the
-      *                      correct  place
-      */
+  *
+  * Execute the plugin
+  *
+  *
+  * @param folder        Folder on which the filter gets applied
+  * @param uid           uid of Message object
+  *                      on the Statusbar
+  * @return boolean      true if match, otherwise false
+  *
+  * @throws Exception    pass exception one level higher to handle it in the
+  *                      correct  place
+  */
     public abstract boolean process(Folder folder, Object uid)
         throws Exception;
-        
-    
-
 }

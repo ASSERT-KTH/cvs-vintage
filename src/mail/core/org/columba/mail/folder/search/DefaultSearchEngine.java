@@ -16,7 +16,6 @@
 package org.columba.mail.folder.search;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 
@@ -50,26 +49,26 @@ import javax.swing.JOptionPane;
  */
 public class DefaultSearchEngine {
     /**
-     * Filter plugins are cached and reused, instead of re-instanciated
-     * all the time
-     */
+ * Filter plugins are cached and reused, instead of re-instanciated
+ * all the time
+ */
     private static Hashtable filterCache;
 
     /**
-     * Folder on which the search is applied
-     */
+ * Folder on which the search is applied
+ */
     private Folder folder;
 
     /**
-     * The default query engine used by the search-engine
-     */
+ * The default query engine used by the search-engine
+ */
     private QueryEngine nonDefaultEngine;
 
     /**
-     * Constructor
-     *
-     * @param folder        folder on which the search is applied
-     */
+ * Constructor
+ *
+ * @param folder        folder on which the search is applied
+ */
     public DefaultSearchEngine(Folder folder) {
         this.folder = folder;
 
@@ -216,8 +215,8 @@ public class DefaultSearchEngine {
     }
 
     /**
-     * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
+ */
     public Object[] searchMessages(Filter filter, Object[] uids)
         throws Exception {
         if (!filter.getEnabled()) {
@@ -282,19 +281,19 @@ public class DefaultSearchEngine {
         }
 
         /*
-        worker.setDisplayText(
-                "Search Result: "
-                        + notDefaultEngineResult.size()
-                        + " messages found in "
-                        + (System.currentTimeMillis() - startTime)
-                        + " ms");
-        */
+worker.setDisplayText(
+        "Search Result: "
+                + notDefaultEngineResult.size()
+                + " messages found in "
+                + (System.currentTimeMillis() - startTime)
+                + " ms");
+*/
         return notDefaultEngineResult.toArray();
     }
 
     /**
-     * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.folder.SearchEngineInterface#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
+ */
     public Object[] searchMessages(Filter filter) throws Exception {
         if (getObservable() != null) {
             getObservable().setMessage(MailResourceLoader.getString(
@@ -313,16 +312,16 @@ public class DefaultSearchEngine {
     }
 
     /**
-             * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object, org.columba.core.command.WorkerStatusController)
-             */
+         * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object, org.columba.core.command.WorkerStatusController)
+         */
     protected List queryEngine(FilterRule filter, Object[] uids)
         throws Exception {
         return processCriteria(filter, Arrays.asList(uids));
     }
 
     /**
-     * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
-     */
+ * @see org.columba.mail.folder.DefaultSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
+ */
     protected List queryEngine(FilterRule filter) throws Exception {
         Object[] uids = folder.getUids();
 
@@ -330,15 +329,15 @@ public class DefaultSearchEngine {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public QueryEngine getNonDefaultEngine() {
         return nonDefaultEngine;
     }
 
     /**
-     * @param engine
-     */
+ * @param engine
+ */
     public void setNonDefaultEngine(QueryEngine engine) {
         nonDefaultEngine = engine;
     }

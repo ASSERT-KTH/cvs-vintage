@@ -15,16 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import javax.swing.tree.TreeNode;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.main.MailInterface;
+
+import javax.swing.tree.TreeNode;
+
 
 /**
  * A Command for moving a folder to another folder.
@@ -41,8 +42,8 @@ public class MoveFolderCommand extends Command {
     private TreeNode parentSourceFolder;
 
     /**
-     * @param references the folder references.
-     */
+ * @param references the folder references.
+ */
     public MoveFolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -53,13 +54,15 @@ public class MoveFolderCommand extends Command {
         if (parentDestFolder != null) {
             MailInterface.treeModel.nodeStructureChanged(parentDestFolder);
         }
+
         if (parentSourceFolder != null) {
             MailInterface.treeModel.nodeStructureChanged(parentSourceFolder);
         }
     }
 
     /** {@inheritDoc} */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         // get folder that is going to be moved
         Folder movedFolder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
         parentSourceFolder = movedFolder.getParent();

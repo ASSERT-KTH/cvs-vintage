@@ -27,10 +27,10 @@ import org.columba.core.gui.frame.FrameMediator;
  */
 public abstract class FolderCommand extends Command {
     /**
-     * Constructor for FolderCommand.
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for FolderCommand.
+ * @param frameMediator
+ * @param references
+ */
     public FolderCommand(DefaultCommandReference[] references) {
         super(references);
     }
@@ -41,9 +41,9 @@ public abstract class FolderCommand extends Command {
     }
 
     /**
-     * Returns the references.
-     * @return DefaultCommandReference[]
-     */
+ * Returns the references.
+ * @return DefaultCommandReference[]
+ */
     public DefaultCommandReference[] getReferences() {
         FolderCommandReference[] r = (FolderCommandReference[]) super.getReferences();
 

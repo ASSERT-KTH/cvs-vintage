@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -37,6 +36,7 @@ import java.io.OutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 
 /**
  * Defines command for saving message source to file
@@ -66,7 +66,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
      * messages.
      * @see org.columba.core.command.Command#execute(Worker)
      */
-    public void execute(WorkerStatusController worker) throws Exception {
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Object[] uids = r[0].getUids(); // uid for messages to save
         Folder srcFolder = (Folder) r[0].getFolder();
@@ -131,8 +132,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
                         out.write(buffer, 0, read);
                     }
                 } catch (IOException ioe) {
-                    ColumbaLogger.log.severe("Error saving msg source to file: " +
-                        ioe.getMessage());
+                    ColumbaLogger.log.severe(
+                        "Error saving msg source to file: " + ioe.getMessage());
                     JOptionPane.showMessageDialog(null,
                         MailResourceLoader.getString("dialog", "saveas",
                             "err_save_msg"),
@@ -153,7 +154,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
                 }
             }
         }
-         // end of loop over selected messages
+
+        // end of loop over selected messages
     }
 
     /**

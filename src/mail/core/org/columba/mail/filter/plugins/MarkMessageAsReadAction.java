@@ -33,8 +33,8 @@ import org.columba.mail.folder.command.MarkMessageCommand;
  */
 public class MarkMessageAsReadAction extends AbstractFilterAction {
     /**
-     * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
-     */
+ * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
+ */
     public Command getCommand(FilterAction filterAction, Folder srcFolder,
         Object[] uids) throws Exception {
         FolderCommandReference[] r = new FolderCommandReference[1];

@@ -26,11 +26,11 @@ import org.columba.mail.main.MailInterface;
  */
 public class DialogFacade {
     /**
-     * opens a dialog which lets the user choose a folder
-     *
-     *
-     * @return        SelectedFolderDialog
-     */
+ * opens a dialog which lets the user choose a folder
+ *
+ *
+ * @return        SelectedFolderDialog
+ */
     public SelectFolderDialog getSelectFolderDialog() {
         return MailInterface.treeModel.getSelectFolderDialog();
     }

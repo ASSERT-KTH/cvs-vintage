@@ -29,55 +29,49 @@ import java.util.List;
  */
 public class DummyQueryEngine implements QueryEngine {
     /**
-     *
-     * @see org.columba.mail.folder.search.QueryEngine#getCaps()
-     */
+ *
+ * @see org.columba.mail.folder.search.QueryEngine#getCaps()
+ */
     public String[] getCaps() {
         return new String[] {  };
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#sync()
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#sync()
+ */
     public void sync() throws Exception {
-        
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#queryEngine(org.columba.mail.filter.FilterRule)
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#queryEngine(org.columba.mail.filter.FilterRule)
+ */
     public List queryEngine(FilterRule filter) throws Exception {
-     
         return null;
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object[])
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object[])
+ */
     public List queryEngine(FilterRule filter, Object[] uids)
         throws Exception {
-      
         return null;
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#messageAdded(org.columba.mail.message.ColumbaMessage)
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#messageAdded(org.columba.mail.message.ColumbaMessage)
+ */
     public void messageAdded(ColumbaMessage message) throws Exception {
-       
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#messageRemoved(java.lang.Object)
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#messageRemoved(java.lang.Object)
+ */
     public void messageRemoved(Object uid) throws Exception {
-       
     }
 
     /**
-     * @see org.columba.mail.folder.search.QueryEngine#reset()
-     */
+ * @see org.columba.mail.folder.search.QueryEngine#reset()
+ */
     public void reset() throws Exception {
-       
     }
 }

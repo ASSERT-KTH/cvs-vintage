@@ -15,21 +15,26 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
 
+import org.columba.addressbook.folder.DataStorage;
+
+import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
+
+import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.folder.LocalFolder;
+
+import org.columba.ristretto.message.io.FileSource;
+import org.columba.ristretto.message.io.Source;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.folder.DataStorageInterface;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.ristretto.message.io.FileSource;
-import org.columba.ristretto.message.io.Source;
 
 
 /**

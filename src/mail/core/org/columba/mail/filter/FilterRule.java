@@ -65,45 +65,45 @@ public class FilterRule extends DefaultItem {
         getRoot().removeElement(index);
 
         /*
-        if ((index >= 0) && (index < list.size())) {
-                list.remove(index);
+if ((index >= 0) && (index < list.size())) {
+        list.remove(index);
 
-                int result = -1;
+        int result = -1;
 
-                for (int i = 0; i < getRootNode().getChildCount(); i++) {
-                        AdapterNode child = (AdapterNode) getRootNode().getChildAt(i);
-                        String name = child.getName();
+        for (int i = 0; i < getRootNode().getChildCount(); i++) {
+                AdapterNode child = (AdapterNode) getRootNode().getChildAt(i);
+                String name = child.getName();
 
-                        if (name.equals("filtercriteria"))
-                                result++;
+                if (name.equals("filtercriteria"))
+                        result++;
 
-                        if (result == index) {
-                                child.remove();
-                                break;
-                        }
+                if (result == index) {
+                        child.remove();
+                        break;
                 }
-
-                //AdapterNode child = getRootNode().getChildAt(index);
-
         }
-        */
+
+        //AdapterNode child = getRootNode().getChildAt(index);
+
+}
+*/
     }
 
     public void removeAll() {
         /*
-        for (int i = 0; i < count(); i++) {
-                remove(0);
-        }
-        */
+for (int i = 0; i < count(); i++) {
+        remove(0);
+}
+*/
         getRoot().removeAllElements();
     }
 
     public void removeLast() {
         /*
-        int index = list.size() - 1;
+int index = list.size() - 1;
 
-        remove(index);
-        */
+remove(index);
+*/
         getRoot().removeElement(getRoot().count() - 1);
     }
 
@@ -119,29 +119,29 @@ public class FilterRule extends DefaultItem {
         return getRoot().getAttribute("condition");
 
         /*
-        if (conditionNode == null) {
-                System.out.println(
-                        "---------------------------> failure: conditionNode == null !");
+if (conditionNode == null) {
+        System.out.println(
+                "---------------------------> failure: conditionNode == null !");
 
-                return new String("matchany");
-        } else
-                return getTextValue(conditionNode);
-        */
+        return new String("matchany");
+} else
+        return getTextValue(conditionNode);
+*/
     }
 
     public void setCondition(String s) {
         getRoot().addAttribute("condition", s);
 
         /*
-        setTextValue(conditionNode, s);
-        */
+setTextValue(conditionNode, s);
+*/
     }
 
     /*
-    public FilterCriteria getCriteria(int index) {
-            return (FilterCriteria) list.get(index);
-    }
-    */
+public FilterCriteria getCriteria(int index) {
+        return (FilterCriteria) list.get(index);
+}
+*/
     public int getConditionInt() {
         //System.out.println("condigtion: "+ condition );
         if (getCondition().equals("matchall")) {
