@@ -92,6 +92,7 @@ from:&#160;<input type="text" size="20"
 <h3>Personnel association search</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
+#set ($userAttrs = $search.UserAttributes) 
 #set ($userList = $data.Parameters.getStrings("user_list"))
 
 #if ($userList && !$userList.isEmpty())
@@ -129,7 +130,6 @@ from:&#160;<input type="text" size="20"
       <option value="created_by"
          #if ($selectedAttr.equals("created_by")) selected="selected" #end
          >Committed by:</option>
-    #set ($userAttrs = $search.getUserAttributes()) 
     #foreach ($selectUserAttr in $userAttrs)
        #set ($selected = false)
        #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
