@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.57 2002/02/13 23:20:11 patriot1burke Exp $ -->
+<!-- $Id: build.xml,v 1.58 2002/02/14 07:37:32 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -874,7 +874,6 @@
              package="${javadoc.package}"
              protected="${javadoc.protected}"
              private="${javadoc.private}"
-             encoding="${javadoc.encoding}"
              use="${javadoc.use}"
 	     verbose="${javadoc.verbose}"> 
       <group title="JDBC Extension" packages="javax.sql*"/>
