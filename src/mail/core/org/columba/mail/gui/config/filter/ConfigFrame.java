@@ -302,9 +302,13 @@ public class ConfigFrame
 		listView = new FilterListTable(filterList, this);
 		listView.getSelectionModel().addListSelectionListener(this);
 		listView.addMouseListener(new MouseTableListener());
+		listView.setTransferHandler(new FilterTransferHandler(listView));
+		listView.setDragEnabled(true);
+		
 		JScrollPane scrollPane = new JScrollPane(listView);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
+		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);
