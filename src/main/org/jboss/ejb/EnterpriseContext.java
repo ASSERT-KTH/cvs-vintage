@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 public abstract class EnterpriseContext
 {
@@ -187,13 +187,16 @@ public abstract class EnterpriseContext
       
       public Principal getCallerPrincipal() 
        { 
-         if (beanPrincipal == null && principal != null) {
-             if (con.getRealmMapping() == null) {
+         if (beanPrincipal == null && principal != null)
+         {
+             if( con.getRealmMapping() == null ) {
                  beanPrincipal = principal;
              } else {
                  beanPrincipal = con.getRealmMapping().getPrincipal(principal);
              }
          }
+         else if( beanPrincipal == null && con.getRealmMapping() == null )
+             throw new IllegalStateException("No security context set");
          return beanPrincipal;
        }
       
