@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.6 2000/09/30 12:03:02 oleg Exp $
+ * $Id: BeanVerifier.java,v 1.7 2000/12/06 13:03:36 pra Exp $
  */
 
  
@@ -47,6 +47,8 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 
+import org.jboss.logging.Logger;
+
 
 /**
  * Attempts to verify the spec compliance of the beans in a given
@@ -60,7 +62,7 @@ import org.jboss.metadata.SessionMetaData;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since   JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {
@@ -128,9 +130,11 @@ public class BeanVerifier implements VerificationContext {
             BeanMetaData bean = (BeanMetaData)beans.next();
             if (bean.isEntity()) {
                 verifier.checkEntity((EntityMetaData)bean);
-            } else {
+            } else if (bean.isSession()){
                 verifier.checkSession((SessionMetaData)bean);
-            }
+            } else {
+		Logger.log("No verification for MessageDriven Beans available jet");
+	    }
         }
         
     }
