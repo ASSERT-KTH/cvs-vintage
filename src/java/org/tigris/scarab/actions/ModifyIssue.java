@@ -100,7 +100,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.187 2004/10/11 23:11:55 jorgeuriarte Exp $
+ * @version $Id: ModifyIssue.java,v 1.188 2004/10/16 12:31:40 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -126,7 +126,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -282,7 +282,7 @@ public class ModifyIssue extends BaseModifyIssue
             } 
             if (!modifiedAttribute)
             {
-                scarabR.setAlertMessage(l10n.get("MustModifyAttribute"));
+                scarabR.setAlertMessage(L10NKeySet.MustModifyAttribute);
                 return;
             }
             Attachment attachment = AttachmentManager.getInstance();
@@ -293,7 +293,7 @@ public class ModifyIssue extends BaseModifyIssue
                                                 newAttVals, attachment, user);
                 intake.removeAll();
                 sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), context);
-                scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
+                scarabR.setConfirmMessage(L10NKeySet.ChangesSaved);
             }
             catch (Exception se)
             {
@@ -302,7 +302,7 @@ public class ModifyIssue extends BaseModifyIssue
         } 
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
     
@@ -362,7 +362,7 @@ public class ModifyIssue extends BaseModifyIssue
                         activitySet = issue
                             .doChangeUrlDescription(activitySet, user, 
                                                     attachment, oldDescription);
-                        scarabR.setConfirmMessage(l10n.get("UrlSaved"));
+                        scarabR.setConfirmMessage(L10NKeySet.UrlSaved);
                     }
                     if (!oldURL.equals(newURL))
                     {
@@ -371,12 +371,12 @@ public class ModifyIssue extends BaseModifyIssue
                         activitySet = issue
                             .doChangeUrlUrl(activitySet, user, 
                                             attachment, oldURL);
-                        scarabR.setConfirmMessage(l10n.get("UrlSaved"));
+                        scarabR.setConfirmMessage(L10NKeySet.UrlSaved);
                     }
                 }
                 else
                 {
-                     scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                     scarabR.setAlertMessage(ERROR_MESSAGE);
                 }
             }
         }
@@ -397,8 +397,8 @@ public class ModifyIssue extends BaseModifyIssue
 
                 // remove the group
                 intake.remove(newGroup);
-                sendEmail(activitySet, issue, l10n.get("UrlSaved"), context);
-                scarabR.setConfirmMessage(l10n.get("UrlSaved"));
+                sendEmail(activitySet, issue, l10n.get(L10NKeySet.UrlSaved), context);
+                scarabR.setConfirmMessage(L10NKeySet.UrlSaved);
             }
         }
     }
@@ -426,7 +426,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
         data.getParameters().add("edit_comments", "true");
@@ -453,7 +453,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -468,7 +468,7 @@ public class ModifyIssue extends BaseModifyIssue
             }
             catch (Exception e)
             {
-                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                scarabR.setAlertMessage(ERROR_MESSAGE);
                 return;
             }
             
@@ -482,12 +482,12 @@ public class ModifyIssue extends BaseModifyIssue
                 scarabR.setAlertMessage(l10nMessage);
                 return;
             }
-            scarabR.setConfirmMessage(l10n.get("CommentSaved"));
+            scarabR.setConfirmMessage(L10NKeySet.CommentSaved);
             intake.remove(group);
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     } 
 
@@ -510,7 +510,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -531,17 +531,17 @@ public class ModifyIssue extends BaseModifyIssue
             ActivitySet activitySet = issue.doSaveFileAttachments(user);
             if (activitySet != null)
             {
-                sendEmail(activitySet, issue, l10n.get("FileSaved"), context);
-                scarabR.setConfirmMessage(l10n.get("FileSaved"));
+                sendEmail(activitySet, issue, l10n.get(L10NKeySet.FileSaved), context);
+                scarabR.setConfirmMessage(L10NKeySet.FileSaved);
             }
             else
             {
-                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                scarabR.setAlertMessage(ERROR_MESSAGE);
             }
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -628,12 +628,12 @@ public class ModifyIssue extends BaseModifyIssue
             }
             else
             {
-                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                scarabR.setAlertMessage(ERROR_MESSAGE);
             }
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get("CouldNotLocateAttachmentGroup"));
+            scarabR.setAlertMessage(L10NKeySet.CouldNotLocateAttachmentGroup);
         }
     }
 
@@ -681,7 +681,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -710,11 +710,11 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            scarabR.setConfirmMessage(DEFAULT_MSG);  
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get("NoCommentsChanged"));
+            scarabR.setInfoMessage(L10NKeySet.NoCommentsChanged);
         }
     }
 
@@ -743,7 +743,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -763,13 +763,13 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-            sendEmail(activitySet, issue, l10n.get("UrlDeleted"), 
+            scarabR.setConfirmMessage(DEFAULT_MSG);
+            sendEmail(activitySet, issue, l10n.get(L10NKeySet.UrlDeleted), 
                       context);
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get("NoUrlsChanged"));
+            scarabR.setInfoMessage(L10NKeySet.NoUrlsChanged);
         }
     }
     
@@ -798,7 +798,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -837,18 +837,18 @@ public class ModifyIssue extends BaseModifyIssue
         {
             if (allFilesDeleted)
             {
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                scarabR.setConfirmMessage(DEFAULT_MSG);
             }
             else
             {
-                scarabR.setAlertMessage(l10n.get(L10NKeySet.FilesPartiallyDeleted));
+                scarabR.setAlertMessage(L10NKeySet.FilesPartiallyDeleted);
             }
             sendEmail(activitySet, issue, l10n.get(L10NKeySet.FileDeleted), context);
 
         }
         else
         {
-            scarabR.setInfoMessage(l10n.get(L10NKeySet.NoFilesChanged));
+            scarabR.setInfoMessage(L10NKeySet.NoFilesChanged);
         }
     }
 
@@ -899,7 +899,7 @@ public class ModifyIssue extends BaseModifyIssue
         if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
                                issue.getModule()))
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             return;
         }
 
@@ -914,11 +914,11 @@ public class ModifyIssue extends BaseModifyIssue
                                                    reasonForChange, doDelete);
         if (!depAdded)
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
         if (!depAdded && !changesMade)
         {
-            scarabR.setInfoMessage(l10n.get(NO_CHANGES_MADE));
+            scarabR.setInfoMessage(NO_CHANGES_MADE);
         }
         else
         {
@@ -945,12 +945,12 @@ public class ModifyIssue extends BaseModifyIssue
         childId.setRequired(true);
         if (!type.isValid() && childId.isValid())
         {
-            type.setMessage(l10n.get("EnterValidDependencyType"));
+            type.setMessage(l10n.get(L10NKeySet.EnterValidDependencyType));
             return false;
         }
         else if (type.isValid() && !childId.isValid())
         {
-            childId.setMessage(l10n.get("EnterValidIssueId"));
+            childId.setMessage(l10n.get(L10NKeySet.EnterValidIssueId));
             return false;
         }
         String childIdStr = childId.toString();
@@ -982,13 +982,13 @@ public class ModifyIssue extends BaseModifyIssue
         }
         if (childIssue == null || childIssue.getDeleted())
         {
-            childId.setMessage(l10n.get("EnterValidIssueId"));
+            childId.setMessage(l10n.get(L10NKeySet.EnterValidIssueId));
             return false;
         }
         // Make sure issue is not being marked as dependant on itself.
         else if (childIssue.equals(issue))
         {
-            childId.setMessage(l10n.get("CannotAddSelfDependency"));
+            childId.setMessage(l10n.get(L10NKeySet.CannotAddSelfDependency));
             return false;
         }
         if (intake.isAllValid())
@@ -1022,7 +1022,7 @@ public class ModifyIssue extends BaseModifyIssue
                 sendEmail(activitySet, issue, l10n.get(DEFAULT_MSG), 
                           context);
             }
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             return true;
         }
         else
@@ -1084,7 +1084,7 @@ public class ModifyIssue extends BaseModifyIssue
                 }
                 catch (Exception e)
                 {
-                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                    scarabR.setAlertMessage(ERROR_MESSAGE);
                     log().debug("Delete error: ", e);
                 }
             }
@@ -1107,7 +1107,7 @@ public class ModifyIssue extends BaseModifyIssue
         // something changed...
         if (activitySet != null)
         {
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             
             // FIXME: when we add a dep, we send email to both issues,
             // but here we are not...should we? it almost seems like 
@@ -1150,7 +1150,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
         }
     }
 
@@ -1189,7 +1189,7 @@ public class ModifyIssue extends BaseModifyIssue
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             setTarget(data, "ViewIssue.vm");
         }
     }

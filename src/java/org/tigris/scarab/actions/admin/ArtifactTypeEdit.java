@@ -68,13 +68,14 @@ import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.61 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.62 2004/10/16 12:31:40 dep4b Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -90,12 +91,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return false;
         }
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return false;
         }
         IntakeTool intake = getIntakeTool(context);
@@ -103,7 +104,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
         if (rmit == null)
         {
-            scarabR.setAlertMessage(l10n.get("IssueTypeRemovedFromModule"));
+            scarabR.setAlertMessage(L10NKeySet.IssueTypeRemovedFromModule);
             doCancel(data, context);
             return false;
         }
@@ -120,7 +121,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 if (displayName.toString().trim().length() == 0)
                 {
                     displayName.setMessage("intake_IssueTypeNameNotAllowedEmpty");
-                    scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                    scarabR.setAlertMessage(ERROR_MESSAGE);
                     return false;
                 }
                 for (int i=0;i<issueTypes.size();i++)
@@ -137,7 +138,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
          
             if (nameTaken) 
             {
-                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+                scarabR.setAlertMessage(ERROR_MESSAGE);
                 rmitGroup.get("DisplayName").setMessage("IssueTypeNameExists");
                 return false;
             }
@@ -145,12 +146,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             {
                 rmitGroup.setProperties(rmit);
                 rmit.save();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                scarabR.setConfirmMessage(DEFAULT_MSG);
             }
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
             return false;
         }
         return success;
@@ -169,12 +170,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return false;
         }
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return false;
         }
 
@@ -182,7 +183,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
         if (rmit == null)
         {
-            scarabR.setAlertMessage(l10n.get("IssueTypeRemovedFromModule"));
+            scarabR.setAlertMessage(L10NKeySet.IssueTypeRemovedFromModule);
             doCancel(data, context);
             return false;
         }
@@ -200,7 +201,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             // Check that duplicate check is not at the beginning.
             if (dupeOrder == 1)
             {
-                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));
+                scarabR.setAlertMessage(L10NKeySet.CannotPositionDuplicateCheckFirst);
                 return false;
             }
             // Check for duplicate sequence numbers
@@ -256,7 +257,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         rmit.save();
         ScarabCache.clear();
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        scarabR.setConfirmMessage(DEFAULT_MSG);
 
         return true;
     }
@@ -275,12 +276,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
 
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             success = false;
         }
         else if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             success = false;
         }
         else
@@ -316,7 +317,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     rmaGroup.setProperties(rma);
                     rma.save();
                 }
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                scarabR.setConfirmMessage(DEFAULT_MSG);
             }
 
         }
@@ -336,10 +337,10 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return null;
         }
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        scarabR.setConfirmMessage(DEFAULT_MSG);
         return issueType.createNewGroup(module);
     }
 
@@ -355,12 +356,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         boolean noAGSelected = true;
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return;
         }
 
@@ -383,14 +384,13 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                        .getInstance(new NumberKey(groupId), false); 
                     ag.delete();
                     noAGSelected = false;
-                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                    scarabR.setConfirmMessage(DEFAULT_MSG);  
                     ScarabCache.clear();
                     getIntakeTool(context).removeAll();
                 }
                 catch (Exception e)
                 {
-                    scarabR.setAlertMessage(
-                        l10n.get(NO_PERMISSION_MESSAGE));
+                    scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
                 }
                 if (attributeGroups.size() -1 < 2)
                 {
@@ -404,7 +404,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         if (noAGSelected)
         {
-           scarabR.setAlertMessage(l10n.get("NoAttributeGroupSelected"));
+           scarabR.setAlertMessage(L10NKeySet.NoAttributeGroupSelected);
         }
     }
 
@@ -421,12 +421,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         boolean hasAttributes = false;
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return;
         }
         Module module = scarabR.getCurrentModule();
@@ -455,13 +455,13 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                    .getRModuleAttribute(attribute,
                    scarabR.getIssueType(issueType.getTemplateId().toString()));
                rma2.delete();
-               scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+               scarabR.setConfirmMessage(DEFAULT_MSG);
                ScarabCache.clear();
            }
         }
         if(!hasAttributes)
         {
-            scarabR.setAlertMessage(l10n.get("NoUserAttributeSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoUserAttributeSelected);
         }
     }
 
@@ -475,7 +475,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(getLocalizationTool(context).get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
@@ -495,12 +495,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         if (issueType.isSystemDefined())
         {
-            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.SystemSpecifiedIssueType);
             return;
         }
         if (issueType.getLocked())
         {
-            scarabR.setAlertMessage(l10n.get("LockedIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.LockedIssueType);
             return;
         }
 
@@ -510,7 +510,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
  
         if (attributeIds == null || attributeIds.length <= 0)
         { 
-            scarabR.setAlertMessage(l10n.get("SelectAttribute"));
+            scarabR.setAlertMessage(L10NKeySet.SelectAttribute);
             return;
         }
         else

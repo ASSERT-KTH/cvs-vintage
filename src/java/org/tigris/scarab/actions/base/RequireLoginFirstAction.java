@@ -74,7 +74,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.55 2004/05/10 21:04:45 dabbous Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.56 2004/10/16 12:31:40 dep4b Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -104,8 +104,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         {
             if (!user.hasLoggedIn()) 
             {
-                scarabR.setInfoMessage(
-                     l10n.get("LoginToAccountWithPermissions"));
+                scarabR.setInfoMessage(L10NKeySet.LoginToAccountWithPermissions);
                 Default.setTargetLogin(data);
                 scarabR.setCurrentModule(null);
             }
@@ -116,20 +115,19 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         }
         else if (perm == null)
         {
-            scarabR.setAlertMessage(l10n.get("ActionNotAssignedPermission"));
+            scarabR.setAlertMessage(L10NKeySet.ActionNotAssignedPermission);
         }
         else
         {
             if (currentModule == null)
             {
-                scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
+                scarabR.setInfoMessage(L10NKeySet.SelectModuleToWorkIn);
                 Default.setTargetSelectModule(data);
             }
             else if (! user.hasLoggedIn() 
                 || !user.hasPermission(perm, currentModule))
             {
-                scarabR.setInfoMessage(
-                     l10n.get("LoginToAccountWithPermissions"));
+                scarabR.setInfoMessage(L10NKeySet.LoginToAccountWithPermissions);
 
                 Default.setTargetLogin(data);
                 scarabR.setCurrentModule(null);
