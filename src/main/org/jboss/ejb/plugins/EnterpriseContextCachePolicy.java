@@ -7,7 +7,6 @@
 package org.jboss.ejb.plugins;
 
 import org.jboss.logging.Log;
-import org.jboss.logging.DefaultLog;
 import org.jboss.util.TimerQueue;
 import org.jboss.util.TimerTask;
 import org.jboss.util.CachePolicy;
@@ -19,14 +18,14 @@ import org.jboss.util.CachePolicy;
  * 
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface EnterpriseContextCachePolicy extends CachePolicy
 {
 	// Constants -----------------------------------------------------
 
 	// Static --------------------------------------------------------
-	public static Log log = Log.createLog("Bean Cache");
+	public static Log log = Log.createLog("org.jboss.ejb.plugins.BeanCache");
 	public static Scheduler scheduler = new Scheduler();
 	
 	// Public --------------------------------------------------------
