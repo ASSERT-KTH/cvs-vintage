@@ -16,24 +16,26 @@
 
 package org.columba.mail.folder.search;
 
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
-
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.filter.plugins.AbstractFilter;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.FolderEvent;
 import org.columba.mail.folder.FolderListener;
-import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.util.*;
-
-import javax.swing.JOptionPane;
 
 /**
  * Divides search requests and passes them along to the

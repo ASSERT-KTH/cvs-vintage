@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;

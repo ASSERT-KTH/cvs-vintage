@@ -15,26 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.main.MainInterface;
-
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.FileSource;
-
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.logging.Logger;
@@ -43,6 +30,14 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.FileSource;
 
 /**
  * Controller for the attachment view.

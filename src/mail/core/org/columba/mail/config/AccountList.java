@@ -25,8 +25,6 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
-import org.columba.ristretto.message.Address;
-
 public class AccountList extends DefaultItem {
 
     protected int nextUid;

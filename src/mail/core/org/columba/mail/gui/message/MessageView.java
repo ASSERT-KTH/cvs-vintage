@@ -22,11 +22,12 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.event.HyperlinkListener;
 
 import org.columba.mail.gui.attachment.AttachmentView;
-import org.columba.mail.gui.message.viewer.*;
+import org.columba.mail.gui.message.viewer.HeaderController;
 import org.columba.mail.gui.message.viewer.MessageBodytextViewer;
+import org.columba.mail.gui.message.viewer.SecurityInformationController;
+import org.columba.mail.gui.message.viewer.SpamStatusController;
 
 public class MessageView extends JScrollPane {
 

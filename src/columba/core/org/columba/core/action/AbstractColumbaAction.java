@@ -15,12 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.action;
 
+import javax.swing.AbstractAction;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.plugin.Plugin;
-
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
 
 
 /**

@@ -17,19 +17,18 @@
 
 package org.columba.mail.folder;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
+import java.io.InputStream;
 
+import org.columba.addressbook.folder.Folder;
+import org.columba.mail.folder.command.MarkMessageCommand;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Every mailbox which actually containss message should implement this

@@ -17,9 +17,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.frame;
 
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionListener;
+
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.NotifyDialog;
@@ -27,10 +29,6 @@ import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
-import org.columba.core.xml.XmlElement;
-
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionListener;
 
 
 /**

@@ -17,13 +17,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.frame;
 
+import java.awt.event.MouseAdapter;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.view.AbstractView;
-
-import java.awt.event.MouseAdapter;
-import javax.swing.JFrame;
 
 
 /**

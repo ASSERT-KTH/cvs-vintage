@@ -16,17 +16,6 @@
 
 package org.columba.mail.gui.tree.util;
 
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.LocalRootFolder;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.folder.virtual.VirtualFolder;
-
-import org.columba.ristretto.message.MessageFolderInfo;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -34,8 +23,16 @@ import java.awt.Font;
 import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.LocalRootFolder;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.folder.virtual.VirtualFolder;
+import org.columba.ristretto.message.MessageFolderInfo;
 
 /**
  * This class is used for the mail folder tree.

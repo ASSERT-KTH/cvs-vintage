@@ -18,11 +18,7 @@ package org.columba.mail.gui.view;
 
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.view.AbstractView;
-
-import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.gui.message.MessageView;
-
-import javax.swing.JPanel;
 
 /**
  *

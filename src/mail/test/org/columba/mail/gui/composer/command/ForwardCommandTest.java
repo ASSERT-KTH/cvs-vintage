@@ -26,8 +26,6 @@ import org.columba.mail.folder.FolderTestHelper;
 import org.columba.mail.folder.MailboxTestFactory;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.message.InputStreamMimePart;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.StreamUtils;
 
 /**
  * @author fdietz

@@ -15,24 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
-import org.columba.core.config.ViewItem;
-//import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.core.gui.view.AbstractView;
-import org.columba.core.gui.util.DialogStore;
+import java.awt.event.KeyEvent;
 
+import javax.swing.KeyStroke;
+
+import org.columba.core.config.ViewItem;
+import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
-import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.action.DownAction;
-import org.columba.mail.gui.table.action.UpAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
@@ -40,11 +38,6 @@ import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
-
-import java.awt.event.KeyEvent;
-
-import javax.swing.JFrame;
-import javax.swing.KeyStroke;
 
 
 /**

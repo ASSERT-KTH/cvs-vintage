@@ -18,7 +18,6 @@
 package org.columba.mail.gui.message.filter;
 
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.message.ColumbaMessage;
 
 
 /**

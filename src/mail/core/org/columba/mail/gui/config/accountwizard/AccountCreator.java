@@ -21,14 +21,12 @@ import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
-
 import org.columba.ristretto.message.Address;
 
 class AccountCreator implements WizardModelListener {

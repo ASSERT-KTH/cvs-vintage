@@ -15,18 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
-import org.columba.mail.gui.table.action.ViewMessageAction;
-import org.columba.mail.gui.table.model.MessageNode;
-
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+
+import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
+import org.columba.mail.gui.table.action.ViewMessageAction;
 
 
 /**

@@ -27,7 +27,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 
 
 /**

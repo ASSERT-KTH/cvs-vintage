@@ -17,10 +17,8 @@ package org.columba.core.gui.util;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 import javax.swing.AbstractButton;
 
