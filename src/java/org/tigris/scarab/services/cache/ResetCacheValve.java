@@ -69,26 +69,31 @@ public class ResetCacheValve
     private static final String KEY = 
         ResetCacheValve.class.getName() + ".start";
 
+    private static final boolean DEBUG = false;
+    
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
     public void invoke( RunData data, ValveContext context )
         throws IOException, TurbineException
     {
-        // Covenient place to add some timing metrics
-        Long start = (Long)data.getRequest().getAttribute(KEY);
-        if (start == null) 
+        if (DEBUG)
         {
-            data.getRequest()
-                .setAttribute(KEY, new Long(System.currentTimeMillis()));
-        }
-        else 
-        {
-            String s = "Action=" + data.getAction() + " and template=" + 
-                data.getTarget() + " took: " + 
-                (System.currentTimeMillis() - start.longValue()) + " ms";
-            log.debug(s);
-            System.out.println(s);
+            // Covenient place to add some timing metrics
+            Long start = (Long)data.getRequest().getAttribute(KEY);
+            if (start == null) 
+            {
+                data.getRequest()
+                    .setAttribute(KEY, new Long(System.currentTimeMillis()));
+            }
+            else
+            {
+                String s = "Action=" + data.getAction() + " and template=" + 
+                    data.getTarget() + " took: " + 
+                    (System.currentTimeMillis() - start.longValue()) + " ms";
+                log.debug(s);
+                System.out.println(s);
+            }
         }
         
         // clear the short-term cache
