@@ -46,7 +46,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class EJBQLParser {
    private Catalog catalog;
@@ -66,12 +66,12 @@ public class EJBQLParser {
       token_source.idManager = idManager;
 
       String lowerCase = ejbql.toLowerCase();
-      int fromBeginIndex = lowerCase.indexOf("from");
+      int fromBeginIndex = lowerCase.indexOf(" from ");
       if(fromBeginIndex < 0) {
          throw new ParseException("FROM not found");
       }
 
-      int fromEndIndex = lowerCase.indexOf("where");
+      int fromEndIndex = lowerCase.indexOf(" where ");
       if(fromEndIndex < 0) {
          fromEndIndex = lowerCase.indexOf("order by");
       }
@@ -86,7 +86,7 @@ public class EJBQLParser {
 
       // everything except for the from clause
       char[] sansFrom = ejbql.toCharArray();
-      clear(sansFrom, fromBeginIndex + 4, fromEndIndex);
+      clear(sansFrom, fromBeginIndex + 6, fromEndIndex);
 
       // From clause
       ReInit(new CharArrayReader(from));
