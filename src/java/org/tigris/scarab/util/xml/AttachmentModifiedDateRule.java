@@ -76,7 +76,7 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") attachment modified date begin()");
+        log().debug("(" + getState() + ") attachment modified date begin");
         digester.push(attributes.getValue("format"));
     }
     
@@ -89,7 +89,7 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment ModifiedDate body: " + text);
+        log().debug("(" + getState() + ") attachment modified date body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

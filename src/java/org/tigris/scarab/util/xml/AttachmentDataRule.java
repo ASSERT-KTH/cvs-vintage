@@ -73,11 +73,18 @@ public class AttachmentDataRule extends BaseRule
     public void body(String text) throws Exception
     {
         log().debug("(" + getState() + ") attachment data body: " + text);
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Attachment attachment = (Attachment)digester.pop();
-            attachment.setDataAsString(text);
-            digester.push(attachment);
-        }
+        super.doInsertionOrValidationAtBody(text);
+    }
+    
+    protected void doInsertionAtBody(String text)
+        throws Exception
+    {
+        Attachment attachment = (Attachment)digester.pop();
+        attachment.setDataAsString(text);
+        digester.push(attachment);
+    }
+    
+    protected void doValidationAtBody(String text)
+    {
     }
 }

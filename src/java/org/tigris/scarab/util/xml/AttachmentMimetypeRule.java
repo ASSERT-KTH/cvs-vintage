@@ -62,7 +62,7 @@ public class AttachmentMimetypeRule extends BaseRule
     {
         super(digester, state);
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -72,12 +72,18 @@ public class AttachmentMimetypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment Mime Type body: " + text);
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Attachment attachment = (Attachment)digester.pop();
-            attachment.setMimeType(text);
-            digester.push(attachment);
-        }
+        log().debug("(" + getState() + ") attachment mime type body: " + text);
+        super.doInsertionOrValidationAtBody(text);
+    }
+    
+    protected void doInsertionAtBody(String text)
+    {
+        Attachment attachment = (Attachment)digester.pop();
+        attachment.setMimeType(text);
+        digester.push(attachment);
+    }
+    
+    protected void doValidationAtBody(String text)
+    {
     }
 }

@@ -45,14 +45,13 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
- 
+
 import org.xml.sax.Attributes;
 
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.Transaction;
 
 /**
  * Handler for the xpath "scarab/module/issue/attachment"
@@ -75,12 +74,18 @@ public class AttachmentRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") attachment begin()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Attachment attachment = new Attachment();
-            digester.push(attachment);
-        }
+        log().debug("(" + getState() + ") attachment begin");
+        super.doInsertionOrValidationAtBegin(attributes);
+    }
+    
+    protected void doInsertionAtBegin(Attributes attributes)
+    {
+        Attachment attachment = new Attachment();
+        digester.push(attachment);
+    }
+    
+    protected void doValidationAtBegin(Attributes attributes)
+    {
     }
     
     /**
@@ -89,16 +94,21 @@ public class AttachmentRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") attachment end()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Attachment attachment = (Attachment)digester.pop();
-            Transaction transaction = (Transaction)digester.pop();
-            Issue issue = (Issue)digester.pop();
-            attachment.setIssueId(issue.getIssueId());
-            attachment.save();
-            digester.push(issue);
-            digester.push(transaction);
-        }
+        log().debug("(" + getState() + ") attachment end");
+        super.doInsertionOrValidationAtEnd();
+    }
+    
+    protected void doInsertionAtEnd()
+        throws Exception
+    {
+        Attachment attachment = (Attachment)digester.pop();
+        Issue issue = (Issue)digester.pop();
+        attachment.setIssueId(issue.getIssueId());
+        attachment.save();
+        digester.push(issue);
+    }
+    
+    protected void doValidationAtEnd()
+    {
     }
 }

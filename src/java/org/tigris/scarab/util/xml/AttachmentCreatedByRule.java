@@ -81,7 +81,7 @@ public class AttachmentCreatedByRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment CreatedBy body: " + text);
+        log().debug("(" + getState() + ") attachment created by body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -95,16 +95,6 @@ public class AttachmentCreatedByRule extends BaseRule
     
     protected void doValidationAtBody(String text) throws Exception
     {
-        try
-        {
-            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
-        }
-        catch(Exception e)
-        {
-            if (!getUserList().contains(text))
-            {
-                throw new Exception("User: " + text + ", is not defined");
-            }
-        }
+        validateUser(text);
     }
 }

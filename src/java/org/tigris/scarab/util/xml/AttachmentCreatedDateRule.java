@@ -75,7 +75,7 @@ public class AttachmentCreatedDateRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") attachment created date begin()");
+        log().debug("(" + getState() + ") attachment created date begin");
         digester.push(attributes.getValue("format"));
     }
     
@@ -88,7 +88,7 @@ public class AttachmentCreatedDateRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment CreatedDate body: " + text);
+        log().debug("(" + getState() + ") attachment created date body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     

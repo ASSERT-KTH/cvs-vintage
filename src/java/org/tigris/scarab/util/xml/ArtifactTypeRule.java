@@ -79,7 +79,7 @@ public class ArtifactTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") artifact-type body: " + text);
+        log().debug("(" + getState() + ") artifact type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -103,7 +103,6 @@ public class ArtifactTypeRule extends BaseRule
     }
     
     protected void doValidationAtBody(String artifactTypeName)
-        throws Exception
     {
         String xmlIssueId = (String)digester.pop();
         String moduleCode = (String)digester.pop();
