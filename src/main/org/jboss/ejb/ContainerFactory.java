@@ -81,7 +81,7 @@ import org.jboss.web.WebServiceMBean;
 *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 *
-*   @version $Revision: 1.80 $
+*   @version $Revision: 1.81 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -105,7 +105,7 @@ public class ContainerFactory
   // Temp directory where deployed jars are stored
   File tmpDir;
   // The logger of this service
-  Log log = Log.createLog( getName() );
+  Log log = Log.createLog(this.getClass().getName());
   // A map of current deployments. If a deployment is made and it is already in this map,
   // then undeploy it first (i.e. make it a re-deploy).
   HashMap deployments = new HashMap();
