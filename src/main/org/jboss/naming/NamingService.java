@@ -19,7 +19,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -87,18 +87,17 @@ public class NamingService
       // RO: this is necessary because some components (=Tomcat servlets) use a 
       // buggy classloader that disallows finding the resource properly
       System.getProperties().load(Thread.currentThread().getContextClassLoader().getResourceAsStream("jndi.properties"));
-   
-      // Create "java:comp/env"
-      RefAddr refAddr = new StringRefAddr("nns", "ENC");
-      Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
-      Context ctx = (Context)new InitialContext().lookup("java:");
-      ctx.rebind("comp", envRef);
    }
    
    public void startService()
       throws Exception
    {
       naming.start();
+      // Create "java:comp/env"
+      RefAddr refAddr = new StringRefAddr("nns", "ENC");
+      Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
+      Context ctx = (Context)new InitialContext().lookup("java:");
+      ctx.rebind("comp", envRef);
       log.log("Naming started on port "+naming.getPort());
    }
       
