@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.152 2002/05/13 23:40:38 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.153 2002/05/14 00:51:26 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -23,7 +23,8 @@
             <ul>
                 <li>User's choice of where to go after entering an issue
                     now gets saved. Bug Report
-                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=307">307</a>. (EWD)</li>
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=307">
+                    307</a>. (EWD)</li>
                 <li>Urls associated with an issue were limited to 255
                     characters, while the description was unlimited.  These 
                     size limitations have been reversed.     
@@ -31,6 +32,10 @@
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=318">
                     318</a>. (JDM)</li>
                  <li>Storing Issue View tab setting in user session. (EWD)</li>
+                 <li>Added Template List popup to the SearchNav.
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=332">
+                    332</a>. (JSS)</li>
             </ul>
          </td>
     </tr>
@@ -40,10 +45,12 @@
             <ul>
                 <li>Dedupe was not getting set properly. Fixed that.(EWD)</li>
                 <li>Default text attribute was not getting saved. Fixed that.
-                    Bug Report#<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=317">317</a>. (EWD)</li>
+                    Bug Report 
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=317">
+                    317</a>. (EWD)</li>
                 <li>Fileupload of zip mimetype was not possible due to
                     artificially small size constraints in the database.
-                    This size limitation has been increased.(JDM)</li>
+                    This size limitation has been increased. (JDM)</li>
                 <li>When downloading a file attachment, if the file was smaller
                     than 4kB, the ContentType header was set to text/html, 
                     regardless of the actual content type. (JDM)</li>
@@ -111,7 +118,7 @@
                 <li>Reports navigation link now goes to a screen that shows
                     a list of saved reports. This page can be used to run or
                     edit saved reports.  It also contains a link to create
-                    a new report (EWD, JSS, JDM).
+                    a new report (EWD, JSS, JDM).</li>
             </ul>
         </td>
     </tr>
