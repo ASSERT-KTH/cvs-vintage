@@ -89,7 +89,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
         int unseen = inboxFolder.getMessageFolderInfo().getUnseen();
 
         // check for new headers
-        inboxFolder.getHeaderList();
+        inboxFolder.synchronizeHeaderlist();
 
         // Get the new numbers
         int newTotal = inboxFolder.getMessageFolderInfo().getExists();
