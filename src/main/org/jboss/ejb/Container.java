@@ -7,18 +7,17 @@
 
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
+import javax.ejb.EJBException;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -35,31 +34,26 @@ import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
-import javax.management.MalformedObjectNameException;
-
-import javax.ejb.EJBException;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
 import javax.naming.Name;
+import javax.naming.NameAlreadyBoundException;
+import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
-
 import javax.transaction.TransactionManager;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
-
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
-
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -68,15 +62,13 @@ import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
-import org.jboss.naming.Util;
 import org.jboss.naming.ENCThreadLocalKey;
+import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
-
+import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
 import org.jboss.util.jmx.ObjectNameFactory;
-
-import org.jboss.system.ServiceMBeanSupport;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -97,7 +89,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.95 $
+ * @version $Revision: 1.96 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -537,6 +529,7 @@ public abstract class Container
    {
       started = false;
       localProxyFactory.stop();
+      teardownEnvironment();
    }
    
    /**
@@ -1125,6 +1118,21 @@ public abstract class Container
       if (debug)
          log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
    }
+
+   /**
+    *The <code>teardownEnvironment</code> method unbinds everything from
+    * the comp/env context.  It would be better do destroy the env context
+    * but destroyContext is not currently implemented..
+    *
+    * @exception Exception if an error occurs
+    */
+   private void teardownEnvironment() throws Exception
+   {
+      Context ctx = (Context)new InitialContext().lookup("java:comp");
+      ctx.unbind("env");
+      log.debug("Removed bindings from java:comp/env for EJB: "+getBeanMetaData().getEjbName());
+   }
+
 
    /**
     * The base class for container interceptors.
