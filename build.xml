@@ -120,8 +120,8 @@
                file="${jaxp.home}/crimson.jar" />
     <available property="xerces-present"
                file="${jaxp.home}/xerces.jar" />
-    <available property="http11-present"
-               file="${jtc.http11.lib}/tomcat-http11.jar" />
+    <available property="jtc-present"
+               file="${jakarta-tomcat-connectors}" />
   </target>
 
   <target name="msg.jdk12" if="jdk12.present" >
@@ -131,6 +131,7 @@
   <target name="msg.jsse" if="jsse.present" >
     <echo message="Detected JSSE"/>
   </target>
+
   <target name="msg.puretls" if="puretls.present">
     <echo message="Detected PureTLS"/>
   </target>
@@ -139,7 +140,11 @@
     <echo message="Detected commons-DBCP"/>
   </target>
 
-  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp" >
+  <target name="msg.jtc" unless="jtc-present" >
+    <fail message="Jakarta-tomcat-connectors repository is required ${jakarta-tomcat-connectors}"/>
+  </target>
+
+  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp,msg.jtc" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -174,21 +179,9 @@
   
   <target name="prepare.jaxp" depends="prepare.jaxp101,prepare.jaxp11,prepare.xerces" />
 
-  <target name="prepare.http11" depends="detect" if="http11-present" >
-    <echo message="Installing Http11 and Coyote"/>
-    <copy tofile="${tomcat.build}/lib/common/tomcat33-resource.jar"
-          file="${jtc.http11.lib}/tomcat33-resource.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/tomcat-http11.jar"
-          file="${jtc.http11.lib}/tomcat-http11.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/tomcat33-coyote.jar"
-          file="${jtc.http11.lib}/tomcat33-coyote.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/commons-logging.jar"
-          file="${commons-logging.jar}"/>
-  </target>
-
   <!-- ==================== Copy static files ==================== -->
 
-  <target name="prepare" depends="init,prepare.dirs,prepare.jaxp,prepare.http11" 
+  <target name="prepare" depends="init,prepare.dirs,prepare.jaxp" 
 	  description="Create the directory structure for build and copy binaries" />
 
   <target name="prepare.dirs" depends="init">
@@ -246,6 +239,8 @@
     <copy file ="src/build/readme/readme.common"
           tofile="${tomcat.build}/lib/common/README" />
 
+    <copy tofile="${tomcat.build}/lib/container/commons-logging.jar"
+          file="${commons-logging.jar}"/>
 
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
@@ -291,33 +286,31 @@
       </fileset>
     </copy>
 
+    <!-- Hooks and other tomcat3.3 specific utils needed in core -->
     <jar jarfile="${tomcat.build}/lib/common/core_util.jar" >
       <fileset dir="${tomcat.build}/classes">
           <include name="org/apache/tomcat/util/hooks/**"/>
-      </fileset>
-      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
-          <include name="org/apache/tomcat/util/log/**"/>
-      </fileset>
-    </jar>
-
-    <jar jarfile="${tomcat.build}/lib/common/connector_util.jar">
-      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
-        <include name="org/apache/tomcat/util/collections/**"/>
-        <include name="org/apache/tomcat/util/http/**"/>
-        <include name="org/apache/tomcat/util/buf/**"/>
-        <include name="org/apache/tomcat/util/res/**"/>
         <!-- All resource must go to common, bug in StringManager/ResourceBundle -->
         <include name="org/apache/tomcat/util/**/*.properties"/>
       </fileset>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar" >
+    <!-- J-T-C utils - with tomcat_util.jar name -->
+    <!-- 
+    <jar jarfile="${tomcat.build}/lib/common/tomcat_util.jar">
+      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
+        <include name="org/apache/tomcat/util/**"/>
+      </fileset>
+    </jar>
+    --> 
+    <copy file="${jakarta-tomcat-connectors}/util/build/lib/tomcat-util.jar"
+          todir="${tomcat.build}/lib/common" />
+
+    <!-- All tomcat3 specific utils -->
+    <jar jarfile="${tomcat.build}/lib/container/container_util.jar" >
       <fileset dir="${tomcat.build}/classes">
         <include name="org/apache/tomcat/util/**"/>
         <exclude name="org/apache/tomcat/util/test/**"/>
-      </fileset>
-      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
-        <include name="org/apache/tomcat/util/**"/>
       </fileset>
     </jar>
   </target>
@@ -515,6 +508,31 @@
     </jar>
   </target>
 
+  <!-- ====================  Coyote  ========== -->
+
+  <target name="coyote" depends="prepare,tomcat_core,tomcat_modules"  >
+    <echo message="Building Coyote"/>
+    <!-- By now we have built the modules coyote needs -->
+    <ant dir="${jakarta-tomcat-connectors}/coyote" />
+
+    <ant dir="${jakarta-tomcat-connectors}/http11" />
+
+    <ant dir="${jakarta-tomcat-connectors}/jk" />
+
+    <copy tofile="${tomcat.build}/lib/common/tomcat33-resource.jar"
+          file="${jtc.http11.lib}/tomcat33-resource.jar"/>
+
+    <copy tofile="${tomcat.build}/lib/container/tomcat-http11.jar"
+          file="${jtc.http11.lib}/tomcat-http11.jar"/>
+
+    <copy tofile="${tomcat.build}/lib/container/tomcat33-coyote.jar"
+          file="${jtc.http11.lib}/tomcat33-coyote.jar"/>
+
+    <copy todir="${tomcat.build}/lib/container"
+          file="${jakarta-tomcat-connectors}/jk/build/WEB-INF/lib/tomcat-jk2.jar"/>
+
+  </target>
+
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="prepare">
     <javac
@@ -560,7 +578,7 @@
     </jar>
   </target>
 
-  <target name="tomcat-jars" depends="prepare,tomcat_util,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,tomcat.jar,facade22,tomcat-startup">
+  <target name="tomcat-jars" depends="prepare,tomcat_util,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,coyote,tomcat.jar,facade22,tomcat-startup">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
@@ -951,6 +969,10 @@
     <delete dir="${tomcat.build}"/>
     <delete dir="${tomcat.dist}"/>
     <delete dir="${tomcat.build}/../etomcat"/>
+    <ant dir="${jakarta-tomcat-connectors}/util" target="clean" />
+    <ant dir="${jakarta-tomcat-connectors}/coyote" target="clean" />
+    <ant dir="${jakarta-tomcat-connectors}/http11" target="clean" />
+    <ant dir="${jakarta-tomcat-connectors}/jk" target="clean" />
   </target>
 
   <target name="all" depends="clean,dist"/>
