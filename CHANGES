@@ -34,6 +34,7 @@ New features:
 - refactored startup process and session management (javaprog)
 - improved mnemonic handling in resource loading framework
 - improved reaction to deleted messages by other applications (e.g. virus killers) while columba is running.
+- added "Open Link/With" items to message-viewer context-menu
 
 Fixed bugs:
 - fixed error in printing when no character set is specified
@@ -51,6 +52,7 @@ Fixed bugs:
 - made AboutDialog non-modal and singleton to be able to use email links (javaprog)
 - fixed copy/move of encrypted messages (tstich)
 - fixed race condition in mail checking on POP3 (tstich)
+
 
   
 Columba v1.0 M1.1
