@@ -347,12 +347,13 @@ else echo "cannot find columba.jar in `pwd`"; fi
            <include name="lib/log4j.jar"/>
            <include name="lib/lucene-1.3-rc1.jar"/>
            <include name="lib/junit.jar"/>
-           <include name="lib/jakarta-oro-2.0.6.jar"/>
            <include name="lib/jargs.jar"/>
            <include name="lib/plastic.jar"/>
            <include name="lib/forms.jar"/>
 	        <include name="lib/jwizz-0.1.1.jar"/>
-	        <include name="lib/jhall.jar"/>
+	        <!-- never sign JavaHelp, its already signed by SUN -->
+	        <!--<include name="lib/jhall.jar"/>-->
+	        <include name="lib/ristretto-1.0pre1.jar" />
 	        <include name="lib/usermanual.jar"/>
           </fileset>
          </signjar>
