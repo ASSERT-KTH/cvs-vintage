@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.jrmp.server;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.UnknownHostException;
 import java.rmi.ServerException;
 import java.rmi.RemoteException;
 import java.rmi.MarshalledObject;
@@ -66,7 +67,8 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.39 $
+ *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ *  @version $Revision: 1.40 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -87,6 +89,8 @@ public class JRMPContainerInvoker
    protected String clientSocketFactoryName;
    /** The class name of the optional custom server socket factory */
    protected String serverSocketFactoryName;
+   /** The address to bind the rmi port on */
+   protected String serverAddress;
    protected boolean jdk122 = false;
    protected Container container;
    protected String jndiName;
@@ -498,11 +502,15 @@ public class JRMPContainerInvoker
          Logger.error(e);
          serverSocketFactoryName = null;
       }
+      Element addrElement = MetaData.getOptionalChild(element, "RMIServerSocketAddr");
+      if( addrElement != null )
+         this.serverAddress = MetaData.getElementContent(addrElement);
       loadCustomSocketFactories(loader);
 
       Logger.debug("Container Invoker RMI Port='"+(rmiPort == ANONYMOUS_PORT ? "Anonymous" : Integer.toString(rmiPort))+"'");
       Logger.debug("Container Invoker Client SocketFactory='"+(clientSocketFactory == null ? "Default" : clientSocketFactory.toString())+"'");
       Logger.debug("Container Invoker Server SocketFactory='"+(serverSocketFactory == null ? "Default" : serverSocketFactory.toString())+"'");
+      Logger.debug("Container Invoker Server SocketAddr='"+(serverAddress == null ? "Default" : serverAddress)+"'");
       Logger.debug("Container Invoker Optimize='"+optimize+"'");
    }
 
@@ -532,24 +540,67 @@ public class JRMPContainerInvoker
    // Private -------------------------------------------------------
    private void loadCustomSocketFactories(ClassLoader loader)
    {
-      try {
-         if (clientSocketFactoryName != null) {
-            Class csfClass = loader.loadClass(clientSocketFactoryName);
-            clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
-         }
-      } catch(Exception e) {
-         Logger.error(e);
-         clientSocketFactory = null;
-      }
-      try {
-         if (serverSocketFactoryName != null) {
-            Class ssfClass = loader.loadClass(serverSocketFactoryName);
-            serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
-         }
-      } catch(Exception e) {
-         Logger.error(e);
-         serverSocketFactory = null;
-      }
+        try
+        {
+            if( clientSocketFactoryName != null )
+            {
+                Class csfClass = loader.loadClass(clientSocketFactoryName);
+                clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            clientSocketFactory = null;
+        }
+        try
+        {
+            if( serverSocketFactoryName != null )
+            {
+                Class ssfClass = loader.loadClass(serverSocketFactoryName);
+                serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
+                if( serverAddress != null )
+                {
+                   // See if the server socket supports setBindAddress(String)
+                   try
+                   {
+                      Class[] parameterTypes = {String.class};
+                      Method m = ssfClass.getMethod("setBindAddress", parameterTypes);
+                      Object[] args = {serverAddress};
+                      m.invoke(serverSocketFactory, args);
+                   }
+                   catch(NoSuchMethodException e)
+                   {
+                      Logger.error("Socket factory does not support setBindAddress(String)");
+                      // Go with default address
+                   }
+                   catch(Exception e)
+                   {
+                      Logger.error("Failed to setBindAddress="+serverAddress+" on socket factory");
+                      // Go with default address
+                   }
+                }
+            }
+            // If a bind address was specified create a DefaultSocketFactory
+            else if( serverAddress != null )
+            {
+               DefaultSocketFactory defaultFactory = new DefaultSocketFactory();
+               serverSocketFactory = defaultFactory;
+               try
+               {
+                  defaultFactory.setBindAddress(serverAddress);
+               }
+               catch(UnknownHostException e)
+               {
+                  Logger.error("Failed to setBindAddress="+serverAddress+" on socket factory, "+e.getMessage());
+               }
+            }
+        }
+        catch(Exception e)
+        {
+            Logger.error(e);
+            serverSocketFactory = null;
+        }
    }
 
    /**
