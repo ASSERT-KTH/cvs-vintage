@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.70 2004/09/26 20:45:33 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.71 2004/10/01 18:00:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1158,19 +1158,23 @@ public class GeneratorDisplay extends Generator2 {
     // }
 
     /**
+     * This function is never used, so I commented it out.
+     * 
      * @return
      */
-    public boolean canParse() {
+    /*public boolean canParse() {
         return true;
-    }
+    }*/
 
     /**
+     * This function is never used, so I commented it out.
+     * 
      * @param o
      * @return
      */
-    public boolean canParse(Object o) {
+    /*public boolean canParse(Object o) {
         return true;
-    }
+    }*/
 
     /**
      * @see org.argouml.application.api.ArgoModule#getModuleName()
