@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.19 2003/08/27 04:31:53 patriot1burke Exp $ -->
+<!-- $Id: log4j.xml,v 1.20 2003/09/23 15:46:14 slaboure Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -234,7 +234,7 @@
    </root>
 
    <!-- Clustering logging -->
-   <!-- Uncomment the following to redirect the org.javagroups and
+   <!-- Uncomment the following to redirect the org.jgroups and
       org.jboss.ha categories to a cluster.log file.
 
    <appender name="CLUSTER" class="org.jboss.logging.appender.RollingFileAppender">
@@ -248,7 +248,7 @@
        <param name="ConversionPattern" value="%d %-5p [%c] %m%n"/>
      </layout>
    </appender>
-   <category name="org.javagroups">
+   <category name="org.jgroups">
      <priority value="DEBUG" />
      <appender-ref ref="CLUSTER"/>
    </category>
