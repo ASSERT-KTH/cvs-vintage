@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.72 2002/09/24 22:28:37 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.73 2002/10/04 01:51:00 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -667,31 +667,31 @@ public abstract class AttributeValue
         AttributeValue attv = null;
         try
         {
-        String className = attribute
-            .getAttributeType().getJavaClassName();
-        attv = (AttributeValue)
-            Class.forName(className).newInstance();
-        attv.setAttribute(attribute);
-        attv.setIssue(issue);
-
-        String key = getCacheKey(attribute.getPrimaryKey());
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        Object resources = null;
-        try
-        {
-            resources = tgcs.getObject(key).getContents();
-        }
-        catch (ObjectExpiredException oee)
-        {
-            resources = attv.loadResources();
-            tgcs.addObject(key, new CachedObject(resources));
-        }
-
-        attv.setResources(resources);
-        attv.init();
+            String className = attribute
+                .getAttributeType().getJavaClassName();
+            attv = (AttributeValue)
+                Class.forName(className).newInstance();
+            attv.setAttribute(attribute);
+            attv.setIssue(issue);
+    
+            String key = getCacheKey(attribute.getPrimaryKey());
+            TurbineGlobalCacheService tgcs = 
+                (TurbineGlobalCacheService)TurbineServices
+                .getInstance().getService(GlobalCacheService.SERVICE_NAME);
+    
+            Object resources = null;
+            try
+            {
+                resources = tgcs.getObject(key).getContents();
+            }
+            catch (ObjectExpiredException oee)
+            {
+                resources = attv.loadResources();
+                tgcs.addObject(key, new CachedObject(resources));
+            }
+    
+            attv.setResources(resources);
+            attv.init();
         }
         catch (Exception e)
         {
