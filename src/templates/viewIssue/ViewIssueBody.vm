@@ -26,29 +26,29 @@
 
 ## PRIMARY INFO
 #if ($tab.equals("1") || $tab.equals("all"))
-  $renderer.render("screens", "ViewIssueTab1.vm")
+  $renderer.render("viewIssue", "ViewIssueTab1.vm")
 #end
 
 ### PERSONNEL
 #if ($tab.equals("2") || $tab.equals("all"))
-  $renderer.render("screens", "ViewIssueTab2.vm")
+  $renderer.render("viewIssue", "ViewIssueTab2.vm")
 #end 
 
 ## COMMENTS
 #if ($tab.equals("3") || $tab.equals("all"))
-  $renderer.render("screens", "ViewIssueTab3.vm")
+  $renderer.render("viewIssue", "ViewIssueTab3.vm")
 #end
 
 ## URL/Attachment/Dependency Tab
 #if ($tab.equals("4") || $tab.equals("all"))
-  $renderer.render("screens", "ViewIssueTab4Url.vm")
-  $renderer.render("screens", "ViewIssueTab4Att.vm")
-  $renderer.render("screens", "ViewIssueTab4Dep.vm")
+  $renderer.render("viewIssue", "ViewIssueTab4Url.vm")
+  $renderer.render("viewIssue", "ViewIssueTab4Att.vm")
+  $renderer.render("viewIssue", "ViewIssueTab4Dep.vm")
 #end
 
 ## ISSUE HISTORY
 #if ($tab.equals("5") || $tab.equals("all"))
-  $renderer.render("screens", "ViewIssueTab5.vm")
+  $renderer.render("viewIssue", "ViewIssueTab5.vm")
 #end
 
 <div class="functnbar2">

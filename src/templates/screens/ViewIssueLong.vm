@@ -16,7 +16,7 @@
        #end
        #printCollisionInfo()
        $intake.newForm()
-       $renderer.render("screens", "ViewIssueBody.vm")
+       $renderer.render("viewIssue", "ViewIssueBody.vm")
        $intake.declareGroups()
        </form>
      #end

@@ -89,7 +89,7 @@
 </div>
 #end
 
-$renderer.render("screens", "ViewIssueBody.vm")
+$renderer.render("viewIssue", "ViewIssueBody.vm")
 
  $intake.declareGroups()
  </form>
