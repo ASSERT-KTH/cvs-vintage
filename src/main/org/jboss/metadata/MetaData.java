@@ -20,10 +20,10 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public abstract class MetaData
-   implements XmlLoadable
+   implements Cloneable, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
@@ -231,6 +231,21 @@ public abstract class MetaData
    // Constructors --------------------------------------------------
     
    // Public --------------------------------------------------------
+
+   /** Create a field wise copy of the object.
+   */
+   public Object clone()
+   {
+      Object clone = null;
+      try
+      {
+         clone = super.clone();
+      }
+      catch(CloneNotSupportedException ignore)
+      {
+      }
+      return clone;
+   }
 
    /**
     * Imports either the jboss or ejb-jar from the given element.
