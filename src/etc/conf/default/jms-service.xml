@@ -43,6 +43,11 @@
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
     <attribute name="ResourceAdapterName">JMS Adapter</attribute>
     <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
+    <attribute name="ManagedConnectionFactoryProperties">
+       SessionDefaultType=javax.jms.Topic
+       #UserName=guest
+       #Password=guest
+     </attribute>
     <attribute name="ConnectionManagerProperties">
       # Pool type - uncomment to force, otherwise it is the default
       #PoolConfiguration=per-factory
