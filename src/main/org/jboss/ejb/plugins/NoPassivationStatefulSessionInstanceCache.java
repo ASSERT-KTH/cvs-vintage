@@ -31,7 +31,7 @@ import org.jboss.ejb.deployment.jBossSession;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.3 $
+*	@version $Revision: 1.4 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
@@ -41,7 +41,7 @@ implements InstanceCache
 	// Attributes ----------------------------------------------------
 	Container con;
 	
-	Map active = Collections.synchronizedMap(new HashMap());
+	Map active = new HashMap();
 	
 	// Static --------------------------------------------------------
 	
