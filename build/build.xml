@@ -13,7 +13,7 @@
     <property name="version" value="1.0-dev"/>
     <property name="project" value="scarab"/>
     <property name="final.name" value="${project}-${version}"/>
-    <property name="final.dir" value="../${final.name}/"/>
+    <property name="final.dir" value="${basedir}/../${final.name}/"/>
 
     <property name="build.compiler" value="classic"/>
     <property name="debug" value="on"/>
@@ -23,18 +23,18 @@
     <property name="ant.home" value="."/>
     <property name="year" value="2000-2001"/>
 
-    <property name="build.dir.default" value="../target"/>
+    <property name="build.dir.default" value="${basedir}/../target"/>
 
-    <property name="turbine.dir" value="../../jakarta-turbine"/>
+    <property name="turbine.dir" value="${basedir}/../../jakarta-turbine"/>
     <property name="turbine.latest.jar" 
             value="turbine-2.1-dev-unreleased.jar"/>
     <property name="torque.zip" value="torque.zip"/>
-    <property name="src.dir" value="../src"/>
+    <property name="src.dir" value="${basedir}/../src"/>
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.java.dir" value="${src.dir}/java"/>
-    <property name="src.lib.dir" value="../lib"/>
+    <property name="src.lib.dir" value="${basedir}/../lib"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
@@ -153,7 +153,7 @@
             targetfile="${src.lib.dir}/${turbine.latest.jar}">
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
-        <echo message="${turbine.jar.uptodate}"/>
+        <echo message="Turbine UpToDate: ${turbine.jar.uptodate}"/>
 
         <echo message="checking: ${src.lib.dir}/${torque.zip}"/>
         <uptodate property="torque.uptodate"
@@ -161,7 +161,7 @@
             <srcfiles dir="${turbine.dir}/conf/torque" includes="**/*"/>
             <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
         </uptodate>
-        <echo message="${torque.uptodate}"/>
+        <echo message="Torque UpToDate: ${torque.uptodate}"/>
     </target>
     <target name="skip-turbine" depends="check-for-turbine,prepare" 
             unless="turbine.cvs.available">
@@ -304,7 +304,7 @@
     <!-- ================================================================== -->
     <target name="jarsrc" depends="prepare">
         <jar jarfile="${build.dir}/${final.name}.src.jar"
-            basedir="${build.src}"
+            basedir="${build.src.scarab}"
             excludes="**/package.html"/>
     </target>
 
@@ -314,7 +314,7 @@
     <target name="javadocs" depends="prepare">
         <mkdir dir="${javadoc.destdir}"/>
         <javadoc
-            sourcepath="${build.src}"
+            sourcepath="${build.src.scarab}"
             packagenames="org.tigris.scarab.*"
             destdir="${javadoc.destdir}"
             author="true"
