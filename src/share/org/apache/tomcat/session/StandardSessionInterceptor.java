@@ -114,14 +114,15 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     public int requestMap(Request request ) {
 	String sessionId = null;
 	Context ctx=request.getContext();
-	System.out.println("X1");
-	if( ctx==null ) return 0;
+	if( ctx==null ) {
+	    log( "Configuration error in StandardSessionInterceptor - no context " + request );
+	    return 0;
+	}
 
 	// "access" it and set HttpSession if valid
 	sessionId=request.getRequestedSessionId();
 
 	if (sessionId != null && sessionId.length()!=0) {
-	    System.out.println("X2");
 	    // GS, We are in a problem here, we may actually get
 	    // multiple Session cookies (one for the root
 	    // context and one for the real context... or old session
@@ -129,12 +130,16 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    StandardManager sM = getManager( ctx );    
 	    HttpSession sess= sM.findSession( sessionId );
 	    if(null != sess) {
+		//		log( "Found session");
 		// set it only if nobody else did !
-		if( null != request.getSession( false ) )
+		if( null == request.getSession( false ) ) {
 		    request.setSession( sess );
+		    //    log("Session set ");
+		}
 	    }
+	    return 0;
 	}
-	System.out.println("X3");
+	//	log( "No session ");
 	return 0;
     }
     
@@ -215,4 +220,10 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	    throw new TomcatException( ex );
 	}
     }
+
+
+    private void log( String s ) {
+	System.out.println("StandardSessionInterceptor: " + s );
+    }
+
 }
