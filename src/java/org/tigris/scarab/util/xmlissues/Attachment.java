@@ -61,6 +61,7 @@ public class Attachment implements java.io.Serializable
     private ModifiedDate modifiedDate = null;
     private String createdBy = null;
     private String modifiedBy = null;
+    private boolean deleted = false;
 
     public Attachment()
     {
@@ -164,5 +165,15 @@ public class Attachment implements java.io.Serializable
     public String getModifiedBy()
     {
         return this.modifiedBy;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
+    }
+
+    public boolean getDeleted()
+    {
+        return this.deleted;
     }
 }
