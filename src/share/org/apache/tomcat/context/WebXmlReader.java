@@ -26,7 +26,7 @@ public class WebXmlReader extends BaseInterceptor {
     }
 
     public void contextInit(Context ctx) {
-	//	System.out.println("Context(" + ctx.getPath() + "): " + ctx.getDocBase());
+	if( ctx.getDebug() > 0 ) ctx.log("XmlReader - init  " + ctx.getPath() + " " + ctx.getDocBase() );
 
 	// read default web.xml
 	try {
@@ -42,10 +42,10 @@ public class WebXmlReader extends BaseInterceptor {
 
     void processFile( Context ctx, String file) {
 	try {
-	    File f=new File(file);
-
+	    File f=new File(file);	
+	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
-	    xh.setDebug( 0 );
+	    if( ctx.getDebug() > 5 ) xh.setDebug( 2 );
 
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
 	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) ); 

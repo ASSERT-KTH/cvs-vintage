@@ -129,22 +129,10 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     public void contextShutdown(Context ctx) throws TomcatException {
     }
-
-    /** Notify when a new servlet is added
-     */
-    public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException {
-    }
-    
-    /** Notify when a servlet is removed from context
-     */
-    public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+    public void addContainer(Container container) throws TomcatException {
     }
 
-    public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException {
-    }
-
-
-    public void removeMapping( Context ctx, String path ) throws TomcatException {
+    public void removeContainer(Container container) throws TomcatException {
     }
 
     /** 

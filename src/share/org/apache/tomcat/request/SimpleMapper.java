@@ -242,48 +242,6 @@ public class SimpleMapper extends  BaseInterceptor  {
 
     */
 
-
-    /** Called when a context is added to a CM
-     */
-    public void addContext( ContextManager cm, Context ctx )
-	throws TomcatException
-    {
-	Mappings m=new Mappings();
-	m.ctx=ctx;
-	m.prefixMappedServlets=new Hashtable();
-	m.extensionMappedServlets=new Hashtable();
-	m.pathMappedServlets=new Hashtable();
-	contextPaths.put( ctx.getPath(), m );
-
-	if(debug>0) ctx.log("New context added to maps. ");
-	// add all existing mappings
-	Enumeration enum=ctx.getServletMappings();
-	while( enum.hasMoreElements() ) {
-	    String path=(String) enum.nextElement();
-	    ServletWrapper sw=ctx.getServletMapping( path );
-	    Container ct=new Container();
-	    ct.setContext( ctx );
-	    ct.setHandler( sw );
-	    if(debug>0) ctx.log("Adding existing " + path );
-	    addMapping( contextPaths, ctx, path, ct );
-	}
-	// set default container
-	Container def=new Container();
-	def.setContext( ctx );
-	ServletWrapper wrapper = ctx.getDefaultServlet();
-	def.setHandler( wrapper );
-	m.defaultContainer=def;
-	
-	enum=ctx.getSecurityConstraints();
-	while( enum.hasMoreElements() ) {
-	    String path=(String) enum.nextElement();
-	    Container ct=ctx.getSecurityConstraint( path );
-	    if(debug>0) ctx.log("Adding existing " + path );
-	    addMapping( securityConstraints, ctx, path, ct );
-	}
-
-    }
-
     /** Called when a context is removed from a CM
      */
     public void removeContext( ContextManager cm, Context ctx ) throws TomcatException
@@ -298,18 +256,6 @@ public class SimpleMapper extends  BaseInterceptor  {
     }
 
 
-    /** Notification - new handler mapping
-     */
-    public void addMapping( Context ctx, String path, ServletWrapper sw)
-	throws TomcatException
-    {
-	Container ct=new Container();
-	ct.setContext( ctx );
-	ct.setHandler( sw );
-	if(debug>0) ctx.log("Adding existing " + path );
-	addMapping( contextPaths, ctx, path, ct );
-    }
-
     /**
      * Associate URL pattern  to a set of propreties.
      * 
@@ -321,10 +267,20 @@ public class SimpleMapper extends  BaseInterceptor  {
      *    default servlet
      *
      */
-    void addMapping( Hashtable mtable, Context ctx, String path, Container ct)
+    public void addContainer( Container ct )
 	throws TomcatException
     {
+	Context ctx=ct.getContext();
+	String path=ct.getPath();
 	String ctxP=ctx.getPath();
+
+	// add the mapping in the "securityContraints"
+	// or in contextPaths if it's a servlet mapping
+	Hashtable mtable=securityConstraints;
+	if( ct.getHandler() != null )
+	    mtable=contextPaths;
+	//	System.out.println("XXX " + path + " " + ctx.getDebug() + " " + ctxP + " " + ct.getHandler() + " " + ct.getRoles());
+	
 	Mappings m=(Mappings)mtable.get(ctxP);
 	if( m==null ) {
 	    m=new Mappings();
@@ -333,6 +289,11 @@ public class SimpleMapper extends  BaseInterceptor  {
 	    m.extensionMappedServlets=new Hashtable();
 	    m.pathMappedServlets=new Hashtable();
 	    mtable.put( ctxP, m );
+	    Container def=new Container();
+	    def.setContext( ctx );
+	    ServletWrapper wrapper = ctx.getDefaultServlet();
+	    def.setHandler( wrapper );
+	    m.defaultContainer=def;
 	}
 	if(debug>0) ctx.log( "Add mapping " + path + " " + ct + " " + m );
 	
@@ -351,69 +312,25 @@ public class SimpleMapper extends  BaseInterceptor  {
 	} 
     }
 
-    /** Notify when a mapping is deleted  from  a context
-     */
-    public void removeMapping( Context ctx, String mapping )
+    public void removeContainer( Container ct )
 	throws TomcatException
     {
+	Context ctx=ct.getContext();
+	String mapping=ct.getPath();
 	String ctxP=ctx.getPath();
-	Mappings m=(Mappings)contextPaths.get(ctxP);
-	
-	if(debug>0) ctx.log( "Remove mapping " + mapping );
-	
         mapping = mapping.trim();
-	
+	if(debug>0) ctx.log( "Remove mapping " + mapping );
+
+	Mappings m=(Mappings)contextPaths.get(ctxP);
+	m.prefixMappedServlets.remove(mapping);
+	m.extensionMappedServlets.remove(mapping);
+	m.pathMappedServlets.remove(mapping);
+
+	m=(Mappings)securityConstraints.get(ctxP);
 	m.prefixMappedServlets.remove(mapping);
 	m.extensionMappedServlets.remove(mapping);
 	m.pathMappedServlets.remove(mapping);
     }
-
-    
-    public void removeServlet(Context ctx, ServletWrapper sw) {
-
-	// find the mappings for ctx
-	if( debug > 0 ) ctx.log( "Remove servlet " + sw );
-	String path=ctx.getPath();
-	Mappings m=(Mappings)contextPaths.get(path);
-	
-	Enumeration enum = m.prefixMappedServlets.keys();
-	    
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    
-	    if (((Container)m.prefixMappedServlets.get(key)).getHandler().equals(sw)) {
-		m.prefixMappedServlets.remove(key);
-	    }
-	}
-	
-	enum = m.extensionMappedServlets.keys();
-	    
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    
-	    if (((Container)m.extensionMappedServlets.get(key)).getHandler().equals(sw)) {
-		m.extensionMappedServlets.remove(key);
-		}
-	}
-
-	enum = m.pathMappedServlets.keys();
-	    
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    
-	    if (((Container)m.pathMappedServlets.get(key)).getHandler().equals(sw)) {
-		m.pathMappedServlets.remove(key);
-	    }
-	}
-    }
-    
-    public void addSecurityConstraint( Context ctx, String path, Container ct)
-	throws TomcatException
-    {
-	if(debug>0) ctx.log( "Add SC " + path + " " + ct );
-	addMapping( securityConstraints, ctx, path, ct );
-    }
-
 
     // -------------------- Implementation --------------------
     /** Get an exact match ( /catalog ) - rule 1 in 10.1

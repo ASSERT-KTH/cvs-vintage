@@ -97,6 +97,10 @@ public class Container {
     // The context including this container, if any
     Context context;
 
+    // Location where this container is mapped
+    String path;
+    String proto;
+    
     // Container attributes
     private Hashtable attributes = new Hashtable();
 
@@ -117,9 +121,16 @@ public class Container {
     }
 	
     public ContextManager getContextManager() {
+	if( contextM==null ) {
+	    if(context!=null) contextM=context.getContextManager();
+	}
 	return contextM;
     }
 
+    public void setContextManager(ContextManager cm) {
+	contextM=cm;
+    }
+    
     public void setContext( Context ctx ) {
 	this.context=ctx;
     }
@@ -128,11 +139,23 @@ public class Container {
 	return context;
     }
     
-    public void setContextManager(ContextManager cm) {
-	contextM=cm;
+
+    public void setPath( String path ) {
+	this.path=path;
+    }
+
+    public String getPath() {
+	return path;
+    }
+
+    public void setProtocol( String protocol ) {
+	this.proto=protocol;
+    }
+
+    public String getProtocol() {
+	return proto;
     }
     
-
     public void addContextInterceptor( ContextInterceptor ci) {
 	contextInterceptors.addElement( ci );
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.8 2000/02/15 17:35:37 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/02/15 17:35:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.9 2000/02/16 05:44:34 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/02/16 05:44:34 $
  *
  * ====================================================================
  *
@@ -75,63 +75,80 @@ import javax.servlet.Servlet;
  */
 public interface ContextInterceptor {
 
-    /** Called when the ContextManger is started
+    /** Called when the ContextManger is started. 
      */
     public void engineInit(ContextManager cm) throws TomcatException;
     
+
     /** Called before the ContextManager is stoped.
      *  You need to stop any threads and remove any resources.
      */
     public void engineShutdown(ContextManager cm) throws TomcatException;
 
-    /** Called when a context is added to a CM
+    
+    /** Called when a context is added to a CM. The context is probably not
+     *  initialized yet, only path and docRoot are probably set.
+     *
+     *  If you need informations that are available in web.xml use contextInit()
+     *  ( a WebXmlReader needs to be the first interceptor in the contextInit chain ).
+     * 
+     *  We do that to support ( eventualy ) a "lazy" init, where you have many contexts,
+     *  most of them not in active use, and you'll init them at first request. ( for
+     *  example an ISP with many users )
+     *
      */
     public void addContext( ContextManager cm, Context ctx ) throws TomcatException;
 
-    /** Called when a context is removed from a CM
-     */
-    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException;
 
-    /** Notification when a context is initialized
+    /** Notify when a context is initialized.
+     *  The first interceptor in the chain for contextInit must read web.xml and set
+     *  the context. When this method is called you can expect the context to be filled
+     *  in with all the informations from web.xml.
      */
     public void contextInit(Context ctx) throws TomcatException;
 
-    /** Called when a context is stoped.
+
+    /** Called when a context is stoped, before removeContext. You must free all resources.
+     * XXX  - do we need this or removeContext is enough ?? ( will be removed from 3.1 if
+     * nobody asks for it)
      */
     public void contextShutdown(Context ctx) throws TomcatException;
     
-    /** Notify when a new servlet is added
-     */
-    public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException;
 
-    /** Notify when a servlet is removed from context
+    /** Called when a context is removed from a CM. A context is removed either as
+     *  a result of admin ( remove or update), to support "clean" servlet reloading
+     *  or at shutdown.
      */
-    public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException;
+    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException;
 
-    /** Notify when a mapping is added to a context
-     */
-    public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException;
 
-    /** Notify when a mapping is deleted  from  a context
+    /** A new location was added to the server. A location is defined as a set of
+     *  URL patterns with common properties. All servlet mappings and security
+     *  constraints are in this category - with a common handler and a common set
+     *  of authorized roles.
+     *
+     *  An interceptor interested in mapping  must implement this method
+     *  and construct it's internal representation. The mapper is _required_
+     *  to find the Container associated with a request using the mapping
+     *  rules defined in the Servlet API.
+     *
+     *  The interceptor must also take care of "merging" parent with child containers.
+     *  It is possible that this method will be called several times for the same
+     *  url pattern ( for example to define a handler and then security constraints),
+     *  the interceptor needs to merge the 2 containers.
+     * 
+     *  XXX  define "merging" of containers 
      */
-    public void removeMapping( Context ctx, String path ) throws TomcatException;
+    public void addContainer( Container container ) throws TomcatException;
+
+    /** A rule was removed, update the internal strucures. You can also clean up
+     * and reload everything using Context.getContainers()
+     */
+    public void removeContainer( Container container ) throws TomcatException;
 
     
-    /** Add a security restriction.
-     *
-     *  We treat the security-constraint as in Apache and most web servers,
-     *  and reverse from web.xml - instead of defining a set of roles and the
-     *  patterns that will be constrainted, we associate some constraints with
-     *  url patterns. ( i.e. path->constraint instead of constraint -> path-set )
-     *
-     *  XXX We should unify method + path
-     *  here and path in addMapping into UrlMatch and transport, roles and wrapper
-     *  under UrlAction ( or something like that ).
-     */
-    public void addSecurityConstraint( Context ctx, String path, Container dirConf ) throws TomcatException;
-
-
-    /** Servlet Init  notification
+    /** Servlet Init notification.
+     *  XXX do we need "pre/post" for init/destroy ? transactions? 
      */
     public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException;
     
@@ -143,4 +160,5 @@ public interface ContextInterceptor {
     public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
     
     public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException;
+
 }

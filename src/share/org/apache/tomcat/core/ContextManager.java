@@ -310,53 +310,23 @@ public class ContextManager {
 	}
     }
 
-    public void removeServlet( Context ctx, ServletWrapper sw )
-	throws TomcatException
-    {
-	if( sw==null) return;
-	ContextInterceptor cI[]=getContextInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].removeServlet( ctx, sw );
-	}
-
-    }
-
-    public void addServlet( Context ctx, ServletWrapper sw )
-	throws TomcatException
-    {
-	ContextInterceptor cI[]=getContextInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].addServlet( ctx, sw );
-	}
-    }
-
-    public void addMapping( Context ctx ,String path, ServletWrapper sw )
+    public void addContainer( Container container )
     	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].addMapping( ctx, path, sw );
+	    cI[i].addContainer( container);
 	}
     }
 
-    public void removeMapping( Context ctx, String path )
-    	throws TomcatException
-    {
-	ContextInterceptor cI[]=getContextInterceptors();
-	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].removeMapping( ctx, path );
-	}
-    }
-
-    public void addSecurityConstraint( Context ctx, String path, Container ct )
+    public void removeContainer( Container container )
 	throws TomcatException
     {
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].addSecurityConstraint( ctx, path, ct );
+	    cI[i].removeContainer( container);
 	}
     }
-
 
     // -------------------- Connectors and Interceptors --------------------
 

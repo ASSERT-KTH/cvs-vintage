@@ -126,6 +126,9 @@ public class Context {
     // Maps specified in web.xml ( String url -> ServletWrapper  )
     private Hashtable mappings = new Hashtable();
     Hashtable constraints=new Hashtable();
+    
+    Hashtable containers=new Hashtable();
+    
     private ServletWrapper defaultServlet = null;
     
     // Authentication properties
@@ -409,8 +412,13 @@ public class Context {
     public void addServletMapping(String path, String servletName)
 	throws TomcatException
     {
+	if( mappings.get( path )!= null) {
+	    log( "Removing duplicate " + path + " -> " + mappings.get(path) );
+	    mappings.remove( path );
+	    Container ct=(Container)containers.get( path );
+	    removeContainer( ct );
+	}
         ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
-
 	if (sw == null) {
 	    //	    System.out.println("Servlet not registered " + servletName );
 	    // Workaround for frequent "bug" in web.xmls
@@ -433,36 +441,15 @@ public class Context {
 	    defaultServlet = sw;
 
 	mappings.put( path, sw );
-	contextM.addMapping( this, path, sw );
-    }
-
-    public Enumeration getServletMappings() {
-	return mappings.keys();
-    }
-
-    public ServletWrapper getServletMapping( String mapping ) {
-        mapping = mapping.trim();
-	return (ServletWrapper)mappings.get(mapping);
-    }
-
-    public void removeMapping( String path ) {
-	log( "Removing " + path + " -> " + mappings.get(path) );
-	mappings.remove( path );
-    }
-    
-    public void removeMappingsFor( ServletWrapper sw ) {
-	Enumeration enum = mappings.keys();
 	
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-
-	    if (mappings.get(key).equals(sw)) {
-		log( "Removing " + key + " -> " + sw );
-		mappings.remove(key);
-	    }
-	}
+	Container map=new Container();
+	map.setContext( this );
+	map.setHandler( sw );
+	map.setPath( path );
+	contextM.addContainer( map );
+	containers.put( path, map );
     }
-    
+
     public void addSecurityConstraint( String path[], String methods[],
 				       String roles[], String transport)
 	throws TomcatException
@@ -472,42 +459,46 @@ public class Context {
 	    ct.setContext( this );
 	    ct.setTransport( transport );
 	    ct.setRoles( roles );
+	    ct.setPath( path[i] );
 	    
 	    // XXX check if exists, merge if true.
 	    constraints.put( path[i], ct );
-	    contextM.addSecurityConstraint( this, path[i], ct);
+	    //contextM.addSecurityConstraint( this, path[i], ct);
+	    contextM.addContainer(  ct );
 	}
     }
 
-    public Enumeration getSecurityConstraints() {
-	return constraints.keys();
+    public Enumeration getContainers() {
+	return containers.elements();
+    }
+    
+    public Enumeration getContainerLocations() {
+	return containers.keys();
     }
 
-    public Container getSecurityConstraint( String path ) {
-	return (Container)constraints.get(path);
+    public Container getContainer( String path ) {
+	return (Container)containers.get(path);
     }
-
+    
+    public void removeContainer( Container ct ) {
+	containers.remove(ct.getPath());
+    }
+    
     public ServletWrapper getDefaultServlet() {
 	if( defaultServlet==null)
 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
-	// XXX works only if we do load default web.xml first - we should
-	// be able to work without that trick ( i.e. define a "default" )
-	
 	return defaultServlet;
     }
 
     // -------------------- Servlets management --------------------
-    
+
+    // XXX do we need that ?? 
     /** Remove the servlet with a specific name
      */
     public void removeServletByName(String servletName)
 	throws TomcatException
     {
-	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
-	if( wrapper != null ) {
-	    servlets.remove( servletName );
-	    contextM.removeServlet( this, wrapper );
-	}
+	servlets.remove( servletName );
     }
 
     public ServletWrapper getServletByName(String servletName) {
@@ -531,6 +522,7 @@ public class Context {
         if (servlets.get(name) != null) {
 	    log("Removing duplicate servlet " + name  + " " + wrapper);
             removeServletByName(name);
+	    //	    getServletByName(name).destroy();
         }
 	servlets.put(name, wrapper);
     }
@@ -559,6 +551,7 @@ public class Context {
 
     /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {
+	if(level>0) log( "Set debug to " + level );
 	debug=level;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.26 2000/02/15 17:35:38 costin Exp $
- * $Revision: 1.26 $
- * $Date: 2000/02/15 17:35:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.27 2000/02/16 05:44:34 costin Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/02/16 05:44:34 $
  *
  * ====================================================================
  *
@@ -393,9 +393,9 @@ public class ServletWrapper {
             // the full exception object.  Oh well.
 
             request.setAttribute(Constants.ATTRIBUTE_ERROR_EXCEPTION_TYPE,
-	        t.getClass().getName());
+				 t.getClass().getName());
             request.setAttribute(Constants.ATTRIBUTE_ERROR_MESSAGE,
-                t.getMessage());
+				 t.getMessage());
 
             try {
 		// A forward would be ideal, so reset and try it

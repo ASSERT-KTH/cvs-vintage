@@ -40,6 +40,7 @@
         <!-- Request processing -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" />
         <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
+        <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
         <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
 
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
@@ -52,10 +53,13 @@
         </Connector>
 
         <!-- example - how to override AutoSetup actions -->
-        <Context path="/examples" docBase="webapps/examples" debug="1" reloadable="true" > 
+        <Context path="/examples" docBase="webapps/examples" debug="0" reloadable="true" > 
         </Context>
         <!-- example - how to override AutoSetup actions -->
-        <Context path="" docBase="webapps/ROOT" debug="1" reloadable="true" > 
+        <Context path="" docBase="webapps/ROOT" debug="0" reloadable="true" > 
+        </Context>
+
+        <Context path="/test" docBase="webapps/test" debug="9" reloadable="true" > 
         </Context>
 
     </ContextManager>

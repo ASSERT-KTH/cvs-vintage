@@ -868,14 +868,6 @@ public class WebApplicationReader {
 
 		if (! containsServlet(ctx, mapping) &&
 		    ! containsJSP(ctx, mapping)) {
-		    if (ctx.getServletMapping(mapping)!=null) {
-// 		        String msg = sm.getString("context.dd.dropMapping",
-// 			    mapping);
-
-// 			System.out.println(msg);
-
-			ctx.removeMapping(mapping);
-		    }
 
                     ctx.addServletMapping( mapping, name);
 		} else {
