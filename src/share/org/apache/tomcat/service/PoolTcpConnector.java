@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.1 2000/02/22 21:06:43 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/22 21:06:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.2 2000/03/20 19:34:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/03/20 19:34:10 $
  *
  * ====================================================================
  *
@@ -101,6 +101,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     public static final String SOCKET_FACTORY="socketFactory";
 
 
+    public static final String INET = "inet";
     public static final String PORT = "port";
     public static final String HANDLER = "handler";
 
@@ -148,6 +149,7 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
 
 	    con.setAttribute("context.manager",cm );
     	ep.setPort(port);
+	ep.setAddress( address );
     	ep.setPoolOn(usePools);
     	if(backlog > 0) {
     	    ep.setBacklog(backlog);
@@ -211,6 +213,11 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     	} else if(THREAD_POOL.equals(prop)) {
     	    if(value.equalsIgnoreCase("off")) {
     	        usePools = false;
+    	    }
+    	} else if(INET.equals(prop)) {
+    	    try {
+		address=InetAddress.getByName( value );
+    	    } catch( Exception ex) {
     	    }
     	} else if(MAX_THREADS.equals(prop)) {
     	    maxThreads = string2Int(value);

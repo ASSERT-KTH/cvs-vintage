@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.1 2000/02/22 21:06:44 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/22 21:06:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.2 2000/03/20 19:34:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/03/20 19:34:10 $
  *
  * ====================================================================
  *
@@ -219,7 +219,7 @@ public class PoolTcpEndpoint extends TcpEndpoint  { // implements Endpoint {
 	        if(factory==null)
 		        factory=ServerSocketFactory.getDefault();
 	        if(serverSocket==null) {
-		        if (inet != null) {
+		        if (inet == null) {
 		            serverSocket = factory.createSocket(port, backlog);
     		    } else {
 	    	        serverSocket = factory.createSocket(port, backlog, inet);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.21 2000/02/17 21:19:01 costin Exp $
- * $Revision: 1.21 $
- * $Date: 2000/02/17 21:19:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.22 2000/03/20 19:34:09 costin Exp $
+ * $Revision: 1.22 $
+ * $Date: 2000/03/20 19:34:09 $
  *
  * ====================================================================
  *
@@ -248,6 +248,7 @@ public class RequestImpl  implements Request {
     }
 
     public void setPathTranslated(String s ) {
+	pathTranslated=s;
     }
 
     public String getPathTranslated() {

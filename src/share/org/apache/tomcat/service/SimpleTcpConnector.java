@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.1 2000/02/22 21:06:44 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/02/22 21:06:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.2 2000/03/20 19:34:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/03/20 19:34:10 $
  *
  * ====================================================================
  *
@@ -102,6 +102,7 @@ public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerC
 
 
     public static final String PORT = "port";
+    public static final String INET = "inet";
     public static final String HANDLER = "handler";
 
     // XXX define ConnectorException
@@ -133,6 +134,7 @@ public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerC
 
 	con.setAttribute("context.manager",cm );
     	ep.setPort(port);
+	ep.setAddress( address );
 	if(socketFactory != null) {
 	    ep.setServerSocketFactory( socketFactory );
 	}
@@ -178,6 +180,11 @@ public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerC
     	    	con=(TcpConnectionHandler)chC.newInstance();
     	    } catch( Exception ex) {
 		ex.printStackTrace();
+    	    }
+    	} else if(INET.equals(prop)) {
+    	    try {
+		address=InetAddress.getByName( value );
+    	    } catch( Exception ex) {
     	    }
     	}
     }
