@@ -29,6 +29,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.tm.TransactionLocal;
 
+import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
 import javax.ejb.EJBException;
 import javax.ejb.CreateException;
@@ -40,11 +41,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
+import java.sql.SQLException;
 
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -80,7 +82,7 @@ public class JDBCStoreManager2
 
    public Schema getSchema()
    {
-      schema = (Schema) getApplicationData(SCHEMA);
+      schema = (Schema)getApplicationData(SCHEMA);
       if(schema == null)
       {
          schema = new Schema();
@@ -91,7 +93,7 @@ public class JDBCStoreManager2
 
    public Catalog getCatalog()
    {
-      Catalog catalog = (Catalog) getApplicationData(CATALOG);
+      Catalog catalog = (Catalog)getApplicationData(CATALOG);
       if(catalog == null)
       {
          catalog = new Catalog();
@@ -127,7 +129,7 @@ public class JDBCStoreManager2
 
    public void setContainer(Container con)
    {
-      this.container = (EntityContainer) con;
+      this.container = (EntityContainer)con;
       if(container != null)
       {
          ejbModule = container.getEjbModule();
@@ -144,7 +146,7 @@ public class JDBCStoreManager2
 
    public void create() throws Exception
    {
-      HashMap managersMap = (HashMap) getApplicationData(CREATED_MANAGERS);
+      HashMap managersMap = (HashMap)getApplicationData(CREATED_MANAGERS);
       if(managersMap == null)
       {
          managersMap = new HashMap();
@@ -157,7 +159,7 @@ public class JDBCStoreManager2
    {
       initStoreManager();
 
-      HashMap managersMap = (HashMap) getApplicationData(CREATED_MANAGERS);
+      HashMap managersMap = (HashMap)getApplicationData(CREATED_MANAGERS);
       Catalog catalog = getCatalog();
       if(catalog.getEntityCount() == managersMap.size() && catalog.getEJBNames().equals(managersMap.keySet()))
       {
@@ -169,7 +171,7 @@ public class JDBCStoreManager2
          // Start Phase 2: resolve relationships
          for(int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager2 manager = (JDBCStoreManager2) managers.get(i);
+            JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
             manager.resolveRelationships();
          }
 
@@ -178,7 +180,7 @@ public class JDBCStoreManager2
          // Start Phase 3: create tables and compile queries
          for(int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager2 manager = (JDBCStoreManager2) managers.get(i);
+            JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
             manager.startStoreManager();
          }
 
@@ -324,14 +326,20 @@ public class JDBCStoreManager2
       return null;
    }
 
-   public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext instance, GenericEntityObjectFactory factory)
+   public Object findEntity(Method finderMethod,
+                            Object[] args,
+                            EntityEnterpriseContext instance,
+                            GenericEntityObjectFactory factory)
       throws FinderException
    {
       QueryCommand query = queryFactory.getQueryCommand(finderMethod);
       return query.fetchOne(schema, factory, args);
    }
 
-   public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance, GenericEntityObjectFactory factory)
+   public Collection findEntities(Method finderMethod,
+                                  Object[] args,
+                                  EntityEnterpriseContext instance,
+                                  GenericEntityObjectFactory factory)
       throws FinderException
    {
       QueryCommand query = queryFactory.getQueryCommand(finderMethod);
@@ -353,14 +361,13 @@ public class JDBCStoreManager2
       }
       catch(EJBException e)
       {
+         log.error("Failed to load instance of " + entityBridge.getEntityName() + " with pk=" + ctx.getId(), e);
          throw e;
       }
       catch(Exception e)
       {
          throw new EJBException(
-            "Failed to load instance of "
-            + entityBridge.getEntityName() +
-            " with pk=" + ctx.getId(), e
+            "Failed to load instance of " + entityBridge.getEntityName() + " with pk=" + ctx.getId(), e
          );
       }
    }
@@ -370,7 +377,7 @@ public class JDBCStoreManager2
       return entityBridge.isStoreRequired(instance);
    }
 
-   public boolean isModified (EntityEnterpriseContext instance) throws Exception
+   public boolean isModified(EntityEnterpriseContext instance) throws Exception
    {
       return entityBridge.isModified(instance);
    }
@@ -388,7 +395,7 @@ public class JDBCStoreManager2
    public void removeEntity(EntityEnterpriseContext ctx) throws RemoveException
    {
       entityBridge.remove(ctx);
-      PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+      PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
       pctx.remove();
    }
 
@@ -404,8 +411,7 @@ public class JDBCStoreManager2
       metaData = loadJDBCEntityMetaData();
 
       // setup the type factory, which is used to map java types to sql types.
-      typeFactory = new JDBCTypeFactory(
-         metaData.getTypeMapping(),
+      typeFactory = new JDBCTypeFactory(metaData.getTypeMapping(),
          metaData.getJDBCApplication().getValueClasses(),
          metaData.getJDBCApplication().getUserTypeMappings()
       );
@@ -446,12 +452,14 @@ public class JDBCStoreManager2
          final Class cmdClass = entityCommand.getCommandClass();
          if(cmdClass == null)
          {
-            throw new DeploymentException("entity-command class name is not specified for entity " + entityBridge.getEntityName());
+            throw new DeploymentException(
+               "entity-command class name is not specified for entity " + entityBridge.getEntityName()
+            );
          }
 
          try
          {
-            createCmd = (CreateCommand) cmdClass.newInstance();
+            createCmd = (CreateCommand)cmdClass.newInstance();
          }
          catch(ClassCastException cce)
          {
@@ -468,14 +476,13 @@ public class JDBCStoreManager2
       ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
 
       // Get JDBC MetaData
-      JDBCApplicationMetaData jamd = (JDBCApplicationMetaData) amd.getPluginData(CMP_JDBC);
+      JDBCApplicationMetaData jamd = (JDBCApplicationMetaData)amd.getPluginData(CMP_JDBC);
 
       if(jamd == null)
       {
          // we are the first cmp entity to need jbosscmp-jdbc.
          // Load jbosscmp-jdbc.xml for the whole application
-         JDBCXmlFileLoader jfl = new JDBCXmlFileLoader(
-            amd,
+         JDBCXmlFileLoader jfl = new JDBCXmlFileLoader(amd,
             container.getClassLoader(),
             container.getLocalClassLoader(),
             log

@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class PersistentContext
 {
@@ -67,6 +67,11 @@ public class PersistentContext
    public void setDirty()
    {
       row.setDirty();
+   }
+
+   public void setDirtyRelations()
+   {
+      row.setDirtyRelations();
    }
 
    public void remove()

@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.10 $</tt>
+ * @version <tt>$Revision: 1.11 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -114,8 +114,8 @@ public class JDBCCMRFieldBridge2
       String relatedEntityName = metadata.getRelatedRole().getEntity().getName();
 
       // Related Entity
-      Catalog catalog = (Catalog) manager.getApplicationData("CATALOG");
-      relatedEntity = (JDBCEntityBridge2) catalog.getEntityByEJBName(relatedEntityName);
+      Catalog catalog = (Catalog)manager.getApplicationData("CATALOG");
+      relatedEntity = (JDBCEntityBridge2)catalog.getEntityByEJBName(relatedEntityName);
       if(relatedEntity == null)
       {
          throw new DeploymentException("Related entity not found: "
@@ -131,11 +131,12 @@ public class JDBCCMRFieldBridge2
             getFieldName()
             +
             ", " +
-            "relatedEntity=" + relatedEntityName);
+            "relatedEntity=" + relatedEntityName
+         );
       }
 
       // Related CMR Field
-      JDBCCMRFieldBridge2[] cmrFields = (JDBCCMRFieldBridge2[]) relatedEntity.getCMRFields();
+      JDBCCMRFieldBridge2[] cmrFields = (JDBCCMRFieldBridge2[])relatedEntity.getCMRFields();
       for(int i = 0; i < cmrFields.length; ++i)
       {
          JDBCCMRFieldBridge2 cmrField = cmrFields[i];
@@ -192,7 +193,7 @@ public class JDBCCMRFieldBridge2
          Map pkFieldsToFKFields = new HashMap(tableKeys.size());
          for(Iterator i = tableKeys.iterator(); i.hasNext();)
          {
-            JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData) i.next();
+            JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
             FieldBridge pkField = entity.getFieldByName(cmpFieldMetaData.getFieldName());
             if(pkField == null)
             {
@@ -212,7 +213,7 @@ public class JDBCCMRFieldBridge2
             }
             keyFieldsList.add(fkField);
          }
-         tableKeyFields = (JDBCCMPFieldBridge2[]) keyFieldsList.toArray(new JDBCCMPFieldBridge2[keyFieldsList.size()]);
+         tableKeyFields = (JDBCCMPFieldBridge2[])keyFieldsList.toArray(new JDBCCMPFieldBridge2[keyFieldsList.size()]);
       }
       else
       {
@@ -438,16 +439,16 @@ public class JDBCCMRFieldBridge2
       Map fkFieldsByRelatedPKFields = new HashMap();
       for(Iterator i = foreignKeys.iterator(); i.hasNext();)
       {
-         JDBCCMPFieldMetaData fkFieldMetaData = (JDBCCMPFieldMetaData) i.next();
+         JDBCCMPFieldMetaData fkFieldMetaData = (JDBCCMPFieldMetaData)i.next();
          JDBCCMPFieldBridge2 relatedPKField =
-            (JDBCCMPFieldBridge2) relatedEntity.getFieldByName(fkFieldMetaData.getFieldName());
+            (JDBCCMPFieldBridge2)relatedEntity.getFieldByName(fkFieldMetaData.getFieldName());
 
          // now determine whether the fk is mapped to a pk column
          String fkColumnName = fkFieldMetaData.getColumnName();
          JDBCCMPFieldBridge2 fkField = null;
 
          // look among the CMP fields for the field with the same column name
-         JDBCCMPFieldBridge2[] tableFields = (JDBCCMPFieldBridge2[]) entity.getTableFields();
+         JDBCCMPFieldBridge2[] tableFields = (JDBCCMPFieldBridge2[])entity.getTableFields();
          for(int tableInd = 0; tableInd < tableFields.length && fkField == null; ++tableInd)
          {
             JDBCCMPFieldBridge2 cmpField = tableFields[tableInd];
@@ -491,13 +492,13 @@ public class JDBCCMRFieldBridge2
          for(int i = 0; i < pkFields.length; ++i)
          {
             JDBCFieldBridge relatedPKField = pkFields[i];
-            JDBCFieldBridge fkField = (JDBCCMPFieldBridge2) fkFieldsByRelatedPKFields.remove(relatedPKField);
+            JDBCFieldBridge fkField = (JDBCCMPFieldBridge2)fkFieldsByRelatedPKFields.remove(relatedPKField);
             fkList.add(fkField);
             relatedPKList.add(relatedPKField);
          }
-         foreignKeyFields = (JDBCCMPFieldBridge2[]) fkList.toArray(new JDBCCMPFieldBridge2[fkList.size()]);
+         foreignKeyFields = (JDBCCMPFieldBridge2[])fkList.toArray(new JDBCCMPFieldBridge2[fkList.size()]);
          relatedPKFields =
-            (JDBCCMPFieldBridge2[]) relatedPKList.toArray(new JDBCCMPFieldBridge2[relatedPKList.size()]);
+            (JDBCCMPFieldBridge2[])relatedPKList.toArray(new JDBCCMPFieldBridge2[relatedPKList.size()]);
 
          if(metadata.hasForeignKeyConstraint())
          {
@@ -513,7 +514,7 @@ public class JDBCCMRFieldBridge2
 
    private FieldState getFieldState(EntityEnterpriseContext ctx)
    {
-      PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+      PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
       FieldState state = pctx.getCMRState(cmrIndex);
       if(state == null)
       {
@@ -535,7 +536,7 @@ public class JDBCCMRFieldBridge2
       try
       {
          Transaction tx = getTransaction();
-         EntityCache instanceCache = (EntityCache) manager.getContainer().getInstanceCache();
+         EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
 
          /*
          RelationInterceptor.RelationInvocation invocation =
@@ -577,7 +578,7 @@ public class JDBCCMRFieldBridge2
       try
       {
          Transaction tx = getTransaction();
-         EntityCache instanceCache = (EntityCache) manager.getContainer().getInstanceCache();
+         EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
          /*
          RelationInterceptor.RelationInvocation invocation =
             new RelationInterceptor.RelationInvocation(RelationInterceptor.CMRMessage.ADD_RELATED_ID);
@@ -638,7 +639,7 @@ public class JDBCCMRFieldBridge2
          throw new IllegalArgumentException("Argument must be of type " + entity.getLocalInterface().getName());
       }
 
-      EJBLocalObject local = (EJBLocalObject) o;
+      EJBLocalObject local = (EJBLocalObject)o;
       try
       {
          return local.getPrimaryKey();
@@ -685,7 +686,7 @@ public class JDBCCMRFieldBridge2
             Object relatedId = getPrimaryKey(value);
             addRelatedId(ctx, relatedId);
             relatedCMRField.invokeAddRelatedId(relatedId, ctx.getId());
-            localObject = (EJBLocalObject) value;
+            localObject = (EJBLocalObject)value;
          }
          else
          {
@@ -697,7 +698,7 @@ public class JDBCCMRFieldBridge2
       {
          if(manager.registerCascadeDelete(ctx.getId(), ctx.getId()))
          {
-            EJBLocalObject value = (EJBLocalObject) getValue(ctx);
+            EJBLocalObject value = (EJBLocalObject)getValue(ctx);
             if(value != null)
             {
                changeValue(null);
@@ -771,7 +772,8 @@ public class JDBCCMRFieldBridge2
                getFieldName()
                +
                " single-valued CMR field is already loaded. Check the database for consistancy. "
-               + " current value=" + value + ", loaded value=" + pk);
+               + " current value=" + value + ", loaded value=" + pk
+            );
          }
 
          changeValue(pk);
@@ -793,7 +795,7 @@ public class JDBCCMRFieldBridge2
 
       public void cacheValue(EntityEnterpriseContext ctx)
       {
-         PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+         PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
          pctx.cacheRelations(cmrIndex, this);
       }
 
@@ -815,7 +817,7 @@ public class JDBCCMRFieldBridge2
       {
          if(!loaded)
          {
-            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
             pctx.loadCachedRelations(cmrIndex, this);
             if(!loaded)
             {
@@ -860,12 +862,13 @@ public class JDBCCMRFieldBridge2
          if(value == null)
          {
             throw new IllegalArgumentException("Can't set collection-valued CMR field to null: " +
-               entity.getEntityName() + "." + getFieldName());
+               entity.getEntityName() + "." + getFieldName()
+            );
          }
 
          destroyExistingRelationships(ctx);
 
-         Collection newValue = (Collection) value;
+         Collection newValue = (Collection)value;
          if(!newValue.isEmpty())
          {
             Set copy = new HashSet(newValue);
@@ -881,10 +884,10 @@ public class JDBCCMRFieldBridge2
 
       public void cascadeDelete(EntityEnterpriseContext ctx) throws RemoveException
       {
-         Collection value = (Collection) getValue(ctx);
+         Collection value = (Collection)getValue(ctx);
          if(!value.isEmpty())
          {
-            EJBLocalObject[] locals = (EJBLocalObject[]) value.toArray();
+            EJBLocalObject[] locals = (EJBLocalObject[])value.toArray();
             for(int i = 0; i < locals.length; ++i)
             {
                locals[i].remove();
@@ -921,10 +924,27 @@ public class JDBCCMRFieldBridge2
          }
          else
          {
-            removed = removeWhileNotLoaded(relatedId);
+            loadOnlyFromCache(ctx);
+            if(loaded)
+            {
+               Set value = getLoadedValue(ctx);
+               if(!value.isEmpty())
+               {
+                  removed = value.remove(relatedId);
+               }
+            }
+            else
+            {
+               removed = removeWhileNotLoaded(relatedId);
+            }
          }
 
          modified = true;
+
+         if(removed)
+         {
+            ((PersistentContext)ctx.getPersistenceContext()).setDirtyRelations();
+         }
 
          return removed;
       }
@@ -939,10 +959,24 @@ public class JDBCCMRFieldBridge2
          }
          else
          {
-            added = addWhileNotLoaded(relatedId);
+            loadOnlyFromCache(ctx);
+            if(loaded)
+            {
+               Set value = getLoadedValue(ctx);
+               added = value.add(relatedId);
+            }
+            else
+            {
+               added = addWhileNotLoaded(relatedId);
+            }
          }
 
          modified = true;
+
+         if(added)
+         {
+            ((PersistentContext)ctx.getPersistenceContext()).setDirtyRelations();
+         }
 
          return added;
       }
@@ -958,7 +992,8 @@ public class JDBCCMRFieldBridge2
                getFieldName()
                +
                " collection-valued CMR field is already loaded. Check the database for consistancy. "
-               + " current value=" + value + ", loaded value=" + pk);
+               + " current value=" + value + ", loaded value=" + pk
+            );
          }
 
          if(pk != null)
@@ -971,7 +1006,7 @@ public class JDBCCMRFieldBridge2
       {
          if(value != null)
          {
-            value = this.value = new HashSet((Set) value);
+            value = this.value = new HashSet((Set)value);
             loaded = true;
          }
          return value;
@@ -984,7 +1019,7 @@ public class JDBCCMRFieldBridge2
 
       public void cacheValue(EntityEnterpriseContext ctx)
       {
-         PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+         PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
          pctx.cacheRelations(cmrIndex, this);
       }
 
@@ -999,8 +1034,7 @@ public class JDBCCMRFieldBridge2
       {
          if(!loaded)
          {
-            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
-            pctx.loadCachedRelations(cmrIndex, this);
+            loadOnlyFromCache(ctx);
 
             if(!loaded)
             {
@@ -1028,6 +1062,12 @@ public class JDBCCMRFieldBridge2
             }
          }
          return value;
+      }
+
+      private void loadOnlyFromCache(EntityEnterpriseContext ctx)
+      {
+         PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
+         pctx.loadCachedRelations(cmrIndex, this);
       }
 
       private boolean removeWhileNotLoaded(Object relatedId)
@@ -1120,16 +1160,17 @@ public class JDBCCMRFieldBridge2
          String relatedTable = relatedEntity.getQualifiedTableName();
          String relationTable = metadata.getRelationMetaData().getDefaultTableName();
 
-         relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[]) relatedEntity.getTableFields(),
+         relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[])relatedEntity.getTableFields(),
             relatedTable,
-            sql);
+            sql
+         );
          sql.append(" from ")
             .append(relatedTable)
             .append(" inner join ")
             .append(relationTable)
             .append(" on ");
 
-         JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) relatedEntity.getPrimaryKeyFields();
+         JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[])relatedEntity.getPrimaryKeyFields();
          for(int i = 0; i < pkFields.length; ++i)
          {
             if(i > 0)
@@ -1199,7 +1240,7 @@ public class JDBCCMRFieldBridge2
             con = relatedTable.getDataSource().getConnection();
             ps = con.prepareStatement(loadSql);
 
-            JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) entity.getPrimaryKeyFields();
+            JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[])entity.getPrimaryKeyFields();
 
             Object myPk = ctx.getId();
             int paramInd = 1;
@@ -1225,11 +1266,13 @@ public class JDBCCMRFieldBridge2
             log.error("Failed to load related role: ejb-name="
                +
                entity.getEntityName() +
-               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e);
+               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e
+            );
             throw new EJBException("Failed to load related role: ejb-name="
                +
                entity.getEntityName() +
-               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e);
+               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e
+            );
          }
          finally
          {
@@ -1259,7 +1302,7 @@ public class JDBCCMRFieldBridge2
       {
          StringBuffer sql = new StringBuffer();
          sql.append("select ");
-         relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[]) relatedEntity.getTableFields(), null, sql);
+         relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[])relatedEntity.getTableFields(), null, sql);
          sql.append(" from ").append(relatedEntity.getQualifiedTableName()).append(" where ");
 
          JDBCCMPFieldBridge2[] relatedFkFields = relatedCMRField.foreignKeyFields;
@@ -1323,11 +1366,13 @@ public class JDBCCMRFieldBridge2
             log.error("Failed to load related role: ejb-name="
                +
                entity.getEntityName() +
-               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e);
+               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e
+            );
             throw new EJBException("Failed to load related role: ejb-name="
                +
                entity.getEntityName() +
-               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e);
+               ", cmr-field=" + getFieldName() + ": " + e.getMessage(), e
+            );
          }
          finally
          {
@@ -1377,7 +1422,7 @@ public class JDBCCMRFieldBridge2
 
          if(fkConstraint != null)
          {
-            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
             pctx.nullForeignKey(fkConstraint);
          }
       }
@@ -1394,7 +1439,7 @@ public class JDBCCMRFieldBridge2
 
          if(fkConstraint != null)
          {
-            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
+            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
             if(relatedId == null)
             {
                pctx.nullForeignKey(fkConstraint);
@@ -1416,7 +1461,8 @@ public class JDBCCMRFieldBridge2
       void addRelatedId(EntityEnterpriseContext ctx, Object relatedId);
    }
 
-   private class CMRSet implements Set
+   private class CMRSet
+      implements Set
    {
       private final EntityEnterpriseContext ctx;
       private final CollectionValuedFieldState state;
@@ -1599,7 +1645,7 @@ public class JDBCCMRFieldBridge2
       {
          Set value = state.getLoadedValue(ctx);
 
-         Object[] result = (Object[]) Array.newInstance(relatedEntity.getLocalInterface(), value.size());
+         Object[] result = (Object[])Array.newInstance(relatedEntity.getLocalInterface(), value.size());
 
          LocalProxyFactory relatedPF = relatedContainer.getLocalProxyFactory();
          int i = 0;
@@ -1617,7 +1663,7 @@ public class JDBCCMRFieldBridge2
          Set value = state.getLoadedValue(ctx);
          if(a == null || a.length < value.size())
          {
-            a = (Object[]) Array.newInstance(entity.getLocalInterface(), value.size());
+            a = (Object[])Array.newInstance(entity.getLocalInterface(), value.size());
          }
 
          LocalProxyFactory relatedPF = relatedContainer.getLocalProxyFactory();

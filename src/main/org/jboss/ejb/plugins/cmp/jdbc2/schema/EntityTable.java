@@ -53,7 +53,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  */
 public class EntityTable
    implements Table
@@ -63,6 +63,7 @@ public class EntityTable
    private static final byte DIRTY = 2;
    private static final byte CREATED = 4;
    private static final byte DELETED = 8;
+   private static final byte DIRTY_RELATIONS = 16;
 
    private JDBCEntityBridge2 entity;
    private String tableName;
@@ -790,6 +791,7 @@ public class EntityTable
       private Row created;
       private Row deleted;
       private Row dirty;
+      private Row dirtyRelations;
       private Row clean;
 
       private Row cacheUpdates;
@@ -1146,6 +1148,15 @@ public class EntityTable
 
       public void flushUpdated() throws SQLException
       {
+         if(dirtyRelations != null)
+         {
+            while(dirtyRelations != null)
+            {
+               Row row = dirtyRelations;
+               row.flushStatus();
+            }
+         }
+
          if(dirty == null)
          {
             if(log.isTraceEnabled())
@@ -1407,20 +1418,28 @@ public class EntityTable
 
       public boolean isDirty()
       {
-         return state != CLEAN;
+         return state != CLEAN && state != DIRTY_RELATIONS;
       }
 
       public void setDirty()
       {
-         if(state == CLEAN)
+         if(state == CLEAN || state == DIRTY_RELATIONS)
          {
             updateState(DIRTY);
          }
       }
 
+      public void setDirtyRelations()
+      {
+         if(state == CLEAN)
+         {
+            updateState(DIRTY_RELATIONS);
+         }
+      }
+
       public void delete()
       {
-         if(state == CLEAN || state == DIRTY)
+         if(state == CLEAN || state == DIRTY || state == DIRTY_RELATIONS)
          {
             updateState(DELETED);
          }
@@ -1464,6 +1483,10 @@ public class EntityTable
          else if(state == DELETED)
          {
             dereference();
+         }
+         else if(state == DIRTY_RELATIONS)
+         {
+            updateState(CLEAN);
          }
 
          scheduleCacheUpdate();
@@ -1526,6 +1549,15 @@ public class EntityTable
             }
             view.deleted = this;
          }
+         else if(state == DIRTY_RELATIONS)
+         {
+            if(view.dirtyRelations != null)
+            {
+               next = view.dirtyRelations;
+               view.dirtyRelations.prev = this;
+            }
+            view.dirtyRelations = this;
+         }
          else
          {
             throw new IllegalStateException("Can't update to state: " + state);
@@ -1551,6 +1583,10 @@ public class EntityTable
          else if(state == DELETED && view.deleted == this)
          {
             view.deleted = next;
+         }
+         else if(state == DIRTY_RELATIONS && view.dirtyRelations == this)
+         {
+            view.dirtyRelations = next;
          }
 
          if(next != null)
