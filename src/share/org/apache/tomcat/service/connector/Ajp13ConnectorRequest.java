@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.9 2000/08/12 04:55:47 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/08/12 04:55:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.10 2000/08/28 06:08:17 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/08/28 06:08:17 $
  *
  * ====================================================================
  *
@@ -166,7 +166,7 @@ public class Ajp13ConnectorRequest extends Request
             }
 
             String hValue = msg.getString();
-            headers.putHeader( hName , hValue );
+            headers.addHeader( hName , hValue );
             //log( "Head: " + hName + "=" + hValue);
         }
 

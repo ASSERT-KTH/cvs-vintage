@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.15 2000/08/27 20:37:30 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/08/27 20:37:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.16 2000/08/28 06:08:17 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/08/28 06:08:17 $
  *
  * ====================================================================
  *
@@ -300,7 +300,7 @@ class JNIRequestAdapter extends Request {
             String []values = new String[nheaders];
             if(h.readHeaders(s, l, names, values) > 0) {
                 for(i = 0 ; i < nheaders ; i++) {
-                    headers.putHeader(names[i].toLowerCase(), values[i]);
+                    headers.addHeader(names[i].toLowerCase(), values[i]);
                 }
             } else {
                 throw new IOException("Error: JNI implementation error");
@@ -366,9 +366,8 @@ class JNIResponseAdapter extends Response {
         headerValues = new String[hcnt];
 
         for(int i = 0; i < hcnt; i++) {
-            MimeHeaderField h = headers.getField(i);
-            headerNames[i] = h.getName();
-            headerValues[i] = h.getValue();
+            headerNames[i] = headers.getName(i).toString();
+            headerValues[i] = headers.getValue(i).toString();
         }
 
         if(h.startReasponse(s, l, status, RequestUtil.getMessage(status), headerNames, headerValues, hcnt) <= 0) {

@@ -80,6 +80,10 @@ public final class MessageBytes implements Cloneable {
     public static final int T_BYTES = 2;
     public static final int T_CHARS = 3;
 
+    // support for efficient int and date parsing/formating
+    public static final int T_INT = 4;
+    public static final int T_DATE = 5;
+
     private int hashCode=0;
     private boolean hasHashCode=false;
 
@@ -103,6 +107,12 @@ public final class MessageBytes implements Cloneable {
     // String
     private String strValue;
     private boolean hasStrValue=false;
+
+    // efficient int and date
+    private int intValue;
+    private boolean hasIntValue=false;
+    private Date dateValue;
+    private boolean hasDateValue=false;
     
     /**
      * Creates a new, uninitialized MessageBytes object.
@@ -139,6 +149,8 @@ public final class MessageBytes implements Cloneable {
 	hasStrValue=false;
 	hasCharValue=false;
 	hasHashCode=false;
+	hasIntValue=false;
+	hasDateValue=false;	
     }
 
 
@@ -174,14 +186,29 @@ public final class MessageBytes implements Cloneable {
 	type=T_STR;
     }
 
+    public void setTime(long t) {
+	if( dateValue==null)
+	    dateValue=new Date(t);
+	else
+	    dateValue.setTime(t);
+	type = T_DATE;
+	hasDateValue=true;
+    }
+
+    public void setInt(int i) {
+	intValue = i;
+	type = T_INT;
+	hasIntValue=true;
+    }
+
     // -------------------- Conversion and getters --------------------
     public String toString() {
 	if( hasStrValue ) return strValue;
-	
+	hasStrValue=true;
+
 	switch (type) {
 	case T_CHARS:
 	    strValue=new String( chars, charsOff, charsLen);
-	    hasStrValue=true;
 	    return strValue;
 	case T_BYTES:
 	    try {
@@ -189,14 +216,18 @@ public final class MessageBytes implements Cloneable {
 		    strValue=toStringUTF8();
 		else
 		    strValue=new String(bytes, bytesOff, bytesLen, enc);
-		hasStrValue=true;
 		return strValue;
 	    } catch (java.io.UnsupportedEncodingException e) {
 		return null;  // can't happen
 	    }
-	default:
-	    return null;
+	case T_DATE:
+	    strValue=DateTool.rfc1123Format.format(dateValue);
+	    return strValue;
+	case T_INT:
+	    strValue=String.valueOf(intValue);
+	    return strValue;
 	}
+	return null;
     }
 
     private String toStringUTF8() {
@@ -217,6 +248,39 @@ public final class MessageBytes implements Cloneable {
 	return new String( chars, 0, bytesLen);
     }
 
+    public long getTime()
+    {
+	if( hasDateValue ) {
+	    if( dateValue==null) return -1;
+	    return dateValue.getTime();
+	}
+
+	long l=DateTool.parseDate( this );
+	if( dateValue==null)
+	    dateValue=new Date(l);
+	else
+	    dateValue.setTime(l);
+	hasDateValue=true;
+	return l;
+    }
+
+    public int getInt()
+    {
+	if( hasIntValue )
+	    return intValue;
+	
+	switch (type) {
+	case T_BYTES:
+	    intValue=Ascii.parseInt(bytes, bytesOff,
+				    bytesLen);
+	    break;
+	default:
+	    intValue=Integer.parseInt(toString());
+	}
+	hasIntValue=true;
+	return intValue;
+    }
+    
     //----------------------------------------
     public int getType() {
 	return type;
@@ -250,7 +314,8 @@ public final class MessageBytes implements Cloneable {
 	    return charsLen;
 	if(type==T_STR)
 	    return strValue.length();
-	return 0;
+	toString();
+	return strValue.length();
     }
 
     // -------------------- equals --------------------
@@ -264,7 +329,12 @@ public final class MessageBytes implements Cloneable {
 	if( ! caseSensitive )
 	    return equalsIgnoreCase( s );
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    toString();
+	    // now strValue is valid
 	case T_STR:
+	    if( strValue==null && s!=null) return false;
 	    return strValue.equals( s );
 	case T_CHARS:
 	    char[] c = chars;
@@ -304,7 +374,11 @@ public final class MessageBytes implements Cloneable {
      */
     public boolean equalsIgnoreCase(String s) {
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    toString(); // now strValue is set
 	case T_STR:
+	    if( strValue==null && s!=null) return false;
 	    return strValue.equalsIgnoreCase( s );
 	case T_CHARS:
 	    char[] c = chars;
@@ -339,15 +413,23 @@ public final class MessageBytes implements Cloneable {
 
     public boolean equals(MessageBytes mb) {
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    toString(); // now strValue is set
 	case T_STR:
 	    return mb.equals( strValue );
 	}
 
-	if( mb.type != T_CHARS && mb.type!= T_BYTES ) {
+	if( mb.type != T_CHARS &&
+	    mb.type!= T_BYTES ) {
 	    // it's a string or int/date string value
 	    return equals( mb.toString() );
 	}
 
+	// mb is either CHARS or BYTES.
+	// this is either CHARS or BYTES
+	// Deal with the 4 cases ( in fact 3, one is simetric)
+	
 	if( mb.type == T_CHARS && type==T_CHARS ) {
 	    char b1[]=chars;
 	    char b2[]=mb.chars;
@@ -442,6 +524,11 @@ public final class MessageBytes implements Cloneable {
 		}
 	    }
 	    return true;
+	case T_INT:
+	case T_DATE:
+	    String s1=toString();
+	    if( s1==null && s!=null) return false;
+	    return s1.startsWith( s );
 	default:
 	    return false;
 	}
@@ -467,6 +554,10 @@ public final class MessageBytes implements Cloneable {
     private int hash() {
 	int code=0;
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    String s1=toString();
+	    // continue with T_STR - it now have a strValue
 	case T_STR:
 	    for (int i = 0; i < strValue.length(); i++) {
 		code = code * 37 + strValue.charAt( i );
@@ -488,6 +579,10 @@ public final class MessageBytes implements Cloneable {
     private int hashIgnoreCase() {
 	int code=0;
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    String s1=toString();
+	    // continue with T_STR - it now have a strValue
 	case T_STR:
 	    for (int i = 0; i < strValue.length(); i++) {
 		code = code * 37 + Ascii.toLower(strValue.charAt( i ));
@@ -515,7 +610,9 @@ public final class MessageBytes implements Cloneable {
 	return code;
     }
 
-    private static int hashBytesIC( byte bytes[], int bytesOff, int bytesLen ) {
+    private static int hashBytesIC( byte bytes[], int bytesOff,
+				    int bytesLen )
+    {
 	int max=bytesOff+bytesLen;
 	byte bb[]=bytes;
 	int code=0;
@@ -531,6 +628,10 @@ public final class MessageBytes implements Cloneable {
      */
     public int indexOf(char c) {
 	switch (type) {
+	case T_INT:
+	case T_DATE:
+	    String s1=toString();
+	    // continue with T_STR - it now have a strValue
 	case T_STR:
 	    return strValue.indexOf( c );
 	case T_CHARS:

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.10 2000/08/11 21:20:55 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/08/11 21:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.11 2000/08/28 06:08:19 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/08/28 06:08:19 $
  *
  * ====================================================================
  *
@@ -64,13 +64,9 @@
 
 package org.apache.tomcat.util;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.NoSuchElementException;
+import java.io.*;
+import java.util.*;
+import java.text.*;
 
 /* XXX XXX XXX Need a major rewrite  !!!!
  */
@@ -147,7 +143,7 @@ public class MimeHeaders {
      */
     public void clear() {
 	for (int i = 0; i < count; i++) {
-	    headers[i].reset();
+	    headers[i].recycle();
 	}
 	count = 0;
     }
@@ -160,22 +156,29 @@ public class MimeHeaders {
     }
 
     /**
-     * Returns the Nth header field, or null if there is no such header.
+     * Returns the Nth header name, or null if there is no such header.
      * This may be used to iterate through all header fields.
      */
-    public MimeHeaderField getField(int n) {
-	return n >= 0 && n < count ? headers[n] : null;
+    public MessageBytes getName(int n) {
+	return n >= 0 && n < count ? headers[n].getName() : null;
     }
 
-    
+    /**
+     * Returns the Nth header value, or null if there is no such header.
+     * This may be used to iterate through all header fields.
+     */
+    public MessageBytes getValue(int n) {
+	return n >= 0 && n < count ? headers[n].getValue() : null;
+    }
+
     /**
      * Finds and returns a header field with the given name.  If no such
      * field exists, null is returned.  If more than one such field is
      * in the header, an arbitrary one is returned.
      */
-    public MimeHeaderField find(String name) {
+    private MimeHeaderField find(String name) {
         for (int i = 0; i < count; i++) {
-	    if (headers[i].nameEquals(name)) {
+	    if (headers[i].getName().equalsIgnoreCase(name)) {
                 return headers[i];
             }
         }
@@ -186,7 +189,7 @@ public class MimeHeaders {
      * Adds a partially constructed field to the header.  This
      * field has not had its name or value initialized.
      */
-    public MimeHeaderField putHeader() {
+    private MimeHeaderField createHeader() {
 	MimeHeaderField mh;
 	int len = headers.length;
 	if (count >= len) {
@@ -202,31 +205,6 @@ public class MimeHeaders {
 	return mh;
     }
 
-
-    
-    
-    // -------------------- 
-    // Please avoid using any of the methods following this line. 
-    // ( most of them will generate GC, or are http sepecific )
-    // ------------------------------------------------------------
-    private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
-    int bufSize=512; // default
-    /**
-     * A buffer used when parsing headers.
-     */
-    private byte[] buf=null;
-
-    
-    /**
-     * Creates a new MimeHeaders object using the specified buffer size.
-     * @param len the buffer size initially used for parsing headers
-     */
-    public MimeHeaders(int len) {
-	bufSize=len;
-	// buf = new byte[len];
-    }
-
     /**
      * Returns an enumeration of strings representing the header field names.
      * Field names may appear multiple times in this enumeration, indicating
@@ -240,17 +218,28 @@ public class MimeHeaders {
     // be renamed to put/get "field" !!!  This object is
     // the header, and its components are called fields.
 
+    public void addBytesHeader(byte b[], int startN, int endN,
+			       int startV, int endV)
+    {
+	MimeHeaderField mhf=createHeader();
+	mhf.getName().setBytes(b, startN, endN);
+	mhf.getValue().setBytes(b, startV, endV);
+    }
+    
     /**
      * Creates a new header field whose value is the specified string.
      * @param name the header name
      * @param s the header field string value
      */
-    public void putHeader(String name, String s) {
-	putHeader(name).setValue(s);
+    public void setHeader(String name, String s) {
+	MimeHeaderField headerF= find( name );
+	if( headerF != null )
+	    headerF=addHeader( name );
+	headerF.getValue().setString(s);
     }
 
     public void addHeader(String name, String s) {
-        addHeader(name).setValue(s);
+        addHeader(name).getValue().setString(s);
     }
 
     /**
@@ -258,12 +247,15 @@ public class MimeHeaders {
      * @param name the header name
      * @param i the header field integer value
      */
-    public void putIntHeader(String name, int i) {
-	putHeader(name).setIntValue(i);
+    public void setIntHeader(String name, int i) {
+	MimeHeaderField headerF= find( name );
+	if( headerF != null )
+	    headerF=addHeader( name );
+	headerF.getValue().setInt(i);
     }
 
     public void addIntHeader(String name, int i) {
-        addHeader(name).setIntValue(i);
+        addHeader(name).getValue().setInt(i);
     }
 
     /**
@@ -272,12 +264,15 @@ public class MimeHeaders {
      * @param name the header name
      * @param t the time in number of milliseconds since the epoch
      */
-    public void putDateHeader(String name, long t) {
-	putHeader(name).setDateValue(t);
+    public void setDateHeader(String name, long t) {
+	MimeHeaderField headerF= find( name );
+	if( headerF != null )
+	    headerF=addHeader( name );
+	headerF.getValue().setTime(t);
     }
 
     public void addDateHeader(String name, long t) {
-        addHeader(name).setDateValue(t);
+        addHeader(name).getValue().setTime(t);
     }
 
     /**
@@ -290,7 +285,7 @@ public class MimeHeaders {
     public String getHeader(String name) {
 	MimeHeaderField mh = find(name);
 
-	return mh != null ? mh.getValue() : null;
+	return mh != null ? mh.getValue().toString() : null;
     }
 
     /**
@@ -301,6 +296,7 @@ public class MimeHeaders {
      * @return array values of the fields, or null if none found
      */
     public String[] getHeaders(String name) {
+	// XXX XXX XXX XXX XXX XXX
 	Vector values = getHeadersVector(name);
 
 	if (values.size() > 0) {
@@ -313,14 +309,15 @@ public class MimeHeaders {
 	return null;
     }
 
+    // XXX XXX XXX XXX XXX XXX 
     /** Same as getHeaders, return a Vector - avoid Vector-[]-Vector conversion
      */
     public Vector getHeadersVector(String name) {
 	Vector values = new Vector();
 
 	for (int i = 0; i < count; i++) {
-	    if (headers[i].nameEquals(name))
-		values.addElement(headers[i].getValue());
+	    if (headers[i].getName().equalsIgnoreCase(name))
+		values.addElement(headers[i].getValue().toString());
 	}
 
 	return values;
@@ -337,7 +334,7 @@ public class MimeHeaders {
     public int getIntHeader(String name) throws NumberFormatException {
 	MimeHeaderField mh = find(name);
 
-	return mh != null ? mh.getIntValue() : -1;
+	return mh != null ? mh.getValue().getInt() : -1;
     }
 
     /**
@@ -350,7 +347,7 @@ public class MimeHeaders {
     public long getDateHeader(String name) throws IllegalArgumentException {
 	MimeHeaderField mh = find(name);
 
-	return mh != null ? mh.getDateValue() : -1;
+	return mh != null ? mh.getValue().getTime() : -1;
     }
 
     /**
@@ -359,7 +356,8 @@ public class MimeHeaders {
      * through all the fields in the header.
      */
     public String getHeaderName(int n) {
-	return n >= 0 && n < count ? headers[n].getName() : null;
+	return n >= 0 && n < count ? headers[n].getName().toString()
+	    : null;
     }
 
     /**
@@ -368,7 +366,8 @@ public class MimeHeaders {
      * with getHeaderName to iterate through all the fields in the header.
      */
     public String getHeader(int n) {
-	return n >= 0 && n < count ? headers[n].getValue() : null;
+	return n >= 0 && n < count ? headers[n].getValue().toString()
+	    : null;
     }
 
     /**
@@ -378,7 +377,7 @@ public class MimeHeaders {
 	int retval = 0;
 
 	for (int i = 0; i < count; i++)
-	    if (headers [i].nameEquals (name))
+	    if (headers [i].getName().equalsIgnoreCase(name))
 		retval++;
 
 	return retval;
@@ -394,11 +393,11 @@ public class MimeHeaders {
         // warning: rather sticky code; heavily tuned
 
         for (int i = 0; i < count; i++) {
-	    if (headers[i].nameEquals(name)) {
+	    if (headers[i].getName().equalsIgnoreCase(name)) {
 	        // reset and swap with last header
 	        MimeHeaderField mh = headers[i];
 
-		mh.reset();
+		mh.recycle();
 		headers[i] = headers[count - 1];
 		headers[count - 1] = mh;
 
@@ -418,50 +417,20 @@ public class MimeHeaders {
     }
 
 
-    /**
-     * Finds a header field given name.  If the header doesn't exist,
-     * it will create a new one.
-     * @param name the header field name
-     * @return the new field
-     */
-    protected MimeHeaderField putHeader(String name) {
-        if (containsHeader(name)) {
-	    removeHeader(name);
-	}
-
-	return addHeader(name);
-    }
-
     protected MimeHeaderField addHeader(String name) {
- 	MimeHeaderField mh = putHeader();
+ 	MimeHeaderField mh = createHeader();
 
-	mh.setName(name);
+	mh.getName().setString(name);
 
 	return mh;
     }
-    
-    /**
-     * Creates a new header with given name, and add it to the headers.
-     * @param name the header field name
-     * @param s the header value
-     * @return the new field
-     */
-    public void appendHeader(String name, String s) {
-	MimeHeaderField mh = putHeader();
-
-	mh.setName(name);
-	mh.setValue(s);
-    }
-    
     
     /**
      * Returns a lengthly string representation of the current header fields.
      */
     public String toString() {
 	StringBuffer sb = new StringBuffer();
-
 	sb.append("{");
-
 	for (int i = 0; i < count; i++) {
 	    sb.append("{");
 	    sb.append(headers[i].toString());
@@ -471,26 +440,14 @@ public class MimeHeaders {
 		sb.append(",");
 	    }
 	}
-
 	sb.append("}");
 
 	return sb.toString();
     }
-
-    /**
-     * Dumps current headers to specified PrintStream for debugging.
-     */
-
-    public void dump(PrintStream out) {
-	for (int i = 0; i < count; i++) {
-	    out.println(headers[i]);
-	}
-    }
 }
 
+// XXX XXX XXX XXX Must be rewritten !!!
 class MimeHeadersEnumerator implements Enumeration {
-    private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
     private Hashtable hash;
     private Enumeration delegate;
 
@@ -510,13 +467,36 @@ class MimeHeadersEnumerator implements Enumeration {
     }
 
     public Object nextElement() {
-        try {
-            return delegate.nextElement();
-        }
-        catch (NoSuchElementException e) {
-            String msg = sm.getString("mimeHeaderEnumerator.next.nse");
-	    throw new NoSuchElementException(msg);
-	}
+	return delegate.nextElement();
     }
 }
 
+class MimeHeaderField {
+    // multiple headers with same name - a linked list will
+    // speed up name enumerations and search ( both cpu and
+    // GC)
+    MimeHeaderField next; 
+    
+    protected final MessageBytes nameB = new MessageBytes();
+    protected final MessageBytes valueB = new MessageBytes();
+
+    /**
+     * Creates a new, uninitialized header field.
+     */
+    public MimeHeaderField() {
+    }
+
+    public void recycle() {
+	nameB.recycle();
+	valueB.recycle();
+	next=null;
+    }
+
+    public MessageBytes getName() {
+	return nameB;
+    }
+
+    public MessageBytes getValue() {
+	return valueB;
+    }
+}

@@ -290,11 +290,7 @@ class FileHandler extends Handler  {
 
     static void setDateHeader( Response res, String name, long value ) {
 	MimeHeaders headers=res.getMimeHeaders();
-	MimeHeaderField headerF=headers.find( name );
-	if( headerF == null )
-	    headerF=headers.putHeader();
-	headerF.setName( name );
-	headerF.setDateValue( value );
+	headers.setDateHeader( name, value );
     }
 
     /** All path checks that were part of DefaultServlet

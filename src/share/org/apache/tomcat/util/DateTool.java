@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.5 2000/08/14 21:54:31 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/08/14 21:54:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.6 2000/08/28 06:08:18 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/08/28 06:08:18 $
  *
  * ====================================================================
  *
@@ -126,5 +126,30 @@ public class DateTool {
 	rfc1036Format.setTimeZone(GMT_ZONE);
 	asctimeFormat.setTimeZone(GMT_ZONE);
     }
+ 
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.resources");
     
+    public static long parseDate( MessageBytes value ) {
+	String dateString=value.toString();
+	Date date=null;
+        try {
+            date = DateTool.rfc1123Format.parse(dateString);
+	    return date.getTime();
+	} catch (ParseException e) { }
+	
+        try {
+	    date = DateTool.rfc1036Format.parse(dateString);
+	    return date.getTime();
+	} catch (ParseException e) { }
+	
+        try {
+            date = DateTool.asctimeFormat.parse(dateString);
+	    return date.getTime();
+        } catch (ParseException pe) {
+        }
+	String msg = sm.getString("httpDate.pe", dateString);
+	throw new IllegalArgumentException(msg);
+    }
+
 }

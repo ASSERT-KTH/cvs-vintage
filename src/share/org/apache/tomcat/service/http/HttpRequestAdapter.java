@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.26 2000/08/22 06:56:55 costin Exp $
- * $Revision: 1.26 $
- * $Date: 2000/08/22 06:56:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.27 2000/08/28 06:08:17 costin Exp $
+ * $Revision: 1.27 $
+ * $Date: 2000/08/28 06:08:17 $
  *
  * ====================================================================
  *
@@ -221,8 +221,7 @@ public class HttpRequestAdapter extends Request {
 	    
 	    // XXX this does not currently handle headers which
 	    // are folded to take more than one line.
-	    MimeHeaderField mhf=headers.putHeader();
-	    if( ! parseHeaderFiled(mhf, buf, start, off - start) ) {
+	    if( ! parseHeaderFiled(headers, buf, start, off - start) ) {
 		// error parsing header
 		return;
 	    }
@@ -236,7 +235,8 @@ public class HttpRequestAdapter extends Request {
      * @param len the length of the bytes
      * @exception IllegalArgumentException if the header format was invalid
      */
-    public boolean parseHeaderFiled(MimeHeaderField mhf, byte[] b, int off, int len)
+    public boolean parseHeaderFiled(MimeHeaders headers, byte[] b, int off,
+				    int len)
     {
 	int start = off;
 	byte c;
@@ -248,21 +248,25 @@ public class HttpRequestAdapter extends Request {
 	    }
 	}
 
-	mhf.setName(b, start, off - start - 1);
+	int nS=start;
+	int nE=off - start - 1;
 
 	while (c == ' ') {
 	    c = b[off++];
 	}
 
 	if (c != ':') {
-	    loghelper.log("Parse error, missing : in  " + new String( b, off, len ), Logger.ERROR);
-	    loghelper.log("Full  " + new String( b, 0, b.length ), Logger.ERROR);
+	    loghelper.log("Parse error, missing : in  " +
+			  new String( b, off, len ), Logger.ERROR);
+	    loghelper.log("Full  " + new String( b, 0, b.length ),
+			  Logger.ERROR);
 	    return false;
 	}
 
 	while ((c = b[off++]) == ' ');
 
-	mhf.setValue(b, off - 1, len - (off - start - 1));
+	headers.addBytesHeader( b, nS, nE,
+				off-1, len - (off - start - 1));
 	return true;
     }
 

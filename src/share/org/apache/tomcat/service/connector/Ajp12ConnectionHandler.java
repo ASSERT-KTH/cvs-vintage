@@ -365,7 +365,7 @@ class AJP12RequestAdapter extends Request {
 		case 3: // Header
 		    token1 = readString(ajpin, null);
 		    token2 = readString(ajpin, "");
-		    headers.putHeader(token1.toLowerCase(), token2);
+		    headers.addHeader(token1.toLowerCase(), token2);
 		    break;
 
 		case 254: // Signal
