@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.75 2003/02/07 01:04:29 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.76 2003/02/11 16:00:14 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -376,32 +376,5 @@
     </attribute>
   </mbean>
 
-  <!--  An alternate hot deployer mbean. Use URLDirectoryScanner if you need to
-    specify which urls are directories to scan, and which are urls to be
-    deployed directly. URLDeploymentScanner assumes that all directories are to
-    be scanned, which can cause problems if directory referred to in the
-    deploy attribute is an exploded archive.
-
-  <mbean code="org.jboss.deployment.scanner.URLDirectoryScanner"
-       name="jboss.deployment:type=DeploymentScanner,flavor=URL">
-
-    <depends optional-attribute-name="Deployer">jboss.system:service=MainDeployer</depends>
-    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
-    <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
-    <attribute name="ScanPeriod">5000</attribute>
-    /* Each entry specifies either a dir (directory to be scanned),
-      or url (url to be deployed). Like the URLs for the DeploymentScanner
-      above, a file: protocol will be assumed if not specified otherwise.
-    */
-    <attribute name="URLs">
-        <urls>
-            <dir name="./deploy" />
-            <url name="./deploy/examples/myapp.ear" />
-            <dir name="./deploy/examples" />
-            <url name="http://www.test.com/samples/myapp.ear" />
-        </urls>
-    </attribute>
-  </mbean>
-  -->
 
 </server>

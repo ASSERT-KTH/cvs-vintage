@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -236,6 +236,9 @@ public class EARDeployer
     *
     * @param di a <code>DeploymentInfo</code> value
     * @exception DeploymentException if an error occurs
+    *
+    * @todo THIS IS A BUG! Only undeploy if we are the last package in
+    * the loader repository.
     */
    public void destroy(DeploymentInfo di) throws DeploymentException
    {

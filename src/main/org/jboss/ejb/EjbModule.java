@@ -92,7 +92,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -350,7 +350,7 @@ public class EjbModule
             /* Add the container mbean to the deployment mbeans so the state
              of the deployment can be tracked.
             */
-            deploymentInfo.mbeans.add(jmxName);
+            deploymentInfo.addMBean(jmxName);
             server.registerMBean(con, jmxName);
             BeanMetaData metaData = con.getBeanMetaData();
             Collection depends = metaData.getDepends();

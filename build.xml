@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.132 2003/02/06 21:16:51 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.133 2003/02/11 16:00:10 d_jencks Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -393,6 +393,12 @@
         <include name="org/jboss/invocation/pooled/interfaces/*"/>
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
+<!--SOME VERSION OF INTERCEPTOR NEEDS TO BE AVAILABLE TO THE CLIENT,
+ BUT CONTAINERPLUGIN AND STATISTICSPROVIDER ARE HERE ONLY BECAUSE 
+THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFIED-->
+        <include name="org/jboss/ejb/ContainerPlugin.class"/>
+        <include name="org/jboss/ejb/Interceptor.class"/>
+        <include name="org/jboss/monitor/StatisticsProvider.class"/>
         <include name="org/jboss/ejb/plugins/TxSupport*.class"/>
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
