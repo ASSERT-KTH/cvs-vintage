@@ -5,10 +5,10 @@
 
 package CH.ifa.draw.contrib;
 
+import java.awt.*;
+import javax.swing.*;
 import CH.ifa.draw.framework.*;
 import CH.ifa.draw.standard.*;
-import java.awt.*;
-import javax.swing.JInternalFrame;
 
 /**
  * This class provides support for JHotDraw applications with multiple
@@ -126,12 +126,12 @@ public class MDI_InternalFrame extends JInternalFrame {
      *
      * @parame	newDrawingView	DrawingView which should replace the current one
      */
-	public DrawingView replaceDrawingView(DrawingView newDrawingView) {
-		DrawingView oldDrawingView = findDrawingView(newDrawingView, getContentPane());
+	public StandardDrawingView replaceDrawingView(StandardDrawingView newDrawingView) {
+		StandardDrawingView oldDrawingView = findDrawingView(newDrawingView, getContentPane());
 		if (oldDrawingView != null) {
-			Container parent = ((Container)oldDrawingView).getParent();
-			parent.remove((Component)oldDrawingView);
-			parent.add((Component)newDrawingView);
+			Container parent = ((StandardDrawingView)oldDrawingView).getParent();
+			parent.remove(oldDrawingView);
+			parent.add(newDrawingView);
 			setDrawingView(newDrawingView);
 			return oldDrawingView;
 		}
@@ -147,12 +147,12 @@ public class MDI_InternalFrame extends JInternalFrame {
      * @param	newDrawingView	DrawingView to be searched
      * @param	container		Container which is searched
      */
-	protected DrawingView findDrawingView(DrawingView newDrawingView, Container container) {
-		DrawingView oldDrawingView = null;
+	protected StandardDrawingView findDrawingView(StandardDrawingView newDrawingView, Container container) {
+		StandardDrawingView oldDrawingView = null;
 		Component[] components = container.getComponents();
 		for (int i = 0; i < components.length; i++) {
 			if (components[i] instanceof DrawingView) {
-				return (DrawingView)components[i];
+				return (StandardDrawingView)components[i];
 			}
 			else if (components[i] instanceof Container) {
 				oldDrawingView = findDrawingView(newDrawingView, (Container)components[i]);

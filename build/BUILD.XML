@@ -86,33 +86,11 @@
   <target name="jar" depends="compile, copyResources">
     <jar jarfile="${dest.dir}/${build.jar}"
          basedir="${build.classes}"
-         includes="CH/**"
-         manifest="jhotdraw.mf"
+         includes="
+           CH/**
+           "
         >
 	</jar>
-  </target>
-
-  <!-- =================================================================== -->
-  <!-- Run examples (and compile if necessary).                            -->
-  <!-- =================================================================== -->
-  <target name="javadraw" depends="main">
-     <java classname="CH.ifa.draw.samples.javadraw.JavaDrawApp" fork="yes" classpath="${classpath};../jhotdraw.jar">
-     </java>
-  </target>
-
-  <target name="pert" depends="main">
-     <java classname="CH.ifa.draw.samples.pert.PertApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
-     </java>
-  </target>
-
-  <target name="net" depends="main">
-     <java classname="CH.ifa.draw.samples.net.NetApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
-     </java>
-  </target>
-
-  <target name="nothing" depends="main">
-     <java classname="CH.ifa.draw.samples.nothing.NothingApp" fork="yes" classpath="${classpath}};../jhotdraw.jar">
-     </java>
   </target>
 
 </project>
