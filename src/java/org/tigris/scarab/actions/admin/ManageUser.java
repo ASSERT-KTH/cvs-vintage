@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.29 2004/10/13 15:12:54 dep4b Exp $
+ * @version $Id: ManageUser.java,v 1.30 2004/10/14 11:33:16 dep4b Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -274,7 +274,7 @@ public class ManageUser extends RequireLoginFirstAction
         {
             
             user =  TurbineSecurity.getUser(username);
-            user.setConfirmed("DELETED");
+            user.setConfirmed(ScarabUser.DELETED);
             TurbineSecurity.saveUser(user);
            
             

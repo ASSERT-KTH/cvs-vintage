@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.53 2004/10/13 15:12:54 dep4b Exp $
+ * @version $Id: Login.java,v 1.54 2004/10/14 11:33:15 dep4b Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -175,7 +175,7 @@ public class Login extends ScarabTemplateAction
 
         try
         {
-            if (user.getConfirmed().equals("DELETED")){
+            if (user.getConfirmed().equals(ScarabUser.DELETED)){
                 scarabR.setAlertMessage(L10NKeySet.UserIsDeleted);
                 Log.get().error("Deleted user attempting to log in");
                 return failAction(data, "Login.vm");

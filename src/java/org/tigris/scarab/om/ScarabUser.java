@@ -61,10 +61,11 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.95 2004/02/17 21:48:30 pledbrook Exp $
+ * @version $Id: ScarabUser.java,v 1.96 2004/10/14 11:33:16 dep4b Exp $
  */
 public interface ScarabUser extends User
 {
+    public static String DELETED = "DELETED";
     /**
      * This method is responsible for creating a new user. It will throw an 
      * exception if there is any sort of error (such as a duplicate login id) 
