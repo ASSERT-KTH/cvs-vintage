@@ -26,7 +26,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.13 1999/03/08 22:42:46 jrobbins Exp $
+// $Id: Agency.java,v 1.14 2000/02/10 05:48:58 esp Exp $
 
 package uci.argo.kernel;
 
@@ -390,3 +390,5 @@ public class Agency extends Observable { //implements java.io.Serialization
 //     Agency.applyAllCritics(_dm, _dsgr);
 //   }
 // } /* end class Trigger */
+
+
