@@ -65,6 +65,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+// Used to find Ajp12 connector port
+import org.apache.tomcat.service.PoolTcpConnector;
+import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
 
 /**
  * Used by ContextManager to generate automatic apache configurations
@@ -130,8 +133,20 @@ public class ApacheConfig  { // implements XXX
 	    pw.println("ApJServLogLevel notice");
 	    pw.println();
 
-	    // XXX read it from ContextManager
-	    pw.println("ApJServDefaultPort 8007");
+		// Find Ajp12 connector
+		int portInt=8007;
+		Enumeration enum=cm.getConnectors();
+		while( enum.hasMoreElements() ) {
+			Object con=enum.nextElement();
+			if( con instanceof  PoolTcpConnector ) {
+				PoolTcpConnector tcpCon=(PoolTcpConnector) con;
+				if( tcpCon.getTcpConnectionHandler()
+						instanceof Ajp12ConnectionHandler ) {
+					portInt=tcpCon.getPort();
+				}
+			}
+		}
+		pw.println("ApJServDefaultPort " + portInt);
 	    pw.println();
 
 	    pw.println("AddType text/jsp .jsp");
@@ -185,7 +200,7 @@ public class ApacheConfig  { // implements XXX
 
 	    // Set up contexts
 	    // XXX deal with Virtual host configuration !!!!
-	    Enumeration enum = cm.getContexts();
+	    enum = cm.getContexts();
 	    while (enum.hasMoreElements()) {
 		Context context = (Context)enum.nextElement();
 		String path  = context.getPath();
@@ -207,6 +222,8 @@ public class ApacheConfig  { // implements XXX
 		    if (!FileUtil.isAbsolute(docBase))
 			docBase = tomcatHome + "/" + docBase;
 		    docBase = FileUtil.patch(docBase);
+			if (File.separatorChar == '\\')
+				docBase = docBase.replace('\\','/');	// use separator preferred by Apache
 
 		    // Static files will be served by Apache
 		    pw.println("Alias " + path + " \"" + docBase + "\"");
@@ -222,6 +239,26 @@ public class ApacheConfig  { // implements XXX
 		    pw.println("    AllowOverride None");
 		    pw.println("    deny from all");
 		    pw.println("</Location>");
+			// For Windows, use Directory too. Location doesn't work unless case matches
+			if (File.separatorChar == '\\') {
+				pw.println("<Directory \"" + docBase + "/WEB-INF/\">");
+				pw.println("    AllowOverride None");
+				pw.println("    deny from all");
+				pw.println("</Directory>");
+			}
+
+		    // Deny serving any files from META-INF
+			pw.println("<Location \"" + path + "/META-INF/\">");
+			pw.println("    AllowOverride None");
+			pw.println("    deny from all");
+			pw.println("</Location>");
+			// For Windows, use Directory too. Location doesn't work unless case matches
+			if (File.separatorChar  == '\\') {
+				pw.println("<Directory \"" + docBase + "/META-INF/\">");
+				pw.println("    AllowOverride None");
+				pw.println("    deny from all");
+				pw.println("</Directory>");
+			}
 		    pw.println();
 
 
@@ -251,12 +288,40 @@ public class ApacheConfig  { // implements XXX
 		    // Deny serving any files from WEB-INF
             mod_jk.println();            
             mod_jk.println("#");		    
-            mod_jk.println("# The following line prohibits users from directly access WEB-INF");
+            mod_jk.println("# The following line prohibits users from directly accessing WEB-INF");
             mod_jk.println("#");                        
 		    mod_jk.println("<Location \"" + path + "/WEB-INF/\">");
 		    mod_jk.println("    AllowOverride None");
 		    mod_jk.println("    deny from all");
 		    mod_jk.println("</Location>");
+			if (File.separatorChar == '\\') {
+				mod_jk.println("#");		    
+				mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
+				mod_jk.println("#");                        
+				mod_jk.println("<Directory \"" + docBase + "/WEB-INF/\">");
+				mod_jk.println("    AllowOverride None");
+				mod_jk.println("    deny from all");
+				mod_jk.println("</Directory>");
+			}
+
+			// Deny serving any files from META-INF
+        	mod_jk.println();            
+        	mod_jk.println("#");		    
+        	mod_jk.println("# The following line prohibits users from directly accessing META-INF");
+        	mod_jk.println("#");                        
+			mod_jk.println("<Location \"" + path + "/META-INF/\">");
+			mod_jk.println("    AllowOverride None");
+			mod_jk.println("    deny from all");
+			mod_jk.println("</Location>");
+			if (File.separatorChar == '\\') {
+				mod_jk.println("#");		    
+				mod_jk.println("# Use Directory too. On Windows, Location doesn't work unless case matches");
+				mod_jk.println("#");                        
+				mod_jk.println("<Directory \"" + docBase + "/META-INF/\">");
+				mod_jk.println("    AllowOverride None");
+				mod_jk.println("    deny from all");
+				mod_jk.println("</Directory>");
+			}
 		    mod_jk.println();
 
             mod_jk.println("#######################################################");		    
