@@ -9,18 +9,19 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
-/*
- * Created on 15.07.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-
 /**
- * @author frd
+ * @author fdietz
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * command:
+ *  sa-learn --spam --dir <your-directory>
+ * 
+ * command description:
+ * 
+ * Learn the input message(s) as spam. If you have previously learnt 
+ * any of the messages as ham, SpamAssassin will forget them first, 
+ * then re-learn them as spam. Alternatively, if you have previously 
+ * learnt them as spam, it'll skip them this time around.
+ * 
  */
 public class LearnSpamAction extends FrameAction implements SelectionListener {
 

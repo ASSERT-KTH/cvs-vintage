@@ -64,8 +64,16 @@ public class LearnHamCommand extends FolderCommand {
 		String path = srcFolder.getDirectoryFile().getAbsolutePath();
 
 		ColumbaLogger.log.debug("creating process..");
-		ipcHelper.executeCommand("sa-learn --ham " + path);
+		ipcHelper.executeCommand("sa-learn --ham --dir " + path);
 
+		int exitCode = ipcHelper.waitFor();
+		ColumbaLogger.log.debug("exitcode=" + exitCode);
+		
+		String output = ipcHelper.getOutputString();
+		ColumbaLogger.log.debug("retrieving output: "+output);
+		
+		worker.setDisplayText("SpamAssassin: "+output);
+		
 		ColumbaLogger.log.debug("wait for threads to join..");
 		ipcHelper.waitForThreads();
 	}
