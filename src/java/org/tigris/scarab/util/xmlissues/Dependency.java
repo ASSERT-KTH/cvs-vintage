@@ -56,6 +56,7 @@ public class Dependency implements java.io.Serializable
     private String type = null;
     private String child = null;
     private String parent = null;
+//    private Issue issue = null;
 
     public Dependency()
     {
@@ -89,5 +90,21 @@ public class Dependency implements java.io.Serializable
     public String getParent()
     {
         return this.parent;
+    }
+
+/*    
+    public void setIssue(Issue issue)
+    {
+        this.issue = issue;
+    }
+
+    public Issue getIssue()
+    {
+        return this.issue;
+    }
+*/
+    public String toString()
+    {
+        return ("Type: " + type + " Parent: " + parent + " Child: " + child);
     }
 }
