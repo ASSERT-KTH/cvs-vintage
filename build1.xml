@@ -14,7 +14,7 @@
   <!-- ==================== Copy static files ==================== -->
   <!-- IF YOU CHANGE, sync dist.prepare !!! -->
 
-  <target name="prepare" depends="init">
+  <target name="prepare">
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="&tomcat_build;"/>
     <mkdir dir="&tomcat_build;/classes"/>
@@ -169,7 +169,7 @@
   
 
   <!-- ==================== Admin ==================== -->
-  <target name="clean" depends="init">
+  <target name="clean">
     <deltree dir="&tomcat_build;"/>
     <deltree dir="&tomcat_home;"/>
   </target>
