@@ -32,7 +32,9 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 	 * @param frameController
 	 * @param path
 	 */
-	public PopupMenuGenerator(AbstractFrameController frameController, String path) {
+	public PopupMenuGenerator(
+		AbstractFrameController frameController,
+		String path) {
 		super(frameController, path);
 
 	}
@@ -80,12 +82,20 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 									"org.columba.core.action")).getAction(
 								next.getAttribute("action"),
 								frameController);
-                        if(action != null){
-                          menu.add(action);
-                        }
+						if (action != null) {
+							//							use our custom CMenuItem here
+							// -> in order to support JavaHelp support
+							// -> @see CMenuItem for more details
+							CMenuItem tmp = new CMenuItem(action);
+							// display tooltip in statusbar
+							tmp.addMouseListener(
+								frameController.getMouseTooltipHandler());
+							menu.add(tmp);
+							menu.add(tmp);
+						}
 					} catch (Exception e) {
-                      ColumbaLogger.log.error(e+": "
-                                              +next.getAttribute("action"));
+						ColumbaLogger.log.error(
+							e + ": " + next.getAttribute("action"));
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {
@@ -101,6 +111,9 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 								frameController);
 						JCheckBoxMenuItem menuitem =
 							new JCheckBoxMenuItem(action);
+						// display tooltip in statusbar
+						menuitem.addMouseListener(
+							frameController.getMouseTooltipHandler());
 						menu.add(menuitem);
 						action.setCheckBoxMenuItem(menuitem);
 					} catch (Exception e) {

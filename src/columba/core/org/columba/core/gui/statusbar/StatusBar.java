@@ -168,7 +168,7 @@ public class StatusBar
 	}
 
 	public void displayTooltipMessage(String message) {
-
+		setText(message);
 	}
 
 	protected void setTaskCount(int i) {
@@ -273,12 +273,15 @@ public class StatusBar
 	protected void displayWorker(int index) {
 		// set to default state
 		setMaximumAndValue(100, 100);
-		setText("");
+		
+		//setText("");
 
 		// now switch to worker
 		Worker w = taskManager.get(index);
 
-		setText(w.getDisplayText());
+		if ( w.getDisplayText().length() != 0 )
+			setText(w.getDisplayText());
+			
 		setMaximumAndValue(w.getProgressBarValue(), w.getProgessBarMaximum());
 
 		if (displayedWorker != null) {

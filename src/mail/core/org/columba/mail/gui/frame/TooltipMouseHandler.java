@@ -45,8 +45,10 @@ public class TooltipMouseHandler extends MouseAdapter {
 			AbstractButton button = (AbstractButton) evt.getSource();
 			Action action = button.getAction(); // getAction is new in JDK 1.3
 			if (action != null) {
+				// NOTE: short description is our tooltip
+				// -> there isno long description anymore
 				String message =
-					(String) action.getValue(Action.LONG_DESCRIPTION);
+					(String) action.getValue(Action.SHORT_DESCRIPTION);
 				statusBar.displayTooltipMessage(message);
 			}
 		}

@@ -202,7 +202,10 @@ public abstract class AbstractMenuGenerator {
 							// use our custom CMenuItem here
 							// -> in order to support JavaHelp support
 							// -> @see CMenuItem for more details
-							menu.add(new CMenuItem(action));
+							CMenuItem tmp = new CMenuItem(action);
+							// display tooltip in statusbar
+							tmp.addMouseListener( frameController.getMouseTooltipHandler() );					
+							menu.add(tmp);
 							lastWasSeparator = false;
 						}
 
@@ -224,6 +227,8 @@ public abstract class AbstractMenuGenerator {
 						if (action != null) {
 							JCheckBoxMenuItem menuitem =
 								new JCheckBoxMenuItem(action);
+							// display tooltip in statusbar
+							menuitem.addMouseListener( frameController.getMouseTooltipHandler() );
 							menu.add(menuitem);
 							action.setCheckBoxMenuItem(menuitem);
 							lastWasSeparator = false;
