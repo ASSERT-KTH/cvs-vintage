@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.49 2002/07/20 06:45:17 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.50 2002/07/31 21:42:49 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -457,7 +457,8 @@ public class ScarabLink extends TemplateLink
                 if ( currentModuleId != null )
                 {
                     if (currentModule == null ||
-                        !currentModule.getModuleId().equals(currentModuleId) ) 
+                        !currentModule.getModuleId().toString()
+                        .equals(currentModuleId) ) 
                     {
                         currentModule = ModuleManager
                             .getInstance(new NumberKey(currentModuleId));
