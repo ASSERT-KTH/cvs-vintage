@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactory.java,v 1.14 2004/02/29 12:35:40 linus Exp $
+// $Id: ActivityGraphsFactory.java,v 1.15 2004/07/17 16:38:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,14 +52,15 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
 
     /** Singleton instance.
      */
-    private static ActivityGraphsFactory SINGLETON =
+    private static ActivityGraphsFactory sINGLETON =
 	new ActivityGraphsFactory();
 
     /**
      * Singleton instance access method.
+     * @return the singleton
      */
     public static ActivityGraphsFactory getFactory() {
-        return SINGLETON;
+        return sINGLETON;
     }
 
     /** Don't allow instantiation
@@ -171,18 +172,39 @@ public class ActivityGraphsFactory extends AbstractUmlModelFactory {
 					       + "context null or not legal");
     }
     
+    /**
+     * @param elem the ActionState to be deleted
+     */
     public void deleteActionState(Object elem) { }
     
+    /**
+     * @param elem the ActivityGraph to be deleted
+     */
     public void deleteActivityGraph(MActivityGraph elem) { }
     
+    /**
+     * @param elem the CallState to be deleted
+     */
     public void deleteCallState(MCallState elem) { }
     
+    /**
+     * @param elem the ClassifierInState to be deleted
+     */
     public void deleteClassifierInState(MClassifierInState elem) { }
     
+    /**
+     * @param elem ObjectFlowState
+     */
     public void deleteObjectFlowState(MObjectFlowState elem) { }
     
+    /**
+     * @param elem Partition
+     */
     public void deletePartition(MPartition elem) { }
     
+    /**
+     * @param elem SubactivityState
+     */
     public void deleteSubactivityState(MSubactivityState elem) { }
 
 }
