@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.17 2003/01/26 03:16:30 larryi Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.18 2003/04/05 07:19:59 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -30,6 +30,8 @@ Bug No.  Description
          naming convention and an Ant task which creates .ver files.  These
          tasks allow the Tomcat work directory to be pre-populated with 
          compiled JSPs.
+
+13285	 Added improvements to the admin web-app to include support for vhosts.
 
 Server:
 
