@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.217 2004/06/03 21:11:08 spestov Exp $
+ * @version $Id: Buffer.java,v 1.218 2004/06/04 00:18:34 spestov Exp $
  */
 public class Buffer
 {
@@ -786,13 +786,13 @@ public class Buffer
 	public Icon getIcon()
 	{
 		if(getFlag(DIRTY))
-			return GUIUtilities.DIRTY_BUFFER_ICON;
+			return GUIUtilities.loadIcon("dirty.gif");
 		else if(getFlag(READ_ONLY) || getFlag(READ_ONLY_OVERRIDE))
-			return GUIUtilities.READ_ONLY_BUFFER_ICON;
+			return GUIUtilities.loadIcon("readonly.gif");
 		else if(getFlag(NEW_FILE))
-			return GUIUtilities.NEW_BUFFER_ICON;
+			return GUIUtilities.loadIcon("new.gif");
 		else
-			return GUIUtilities.NORMAL_BUFFER_ICON;
+			return GUIUtilities.loadIcon("normal.gif");
 	} //}}}
 
 	//}}}

@@ -53,15 +53,39 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.81 2004/06/01 20:01:40 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.82 2004/06/04 00:18:34 spestov Exp $
  */
 public class GUIUtilities
 {
 	//{{{ Some predefined icons
+	/**
+	 * @deprecated Use <code>GUIUtilities.loadIcon("new.gif");</code>
+	 * instead.
+	 */
 	public static Icon NEW_BUFFER_ICON;
+
+	/**
+	 * @deprecated Use <code>GUIUtilities.loadIcon("dirty.gif");</code>
+	 * instead.
+	 */
 	public static Icon DIRTY_BUFFER_ICON;
+
+	/**
+	 * @deprecated Use <code>GUIUtilities.loadIcon("readonly.gif");</code>
+	 * instead.
+	 */
 	public static Icon READ_ONLY_BUFFER_ICON;
+
+	/**
+	 * @deprecated Use <code>GUIUtilities.loadIcon("normal.gif");</code>
+	 * instead.
+	 */
 	public static Icon NORMAL_BUFFER_ICON;
+
+	/**
+	 * @deprecated Use <code>GUIUtilities.loadIcon("jedit-icon.gif");</code>
+	 * instead.
+	 */
 	public static Icon WINDOW_ICON;
 	//}}}
 
@@ -134,7 +158,7 @@ public class GUIUtilities
 	 */
 	public static Image getEditorIcon()
 	{
-		return ((ImageIcon)WINDOW_ICON).getImage();
+		return ((ImageIcon)loadIcon("jedit-icon.gif")).getImage();
 	} //}}}
 
 	//{{{ getPluginIcon() method
@@ -143,7 +167,7 @@ public class GUIUtilities
 	 */
 	public static Image getPluginIcon()
 	{
-		return ((ImageIcon)WINDOW_ICON).getImage();
+		return getEditorIcon();
 	} //}}}
 
 	//}}}

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.89 2004/06/03 21:11:08 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.90 2004/06/04 00:18:34 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1503,7 +1503,7 @@ loop:		for(;;)
 		//{{{ foldLevelChanged() method
 		public void foldLevelChanged(Buffer buffer, int start, int end)
 		{
-			System.err.println("Invalidate " + (start-1) + " to " + textArea.getLastPhysicalLine() + "," + end);
+			//System.err.println("Invalidate " + (start-1) + " to " + textArea.getLastPhysicalLine() + "," + end);
 
 			if(textArea.getDisplayManager() == DisplayManager.this
 				&& end != 0 && buffer.isLoaded())
