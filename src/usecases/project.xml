@@ -6,7 +6,8 @@
     
     <body>
     <menu name="Use Cases">
-        <item name="Entering an Issue"     href="/usecase01.html"/>
+        <item name="Entering an Issue"          href="/usecase01.html"/>
+        <item name="Search for Issue by ID"     href="/usecase02.html"/>
     </menu>
     
     </body>

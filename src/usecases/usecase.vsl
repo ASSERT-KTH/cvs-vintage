@@ -31,13 +31,18 @@
     #set ($menus = $project.getChild("body").getChildren("menu"))
     #foreach ( $menu in $menus )
         <p><strong>$menu.getAttributeValue("name")</strong></p>
-        <ul>
+        <font size="-2"><ul>
         #foreach ( $item in $menu.getChildren() )
+            #if ( $velocityCount < 10 )
+                #set ($itemCount = "0$velocityCount")
+            #else
+                #set ($itemCount = $velocityCount)
+            #end
             #set ($name = $item.getAttributeValue("name"))
-            <li><font size="-2">UC-$root.getChild("number").getText() - 
-            #projectanchor($name $item.getAttributeValue("href"))</font></li>
+            <li>UC-$itemCount - 
+            #projectanchor($name $item.getAttributeValue("href"))</li>
         #end
-        </ul>
+        </ul></font>
     #end
 #end
 
@@ -172,7 +177,7 @@
                 </td></tr>
                 <tr><td colspan="2">
                     <div align="center"><font color="$bodylink" size="-1"><em>
-                    Copyright &#169; 2001, Tigris.org
+                    Copyright &#169; 2001, Scarab.tigris.org
                     </em></font></div>
                 </td></tr>
             </table>

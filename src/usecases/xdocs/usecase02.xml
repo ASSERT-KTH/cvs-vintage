@@ -1,0 +1,59 @@
+<usecase>
+<number>02</number>
+<title>Search for Issue by ID</title>
+
+<section>
+<extends>None</extends>
+<description>
+       User enters Issue ID and sees the details of the specified Issue
+       or an appropriate message.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">wants to be able to specify issue
+      unamgiously via an easy-to-type-or-say string.  This is often
+      done via email, in code comments, in chat, or verbally on phone
+      or in meetings.  Challenge is that unambiguous specification is
+      at odds with brevity.  Assumes project name or URL as shared
+      knowledge.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Exiting Issue</req>
+    <req>User knows Issue ID</req>
+</prerequirements>
+<result>
+Details of the Issue is displayed
+</result>
+<datasets>
+    <data>Issue ID</data>
+</datasets>
+<faq>
+    <item q="If all Issues are in project context, 
+             is there a quick way to jump to Issue in another project?">
+        If possible a link to the other project should be provided.
+    </item>
+    <item q="How can this functionality be put on tigris StartPage?">
+        As a small text entry box.
+    </item>
+</faq>
+<notes>
+    <note>If validation fails, Scarab displays an error</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: visit ProjectIssues, or any Scarab page in project context.</li>
+        <li>User: Enter issue ID into small field and hit button</li>
+        <li>[validation] Scarab: validates issue number</li>
+        <li>[validation] Scarab: validates user role permissions</li>
+        <li>Scarab: display IssueView details</li>
+      </ol>
+</scenario>
+</section>
+</usecase>
