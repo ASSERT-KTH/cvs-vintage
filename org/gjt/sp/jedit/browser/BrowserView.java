@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.29 2002/01/30 08:06:40 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.30 2002/02/06 09:54:01 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -170,6 +170,11 @@ public class BrowserView extends JPanel
 		{
 			parentModel.removeAllElements();
 			String parent = path;
+
+			if(parent.length() != 1 && (parent.endsWith("/")
+				|| parent.endsWith(File.separator)))
+				parent = parent.substring(0,parent.length() - 1);
+
 			for(;;)
 			{
 				parentModel.insertElementAt(parent,0);
