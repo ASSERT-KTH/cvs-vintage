@@ -1,4 +1,4 @@
-// $Id: ChangeRegistry.java,v 1.4 2003/06/29 23:48:17 linus Exp $
+// $Id: ChangeRegistry.java,v 1.5 2003/08/27 19:51:03 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.4 2003/06/29 23:48:17 linus Exp $
+// $Id: ChangeRegistry.java,v 1.5 2003/08/27 19:51:03 jjones Exp $
 
 package org.argouml.util;
 
@@ -50,12 +50,13 @@ public class ChangeRegistry implements GraphListener
      */
     public void setChangeFlag( boolean newValue ) {
 		
-	if (changeFlag != newValue) {
+        boolean oldValue = changeFlag;
+        changeFlag = newValue;                
+        
+	if (oldValue != newValue) {
 	    // notify the gui to put a * on the title bar (swing gui):
 	    ProjectManager.getManager().notifySavePropertyChanged(newValue);
 	}
-                
-	changeFlag = newValue;
                 
     }
 
