@@ -15,18 +15,16 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
-import org.jboss.security.AnybodyPrincipal;
-import org.jboss.security.AuthenticationManager;
-import org.jboss.security.RealmMapping;
-import org.jboss.security.SecurityAssociation;
-import org.jboss.security.SimplePrincipal;
+import org.jboss.security.*;
 
-/** The SecurityInterceptor is where the EJB 2.0 declarative security model
- is enforced. This is where the caller identity propagation is controlled as well.
-
- @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
- @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- @version $Revision: 1.35 $
+/**
+ * The SecurityInterceptor is where the EJB 2.0 declarative security model
+ * is enforced. This is where the caller identity propagation is controlled as well.
+ *
+ * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
+ * @version $Revision: 1.36 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -43,7 +41,7 @@ public class SecurityInterceptor extends AbstractInterceptor
     * @supplierQualifier identity mapping
     */
    protected RealmMapping realmMapping;
-   protected Principal runAsRole;
+   protected RunAsIdentity runAsIdentity;
 
    public SecurityInterceptor()
    {
@@ -62,7 +60,8 @@ public class SecurityInterceptor extends AbstractInterceptor
          if (secMetaData != null && secMetaData.getUseCallerIdentity() == false)
          {
             String roleName = secMetaData.getRunAsRoleName();
-            runAsRole = new SimplePrincipal(roleName);
+            String principalName = secMetaData.getRunAsPrincipalName();
+            runAsIdentity = new RunAsIdentity(roleName, principalName);
          }
          securityManager = container.getSecurityManager();
          realmMapping = container.getRealmMapping();
@@ -79,14 +78,16 @@ public class SecurityInterceptor extends AbstractInterceptor
    {
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
+
       /* If a run-as role was specified, push it so that any calls made
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsRole != null)
+      if (runAsIdentity != null)
       {
-         SecurityAssociation.pushRunAsRole(runAsRole);
+         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
       }
+
       try
       {
          Object returnValue = getNext().invokeHome(mi);
@@ -94,9 +95,9 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsRole != null)
+         if (runAsIdentity != null)
          {
-            SecurityAssociation.popRunAsRole();
+            SecurityAssociation.popRunAsIdentity();
          }
       }
    }
@@ -105,14 +106,17 @@ public class SecurityInterceptor extends AbstractInterceptor
    {
       // Authenticate the subject and apply any declarative security checks
       checkSecurityAssociation(mi);
+
       /* If a run-as role was specified, push it so that any calls made
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-      if (runAsRole != null)
+
+      if (runAsIdentity != null)
       {
-         SecurityAssociation.pushRunAsRole(runAsRole);
+         SecurityAssociation.pushRunAsIdentity(runAsIdentity);
       }
+
       try
       {
          Object returnValue = getNext().invoke(mi);
@@ -120,9 +124,9 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
       finally
       {
-         if (runAsRole != null)
+         if (runAsIdentity != null)
          {
-            SecurityAssociation.popRunAsRole();
+            SecurityAssociation.popRunAsIdentity();
          }
       }
    }
@@ -156,21 +160,33 @@ public class SecurityInterceptor extends AbstractInterceptor
             new SecurityException("Role mapping manager has not been set"));
       }
 
-      // Check the security info from the method invocation
-      if (securityManager.isValid(principal, credential) == false)
+      // run-as principals don't need to be authenticated
+      RunAsIdentity threadRunAs = SecurityAssociation.peekRunAsIdentity();
+      if (threadRunAs == null)
       {
-         String msg = "Authentication exception, principal=" + principal;
-         log.error(msg);
-         SecurityException e = new SecurityException(msg);
-         throw new EJBException("checkSecurityAssociation", e);
+         // Check the security info from the method invocation
+         if (securityManager.isValid(principal, credential) == false)
+         {
+            String msg = "Authentication exception, principal=" + principal;
+            log.error(msg);
+            SecurityException e = new SecurityException(msg);
+            throw new EJBException("checkSecurityAssociation", e);
+         }
+         else
+         {
+            SecurityAssociation.setPrincipal(principal);
+            SecurityAssociation.setCredential(credential);
+            if (trace)
+            {
+               log.trace("Authenticated  principal=" + principal);
+            }
+         }
       }
       else
       {
-         SecurityAssociation.setPrincipal(principal);
-         SecurityAssociation.setCredential(credential);
          if (trace)
          {
-            log.trace("Authenticated  principal=" + principal);
+            log.trace("Skipping authentication runAs=" + threadRunAs);
          }
       }
 
@@ -195,26 +211,29 @@ public class SecurityInterceptor extends AbstractInterceptor
           is, this is the security role against which the assigned method
           permissions must be checked.
       */
-      Principal threadRunAsRole = SecurityAssociation.peekRunAsRole();
-      if (threadRunAsRole != null)
+      if (threadRunAs != null)
       {
-         if( trace )
+         if (trace)
          {
-            log.trace("Checking runAsRole: "+threadRunAsRole);
+            log.trace("Checking runAs: " + threadRunAs);
          }
          // Check the runAs role
-         if (methodRoles.contains(threadRunAsRole) == false &&
-            methodRoles.contains(AnybodyPrincipal.ANYBODY_PRINCIPAL) == false)
+         if (methodRoles.contains(threadRunAs.getRunAsRole()) == false &&
+                 methodRoles.contains(AnybodyPrincipal.ANYBODY_PRINCIPAL) == false)
          {
             String method = mi.getMethod().getName();
-            String msg = "Insufficient method permissions, runAsRole=" + threadRunAsRole
-               + ", method=" + method + ", interface=" + iface
-               + ", requiredRoles=" + methodRoles;
+            String msg = "Insufficient method permissions, runAsRole=" + threadRunAs
+                    + ", method=" + method + ", interface=" + iface
+                    + ", requiredRoles=" + methodRoles;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new EJBException("checkSecurityAssociation", e);
          }
+
+         // from now on we use the run-as principal
+         mi.setPrincipal(threadRunAs);
       }
+
       /* If the method has no assigned roles or the user does not have at
          least one of the roles then access is denied.
       */
