@@ -12,9 +12,9 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class LRUCachePolicy 
+public class LRUCachePolicy
 	implements CachePolicy
 {
 	// Constants -----------------------------------------------------
@@ -44,15 +44,15 @@ public class LRUCachePolicy
 	 * Creates a LRU cache policy object with zero cache capacity.
 	 * @see #init
 	 */
-	public LRUCachePolicy() 
-	{		
+	public LRUCachePolicy()
+	{
 	}
 	/**
-	 * Creates a LRU cache policy object with the specified minimum 
+	 * Creates a LRU cache policy object with the specified minimum
 	 * and maximum capacity.
 	 * @see #init
 	 */
-	public LRUCachePolicy(int min, int max) 
+	public LRUCachePolicy(int min, int max)
 	{
 		if (min < 2 || min > max) {throw new IllegalArgumentException("Illegal cache capacities");}
 		m_minCapacity = min;
@@ -68,7 +68,7 @@ public class LRUCachePolicy
 	 * @see #start
 	 * @see #destroy
 	 */
-	public void init() throws Exception 
+	public void init() throws Exception
 	{
 		m_map = new HashMap();
 		m_list = createList();
@@ -81,7 +81,7 @@ public class LRUCachePolicy
 	 * @see #init
 	 * @see #stop
 	 */
-	public void start() throws Exception 
+	public void start() throws Exception
 	{
 	}
 	/**
@@ -90,29 +90,32 @@ public class LRUCachePolicy
 	 * @see #start
 	 * @see #destroy
 	 */
-	public void stop() 
+	public void stop()
 	{
-		flush();
+		if (m_list != null)
+		{
+			flush();
+		}
 	}
 	/**
 	 * Destroys the cache that is now unusable. <br>
-	 * To have it working again it must be re-{@link #init}ialized and 
+	 * To have it working again it must be re-{@link #init}ialized and
 	 * re-{@link #start}ed.
 	 * @see #init
 	 */
-	public void destroy() 
+	public void destroy()
 	{
 	}
 
-	public Object get(Object key) 
+	public Object get(Object key)
 	{
-		if (key == null) 
+		if (key == null)
 		{
 			throw new IllegalArgumentException("Requesting an object using a null key");
 		}
 
 		LRUCacheEntry value = (LRUCacheEntry)m_map.get(key);
-		if (value != null) 
+		if (value != null)
 		{
 			m_list.promote(value);
 			return value.m_object;
@@ -123,53 +126,53 @@ public class LRUCachePolicy
 			return null;
 		}
 	}
-	public Object peek(Object key) 
+	public Object peek(Object key)
 	{
-		if (key == null) 
+		if (key == null)
 		{
 			throw new IllegalArgumentException("Requesting an object using a null key");
 		}
-		
+
 		LRUCacheEntry value = (LRUCacheEntry)m_map.get(key);
-		if (value == null) 
+		if (value == null)
 		{
 			return null;
 		}
-		else 
+		else
 		{
 			return value.m_object;
 		}
 	}
-	public void insert(Object key, Object o) 
+	public void insert(Object key, Object o)
 	{
 		if (o == null) {throw new IllegalArgumentException("Cannot insert a null object in the cache");}
 		if (key == null) {throw new IllegalArgumentException("Cannot insert an object in the cache with null key");}
 		Object obj = m_map.get(key);
-		if (obj == null) 
+		if (obj == null)
 		{
 			m_list.demote();
 			LRUCacheEntry entry = createCacheEntry(key, o);
 			m_list.promote(entry);
 			m_map.put(key, entry);
 		}
-		else 
+		else
 		{
 			throw new IllegalStateException("Attempt to put in the cache an object that is already there");
 		}
 	}
-	public void remove(Object key) 
+	public void remove(Object key)
 	{
 		if (key == null) {throw new IllegalArgumentException("Removing an object using a null key");}
 
 		Object value = m_map.get(key);
-		if (value != null) 
+		if (value != null)
 		{
 			m_list.remove((LRUCacheEntry)value);
 		}
 		else {} // Do nothing, the object isn't in the cache list
 		m_map.remove(key);
 	}
-	public void flush() 
+	public void flush()
 	{
 		LRUCacheEntry entry = null;
 		while ((entry = m_list.m_tail) != null)
@@ -188,24 +191,24 @@ public class LRUCachePolicy
 	 */
 	protected LRUList createList() {return new LRUList();}
 	/**
-	 * Callback method called when the cache algorithm ages out of the cache 
+	 * Callback method called when the cache algorithm ages out of the cache
 	 * the given entry. <br>
 	 * The implementation here is removing the given entry from the cache.
 	 */
-	protected void ageOut(LRUCacheEntry entry) 
+	protected void ageOut(LRUCacheEntry entry)
 	{
 		remove(entry.m_key);
 	}
 	/**
 	 * Callback method called when a cache miss happens.
 	 */
-	protected void cacheMiss() 
+	protected void cacheMiss()
 	{
 	}
-	/** 
+	/**
 	 * Factory method for cache entries
 	 */
-	protected LRUCacheEntry createCacheEntry(Object key, Object value) 
+	protected LRUCacheEntry createCacheEntry(Object key, Object value)
 	{
 		return new LRUCacheEntry(key, value);
 	}
@@ -216,7 +219,7 @@ public class LRUCachePolicy
 	/**
 	 * Double queued list used to store cache entries.
 	 */
-	public class LRUList 
+	public class LRUList
 	{
 		/** The maximum capacity of the cache list */
 		public int m_maxCapacity;
@@ -235,7 +238,7 @@ public class LRUCachePolicy
 		/**
 		 * Creates a new double queued list.
 		 */
-		protected LRUList() 
+		protected LRUList()
 		{
 			m_head = null;
 			m_tail = null;
@@ -243,21 +246,21 @@ public class LRUCachePolicy
 		}
 		/**
 		 * Promotes the cache entry <code>entry</code> to the last used position
-		 * of the list. <br> 
+		 * of the list. <br>
 		 * If the object is already there, does nothing.
 		 * @param entry the object to be promoted, cannot be null
 		 * @see #demote
 		 * @throws IllegalStateException if this method is called with a full cache
 		 */
-		protected void promote(LRUCacheEntry entry) 
+		protected void promote(LRUCacheEntry entry)
 		{
 			if (entry == null) {throw new IllegalArgumentException("Trying to promote a null object");}
 			if (m_capacity < 1) {throw new IllegalStateException("Can't work with capacity < 1");}
 
 			entry.m_time = System.currentTimeMillis();
-			if (entry.m_prev == null) 
+			if (entry.m_prev == null)
 			{
-				if (entry.m_next == null) 
+				if (entry.m_next == null)
 				{
 					// entry is new or there is only the head
 					if (m_count == 0) // cache is empty
@@ -268,7 +271,7 @@ public class LRUCachePolicy
 						entryAdded(entry);
 					}
 					else if (m_count == 1 && m_head == entry) {} // there is only the head and I want to promote it, do nothing
-					else if (m_count < m_capacity) 
+					else if (m_count < m_capacity)
 					{
 						entry.m_prev = null;
 						entry.m_next = m_head;
@@ -277,7 +280,7 @@ public class LRUCachePolicy
 						++m_count;
 						entryAdded(entry);
 					}
-					else if (m_count < m_maxCapacity) 
+					else if (m_count < m_maxCapacity)
 					{
 						entry.m_prev = null;
 						entry.m_next = m_head;
@@ -291,9 +294,9 @@ public class LRUCachePolicy
 					}
 					else {throw new IllegalStateException("Attempt to put a new cache entry on a full cache");}
 				}
-				else {} // entry is the head, do nothing 
+				else {} // entry is the head, do nothing
 			}
-			else 
+			else
 			{
 				if (entry.m_next == null) // entry is the tail
 				{
@@ -322,33 +325,33 @@ public class LRUCachePolicy
 		 * If the cache is not full, does nothing.
 		 * @see #promote
 		 */
-		protected void demote() 
+		protected void demote()
 		{
 			if (m_capacity < 1) {throw new IllegalStateException("Can't work with capacity < 1");}
 			if (m_count > m_maxCapacity) {throw new IllegalStateException("Cache list entries number (" + m_count + ") > than the maximum allowed (" + m_maxCapacity + ")");}
-			if (m_count == m_maxCapacity) 
+			if (m_count == m_maxCapacity)
 			{
 				LRUCacheEntry entry = m_tail;
-				
+
 				// the entry will be removed by ageOut
-				ageOut(entry);				
+				ageOut(entry);
 			}
 			else {} // cache is not full, do nothing
 		}
 		/**
 		 * Removes from the cache list the specified entry.
-		 */		
-		protected void remove(LRUCacheEntry entry) 
+		 */
+		protected void remove(LRUCacheEntry entry)
 		{
 			if (entry == null) {throw new IllegalArgumentException("Cannot remove a null entry from the cache");}
 			if (m_count < 1) {throw new IllegalStateException("Trying to remove an entry from an empty cache");}
 
 			entry.m_key = entry.m_object = null;
-			if (m_count == 1) 
+			if (m_count == 1)
 			{
 				m_head = m_tail = null;
 			}
-			else 
+			else
 			{
 				if (entry.m_prev == null) // the head
 				{
@@ -387,7 +390,7 @@ public class LRUCachePolicy
 		 */
 		protected void capacityChanged(int oldCapacity) {}
 
-		public String toString() 
+		public String toString()
 		{
 			String s = Integer.toHexString(super.hashCode());
 			s += " size: " + m_count;
@@ -398,11 +401,11 @@ public class LRUCachePolicy
 			return s;
 		}
 	}
-	
+
 	/**
 	 * Double linked cell used as entry in the cache list.
 	 */
-	public class LRUCacheEntry 
+	public class LRUCacheEntry
 	{
 		/** Reference to the next cell in the list */
 		public  LRUCacheEntry m_next;
@@ -415,7 +418,7 @@ public class LRUCachePolicy
 		/** The timestamp of the creation */
 		public long m_time;
 		/**
-		 * Creates a new double linked cell, storing the object we 
+		 * Creates a new double linked cell, storing the object we
 		 * want to cache and the key that is used to retrieve it.
 		 */
 		protected LRUCacheEntry(Object key, Object object)
