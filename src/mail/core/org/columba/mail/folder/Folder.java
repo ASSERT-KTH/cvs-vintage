@@ -17,7 +17,6 @@
 package org.columba.mail.folder;
 
 import java.io.File;
-import java.io.InputStream;
 
 import javax.swing.JDialog;
 import javax.swing.tree.TreeNode;
@@ -32,14 +31,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  *   
