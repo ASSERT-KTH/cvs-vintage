@@ -8,7 +8,7 @@ sleep 10
 echo "Runbox update started: "
 date
 
-TURBINE="../../jakarta-turbine"
+TURBINE="../../jakarta-turbine-3"
 TORQUE="../../jakarta-turbine-torque"
 SCARAB=".."
 DIR=`pwd`
