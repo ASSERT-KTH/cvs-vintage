@@ -38,120 +38,116 @@ public class MessageView extends CScrollPane {
 	protected MouseListener listener;
 	//protected MessageController messageViewer;
 	protected int active;
-	
+
 	//HyperlinkTextViewer viewer;
 	//JList list;
 	protected JPanel panel;
-	
+
 	protected HeaderViewer hv;
 	protected BodyTextViewer bodyTextViewer;
-	
+
 	protected MessageController messageController;
-	
-	public MessageView( MessageController c) {
+
+	public MessageView(MessageController c) {
 		super();
 		this.messageController = c;
-		
+
 		getViewport().setBackground(Color.white);
-		
+
 		panel = new MessagePanel();
 		//panel = new JPanel();
-		panel.setLayout( new BorderLayout() );
-		
+		panel.setLayout(new BorderLayout());
+
 		setViewportView(panel);
-		
+
 		active = VIEWER_SIMPLE;
-		
+
 		//setVerticalScrollBarPolicy( JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		
+
 		hv = new HeaderViewer();
 		bodyTextViewer = new BodyTextViewer();
+
+		panel.add(hv, BorderLayout.NORTH);
 		
-		panel.add( hv, BorderLayout.NORTH );				
-		panel.add( bodyTextViewer, BorderLayout.CENTER );
-		panel.add( c.getMailFrameController().attachmentController.getView(), BorderLayout.SOUTH );
-		
-		
-	}
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout( new BorderLayout() );
+		centerPanel.add(bodyTextViewer, BorderLayout.CENTER);
+
+		JPanel attachmentPanel = new JPanel();
+		attachmentPanel.setLayout( new BorderLayout() );
+		attachmentPanel.add( c.getMailFrameController().attachmentController.getView(), BorderLayout.CENTER);
 	
-	protected void adjustSize()
-	{
+		centerPanel.add( attachmentPanel, BorderLayout.SOUTH);
 		
+		panel.add(
+			centerPanel,
+			BorderLayout.CENTER);
+
+	}
+
+	protected void adjustSize() {
+
 		Dimension d = getPreferredSize();
-		
+
 		Dimension d2 = hv.getPreferredSize();
 		d2.width = d.width;
-		
-		
-		hv.setPreferredSize( d2 );
-		
+
+		hv.setPreferredSize(d2);
+
 	}
-	
-	
-	public void addHyperlinkListener( HyperlinkListener l )
-	{
+
+	public void addHyperlinkListener(HyperlinkListener l) {
 		hv.addHyperlinkListener(l);
 		bodyTextViewer.addHyperlinkListener(l);
 	}
-	
-	public void addMouseListener( MouseListener l )
-	{
+
+	public void addMouseListener(MouseListener l) {
 		hv.addMouseListener(l);
 		bodyTextViewer.addMouseListener(l);
 	}
 
-	
-	
-	
-	protected void switchViewer( boolean html )
-	{
-		if ( html )
-		{
-			if ( active == VIEWER_HTML )
-			{
+	protected void switchViewer(boolean html) {
+		if (html) {
+			if (active == VIEWER_HTML) {
 				// do nothing
-			}
-			else
-			{
+			} else {
 				active = VIEWER_HTML;
 				panel.removeAll();
-				panel.add( hv, BorderLayout.NORTH );				
-				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
+				panel.add(hv, BorderLayout.NORTH);
+				panel.add((JTextComponent) list[active], BorderLayout.CENTER);
 				panel.validate();
-				
+
 				adjustSize();
 			}
-		}
-		else
-		{
-			if ( active == VIEWER_SIMPLE )
-			{
+		} else {
+			if (active == VIEWER_SIMPLE) {
 				// do nothing
-			}
-			else
-			{
+			} else {
 				active = VIEWER_SIMPLE;
 				panel.removeAll();
-				panel.add( hv, BorderLayout.NORTH );				
-				panel.add( (JTextComponent) list[active], BorderLayout.CENTER );
+				panel.add(hv, BorderLayout.NORTH);
+				panel.add((JTextComponent) list[active], BorderLayout.CENTER);
 				panel.validate();
 				adjustSize();
 			}
 		}
 	}
-	
-	public void setDoc( HeaderInterface header, String str, boolean html, boolean hasAttachments ) throws Exception
-	{
+
+	public void setDoc(
+		HeaderInterface header,
+		String str,
+		boolean html,
+		boolean hasAttachments)
+		throws Exception {
 		//switchViewer( html );
-		
-		if ( header != null ) hv.setHeader( header, hasAttachments );
-		
+
+		if (header != null)
+			hv.setHeader(header, hasAttachments);
+
 		//list[active].setDoc( str );
 		bodyTextViewer.setBodyText(str, html);
-		
+
 	}
-	
-	
 
 	public void setPopupListener(MouseListener l) {
 		listener = l;

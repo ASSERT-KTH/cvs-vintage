@@ -105,11 +105,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 		try {
 			op.finish();
-/*
-			if (guiUpdater.amIGuiUpdater(this) && !cancelled())
-				op.updateSelectedGUI();
-*/
-			//setDisplayText(displayText + " done");
+
+			setDisplayText("");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();

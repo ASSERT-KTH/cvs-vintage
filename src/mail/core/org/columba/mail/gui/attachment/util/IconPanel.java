@@ -48,7 +48,8 @@ public class IconPanel extends JPanel implements MouseInputListener {
 
 		count = 0;
 		selection = new Vector();
-		selectionListener = new ArrayList();		
+		selectionListener = new ArrayList();
+
 	}
 
 	public void updateUI() {
@@ -187,7 +188,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 			select(e.getPoint(), 0);
 
 			if (e.getClickCount() >= 2) {
-				if( doubleClickAction != null)
+				if (doubleClickAction != null)
 					doubleClickAction.actionPerformed(null);
 			}
 		}
@@ -216,18 +217,23 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	public void mouseMoved(MouseEvent e) {
 	}
 
-	public void addIconPanelSelectionListener( IconPanelSelectionListener listener ) {
+	public void addIconPanelSelectionListener(IconPanelSelectionListener listener) {
 		selectionListener.add(listener);
 	}
 
 	private void fireSelectionChanged() {
-		
+
 		int[] newSelection = getSelection();
-		
-		for( int i=0; i<selectionListener.size(); i++) {
-			((IconPanelSelectionListener) selectionListener.get(i)).selectionChanged(newSelection);
+
+		for (int i = 0; i < selectionListener.size(); i++) {
+			(
+				(IconPanelSelectionListener) selectionListener.get(
+					i)).selectionChanged(
+				newSelection);
 		}
 	}
+
+	
 
 }
 
@@ -288,5 +294,5 @@ class ClickableIcon extends JComponent {
 	public int getIndex() {
 		return index;
 	}
-	
+
 }

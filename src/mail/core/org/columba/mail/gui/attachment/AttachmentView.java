@@ -16,6 +16,7 @@
 
 package org.columba.mail.gui.attachment;
 
+import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -40,12 +41,14 @@ public class AttachmentView extends IconPanel {
 	public AttachmentView(AttachmentModel model) {
 		super();
 		this.model = model;
+
+		//setPreferredSize( new Dimension(100,100) );
 	}
 
 	public AttachmentModel getModel() {
 		return model;
 	}
-	
+
 	public MimePart getSelectedMimePart() {
 		return (MimePart) model.getDisplayedMimeParts().get(getSelected());
 	}
@@ -92,6 +95,9 @@ public class AttachmentView extends IconPanel {
 			add(icon, text);
 			output = true;
 		}
+
+		Dimension d = getSize();
+		
 		return output;
 	}
 }

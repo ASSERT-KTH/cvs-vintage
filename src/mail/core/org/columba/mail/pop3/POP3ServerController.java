@@ -111,9 +111,9 @@ public class POP3ServerController implements ActionListener {
 			timer = new Timer(ONE_SECOND * interval * 60, this);
 			timer.restart();
 
-			//System.out.println("---------------->timer restarted");
+			
 		} else {
-			//System.out.println("----------------->timer stopped");
+			
 
 			if (timer != null) {
 				timer.stop();

@@ -117,7 +117,7 @@ public class TableModelSorter extends TableModelPlugin {
 					MessageNode rootNode = getHeaderTableModel().getRootNode();
 					Vector v = rootNode.getVector();
 
-					System.out.println("starting to sort");
+					
 					Collections.sort(
 						v,
 						new MessageHeaderComparator(

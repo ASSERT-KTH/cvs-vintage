@@ -128,7 +128,7 @@ public class HeaderTableModelSorter extends TableModelSorter
                 MessageNode rootNode = getHeaderTableModel().getRootNode();
                 Vector v = rootNode.getVector();
 
-                System.out.println("starting to sort");
+               
                 Collections.sort( v, new MessageHeaderComparator(
                     getHeaderTableModel().getColumnNumber( getSortingColumn() ) ,
                     getSortingOrder() ) );

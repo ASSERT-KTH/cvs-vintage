@@ -254,9 +254,9 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			timer = new Timer(ONE_SECOND * interval * 60, this);
 			timer.restart();
 
-			System.out.println("---------------->timer restarted");
+			
 		} else {
-			System.out.println("----------------->timer stopped");
+			
 
 			if (timer != null) {
 				timer.stop();

@@ -18,6 +18,7 @@ package org.columba.mail.gui.table.command;
 import java.awt.Container;
 
 import javax.swing.JScrollPane;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
@@ -82,48 +83,8 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				.isAscending();
 		ColumbaLogger.log.debug("ascending=" + ascending);
 
-		Container c =
-			((MailFrameController) frameController)
-				.tableController
-				.getView()
-				.getParent()
-				.getParent();
+		//scrollPane.repaint();
 
-		
-		JScrollPane scrollPane = (JScrollPane) c;
-		scrollPane.revalidate();
-		if (!ascending)
-			scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMinimum());
-		else
-			scrollPane.getVerticalScrollBar().setValue(
-				scrollPane.getVerticalScrollBar().getMaximum());
-		
-		scrollPane.repaint();
-		
-		/*
-		JTree tree =
-			((MailFrameController) frameController)
-				.tableController
-				.getView()
-				.getTree();
-
-		if (!ascending)
-			((MailFrameController) frameController)
-				.tableController
-				.getView()
-				.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
-		else
-		{
-			int height = ((MailFrameController) frameController)
-			.tableController
-			.getView().getHeight();
-			
-			((MailFrameController) frameController)
-				.tableController
-				.getView()
-				.scrollRectToVisible(new Rectangle(0, height-1, 0, height-1));
-		}
-		*/
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(
 				"property",
@@ -137,6 +98,23 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		MainInterface.treeModel.nodeChanged(folder);
 
+		Container c =
+			((MailFrameController) frameController)
+				.tableController
+				.getView()
+				.getParent()
+				.getParent();
+
+		JScrollPane scrollPane = (JScrollPane) c;
+		scrollPane.revalidate();
+
+		if (!ascending)
+			scrollPane.getVerticalScrollBar().setValue(0);
+		else {
+			int max = scrollPane.getVerticalScrollBar().getMaximum();
+
+			scrollPane.getVerticalScrollBar().setValue(max);
+		}
 	}
 
 	/**
