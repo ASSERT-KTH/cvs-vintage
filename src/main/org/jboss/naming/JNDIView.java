@@ -7,14 +7,17 @@
 
 package org.jboss.naming;
 
-import java.io.InputStream;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.util.Properties;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.Context;
@@ -23,11 +26,11 @@ import javax.naming.LinkRef;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-
-import org.jboss.ejb.Application;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBDeployerMBean;
+import org.jboss.ejb.EjbModule;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * A simple utlity mbean that allows one to recursively list the default
@@ -35,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JNDIView 
    extends ServiceMBeanSupport 
@@ -57,7 +60,7 @@ public class JNDIView
    public String list(boolean verbose)
    {
       StringBuffer buffer = new StringBuffer();
-      Iterator applications = null;
+      Set ejbModules = null;
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 
@@ -66,13 +69,10 @@ public class JNDIView
       */
       try
       {
-         applications = (Iterator) server.invoke(
-            EJBDeployerMBean.OBJECT_NAME,
-            "getDeployedApplications",
-            new Object[] { },
-            new String[] { });
+         ejbModules = server.queryNames(
+            ObjectNameFactory.create("jboss.j2ee:service=EjbModule,*"), null);
       }
-      catch(Exception e)
+      catch(Throwable e)
       {
          log.error("getDeployedApplications failed", e);
          buffer.append("Failed to getDeployedApplications\n");
@@ -83,36 +83,47 @@ public class JNDIView
       }
 
       // List each application JNDI namespace
-      while(applications.hasNext())
+      for (Iterator i = ejbModules.iterator(); i.hasNext(); )
       {
-         Application app = (Application) applications.next();
-         Iterator iter = app.getContainers().iterator();
-         buffer.append("<h1>Application: " + app.getName() + "</h1>\n");
-         while(iter.hasNext())
+         ObjectName app = (ObjectName) i.next();
+         buffer.append("<h1>Ejb Module: " + app.getKeyProperty("url") + "</h1>\n");
+         try 
          {
-            Container con = (Container)iter.next();
-            /* Set the thread class loader to that of the container as
-               the class loader is used by the java: context object
-               factory to partition the container namespaces.
-            */
-            Thread.currentThread().setContextClassLoader(con.getClassLoader());
-            String bean = con.getBeanMetaData().getEjbName();
-            buffer.append("<h2>java:comp namespace of the " + bean + " bean:</h2>\n");
-
-            try
+            Collection containers = (Collection)server.getAttribute(app, "Containers");
+            for (Iterator iter = containers.iterator(); iter.hasNext();)
             {
-               context = new InitialContext();
-               context = (Context)context.lookup("java:comp");
+               Container con = (Container)iter.next();
+               /* Set the thread class loader to that of the container as
+                  the class loader is used by the java: context object
+                  factory to partition the container namespaces.
+               */
+               Thread.currentThread().setContextClassLoader(con.getClassLoader());
+               String bean = con.getBeanMetaData().getEjbName();
+               buffer.append("<h2>java:comp namespace of the " + bean + " bean:</h2>\n");
+               
+               try
+               {
+                  context = new InitialContext();
+                  context = (Context)context.lookup("java:comp");
+               }
+               catch(NamingException e)
+               {
+                  buffer.append("Failed on lookup, "+e.toString(true));
+                  formatException(buffer, e);
+                  continue;
+               }
+               buffer.append("<pre>\n");
+               list(context, " ", buffer, verbose);
+               buffer.append("</pre>\n");
             }
-            catch(NamingException e)
-            {
-               buffer.append("Failed on lookup, "+e.toString(true));
-               formatException(buffer, e);
-               continue;
-            }
-            buffer.append("<pre>\n");
-            list(context, " ", buffer, verbose);
-            buffer.append("</pre>\n");
+         }
+         catch(Throwable e)
+         {
+            log.error("getConainers failed", e);
+            buffer.append("<pre>");
+            buffer.append("Failed to get ejbs in module\n");
+            formatException(buffer, e);
+            buffer.append("</pre>");
          }
       }
 
@@ -161,7 +172,7 @@ public class JNDIView
     **/
    public String listXML() {
       StringBuffer buffer = new StringBuffer();
-      Iterator applications = null;
+      Iterator ejbModules = null;
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
 
@@ -170,7 +181,7 @@ public class JNDIView
       */
       try
       {
-         applications = (Iterator) server.invoke(
+         ejbModules = (Iterator) server.invoke(
             EJBDeployerMBean.OBJECT_NAME,
             "getDeployedApplications",
             new Object[] { },
@@ -194,11 +205,11 @@ public class JNDIView
       buffer.append( "<jndi>" );
       buffer.append( '\n' );
       // List each application JNDI namespace
-      while(applications.hasNext())
+      while(ejbModules.hasNext())
       {
-         Application app = (Application) applications.next();
+         EjbModule app = (EjbModule) ejbModules.next();
          Iterator iter = app.getContainers().iterator();
-         buffer.append( "<application>" );
+         buffer.append( "<ejbmodule>" );
          buffer.append( '\n' );
          buffer.append( "<file>" + app.getName() + "</file>" );
          buffer.append( '\n' );
@@ -236,7 +247,7 @@ public class JNDIView
             buffer.append( "</context>" );
             buffer.append( '\n' );
          }
-         buffer.append( "</application>" );
+         buffer.append( "</ejbmodule>" );
          buffer.append( '\n' );
       }
 

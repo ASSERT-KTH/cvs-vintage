@@ -64,7 +64,7 @@ import javax.transaction.TransactionManager;
  * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -88,7 +88,7 @@ public class EjbModule
    static final String ANY_VALUE = "Both";
    
    /** Class logger. */
-   private static final Logger log = Logger.getLogger(Application.class);
+   private static final Logger log = Logger.getLogger(EjbModule.class);
    
    // Constants -----------------------------------------------------
     
@@ -179,6 +179,7 @@ public class EjbModule
     *
     * @return  a collection of containers for each enterprise bean in this 
     *          application unit.
+    * @jmx:managed-attribute
     */
    public Collection getContainers()
    {
@@ -209,6 +210,7 @@ public class EjbModule
     * Get the name of this Application. 
     *
     * @return    The name of this application.
+    * @jmx:managed-attribute
     */
    public String getName()
    {

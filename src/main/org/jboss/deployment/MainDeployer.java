@@ -46,7 +46,7 @@ import org.jboss.util.jmx.MBeanProxy;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -506,7 +506,7 @@ public class MainDeployer
          }
          else
          {
-            log.info("No deployer for package: " + deployment.url);
+            log.debug("No deployer for package: " + deployment.url);
          } // end of else
          
 

@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.11 $ 
+* @version $Revision: 1.12 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -460,61 +460,6 @@ implements EJBDeployerMBean
       } // end of try-catch
    }
 
-   /**
-   * Remove previously deployed EJBs.
-   *
-   * @param url
-   *
-   * @throws DeploymentException
-   */
-   public void xxxxxxxxxundeploy(DeploymentInfo di)
-      throws DeploymentException
-   {
-      // undeploy(di.url);  
-   }
-   
-   public void xxxxxxxxundeploy(URL url )
-      throws DeploymentException
-   {
-      // Get application from table
-      //Application app = (Application) deployments.get( url );
-      
-      // Check if deployed
-      //if( app == null )
-      //{
-         //   throw new DeploymentException( "URL not deployed" );
-      //}
-      
-      // Undeploy application
-      //log.info( "Undeploying:" + url );
-      //app.stop();
-      //app.destroy();
-      
-      
-      /*
-      try {
-      if ( app.getClassLoader() != null ) {
-      // Remove from webserver
-      WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
-      webServer.removeClassLoader( app.getClassLoader() );
-      }
-      } catch( Exception e ) {
-      throw new DeploymentException( "Error during undeploy of " + app.getURL().toString(), e );
-      } finally {
-      // Remove JSR-77 Module
-      if( app.getModuleName() != null ) {
-      EjbModule.destroy( getServer(), app.getModuleName() );
-      }
-      // Done
-      if (log.isInfoEnabled())
-         log.info( "Undeployed application: " + app.getName() );
-      }
-      
-      */
-      
-      // Remove deployment
-      deployments.remove( url );
-   }
    
    /**
    * Is the aplication with this url deployed.

@@ -19,7 +19,7 @@ import javax.management.JMException;
 
 import org.jboss.ejb.EJBDeployer;
 import org.jboss.ejb.EJBDeployerMBean;
-import org.jboss.ejb.Application;
+import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -31,7 +31,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class BeanCacheMonitor
    implements BeanCacheMonitorMBean, MBeanRegistration
@@ -65,13 +65,20 @@ public class BeanCacheMonitor
    {}
    
    // CacheMonitorMBean implementation -----------------------------------
+   /**
+    * Describe <code>getSnapshots</code> method here.
+    *
+    * @return a <code>BeanCacheSnapshot[]</code> value
+    * @todo: convert to queries on object names of components.
+    */
    public BeanCacheSnapshot[] getSnapshots()
    {
-      Iterator applications = null;
+      Iterator ejbModules = null;
       // Get map of deployed applications
       try
       {
-         applications = (Iterator)m_mbeanServer.invoke(EJBDeployerMBean.OBJECT_NAME, "getDeployedApplications", new Object[]
+         //This should be a query over object names for the containers.
+         ejbModules = (Iterator)m_mbeanServer.invoke(EJBDeployerMBean.OBJECT_NAME, "getDeployedApplications", new Object[]
          {}, new String[]
          {});
       }
@@ -84,12 +91,13 @@ public class BeanCacheMonitor
       ArrayList cacheSnapshots = new ArrayList();
       
       // For each application, getContainers()
-      while (applications.hasNext())
+      while (ejbModules.hasNext())
       {
-         Application app = (Application)applications.next();
+         EjbModule app = (EjbModule)ejbModules.next();
          String name = app.getName();
          
          // Loop on each container of the application
+         //Since we are just totaling everything, do a query on container object names.
          for (Iterator containers = app.getContainers().iterator(); containers.hasNext();)
          {
             // Get the cache for each container
