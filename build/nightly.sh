@@ -42,6 +42,7 @@ else
     echo "Scarab target directory does not exist..."    
 fi
 
+# remove so we don't have conflicts
 cd ${DIR}
 echo "Removing Torque and Turbine from ${SCARAB}/lib..."
 rm -rf ${SCARAB}/lib/turbine*.jar
@@ -74,6 +75,12 @@ if [ ${CVSUPDATE} -gt 0 ] ; then
 else
     echo "Skipping CVS update..."
 fi
+
+# remove after the cvs update
+cd ${DIR}
+echo "Removing Torque and Turbine from ${SCARAB}/lib again..."
+rm -rf ${SCARAB}/lib/turbine*.jar
+rm -rf ${SCARAB}/lib/torque*.zip
 
 ## Build things now
 echo "Building Turbine Start..."
