@@ -25,6 +25,9 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
+        <field name="OptionId" key="attoid" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
         <field name="AttributeId" key="attid" type="NumberKey">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
