@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.16 2001/01/03 08:28:47 tobias Exp $
+ * $Id: AbstractVerifier.java,v 1.17 2001/01/24 10:00:04 oberg Exp $
  */
 
 // standard imports
@@ -61,7 +61,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -482,9 +482,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     /*
      * checks the return type of method matches the entity's primary key class
+     * or is a super class of the primary key class
      */
     public boolean hasPrimaryKeyReturnType(EntityMetaData entity, Method m) {
-        return (m.getReturnType().getName().equals(entity.getPrimaryKeyClass()));
+      try {
+         return (m.getReturnType().isAssignableFrom(classloader.loadClass(entity.getPrimaryKeyClass())));
+      } catch (ClassNotFoundException cnfe)
+      {
+         // Only check equality
+         return (m.getReturnType().getName().equals(entity.getPrimaryKeyClass()));
+      }
     }
 
     /*
