@@ -55,21 +55,21 @@ import org.w3c.dom.Element;
 
 /** A class intended to encapsulate the complex task of making an URL pointed
  *  to an J2ee module an installed Deployment.
- *      
+ *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class Installer
 {
    // Constants -----------------------------------------------------
 
 
-	// the order is the order of the type constants defined in this class 
+	// the order is the order of the type constants defined in this class
 	private static final String[] files = {"META-INF/ejb-jar.xml", "WEB-INF/web.xml", "META-INF/application.xml"};
-    
+
 	// Attributes ----------------------------------------------------
-    
+
 	// the basedir of this Deployment within the InstallerFactories baseDir
 	File baseDir;
 	// the URL to install
@@ -86,6 +86,9 @@ public class Installer
 	// flag to not run execute twice
 	boolean done;
 
+	//copy buffer we'll re-use for copying from
+	//an InputStream source to an OutputStream dest
+	private byte[] copyBuffer;
 
    // Static --------------------------------------------------------
 
@@ -99,7 +102,7 @@ public class Installer
 		return ++counter;
 	}
 
-   
+
 	// Constructors --------------------------------------------------
 	public Installer (InstallerFactory _factory, URL _src) throws IOException
 	{
@@ -112,7 +115,7 @@ public class Installer
 
 	/** performes the complex task of installation
 	 *  @return the installed Deployment on success
-	 *  @throws J2eeDeploymentException 
+	 *  @throws J2eeDeploymentException
 	 *  @throws IOException
 	 */
 	public Deployment execute() throws J2eeDeploymentException, IOException
@@ -121,7 +124,7 @@ public class Installer
 			throw new IllegalStateException ("this object ("+src+")is already executed.");
 
 
-		File localCopy = null; 
+		File localCopy = null;
 		d = new Deployment();
 		Deployment.Module m = null;
 		d.name = getName (src.toString());
@@ -141,7 +144,7 @@ public class Installer
 			switch (type)
 			{
 			case 0: // ejb package...
-		  
+
 				// just install the package
 				m = d.newModule();
 				m.name = d.name; // module name = app name
@@ -153,10 +156,10 @@ public class Installer
 				Manifest mf = new JarFile(f).getManifest ();
 				if (mf != null)
 					addLibraries (mf, src);
-				
+
 				m.localUrls.add (f.toURL());
 
-				d.ejbModules.add(m);		  
+				d.ejbModules.add(m);
 				break;
 
 			case 1: // web package
@@ -178,24 +181,24 @@ public class Installer
 
 				m.localUrls.add (f.toURL());
 
-				d.webModules.add(m);		  
+				d.webModules.add(m);
 				break;
 
-			case 2: // application package 
+			case 2: // application package
 
 				// reading the deployment descriptor...
 				JarFile jarFile = new JarFile (localCopy);
-				J2eeApplicationMetaData app = null; 
+				J2eeApplicationMetaData app = null;
 				try
 				{
 					InputStream in = jarFile.getInputStream(jarFile.getEntry(files[type]));
 					Element root = XmlFileLoader.getDocument (in).getDocumentElement ();
 					app = new J2eeApplicationMetaData (root);
-					in.close();		  
+					in.close();
 				}
 				catch (IOException _ioe)
 				{
-					throw new J2eeDeploymentException ("Error in accessing application metadata: "+_ioe.getMessage ());		  
+					throw new J2eeDeploymentException ("Error in accessing application metadata: "+_ioe.getMessage ());
 				}
 				catch (DeploymentException _de)
 				{
@@ -213,7 +216,7 @@ public class Installer
 				{
 					// iterate the ear modules
 					mod = (J2eeModuleMetaData) it.next ();
-            
+
 					if (mod.isEjb ())
 					{
 						m = d.newModule();
@@ -229,7 +232,7 @@ public class Installer
 							mf = new JarFile(f).getManifest ();
 							if (mf != null)
 								addLibraries (mf, new URL("jar:file:"+localCopy.getAbsolutePath()+"!/"));
-							
+
 							m.localUrls.add(f.toURL());
 						}
 						catch (IOException _ioe)
@@ -242,7 +245,7 @@ public class Installer
 							throw new J2eeDeploymentException ("module "+m.name+" not found in "+d.name);
 						}
 
-						d.ejbModules.add(m);		  
+						d.ejbModules.add(m);
 
 					}
 					else if (mod.isWeb ())
@@ -284,13 +287,13 @@ public class Installer
 							throw new J2eeDeploymentException ("module "+m.name+" not found in "+d.name);
 						}
 
-						d.webModules.add(m);		  
+						d.webModules.add(m);
 					}
 					// other packages we dont care about (currently)
-				} 
+				}
 
 /*
-				// walk throgh the .ear file and download all jar files that are included 
+				// walk throgh the .ear file and download all jar files that are included
 				// (and not yet downloaded) and put them into the common classpath
 				Enumeration enum = jarFile.entries();
 				while (enum.hasMoreElements())
@@ -354,11 +357,11 @@ public class Installer
 				log.debug("couldnt remove temporary copy "+localCopy+": "+_e.getMessage());
 			}
 		}
-    
+
 		return d;
 	}
 
-    
+
    // Private -------------------------------------------------------
 
 	/** Determines the type (ejb/war/ear) of the given JarFile by trying to access
@@ -406,12 +409,12 @@ public class Installer
 	/** Downloads the jar file or directory the src URL points to.
 	 *  In case of directory it becomes packed to a jar file.
 	 *  @return a File object representing the downloaded module
-	 *  @throws IOException 
+	 *  @throws IOException
 	 */
 	private File makeLocalCopy () throws IOException
 	{
 		URL dest = null;
-		if (src.getProtocol().equals ("file") && 
+		if (src.getProtocol().equals ("file") &&
 				new File (src.getFile ()).isDirectory ())
 		{
 			dest = URLWizzard.downloadAndPackTemporary (src, factory.baseDir.toURL (), "copy", ".zip");
@@ -420,7 +423,7 @@ public class Installer
 		{
 			dest = URLWizzard.downloadTemporary (src, factory.baseDir.toURL (), "copy", ".zip");
 		}
-		
+
 		return new File (dest.getFile());
 	}
 
@@ -428,7 +431,7 @@ public class Installer
 	 *  Deployments commonUrls member.
 	 *  @param _mf the Manifest to process
 	 *  @param _anchestor the URL to which the Class-Path entries will be relative
-	 *  @throws IOException 
+	 *  @throws IOException
 	 */
 	private void addLibraries (Manifest _mf, URL _anchestor) throws IOException
 	{
@@ -467,7 +470,7 @@ public class Installer
 
 		return result;
 	}
-		
+
 	/** Same as <code>install()</code> but inflates the jar file.
 	 *  @param _in the Inputstream of an jar/zip file
 	 *  @param _prefix the name prefix for the temporary directory that will become created
@@ -481,13 +484,13 @@ public class Installer
 
 		return result;
 	}
-																  
+
 
 	/** Serializes the Deployment object.
 	 *  @throws IOException
 	 */
 	private void saveConfig () throws IOException
-	{          
+	{
 		ObjectOutputStream out = new ObjectOutputStream (new FileOutputStream (new File (baseDir, J2eeDeployer.CONFIG)));
 
 		out.writeObject (d);
@@ -501,10 +504,10 @@ public class Installer
 	private String getName (String _url)
 	{
 		String result = _url;
-		
+
 		if (result.endsWith ("/"))
 			result = result.substring (0, result.length() - 1);
-      
+
 		result = result.substring (result.lastIndexOf ("/") + 1);
 
 		return result;
@@ -517,14 +520,27 @@ public class Installer
 	public String getWebContext (String _url)
 	{
 		String s = getName (_url);
-      
+
 		// truncate the file extension
 		int p = s.lastIndexOf (".");
 		if (p != -1)
 			s = s.substring (0, p);
-      
+
 		return "/" + s.replace ('.', '/');
-	}	  
+	}
+
+
+	/**
+	 * Get the copy buffer (create new if null)
+	 */
+	private byte[] getCopyBuffer()
+	{
+		if (copyBuffer == null)
+		{
+			copyBuffer = new byte[1024*1024];
+		}
+		return copyBuffer;
+	}
 
 
 	/** Writes all from one stream into the other.
@@ -536,7 +552,7 @@ public class Installer
 	 */
 	private void copy (InputStream _in, OutputStream _out, boolean _closeInput) throws IOException
 	{
-		byte[] buffer = new byte[1024*1024];
+		byte[] buffer = getCopyBuffer();
 		int read;
 		while (true)
 		{
@@ -546,7 +562,7 @@ public class Installer
 
 			_out.write(buffer, 0, read);
 		}
-      
+
 		_out.flush();
 		_out.close();
 		if (_closeInput)
@@ -562,9 +578,9 @@ public class Installer
 	{
 		if (_destDir.exists ())
 			deleteRecursive (_destDir);
-      
+
 		_destDir.mkdirs ();
-		
+
 		OutputStream out;
 		ZipEntry entry;
 		while ((entry = _in.getNextEntry ()) != null)
@@ -593,7 +609,7 @@ public class Installer
 	 *  @param _parent the directory in which to create the file
 	 *  @param _prefix the file name prefix
 	 *  @param _suffix the file names suffix
-	 *  @throws IOException 
+	 *  @throws IOException
 	 */
 	private File createTmpFile(File _parent, String _prefix, String _suffix) throws IOException
 	{
@@ -612,7 +628,7 @@ public class Installer
 		do
 		{
 			result = new File (_parent, _prefix+nextNumber()+_suffix);
-		} 
+		}
 		while (result.exists());
 
 		return result;
@@ -621,7 +637,7 @@ public class Installer
 	/** Creates  a temporary (unique) directory.
 	 *  @param _parent the directory in which to create the file
 	 *  @param _prefix the file name prefix
-	 *  @throws IOException 
+	 *  @throws IOException
 	 */
 	private File createTmpDir(File _parent, String _prefix) throws IOException
 	{
