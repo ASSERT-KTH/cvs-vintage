@@ -36,14 +36,14 @@ import org.gjt.sp.jedit.*;
 /**
  * Text area with a history.
  * @author Slava Pestov
- * @version $Id: HistoryTextArea.java,v 1.1 2004/09/02 04:55:36 spestov Exp $
+ * @version $Id: HistoryTextArea.java,v 1.2 2004/09/02 05:07:13 spestov Exp $
  */
 public class HistoryTextArea extends JTextArea
 {
 	//{{{ HistoryTextArea constructor
 	public HistoryTextArea(String name)
 	{
-		super(4,15);
+		super(3,15);
 		controller = new HistoryText(this,name);
 	} //}}}
 
@@ -119,6 +119,13 @@ public class HistoryTextArea extends JTextArea
 		{
 			switch(evt.getKeyCode())
 			{
+			case KeyEvent.VK_ENTER:
+				if(evt.isShiftDown())
+				{
+					replaceSelection("\n");
+					evt.consume();
+				}
+				break;
 			case KeyEvent.VK_PAGE_UP:
 				if(evt.isShiftDown())
 					controller.doBackwardSearch();

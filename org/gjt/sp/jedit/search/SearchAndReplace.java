@@ -62,7 +62,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.65 2004/09/01 23:31:58 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.66 2004/09/02 05:07:14 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -905,12 +905,14 @@ loop:			while(path != null)
 	//{{{ escapeRegexp() method
 	/**
 	 * Escapes characters with special meaning in a regexp.
+	 * @param multiline Should \n be escaped?
 	 * @since jEdit 4.3pre1
 	 */
-	public static String escapeRegexp(String str)
+	public static String escapeRegexp(String str, boolean multiline)
 	{
 		return MiscUtilities.charsToEscapes(str,
-			"\n\r\t\\()[]{}$^*+?|.");
+			"\r\t\\()[]{}$^*+?|."
+			+ (multiline ? "" : "\n"));
 	} //}}}
 
 	//{{{ load() method

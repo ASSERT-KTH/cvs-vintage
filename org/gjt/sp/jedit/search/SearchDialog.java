@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.54 2004/09/02 04:55:36 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.55 2004/09/02 05:07:14 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -123,7 +123,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 				if(SearchAndReplace.getRegexp())
 				{
 					find.setText(SearchAndReplace.escapeRegexp(
-						searchString));
+						searchString,true));
 				}
 				else
 					find.setText(searchString);
@@ -286,8 +286,6 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	{
 		super(view,jEdit.getProperty("search.title"),false);
 
-		setEnterEnabled(false);
-		
 		this.view = view;
 
 		JPanel content = new JPanel(new BorderLayout());
@@ -605,8 +603,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		JPanel grid = new JPanel(new GridLayout(5,1,0,12));
 
 		findBtn = new JButton(jEdit.getProperty("search.findBtn"));
-		findBtn.setMnemonic(jEdit.getProperty("search.findBtn.mnemonic")
-			.charAt(0));
+		/* findBtn.setMnemonic(jEdit.getProperty("search.findBtn.mnemonic")
+			.charAt(0)); */
 		getRootPane().setDefaultButton(findBtn);
 		grid.add(findBtn);
 		findBtn.addActionListener(actionHandler);
