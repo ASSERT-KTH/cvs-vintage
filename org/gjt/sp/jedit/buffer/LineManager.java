@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: LineManager.java,v 1.5 2004/04/20 18:34:28 spestov Exp $
+ * @version $Id: LineManager.java,v 1.6 2004/06/26 19:10:58 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class LineManager
@@ -331,8 +331,8 @@ public class LineManager
 	 * In the old document model there were 5 objects per line, for a
 	 * total of about 100 bytes, plus a cached token list, which used
 	 * another 100 or so bytes. */
-	private static final int FOLD_LEVEL_MASK         = 0x00ffff;
-	private static final int SCREEN_LINES_MASK       = 0x7fff00;
+	private static final int FOLD_LEVEL_MASK         = 0x0000ffff;
+	private static final int SCREEN_LINES_MASK       = 0x7fff0000;
 	private static final int SCREEN_LINES_SHIFT      = 16;
 	private static final int SCREEN_LINES_VALID_MASK = 1<<31;
 
