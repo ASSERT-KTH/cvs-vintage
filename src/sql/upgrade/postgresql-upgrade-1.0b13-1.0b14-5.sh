@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Created By: Sean Jackson <sean@pnc.com.au>
+
 CMDNAME=`basename "$0"`
 DB_SETTINGS="dbsettings.props"
 POPULATION_SCRIPT_DIR='../../../target/webapps/scarab/WEB-INF/sql'
@@ -42,12 +44,11 @@ if [ "${usage}" ] ; then
     echo
     echo "$CMDNAME upgrades the database."
     echo
-    echo "Currently only works with MySQL and requres that"
-    echo "Scarab already be built and configured to connect"
+    echo "Requres that Scarab already be built and configured to connect"
     echo "to the database properly."
     echo
     echo
-    echo "This MySQL specific script does the following:"
+    echo "This Postgresql specific script does the following:"
     echo 
     echo "   1) Gets a list of template issue types (i.e., issue types
                 where the parent id is not 0)."
@@ -93,37 +94,39 @@ if [ ! -z "$password" ] ; then
     echo
 fi
 
-MYSQL=`which mysql`
-if [ ! -x "${MYSQL}" ] ; then
+PSQL=`which psql`
+if [ ! -x "${PSQL}" ] ; then
     echo
-    echo "The MySQL binary needs to be in your PATH!"
+    echo "The pgsql binary needs to be in your PATH!"
     echo
     exit 1
 fi
 
 USERCMD=
 if [ "${DB_USER}" != "" ] ; then
-    USERCMD="--user=${DB_USER}"
+    USERCMD="-U ${DB_USER}"
 fi
 
 PASSCMD=
 if [ ! -z "${password}" ] ; then
-    PASSCMD="--password=${DB_PASS}"
+    PASSCMD="-W"
 fi
 PORTCMD=
 if [ "${DB_PORT}" != "" ] ; then
-    PORTCMD="--port=${DB_PORT}"
+    PORTCMD="-p ${DB_PORT}"
 fi
-HOSTCMD="--host=${DB_HOST}"
+HOSTCMD="-h ${DB_HOST}"
 
-MYSQLCMD="${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD}"
+TUPLES="-t"
+
+PSQLCMD="${HOSTCMD} ${PORTCMD} ${USERCMD} ${PASSCMD} ${TUPLES}"
 
 ## for remove module-issuetype mappings for template types
 SQL="select SCARAB_ISSUE_TYPE.ISSUE_TYPE_ID from SCARAB_ISSUE_TYPE where parent_id>0"
-echo $SQL | ${MYSQL} ${MYSQLCMD} ${DB_NAME} | grep -v '^ISSUE_TYPE_ID' | \
+echo $SQL | ${PSQL} ${PSQLCMD} ${DB_NAME} | grep '[0-9]' | \
 while read issuetypeid ; do
  echo "issuetypeid is: $issuetypeid"
  SQL="delete from SCARAB_R_MODULE_ISSUE_TYPE where ISSUE_TYPE_ID='$issuetypeid'"
- echo $SQL | ${MYSQL} ${MYSQLCMD} ${DB_NAME} 
+ echo $SQL | ${PSQL} ${PSQLCMD} ${DB_NAME} 
 done
 
