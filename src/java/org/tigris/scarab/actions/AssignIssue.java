@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.30 2002/01/18 22:26:02 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.31 2002/01/22 00:53:23 jon Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -149,7 +149,7 @@ public class AssignIssue extends RequireLoginFirstAction
                         if (deleted.toString().equals("true"))
                         {
                             StringBuffer buf1 = new StringBuffer("You have been "
-                                                                 + " removed from ");
+                                                                 + "removed from ");
                             buf1.append(oldAttribute.getName()).append(".");
                             emailAction = buf1.toString();
                              
@@ -178,7 +178,7 @@ public class AssignIssue extends RequireLoginFirstAction
                             else
                             {
                                 StringBuffer buf1 = new StringBuffer("You have been "
-                                                                     + " switched from ");
+                                                                     + "switched from ");
                                 buf1.append(oldAttribute.getName()).append(" to ");
                                 buf1.append(newAttribute.getName()).append(".");
                                 emailAction = buf1.toString();
@@ -210,15 +210,16 @@ public class AssignIssue extends RequireLoginFirstAction
                              group.setProperties(attVal);
                              attVal.save();
                              data.getParameters().add("isChanged", "true");
-                             emailAssignIssueToUser(issue, assignee, emailAction, context); }
+                             emailAssignIssueToUser(issue, assignee, emailAction, context); 
+                        }
                     }
                 }
-           }
-       }
-       else
-       {
+            }
+        }
+        else
+        {
            data.setMessage(ERROR_MESSAGE);
-       }
+        }
     }
 
     public void doAdd(RunData data, TemplateContext context) 
@@ -302,11 +303,9 @@ public class AssignIssue extends RequireLoginFirstAction
                         }
                     }
                 }
-             }
+            }
         }
     }
-
-
 
     /**
      * Takes care of giving an email notice about an issue to a list of users 
@@ -348,6 +347,4 @@ public class AssignIssue extends RequireLoginFirstAction
                                "email/AssignIssue.vm"));
         te.send();
     }
-
-
 }
