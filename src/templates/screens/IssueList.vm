@@ -17,7 +17,7 @@
 	
 <P>
 
-	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="#">add/remove attributes from view</a>)</div>
+	<div class="misc"><a href="#">&laquo;</a> <a href="#">previous</a> | 3 of 5 | <a href="#">next</a> <a href="#">&raquo;</a> (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 
 
 	<div class="datatable">
