@@ -61,7 +61,6 @@
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
-				<include name="lib/Lib/**"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
@@ -100,7 +99,7 @@
 	<!-- compile the classes -->
 	<target name="compile" depends="init,copy-required">
 		<echo message="the classes are going to ${dest} "/> 
-		<javac srcdir="${src}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+		<javac srcdir="${src}/src/" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
@@ -158,7 +157,6 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
-				<include name="lib/Lib/**"/>
 				<!-- include name="ext/csWillySpell.jar" -->
 			</zipfileset>
 		</zip>
@@ -186,7 +184,6 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
-				<include name="lib/Lib/**"/>
 			</zipfileset>
 			<!--zipfileset dir="${dest}" prefix="columba-${version}-src" -->
 				<!-- include name="run.sh"/-->
