@@ -30,7 +30,7 @@ import org.jboss.util.FastKey;
  *	@see Container
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public interface ContainerInvoker
    extends ContainerPlugin
@@ -86,7 +86,7 @@ public interface ContainerInvoker
 	 * @return     an implementation of the remote interface for this container
 	 * @exception   RemoteException  thrown if the EJBObject could not be created
 	 */
-   public EJBObject getEntityEJBObject(FastKey id)
+   public EJBObject getEntityEJBObject(Object id)
       throws RemoteException;
 
 
