@@ -32,7 +32,7 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  */
 public class Main
 {
@@ -95,6 +95,8 @@ public class Main
    // Constructors --------------------------------------------------
    public Main(String confName)
    {
+   	  Date startTime = new Date();
+      
       try
       {
          System.out.println("Using configuration \""+confName+"\"");
@@ -173,7 +175,9 @@ public class Main
       }
 
       // Done
-      System.out.println("JBoss "+versionIdentifier+" Started");
+      Date stopTime = new Date();
+      Date lapsedTime = new Date(stopTime.getTime()-startTime.getTime());
+      System.out.println("JBoss "+versionIdentifier+" Started in "+lapsedTime.getMinutes()+"m:"+lapsedTime.getSeconds()+"s");
    }
 }
 
