@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -68,6 +68,12 @@ public class SQLUtil {
       } finally {
          JDBCUtil.safeClose(con);
       }
+   }
+ 
+   public static String fixConstraintName(String name, DataSource dataSource) 
+         throws DeploymentException {
+
+      return fixTableName(name, dataSource);
    }
    
    // =======================================================================

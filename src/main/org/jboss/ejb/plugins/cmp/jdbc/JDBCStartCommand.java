@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JDBCStartCommand {
 
@@ -80,10 +80,11 @@ public class JDBCStartCommand {
       // Create table if necessary
       if(!entity.getTableExists()) {
          if(entityMetaData.getCreateTable()) {
+            DataSource dataSource = entity.getDataSource();
             createTable(
-                  entity.getDataSource(),
+                  dataSource,
                   entity.getTableName(),
-                  getEntityCreateTableSQL());
+                  getEntityCreateTableSQL(dataSource));
          } else {
             log.debug("Table not create as requested: " +
                   entity.getTableName());
@@ -106,10 +107,11 @@ public class JDBCStartCommand {
                !relationMetaData.getTableExists()) {
                
                if(relationMetaData.getCreateTable()) {
+                  DataSource dataSource = relationMetaData.getDataSource();
                   createTable(
-                        relationMetaData.getDataSource(),
+                        dataSource,
                         cmrField.getTableName(),
-                        getRelationCreateTableSQL(cmrField));
+                        getRelationCreateTableSQL(cmrField, dataSource));
                } else {
                   log.debug("Relation table not create as requested: " +
                         cmrField.getTableName());
@@ -232,7 +234,8 @@ public class JDBCStartCommand {
       }
    }
 
-   private String getEntityCreateTableSQL() {
+   private String getEntityCreateTableSQL(DataSource dataSource) 
+         throws DeploymentException {
 
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE TABLE ").append(entity.getTableName());
@@ -247,10 +250,14 @@ public class JDBCStartCommand {
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
                throw new IllegalStateException("Primary key constriant is " +
-                     "not allowed for this type of datastore");
+                     "not allowed for this type of data source");
             }
+
+            String name = 
+               "pk_" + entity.getMetaData().getDefaultTableName();
+            name = SQLUtil.fixConstraintName(name, dataSource);
             String[] args = new String[] {
-               "pk_"+entity.getTableName(),
+               name,
                SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }
@@ -260,7 +267,10 @@ public class JDBCStartCommand {
       return sql.toString();
    }
 
-   private String getRelationCreateTableSQL(JDBCCMRFieldBridge cmrField) {
+   private String getRelationCreateTableSQL(
+         JDBCCMRFieldBridge cmrField,
+         DataSource dataSource) throws DeploymentException {
+
       List fields = new ArrayList();
       fields.addAll(cmrField.getTableKeyFields());
       fields.addAll(cmrField.getRelatedCMRField().getTableKeyFields());
@@ -279,10 +289,14 @@ public class JDBCStartCommand {
                manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
             if(pkConstraint == null) {
                throw new IllegalStateException("Primary key constriant is " +
-                     "not allowed for this type of datastore");
+                     "not allowed for this type of data store");
             }
+
+            String name = 
+               "pk_" + cmrField.getRelationMetaData().getDefaultTableName();
+            name = SQLUtil.fixConstraintName(name, dataSource);
             String[] args = new String[] {
-               "pk_"+cmrField.getTableName(),
+               name,
                SQLUtil.getColumnNamesClause(fields)};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }   
@@ -342,9 +356,12 @@ public class JDBCStartCommand {
       }
       String a = SQLUtil.getColumnNamesClause(fields);
       String b = SQLUtil.getColumnNamesClause(referencesFields);
+
+
       String[] args = new String[] {
          tableName, 
-         "fk_"+tableName+"_"+cmrFieldName,
+         SQLUtil.fixConstraintName(
+               "fk_"+tableName+"_"+cmrFieldName, dataSource),
          a,
          referencesTableName,
          b};
