@@ -1,25 +1,35 @@
 $page.setTitle("Confirm new account information")
+
 <div id="registerconfirm" class="app">
+
 <h2>$page.Title</h2>
+
 ## get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if (!$user.FirstName)
+
 <p><strong class="alert">
 There has been an error locating the required information. Please go
 back to the <a href="$link.setPage("Register.vm")">Registration</a> page
 and try again.</strong>
 </p>
+
 #else
+
 <p>
 Please confirm that the information below is accurate, then click the
 Confirm Registration button. This will send an email to your account with
 instructions for the next step. Otherwise click the Back button to go
 back to the Registration page.
 </p>
+
+<h3>Confirmation</h3>
+
 <form action="$link.setPage("RegisterConfirm.vm")" method="post">
-    <input type="hidden" name="action" value="RegisterConfirm" />
-    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm" />
-    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm" />
+<input type="hidden" name="action" value="RegisterConfirm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Confirm.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Register.vm" />
+
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
@@ -30,15 +40,14 @@ back to the Registration page.
   <th>Full name</th>
   <td>$user.FirstName $user.LastName</td>
  </tr>
- <tr>
- <td>&nbsp;</td>
-  <td>
-<input type="submit" name="eventSubmit_doBack" value="Back" />
-<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
-  </td>
- </tr>
 </table>
 </div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doBack" value="Back" />
+<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
+</div>
+
 </form>
 #end
 </div>

@@ -50,13 +50,12 @@ be asked to confirm it the next time you try to login.
    #fieldErrorMsg($regGroup.Confirm "")
   </td>
  </tr>
- <tr>
-  <td colspan="2">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-   <input type="submit" name="eventSubmit_doConfirm" value="Confirm" />
-  </td>
- </tr>
 </table>
+</div>
+
+<div class="functnbar2">
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+<input type="submit" name="eventSubmit_doConfirm" value="Confirm" />
 </div>
 
 $intake.declareGroups()
