@@ -41,7 +41,7 @@ import org.jboss.tm.JBossTransactionRolledbackLocalException;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public final class LogInterceptor extends AbstractInterceptor
 {
@@ -211,11 +211,12 @@ public final class LogInterceptor extends AbstractInterceptor
             {
                cause = ((EJBException) cause).getCausedByException();
             }
-            log.error(exceptionType + ", causedBy:", cause);
+            log.error(exceptionType + " in method: " + invocation.getMethod()
+               + ", causedBy:", cause);
          }
          else
          {
-            log.error(exceptionType + ":", e);
+            log.error(exceptionType + " in method: " + invocation.getMethod(), e);
          }
          return (Exception)e;
       }
