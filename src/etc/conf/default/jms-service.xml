@@ -49,13 +49,8 @@
       MinSize=0
       MaxSize=10
       BlockingTimeoutMillis=5000
-      CleanupEnabled=false
-      IdleTimeoutEnabled=false
-      InvalidateOnError=false
-      TrackLastUsed=false
-      GCIntervalMillis=120000
-      GCMinIdleMillis=1200000
-      IdleTimeoutMillis=1800000
+      IdleTimeoutMinutes=30
+      CleanupIntervalMinutes=10
       MaxIdleTimeoutPercent=1.0
     </attribute>
 
