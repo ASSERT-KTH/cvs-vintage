@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.addressbook.folder;
@@ -21,8 +21,6 @@ import org.columba.addressbook.parser.DefaultCardLoader;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.TableItem;
-import org.columba.core.logging.ColumbaLogger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,6 +29,7 @@ import java.io.ObjectOutputStream;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 
 /**
@@ -46,6 +45,9 @@ import java.util.Vector;
  *
  */
 public class LocalHeaderCacheFolder extends LocalFolder {
+
+    private static final Logger LOG = Logger.getLogger("org.columba.addressbook.folder");
+
     /**
      *
      * keeps a list of HeaderItem's we need for the table-view
@@ -331,7 +333,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     public void load(WorkerStatusController worker) throws Exception {
-        ColumbaLogger.log.fine("loading header-cache=" + headerFile);
+        LOG.fine("loading header-cache=" + headerFile);
 
         FileInputStream istream = new FileInputStream(headerFile.getPath());
         ObjectInputStream p = new ObjectInputStream(istream);
@@ -341,7 +343,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         //int capacity = getMessageFileCount();
         if (capacity != getMessageFileCount()) {
             // messagebox headercache-file is corrupted
-            ColumbaLogger.log.fine("Messagebox headercache-file is corrupted!");
+            LOG.fine("Messagebox headercache-file is corrupted!");
 
             recreateIndex();
 
@@ -393,7 +395,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     public void save(WorkerStatusController worker) throws Exception {
-        ColumbaLogger.log.fine("saving header-cache=" + headerFile);
+        LOG.fine("saving header-cache=" + headerFile);
 
         FileOutputStream istream = new FileOutputStream(headerFile.getPath());
         ObjectOutputStream p = new ObjectOutputStream(istream);
@@ -438,7 +440,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     public void recreateIndex() {
-        ColumbaLogger.log.fine("recreating index");
+        LOG.fine("recreating index");
 
         File[] list = directoryFile.listFiles();
         List v = new Vector();
@@ -485,7 +487,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
                 DefaultCardLoader parser = new DefaultCardLoader(newFile);
                 parser.load();
 
-                if (parser.isContact() == true) {
+                if (parser.isContact()) {
                     ContactCard card = parser.createContactCard();
 
                     addHeaderItem(card, new Integer(i));
@@ -507,7 +509,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
             HeaderItem item = (HeaderItem) getHeaderItemList().get(i);
 
             if (item != null) {
-                if (item.matchPattern(pattern) == true) {
+                if (item.matchPattern(pattern)) {
                     searchResult.add(item);
                 }
             }
