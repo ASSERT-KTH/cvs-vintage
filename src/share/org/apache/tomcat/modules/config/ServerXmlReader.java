@@ -83,7 +83,6 @@ import org.xml.sax.*;
  * @author Costin Manolache
  */
 public class ServerXmlReader extends BaseInterceptor {
-    int configFileNote;
     private static StringManager sm =
 	StringManager.getManager("org.apache.tomcat.resources");
 
@@ -118,6 +117,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	xh.addRule( "ContextManager", xh.setProperties() );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
+	addTagRules( cm, xh );
 	setBackward( xh );
 
 	// load the config file(s)
@@ -137,14 +137,14 @@ public class ServerXmlReader extends BaseInterceptor {
 		s="$TOMCAT_HOME" + s.substring( cm.getHome().length());
 	    log( "Config=" + s);
             // load server-*.xml
-/*            Vector v = getUserConfigFiles(f);
+            Vector v = getUserConfigFiles(f);
             for (Enumeration e = v.elements();
                  e.hasMoreElements() ; ) {
                 f = (File)e.nextElement();
                 loadConfigFile(xh,f,cm);
 		cm.log(sm.getString("tomcat.loading") + " " + f);
             }
-*/
+	    
         }
     }
 
@@ -161,6 +161,27 @@ public class ServerXmlReader extends BaseInterceptor {
 	}
     }
 
+    public void addTagRules( ContextManager cm, XmlMapper xh )
+	throws TomcatException
+    {
+	Hashtable modules=(Hashtable)cm.getNote("modules");
+	if( modules==null) return;
+	Enumeration keys=modules.keys();
+	while( keys.hasMoreElements() ) {
+	    String tag=(String)keys.nextElement();
+	    String classN=(String)modules.get( tag );
+
+	    xh.addRule(  tag ,
+			 xh.objectCreate( classN, null ));
+	    xh.addRule( tag ,
+			xh.setProperties());
+	    xh.addRule( tag,
+			xh.addChild( "addInterceptor",
+				     "org.apache.tomcat.core.BaseInterceptor"));
+	}
+    }
+
+
     public static void setTagRules( XmlMapper xh ) {
 	xh.addRule( "module",  new XmlAction() {
 		public void start(SaxContext ctx ) throws Exception {
@@ -169,8 +190,9 @@ public class ServerXmlReader extends BaseInterceptor {
 		    String name=attributes.getValue("name");
 		    String classN=attributes.getValue("javaClass");
 		    if( name==null || classN==null ) return;
-		    XmlMapper mapper=ctx.getMapper();
-		    ServerXmlReader.addTag( mapper, name, classN );
+		    ContextManager cm=(ContextManager)ctx.currentObject();
+		    Hashtable modules=(Hashtable)cm.getNote("modules");
+		    modules.put( name, classN );
 		}
 	    });
     }
@@ -183,8 +205,8 @@ public class ServerXmlReader extends BaseInterceptor {
 	    return;
 	File f=new File( cm.getHome(), "/conf/modules.xml");
 	if( f.exists() ) {
-	    //            cm.setNote( "configFile", f.getAbsoluteFile());
-	    cm.setNote( "modules", new Hashtable());
+	    Hashtable modules=new Hashtable();
+	    cm.setNote( "modules", modules );
 	    loadConfigFile( xh, f, cm );
             // load module-*.xml
             Vector v = getUserConfigFiles(f);
@@ -195,18 +217,6 @@ public class ServerXmlReader extends BaseInterceptor {
             }
 	}
     }
-
-    // similar with ant's taskdef
-    public static void addTag( XmlMapper xh, String tag, String classN) {
-	xh.addRule( tag ,
-		    xh.objectCreate( classN, null ));
-	xh.addRule( tag ,
-		    xh.setProperties());
-	xh.addRule( tag,
-		    xh.addChild( "addInterceptor",
-				 "org.apache.tomcat.core.BaseInterceptor"));
-    }
-
 
     // -------------------- File utils --------------------
 

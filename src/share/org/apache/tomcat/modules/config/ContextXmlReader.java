@@ -108,8 +108,7 @@ public class ContextXmlReader extends BaseInterceptor {
 	xh.setDebug( debug );
 
 	// use the same tags for context-local modules
-	setTagRules( xh );
-	addDefaultTags(cm, xh);
+	addTagRules(cm, xh);
 	setContextRules( xh );
 	setBackward( xh );
 
@@ -211,54 +210,26 @@ public class ContextXmlReader extends BaseInterceptor {
     }
 
     // --------------------
-    
-    public static void setTagRules( XmlMapper xh ) {
-	xh.addRule( "module",  new XmlAction() {
-		public void start(SaxContext ctx ) throws Exception {
-		    Object elem=ctx.currentObject();
-		    AttributeList attributes = ctx.getCurrentAttributes();
-		    String name=attributes.getValue("name");
-		    String classN=attributes.getValue("javaClass");
-		    if( name==null || classN==null ) return;
-		    XmlMapper mapper=ctx.getMapper();
-		    ContextXmlReader.addTag( mapper, name, classN );
-		}
-	    });
-    }
 
-    // read modules.xml, if any, and load taskdefs
-    public static  void addDefaultTags( ContextManager cm,
-					XmlMapper xh)
+    public void addTagRules( ContextManager cm, XmlMapper xh )
 	throws TomcatException
     {
-	File f=new File( cm.getHome(), "/conf/modules.xml");
-	if( f.exists() ) {
-	    //            cm.setNote( "configFile", f.getAbsoluteFile());
-	    //	    cm.setNote( "modules", new Hashtable());
-	    ServerXmlReader.loadConfigFile( xh, f, cm );
-            // load module-*.xml
-            Vector v = ServerXmlReader.getUserConfigFiles(f);
-            for (Enumeration e = v.elements();
-                 e.hasMoreElements() ; ) {
-                f = (File)e.nextElement();
-                ServerXmlReader.loadConfigFile(xh,f,cm);
-            }
+	Hashtable modules=(Hashtable)cm.getNote("modules");
+	if( modules==null) return;
+	Enumeration keys=modules.keys();
+	while( keys.hasMoreElements() ) {
+	    String name=(String)keys.nextElement();
+	    String classN=(String)modules.get( name );
+
+	    String tag="Context" + "/" + name;
+	    xh.addRule(  tag ,
+			 xh.objectCreate( classN, null ));
+	    xh.addRule( tag ,
+			xh.setProperties());
+	    xh.addRule( tag,
+			xh.addChild( "addInterceptor",
+				     "org.apache.tomcat.core.BaseInterceptor"));
 	}
     }
-
-    // similar with ant's taskdef
-    public static void addTag( XmlMapper xh, String tag, String classN) {
-
-	tag="Context" + "/" + tag;
-	xh.addRule(  tag ,
-		    xh.objectCreate( classN, null ));
-	xh.addRule( tag ,
-		    xh.setProperties());
-	xh.addRule( tag,
-		    xh.addChild( "addInterceptor",
-				 "org.apache.tomcat.core.BaseInterceptor"));
-    }
-
-
 }
 
