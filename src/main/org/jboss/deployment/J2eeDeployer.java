@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.19 $
+*   @version $Revision: 1.20 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -396,6 +396,7 @@ implements J2eeDeployerMBean
 
       // redirect all modules to the responsible deployers
       Deployment.Module m = null;
+      String moduleName = null;
       String message;
       try
       {
@@ -408,8 +409,8 @@ implements J2eeDeployerMBean
          while (it.hasNext ())
          {
             m = (Deployment.Module)it.next ();
-            
-            log.log ("Starting module " + m.name);
+            moduleName = m.name;
+            log.log ("Starting module " + moduleName);
             
             // Call the TomcatDeployer that is loaded in the JMX server
             server.invoke(warDeployer, "deploy",
@@ -421,30 +422,35 @@ implements J2eeDeployerMBean
 
          // JBoss
          // gather the ejb module urls and deploy the application
+         moduleName = _d.name;
          Vector tmp = new java.util.Vector();
          for( it = _d.ejbModules.iterator(); it.hasNext(); )
-            tmp.add( ((Deployment.Module) it.next()).localUrls.firstElement().toString() );
+         {
+             m = (Deployment.Module) it.next();
+             tmp.add( m.localUrls.firstElement().toString() );
+         }
          String[] jarUrls = new String[ tmp.size() ];
          tmp.toArray( jarUrls );
          // Call the ContainerFactory that is loaded in the JMX server
          server.invoke(jarDeployer, "deploy",
             new Object[]{ _d.localUrl.toString(), jarUrls }, new String[]{ String.class.getName(), String[].class.getName() } );
-	 }
+      }
       catch (MBeanException _mbe)
       {
-         log.error ("Starting "+m.name+" failed!");
-         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
+         log.error ("Starting "+moduleName+" failed!");
+         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
       }
       catch (RuntimeErrorException e)
       {
-         log.error ("Starting "+m.name+" failed!");
-         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + e.getTargetError ().getMessage (), e.getTargetError ());
+         log.error ("Starting "+moduleName+" failed!");
+         e.getTargetError().printStackTrace();
+         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + e.getTargetError ().getMessage (), e.getTargetError ());
       }
       catch (RuntimeMBeanException e)
       {
-         log.error ("Starting "+m.name+" failed!");
+         log.error ("Starting "+moduleName+" failed!");
          e.getTargetException ().printStackTrace();
-         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + e.getTargetException ().getMessage (), e.getTargetException ());
+         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + e.getTargetException ().getMessage (), e.getTargetException ());
       }
       catch (JMException _jme)
       {
