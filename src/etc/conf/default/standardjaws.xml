@@ -10,7 +10,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.28 2002/05/10 01:31:37 danch Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.29 2002/05/21 14:53:36 starksm Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -1071,7 +1071,7 @@
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
 	    <jdbc-type>BIT</jdbc-type>
-	    <sql-type>FIXED(1,0)</sql-type>
+	    <sql-type>BOOLEAN</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.lang.Float</java-type>

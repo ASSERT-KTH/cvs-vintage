@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.27 2002/05/14 18:05:55 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.28 2002/05/21 14:53:36 starksm Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -1617,7 +1617,7 @@
          <mapping>
             <java-type>java.lang.Boolean</java-type>
             <jdbc-type>BIT</jdbc-type>
-            <sql-type>FIXED(1,0)</sql-type>
+            <sql-type>BOOLEAN</sql-type>
          </mapping>
          <mapping>
             <java-type>java.lang.Float</java-type>
