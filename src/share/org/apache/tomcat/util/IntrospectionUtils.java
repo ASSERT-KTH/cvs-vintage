@@ -185,7 +185,10 @@ public final class IntrospectionUtils {
 	    if( path.endsWith( jarName ) ) {
 		home=path.substring( 0, path.length() - jarName.length() );
 		try {
-		    File f=new File( home );
+                    if( "".equals(home) ) {
+                        home=new File("./").getCanonicalPath();
+                    }
+                    File f=new File( home );
 		    File f1=new File ( f, "..");
 		    install = f1.getCanonicalPath();
 		    if( installSysProp != null )
@@ -472,9 +475,24 @@ public final class IntrospectionUtils {
     public static void addToolsJar( Vector v )
     {
 	try {
-	    v.addElement( new URL( "file", "" ,
-				   System.getProperty( "java.home" ) +
-				   "/../lib/tools.jar"));
+            // Add tools.jar in any case
+            File f=new File( System.getProperty( "java.home" ) +
+                             "/../lib/tools.jar");
+
+            if( ! f.exists() ) {
+                // On some systems java.home gets set to the root of jdk.
+                // That's a bug, but we can work around and be nice.
+                f=new File( System.getProperty( "java.home" ) +
+                                 "/lib/tools.jar");
+                if( f.exists() ) {
+                    System.out.println("Detected strange java.home value " +
+                                       System.getProperty( "java.home" ) +
+                                       ", it should point to jre");
+                }
+            }
+            URL url=new URL( "file", "" , f.getAbsolutePath() );
+
+	    v.addElement( url );
 	} catch ( MalformedURLException ex ) {
 	    ex.printStackTrace();
 	}
