@@ -17,22 +17,29 @@ package org.columba.mail.folder.command;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
+import org.columba.core.print.cHTMLPart;
 import org.columba.core.print.cLine;
 import org.columba.core.print.cParagraph;
 import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
+import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
@@ -40,11 +47,13 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.util.MailResourceLoader;
+
 
 /**
  * @author freddy
@@ -264,15 +273,96 @@ public class PrintMessageCommand extends FolderCommand {
 	 */
 	private cPrintObject getPlainBodyPrintObject(MimePart bodyPart) {
 
+		// decode message body with respect to charset
+		String decodedBody = getDecodedMessageBody(bodyPart);
+		// create a print object and return it
+		cParagraph printBody = new cParagraph();
+		printBody.setTopMargin(new cCmUnit(1.0));
+		printBody.setText(decodedBody);
+		return printBody;
+	}
+	
+	/**
+	 * Private utility to create a print object representing the 
+	 * body of a html message.<br>
+	 * Precondition: Mime subtype is "html".
+	 * 
+	 * NB: HTML printing is still only experimental
+	 *
+	 * @param	bodyPart	Body part of message
+	 * @return	Print object ready to be appended to the print document
+	 * @author	Karl Peder Olesen (karlpeder), 20030531
+	 */
+	private cPrintObject getHTMLBodyPrintObject(MimePart bodyPart) {
+
+		ColumbaLogger.log.info("HTML message - print support is EXPERIMENTAL!!!");
+
+		// decode message body with respect to charset
+		String decodedBody = getDecodedMessageBody(bodyPart);
+		
+		// try to fix broken html-strings
+		DocumentParser parser = new DocumentParser();
+		String validated = parser.validateHTMLString(decodedBody);
+		ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+
+		// TODO: karlpeder: Find the right way to load html body!!!
+
+		try {
+			// create temporary file and save validated body
+			File tempFile = TempFileStore.createTempFileWithSuffix("html");
+			DiskIO.saveStringInFile(tempFile, validated);
+			URL url = tempFile.toURL();
+			cHTMLPart htmlBody = new cHTMLPart();
+			htmlBody.setHTML(url);
+			return htmlBody;
+		}
+		catch (MalformedURLException e) {
+			ColumbaLogger.log.error("Error loading html for print", e);
+			return null;
+		}
+		catch (IOException e) {
+			ColumbaLogger.log.error("Error loading html for print", e);
+			return null;
+		}
+/*
+		// create a HTMLDocument from the validated message body
+		HTMLDocument doc;
+		try {
+			HTMLEditorKit kit = new HTMLEditorKit();
+			Reader in = new BufferedReader(new StringReader(validated));
+			doc = (HTMLDocument) kit.createDefaultDocument();
+			kit.read(in, doc, 0);
+		}
+		catch (BadLocationException e) {
+			ColumbaLogger.log.error("Error loading html from message body", e);
+			return null;
+		}
+		catch (IOException e) {
+			ColumbaLogger.log.error("Error loading html from message body", e);
+			return null;
+		}
+	
+		// create a print object and return it
+		cHTMLPart htmlBody = new cHTMLPart();
+		htmlBody.setHTML(doc);
+		return htmlBody;
+*/
+	}
+	
+	/**
+	 * Private utility to decode the message body with the proper charset
+	 * @param	bodyPart	The body of the message
+	 * @return	Decoded message body
+	 * @author 	Karl Peder Olesen (karlpeder), 20030601
+	 */
+	private String getDecodedMessageBody(MimePart bodyPart)	{
 		// First determine which charset to use
 		String charsetToUse;	
-		if (charset.equals("auto"))
-		{
+		if (charset.equals("auto")) {
 			// get charset from message
 			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
 		}
-		else
-		{
+		else {
 			charsetToUse = charset;
 		}
 		
@@ -295,32 +385,8 @@ public class PrintMessageCommand extends FolderCommand {
 				never.printStackTrace();
 			}
 		}
-		
-		// create a print object and return it
-		cParagraph printBody = new cParagraph();
-		printBody.setTopMargin(new cCmUnit(1.0));
-		printBody.setText(decodedBody);
-		return printBody;
-
-	}
 	
-	/**
-	 * Private utility to create a print object representing the 
-	 * body of a html message.<br>
-	 * Precondition: Mime subtype is "html".
-	 * 
-	 * NB: HTML printing still not supported
-	 *
-	 * @param	bodyPart	Body part of message
-	 * @return	Print object ready to be appended to the print document
-	 * @author	Karl Peder Olesen (karlpeder), 20030531
-	 */
-	private cPrintObject getHTMLBodyPrintObject(MimePart bodyPart) {
-		ColumbaLogger.log.info("HTML message - print still not supported");
-		cParagraph dummyBody = new cParagraph();
-		dummyBody.setTopMargin(new cCmUnit(1.0));
-		dummyBody.setText("HTML print still not supported, sorry!");
-		return dummyBody;
+		return decodedBody;
 	}
 
 }
