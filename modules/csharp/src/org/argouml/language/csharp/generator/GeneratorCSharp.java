@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.32 2005/02/02 21:18:10 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.33 2005/02/08 22:15:49 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1569,7 +1569,15 @@ public class GeneratorCSharp extends Generator2
      * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
-        return generateState(actionState);
+        String ret = "";
+        Object action = Model.getFacade().getEntry(actionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = generateExpression(expression);
+            }
+        }
+        return ret;
     }
 
     private String generateImports(Object cls, String packagePath) {

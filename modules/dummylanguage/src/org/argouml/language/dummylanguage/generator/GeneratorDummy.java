@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.12 2005/02/02 21:18:09 mvw Exp $
+// $Id: GeneratorDummy.java,v 1.13 2005/02/08 22:15:48 mvw Exp $
 // Copyright (c) 2001-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,7 +243,15 @@ public final class GeneratorDummy
      * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
-        return "ActionState(" + Model.getFacade().getName(actionState) + ")";
+        String ret = "";
+        Object action = Model.getFacade().getEntry(actionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = generateExpression(expression);
+            }
+        }
+        return ret;
     }
 
 

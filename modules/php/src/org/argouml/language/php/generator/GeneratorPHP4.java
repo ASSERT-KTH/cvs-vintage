@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.23 2005/02/02 21:18:13 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.24 2005/02/08 22:15:48 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1886,6 +1886,14 @@ public class GeneratorPHP4
      * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
-        return generateState(actionState);
+        String ret = "";
+        Object action = Model.getFacade().getEntry(actionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = generateExpression(expression);
+            }
+        }
+        return ret;
     }
 }

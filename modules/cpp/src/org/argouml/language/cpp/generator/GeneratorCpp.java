@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.42 2005/02/07 19:07:00 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.43 2005/02/08 22:15:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2790,6 +2790,14 @@ public class GeneratorCpp extends Generator2
      * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
      */
     public String generateActionState(Object actionState) {
-        return generateState(actionState);
+        String ret = "";
+        Object action = Model.getFacade().getEntry(actionState);
+        if (action != null) {
+            Object expression = Model.getFacade().getScript(action);
+            if (expression != null) {
+                ret = generateExpression(expression);
+            }
+        }
+        return ret;
     }
 } /* end class GeneratorCpp */
