@@ -1,4 +1,4 @@
-// $Id: ClassifierEndCodePiece.java,v 1.11 2003/09/06 01:00:39 bobtarling Exp $
+// $Id: ClassifierEndCodePiece.java,v 1.12 2003/09/08 13:39:19 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,7 @@ import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MInterface;
-import ru.novosoft.uml.foundation.core.MModelElement;
 /**
    This code piece represents the end of a class or an interface.
 */
@@ -114,7 +112,7 @@ public class ClassifierEndCodePiece extends NamedCodePiece
 
         // Insert new features
         for (Iterator i = newFeatures.iterator(); i.hasNext(); ) {
-            MFeature mFeature = (MFeature) i.next();
+            Object mFeature = /*(MFeature)*/ i.next();
             if (ModelFacade.isAOperation(mFeature)) {
                 CodeGenerator.generateOperation(mFeature,
 						mClassifier, reader, writer);
@@ -127,11 +125,10 @@ public class ClassifierEndCodePiece extends NamedCodePiece
 
         // Insert new inner classes
         for (Iterator i = newInnerClasses.iterator(); i.hasNext(); ) {
-            MModelElement element = (MModelElement) i.next();
+            Object element = /*(MModelElement)*/ i.next();
             if (ModelFacade.isAClass(element)) {
                 CodeGenerator.generateClass((MClass) element, reader, writer);
-            }
-            else if (ModelFacade.isAInterface(element)) {
+            } else if (ModelFacade.isAInterface(element)) {
 		CodeGenerator.generateInterface((MInterface) element,
 						reader, writer);
             }

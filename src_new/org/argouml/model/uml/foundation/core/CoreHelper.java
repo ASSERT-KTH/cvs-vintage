@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.67 2003/09/06 00:53:58 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.68 2003/09/08 13:39:20 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -388,9 +388,9 @@ public class CoreHelper {
      * @param cls  the class you want to have the interfaces for
      * @return a collection of the Interfaces
      */
-    public Collection getSpecifications(MClassifier cls) {
+    public Collection getSpecifications(Object classifier) {
         Collection result = new Vector();
-        Collection deps = cls.getClientDependencies();
+        Collection deps = ((MClassifier)classifier).getClientDependencies();
         Iterator depIterator = deps.iterator();
         while (depIterator.hasNext()) {
             Object dep = depIterator.next();

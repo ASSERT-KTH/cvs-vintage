@@ -1,4 +1,4 @@
-// $Id: ClassCodePiece.java,v 1.10 2003/08/30 14:40:24 alexb Exp $
+// $Id: ClassCodePiece.java,v 1.11 2003/09/08 13:39:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,12 +109,12 @@ public class ClassCodePiece extends NamedCodePiece
                       Stack parseStateStack) throws Exception
     {
 	ParseState parseState = (ParseState) parseStateStack.peek();
-	MClass mClass = (MClass) parseState.newClassifier(name);
+	Object mClass = /*(MClass)*/ parseState.newClassifier(name);
 
 	if (mClass != null) {
 	    parseStateStack.push(new ParseState(mClass));
 	    StringBuffer sbText =
-		GeneratorJava.getInstance().generateClassifierStart(mClass);
+		GeneratorJava.getInstance().generateClassifierStart((MClass)mClass);
 	    if (sbText != null) {
 		writer.write (sbText.toString());
 	    }

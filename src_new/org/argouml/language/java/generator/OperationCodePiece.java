@@ -1,5 +1,4 @@
-
-// $Id: OperationCodePiece.java,v 1.10 2003/08/30 14:40:24 alexb Exp $
+// $Id: OperationCodePiece.java,v 1.11 2003/09/08 13:39:19 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +35,8 @@ import java.io.BufferedWriter;
 import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
+import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MOperation;
 
 /**
@@ -132,15 +131,13 @@ public class OperationCodePiece extends NamedCodePiece
         boolean found = false;
 
         for (Iterator j = features.iterator(); j.hasNext() && !found; ) {
-            MFeature feature = (MFeature) j.next();
-            if (feature.getName().equals(name)
-		&& org.argouml.model.ModelFacade.isAOperation(feature)) 
-	    {
+            Object feature = /*(MFeature)*/ j.next();
+            if (ModelFacade.getName(feature).equals(name) && ModelFacade.isAOperation(feature)) {
                 found = true;
                 parseState.newFeature(feature);
-                MOperation mOperation = (MOperation) feature;
+                Object mOperation = /*(MOperation)*/ feature;
                 writer.write(GeneratorJava.getInstance()
-			     .generateOperation(mOperation, true));
+			     .generateOperation((MOperation)mOperation, true));
             }
         }
         if (found) {

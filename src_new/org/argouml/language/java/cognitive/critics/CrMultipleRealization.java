@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.6 2003/08/30 14:40:24 alexb Exp $
+// $Id: CrMultipleRealization.java,v 1.7 2003/09/08 13:39:19 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.6 2003/08/30 14:40:24 alexb Exp $
+// $Id: CrMultipleRealization.java,v 1.7 2003/09/08 13:39:19 bobtarling Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -35,8 +35,6 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.uml.cognitive.critics.CrUML;
 import org.argouml.model.uml.UmlHelper;
-
-import ru.novosoft.uml.foundation.core.MInterface;
 
 // related to issue 570
 
@@ -53,7 +51,7 @@ public class CrMultipleRealization extends CrUML {
 
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(org.argouml.model.ModelFacade.isAInterface(dm))) return NO_PROBLEM;
-	MInterface inter = (MInterface) dm;
+	Object inter = /*(MInterface)*/ dm;
    
 	Collection realize =
 	    UmlHelper.getHelper().getCore().getSpecifications(inter);
