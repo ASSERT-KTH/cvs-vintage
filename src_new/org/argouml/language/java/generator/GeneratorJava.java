@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.45 2002/10/25 04:46:43 mkl Exp $
+// $Id: GeneratorJava.java,v 1.46 2002/10/25 05:30:04 mkl Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -227,6 +227,7 @@ implements PluggableNotation, FileGenerator {
       		sb.append(INDENT).append(s);
     	sb.append('\n').append(INDENT);
     }
+
     // 2002-07-14
     // Jaap Branderhorst
     // missing concurrency generation
@@ -276,11 +277,13 @@ implements PluggableNotation, FileGenerator {
   public String generateAttribute (MAttribute attr, boolean documented) {
     StringBuffer sb = new StringBuffer(80);
 
-    String s = generateConstraintEnrichedDocComment(attr,documented,INDENT);
-    if (s != null && s.trim().length() > 0)
-      sb.append('\n').append(INDENT).append(s);
-
-    sb.append(INDENT);
+    if (documented) {
+        String s = 
+            generateConstraintEnrichedDocComment(attr,documented,INDENT);
+        if (s != null && s.trim().length() > 0)
+            sb.append('\n').append(INDENT).append(s);
+        sb.append(INDENT);
+    }
     sb.append(generateVisibility(attr));
     sb.append(generateScope(attr));
     sb.append(generateChangability(attr));
