@@ -126,6 +126,11 @@ public class IMAPFolder extends RemoteFolder {
     }
 
     public void setName(String name) {
+        if(getName() == null) {  // if creating new folder
+            super.setName(name);
+            return;
+        }
+        
         try {
             String oldPath = getImapPath();
             LOG.info("old path=" + oldPath);
