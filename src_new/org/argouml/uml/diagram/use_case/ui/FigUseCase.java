@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.3 2002/05/03 19:17:04 jeremybennett Exp $
+// $Id: FigUseCase.java,v 1.4 2002/06/09 14:48:56 linus Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -1368,8 +1368,12 @@ public class FigUseCase extends FigNodeModelElement {
                 }
 
                 // Now put the text in
-
-                epFig.setText(Notation.generate(this, ep));
+		// We must handle the case where the text is null
+		String epText = Notation.generate(this, ep);
+		if (epText == null) {
+		    epText = "";
+		}
+                epFig.setText(epText);
                 epFig.setModelElement(ep);
 
                 epCount++;

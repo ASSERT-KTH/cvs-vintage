@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.13 2002/05/03 19:17:07 jeremybennett Exp $
+// $Id: GeneratorDisplay.java,v 1.14 2002/06/09 14:48:56 linus Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -72,7 +72,7 @@ implements PluggableNotation {
   public static GeneratorDisplay getInstance() { return SINGLETON; }
 
 
-  public GeneratorDisplay() {
+  private GeneratorDisplay() {
      super(Notation.makeNotation("Uml", "1.3",
                 Argo.lookupIconResource("UmlNotation")));
   }

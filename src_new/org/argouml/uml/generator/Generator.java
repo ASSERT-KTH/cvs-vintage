@@ -24,7 +24,7 @@
 // File: Generator.java
 // Classes: Generator
 // Original Author:
-// $Id: Generator.java,v 1.9 2002/05/03 19:17:07 jeremybennett Exp $
+// $Id: Generator.java,v 1.10 2002/06/09 14:48:56 linus Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -68,8 +68,14 @@ implements NotationProvider {
 
   public final static String fileSep=System.getProperty("file.separator");
 
+    private static Map s_generators = new HashMap();
+    public static Generator getGenerator(NotationName n) {
+	return (Generator)s_generators.get(n);
+    }
+
   public Generator(NotationName notationName) {
       _notationName = notationName;
+      s_generators.put(_notationName, this);
   }
 
   public NotationName getNotation() {
@@ -177,6 +183,7 @@ implements NotationProvider {
 	   NotationHelper.getRightGuillemot();
   }
 
+    // Module stuff
   public boolean isModuleEnabled() { return true; }
   public Vector getModulePopUpActions(Vector v, Object o) { return null; }
   public boolean shutdownModule() { return true; }
