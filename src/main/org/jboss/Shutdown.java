@@ -24,13 +24,13 @@ import gnu.getopt.LongOpt;
 
 import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
 import org.jboss.system.server.Server;
-import org.jboss.system.server.ServerImpl;
+import org.jboss.system.server.ServerImplMBean;
 import org.jnp.interfaces.NamingContext;
 
 /**
  * A JMX client that uses an RMIAdaptor to shutdown a remote JBoss server.
  *
- * @version <tt>$Revision: 1.16 $</tt>
+ * @version <tt>$Revision: 1.17 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -93,7 +93,7 @@ public class Shutdown
       String adapterName = "jmx/rmi/RMIAdaptor";
       String username = null;
       String password = null;
-      ObjectName serverJMXName = ServerImpl.OBJECT_NAME;
+      ObjectName serverJMXName = ServerImplMBean.OBJECT_NAME;
       boolean exit = false;
       boolean halt = false;
       int exitcode = -1;
