@@ -85,8 +85,8 @@ public class AttributePeer
     /**
      *  Gets a List of all of the Attribute objects in the database.
      */
-    public static List getAllAttributes(String sortColumn, 
-                                        String sortPolarity)
+    public static List getAttributes(String attributeType,
+                                     String sortColumn, String sortPolarity)
         throws Exception
     {
         List result = null;
@@ -95,6 +95,18 @@ public class AttributePeer
         {        
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
+            // add user type criteria  - user or data (non-user)
+            if (attributeType.equals("user"))
+            {
+                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                         AttributeTypePeer.USER_TYPE_KEY);
+            }
+            else
+            {
+                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                         AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL);
+            }
+            // sort criteria
             if (sortColumn.equals("desc"))
             {
                 addSortOrder(crit, AttributePeer.DESCRIPTION, 
@@ -130,6 +142,37 @@ public class AttributePeer
                 
         ScarabCache.put(result, ATTRIBUTE_PEER, GET_ALL_ATTRIBUTES);
         return result;
+    }
+
+    /**
+     *  Gets a List of all of the Attribute objects in the database.
+     *  Sorts on selected column.
+     */
+    public static List getAttributes()
+        throws Exception
+    {
+        return getAttributes("data", AttributePeer.ATTRIBUTE_NAME, "asc");
+    }
+
+    /**
+     *  Gets a List of Attribute objects in the database.
+     */
+    public static List getAttributes(String attributeType)
+        throws Exception
+    {
+        return getAttributes(attributeType, AttributePeer.ATTRIBUTE_NAME, 
+                             "asc");
+    }
+
+    /**
+     *  Gets a List of data Attribute objects in the database.
+     *  Sorts on selected column.
+     */
+    public static List getAttributes(String sortColumn, 
+                                     String sortPolarity)
+        throws Exception
+    {
+        return getAttributes("data", sortColumn, sortPolarity);
     }
 
     private static List sortAttributesByCreatingUser(List result,
@@ -173,47 +216,4 @@ public class AttributePeer
         return crit;
     }
 
-    /**
-     *  Gets a List of all of the Attribute objects in the database.
-     *  Sorts on selected column.
-     */
-    public static List getAllAttributes()
-        throws Exception
-    {
-        return getAllAttributes(AttributePeer.ATTRIBUTE_NAME, "asc");
-    }
-
-    /**
-     *  Gets a List of all of the Attribute objects in the database.
-     */
-    public static List getAttributes(String attributeType)
-        throws Exception
-    {
-        List result = null;
-        Object obj = ScarabCache.get(ATTRIBUTE_PEER, GET_ATTRIBUTES, 
-                                     attributeType); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria();
-            crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
-            if (attributeType.equals("user"))
-            {
-                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
-                         AttributeTypePeer.USER_TYPE_KEY);
-            }
-            else
-            {
-                crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
-                         AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL);
-            }
-            result = doSelect(crit);
-            ScarabCache.put(result, ATTRIBUTE_PEER, GET_ATTRIBUTES, 
-                                     attributeType);
-        }
-        else 
-        {
-            result = (List)obj;
-        }
-        return result;
-    }
 }
