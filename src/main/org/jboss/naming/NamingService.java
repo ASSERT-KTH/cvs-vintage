@@ -7,6 +7,7 @@
 package org.jboss.naming;
 
 import java.io.InputStream;
+import java.net.UnknownHostException;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -28,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -70,6 +71,24 @@ public class NamingService
    public int getRmiPort()
    {
       return naming.getRmiPort();
+   }
+
+   public String getBindAddress()
+   {
+      return naming.getBindAddress();
+   }
+   public void setBindAddress(String host) throws UnknownHostException
+   {
+      naming.setBindAddress(host);
+   }
+
+   public int getBacklog()
+   {
+      return naming.getBacklog();
+   }
+   public void setBacklog(int backlog)
+   {
+      naming.setBacklog(backlog);
    }
 
     public String getClientSocketFactory()
@@ -165,4 +184,5 @@ public class NamingService
 
    // Protected -----------------------------------------------------
 }
+
 

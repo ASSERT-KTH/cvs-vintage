@@ -47,7 +47,7 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -314,7 +314,6 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         public void loadProperties(String contextPropsURL) throws IOException
         {
             InputStream is = null;
-            IOException ex = null;
             contextProps = new Properties();
 
             // See if this is a URL we can load
@@ -328,14 +327,11 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
             catch(IOException e)
             {   // Failed, try to locate a classpath resource below
                 is = null;
-                ex = e;
             }
 
             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(contextPropsURL);
             if( is == null )
             {
-                if( ex != null )
-                    throw ex;
                 throw new IOException("Failed to locate context props as URL or resource:"+contextPropsURL);
             }
             contextProps.load(is);
