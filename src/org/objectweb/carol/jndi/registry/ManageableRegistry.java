@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.4 2005/03/11 14:03:35 benoitf Exp $
+ * $Id: ManageableRegistry.java,v 1.5 2005/03/15 09:55:13 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -228,9 +228,11 @@ public class ManageableRegistry extends RegistryImpl {
     public static Registry createManagableRegistry(int port, int objectPort) throws RemoteException {
         // used fixed port factory only if user want set the port
         if (objectPort > 0) {
-            RMIFixedPortFirewallSocketFactory.register(objectPort);
+            RMISocketFactory socketFactory = RMIFixedPortFirewallSocketFactory.register(objectPort);
+            return new ManageableRegistry(port, socketFactory, socketFactory);
+        } else {
+            return new ManageableRegistry(port);
         }
-        return new ManageableRegistry(port);
     }
 
     /**
