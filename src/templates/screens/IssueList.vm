@@ -147,7 +147,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
   <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
 #end
-<input type="submit" value="View verbose" name="eventSubmit_doViewselected" />&#160;
+<input type="submit" value="View verbose" name="eventSubmit_doViewall" />&#160;
 <small>all</small>&#160;
 </div>
         

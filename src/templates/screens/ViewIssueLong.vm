@@ -5,10 +5,15 @@
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 
+#foreach ($issueid in $issueList)
+$issueid
+#end
+
 #if ($issueList.size() > $resultsPerPage)
    #set ($paginated = "true")
    #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
+
 
 #if ($issueList)
 ## PAGINATION
@@ -24,10 +29,15 @@
     | <a href="$nextLink">&raquo;</a> next
   #end
 #end
+
   #set ($currentModule = $scarabR.CurrentModule)
   #foreach ($issueId in $issueList)
      #set ($currentIssue = $scarabR.getIssueByPk($issueId.toString()))
   <form method="post" action="$action">
+$intake.newForm()
+    #foreach ($issueId in $issueList)
+        <input type="hidden" name="issue_ids" value="$issueId">
+    #end
     <input type="hidden" name="id" value="$currentIssue.UniqueId">
     <input type="hidden" name="resultsPerPage" value="$resultsPerPage">
     #viewIssue ($currentIssue $currentModule)
