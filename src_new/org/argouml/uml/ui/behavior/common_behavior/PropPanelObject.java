@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.24 2003/09/01 11:51:07 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.25 2003/09/12 19:09:47 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.24 2003/09/01 11:51:07 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.25 2003/09/12 19:09:47 jjones Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -139,7 +139,25 @@ public class PropPanelObject extends PropPanelModelElement {
 	    if (element != null) {
 	    	classifiers.add(element);
 	    }
-	    inst.setClassifiers(classifiers);
+        
+        boolean changed = false;
+        if (inst.getClassifiers() == null 
+            || classifiers.size() != inst.getClassifiers().size()) {
+            changed = true;
+        }
+        else {
+            Iterator iter1 = classifiers.iterator();
+            Iterator iter2 = inst.getClassifiers().iterator();
+            while (!changed && iter1.hasNext()) {
+                if (!(iter1.next().equals(iter2.next()))) {
+                    changed = true;
+                }
+            }
+        }
+                        
+        if (changed) {
+            inst.setClassifiers(classifiers);
+        }
         }
 	/*
 	//            ((MInstance) target).setClassifier((MClassifier) element);
