@@ -29,22 +29,39 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Select</th>
-<th>Issue type name</th>
+<th>Name</th>
 <th>Active</th>
 <th>Show in left hand nav</th>
 <th>Sequence #</th>
 </tr>
 
 #foreach ($rmit in $rmits)
-#set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
-#indexedRows($velocityCount)
-<td><input type="checkbox" name="delete_$rmit.IssueTypeId"/></td>
-<td>$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("#if ($rmit.DisplayName)${rmit.DisplayName}#else${rmit.IssueType.Name}#end")</td>
-<td>#booleanCheckbox ($rmitGroup.Active)</td>
-<td>#booleanCheckbox ($rmitGroup.Display)</td>
-<td>#numericSelect( $rmitGroup.Order.Key 1 5 $rmit.Order 1 )</td>
-</tr>        
+  #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+  #indexedRows($velocityCount)
+  <td><input type="checkbox" name="delete_${rmit.IssueTypeId}"/></td>
+  #if ($rmit.DisplayName)
+    #set ($label = $rmit.DisplayName)
+  #else
+    #set ($label = $rmit.IssueType.Name)
+  #end
+
+  <td>$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("$label")</td>
+  <td>#booleanCheckbox($rmitGroup.Active)</td>
+  <td>#booleanCheckbox($rmitGroup.Display)</td>
+  <td>
+  
+### FIXME: can't use the macro below because of a bug in Velocity 1.4-dev
+<select name="$rmitGroup.Order.Key" size="1">
+#foreach ($i in [1..$rmits.size()])
+<option value="$i" #if ($i==$rmit.Order)selected="selected" #end>$i</option>
 #end
+</select>
+
+##  #numericSelect($rmitGroup.Order.Key 1 $rmits.size() $rmit.Order 1)
+  </td>
+  </tr>
+#end
+
 </table>
 
 <div class="functnbar3">
@@ -56,6 +73,7 @@
 </div>
 
 #end
+
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
