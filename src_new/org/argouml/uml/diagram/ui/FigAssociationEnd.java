@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.6 2005/01/31 19:06:00 mvw Exp $
+// $Id: FigAssociationEnd.java,v 1.7 2005/02/09 21:40:27 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,12 +183,13 @@ public class FigAssociationEnd extends FigEdgeModelElement {
 
         multiToUpdate.setText(Notation.generate(this, multi));
         orderingToUpdate.setText(getOrderingName(order));
+        String n = Notation.generate(this, name);
+        if (n.length() < 1) visi = ""; //temporary solution for issue 1011
         if (stereo != null) {
             roleToUpdate.setText(Notation.generate(this, stereo)
-                    + " " + visi
-                    + Notation.generate(this, name));
+                    + " " + visi + n);
         } else {
-            roleToUpdate.setText(visi + Notation.generate(this, name));
+            roleToUpdate.setText(visi + n);
         }
     }
 
