@@ -24,7 +24,7 @@
 // File: SnoozeOrder.java
 // Classes: SnoozeOrder
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SnoozeOrder.java,v 1.2 2000/11/29 07:45:15 carnold Exp $
+// $Id: SnoozeOrder.java,v 1.3 2001/10/22 15:53:34 thierrylach Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -85,7 +85,7 @@ public class SnoozeOrder implements java.io.Serializable {
     long now = (new Date()).getTime();
     _snoozeUntil.setTime(now + _interval);
     _snoozeAgain.setTime(now + _interval + _initialIntervalMS);
-    System.out.println("Setting snooze order to: " +
+    Critic.cat.info("Setting snooze order to: " +
 		       _snoozeUntil.toString());
   }
 
