@@ -88,11 +88,11 @@
 
 
 #if ($attribute.AttributeType.AttributeClass.Name.equals("select-one"))
-#datatitle ("Attribute Options")
+#datatitle ("Attribute options")
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())
 
-<table width="70%" border="0" cellspacing="2" cellpadding="2">
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 #if ($maxNum > 0)
  <th>Deleted</th>
@@ -177,7 +177,7 @@
 <input type="submit" value="Delete selected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
 
-<p><small>Please note: Once created, Attribute Options cannot be deleted
+<p><small>Please note: Once created, Attribute options cannot be deleted
 from the database. They can only be marked as deleted and will always
 show up in the list above (but will not show up in the application
 itself). Therefore, please use caution when creating new Attribute
