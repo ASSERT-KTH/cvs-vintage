@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.9 2005/03/10 12:21:46 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.10 2005/03/15 09:52:52 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -134,7 +134,7 @@ public class JacORBCosNaming extends AbsRegistry implements NameService {
                 int iiopSslPort = PortNumber.strToint(getConfigProperties().getProperty(propertyName,
                         String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
                 if (iiopSslPort > 0) {
-                    TraceCarol.infoCarol("Using SSL IIOP port number '" + iiopSslPort + "'.");
+                    TraceCarol.debugCarol("Using SSL IIOP port number '" + iiopSslPort + "'.");
                     System.setProperty("OASSLPort", String.valueOf(iiopSslPort));
                 }
             } else {
