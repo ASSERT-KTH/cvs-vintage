@@ -426,9 +426,10 @@
 #end
 
 #macro (paginateWithSearch $resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "ViewIssue.vm"))
  <p class="paginate">
  #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.PrevPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField))
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.PrevPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField).addPathInfo($scarabG.Constant.CANCEL_TEMPLATE, $cancelTemplate))
  #foreach ($parameter in $parameters)
    #set ($paramKey = $parameter.get(0))
    #if ($paramKey.length() > 0)
@@ -439,7 +440,8 @@
  #end
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.NextPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField))
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage.toString()").addPathInfo("pageNum", "$scarabR.NextPage").addPathInfo("sortColumn", "$sortColumn").addPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()).addPathInfo("searchString", $searchString).addPathInfo("searchField", $searchField).addPathInfo($scarabG.Constant.CANCEL_TEMPLATE, $cancelTemplate))
+ 
  #foreach ($parameter in $parameters)
    #set ($paramKey = $parameter.get(0))
    #if ($paramKey.length() > 0)
