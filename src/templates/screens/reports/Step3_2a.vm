@@ -43,7 +43,6 @@
 </table>
 </div>
 
-#addReportHiddenInputs($report "reports,Step3_2a.vm")
 $intake.declareGroups()
 </form>
 </div>

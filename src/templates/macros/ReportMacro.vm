@@ -82,6 +82,7 @@
 #end
 
 
+#*
 #macro ( addReportHiddenInputs $report $template)
 
 #set ( $ir = $intake.Report.mapTo($report) )
@@ -161,7 +162,7 @@
 #end
 
 #end
-
+*#
 
 #macro (wizardLinks $template $reportParameters $link)
 <div class="tabs">

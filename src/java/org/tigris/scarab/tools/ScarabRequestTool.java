@@ -1474,26 +1474,62 @@ try{
     {
         if ( reportGenerator == null ) 
         {
+            String key = data.getParameters()
+                .getString(ScarabConstants.CURRENT_REPORT);
             ValueParser parameters = data.getParameters();
             String id = parameters.getString("report_id");
             if ( id == null || id.length() == 0 ) 
             {
-                reportGenerator = new Report();
-                reportGenerator.setModule(getCurrentModule());
-                reportGenerator.setGeneratedBy((ScarabUser)data.getUser());
-                reportGenerator.setIssueType(getCurrentIssueType());
-                reportGenerator
-                    .setQueryString(getReportQueryString(parameters));
+                if ( key == null ) 
+                {
+                    reportGenerator = getNewReport();
+                }
+                else 
+                {
+                    reportGenerator = ((ScarabUser)data.getUser())
+                        .getCurrentReport(key);
+                    
+                    // if reportingIssue is still null, the parameter must have
+                    // been stale, just get a new issue
+                    if ( reportGenerator == null ) 
+                    {
+                        reportGenerator = getNewReport();                    
+                    }
+                }                
             }
             else 
             {
-                reportGenerator = ReportPeer.retrieveByPK(new NumberKey(id));
-                reportGenerator
-                    .setQueryString(getReportQueryString(parameters));
+                reportGenerator = 
+                    ReportPeer.retrieveByPK(new NumberKey(id));
+                //reportGenerator
+                //    .setQueryString(getReportQueryString(parameters));
+                System.out.println("Old key " + key); 
+                key = ((ScarabUser)data.getUser())
+                    .setCurrentReport(reportGenerator);
+                data.getParameters()
+                    .remove(ScarabConstants.CURRENT_REPORT);
+                data.getParameters()
+                    .add(ScarabConstants.CURRENT_REPORT, key);
+                System.out.println("Set new report " + key + " = " + 
+                                   reportGenerator);
             }
         }
         
         return reportGenerator;
+    }
+
+    private Report getNewReport()
+        throws Exception
+    {
+        Report report  = new Report();
+        report.setModule(getCurrentModule());
+        report.setGeneratedBy((ScarabUser)data.getUser());
+        report.setIssueType(getCurrentIssueType());
+
+        String key = ((ScarabUser)data.getUser()).setCurrentReport(report);
+        data.getParameters().add(ScarabConstants.CURRENT_REPORT, key);
+
+        return report;
     }
 
     public void setReport(Report report)
@@ -1501,6 +1537,7 @@ try{
         this.reportGenerator = report;
     }
     
+    /*
     private static String getReportQueryString(ValueParser params) 
     {
         StringBuffer query = new StringBuffer();
@@ -1521,6 +1558,7 @@ try{
          }
          return query.toString();
     }
+    */
 
     public List getUserSearchResults()  throws Exception
     {

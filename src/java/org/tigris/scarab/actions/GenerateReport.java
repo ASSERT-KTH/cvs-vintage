@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.12 2002/01/18 22:26:02 jon Exp $
+    @version $Id: GenerateReport.java,v 1.13 2002/02/23 19:30:27 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -131,6 +131,8 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
+            //Group g = intake.get("Report", report.getQueryKey(), false);
+            //g.setProperties(report);
             setTarget(data, "reports,Step2b.vm");
         }
         else 
@@ -146,6 +148,8 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
+            //Group g = intake.get("Report", report.getQueryKey(), false);
+            //g.setProperties(report);
             setTarget(data, "reports,Step3_1a.vm");
         }
         else 
@@ -163,6 +167,12 @@ public class GenerateReport
         {
             // add new option group
             List groups = report.getOptionGroups();
+            if (groups == null) 
+            {
+                groups = new ArrayList();
+                report.setOptionGroups(groups);
+            }
+            
             Report.OptionGroup group = report.getNewOptionGroup();
             Group intakeGroup = intake.get("OptionGroup", 
                                            group.getQueryKey(), false);
@@ -207,7 +217,9 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
+            
             setTarget(data, "reports,Step3_1a.vm");
+            intake.removeAll();
         }
         else 
         {
@@ -223,6 +235,7 @@ public class GenerateReport
         if ( intake.isAllValid() ) 
         {
             setTarget(data, "reports,Step3_1b.vm");
+            intake.removeAll();
         }
         else 
         {
@@ -238,6 +251,7 @@ public class GenerateReport
         if ( intake.isAllValid() ) 
         {
             setTarget(data, "reports,Report_1.vm");
+            intake.removeAll();
         }
         else 
         {
@@ -253,6 +267,7 @@ public class GenerateReport
         if ( intake.isAllValid() ) 
         {
             setTarget(data, "reports,Step3_2b.vm");
+            intake.removeAll();
         }
         else 
         {
@@ -312,6 +327,7 @@ public class GenerateReport
         if ( intake.isAllValid() ) 
         {
             setTarget(data, "reports,Report_1.vm");
+            intake.removeAll();
         }
         else 
         {
@@ -408,157 +424,9 @@ public class GenerateReport
                                    RunData data, TemplateContext context)
        throws Exception
     {
-        Report report = null;
-        IntakeTool intake = getIntakeTool(context);
-
-        if ( !intake.isAllValid() ) 
-        {
-            data.setMessage("Please check data");
-        }
-
         ScarabRequestTool scarabR = getScarabRequestTool(context); 
-        report = scarabR.getReport();
-
-        // add a value parser to the context that can be used to build
-        // links for forwarding report data
-        ValueParser vp = getReportParameters(report, template, data, context);
-        intake.addGroupsToParameters(vp);
-        context.put("reportParameters", vp);
+        Report report = scarabR.getReport();
+        report.populate(data.getParameters());
         return report;
-    }
-
-    private ValueParser getReportParameters(Report report, String template, 
-                                            RunData data, 
-                                            TemplateContext context)
-        throws Exception
-    {
-        ValueParser params = new BaseValueParser();
-        IntakeTool intake = getIntakeTool(context);
-        Group ir = intake.get("Report").mapTo(report);
-        String id = data.getParameters().getString("report_id"); 
-        if (id != null && id.length() > 0)
-        {
-            params.add("report_id", id);
-        }
-        if (!template.equals("reports,Step1.vm"))
-        {
-            if (report.getName() != null)
-            {
-                Field field = ir.get("Name"); 
-                params.add(field.getKey(), field.toString()); 
-            }
-            if (report.getDescription() != null)
-            {
-                Field field = ir.get("Description"); 
-                params.add(field.getKey(), field.toString()); 
-            }
-            if (report.getType() != 0)
-            {
-                Field field = ir.get("Type"); 
-                params.add(field.getKey(), field.toString()); 
-            }
-        }
-
-        if (!template.equals("reports,Step2.vm"))
-        {
-            String[] aogs = report.getAttributesAndOptionsForGrouping();
-            if (aogs != null)
-            {
-                Field field = ir.get("AttributesAndOptionsForGrouping"); 
-                for ( int i=0; i<aogs.length; i++ ) 
-                {
-                    params.add(field.getKey(), aogs[i]);
-                }
-                
-            }
-        }
-
-        if (!template.equals("reports,Step2b.vm"))
-        {
-            List ogs = report.getOptionGroups();
-            if (ogs != null)
-            {
-                Iterator og = ogs.iterator();
-                while (og.hasNext()) 
-                {   
-                    Report.OptionGroup group = (Report.OptionGroup)og.next();
-                    Group intakeOptionGroup = 
-                        intake.get("OptionGroup").mapTo(group);
-                    Field field = intakeOptionGroup.get("DisplayValue");
-                    params.add(field.getKey(), field.toString());
-
-                    List options = group.getOptions();
-                    if (options != null) 
-                    {
-                        Iterator opti = options.iterator();
-                        while (opti.hasNext()) 
-                        {
-                            Retrievable option = (Retrievable)opti.next();
-                            params.add("ofg" + option.getQueryKey(), 
-                                       group.getQueryKey());
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!template.equals("reports,Step3_1a.vm")  
-            && !template.equals("reports,Step3_2a.vm"))
-        {
-            if (report.getAxis1Category() >= 0)
-            {
-                Field field = ir.get("Axis1Category"); 
-                params.add(field.getKey(), field.toString()); 
-            }
-            if (report.getAxis2Category() >= 0)
-            {
-                Field field = ir.get("Axis2Category"); 
-                params.add(field.getKey(), field.toString()); 
-            }
-        }
-
-        if (!template.equals("reports,Step3_1b.vm")  
-            && !template.equals("reports,Step3_2b.vm"))
-        {
-            String[] keys = report.getAxis1Keys();
-            if (keys != null)
-            {
-                Field field = ir.get("Axis1Keys"); 
-                for ( int i=0; i<keys.length; i++ ) 
-                {
-                    params.add(field.getKey(), keys[i]);
-                }
-            }
-
-            keys = report.getAxis2Keys();
-            if (keys != null)
-            {
-                Field field = ir.get("Axis2Keys"); 
-                for ( int i=0; i<keys.length; i++ ) 
-                {
-                    params.add(field.getKey(), keys[i]);
-                }
-            }
-        }
-
-
-        if (!template.equals("reports,Step3_1a.vm")  
-            && !template.equals("reports,Step3_2b.vm"))
-        {
-            List dates = report.getReportDates();
-            if (dates != null)
-            {
-                Iterator datesi = dates.iterator();
-                while (datesi.hasNext()) 
-                {   
-                    Report.ReportDate date = (Report.ReportDate)datesi.next();
-                    Group intakeOptionGroup = 
-                        intake.get("ReportDate").mapTo(date);
-                    Field field = intakeOptionGroup.get("Date");
-                    params.add(field.getKey(), date.getDate().getTime());
-                }
-            }
-        }
-        return params;
     }
 }

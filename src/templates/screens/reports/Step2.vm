@@ -46,7 +46,6 @@ seperate column (i.e. side-by-side comparison).</p>
  </tr>
 </table>
 </div>
-#addReportHiddenInputs($report "reports,Step2.vm")
 $intake.declareGroups()
 </form>
 </div>

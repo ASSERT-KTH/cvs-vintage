@@ -6,7 +6,7 @@ $page.setTitle("Save Report")
 
 <div id="savereport" class="app">
 
-<form method="post" action="$link.setPage("Index.vm")" >
+<form method="post" action="$link.setPage("reports,Step1.vm")" >
 <input type="hidden" name="action" value="GenerateReport" />
 ##set ($queryString = $data.Parameters.getString("queryString"))
 ## <input type="hidden" name="$intakeReport.QueryString.Key" value="$queryString" />

@@ -91,7 +91,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.50 2002/02/20 22:47:47 maartenc Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.51 2002/02/23 19:30:27 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -559,6 +559,32 @@ public class ScarabUserImpl
     public void setReportingIssue(String key, Issue issue)
     {
         internalUser.setReportingIssue(key, issue);
+    }
+    
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getCurrentReport(String)
+     */
+    public Report getCurrentReport(String key)
+        throws Exception
+    {
+        return internalUser.getCurrentReport(key);
+    }
+    
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Report)
+     */
+    public String setCurrentReport(Report report)
+        throws ScarabException
+    {
+        return internalUser.setCurrentReport(report);
+    }
+    
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, Report)
+     */
+    public void setCurrentReport(String key, Report report)
+    {
+        internalUser.setCurrentReport(key, report);
     }
     
     /**

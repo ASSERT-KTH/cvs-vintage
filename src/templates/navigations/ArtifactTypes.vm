@@ -16,7 +16,13 @@
 ##    <div><small>$link.setPage("Search.vm").setLabel("Custom Query")</small></div>
     <div><small>$link.setPage("QueryList.vm").setLabel("Saved queries")</small></div>
     <div><small>$link.setPage("TemplateList.vm").setLabel("Template list")</small></div>
-    <div><small>$link.setPage("reports,Step1.vm").setLabel("New report")</small></div>
+#set ($currentReportKey = $data.Parameters.getString($scarabG.Constant.CURRENT_REPORT, ""))
+#if ($currentReportKey.length() == 0)
+    <div><small>$link.setPage("reports,Step1.vm").setLabel("Reports")</small></div>
+#else
+$link.setPage("reports,Step1.vm").setLabel("New Report").addPathInfo($scarabG.Constant.REMOVE_CURRENT_REPORT, $currentReportKey).removePathInfo($scarabG.Constant.CURRENT_REPORT)
+    <div><small>$link</small></div>
+#end
 ##    <div><small>Saved reports</small></div>
     </div>
   #else

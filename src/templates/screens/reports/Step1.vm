@@ -82,7 +82,6 @@ later).</p>
  </tr>
 </table>
 </div>
-#addReportHiddenInputs($report "reports,Step1.vm")
 $intake.declareGroups()
 </form>
 </div>

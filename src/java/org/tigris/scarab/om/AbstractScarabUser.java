@@ -82,13 +82,15 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.14 2002/02/18 23:29:25 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.15 2002/02/23 19:30:27 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
 {
     private int issueCount = 0;
     private Map issueMap;
+    private int reportCount = 0;
+    private Map reportMap;
 
     /**
         Call the superclass constructor to initialize this object.
@@ -97,6 +99,7 @@ public abstract class AbstractScarabUser
     {
         super();
         issueMap = new HashMap();
+        reportMap = new HashMap();
     }
 
     public abstract NumberKey getUserId();
@@ -313,6 +316,69 @@ public abstract class AbstractScarabUser
             issueMap.put(String.valueOf(key), issue);
         }
     }
+
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getCurrentReport(String)
+     */
+    public Report getCurrentReport(String key)
+    {
+        return (Report)reportMap.get(key);
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(Issue)
+     */
+    public String setCurrentReport(Report report)
+        throws ScarabException
+    {
+        String key = null;
+        if ( report == null ) 
+        {
+            throw new ScarabException("Null Report is not allowed.");
+        }
+        else 
+        {
+            key = String.valueOf(reportCount++);
+            setCurrentReport(key, report);
+        }
+        return key;
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setCurrentReport(String, Report)
+     */
+    public void setCurrentReport(String key, Report report)
+    {
+        if ( report == null ) 
+        {
+            reportMap.remove(key);
+        }
+        else 
+        {
+            // make sure reports are not being accumulated, set a reasonable
+            // limit of 10 open reports
+            int intKey = Integer.parseInt(key);
+            int count = 0;
+            for (int i=intKey-1; i>=0; i--) 
+            {
+                String testKey = String.valueOf(i);
+                if (getCurrentReport(testKey) != null) 
+                {
+                    if (++count > 10) 
+                    {
+                        reportMap.remove(testKey);
+                    }
+                }
+            }
+            
+            reportMap.put(String.valueOf(key), report);
+        }
+    }
+
 
     private static final String GET_DEFAULT_QUERY_USER = 
         "getDefaultQueryUser";

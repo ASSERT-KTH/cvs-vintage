@@ -52,7 +52,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Arrays;
+import java.util.Iterator;
 
+import java.text.SimpleDateFormat;
 import org.apache.commons.util.ObjectUtils;
 import com.workingdogs.village.Record;
 
@@ -75,6 +77,7 @@ import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.user.UserManager;
@@ -194,45 +197,7 @@ public  class Report
     {
         setModuleId(v.getModuleId());
     }
-    
-    /* *
-     * Get the value of name.
-     * @return value of name.
-     * /
-    public String getName() 
-    {
-        return name;
-    }
-    
-    /* *
-     * Set the value of name.
-     * @param v  Value to assign to name.
-     * /
-    public void setName(String  v) 
-    {
-        this.name = v;
-    }
-    
-    /* *
-     * Get the value of description.
-     * @return value of description.
-     * /
-    public String getDescription() 
-    {
-        return description;
-    }
-    
-    /* *
-     * Set the value of description.
-     * @param v  Value to assign to description.
-     * / 
-    public void setDescription(String  v) 
-    {
-        this.description = v;
-    }
-    */
-
-    
+        
     /**
      * Get the value of type.
      * @return value of type.
@@ -1113,7 +1078,7 @@ public  class Report
         }
     }
 
-    private void populate(ValueParser parameters)
+    public void populate(ValueParser parameters)
         throws Exception
     {
         Intake intake = new Intake();
@@ -1128,78 +1093,267 @@ public  class Report
         {   
             intakeReport.setValidProperties(this);
 
+            Field a1k = intakeReport.get("Axis1Keys");
+            a1k.setProperty(this);
+
         // set up option groups
         int i = 0;
-        List groups = new ArrayList();
         Report.OptionGroup group = this.getNewOptionGroup();
         group.setQueryKey(String.valueOf(i++));
         Group intakeGroup = intake.get("OptionGroup", 
                                        group.getQueryKey(), false);
-        while ( intakeGroup != null ) 
+        if ( intakeGroup != null ) 
         {
-            intakeGroup.setValidProperties(group);
-            groups.add(group);
-
-            group = this.getNewOptionGroup();
-            group.setQueryKey(String.valueOf(i++));
-            intakeGroup = intake.get("OptionGroup", 
-                                     group.getQueryKey(), false);
-        }
-        this.setOptionGroups(groups);
-
-        List options = this.getSelectedOptionsForGrouping();
-        for ( i=0; i<options.size(); i++ ) 
-        {
-            RModuleOption rmo = (RModuleOption)options.get(i);
-            String key = "ofg" + rmo.getQueryKey();
-            int groupIndex = parameters.getInt(key);
-            if ( groupIndex >= 0 && groupIndex < groups.size() ) 
+            List groups = new ArrayList();            
+            while ( intakeGroup != null ) 
             {
-                ((Report.OptionGroup)groups.get(groupIndex))
-                    .addOption(rmo);
+                intakeGroup.setValidProperties(group);
+                groups.add(group);  
+                group = this.getNewOptionGroup();
+                group.setQueryKey(String.valueOf(i++));
+                intakeGroup = intake.get("OptionGroup", 
+                                         group.getQueryKey(), false);
+            }
+            this.setOptionGroups(groups);
+
+            List options = this.getSelectedOptionsForGrouping();
+            for ( i=0; i<options.size(); i++ ) 
+            {
+                RModuleOption rmo = (RModuleOption)options.get(i);
+                String key = "ofg" + rmo.getQueryKey();
+                int groupIndex = parameters.getInt(key);
+                if ( groupIndex >= 0 && groupIndex < groups.size() ) 
+                {
+                    ((Report.OptionGroup)groups.get(groupIndex))
+                        .addOption(rmo);
+                }
             }
         }
 
         // set up dates
         i = 0;
-        List dates = new ArrayList();
         Report.ReportDate date = this.getNewReportDate();
         date.setQueryKey(String.valueOf(i++));
         Group intakeDate = intake.get("ReportDate", 
                                        date.getQueryKey(), false);
-        while ( intakeDate != null ) 
+        if ( intakeDate != null ) 
         {
-            if ( intakeDate.get("Date").isSet()) 
+            List dates = new ArrayList();
+            while ( intakeDate != null ) 
             {
-                intakeDate.setValidProperties(date);
-                dates.add(date);                
-            }
-            
-            date = this.getNewReportDate();
-            date.setQueryKey(String.valueOf(i++));
-            intakeDate = intake.get("ReportDate", 
-                                     date.getQueryKey(), false);
-        }
-        if ( dates.size() > 0 ) 
-        {
-            // the intakeReport.setProperties call above may have added a date
-            // so we do not want to lose it. 
-            List reportDates = this.getReportDates();
-            if ( reportDates != null ) 
-            {
-                for ( int j=0; j<reportDates.size(); j++ ) 
+                if ( intakeDate.get("Date").isSet()) 
                 {
-                    Report.ReportDate reportDate = 
-                        (Report.ReportDate)reportDates.get(j);
-                    date.setQueryKey(String.valueOf(i++));
-                    dates.add(reportDate);
+                    intakeDate.setValidProperties(date);
+                    dates.add(date);                
                 }
+                
+                date = this.getNewReportDate();
+                date.setQueryKey(String.valueOf(i++));
+                intakeDate = intake.get("ReportDate", 
+                                        date.getQueryKey(), false);
             }
-            this.setReportDates(dates);            
+
+            if ( dates.size() > 0 ) 
+            {
+                // the intakeReport.setProperties call above may have added a
+                // date so we do not want to lose it. 
+                List reportDates = this.getReportDates();
+                if ( reportDates != null ) 
+                {
+                    for ( int j=0; j<reportDates.size(); j++ ) 
+                    {
+                        Report.ReportDate reportDate = 
+                            (Report.ReportDate)reportDates.get(j);
+                        date.setQueryKey(String.valueOf(i++));
+                        dates.add(reportDate);
+                    }
+                }
+                this.setReportDates(dates);            
+            }
         }
         }
     }
 
+    public String getQueryString()
+    {
+        StringBuffer sb = new StringBuffer(100);
+        try
+        {
+        Intake intake = new Intake();
+        Group ir = intake.get("Report").mapTo(this);
+
+        String INTAKE = "intake-grp";
+        char EQUALS = '=';
+        char AMP = '&';
+
+        String repKey = ir.getGID();
+        // intake-grp=rep&rep=&
+        sb.append(INTAKE).append(EQUALS).append(repKey).append(AMP)
+            .append(repKey).append(EQUALS).append(AMP);
+
+        if (getName() != null) 
+        {
+            sb.append(ir.get("Name").getKey())
+                .append(EQUALS)
+                .append(ir.get("Name").toString());            
+            sb.append(AMP);
+        }
+
+        if (getDescription() != null) 
+        {
+            sb.append(ir.get("Description").getKey())
+                .append(EQUALS)
+                .append(ir.get("Description").toString());            
+            sb.append(AMP);
+        }
+        
+        if (getType() >= 0) 
+        {
+            sb.append(ir.get("Type").getKey())
+                .append(EQUALS)
+                .append(ir.get("Type").toString());            
+            sb.append(AMP);
+        }
+
+        String[] aos = getAttributesAndOptionsForGrouping();
+        if (aos != null)
+        {
+            for (int i=0; i<aos.length; i++) 
+            {
+                sb.append(ir.get("AttributesAndOptionsForGrouping").getKey())
+                    .append(EQUALS)
+                    .append(aos[i]);            
+                sb.append(AMP);                
+            }
+        }
+
+
+        List ogs = getOptionGroups();
+        if (ogs != null)
+        {
+            sb.append(INTAKE).append(EQUALS).append("ofg").append(AMP); 
+            Iterator iter = ogs.iterator();
+            boolean addGroupKey = true;
+            while (iter.hasNext()) 
+            {                
+                OptionGroup og = (OptionGroup)iter.next();
+                Group intakeOptionGroup = 
+                    intake.get("OptionGroup").mapTo(og);
+                String ogGroupKey = intakeOptionGroup.getGID();
+                if (addGroupKey) 
+                {
+                    sb.append(INTAKE).append(EQUALS)
+                        .append(ogGroupKey).append(AMP); 
+                    addGroupKey = false;
+                }
+                sb.append(ogGroupKey).append(EQUALS)
+                    .append(og.getQueryKey()).append(AMP); 
+                sb.append(intakeOptionGroup.get("DisplayValue").getKey())
+                .append(EQUALS)
+                .append(intakeOptionGroup.get("DisplayValue").toString());  
+                sb.append(AMP);
+                List options = og.getOptions();
+                if (options != null) 
+                {
+                    Iterator iter2 = options.iterator();
+                    while (iter2.hasNext()) 
+                    {                
+                        RModuleOption option = 
+                            (RModuleOption)iter2.next();
+
+                        sb.append("ofg")
+                            .append(EQUALS)
+                            .append(option.getQueryKey())
+                            .append(AMP)                
+                            .append("ofg")
+                            .append(option.getQueryKey())
+                            .append(EQUALS)
+                            .append(og.getQueryKey())     
+                            .append(AMP);                
+                    }
+                }                
+            }
+        }
+
+        if (getAxis1Category() >= 0) 
+        {
+            sb.append(ir.get("Axis1Category").getKey())
+                .append(EQUALS)
+                .append(ir.get("Axis1Category").toString());            
+            sb.append(AMP);
+        }
+
+        if (getAxis2Category() >= 0) 
+        {
+            sb.append(ir.get("Axis2Category").getKey())
+                .append(EQUALS)
+                .append(ir.get("Axis2Category").toString());            
+            sb.append(AMP);
+        }
+
+        String[] aks = getAxis1Keys();
+        if (aks != null)
+        {
+            for (int i=0; i<aks.length; i++) 
+            {
+                sb.append(ir.get("Axis1Keys").getKey())
+                    .append(EQUALS)
+                    .append(aks[i]);            
+                sb.append(AMP);                
+            }
+        }
+
+        aks = getAxis2Keys();
+        if (aks != null)
+        {
+            for (int i=0; i<aks.length; i++) 
+            {
+                sb.append(ir.get("Axis2Keys").getKey())
+                    .append(EQUALS)
+                    .append(aks[i]);            
+                sb.append(AMP);                
+            }
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy HH:mm");
+        List dates = getReportDates();
+        if (dates != null)
+        {
+            boolean addGroupKey = true;
+            Iterator iter = dates.iterator();
+            while (iter.hasNext()) 
+            {                
+                ReportDate rd = (ReportDate)iter.next();
+                Group intakeDate = 
+                    intake.get("ReportDate").mapTo(rd);
+                String dateGroupKey = intakeDate.getGID();
+                if (addGroupKey) 
+                {
+                    sb.append(INTAKE).append(EQUALS)
+                        .append(dateGroupKey).append(AMP); 
+                    addGroupKey = false;
+                }
+                sb.append(dateGroupKey).append(EQUALS)
+                    .append(rd.getQueryKey()).append(AMP); 
+                sb.append(intakeDate.get("Date").getKey())
+                    .append(EQUALS)
+                    .append(dateFormat.format(rd.getDate())); 
+                sb.append(AMP);                
+            }
+        }
+
+        if (sb.charAt(sb.length()-1) == AMP) 
+        {
+            sb.setLength(sb.length()-1);
+        }
+        }
+        catch (Exception e)
+        {
+            getCategory().error(e);
+        }
+        
+        return sb.toString();
+    }
 
 
     public TableModel getModel()

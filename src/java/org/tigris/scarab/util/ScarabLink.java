@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.34 2002/02/05 18:36:26 jon Exp $
+    @version $Id: ScarabLink.java,v 1.35 2002/02/23 19:30:28 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -159,6 +159,19 @@ public class ScarabLink extends TemplateLink
         if (issueKey != null && issueKey.length() > 0)
         {
             addPathInfo(ScarabConstants.REPORTING_ISSUE, issueKey);
+        }
+        String reportKey = data.getParameters()
+            .getString(ScarabConstants.CURRENT_REPORT);
+        if (reportKey != null && reportKey.length() > 0)
+        {
+            if (t.startsWith("report")) 
+            {
+                addPathInfo(ScarabConstants.CURRENT_REPORT, reportKey);
+            }
+            else if (!t.startsWith("help"))
+            {
+                addPathInfo(ScarabConstants.REMOVE_CURRENT_REPORT, reportKey);
+            }            
         }
         // if a screen is to be passed along, add it
         String historyScreen = data.getParameters()

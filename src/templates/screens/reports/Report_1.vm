@@ -2,7 +2,7 @@
 
 <div class="app" id="div2-4-1-a-output">
 
-<form method="get" action="$link.setPage("Index.vm")">
+<form method="get" action="$link.setPage("reports,Step1.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
 
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
@@ -68,7 +68,6 @@ Report
 </table>
 </div>
 
-#addReportHiddenInputs($report "reports,Report_1.vm")
 $intake.declareGroups()
 </form>
 </div>

@@ -100,7 +100,13 @@ column.</p>
         #set ($selectedOption = $data.Parameters.getString("ofg$attOption.QueryKey", ""))
         #foreach ($optionGroup in $report.OptionGroups)
           #set ($optionValue = $velocityCount - 1)
-          <option #if($selectedOption == "$optionValue")selected="selected"#end
+          #set ($selectedGroup = false)
+          #foreach ($option in $optionGroup.Options)
+            #if ($option.equals($attOption))
+                #set ($selectedGroup = true)
+            #end
+          #end
+          <option #if($selectedGroup)selected="selected"#end
               value="$optionValue">$optionGroup.DisplayValue</option>
         #end
        </select>
@@ -124,7 +130,6 @@ column.</p>
 </table>
 </div>
 
-#addReportHiddenInputs($report "reports,Step2b.vm")
 $intake.declareGroups()
 </form>
 </div>
