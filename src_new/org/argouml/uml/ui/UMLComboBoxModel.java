@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.28 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: UMLComboBoxModel.java,v 1.29 2003/12/12 19:51:55 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.28 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: UMLComboBoxModel.java,v 1.29 2003/12/12 19:51:55 mkl Exp $
 
 package org.argouml.uml.ui;
 
@@ -260,6 +260,8 @@ public class UMLComboBoxModel extends AbstractListModel implements
                 cat.error(e.toString() + ". " +
                                    this.getClass().toString() +
                                    ": invalid set method " + setMethod, e);
+		cat.error("Need to rethrow this exception as RuntimeException.");
+		throw new RuntimeException(e);
             }
         }
     }
