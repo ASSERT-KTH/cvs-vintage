@@ -322,13 +322,13 @@ public abstract class AttributeValue
      *
      * @param optionId a <code>NumberKey</code> value
      */
-    public void setOptionId(NumberKey optionId, IssueType issueType)
+    public void setOptionId(NumberKey optionId)
         throws Exception
     {
         if ( optionId != null && optionId.getValue() != null ) 
         {
             List options = getIssue().getModule()
-                .getRModuleOptions(getAttribute(), issueType);
+                .getRModuleOptions(getAttribute(), getIssue().getIssueType());
             for ( int i=options.size()-1; i>=0; i-- ) 
             {
                 RModuleOption option = (RModuleOption)options.get(i);
