@@ -150,6 +150,8 @@ public interface Request  {
      */
     String getPathTranslated() ;
 
+    /**
+     */
     void setPathTranslated(String path) ;
 
     /** Path Info - set be mappers or from adapter
@@ -164,23 +166,10 @@ public interface Request  {
 
     public String getServletPath() ;
 
-    /** Wrapper - the servlet that will execute the request
-     *  Similar with "handler" in Apache.
-     */
-    public ServletWrapper getWrapper() ;
-    
-    public void setWrapper(ServletWrapper handler) ;
 
     public Container getContainer() ;
     
     public void setContainer(Container handler) ;
-
-    /** The file - result of mapping the request ( using aliases and other
-     *  mapping rules. Usefull only for static resources.
-     */
-    public String getMappedPath() ;
-
-    public void setMappedPath( String m ) ;
 
     // -------------------- Security --------------------
     // Will be set by security interceptors
@@ -194,11 +183,7 @@ public interface Request  {
     void setRemoteUser(String s) ;
 
     boolean isSecure() ;
-	
-    Principal getUserPrincipal() ;
-
-    boolean isUserInRole(String role) ;
-
+    
 
     // -------------------- Session --------------------
     // Will be set by session interceptors
@@ -217,12 +202,6 @@ public interface Request  {
     boolean isRequestedSessionIdValid() ;
 
     // -------------------- Parameters --------------------
-    // Derived from parsing query string and body (for POST)
-
-    public void setParameters( Hashtable h ) ;
-
-    public Hashtable getParameters() ;
-
     /** Set query string - will be called by forward
      */
     public void setQueryString(String queryString) ;
@@ -241,6 +220,8 @@ public interface Request  {
     public Enumeration getAttributeNames() ;
 
     // -------------------- Input --------------------
+
+    // XXX review - do we need both reader and IS ? 
     public BufferedReader getReader() 	throws IOException;
 
     public ServletInputStream getInputStream() 	throws IOException;
@@ -259,5 +240,45 @@ public interface Request  {
     /** One-to-One with Facade
      */
     public HttpServletRequestFacade getFacade() ;
-    
+
+    // -------------------- Internal/deprecated--------------------
+    // Derived from parsing query string and body (for POST)
+
+    /** @deprecated internal use only */
+    public void setParameters( Hashtable h ) ;
+
+    /** @deprecated internal use only */
+    public Hashtable getParameters() ;
+
+    /** @deprecated  */
+    Principal getUserPrincipal() ;
+
+    /** @deprecated  */
+    boolean isUserInRole(String role) ;
+
+
+    /** Wrapper - the servlet that will execute the request
+     *  Similar with "handler" in Apache.
+     *  @deprecated - use Container instead
+     */
+    public ServletWrapper getWrapper() ;
+
+    /**
+     *  @deprecated - use Container instead
+     */
+    public void setWrapper(ServletWrapper handler) ;
+
+    /** The file - result of mapping the request ( using aliases and other
+     *  mapping rules. Usefull only for static resources.
+     *  @deprecated - internal use only
+     */
+    public String getMappedPath() ;
+
+    /**
+     *  @deprecated - internal use only
+     */
+    public void setMappedPath( String m ) ;
+
+
+
 }

@@ -104,12 +104,12 @@ public interface Response {
     public boolean isUsingStream();
     
     /** Signal that we're done with a particular request, the
-	server can go on and read more requests or close the socket
-    */
+     *	server can go on and read more requests or close the socket
+     */
     public void finish() throws IOException ;
 
     /** Either re-implement getOutputStream or return BufferedServletOutputStream(this)
-	and implement doWrite();
+     *  and implement doWrite();
      */
     public ServletOutputStream getOutputStream() ;
 
@@ -137,6 +137,8 @@ public interface Response {
 
     public void reset() throws IllegalStateException ;
 
+    /** Any implementation needs to notify ContextManger
+     */
     public void flushBuffer() throws IOException ;
 
     // -------------------- Cookies --------------------
