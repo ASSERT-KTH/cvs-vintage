@@ -62,7 +62,8 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.13 $
+ *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *  @version $Revision: 1.14 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -209,15 +210,16 @@ public class StatefulSessionFilePersistenceManager
    {
       try
       {
-
          ObjectInputStream in;
 
 
          // Load state
          in = new SessionObjectInputStream(ctx, new FileInputStream(new File(dir, ctx.getId()+".ser")));
-         for (int i = 0; i < fields.size(); i++)
-            ((Field)fields.get(i)).set(ctx.getInstance(), in.readObject());
-
+         
+         ctx.setInstance(in.readObject());
+         
+         in.close();
+         
          // Call bean
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
       } catch (ClassNotFoundException e)
@@ -266,16 +268,10 @@ public class StatefulSessionFilePersistenceManager
          // Store state
          ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
 
-         for (int i = 0; i < fields.size(); i++) {
-            
-            // skip the sessionContext, we can't read the value (inner class, no constructor available)
-            // (it will be restored by the SessionObjectInputStream upon activation)
-            if (! SessionContext.class.isAssignableFrom(((Field)fields.get(i)).getType()))
-            
-               out.writeObject(((Field)fields.get(i)).get(ctx.getInstance()));
-         }
+         out.writeObject(ctx.getInstance());
 
          out.close();   
+         
       } catch (IOException e)
       {
          throw new ServerException("Could not passivate", e);
