@@ -13,14 +13,13 @@ import javax.ejb.EJBObject;
 import javax.naming.InitialContext;
 import java.lang.reflect.Method;
 
-import org.jboss.logging.Logger;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class EntityHandleImpl
    implements Handle
@@ -48,7 +47,7 @@ public class EntityHandleImpl
    {
       try
       {
-         Logger.debug("Resolve handle:"+name+"#"+id);
+         System.out.println("Resolve handle:"+name+"#"+id);
          Object home = new InitialContext().lookup(name);
          
          Method finder = home.getClass().getMethod("findByPrimaryKey", new Class[] { id.getClass() });
