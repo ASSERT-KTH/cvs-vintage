@@ -24,17 +24,17 @@
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
-   #set ($createNew = "false")
+   #set ($createNew = false)
 #else
    #set ($attgroup = $intake.Attribute.Default)
-   #set ($createNew = "true")
+   #set ($createNew = true)
 #end
 
 <p>$l10n.GlobalAttributes </p>
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
-#if ($createNew.equals("false"))
+#if (!$createNew)
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
@@ -44,7 +44,7 @@
 <input type="hidden" name="pageNum" value="$!data.Parameters.getInt("pageNum",1)" />
 
 <div class="functnbar">
-#if ($createNew.equals("false"))
+#if (!$createNew)
     <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
@@ -88,7 +88,7 @@
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attgroup.Description</textarea>
   </td>
  </tr>
-#if ($createNew.equals("false"))
+#if (!$createNew)
   #if ($attribute.CreatedDate)
  <tr>
   <th>$l10n.CreatedBy</th>
@@ -212,7 +212,7 @@
 #end
 
 <div class="functnbar2">
-#if ($createNew.equals("false"))
+#if (!$createNew)
     <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
