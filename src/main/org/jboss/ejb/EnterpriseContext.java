@@ -29,6 +29,8 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
@@ -54,7 +56,7 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.78 $
+ * @version $Revision: 1.79 $
  */
 public abstract class EnterpriseContext
         implements AllowedOperationsFlags
@@ -252,6 +254,32 @@ public abstract class EnterpriseContext
        *  first call to <code>getUserTransaction()</code>.
        */
       private UserTransactionImpl userTransaction = null;
+
+      private InitialContext ctx;
+
+      protected EJBContextImpl()
+      {
+         try
+         {
+            ctx = new InitialContext();
+         }
+         catch (NamingException e)
+         {
+            throw new RuntimeException(e);
+         }
+      }
+
+      public Object lookup(String name)
+      {
+         try
+         {
+            return ctx.lookup(name);
+         }
+         catch (NamingException ignored)
+         {
+         }
+         return null;
+      }
 
       /**
        * @deprecated
