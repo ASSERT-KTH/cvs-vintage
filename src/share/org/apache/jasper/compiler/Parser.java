@@ -70,6 +70,7 @@ import javax.servlet.jsp.tagext.TagInfo;
  * the code generator backend. 
  *
  * @author Anil K. Vijendran
+ * @author Rajiv Mordani
  */
 public class Parser {
     /**
@@ -121,25 +122,31 @@ public class Parser {
 	  "taglib"
 	};
 
-	private static final String[] validAttributes = {
-	    "language", 
-	    "extends",
-	    "import",
-	    "session",
-	    "buffer",
-	    "autoFlush",
-	    "isThreadSafe",
-	    "info",
-	    "errorPage",
-	    "isErrorPage",
-	    "contentType",
-	    "file",
-	    "uri",
-            "prefix"
+	private static final JspUtil.ValidAttribute[] pageDvalidAttrs = {
+	    new JspUtil.ValidAttribute ("language"),
+	    new JspUtil.ValidAttribute ("extends"),
+	    new JspUtil.ValidAttribute ("import"),
+	    new JspUtil.ValidAttribute ("session"),
+	    new JspUtil.ValidAttribute ("buffer"),
+	    new JspUtil.ValidAttribute ("autoFlush"),
+	    new JspUtil.ValidAttribute ("isThreadSafe"),
+	    new JspUtil.ValidAttribute ("info"),
+	    new JspUtil.ValidAttribute ("errorPage"),
+	    new JspUtil.ValidAttribute ("isErrorPage"),
+	    new JspUtil.ValidAttribute ("contentType")
 	};
-	    
-	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
-	    throws JasperException
+
+	private static final JspUtil.ValidAttribute[] includeDvalidAttrs = {
+	    new JspUtil.ValidAttribute ("file", true)
+	};
+
+	private static final JspUtil.ValidAttribute[] tagDvalidAttrs = {
+	    new JspUtil.ValidAttribute ("uri", true),
+	    new JspUtil.ValidAttribute ("prefix", true)
+	};
+
+	public boolean accept(ParseEventListener listener, JspReader reader, 
+			      Parser parser) throws JasperException
 	{
 	    String close;
 	    String open;
@@ -172,7 +179,15 @@ public class Parser {
 
 	    // Parse the attr-val pairs.
 	    Hashtable attrs = reader.parseTagAttributes();
-	    checkAttributes ("Directive", attrs.keys(), validAttributes);
+	    if (match.equals ("page"))
+	        JspUtil.checkAttributes ("Page directive", attrs, 
+					 pageDvalidAttrs);
+	    else if (match.equals("include"))
+	        JspUtil.checkAttributes ("Include directive", attrs, 
+					 includeDvalidAttrs);
+	    else if (match.equals("taglib"))
+	        JspUtil.checkAttributes ("Taglib directive", attrs, 
+					 tagDvalidAttrs);
 	    
 	    // Match close.
 	    reader.skipSpaces();
@@ -206,9 +221,9 @@ public class Parser {
 	private static final String OPEN_INDIVIDUAL_PARAM = "<jsp:param";
 	private static final String CLOSE_INDIVIDUAL_PARAM = "/>";
 
-	private static final String[] validAttributes = {
-            "page",
-            "flush"
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+            new JspUtil.ValidAttribute("page", true),
+            new JspUtil.ValidAttribute("flush")
 	};
 
 	public boolean accept(ParseEventListener listener, JspReader reader, 
@@ -220,7 +235,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_INCLUDE.length());
 		Hashtable attrs = reader.parseTagAttributes();
-		checkAttributes ("Include", attrs.keys(), validAttributes);
+		JspUtil.checkAttributes ("Include", attrs, validAttributes);
 		reader.skipSpaces();
 		
 		if (!reader.matches(CLOSE_INCLUDE_NO_BODY)) {
@@ -290,10 +305,11 @@ public class Parser {
 	private static final String OPEN_INDIVIDUAL_PARAM = "<jsp:param";
 	private static final String CLOSE_INDIVIDUAL_PARAM = "/>";
 
-	private static final String[] validAttributes = {
-	   "page" 
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+	   new JspUtil.ValidAttribute("page", true)
 	};
-	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
+	public boolean accept(ParseEventListener listener, JspReader reader, 
+				Parser parser) 
 	    throws JasperException 
 	{
 	    if (reader.matches(OPEN_FORWARD)) {
@@ -301,7 +317,7 @@ public class Parser {
 		reader.advance(OPEN_FORWARD.length());
 		Hashtable attrs = reader.parseTagAttributes();
 		Hashtable param = new Hashtable();
-	        checkAttributes ("Forward", attrs.keys(), validAttributes);
+	        JspUtil.checkAttributes ("Forward", attrs, validAttributes);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_FORWARD_NO_BODY)) {
 		    if (!reader.matches(CLOSE_FORWARD_BODY))
@@ -407,7 +423,7 @@ public class Parser {
 	private static final String END_OPEN_DECL_2 = ">";
 	private static final String CLOSE_DECL_2 = "</jsp:decl>";
 
-        private static final String[] validAttributes = {
+        private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -438,7 +454,7 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-                checkAttributes("Declaration", attrs.keys(), validAttributes);
+		JspUtil.checkAttributes("Declaration", attrs, validAttributes);
             }
 
 	    Mark start = reader.mark();
@@ -467,7 +483,7 @@ public class Parser {
 	private static final String END_OPEN_EXPR_2 = ">";
 	private static final String CLOSE_EXPR_2 = "</jsp:expression>";
     
-        private static final String[] validAttributes = {
+        private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -498,7 +514,7 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-                checkAttributes("Expression", attrs.keys(), validAttributes);
+                JspUtil.checkAttributes("Expression", attrs, validAttributes);
             }
 
 	    Mark start = reader.mark();
@@ -526,7 +542,7 @@ public class Parser {
 	private static final String END_OPEN_SCRIPTLET_2 = ">";
 	private static final String CLOSE_SCRIPTLET_2 = "</jsp:scriptlet>";
 
-        private static final String[] validAttributes = {
+        private static final JspUtil.ValidAttribute[] validAttributes = {
         };
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -557,7 +573,7 @@ public class Parser {
 	        reader.advance(end_open.length());
 		reader.skipSpaces();
 
-                checkAttributes("Scriptlet", attrs.keys(), validAttributes);
+                JspUtil.checkAttributes("Scriptlet", attrs, validAttributes);
             }
 
 	    Mark start = reader.mark();
@@ -585,12 +601,12 @@ public class Parser {
 	private static final String CLOSE_BEAN_2 = "</jsp:useBean>";
 	private static final String CLOSE_BEAN_3 = ">";
 
-	private static final String[] validAttributes = {
-	   "id",
-	   "scope",
-	   "class",
-	   "type",
-	   "beanName"
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+	   new JspUtil.ValidAttribute("id"),
+	   new JspUtil.ValidAttribute("scope"),
+	   new JspUtil.ValidAttribute("class"),
+	   new JspUtil.ValidAttribute("type"),
+	   new JspUtil.ValidAttribute("beanName")
 	};
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -600,7 +616,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_BEAN.length());
 		Hashtable attrs = reader.parseTagAttributesBean();
-	        checkAttributes ("useBean", attrs.keys(), validAttributes);
+	        JspUtil.checkAttributes ("useBean", attrs, validAttributes);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_BEAN)) {
 		    if (!reader.matches(CLOSE_BEAN_3))
@@ -650,9 +666,9 @@ public class Parser {
 	private static final String OPEN_GETPROPERTY  = "<jsp:getProperty";
 	private static final String CLOSE_GETPROPERTY = "/>";
 	
-	private static final String[] validAttributes = {
-	   "name",
-	   "property"
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+	   new JspUtil.ValidAttribute("name", true),
+	   new JspUtil.ValidAttribute("property", true)
 	};
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -662,7 +678,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_GETPROPERTY.length());
 		Hashtable attrs = reader.parseTagAttributes ();
-	        checkAttributes ("getProperty", attrs.keys(), validAttributes);
+	        JspUtil.checkAttributes ("getProperty", attrs, validAttributes);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_GETPROPERTY))
 		    throw new ParseException(reader.mark(), 
@@ -690,11 +706,11 @@ public class Parser {
 	private static final String OPEN_SETPROPERTY  = "<jsp:setProperty";
 	private static final String CLOSE_SETPROPERTY = "/>";
 	
-	private static final String[] validAttributes = {
-	   "name",
-	   "property",
-	   "value",
-	   "param"
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+	   new JspUtil.ValidAttribute("name", true),
+	   new JspUtil.ValidAttribute("property", true),
+	   new JspUtil.ValidAttribute("value"),
+	   new JspUtil.ValidAttribute("param")
 	};
 
 	public boolean accept(ParseEventListener listener, JspReader reader, Parser parser) 
@@ -704,7 +720,7 @@ public class Parser {
 		Mark start = reader.mark();
 		reader.advance(OPEN_SETPROPERTY.length());
 		Hashtable attrs = reader.parseTagAttributes ();
-	        checkAttributes ("setProperty", attrs.keys(), validAttributes);
+	        JspUtil.checkAttributes ("setProperty", attrs, validAttributes);
 		reader.skipSpaces();
 		if (!reader.matches(CLOSE_SETPROPERTY))
 		    throw new ParseException(reader.mark(), 
@@ -851,22 +867,20 @@ public class Parser {
 	private static final String OPEN_FALLBACK = "<jsp:fallback>";
 	private static final String CLOSE_FALLBACK = "</jsp:fallback>";
 
-	private static final String[] validAttributes = {
-	   "type",
-	   "code",
-	   "codebase",
-	   "align",
-	   "archive",
-	   "height",
-	   "hspace",
-	   "jreversion",
-	   "name",
-	   "vspace",
-	   "width",
-	   "nspluginurl",
-	   "iepluginurl",
-	   "params",
-	   "fallback"
+	private static final JspUtil.ValidAttribute[] validAttributes = {
+	   new JspUtil.ValidAttribute ("type",true),
+	   new JspUtil.ValidAttribute("code", true),
+	   new JspUtil.ValidAttribute("codebase"),
+	   new JspUtil.ValidAttribute("align"),
+	   new JspUtil.ValidAttribute("archive"),
+	   new JspUtil.ValidAttribute("height"),
+	   new JspUtil.ValidAttribute("hspace"),
+	   new JspUtil.ValidAttribute("jreversion"),
+	   new JspUtil.ValidAttribute("name"),
+	   new JspUtil.ValidAttribute("vspace"),
+	   new JspUtil.ValidAttribute("width"),
+	   new JspUtil.ValidAttribute("nspluginurl"),
+	   new JspUtil.ValidAttribute("iepluginurl")
 	};
 
 	public boolean accept(ParseEventListener listener, JspReader reader, 
@@ -888,7 +902,7 @@ public class Parser {
 		Hashtable param = null;
 		String fallback = null;
 
-	        checkAttributes ("plugin", attrs.keys(), validAttributes);
+	        JspUtil.checkAttributes ("plugin", attrs, validAttributes);
 		if (reader.matches (OPEN_PARAMS)) {
 		    param = new Hashtable ();
 		    boolean paramsClosed = false;
@@ -1051,27 +1065,5 @@ public class Parser {
 		caw.write((char) reader.nextChar());
 	}
 	flushCharData();
-    }
-
- 
-    public static void checkAttributes (String typeOfTag, Enumeration enum,
-    			String[] validAttributes) throws JasperException
-    {
-    	String attribute = null;
-	boolean valid;
-	while (enum.hasMoreElements()) {
-	    valid = false;
-	    attribute = (String) enum.nextElement();
-	    for (int i=0; i < validAttributes.length; i++) {
-	        if (attribute.equals (validAttributes[i])) {
-	            valid = true;
-		    break;
-	        }
-	    }
-	    if (!(valid))
-	        throw new JasperException(Constants.getString(
-				"jsp.error.invalid.attribute", 
-                                 new Object[] { typeOfTag, attribute }));
-	}
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.4 1999/12/21 21:38:03 rubys Exp $
- * $Revision: 1.4 $
- * $Date: 1999/12/21 21:38:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.5 1999/12/23 08:30:20 mode Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/23 08:30:20 $
  *
  * ====================================================================
  * 
@@ -65,6 +65,8 @@ import java.net.URL;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
@@ -80,6 +82,7 @@ import com.sun.xml.parser.*;
  * Ideally should move all the bean containers here.
  *
  * @author Mandar Raje.
+ * @author Rajiv Mordani.
  */
 public class JspUtil {
 
@@ -122,16 +125,19 @@ public class JspUtil {
 	
 	int length = returnString.length();
 	if (expression.endsWith(CLOSE_EXPR))
-	    returnString = returnString.substring (0, length - CLOSE_EXPR.length());
+	    returnString = returnString.substring (0, length - 
+	    						CLOSE_EXPR.length());
 	else if (expression.endsWith(CLOSE_EXPR_2))
-	    returnString = returnString.substring (0, length - CLOSE_EXPR_2.length());
+	    returnString = returnString.substring (0, length - 
+	    						CLOSE_EXPR_2.length());
 	
 	return returnString;
     }
 
     // Parses the XML document contained in the InputStream.
-    public static XmlDocument parseXMLDoc(InputStream in, URL dtdURL, String dtdId)
-    throws JasperException {
+    public static XmlDocument parseXMLDoc(InputStream in, URL dtdURL, 
+    					  String dtdId) throws JasperException 
+    {
 	XmlDocument tld;
 	XmlDocumentBuilder builder = new XmlDocumentBuilder();
 	
@@ -153,21 +159,83 @@ public class JspUtil {
             builder.setDisableNamespaces(false);
             parser.parse(new InputSource(in));
         } catch (SAXException sx) {
-            throw new JasperException(Constants.getString("jsp.error.parse.error.in.TLD",
-                                                          new Object[] {
-		sx.getMessage()
-		    }
-                                                          ));
+            throw new JasperException(Constants.getString(
+	    	"jsp.error.parse.error.in.TLD", new Object[] {
+							sx.getMessage()
+		    				     }));
         } catch (IOException io) {
-            throw new JasperException(Constants.getString("jsp.error.unable.to.open.TLD",
-                                                          new Object[] {
-		io.getMessage()
-		    }
-                                                          ));
+            throw new JasperException(Constants.getString(
+	    		"jsp.error.unable.to.open.TLD", new Object[] {
+							    io.getMessage() }));
         }
         
         tld = builder.getDocument();
 	return tld;
+    }
+
+    public static void checkAttributes (String typeOfTag, Hashtable attrs,
+    					ValidAttribute[] validAttributes)
+					throws JasperException
+    {
+	boolean valid = true;
+	Hashtable temp = (Hashtable)attrs.clone ();
+
+	/**
+	 * First check to see if all the mandatory attributes are present.
+	 * If so only then proceed to see if the other attributes are valid
+	 * for the particular tag.
+	 */
+	String missingAttribute = null;
+
+	for (int i = 0; i < validAttributes.length; i++) {
+	        
+	    if (validAttributes[i].mandatory) {
+	        if (temp.get (validAttributes[i].name) != null) {
+	            temp.remove (validAttributes[i].name);
+		    valid = true;
+		} else {
+		    valid = false;
+		    missingAttribute = validAttributes[i].name;
+		    break;
+		}
+	    }
+	}
+
+	/**
+	 * If mandatory attribute is missing then the exception is thrown.
+	 */
+	if (!valid)
+	    throw new JasperException(Constants.getString(
+			"jsp.error.mandatory.attribute", 
+                                 new Object[] { typeOfTag, missingAttribute}));
+
+	/**
+	 * Check to see if there are any more attributes for the specified
+	 * tag.
+	 */
+	if (temp.size() == 0)
+	    return;
+
+	/**
+	 * Now check to see if the rest of the attributes are valid too.
+	 */
+   	Enumeration enum = temp.keys ();
+	String attribute = null;
+
+	while (enum.hasMoreElements ()) {
+	    valid = false;
+	    attribute = (String) enum.nextElement ();
+	    for (int i = 0; i < validAttributes.length; i++) {
+	        if (attribute.equals(validAttributes[i].name)) {
+		    valid = true;
+		    break;
+		}
+	    }
+	    if (!valid)
+	        throw new JasperException(Constants.getString(
+			"jsp.error.invalid.attribute", 
+                                 new Object[] { typeOfTag, attribute }));
+	}
     }
     
     public static String escapeQueryString(String unescString) {
@@ -188,10 +256,18 @@ public class JspUtil {
 	return escString;
     }
     
+
+    public static class ValidAttribute {
+   	String name;
+	boolean mandatory;
+
+	public ValidAttribute (String name, boolean mandatory) {
+	    this.name = name;
+	    this.mandatory = mandatory;
+	}
+
+	public ValidAttribute (String name) {
+	    this (name, false);
+	}
+    }
 }
-
-
-
-
-
-
