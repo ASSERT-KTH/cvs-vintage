@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.159 2004/11/04 17:23:13 bobtarling Exp $
+<!-- $Id: build.xml,v 1.160 2004/12/23 12:08:18 bobtarling Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -740,7 +740,8 @@ Property files to be searched:
     <java classname="org.argouml.application.Main"
           classpath="${argo.build.classes};${classpath}"
           fork="yes"
-          taskname="argouml">
+          taskname="argouml"
+     	  jvmargs="-Xmx500M">
       <!--sysproperty key="javax.xml.parsers.SAXParserFactory"
                    value="org.apache.xerces.parsers.SAXParser"/-->
       <!-- sysproperty key="log4j.configuration"
