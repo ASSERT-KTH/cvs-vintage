@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public class TxManager
    implements TransactionManager
@@ -76,15 +76,9 @@ public class TxManager
    {
 //      Logger.log("commit tx");
 
-		try {
+		
 
 			getTransaction().commit();
-		}
-		finally {
-
-			// Disassociation
-			threadTx.set(null);
-		}
    }
 
    public int getStatus()
@@ -205,33 +199,41 @@ public class TxManager
 
 
 
-   // Public --------------------------------------------------------
-   public void commit(Transaction tx)
-            throws RollbackException,
-                   HeuristicMixedException,
-                   HeuristicRollbackException,
-                   java.lang.SecurityException,
-                   java.lang.IllegalStateException,
-                   SystemException
-   {
-	  // Look up the txCapsule and delegate
-	  ((TxCapsule) txCapsules.get(tx)).commit();
-   }
-
-   public boolean delistResource(Transaction tx, XAResource xaRes, int flag)
+	// Public --------------------------------------------------------
+	protected void commit(Transaction tx)
+	throws RollbackException,
+	HeuristicMixedException,
+	HeuristicRollbackException,
+	java.lang.SecurityException,
+	java.lang.IllegalStateException,
+	SystemException
+	{
+		try {
+			
+			// Look up the txCapsule and delegate
+			((TxCapsule) txCapsules.get(tx)).commit();
+		}
+		finally {
+			
+			// Disassociation
+			threadTx.set(null);
+		}
+	}
+	
+   protected boolean delistResource(Transaction tx, XAResource xaRes, int flag)
    {
 	   // Look up the txCapsule and delegate
 	   return ((TxCapsule) txCapsules.get(tx)).delistResource(xaRes, flag);
    }
 
-   public boolean enlistResource(Transaction tx, XAResource xaRes)
+   protected boolean enlistResource(Transaction tx, XAResource xaRes)
       throws RollbackException
    {
    		// Look up the txCapsule and delegate
 	   return ((TxCapsule) txCapsules.get(tx)).enlistResource(xaRes);
    }
 
-   public int getStatus(Transaction tx)
+   protected int getStatus(Transaction tx)
               throws SystemException
    {
       // Look up the txCapsule and delegate
@@ -239,22 +241,30 @@ public class TxManager
       return txCap == null ? Status.STATUS_NO_TRANSACTION : txCap.getStatus();
    }
 
-   public void registerSynchronization(Transaction tx, Synchronization s)
+   protected void registerSynchronization(Transaction tx, Synchronization s)
    {
       // Look up the txCapsule and delegate
 	  ((TxCapsule) txCapsules.get(tx)).registerSynchronization(s);
    }
 
-   public void rollback(Transaction tx)
+   protected void rollback(Transaction tx)
               throws java.lang.IllegalStateException,
                      java.lang.SecurityException,
                      SystemException
-   {
-	   // Look up the txCapsule and delegate
-	  ((TxCapsule) txCapsules.get(tx)).rollback();
-   }
-
-   public void setRollbackOnly(Transaction tx)
+	{
+		try {
+			
+			// Look up the txCapsule and delegate
+			((TxCapsule) txCapsules.get(tx)).rollback();
+		}
+		finally {
+			
+			// Disassociation
+			threadTx.set(null);
+		}
+	}
+	
+   protected void setRollbackOnly(Transaction tx)
                      throws java.lang.IllegalStateException,
                             SystemException
    {
