@@ -24,7 +24,7 @@ import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
    
 import org.apache.log4j.Category;
-import org.apache.log4j.Priority;
+import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -51,7 +51,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss.system:type=Log4jService,service=Logging"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.22 $</tt>
+ * @version <tt>$Revision: 1.23 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -212,7 +212,7 @@ public class Log4jService
    public void setLoggerPriority(final String name, final String priority)
    {
       Category c = Category.getInstance(name);
-      XLevel p = XLevel.toPriority(priority);
+      Level p = XLevel.toLevel(priority);
 
       c.setLevel(p);
 
@@ -229,7 +229,7 @@ public class Log4jService
    public String getLoggerPriority(final String name)
    {
       Category c = Category.getInstance(name);
-      Priority p = c.getPriority();
+      Level p = c.getLevel();
 
       if (p != null) 
          return p.toString();
@@ -299,14 +299,14 @@ public class Log4jService
       {
          category = Category.getInstance("STDOUT");
          out = System.out;
-         System.setOut(new CategoryStream(category, Priority.INFO, out));
+         System.setOut(new CategoryStream(category, Level.INFO, out));
          log.debug("Installed System.out adapter");
       }
       if (CATCH_SYSTEM_ERR)
       {
          category = Category.getInstance("STDERR");
          err = System.err;
-         System.setErr(new CategoryStream(category, Priority.ERROR, err));
+         System.setErr(new CategoryStream(category, Level.ERROR, err));
          log.debug("Installed System.err adapter");
       }
    }
