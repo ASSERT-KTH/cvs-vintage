@@ -1,6 +1,6 @@
 #set ($action = $link.setPage("ViewIssueLong.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssueLong.vm"))
 
-#set ($user = $scarabR.User)
+#set ($user = $data.User)
 #set ($issueIdList = $user.getTemp("issueIdList"))
 
 #if( $issueIdList )
