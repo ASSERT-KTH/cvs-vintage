@@ -94,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.33 2001/09/12 21:51:13 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.34 2001/09/24 21:36:28 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -546,7 +546,7 @@ public class ModifyIssue extends TemplateAction
                // Save activity record
                Activity activity = new Activity();
                StringBuffer descBuf = new StringBuffer("changed dependency " + 
-                                                       "type on Issue  ");
+                                                       "type on Issue ");
                descBuf.append(issue.getUniqueId());
                descBuf.append(" from ").append(oldValue);
                descBuf.append(" to ").append(newValue);
@@ -599,8 +599,14 @@ public class ModifyIssue extends TemplateAction
                                     new NumberKey(observedId.toString()));
                 if (parentIssue.getDependency(issue) != null)
                 {
-                    observedId.setMessage("This issue already has a dependency on " +
-                                          "the issue id you entered.");
+                    observedId.setMessage("This issue already has a dependency" 
+                                          + " on the issue id you entered.");
+                    isValid = false;
+                }
+                else if (parentIssue.equals(issue))
+                {
+                    observedId.setMessage("You cannot add a dependency for an " 
+                                          + "issue on itself.");
                     isValid = false;
                 }
             }
@@ -634,7 +640,9 @@ public class ModifyIssue extends TemplateAction
             Activity activity = new Activity();
             StringBuffer descBuf = new StringBuffer("added ");
             descBuf.append(depend.getDependType().getName());
-            descBuf.append(" dependency on Issue  ");
+            descBuf.append(" dependency for Issue ");
+            descBuf.append(issue.getUniqueId());
+            descBuf.append(" on Issue  ");
             descBuf.append(parentIssue.getUniqueId());
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
