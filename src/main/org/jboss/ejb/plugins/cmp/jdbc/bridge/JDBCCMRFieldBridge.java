@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1133,7 +1133,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                   // crete the relation set and register for a tx callback
                   relationSet = new RelationSet(
                      JDBCCMRFieldBridge.this, ctx, setHandle);
-                  TxSynchronization sync = new TxSynchronization(setHandle);
+                  TxSynchronization sync = 
+                        new TxSynchronization(FieldState.this);
                   tx.registerSynchronization(sync);
                
                } else {
@@ -1160,7 +1161,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return lastRead;
       }
       public void invalidate() {
-         setHandle[0] = null;
+         if(setHandle != null && setHandle.length > 0)
+         {
+            setHandle[0] = null;
+         }
          setHandle = null;
          relationSet = null;
       }
@@ -1230,16 +1234,17 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          throw new UnsupportedOperationException();
       }
    }
-   private final static class TxSynchronization implements Synchronization {
-      private final WeakReference setHandleRef;
+   private final static class TxSynchronization implements Synchronization 
+   {
+      private final WeakReference fieldStateRef;
       
-      private TxSynchronization(List[] setHandle)
+      private TxSynchronization(FieldState fieldState)
       {
-         if(setHandle == null || setHandle.length != 1) {
-            throw new IllegalArgumentException("setHandle must be an array " +
-                  "of length 1: " + setHandle);
+         if(fieldState == null)
+         {
+            throw new IllegalArgumentException("fieldState is null");
          }
-         this.setHandleRef = new WeakReference(setHandle);
+         this.fieldStateRef = new WeakReference(fieldState);
       }
       
       public void beforeCompletion()
@@ -1249,9 +1254,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
       public void afterCompletion(int status)
       {
-         List[] setHandle = (List[])setHandleRef.get();
-         if(setHandle != null) {
-            setHandle[0] = null;
+         FieldState fieldState = (FieldState)fieldStateRef.get();
+         if(fieldState != null) {
+            fieldState.invalidate();
          }
       }
    }
