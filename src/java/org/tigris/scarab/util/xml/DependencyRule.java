@@ -63,12 +63,13 @@ public class DependencyRule extends Rule
 {
     private String state;
     private DependencyTree dependTree;
-    
+    private Category cat;
     public DependencyRule(Digester digester, String state, DependencyTree dependTree)
     {
         super(digester);
         this.state = state;
         this.dependTree = dependTree;
+        cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
     }
     
     /**
@@ -77,7 +78,7 @@ public class DependencyRule extends Rule
      */
     public void end() throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
+        
         cat.debug("(" + state + ") dependency end()");
         if(state.equals(DBImport.STATE_DB_INSERTION))
         {
@@ -139,13 +140,15 @@ public class DependencyRule extends Rule
         {
             if(dependTree.isIssueResolvedYet(parentOrChildIssueXmlId)) 
             {
+                cat.debug("parent dependency of " + parentOrChildIssueXmlId + " has been resolved");
                 depend.setObserverId(issue.getIssueId());
                 depend.setObservedId(dependTree.getIssueId(parentOrChildIssueXmlId));
                 depend.save();
             }
             else{
+                cat.debug("can't resolve the parent dependency of " + parentOrChildIssueXmlId);
                 //resolve at the end 
-                dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType, issueXmlId, parentOrChildIssueXmlId, dependType, true));
+                dependTree.addIssueDependency(issueXmlId, new DependencyNode(nodeType, issueXmlId, parentOrChildIssueXmlId, dependType, false));
             }
             
         } 
