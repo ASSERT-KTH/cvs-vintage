@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.144 2004/01/14 20:27:43 linus Exp $
+<!-- $Id: build.xml,v 1.145 2004/02/08 08:23:23 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -954,7 +954,6 @@ For details see http://www.clarkware.com/software/JDepend.html.
       <sysproperty key="checkstyle.header.file" value="${argo.tools.dir}/checkstyle/java.header"/>
       <classpath>
 	<pathelement location="${checkstyle.jar.path}"/>
-	<pathelement location="${checkstyleindent.jar.path}"/>
         <pathelement location="${xerces.jar.path}"/>
       </classpath>
       <arg value="-c"/>
@@ -973,7 +972,6 @@ For details see http://www.clarkware.com/software/JDepend.html.
       <sysproperty key="checkstyle.header.file" value="${argo.tools.dir}/checkstyle/java.header"/>
       <classpath>
 	<pathelement location="${checkstyle.jar.path}"/>
-	<pathelement location="${checkstyleindent.jar.path}"/>
         <pathelement location="${xerces.jar.path}"/>
       </classpath>
       <arg value="-c"/>
