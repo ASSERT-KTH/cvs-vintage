@@ -95,6 +95,18 @@
   </target>
 
   <target name="tomcat" depends="prepare,tomcat-compile">
+    <!-- create tomcat jar files -->
+    <jar jarfile="${tomcat.build}/lib/webserver.jar"
+         basedir="${tomcat.build}/classes" > 
+         <include name="org/apache/tomcat/**" /> 
+         <exclude name="org/apache/tomcat/deployment/**" />
+         <exclude name="org/apache/tomcat/j2ee/**" />
+         <exclude name="org/apache/tomcat/util/XMLParser.class" /> 
+         <exclude name="org/apache/tomcat/util/XMLTree.class" />
+    </jar>
+    <jar jarfile="${tomcat.build}/lib/jasper.jar"
+         basedir="${tomcat.build}/classes"
+         includes="org/apache/jasper/**"/>
   </target>
 
 
@@ -108,8 +120,6 @@
    <copydir src="src/j2ee" 
             dest="${tomcat.build}/classes">
         <include name="**/*.properties" />
-        <include name="**/web.dtd" />
-        <include name="**/web.xml" />
     </copydir>
   </target>
 
@@ -158,19 +168,6 @@
     <mkdir dir="${tomcat.home}"/>
     <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
     <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
-
-    <!-- create tomcat jar files -->
-    <jar jarfile="${tomcat.home}/lib/webserver.jar"
-         basedir="${tomcat.build}/classes" >
-         <include name="org/apache/tomcat/**" />
-         <exclude name="org/apache/tomcat/deployment/**" />
-         <exclude name="org/apache/tomcat/j2ee/**" />
-         <exclude name="org/apache/tomcat/util/XMLParser.class" />
-         <exclude name="org/apache/tomcat/util/XMLTree.class" />
-    </jar> 
-    <jar jarfile="${tomcat.home}/lib/jasper.jar"
-         basedir="${tomcat.home}/classes"
-         includes="org/apache/jasper/**"/>
     <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
     <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.home}/lib/jaxp.jar"/>
     <copyfile src="${jaxp}/parser.jar" dest="${tomcat.home}/lib/parser.jar"/>
