@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.10 2000/02/25 19:45:38 mandar Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/25 19:45:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.11 2000/02/25 19:48:16 mandar Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/02/25 19:48:16 $
  *
  * ====================================================================
  * 
@@ -719,25 +719,11 @@ public class JspParseEventListener extends BaseJspListener {
                 if (genCoords) {
 		    commentGenerator.generateStartComment
 			(generator, out, start, stop);
-                    //if (start != null && stop != null) {
-		    //  if (start.fileid == stop.fileid) {
-		    //    String fileName = out.quoteString(
-		    //    				start.getFile ());
-		    //      out.println("// begin [file="+fileName+";from="+
-		    //                  start.toShortString()+";to="+stop.toShortString()+"]");
-		    //}
-		    //  else
-		    //      out.println("// begin [from="+start+";to="+stop+"]");
-                    //} else
-		    //  out.println("// begin");
-                    //out.pushIndent();
                 }
                 generator.generate(out, phase);
                 if (genCoords) {
 		    commentGenerator.generateEndComment
 			(generator, out, start, stop);
-                    //out.popIndent();
-                    //out.println("// end");
                 }
             }
         }
