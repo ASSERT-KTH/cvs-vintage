@@ -83,10 +83,11 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.9 2002/02/13 20:06:05 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.10 2002/02/14 02:04:14 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
+
     /**
      * Adds or modifies an issue type's properties.
      */
@@ -199,6 +200,10 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 rmit.setDedupe(false);
             }
             rmit.save();
+        }
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
         }
     }
 
