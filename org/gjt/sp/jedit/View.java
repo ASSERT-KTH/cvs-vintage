@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.104 2003/10/09 00:00:30 spestov Exp $
+ * @version $Id: View.java,v 1.105 2003/10/10 23:46:24 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -494,7 +494,6 @@ public class View extends JFrame implements EBComponent
 				|| inputHandler.isPrefixActive()
 				|| getTextArea().hasFocus())
 			{
-			System.err.println(getFocusOwner());
 				KeyEventTranslator.Key keyStroke
 					= KeyEventTranslator
 					.translateKeyEvent(evt);

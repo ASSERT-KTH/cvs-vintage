@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.35 2003/05/22 18:48:41 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.36 2003/10/10 23:46:24 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -222,7 +222,15 @@ public abstract class OptionsDialog extends EnhancedDialog
 			new Object[] { jEdit.getProperty(this.name + ".title"),
 			buf.toString() }));
 
-		optionPane.init();
+		try
+		{
+			optionPane.init();
+		}
+		catch(Throwable t)
+		{
+			Log.log(Log.ERROR,this,"Error initializing options:");
+			Log.log(Log.ERROR,this,t);
+		}
 
 		if(currentPane != null)
 			stage.remove(currentPane.getComponent());

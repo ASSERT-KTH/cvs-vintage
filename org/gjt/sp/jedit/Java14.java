@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.28 2003/09/21 19:59:16 spestov Exp $
+ * @version $Id: Java14.java,v 1.29 2003/10/10 23:46:24 spestov Exp $
  */
 public class Java14
 {
@@ -153,7 +153,8 @@ public class Java14
 				{
 					if(comp instanceof View)
 					{
-						((View)comp).processKeyEvent(evt);
+						((View)comp).processKeyEvent(evt,
+							View.VIEW);
 						return true;
 					}
 					else if(comp == null || comp instanceof Window

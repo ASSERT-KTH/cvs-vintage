@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.196 2003/09/21 16:55:32 spestov Exp $
+ * @version $Id: jEdit.java,v 1.197 2003/10/10 23:46:24 spestov Exp $
  */
 public class jEdit
 {
@@ -376,7 +376,13 @@ public class jEdit
 
 		GUIUtilities.init();
 		BeanShell.init();
+
+		if(jEditHome != null)
+			initSiteProperties();
+
 		initUserProperties();
+
+
 		initPLAF();
 
 		VFSManager.init();
@@ -387,9 +393,6 @@ public class jEdit
 
 		if(loadPlugins)
 			initPlugins();
-
-		if(jEditHome != null)
-			initSiteProperties();
 
 		BufferHistory.load();
 		KillRing.load();
@@ -1082,10 +1085,12 @@ public class jEdit
 
 			String path = MiscUtilities.constructPath(directory,plugin);
 
+			// remove this when 4.1 plugin API is deprecated
 			if(plugin.equals("EditBuddy.jar")
 				|| plugin.equals("PluginManager.jar")
 				|| plugin.equals("Firewall.jar")
-				|| plugin.equals("Tidy.jar"))
+				|| plugin.equals("Tidy.jar")
+				|| plugin.equals("DragAndDrop.jar"))
 			{
 				pluginError(path,"plugin-error.obsolete",null);
 				continue;

@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.MiscUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.19 2003/06/22 21:23:33 spestov Exp $
+ * @version $Id: Selection.java,v 1.20 2003/10/10 23:46:24 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -152,7 +152,7 @@ public abstract class Selection implements Cloneable
 	{
 	} //}}}
 
-	//{{{ Range constructor
+	//{{{ Selection constructor
 	Selection(Selection sel)
 	{
 		this.start = sel.start;
@@ -392,14 +392,14 @@ public abstract class Selection implements Cloneable
 		//{{{ getStart() method
 		public int getStart(Buffer buffer, int line)
 		{
-			return getColumnOnOtherLine(buffer,startLine,line,
+			return getColumnOnOtherLine(buffer,line,
 				getStartColumn(buffer));
 		} //}}}
 
 		//{{{ getEnd() method
 		public int getEnd(Buffer buffer, int line)
 		{
-			return getColumnOnOtherLine(buffer,startLine,line,
+			return getColumnOnOtherLine(buffer,line,
 				getEndColumn(buffer));
 		} //}}}
 
@@ -666,15 +666,15 @@ public abstract class Selection implements Cloneable
 		//{{{ Private members
 
 		//{{{ getColumnOnOtherLine() method
-		private int getColumnOnOtherLine(Buffer buffer, int line1,
-			int line2, int col)
+		private int getColumnOnOtherLine(Buffer buffer, int line,
+			int col)
 		{
 			int returnValue = buffer.getOffsetOfVirtualColumn(
-				line2,col,null);
+				line,col,null);
 			if(returnValue == -1)
-				return buffer.getLineEndOffset(line2) - 1;
+				return buffer.getLineEndOffset(line) - 1;
 			else
-				return buffer.getLineStartOffset(line2) + returnValue;
+				return buffer.getLineStartOffset(line) + returnValue;
 		} //}}}
 
 		//}}}
