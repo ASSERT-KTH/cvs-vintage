@@ -523,7 +523,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory?)>
+<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory?, RMIServerSocketAddr?)>
 
 <!-- 
         This element is only valid if the container invoker is 
@@ -588,6 +588,17 @@ default if metricsEnabled is not explicitly given.
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIServerSocketFactory (#PCDATA)>
+
+<!--
+	The RMIServerSocketAddr element specifies the address on which the
+     RMI objects should be bound.
+
+     Its value is the interface address as a dot decimal IP address or
+     hostname.
+
+        Used in: container-invoker-conf for JRMPContainerInvoker
+	-->
+<!ELEMENT RMIServerSocketAddr (#PCDATA)>
 
 <!ELEMENT JMSProviderAdapterJNDI (#PCDATA)>
 
