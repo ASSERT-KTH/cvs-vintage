@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCKeyGeneratorCreateCommand
    extends JDBCCreateEntityCommand
@@ -154,7 +154,7 @@ public class JDBCKeyGeneratorCreateCommand
          JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) iter.next();
          if( cmpField.isUnknownPk() )
          {
-            cmpField.setInstanceValue( ctx, keyGenerator.generateKey() );
+            cmpField.setInstanceValue( ctx, pk );
             break;
          }
       }
