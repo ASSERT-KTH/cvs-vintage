@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.68 2002/02/17 09:52:51 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.69 2002/02/21 23:33:19 chirino Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -567,6 +567,13 @@
         <include name="org/jboss/tm/usertx/client/*.class"/>
         <include name="org/jboss/tm/usertx/interfaces/*.class"/>
         <include name="org/jboss/tm/usertx/server/*Stub.class"/>
+      </fileset>
+    </jar>
+
+    <!-- boot.jar -->
+    <jar jarfile="${build.lib}/boot.jar" manifest="${build.etc}/manifest/boot.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/Boot*"/>
       </fileset>
     </jar>
 
