@@ -46,6 +46,7 @@
     <property name="src.usecases.dir" value="${src.dir}/usecases"/>
 
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
+    <property name="tomcat.cvs.dir" value="../../jakarta-tomcat-4.0"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -461,6 +462,28 @@
         <jar jarfile="${build.dir.scarab}/${final.name}.src.jar"
             basedir="${build.src.scarab}"
             excludes="**/package.html"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Tomcat easily                               -->
+    <!-- ================================================================== -->
+    <target name="upgrade-tomcat">
+        <copy todir="${tomcat.dist.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/bin"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/common" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/common"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/lib" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/lib">
+                <include name="namingfactory.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/server" filtering="no">
+            <fileset dir="${tomcat.cvs.dir}/build/server">
+                <exclude name="warp.jar"/>
+            </fileset>
+        </copy>
     </target>
 
     <!-- ================================================================== -->
