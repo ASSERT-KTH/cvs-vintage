@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.21 2005/01/31 20:54:36 linus Exp $
+// $Id: CoreFactoryImpl.java,v 1.22 2005/02/07 16:38:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1430,7 +1430,7 @@ public class CoreFactoryImpl
      * @param clnt is the client
      * @param spplr is the supplier
      * @param model the namespace to use if client and
-     * supplier are of different namespace
+     *              supplier are of different namespace
      * @return Object the created abstraction
      */
     public Object buildRealization(
@@ -1452,7 +1452,7 @@ public class CoreFactoryImpl
 	if (nsc.equals(nss)) {
 	    ns = nsc;
 	} else {
-	    ns = (MModel) model;
+	    ns = (MNamespace) model;
 	}
 	nsmodel.getExtensionMechanismsFactory().buildStereotype(realization,
 								"realize", ns);
