@@ -40,7 +40,7 @@ fi
 
 # Creating new base and inputting default data
 
-echo "Creating Database..."        
+echo "Creating Database ${DB_NAME}..."
 ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 
 FILES="mysql-scarab.sql \
