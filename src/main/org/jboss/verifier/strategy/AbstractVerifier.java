@@ -8,18 +8,18 @@ package org.jboss.verifier.strategy;
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.17 2001/01/24 10:00:04 oberg Exp $
+ * $Id: AbstractVerifier.java,v 1.18 2001/06/07 21:27:06 kvvinaymenon Exp $
  */
 
 // standard imports
@@ -60,8 +60,9 @@ import org.gjt.lindfors.pattern.StrategyContext;
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
+ * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -76,7 +77,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     /**
      * The application classloader. This can be provided by the context directly
      * via {@link VerificationContext#getClassLoader} method, or constructed
-     * by this object by creating a classloader to the URL returned by 
+     * by this object by creating a classloader to the URL returned by
      * {@link VerificationContext#getJarLocation} method. <p>
      *
      * Initialized in the constructor.
@@ -87,12 +88,12 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * Factory for generating the verifier events. <p>
      *
      * Initialized in the constructor.
-     * 
+     *
      * @see org.jboss.verifier.factory.DefaultEventFactory
      */
     private VerificationEventFactory factory = null;
 
-    /** 
+    /**
      * Context is used for retrieving application level information, such
      * as the application meta data, location of the jar file, etc. <p>
      *
@@ -108,9 +109,9 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *************************************************************************
  */
 
-    public AbstractVerifier(VerificationContext      context, 
+    public AbstractVerifier(VerificationContext      context,
                             VerificationEventFactory factory) {
-        
+
         this.factory     = factory;
         this.context     = context;
         this.classloader = context.getClassLoader();
@@ -121,7 +122,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             ClassLoader parent = Thread.currentThread().getContextClassLoader();
             this.classloader   = new URLClassLoader(list, parent);
         }
-        
+
     }
 
 
@@ -132,7 +133,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *
  *************************************************************************
  */
-    
+
     public boolean hasLegalRMIIIOPArguments(Method method) {
 
         Class[] params = method.getParameterTypes();
@@ -148,6 +149,27 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return isRMIIIOPType(method.getReturnType());
     }
 
+
+    public boolean hasLegalRMIIIOPExceptionTypes(Method method) {
+
+        /*
+         * All checked exception classes used in method declarations
+         * (other than java.rmi.RemoteException) MUST be conforming
+         * RMI/IDL exception types.
+         *
+         * Spec 28.2.3 (4)
+         */
+        Iterator it = Arrays.asList(method.getExceptionTypes()).iterator();
+
+        while (it.hasNext()) {
+            Class exception = (Class)it.next();
+
+            if (!isRMIIDLExceptionType(exception))
+                return false;
+        }
+
+        return true;
+    }
 
     /*
      * checks if the method includes java.rmi.RemoteException or its
@@ -184,16 +206,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * throws clause.
      */
     public boolean throwsFinderException(Method method) {
-        
+
         Class[] exception = method.getExceptionTypes();
-        
+
         for (int i = 0; i < exception.length; ++i)
             if (javax.ejb.FinderException.class.isAssignableFrom(exception[i]))
                 return true;
-                
+
         return false;
     }
-    
+
 
     /*
      * checks if a class's member (method, constructor or field) has a 'static'
@@ -550,20 +572,20 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      * returns the finder methods of a home interface
      */
     public Iterator getFinderMethods(Class home) {
-        
+
         List finders = new LinkedList();
-        
+
         Method[] method = home.getMethods();
-        
+
         for (int i = 0; i < method.length; ++i) {
-            
+
             if (method[i].getName().startsWith("find"))
                 finders.add(method[i]);
         }
-        
+
         return finders.iterator();
     }
-    
+
     /*
      * Returns the ejbCreate(...) methods of a bean
      */
@@ -663,7 +685,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         }
     }
 
-    
+
     public boolean hasMatchingEJBCreate(Class bean, Method create) {
         try {
             return (bean.getMethod(EJB_CREATE_METHOD, create.getParameterTypes()) != null);
@@ -703,7 +725,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return false;
         }
     }
-    
+
     public Method getMatchingEJBFind(Class bean, Method finder) {
         try {
             String methodName = "ejbF" + finder.getName().substring(1);
@@ -714,7 +736,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return null;
         }
     }
-    
+
 /*
  *************************************************************************
  *
@@ -722,18 +744,18 @@ public abstract class AbstractVerifier implements VerificationStrategy {
  *
  *************************************************************************
  */
- 
+
     protected void fireSpecViolationEvent(BeanMetaData bean, Section section) {
         fireSpecViolationEvent(bean, null /* method */, section);
     }
-    
+
     protected void fireSpecViolationEvent(BeanMetaData bean, Method method,
                                           Section section) {
 
         VerificationEvent event = factory.createSpecViolationEvent(context, section);
         event.setName(bean.getEjbName());
         event.setMethod(method);
-        
+
         context.fireSpecViolation(event);
     }
 
@@ -745,7 +767,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         context.fireBeanChecked(event);
     }
 
-    
+
 /*
  *************************************************************************
  *
@@ -771,7 +793,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return context;
     }
 
-    
+
 /*
  *************************************************************************
  *
@@ -868,7 +890,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
          */
         if (!java.rmi.Remote.class.isAssignableFrom(type))
             return false;
-        
+
         Iterator methodIterator = Arrays.asList(type.getMethods()).iterator();
 
         while (methodIterator.hasNext()) {
