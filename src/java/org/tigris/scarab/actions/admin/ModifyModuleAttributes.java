@@ -69,6 +69,7 @@ import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
@@ -80,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.37 2001/11/01 22:09:59 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.38 2001/11/08 02:18:12 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -268,6 +269,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         String attributeId = data.getParameters().getString("attributeid");
         String groupId = data.getParameters().getString("groupId");
+        Attribute attribute = (Attribute)AttributePeer.
+                               retrieveByPK(new NumberKey(attributeId));
         AttributeGroup group = null;
 
         // FIXME: use intake for this stuff...
@@ -295,11 +298,11 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             return;
         }
 
-        NumberKey issueTypeId = group.getIssueTypeId();
+        //ModuleEntity module = (ScarabModule)ScarabModulePeer.retrieveByPk
+        ModuleEntity module = group.getScarabModule();
         IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
+                            .retrieveByPK(group.getIssueTypeId());
 
-        ModuleEntity module = scarabR.getCurrentModule();
 
         // add module-attribute mappings
         RModuleAttribute rma = new RModuleAttribute();
@@ -309,6 +312,25 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rma.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
         rma.setOrder(module.getHighestSequence(issueType) + 1);
         rma.save();
+
+        // add module-attributeoption mappings
+        List options = attribute.getAttributeOptions();
+        for (int i=0;i < options.size();i++)
+        {
+            AttributeOption option = (AttributeOption)options.get(i);
+            RModuleOption rmo = new RModuleOption();
+            rmo.setModuleId(module.getModuleId());
+            rmo.setIssueTypeId(issueType.getIssueTypeId());
+            rmo.setOptionId(option.getOptionId());
+            rmo.setDisplayValue(option.getName());
+            rmo.save();
+            // add module-attributeoption mappings to template type
+            RModuleOption rmo2 = rmo.copy();
+            rmo2.setModuleId(module.getModuleId());
+            rmo2.setIssueTypeId(issueType.getTemplateId());
+            rmo2.save();
+        }
+        
 
         // add module-attribute mappings to template type
         RModuleAttribute rma2 = new RModuleAttribute();
@@ -728,7 +750,6 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                Attribute attribute = (Attribute)AttributePeer
                                      .retrieveByPK(new NumberKey(attributeId));
 
-
                // Remove attribute - module mapping
                IssueType issueType = ag.getIssueType();
                RModuleAttribute rma = module
@@ -743,11 +764,17 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                }
 
                // Remove attribute - module mapping from template type
-               IssueType templateType = (IssueType)IssueTypePeer
-                                        .retrieveByPK(new NumberKey("2"));
                RModuleAttribute rma2 = module
-                   .getRModuleAttribute(attribute, templateType); 
-               rma2.delete(user);
+                   .getRModuleAttribute(attribute, 
+                   scarabR.getIssueType(issueType.getTemplateId().toString()));
+               try
+               {
+                   rma2.delete(user);
+               }
+               catch (Exception e)
+               {
+                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+               }
 
                // Remove attribute - group mapping
                RAttributeAttributeGroup raag = 
@@ -761,6 +788,26 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                {
                   data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
                }
+
+               if (attribute.isOptionAttribute())
+               {
+                   // Remove module-option mapping
+                   List rmos = module.getRModuleOptions(attribute, issueType);
+                   rmos.addAll(module.getRModuleOptions(attribute, 
+                         scarabR.getIssueType(issueType.getTemplateId().toString())));
+                   for (int j = 0; j<rmos.size();j++)
+                   {
+                       RModuleOption rmo = (RModuleOption)rmos.get(j);
+                       try
+                       {
+                          rmo.delete(user);
+                       }
+                       catch (Exception e)
+                       {
+                          data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                       }
+                   }
+                }
             }
         }        
         data.getParameters().add("groupid", groupId);
