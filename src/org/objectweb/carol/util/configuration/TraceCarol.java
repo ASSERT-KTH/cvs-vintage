@@ -55,6 +55,7 @@ public class TraceCarol {
     protected static Logger carolLogger = null;  
     protected static Logger jndiCarolLogger = null;
     protected static Logger rmiCarolLogger = null;
+    protected static Logger cmiCarolLogger = null;
 
     /**
     * Configure the log for CAROL.
@@ -95,6 +96,7 @@ public class TraceCarol {
         carolLogger = lf.getLogger(prefix);
         jndiCarolLogger = lf.getLogger(prefix + ".jndi");
         rmiCarolLogger = lf.getLogger(prefix + ".rmi");
+        cmiCarolLogger = lf.getLogger(prefix + ".cmi");
     }
 
 
@@ -193,6 +195,27 @@ public class TraceCarol {
     public static void debugRmiCarol(String msg) {
         if (rmiCarolLogger != null) {
             rmiCarolLogger.log(BasicLevel.DEBUG, msg);
+        }
+    }
+
+    /**
+     * Test if Cmi info messages are logged.
+     *
+     * @return boolean  <code>true</code> if Cmi info messages are logged,
+     * <code>false</code> otherwise
+     */
+    static public boolean isInfoCmiCarol() {
+        return (cmiCarolLogger != null) && cmiCarolLogger.isLoggable(BasicLevel.INFO);
+    }
+
+    /**
+     * Log a Cmi info message.
+     *
+     * @param <code>msg</code> Cmi info message
+     */
+    public static void infoCmiCarol(String msg) {
+        if (cmiCarolLogger != null) {
+            cmiCarolLogger.log(BasicLevel.INFO, msg);
         }
     }
 }

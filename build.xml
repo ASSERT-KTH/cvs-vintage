@@ -74,6 +74,7 @@
     <antcall target="compile.iiop"/> 
     <antcall target="compile.jonathan"/>
     <antcall target="compile.jvm.daemon"/>
+    <antcall target="compile.cmi"/>
   </target>
 
   <!-- Compile base file -->
@@ -124,6 +125,15 @@
       <!-- include specific rmi iiop interception features -->
       <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
     </javac> 
+  </target>
+
+  <target name="compile.cmi">
+    <rmic base="${build}/classes" classname="org.objectweb.carol.cmi.ClusterRegistryImpl">
+    <classpath refid="carol.classpath"/>
+    </rmic>
+    <rmic base="${build}/classes" classname="org.objectweb.carol.cmi.jndi.ReferenceImpl">
+    <classpath refid="carol.classpath"/>
+    </rmic>
   </target>
 
   <!-- **************************************-->

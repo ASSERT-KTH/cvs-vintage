@@ -98,6 +98,10 @@ public class RMIConfiguration {
 	String urlPref     = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.URL_PREFIX;
 	String factoryPref = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.FACTORY_PREFIX;
 
+    if (name.equals("cmi")) {
+        org.objectweb.carol.cmi.Config.setProperties(carolProperties);
+    }
+
 	// RMI Properties
 	rmiName=name;
 
@@ -193,20 +197,25 @@ public class RMIConfiguration {
      * 0 is given in error case)
      */
     static int getPortOfUrl(String url) {
-	int portNumber = 0;
-	try {
-	    StringTokenizer st = new StringTokenizer(url,":");
-	    st.nextToken();
-	    st.nextToken();
-	    if (st.hasMoreTokens()) {
-		StringTokenizer lastst = new StringTokenizer(st.nextToken(),"/");
-		String pts = lastst.nextToken().trim();
-		portNumber = new Integer(pts).intValue();
-	    }
-	    return portNumber;
-	} catch (Exception e) {
-	    return -1;
-	}
+        int portNumber = 0;
+        try {
+            StringTokenizer st = new StringTokenizer(url, ":");
+            st.nextToken();
+            st.nextToken();
+            if (st.hasMoreTokens()) {
+                StringTokenizer lastst =
+                    new StringTokenizer(st.nextToken(), "/");
+                String pts = lastst.nextToken().trim();
+                int i = pts.indexOf(',');
+                if (i > 0) {
+                    pts = pts.substring(0, i);
+                }
+                portNumber = new Integer(pts).intValue();
+            }
+            return portNumber;
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
 }
