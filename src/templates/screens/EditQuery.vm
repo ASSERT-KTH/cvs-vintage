@@ -21,9 +21,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 
 <div class="functnbar">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
-  <input type="submit" name="eventSubmit_doDone" value="Done" />&#160; 
   <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 <h3>Query: $currentQuery.Name</h3>
@@ -104,9 +102,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 
 <div class="functnbar2">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
-  <input type="submit" name="eventSubmit_doDone" value="Done" />&#160; 
   <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
 </div>
 
 $intake.declareGroups()

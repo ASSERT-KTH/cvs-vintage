@@ -78,7 +78,7 @@
 
 <div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">Destination module / issue type</th>
+<th width="120">Destination module</th>
 <td>$newModule.Name</td>
 <tr>
 <th>Action</th>

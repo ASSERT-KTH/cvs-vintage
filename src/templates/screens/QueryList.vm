@@ -12,11 +12,6 @@
 
 <p>Click on name to modify the saved query. Click on availability to execute.</p>
 
-<div class="functnbar">        
-<input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
-</div>
- 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -110,10 +105,6 @@
 
 #end
 
-<div class="functnbar2">        
-<input type="submit" value="Done"  name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
-</div>
 
 $intake.declareGroups()
 </form>

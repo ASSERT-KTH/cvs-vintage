@@ -2,15 +2,6 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-#macro (TemplateListBar $val)
-<div class="functnbar$val">
-  #if ($noTemplates.equals("false"))
-  <input type="submit" value="Done" name="eventSubmit_doGonext" />&#160;
-  #end
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>
-#end
-
 <div class="app" id="templateList">
 
 <h2>$page.Title</h2>
@@ -19,7 +10,6 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
 
-#TemplateListBar("")
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
@@ -124,8 +114,6 @@
     &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
-
-#TemplateListBar("2")
 
 </form>
 </div>
