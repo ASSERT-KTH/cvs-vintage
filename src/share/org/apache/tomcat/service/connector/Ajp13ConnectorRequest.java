@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.1 2000/05/19 07:14:16 shachor Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/19 07:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.2 2000/05/25 14:18:22 shachor Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/25 14:18:22 $
  *
  * ====================================================================
  *
@@ -73,6 +73,12 @@ import javax.servlet.http.*;
 
 public class Ajp13ConnectorRequest extends RequestImpl 
 {
+	public static final int  MAX_READ_SIZE = TcpConnector.MAX_PACKET_SIZE - 
+	                                         TcpConnector.H_SIZE - 
+	                                         2;
+	                                         
+	public static final byte JK_AJP13_GET_BODY_CHUNK = 6;
+	
     public static final byte SC_A_CONTEXT      = 1;
     public static final byte SC_A_SERVLET_PATH = 2;
     public static final byte SC_A_REMOTE_USER  = 3;
@@ -112,10 +118,8 @@ public class Ajp13ConnectorRequest extends RequestImpl
     };
 
     MsgConnector con;
-    Hashtable env_vars;
 
-    private InputStream in;
-    byte bodyBuff[];
+    byte []bodyBuff = new byte[MAX_READ_SIZE];
     int blen;
     int pos;
 
@@ -212,6 +216,17 @@ public class Ajp13ConnectorRequest extends RequestImpl
 
         contentLength = headers.getIntHeader("content-length");
         contentType = headers.getHeader("content-type");
+    	((BufferedServletInputStream)this.in).setLimit(contentLength);
+    	if(contentLength > 0) {    		
+    		/* Read present data */
+    		int err = con.receive(msg);
+            if(err < 0) {
+            	return -1;                
+			}
+
+    		blen = msg.peekInt();
+    		msg.getBytes(bodyBuff);
+    	}
     
         return 0;
     }
@@ -219,8 +234,7 @@ public class Ajp13ConnectorRequest extends RequestImpl
     public int doRead() throws IOException 
     {
         if(pos > blen) {
-            System.out.println("Read after end " + pos + " " + blen );
-            return  -1;
+            refeelReadBuffer();
         }
         return bodyBuff[pos++];
     }
@@ -228,15 +242,15 @@ public class Ajp13ConnectorRequest extends RequestImpl
     public int doRead(byte[] b, int off, int len) throws IOException 
     {
         // XXXXXX Stupid, but the whole thing must be rewriten ( see super()! )
-        for(int i = off ; i < len+off ; i++) {
-            int a=doRead();
-            if(a==-1) {
+        for(int i = off ; i < (len + off) ; i++) {
+            int a = doRead();
+            if(-1 == a) {
                 System.out.println("Y");
                 return i-off;
             }
-            b[i]=(byte)a;
+            b[i] = (byte)a;
         }
-        System.out.println("doRead " + off + " " + len );
+        
         return len;
     }
     
@@ -252,4 +266,21 @@ public class Ajp13ConnectorRequest extends RequestImpl
         pos = 0;
         this.in = new BufferedServletInputStream(this);
     }   
+    
+    public void refeelReadBuffer() throws IOException 
+    {
+		MsgBuffer msg = con.getMsgBuffer();
+		msg.appendByte(JK_AJP13_GET_BODY_CHUNK);
+		msg.appendInt(MAX_READ_SIZE);
+		con.send(msg);
+		
+		int err = con.receive(msg);
+        if(err < 0) {
+        	throw new IOException();
+		}
+
+    	blen = msg.peekInt();
+    	pos = 0;
+    	msg.getBytes(bodyBuff);
+    }    
 }

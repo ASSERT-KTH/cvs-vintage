@@ -57,7 +57,7 @@
  * Description: Experimental bi-directionl protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -73,6 +73,7 @@
 #define DEF_RETRY_ATTEMPTS      (1)
 #define DEF_CACHE_SZ            (1)
 #define JK_INTERNAL_ERROR       (-2)
+#define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
 
 struct ajp13_endpoint;
 typedef struct ajp13_endpoint ajp13_endpoint_t;
@@ -106,6 +107,8 @@ struct ajp13_endpoint {
     int sd;
     int reuse;
     jk_endpoint_t endpoint;
+
+    unsigned left_bytes_to_send;
 };
 
 static void reset_endpoint(ajp13_endpoint_t *ep)
@@ -116,12 +119,38 @@ static void reset_endpoint(ajp13_endpoint_t *ep)
 
 static void close_endpoint(ajp13_endpoint_t *ep)
 {
+    reset_endpoint(ep);
     if(ep->sd > 0) {
         jk_close_socket(ep->sd);
     } 
     free(ep);
 }
 
+
+static void reuse_connection(ajp13_endpoint_t *ep,
+                             jk_logger_t *l)
+{
+    ajp13_worker_t *w = ep->worker;
+
+    if(w->ep_cache_sz) {
+        int rc;
+        JK_ENTER_CS(&w->cs, rc);
+        if(rc) {
+            unsigned i;
+                    
+            for(i = 0 ; i < w->ep_cache_sz ; i++) {
+                if(w->ep_cache[i]) {
+                    ep->sd = w->ep_cache[i]->sd;
+                    w->ep_cache[i]->sd = -1;
+                    close_endpoint(w->ep_cache[i]);
+                    w->ep_cache[i] = NULL;
+                    break;
+                 }
+            }
+            JK_LEAVE_CS(&w->cs, rc);
+        }
+    }
+}
 
 static void connect_to_tomcat(ajp13_endpoint_t *ep,
                               jk_logger_t *l)
@@ -196,6 +225,55 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
     return JK_TRUE;
 }
 
+static int read_fully_from_server(jk_ws_service_t *s, 
+                                  unsigned char *buf, 
+                                  unsigned len)
+{
+    unsigned rdlen = 0;
+
+    while(rdlen < len) {
+        unsigned this_time = 0;
+        if(!s->read(s, buf + rdlen, len - rdlen, &this_time)) {
+            return -1;
+        }
+
+        if(0 == this_time) {
+            break;
+        }
+	    rdlen += this_time;
+    }
+
+    return (int)rdlen;
+}
+
+static int read_into_msg_buff(ajp13_endpoint_t *ep,
+                              jk_ws_service_t *r, 
+                              jk_msg_buf_t *msg, 
+                              jk_logger_t *l,
+                              unsigned len)
+{
+    unsigned char *read_buf = jk_b_get_buff(msg);                                                                                       
+
+    jk_b_reset(msg);
+    
+    read_buf += 4; /* leave some space for the buffer headers */
+    read_buf += 2; /* leave some space for the read length */
+
+    if(read_fully_from_server(r, read_buf, len) <= 0) {
+        return JK_FALSE;                        
+    } 
+    
+    ep->left_bytes_to_send -= len;
+
+    if(0 != jk_b_append_int(msg, (unsigned short)len)) {
+        return JK_FALSE;
+    }
+
+    jk_b_set_len(msg, jk_b_get_len(msg) + len);
+    
+    return JK_TRUE;
+}
+
 static int ajp13_process_callback(jk_msg_buf_t *msg, 
                                   ajp13_endpoint_t *ep,
                                   jk_ws_service_t *r, 
@@ -228,6 +306,26 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
             {
 	            unsigned len = (unsigned)jk_b_get_int(msg);
                 if(!r->write(r, jk_b_get_buff(msg) + jk_b_get_pos(msg), len)) {
+                    return JK_INTERNAL_ERROR;
+                }
+            }
+	    break;
+
+        case JK_AJP13_GET_BODY_CHUNK:
+            {
+	            unsigned len = (unsigned)jk_b_get_int(msg);
+
+                if(len > MAX_SEND_BODY_SZ) {
+                    len = MAX_SEND_BODY_SZ;
+                }
+                if(len > ep->left_bytes_to_send) {
+                    len = ep->left_bytes_to_send;
+                }
+                if(len > 0) {
+                    if(read_into_msg_buff(ep, r, msg, l, len)) {
+                        return JK_AJP13_HAS_RESPONSE;
+                    }                  
+
                     return JK_INTERNAL_ERROR;
                 }
             }
@@ -348,10 +446,8 @@ static int JK_METHOD destroy(jk_worker_t **pThis,
             unsigned i;
             for(i = 0 ; i < private_data->ep_cache_sz ; i++) {
                 if(private_data->ep_cache[i]) {
-
                     reset_endpoint(private_data->ep_cache[i]);
                     close_endpoint(private_data->ep_cache[i]);
-                    free(private_data->ep_cache[i]);
                 }                
             }
             free(private_data->ep_cache);
@@ -423,67 +519,103 @@ static int JK_METHOD service(jk_endpoint_t *e,
 
     if(e && e->endpoint_private && s && is_recoverable_error) {
         ajp13_endpoint_t *p = e->endpoint_private;
+        jk_msg_buf_t *msg = jk_b_new(&(p->pool));
+
+        jk_b_set_buffer_size( msg, DEF_BUFFER_SZ); 
+	    jk_b_reset(msg);
+        
+        p->left_bytes_to_send = s->content_length;
+        p->reuse = JK_FALSE;
         *is_recoverable_error = JK_TRUE;
 
-        p->reuse = JK_FALSE;
+        if(!ajp13_marshal_into_msgb(msg, s, l)) {
+            *is_recoverable_error = JK_FALSE;                
+            return JK_FALSE;
+        }
+
+        /*
+         * First try to reuse open connections...
+         */
+        while((p->sd > 0) && !connection_tcp_send_message(p, msg, l)) {
+    	    jk_log(l, JK_LOG_ERROR,
+			       "Error sending request try another pooled connection\n");
+		    jk_close_socket(p->sd);
+            p->sd = -1;
+            reuse_connection(p, l);
+        } 
+
+        /*
+         * If we failed to reuse a connection, try to reconnect.
+         */
         if(p->sd < 0) {
-
             connect_to_tomcat(p, l);
-
             if(p->sd >= 0) {
                 /*
                  * After we are connected, each error that we are going to
                  * have is probably unrecoverable
                  */            
                 *is_recoverable_error = JK_FALSE;
+                if(!connection_tcp_send_message(p, msg, l)) {
+    	            jk_log(l, JK_LOG_ERROR,
+			               "Error sending request on a fresh connection\n");
+		            return JK_FALSE;
+                } 
+            } else {
+                jk_log(l, 
+                       JK_LOG_ERROR,
+			           "Error connecting to the Tomcat process.\n");
+		        return JK_FALSE;
             }
-        }
+        } 
 
-        if(p->sd >= 0) {
-	        jk_msg_buf_t *msg = jk_b_new(&(p->pool));
+        /* 
+         * From now on an error means that we have an internal server error 
+         * or Tomcat crashed. In any case we cannot recover this.
+         */
+        *is_recoverable_error = JK_FALSE;
+        
 
-	        jk_b_set_buffer_size( msg, DEF_BUFFER_SZ); 
-	        jk_b_reset(msg);
-
-            if(!ajp13_marshal_into_msgb(msg, s, l)) {
-                *is_recoverable_error = JK_FALSE;                
+        if(p->left_bytes_to_send > 0) {
+            unsigned len = p->left_bytes_to_send;
+            if(len > MAX_SEND_BODY_SZ) {
+                len = MAX_SEND_BODY_SZ;
+            }
+            if(!read_into_msg_buff(p, s, msg, l, len)) {
                 return JK_FALSE;
-            }
-   
+            }                  
             if(!connection_tcp_send_message(p, msg, l)) {
     	        jk_log(l, JK_LOG_ERROR,
-			           "Error sending request\n");
+			           "Error sending request body\n");
 		        return JK_FALSE;
             }   
-
-	        while(1) {
-                int rc = 0;
-                
-		        if(!connection_tcp_get_message(p, msg, l)) {
-		            jk_log(l, JK_LOG_ERROR,
-				           "Error reading request\n");
-		            return JK_FALSE;
-		        }
-
-                rc = ajp13_process_callback(msg, p, s, l);
-                if(JK_AJP13_END_RESPONSE == rc) {
-                    return JK_TRUE;
-                } else if(JK_AJP13_HAS_RESPONSE == rc) {
-		            rc = connection_tcp_send_message(p, msg, l);
-		            if(rc < 0) {
-			            jk_log(l, JK_LOG_DEBUG,
-				               "Error reading response1 %d\n", rc);
-			            return JK_FALSE;
-		            }
-                } else if(rc < 0) {
-                    break; /* XXX error */
-                }
-	        }        
-        } else {
-            jk_log(l, 
-                   JK_LOG_ERROR, 
-                   "In jk_endpoint_t::service, Error sd = %d\n", p->sd);
         }
+
+        /*
+         * Enter the message pump.
+         */
+	    while(1) {
+            int rc = 0;
+            
+		    if(!connection_tcp_get_message(p, msg, l)) {
+		        jk_log(l, JK_LOG_ERROR,
+				       "Error reading request\n");
+		        return JK_FALSE;
+		    }
+
+            rc = ajp13_process_callback(msg, p, s, l);
+            if(JK_AJP13_END_RESPONSE == rc) {
+                return JK_TRUE;
+            } else if(JK_AJP13_HAS_RESPONSE == rc) {
+		        rc = connection_tcp_send_message(p, msg, l);
+		        if(rc < 0) {
+			        jk_log(l, JK_LOG_DEBUG,
+				           "Error reading response1 %d\n", rc);
+			        return JK_FALSE;
+		        }
+            } else if(rc < 0) {
+                break; /* XXX error */
+            }
+	    }        
     } else {
         jk_log(l, 
                JK_LOG_ERROR, 

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 #ifndef JK_AJP13_H
 #define JK_AJP13_H
@@ -101,6 +101,11 @@ extern "C" {
  * Marks the end of response.
  */
 #define JK_AJP13_END_RESPONSE       (unsigned char)5
+
+/*
+ * Marks the end of response.
+ */
+#define JK_AJP13_GET_BODY_CHUNK     (unsigned char)6
 
 struct jk_res_data {
     int         status;

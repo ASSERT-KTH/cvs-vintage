@@ -57,7 +57,7 @@
  * Description: Data marshaling. XDR like                                  *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #ifndef JK_MSG_BUF_H
@@ -68,7 +68,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define DEF_BUFFER_SZ 4 * 1024
+#define DEF_BUFFER_SZ (8 * 1024)
 
 /* XXX replace all return values with error codes */
 #define ERR_BAD_PACKET -5

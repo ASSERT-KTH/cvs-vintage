@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.2 2000/05/23 21:39:52 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/23 21:39:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.3 2000/05/25 14:18:23 shachor Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/25 14:18:23 $
  *
  * ====================================================================
  *
@@ -75,6 +75,10 @@ import javax.servlet.http.*;
 
 public class Ajp13ConnectorResponse extends ResponseImpl 
 {
+	public static final int  MAX_SEND_SIZE = TcpConnector.MAX_PACKET_SIZE - 
+	                                         TcpConnector.H_SIZE - 
+	                                         2;
+	
     public static final byte JK_AJP13_SEND_BODY_CHUNK   = 3;
     public static final byte JK_AJP13_SEND_HEADERS      = 4;
     public static final byte JK_AJP13_END_RESPONSE      = 5;
@@ -96,7 +100,7 @@ public class Ajp13ConnectorResponse extends ResponseImpl
 
     public Ajp13ConnectorResponse() 
     {
-}
+	}
 
     // XXX if more headers that MAX_SIZE, send 2 packets!   
     public void endHeaders() throws IOException 
@@ -107,11 +111,12 @@ public class Ajp13ConnectorResponse extends ResponseImpl
             return;
         }
     
-	// Servlet Engine header will be set per/adapter - smarter adapters will
-	// not send it every time ( have it in C side ), and we may also want
-	// to add informations about the adapter used 
-	if( request.getContext() != null)
-	    setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+		// Servlet Engine header will be set per/adapter - smarter adapters will
+		// not send it every time ( have it in C side ), and we may also want
+		// to add informations about the adapter used 
+		if(request.getContext() != null) {
+	    	setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+	    }
 
         MsgBuffer msg=con.getMsgBuffer();
         msg.reset();
@@ -219,8 +224,7 @@ public class Ajp13ConnectorResponse extends ResponseImpl
         rout.setResponse(this);
         this.out = rout;
     }
-    
-    
+        
 	class Ajp13OutputStream extends BufferedServletOutputStream  
 	{     
     	MsgConnector con;
@@ -233,14 +237,18 @@ public class Ajp13ConnectorResponse extends ResponseImpl
 
     	public void doWrite(  byte b[], int off, int len) throws IOException 
     	{
-        	// XXX check if len > MAX_PACKET_SIZE !
-        	MsgBuffer buf = con.getMsgBuffer();
-        	buf.reset();
-        	buf.appendByte(Ajp13ConnectorResponse.JK_AJP13_SEND_BODY_CHUNK);
-        	// XXX avoid copy !!
-        	buf.appendBytes( b, off, len );
-        	buf.end();
-        	con.send(buf);
+        	int sent = 0;
+        	while(sent < len) {
+        		int to_send = len - sent;
+        		to_send = to_send > MAX_SEND_SIZE ? MAX_SEND_SIZE : to_send;
+        		
+	        	MsgBuffer buf = con.getMsgBuffer();
+	        	buf.reset();
+	        	buf.appendByte(Ajp13ConnectorResponse.JK_AJP13_SEND_BODY_CHUNK);	        	
+	        	buf.appendBytes(b, off + sent, to_send);	        
+	        	con.send(buf);
+	        	sent += to_send;
+	        }
     	}
 
     	protected void endResponse() throws IOException 
