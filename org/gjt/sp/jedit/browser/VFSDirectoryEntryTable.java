@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.3 2003/04/22 01:35:07 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.4 2003/04/22 03:04:20 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -52,11 +52,10 @@ public class VFSDirectoryEntryTable extends JTable
 
 		setIntercellSpacing(new Dimension(0,0));
 
-		TableColumn col1 = getColumnModel().getColumn(0);
+		/* TableColumn col1 = getColumnModel().getColumn(0);
 		col1.setMinWidth(20);
 		col1.setMaxWidth(20);
-		col1.setPreferredWidth(20);
-		col1.setResizable(false);
+		col1.setPreferredWidth(20); */
 
 		setDefaultRenderer(VFSDirectoryEntryTableModel.Entry.class,
 			renderer = new FileCellRenderer());
@@ -67,6 +66,8 @@ public class VFSDirectoryEntryTable extends JTable
 		setRowSelectionAllowed(true);
 		//setColumnSelectionAllowed(true);
 		//setCellSelectionEnabled(false);
+
+		setAutoResizeMode(AUTO_RESIZE_OFF);
 	} //}}}
 
 	//{{{ doTypeSelect() method
@@ -95,7 +96,7 @@ public class VFSDirectoryEntryTable extends JTable
 	public VFS.DirectoryEntry[] getSelectedFiles()
 	{
 		VFSDirectoryEntryTableModel model
-		= (VFSDirectoryEntryTableModel)getModel();
+			= (VFSDirectoryEntryTableModel)getModel();
 
 		LinkedList returnValue = new LinkedList();
 		int[] selectedRows = getSelectedRows();
@@ -111,7 +112,7 @@ public class VFSDirectoryEntryTable extends JTable
 	public Set getExpandedDirectories()
 	{
 		VFSDirectoryEntryTableModel model
-		= (VFSDirectoryEntryTableModel)getModel();
+			= (VFSDirectoryEntryTableModel)getModel();
 
 		HashSet returnValue = new HashSet();
 		if(model.files != null)
@@ -155,6 +156,8 @@ public class VFSDirectoryEntryTable extends JTable
 				(VFSDirectoryEntryTableModel.Entry)node,
 				list);
 		}
+
+		resizeColumnsAppropriately();
 	} //}}}
 
 	//{{{ maybeReloadDirectory() method
@@ -252,6 +255,32 @@ public class VFSDirectoryEntryTable extends JTable
 		}
 
 		return false;
+	} //}}}
+
+	//{{{ resizeColumnsAppropriately() method
+	private void resizeColumnsAppropriately()
+	{
+		VFSDirectoryEntryTableModel model
+		= (VFSDirectoryEntryTableModel)getModel();
+
+		int[] widths = new int[model.getColumnCount()];
+		for(int i = 0; i < model.files.length; i++)
+		{
+			for(int j = 0; j < widths.length; j++)
+			{
+				int width = renderer.getTableCellRendererComponent(
+					this,model.files[i],false,false,i,j)
+					.getPreferredSize().width;
+				widths[j] = Math.max(widths[j],width);
+			}
+		}
+
+		for(int i = 0; i < widths.length; i++)
+		{
+			getColumnModel().getColumn(i).setPreferredWidth(widths[i] + (i == widths.length - 1 ? 0 : 10));
+		}
+
+		doLayout();
 	} //}}}
 
 	//}}}

@@ -28,6 +28,7 @@ package org.gjt.sp.jedit;
 import javax.swing.text.Segment;
 import javax.swing.JMenuItem;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.util.Log;
@@ -66,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.44 2003/04/16 23:56:21 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.45 2003/04/22 03:04:19 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -986,6 +987,25 @@ loop:		for(int i = 0; i < str.length(); i++)
 			}
 		}
 		return buf.toString();
+	} //}}}
+
+	public static final DecimalFormat KB_FORMAT = new DecimalFormat("#.# KB");
+	public static final DecimalFormat MB_FORMAT = new DecimalFormat("#.# KB");
+
+	/**
+	 * Formats the given file size into a nice string (123 bytes, 10.6 KB,
+	 * 1.2 MB).
+	 * @param length The size
+	 * @since jEdit 4.2pre1
+	 */
+	public static String formatFileSize(long length)
+	{
+		if(length < 1024)
+			return length + " bytes";
+		else if(length < 1024*1024)
+			return KB_FORMAT.format((double)length / 1024);
+		else
+			return MB_FORMAT.format((double)length / 1024 / 1024);
 	} //}}}
 
 	//}}}
