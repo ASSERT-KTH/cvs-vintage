@@ -112,7 +112,6 @@ public class CachedMHFolder extends MHFolder {
 		EncodedWordDecoder decoder = new EncodedWordDecoder();
 		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
-		Object o;
 		for (int j = 0; j < v.count(); j++) {
 			HeaderItem headerItem = v.getHeaderItem(j);
 			column = (String) headerItem.get("name");
