@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.jaws.MetaInfo;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCDestroyCommand
    extends JDBCUpdateCommand
@@ -47,7 +47,7 @@ public class JDBCDestroyCommand
          // Remove it!
          try
          {
-            jdbcExecute();
+            jdbcExecute(null);
          } catch (Exception e)
          {
             log.debug("Could not drop table " +
@@ -58,8 +58,11 @@ public class JDBCDestroyCommand
    
    // JDBCUpdateCommand overrides -----------------------------------
    
-   protected void handleResult(int rowsAffected) throws Exception
+   protected Object handleResult(int rowsAffected, Object argOrArgs) 
+      throws Exception
    {
       log.debug("Table "+metaInfo.getTableName()+" removed");
+      
+      return null;
    }
 }

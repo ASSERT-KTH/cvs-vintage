@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCQueryCommand extends JDBCCommand
 {
@@ -38,15 +38,25 @@ public abstract class JDBCQueryCommand extends JDBCCommand
    /**
     * Template Method that executes the PreparedStatement and calls
     * <code>handleResult</code> on the resulting ResultSet.
+    *
+    * @param stmt the prepared statement, with its parameters already set.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
+    * @throws Exception if execution or result handling fails.
     */
-   protected void executeStatementAndHandleResult(PreparedStatement stmt)
+   protected Object executeStatementAndHandleResult(PreparedStatement stmt,
+                                                    Object argOrArgs)
       throws Exception
    {
       ResultSet rs = null;
+      Object result = null;
+      
       try
       {
          rs = stmt.executeQuery();
-         handleResult(rs);
+         result = handleResult(rs, argOrArgs);
       } finally
       {
          if (rs != null)
@@ -60,10 +70,20 @@ public abstract class JDBCQueryCommand extends JDBCCommand
             }
          }
       }
+      
+      return result;
    }
    
    /**
-    * Handle the result of successful execution of the query.
+    * Handles the result of successful execution of the query.
+    *
+    * @param rs the result set from the query.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
+    * @throws Exception if execution or result handling fails.
     */
-   protected abstract void handleResult(ResultSet rs) throws Exception;
+   protected abstract Object handleResult(ResultSet rs, Object argOrArgs) 
+      throws Exception;
 }

@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -73,11 +73,14 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
    
    // JDBCFinderCommand overrides ------------------------------------
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
+      Object[] args = (Object[])argOrArgs;
+      
       for (int i = 0; i < parameterArray.length; i++)
       {
-         stmt.setObject(i+1, argsArgument[parameterArray[i]]);
+         stmt.setObject(i+1, args[parameterArray[i]]);
       }
    }
 }

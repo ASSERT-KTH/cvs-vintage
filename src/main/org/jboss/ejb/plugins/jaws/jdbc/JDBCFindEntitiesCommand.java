@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -75,31 +75,39 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
    {
       String finderName = finderMethod.getName();
       
-      // Do we know a finder command for this method name?
+      JPMFindEntitiesCommand finderCommand = null;
       
-      JPMFindEntitiesCommand finderCommand = 
-         (JPMFindEntitiesCommand)knownFinderCommands.get(finderName);
-      
-      // If we didn't get a finder command, see if we can make one
-      
-      if (finderCommand == null)      
-      {
-         try
+      synchronized(this) {
+         // JF: TODO: get rid of this lazy instantiation, which
+         // requires synchronization, by doing all specific Finder
+         // creation in the constructor (i.e. at deployment time).
+
+         // Do we know a finder command for this method name?
+
+         finderCommand = 
+            (JPMFindEntitiesCommand)knownFinderCommands.get(finderName);
+
+         // If we didn't get a finder command, see if we can make one
+
+         if (finderCommand == null)      
          {
-            if (finderName.equals("findAll"))
+            try
             {
-               finderCommand = factory.createFindAllCommand();
-            } else if (finderName.startsWith("findBy"))
+               if (finderName.equals("findAll"))
+               {
+                  finderCommand = factory.createFindAllCommand();
+               } else if (finderName.startsWith("findBy"))
+               {
+                  finderCommand = factory.createFindByCommand(finderMethod);
+               }
+
+               // Remember the new finder command
+               knownFinderCommands.put(finderName, finderCommand);
+
+            } catch (IllegalArgumentException e)
             {
-               finderCommand = factory.createFindByCommand(finderMethod);
+               factory.getLog().warning(e.getMessage());
             }
-            
-            // Remember the new finder command
-            knownFinderCommands.put(finderName, finderCommand);
-            
-         } catch (IllegalArgumentException e)
-         {
-            factory.getLog().warning(e.getMessage());
          }
       }
       

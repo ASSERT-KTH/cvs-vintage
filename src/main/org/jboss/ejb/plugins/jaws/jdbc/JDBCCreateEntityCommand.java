@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand
@@ -48,8 +48,6 @@ public class JDBCCreateEntityCommand
    // Attributes ----------------------------------------------------
    
    private JDBCBeanExistsCommand beanExistsCommand;
-   
-   private EntityEnterpriseContext ctxArgument;
    
    // Constructors --------------------------------------------------
    
@@ -105,9 +103,6 @@ public class JDBCCreateEntityCommand
                        EntityEnterpriseContext ctx)
       throws RemoteException, CreateException
    {
-      // Save ctx for use in setParameters(), handleResult()
-      ctxArgument = ctx;
-      
       try
       {
          // Extract pk
@@ -153,7 +148,7 @@ public class JDBCCreateEntityCommand
          
          try
          {
-            jdbcExecute();
+            jdbcExecute(ctx);
          } catch (Exception e)
          {
             log.exception(e);
@@ -171,15 +166,17 @@ public class JDBCCreateEntityCommand
    
    // JDBCUpdateCommand overrides -----------------------------------
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
       int idx = 1; // Parameter-index
       
       Iterator iter = metaInfo.getCMPFieldInfos();
       while (iter.hasNext())
       {
          CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
-         Object value = getCMPFieldValue(ctxArgument.getInstance(), fieldInfo);
+         Object value = getCMPFieldValue(ctx.getInstance(), fieldInfo);
          
          if (fieldInfo.isEJBReference())
          {
@@ -191,9 +188,12 @@ public class JDBCCreateEntityCommand
       }
    }
    
-   protected void handleResult(int rowsAffected) throws Exception
+   protected Object handleResult(int rowsAffected, Object argOrArgs) 
+      throws Exception
    {
       // arguably should check one row went in!!!
+      
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
       
       // Store state to be able to do tuned updates
       JAWSPersistenceManager.PersistenceContext pCtx =
@@ -203,8 +203,10 @@ public class JDBCCreateEntityCommand
       if (metaInfo.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
       
       // Save initial state for tuned updates
-      pCtx.state = getState(ctxArgument);
+      pCtx.state = getState(ctx);
       
-      ctxArgument.setPersistenceContext(pCtx);
+      ctx.setPersistenceContext(pCtx);
+      
+      return null;
    }
 }

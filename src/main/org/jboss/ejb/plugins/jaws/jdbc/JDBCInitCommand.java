@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -82,7 +82,7 @@ public class JDBCInitCommand
          // Try to create it
          try
          {
-            jdbcExecute();
+            jdbcExecute(null);
          } catch (Exception e)
          {
             log.debug("Could not create table " + 
@@ -93,8 +93,11 @@ public class JDBCInitCommand
    
    // JDBCUpdateCommand overrides -----------------------------------
    
-   protected void handleResult(int rowsAffected) throws Exception
+   protected Object handleResult(int rowsAffected, Object argOrArgs) 
+      throws Exception
    {
       log.debug("Table " + metaInfo.getTableName() + " created");
+      
+      return null;
    }
 }

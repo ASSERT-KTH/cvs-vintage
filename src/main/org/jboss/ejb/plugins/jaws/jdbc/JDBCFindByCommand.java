@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -90,16 +90,19 @@ public class JDBCFindByCommand extends JDBCFinderCommand
    
    // JDBCFinderCommand overrides -----------------------------------
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
+      Object[] args = (Object[])argOrArgs;
+      
       if (fieldInfo != null)
       {
          if (fieldInfo.isEJBReference())
          {
-            setForeignKey(stmt, 1, fieldInfo, argsArgument[0]);
+            setForeignKey(stmt, 1, fieldInfo, args[0]);
          } else
          {
-            setParameter(stmt, 1, fieldInfo.getJDBCType(), argsArgument[0]);
+            setParameter(stmt, 1, fieldInfo.getJDBCType(), args[0]);
          }
       }
    }

@@ -32,30 +32,23 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
    implements JPMStoreEntityCommand
 {
-   // Attributes ----------------------------------------------------
-   
-   private EntityEnterpriseContext ctxArgument;
-   private boolean tuned;
-   private Object[] currentState;
-   private boolean[] dirtyField;    // only used for tuned updates
-   
    // Constructors --------------------------------------------------
    
    public JDBCStoreEntityCommand(JDBCCommandFactory factory)
    {
       super(factory, "Store");
-      tuned = metaInfo.hasTunedUpdates();
+      boolean tuned = metaInfo.hasTunedUpdates();
       
       // If we don't have tuned updates, create static SQL
       if (!tuned)
       {
-         setSQL(makeSQL());
+         setSQL(makeSQL(null));
       }
    }
    
@@ -75,22 +68,26 @@ public class JDBCStoreEntityCommand
          return;
       }
       
-      ctxArgument = ctx;
-      currentState = getState(ctx);
+      ExecutionState es = new ExecutionState();
+      es.ctx = ctx;
+      es.currentState = getState(ctx);
       boolean dirty = false;
+      
+      
+      boolean tuned = metaInfo.hasTunedUpdates();
       
       // For tuned updates, need to see which fields have changed
       
       if (tuned)
       {
-         dirtyField = new boolean[currentState.length];
+         es.dirtyField = new boolean[es.currentState.length];
          Object[] oldState =
             ((JAWSPersistenceManager.PersistenceContext)ctx.getPersistenceContext()).state;
          
-         for (int i = 0; i < currentState.length; i++)
+         for (int i = 0; i < es.currentState.length; i++)
          {
-            dirtyField[i] = changed(currentState[i], oldState[i]);
-            dirty |= dirtyField[i];
+            es.dirtyField[i] = changed(es.currentState[i], oldState[i]);
+            dirty |= es.dirtyField[i];
          }
       }
       
@@ -99,7 +96,7 @@ public class JDBCStoreEntityCommand
          try
          {
             // Update db
-            jdbcExecute();
+            jdbcExecute(es);
             
          } catch (Exception e)
          {
@@ -114,13 +111,19 @@ public class JDBCStoreEntityCommand
     * Returns dynamically-generated SQL if this entity
     * has tuned updates, otherwise static SQL.
     */
-   protected String getSQL() throws Exception
+   protected String getSQL(Object argOrArgs) throws Exception
    {
-      return tuned ? makeSQL() : super.getSQL();
+      boolean tuned = metaInfo.hasTunedUpdates();
+      
+      return tuned ? makeSQL(argOrArgs) : super.getSQL(argOrArgs);
    }
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
+      ExecutionState es = (ExecutionState)argOrArgs;
+      boolean tuned = metaInfo.hasTunedUpdates();
+      
       int idx = 1;
       Iterator iter = metaInfo.getCMPFieldInfos();
       int i = 0;
@@ -128,32 +131,38 @@ public class JDBCStoreEntityCommand
       {
          CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
          
-         if (!tuned || dirtyField[i])
+         if (!tuned || es.dirtyField[i])
          {
             if (fieldInfo.isEJBReference())
             {
-               idx = setForeignKey(stmt, idx, fieldInfo, currentState[i]);
+               idx = setForeignKey(stmt, idx, fieldInfo, es.currentState[i]);
             } else
             {
-               setParameter(stmt, idx++, fieldInfo.getJDBCType(), currentState[i]);
+               setParameter(stmt, idx++, fieldInfo.getJDBCType(), es.currentState[i]);
             }
          }
          
          i++;
       }
       
-      setPrimaryKeyParameters(stmt, idx, ctxArgument.getId());
+      setPrimaryKeyParameters(stmt, idx, es.ctx.getId());
    }
    
-   protected void handleResult(int rowsAffected) throws Exception
+   protected Object handleResult(int rowsAffected, Object argOrArgs) 
+      throws Exception
    {
+      ExecutionState es = (ExecutionState)argOrArgs;
+      boolean tuned = metaInfo.hasTunedUpdates();
+      
       if (tuned)
       {
          // Save current state for tuned updates
          JAWSPersistenceManager.PersistenceContext pCtx =
-            (JAWSPersistenceManager.PersistenceContext)ctxArgument.getPersistenceContext();
-         pCtx.state = currentState;
+            (JAWSPersistenceManager.PersistenceContext)es.ctx.getPersistenceContext();
+         pCtx.state = es.currentState;
       }
+      
+      return null;
    }
    
    // Protected -----------------------------------------------------
@@ -166,8 +175,11 @@ public class JDBCStoreEntityCommand
    /** 
     * Used to create static SQL (tuned = false) or dynamic SQL (tuned = true).
     */
-   protected String makeSQL()
+   protected String makeSQL(Object argOrArgs)
    {
+      ExecutionState es = (ExecutionState)argOrArgs;  // NB: null if tuned
+      boolean tuned = metaInfo.hasTunedUpdates();
+      
       String sql = "UPDATE "+metaInfo.getTableName()+" SET ";
       Iterator iter = metaInfo.getCMPFieldInfos();
       int i = 0;
@@ -176,7 +188,7 @@ public class JDBCStoreEntityCommand
       {
          CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
          
-         if (!tuned || dirtyField[i++])
+         if (!tuned || es.dirtyField[i++])
          {
             if (fieldInfo.isEJBReference())
             {
@@ -199,5 +211,14 @@ public class JDBCStoreEntityCommand
       }
       sql += " WHERE "+getPkColumnWhereList();
       return sql;
+   }
+   
+   // Inner Classes -------------------------------------------------
+   
+   protected static class ExecutionState
+   {
+      public EntityEnterpriseContext ctx;
+      public Object[] currentState;
+      public boolean[] dirtyField;    // only used for tuned updates
    }
 }

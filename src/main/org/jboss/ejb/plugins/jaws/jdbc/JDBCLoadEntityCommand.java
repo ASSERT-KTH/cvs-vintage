@@ -34,16 +34,12 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
    implements JPMLoadEntityCommand
 {
-   // Attributes ----------------------------------------------------
-   
-   private EntityEnterpriseContext ctxArgument;
-   
    // Constructors --------------------------------------------------
    
    public JDBCLoadEntityCommand(JDBCCommandFactory factory)
@@ -90,14 +86,11 @@ public class JDBCLoadEntityCommand
    public void execute(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      // Save the argument for use by setParameters() and handleResult()
-      ctxArgument = ctx;
-      
-      if ( !metaInfo.isReadOnly() || isTimedOut() )
+      if ( !metaInfo.isReadOnly() || isTimedOut(ctx) )
       {
          try
          {
-            jdbcExecute();
+            jdbcExecute(ctx);
          } catch (Exception e)
          {
             throw new ServerException("Load failed", e);
@@ -107,15 +100,22 @@ public class JDBCLoadEntityCommand
    
    // JDBCQueryCommand overrides ------------------------------------
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
-      setPrimaryKeyParameters(stmt, 1, ctxArgument.getId());
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
+      
+      setPrimaryKeyParameters(stmt, 1, ctx.getId());
    }
    
-   protected void handleResult(ResultSet rs) throws Exception
+   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
+      
       if (!rs.next())
-         throw new NoSuchObjectException("Entity "+ctxArgument.getId()+" not found");
+      {
+         throw new NoSuchObjectException("Entity "+ctx.getId()+" not found");
+      }
       
       // Set values
       int idx = 1;
@@ -186,7 +186,7 @@ public class JDBCLoadEntityCommand
                Object ref = finder.invoke(home, new Object[] { pk });
                
                // Set found entity
-               setCMPFieldValue(ctxArgument.getInstance(), fieldInfo, ref);
+               setCMPFieldValue(ctx.getInstance(), fieldInfo, ref);
             } catch (Exception e)
             {
                throw new ServerException("Could not restore reference", e);
@@ -196,7 +196,7 @@ public class JDBCLoadEntityCommand
             // Load primitive
             
             // TODO: this probably needs to be fixed for BLOB's etc.
-            setCMPFieldValue(ctxArgument.getInstance(), 
+            setCMPFieldValue(ctx.getInstance(), 
                              fieldInfo, 
                              getResultObject(rs, idx++, jdbcType));
          }
@@ -204,17 +204,19 @@ public class JDBCLoadEntityCommand
       
       // Store state to be able to do tuned updates
       JAWSPersistenceManager.PersistenceContext pCtx =
-         (JAWSPersistenceManager.PersistenceContext)ctxArgument.getPersistenceContext();
+         (JAWSPersistenceManager.PersistenceContext)ctx.getPersistenceContext();
       if (metaInfo.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
-      pCtx.state = getState(ctxArgument);
+      pCtx.state = getState(ctx);
+      
+      return null;
    }
    
    // Protected -----------------------------------------------------
    
-   protected boolean isTimedOut()
+   protected boolean isTimedOut(EntityEnterpriseContext ctx)
    {
       JAWSPersistenceManager.PersistenceContext pCtx =
-         (JAWSPersistenceManager.PersistenceContext)ctxArgument.getPersistenceContext();
+         (JAWSPersistenceManager.PersistenceContext)ctx.getPersistenceContext();
       
       return (System.currentTimeMillis() - pCtx.lastRead) > metaInfo.getReadOnlyTimeOut();
    }

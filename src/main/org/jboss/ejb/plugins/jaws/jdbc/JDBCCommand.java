@@ -44,7 +44,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public abstract class JDBCCommand
 {
@@ -88,22 +88,32 @@ public abstract class JDBCCommand
     * a database connection, preparing a statement, setting its parameters,
     * executing the prepared statement, handling the result,
     * and cleaning up.
+    *
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method, and passed on to 'hook' methods for
+    *  getting SQL and for setting parameters.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
+    * @throws Exception if connection fails, or if any 'hook' method
+    *  throws an exception.
     */
-   protected void jdbcExecute() throws Exception
+   protected Object jdbcExecute(Object argOrArgs) throws Exception
    {
       Connection con = null;
       PreparedStatement stmt = null;
+      Object result = null;
+      
       try
       {
          con = getConnection();
-         String theSQL = getSQL();
+         String theSQL = getSQL(argOrArgs);
          if (debug)
          {
             log.debug(name + " command executing: " + theSQL);
          }
          stmt = con.prepareStatement(theSQL);
-         setParameters(stmt);
-         executeStatementAndHandleResult(stmt);
+         setParameters(stmt, argOrArgs);
+         result = executeStatementAndHandleResult(stmt, argOrArgs);
       } finally
       {
          if (stmt != null)
@@ -127,6 +137,8 @@ public abstract class JDBCCommand
             }
          }
       }
+      
+      return result;
    }
    
    /**
@@ -151,11 +163,13 @@ public abstract class JDBCCommand
     * Override if dynamically-generated SQL, based on the arguments
     * given to execute(), is needed.
     *
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
     * @return the SQL to use in the PreparedStatement.
     * @throws Exception if an attempt to generate dynamic SQL results in 
     *  an Exception.
     */
-   protected String getSQL() throws Exception
+   protected String getSQL(Object argOrArgs) throws Exception
    {
       return sql;
    }
@@ -165,21 +179,29 @@ public abstract class JDBCCommand
     * Override if parameters need to be set.
     *
     * @param stmt the PreparedStatement which will be executed by this Command.
-    * @throws Exception if the parameter setting code throws an Exception.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @throws Exception if parameter setting fails.
     */
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs)
+      throws Exception
    {
    }
    
    /**
-    * Executes the PreparedStatement and handle result of successful execution.
+    * Executes the PreparedStatement and handles result of successful execution.
     * This is implemented in subclasses for queries and updates.
     *
     * @param stmt the PreparedStatement to execute.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
     * @throws Exception if execution or result handling fails.
     */
-   protected abstract void executeStatementAndHandleResult(
-      PreparedStatement stmt) throws Exception;
+   protected abstract Object executeStatementAndHandleResult(
+            PreparedStatement stmt, 
+            Object argOrArgs) throws Exception;
    
    // ---------- Utility methods for use in subclasses ----------
    
@@ -332,7 +354,7 @@ public abstract class JDBCCommand
       
       // Result transformation required by Oracle, courtesy of Jay Walters
       
-      if (result != null && result instanceof BigDecimal)
+      if (result instanceof BigDecimal)
       {
          BigDecimal bigDecResult = (BigDecimal)result;
          
@@ -413,7 +435,7 @@ public abstract class JDBCCommand
     * Returns the comma-delimited list of primary key column names
     * for this entity.
     *
-    * return comma-delimited list of primary key column names.
+    * @return comma-delimited list of primary key column names.
     */
    protected final String getPkColumnList()
    {

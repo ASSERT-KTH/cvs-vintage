@@ -19,16 +19,10 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
-   // Attributes ----------------------------------------------------
-   
-   private Object idArgument;    // the id given to execute()
-   
-   private boolean result;       // the result to be returned by execute()
-   
    // Constructors --------------------------------------------------
    
    public JDBCBeanExistsCommand(JDBCCommandFactory factory)
@@ -45,15 +39,11 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
    
    public boolean execute(Object id)
    {
-      // Save argument so setParameters() can access it
-      idArgument = id;
-      
-      // Assume bean doesn't exist; handleResult() can change this
-      result = false;
+      boolean result = false;
       
       try
       {
-         jdbcExecute();
+         result = ((Boolean)jdbcExecute(id)).booleanValue();
       } catch (Exception e)
       {
          log.exception(e);
@@ -64,19 +54,19 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
    
    // JDBCQueryCommand overrides ------------------------------------
    
-   protected void setParameters(PreparedStatement stmt) 
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
       throws Exception
    {
-      setPrimaryKeyParameters(stmt, 1, idArgument);
+      setPrimaryKeyParameters(stmt, 1, argOrArgs);
    }
    
-   protected void handleResult(ResultSet rs) throws Exception
+   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
       if ( !rs.next() )
       {
          throw new SQLException("Unable to check for EJB in database");
       }
       int total = rs.getInt("Total");
-      result = (total >= 1);
+      return new Boolean(total >= 1);
    }
 }

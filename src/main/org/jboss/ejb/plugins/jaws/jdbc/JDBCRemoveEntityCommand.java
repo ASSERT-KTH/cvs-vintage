@@ -24,18 +24,12 @@ import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
    implements JPMRemoveEntityCommand
 {
-   // Attributes ----------------------------------------------------
-   
-   private EntityEnterpriseContext ctxArgument;
-   
-   // Static --------------------------------------------------------
-   
    // Constructors --------------------------------------------------
    
    public JDBCRemoveEntityCommand(JDBCCommandFactory factory)
@@ -53,12 +47,10 @@ public class JDBCRemoveEntityCommand
    public void execute(EntityEnterpriseContext ctx)
       throws RemoteException, RemoveException
    {
-      ctxArgument = ctx;
-      
       try
       {
          // Remove from DB
-         jdbcExecute();
+         jdbcExecute(ctx);
       } catch (Exception e)
       {
          throw new RemoveException("Could not remove "+ctx.getId());
@@ -67,16 +59,21 @@ public class JDBCRemoveEntityCommand
    
    // JDBCUpdateCommand overrides -----------------------------------
    
-   protected void setParameters(PreparedStatement stmt) throws Exception
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+      throws Exception
    {
-      setPrimaryKeyParameters(stmt, 1, ctxArgument.getId());
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)argOrArgs;
+      
+      setPrimaryKeyParameters(stmt, 1, ctx.getId());
    }
    
-   protected void handleResult(int rowsAffected) throws Exception
+   protected Object handleResult(int rowsAffected, Object argOrArgs)
+      throws Exception
    {
       if (rowsAffected == 0)
       {
          throw new RemoveException("Could not remove entity");
       }
+      return null;
    }
 }

@@ -33,17 +33,12 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCFinderCommand 
    extends JDBCQueryCommand
    implements JPMFindEntitiesCommand
 {
-   // Attributes ----------------------------------------------------
-   
-   protected Object[] argsArgument;
-   protected ArrayList result;
-   
    // Constructors --------------------------------------------------
    
    public JDBCFinderCommand(JDBCCommandFactory factory, String name)
@@ -58,11 +53,11 @@ public abstract class JDBCFinderCommand
                              EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
-      argsArgument = args;
+      Collection result = null;
       
       try
       {
-         jdbcExecute();
+         result = (Collection)jdbcExecute(args);
       } catch (Exception e)
       {
          log.exception(e);
@@ -74,10 +69,9 @@ public abstract class JDBCFinderCommand
    
    // JDBCQueryCommand overrides ------------------------------------
    
-   protected void handleResult(ResultSet rs) throws Exception
+   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
-      result = new ArrayList();
-      int i = 1;   // parameter index
+      Collection result = new ArrayList();
       
       if (metaInfo.hasCompositeKey())
       {
@@ -86,11 +80,10 @@ public abstract class JDBCFinderCommand
          {
             while (rs.next())
             {
-               i = 1;
-            
                Object pk = metaInfo.getPrimaryKeyClass().newInstance();
-               
+               int i = 1;   // parameter index
                Iterator it = metaInfo.getPkFieldInfos();
+               
                while (it.hasNext())
                {
                   PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
@@ -115,8 +108,10 @@ public abstract class JDBCFinderCommand
          
          while (rs.next())
          {
-            result.add(getResultObject(rs, i, jdbcType));
+            result.add(getResultObject(rs, 1, jdbcType));
          }
       }
+      
+      return result;
    }
 }
