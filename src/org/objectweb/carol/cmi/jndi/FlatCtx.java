@@ -124,8 +124,6 @@ class FlatCtx implements Context {
                 TraceCarol.debugJndiCarol("lookup(" + name + ") returned");
             return obj;
         } catch (java.rmi.NotBoundException e) {
-            Thread.dumpStack();
-            System.out.println(e);
             throw new NameNotFoundException(e.toString());
         } catch (Exception e) {
             throw new NamingException(e.toString());
