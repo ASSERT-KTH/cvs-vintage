@@ -1,4 +1,4 @@
-// $Id: ActionSetMetaClass.java,v 1.3 2004/08/28 16:12:10 mvw Exp $
+// $Id: ActionSetMetaClass.java,v 1.4 2004/12/30 12:34:09 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.foundation.extension_mechanisms;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
@@ -35,7 +35,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  * @author mkl
  *  
  */
-public class ActionSetMetaClass extends UMLChangeAction {
+public class ActionSetMetaClass extends UMLAction {
 
     /**
      * The Singleton.
@@ -47,7 +47,7 @@ public class ActionSetMetaClass extends UMLChangeAction {
      * Constructor.
      */
     public ActionSetMetaClass() {
-        super("Set");
+        super("Set", HAS_ICON);
     }
 
     /**

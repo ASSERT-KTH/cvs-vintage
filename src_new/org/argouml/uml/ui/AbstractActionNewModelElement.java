@@ -1,4 +1,4 @@
-// $Id: AbstractActionNewModelElement.java,v 1.13 2004/12/26 11:14:45 mvw Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.14 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.13 2004/12/26 11:14:45 mvw Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.14 2004/12/30 12:34:00 mvw Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.i18n.Translator;
@@ -31,7 +31,7 @@ import org.argouml.i18n.Translator;
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public abstract class AbstractActionNewModelElement extends UMLChangeAction {
+public abstract class AbstractActionNewModelElement extends UMLAction {
 
     private Object/*MModelElement*/ target;
     

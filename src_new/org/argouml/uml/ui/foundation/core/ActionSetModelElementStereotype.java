@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.12 2004/11/01 19:55:14 mvw Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.13 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.ModelManagementHelper;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public class ActionSetModelElementStereotype extends UMLChangeAction {
+public class ActionSetModelElementStereotype extends UMLAction {
 
     private static final ActionSetModelElementStereotype SINGLETON = 
         new ActionSetModelElementStereotype();

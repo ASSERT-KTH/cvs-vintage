@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.6 2004/12/26 11:14:46 mvw Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.7 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 
 /**
  * A class to implement the addition of extension points to use cases.<p>
@@ -41,7 +41,7 @@ import org.argouml.uml.ui.UMLChangeAction;
  * @author  Jeremy Bennett (mail@jeremybennett.com).
  * @stereotype singleton
  */
-public final class ActionAddExtensionPoint extends UMLChangeAction {
+public final class ActionAddExtensionPoint extends UMLAction {
 
 
     ///////////////////////////////////////////////////////////////////////////

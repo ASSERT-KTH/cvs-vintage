@@ -1,4 +1,4 @@
-// $Id: ActionAddDiagram.java,v 1.28 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.29 2004/12/30 12:33:59 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.28 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.29 2004/12/30 12:33:59 mvw Exp $
 
 package org.argouml.uml.ui;
 
@@ -43,7 +43,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * namespace is valid to add the diagram to.
  * @author jaap.branderhorst@xs4all.nl
  */
-public abstract class ActionAddDiagram extends UMLChangeAction {
+public abstract class ActionAddDiagram extends UMLAction {
     private static final Logger LOG = 
         Logger.getLogger(ActionAddDiagram.class);
 

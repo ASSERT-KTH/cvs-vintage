@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.13 2004/12/26 11:14:47 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.14 2004/12/30 12:34:09 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.CollaborationsHelper;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public class ActionSetAssociationRoleBase extends UMLChangeAction {
+public class ActionSetAssociationRoleBase extends UMLAction {
 
     private static final ActionSetAssociationRoleBase SINGLETON =
 	new ActionSetAssociationRoleBase();

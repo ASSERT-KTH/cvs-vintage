@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetParameterDirectionKind.java,v 1.3 2004/12/30 12:34:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
@@ -39,7 +39,7 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  * @author mkl
  *  
  */
-public class ActionSetParameterDirectionKind extends UMLChangeAction {
+public class ActionSetParameterDirectionKind extends UMLAction {
 
     private static final ActionSetParameterDirectionKind SINGLETON = 
         new ActionSetParameterDirectionKind();

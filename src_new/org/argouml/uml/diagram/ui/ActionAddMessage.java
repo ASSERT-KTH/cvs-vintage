@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.4 2004/12/26 11:14:46 mvw Exp $
+// $Id: ActionAddMessage.java,v 1.5 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Layer;
@@ -41,7 +41,7 @@ import org.tigris.gef.presentation.FigNode;
  * Action to add a message.
  * @stereotype singleton
  */
-public class ActionAddMessage extends UMLChangeAction {
+public class ActionAddMessage extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables

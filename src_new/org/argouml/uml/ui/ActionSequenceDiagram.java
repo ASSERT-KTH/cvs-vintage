@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.29 2004/09/16 20:50:03 mvw Exp $
+// $Id: ActionSequenceDiagram.java,v 1.30 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
  *
  * @author jaap.branderhorst@xs4all.nl
  */
-public class ActionSequenceDiagram extends UMLChangeAction {
+public class ActionSequenceDiagram extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables

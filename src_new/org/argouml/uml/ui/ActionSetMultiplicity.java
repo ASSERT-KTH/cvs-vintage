@@ -1,4 +1,4 @@
-// $Id: ActionSetMultiplicity.java,v 1.6 2004/02/29 12:35:46 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.7 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.6 2004/02/29 12:35:46 linus Exp $
+// $Id: ActionSetMultiplicity.java,v 1.7 2004/12/30 12:34:00 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -34,7 +34,7 @@ import org.argouml.i18n.Translator;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 6, 2003
  */
-public abstract class ActionSetMultiplicity extends UMLChangeAction {
+public abstract class ActionSetMultiplicity extends UMLAction {
 
     /**
      * Constructor for ActionSetMultiplicity.

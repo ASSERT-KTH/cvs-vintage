@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.48 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionRemoveFromModel.java,v 1.49 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import org.tigris.gef.presentation.Fig;
  * @author original author not known.
  * @author jaap.branderhorst@xs4all.nl extensions
  */
-public class ActionRemoveFromModel extends UMLChangeAction {
+public class ActionRemoveFromModel extends UMLAction {
 
     /**
      * Constructor.

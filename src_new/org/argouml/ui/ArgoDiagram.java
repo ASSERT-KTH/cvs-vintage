@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.32 2004/10/31 08:50:14 mvw Exp $
+// $Id: ArgoDiagram.java,v 1.33 2004/12/30 12:34:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.cognitive.ItemUID;
+import org.argouml.kernel.ChangeRegistry;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.util.ChangeRegistry;
 import org.argouml.model.ModelFacade;
 
 import org.tigris.gef.base.Diagram;

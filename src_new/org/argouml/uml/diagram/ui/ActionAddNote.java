@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.10 2004/12/28 04:42:37 bobtarling Exp $
+// $Id: ActionAddNote.java,v 1.11 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.FigComment;
 import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigEdge;
@@ -47,7 +47,7 @@ import org.tigris.gef.presentation.FigNode;
  *
  * @stereotype singleton
  */
-public class ActionAddNote extends UMLChangeAction {
+public class ActionAddNote extends UMLAction {
 
     private static final int DISTANCE = 80;
 
@@ -78,7 +78,8 @@ public class ActionAddNote extends UMLChangeAction {
         if (target == null || !(ModelFacade.isAModelElement(target))) {
             return;
         }
-        Object model = ProjectManager.getManager().getCurrentProject().getModel();
+        Object model = ProjectManager.getManager().getCurrentProject()
+            .getModel();
         Object comment =
             CoreFactory.getFactory().buildComment(target, model);
 

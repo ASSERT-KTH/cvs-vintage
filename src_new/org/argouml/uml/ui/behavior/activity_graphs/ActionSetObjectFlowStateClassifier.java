@@ -1,4 +1,4 @@
-// $Id: ActionSetObjectFlowStateClassifier.java,v 1.2 2004/12/26 11:14:47 mvw Exp $
+// $Id: ActionSetObjectFlowStateClassifier.java,v 1.3 2004/12/30 12:34:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
@@ -36,7 +36,7 @@ import org.argouml.uml.ui.UMLComboBox2;
 * @author mvw
 * @stereotype singleton
 */
-public class ActionSetObjectFlowStateClassifier extends UMLChangeAction {
+public class ActionSetObjectFlowStateClassifier extends UMLAction {
 
     /**
      * <code>SINGLETON</code>

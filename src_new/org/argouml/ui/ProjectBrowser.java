@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.139 2004/12/28 18:56:43 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.140 2004/12/30 12:34:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,10 +53,6 @@ import org.argouml.cognitive.ui.ToDoPane;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.tigris.swidgets.BorderSplitPane;
-import org.tigris.swidgets.Horizontal;
-import org.tigris.swidgets.Orientation;
-import org.tigris.swidgets.Vertical;
 import org.argouml.ui.cmd.GenericArgoMenuBar;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
@@ -66,6 +62,10 @@ import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ui.IStatusBar;
 import org.tigris.gef.util.VectorSet;
+import org.tigris.swidgets.BorderSplitPane;
+import org.tigris.swidgets.Horizontal;
+import org.tigris.swidgets.Orientation;
+import org.tigris.swidgets.Vertical;
 import org.tigris.toolbar.layouts.DockBorderLayout;
 
 /**
@@ -409,8 +409,9 @@ public class ProjectBrowser
         if (title == null || "".equals(title)) {
             setTitle(getAppName());
         } else {
+            // ask the Project if we are "dirty" - i.e. need to save
             String changeIndicator = ProjectManager.getManager()
-                .getCurrentProject().getSaveRegistry().hasChanged()
+                .getCurrentProject().needsSave()
                 ? " *" : "";
             ArgoDiagram activeDiagram = ProjectManager.getManager()
                 .getCurrentProject().getActiveDiagram();

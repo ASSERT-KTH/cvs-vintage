@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.33 2004/12/28 12:56:45 mvw Exp $
+// $Id: UMLAction.java,v 1.34 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,7 +196,7 @@ public class UMLAction extends AbstractAction {
      * @param s the string to be stripped from junk
      * @return the cleansed string
      */
-    protected static String stripJunk(String s) {
+    private static String stripJunk(String s) {
         String res = "";
         int len = s.length();
         for (int i = 0; i < len; i++) {

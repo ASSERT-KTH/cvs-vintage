@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.5 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetChangeability.java,v 1.6 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,13 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
  * @author jaap.branderhorst@xs4all.nl, alexb
  */
-public class ActionSetChangeability extends UMLChangeAction {
+public class ActionSetChangeability extends UMLAction {
 
     private static final ActionSetChangeability SINGLETON = 
         new ActionSetChangeability();

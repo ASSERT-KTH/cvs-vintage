@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.11 2004/12/28 04:42:37 bobtarling Exp $
+// $Id: ActionAddAttribute.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,14 +32,14 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 
 /**
  * Action to add an attribute to a classifier.<p>
  *
  * @stereotype singleton
  */
-public class ActionAddAttribute extends UMLChangeAction {
+public class ActionAddAttribute extends UMLAction {
     
     private static ActionAddAttribute singleton = new ActionAddAttribute();    
 
@@ -65,10 +65,12 @@ public class ActionAddAttribute extends UMLChangeAction {
 	else
 	    return;
 
-    Collection propertyChangeListeners = 
-        ProjectManager.getManager().getCurrentProject().findFigsForMember(cls);
-    Object intType = ProjectManager.getManager().getCurrentProject().findType("int");
-    Object model = ProjectManager.getManager().getCurrentProject().getModel();
+	Collection propertyChangeListeners = ProjectManager.getManager()
+	    .getCurrentProject().findFigsForMember(cls);
+	Object intType = ProjectManager.getManager()
+	    .getCurrentProject().findType("int");
+	Object model = ProjectManager.getManager()
+	    .getCurrentProject().getModel();
 	Object attr = UmlFactory.getFactory().getCore().buildAttribute(
             cls, 
             model, 

@@ -1,4 +1,4 @@
-// $Id: ActionEmptyTrash.java,v 1.7 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionEmptyTrash.java,v 1.8 2004/12/30 12:34:00 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +24,14 @@
 
 package org.argouml.uml.ui;
 
-import org.argouml.util.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+
+import org.argouml.util.Trash;
 
 /** Action to empty the trashcan. 
  *  @stereotype singleton
  */
-public class ActionEmptyTrash extends UMLChangeAction {
+public class ActionEmptyTrash extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables

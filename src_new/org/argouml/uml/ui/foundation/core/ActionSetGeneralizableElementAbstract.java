@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementAbstract.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetGeneralizableElementAbstract.java,v 1.9 2004/12/30 12:34:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
 
 /**
@@ -36,7 +36,7 @@ import org.argouml.uml.ui.UMLCheckBox2;
  * @author jaap.branderhorst@xs4all.nl
  * @since Jan 27, 2003
  */
-public class ActionSetGeneralizableElementAbstract extends UMLChangeAction {
+public class ActionSetGeneralizableElementAbstract extends UMLAction {
 
     private static final ActionSetGeneralizableElementAbstract SINGLETON = 
         new ActionSetGeneralizableElementAbstract();

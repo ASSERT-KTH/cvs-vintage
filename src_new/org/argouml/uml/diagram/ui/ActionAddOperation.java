@@ -1,4 +1,4 @@
-// $Id: ActionAddOperation.java,v 1.11 2004/12/28 04:42:10 bobtarling Exp $
+// $Id: ActionAddOperation.java,v 1.12 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,12 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
-import org.argouml.uml.ui.UMLChangeAction;
-
-import ru.novosoft.uml.foundation.core.MClassifier;
+import org.argouml.uml.ui.UMLAction;
 
 /** Action to add an operation to a classifier.
  *  @stereotype singleton
  */
-public class ActionAddOperation extends UMLChangeAction {
+public class ActionAddOperation extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // static variables
@@ -79,10 +77,14 @@ public class ActionAddOperation extends UMLChangeAction {
 	else
 	    return;
 
-    Collection propertyChangeListeners = ProjectManager.getManager().getCurrentProject().findFigsForMember(cls);
-    Object model = ProjectManager.getManager().getCurrentProject().getModel();
-    Object voidType = ProjectManager.getManager().getCurrentProject().findType("void");
-	Object oper = UmlFactory.getFactory().getCore().buildOperation(cls, model, voidType, propertyChangeListeners);
+	Collection propertyChangeListeners = ProjectManager.getManager()
+	    .getCurrentProject().findFigsForMember(cls);
+	Object model = ProjectManager.getManager()
+	    .getCurrentProject().getModel();
+	Object voidType = ProjectManager.getManager()
+	    .getCurrentProject().findType("void");
+	Object oper = UmlFactory.getFactory().getCore()
+	    .buildOperation(cls, model, voidType, propertyChangeListeners);
         TargetManager.getInstance().setTarget(oper);
 
         Iterator it =

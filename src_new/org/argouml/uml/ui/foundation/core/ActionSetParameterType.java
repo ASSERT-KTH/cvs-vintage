@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterType.java,v 1.14 2004/11/01 19:55:15 mvw Exp $
+// $Id: ActionSetParameterType.java,v 1.15 2004/12/30 12:34:01 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,14 +29,14 @@ import java.awt.event.ActionEvent;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.ModelManagementHelper;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 
 /**
  * @since Nov 3, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class ActionSetParameterType extends UMLChangeAction {
+public class ActionSetParameterType extends UMLAction {
 
     private static final ActionSetParameterType SINGLETON = 
         new ActionSetParameterType();

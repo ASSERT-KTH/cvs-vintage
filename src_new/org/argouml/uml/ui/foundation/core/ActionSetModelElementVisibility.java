@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementVisibility.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetModelElementVisibility.java,v 1.9 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class ActionSetModelElementVisibility extends UMLChangeAction {
+public class ActionSetModelElementVisibility extends UMLAction {
 
     private static final ActionSetModelElementVisibility SINGLETON = 
         new ActionSetModelElementVisibility();

@@ -1,4 +1,4 @@
-// $Id: ActionSetFlowSource.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetFlowSource.java,v 1.11 2004/12/30 12:34:05 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,14 +30,14 @@ import java.util.Vector;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLChangeAction;
+import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
 /**
  * @since Oct 12, 2002
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public class ActionSetFlowSource extends UMLChangeAction {
+public class ActionSetFlowSource extends UMLAction {
 
     private static final ActionSetFlowSource SINGLETON = 
         new ActionSetFlowSource();
