@@ -28,7 +28,7 @@
 #if ($canEdit)
 <form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleid","$currentModule.ModuleId")" method="post">
 <div class="functnbar2">
-  <input type="submit" name="maxumusDorkus" value="Edit" />
+  <input type="submit" name="maxumusDorkus" value="$l10n.Edit" />
 </div>
 </form>
 #end

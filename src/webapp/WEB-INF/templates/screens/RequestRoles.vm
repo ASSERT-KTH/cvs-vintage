@@ -59,8 +59,8 @@
 
 <div class="functnbar2">
  <input type="submit" name="eventSubmit_doRequestroles" 
-     value="Request roles" />&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+     value="$l10n.RequestRoles" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 </form>

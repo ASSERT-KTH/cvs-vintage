@@ -56,7 +56,7 @@ $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 <input type="text" name="searchCriteria" value="$searchCriteria" />
 </td>
 <td>
-Order by: <select name="orderByField">
+$l10n.OrderBy: <select name="orderByField">
  <option value="FIRST_NAME" #if ($orderByField.equals("FIRST_NAME")) selected="selected" #end>$l10n.FirstName</option>
  <option value="LAST_NAME" #if ($orderByField.equals("LAST_NAME")) selected="selected" #end>$l10n.LastName</option>
  <option value="EMAIL" #if ($orderByField.equals("EMAIL")) selected="selected" #end>$l10n.Email</option>

@@ -74,8 +74,8 @@
 #asterisk()
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="7" />&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="8" />
+ <input type="submit" name="eventSubmit_doRegister" value="$l10n.Register" tabindex="7" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" tabindex="8" />
 </div>
 
 $intake.declareGroups()

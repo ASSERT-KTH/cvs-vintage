@@ -190,7 +190,7 @@
 #end
 
 #macro (alert $text)
-   <p class="warningmark"><strong>Alert! $text</strong></p>
+   <p class="warningmark"><strong>$l10n.Alert $text</strong></p>
 #end
 
 #macro (fieldErrorMsg $field $br)

@@ -39,8 +39,8 @@ $l10n.ConfirmAccuracy
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doBack" value="Back" />&#160;
-<input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
+<input type="submit" name="eventSubmit_doBack" value="$l10n.Back" />&#160;
+<input type="submit" name="eventSubmit_doConfirmRegistration" value="$l10n.Confirm" />
 </div>
 
 </form>

@@ -41,9 +41,9 @@
     #fieldErrorMsg($searchGroup.MaxId "")
 </th>
 <td>
-$l10n.From:&#160;<input type="text" size="20"
+$l10n.RangeFrom:&#160;<input type="text" size="20"
     name="$searchGroup.MinId.Key" value="$!searchGroup.MinId.Value" />
-&#160;&#160;$l10n.To:&#160;<input type="text" size="20"
+&#160;&#160;$l10n.RangeTo:&#160;<input type="text" size="20"
     name="$searchGroup.MaxId.Key" value="$!searchGroup.MaxId.Value" />
 </td>
 </tr>
@@ -54,9 +54,9 @@ $l10n.From:&#160;<input type="text" size="20"
 <td>
     #fieldErrorMsg($searchGroup.MinDate "")
     #fieldErrorMsg($searchGroup.MaxDate "")
-$l10n.From:&#160;<input type="text" size="20"
+$l10n.TimeFrom:&#160;<input type="text" size="20"
     name="$searchGroup.MinDate.Key" value="$!searchGroup.MinDate.toString()" />
-&#160;&#160;$l10n.To:&#160;<input type="text" size="20"
+&#160;&#160;$l10n.TimeTo:&#160;<input type="text" size="20"
     name="$searchGroup.MaxDate.Key" value="$!searchGroup.MaxDate.toString()" />
 <p><small>$l10n.DateEg</small></p>
 </td>
@@ -235,7 +235,7 @@ $l10n.From:&#160;<input type="text" size="20"
         $option.DisplayValue
     </option>
 #end
-  </select> $l10n.To
+  </select> $l10n.RangeTo
   <select name="$searchGroup.StateChangeToOptionId.Key">
     #set ( $selected = false )
     #if ( !$searchGroup.StateChangeToOptionId.Value )

@@ -61,6 +61,7 @@ import org.apache.fulcrum.security.util.EntityExistsException;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
@@ -69,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManagePermissions.java,v 1.7 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ManagePermissions.java,v 1.8 2004/02/14 15:12:31 pledbrook Exp $
  */
 public class ManagePermissions extends RequireLoginFirstAction
 {
@@ -98,7 +99,8 @@ public class ManagePermissions extends RequireLoginFirstAction
     public void doAddpermission(RunData data, TemplateContext context)
         throws Exception
     {
-         IntakeTool intake = getIntakeTool(context);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         
         if (intake.isAllValid())
         {
@@ -122,13 +124,18 @@ public class ManagePermissions extends RequireLoginFirstAction
                 
                 TurbineSecurity.addPermission(permission);
                 data.getParameters().setString("lastAction","addedpermission");
-                getScarabRequestTool(context).setConfirmMessage("SUCCESS: a new permission was created [permission: " + name +"]");
+                String msg = l10n.format("PermissionCreated",name);
+                getScarabRequestTool(context).setConfirmMessage(msg);
+                //getScarabRequestTool(context).
+                //   setConfirmMessage("SUCCESS: a new permission was created [permission: " + name +"]");
                 
             }
             catch (EntityExistsException eee)
             {
-                getScarabRequestTool(context).setAlertMessage(
-                    "A permission already exists with that name: " + name);
+                String msg = l10n.format("PermissionExists",name);
+                getScarabRequestTool(context).setConfirmMessage(msg);
+                //getScarabRequestTool(context).setAlertMessage(
+                //    "A permission already exists with that name: " + name);
                 data.getParameters().setString("lastAction","");
             }
         }       
@@ -145,7 +152,10 @@ public class ManagePermissions extends RequireLoginFirstAction
         Permission permission = TurbineSecurity.getPermission(name);    
         TurbineSecurity.removePermission(permission);
         
-        getScarabRequestTool(context).setConfirmMessage("SUCCESS: the " + name + " permission was deleted.");
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        String msg = l10n.format("PermissionDeleted",name);
+        getScarabRequestTool(context).setConfirmMessage(msg);
+        //getScarabRequestTool(context).setConfirmMessage("SUCCESS: the " + name + " permission was deleted.");
         setTarget(data, data.getParameters().getString(ScarabConstants.NEXT_TEMPLATE, "admin,ManagePermissions.vm"));
         
     }

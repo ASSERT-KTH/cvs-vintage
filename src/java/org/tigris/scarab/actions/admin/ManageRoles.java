@@ -62,6 +62,7 @@ import org.apache.fulcrum.security.util.PermissionSet;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
@@ -70,7 +71,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.9 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: ManageRoles.java,v 1.10 2004/02/14 15:12:31 pledbrook Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
@@ -109,7 +110,8 @@ public class ManageRoles extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+
         if (intake.isAllValid())
         {
             Object user = data.getUser().getTemp(ScarabConstants.SESSION_REGISTER);
@@ -132,15 +134,19 @@ public class ManageRoles extends RequireLoginFirstAction
                 
                 TurbineSecurity.addRole(role);
                 data.getParameters().setString("lastAction","addedrole");
-                getScarabRequestTool(context).setConfirmMessage(
-                    "SUCCESS: a new role was created [role: " + name +"]");
+                String msg = l10n.format("RoleCreated",name);
+                getScarabRequestTool(context).setConfirmMessage(msg);
+                //getScarabRequestTool(context).setConfirmMessage(
+                //    "SUCCESS: a new role was created [role: " + name +"]");
                 
             }
             catch (EntityExistsException eee)
             {
-                getScarabRequestTool(context).setAlertMessage(
-                    "ERROR: a role already exists with that name [role: " 
-                    + name +"]");
+                String msg = l10n.format("RoleExists",name);
+                getScarabRequestTool(context).setConfirmMessage(msg);
+                //getScarabRequestTool(context).setAlertMessage(
+                //    "ERROR: a role already exists with that name [role: " 
+                //    + name +"]");
                 data.getParameters().setString("lastAction","");
             }
         }
@@ -217,8 +223,12 @@ public class ManageRoles extends RequireLoginFirstAction
         Role role = TurbineSecurity.getRole(name);
         TurbineSecurity.removeRole(role);
         
-        getScarabRequestTool(context).setConfirmMessage(
-            "SUCCESS: the " + name + " role was deleted.");
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+
+        String msg = l10n.format("RoleDeleted",name);
+        getScarabRequestTool(context).setConfirmMessage(msg);
+        //getScarabRequestTool(context).setConfirmMessage(
+        //    "SUCCESS: the " + name + " role was deleted.");
         setTarget(data, data.getParameters()
                       .getString(ScarabConstants.NEXT_TEMPLATE, "admin,ManageRoles.vm"));
     }

@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.22 2003/08/07 00:55:34 elicia Exp $
+ * @version $Id: ManageUser.java,v 1.23 2004/02/14 15:12:31 pledbrook Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -134,8 +134,8 @@ public class ManageUser extends RequireLoginFirstAction
                 ScarabUserImpl.confirmUser(register.get("UserName").toString());
                 // force the user to change their password the first time they login
                 su.setPasswordExpire(Calendar.getInstance());
-                scarabR.setConfirmMessage("SUCCESS: a new user was created [username: " 
-                        + register.get("UserName").toString() +"]");
+                String msg = l10n.format("userCreated",register.get("UserName").toString());
+                scarabR.setConfirmMessage(msg);
                 data.getParameters().setString("state","showadduser");
                 data.getParameters().setString("lastAction","addeduser");
                 
@@ -162,6 +162,7 @@ public class ManageUser extends RequireLoginFirstAction
     public void doEdituser(RunData data, TemplateContext context) throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
         ScarabUser su = null;
@@ -213,9 +214,8 @@ public class ManageUser extends RequireLoginFirstAction
                         TurbineSecurity.forcePassword(su, password.trim());
                     }
                     
-                    scarabR.setConfirmMessage("SUCCESS: changes to the user have " + 
-                                        " been saved [username: " + 
-                                        register.get("UserName").toString() +"]");
+                    String msg = l10n.format("userChangesSaved",username);
+                    scarabR.setConfirmMessage(msg);
                     data.getParameters().setString("state","showedituser");
                     data.getParameters().setString("lastAction","editeduser");
                     
@@ -224,9 +224,8 @@ public class ManageUser extends RequireLoginFirstAction
                 }
                 else
                 {
-                    scarabR.setAlertMessage("ERROR: couldn't retrieve the user " + 
-                                        " from the DB [username: " + 
-                                        register.get("UserName").toString() +"]");
+                    String msg = l10n.format("userNotRetrieved",username);
+                    scarabR.setAlertMessage(msg);
                     data.getParameters().setString("state","showedituser");                    
                 }
             }
@@ -250,11 +249,10 @@ public class ManageUser extends RequireLoginFirstAction
     public void doDeleteuser(RunData data, TemplateContext context)
         throws Exception
     {
-        getScarabRequestTool(context)
-        .setAlertMessage("User delete is not yet implemented. Instructions on"
-                         + " implementation are given in issue# 165.  " + 
-                         "deleted [username: " + data.getParameters()
-                         .getString("username") +"]");
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        String msg = l10n.format("userDeleteNotImplemented",
+                                 data.getParameters().getString("username"));
+        getScarabRequestTool(context).setAlertMessage(msg);
         setTarget(data, data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, "admin,AdminIndex.vm"));
     }
@@ -314,7 +312,9 @@ public class ManageUser extends RequireLoginFirstAction
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage("Please select a user first!");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            String msg = l10n.get("userSelect");
+            getScarabRequestTool(context).setAlertMessage(msg);
         }
     }
     
@@ -331,7 +331,9 @@ public class ManageUser extends RequireLoginFirstAction
         }
         else
         {
-            getScarabRequestTool(context).setAlertMessage("Please select a user first!");
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            String msg = l10n.get("userSelect");
+            getScarabRequestTool(context).setAlertMessage(msg);
         }
     }
     
