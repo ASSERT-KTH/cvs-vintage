@@ -96,6 +96,14 @@ public class ReportGenerator
     private static List reportTypes;
     private static List axisCategories;
 
+
+    private static final String ACT_NEW_OPTION_ID;
+    private static final String ACT_ISSUE_ID;
+    private static final String ACT_TRANSACTION_ID;
+    private static final String ACT_END_DATE;
+    private static final String TRAN_TRANSACTION_ID;
+    private static final String TRAN_CREATED_DATE;
+
     private ModuleEntity module;
     private String name;    
     private String description;
@@ -126,6 +134,20 @@ public class ReportGenerator
         {
             axisCategories.add(new SimpleSelectOption(i, AXIS_CATEGORIES[i]));
         }
+
+        // column names only
+        ACT_NEW_OPTION_ID = ActivityPeer.NEW_OPTION_ID.substring(
+            ActivityPeer.NEW_OPTION_ID.indexOf('.')+1);
+        ACT_ISSUE_ID = ActivityPeer.ISSUE_ID.substring(
+            ActivityPeer.ISSUE_ID.indexOf('.')+1);
+        ACT_TRANSACTION_ID = ActivityPeer.TRANSACTION_ID.substring(
+            ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
+        ACT_END_DATE = ActivityPeer.END_DATE.substring(
+            ActivityPeer.END_DATE.indexOf('.')+1);
+        TRAN_TRANSACTION_ID = TransactionPeer.TRANSACTION_ID.substring(
+            TransactionPeer.TRANSACTION_ID.indexOf('.')+1);
+        TRAN_CREATED_DATE = TransactionPeer.CREATED_DATE.substring(
+            TransactionPeer.CREATED_DATE.indexOf('.')+1);
     }
 
     public List getReportTypes()
@@ -378,7 +400,6 @@ public class ReportGenerator
                 {
                     if ( rmaId.equals(keys[j]) ) 
                     {
-            System.out.println("matched ");
                         isRMASelected = true;
                         //removing the key, as it is already matched
                         moveToFront(keys, j);
@@ -392,27 +413,21 @@ public class ReportGenerator
                     .getLeafRModuleOptions(rma.getAttribute());
                 if ( isRMASelected ) 
                 {
-            System.out.println("adding all options " );
                     for ( int j=0; j<rmos.size(); j++ ) 
                     {
-System.out.println("adding Option: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
                         options.add( rmos.get(j) );
                     }               
                 }
                 else 
                 {
-            System.out.println("searching options: " );
-
                     for ( int j=0; j<rmos.size(); j++ ) 
                     {
-System.out.println("?? Option: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
                         String rmoId = getKey((RModuleOption)rmos.get(j));
                         boolean isRMOSelected = false;
                         for ( int k=start; k<keys.length; k++ ) 
                         {
                             if ( rmoId.equals(keys[k]) ) 
                             {
-System.out.println("match: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
                                 isRMOSelected = true;
                                 //removing the key, as it is already matched
                                 moveToFront(keys, k);
@@ -425,7 +440,6 @@ System.out.println("match: " + ((RModuleOption)rmos.get(j)).getDisplayValue() );
                             options.add( rmos.get(j) );
                         }                                   
                     }
-System.out.println("done searching options: " );
                 }
             }
         }
@@ -708,10 +722,6 @@ System.out.println("done searching options: " );
         }
     }
 
-    public void generateReport()
-    {
-    }
-
     public int getIssueCount(AttributeOption o1, AttributeOption o2,
                              OptionGroup group, Date date)
         throws Exception
@@ -726,6 +736,69 @@ System.out.println("done searching options: " );
         return runQuery(o1, o2, rmo, date);
     }
 
+    private int[] aliases = new int[5];
+
+    private void registerAlias(int alias, Criteria crit)
+    {
+        for ( int i=0; i<aliases.length; i++) 
+        {
+            if ( aliases[i] == alias ) 
+            {
+                break;
+            }
+            else if ( aliases[i] <= 0 ) 
+            {
+                aliases[i] = alias;
+                if ( i != 0 ) 
+                {
+                    crit.addJoin("a"+aliases[0]+'.'+ACT_ISSUE_ID, 
+                                 "a"+alias+'.'+ACT_ISSUE_ID);
+                }
+                break;
+            }
+        }
+        crit.addAlias("a"+alias, ActivityPeer.TABLE_NAME);
+        crit.addAlias("t"+alias, TransactionPeer.TABLE_NAME);
+    }
+
+    private void addOptionOrGroup(int alias, Object optionOrGroup, 
+                                  Date date, Criteria crit)
+    {
+        registerAlias(alias, crit);
+        String a = "a"+alias;
+        String t = "t"+alias;
+        crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
+        crit.add(t, TRAN_CREATED_DATE, date, Criteria.LESS_THAN);
+
+        if ( optionOrGroup instanceof OptionGroup ) 
+        {
+            List options = ((OptionGroup)optionOrGroup).getOptions();
+            NumberKey[] nks = new NumberKey[options.size()];
+            for ( int i=0; i<nks.length; i++) 
+            {
+                nks[i] = ((RModuleOption)options.get(i)).getOptionId();
+            }
+            
+            crit.addIn(a+'.'+ACT_NEW_OPTION_ID, nks);
+        }
+        else if (optionOrGroup instanceof RModuleOption)
+        {
+            crit.add(a, ACT_NEW_OPTION_ID, 
+                     ((RModuleOption)optionOrGroup).getOptionId());
+        }
+        else if (optionOrGroup instanceof AttributeOption)
+        {
+            crit.add(a, ACT_NEW_OPTION_ID, 
+                     ((AttributeOption)optionOrGroup).getOptionId());
+        }
+
+        // end date criteria
+        Criteria.Criterion c1 = crit.getNewCriterion(
+            a, ACT_END_DATE, date, Criteria.GREATER_THAN);
+        c1.or(crit.getNewCriterion(
+            a, ACT_END_DATE, null, Criteria.EQUAL) );
+        crit.add(c1);
+    }
 
     private int runQuery(AttributeOption o1, AttributeOption o2,
                          Object ogOrRmo, Date date)
@@ -734,88 +807,25 @@ System.out.println("done searching options: " );
         Criteria crit = new Criteria();
         // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
         crit.addSelectColumn("count(a1.ISSUE_ID)");
-        crit.addAlias("a1", ActivityPeer.TABLE_NAME);
-        crit.addAlias("a2", ActivityPeer.TABLE_NAME);
-        crit.addAlias("a3", ActivityPeer.TABLE_NAME);
-        crit.addAlias("t1", TransactionPeer.TABLE_NAME);
-        crit.addAlias("t2", TransactionPeer.TABLE_NAME);
-        crit.addAlias("t3", TransactionPeer.TABLE_NAME);
-        System.out.println("1:  " + crit);
-        // where a1.new_option_id=axis1option 
-        // and a2.new_option_id=axis2option 
-        // and a3.new_option_id in (grouped_options)
-        String A1_NEW_OPTION_ID = "a1.NEW_OPTION_ID";
-        String A2_NEW_OPTION_ID = "a2.NEW_OPTION_ID";
-        String A3_NEW_OPTION_ID = "a3.NEW_OPTION_ID";
-        crit.add(A1_NEW_OPTION_ID, o1.getOptionId());
-        crit.add(A2_NEW_OPTION_ID, o2.getOptionId());
-        addOptionOrOptionGroup(ogOrRmo, crit);
-        System.out.println("2:  " + crit);
-        // and a1.issue_id=a2.issue_id
-        // and a1.issue_id=a3.issue_id
-        // and t1.transaction_id=a1.transaction_id
-        // and t2.transaction_id=a2.transaction_id
-        // and t3.transaction_id=a3.transaction_id
-        String A1_ISSUE_ID = "a1.ISSUE_ID";
-        String A2_ISSUE_ID = "a2.ISSUE_ID";
-        String A3_ISSUE_ID = "a3.ISSUE_ID";
-        String A1_TRANSACTION_ID = "a1.TRANSACTION_ID";
-        String A2_TRANSACTION_ID = "a2.TRANSACTION_ID";
-        String A3_TRANSACTION_ID = "a3.TRANSACTION_ID";
-        String T1_TRANSACTION_ID = "t1.TRANSACTION_ID";
-        String T2_TRANSACTION_ID = "t2.TRANSACTION_ID";
-        String T3_TRANSACTION_ID = "t3.TRANSACTION_ID";
-        crit.addJoin(A1_ISSUE_ID, A2_ISSUE_ID);
-        crit.addJoin(A1_ISSUE_ID, A3_ISSUE_ID);
-        crit.addJoin(T1_TRANSACTION_ID, A1_TRANSACTION_ID);
-        crit.addJoin(T2_TRANSACTION_ID, A2_TRANSACTION_ID);
-        crit.addJoin(T3_TRANSACTION_ID, A3_TRANSACTION_ID);
-        System.out.println("3:  " + crit);
-        // and t1.created_date<date
-        // and t2.created_date<date
-        // and t3.created_date<date
-        String T1_CREATED_DATE = "t1.CREATED_DATE";
-        String T2_CREATED_DATE = "t2.CREATED_DATE";
-        String T3_CREATED_DATE = "t3.CREATED_DATE";
-        crit.add(T1_CREATED_DATE, date, Criteria.LESS_THAN);
-        crit.add(T2_CREATED_DATE, date, Criteria.LESS_THAN);
-        crit.add(T3_CREATED_DATE, date, Criteria.LESS_THAN);
-        System.out.println("4:  " + date);
-        System.out.println("4:  " + crit);
-        // and a1.end_date>date
-        // and a2.end_date>date
-        // and a3.end_date>date
-        String A1_END_DATE = "a1.END_DATE";
-        String A2_END_DATE = "a2.END_DATE";
-        String A3_END_DATE = "a3.END_DATE";
-        crit.add(A1_END_DATE, date, Criteria.GREATER_THAN);
-        crit.add(A2_END_DATE, date, Criteria.GREATER_THAN);
-        crit.add(A3_END_DATE, date, Criteria.GREATER_THAN);
-        // need to add in module criteria
+        addOptionOrGroup(1, o1, date, crit);
+        addOptionOrGroup(2, o2, date, crit);
+        addOptionOrGroup(3, ogOrRmo, date, crit);
+        // need to add in module criteria !FIXME!
         System.out.println("5:  " + crit);
+        return getCountAndCleanUp(crit);
+    }
+
+    private int getCountAndCleanUp(Criteria crit)
+        throws Exception
+    {
         List records = ActivityPeer.doSelectVillageRecords(crit);
+        // clean up
+        for ( int i=0; i<aliases.length; i++ ) 
+        {
+            aliases[i] = 0;
+        }
         return ((Record)records.get(0)).getValue(1).asInt();
     }
-
-    private void addOptionOrOptionGroup(Object obj, Criteria crit)
-    {
-        if ( obj instanceof OptionGroup ) 
-        {
-            List options = ((OptionGroup)obj).getOptions();
-            NumberKey[] nks = new NumberKey[options.size()];
-            for ( int i=0; i<nks.length; i++) 
-            {
-                nks[i] = ((RModuleOption)options.get(i)).getOptionId();
-            }
-            
-            crit.addIn("a3.OPTION_ID", nks);
-        }
-        else 
-        {
-            crit.add("a3.OPTION_ID", ((RModuleOption)obj).getOptionId());
-        }
-    }
-
 
     // *********************************************************
     // Retrievable implementation
