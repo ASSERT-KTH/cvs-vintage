@@ -118,7 +118,7 @@
 <h2>Issue ID: TBNS1</h2>
 
 <div class="functnbar">
-     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;
      <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
 </div>
 
@@ -439,6 +439,7 @@
      <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
 
+
  <input type="hidden" name="depdependKeyori" value="104" />
  <h3>Dependencies</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -454,16 +455,43 @@
      <tr class="a">
      <td>&nbsp;</td>
      <td>
-     <input type="text" size="5">
+     NS102
      </td>
+     <td>Child</td>
      <td>
 	<select name="depdependKeydti" class="select">
-    <option value="0">Choose relationship</option>
+    <option value="0">Choose dependency type</option>
           <option value="1">
-          Parent</option>
+          blocking</option>
           <option value="2">
-          Child</option>
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
         </select>     </td>
+   </tr>
+     <tr class="b">
+     <td>&nbsp;</td>
+     <td>
+     NV125
+     </td>
+     <td>Parent</td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose dependency type</option>
+          <option value="1">
+          blocking</option>
+          <option value="2">
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
+        </select>     </td>
+   </tr>
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>&nbsp;</td>
      <td>
 	<select name="depdependKeydti" class="select">
     <option value="0">Choose dependency type</option>
@@ -480,8 +508,6 @@
 <div class="functnbar3">
  <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
 </div>
-
-
 <h3>Comments</h3>
 
 
@@ -632,7 +658,7 @@ jsdk-1.3
 
 
 <div class="functnbar2">
-     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;
      <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
 </div>
 
@@ -661,7 +687,7 @@ jsdk-1.3
 <h2>Issue ID: TBNS2</h2>
 
 <div class="functnbar">
-     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;
      <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
 </div>
 
@@ -982,6 +1008,7 @@ jsdk-1.3
      <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
 
+
  <input type="hidden" name="depdependKeyori" value="104" />
  <h3>Dependencies</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -997,16 +1024,43 @@ jsdk-1.3
      <tr class="a">
      <td>&nbsp;</td>
      <td>
-     <input type="text" size="5">
+     NS102
      </td>
+     <td>Child</td>
      <td>
 	<select name="depdependKeydti" class="select">
-    <option value="0">Choose relationship</option>
+    <option value="0">Choose dependency type</option>
           <option value="1">
-          Parent</option>
+          blocking</option>
           <option value="2">
-          Child</option>
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
         </select>     </td>
+   </tr>
+     <tr class="b">
+     <td>&nbsp;</td>
+     <td>
+     NV125
+     </td>
+     <td>Parent</td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose dependency type</option>
+          <option value="1">
+          blocking</option>
+          <option value="2">
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
+        </select>     </td>
+   </tr>
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>&nbsp;</td>
      <td>
 	<select name="depdependKeydti" class="select">
     <option value="0">Choose dependency type</option>
@@ -1023,7 +1077,6 @@ jsdk-1.3
 <div class="functnbar3">
  <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
 </div>
-
 
 <h3>Comments</h3>
 
@@ -1175,7 +1228,7 @@ jsdk-1.3
 
 
 <div class="functnbar2">
-     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;
      <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
 </div>
 
