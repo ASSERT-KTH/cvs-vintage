@@ -71,11 +71,13 @@ import org.tigris.scarab.services.module.ModuleEntity;
 public class ScarabModulePeer
     extends org.tigris.scarab.om.BaseScarabModulePeer
 {
+    /*
     public static Class getOMClass()
         throws Exception
     {
         return ModuleManager.getOMClass();
     }
+    */
 
     /**
      * Gets a List of all of the ScarabModule objects
