@@ -56,8 +56,11 @@ import org.apache.turbine.RunData;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
+import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -69,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.12 2003/03/25 16:57:52 jmcnally Exp $
+ * @version $Id: ModuleQuery.java,v 1.13 2003/05/15 18:42:23 jmcnally Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -81,11 +84,11 @@ public class ModuleQuery extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         // the list to add items to
         MITList list = null;
-
-        boolean isAllIssueTypes = data.getParameters().getBoolean("allit");
-        if (isAllIssueTypes) 
+        if (data.getParameters().getBoolean("allit")) 
         {
-            list = MITListManager.getCurrentModuleAllIssueTypesList(user);
+            Module module = user.getCurrentModule();
+            list = MITListManager
+                .getSingleModuleAllIssueTypesList(module, user);
             user.setCurrentMITList(list);
         }
         else 

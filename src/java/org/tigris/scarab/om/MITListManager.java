@@ -50,8 +50,10 @@ import java.util.List;
 import java.util.Iterator;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
+import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.ScarabUser;
 
 /** 
@@ -87,52 +89,60 @@ public class MITListManager
         return list;
     }
 
-    public static MITList getCurrentModuleAllIssueTypesList(ScarabUser user)
+    public static MITList getSingleModuleAllIssueTypesList(Module module,
+                                                           ScarabUser user)
         throws TorqueException
     {
-        MITList list = getInstance(MITListPeer.CURRENT_MODULE_ALL_ISSUETYPES)
-            .copy();
+        MITList list = MITListManager.getInstance();
+        list.setModifiable(false);
         list.setScarabUser(user);
+        list.setName(Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         user.getLocale(),
+                                         "AllIssueTypesCurrentModule", 
+                                         module.getRealName()));
+        
+        MITListItem item = MITListItemManager.getInstance();
+        item.setModule(module);
+        item.setIssueTypeId(MITListItem.MULTIPLE_KEY);
+        list.addMITListItem(item);
         return list;
     }
 
     public static MITList getAllModulesAllIssueTypesList(ScarabUser user)
         throws TorqueException
     {
-        MITList list = getInstance(MITListPeer.ALL_MODULES_ISSUETYPES)
-            .copy();
+        MITList list = MITListManager.getInstance();
+        list.setModifiable(false);
         list.setScarabUser(user);
+        list.setName(Localization.getString(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                      user.getLocale(),
+                                      "AllModulesAndIssueTypes"));
+
+        MITListItem item = MITListItemManager.getInstance();
+        item.setModuleId(MITListItem.MULTIPLE_KEY);
+        list.addMITListItem(item);
+        item.setIssueTypeId(MITListItem.MULTIPLE_KEY);
         return list;
     }
 
-    public static MITList getAllModulesCurrentIssueTypeList(ScarabUser user)
+    public static MITList getAllModulesSingleIssueTypeList(IssueType issueType,
+                                                           ScarabUser user)
         throws TorqueException
     {
-        MITList list = getInstance(MITListPeer.ALL_MODULES_CURRENT_ISSUETYPE)
-            .copy();
+        MITList list = MITListManager.getInstance();
+        list.setModifiable(false);
         list.setScarabUser(user);
+        list.setName(Localization.format(ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         user.getLocale(),
+                                         "CurrentIssueTypeAllModules", 
+                                         issueType.getName()));
+
+        MITListItem item = MITListItemManager.getInstance();
+        item.setModuleId(MITListItem.MULTIPLE_KEY);
+        item.setIssueType(issueType);
+        list.addMITListItem(item);
         return list;
     }
-
-
-    public static MITList getCurrentModuleAllIssueTypesList()
-        throws TorqueException
-    {
-        return getInstance(MITListPeer.CURRENT_MODULE_ALL_ISSUETYPES);
-    }
-
-    public static MITList getAllModulesAllIssueTypesList()
-        throws TorqueException
-    {
-        return getInstance(MITListPeer.ALL_MODULES_ISSUETYPES);
-    }
-
-    public static MITList getAllModulesCurrentIssueTypeList()
-        throws TorqueException
-    {
-        return getInstance(MITListPeer.ALL_MODULES_CURRENT_ISSUETYPE);
-    }
-
 
     /**
      * An issue has an associated Module and IssueType, this method takes

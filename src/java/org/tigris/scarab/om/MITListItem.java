@@ -60,7 +60,7 @@ public  class MITListItem
     extends org.tigris.scarab.om.BaseMITListItem
     implements Persistent
 {
-    private static final Integer MULTIPLE_KEY = new Integer(0);
+    static final Integer MULTIPLE_KEY = new Integer(0);
 
     /**
      * The number of active issues of the this issue type within the module.

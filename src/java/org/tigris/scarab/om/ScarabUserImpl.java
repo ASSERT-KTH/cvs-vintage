@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.103 2003/05/09 21:27:38 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.104 2003/05/15 18:42:24 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -1001,7 +1001,6 @@ public class ScarabUserImpl
      * Gets the users default locale from the users preferences.
      */
     public Locale getLocale()
-        throws Exception
     {
         return internalUser.getLocale();
     }

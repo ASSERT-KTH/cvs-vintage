@@ -36,16 +36,14 @@
 
  #set($manager = $scarabG.MITListManager)
  #set($key = "pd_list_id")
- #set($list2 = $manager.AllModulesCurrentIssueTypeList)
- #set($checked2 = $list.QueryKey == $data.Parameters.getString($key, ""))
- #set($list = $manager.AllModulesAllIssueTypesList)
- #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
+ #set($checked2 = "oneitallmods" == $data.Parameters.getString($key, ""))
+ #set($checked = !$checked2 || "allmits" == $data.Parameters.getString($key, ""))
  <div class="colbar">
    <p>$l10n.ChoosePredefinedList</p>
-   <p><input type="radio" name="$key" value="$list.QueryKey"
-     #if($checked) checked="checked"#end />$list.Name</p>
-   <p><input type="radio" name="$key" value="$list2.QueryKey"
-     #if($checked2) checked="checked"#end />$list2.Name</p>
+   <p><input type="radio" name="$key" value="allmits"
+     #if($checked) checked="checked"#end />$l10n.AllModulesAndIssueTypes</p>
+   <p><input type="radio" name="$key" value="oneitallmods"
+     #if($checked2) checked="checked"#end />$l10n.format("CurrentIssueTypeAllModules", $scarabR.CurrentIssueType.Name)</p>
  </div>
 
  <div class="functnbar2">

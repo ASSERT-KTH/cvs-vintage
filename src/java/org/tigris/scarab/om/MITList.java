@@ -69,7 +69,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.24 2003/04/29 23:38:49 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.25 2003/05/15 18:42:24 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -936,8 +936,8 @@ public  class MITList
         List items = new ArrayList();
         try
         {
-            Iterator rawItems = getMITListItems().iterator();
-            while (rawItems.hasNext()) 
+            for (Iterator rawItems = getMITListItems().iterator();
+                 rawItems.hasNext();) 
             {
                 MITListItem item = (MITListItem)rawItems.next();
                 if (!item.isSingleModule()) 
@@ -979,6 +979,9 @@ public  class MITList
         return items;
     }
 
+    /**
+     * Adds all the active issue types in module to the items List
+     */
     private void addIssueTypes(Module module, List items)
         throws Exception
     {

@@ -190,16 +190,20 @@ public class IssueListExport extends DataExport
         printer.print(queryResult.getUniqueId());
 
         List values = queryResult.getAttributeValuesAsCSV();
-        for (Iterator itr = values.iterator();itr.hasNext();)
+        // ISSUE ATTRIBUTE VALUES as column headings.
+        if (containsElements(values)) 
         {
-            String val = (String)itr.next();
-            if (val.length() == 0)
+            for (Iterator itr = values.iterator();itr.hasNext();)
             {
-                printer.print(NO_CONTENT);
-            }
-            else
-            {
-                printer.print(val);
+                String val = (String)itr.next();
+                if (val.length() == 0)
+                {
+                    printer.print(NO_CONTENT);
+                }
+                else
+                {
+                    printer.print(val);
+                }
             }
         }
     }
