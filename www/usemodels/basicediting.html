@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Browsing and Searching Use Cases</title>
+  </head>
+
+  <body>
+    <h1>Browsing and Searching Use Cases</h1>
+
+<!-- --------------------------------------------------------------- -->
+
+
+<a name="UC-08"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-08: Assigning an issue to specific developer</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td> 
+    <td bgcolor="white" valign="top">None</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right"
+    valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       If an issue has been entered and was not assigned to a specific developer at that time, 
+       the component owner must assign it to a specific developer.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td> 
+    <td bgcolor="white" valign="top">
+      <a href="http://www.tigris.org/features/feature.html">FeatureName</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor="white" valign="top">
+       CompOwner: Component Owner (High Priority, High Frequency)<br> 
+       Assignee: Typically Developer (High Priority, High Frequency)<br>
+       Scarab: The scarab system.<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor="white" valign="top">
+      Reporter: Wants to know when work on reported issue has begun, when it might be resolved.<br>
+      Assignee: needs to know about issues assigned to him/her.<br>
+      Assignee: may be a person or a shared work queue.<br>
+      Other project members: want to have visibility into project activity and progress.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Pre-conditions:</b></td>
+    <td bgcolor="white" valign="top">
+       Logged in<br> 
+       Project set up<br> 
+       Existing issue assigned to component owner by default<br> 
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Post-conditions:</b></td> 
+    <td bgcolor="white" valign="top">
+      Issue assigned to assignee, and intersted parties notified and ready
+      to take action.  Next step, assignee accepts issue and begins work.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor="white" valign="top">
+        Assignee name
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Main Success Scenario:</b><br>
+      <ol>
+        <li> CompOwner: visit MyIssues or other list of issues assigned to his/her component
+        <li> CompOwner: select an issue from list
+        <li> Scarab: display <a href="IssueView.html">IssueView</a>
+        <li> CompOwner: review issue and decide on assignee
+        <li> CompOwner: enter new assignee and comment and hit submit
+        <li> [validation] Scarab: validates assignee and comment
+        <li> Scarab: record change
+        <li> Scarab: send email to old and new assignees and other users who expressed interest in issue
+        <li> Scarab: display change comfimation, email confirmation, 
+             and <a href="IssueView.html">IssueView</a> for next issue in list, or <a href="IssueList.html">IssueList</a> if last
+      </ol>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b><br>
+      <ul>
+        <li> [validation] if validation fails:
+             <ul>
+                <li> Scarab: display <a href="IssueView.html">IssueView</a> w/ error message and field data as entered
+             </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2"
+    valign="top"><b>Notes/Questions:</b><br>
+       <ul>
+         <li> In bugzilla, anyone can reassign any issue to anyone.  
+              In Issuezilla, permissions are limited somewhat and assignees 
+              are limited to project members.  What enterprise-level 
+              requirements are there on who can assign what to whom in scarab?
+         <li> Workload and relevant knowledge are factors in making good assignments.
+         <li> Estimated effort to resolve?
+         <li> Is this really more of a 'triage incoming issues' use case?
+         <li> Make this extend a general editing use case.
+        </ul>
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+
+<a name="UC-09"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-09: Changing an issue</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td> 
+    <td bgcolor="white" valign="top">None</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       General use case for any kind of issue field change.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td> 
+    <td bgcolor="white" valign="top">
+      <a href="http://www.tigris.org/features/feature.html">FeatureName</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor="white" valign="top">
+       User: Any Role (High Priority, High Frequency)<br> 
+       Scarab: The scarab system.<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor="white" valign="top">None
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Pre-conditions:</b></td>
+    <td bgcolor="white" valign="top">
+       Logged in<br> 
+       Project set up<br> 
+       Existing issue<br> 
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Post-conditions:</b></td> 
+    <td bgcolor="white" valign="top">
+      Change is validated and recorded, user sees confirmation,
+      notificiations emailed to interested parties.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor="white" valign="top">
+        Query terms.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Main Success Scenario:</b><br>
+      <ol>
+        <li> User: visit <a href="IssuesView.html">IssuesView</a>.  
+        <li> User: review fields in issue
+        <li> [change] User: change field values and enter comment
+        <li> [validation] Scarab: validates field values
+        <li> Scarab: record change
+        <li> Scarab: send email to old and new assignees and other users who expressed interest in issue
+        <li> Scarab: display change comfimation, email confirmation, 
+             and <a href="IssueView.html">IssueView</a> for next issue in list, or IssueList if last
+      </ol>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b><br>
+      <ul>
+        <li> [validation] if validation fails:
+             <ul type='a'>
+               <li> Scarab: display ProjectIssues with error message and field data as entered
+             </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" COLSPAN="2" valign="top"><b>Notes/Questions:</b><br>
+       <ul>
+       <li> Future feature: This is where query relaxation could be
+       useful to offer users results that were "close" to what they
+       asked for in addition to the ones that exactly match.
+       <li> Future feature: result column sorting, custom columns, etc.
+       </ul>
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-10"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-10: Changing multiple issues at once</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       QA managers need to assign or reassign many issues at once, 
+       or adjust priority or deadlines for groups of issues.
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-11"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-11: Edit milestone details</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       Drill into a milestone object and make a change, affecting every issue with that milestone.
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-12"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-12: Defer issue until further notice</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       Indicate that an issue is not invlaid, yet
+       the development team will not work on it any time soon.
+    </td>
+  </tr>
+</table>
+
+<br><hr><br>
+<!-- --------------------------------------------------------------- -->
+
+<a name="UC-13"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-13: Reject invalid issue/td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       In the course of reviewing new issues, reject those that are invalid.  Provide consise rationale.
+    </td>
+  </tr>
+</table>
+
+
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Basic Data Entry Use Cases</title>
+  </head>
+
+  <body>
+    <h1>Basic Data Entry Use Cases</h1>
+
+<!-- --------------------------------------------------------------- -->
+
+
+<a name="UC-01"></a>
+<table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+    <td bgcolor="white" valign="top">UC-01: Creating an New Issue</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
+    <td bgcolor="white" valign="top">None</td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
+    <td bgcolor="white" valign="top">
+       User enters an issue, duplicates are avoided if possible.  If
+       it is a duplicate, the correct existing issue gains a vote.  If
+       a new issue is entered, it is well specified and actonable.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td>
+    <td bgcolor="white" valign="top"><a href="http://www.tigris.org/features/feature.html">FeatureName</a></td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
+    <td bgcolor="white" valign="top">
+       User: Any Role (High Priority, High Frequency)<br>
+       Scarab: The scarab system.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
+    <td bgcolor="white" valign="top">
+      QA Mangager: wants to avoid duplicate issues.<br>
+      QA Mangager: wants enough info to assign issue to proper developer, deadline.<br>
+      QA Mangager: wants well-formed, well-written issue reports.<br>
+      Assigned Developer: wants detailed description, steps to reproduce.<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Prereq:</b></td>
+    <td bgcolor="white" valign="top">
+       Project set up<br>
+       User knows which project to report the issue against<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
+    <td bgcolor="white" valign="top">New issue is entered, or matching existing issue has vote increased.
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
+    <td bgcolor="white" valign="top">
+        Quick fields<br>
+        Yes/No on duplicate candidates<br>
+        Detailed fields<br>
+        Field values based on user profile: e.g., reporter<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="right" valign="top"><b>Notes/Questions:</b></td>
+    <td bgcolor="white" valign="top">
+       Does the user have limited votes?<br>
+       Do the forms help users enter good issue reports?<br>
+       No anonymous users can post issues<br>
+       At what point do users ahve to log in?<br>
+       Admin use case to to put which fields in the NewIssueBox<br>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white"  COLSPAN="2" valign="top"><b>Main Success Scenario:</b>
+      <ol>
+        <li> User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given project 
+        <li> User: log in as non-guest if not already
+        <li> User: enter fields in <a href="ProjectIssues.html#NewIssueBox">NewIssueBox</a>, hit submit
+           <ul>
+            <li> choose type of issue
+            <li> enter summary
+            <li> enter platform, os
+            <li> enter severity, priority
+           </ul>
+        <li> Scarab: checks for duplicates
+        <li> If duplicates found:
+           <ol type="a">
+           <li> Scarab: display <a href="Deduplicate.html">Deduplicate</a> Page
+           <li> User: review list of duplicates
+           <li> If dup matches user's issue:
+             <ul type='a'>
+               <li> User: vote for matching issue
+             </ul>
+
+           <li> If no match:
+             <ul type='a'>
+               <li> User: indicate no match
+             </ul>
+
+           </ol>
+        <li> Scarab: display <a href="NewIssueDetails.html">NewIssueDetails</a> page
+        <li> User: enter fields and hit submit
+        <li> Scarab: validate data or bounce back to prev screen
+        <li> Scarab: store values in database
+        <li> Scarab: display <a href="ProjectIssues.html">ProjectIssues</a> page 
+                     with <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a> 
+      </ol>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white"  COLSPAN="2" valign="top"><b>Alternative Scenario Extensions:</b>
+      <ul>
+        <li> None
+      </ul>
+    </td>
+  </tr>
+</table>
+<br><hr><br>
+
+  </body>
+</html>
