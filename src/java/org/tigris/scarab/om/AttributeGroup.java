@@ -63,6 +63,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -326,6 +327,8 @@ public  class AttributeGroup
         RModuleAttribute rma = module
             .getRModuleAttribute(attribute, issueType);
         rma.delete(user);
+        WorkflowFactory.getInstance().deleteWorkflowsForAttribute(attribute, module, 
+                                                                  issueType);
         rmas.remove(rma);
 
         // Remove attribute - module mapping from template type
