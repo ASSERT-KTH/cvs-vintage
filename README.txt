@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.54 2003/01/03 18:51:45 jon Exp $
+$Id: README.txt,v 1.55 2003/01/17 18:46:36 kmaples Exp $
 
 Welcome to Scarab!
 
@@ -78,7 +78,7 @@ have the database binaries in your PATH (ie: $MYSQL_HOME/bin).
     With csh/tcsh:
         setenv ANT_HOME /path/to/ant-install
         setenv MYSQL_HOME /path/to/mysql-install
-        export JAVA_HOME /path/to/jdk-install
+        setenv JAVA_HOME /path/to/jdk-install
         setenv PATH ${PATH}:${ANT_HOME}/bin:${MYSQL_HOME}/bin:${JAVA_HOME}/bin
 
     Note: To make these settings 'sticky', put them into the appropriate
