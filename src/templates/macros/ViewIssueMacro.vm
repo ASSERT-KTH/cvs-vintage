@@ -609,14 +609,14 @@ $l10n.NoDependencies
      #if ($activitySet && $activitySet.Attachment)
        #if ($activitySet.Attachment.Data && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
          $activitySet.Attachment.Data
-       #else Not provided. #end
+       #else $l10n.NotProvided #end
      #elseif ($act.Attachment)
        #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
           $act.Attachment.Data 
-       #else Not provided. #end     
+       #else $l10n.NotProvided #end     
      #elseif ($activitySet && $activitySet.ActivitySetType.Name.equals("Create Issue"))
            $l10n.InitialEntry
-     #else Not provided.
+     #else $l10n.NotProvided
      #end
      </td>
      <td>
