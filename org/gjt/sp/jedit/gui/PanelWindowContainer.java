@@ -39,7 +39,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.40 2002/08/10 21:28:32 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.41 2002/08/12 20:08:01 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -174,6 +174,9 @@ public class PanelWindowContainer implements DockableWindowContainer
 	//{{{ remove() method
 	public void remove(DockableWindowManager.Entry entry)
 	{
+		if(entry.factory.name.equals(mostRecent))
+			mostRecent = null;
+
 		int index = dockables.indexOf(entry);
 		buttons.remove(index + 2);
 
@@ -194,6 +197,15 @@ public class PanelWindowContainer implements DockableWindowContainer
 	public void save(DockableWindowManager.Entry entry) {}
 	//}}}
 
+	//{{{ showMostRecent() method
+	public void showMostRecent()
+	{
+		if(mostRecent == null)
+			Toolkit.getDefaultToolkit().beep();
+
+		wm.showDockableWindow(mostRecent);
+	} //}}}
+
 	//{{{ show() method
 	public void show(final DockableWindowManager.Entry entry)
 	{
@@ -212,6 +224,7 @@ public class PanelWindowContainer implements DockableWindowContainer
 
 		if(entry != null)
 		{
+			mostRecent = entry.factory.name;
 			this.current = entry;
 
 			dockablePanel.showDockable(entry.factory.name);
@@ -306,6 +319,9 @@ public class PanelWindowContainer implements DockableWindowContainer
 	private DockableWindowManager.Entry current;
 	private JPopupMenu popup;
 	private JMenu floatMenu;
+
+	// remember the most recent dockable
+	private String mostRecent;
 	//}}}
 
 	//{{{ Inner classes
@@ -724,6 +740,12 @@ public class PanelWindowContainer implements DockableWindowContainer
 			ResizeMouseHandler resizeMouseHandler = new ResizeMouseHandler();
 			addMouseListener(resizeMouseHandler);
 			addMouseMotionListener(resizeMouseHandler);
+		} //}}}
+
+		//{{{ getWindowContainer() method
+		PanelWindowContainer getWindowContainer()
+		{
+			return PanelWindowContainer.this;
 		} //}}}
 
 		//{{{ showDockable() method

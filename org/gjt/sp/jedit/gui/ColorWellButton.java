@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * You can get and set the currently selected color using
  * <code>getSelectedColor()</code> and <code>setSelectedColor().
  * @author Slava Pestov
- * @version $Id: ColorWellButton.java,v 1.2 2002/05/30 10:17:45 spestov Exp $
+ * @version $Id: ColorWellButton.java,v 1.3 2002/08/12 20:08:01 spestov Exp $
  */
 public class ColorWellButton extends JButton
 {
@@ -77,12 +77,12 @@ public class ColorWellButton extends JButton
 
 		public int getIconWidth()
 		{
-			return 25;
+			return 35;
 		}
 
 		public int getIconHeight()
 		{
-			return 13;
+			return 10;
 		}
 
 		public void paintIcon(Component c, Graphics g, int x, int y)

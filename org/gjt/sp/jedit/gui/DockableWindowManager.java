@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.34 2002/08/10 21:13:49 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.35 2002/08/12 20:08:01 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -672,6 +672,30 @@ public class DockableWindowManager extends JPanel
 		else
 			return (entry.position != FLOATING);
 	} //}}}
+
+	//{{{ closeCurrentArea() method
+	/**
+	 * Closes the currently focused docking area.
+	 * @since jEdit 4.1pre3
+	 */
+	public void closeCurrentArea()
+	{
+		Component comp = view.getFocusOwner();
+		while(comp != null)
+		{
+			if(comp instanceof PanelWindowContainer
+				.DockablePanel)
+			{
+				PanelWindowContainer container =
+					((PanelWindowContainer.DockablePanel)
+					comp).getWindowContainer();
+				container.show(null);
+				return;
+			}
+		}
+
+		getToolkit().beep();
+	}
 
 	//{{{ close() method
 	/**
