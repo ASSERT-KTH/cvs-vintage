@@ -96,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.77 2002/01/09 01:57:28 maartenc Exp $
+ * @version $Id: ReportIssue.java,v 1.78 2002/01/09 20:03:28 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -440,7 +440,8 @@ public class ReportIssue extends RequireLoginFirstAction
             if (group != null)
             {
                 group.setProperties(attachment);
-                if (attachment.getData().length > 0)
+                if (attachment.getData() != null 
+                    && attachment.getData().length > 0)
                 {
                     ScarabRequestTool scarabR = getScarabRequestTool(context);
                     Issue issue = scarabR.getIssue();
@@ -457,6 +458,12 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         cleanup(data, context);
                     }
+                }
+                else 
+                {
+                    data.setMessage(
+                        "No text was entered into the Notes textarea.");
+                    searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
                 }
             }
         }
