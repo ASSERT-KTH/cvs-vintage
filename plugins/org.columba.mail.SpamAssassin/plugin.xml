@@ -13,6 +13,10 @@
  <extension name="org.columba.core.action">
   <action name="LearnSpam" class="LearnSpamAction" />
   <action name="LearnHam" class="LearnHamAction" />
+  <action name="MarkMessageAsSpam" class="MarkMessageAsSpamAction" />
+  <action name="MarkMessageAsHam" class="MarkMessageAsHamAction" />
+  <action name="AnalyzeFolder" class="AnalyzeFolderAction" />
+  <action name="AnalyzeMessage" class="AnalyzeMessageAction" />
   <action name="AddAddressToWhitelist" class="AddAddressToWhiteListAction" />
   <action name="AddAddressToBlacklist" class="AddAddressToBlackListAction" />
   <action name="RemoveAddressFromWhitelist" class="RemoveAddressFromWhiteListAction" />
@@ -22,7 +26,7 @@
  <extension name="org.columba.mail.menu">
   <menu name="menu_utilities" extensionpoint="top">
     <menu name="SpamAssassin">
-     <menu name="Bayesian Spam Analysis">
+     <menu name="Train Bayesian Filter">
   	  <menuitem action="org.columba.mail.SpamAssassin$LearnSpam"/>
   	  <menuitem action="org.columba.mail.SpamAssassin$LearnHam"/>
   	 </menu>
@@ -30,10 +34,16 @@
   	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToWhitelist"/>
   	 <menuitem action="org.columba.mail.SpamAssassin$AddAddressToBlacklist"/>
   	 <menuitem action="org.columba.mail.SpamAssassin$RemoveAddressFromWhitelist"/>
+  	 <separator/>
+  	  <menuitem action="org.columba.mail.SpamAssassin$AnalyzeFolder"/>
+  	  <menuitem action="org.columba.mail.SpamAssassin$AnalyzeMessage"/>
+  	 <separator/>
+  	  <menuitem action="org.columba.mail.SpamAssassin$MarkMessageAsSpam"/>
+  	  <menuitem action="org.columba.mail.SpamAssassin$MarkMessageAsHam"/>
   	</menu>
   </menu>
  </extension>
  
  
- <runtime type="java" jar="SpamAssassinPOP3preProcessingFilter.jar"/>
+ <runtime type="java" jar="SpamAssassin.jar"/>
 </plugin>

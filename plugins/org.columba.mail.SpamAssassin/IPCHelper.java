@@ -56,7 +56,7 @@ public class IPCHelper {
 
 		inputStream.println(str);
 		inputStream.flush();
-		//out.close();
+		inputStream.close();
 
 	}
 
