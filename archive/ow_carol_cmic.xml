@@ -10,7 +10,7 @@
         <include name="org/objectweb/carol/cmi/compiler/*.vm"/>
       </fileset>
       <manifest>
-        <attribute name="Specification-Title" value="$Cluster Method Invokation (CMI) Compiler" />
+        <attribute name="Specification-Title" value="Cluster Method Invokation (CMI) Compiler" />
         <attribute name="Specification-Version" value="${carol.version}" />
         <attribute name="Specification-Vendor" value="ObjectWeb" />
         <attribute name="Implementation-Title" value="org.objectweb.carol.cmi.compiler" />
