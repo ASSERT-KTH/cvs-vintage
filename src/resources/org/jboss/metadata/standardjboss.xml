@@ -9,13 +9,25 @@
 	 		<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-			<instance-cache>org.jboss.ejb.plugins.NoPassivationEntityInstanceCache</instance-cache>
+			<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
 				<Optimized>False</Optimized>
 			</container-invoker-conf>
-			<container-cache-conf />
+			<container-cache-conf>
+			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
+			  <MinimumCapacity>5</MinimumCapacity>
+			  <MaximumCapacity>200</MaximumCapacity>
+			  <cache-policy-conf>
+				<OveragerPeriod>300</OveragerPeriod>
+				<ResizerPeriod>600</ResizerPeriod>
+				<MaxBeanAge>300</MaxBeanAge>
+				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
+				<MinCacheMissPeriod>1</MinCacheMissPeriod>
+				<CacheLoadFactor>0.7</CacheLoadFactor>
+			  </cache-policy-conf>
+			</container-cache-conf>
 			<container-pool-conf>
 				<MaximumSize>100</MaximumSize>
 				<MinimumSize>10</MinimumSize>
@@ -80,12 +92,25 @@
 			<container-name>Standard Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
-			<instance-cache>org.jboss.ejb.plugins.NoPassivationStatefulSessionInstanceCache</instance-cache>
+			<instance-cache>org.jboss.ejb.plugins.StatefulSessionInstanceCache</instance-cache>
 			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
 			<Optimized>False</Optimized>
 			</container-invoker-conf>
+			<container-cache-conf>
+			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
+			  <MinimumCapacity>5</MinimumCapacity>
+			  <MaximumCapacity>200</MaximumCapacity>
+			  <cache-policy-conf>
+				<OveragerPeriod>300</OveragerPeriod>
+				<ResizerPeriod>600</ResizerPeriod>
+				<MaxBeanAge>300</MaxBeanAge>
+				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
+				<MinCacheMissPeriod>1</MinCacheMissPeriod>
+				<CacheLoadFactor>0.8</CacheLoadFactor>
+			  </cache-policy-conf>
+			</container-cache-conf>
 		</container-configuration>
 				
 		<container-configuration>
@@ -105,14 +130,26 @@
 		 	<call-logging>false</call-logging>
 		 	<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
-		 	<instance-cache>org.jboss.ejb.plugins.NoPassivationEntityInstanceCache</instance-cache>
+		 	<instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
 		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 		 	<container-invoker-conf>
 		   		<Optimized>False</Optimized>
 		 	</container-invoker-conf>
-		 	<container-cache-conf />
-		 	<container-pool-conf>
+			 <container-cache-conf>
+			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
+			  <MinimumCapacity>5</MinimumCapacity>
+			  <MaximumCapacity>200</MaximumCapacity>
+			  <cache-policy-conf>
+				<OveragerPeriod>300</OveragerPeriod>
+				<ResizerPeriod>600</ResizerPeriod>
+				<MaxBeanAge>300</MaxBeanAge>
+				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
+				<MinCacheMissPeriod>1</MinCacheMissPeriod>
+				<CacheLoadFactor>0.7</CacheLoadFactor>
+			  </cache-policy-conf>
+			 </container-cache-conf>	 	
+			<container-pool-conf>
 		   	<MaximumSize>100</MaximumSize>
 		   	<MinimumSize>10</MinimumSize>
 		 	</container-pool-conf>
