@@ -37,7 +37,7 @@
 <div class="colbar"><a href="$link.setPage("reports,AxisConfiguration.vm").setPathInfo("axis", "$axisIndex").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
 #end
 
-<form method="get" action="$link.setPage("reports,AxisConfiguration.vm")">
+<form method="post" action="$link.setPage("reports,AxisConfiguration.vm")">
 <input type="hidden" name="action" value="ConfigureReport"/>
 <input type="hidden" name="axis" value="$axisIndex"/>
 #set ($parameters = [])
