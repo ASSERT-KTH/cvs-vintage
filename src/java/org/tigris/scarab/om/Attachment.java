@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.41 2002/09/13 00:08:24 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.42 2002/09/24 22:27:59 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -331,7 +331,10 @@ public class Attachment
             }
         }
 
-        if (isNew()) 
+        // need to handle the case where we don't want to be smart
+        // and just set the dates to be whatever we want them
+        // to be (xml import!).
+        if (isNew() && (getCreatedDate() == null && getModifiedDate() == null))
         {
             Date now = new Date();
             setCreatedDate(now);
