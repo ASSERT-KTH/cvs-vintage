@@ -1,0 +1,113 @@
+                              Apache Tomcat 3.3.2
+                              ===================
+                                 Release Notes
+                                 =============
+
+$Id: readme-3.3.2,v 1.1 2004/03/01 00:32:18 billbarker Exp $
+
+
+This document describes the changes that have been made since the
+release of Tomcat 3.3.1 Final.
+
+=========
+Bug Fixes
+=========
+
+The release in which the fix appears is indicated in brackets.
+
+Feature Additions:
+
+Bug No.  Description
+
+8099     Preserve the query string when redirecting to the welcome page.
+
+         Removed '.sh' extension from Unix shell scripts.
+
+	 (Re-) Open the log files with "append", so that log rotation can
+	 be configured to be other than daily.
+
+         Package an Ant compiler adapter that compiles JSPs with the correct
+         naming convention and an Ant task which creates .ver files.  These
+         tasks allow the Tomcat work directory to be pre-populated with 
+         compiled JSPs.
+
+13285	 Added improvements to the admin web-app to include support for vhosts.
+
+Server:
+
+Bug No.  Description
+
+         Bug fixed in SimpleSessionStore in session attribute reloading during
+         context reloads.
+
+7770	 Fixed thread race problem in accessing the Hooks.
+
+8092	 Fixed JSP source exposure proplem.
+
+9165	 Fix auto-detection of tomcat.install for certain 1.1.x JDKs.
+
+7654	 Make certain that the Context Classloader is set before a servlet 
+	 class is loaded.  This allows JAXP and log4j classes to be created
+	 in the constructor of the servlet, instead of in init.
+
+	 Fix problem with multiple Context adds on Context reload under
+	 high traffic.
+
+	 Preserve sessions across session reloadings.
+
+	 Fix Cookie case name problem under Windows for Session Cookie.
+
+	 Fix problems with URL normalization when the URL attempts to access
+	 a file above the ROOT.
+
+	 Prevent session sharing when switching from HTTPS to HTTP.  This
+	 removes a way to hijack sensitive sessions.  The old behavior can
+	 be restored by setting the secureCookie="false" attribute on the
+	 SessionId element in server.xml.
+
+	 Fix the handling of response.encodeURL("") to conform to the w3 spec.
+
+15894	 Fix race condition on reusing Sessions.
+
+         Updated DecodeInterceptor to treat URL paths containing null
+         characters as unsafe.
+
+	 Fix problem where the AccessLog was printing the content-length of the
+	 Request instead of the Response.
+
+24123    Fix problem where the AccessLog wasn't logging request that produce
+         no output.  Also log the Request's content length for PUT requests.
+
+         Partially update to use commons-logging.
+
+Jasper:
+
+Bug No.  Description
+
+11463	 Fix PageContext.removeAttribute(String) to work for a page with
+	 session=false.
+
+13378	 Fix dependency on GenericServlet in the generated .java file.
+
+23101    Fix case dependency problem on Windows platforms.
+
+         Fix high byte chars (xlate to unicode)
+
+         Fix a problem when a jsp include another jsp with relative path.
+
+Configuration:
+
+Bug No.  Description
+8634     Allow alternative location for modules.xml
+
+
+Connectors:
+
+Bug No.  Description
+
+
+
+Documentation:
+
+Bug No.  Description
+
