@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.ui.part.intro;
 
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.intro.IIntroPart;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.part.WorkbenchPart;
@@ -29,4 +30,10 @@ public abstract class IntroPart extends WorkbenchPart implements IIntroPart {
 	public IIntroSite getIntroSite() {
 		return (IIntroSite) getSite();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.intro.IIntroPart#saveState(org.eclipse.ui.IMemento)
+	 */
+	public void saveState(IMemento memento){
+	}	
 }

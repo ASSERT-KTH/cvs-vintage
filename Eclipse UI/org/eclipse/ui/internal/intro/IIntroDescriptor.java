@@ -8,11 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.ui.intro;
+package org.eclipse.ui.internal.intro;
 
 import org.eclipse.core.runtime.CoreException;
 
 import org.eclipse.ui.IWorkbenchPartDescriptor;
+import org.eclipse.ui.intro.IIntroPart;
 
 /**
  * Describes an introduction extension.
