@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Runbox update started: "
+date
+
 TURBINE="../../jakarta-turbine"
 SCARAB=".."
 DIR=`pwd`
@@ -33,6 +36,12 @@ if [ -d ${SCARAB}/target ] ; then
 else
     echo "Scarab target directory does not exist..."    
 fi
+
+cd ${DIR}
+echo "Removing Torque and Turbine from ${SCARAB}/lib..."
+rm -rf ${SCARAB}/lib/turbine*.jar
+rm -rf ${SCARAB}/lib/torque*.zip
+
 cd ${DIR}
 if [ -d ${TURBINE}/bin ] ; then
     echo "Removing Turbine ${TURBINE}/bin directory..."
@@ -77,3 +86,6 @@ if [ -d ${SCARAB}/target/bin ] ; then
     cd ${SCARAB}/target
     ./bin/startup.sh
 fi
+
+echo "Runbox update finished:"
+date
