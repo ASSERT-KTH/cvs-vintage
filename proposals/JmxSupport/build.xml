@@ -18,7 +18,7 @@
 
   <property name="commons-logging.jar" location="${tomcat.build}/lib/common/commons-logging.jar" />
 
-  <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
+  <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-jmx.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
 
   <property name="tomcat.classes.dir" location="${tomcat.build}/classes"/>
