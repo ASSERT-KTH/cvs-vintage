@@ -1,4 +1,6 @@
 ##set ( $action = $link.setPage("IssueList.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "IssueList.vm") )
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
 
 	<h3>Search Results</h3>
 	
@@ -23,12 +25,13 @@
 		<tr>
 		<th nowrap="nowrap"><a href="#"><img src="scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
 		<th><a href="#" class="header" title="sort">issue ID:</a></th>
-		<th><a href="#" class="header" title="sort">issue summary:</a></th>
-		<th><a href="#" class="header" title="sort">attribute name:</a></th>
-		<th><a href="#" class="header" title="sort">attribute x:</a></th>
+#foreach( $userAttribute in $user.getAttributesForIssueList($module))
+		<th><a href="#" class="header" title="sort">$userAttribute.Name:</a></th>
+#end
 		</tr>
 		
 #foreach ($issue in $issueList)
+
     #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
          #if( $velocityCount % 2 > 0 )
             <tr class="a">
@@ -36,17 +39,16 @@
             <tr class="b">
          #end
 		<td><input type="checkbox" /></td>
-		<td>$issue.UniqueId</td>
-		<td><a href="$issueLink">$issue.ModuleAttributeValuesMap.get("SUMMARY").Value</strong></a></td>
-		<td></td>
-		<td>busted</td>
-		<td>priority 1</td>
+		<td><a href="$issueLink">$issue.UniqueId</a></td>
+#foreach( $userAttribute in $user.getAttributesForIssueList($module))
+    <td><a href="$issueLink">$issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value</a></td>
+#end
 		</tr>
 		
 #end
 		</table>
 	</div>
-	<div class="misc">issues per page:&#160; <input type="radio" name="issue_limit" value="25"/> 25 <input type="radio" name="issue_limit" value="50"/> 50 <input type="radio" name="issue_limit" value="50"/> 75 <input type="radio" name="issue_limit" value="100"/> 100>&nbsp; <input type="submit" name="eventSubmit_doSearch" value="Refresh"></div>
+	<div class="misc">issues per page:&#160; <input type="radio" name="issue_limit" value="25"/> 25 <input type="radio" name="issue_limit" value="50"/> 50 <input type="radio" name="issue_limit" value="50"/> 75 <input type="radio" name="issue_limit" value="100"/> 100&nbsp; <input type="submit" name="eventSubmit_doSearch" value="Refresh"></div>
 	<div class="functnbar">
 		<table width="100%" cellpadding="3" cellspacing="2" border="1">
 		<tr>
