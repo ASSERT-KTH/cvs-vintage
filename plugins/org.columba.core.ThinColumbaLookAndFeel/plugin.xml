@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.core.ThinColumbaLookAndFeel" name="ThinColumba Look And Feel" description="ThinColumba Look And Feel" version="1.0" >
+ <extension name="org.columba.core.theme">
+  <theme name="ThinColumba" class="ThinColumbaPlugin"/>
+ </extension>
+ <runtime type="java" jar="ThinColumbaLookAndFeel.jar"/>
+</plugin>
