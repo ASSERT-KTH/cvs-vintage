@@ -24,7 +24,7 @@
 // File: NotationProviderFactory.java
 // Classes: NotationProviderFactory
 // Original Author: Thierry Lach
-// $Id: NotationProviderFactory.java,v 1.4 2002/10/20 21:11:12 linus Exp $
+// $Id: NotationProviderFactory.java,v 1.5 2003/05/31 13:50:36 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -80,6 +80,7 @@ implements ArgoModuleEventListener {
 	    }
       }
       ArgoEventPump.addListener(ArgoEventTypes.ANY_NOTATION_EVENT, this);
+      ArgoEventPump.addListener(ArgoEventTypes.ANY_MODULE_EVENT, this);
   }
 
   /** Remove the notation change listener.

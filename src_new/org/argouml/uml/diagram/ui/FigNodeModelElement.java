@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.65 2003/05/30 14:53:03 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.66 2003/05/31 13:50:36 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,12 +113,13 @@ public abstract class FigNodeModelElement
         PropertyChangeListener,
         MElementListener,
         NotationContext,
-        ArgoNotationEventListener {
+        ArgoNotationEventListener {            
 
     private Category cat = Category.getInstance(this.getClass());
     ////////////////////////////////////////////////////////////////
     // constants
 
+    private NotationName _currentNotationName;
     public static Font LABEL_FONT;
     public static Font ITALIC_LABEL_FONT;
     public final int MARGIN = 2;
@@ -767,15 +768,18 @@ public abstract class FigNodeModelElement
 
     }
 
-    /** This default implementation simply requests the default notation.
-     *
-     * @return null
+    /**
+     * Returns the notation name for this fig. First start to implement notations on
+     * a per fig basis.
+     * @see org.argouml.application.api.NotationContext#getContextNotation()
      */
     public NotationName getContextNotation() {
-        return null;
+        return _currentNotationName;
     }
 
     public void notationChanged(ArgoNotationEvent event) {
+        PropertyChangeEvent changeEvent = (PropertyChangeEvent)event.getSource();
+        _currentNotationName = Notation.findNotation((String)changeEvent.getNewValue());
         renderingChanged();
     }
 
@@ -909,21 +913,28 @@ public abstract class FigNodeModelElement
         super.damage();
     }
 
-    /**
-     * If the diagram this fig is part of is selected, this method is called so 
-     * this fig is (re)registred as model event listener to it's owner and the 
-     * fig is repainted.  
-     *
-     */
-    public void setAsTarget() {
-        Object owner = getOwner();
-        setOwner(null);
-        setOwner(owner);
-        damage();
-    }
+    
+    
+    
 
-    public void removeAsTarget() {
-        // disableEventSenders();
+    /**
+     * @see org.tigris.gef.presentation.Fig#postLoad()
+     */
+    public void postLoad() {       
+        super.postLoad();
+        if (this instanceof ArgoEventListener) {
+            ArgoEventPump.removeListener(this);
+            ArgoEventPump.addListener(this);
+        }
+        Iterator it = getFigs().iterator();
+        while (it.hasNext()) {
+            Fig fig = (Fig)it.next();
+            if (fig instanceof ArgoEventListener) {
+                // cannot do the adding of listeners recursive since some are not children of FigNodeModelELement or FigEdgeModelElement
+                ArgoEventPump.removeListener((ArgoEventListener)fig);
+                ArgoEventPump.addListener((ArgoEventListener)fig);
+            }
+        }
     }
 
 } /* end class FigNodeModelElement */

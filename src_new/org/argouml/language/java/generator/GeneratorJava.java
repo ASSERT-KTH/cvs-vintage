@@ -24,7 +24,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.65 2003/03/04 13:18:30 lepekhine Exp $
+// $Id: GeneratorJava.java,v 1.66 2003/05/31 13:50:36 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -47,12 +47,12 @@ import java.util.Vector;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
-import org.argouml.application.api.PluggableNotation;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.DocumentationManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator;
+
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 import ru.novosoft.uml.behavior.common_behavior.MAction;
@@ -74,7 +74,6 @@ import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MInterface;
 import ru.novosoft.uml.foundation.core.MMethod;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.core.MStructuralFeature;
@@ -99,8 +98,7 @@ import ru.novosoft.uml.model_management.MPackage;
 // TODO: always check for null!!!
 
 public class GeneratorJava
-    extends Generator
-    implements PluggableNotation, FileGenerator {
+    extends Generator implements FileGenerator {
 
     /*
       	 * 2002-06-09
@@ -1853,5 +1851,15 @@ public class GeneratorJava
     public void setVerboseDocs(boolean _verboseDocs) {
         this._verboseDocs = _verboseDocs;
     }
+    
+
+    /**
+     * @see org.argouml.application.api.Pluggable#inContext(java.lang.Object[])
+     */
+    public boolean inContext(Object[] o) {
+       return true;
+    }
+    
+    public boolean isModuleEnabled() { return true; }
 
 }
