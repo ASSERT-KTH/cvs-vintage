@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.30 2002/02/05 02:11:00 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.31 2002/02/05 02:20:25 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -128,7 +128,7 @@ Bug No.  Description
          the status code set by the "redirect" handler if a status code has
          not already been set.  This primarily affects the status code used
          when the StaticInterceptor module redirects a "directory" URL that
-         doesn't end with a '/'.
+         doesn't end with a '/' and redirects to welcome files.
 
 
 Server:
