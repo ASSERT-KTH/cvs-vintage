@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.64 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: Module.java,v 1.65 2003/03/25 18:28:23 dlr Exp $
  */
 public interface Module
     extends Serializable
@@ -179,12 +179,9 @@ public interface Module
 /** @deprecated THESE WILL BE DEPRECATED */
     Integer getQaContactId();
 /** @deprecated THESE WILL BE DEPRECATED */
-    //void setQaContactId(String v) throws Exception;
-/** @deprecated THESE WILL BE DEPRECATED */
     void setQaContactId(Integer v) throws Exception;
 
     Integer getOwnerId();
-    //void setOwnerId(String v) throws Exception;
     void setOwnerId(Integer v) throws Exception;
 
     void save() throws Exception;
