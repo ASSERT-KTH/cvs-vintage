@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.6 2002/08/31 21:41:43 d00mst Exp $
+// $Id: FigMessage.java,v 1.7 2002/09/03 12:21:43 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -258,4 +258,12 @@ public class FigMessage extends FigNodeModelElement {
   }
 
  
+	/**
+	 * @see org.tigris.gef.presentation.Fig#delete()
+	 */
+	public void delete() {
+		super.delete();
+		
+	}
+
 } /* end class FigMessage */
