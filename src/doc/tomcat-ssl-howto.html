@@ -121,6 +121,10 @@
   # What is the indicator for the client SSL certificated (default is SSL_CLIENT_CERT) 
   <br>
   JkCERTSIndicator SSL_CLIENT_CERT </font></p>
+<p>When using mod_jk with Apache & mod_ssl it is essential to specify "SSLOptions 
+  +StdEnvVars +ExportCertData" in the httpd.conf file.<br>
+  Otherwise mod_ssl will not produce the neccessary environment variables for 
+  mod_jk. (Tilo Christ &lt;tilo.christ@med.siemens.de&gt;)</p>
 <p>Warning, even if mod_jk support both ajp12 (old version from ApacheJServ) and 
   ajp13, only ajp13 could forward SSL informations to tomcat.</p>
 <hr>
@@ -163,14 +167,21 @@
   and <a href="http://www.modssl.org">ModSSL</a> (SSL support for Apache)</p>
 <h3><a name=s61><font size="+1">Verify tomcat server.xml configuration file</font></a></h3>
 <blockquote> 
-  <p> <font face="Courier New, Courier, mono" size="-1">To use the HTTP with SSL 
-    connector in tomcat, verify that it is activated in server.xml</font></p>
+  <p> To use the HTTP with SSL connector in tomcat, verify that it is activated 
+    in server.xml</p>
   <p><font face="Courier New, Courier, mono" size="-1">&lt;Connector className="org.apache.tomcat.service.PoolTcpConnector"&gt;<br>
     &lt;Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/&gt;<br>
     &lt;Parameter name="port" value="8443"/&gt;<br>
     &lt;Parameter name="socketFactory" value="org.apache.tomcat.net.SSLSocketFactory" 
-    /&gt; <br>
+    /&gt;<br>
+    &lt;Parameter name="keystore" value="/var/tomcat/conf/keystore" /&gt;</font><font face="Courier New, Courier, mono" size="-1"> 
+    <br>
+    &lt;Parameter name="keypass" value="changeit"/&gt;<br>
+    &lt;Parameter name="clientAuth" value="true"/&gt; <br>
     &lt;/Connector&gt; </font></p>
+  <p>In this example we indicate the keystore is file <b>/var/tomcat/conf/keystore</b>. 
+    The keystore password is <b>changeit</b> and we want client to authentificate.</p>
+  <blockquote>&nbsp;</blockquote>
 </blockquote>
 <h3><a name=s62>Generate a SSL certificate (RSA) for tomcat</a></h3>
 <blockquote>
