@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2003 Slava Pestov
+ * Copyright (C) 2000, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
  * favorite and clicking 'delete' in the browser just deletes the
  * favorite, and not the directory itself.
  * @author Slava Pestov
- * @version $Id: FavoritesVFS.java,v 1.10 2003/07/28 21:08:04 spestov Exp $
+ * @version $Id: FavoritesVFS.java,v 1.11 2004/02/23 00:15:21 spestov Exp $
  */
 public class FavoritesVFS extends VFS
 {
@@ -104,10 +104,10 @@ public class FavoritesVFS extends VFS
 	//{{{ loadFavorites() method
 	public static void loadFavorites()
 	{
-		favorites = new LinkedList();
-
 		synchronized(lock)
 		{
+			favorites = new LinkedList();
+
 			String favorite;
 			int i = 0;
 			while((favorite = jEdit.getProperty("vfs.favorite." + i)) != null)
