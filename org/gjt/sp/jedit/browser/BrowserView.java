@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.6 2001/11/16 05:32:11 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.7 2001/11/16 06:30:38 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
@@ -53,7 +53,7 @@ public class BrowserView extends JPanel
 		tree.setCellRenderer(renderer);
 		tree.setEditable(false);
 		tree.addTreeExpansionListener(new TreeHandler());
-		tree.putClientProperty("JTree.lineStyle", "Horizontal");
+		tree.putClientProperty("JTree.lineStyle", "Angled");
 		tree.setRootVisible(false);
 		tree.setShowsRootHandles(true);
 
