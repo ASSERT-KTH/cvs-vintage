@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.IssueSearch class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearchTest.java,v 1.1 2003/01/31 21:30:55 jmcnally Exp $
+ * @version $Id: IssueSearchTest.java,v 1.2 2003/03/20 22:05:01 dlr Exp $
  */
 public class IssueSearchTest extends BaseTestCase
 {
@@ -98,7 +98,7 @@ public class IssueSearchTest extends BaseTestCase
     {
         Module module = getModule();
         IssueType it = getDefaultIssueType();
-        IssueSearch search = new IssueSearch(module, it);
+        IssueSearch search = new IssueSearch(module, it, getUser1());
         search.setIssueListAttributeColumns(
             module.getDefaultRModuleUserAttributes(it));
         return search;
