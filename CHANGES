@@ -1,3 +1,36 @@
+Columba v1.0 RC1-test2
+
+New features:
+- re-added "Drafts" flag
+- when double-clicking "marked as draft" messages, open the composer directly
+- mark message as read in Sent folder, after successful sending
+
+Fixed Bugs:
+- when marking message as spam, it was learned as non-spam
+- #955296, removal of plugin fails - tree model wasn't updated correctly
+- #951519 better error dialog handling
+- added central location for exception handling, custom human-readable 
+  messages added for most exceptions
+- if viewer application isn't found on its path, prompt user for new viewer path
+- #952161 Changed URLConnection's caching behaviour (javaprog)
+- fixes the folderoptions bug, which caused column data lose, check if columns 
+  exist, if not, create new default column data
+- fixed major bug in spam marking. messages were learned twice times, 
+  which created false message scoring
+- #952189, added dialog to prompt user to save his work in composer, 
+  using windowClosing event here
+- #951531, added decoding of headerfield
+- #951522 fixed initial selection of folder selection dialog
+- #951528, newly created folders are now selected as expected
+- #952164 signature file defaults to signature.txt which should be more 
+  familiar for windows users
+- #952184, creating virtual folder sets parent correctly now. additionally 
+  the search dialog is opened immediately
+- #953239 fixed nullpointer exception when searching IMAP folders
+- replaced JTextArea multi line label with a slightly better approach (javaprog)
+
+
+
 Columba v1.0 RC1-test1
 
 New features:
