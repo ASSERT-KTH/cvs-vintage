@@ -1,4 +1,4 @@
-// $Id: TestActionAddAllClassesFromModel.java,v 1.3 2004/08/26 20:09:51 mvw Exp $
+// $Id: TestActionAddAllClassesFromModel.java,v 1.4 2004/11/14 08:34:28 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class TestActionAddAllClassesFromModel extends TestCase {
         super.setUp();
         diagram = new UMLClassDiagram();
 	action = new ActionAddAllClassesFromModel("Add all classes from model",
-						   diagram);
+						  diagram);
     }
     
     /**
@@ -60,12 +60,8 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testConstruction() {
-        try {
-            ActionAddAllClassesFromModel a = 
-		new ActionAddAllClassesFromModel("Add all classes from model",
-						 diagram);
-        } catch (Exception noHead) {
-        }
+	new ActionAddAllClassesFromModel("Add all classes from model",
+					 diagram);
     }
     
     /**
