@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.24 2002/01/30 03:37:12 billbarker Exp $
- * $Revision: 1.24 $
- * $Date: 2002/01/30 03:37:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.25 2002/02/05 03:54:27 billbarker Exp $
+ * $Revision: 1.25 $
+ * $Date: 2002/02/05 03:54:27 $
  *
  * ====================================================================
  *
@@ -106,7 +106,10 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     void recycle() {
 	usingStream = false;
 	usingWriter= false;
-	//	writer=null; // fixed ( ? )
+	if( writer.checkError() ) {
+	    OutputBuffer oBuffer= response.getBuffer();
+	    writer = new ServletWriterFacade( oBuffer, response);
+	}
 	if( osFacade != null ) osFacade.recycle();
     }
 
