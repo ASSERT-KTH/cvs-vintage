@@ -19,7 +19,7 @@
 // File: CrCircularAssocClass.java.java
 // Classes: CrCircularAssocClass.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.2 1998/04/18 01:27:25 jrobbins Exp $
+// $Id: CrCircularAssocClass.java,v 1.3 1998/04/18 23:37:25 jrobbins Exp $
 
 package uci.uml.critics;
 

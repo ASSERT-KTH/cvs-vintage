@@ -19,7 +19,7 @@
 // File:CrMissingAttrName.java.java
 // Classes:CrMissingAttrName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.2 1998/04/18 01:27:32 jrobbins Exp $
+// $Id: CrMissingAttrName.java,v 1.3 1998/04/18 23:37:32 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -19,7 +19,7 @@
 // File: CrMultipleAgg.java.java
 // Classes: CrMultipleAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.2 1998/04/18 01:27:33 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.3 1998/04/18 23:37:34 jrobbins Exp $
 
 package uci.uml.critics;
 

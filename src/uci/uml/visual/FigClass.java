@@ -19,7 +19,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.9 1998/04/18 01:27:46 jrobbins Exp $
+// $Id: FigClass.java,v 1.10 1998/04/18 23:38:24 jrobbins Exp $
 
 package uci.uml.visual;
 

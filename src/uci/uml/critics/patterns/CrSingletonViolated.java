@@ -19,7 +19,7 @@
 // File: CrSingletonViolated.java
 // Classes: CrSingletonViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSingletonViolated.java,v 1.2 1998/04/18 01:27:44 jrobbins Exp $
+// $Id: CrSingletonViolated.java,v 1.3 1998/04/18 23:37:45 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 

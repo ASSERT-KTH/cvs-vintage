@@ -19,7 +19,7 @@
 // File: CrNWayAgg.java.java
 // Classes: CrNWayAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.2 1998/04/18 01:27:34 jrobbins Exp $
+// $Id: CrNWayAgg.java,v 1.3 1998/04/18 23:37:35 jrobbins Exp $
 
 package uci.uml.critics;
 
