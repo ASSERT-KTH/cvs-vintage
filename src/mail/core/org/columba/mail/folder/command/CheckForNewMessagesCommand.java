@@ -33,7 +33,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 
 	FolderCommandAdapter adapter;
 	IMAPFolder inboxFolder;
-
+    boolean needGUIUpdate;
 	/**
 	 * @param references
 	 */
@@ -85,7 +85,8 @@ public class CheckForNewMessagesCommand extends FolderCommand {
         // ALP 04/29/03
         // Call updageGUI() if anything has changed
 		if (newRecent != recent || newTotal != total || newUnseen != unseen){
-          updateGUI();
+          needGUIUpdate = true;
+          //updateGUI();
           ImapItem item = srcFolder.getAccountItem().getImapItem();
           if((newRecent != recent) && (item.getBoolean("enable_sound"))){
             // the number of "recent" messages has changed, so play a sound
@@ -115,11 +116,11 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		// send update event to table
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
-        MainInterface.treeModel.nodeChanged(inboxFolder);
-        MailFrameController.tableChanged(ev);
-        
-		// update tree information
-	 	MainInterface.treeModel.nodeChanged(inboxFolder);
+        if(needGUIUpdate){
+          // Update summary table
+          MailFrameController.tableChanged(ev);
+          // Update folder tree
+          MainInterface.treeModel.nodeChanged(inboxFolder);
+        }
 	}
-
 }
