@@ -20,25 +20,18 @@ public class ShowSource
     }
 
     public int doEndTag() throws JspException {
-        JspWriter out = pageContext.getOut();
-
-	if (jspFile.indexOf( ".." ) >= 0) {
-	    try {
-		out.println("<body><h1>Invalid file " + jspFile + "</h1></body>");
-	    } catch (IOException ex) {
-		throw new JspTagException("IOException: "+ex.toString());
-	    }
-	    
-	    return EVAL_PAGE;
-	}
+	if (jspFile.indexOf( ".." ) >= 0)
+	    throw new JspTagException("Invalid JSP file " + jspFile);
 
         InputStream in
             = pageContext.getServletContext().getResourceAsStream(jspFile);
 
         if (in == null)
             throw new JspTagException("Unable to find JSP file: "+jspFile);
+
         InputStreamReader reader = new InputStreamReader(in);
-        
+	JspWriter out = pageContext.getOut();
+
 
         try {
             out.println("<body>");
