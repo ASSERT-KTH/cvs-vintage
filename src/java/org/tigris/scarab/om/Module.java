@@ -79,20 +79,8 @@ public class Module
     }
 
     /**
-     * gets a list of all of the AttributeOptions for a given Attribute.
+     * Saves the module into the database
      */
-    public AttributeOption[] getAttributeOptions(Attribute attr)
-        throws Exception
-    {
-        List attributeOptions = attr.getAttributeOptions();
-        AttributeOption[] ao = new AttributeOption[attributeOptions.size()];
-        for ( int i=0; i<attributeOptions.size(); i++ ) 
-        {
-            ao[i] = ((AttributeOption) attributeOptions.get(i));
-        }
-        return ao;
-    }
-
     public void save() throws Exception
     {
         // if new, relate the Module to the user who created it.
@@ -130,7 +118,6 @@ public class Module
             }
             
         }
-
         super.save();        
     }
 
@@ -187,6 +174,3 @@ public class Module
         return this;
     }
 }
-
-
-
