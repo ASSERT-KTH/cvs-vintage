@@ -53,9 +53,6 @@ import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.BuildException;
-
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
@@ -66,8 +63,23 @@ import org.apache.commons.logging.LogFactory;
 
 import org.tigris.scarab.util.TurbineInitialization;
 
-public class ImportScarabIssues extends MatchingTask
+/**
+ * This is a bean'ish object which allows one to set the right
+ * values for importing issues. There is an Ant wrapper called
+ * ImportIssuesTask.java which allows you to call this file from
+ * an Ant xml file. The way this works is simple: call all the
+ * appropriate set methods to define the properties. Then you will
+ * need to call the init() and execute methods to start running 
+ * things. Note: If Turbine is already initialized, there is no need to
+ * call the init() method.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ImportIssues.java,v 1.1 2003/01/28 11:41:31 jon Exp $
+ */
+public class ImportIssues
 {
+    private final static Log log = LogFactory.getLog(ImportIssues.class);
+
     /** name of the TR.props file */
     private String TR_PROPS = 
         "/WEB-INF/conf/TurbineResourcesTest.properties";
@@ -78,12 +90,6 @@ public class ImportScarabIssues extends MatchingTask
     private File configDir = null;
     private boolean sendEmail = false;
     private File xmlFile = null;
-
-    private final static Log log = LogFactory.getLog(ImportScarabIssues.class);
-
-    public ImportScarabIssues()
-    {
-    }
 
     public boolean getSendEmail()
     {
@@ -135,8 +141,8 @@ public class ImportScarabIssues extends MatchingTask
         this.TR_PROPS = TR_PROPS;
     }
 
-    public void execute() 
-        throws BuildException
+    public void init()
+        throws Exception
     {
         try
         {
@@ -145,9 +151,13 @@ public class ImportScarabIssues extends MatchingTask
         }
         catch (Exception e)
         {
-            throw new BuildException(e);
+            throw new Exception(e);
         }
-
+    }
+    
+    public void execute() 
+        throws Exception
+    {
         try
         {
             BeanReader reader = createBeanReader();
@@ -161,7 +171,7 @@ public class ImportScarabIssues extends MatchingTask
             List importErrors = si.getImportErrors();
             if (importErrors != null && importErrors.size() > 0)
             {
-                log.debug("Found " + importErrors.size() + " errors:");
+                log.error("Found " + importErrors.size() + " errors:");
                 for (Iterator itr = importErrors.iterator(); itr.hasNext();)
                 {
                     String message = (String)itr.next();
@@ -182,10 +192,10 @@ public class ImportScarabIssues extends MatchingTask
         }
         catch(Exception e)
         {
-            log.error("\nThe following error(s) found: " +
+            log.error("\nThe following error(s) were found: " +
                       "\n------------------------------------------------------\n" +
                       e.getMessage());
-            throw new BuildException(e);
+            throw new Exception(e);
         }
     }
 
@@ -215,7 +225,8 @@ public class ImportScarabIssues extends MatchingTask
     }
 
     /**
-     * Description of the Method
+     * Method to output the bean object as XML. Not really used
+     * right now.
      */
     protected void write(Object bean, Writer out)
         throws Exception
