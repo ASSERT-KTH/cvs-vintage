@@ -71,7 +71,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.53 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: Module.java,v 1.54 2002/09/20 02:48:20 elicia Exp $
  */
 public interface Module
     extends Serializable
@@ -360,7 +360,7 @@ public interface Module
     public RModuleIssueType getRModuleIssueType(IssueType issueType)
         throws Exception;
 
-    public void addRModuleIssueType(IssueType issueType)
+    public void addIssueType(IssueType issueType)
         throws Exception;
 
     public void addAttributeOption(IssueType issueType, AttributeOption option)

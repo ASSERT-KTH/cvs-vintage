@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.17 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.18 2002/09/20 02:48:20 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -148,7 +148,8 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         }
         else
         {
-            module.addRModuleIssueType(issueType);
+            module.addIssueType(issueType);
+            ScarabCache.clear();
             scarabR.setConfirmMessage(l10n.get("IssueTypeAddedToModule"));
             setTarget(data, "admin,ManageArtifactTypes.vm");            
         }

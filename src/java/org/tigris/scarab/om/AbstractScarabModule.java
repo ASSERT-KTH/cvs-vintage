@@ -130,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.53 2002/09/18 20:24:54 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.54 2002/09/20 02:48:20 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1706,19 +1706,6 @@ try{
     }
   
 
-    public void addRModuleIssueType(IssueType issueType)
-        throws Exception
-    {
-        RModuleIssueType rmit = new RModuleIssueType();
-        rmit.setModuleId(getModuleId());
-        rmit.setIssueTypeId(issueType.getIssueTypeId());
-        rmit.setActive(false);
-        rmit.setDisplay(false);
-        rmit.save();
-        addIssueType(issueType);
-
-    }
-
     public void setRmaBasedOnIssueType(RIssueTypeAttribute ria)
         throws Exception
     {
@@ -1768,6 +1755,15 @@ try{
     public void addIssueType(IssueType issueType)
         throws Exception
     {
+        // add module-issue type mapping
+        RModuleIssueType rmit = new RModuleIssueType();
+        rmit.setModuleId(getModuleId());
+        rmit.setIssueTypeId(issueType.getIssueTypeId());
+        rmit.setActive(false);
+        rmit.setDisplay(false);
+        rmit.setOrder(getRModuleIssueTypes().size() + 1);
+        rmit.save();
+
         // add user attributes
         List userRIAs = issueType.getRIssueTypeAttributes(false, "user");
         for (int m=0; m<userRIAs.size(); m++)
