@@ -72,7 +72,7 @@ rm -rf $RPM_BUILD_DIR/%{packname}
 
 %post
 rm -f /usr/bin/tomcat
-ln -s /opt/tomcat/bin/tomcat.sh /usr/bin/tomcat
+ln -s /opt/tomcat/bin/tomcat /usr/bin/tomcat
 /sbin/chkconfig --add tomcat
 
 echo ""

@@ -24,15 +24,15 @@ $JAVA_HOME/bin/java -version
 # Make sure no tomcat is running
 cd $ROOT/tomcat
 echo Make sure tomcat is stopped
-bin/tomcat.sh stop >/dev/null 2>&1
+bin/tomcat stop >/dev/null 2>&1
 
 
 rm -f $LOGDIR/tomcat-run$EXT.log >/dev/null 2>&1
 $JAVA_HOME/bin/java -version > $LOGDIR/tomcat-run$EXT.log 2>&1 &
 if [ "$EXT" = "security" ] ; then
-  bin/tomcat.sh run -sandbox >> $LOGDIR/tomcat-run$EXT.log 2>&1 &
+  bin/tomcat run -sandbox >> $LOGDIR/tomcat-run$EXT.log 2>&1 &
 else
-  bin/tomcat.sh run >> $LOGDIR/tomcat-run$EXT.log 2>&1 &
+  bin/tomcat run >> $LOGDIR/tomcat-run$EXT.log 2>&1 &
 fi
 
 i=0

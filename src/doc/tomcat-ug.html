@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.24 2002/03/12 04:14:49 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.25 2002/04/18 13:58:00 keith Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -88,7 +88,7 @@ web servers, refer to the &quot;Tomcat Documentation&quot; given below.</p>
       <li><a href="#starting_tomcat">Starting Tomcat</a></li>
       <li><a href="#stopping_tomcat">Stopping Tomcat</a></li>
       <li><a href="#tomcat_scripts">Tomcat Shell and Batch Files</a></li>
-      <li><a href="#tomcat_actions">tomcat.sh/tomcat.bat Actions</a></li>
+      <li><a href="#tomcat_actions">tomcat/tomcat.bat Actions</a></li>
       <li><a href="#tomcat_task_args">Tomcat Task Arguments</a></li>
     </ul>
   </li>
@@ -379,7 +379,7 @@ stop Tomcat 3.3.</p>
 <p>To start Tomcat 3.3, execute:</p>
 
 <ul>
-  <li>On UNIX: bin/startup.sh</li>
+  <li>On UNIX: bin/startup</li>
   <li>On Win32: bin\startup</li>
 </ul>
 
@@ -447,7 +447,7 @@ starting Tomcat.</p>
 <p>To stop Tomcat 3.3, execute:</p>
 
 <ul>
-  <li>On UNIX: bin/shutdown.sh</li>
+  <li>On UNIX: bin/shutdown</li>
   <li>On Win32: bin\shutdown</li>
 </ul>
 
@@ -473,8 +473,8 @@ these batch files to suit your needs.</p>
   <tr><td>cpappend.bat</td><td>This batch file is used by <code>tomcat.bat</code>
     to build a classpath in a couple of <code>tomcat.bat</code>'s other
     functions.  It is not executed during Tomcat start and stop functions.</td></tr>
-  <tr><td>jspc.sh</td><td>Shell script to invoke JSPC on Unix based systems. It
-    uses <code>tomcat.sh</code> with the &quot;jspc&quot; option to pre-translate
+  <tr><td>jspc</td><td>Shell script to invoke JSPC on Unix based systems. It
+    uses <code>tomcat</code> with the &quot;jspc&quot; option to pre-translate
     JSP pages to Java files.</td></tr>
   <tr><td>jspc.bat</td><td>Batch file to invoke JSPC on Windows based systems.
     It uses <code>tomcat.bat</code> with the &quot;jspc&quot; option to
@@ -484,11 +484,11 @@ these batch files to suit your needs.</p>
     directory, or one of its subdirectories. It executes <code>tomcat.bat</code>
     with the &quot;start&quot; argument. Features and limitations of
     <code>tomcat.bat</code> apply to this batch file.</td></tr>
-  <tr><td>shutdown.sh</td><td>Shell script for stopping Tomcat on Unix based
-    systems.  It executes <code>tomcat.sh</code> with the &quot;stop&quot;
-     argument. Features and limitations of <code>tomcat.sh</code> apply to
+  <tr><td>shutdown</td><td>Shell script for stopping Tomcat on Unix based
+    systems.  It executes <code>tomcat</code> with the &quot;stop&quot;
+     argument. Features and limitations of <code>tomcat</code> apply to
      this script.</td></tr>
-  <tr><td>tomcat.sh</td><td>The main script for Unix based systems. It can start
+  <tr><td>tomcat</td><td>The main script for Unix based systems. It can start
     and stop Tomcat, as well as perform other functions.  It makes a number of
     attempts to guess TOMCAT_HOME if not set explicitly (see script contents
     for details). It can also guess your JAVA_HOME if it is in your PATH
@@ -498,9 +498,9 @@ these batch files to suit your needs.</p>
     directory, or one of its subdirectories. It executes <code>tomcat.bat</code>
     with the &quot;start&quot; argument. Features and limitations of
     <code>tomcat.bat</code> apply to this batch file.</td></tr>
-  <tr><td>startup.sh</td><td>Shell script for starting Tomcat on Unix based
-     systems. It executes <code>tomcat.sh</code> with the &quot;start&quot;
-     argument. Features and limitations of <code>tomcat.sh</code> apply to
+  <tr><td>startup</td><td>Shell script for starting Tomcat on Unix based
+     systems. It executes <code>tomcat</code> with the &quot;start&quot;
+     argument. Features and limitations of <code>tomcat</code> apply to
      this script.</td></tr>
   <tr><td>tomcat.bat</td><td>The main batch file for Windows based systems. It
     can start and stop Tomcat, as well as perform other functions.  It can guess
@@ -513,7 +513,7 @@ these batch files to suit your needs.</p>
     MS-DOS window.</td></tr>
 </table>
 
-<p>You may have noted that <code>tomcat.sh</code> and <code>tomcat.bat</code>
+<p>You may have noted that <code>tomcat</code> and <code>tomcat.bat</code>
 are the primary scripts. They are the scripts that actually perform the
 &quot;actions&quot;. The list of actions, as well as additional environment
 variables they support, are described in the
@@ -526,9 +526,9 @@ full capabilities of Tomcat, you will need to become familiar with these
 arguments as well. See <a href="#tomcat_task_args">Tomcat Task Arguments</a>
 for those details.</p>
 
-<h3><a name="tomcat_actions">tomcat.sh/tomcat.bat Actions</a></h3>
+<h3><a name="tomcat_actions">tomcat/tomcat.bat Actions</a></h3>
 
-<p>The <code>tomcat.sh</code> shell script and <code>tomcat.bat</code> batch
+<p>The <code>tomcat</code> shell script and <code>tomcat.bat</code> batch
 files contain the code that invokes the various features of Tomcat 3.3.  It
 supports a number of actions specified by the first argument.  The following
 table lists the supported actions. Almost all of the actions involve starting
@@ -544,7 +544,7 @@ settings in <code>TOMCAT_OPTS</code> or <code>JSPC_OPTS</code> because the
 sign. If you need an additional system property setting, you will need to
 modify your <code>tomcat.bat</code> to include it on the command line.</p>
 
-<h4>Actions supported by the tomcat.sh and tomcat.bat scripts</h4>
+<h4>Actions supported by the tomcat and tomcat.bat scripts</h4>
 <table border="1">
   <tr><th bgcolor="#c0c0c0">Action</th><th bgcolor="#c0c0c0">Description</th></tr>
   <tr><td>start</td><td>This action starts up Tomcat in the background on Unix
@@ -580,7 +580,7 @@ modify your <code>tomcat.bat</code> to include it on the command line.</p>
 
 <p>Except for the <code>env</code> action, each action corresponds to a
 &quot;task&quot; supported by the <code>org.apache.tomcat.startup.Main</code>
-class. The <code>tomcat.sh</code> and <code>tomcat.bat</code> files, as well
+class. The <code>tomcat</code> and <code>tomcat.bat</code> files, as well
 as the files that call them, will pass additional arguments on the command line
 to the <code>Main</code> class as arguments. See the next section for what
 arguments are supported by each of the tasks.</p>
@@ -703,7 +703,7 @@ assume a command line argument that doesn't match one of the predefined
 arguments is a ContextManager property name and the next command line argument
 is its value.  Thus a command such as:</p>
 
-<pre>bin/startup.sh myprop myvalue</pre>
+<pre>bin/startup myprop myvalue</pre>
 
 <p>would define a ContextManager property named &quot;myprop&quot; with a
 String value of &quot;myvalue&quot;.  ContextManager properties can used for
@@ -1432,7 +1432,7 @@ to update the <code>apps-admin.xml</code> file to set the context's
 <code>trusted</code> attribute to <code>true</code>.  You can do this from
 the command line using the &quot;tomcat&quot; script/batch file and the
 <code>enableAdmin</code> action (see
-<a href="#tomcat_actions">tomcat.sh/tomcat.bat Actions</a> for details).
+<a href="#tomcat_actions">tomcat/tomcat.bat Actions</a> for details).
 The <code>trusted</code> attribute is set <code>false</code> by default for
 security reasons.  When you change it to <code>true</code>, it is also
 recommended that you change the password in the

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.32 2002/01/31 03:58:13 larryi Exp $
+# $Id: tomcat.sh,v 1.33 2002/04/18 13:58:01 keith Exp $
 
 # Shell script to start and stop the server
 
@@ -20,7 +20,7 @@ fi
 
 # -------------------- Guess TOMCAT_HOME --------------------
 DEBUG_HOMEFIND=false
-# Follow symbolic links to the real tomcat.sh
+# Follow symbolic links to the real tomcat
 # Extract the base dir.
 # Look in well-known places if this fails
 if [ "$TOMCAT_INSTALL" = "" ] ; then
@@ -40,7 +40,7 @@ if [ "$TOMCAT_INSTALL" = "" ] ; then
   
   TOMCAT_INSTALL_1=`dirname "$PRG"`/..
   if [ "$DEBUG_HOMEFIND" != "false" ] ; then
-    echo "Guessing TOMCAT_INSTALL from tomcat.sh to ${TOMCAT_INSTALL_1}" 
+    echo "Guessing TOMCAT_INSTALL from tomcat to ${TOMCAT_INSTALL_1}" 
   fi
     if [ -d ${TOMCAT_INSTALL_1}/lib ] ; then 
         TOMCAT_INSTALL=${TOMCAT_INSTALL_1}
@@ -235,7 +235,7 @@ elif [ "$1" = "jspcOrig" ] ; then
     (cd $TOMCAT_HOME; $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC $@ )
 
 elif [ "$1" = "env" ] ; then 
-  ## Call it with source tomcat.sh to set the env for tomcat
+  ## Call it with source tomcat to set the env for tomcat
   shift 
   echo Setting classpath to: ${CLASSPATH}
   # -------------------- Add all classes in common, container, apps - 

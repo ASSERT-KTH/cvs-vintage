@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# $Id: jspc.sh,v 1.5 2001/09/27 12:40:35 hgomez Exp $
+# $Id: jspc.sh,v 1.6 2002/04/18 13:58:01 keith Exp $
 
 # Shell script to runt JspC
 
 
 BASEDIR=`dirname $0`
 
-$BASEDIR/tomcat.sh jspc "$@"
+$BASEDIR/tomcat jspc "$@"

@@ -343,13 +343,13 @@ f none /opt/tomcat/webpages/WEB-INF/classes/SnoopServlet.class 0644 costin staff
 f none /opt/tomcat/webpages/WEB-INF/web.xml 0644 costin staff
 f none /opt/tomcat/webpages/tomcat.gif 0644 costin staff
 f none /opt/tomcat/webpages/index.html 0644 costin staff
-f none /opt/tomcat/tomcat.sh 0644 costin staff
+f none /opt/tomcat/tomcat 0644 costin staff
 f none /opt/tomcat/env.tomcat 0644 costin staff
 f none /opt/tomcat/ant 0644 costin staff
-f none /opt/tomcat/shutdown.sh 0644 costin staff
+f none /opt/tomcat/shutdown 0644 costin staff
 f none /opt/tomcat/tomcat.bat 0644 costin staff
 f none /opt/tomcat/tomcatEnv.bat 0644 costin staff
-f none /opt/tomcat/startup.sh 0644 costin staff
+f none /opt/tomcat/startup 0644 costin staff
 f none /opt/tomcat/shutdown.bat 0644 costin staff
 f none /opt/tomcat/startup.bat 0644 costin staff
 f none /opt/tomcat/server.xml 0644 costin staff

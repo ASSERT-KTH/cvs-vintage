@@ -14,7 +14,7 @@ cd $ROOT
 
 # Make sure no tomcat is running
 cd $ROOT/tomcat
-bin/tomcat.sh stop 
+bin/tomcat stop 
 
 if [ -f /usr/bin/pkill ] ; then 
    pkill java

@@ -60,13 +60,13 @@ all of the required distributions.
   This version can be executed as follows:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
-	./bin/startup.sh	<-- Unix
+	./bin/startup		<-- Unix
 	bin\startup		<-- Windows
 
   and it can be shut down as follows:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
-	./bin/shutdown.sh	<-- Unix
+	./bin/shutdown		<-- Unix
 	bin\shutdown		<-- Windows
 
 * You can also build a binary distribution version of Tomcat as follows:
@@ -95,7 +95,7 @@ You can run the "unpacked" version of Tomcat as follows:
 * To start Tomcat, execute the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
-	./bin/startup.sh	<-- Unix
+	./bin/startup		<-- Unix
 	bin\startup		<-- Windows
 
 * You can now access the default web pages from a web browser at URL:
@@ -105,7 +105,7 @@ You can run the "unpacked" version of Tomcat as follows:
 * To stop Tomcat, execute the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
-	./bin/shutdown.sh	<-- Unix
+	./bin/shutdown		<-- Unix
 	bin\shutdown		<-- Windows
 
 You can run the "distribution" version of Tomcat as follows:
@@ -113,7 +113,7 @@ You can run the "distribution" version of Tomcat as follows:
 * To start Tomcat, execute the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
-	./bin/startup.sh	<-- Unix
+	./bin/startup		<-- Unix
 	bin\startup		<-- Windows
 
 * You can now access the default web pages from a web browser at URL:
@@ -123,7 +123,7 @@ You can run the "distribution" version of Tomcat as follows:
 * To stop Tomcat, execute the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
-	./bin/shutdown.sh	<-- Unix
+	./bin/shutdown		<-- Unix
 	bin\shutdown		<-- Windows
 
 Alternatively, you can run Tomcat without changing your current working
@@ -133,12 +133,12 @@ Tomcat files you have built (for example, at directory
 "$JAKARTA_HOME/jakarta-tomcat/dist/tomcat").  Now, you can start Tomcat
 as follows:
 
-	$TOMCAT_HOME/bin/startup.sh	<-- Unix
+	$TOMCAT_HOME/bin/startup	<-- Unix
 	%TOMCAT_HOME%\bin\startup	<-- Windows
 
 and shut it down likewise:
 
-	$TOMCAT_HOME/bin/shutdown.sh	<-- Unix
+	$TOMCAT_HOME/bin/shutdown	<-- Unix
 	%TOMCAT_HOME%\bin\shutdown	<-- Windows
 
 Tomcat may be run with any XML parser that is compliant with the Java API for
@@ -173,14 +173,14 @@ Before you can run the test, you must set the Admin web application to
 "trusted". This can be accomplished by executing the following:
 
 	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat	<-- Unix
-	./bin/tomcat.sh enableAdmin
+	./bin/tomcat enableAdmin
 
 	cd %JAKARTA_HOME%\jakarta-tomcat\build\tomcat	<-- Windows
 	bin\tomcat enableAdmin
 
 Next, start Tomcat with: 
 
-	./bin/startup.sh	<-- Unix
+	./bin/startup		<-- Unix
 	bin\startup		<-- Windows
 
 To run the test, invoke the following URL in your browser:
