@@ -14,9 +14,9 @@ import java.util.HashMap;
  * This class manages aliases for generated queries.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-final class AliasManager
+public final class AliasManager
 {
    private static final String RELATION_TABLE_SUFFIX = "_RELATION_TABLE";
 
