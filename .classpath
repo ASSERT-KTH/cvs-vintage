@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="src/addressbook/test"/>
 	<classpathentry kind="src" path="src/columba/test"/>
 	<classpathentry kind="src" path="src/mail/core"/>
 	<classpathentry kind="src" path="src/mail/test"/>
