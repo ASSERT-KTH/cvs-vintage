@@ -62,6 +62,8 @@ $l10n.NoComments
     <p><a href="$commentsLink">$l10n.HideCommentList</a></p>
   #else
     #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true").addPathInfo("tab", $tab))
-    <p><a href="$commentsLink">$l10n.ShowCommentList</a></p>
+    #set ($hiddenCommentCount = $currentIssue.CommentsCount - $currentIssue.CommentsLimit)
+    <p>$l10n.format("ThereAreMoreComments", $hiddenCommentCount)
+    <a href="$commentsLink">$l10n.ShowCommentList</a></p>
   #end
 #end

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.210 2002/11/07 21:38:42 elicia Exp $
+ * @version $Id: Issue.java,v 1.211 2002/11/12 16:33:27 thierrylach Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1301,18 +1301,26 @@ public class Issue
 
 
     /**
+     * Returns the total number of comments.
+     */
+    public int getCommentsCount() throws Exception
+    {
+        return getComments(true).size();
+    }
+
+    /**
      * Determines whether the comments list is longer than
      * The default limit.
      */
     public boolean isCommentsLong() throws Exception
     {
-        return (getComments(true).size() > getCommentsLimit());
+        return (getCommentsCount() > getCommentsLimit());
     }
 
     /**
      * Gets default comments limit for this module-issue type.
      */
-    private int getCommentsLimit() throws Exception
+    public int getCommentsLimit() throws Exception
     {
         int limit=0;
         try
@@ -1334,7 +1342,7 @@ public class Issue
     {
         List result = null;
         Boolean fullBool = (full ? Boolean.TRUE : Boolean.FALSE);
-        Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool); 
+        Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool);
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
