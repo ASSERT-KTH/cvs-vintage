@@ -116,7 +116,7 @@ public class StatusBar
 
 		taskPanel.add(taskButton, BorderLayout.CENTER);
 
-		leftMainPanel.add(taskPanel, BorderLayout.WEST);
+		//leftMainPanel.add(taskPanel, BorderLayout.WEST);
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BorderLayout());
@@ -150,7 +150,7 @@ public class StatusBar
 
 		onlinePanel.add(onlineButton, BorderLayout.CENTER);
 
-		rightPanel.add(onlinePanel, BorderLayout.EAST);
+		//rightPanel.add(onlinePanel, BorderLayout.EAST);
 
 		add(rightPanel, BorderLayout.EAST);
 
