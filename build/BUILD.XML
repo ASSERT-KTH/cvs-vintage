@@ -50,13 +50,13 @@
   <!-- =================================================================== -->
   <!-- Builds a package with all essential files                           -->
   <!-- =================================================================== -->
-  <target name="main" depends="init, compile, copyResources, jar">
+  <target name="main" depends="compile, copyResources, jar">
   </target>
 
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile" depends="check-for-optional-packages">
+  <target name="compile">
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="${javac.debug}"
