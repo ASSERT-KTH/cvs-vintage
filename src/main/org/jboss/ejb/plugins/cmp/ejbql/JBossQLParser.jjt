@@ -47,7 +47,7 @@ import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JBossQLParser {
    private Catalog catalog;
@@ -345,11 +345,11 @@ void BetweenExpression() #Between :
 void InExpression() #In :
 {}
 {
-   (StringValue() [<NOT> { jjtThis.not=true; } ] <IN>
-      <LPAREN> StringValue() ( <COMMA> StringValue() )* <RPAREN>)
+   (StringExpression() [<NOT> { jjtThis.not=true; } ] <IN>
+      <LPAREN> StringExpression() ( <COMMA> StringExpression() )* <RPAREN>)
 |
-   (ArithmeticValue() [<NOT> { jjtThis.not=true; } ] <IN>
-      <LPAREN>  ArithmeticValue() ( <COMMA> ArithmeticValue() )* <RPAREN>)
+   (ArithmeticPrimary() [<NOT> { jjtThis.not=true; } ] <IN>
+      <LPAREN>  ArithmeticPrimary() ( <COMMA> ArithmeticPrimary() )* <RPAREN>)
 |
    (DatetimeValue() [<NOT> { jjtThis.not=true; } ] <IN>
       <LPAREN> DatetimeValue() ( <COMMA> DatetimeValue() )* <RPAREN>)
@@ -359,7 +359,7 @@ void LikeExpression() #Like :
 {}
 {
    StringValue() [<NOT> { jjtThis.not=true; } ] <LIKE>
-      StringValue() [<ESCAPE> StringValue() ]
+      StringExpression() [<ESCAPE> (StringLiteral() | NumericValuedParameter())]
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -367,7 +367,15 @@ void LikeExpression() #Like :
 void NullComparisonExpression() #NullComparison :
 {}
 {
-   SingleValuedPath() <IS> [<NOT> { jjtThis.not=true; } ] <NULL>
+   (
+      SingleValuedPath() |
+      NumericValuedParameter() |
+      EntityValuedParameter() |
+      StringValuedParameter() |
+      DatetimeValuedParameter() |
+      BooleanValuedParameter()
+   )
+   <IS> [<NOT> { jjtThis.not=true; } ] <NULL>
 }
 
 void EmptyCollectionComparisonExpression() #IsEmpty :
@@ -665,27 +673,36 @@ void FunctionsReturningNumerics() #void :
          ArithmeticExpression() <RPAREN>
    ) #Mod
 |
+   AggregateFunctions()
+////////////////////////////////////////////////////////////////////////////
+}
+
+void AggregateFunctions() #void:
+{}
+{
    (
-      <COUNT> <LPAREN> SingleValuedPath() <RPAREN>
-   ) #Count
-|
-   (
-      <MAX> <LPAREN> SingleValuedPath() <RPAREN>
-   ) #Max
-|
-   (
-      <MIN> <LPAREN> SingleValuedPath() <RPAREN>
-   ) #Min
-|
-   (
-      <AVG> <LPAREN> SingleValuedPath() <RPAREN>
+      <AVG> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
    ) #Avg
 |
    (
-      <SUM> <LPAREN> SingleValuedPath() <RPAREN>
+      <MAX> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Max
+|
+   (
+      <MIN> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
+   ) #Min
+|
+   (
+      <SUM> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}] SingleValuedPath() <RPAREN>
    ) #Sum
-
-////////////////////////////////////////////////////////////////////////////
+|
+   (
+      <COUNT> <LPAREN> [<DISTINCT> {jjtThis.distinct="DISTINCT";}]
+      (
+         SingleValuedPath() | EntityBeanValue()
+      )
+      <RPAREN>
+   ) #Count
 }
 
 Token CollectionValuedPath() #Path :
