@@ -67,7 +67,9 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributeOptionManager;
+import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
@@ -521,6 +523,96 @@ public  class ReportBridge
         
         return result;
     }
+
+    public boolean removeStaleDefinitions()
+        throws Exception
+    {
+        boolean reportModified = false;
+        MITList mitList = getMITList();
+        List axes = reportDefn.getReportAxisList();
+        if (axes != null) 
+        {
+            for (Iterator i = axes.iterator(); i.hasNext();) 
+            {
+                ReportAxis axis = (ReportAxis)i.next();
+                List headings = axis.getReportHeadings();
+                if (headings != null) 
+                {
+                    for (Iterator j = headings.iterator(); j.hasNext();) 
+                    {
+                        ReportHeading heading = (ReportHeading)j.next();
+                        reportModified |= removeStaleOptions(
+                            heading.getReportOptionAttributes(), mitList);
+                        reportModified |= removeStaleUserAttributes(heading
+                            .getReportUserAttributes(), mitList);
+                        List groups = heading.getReportGroups();
+                        if (groups != null && !groups.isEmpty()) 
+                        {
+                            for (Iterator n = groups.iterator(); n.hasNext();) 
+                            {
+                                reportModified |= 
+                                    removeStaleOptions( ((ReportGroup)n.next())
+                                    .getReportOptionAttributes(), mitList );
+                                reportModified |= removeStaleUserAttributes( 
+                                    ((ReportGroup)n.next())
+                                    .getReportUserAttributes(), mitList );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return reportModified;
+    }
+
+    private boolean removeStaleOptions(List options, MITList mitList)
+        throws Exception
+    {
+        boolean anyRemoved = false;
+        if (options != null && !options.isEmpty()) 
+        {
+            for (Iterator n = options.iterator(); n.hasNext();)
+            {
+                ReportOptionAttribute rao = 
+                    (ReportOptionAttribute)n.next();
+                AttributeOption ao = AttributeOptionManager
+                    .getInstance(rao.getOptionId());
+                if (!mitList.isCommon(ao, false)) 
+                {
+                    n.remove();
+                    anyRemoved = true;
+                }
+                else if (!mitList.isCommon(ao.getAttribute(), false)) 
+                {
+                    n.remove();
+                    anyRemoved = true;
+                }
+            }
+        }
+        return anyRemoved;
+    }    
+
+    private boolean removeStaleUserAttributes(List attributes, MITList mitList)
+        throws Exception
+    {
+        boolean anyRemoved = false;
+        if (attributes != null && !attributes.isEmpty()) 
+        {
+            for (Iterator n = attributes.iterator(); n.hasNext();)
+            {
+                ReportUserAttribute rua = 
+                    (ReportUserAttribute)n.next();
+                Attribute attr = AttributeManager
+                    .getInstance(rua.getAttributeId());
+                if (!mitList.isCommon(attr, false)) 
+                {
+                    n.remove();
+                    anyRemoved = true;
+                }
+            }
+        }
+        return anyRemoved;
+    }    
 
     public ReportTableModel getModel(ScarabUser searcher)
         throws Exception

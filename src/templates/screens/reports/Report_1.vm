@@ -16,6 +16,10 @@
 </div>
 #end
 
+#if (!$report.isReadyForCalculation())
+    <p>$l10n.IncompleteReportDefinition</p>
+#else 
+
 $data.User.setCurrentMITList($report.getMITList().getPermittedSublist($scarabG.Permission.ISSUE__SEARCH, $data.User))
 #showMITList($l10n.MITListReportHeading $data.User false)
 
@@ -73,4 +77,6 @@ $l10n.Report
 </div>
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
 <p><pre>$report.ReportDefinition.toXmlString()</pre></p>
+#end
+
 #end

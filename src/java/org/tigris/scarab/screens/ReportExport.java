@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * Handles export of a report to non-web formats.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ReportExport.java,v 1.2 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: ReportExport.java,v 1.3 2003/06/26 17:43:30 jmcnally Exp $
  * @see org.tigris.scarab.screens.DataExport
  * @since Scarab 1.0
  */
@@ -101,6 +101,31 @@ public class ReportExport extends DataExport
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ReportBridge report = scarabR.getReport();
+
+        // --------------------------------------------------------
+        // This code is not generally excercised as the action will 
+        // not redirect to this screen if the following conditions are 
+        // present.  
+        try 
+        {
+            String message = (String)scarabR.getInfoMessage();
+            if (message != null && message.length() > 0)
+            {
+                printer.print(message);
+            }
+        }
+        catch (Exception e)
+        {
+            printer.print(l10n.get("ErrorOccurredCheckingMessage"));
+        }
+        
+        if (!report.isReadyForCalculation()) 
+        {
+            printer.print(l10n.get("IncompleteReportDefinition"));
+            return;
+        }
+        // --------------------------------------------------------
+
         ReportTableModel model = report.getModel(user);
 
         List rowHeadings = model.getRowHeadings();

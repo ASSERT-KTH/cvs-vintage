@@ -8,10 +8,9 @@
 
 <h3>$l10n.SelectedUsers</h3>
 
-#if (!$selectedHeading)
+#if (!$selectedHeading.ReportUserAttributes || $selectedHeading.ReportUserAttributes.isEmpty())
     <p><em>$l10n.NoneAssigned.</em></p>
 #else
-		
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
       <tr>
 		<th nowrap="nowrap">$l10n.Select</th>
