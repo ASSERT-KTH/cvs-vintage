@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class NamingAlias
    extends ServiceMBeanSupport
@@ -154,7 +154,7 @@ public class NamingAlias
     */
    private void removeLinkRef(String name) throws NamingException
    {
-      if( super.getState() == ServiceMBean.STARTED )
+      if(super.getState() == ServiceMBean.STOPPING)
       {
          InitialContext ctx = new InitialContext();
          ctx.unbind(name);
