@@ -46,9 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import org.apache.torque.util.Criteria;
-import org.tigris.scarab.services.cache.ScarabCache;
+import org.apache.torque.TorqueException;
 
 /** 
  * This class is the home of where we store user preferences
@@ -57,50 +55,44 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.6 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: UserPreference.java,v 1.7 2003/04/04 02:51:47 jon Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference
 {
-    private static final String USER_PREFERENCE = 
-        "UserPreference";
-    private static final String GET_INSTANCE = 
-        "getInstance";
-
     /**
-     * Gets a UserPrefernce object
+     * Gets a UserPreference object
      * @return new UserPreference object
+     * @deprecated Use UserPreferenceManager.getInstance()
      */
     public static UserPreference getInstance()
+        throws TorqueException
     {
-        return new UserPreference();
+        return UserPreferenceManager.getInstance();
     }
 
     /**
      * Gets a UserPrefernce object for a specific user
      * @return null if userid could not be found
+     * @deprecated Use UserPreferenceManager.getInstance(Integer)
      */
     public static UserPreference getInstance(Integer userid)
         throws Exception
     {
-        UserPreference result = null;
-        Object obj = ScarabCache.get(USER_PREFERENCE, GET_INSTANCE, userid); 
-        if (obj == null) 
-        {        
-            Criteria crit = new Criteria();
-            crit.add(UserPreferencePeer.USER_ID, userid);
-            List prefs = UserPreferencePeer.doSelect(crit);
-            if (prefs.size() == 1)
-            {
-                result = (UserPreference) prefs.get(0);
-                ScarabCache.put(result, USER_PREFERENCE, GET_INSTANCE, userid);
-            }
-        }
-        else 
-        {
-            result = (UserPreference) obj;
-        }
-
-        return result;
+        return UserPreferenceManager.getInstance(userid);
+    }
+    
+    /**
+     * Internally, this method will trim the String length
+     * to 255 characters if it is greater than 255 because
+     * the database column is onl 255 characters. This should
+     * not have an adverse affect because the AcceptLanguage header
+     * parser really only needs the first few characters.
+     */
+    public void setAcceptLanguage(String lang)
+    {
+        String newLang = (lang != null && lang.length() > 255) ? 
+                         lang.substring(0,254) : lang;
+        super.setAcceptLanguage(newLang);
     }
 }
