@@ -11,70 +11,69 @@ Installing and Building Tomcat
 ==============================
 
 In order to successfully build Tomcat, you will need to do the following.
-In the instructions below, $JAKARTA_HOME is assumed to be the directory into
-which you are installing all of the required distributions.
+In the instructions below, $JAKARTA_HOME (subsitute %JAKARTA_HOME% for
+Windows systems) is assumed to be the directory into which you are installing
+all of the required distributions.
 
 * Download and install a version 1.1 or later Java Development Kit
   implementation for your operating system platform.  Set a "JAVA_HOME"
   environment variable to point at the directory where your JDK is installed,
-  and add "$JAVA_HOME/bin" to your PATH.  Configure the CLASSPATH environment
-  variable as well, if required.
+  and add "$JAVA_HOME/bin" ("%JAVA_HOME%\bin" for Windows) to your PATH.
+  Configure the CLASSPATH environment variable as well, if required.
 
 * Download the Ant version 1.3 binary distribution from
   <http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin> and install
-  it in the $JAKARTA_HOME directory.
+  it in the $JAKARTA_HOME directory.  Set an "ANT_HOME" environment variable
+  to point to $JAKARTA_HOME/jakarta-ant-1.3.  If you are using Windows 9x,
+  you should set ANT_HOME using DOS 8.3 names.  Also, add "$ANT_HOME/bin"
+  (%ANT_HOME%/bin for Windows) to your PATH.
 
-  Note: Ant v1.3 includes a copy of the JAXP 1.0 reference implementation XML
-  parser for use during building.
-
-* If you plan to build the Tomcat binary distribution, download JAXP
-  version 1.0.1 from <http://java.sun.com/xml> and install it in the
-  $JAKARTA_HOME directory.
+* Download JAXP version 1.0.1 from <http://java.sun.com/xml> and install it
+  in the $JAKARTA_HOME directory.
 
 * If you want to include SSL support, download the Java Secure Sockets
   Extension (JSSE) implementation (current version number is 1.0.2) from
   <http://java.sun.com/products/jsse> and install it into $JAKARTA_HOME.
 
-* Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
-  or check it out via anonymous CVS, into a subdirectory named
-  "$JAKARTA_HOME/jakarta-tomcat". Since the "jakarta-tomcat" directory is
-  included in the archive, expand the source distribution to $JAKARTA_HOME.
-  You can now build an "unpacked" version of Tomcat (builds quicker because
-  no time is spent JARing up results) by executing the following commands:
+* Download the source distribution archive of Tomcat 3.3 and expand it
+  in the $JAKARTA_HOME directory.  It will expand using a base directory named
+  "jakarta-tomcat-3.3", or something similar indicating the release.  If a
+  different directory is used, substitute its name for "jakarta-tomcat-3.3"
+  in the commands below.  You can now build an "unpacked" version of Tomcat
+  (builds quicker because no time is spent JARing up results) by executing
+  the following commands:
 
-	cd $JAKARTA_HOME/jakarta-tomcat
-	./build.sh		<-- Unix
-	build			<-- Windows
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3
+        ant
 
   This version can be executed as follows:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
   and it can be shut down as follows:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
 * You can also build a binary distribution version of Tomcat as follows:
 
 	cd $JAKARTA_HOME/jakarta-tomcat
-	./build.sh dist		<-- Unix
-	build dist		<-- Windows
+        ant dist
 
-  This will create a distribution in "$JAKARTA_HOME/dist/tomcat" that is
-  equivalent (in file arrangement) to the binary distribution releases
-  of Tomcat that can be downloaded from the Jakarta web site at
-  <http://jakarta.apache.org>.
+  This will create a binary distribution in
+  "$JAKARTA_HOME/jakarta-tomcat-3.3/dist/tomcat" that is equivalent
+  (in file arrangement) to the binary distribution releases of Tomcat 3.3
+  that can be downloaded from the Jakarta web site at
+  <http://jakarta.apache.org/site/binindex.html>.
 
 * You can delete the generated files in the "build/tomcat" and "dist/tomcat"
   directories by executing the following:
 
-	cd $JAKARTA_HOME/jakarta-tomcat
-	./build.sh clean	<-- Unix
-	build clean		<-- Windows
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3
+        ant clean
 
 
 Running the Build
@@ -84,7 +83,7 @@ You can run the "unpacked" version of Tomcat as follows:
 
 * To start Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
@@ -94,7 +93,7 @@ You can run the "unpacked" version of Tomcat as follows:
 
 * To stop Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
@@ -102,7 +101,7 @@ You can run the "distribution" version of Tomcat as follows:
 
 * To start Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/dist/tomcat
 	./bin/startup.sh	<-- Unix
 	bin\startup		<-- Windows
 
@@ -112,15 +111,15 @@ You can run the "distribution" version of Tomcat as follows:
 
 * To stop Tomcat, execute the following commands:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/dist/tomcat
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/dist/tomcat
 	./bin/shutdown.sh	<-- Unix
 	bin\shutdown		<-- Windows
 
 Alternatively, you can run Tomcat without changing your current working
 directory, by setting the TOMCAT_HOME environment variable to point at the
 Tomcat files you have built (for example, at directory
-"$JAKARTA_HOME/jakarta-tomcat/build/tomcat" or
-"$JAKARTA_HOME/jakarta-tomcat/dist/tomcat").  Now, you can start Tomcat
+"$JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat" or
+"$JAKARTA_HOME/jakarta-tomcat-3.3/dist/tomcat").  Now, you can start Tomcat
 as follows:
 
 	$TOMCAT_HOME/bin/startup.sh	<-- Unix
@@ -151,17 +150,21 @@ the various parts of the Tomcat container.  This test is not built by
 default.  To add the "test" web application to your "unpackaged" build,
 execute:
 
-	cd $JAKARTA_HOME/jakarta-tomcat
-	./build.sh sanity-test  <-- Unix
-	build sanity-test       <-- Windows
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3
+	ant sanity-test
+
+To add the "test" web application to the distribution build, execute:
+
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3
+	ant test.war
 
 Before you can run the test, you must set the Admin web application to
 "trusted". This can be accomplished by executing the following:
 
-	cd $JAKARTA_HOME/jakarta-tomcat/build/tomcat	<-- Unix
+	cd $JAKARTA_HOME/jakarta-tomcat-3.3/build/tomcat	<-- Unix
 	./bin/tomcat.sh run -enableAdmin
 
-	cd %JAKARTA_HOME%\jakarta-tomcat\build\tomcat	<-- Windows
+	cd %JAKARTA_HOME%\jakarta-tomcat-3.3\build\tomcat	<-- Windows
 	bin\tomcat run -enableAdmin
 
 Next, start Tomcat with: 
@@ -177,7 +180,8 @@ and then click "Submit Query".  The build targets for the Ant based test
 script are then listed and the tests executed.  After the tests are
 completed, the results will appear with "FAILED Tests" listed first,
 followed the "PASSED Tests". This same procedure will also work with the
-binary distribution which is created in "$JAKARTA_HOME/dist/tomcat".
+binary distribution which is created in
+"$JAKARTA_HOME/jakarta-tomcat-3.3/dist/tomcat".
 
 For security reasons, after you are done with the test, you should either
 restore the Admin web application to the default "untrusted" state, or change
