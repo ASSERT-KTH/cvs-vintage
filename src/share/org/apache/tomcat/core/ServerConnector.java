@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerConnector.java,v 1.3 2000/05/31 20:58:37 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/05/31 20:58:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerConnector.java,v 1.4 2000/06/22 23:38:52 alex Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/22 23:38:52 $
  *
  * ====================================================================
  *
@@ -103,4 +103,8 @@ public interface ServerConnector {
     /** Set a config property
      */
     public void setAttribute( String s, Object value );
+
+    /** Set a org.apache.tomcat.logging.Logger explicitly
+     */
+    public void setLogger( org.apache.tomcat.logging.Logger logger );
 }
