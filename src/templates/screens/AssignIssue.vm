@@ -59,7 +59,7 @@
  #set ($issue = $scarabR.getIssue($issueId))
  #if ($issue)
 
-<h3>$l10n.format("PersonnelAssociatedWithIssue", $issue.UniqueId)</h3>
+<h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
     ## if there is no temporary list, use list of already-assigned users
     #set ($noUsers = "false")
@@ -144,7 +144,7 @@
 
 
 #else
- <p class="alert"> $l10n.IssueIdNotValid</p>
+ <p class="alert"> $l10n.format("IssueIdNotValid", "$issueId")</p>
 #end
 #end
 
