@@ -443,24 +443,32 @@ try{
     public Attribute getAttribute()
      throws Exception
     {
-try{
+     try
+     {
         if (attribute == null)
         {
             String attId = getIntakeTool()
                 .get("Attribute", IntakeTool.DEFAULT_KEY)
                 .get("Id").toString();
          if ( attId == null || attId.length() == 0 )
-            {
+         {
+            attId = data.getParameters().getString("attId");
+            if ( attId == null || attId.length() == 0 )
+            { 
                 attribute = Attribute.getInstance();
             }
             else 
             {
                 attribute = Attribute.getInstance(new NumberKey(attId));
             }
-        }        
+        }
+        else 
+        {
+            attribute = Attribute.getInstance(new NumberKey(attId));
+        }
+     } 
 }catch(Exception e){e.printStackTrace();}
         return attribute;
- 
    }
 
     /**
