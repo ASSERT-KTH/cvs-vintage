@@ -5,25 +5,27 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: EJBVerifier21.java,v 1.1 2003/12/02 16:13:04 cgjung Exp $
-
+// $Id: EJBVerifier21.java,v 1.2 2004/04/06 19:54:14 tdiesler Exp $
 package org.jboss.verifier.strategy;
 
-// standard imports
+// $Id: EJBVerifier21.java,v 1.2 2004/04/06 19:54:14 tdiesler Exp $
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.lang.reflect.Method;
 
 // non-standard class dependencies
 import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.verifier.Section;
 
 /**
  * EJB 2.1 bean verifier.
  *
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ * @author Thomas.Diesler@jboss.org
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since   02.12.2003
  */
 
@@ -98,6 +100,238 @@ public class EJBVerifier21 extends EJBVerifier20
          // All OK; full steam ahead
          fireBeanVerifiedEvent(session);
       }
+   }
+
+   /*
+    * Verify Message Driven Bean
+    */
+   protected boolean verifyMessageDrivenBean( MessageDrivenMetaData mdBean )
+   {
+      boolean status = true;
+
+      // A message driven bean MUST implement, directly or indirectly,
+      // javax.ejb.MessageDrivenBean interface.
+      //
+      // Spec 15.7.2
+      //
+      if (!hasMessageDrivenBeanInterface(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.a"));
+         status = false;
+      }
+
+      // The class must implement, directly or indirectly, the message listener interface required by the messaging
+      // type that it supports. In the case of JMS, this is the javax.jms.MessageListener interface.
+      //
+      // Spec 15.7.2
+      //
+      if (!isAssignableFrom(mdBean.getMessagingType(), bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.b"));
+         status = false;
+      }
+
+      // The message driven bean class MUST be defined as public.
+      //
+      // Spec 15.7.2
+      //
+      if (!isPublic(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.c1"));
+         status = false;
+      }
+
+      // The message driven bean class MUST NOT be final.
+      //
+      // Spec 15.7.2
+      //
+      if (isFinal(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.c2"));
+         status = false;
+      }
+
+      // The message driven bean class MUST NOT be abstract.
+      //
+      // Spec 15.7.2
+      //
+      if (isAbstract(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.c3"));
+         status = false;
+      }
+
+      // The message driven bean class MUST have a public constructor that
+      // takes no arguments.
+      //
+      // Spec 15.7.2
+      //
+      if (!hasDefaultConstructor(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.d"));
+         status = false;
+      }
+
+      // The message driven bean class MUST NOT define the finalize() method.
+      //
+      // Spec 15.7.2
+      //
+      if (hasFinalizer(bean))
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.2.e"));
+         status = false;
+      }
+
+      // A message driven bean MUST implement the ejbCreate() method.
+      // The ejbCreate() method signature MUST follow these rules:
+      //
+      //      - The method name MUST be ejbCreate
+      //      - The method MUST be declared as public
+      //      - The method MUST NOT be declared as final or static
+      //      - The return type MUST be void
+      //      - The method arguments MUST have no arguments.
+      //      - The method MUST NOT define any application exceptions.
+      //
+      // Spec 15.7.2, 3
+      //
+      if (hasEJBCreateMethod(bean, false))
+      {
+         Iterator it = getEJBCreateMethods(bean);
+         Method ejbCreate = (Method)it.next();
+
+         if (!isPublic(ejbCreate))
+         {
+            fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.b"));
+            status = false;
+         }
+
+         if ( (isFinal(ejbCreate)) || (isStatic(ejbCreate)) )
+         {
+            fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.c"));
+            status = false;
+         }
+
+         if (!hasVoidReturnType(ejbCreate))
+         {
+            fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.d"));
+            status = false;
+         }
+
+         if (!hasNoArguments(ejbCreate))
+         {
+            fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.e"));
+            status = false;
+         }
+
+         if (!throwsNoException(ejbCreate))
+         {
+            fireSpecViolationEvent(mdBean, ejbCreate, new Section("15.7.3.f"));
+            status = false;
+         }
+
+         if (it.hasNext())
+         {
+            fireSpecViolationEvent(mdBean, new Section("15.7.3.a"));
+            status = false;
+         }
+      }
+      else
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.3.a"));
+         status = false;
+      }
+
+      // The message-driven bean class must define the message listener methods. The signature of a message
+      // listener method must follow these rules:
+      //
+      //      - The method MUST be declared as public
+      //      - The method MUST NOT be declared as final or static
+      //
+      // Spec 15.7.4
+      //
+      if( hasOnMessageMethod(bean) )
+      {
+         Iterator it = getOnMessageMethods(bean);
+         Method onMessage = (Method)it.next();
+
+         if (!isPublic(onMessage))
+         {
+            fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.b"));
+            status = false;
+         }
+
+         if ( (isFinal(onMessage)) || (isStatic(onMessage)) )
+         {
+            fireSpecViolationEvent(mdBean, onMessage, new Section("15.7.4.c"));
+            status = false;
+         }
+      }
+      else
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.4.a"));
+         status = false;
+      }
+
+      // A message driven bean MUST implement the ejbRemove() method.
+      // The ejbRemove() method signature MUST follow these rules:
+      //
+      //      - The method name MUST be ejbRemove
+      //      - The method MUST be declared as public
+      //      - The method MUST NOT be declared as final or static
+      //      - The return type MUST be void
+      //      - The method MUST have no arguments.
+      //      - The method MUST NOT define any application exceptions.
+      //
+      // Spec 15.7.5
+      //
+      if (hasEJBRemoveMethod(bean))
+      {
+         Iterator it = getEJBRemoveMethods(bean);
+         Method ejbRemove = (Method)it.next();
+
+         if (!isPublic(ejbRemove))
+         {
+            fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.b"));
+            status = false;
+         }
+
+         if ( (isFinal(ejbRemove)) || (isStatic(ejbRemove)) )
+         {
+            fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.c"));
+            status = false;
+         }
+
+         if (!hasVoidReturnType(ejbRemove))
+         {
+            fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.d"));
+            status = false;
+         }
+
+         if (!hasNoArguments(ejbRemove))
+         {
+            fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.e"));
+            status = false;
+         }
+
+         if (!throwsNoException(ejbRemove))
+         {
+            fireSpecViolationEvent(mdBean, ejbRemove, new Section("15.7.5.f"));
+            status = false;
+         }
+
+         if (it.hasNext())
+         {
+            fireSpecViolationEvent(mdBean, new Section("15.7.5.a"));
+            status = false;
+         }
+      }
+      else
+      {
+         fireSpecViolationEvent(mdBean, new Section("15.7.5.a"));
+         status = false;
+      }
+
+      return status;
    }
 
    /**
@@ -299,6 +533,3 @@ public class EJBVerifier21 extends EJBVerifier20
    }
 
 }
-/*
-vim:ts=3:sw=3:et
-*/

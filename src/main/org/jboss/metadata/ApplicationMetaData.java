@@ -27,7 +27,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -108,7 +108,7 @@ public class ApplicationMetaData
 
    public boolean isEJB21()
    {
-      return isEJB2x() && ejbMinorVersion == 1;
+      return ejbVersion == 2 && ejbMinorVersion == 1;
    }
 
    public Iterator getEnterpriseBeans()
@@ -243,7 +243,6 @@ public class ApplicationMetaData
          if ("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI()))
          {
             ejbVersion = 2;
-            //TODO we should have a look at the version attribute
             ejbMinorVersion = 1;
          }
          else

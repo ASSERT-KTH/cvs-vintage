@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.32 2003/12/02 16:13:04 cgjung Exp $
+ * $Id: EJBVerifier20.java,v 1.33 2004/04/06 19:54:13 tdiesler Exp $
  */
 
 
@@ -47,7 +47,7 @@ import org.jboss.verifier.factory.DefaultEventFactory;
  * @author Jay Walters     (jwalters@computer.org)
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
@@ -2673,7 +2673,7 @@ public class EJBVerifier20
    /*
     * Verify Message Driven Bean
     */
-   private boolean verifyMessageDrivenBean( MessageDrivenMetaData mdBean )
+   protected boolean verifyMessageDrivenBean( MessageDrivenMetaData mdBean )
    {
       boolean status = true;
 
