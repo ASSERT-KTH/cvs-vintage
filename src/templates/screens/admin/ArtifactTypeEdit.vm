@@ -1,27 +1,30 @@
-
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
-#set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+#set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
 
 <div class="app" id="div2-1-4-0">
 
 <h2>$page.Title</h2>
 
-#if (!$issueTypeId)
-<p class="alert">Issue type not found. Please click $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
+#if (!$issueTypeId && $issueTypeId.length() == 0)
+<p class="alert">Issue type not found. Please click 
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
+</p>
 #else
 #set ($groups = $issueType.getAttributeGroups($module))
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
 #set ($modGroup = $intake.Module.mapTo($module))
 
-
-<form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
+<form method="post" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeSelect.vm" />
 
-<div class="functnbar"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+</div>
 
 <h3>Issue type details</h3>
 <div class="axial">
@@ -37,11 +40,12 @@
     </td>
     </tr>
     <tr>
-    <th>Issue type desc</th>
+    <th>Issue type description</th>
     <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
 </div>
+
 <h3>Issue view display options</h3>
 
 <div class="axial">
@@ -53,7 +57,7 @@
 <option #if ($rmitGroup.Comments.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.Comments.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.Comments.Value == 20) selected="selected" #end>20</option>
-</select>&nbsp;most recent.
+</select>&#160;most recent.
 <p>Full list on seperate screen</p>
 </td>
 </tr>
@@ -65,7 +69,7 @@
 <option #if ($rmitGroup.History.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.History.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.History.Value == 20) selected="selected" #end>20</option>
-</select>&nbsp;most recent.
+</select>&#160;most recent.
 <p>Full list on seperate screen</p>
 </td>
 </tr>
@@ -117,7 +121,7 @@
 <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeletegroup" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />&#160;
-<small>attribute group</small>&#160;
+<small>attribute group</small>
 </div>
 
 <h3>User attributes</h3>
@@ -157,17 +161,20 @@
 #end
 
 </table>
-<div class="functnbar3">
 
+<div class="functnbar3">
 <input type="submit" value="Save"  name="eventSubmit_doSaveuserattributes" />&#160;
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doDeleteuserattribute" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSaveuserattributes" />&#160;
-<small>attribute group</small>&#160;
+<small>attribute group</small>
 </div>
 
-<div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
+<div class="functnbar2">
+<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+</div>        
 
 $intake.declareGroups()
 </form>
