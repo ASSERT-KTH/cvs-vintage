@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.24 2003/03/04 17:27:21 jmcnally Exp $
+ * @version $Id: IssueTest.java,v 1.25 2003/04/15 20:25:47 elicia Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -170,7 +170,7 @@ public class IssueTest extends BaseTestCase
     {
         System.out.println ("testAssociatedUsers()");
         assertEquals(getIssue0().getAssociatedUsers().size(), 1);
-        List pair = (List)getIssue0().getAssociatedUsers().get(0);
+        List pair = (List)getIssue0().getAssociatedUsers().iterator().next();
         assertEquals(((ScarabUser)pair.get(1)),getUser2());
     }
 
@@ -184,7 +184,7 @@ public class IssueTest extends BaseTestCase
         AttributeValue attVal = getIssue0().getAttributeValue(assignAttr);
         getIssue0().changeUserAttributeValue(null, getUser1(), getUser2(), 
                                attVal, ccAttr, getAttachment(assigner));
-        List pair = (List)getIssue0().getAssociatedUsers().get(0);
+        List pair = (List)getIssue0().getAssociatedUsers().iterator().next();
         assertEquals(((Attribute)pair.get(0)),ccAttr);
     }
                
