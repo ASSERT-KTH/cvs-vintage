@@ -245,6 +245,14 @@ public class ScarabRequestTool
     }
 
     /**
+     * A Attachment object for use within the Scarab API
+     */
+    public void setAttachment(Attachment attachment)
+    {
+        this.attachment = attachment;
+    }
+
+    /**
      * A Attribute object for use within the Scarab API.
      */
     public void setAttribute (Attribute attribute)
