@@ -51,6 +51,7 @@ import java.util.Stack;
 import java.util.Date;
 
 import org.apache.turbine.RunData;
+import org.apache.turbine.Log;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -76,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.15 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.16 2002/03/19 06:32:29 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -227,6 +228,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     {
                         intake.remove(newPCAOGroup);
                         data.setMessage(se.getMessage());
+                        Log.error(se);
                         return;
                     }
                     // only add a new entry if there is a name defined
@@ -242,6 +244,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         }
                         catch (Exception e)
                         {
+                            Log.error(e);
                             data.setMessage(e.getMessage());
                         }
                     }
