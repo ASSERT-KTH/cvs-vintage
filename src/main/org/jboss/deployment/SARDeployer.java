@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.3 $ <p>
+* @version   $Revision: 1.4 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -433,8 +433,9 @@ implements SARDeployerMBean
                new Object[] {sub},
                new String[] {"org.jboss.deployment.DeploymentInfo"});
          }
-         
-         catch (Exception e) {log.error(e);}
+         catch (Exception e) {
+	     log.error("operation failed", e);
+	 }
          
          log.debug("deployed classes for " + neededUrl);
       

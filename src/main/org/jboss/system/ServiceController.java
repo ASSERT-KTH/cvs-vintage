@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
 package org.jboss.system;
 
@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.23 $ <p>
+* @version $Revision: 1.24 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -235,6 +235,8 @@ implements ServiceControllerMBean, MBeanRegistration
    */
    public synchronized void create(ObjectName serviceName) throws Exception
    {  
+      boolean debug = log.isDebugEnabled();
+
       ServiceContext ctx = (ServiceContext) getServiceContext(serviceName);
       
       // Get the fancy service proxy (for the lifecycle API)
@@ -257,8 +259,11 @@ implements ServiceControllerMBean, MBeanRegistration
          
          // A dependent is not created or running
          if (!(state == ServiceContext.CREATED || state == ServiceContext.RUNNING)) {
-            
-            log.info("waiting in create "+serviceName.toString() +" waiting on "+sc.objectName);
+            if (debug) {
+	       log.debug("waiting in create "+ serviceName +
+			 " waiting on " + sc.objectName);
+	    }
+
             ctx.state=oldState;
             return;
          }
@@ -289,6 +294,8 @@ implements ServiceControllerMBean, MBeanRegistration
    */
    public synchronized void start(ObjectName serviceName) throws Exception
    {   
+      boolean debug = log.isDebugEnabled();
+
       ServiceContext ctx = (ServiceContext) getServiceContext(serviceName);
       
       // If we are already started (can happen in dependencies) just return
@@ -312,7 +319,9 @@ implements ServiceControllerMBean, MBeanRegistration
             ObjectName cac = new ObjectName("Test:name=test");
             ObjectName ca2 = new ObjectName("Test:name=test");
             
-            log.info("waiting in start "+serviceName.toString()+" on "+sctx.objectName);
+	    if (debug) {
+	       log.debug("waiting in start "+serviceName+" on "+sctx.objectName);
+	    }
             
             ctx.state=oldState;
             return;

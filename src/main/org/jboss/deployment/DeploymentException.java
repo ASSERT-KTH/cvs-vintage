@@ -12,7 +12,7 @@ package org.jboss.deployment;
  *
  *   @see DeployerMBean
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class DeploymentException
    extends Exception
@@ -36,6 +36,11 @@ public class DeploymentException
       super(message);
       
       this.cause = cause;
+   }
+
+   public DeploymentException(Throwable cause)
+   {
+      this(cause.getMessage(), cause);
    }
    
    // Public --------------------------------------------------------
