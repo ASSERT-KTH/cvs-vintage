@@ -857,14 +857,17 @@ Prints out a date entry form.
  <tr>
  <th>$l10n.Templates</th>
  <td>
-<select name="templateId">
+<select name="templateId"
+  onchange="javascript:submitFormTo(this.form, 'eventSubmit_doUsetemplates');">
    <option value="">$l10n.Choose</option>
 #foreach ($template in $allTemplates)
    <option value="$template.Issue.IssueId"#if ($template.IssueId.toString().equals($data.Parameters.getString("templateId"))) selected="selected"#end>$template.Name</option>
 #end
 </select>
+<noscript>
 &#160;
 <input type="submit" value="$l10n.Select" name="eventSubmit_doUsetemplates" />
+</noscript>
 &#160;
 $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $scarabR.CurrentIssueType.Name.toLowerCase()))
  </td>
