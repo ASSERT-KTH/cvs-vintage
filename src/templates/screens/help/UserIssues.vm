@@ -11,12 +11,12 @@
                   <li><a href="#types">$l10n.IssueTypes</a></li>
                   <li><a href="#attributes">$l10n.IssueAttributes</a></li>
                   <li><a href="#entry">$l10n.IssueEntryScreen</a></li>
-                  <li><a href="#xml">$l10n.XMLImportExport</a></li>
                 </ul>
               </li>
+              <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
               <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues </a> </li>
               <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
-              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
             </ul>
           <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
           <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
@@ -58,32 +58,5 @@
     <li>$l10n.ViewThisIssue</li>
     <li>$l10n.StartPage</li>
   </ul>
-  <h3><a name="xml" id="xml">$l10n.XMLImportExport</h3>
-  <p>$l10n.XMLImportExportP1</p>
-  <p><a name="export" id="export"><strong>$l10n.ExportingIssues</strong></a></p>
-  <p>$l10n.ExportingIssuesP1</p>
-  <p>$l10n.ExportingIssuesP2</p>
-  <p>$l10n.ExportingIssuesP3</p>
-  <ol>
-    <li>$l10n.ClickThe <strong>$l10n.XMLExportIssues</strong> $l10n.ExportingIssuesP3B1</li>
-    <li>$l10n.ExportingIssuesP3B2</li>
-    <li>$l10n.ExportingIssuesP3B3</li>
-    <li>$l10n.ClickThe <strong>$l10n.Export</strong> $l10n.IssueEntryP26S2</li>
-  </ol>
-  <p><a name="import" id="import"><strong>$l10n.ImportingIssues</strong></a></p>
-  <p>$l10n.ImportingIssuesP1</p>
-  <p>$l10n.ImportingIssuesP2</p>
-  <ul>
-    <li><em>$l10n.Domain</em>$l10n.Colon $l10n.ImportingIssuesP2B1</li>
-    <li><em>$l10n.Name</em>$l10n.Colon $l10n.ImportingIssuesP2B2</li>
-    <li><em>$l10n.Code</em>$l10n.Colon $l10n.ImportingIssuesP2B3</li>
-  </ul>
-  <p>$l10n.ImportingIssuesP3</p>
-  <p>$l10n.ImportingIssuesP4</p>
-  <ol>
-    <li>$l10n.ClickThe <strong>$l10n.XMLImportIssues</strong> $l10n.ExportingIssuesP3B1</li>
-    <li>$l10n.ImportingIssuesP4B1</li>
-    <li>$l10n.ClickThe <strong>$l10n.Import</strong> $l10n.IssueEntryP26S2</li>
-  </ol>
  <div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
   </div>
