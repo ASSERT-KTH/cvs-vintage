@@ -189,4 +189,8 @@ public class SessionIdGenerator {
     public static synchronized String generateId(Random randomSource) {
         return getIdentifier(randomSource, null);
     }
+
+    public static synchronized String generateId() {
+        return getIdentifier(globalRandomSource, null);
+    }
 }
