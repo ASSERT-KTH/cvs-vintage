@@ -22,96 +22,70 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.3 2005/03/03 16:11:03 benoitf Exp $
+ * $Id: ManageableRegistry.java,v 1.4 2005/03/11 14:03:35 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
 
-import java.net.InetAddress;
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.rmi.server.ObjID;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RMISocketFactory;
 import java.rmi.server.ServerNotActiveException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Properties;
 
 import sun.rmi.registry.RegistryImpl;
 
 /**
- * @author riviereg Manageable Registry for Carol
+ * JRMP Registry without checks for bind
+ * @author Guillaume Rivière
  */
 public class ManageableRegistry extends RegistryImpl {
 
-    public Hashtable remoteObjectTable = new Hashtable(101);
-
-    public static ManageableRegistry manageableRegistry;
-
-    public static ObjID id = new ObjID(ObjID.REGISTRY_ID);
-
-    public static RegistryFireWall writeFirewall = new RegistryFireWall();
-
-    public static RegistryFireWall readFirewall = new RegistryFireWall();
-
-    // The registry properties
-    public static String REGISTRY_MANAGER_NAME = "carolregistryadministator";
-
-    public Properties regProps = new Properties();
-
-    // The registry manager
-    RegistryManager manager = null;
-
-    public static boolean verbose = false;
+    /**
+     * Initial capacity of the hashtable
+     */
+    private static final int INITIAL_CAPACITY = 101;
 
     /**
-     *
+     * Hashtable containing objects of the registry
      */
-    public ManageableRegistry(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
+    private Hashtable registryObjects = new Hashtable(INITIAL_CAPACITY);
+
+    /**
+     * Verbosity
+     */
+    private static boolean verbose = false;
+
+    /**
+     * Build a new registry on a given port
+     * @param port given port number
+     * @param csf client socket factory
+     * @param ssf server socket factory
+     * @throws RemoteException if the registry cannot be built
+     */
+    private ManageableRegistry(int port, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(port, csf, ssf);
-        try {
-            regProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("registry.properties"));
-        } catch (Exception e) {
-            //there is no registry propertie use defaults
-        }
-        setManager(port);
     }
 
     /**
-     * @param objectPort
-     *
+     * Build a new registry on a given port
+     * @param port given port number
+     * @throws RemoteException if the registry cannot be built
      */
-    public ManageableRegistry(int port, int objectPort) throws RemoteException {
-        super(port, RMISocketFactory.getSocketFactory(), RMISocketFactory.getSocketFactory());
-        try {
-            regProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("registry.properties"));
-        } catch (Exception e) {
-            //there is no registry propertie use defaults
-        }
-        setManager(objectPort);
-
+    private ManageableRegistry(int port) throws RemoteException {
+        this(port, RMISocketFactory.getSocketFactory(), RMISocketFactory.getSocketFactory());
     }
 
     /**
-     * Create a Remote Manager Object and bind it
-     */
-    private void setManager(int port) throws RemoteException {
-        manager = new RegistryManagerImpl(this, port);
-        try {
-            bind(REGISTRY_MANAGER_NAME, manager);
-        } catch (Exception e) {
-            //nothing to do
-        }
-    }
-
-    /**
-     * Set verbose
+     * Set verbosity
+     * @param v true/false
      */
     public void setVerbose(boolean v) {
         System.out.println("RegistryManager.setVerbose(" + v + ")");
@@ -119,10 +93,13 @@ public class ManageableRegistry extends RegistryImpl {
     }
 
     /**
-     *
+     * Retrieves the named object.
+     * @param name the name of the object to look up
+     * @return the object bound to <tt>name</tt>
+     * @throws RemoteException if a naming exception is encountered
+     * @throws NotBoundException if object is not bound
      */
     public Remote lookup(String name) throws RemoteException, NotBoundException {
-        checkReadAccess(name);
         if (verbose) {
             try {
                 System.out.println("ManageableRegistry.lookup(" + name + ") from client: " + getClientHost());
@@ -130,18 +107,26 @@ public class ManageableRegistry extends RegistryImpl {
                 e.printStackTrace();
             }
         }
-        synchronized (remoteObjectTable) {
-            Remote obj = (Remote) remoteObjectTable.get(name);
-            if (obj == null) throw new NotBoundException(name);
+        synchronized (registryObjects) {
+            Remote obj = (Remote) registryObjects.get(name);
+            if (obj == null) {
+                throw new NotBoundException(name);
+            }
             return obj;
         }
     }
 
     /**
-     *
+     * Binds a name to an object, overwriting any existing binding. All
+     * intermediate contexts and the target context (that named by all but
+     * terminal atomic component of the name) must already exist.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws RemoteException if a bind cannot be done exception is encountered
+     * @throws AlreadyBoundException if object is already bound
+     * @throws AccessException if cannot bind
      */
     public void bind(String name, Remote obj) throws RemoteException, AlreadyBoundException, AccessException {
-        checkWriteAccess();
         if (verbose) {
             try {
                 System.out.println("ManageableRegistry.bind(" + name + ", obj)" + " from client: " + getClientHost());
@@ -149,18 +134,25 @@ public class ManageableRegistry extends RegistryImpl {
                 e.printStackTrace();
             }
         }
-        synchronized (remoteObjectTable) {
-            Remote curr = (Remote) remoteObjectTable.get(name);
-            if (curr != null) throw new AlreadyBoundException(name);
-            remoteObjectTable.put(name, obj);
+        synchronized (registryObjects) {
+            Remote curr = (Remote) registryObjects.get(name);
+            if (curr != null) {
+                throw new AlreadyBoundException(name);
+            }
+            registryObjects.put(name, obj);
         }
     }
 
     /**
-     *
+     * Unbinds the named object. Removes the terminal atomic name in
+     * <code>name</code> from the target context--that named by all but the
+     * terminal atomic part of <code>name</code>.
+     * @param name the name to unbind; may not be empty
+     * @throws RemoteException if a naming exception is encountered
+     * @throws NotBoundException if object was not bound
+     * @throws AccessException if unbind is not authorized
      */
     public void unbind(String name) throws RemoteException, NotBoundException, AccessException {
-        checkWriteAccess();
         if (verbose) {
             try {
                 System.out.println("ManageableRegistry.unbind(" + name + ")" + " from client: " + getClientHost());
@@ -168,21 +160,25 @@ public class ManageableRegistry extends RegistryImpl {
                 e.printStackTrace();
             }
         }
-        synchronized (remoteObjectTable) {
-            // Do not Unbind the manager
-            if (REGISTRY_MANAGER_NAME.equals(name))
-                    throw new NotBoundException("Can not unbind the Registry Manager use the Stop() method");
-            Remote obj = (Remote) remoteObjectTable.get(name);
-            if (obj == null) throw new NotBoundException(name);
-            remoteObjectTable.remove(name);
+        synchronized (registryObjects) {
+            Remote obj = (Remote) registryObjects.get(name);
+            if (obj == null) {
+                throw new NotBoundException(name);
+            }
+            registryObjects.remove(name);
         }
     }
 
     /**
-     *
+     * ReBinds a name to an object, overwriting any existing binding. All
+     * intermediate contexts and the target context (that named by all but
+     * terminal atomic component of the name) must already exist.
+     * @param name the name to bind; may not be empty
+     * @param obj the object to bind; possibly null
+     * @throws RemoteException if a bind cannot be done exception is encountered
+     * @throws AccessException if cannot bind
      */
     public void rebind(String name, Remote obj) throws RemoteException, AccessException {
-        checkWriteAccess();
         if (verbose) {
             try {
                 System.out.println("ManageableRegistry.rebind(" + name + ", obj)" + " from client: " + getClientHost());
@@ -190,14 +186,18 @@ public class ManageableRegistry extends RegistryImpl {
                 e.printStackTrace();
             }
         }
-        remoteObjectTable.put(name, obj);
+        registryObjects.put(name, obj);
     }
 
     /**
-     *
+     * Enumerates the names bound in the named context, along with the class
+     * names of objects bound to them. The contents of any subcontexts are not
+     * included.
+     * @return the names in this context.
+     * @throws RemoteException if a naming exception is encountered
      */
     public String[] list() throws RemoteException {
-        checkReadAccess("");
+
         if (verbose) {
             try {
                 System.out.println("ManageableRegistry.list()" + " from client: " + getClientHost());
@@ -207,47 +207,50 @@ public class ManageableRegistry extends RegistryImpl {
             }
         }
         String[] names;
-        synchronized (remoteObjectTable) {
-            int i = remoteObjectTable.size();
+        synchronized (registryObjects) {
+            int i = registryObjects.size();
             names = new String[i];
-            Enumeration enum = remoteObjectTable.keys();
-            while ((--i) >= 0)
-                names[i] = (String) enum.nextElement();
+            Enumeration e = registryObjects.keys();
+            while ((--i) >= 0) {
+                names[i] = (String) e.nextElement();
+            }
         }
         return names;
     }
 
-    public static ObjID getID() {
-        return id;
-    }
-
+    /**
+     * Create a new registry on given port and use exported object port given
+     * @param port registry port
+     * @param objectPort exported objects port
+     * @return a new Registry object
+     * @throws RemoteException if registry cannot be built
+     */
     public static Registry createManagableRegistry(int port, int objectPort) throws RemoteException {
         // used fixed port factory only if user want set the port
         if (objectPort > 0) {
             RMIFixedPortFirewallSocketFactory.register(objectPort);
         }
-        return new ManageableRegistry(port, objectPort);
+        return new ManageableRegistry(port);
     }
 
     /**
-     *
+     * Remove objects of the registry
      */
     public void purge() {
-        RegistryManager reg = (RegistryManager) remoteObjectTable.get(REGISTRY_MANAGER_NAME);
-        remoteObjectTable.clear();
-        remoteObjectTable.put(REGISTRY_MANAGER_NAME, reg);
+        registryObjects.clear();
     }
 
     /**
-     *
+     * Start a new Registry
+     * @param args arguments for starting registry
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         try {
             int regPort = Registry.REGISTRY_PORT;
             if (args.length >= 1) {
                 regPort = Integer.parseInt(args[0]);
             }
-            manageableRegistry = new ManageableRegistry(regPort, 0);
+            createManagableRegistry(regPort, 0);
             System.out.println("ManageableRegistry started on port " + regPort);
             // The registry should not exiting because of the Manager binded
 
@@ -257,171 +260,4 @@ public class ManageableRegistry extends RegistryImpl {
         }
     }
 
-    /**
-     *
-     */
-    public static void checkWriteAccess() throws AccessException {
-
-        try {
-            String clientHostName = getClientHost();
-            InetAddress clientHost = InetAddress.getByName(clientHostName);
-            if (!(writeFirewall.isAllow(clientHost))) {
-                throw new AccessException("Write in registry disallowed; from " + clientHost + " host");
-            }
-        } catch (ServerNotActiveException ex) {
-            // local jvm registry alway allow
-        } catch (java.net.UnknownHostException ex) {
-            throw new AccessException("Write in the registry disallowed; from unknown host");
-        }
-    }
-
-    /**
-     *
-     */
-    public static void checkReadAccess(String name) throws AccessException {
-
-        try {
-            String clientHostName = getClientHost();
-            InetAddress clientHost = InetAddress.getByName(clientHostName);
-            if ((REGISTRY_MANAGER_NAME.equals(name)) && (InetAddress.getLocalHost().equals(clientHost))) {
-                // always allow to lookup Manager from local host
-            } else {
-                if (!(readFirewall.isAllow(clientHost))) {
-                    throw new AccessException("Read in registry disallowed; from " + clientHost + " host");
-                }
-            }
-        } catch (ServerNotActiveException ex) {
-            // local jvm registry alway allow
-        } catch (java.net.UnknownHostException ex) {
-            throw new AccessException("Read in the registry disallowed; from unknown host");
-        }
-    }
-
-    // write firewall methods
-    /**
-     * Allow everybody write
-     */
-    public synchronized void allowWriteAll() {
-        writeFirewall.allowAll();
-    }
-
-    /**
-     * Forbid everybody write
-     */
-    public synchronized void forbidWriteAll() {
-        writeFirewall.forbidAll();
-    }
-
-    /**
-     * add a write forbiden address
-     * @param i
-     */
-    public synchronized void addWriteForbidenAddress(InetAddress i) {
-        writeFirewall.addForbidenAddress(i);
-    }
-
-    /**
-     * remove a write forbiden adress
-     * @param i
-     */
-    public synchronized void addWriteAllowAddress(InetAddress i) {
-        writeFirewall.addAllowedAddress(i);
-    }
-
-    /**
-     * list write forbiden adress
-     * @return
-     */
-    public InetAddress[] listWriteForbidenAddress() {
-        return writeFirewall.listForbidenAddress();
-    }
-
-    /**
-     * list write Allowed Adress
-     * @return
-     */
-    public InetAddress[] listWriteAllowedAddress() {
-        return writeFirewall.listAllowedAddress();
-    }
-
-    /**
-     * is allow for all writer
-     * @return
-     */
-    public boolean isWriteAllowAll() {
-        return writeFirewall.isAllowAll();
-    }
-
-    /**
-     * Tets if a InetAdress is allow for writting
-     * @param i
-     * @return
-     */
-    public boolean isWriteAllow(InetAddress i) {
-        return writeFirewall.isAllow(i);
-    }
-
-    // read firewall method
-    /**
-     * Allow everybody read
-     */
-    public synchronized void allowReadAll() {
-        readFirewall.allowAll();
-    }
-
-    /**
-     * Forbid everybody read
-     */
-    public synchronized void forbidReadAll() {
-        readFirewall.forbidAll();
-    }
-
-    /**
-     * add a read forbiden address
-     * @param i
-     */
-    public synchronized void addReadForbidenAddress(InetAddress i) {
-        readFirewall.addForbidenAddress(i);
-    }
-
-    /**
-     * remove a read forbiden adress
-     * @param i
-     */
-    public synchronized void addReadAllowAddress(InetAddress i) {
-        readFirewall.addAllowedAddress(i);
-    }
-
-    /**
-     * list read forbiden adress
-     * @return
-     */
-    public InetAddress[] listReadForbidenAddress() {
-        return readFirewall.listForbidenAddress();
-    }
-
-    /**
-     * list read Allowed Adress
-     * @return
-     */
-    public InetAddress[] listReadAllowedAddress() {
-        return readFirewall.listAllowedAddress();
-    }
-
-    /**
-     * is read allow for all
-     * @return
-     */
-    public boolean isReadAllowAll() {
-        return readFirewall.isAllowAll();
-    }
-
-    /**
-     * Tets if a InetAdress is allow to read
-     * @param i
-     * @return
-     */
-    public boolean isReadAllow(InetAddress i) {
-        return readFirewall.isAllow(i);
-    }
 }
