@@ -55,8 +55,8 @@
     appear in the User attributes drop down menu and can be associted with an 
     issue using that User attribute. The Assigned To attribute is a User attribute.</dd>
   <dt>&nbsp;</dt>
-  <dd>For more information see <a href="$link.setPage("help,UserIssues.vm#attributes")">Managing 
-    issues: overview</a> for Global attributes and <a href="$link.setPage("help,UserIssueModify.vm#manage")">Modifying 
+  <dd>For more information see <a href="$link.setPage("help,UserIssues.vm")#attributes">Managing 
+    issues: overview</a> for Global attributes and <a href="$link.setPage("help,UserIssueModify.vm")#manage">Modifying 
     Issues</a> for User attributes.</dd>
 </dl>
 
