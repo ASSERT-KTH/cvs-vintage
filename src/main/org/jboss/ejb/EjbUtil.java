@@ -26,7 +26,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class EjbUtil
 {
@@ -67,6 +67,11 @@ public final class EjbUtil
    private static String resolveLink( MBeanServer server, DeploymentInfo di,
       String link, boolean isLocal )
    {
+      if( link == null )
+      {
+         return null;
+      }
+
       if( log.isTraceEnabled() )
       {
          log.trace( "resolveLink( {" + di + "}, {" + link + "}, {" + isLocal +
