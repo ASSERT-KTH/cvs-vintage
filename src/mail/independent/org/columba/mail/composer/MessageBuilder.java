@@ -29,6 +29,7 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
@@ -369,9 +370,19 @@ public class MessageBuilder {
 	private static String createQuotedBodyText(Message message) {
 		String bodyText = createBodyText(message);
 
+		/*
+		 * *20030621, karlpeder* tags are stripped
+		 * if the message body part is html
+		 */
+		MimeHeader header = message.getBodyPart().getHeader();
+		if (header.getContentSubtype().equals("html")) {
+			bodyText = BodyTextParser.htmlToText(bodyText);
+		}
+
 		String quotedBodyText = BodyTextParser.quote(bodyText);
 
 		return quotedBodyText;
+
 	}
 
 	/** 
@@ -447,6 +458,9 @@ public class MessageBuilder {
 		} else {
 			// prepend "> " to every line of the bodytext
 			String bodyText = createQuotedBodyText(message);
+			if (bodyText == null) {
+				bodyText = "<Error parsing bodytext>";
+			}
 			model.setBodyText(bodyText);
 		}
 
@@ -523,9 +537,18 @@ public class MessageBuilder {
 			}
 
 			// first MimePart is the bodytext of the message
-			if (i == 0)
-				model.setBodyText(str);
-			else {
+			if (i == 0) {
+				/*
+				 * *20030621, karlpeder* tags are stripped if the 
+				 * message body part is html
+				 */
+				if (mimeHeader.getContentSubtype().equals("html")) {
+					model.setBodyText(BodyTextParser.htmlToText(str));
+				} else {
+					model.setBodyText(str);
+				}
+				//model.setBodyText(str);
+			} else {
 				mp.setBody(str);
 				model.addMimePart(mp);
 			}
