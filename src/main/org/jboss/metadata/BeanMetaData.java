@@ -32,7 +32,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.69 $
+ * @version $Revision: 1.70 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -67,6 +67,9 @@ public abstract class BeanMetaData
    /** The local element contains the fully-qualified name of the enterprise
     bean's local interface */
    private String localClass;
+   /** The service-endpoint element contains the fully-qualified
+    *  name of the bean´s service endpoint interface (SEI) */
+   protected String serviceEndpointClass;
    /** The ejb-class element contains the fully-qualified name of the
     enterprise bean's class. */
    private String ejbClass;
@@ -128,6 +131,8 @@ public abstract class BeanMetaData
 
    /** Describes the security configuration information for the IOR. Optional element. Since 4.0. */
    private IorSecurityConfigMetaData iorSecurityConfig;
+   /** The jboss port-component binding for a ejb webservice */
+   protected EjbPortComponentMetaData portComponent;
 
    // Static --------------------------------------------------------
 
@@ -171,6 +176,16 @@ public abstract class BeanMetaData
    public String getLocal()
    {
       return localClass;
+   }
+
+   public String getServiceEndpoint()
+   {
+      return serviceEndpointClass;
+   }
+
+   public EjbPortComponentMetaData getPortComponent()
+   {
+      return portComponent;
    }
 
    public String getEjbClass()

@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Scott.Stark@jboss.org
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  */
 public class SessionMetaData extends BeanMetaData
 {
@@ -31,13 +31,6 @@ public class SessionMetaData extends BeanMetaData
    // Attributes ----------------------------------------------------
    /** whether it is a stateful or stateless bean */
    private boolean stateful;
-   /** the service-endpoint element contains the fully-qualified
-    *  name of the session bean´s web service interface
-    */
-   protected String serviceEndpointClass;
-   /** the jboss port-component binding for a ejb webservice
-    */
-   protected EjbPortComponentMetaData portComponent;
 
    // Static --------------------------------------------------------
     
@@ -61,16 +54,6 @@ public class SessionMetaData extends BeanMetaData
    public boolean isWebservice()
    {
       return getServiceEndpoint() != null;
-   }
-
-   public String getServiceEndpoint()
-   {
-      return serviceEndpointClass;
-   }
-
-   public EjbPortComponentMetaData getPortComponent()
-   {
-      return portComponent;
    }
 
    public String getDefaultConfigurationName()
