@@ -30,7 +30,6 @@ import javax.swing.JRadioButton;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.RadioButtonWithMnemonic;
 import org.columba.mail.config.AccountItem;
@@ -41,6 +40,7 @@ import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**

@@ -29,11 +29,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.util.MailResourceLoader;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**

@@ -46,7 +46,6 @@ import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -59,6 +58,7 @@ import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**

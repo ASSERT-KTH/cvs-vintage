@@ -38,13 +38,13 @@ import javax.swing.SpinnerNumberModel;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**

@@ -97,7 +97,7 @@ public class DefaultContainer extends JFrame implements Container,
 
 		if (MainInterface.DEBUG) { 
 			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version +
-					" Running in DEBUG MODE");
+					" DEBUG MODE");
 		} else { 
 			setTitle("Columba - version: " + org.columba.core.main.MainInterface.version);
 		}

@@ -21,9 +21,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.util.MailResourceLoader;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 
 
 /**

@@ -46,7 +46,6 @@ import javax.swing.SpinnerNumberModel;
 import org.columba.core.command.ExceptionHandler;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
@@ -57,6 +56,7 @@ import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.smtp.SMTPException;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 /**

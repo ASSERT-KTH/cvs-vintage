@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -40,6 +39,7 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class IdentityPanel extends DefaultPanel implements ActionListener {

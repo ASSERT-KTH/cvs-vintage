@@ -46,7 +46,6 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.main.MailInterface;
@@ -54,6 +53,7 @@ import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.swing.SortedJTree;
 import org.frappucino.swing.SortedTreeModelDecorator;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class CreateFolderDialog extends JDialog implements ActionListener {
