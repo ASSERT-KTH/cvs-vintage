@@ -340,11 +340,9 @@ insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
  * Types of saved queries.
  */
 insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
-        values(1, 'global');
+        values(1, 'Personal profile');
 insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
-        values(2, 'project');
-insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
-        values(3, 'personal');
+        values(2, 'All users');
 
 /*
  *
