@@ -1,4 +1,4 @@
-// $Id: GenerationPreferences.java,v 1.5 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: GenerationPreferences.java,v 1.6 2004/03/09 20:42:49 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ public class GenerationPreferences implements java.io.Serializable {
 	if (System.getProperty("file.separator").equals("/") )
 	    _outputDir = "/tmp";
 	else
-	    _outputDir = "c:\\temp";
+	    //_outputDir = "c:\\temp"; //This does not even exist on many systems!
+            _outputDir = System.getProperty("java.io.tmpdir");
     }
 
     ////////////////////////////////////////////////////////////////
