@@ -20,13 +20,15 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
+ * In order to simplify parsing, all POP3 servers are
+ * required to use a certain format for scan listings.  
+ * A scan listing consists of the message-number of the
+ * message, followed by a single space and the exact size of
+ * the message in octets.
+ * 
+ */          
 public class SizeListParser {
 
 	/**
@@ -35,31 +37,29 @@ public class SizeListParser {
 	public SizeListParser() {
 		super();
 	}
-	
-	public static List parse( String s )
-    {
-        List list = new Vector();
-        
-        String str,str2;
-        StringTokenizer tok = new StringTokenizer( s, "\n" );
-        StringTokenizer tok2;
 
-        while ( tok.hasMoreElements() )
-        {
-            str = (String) tok.nextElement();
-            tok2 = new StringTokenizer( str, " " );
+	public static List parse(String s) {
+		List list = new Vector();
 
-                // message number
-            str2 = (String) tok2.nextElement();
-            Integer i = new Integer( str2 );
-            int number = i.intValue();
+		String str, str2;
+		StringTokenizer tok = new StringTokenizer(s, "\n");
+		StringTokenizer tok2;
 
-                // message size
-            str2 = (String) tok2.nextElement();
-            list.add( str2 );
-        }
-        
-        return list;
-    }
+		while (tok.hasMoreElements()) {
+			str = (String) tok.nextElement();
+			tok2 = new StringTokenizer(str, " ");
+
+			// message number
+			str2 = (String) tok2.nextElement();
+			Integer i = new Integer(str2);
+			int number = i.intValue();
+
+			// message size
+			str2 = (String) tok2.nextElement();
+			list.add(str2);
+		}
+
+		return list;
+	}
 
 }

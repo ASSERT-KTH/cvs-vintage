@@ -32,22 +32,28 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.ssl.SSLProvider;
 
+/**
+ * @author fdietz
+ *
+ * This is an implementation of the POP3 protocol as defined
+ * in RFC 1939: http://www.ietf.org/rfc/rfc1939.txt
+ * 
+ * Generally every command has its corresponding method in this
+ * class.
+ * 
+ */
 public class POP3Protocol {
+	
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
 
 	private boolean statuschecked;
-	//public boolean connected;
+	
 	private String security;
 	public String answer;
 	private int logMethod;
-	//private int totalMessages;
-	//private int totalSize;
-
-	private String selectedMessageSizeString;
-	private int lineCount;
-	private int selectedMessageSize;
+		
 	private String user;
 	private String password;
 	private String server;
@@ -59,6 +65,13 @@ public class POP3Protocol {
 	public static final int APOP = 2;
 	private boolean useSSL;
 
+	/**
+	 * @param user
+	 * @param password
+	 * @param server
+	 * @param port
+	 * @param useSSL
+	 */
 	public POP3Protocol(
 		String user,
 		String password,
@@ -70,14 +83,23 @@ public class POP3Protocol {
 		this.password = password;
 		this.server = server;
 		this.useSSL = useSSL;
-		
+
 		logMethod = USER;
 	}
 
+	/**
+	 * 
+	 */
 	public POP3Protocol() {
 		logMethod = USER;
 	}
 
+	/**
+	 * 
+	 * @param str	possible arguments are "USER" and "APOP"
+	 *              (hopefully more to come ;-)
+	 * 
+	 */
 	public void setLoginMethod(String str) {
 		if (str.equalsIgnoreCase("USER"))
 			logMethod = USER;
@@ -87,6 +109,10 @@ public class POP3Protocol {
 			logMethod = USER;
 	}
 
+	/**
+	 * @param s
+	 * @throws IOException
+	 */
 	public void sendString(String s) throws IOException {
 		ColumbaLogger.log.debug("CLIENT:" + s);
 
@@ -94,10 +120,29 @@ public class POP3Protocol {
 		out.flush();
 	}
 
+	/**
+	 * @return	response from server
+	 * 
+	 * @throws IOException
+	 */
 	public String getServerResponse() throws IOException {
 		return answer;
 	}
 
+	/**
+	 * 
+	 * Responses in the POP3 consist of a status indicator and a keyword
+	 * possibly followed by additional information.  All responses are
+	 * terminated by a CRLF pair.  Responses may be up to 512 characters
+	 * long, including the terminating CRLF.  There are currently two status
+	 * indicators: positive ("+OK") and negative ("-ERR").  Servers MUST
+	 * send the "+OK" and "-ERR" in upper case. 
+	 * 
+	 * 
+	 * @return	true, if server answered with "+OK", false otherwise
+	 * 
+	 * @throws IOException
+	 */
 	public boolean getAnswer() throws IOException {
 
 		answer = in.readLine();
@@ -111,17 +156,30 @@ public class POP3Protocol {
 		}
 	}
 
+	/**
+	 * Read next line from server
+	 * 
+	 * @throws IOException
+	 */
 	public void getNextLine() throws IOException {
 		answer = in.readLine();
 
 		ColumbaLogger.log.debug("SERVER:" + answer);
 	}
 
+	/**
+	 * 
+	 * Establish SSL encrypted connection
+	 * 
+	 * see RFC 2595: http://www.faqs.org/rfcs/rfc2595.html
+	 * 
+	 * @throws Exception
+	 */
 	protected void initSSL() throws Exception {
 		sendString("STLS");
 
 		// server doesn't seem to support STARTTLS extension
-		if ( getAnswer() == false )
+		if (getAnswer() == false)
 			return;
 
 		// create SSLSocket using already established socket
@@ -141,6 +199,22 @@ public class POP3Protocol {
 				new OutputStreamWriter(socket.getOutputStream(), "ISO-8859-1"));
 	}
 
+	/**
+	 * Open port to POP3 server
+	 * 
+	 * Once the TCP connection has been opened by a POP3 client, the POP3
+	 * server issues a one line greeting.  This can be any positive
+	 * response.  An example might be:
+	 * 
+	 * S: +OK POP3 server ready
+	 * 
+	 * The POP3 session is now in the AUTHORIZATION state.  The client must
+	 * now identify and authenticate itself to the POP3 server.
+	 * 
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean openPort() throws Exception {
 		socket = new Socket(server, port);
 
@@ -165,22 +239,29 @@ public class POP3Protocol {
 				security = answer.substring(i, answer.indexOf(">") + 1);
 
 			}
-			
-			if ( useSSL ) initSSL();
+
+			if (useSSL)
+				initSSL();
 
 			return true;
 		} else
 			return false;
 	}
 
-	public int getSize() {
-		return selectedMessageSize;
-	}
+	
 
-	public String getSizeString() {
-		return selectedMessageSizeString;
-	}
-
+	/**
+	 * Login to the POP3 server
+	 * 
+	 * Two possible mechanisms for doing this are implemented,
+	 * the USER and PASS command combination and the APOP command.
+	 * 
+	 * 
+	 * @param u
+	 * @param pass
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean login(String u, String pass) throws IOException {
 
 		switch (logMethod) {
@@ -195,25 +276,51 @@ public class POP3Protocol {
 		return false;
 	}
 
-	/*
-	public boolean login() throws IOException {
-		switch (logMethod) {
-			case USER :
-				{
-	
-					return userPass(user, password);
-				}
-	
-			case APOP :
-				{
-	
-					return apop(user, password);
-				}
-		}
-	
-		return false;
-	}
-	*/
+	/**
+	 * command syntax:
+	 * 
+	 * USER name
+	 * 
+	 * Arguments : 
+	 *   a string identifying a mailbox(required), which is of
+	 *   significance ONLY to the server
+	 * 
+	 * Possible Responses for "USER":
+	 *   +OK name is a valid mailbox
+	 *   -ERR never heard of mailbox name
+	 * 
+	 * Possible Responses for "PASS":
+	 *   +OK maildrop locked and ready
+	 *   -ERR invalid password
+	 *   -ERR unable to lock maildrop
+	 * 
+	 * Restrictions:
+	 *   may only be given in the AUTHORIZATION state after the POP3
+	 *   greeting or after an unsuccessful USER or PASS command
+	 * 
+	 * Discussion:
+	 *   To authenticate using the USER and PASS command
+	 *   combination, the client must first issue the USER
+	 *   command.  If the POP3 server responds with a positive
+	 *   status indicator ("+OK"), then the client may issue
+	 *   either the PASS command to complete the authentication,
+	 *   or the QUIT command to terminate the POP3 session.  If
+	 *   the POP3 server responds with a negative status indicator
+	 *   ("-ERR") to the USER command, then the client may either
+	 *   issue a new authentication command or may issue the QUIT
+	 *   command.
+	 * 
+	 *   The server may return a positive response even though no
+	 *   such mailbox exists.  The server may return a negative
+	 *   response if mailbox exists, but does not permit plaintext
+	 * 
+	 * 
+	 * @param usr	username
+	 * @param pass	password
+	 * @return		true, if login was successful, false otherwise
+	 * 
+	 * @throws IOException
+	 */
 	private boolean userPass(String usr, String pass) throws IOException {
 		sendString("USER " + usr);
 		if (getAnswer()) {
@@ -223,6 +330,21 @@ public class POP3Protocol {
 		return false;
 	}
 
+	/**
+	 * 
+	 * Arguments:
+	 *   a string identifying a mailbox and a MD5 digest string
+	 *   (both required)
+	 * 
+	 * Possible Responses:
+	 *   +OK maildrop locked and ready
+	 *   -ERR invalid password
+	 * 
+	 * @param user		username
+	 * @param pass		password
+	 * @return			true if login was successful, false otherwise
+	 * @throws IOException
+	 */
 	private boolean apop(String user, String pass) throws IOException {
 		if (security != null) {
 			try {
@@ -239,48 +361,67 @@ public class POP3Protocol {
 		return false;
 	}
 
+	/**
+	 * Logout from POP3 server
+	 * 
+	 * Possible Responses:
+	 *  +OK
+	 *  -ERR some deleted messages not removed
+	 * 
+	 * Discussion:
+	 *  The POP3 server removes all messages marked as deleted
+	 *  from the maildrop and replies as to the status of this
+	 *  operation.  If there is an error, such as a resource
+	 *  shortage, encountered while removing messages, the
+	 *  maildrop may result in having some or none of the messages
+	 *  marked as deleted be removed.  In no case may the server
+	 *  remove any messages not marked as deleted.
+	 * 
+	 *  Whether the removal was successful or not, the server
+	 *  then releases any exclusive-access lock on the maildrop
+	 *  and closes the TCP connection.
+	 * 
+	 * @return	true if successfull, false otherwise
+	 * 
+	 * @throws IOException
+	 */
 	public boolean logout() throws IOException {
 
 		sendString("QUIT");
 
-		//in.close();
-		//out.close();
-		//socket.close();
 		return getAnswer();
 
 	}
 
+	/**
+	 * 
+	 * Explicitly close all streams and the socket.
+	 * 
+	 * @throws IOException
+	 */
 	public void close() throws IOException {
 		in.close();
 		out.close();
 		socket.close();
 	}
 
-	/*
-	public int getTotalMessages() throws IOException {
-		
-	
-		if (!checkStat()) {
-			return -1;
-		}
-	
-		return totalMessages;
-	}
-	
-	public int getTotalSize() throws IOException {
-		if (!statuschecked) {
-			if (!checkStat()) {
-				return -1;
-			}
-		}
-		return totalSize;
-	}
-	*/
 
-	public int getLineCount() {
-		return lineCount;
-	}
-
+	/**
+	 * 
+	 * The POP3 server issues a positive response with a line
+	 * containing information for the maildrop.  This line is
+	 * called a "drop listing" for that maildrop.
+	 * 
+	 * Possible Responses:
+	 *  +OK nn mm
+	 * 
+	 * Examples:
+	 *  C: STAT
+	 *  S: +OK 2 320
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public int fetchMessageCount() throws IOException {
 		String dummy;
 
@@ -294,8 +435,6 @@ public class POP3Protocol {
 
 				dummy = dummy.substring(dummy.indexOf(' ') + 1);
 
-				//totalSize = Integer.parseInt(dummy);
-
 				statuschecked = true;
 				return totalMessages;
 
@@ -306,6 +445,26 @@ public class POP3Protocol {
 		return -1;
 	}
 
+	/**
+	 * Fetch list with message sizes
+	 * 
+	 * After the initial +OK, for each message in the maildrop,
+	 * the POP3 server responds with a line containing
+	 * information for that message.  This line is also called a
+	 * "scan listing" for that message.  If there are no
+	 * messages in the maildrop, then the POP3 server responds
+	 * with no scan listings--it issues a positive response
+	 * followed by a line containing a termination octet and a
+	 * CRLF pair.  
+	 * 
+	 * Possible Responses:
+	 *  +OK scan listing follows
+	 *  -ERR no such message
+	 *     
+	 * @return	string containing server response
+	 * 
+	 * @throws IOException
+	 */
 	public String fetchMessageSizes() throws IOException {
 		int size = -1;
 		String dummy;
@@ -318,18 +477,7 @@ public class POP3Protocol {
 			int i = 0;
 			while (!answer.equals(".")) {
 				buf.append(answer + "\n");
-				/*
-				try {
-					size =
-						Integer.parseInt(
-							answer.substring(answer.indexOf(' ') + 1));
-				} catch (NumberFormatException e) {
-				}
-				
-				messageSizes.addElement(new Integer(size));
-				
-				i++;
-				*/
+
 				getNextLine();
 			}
 
@@ -341,31 +489,30 @@ public class POP3Protocol {
 		return null;
 	}
 
-	/*
-	public String getMessage(int messageNumber) throws IOException
-	{
-	StringBuffer messageBuffer = new StringBuffer();
-	    lineCount=0;
-	
-	    //System.out.println(lineCount);
-	
-	
-	if( connected ) {
-	    sendString("RETR "+messageNumber);
-	    if ( getAnswer() ) {
-		getNextLine();
-		while( !answer.equals(".") ) {
-		    messageBuffer.append(answer+"\n");
-		    getNextLine();
-	                lineCount++;
-		}
-	    }
-	}
-	
-	return messageBuffer.toString();
-	}
-	*/
-
+	/**
+	 * Fetch a list of all message UIDs
+	 * 
+	 * If no argument was given and the POP3 server issues a positive
+	 * response, then the response given is multi-line.  After the
+	 * initial +OK, for each message in the maildrop, the POP3 server
+	 * responds with a line containing information for that message.
+	 * This line is called a "unique-id listing" for that message.
+	 * 
+	 * In order to simplify parsing, all POP3 servers are required to
+	 * use a certain format for unique-id listings.  A unique-id
+	 * listing consists of the message-number of the message,
+	 * followed by a single space and the unique-id of the message.
+	 * No information follows the unique-id in the unique-id listing.
+	 * 
+	 * Possible Responses:
+	 *  +OK unique-id listing follows
+	 *  -ERR no such message
+	 *   
+	 * @param totalMessageCount
+	 * @param worker
+	 * @return
+	 * @throws Exception
+	 */
 	public String fetchUIDList(
 		int totalMessageCount,
 		WorkerStatusController worker)
@@ -381,7 +528,7 @@ public class POP3Protocol {
 			worker.setProgressBarValue(0);
 			getNextLine();
 			while (!answer.equals(".")) {
-				//System.out.println("SERVER: "+ answer );
+
 				if (worker.cancelled() == true)
 					throw new CommandCancelledException();
 				buffer.append(answer + "\n");
@@ -395,6 +542,30 @@ public class POP3Protocol {
 		return buffer.toString();
 	}
 
+	/**
+	 * Fetch message with "number"
+	 * 
+	 * 
+	 * Arguments:
+	 *  a message-number (required) which may NOT refer to a
+	 *  message marked as deleted
+	 * 
+	 * Discussion:
+	 *  If the POP3 server issues a positive response, then the
+	 *  response given is multi-line.  After the initial +OK, the
+	 *  POP3 server sends the message corresponding to the given
+	 *  message-number, being careful to byte-stuff the termination
+	 *  character (as with all multi-line responses).
+	 * 
+	 * Possible Responses:
+	 *  +OK message follows
+	 *  -ERR no such message
+	 * 
+	 * @param messageNumber		number of messages
+	 * @param worker			worker for updating the statusbar
+	 * @return					message source as string
+	 * @throws Exception
+	 */
 	public String fetchMessage(
 		String messageNumber,
 		WorkerStatusController worker)
@@ -424,22 +595,6 @@ public class POP3Protocol {
 				}
 			}
 
-			/*
-			//selectedMessageSizeString = answer.substring(3, answer.indexOf(' ',4) );
-			
-			try
-			{
-			
-			    selectedMessageSize = parser.parseInt( answer.substring(3, answer.indexOf(' ',4) ).trim());
-			    //worker.setProgressBarMaximum( selectedMessageSize );
-			}
-			catch (NumberFormatException ex )
-			{
-			    System.out.println( ex.getMessage() );
-			    //progressBar = false;
-			}
-			*/
-
 			getNextLine();
 			while (!answer.equals(".")) {
 
@@ -454,16 +609,38 @@ public class POP3Protocol {
 
 				getNextLine();
 			}
-			/*
-			if ( progressBar == true )
-			    worker.setProgressBarValue( selectedMessageSize );
-			    */
 
 		}
 
 		return messageBuffer.toString();
 	}
 
+	/**
+	 * Arguments:
+	 *  a message-number (required) which may NOT refer to to a
+	 *  message marked as deleted, and a non-negative number
+	 *  of lines (required)
+	 * 
+	 * Discussion:
+	 *  If the POP3 server issues a positive response, then the
+	 *  response given is multi-line.  After the initial +OK, the
+	 *  POP3 server sends the headers of the message, the blank
+	 *  line separating the headers from the body, and then the
+	 *  number of lines of the indicated message's body, being
+	 *  careful to byte-stuff the termination character (as with
+	 *  all multi-line responses).
+	 *  Note that if the number of lines requested by the POP3
+	 *  client is greater than than the number of lines in the
+	 *  body, then the POP3 server sends the entire message.
+	 * 
+	 * Possible Responses:
+	 *  +OK top of message follows
+	 *  -ERR no such message
+	 *       
+	 * @param 		messageNumber	
+	 * @return		message header as string
+	 * @throws IOException
+	 */
 	public String getMessageHeader(int messageNumber) throws IOException {
 		StringBuffer messageBuffer = new StringBuffer();
 		Integer parser = new Integer(0);
@@ -481,6 +658,27 @@ public class POP3Protocol {
 		return messageBuffer.toString();
 	}
 
+	/**
+	 * 
+	 * Arguments:
+	 *  a message-number (required) which may NOT refer to a
+	 *  message marked as deleted
+	 * 
+	 * Discussion:
+	 *  The POP3 server marks the message as deleted.  Any future
+	 *  reference to the message-number associated with the message
+	 *  in a POP3 command generates an error.  The POP3 server does
+	 *  not actually delete the message until the POP3 session
+	 *  enters the UPDATE state.
+	 * 
+	 *  Possible Responses:
+	 *   +OK message deleted
+	 *   -ERR no such message
+	 *     
+	 * @param messageNumber
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean deleteMessage(int messageNumber) throws IOException {
 
 		sendString("DELE " + messageNumber);
@@ -490,6 +688,19 @@ public class POP3Protocol {
 		return false;
 	}
 
+	/**
+	 * 
+	 * Discussion:
+	 *  The POP3 server does nothing, it merely replies with a
+	 *  positive response.
+	 * 
+	 * Possible Responses:
+	 *  +OK
+	 *      
+	 * @return	returns true if server returns a positive response
+	 * 
+	 * @throws IOException
+	 */
 	public boolean noop() throws IOException {
 
 		sendString("NOOP");
@@ -499,6 +710,16 @@ public class POP3Protocol {
 		return false;
 	}
 
+	/**
+	 * 
+	 * If any messages have been marked as deleted by the POP3
+	 * server, they are unmarked.  The POP3 server then replies
+	 * with a positive response.
+	 *       
+	 * @return		true if successful, false otherwise
+	 * 
+	 * @throws IOException
+	 */
 	public boolean reset() throws IOException {
 
 		sendString("RSET");
@@ -508,6 +729,13 @@ public class POP3Protocol {
 		return false;
 	}
 
+	/**
+	 * 
+	 * helper method for APOP authentication
+	 * 
+	 * @param digest
+	 * @return
+	 */
 	private String digestToString(byte[] digest) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < 16; ++i) {

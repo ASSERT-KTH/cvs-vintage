@@ -19,41 +19,40 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-public class UIDListParser
-{
-    
+/**
+ * @author fdietz
+ *
+ * In order to simplify parsing, all POP3 servers are required to
+ * use a certain format for unique-id listings.  A unique-id
+ * listing consists of the message-number of the message,
+ * followed by a single space and the unique-id of the message.
+ * No information follows the unique-id in the unique-id listing.
+ *  
+ */
+public class UIDListParser {
 
-    public static List parse( String s )
-    {
-        List list = new Vector();
+	public static List parse(String s) {
+		List list = new Vector();
 
-        String str,str2;
-        StringTokenizer tok = new StringTokenizer( s, "\n" );
-        StringTokenizer tok2;
+		String str, str2;
+		StringTokenizer tok = new StringTokenizer(s, "\n");
+		StringTokenizer tok2;
 
-        while ( tok.hasMoreElements() )
-        {
-            str = (String) tok.nextElement();
-            tok2 = new StringTokenizer( str, " " );
+		while (tok.hasMoreElements()) {
+			str = (String) tok.nextElement();
+			tok2 = new StringTokenizer(str, " ");
 
-                // message number
-            str2 = (String) tok2.nextElement();
-            Integer i = new Integer( str2 );
-            int number = i.intValue();
+			// message number
+			str2 = (String) tok2.nextElement();
+			Integer i = new Integer(str2);
+			int number = i.intValue();
 
-                // message uid
-            str2 = (String) tok2.nextElement();
-            list.add( str2 );
-        }
-        
-        return list;
-    }
+			// message uid
+			str2 = (String) tok2.nextElement();
+			list.add(str2);
+		}
 
-  
-
-  
+		return list;
+	}
 
 }
-
-
-
