@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.289 2002/11/08 23:28:53 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.290 2002/11/12 15:57:54 thierrylach Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,10 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>Added pre-creation of tables in Oracle
+		    ant install.  It is now possible to
+		    create an Oracle schema using <code>ant create-db</code>
+		    without the table deletes causing it to fail.  (TL)</li>
                 <li>Added login name to Delete User screen.  (TL)</li>
                 <li>Lots of code cleanup (removed unused imports, unnecessary casts, 
                     strange logic, etc). Thanks to Jerome Lacoste for his 
