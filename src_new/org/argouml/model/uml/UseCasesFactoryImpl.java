@@ -1,4 +1,4 @@
-// $Id: UseCasesFactoryImpl.java,v 1.2 2005/01/02 11:31:26 mvw Exp $
+// $Id: UseCasesFactoryImpl.java,v 1.3 2005/01/07 09:11:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.model.uml;
 
-
-import org.argouml.model.Model;
 import org.argouml.model.UseCasesFactory;
 
 import ru.novosoft.uml.MFactory;
@@ -51,9 +49,17 @@ public class UseCasesFactoryImpl
 	implements UseCasesFactory {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    UseCasesFactoryImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    UseCasesFactoryImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -142,7 +148,7 @@ public class UseCasesFactoryImpl
         MUseCase base = (MUseCase) abase;
         MUseCase extension = (MUseCase) anextension;
 
-	MExtend extend = Model.getUmlFactory().getUseCases().createExtend();
+	MExtend extend = nsmodel.getUmlFactory().getUseCases().createExtend();
 	// Set the ends
 
 	extend.setBase(base);
@@ -217,7 +223,7 @@ public class UseCasesFactoryImpl
 
         MUseCase useCase = (MUseCase) modelElement;
         MExtensionPoint extensionPoint =
-	    Model.getUmlFactory().getUseCases().createExtensionPoint();
+	    nsmodel.getUmlFactory().getUseCases().createExtensionPoint();
 
         // Set the owning use case if there is one given.
 
@@ -265,7 +271,7 @@ public class UseCasesFactoryImpl
         MUseCase base = (MUseCase) abase;
         MUseCase addition = (MUseCase) anaddition;
 	MInclude include =
-	    Model.getUmlFactory().getUseCases().createInclude();
+	    nsmodel.getUmlFactory().getUseCases().createInclude();
 
 	// Set the ends. Because of the NSUML bug we reverse the accessors
 	// here.
@@ -310,8 +316,8 @@ public class UseCasesFactoryImpl
      * @param actor the given actor
      * @return MActor the newly build actor
      *
-     * @see org.argouml.model.UseCasesFactory#buildActor(java.lang.Object, 
-     * java.lang.Object)
+     * @see org.argouml.model.UseCasesFactory#buildActor(java.lang.Object,
+     *         java.lang.Object)
      */
     public MActor buildActor(Object actor, Object model) {
         if (actor instanceof MActor) {
@@ -329,7 +335,7 @@ public class UseCasesFactoryImpl
      * @param elem the UML element to be deleted
      */
     public void deleteExtend(MExtend elem) {
-	Model.getUmlHelper().deleteCollection(elem.getExtensionPoints());
+	nsmodel.getUmlHelper().deleteCollection(elem.getExtensionPoints());
     }
 
     /**
@@ -348,10 +354,10 @@ public class UseCasesFactoryImpl
      * @param elem the UML element to be deleted
      */
     public void deleteUseCase(MUseCase elem) {
-	Model.getUmlHelper().deleteCollection(elem.getExtends());
-	Model.getUmlHelper().deleteCollection(elem.getExtends2());
-	Model.getUmlHelper().deleteCollection(elem.getIncludes());
-	Model.getUmlHelper().deleteCollection(elem.getIncludes2());
+	nsmodel.getUmlHelper().deleteCollection(elem.getExtends());
+	nsmodel.getUmlHelper().deleteCollection(elem.getExtends2());
+	nsmodel.getUmlHelper().deleteCollection(elem.getIncludes());
+	nsmodel.getUmlHelper().deleteCollection(elem.getIncludes2());
     }
 
     /**

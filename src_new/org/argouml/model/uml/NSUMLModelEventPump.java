@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.2 2005/01/02 16:43:45 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.3 2005/01/07 09:11:01 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,6 +61,11 @@ class NSUMLModelEventPump
     private static final Logger LOG =
         Logger.getLogger(NSUMLModelEventPump.class);
 
+    /**
+     * The model implementation.
+     */
+    private NSUMLModelImplementation nsmodel;
+
     private Map modelEventListeners;
     private Map classEventListeners;
 
@@ -71,9 +76,12 @@ class NSUMLModelEventPump
      * model component.
      *
      * TODO: Don't make available.
+     * @param implementation
      */
-    public NSUMLModelEventPump() {
+    public NSUMLModelEventPump(NSUMLModelImplementation implementation) {
         super();
+        nsmodel = implementation;
+
         modelEventListeners = new WeakHashMap();
         classEventListeners = new WeakHashMap();
     }
@@ -137,8 +145,8 @@ class NSUMLModelEventPump
                   + listener + ", "
                   + modelelement + ", "
                   + eventNames + ")");
-        NSUMLEventListener relay = find(modelEventListeners,
-                                        listener, modelelement, eventNames);
+        NSUMLEventListener relay =
+            find(modelEventListeners, listener, modelelement, eventNames);
         if (relay != null) {
             unregister(modelEventListeners, relay);
             relay.delete();
@@ -180,8 +188,8 @@ class NSUMLModelEventPump
         LOG.debug("removeModelEventListener("
                   + listener + ", "
                   + modelelement + ")");
-        NSUMLEventListener relay = find(modelEventListeners,
-                			listener, modelelement, null);
+        NSUMLEventListener relay =
+            find(modelEventListeners, listener, modelelement, null);
         if (relay != null) {
             unregister(modelEventListeners, relay);
             relay.delete();
@@ -237,8 +245,8 @@ class NSUMLModelEventPump
                   + listener + ", "
                   + modelClass + ", "
                   + eventNames + ")");
-        NSUMLEventListener relay = find(classEventListeners,
-		listener, modelClass, null);
+        NSUMLEventListener relay =
+            find(classEventListeners, listener, modelClass, null);
         if (relay != null) {
             unregister(classEventListeners, relay);
             relay.delete();

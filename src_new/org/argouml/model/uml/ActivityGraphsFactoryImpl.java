@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactoryImpl.java,v 1.2 2005/01/03 16:31:04 linus Exp $
+// $Id: ActivityGraphsFactoryImpl.java,v 1.3 2005/01/07 09:11:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.model.uml;
 
 import org.argouml.model.ActivityGraphsFactory;
-import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MFactory;
@@ -57,9 +56,17 @@ public class ActivityGraphsFactoryImpl
     	implements ActivityGraphsFactory {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    ActivityGraphsFactoryImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    ActivityGraphsFactoryImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -165,7 +172,7 @@ public class ActivityGraphsFactoryImpl
     		if (context instanceof MBehavioralFeature) {
 		    graph.setNamespace(context.getNamespace());
     		}
-	    Model.getStateMachinesFactory().buildCompositeState(graph);
+	    nsmodel.getStateMachinesFactory().buildCompositeState(graph);
 	    return graph;
     	} else {
 	    throw new IllegalArgumentException("In buildActivityGraph: "

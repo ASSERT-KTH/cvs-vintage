@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.1 2005/01/02 10:08:12 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.2 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.ActivityGraphsHelper;
-import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
@@ -49,9 +48,17 @@ import ru.novosoft.uml.model_management.MPackage;
 class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    ActivityGraphsHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    ActivityGraphsHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -76,8 +83,9 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
             ns = ModelFacade.getNamespace(ns);
         }
         if (ns != null) {
-            Collection c = Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
+            Collection c =
+                nsmodel.getModelManagementHelper()
+                	.getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
             Iterator i = c.iterator();
             while (i.hasNext()) {
                 Object classifier = i.next();
@@ -116,9 +124,9 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
         Iterator i = allStatemachines.iterator();
         while (i.hasNext()) {
             Object statemachine = i.next();
-            Object top = Model.getStateMachinesHelper().getTop(statemachine);
+            Object top = nsmodel.getStateMachinesHelper().getTop(statemachine);
             Collection allStates =
-                Model.getStateMachinesHelper().getAllSubStates(top);
+                nsmodel.getStateMachinesHelper().getAllSubStates(top);
             Iterator ii = allStates.iterator();
             while (ii.hasNext()) {
                 Object state = ii.next();

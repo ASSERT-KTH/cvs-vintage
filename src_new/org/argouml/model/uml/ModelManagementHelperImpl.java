@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.1 2005/01/02 10:08:12 linus Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.2 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,9 +61,17 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
 	Logger.getLogger(ModelManagementHelperImpl.class);
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    ModelManagementHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    ModelManagementHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -284,8 +292,8 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      * @return a collection of all behavioralfeatures in the current project
      */
     public Collection getAllBehavioralFeatures() {
-        Object model = ProjectManager.getManager().getCurrentProject()
-            .getModel();
+        Object model =
+            ProjectManager.getManager().getCurrentProject().getModel();
         return getAllBehavioralFeatures(model);
     }
 
@@ -431,8 +439,9 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
         }
 
         // The cast is actually safe
-        MNamespace ns = (MNamespace) getCorrespondingElement(
-            ((MModelElement) elem).getNamespace(), model, canCreate);
+        MNamespace ns =
+            (MNamespace) getCorrespondingElement(
+                    ((MModelElement) elem).getNamespace(), model, canCreate);
         if (ns == null) {
             return null;
         }
@@ -454,7 +463,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
             return null;
         }
 
-        return CopyHelper.getHelper().copy(elem, ns);
+        return nsmodel.getCopyHelper().copy(elem, ns);
     }
 
     /**

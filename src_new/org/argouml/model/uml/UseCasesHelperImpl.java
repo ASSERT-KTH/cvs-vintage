@@ -1,4 +1,4 @@
-// $Id: UseCasesHelperImpl.java,v 1.1 2005/01/02 10:08:13 linus Exp $
+// $Id: UseCasesHelperImpl.java,v 1.2 2005/01/07 09:11:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.argouml.model.Model;
 import org.argouml.model.UseCasesHelper;
 
 import ru.novosoft.uml.behavior.use_cases.MActor;
@@ -54,9 +53,17 @@ import ru.novosoft.uml.model_management.MSubsystem;
 class UseCasesHelperImpl implements UseCasesHelper {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    UseCasesHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    UseCasesHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -237,7 +244,7 @@ class UseCasesHelperImpl implements UseCasesHelper {
     public Collection getSpecificationPath(Object ausecase) {
         MUseCase uc = (MUseCase) ausecase;
 	Set set = new HashSet();
-	set.addAll(Model.getModelManagementHelper()
+	set.addAll(nsmodel.getModelManagementHelper()
 		   .getAllSurroundingNamespaces(uc));
 	Set set2 = new HashSet();
 	Iterator it = set.iterator();
@@ -269,7 +276,7 @@ class UseCasesHelperImpl implements UseCasesHelper {
             point.removeExtend(extend);
         }
         MExtensionPoint point =
-	    Model.getUseCasesFactory().buildExtensionPoint(base);
+	    nsmodel.getUseCasesFactory().buildExtensionPoint(base);
         extend.setBase(base);
         extend.addExtensionPoint(point);
     }

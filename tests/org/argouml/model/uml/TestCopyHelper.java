@@ -1,4 +1,4 @@
-// $Id: TestCopyHelper.java,v 1.4 2003/05/11 09:49:06 linus Exp $
+// $Id: TestCopyHelper.java,v 1.5 2005/01/07 09:11:02 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,32 +25,38 @@
 package org.argouml.model.uml;
 
 import junit.framework.TestCase;
-
-import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.core.MCommentImpl;
+import ru.novosoft.uml.foundation.core.MNamespaceImpl;
 
 /**
  * Non-gui tests of the CopyHelper class.
  */
 public class TestCopyHelper extends TestCase {
     /**
-     * @see junit.framework.TestCase#TestCase()
+     * The model implementation.
+     */
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * @see junit.framework.TestCase#TestCase(String)
      */
     public TestCopyHelper(String name) {
 	super(name);
+	nsmodel = new NSUMLModelImplementation();
     }
 
     /**
      * Testing the existance of public static members.
      */
     public void compileTestPublicStaticMembers() {
-	CopyHelper.getHelper();
+	nsmodel.getCopyHelper();
     }
 
     /**
      * Testing the existance of public members.
      */
     public void compileTestPublicMembers() {
-	CopyHelper h = CopyHelper.getHelper();
+	CopyHelper h = nsmodel.getCopyHelper();
 
 	h.copy(new MCommentImpl(), new MNamespaceImpl());
     }

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.2 2005/01/06 23:04:54 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.3 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.argouml.model.ExtensionMechanismsHelper;
-import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -49,9 +48,17 @@ import ru.novosoft.uml.model_management.MModel;
 class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    ExtensionMechanismsHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    ExtensionMechanismsHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -301,7 +308,7 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
     public void setStereoType(Object modelElement, Object stereotype) {
 	if (stereotype != null) {
 	    stereotype =
-		Model.getModelManagementHelper().getCorrespondingElement(
+		nsmodel.getModelManagementHelper().getCorrespondingElement(
 			stereotype,
 			ModelFacade.getModel(modelElement),
 			true);
@@ -352,7 +359,7 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
 	if (isStereotype(object, name, base)) {
 	    return true;
 	}
-	Iterator it = Model.getCoreHelper().getSupertypes(object).iterator();
+	Iterator it = nsmodel.getCoreHelper().getSupertypes(object).iterator();
 	while (it.hasNext()) {
 	    if (isStereotypeInh(it.next(), name, base)) {
 	        return true;

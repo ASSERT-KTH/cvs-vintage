@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.6 2005/01/06 23:04:54 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.7 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.CollaborationsFactory;
-import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MFactory;
@@ -55,9 +54,17 @@ public class CollaborationsFactoryImpl
 	implements CollaborationsFactory {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    CollaborationsFactoryImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    CollaborationsFactoryImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**
@@ -337,8 +344,8 @@ public class CollaborationsFactoryImpl
      */
     public Object buildAssociationRole(Object link) {
         if (ModelFacade.isALink(link)) {
-            Object from = Model.getUmlHelper().getCore().getSource(link);
-            Object to = Model.getUmlHelper().getCore().getDestination(link);
+            Object from = nsmodel.getUmlHelper().getCore().getSource(link);
+            Object to = nsmodel.getUmlHelper().getCore().getDestination(link);
             Object classifierRoleFrom =
                 ModelFacade.getClassifiers(from).iterator().next();
             Object classifierRoleTo =
@@ -529,7 +536,7 @@ public class CollaborationsFactoryImpl
 
         Iterator it = ((MAssociationRole) elem).getMessages().iterator();
         while (it.hasNext()) {
-            Model.getUmlFactory().delete(it.next());
+            nsmodel.getUmlFactory().delete(it.next());
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperImpl.java,v 1.2 2005/01/05 13:36:56 linus Exp $
+// $Id: CommonBehaviorHelperImpl.java,v 1.3 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,17 @@ import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
 class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    CommonBehaviorHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    CommonBehaviorHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: DataTypesFactoryImpl.java,v 1.1 2005/01/02 10:08:12 linus Exp $
+// $Id: DataTypesFactoryImpl.java,v 1.2 2005/01/07 09:11:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,6 @@ import java.util.List;
 
 import org.argouml.model.DataTypesFactory;
 
-
-
 import ru.novosoft.uml.foundation.data_types.MActionExpression;
 import ru.novosoft.uml.foundation.data_types.MArgListsExpression;
 import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
@@ -58,9 +56,17 @@ public class DataTypesFactoryImpl
 	implements DataTypesFactory {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    DataTypesFactoryImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    DataTypesFactoryImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: DataTypesHelperImpl.java,v 1.2 2005/01/06 23:04:54 linus Exp $
+// $Id: DataTypesHelperImpl.java,v 1.3 2005/01/07 09:11:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,10 @@ import java.util.Iterator;
 
 import org.argouml.model.DataTypesHelper;
 
-
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
+import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 
 /**
  * Helper class for UML Foundation::DataTypes Package.<p>
@@ -45,9 +44,17 @@ import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 class DataTypesHelperImpl implements DataTypesHelper {
 
     /**
-     * Don't allow instantiation.
+     * The model implementation.
      */
-    DataTypesHelperImpl() {
+    private NSUMLModelImplementation nsmodel;
+
+    /**
+     * Don't allow instantiation.
+     *
+     * @param implementation To get other helpers and factories.
+     */
+    DataTypesHelperImpl(NSUMLModelImplementation implementation) {
+        nsmodel = implementation;
     }
 
      /**
@@ -60,8 +67,8 @@ class DataTypesHelperImpl implements DataTypesHelper {
         }
         if (!(to instanceof MModelElement)) {
             throw new IllegalArgumentException();
-        }        
-        
+        }
+
 	Iterator it = ((MModelElement) from).getTaggedValues().iterator();
 	while (it.hasNext()) {
 	    MTaggedValue tv = (MTaggedValue) it.next();
