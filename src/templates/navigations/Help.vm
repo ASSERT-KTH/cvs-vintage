@@ -3,10 +3,7 @@ Links given doc and label in 'Help window' mode.
 Usage: #enterHelp($link "#middle" "label")
 ------------------------------------------------------------------------- *#
 #macro (enterHelp $link $anchor $linktext)
-    <a href="$link$anchor" onClick="helpWindow=window.open('', 'helpwindow',
-    'resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700'); helpWindow.focus();" 
-    target="helpwindow" title="New Window - Help">$linktext</a>
-
+    <a href="$link$anchor" onclick="return launch(this.href, 1)" title="Note: may open in new window">$linktext</a>
 #end
 
 #if( $link.setPage("help,Introduction.vm").isAllowed() ) 
@@ -40,7 +37,6 @@ Usage: #enterHelp($link "#middle" "label")
  
 <div>#enterHelp($link "" "Find out about Scarab terminology?")</div>
 #end
-
 
 #* link template
 #if( $link.setPage("help,").isAllowed() ) 
