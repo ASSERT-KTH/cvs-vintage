@@ -41,7 +41,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * stored elsewhere than the local filesystem, for example on an FTP
  * site.
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.6 2002/01/02 04:49:58 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.7 2002/06/01 02:32:02 spestov Exp $
  */
 public class VFSManager
 {
@@ -54,7 +54,7 @@ public class VFSManager
 		int count = jEdit.getIntegerProperty("ioThreadCount",4);
 		ioThreadPool = new WorkThreadPool("jEdit I/O",count);
 		registerVFS(FavoritesVFS.PROTOCOL,new FavoritesVFS());
-		if(OperatingSystem.isDOSDerived())
+		if(OperatingSystem.isDOSDerived() || OperatingSystem.isMacOS())
 			registerVFS(FileRootsVFS.PROTOCOL,new FileRootsVFS());
 	} //}}}
 

@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.24 2002/05/28 01:58:02 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.25 2002/06/01 02:32:01 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -300,8 +300,10 @@ public class MiscUtilities
 		// If backups is 1, create ~ file
 		if(backups == 1)
 		{
-			file.renameTo(new File(backupDirectory,
-				backupPrefix + name + backupSuffix));
+			File backupFile = new File(backupDirectory,
+				backupPrefix + name + backupSuffix);
+			backupFile.delete();
+			file.renameTo(backupFile);
 		}
 		// If backups > 1, move old ~n~ files, create ~1~ file
 		else

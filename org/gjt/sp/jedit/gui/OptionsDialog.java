@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.11 2002/05/31 07:38:57 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.12 2002/06/01 02:32:02 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -48,8 +48,6 @@ public class OptionsDialog extends EnhancedDialog
 		JPanel content = new JPanel(new BorderLayout(12,12));
 		content.setBorder(new EmptyBorder(12,12,12,12));
 		setContentPane(content);
-
-		content.setLayout(new BorderLayout());
 
 		JPanel stage = new JPanel(new BorderLayout(6,6));
 		content.add(stage, BorderLayout.CENTER);

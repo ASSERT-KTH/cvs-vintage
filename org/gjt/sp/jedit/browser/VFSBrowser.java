@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.41 2002/05/28 02:53:27 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.42 2002/06/01 02:32:02 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -495,7 +495,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 	 */
 	public void rootDirectory()
 	{
-		if(OperatingSystem.isDOSDerived())
+		if(OperatingSystem.isDOSDerived() || OperatingSystem.isMacOS())
 			setDirectory(FileRootsVFS.PROTOCOL + ":");
 		else
 			setDirectory("/");
