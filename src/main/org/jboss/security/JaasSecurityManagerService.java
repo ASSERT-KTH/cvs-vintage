@@ -93,7 +93,7 @@ public class JaasSecurityManagerService
                     smContext.unbind((String) it.next());
                     it.remove();
                 }
-                ic.destroySubcontext(JNDI_SM_CONTEXT_NAME);
+                //ic.destroySubcontext(JNDI_SM_CONTEXT_NAME); - OperationNotSupportedException
                 smContext = null;
             }
             ic.unbind(JNDI_NAME);

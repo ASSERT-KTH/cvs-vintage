@@ -22,19 +22,13 @@ import org.jboss.system.SimplePrincipal;
 
 
 public class ClientLoginModule implements LoginModule {
-    private Subject _subject;
     private CallbackHandler _callbackHandler;
-
-    // username and password
-    private String _username;
-    private char[] _password;
 
     /**
      * Initialize this LoginModule.
      */
     public void initialize(Subject subject, CallbackHandler callbackHandler,
             Map sharedState, Map options) {
-        _subject = subject;
         _callbackHandler = callbackHandler;
     }
 
@@ -52,14 +46,20 @@ public class ClientLoginModule implements LoginModule {
         callbacks[0] = new NameCallback("User name: ", "guest");
         callbacks[1] = new PasswordCallback("Password: ", false);
         try {
+            String username;
+            char[] password = null;
+            char[] tmpPassword;
+
             _callbackHandler.handle(callbacks);
-            _username = ((NameCallback)callbacks[0]).getName();
-            char[] tmpPassword = ((PasswordCallback)callbacks[1]).getPassword();
+            username = ((NameCallback)callbacks[0]).getName();
+            SecurityAssociation.setPrincipal(new SimplePrincipal(username));
+            tmpPassword = ((PasswordCallback)callbacks[1]).getPassword();
             if (tmpPassword != null) {
-                _password = new char[tmpPassword.length];
-                System.arraycopy(tmpPassword, 0, _password, 0, tmpPassword.length);
+                password = new char[tmpPassword.length];
+                System.arraycopy(tmpPassword, 0, password, 0, tmpPassword.length);
                 ((PasswordCallback)callbacks[1]).clearPassword();
             }
+            SecurityAssociation.setCredential(password);
         } catch (java.io.IOException ioe) {
             throw new LoginException(ioe.toString());
         } catch (UnsupportedCallbackException uce) {
@@ -74,8 +74,6 @@ public class ClientLoginModule implements LoginModule {
      * Method to commit the authentication process (phase 2).
      */
     public boolean commit() throws LoginException {
-        SecurityAssociation.setPrincipal(new SimplePrincipal(_username));
-        SecurityAssociation.setCredential(_password);
         return true;
     }    
           
@@ -83,12 +81,8 @@ public class ClientLoginModule implements LoginModule {
      * Method to abort the authentication process (phase 2).
      */
     public boolean abort() throws LoginException {
-        _username = null;
-        if (_password != null) {
-            for (int i = 0; i < _password.length; i++)
-            _password[i] = ' ';
-            _password = null;
-        }
+        SecurityAssociation.setPrincipal(null);
+        SecurityAssociation.setCredential(null);
         return true;
     }
 
