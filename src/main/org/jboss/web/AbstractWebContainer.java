@@ -148,7 +148,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.36 $
+@version $Revision: 1.37 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -247,7 +247,7 @@ public abstract class AbstractWebContainer
       }
       catch (Exception e)
       {
-         log.error("Problem in init ", e); throw new DeploymentException(e.getMessage());
+         log.error("Problem in init ", e); throw new DeploymentException(e);
       }
       log.debug("End init");
    }
@@ -390,6 +390,13 @@ public abstract class AbstractWebContainer
          // If there is no webContext build one
          if( webContext == null )
             webContext = buildWebContext(di);
+
+         if (log.isDebugEnabled()) {
+            log.debug("webContext: " + webContext);
+            log.debug("warURL: " + warURL);
+            log.debug("webAppParser: " + webAppParser);
+         }
+
          WebApplication warInfo = performDeploy(webContext, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
       }
