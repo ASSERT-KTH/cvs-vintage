@@ -6,20 +6,13 @@
  */
 package org.jboss.util;
 
-
-import javax.ejb.EJBException;
-
-import org.jboss.logging.Logger;
-
-
-
 /**
  * Class that queues {@link Executable} jobs that are executed sequentially 
  * by a single thread.
  *
  * @see Executable
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class WorkerQueue
 {
@@ -173,6 +166,11 @@ public class WorkerQueue
      * Override in subclasses to create a custom loop.
      */
     protected Runnable createQueueLoop() {return new QueueLoop();}
+	/**
+	 * Logs exceptions that happens during the execution of a job.
+	 * Default implementation simply printStackTrace the exception.
+	 */
+	protected void logJobException(Exception x) {x.printStackTrace();}
 
     // Private -------------------------------------------------------
 
@@ -207,17 +205,7 @@ public class WorkerQueue
                         catch (Exception ignored) {}
                         break;
                     }
-                    catch (Exception x) {
-                        // Log system exceptions
-                        if (x instanceof EJBException)
-                        {
-                            Logger.error("BEAN EXCEPTION:"+x.getMessage());
-                            if (((EJBException)x).getCausedByException() != null)
-                                Logger.exception(((EJBException)x).getCausedByException());
-                        } else {
-                            Logger.exception(x);
-                        }
-                    }
+                    catch (Exception x) {logJobException(x);}
                 }
             }
             finally {clear();}
