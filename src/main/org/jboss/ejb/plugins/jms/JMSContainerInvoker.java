@@ -46,7 +46,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans.
  * 
- * @version <tt>$Revision: 1.51 $</tt>
+ * @version <tt>$Revision: 1.52 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -277,15 +277,17 @@ public class JMSContainerInvoker
       }
       catch (Exception ignore) {}
          
+      Element mdbConfig = MetaData.getUniqueChild(element, "MDBConfig");
+         
       try {
          temp = MetaData.getElementContent
-            (MetaData.getUniqueChild(element, "ReconnectInterval"));
+            (MetaData.getUniqueChild(mdbConfig, "ReconnectInterval"));
          reconnectInterval = Long.parseLong(temp);
       }
       catch (Exception ignore) {}
          
       // Get Dead letter queue config - and save it for later use
-      dlqConfig = MetaData.getOptionalChild(element, "DLQConfig");
+      dlqConfig = MetaData.getOptionalChild(mdbConfig, "DLQConfig");
       if (dlqConfig != null)
       {
          dlqConfig = (Element)((Node)dlqConfig).cloneNode(true);
