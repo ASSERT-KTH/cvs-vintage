@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.18 2003/04/05 07:19:59 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.19 2003/09/14 04:43:20 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -80,6 +80,8 @@ Bug No.  Description
 	 session=false.
 
 13378	 Fix dependency on GenericServlet in the generated .java file.
+
+23101    Fix case dependency problem on Windows platforms.
 
 Configuration:
 
