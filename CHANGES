@@ -13,6 +13,11 @@ Bugs:
 - nicer handling of plugin loader exceptions (fdietz)
 - cleanup of external tools plugin method signature (javaprog)
 - more i18n cleanups (javaprog)
+- do not allow dragging of IMAPFolder, IMAPRootFolder and LocalRootFolder (fdietz)
+- only open composer window, if at least one account exists (fdietz)
+- decode filenames of attachments when saving to disk (fdietz)
+- win32 removing of messages bug (tstich)
+
 
 Columba v1.0 M1 ::Black Mamba::
 
