@@ -1,4 +1,4 @@
-// $Id: CrCircularComposition.java,v 1.15 2004/09/21 19:03:26 mvw Exp $
+// $Id: CrCircularComposition.java,v 1.16 2004/10/18 12:24:15 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ public class CrCircularComposition extends CrUML {
 	setHeadline("Remove Circular Composition");
 	addSupportedDecision(CrUML.DEC_CONTAINMENT);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
+    setPriority(ToDoItem.LOW_PRIORITY);
 	// no good trigger
     }
 							  
