@@ -67,7 +67,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -265,7 +265,8 @@ public class EjbModule
             server,
             ( deploymentInfo.parent == null ? lName : deploymentInfo.parent.shortName ),
             lName,
-            deploymentInfo.localUrl
+            deploymentInfo.localUrl,
+            getServiceName()
          );
       if( lModule != null ) 
       {

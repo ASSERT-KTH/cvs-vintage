@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBC JDBC}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -35,6 +35,9 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Creation
  * </ul>
+ *
+ * @todo This resource should not implement state manageable because it
+ *       has no MBean/Service associated but codes stays.
  **/
 public class JDBC
    extends J2EEResource
@@ -47,6 +50,7 @@ public class JDBC
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
+   private Listener mListener;
    
    private List mDatasources = new ArrayList();
    
@@ -63,7 +67,7 @@ public class JDBC
                                           };
    
    public static ObjectName create( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBC.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
@@ -72,11 +76,11 @@ public class JDBC
          ).iterator().next();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 JDBC Manager", e );
+         lLog.error( "Could not find parent J2EEServer", e );
          return null;
       }
       try {
-         // Now create the JNDI Representant
+         // Now create the JDBC Representant
          return pServer.createMBean(
             "org.jboss.management.j2ee.JDBC",
             null,
@@ -138,6 +142,7 @@ public class JDBC
          InvalidParentException
    {
       super( "JDBC", pName, pServer );
+//AS      mService = pService;
    }
    
    // Public --------------------------------------------------------
@@ -190,7 +195,6 @@ public class JDBC
    }
 
    public void startRecursive() {
-      // No recursive start here
       start();
       Iterator i = mDatasources.iterator();
       ObjectName lDataSource = null;
@@ -205,13 +209,23 @@ public class JDBC
             );
          }
          catch( JMException jme ) {
-            getLog().error( "Could not stop JSR-77 JDBC-DataSource: " + lDataSource, jme );
+            getLog().error( "Could not start JSR-77 JDBC-DataSource: " + lDataSource, jme );
          }
       }
    }
 
    public void stopService() {
       Iterator i = mDatasources.iterator();
+      mState = ServiceMBean.STOPPING;
+      sendNotification(
+         new Notification(
+            sTypes[ 2 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "JDBC Manager stopping"
+         )
+      );
       while( i.hasNext() ) {
          ObjectName lDataSource = (ObjectName) i.next();
          try {
@@ -226,16 +240,6 @@ public class JDBC
             getLog().error( "Could not stop JSR-77 JDBC-DataSource: " + lDataSource, jme );
          }
       }
-      mState = ServiceMBean.STOPPING;
-      sendNotification(
-         new Notification(
-            sTypes[ 2 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JDBC Manager stopping"
-         )
-      );
       mState = ServiceMBean.STOPPED;
       sendNotification(
          new Notification(
@@ -248,10 +252,23 @@ public class JDBC
       );
    }
    
-   // org.jboss.ServiceMBean overrides ------------------------------------
-   
-   public void postRegister( Boolean pRegisterationDone ) {
-      super.postRegister( pRegisterationDone );
+   /**
+    * @todo Listener cannot be used right now because there is no MBean associated
+    *       to it and therefore no state management possible but currently it stays
+    *       StateManageable to save the code.
+    **/
+   public void postCreation() {
+/*AS 
+      try {
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         getLog().error( "Could not add listener at target service", jme );
+      }
+*/
       sendNotification(
          new Notification(
             sTypes[ 0 ],
@@ -263,7 +280,12 @@ public class JDBC
       );
    }
    
-   public void preDeregister() {
+   /**
+    * @todo Listener cannot be used right now because there is no MBean associated
+    *       to it and therefore no state management possible but currently it stays
+    *       StateManageable to save the code.
+    **/
+   public void preDestruction() {
       sendNotification(
          new Notification(
             sTypes[ 1 ],
@@ -273,6 +295,17 @@ public class JDBC
             "JDBC Resource deleted"
          )
       );
+/*AS
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+*/
    }
    
    // javax.management.j2ee.JDBC implementation ---------------------
@@ -321,4 +354,34 @@ public class JDBC
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
+   
+   private class Listener implements NotificationListener {
+      
+      public void handleNotification( Notification pNotification, Object pHandback )
+      {
+         if( pNotification instanceof AttributeChangeNotification ) {
+            AttributeChangeNotification lChange = (AttributeChangeNotification) pNotification;
+            if( "State".equals( lChange.getAttributeName() ) )
+            {
+               mState = ( (Integer) lChange.getNewValue() ).intValue();
+               if( mState == ServiceMBean.STARTED ) {
+                  mStartTime = lChange.getTimeStamp();
+               } else {
+                  mStartTime = -1;
+               }
+               // Now send the event to the JSR-77 listeners
+               sendNotification(
+                  new Notification(
+                     sTypes[ getState() + 2 ],
+                     getName(),
+                     1,
+                     System.currentTimeMillis(),
+                     "State changed"
+                  )
+               );
+            }
+         }
+      }
+      
+   }
 }

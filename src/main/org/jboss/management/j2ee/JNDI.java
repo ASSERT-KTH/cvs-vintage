@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JNDI JNDI}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -46,6 +46,7 @@ public class JNDI
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
+   private Listener mListener;
    
    // Static --------------------------------------------------------
    
@@ -192,13 +193,10 @@ public class JNDI
       }
    }
    
-   // org.jboss.ServiceMBean overrides ------------------------------------
-   
-   public void postRegister( Boolean pRegisterationDone ) {
-      super.postRegister( pRegisterationDone );
-      // If set then register for its events
+   public void postCreation() {
       try {
-         getServer().addNotificationListener( mService, new Listener(), null, null );
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
       }
       catch( JMException jme ) {
          //AS ToDo: later on we have to define what happens when service is null or
@@ -216,7 +214,7 @@ public class JNDI
       );
    }
    
-   public void preDeregister() {
+   public void preDestruction() {
       sendNotification(
          new Notification(
             sTypes[ 1 ],
@@ -226,6 +224,15 @@ public class JNDI
             "JNDI Resource deleted"
          )
       );
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
    }
    
    // java.lang.Object overrides ------------------------------------

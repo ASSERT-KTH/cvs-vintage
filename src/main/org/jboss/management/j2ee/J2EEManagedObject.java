@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -186,28 +186,44 @@ public abstract class J2EEManagedObject
       return getObjectName();
    }
    
-   public void postRegister( java.lang.Boolean pRegistrationDone ) {
+   /**
+    * Last steps to be done after MBean is registered on MBeanServer. This
+    * method is made final because it contains vital steps mandatory to all
+    * J2EEManagedObjects. To perform your own Post-Creation steps please
+    * override {@link #postCreation postCreation()} method.
+    **/
+   public final void postRegister( java.lang.Boolean pRegistrationDone ) {
       log.debug("postRegister(), parent: " + mParent );
-      if( pRegistrationDone.booleanValue() && mParent != null ) {
-         try {
-            // Notify the parent about its new child
-            getServer().invoke(
-               mParent,
-               "addChild",
-               new Object[] { mName },
-               new String [] { ObjectName.class.getName() }
-            );
-            super.postRegister( pRegistrationDone );
-         }
-         catch( JMException jme ) {
-            jme.printStackTrace();
-            // Stop it because of the error
-            super.postRegister( new Boolean( false ) );
+      if( pRegistrationDone.booleanValue() ) {
+         // Let the subclass handle post creation steps
+         postCreation();
+         if( mParent != null ) {
+            try {
+               // Notify the parent about its new child
+               getServer().invoke(
+                  mParent,
+                  "addChild",
+                  new Object[] { mName },
+                  new String [] { ObjectName.class.getName() }
+               );
+               super.postRegister( pRegistrationDone );
+            }
+            catch( JMException jme ) {
+               jme.printStackTrace();
+               // Stop it because of the error
+               super.postRegister( new Boolean( false ) );
+            }
          }
       }
    }
    
-   public void preDeregister()
+   /**
+    * Last steps to be done before MBean is unregistered on MBeanServer. This
+    * method is made final because it contains vital steps mandatory to all
+    * J2EEManagedObjects. To perform your own Pre-Destruction steps please
+    * override {@link #preDestruction preDestruction()} method.
+    **/
+   public final void preDeregister()
       throws Exception
    {
       log.debug("preDeregister(), parent: " + mParent );
@@ -222,6 +238,8 @@ public abstract class J2EEManagedObject
                new String [] { ObjectName.class.getName() }
             );
          }
+         // Let the subclass handle pre destruction steps
+         preDestruction();
       }
       catch( JMException jme ) {
          jme.printStackTrace();
@@ -237,6 +255,12 @@ public abstract class J2EEManagedObject
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
+   
+   public void postCreation() {
+   }
+   
+   public void preDestruction() {
+   }
    
    // Private -------------------------------------------------------
    

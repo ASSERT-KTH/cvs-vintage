@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -49,6 +49,7 @@ public class JDBCDataSource
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
    private ObjectName mJdbcDriver;
+   private Listener mListener;
    
    // Static --------------------------------------------------------
    
@@ -210,26 +211,16 @@ public class JDBCDataSource
          getLog().error( "start failed", e );
       }
    }
-
-   // javax.management.j2ee.JDBCDataSource implementation -----------------
    
-   public ObjectName getJdbcDriver()
-   {
-      return mJdbcDriver;
-   }
-   
-   // org.jboss.ServiceMBean overrides ------------------------------------
-   
-   public void postRegister( Boolean pRegisterationDone ) {
-      super.postRegister( pRegisterationDone );
-      // If set then register for its events
+   public void postCreation() {
       try {
-         getServer().addNotificationListener( mService, new Listener(), null, null );
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
       }
       catch( JMException jme ) {
          //AS ToDo: later on we have to define what happens when service is null or
          //AS ToDo: not found.
-         jme.printStackTrace();
+         getLog().error( "Could not add listener at target service", jme );
       }
       sendNotification(
          new Notification(
@@ -242,11 +233,7 @@ public class JDBCDataSource
       );
    }
    
-   public void preDeregister() {
-      Logger lLog = getLog();
-      if( lLog.isInfoEnabled() ) {
-         lLog.info( "JDBCDataSource.preDeregister(): " + getName() );
-      }
+   public void preDestruction() {
       sendNotification(
          new Notification(
             sTypes[ 1 ],
@@ -256,6 +243,22 @@ public class JDBCDataSource
             "JDBC DataSource Resource deleted"
          )
       );
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+   }
+   
+   // javax.management.j2ee.JDBCDataSource implementation -----------------
+   
+   public ObjectName getJdbcDriver()
+   {
+      return mJdbcDriver;
    }
    
    // ServiceMBeanSupport overrides ---------------------------------

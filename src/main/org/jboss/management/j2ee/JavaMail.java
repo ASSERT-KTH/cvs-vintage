@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JavaMail JavaMail}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -42,6 +42,7 @@ public class JavaMail
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
+   private Listener mListener;
    
    // Static --------------------------------------------------------
 
@@ -119,42 +120,6 @@ public class JavaMail
       super( "JavaMail", pName, pServer );
       mService = pService;
    }
-
-   // org.jboss.ServiceMBean overrides ------------------------------------
-
-   public void postRegister( Boolean pRegisterationDone ) {
-      super.postRegister( pRegisterationDone );
-      // If set then register for its events
-      try {
-         getServer().addNotificationListener( mService, new Listener(), null, null );
-      }
-      catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service is null or
-         //AS ToDo: not found.
-         jme.printStackTrace();
-      }
-      sendNotification(
-         new Notification(
-            sTypes[ 0 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JavaMail Resource created"
-         )
-      );
-   }
-   
-   public void preDeregister() {
-      sendNotification(
-         new Notification(
-            sTypes[ 1 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JavaMail Resource deleted"
-         )
-      );
-   }
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
@@ -202,6 +167,48 @@ public class JavaMail
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
+      }
+   }
+   
+   public void postCreation() {
+      try {
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+      sendNotification(
+         new Notification(
+            sTypes[ 0 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "Java Mail Resource created"
+         )
+      );
+   }
+   
+   public void preDestruction() {
+      sendNotification(
+         new Notification(
+            sTypes[ 1 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "Java Mail Resource deleted"
+         )
+      );
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
       }
    }
    

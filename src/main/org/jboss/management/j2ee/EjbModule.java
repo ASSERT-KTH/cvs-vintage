@@ -14,8 +14,11 @@ import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.management.AttributeChangeNotification;
+import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.Notification;
@@ -36,7 +39,7 @@ import java.util.Set;
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -58,6 +61,8 @@ public class EjbModule
    private List mEJBs = new ArrayList();
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
+   private ObjectName mService;
+   private Listener mListener;
    //used to see if we should remove our parent when we are destroyed.
    private static final Map iCreatedParent = new HashMap();
 
@@ -73,7 +78,7 @@ public class EjbModule
                                              "state.failed"
                                           };
    
-   public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL ) {
+   public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL, ObjectName pService ) {
       Logger lLog = Logger.getLogger( EjbModule.class );
       String lDD = null;
       ObjectName lApplication = null;
@@ -139,12 +144,14 @@ public class EjbModule
             new Object[] {
                pName,
                lApplication,
-               lDD
+               lDD,
+               pService
             },
             new String[] {
                String.class.getName(),
                ObjectName.class.getName(),
-               String.class.getName()
+               String.class.getName(),
+               ObjectName.class.getName()
             }
          ).getObjectName();
          //remember if we created our parent, if we did we have to kill it on destroy.
@@ -191,12 +198,13 @@ public class EjbModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public EjbModule( String pName, ObjectName pApplication, String pDeploymentDescriptor )
+   public EjbModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
       super( "EjbModule", pName, pApplication, pDeploymentDescriptor );
+      mService = pService;
    }
 
    // Public --------------------------------------------------------
@@ -241,22 +249,17 @@ public class EjbModule
          mEJBs.remove( pChild );
       }
    }
-
-   // org.jboss.ServiceMBean overrides ------------------------------------
-
-   public void postRegister( Boolean pRegisterationDone ) {
-      super.postRegister( pRegisterationDone );
-      // If set then register for its events
-/*
+   
+   public void postCreation() {
       try {
-         getServer().addNotificationListener( mService, new Listener(), null, null );
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
       }
       catch( JMException jme ) {
          //AS ToDo: later on we have to define what happens when service is null or
          //AS ToDo: not found.
          jme.printStackTrace();
       }
-*/
       sendNotification(
          new Notification(
             sTypes[ 0 ],
@@ -267,8 +270,8 @@ public class EjbModule
          )
       );
    }
-
-   public void preDeregister() {
+   
+   public void preDestruction() {
       sendNotification(
          new Notification(
             sTypes[ 1 ],
@@ -278,6 +281,121 @@ public class EjbModule
             "EJB Module deleted"
          )
       );
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+   }
+   
+   // javax.management.j2ee.StateManageable implementation ----------
+   
+   public long getStartTime() {
+      return mStartTime;
+   }
+   
+   public int getState() {
+      return mState;
+   }
+   
+   /**
+    * This method is only overwriten because to catch the exception
+    * which is not specified in {@link javax.management.j2ee.StateManageable
+    * StateManageable} interface.
+    **/
+   public void start()
+   {
+      try {
+         super.start();
+      }
+      catch( Exception e ) {
+         getLog().error( "start failed", e );
+      }
+   }
+   
+   public void startRecursive() {
+      // No recursive start here
+      try {
+         start();
+         Iterator i = mEJBs.iterator();
+         while( i.hasNext() ) {
+            ObjectName lName = (ObjectName) i.next();
+            try {
+               getServer().invoke(
+                  lName,
+                  "start",
+                  new Object[] {},
+                  new String[] {}
+               );
+            }
+            catch( JMException jme ) {
+               getLog().error( "start of EJB failed", jme );
+            }
+         }
+      }
+      catch( Exception e ) {
+         getLog().error( "start failed", e );
+      }
+   }
+   
+   public void stop() {
+      try {
+         Iterator i = mEJBs.iterator();
+         while( i.hasNext() ) {
+            ObjectName lName = (ObjectName) i.next();
+            try {
+               getServer().invoke(
+                  lName,
+                  "stop",
+                  new Object[] {},
+                  new String[] {}
+               );
+            }
+            catch( JMException jme ) {
+               getLog().error( "stop of EJB failed", jme );
+            }
+         }
+         super.stop();
+      }
+      catch( Exception e ) {
+         getLog().error( "stop failed", e );
+      }
+   }
+         
+   // ServiceMBeanSupport overrides ---------------------------------
+   
+   public void startService() {
+      try {
+         getServer().invoke(
+            mService,
+            "start",
+            new Object[] {},
+            new String[] {}
+         );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be started
+         jme.printStackTrace();
+      }
+   }
+   
+   public void stopService() {
+      try {
+         getServer().invoke(
+            mService,
+            "stop",
+            new Object[] {},
+            new String[] {}
+         );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be stopped
+         jme.printStackTrace();
+      }
    }
    
    // Object overrides ---------------------------------------------------
