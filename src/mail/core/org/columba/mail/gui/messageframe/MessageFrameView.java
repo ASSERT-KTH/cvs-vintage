@@ -59,7 +59,7 @@ public class MessageFrameView extends AbstractFrameView {
 
 	public void init(MessageView message, StatusBar statusBar) {
 
-		super.init();
+		//super.init();
 
 		getContentPane().add(message, BorderLayout.CENTER);
 
