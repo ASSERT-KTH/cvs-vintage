@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.35 2004/07/22 13:28:53 mkl Exp $
+// $Id: Critic.java,v 1.36 2004/07/24 15:55:16 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.35 2004/07/22 13:28:53 mkl Exp $
+// $Id: Critic.java,v 1.36 2004/07/24 15:55:16 mkl Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -145,7 +145,7 @@ public class Critic implements Poster, Serializable {
     /** The icon representing the resource.
      */
     public static Icon DEFAULT_CLARIFIER =
-	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	ResourceLoaderWrapper
 	    .lookupIconResource("PostIt0");
     protected Icon _clarifier = DEFAULT_CLARIFIER;
 
