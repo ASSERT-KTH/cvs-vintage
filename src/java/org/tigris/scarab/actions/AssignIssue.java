@@ -78,7 +78,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.88 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.89 2003/04/08 01:06:57 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -136,13 +136,13 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Removes users from temporary working list.
      */
-    private void remove(RunData data, TemplateContext context, Integer issueId) 
+    private void remove(RunData data, TemplateContext context, String issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context); 
-        List userList = (List)user.getAssociatedUsersMap().get(issueId);
+        List userList = (List)user.getAssociatedUsersMap().get(new Long(issueId));
         ValueParser params = data.getParameters();
         String[] userIds =  params.getStrings(SELECTED_USER);
         if (userIds != null && userIds.length > 0) 
@@ -171,13 +171,13 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Changes the user attribute a user is associated with.
      */
-    private void update(RunData data, TemplateContext context, Integer issueId) 
+    private void update(RunData data, TemplateContext context, String issueId) 
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        List userList = (List)user.getAssociatedUsersMap().get(issueId);
+        List userList = (List)user.getAssociatedUsersMap().get(new Long(issueId));
         ValueParser params = data.getParameters();
         String[] userIds =  params.getStrings(SELECTED_USER);
         if (userIds != null && userIds.length > 0) 
@@ -370,12 +370,12 @@ public class AssignIssue extends BaseModifyIssue
                 if (key.startsWith("eventsubmit_doremove"))
                 {
                     String issueId = key.substring(21);
-                    remove(data, context, new Integer(issueId));
+                    remove(data, context, issueId);
                 }
                 else if (key.startsWith("eventsubmit_doupdate"))
                 {
                     String issueId = key.substring(21);
-                    update(data, context, new Integer(issueId));
+                    update(data, context, issueId);
                 }
             }
         }

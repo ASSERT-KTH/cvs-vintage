@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.285 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: Issue.java,v 1.286 2003/04/08 01:06:57 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3085,6 +3085,7 @@ public class Issue
         attVal.setUserId(assignee.getUserId());
         attVal.setValue(assignee.getUserName());
         attVal.save();
+        getUserAttributeValues().add(attVal);
 
         return activitySet;
     }
@@ -3232,6 +3233,7 @@ public class Issue
         // Save assignee value
         attVal.setDeleted(true);
         attVal.save();
+        getUserAttributeValues().remove(attVal);
 
         return activitySet;
     }
