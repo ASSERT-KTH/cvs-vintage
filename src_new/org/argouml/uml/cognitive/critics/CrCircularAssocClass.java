@@ -1,4 +1,4 @@
-// $Id: CrCircularAssocClass.java,v 1.12 2005/03/07 10:59:09 mkl Exp $
+// $Id: CrCircularAssocClass.java,v 1.13 2005/03/07 12:06:56 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,6 @@ public class CrCircularAssocClass extends CrUML {
      *      java.lang.Object, org.argouml.cognitive.Designer)
      */
     public boolean predicate2(Object dm, Designer dsgr) {
-        System.out.println("predicate2:" + dm);
         // self.allConnections->forAll(ar|ar.participant <> self)
         if (!Model.getFacade().isAAssociationClass(dm))
             return NO_PROBLEM;
