@@ -204,14 +204,14 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
 			// this didn't work -> try to load it as external plugin
-			
+
 			// get plugin id
 			String pluginId = (String) pluginMap.get(name);
 
 			// get runtime properties:
 			// get type of plugin: "java" or "python"
 			String type = pluginManager.getPluginType(pluginId);
-			
+
 			// if type=="java", it could be packaged as jar-file
 			File pluginDir = pluginManager.getJarFile(pluginId);
 
@@ -220,10 +220,10 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 		} catch (InvocationTargetException ex) {
 			// error while instanciating plugin
 			ex.getTargetException().printStackTrace();
-			
+
 			// show exception in dialog
 			new ErrorDialog(ex.getMessage(), ex.getTargetException());
-			
+
 			throw ex;
 		}
 	}
@@ -260,15 +260,18 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 				return clazz;
 			}
 		}
-		
+
 		// oops - couldn't find plugin with this "name"
-		LOG.severe("Can't find plugin with name \""+name+"\" in plugin-handler.");
-		
+		LOG.severe("Can't find plugin with name \"" + name
+				+ "\" in plugin-handler.");
+		LOG
+				.severe("Check if the plugin was disabled before. If so, set the enabled-attribute in plugin.xml to \"true\"");
+
 		if (MainInterface.DEBUG) {
 			// list all available plugins of this handler
 			XmlElement.printNode(parentNode, " ");
 		}
-		
+
 		return null;
 	}
 

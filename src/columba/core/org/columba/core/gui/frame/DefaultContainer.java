@@ -230,6 +230,15 @@ public class DefaultContainer extends JFrame implements Container,
 
 		switchedFrameMediator = true;
 
+		//		 default menu
+		menu = new ColumbaMenu("org/columba/core/action/menu.xml", mediator);
+		setJMenuBar(menu);
+		// default toolbar
+		toolbar = new ColumbaToolBar(mediator);
+		setToolBar(toolbar);
+		// default infopanel
+		setInfoPanel(new ContainerInfoPanel());
+
 		// update content-pane
 		setContentPane(m.getContentPane());
 

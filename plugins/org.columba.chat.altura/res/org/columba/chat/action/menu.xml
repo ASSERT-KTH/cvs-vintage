@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menubar>
+	<menu name="menu_file" extensionpoint="open">
+	<!-- -->	
+	</menu>
+	
+	<menu name="menu_file" extensionpoint="top">
+		<menuitem action="Connect" />
+		<menuitem action="Disconnect" />
+		<separator/>
+		<menuitem action="AddContact"/>	
+		<menuitem action="RemoveContact" />
+		<separator/>
+		<menuitem action="OpenConversation" />
+	</menu>
+	
+	<menu name="menu_utilities" extensionpoint="bottom">
+
+	</menu>
+	
+</menubar>

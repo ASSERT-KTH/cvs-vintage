@@ -18,18 +18,23 @@
 
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.AbstractColumbaAction;
+import java.awt.event.MouseAdapter;
+
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.xml.XmlElement;
 
-import java.awt.event.MouseAdapter;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-
+/**
+ * JMenuBar implementation depending on a {@link FrameMediator}. Additionally,
+ * can be extended by using xml-defined menustructures.
+ * 
+ * @author fdietz
+ */
 public class ColumbaMenu extends JMenuBar {
 	private MouseAdapter handler;
 
@@ -65,7 +70,6 @@ public class ColumbaMenu extends JMenuBar {
 		return menuGenerator;
 	}
 
-
 	public void extendMenuFromFile(FrameMediator mediator, String path) {
 		menuGenerator = createMenuBarGeneratorInstance(menuRoot, mediator);
 
@@ -76,14 +80,6 @@ public class ColumbaMenu extends JMenuBar {
 	public void extendMenu(XmlElement menuExtension) {
 		menuGenerator.extendMenu(menuExtension);
 		menuGenerator.createMenuBar(this);
-	}
-
-	public void addMenuEntry(String id, AbstractColumbaAction action) {
-		CMenuItem menuItem = new CMenuItem(action);
-		menuItem.addMouseListener(handler);
-
-		JMenu menu = getMenu(id);
-		menu.add(menuItem);
 	}
 
 	public JMenu getMenu(String id) {
@@ -99,21 +95,4 @@ public class ColumbaMenu extends JMenuBar {
 		return null;
 	}
 
-	public void addMenuSeparator(String id) {
-		for (int i = 0; i < getMenuCount(); i++) {
-			JMenu menu = (JMenu) getComponent(i);
-
-			if (menu.getActionCommand().equalsIgnoreCase(id)) {
-				// found the right menu
-				menu.addSeparator();
-			}
-		}
-	}
-
-	/**
-	 * @return
-	 */
-	public FrameMediator getFrameController() {
-		return frameController;
-	}
 }

@@ -39,18 +39,19 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 	private JRadioButtonMenuItem addressbookMenu;
 
+	private JRadioButtonMenuItem chatMenu;
+	
 	/**
 	 * @param controller
 	 * @param caption
 	 */
 	public SwitchPerspectiveSubmenu(FrameMediator controller) {
-		super(controller, "Perspective");
+		super(controller, "Show View");
 
 		String id = getFrameMediator().getViewItem().get("id");
 
 		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem mailMenu = new JRadioButtonMenuItem("Mail");
-		//mailMenu.setIcon(ImageLoader.getSmallImageIcon("mail-new.png"));
 		group.add(mailMenu);
 		mailMenu.setActionCommand("MAIL");
 		mailMenu.addActionListener(this);
@@ -63,10 +64,21 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		addressbookMenu.addActionListener(this);
 		add(addressbookMenu);
 
+		
+		chatMenu = new JRadioButtonMenuItem("Chat");
+		//chatMenu.setIcon(ImageLoader.getSmallImageIcon("stock_book-16.png"));
+		group.add(chatMenu);
+		chatMenu.setActionCommand("CHAT");
+		chatMenu.addActionListener(this);
+		add(chatMenu);
+
+		
 		if (id.equals("ThreePaneMail"))
 			mailMenu.setSelected(true);
-		else
+		else if ( id.equals("Addressbook"))
 			addressbookMenu.setSelected(true);
+		else
+			chatMenu.setSelected(true);
 	}
 
 	/**
@@ -88,6 +100,12 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 		} else if (action.equals("ADDRESSBOOK")) {
 			try {
 				MainInterface.frameModel.switchView(container, "Addressbook");
+			} catch (PluginLoadingFailedException e) {
+				e.printStackTrace();
+			}
+		} else if (action.equals("CHAT")) {
+			try {
+				MainInterface.frameModel.switchView(container, "AlturaFrame");
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}

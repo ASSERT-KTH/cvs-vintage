@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
+
+<actionlist>
+ <action name="Connect" class="org.columba.chat.ui.action.ConnectAction"/>
+ <action name="Disconnect" class="org.columba.chat.ui.action.DisconnectAction"/>
+ <action name="AddContact" class="org.columba.chat.ui.action.AddContactAction"/>
+ <action name="RemoveContact" class="org.columba.chat.ui.action.RemoveContactAction"/>
+ <action name="OpenConversation" class="org.columba.chat.ui.action.OpenConversationAction"/>
+</actionlist>

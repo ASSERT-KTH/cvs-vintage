@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Log display" description="displays the log for Columba" id="org.columba.core.gui.logdisplay.LogDisplay" version="0.9" enabled="true">
+<plugin name="Log display" description="displays the log for Columba" id="org.columba.core.gui.logdisplay.LogDisplay" version="0.9" enabled="false">
   <extension name="org.columba.core.action">
     <action name="LogDisplayAction" class="org.columba.core.gui.logdisplay.DisplayLogAction"></action>
   </extension>

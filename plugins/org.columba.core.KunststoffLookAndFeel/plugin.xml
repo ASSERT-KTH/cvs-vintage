@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin name="Kunststoff Look And Feel" description="Kunststoff Look And Feel" id="org.columba.core.KunststoffLookAndFeel" version="1.0" category="Look and Feel" enabled="true">
+<plugin name="Kunststoff Look And Feel" description="Kunststoff Look And Feel" id="org.columba.core.KunststoffLookAndFeel" version="1.0" category="Look and Feel" enabled="false">
   <extension name="org.columba.core.theme">
     <theme name="Kunststoff" class="KunststoffLookAndFeelPlugin"></theme>
   </extension>

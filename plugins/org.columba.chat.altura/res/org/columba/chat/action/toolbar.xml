@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
+
+<toolbar visible="true">
+	<button action="Connect"/>
+    <separator/>
+    <button action="OpenConversation"/>
+    <separator/>
+    <button action="AddContact"/>
+    <button action="RemoveContact"/>
+    
+</toolbar>
