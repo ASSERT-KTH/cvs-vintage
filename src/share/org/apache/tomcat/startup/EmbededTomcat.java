@@ -552,6 +552,15 @@ public class EmbededTomcat {
 		contextM.addInterceptor( (BaseInterceptor)
 					 modules.elementAt( i ) );
 	    }
+
+            // if using server.xml and no new interceptors found, then quit
+            if( serverXml && (modules.size() ==
+                        contextM.getContainer().getInterceptors().length)) {
+                debug("No configuration found.");
+                debug("The modules and/or server configuration files are missing.");
+                return;
+            }
+
 	    contextM.init();
 	} catch( Throwable ex ) {
 	    if( ex instanceof InvocationTargetException ) {
@@ -696,8 +705,10 @@ public class EmbededTomcat {
 	    debug("Init time "  + (time2-time1));
 	}
 
-	// Start
-	start();
+        if( initialized ) {
+            // Start
+            start();
+        }
     }
 
 
