@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.20 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelNode.java,v 1.21 2003/05/10 15:03:52 alexb Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -57,6 +57,10 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.foundation.core.MNode;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelNode extends PropPanelClassifier {
 
     ////////////////////////////////////////////////////////////////

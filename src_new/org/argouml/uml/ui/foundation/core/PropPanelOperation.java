@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.32 2003/05/09 00:28:54 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.33 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,10 @@ import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelOperation extends PropPanelModelElement {
 
     ////////////////////////////////////////////////////////////////

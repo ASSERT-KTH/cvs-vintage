@@ -24,7 +24,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.12 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelPseudostate.java,v 1.13 2003/05/10 15:03:52 alexb Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -53,6 +53,10 @@ import org.argouml.util.ConfigLoader;
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelPseudostate extends PropPanelStateVertex {
 
     private ButtonGroup kindGroup = new ButtonGroup();

@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.10 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelCallAction.java,v 1.11 2003/05/10 15:03:51 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,10 @@ import org.argouml.uml.ui.UMLExpressionModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelCallAction extends PropPanelModelElement {
 
     ////////////////////////////////////////////////////////////////

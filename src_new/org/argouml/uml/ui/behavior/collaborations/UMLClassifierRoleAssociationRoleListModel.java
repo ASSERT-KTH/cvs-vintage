@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.3 2002/12/31 09:58:48 kataka Exp $
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.4 2003/05/10 15:03:51 alexb Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -47,6 +47,11 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  * Binary relation list model for associationsroles between classifierroles
  * 
  * @author jaap.branderhorst@xs4all.nl
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by ?,
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class UMLClassifierRoleAssociationRoleListModel
 	extends UMLConnectionListModel {

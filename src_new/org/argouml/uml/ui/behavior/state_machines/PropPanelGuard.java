@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.13 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.14 2003/05/10 15:03:52 alexb Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -52,6 +52,9 @@ import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
  * mechanism and to include all valid properties as defined in the UML 1.3 spec.
  * @since Dec 14, 2002
  * @author jaap.branderhorst@xs4all.nl
+ *
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components
  */
 public class PropPanelGuard extends PropPanelModelElement {
 

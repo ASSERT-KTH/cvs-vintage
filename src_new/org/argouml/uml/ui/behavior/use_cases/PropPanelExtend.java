@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.18 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelExtend.java,v 1.19 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,9 @@ import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
  * <p>This is a type of Relationship, but, since Relationship has no semantic
  *   meaning of its own, we derive directly from PropPanelModelElement (as
  *   other children of Relationship do).</p>
+ *
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
  */
 
 public class PropPanelExtend extends PropPanelModelElement {

@@ -40,7 +40,10 @@ import ru.novosoft.uml.foundation.core.MComponent;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.21 2003/05/05 21:36:16 alexb Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.22 2003/05/10 15:03:52 alexb Exp $
+ *
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
  *
  * @author 5eichler@informatik.uni-hamburg.de
  */

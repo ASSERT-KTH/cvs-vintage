@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.28 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.29 2003/05/10 15:03:51 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.28 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.29 2003/05/10 15:03:51 alexb Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -50,6 +50,10 @@ import ru.novosoft.uml.behavior.common_behavior.MAction;
 import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components, specifically namesToWatch mechanism.
+ */
 public class PropPanelMessage extends PropPanelModelElement {
 
   ////////////////////////////////////////////////////////////////

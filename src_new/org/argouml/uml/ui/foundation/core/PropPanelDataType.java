@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.26 2003/05/10 13:23:19 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.27 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,10 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.model_management.MModel;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelDataType extends PropPanelClassifier {
 
 

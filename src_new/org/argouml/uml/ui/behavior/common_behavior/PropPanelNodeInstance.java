@@ -1,4 +1,4 @@
-// $Id: PropPanelNodeInstance.java,v 1.13 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelNodeInstance.java,v 1.14 2003/05/10 15:03:51 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.13 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelNodeInstance.java,v 1.14 2003/05/10 15:03:51 alexb Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -47,6 +47,10 @@ import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelNodeInstance extends PropPanelModelElement {
     public PropPanelNodeInstance() {
         super("Node Instance", _nodeInstanceIcon, ConfigLoader.getTabPropsOrientation());

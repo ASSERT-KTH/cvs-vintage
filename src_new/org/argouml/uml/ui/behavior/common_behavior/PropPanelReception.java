@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.12 2003/05/09 18:33:28 bobtarling Exp $
+// $Id: PropPanelReception.java,v 1.13 2003/05/10 15:03:51 alexb Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,9 @@ import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * @author Jaap
+ *
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
  */
 public class PropPanelReception extends PropPanelModelElement {
 	

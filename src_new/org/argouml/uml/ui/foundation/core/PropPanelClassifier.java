@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.37 2003/05/10 13:23:19 bobtarling Exp $
+// $Id: PropPanelClassifier.java,v 1.38 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,8 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.swingext.GridLayout2;
 import org.argouml.swingext.Orientation;
-import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.UMLReflectionListModel;
 
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -94,9 +92,6 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
         new UMLClassifierParameterListModel();
     private static UMLClassifierStructuralFeatureListModel structuralFeatureListModel =
         new UMLClassifierStructuralFeatureListModel();
-
-    private UMLReflectionListModel _implementsModel = null;
-    private UMLReflectionListModel _connectModel = null;
 
     ////////////////////////////////////////////////////////////////
     // contructors

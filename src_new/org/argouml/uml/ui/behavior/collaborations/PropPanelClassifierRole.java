@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.29 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.30 2003/05/10 15:03:51 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.29 2003/05/04 08:44:29 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.30 2003/05/10 15:03:51 alexb Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -45,7 +45,10 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 
-
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelClassifierRole extends PropPanelClassifier {
 
 

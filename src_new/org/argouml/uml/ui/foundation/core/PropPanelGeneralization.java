@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.22 2003/05/04 10:50:15 kataka Exp $
+// $Id: PropPanelGeneralization.java,v 1.23 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,6 +53,10 @@ import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 import ru.novosoft.uml.model_management.MPackage;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelGeneralization extends PropPanelModelElement {
      protected static Category cat = 
         Category.getInstance(PropPanelGeneralization.class);

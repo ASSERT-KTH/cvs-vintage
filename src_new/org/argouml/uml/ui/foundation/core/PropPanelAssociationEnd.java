@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.31 2003/05/05 11:25:39 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.32 2003/05/10 15:03:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,10 @@ import org.argouml.util.ConfigLoader;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
+/**
+ * @todo this property panel needs refactoring to remove dependency on
+ *       old gui components.
+ */
 public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     protected JLabel associationsLabel;
