@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.13 $
+ *      @version $Revision: 1.14 $
  */
 public class EntityProxy
    extends GenericProxy
@@ -145,7 +145,7 @@ public class EntityProxy
            	 rmi.setCredential( getCredential() );
 			 
 			 // Invoke on the remote server, enforce marshalling
-	         return container.invoke(new MarshalledObject(rmi));
+	         return container.invoke(new MarshalledObject(rmi)).get();
 	      }
       }
    }
