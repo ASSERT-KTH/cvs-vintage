@@ -42,7 +42,7 @@
 <input type="hidden" name="cancelTemplate" value="Login.vm">
 
 ## Attempt to populate the Scarab API User object on re-display
-$data.Parameters.setProperties($scarab.getUser())
+$data.Parameters.setProperties($scarabR.getUser())
 
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<TR>
