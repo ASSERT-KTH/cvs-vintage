@@ -69,6 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 import org.apache.torque.util.Criteria;
@@ -86,7 +87,7 @@ import org.apache.torque.TorqueException;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.30 2002/07/16 01:54:45 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.31 2002/08/01 17:35:31 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -342,6 +343,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         throws TorqueException
     {
         return ModuleManager.getInstancesFromIssueList(issues);
+    }
+
+    public MITListManager getMITListManager()
+    {
+        return MITListManager.getManager();
     }
 
     /**

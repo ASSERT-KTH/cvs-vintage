@@ -17,6 +17,6 @@ public class MITListPeer
     public static final NumberKey CURRENT_MODULE_ALL_ISSUETYPES
         = new NumberKey("2");
 
-    public static final NumberKey ALL_MODULES_CURRENT_ISSUETYPES
+    public static final NumberKey ALL_MODULES_CURRENT_ISSUETYPE
         = new NumberKey("3");
 }

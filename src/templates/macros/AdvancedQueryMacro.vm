@@ -13,17 +13,23 @@
 <div class="colbar">
 #if ($user.CurrentMITList)
   #set ($list = $user.CurrentMITList)
-  #foreach ($item in $list.ExpandedMITListItems)
-    <div>$item.Module.Name $item.IssueType.Name</div>
+  #if ($list.isModifiable())
+    #foreach ($item in $list.ExpandedMITListItems)
+      <div>$item.Module.Name $item.IssueType.Name</div>
+    #end
+  #else
+    <div>$list.Name</div>
   #end
 #else
   <div>$scarabR.CurrentModule.Name $scarabR.CurrentRModuleIssueType.DisplayName</div>
 #end
 </div>
-<div class="functnbar3">
-<input type="submit" value="Edit list" name="eventSubmit_doRedirecttocrossmodulequery" />
-</div>
-
+#if ($user.CurrentMITList.isModifiable())
+    <div class="functnbar3">
+    <input type="submit" value="Edit list" 
+        name="eventSubmit_doRedirecttocrossmodulequery" />
+    </div>
+#end
 
 <h3>Issue ID query</h3>
 <div class="axial">

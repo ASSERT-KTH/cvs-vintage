@@ -66,8 +66,12 @@
 #if ($user.CurrentMITList)
   <div class="colbar">
   #set ($list = $user.CurrentMITList)
-  #foreach ($item in $list.ExpandedMITListItems)
-    <div>$item.Module.Name $item.IssueType.Name</div>
+  #if ($list.isModifiable())
+    #foreach ($item in $list.ExpandedMITListItems)
+      <div>$item.Module.Name $item.IssueType.Name</div>
+    #end
+  #else
+    <div>$list.Name</div>
   #end
   </div>
 #end

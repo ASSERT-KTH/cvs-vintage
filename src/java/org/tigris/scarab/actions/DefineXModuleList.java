@@ -88,6 +88,7 @@ import org.tigris.scarab.om.RModuleIssueTypePeer;
 import org.tigris.scarab.om.RModuleIssueTypeManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
@@ -95,30 +96,45 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.5 2002/07/18 01:14:49 jon Exp $
+ * @version $Id: DefineXModuleList.java,v 1.6 2002/08/01 17:35:30 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
+    public void doGotoquerywithinternallist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String listId = data.getParameters().getString("pd_list_id");
+        if (listId == null || listId.length()==0)
+        {
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            scarabR.setAlertMessage(
+                "No predefined cross module list was selected.");
+        }
+        else 
+        {
+            ScarabUser user = (ScarabUser)data.getUser();
+            MITList list = setAndGetCurrentList(listId, data, context);   
+            if (list != null)
+            {
+                setTarget(data, "AdvancedQuery.vm");            
+            }            
+        }
+    }        
+
     public void doGotoquery(RunData data, TemplateContext context)
         throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        try
+        ScarabUser user = (ScarabUser)data.getUser();
+        MITList currentList = user.getCurrentMITList();
+        if (currentList != null && !currentList.isEmpty()) 
         {
-            // we do this here because getSearch() can throw an exception
-            // if it does throw an exception, then we want to show the 
-            // ModuleQuery page again. if it doesn't, then we put the result
-            // into the context so that AdvancedQueryMacro can access it 
-            // instead of having to call the method yet again which would
-            // have a performance impact. kind of ugly, but it is in the 
-            // name of performance and not throwing exceptions. =) (JSS)
-            IssueSearch is = scarabR.getSearch();
-            context.put("searchPutInContext", is);
-            setTarget(data, "AdvancedQuery.vm");
+            setTarget(data, "AdvancedQuery.vm");            
         }
-        catch (Exception e)
+        else
         {
-            scarabR.setAlertMessage("No matching issues.");
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            scarabR.setAlertMessage("A list containing at least one " + 
+                "module/issue type pair must be selected.");
         }
     }
 
@@ -135,37 +151,40 @@ public class DefineXModuleList extends RequireLoginFirstAction
         }
         else 
         {
-            MITList list = MITListManager.getInstance(new NumberKey(listId));
             ScarabUser user = (ScarabUser)data.getUser();
-            if (list.getModifiable())
+            MITList list = setAndGetCurrentList(listId, data, context);   
+            if (list != null && !list.getModifiable())
+            {
+                setTarget(data, "AdvancedQuery.vm");
+            }
+        }        
+    }
+
+    private MITList setAndGetCurrentList(String listId, RunData data, 
+                                         TemplateContext context)
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        MITList list = null;
+        try
+        {
+            list = MITListManager.getInstance(new NumberKey(listId));
+            if (list == null) 
+            {
+                scarabR.setAlertMessage("An invalid id was entered: "+listId);
+            }
+            else 
             {
                 list = list.copy();
+                user.setCurrentMITList(list);
+                list.setScarabUser(user);
             }
-            else
-            {
-                try
-                {
-                    // we do this here because getSearch() can throw an exception
-                    // if it does throw an exception, then we want to show the 
-                    // ModuleQuery page again. if it doesn't, then we put the result
-                    // into the context so that AdvancedQueryMacro can access it 
-                    // instead of having to call the method yet again which would
-                    // have a performance impact. kind of ugly, but it is in the 
-                    // name of performance and not throwing exceptions. =) (JSS)
-                    IssueSearch is = scarabR.getSearch();
-                    context.put("searchPutInContext", is);
-                    setTarget(data, "AdvancedQuery.vm");
-                }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage("No matching issues.");
-                    return;
-                }
-            }
-
-            user.setCurrentMITList(list);
-            list.setScarabUser(user);
-        }        
+        }
+        catch (Exception e)
+        {
+            scarabR.setAlertMessage("An invalid id was entered: "+listId);
+        }
+        return list;
     }
 
     public void doRemoveitemsfromlist(RunData data, TemplateContext context)
@@ -189,11 +208,31 @@ public class DefineXModuleList extends RequireLoginFirstAction
     public void doGotosavelist(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, "EditXModuleList.vm");
-        //IntakeTool intake = getIntakeTool(context);
-        //ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        MITList list = user.getCurrentMITList();
+        if (list == null) 
+        {
+            scarabR.setAlertMessage("Application error: list was null.");
+            Log.get().error("Current list was null in DefineXModuleList.doGotosavelist.");
+        }
+        else if (list.isAnonymous())
+        {
+            list.save();
+            scarabR.setConfirmMessage("Your changes were saved.");
+        }
+        else
+        {
+            list.setName(null);
+            setTarget(data, "EditXModuleList.vm");
+        }
     }
 
+    public void doStartover(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ((ScarabUser)data.getUser()).setCurrentMITList(null);
+    }
 
     public void doSavelist(RunData data, TemplateContext context)
         throws Exception

@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.47 2002/07/23 22:16:13 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.48 2002/08/01 17:35:31 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -821,6 +821,12 @@ public abstract class AbstractScarabUser
         return up;
     }
 
+    /**
+     * Gets active, named lists
+     *
+     * @return a <code>List</code> value
+     * @exception TorqueException if an error occurs
+     */
     public List getMITLists()
         throws TorqueException    
     {
@@ -833,6 +839,9 @@ public abstract class AbstractScarabUser
         userCrit.or(crit.getNewCriterion(
             MITListPeer.USER_ID, null, Criteria.EQUAL));
         crit.add(userCrit);
+        crit.add(MITListPeer.LIST_ID, 4, Criteria.GREATER_THAN);
+        crit.add(MITListPeer.ACTIVE, true);
+        crit.add(MITListPeer.NAME, (Object)null, Criteria.NOT_EQUAL);
         result = MITListPeer.doSelect(crit);
 
         return result;
@@ -1031,6 +1040,7 @@ public abstract class AbstractScarabUser
                     if (item.getQueryKey().equals(ids[i])) 
                     {
                         iter.remove();
+                        mitList.scheduleItemForDeletion(item);
                         continue;
                     }
                 }

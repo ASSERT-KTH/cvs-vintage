@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
+import java.sql.Connection;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
@@ -25,6 +26,8 @@ public  class MITList
      * a local reference to the user.
      */
     private ScarabUser aScarabUser;
+
+    List itemsScheduledForDeletion;
 
     public int size()
     {
@@ -109,6 +112,20 @@ public  class MITList
         }
     }
 
+    /**
+     * Alias for getModifiable()
+     *
+     * @return a <code>boolean</code> value
+     */
+    public boolean isModifiable()
+    {
+        return getModifiable();
+    }
+
+    public boolean isAnonymous()
+    {
+        return !isNew() && getName() == null;
+    }
 
     /**
      * Makes a copy of this object.  
@@ -779,5 +796,38 @@ public  class MITList
             newItem.setListId(getListId());
             items.add(newItem);
         }                            
+    }
+
+
+    public void scheduleItemForDeletion(MITListItem item)
+    {
+        if (itemsScheduledForDeletion == null) 
+        {
+            itemsScheduledForDeletion = new ArrayList();
+        }
+        itemsScheduledForDeletion.add(item);
+    }
+
+    public void save(Connection con)
+        throws TorqueException
+    {
+        super.save(con);
+        if (itemsScheduledForDeletion != null) 
+        {
+            List itemIds = new ArrayList(itemsScheduledForDeletion.size());
+            Iterator iter = itemsScheduledForDeletion.iterator();
+            while (iter.hasNext()) 
+            {
+                MITListItem item = (MITListItem)iter.next();
+                if (!item.isNew()) 
+                {
+                    itemIds.add(item.getPrimaryKey());   
+                }                
+            }
+            
+            Criteria crit = new Criteria();
+            crit.addIn(MITListItemPeer.ITEM_ID, itemIds);
+            MITListItemPeer.doDelete(crit);
+        }
     }
 }

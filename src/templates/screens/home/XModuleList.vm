@@ -20,13 +20,35 @@
 <input type="hidden" name="action" value="DefineXModuleList" />
 <input type="hidden" name="queryString" value="$!queryString" />
 
+#if (!$mitList || $mitList.isEmpty())
+ <p>Please choose a predefined list or build a custom list</p>
+ <h3>Predefined static cross module lists</h3>
+
+ #set($manager = $scarabG.MITListManager)
+ #set($key = "pd_list_id")
+ #set($list2 = $manager.AllModulesCurrentIssueTypeList)
+ #set($checked2 = $list.QueryKey == $data.Parameters.getString($key, ""))
+ #set($list = $manager.AllModulesAllIssueTypesList)
+ #set($checked = !$checked2 || $list.QueryKey == $data.Parameters.getString($key, ""))
+ <div><input type="radio" name="$key" value="$list.QueryKey"
+     #if($checked) checked="checked"#end />$list.Name</div>
+ <div><input type="radio" name="$key" value="$list2.QueryKey"
+     #if($checked2) checked="checked"#end />$list2.Name</div>
+
+ <div class="functnbar2">
+  <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="Go to define query" />
+ </div>
+#end
+
+
+		
+<h3>Build list of issue types for this query</h3>
+
 #if ($mitList && !$mitList.isEmpty())
 <div class="functnbar">
- <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
+ <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
 </div>
 #end
-		
-<h3>Issue types selected for this query</h3>
 
 <div class="colbar">
   <select name="list_id">
@@ -35,7 +57,7 @@
     <option value="$list.QueryKey"#if($list.QueryKey == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
   #end
   </select>&nbsp;
-  <input type="submit" name="eventSubmit_doChooselist" value="Go" />
+  <input type="submit" name="eventSubmit_doChooselist" value="Select list" />
 </div>
 #if (!$mitList || $mitList.isEmpty())
 <p class="alert">
@@ -66,13 +88,15 @@ No issue types have been selected.  Please select from the list below.
 
 #if ($mitList && !$mitList.isEmpty())
  <div class="functnbar3">
+  <input type="submit" name="eventSubmit_doStartover" 
+     value="Start over / reset" />&nbsp;
   <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
      value="Remove from list" />&nbsp;
   <input type="submit" name="eventSubmit_doGotosavelist" value="Save this list" />
  </div>
 
  <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doGotoquery" value="Go" />
+  <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
  </div>
 #end
 

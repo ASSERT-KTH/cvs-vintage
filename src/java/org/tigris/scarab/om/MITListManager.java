@@ -40,6 +40,44 @@ public class MITListManager
         return list;
     }
 
+    public static MITList getAllModulesAllIssueTypesList(ScarabUser user)
+        throws TorqueException
+    {
+        MITList list = getInstance(MITListPeer.ALL_MODULES_ISSUETYPES)
+            .copy();
+        list.setScarabUser(user);
+        return list;
+    }
+
+    public static MITList getAllModulesCurrentIssueTypeList(ScarabUser user)
+        throws TorqueException
+    {
+        MITList list = getInstance(MITListPeer.ALL_MODULES_CURRENT_ISSUETYPE)
+            .copy();
+        list.setScarabUser(user);
+        return list;
+    }
+
+
+    public static MITList getCurrentModuleAllIssueTypesList()
+        throws TorqueException
+    {
+        return getInstance(MITListPeer.CURRENT_MODULE_ALL_ISSUETYPES);
+    }
+
+    public static MITList getAllModulesAllIssueTypesList()
+        throws TorqueException
+    {
+        return getInstance(MITListPeer.ALL_MODULES_ISSUETYPES);
+    }
+
+    public static MITList getAllModulesCurrentIssueTypeList()
+        throws TorqueException
+    {
+        return getInstance(MITListPeer.ALL_MODULES_CURRENT_ISSUETYPE);
+    }
+
+
     /**
      * An issue has an associated Module and IssueType, this method takes
      * a list of issues and creates an MITList from these associations.
