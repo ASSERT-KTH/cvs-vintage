@@ -72,7 +72,6 @@ public class WeakCache {
         rQueueThread.start();
     }
 
-    //TODO Thread end ?
     private static class RefQueueFlush extends Thread {
         public RefQueueFlush() {
         }
