@@ -55,7 +55,7 @@ import org.tigris.scarab.om.Issue;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.6 2001/10/24 06:10:59 jon Exp $
+ * @version $Id: IssueTest.java,v 1.7 2002/01/10 19:49:35 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -99,15 +99,5 @@ public class IssueTest extends BaseTestCase
         String strUniqueID = null;
         strUniqueID = issue.getUniqueId();
         System.out.println ("Unique id: " + strUniqueID);   
-    }
-
-    private void testGetEligibleAssignees(Issue issue) throws Exception
-    {
-        System.out.println ("testGetEligibleAssignees()");
-
-        java.util.List eligibleAssignees = null;
-        eligibleAssignees = issue.getEligibleAssignees();
-        System.out.println ("Number of eligible assignees: "
-            + eligibleAssignees.size());
     }
 }
