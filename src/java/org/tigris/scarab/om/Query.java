@@ -102,6 +102,59 @@ public class Query
     }
 
     /**
+     * Returns list of all frequency values.
+     */
+    public List getFrequencies() throws Exception
+    {
+        return FrequencyPeer.doSelect(new Criteria());
+    }
+
+    /**
+     * Returns list of subscribed users.
+     */
+    public List getSubscribedUsers() throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
+        return RQueryUserPeer.doSelect(crit);
+    }
+
+    /**
+     * Returns true if passed-in user is subscribed to query.
+     */
+    public boolean isUserSubscribed(NumberKey userId) throws Exception
+    {
+        boolean isSubscribed = false;
+        List queryUsers = getSubscribedUsers(); 
+        for (int i=0;i<queryUsers.size(); i++)
+        {
+            if (((RQueryUser)queryUsers.get(i))
+                             .getScarabUserImpl().getUserId().equals(userId))
+            {
+                 isSubscribed = true;
+                 break;
+            }
+        }
+        return isSubscribed;
+    }
+
+    /**
+     * Gets RQueryUser object for this query and user.
+     */
+    public RQueryUser getSubscription(NumberKey userId) throws Exception
+    {
+        RQueryUser rqu = new RQueryUser();
+        if (isUserSubscribed(userId))
+        {
+            Criteria crit = new Criteria();
+            crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
+            crit.add(RQueryUserPeer.USER_ID, userId);
+            rqu = (RQueryUser)RQueryUserPeer.doSelect(crit).get(0);
+        }
+        return rqu;
+    }
+
+    /**
      * Checks permission and approves or rejects query. 
      * If query is approved, query type set to "global", else set to "personal".
      */
@@ -140,7 +193,7 @@ public class Query
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user, module)
-             || (user.getUserId().equals(getUserId())))
+          || (user.getUserId().equals(getUserId()) && getQueryType().equals(USER__PK)))
         {
             setDeleted(true);
             save();
