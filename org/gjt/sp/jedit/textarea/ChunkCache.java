@@ -30,13 +30,10 @@ import org.gjt.sp.jedit.syntax.*;
 //}}}
 
 /**
- * A "chunk" is a run of text with a specified font style and color. This class
- * contains various static methods for manipulating chunks and chunk lists. It
- * also has a number of package-private instance methods used internally by the
- * text area for painting text.
+ * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.66 2003/03/24 01:38:26 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.67 2003/03/24 02:42:27 spestov Exp $
  */
 class ChunkCache
 {
