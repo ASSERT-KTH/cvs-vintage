@@ -211,8 +211,11 @@ public class ColumbaCmdLineParser {
     System.out.println("  -d, --debug\t\tprints debug informations to standard out");
     System.out.println("  -c, --composer\tdisplays the composer window on startup");
     System.out.println("  -p, --path\t\tsets the path to the config directory");
-    System.out.println("  -r, --rcpt\t\tsets the recipient for the composer");
-    System.out.println("  -b, --body\t\tsets the message body for the composer");
+    System.out.println("  -r, --rcpt\t\tsets the recipient for the composer " +      "(if the composer argument given)");
+    System.out.println("  -b, --body\t\tsets the message body for the composer " +      "(if the composer argument given)");
+    System.out.println("  --subject\t\tsets the subject for the composer " +      "(if the composer argument given)");
+    System.out.println("  --cc\t\t\tsets the Cc for the composer (if the composer argument given)");
+    System.out.println("  --bcc\t\t\tsets the Bcc for the composer " +      "(if the composer argument given)");
     System.out.println("\t--help\t\tdisplay this help and exit");
     System.out.println("\t--version\toutput version information and exit");
     System.out.println();
