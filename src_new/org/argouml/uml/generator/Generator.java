@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.18 2003/06/30 21:59:33 linus Exp $
+// $Id: Generator.java,v 1.19 2003/08/17 22:17:00 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Generator.java
 // Classes: Generator
 // Original Author:
-// $Id: Generator.java,v 1.18 2003/06/30 21:59:33 linus Exp $
+// $Id: Generator.java,v 1.19 2003/08/17 22:17:00 linus Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -284,15 +284,6 @@ public abstract class Generator
         if (s != null)
             return s.trim();
         return null;
-    }
-
-    /**   
-     * @deprecated must be added to all leaf classes from this class,
-     * these are the modules not this abstract class
-     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
-     */
-    public boolean isModuleEnabled() {
-        return true;
     }
 
 } /* end class Generator */

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.28 2003/08/10 14:51:37 linus Exp $
+// $Id: ModelManagementHelper.java,v 1.29 2003/08/17 22:16:59 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,30 +242,6 @@ public class ModelManagementHelper {
 	path.add(ModelFacade.getName(element));
 
 	return path;
-    }
-
-    /**
-     * Move a modelelement to a new namespace. The way this is currently
-     * implemented this means that ALL modelelements that share the same
-     * namespace as the element to be moved are moved.
-     * TODO: make this into a copy function
-     * TODO: make this only move/copy the asked element
-     * @param element
-     * @param to
-     * @deprecated As of ArgoUml version 0.13.5, 
-     *             You should use 
-     *          {@link #getCorrespondingElement(MModelElement,MModel,boolean)} 
-     *             instead.
-     */
-    public void moveElement(MModelElement element, MModel to) {
-        MModel currentModel = element.getModel();
-        if (currentModel != to) {
-            if (element.getNamespace() != currentModel) { // handle packages
-                moveElement(element.getNamespace(), to);
-            } else {
-                element.setNamespace(to);
-            }
-        }
     }
 
     /**

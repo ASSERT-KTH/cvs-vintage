@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.34 2003/06/30 21:59:34 linus Exp $
+// $Id: Import.java,v 1.35 2003/08/17 22:17:00 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,7 +70,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.34 2003/06/30 21:59:34 linus Exp $
+ * <p>$Id: Import.java,v 1.35 2003/08/17 22:17:00 linus Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -112,12 +112,6 @@ public class Import {
     // log4j logging
     private static Category cat =
 	Category.getInstance(org.argouml.uml.reveng.Import.class);
-    
-    /**
-     * not used.
-     * @deprecated As of ArgoUml version 0.13.5, don't use this!
-     */
-    public static final String separator = "/";
     
     /**
      * Unnecessary attribute

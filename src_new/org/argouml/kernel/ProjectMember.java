@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.11 2003/06/30 18:00:18 linus Exp $
+// $Id: ProjectMember.java,v 1.12 2003/08/17 22:16:59 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,9 +128,8 @@ public abstract class ProjectMember {
     // actions
 
     public abstract void load() throws IOException, org.xml.sax.SAXException;
+
     /**
-     * @deprecated As of 7 June 2003 (ArgoUml version 0.13.6).
-     *             Will be removed in future.
      * @param path
      * @param overwrite
      * @throws Exception
@@ -138,8 +137,6 @@ public abstract class ProjectMember {
     public abstract void save(String path, boolean overwrite) throws Exception;
 
     /**
-     * @deprecated As of 7 June 2003 (ArgoUml version 0.13.6).
-     *             Will be removed in future.
      * @param path
      * @param overwrite
      * @param writer

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.39 2003/05/16 13:51:19 bobtarling Exp $
+// $Id: PropPanelClassifier.java,v 1.40 2003/08/17 22:17:00 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,15 +95,6 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
 
     ////////////////////////////////////////////////////////////////
     // contructors
-    /**
-     *    @deprecated As of ArgoUml version 0.13.5 (10-May-2003),
-     *                {@link #PropPanelClassifier(String title, Orientation orientation)}
-     *                I propose to remove this by version 0.15 (Bob Tarling)
-     */
-    public PropPanelClassifier(String name, int columns) {
-        this(name, null, columns);
-    }
-
     public PropPanelClassifier(String title, Orientation orientation) {
         super(title, orientation);
         initialize();
@@ -111,16 +102,6 @@ abstract public class PropPanelClassifier extends PropPanelNamespace {
 
     public PropPanelClassifier(String name, ImageIcon icon, Orientation orientation) {
         super(name, icon, orientation);
-        initialize();
-    }
-
-    /**
-     *    @deprecated As of ArgoUml version 0.13.5 (10-May-2003),
-     *                {@link #PropPanelClassifier(String title, ImageIcon icon, Orientation orientation)}
-     *                I propose to remove this by version 0.15 (Bob Tarling)
-     */
-    public PropPanelClassifier(String name, ImageIcon icon, int columns) {
-        super(name, icon, columns);
         initialize();
     }
 

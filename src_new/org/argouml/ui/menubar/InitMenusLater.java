@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.12 2003/06/30 18:00:25 linus Exp $
+// $Id: InitMenusLater.java,v 1.13 2003/08/17 22:16:59 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,27 +49,6 @@ class InitMenusLater implements Runnable {
     JMenu align, distribute, reorder, nudge, setPreferredSize, layout;
     JMenu editTabs, detailsTabs;
 
-    /**
-     * @deprecated we don't have a details tab menu section any more
-     * @param a the alignment submenu
-     * @param d the distribute submenu
-     * @param r the reorder submenu
-     * @param n the nudge submenu
-     * @param l the layout submenu
-     * @param et the editor tabs submenu
-     * @param dt the details tab submenu
-     */
-    public InitMenusLater(JMenu a, JMenu d, JMenu r, JMenu n, 
-			  JMenu l, JMenu et, JMenu dt) {
-	align = a;
-	distribute = d;
-	reorder = r;
-	nudge = n;
-	layout = l;
-	editTabs = et;
-	detailsTabs = dt;
-    }
-  
     /**
      * Constructs this new runnable to initialize the submenus.
      * @param align the alignment submenu

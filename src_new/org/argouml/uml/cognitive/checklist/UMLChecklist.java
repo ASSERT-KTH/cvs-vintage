@@ -1,4 +1,4 @@
-// $Id: UMLChecklist.java,v 1.5 2003/06/30 18:00:26 linus Exp $
+// $Id: UMLChecklist.java,v 1.6 2003/08/17 22:16:59 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,44 +44,6 @@ public class UMLChecklist extends Checklist {
 		_items.addElement(item);
 	    }
 	}
-    }
-
-    /**
-     * @deprecated As of ArgoUml version unknown (before 0.13.5),
-     *             Previously used by ChActor et al,
-     *             replaced by (presumably) {@link #UMLChecklist(String[][])}
-     */
-    public UMLChecklist() {
-	/*       used to capture checklist contents
-		 String className = getClass().getName();
-		 className = className.substring(className.lastIndexOf('.')+1);
-		 CrUML.log("    }\n},\n{ \"" + className + "\",");
-	*/
-    }
-
-    /**
-     *   @deprecated As of ArgoUml version unknown (before 0.13.5),
-     *   Previously used by ChActor et al
-     */
-    public void addItem(String description) {
-	CheckItem item = new UMLCheckItem(_nextCategory, description);
-	_items.addElement(item);
-	/*
-	  CrUML.log(" \"" +
-	  CrUML.escape(CrUML.escape(CrUML.escape(description,'\"',"\\\""),'\n',"\\n"),'\r',"")
-	  + "\",");
-	*/
-    }
-
-    /**
-     *   @deprecated As of ArgoUml version unknown (before 0.13.5),
-     *   Previously used by ChActor et al
-     */
-    public void setNextCategory(String category) {
-	super.setNextCategory(category);
-	/*
-	  CrUML.log("    },\n    new String[] { \"" + category + "\",");
-	*/
     }
 
 } /* end class UMLChecklist */
