@@ -26,7 +26,7 @@ package org.gjt.sp.jedit.syntax;
 /**
  * A parser rule.
  * @author mike dillon, Slava Pestov
- * @version $Id: ParserRule.java,v 1.4 2002/05/26 04:50:14 spestov Exp $
+ * @version $Id: ParserRule.java,v 1.5 2002/05/26 23:53:06 spestov Exp $
  */
 public class ParserRule
 {
@@ -86,8 +86,14 @@ public class ParserRule
 	 */
 	public ParserRuleSet getDelegateRuleSet(TokenMarker tokenMarker)
 	{
+		// don't worry
 		if(delegate == null)
-			return ParserRuleSet.getStandardRuleSet(token);
+		{
+			if((action & MAJOR_ACTIONS) == SEQ)
+				return null;
+			else
+				return ParserRuleSet.getStandardRuleSet(token);
+		}
 		else
 		{
 			ParserRuleSet delegateSet = tokenMarker.getRuleSet(delegate);

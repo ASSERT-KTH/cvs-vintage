@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.28 2002/05/26 07:38:43 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.29 2002/05/26 23:53:06 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -392,6 +392,16 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 			case ParserRule.SEQ:
 				tokenHandler.handleToken(checkRule.token,
 					pos - line.offset,pattern.count,context);
+
+				// a DELEGATE attribute on a SEQ changes the
+				// ruleset from the end of the SEQ onwards
+				ParserRuleSet delegateSet = checkRule.getDelegateRuleSet(this);
+				if(delegateSet != null)
+				{
+					context = new LineContext(delegateSet,
+						context.parent);
+					keywords = context.rules.getKeywords();
+				}
 				break;
 			//}}}
 			//{{{ SPAN, EOL_SPAN, MARK_FOLLOWING
@@ -400,7 +410,7 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 			case ParserRule.MARK_FOLLOWING:
 				context.inRule = checkRule;
 
-				ParserRuleSet delegateSet = checkRule.getDelegateRuleSet(this);
+				delegateSet = checkRule.getDelegateRuleSet(this);
 
 				tokenHandler.handleToken(
 					((checkRule.action & ParserRule.EXCLUDE_MATCH)
