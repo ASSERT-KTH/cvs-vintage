@@ -1,17 +1,49 @@
+$Id: sql_questions.txt,v 1.2 2001/02/23 23:49:33 jon Exp $
+
+This file contains common SQL queries that are used in the system.
+
+--------------------------------------------------------------------
+
 show me all of the issues in a particular module that are:
     assigned to me
     that i am tracking
     
     select distinct
-        scarab_issue_attribute_value.value, scarab_issue_attribute_value.ATTRIBUTE_ID
+        scarab_issue_attribute_value.value, 
+        scarab_issue_attribute_value.ATTRIBUTE_ID
     from 
         scarab_issue_attribute_value, scarab_issue, scarab_module
     where
-        (scarab_issue.module_id=2 and scarab_issue_attribute_value.issue_id=scarab_issue.issue_id)
+        (scarab_issue.module_id=2 and 
+        scarab_issue_attribute_value.issue_id=scarab_issue.issue_id)
     and
-        (scarab_issue_attribute_value.attribute_id=2 or scarab_issue_attribute_value.attribute_id=10)
+        (scarab_issue_attribute_value.attribute_id=2 or 
+        scarab_issue_attribute_value.attribute_id=10)
     and
-        scarab_issue_attribute_value.visitor_id=1
+        scarab_issue_attribute_value.user_id=1
     and
-        scarab_issue_attribute_value.issue_id=1
+        scarab_issue_attribute_value.issue_id=1;
       
+--------------------------------------------------------------------
+
+this will retrieve all the data that represents an issue that is assigned
+to user_id=1.
+
+select
+    issue.issue_id, attribute.attribute_name, issue_attribute_value.value
+from
+    scarab_issue issue, scarab_attribute attribute, 
+    scarab_issue_attribute_value issue_attribute_value,
+    scarab_issue_attribute_vote issue_attribute_vote
+where
+    issue_attribute_vote.issue_id = issue.issue_id
+and
+    issue_attribute_vote.attribute_id = 10
+and
+    issue_attribute_vote.user_id = 1
+and
+    issue_attribute_value.issue_id = issue.issue_id
+and
+    attribute.attribute_id = issue_attribute_value.attribute_id
+order by
+    issue.issue_id, attribute.attribute_id;
