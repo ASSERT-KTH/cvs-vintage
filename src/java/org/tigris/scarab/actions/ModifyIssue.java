@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.103 2002/06/13 22:05:41 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.104 2002/07/02 21:17:24 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -798,7 +798,7 @@ public class ModifyIssue extends BaseModifyIssue
                     currentIssue.save();
                     // Save transaction record
                     String uniqueId = otherIssue.getUniqueId();
-                    String s = "changed dependency type for Issue ";
+                    String s = "changed dependency type for issue ";
                     String from = " from ";
                     String to = " to ";
                     int capacity = s.length() + uniqueId.length() + 
@@ -909,15 +909,37 @@ public class ModifyIssue extends BaseModifyIssue
             depend.save();
 
             // Save transaction record
-            String desc = new StringBuffer("added ")
+            Transaction transaction = new Transaction();
+            transaction
+                .create(TransactionTypePeer.EDIT_ISSUE__PK, user);
+    
+            // Save transaction record for parent
+            String desc = new StringBuffer("added '")
                 .append(depend.getDependType().getName())
-                .append(" dependency for Issue ")
+                .append("' child dependency on issue ")
                 .append(childIssue.getUniqueId())
                 .toString();
-            registerActivity(desc, "added dependency", issue, 
-                             user, null, context, data);
-            data.setMessage(DEFAULT_MSG);  
 
+            // Save activity record
+            Activity activity = new Activity();
+            activity.create(issue, null, desc, transaction, 
+                            "", childIssue.getUniqueId());
+            sendEmail(transaction, childIssue, desc, context, data);
+
+            // Save transaction record for child
+            desc = new StringBuffer("added '")
+                .append(depend.getDependType().getName())
+                .append("' parent dependency on issue ")
+                .append(issue.getUniqueId())
+                .toString();
+
+            // Save activity record
+            activity = new Activity();
+            activity.create(childIssue, null, desc, transaction, 
+                            "", issue.getUniqueId());
+            sendEmail(transaction, issue, desc, context, data);
+
+            data.setMessage(DEFAULT_MSG);
             intake.remove(group);
         }
         else
