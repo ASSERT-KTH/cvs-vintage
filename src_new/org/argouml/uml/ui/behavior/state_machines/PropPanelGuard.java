@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.35 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelGuard.java,v 1.36 2005/02/01 14:54:33 mkl Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         JList transitionList = new UMLLinkedList(
                 new UMLGuardTransitionListModel());
-        // MVW: TODO: Why is this is list? There's only one!
+        transitionList.setVisibleRowCount(1);
         addField(Translator.localize("label.transition"),
                 new JScrollPane(transitionList));
 
