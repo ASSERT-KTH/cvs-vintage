@@ -137,7 +137,7 @@
 <tr>
 <th width="120">$l10n.Comment</th>
 <td>
-#textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
+#textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
 <p>
 <input type="submit" name="eventSubmit_doAddnote" value="$l10n.AddComment" />
 </p>

@@ -134,7 +134,7 @@
             <filename>$filePath</filename>
             #set ($filePath = "")
           #else
-          #set ($fileData = $attachment.DataAsString)
+          #set ($fileData = $attachment.Data)
             #if ($fileData && $fileData.length() > 0)
 
             <data>$fileData</data>

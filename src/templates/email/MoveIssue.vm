@@ -12,6 +12,6 @@ $l10n.YouCanViewIssue
 
     <$link.getIssueIdAbsoluteLink($issue)>
 
-#if ($attachment.DataAsString)
-$l10n.Comment  $attachment.DataAsString
+#if ($attachment.Data)
+$l10n.Comment  $attachment.Data
 #end

@@ -131,9 +131,9 @@
 <tr>
 <th>* $l10n.ReasonForChange</th>
 <td>$l10n.EnterReason
-   #fieldErrorMsg($attCommentGroup.DataAsString "")
+   #fieldErrorMsg($attCommentGroup.Data "")
    
-   <p>#textAreaMedium("$attCommentGroup.DataAsString.Key" $attCommentGroup.DataAsString.Value)
+   <p>#textAreaMedium("$attCommentGroup.Data.Key" $attCommentGroup.Data.Value)
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
 </td>
 </tr>
@@ -230,10 +230,10 @@ $l10n.NoComments
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
     #if ($isEditComments)
-      <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
+      <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.Data)</p>
     #else
       <p>
-      #foreach($lineoftext in $scarabG.tokenize($comment.DataAsString, ""))
+      #foreach($lineoftext in $scarabG.tokenize($comment.Data, ""))
         #linkIssueIds($lineoftext)<br />
       #end
       </p>
@@ -256,8 +256,8 @@ $l10n.NoComments
      <tr>
        <td>
           #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-          #textAreaLarge("$commentGroup.DataAsString.Key" "")
-          #fieldErrorMsg($commentGroup.DataAsString "")
+          #textAreaLarge("$commentGroup.Data.Key" "")
+          #fieldErrorMsg($commentGroup.Data "")
           <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
        </td>
      </tr>
@@ -307,12 +307,12 @@ $l10n.NoComments
        <input type="checkbox" name="url_delete_$url.AttachmentId" />
      </td>
      #end
-     <td><a href="$url.DataAsString">$url.Name</a></td>
+     <td><a href="$url.Data">$url.Name</a></td>
      #if ($canEdit)
       #set ($urlGroup = $intake.Attachment.mapTo($url))
-         <td><input type="text" size="25" name="$urlGroup.DataAsString.Key" 
-                 value="$urlGroup.DataAsString" />
-         #fieldErrorMsg($urlGroup.DataAsString "")
+         <td><input type="text" size="25" name="$urlGroup.Data.Key" 
+                 value="$urlGroup.Data" />
+         #fieldErrorMsg($urlGroup.Data "")
          </td>
          <td><input type="text" size="25" name="$urlGroup.Name.Key" 
                  value="$urlGroup.Name" />
@@ -329,9 +329,9 @@ $l10n.NoComments
      #end
      #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
      <td>
-     <input type="text" size="25" name="$urlGroup.DataAsString.Key" 
-         value="$!urlGroup.DataAsString" />
-     #fieldErrorMsg($urlGroup.DataAsString "")
+     <input type="text" size="25" name="$urlGroup.Data.Key" 
+         value="$!urlGroup.Data" />
+     #fieldErrorMsg($urlGroup.Data "")
      </td>
      <td>
      <input type="text" size="25" name="$urlGroup.Name.Key" 
@@ -602,12 +602,12 @@ $l10n.NoDependencies
 
      <td>
      #if ($activitySet && $activitySet.Attachment)
-       #if ($activitySet.Attachment.DataAsString && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
-         $activitySet.Attachment.DataAsString
+       #if ($activitySet.Attachment.Data && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
+         $activitySet.Attachment.Data
        #else Not provided. #end
      #elseif ($act.Attachment)
-       #if ($act.Attachment.DataAsString && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
-          $act.Attachment.DataAsString 
+       #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
+          $act.Attachment.Data 
        #else Not provided. #end     
      #elseif ($activitySet && $activitySet.ActivitySetType.Name.equals("Create Issue"))
            $l10n.InitialEntry

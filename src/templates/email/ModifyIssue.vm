@@ -9,13 +9,13 @@ $l10n.YouCanViewIssue
 $l10n.ModificationsMade
 
 #foreach( $activity in $activityList)
-#if ($activity.Attachment.DataAsString)
-$activity.Attachment.DataAsString  
+#if ($activity.Attachment.Data)
+$activity.Attachment.Data  
 #else
 $activity.Description
 
-#if ($attachment.DataAsString)
-$l10n.Comment  $attachment.DataAsString
+#if ($attachment.Data)
+$l10n.Comment  $attachment.Data
 #end  
 #end
 #end

@@ -199,11 +199,11 @@
 #if ($reasonOptional)
     <small>$l10n.CommentFieldDesc</small>
 #else
-    #fieldErrorMsg($intakeAttachment.DataAsString "")
+    #fieldErrorMsg($intakeAttachment.Data "")
     <small><strong>$l10n.MissedRequired1</strong> $l10n.MissedRequire2</small>
 #end
 <p>
-#textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
+#textAreaMedium("$intakeAttachment.Data.Key" $intakeAttachment.Data)
 </p>
    </td>
  </tr>

@@ -102,7 +102,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.140 2002/10/01 00:02:54 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.141 2002/10/02 05:11:35 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -370,7 +370,7 @@ public class ReportIssue extends RequireLoginFirstAction
                 boolean saveIssue = true;
                 String summary = issue.getDefaultText();
                 Group commentGroup = intake.get("Attachment", "_1", false);
-                Field commentField = commentGroup.get("DataAsString");
+                Field commentField = commentGroup.get("Data");
                 if ( summary.length() == 0 ) 
                 {
                     commentField.setRequired(true);

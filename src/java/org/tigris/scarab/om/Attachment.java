@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.43 2002/10/01 00:02:54 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.44 2002/10/02 05:11:35 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -282,7 +282,7 @@ public class Attachment
                                       + " the issue to which it is attached.");
         }
         // It would be better (from an oo perspective) to do this whenever 
-        // setDataAsString is called, but we can't be sure the typeId will be 
+        // setData is called, but we can't be sure the typeId will be 
         // set prior to setting the url, so we will do the check here.
         if (AttachmentTypePeer.URL_PK.equals(getTypeId())) 
         {
