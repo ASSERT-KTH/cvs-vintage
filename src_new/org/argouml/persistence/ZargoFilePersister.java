@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.16 2005/01/11 11:28:33 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.17 2005/01/15 03:03:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class ZargoFilePersister extends UmlFilePersister {
      */
     public Project doLoad(URL url) throws OpenException {
         try {
-            File file = File.createTempFile("xxx", ".uml");
+            File file = File.createTempFile("combinedzargo_", ".uml");
             LOG.info(
                 "Combining old style zargo sub files into new style uml file "
                     + file.getAbsolutePath());
