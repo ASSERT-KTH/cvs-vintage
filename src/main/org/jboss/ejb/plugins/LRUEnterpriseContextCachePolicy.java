@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @see EnterpriseInstanceCache
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable
@@ -60,8 +60,6 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	{	
 		if (eic == null) throw new IllegalArgumentException("Instance cache argument cannot be null");
 		m_cache = eic;
-		m_maxCapacity = m_cache.getMaxCapacity();
-		m_minCapacity = m_cache.getMinCapacity();
 	}
 
 	// Public --------------------------------------------------------
@@ -94,14 +92,34 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	 */
 	public void importXml(Element element) throws DeploymentException
 	{
-		String op = MetaData.getElementContent(MetaData.getOptionalChild(element, "OveragerPeriod"));
-		String rp = MetaData.getElementContent(MetaData.getOptionalChild(element, "ResizerPeriod"));
-		String ma = MetaData.getElementContent(MetaData.getOptionalChild(element, "MaxBeanAge"));
-		String map = MetaData.getElementContent(MetaData.getOptionalChild(element, "MaxCacheMissPeriod"));
-		String mip = MetaData.getElementContent(MetaData.getOptionalChild(element, "MinCacheMissPeriod"));
-		String fa = MetaData.getElementContent(MetaData.getOptionalChild(element, "CacheLoadFactor"));
+		String min = MetaData.getElementContent(MetaData.getOptionalChild(element, "min-capacity"));
+		String max = MetaData.getElementContent(MetaData.getOptionalChild(element, "max-capacity"));
+		String op = MetaData.getElementContent(MetaData.getOptionalChild(element, "overager-period"));
+		String rp = MetaData.getElementContent(MetaData.getOptionalChild(element, "resizer-period"));
+		String ma = MetaData.getElementContent(MetaData.getOptionalChild(element, "max-bean-age"));
+		String map = MetaData.getElementContent(MetaData.getOptionalChild(element, "max-cache-miss-period"));
+		String mip = MetaData.getElementContent(MetaData.getOptionalChild(element, "min-cache-miss-period"));
+		String fa = MetaData.getElementContent(MetaData.getOptionalChild(element, "cache-load-factor"));
 		try 
 		{
+			if (min != null)
+			{
+				int s = Integer.parseInt(min);
+				if (s <= 0) 
+				{
+					throw new DeploymentException("Min cache capacity can't be <= 0");
+				}
+				m_minCapacity = s;
+			}
+			if (max != null)
+			{
+				int s = Integer.parseInt(max);
+				if (s <= 0)
+				{
+					throw new DeploymentException("Max cache capacity can't be <= 0");
+				}
+				m_maxCapacity = s;
+			}				
 			if (op != null)
 			{
 				int p = Integer.parseInt(op);
