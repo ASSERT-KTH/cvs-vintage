@@ -107,6 +107,7 @@
         <field name="Template" key="tem" type="boolean" mapToProperty=""/>
         <field name="Deleted" key="del" type="boolean"/>
         <field name="Dedupe" key="dup" type="boolean"/>
+        <field name="Locked" key="loc" type="boolean"/>
 </group>
 
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
@@ -168,6 +169,7 @@
         <field name="Required" key="req" type="boolean"/>
         <field name="QuickSearch" key="qs" type="boolean"/>
         <field name="IsDefaultText" key="dt" type="boolean"/>
+        <field name="Locked" key="loc" type="boolean"/>
         <field name="Order" key="order" type="int" 
                 mapToProperty="Order">
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
@@ -208,6 +210,7 @@
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
+        <field name="Locked" key="loc" type="boolean"/>
         <field name="Weight" key="weight" type="int" 
                 mapToProperty="Weight">
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
