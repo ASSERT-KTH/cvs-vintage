@@ -53,7 +53,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public abstract class JDBCCommand
 {
@@ -419,8 +419,24 @@ public abstract class JDBCCommand
 				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
 
                 if(!destination.isAssignableFrom(result.getClass())) {
-                    log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
-                    result = null;
+                    boolean found = false;
+                    if(destination.isPrimitive()) {
+                        if((destination.equals(Byte.TYPE) && result instanceof Byte) ||
+                           (destination.equals(Short.TYPE) && result instanceof Short) ||
+                           (destination.equals(Character.TYPE) && result instanceof Character) ||
+                           (destination.equals(Boolean.TYPE) && result instanceof Boolean) ||
+                           (destination.equals(Integer.TYPE) && result instanceof Integer) ||
+                           (destination.equals(Long.TYPE) && result instanceof Long) ||
+                           (destination.equals(Float.TYPE) && result instanceof Float) ||
+                           (destination.equals(Double.TYPE) && result instanceof Double)
+                          ) {
+                            found = true;
+                        }
+                    }
+                    if(!found) {
+                        log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
+                        result = null;
+                    }
                 }
 
                 ois.close();
