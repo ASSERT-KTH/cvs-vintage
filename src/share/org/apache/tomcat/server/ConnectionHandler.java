@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.4 1999/10/30 00:46:46 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/30 00:46:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.5 1999/10/30 01:02:38 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/30 01:02:38 $
  *
  * ====================================================================
  *
@@ -260,7 +260,7 @@ class ConnectionHandler extends Thread {
 	    // away before the response is completely written ... too bad
 	    // there's nothing like an error code we can switch on !!
 	    System.out.println("HANDLER THREAD PROBLEM: " + e);
-	    e.printStackTrace();
+ 	    e.printStackTrace();
 	} finally {
 	    // recycle kernel sockets ASAP
 	    try { socket.close (); }
