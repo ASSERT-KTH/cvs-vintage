@@ -30,7 +30,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -150,6 +150,10 @@ public class JawsApplicationMetaData extends MetaData implements XmlLoadable {
 		// get the datasource (optional, but always set in standardjaws.xml)
 		Element db = getOptionalChild(element, "datasource");
 		if (db != null) dbURL = getElementContent(db);
+		
+      // Make sure it is prefixed with java:
+		if (!dbURL.startsWith("java:/"))
+		   dbURL = "java:/"+dbURL;
 		
 		// get the type mapping for this datasource (optional, but always set in standardjaws.xml)
 		String typeMappingString = getElementContent(getOptionalChild(element, "type-mapping"));

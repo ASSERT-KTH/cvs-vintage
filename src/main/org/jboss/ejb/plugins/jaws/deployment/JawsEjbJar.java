@@ -27,7 +27,7 @@ import com.dreambean.ejx.Util;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class JawsEjbJar
    extends com.dreambean.ejx.ejb.EjbJar
@@ -58,6 +58,10 @@ public class JawsEjbJar
    public void setDataSource(String ds) 
    { 
    	dataSource = ds; 
+      
+   	// Make sure it is prefixed with java:
+   	if (!dataSource.startsWith("java:/"))
+   	   dataSource = "java:/"+dataSource;
    }
    
    public String getDataSource() 
