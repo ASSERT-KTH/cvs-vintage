@@ -1348,6 +1348,7 @@ try{
         }
         else
         {
+            id = id.trim();
             try
             {
                 char firstChar = id.charAt(0);
