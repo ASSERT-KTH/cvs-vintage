@@ -13,8 +13,7 @@
 
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-$scarabG.Permission.ISSUE__EDIT
-$canEdit
+
 <h3>Issue ID: $currentIssue.UniqueId</h3>
 
 <div class="axial">
