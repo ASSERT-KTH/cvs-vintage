@@ -370,7 +370,7 @@
     <!-- Build our version of Torque easily                                -->
     <!-- ================================================================== -->
     <target name="build-torque">
-        <exec executable="ant" dir="${torque.dir}/build">
+        <exec executable="ant" dir="${torque.dir}">
             <arg line="dist"/>
         </exec>
     </target>
