@@ -189,10 +189,18 @@
     <attribute name="Port">8082</attribute>
   </mbean>
 
+  <!-- Mail Connection Factory -->
+  <mbean code="org.jboss.mail.MailService" name=":service=Mail">
+  	<attribute name="JNDIName">Mail</attribute>
+  	<attribute name="ConfigurationFile">mail.properties</attribute>
+  	<attribute name="User">user_id</attribute>
+  	<attribute name="Password">password</attribute>
+  </mbean>
+
   <!-- Uncomment to enable JMX monitoring of the bean cache  
   <mbean code="org.jboss.monitor.BeanCacheMonitor" name="Monitor:name=BeanCacheMonitor"/>
   -->
-
+  
   <!-- Add your custom MBeans here -->
   
 </server>
