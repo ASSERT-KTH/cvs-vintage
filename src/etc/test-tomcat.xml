@@ -372,10 +372,12 @@
 
    <gtest request="GET /test/jsp/extend1.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
+           magnitude="false" 
     />
 
    <gtest request="GET /test/jsp/extend2.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
+           magnitude="false" 
     />
 
    <gtest request="GET /test/jsp/extend3.jsp HTTP/1.0"
