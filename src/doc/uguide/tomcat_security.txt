@@ -105,58 +105,22 @@ and "file:${tomcat.home}/lib/-" which grant AllPermissions.
 And a default grant entry with no codeBase which has very
 restrictive Permissions configured.
 
-Edit the conf/tomcat.policy file and replace ${tomcat.home} with
-the path to your Tomcat home directory.
+If tomcat generates an AccessControlException when you try to
+start it with -security you need to edit the conf/tomcat.policy
+file and replace ${tomcat.home} with the path to your Tomcat home directory.
+
+By default read access on webapp dir and write in workdir is
+granted to a web application.
+
+The tomcat.policy file has an example of how to configure 
+additional permissions for a web application.
 
 The tomcat.policy file replaces any system java.policy file.
 
-conf/server.xml.security
+conf/server.xml
 
-This is an example server.xml file with a SecurityManager and Permissions
-configured.  You can use this as a starting point for configuring
-your own Permissions.
-
-There are two elements you can use to configure Security and Permissions
-in server.xml.
-
-<SecurityManager className="java.security.SecurityManager">
-	<Permission className="java.lang.RuntimePermission" attribute="stopThread"/>
-	<Permission className="java.util.PropertyPermission" attribute="java.version" value="read"/>
-</SecurityManager>
-
-If Tomcat is started with -security, the above element is used to
-contain the default Permissions given to web application Context's.
-The JVM java.security.SecurityManager will be used by default as
-the SecurityManager unless you define an alternate SecurityManager
-using the className attribute.
-
-In addition to the Permissions you define above, the web application
-will be given a FilePermission "read" access to its docBase.
-
-To override the default Permissions given to a web application as
-configured in the SecurityManager element use the Permission element
-within the Context element you want to assign a different Permission
-set.
-
-<Context path="/examples" docBase="webapps/examples" debug="0" reloadable="true" >
-	<Permission className="java.io.FilePermission" attribute="/usr/local/tomcat/webapps/examples/-" value="read"/>
-	<Permission className="java.util.PropertyPermission" attribute="java.version" value="read" />
-</Context>
-
-You must assign Permissions you want to grant including FilePermission's
-when configuring Permissions in a Context.
-
-You might configure Permissions for a Context when you want to grant
-a different Permission set from the default configured using the
-SecurityManager element.
-
-The Permission element requires that the className for the Permission
-class be configured and that the attribute be configured.  The value
-is optional.  These attributes and values match the arguments passed
-to the constructor for each type of Permission.
-
-The above SecurityManager and Permission configurations will be 
-ignored if Tomcat is started without the "-security" option.
+Uncomment out the entry in server.xml for the ContextInterceptor
+which defines the PolicyInterceptor.
 
 Starting Tomcat with a SecurityManager
 --------------------------------------
