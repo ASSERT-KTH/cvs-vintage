@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.4 2000/03/28 04:29:49 akv Exp $
- * $Revision: 1.4 $
- * $Date: 2000/03/28 04:29:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspRuntimeLibrary.java,v 1.5 2000/07/25 12:13:53 glenn Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/07/25 12:13:53 $
  *
  * ====================================================================
  * 
@@ -196,8 +196,7 @@ public class JspRuntimeLibrary {
 			createTypedArray (bean, method, values, t); 
 		    }
 		} else {
-		    //XXX please check.
-		    if(value == null || value.equals("")) return;
+		    if(value == null) return;
 		    Object oval = convert(value, type);
 		    if ( oval != null )
 			method.invoke(bean, new Object[] { oval });
