@@ -68,14 +68,14 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.SkipFiltering;
 
 /**
-    This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
-    into the context to replace the $link that Turbine adds.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @author <a href="mailto:jmcnally@collab.net">John McNally</a>
-    @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.58 2003/03/28 02:08:17 jon Exp $
-*/
+ * This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
+ * into the context to replace the $link that Turbine adds.
+ *   
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
+ * @version $Id: ScarabLink.java,v 1.59 2003/04/16 00:21:49 jon Exp $
+ */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
 {
@@ -131,6 +131,36 @@ public class ScarabLink extends TemplateLink
         isOmitModule = false;
         isOmitIssueType = false;
         overrideSecurity = false;
+    }
+
+    /**
+     * Gets the server name.
+     *
+     * @return A String with the server name.
+     */
+    public String getServerName()
+    {
+        return super.getServerName();
+    }
+
+    /**
+     * Gets the server port.
+     *
+     * @return A String with the server port.
+     */
+    public int getServerPort()
+    {
+        return super.getServerPort();
+    }
+
+    /**
+     * Gets the server scheme (HTTP or HTTPS).
+     *
+     * @return A String with the server scheme.
+     */
+    public String getServerScheme()
+    {
+        return super.getServerScheme();
     }
 
     /**
