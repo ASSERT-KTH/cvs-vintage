@@ -92,15 +92,18 @@ public class FolderTreeCellRenderer
 		setFont(plainFont);
 		setToolTipText("");
 
-		// TODO why we call this? the return value is never used. (waffel)
-		super.getTreeCellRendererComponent(
-			tree,
-			value,
-			isSelected,
-			expanded,
-			leaf,
-			row,
-			hasFocusVar);
+		/* RIYAD: Waffel pointed out that this is a noop call, the return is
+		 * never used. Most likely this was the default behavior with the first
+		 * impl and it was never removed because no one knew what it did.
+		 */
+//		super.getTreeCellRendererComponent(
+//			tree,
+//			value,
+//			isSelected,
+//			expanded,
+//			leaf,
+//			row,
+//			hasFocusVar);
 
 		FolderTreeNode treeNode = (FolderTreeNode) value;
 

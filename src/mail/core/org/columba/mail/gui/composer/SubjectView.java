@@ -15,6 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
 import javax.swing.JTextField;
 
 import org.columba.mail.util.MailResourceLoader;
@@ -34,8 +37,8 @@ public class SubjectView extends JTextField {
 	public SubjectView( SubjectController controller )
 	{
 		super(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
-		
 		this.controller = controller;				
+		addFocusListener(new FocusEventHandler());
 	}
 	
 	public void installListener( SubjectController controller )
@@ -43,7 +46,19 @@ public class SubjectView extends JTextField {
 		getDocument().addDocumentListener(controller);
 	}
 	
-	
-	
-
+	private class FocusEventHandler extends FocusAdapter
+	{
+		/**
+		 * Used to clear the subject field if the user clicks in it for
+		 * the first time and the text contained in it is the default emtpy
+		 * subject test.
+		 * 
+		 * @param evt The focus event fired when the focus was gained by this
+		 * component.
+		 */
+		public void focusGained(FocusEvent evt) {
+			if(SubjectView.this.getText().equals(MailResourceLoader.getString("dialog","composer","composer_no_subject")))
+				SubjectView.this.setText("");
+		}
+	}
 }

@@ -26,14 +26,40 @@ package org.columba.mail.parser.text;
  * Window>Preferences>Java>Code Generation.
  */
 public class BodyTextParser {
-
-	public static String quote( String text )
+	/**
+	 * Quote each line of a body of text with the default greater than 
+	 * character.
+	 *  
+	 * @param text The text that will be quoted.
+	 * @return the text passed in with each line quoted with the default greater
+	 * than sign.
+	 */
+	public static String quote(String text)
 	{
-		if (text == null)
+		return quote("> ", text);
+	}
+	
+	/**
+	 * Quote each line of a body of text with a given string prefix.
+	 * 
+	 * @param prefix The string prefix to prepend to each line of text. This was
+	 * made a String instead of a char so you could prefix a line with ANY 
+	 * values, not just single chars.
+	 * @param text The text that will have each of its lines prepended with the
+	 * prefix value.
+	 * @return the text passed in with each line quoted with the passed in 
+	 * prefix string.
+	 */
+	public static String quote(String prefix, String text)
+	{
+		/* Lazily create the buffer, because we can better guess its initial
+		 * size and avoid resizing of the internal array
+		 */
+		StringBuffer buffer = null;
+		
+		/* Check if the text is null or empty */
+		if (text == null || text.length() == 0)
 			return null;
-
-
-		StringBuffer buf = new StringBuffer();
 
 		/*
 		 * *20030621, karlpeder* The StringTokenizer treats
@@ -50,19 +76,28 @@ public class BodyTextParser {
 		}
 		return buf.toString();
 */
-		int end = 0;
-		int start = 0;
-		while (end < text.length()) {
-			end = text.indexOf('\n', start);
-			if (end == -1) {
-				end = text.length();
-			}
-			buf.append("> ");
-			buf.append(text.substring(start, end));
-			buf.append("\n");
-			start = end + 1;
-		}
-		return buf.toString();
-	}
 
+//		int end = 0;
+//		int start = 0;
+//		while (end < text.length()) {
+//			end = text.indexOf('\n', start);
+//			if (end == -1) {
+//				end = text.length();
+//			}
+//			buf.append("> ");
+//			buf.append(text.substring(start, end));
+//			buf.append("\n");
+//			start = end + 1;
+//		}
+
+		/* RIYAD: Lets use regexp and simplify the code, they are superfast */
+		String[] textLines = text.split("\n");
+		/* Make the buffer the size of the original text + 2 new chars per each line */
+		buffer = new StringBuffer(text.length() + 2 * textLines.length);
+		
+		for(int i = 0; i < textLines.length; i++)
+			buffer.append(prefix).append(textLines[i]);
+		
+		return buffer.toString();
+	}
 }
