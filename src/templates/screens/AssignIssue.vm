@@ -37,8 +37,6 @@ $page.setTitle("Assign users")
 #foreach ($issueId in $issueList)
    #set ($mylink = $mylink.addPathInfo("issue_ids", $issueId))
 #end
-$mylink
-
 <p><a href="${mylink}#add">Click here</a> to select users to associate with this issue</p>
 		
 
