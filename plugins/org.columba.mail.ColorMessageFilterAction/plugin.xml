@@ -1,0 +1,14 @@
+<plugin id="org.columba.mail.colormessage.ColorMessageFilterAction"
+        name="Color a message filteraction"
+        description="Colors a message in the message list with a specified color."
+        version="1.0"
+        enabled="true"
+        category="Filter Action" >
+	<extension name="org.columba.mail.filteraction">
+  		<filteraction name="Color message"
+          main_class="org.columba.mail.filter.plugins.colormessage.ColorMessageFilterAction"
+          gui_class= "org.columba.mail.filter.plugins.colormessage.ColorActionConfig" />
+	</extension> 
+	<runtime type="java"
+          jar="ColorMessageFilterAction.jar" />
+</plugin>
