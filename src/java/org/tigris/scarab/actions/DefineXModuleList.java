@@ -96,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.7 2002/08/06 03:09:29 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.8 2002/08/06 17:39:00 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -252,6 +252,20 @@ public class DefineXModuleList extends RequireLoginFirstAction
             Group group = 
                 intake.get("MITList", list.getQueryKey(), false);
             group.setProperties(list);
+            // check if the name already exists and inactivate the old list
+            MITList oldList = MITListManager
+                .getInstanceByName(list.getName(), user);
+            if (oldList != null) 
+            {
+                // oldList should not be the same as the new, but checking
+                // will not hurt
+                if (!list.equals(oldList)) 
+                {                                    
+                    oldList.setActive(false);
+                    oldList.save();
+                }
+            }
+            // save the new list
             list.save();
 
             // if the list is modifiable, we do not keep the saved list

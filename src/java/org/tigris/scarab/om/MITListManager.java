@@ -8,7 +8,9 @@ import java.util.Iterator;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
 
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 
 /** 
@@ -119,6 +121,28 @@ public class MITListManager
         return list;
     }
 
+    public static MITList getInstanceByName(String name, ScarabUser user)
+        throws TorqueException
+    {
+        MITList result = null;
+        Criteria crit = new Criteria();
+        crit.add(MITListPeer.NAME, name);
+        crit.add(MITListPeer.ACTIVE, true);
+        crit.add(MITListPeer.USER_ID, user.getUserId());
+        List mitLists = MITListPeer.doSelect(crit);
+        if (mitLists != null && !mitLists.isEmpty()) 
+        {
+            result = (MITList)mitLists.get(0);
+            // it is not good if more than one active list has the 
+            // same name (per user).  We could throw an exception here
+            // but its possible the system can still function under
+            // this circumstance, so just log it for now.
+            Log.get().error("Multiple active lists exist with list name="
+                            + name + " for user=" + user.getUserName() + 
+                            "("+user.getUserId()+")");
+        }
+        return result;
+    }
 }
 
 
