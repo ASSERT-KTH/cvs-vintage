@@ -18,7 +18,7 @@ import java.awt.Cursor;
  * 
  * <p>Created on: 08/05/2003.</p>
  * 
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author <a href="mailto:ricardo_padilha@users.sourceforge.net">Ricardo 
  * Sangoi Padilha</a>
  * @see CH.ifa.draw.framework.Cursor
@@ -39,8 +39,8 @@ public class AWTCursor extends Cursor implements CH.ifa.draw.framework.Cursor {
 	 * @param name
 	 * @see Cursor#Cursor(java.lang.String)
 	 */
-	public AWTCursor(String name) {
-		super(name);
+	public AWTCursor(String newName) {
+		super(newName);
 	}
 
 }
