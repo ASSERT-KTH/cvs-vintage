@@ -55,7 +55,7 @@ import org.tigris.scarab.tools.localization.LocalizationKey;
     would result in a bad state.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ValidationException.java,v 1.3 2004/05/01 19:04:29 dabbous Exp $
+    @version $Id: ValidationException.java,v 1.4 2004/05/07 05:57:48 dabbous Exp $
 */
 public class ValidationException extends ScarabException
 {

@@ -72,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.67 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: IssueType.java,v 1.68 2004/05/07 05:57:42 dabbous Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType

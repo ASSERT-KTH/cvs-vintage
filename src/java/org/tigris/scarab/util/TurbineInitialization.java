@@ -60,7 +60,7 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.9 2004/05/01 19:04:29 dabbous Exp $
+ * @version $Id: TurbineInitialization.java,v 1.10 2004/05/07 05:57:48 dabbous Exp $
  */
 public class TurbineInitialization
 {

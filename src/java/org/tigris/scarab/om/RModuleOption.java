@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.43 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: RModuleOption.java,v 1.44 2004/05/07 05:57:42 dabbous Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption

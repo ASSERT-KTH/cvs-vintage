@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.100 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.101 2004/05/07 05:57:41 dabbous Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 

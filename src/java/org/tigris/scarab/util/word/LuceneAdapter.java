@@ -85,7 +85,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.27 2004/05/01 19:04:30 dabbous Exp $
+ * @version $Id: LuceneAdapter.java,v 1.28 2004/05/07 05:57:48 dabbous Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex

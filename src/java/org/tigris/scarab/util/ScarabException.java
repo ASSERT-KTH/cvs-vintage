@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.localization.Localizable;
     ScarabExcetpion adds a new type of message, the L10NMessage.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ScarabException.java,v 1.5 2004/05/01 19:04:29 dabbous Exp $
+    @version $Id: ScarabException.java,v 1.6 2004/05/07 05:57:47 dabbous Exp $
 */
 public class ScarabException extends TurbineException implements Localizable
 {

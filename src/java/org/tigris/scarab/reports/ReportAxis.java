@@ -46,7 +46,7 @@ import org.apache.fulcrum.intake.Retrievable;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportAxis.java,v 1.5 2004/05/01 19:04:24 dabbous Exp $
+ * @version $Id: ReportAxis.java,v 1.6 2004/05/07 05:57:42 dabbous Exp $
  */
 public class ReportAxis
     implements java.io.Serializable,

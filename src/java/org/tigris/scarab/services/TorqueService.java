@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * It also creates an instance of each scarab om object to avoid deadlock.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TorqueService.java,v 1.5 2004/05/01 19:04:27 dabbous Exp $
+ * @version $Id: TorqueService.java,v 1.6 2004/05/07 05:57:43 dabbous Exp $
  */
 public class TorqueService
     extends BaseService

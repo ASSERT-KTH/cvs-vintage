@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValuePeer.java,v 1.17 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: AttributeValuePeer.java,v 1.18 2004/05/07 05:57:42 dabbous Exp $
  */
 public class AttributeValuePeer 
     extends BaseAttributeValuePeer

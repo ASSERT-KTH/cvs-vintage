@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.26 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.27 2004/05/07 05:57:42 dabbous Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo

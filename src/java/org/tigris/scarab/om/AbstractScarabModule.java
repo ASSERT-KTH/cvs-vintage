@@ -103,7 +103,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.117 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.118 2004/05/07 05:57:41 dabbous Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject

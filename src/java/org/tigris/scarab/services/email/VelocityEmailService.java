@@ -105,7 +105,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
- * @version $Id: VelocityEmailService.java,v 1.8 2004/05/01 19:04:28 dabbous Exp $
+ * @version $Id: VelocityEmailService.java,v 1.9 2004/05/07 05:57:43 dabbous Exp $
  */
 public class VelocityEmailService
     extends BaseTemplateEngineService

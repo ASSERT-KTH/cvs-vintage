@@ -58,7 +58,7 @@ import org.tigris.scarab.util.ScarabException;
     searches are in process and another is requested.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: MaxConcurrentSearchException.java,v 1.2 2004/05/01 19:04:30 dabbous Exp $
+    @version $Id: MaxConcurrentSearchException.java,v 1.3 2004/05/07 05:57:48 dabbous Exp $
 */
 public class MaxConcurrentSearchException extends ScarabException
 {

@@ -59,7 +59,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.7 2004/05/01 19:04:23 dabbous Exp $
+ * @version $Id: ActivitySetManager.java,v 1.8 2004/05/07 05:57:42 dabbous Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager

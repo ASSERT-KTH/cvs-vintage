@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.9 2004/05/01 19:04:28 dabbous Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.10 2004/05/07 05:57:44 dabbous Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
