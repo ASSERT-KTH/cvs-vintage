@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class WebMetaData extends MetaData
 {
@@ -81,23 +81,36 @@ public class WebMetaData extends MetaData
 
    private ArrayList depends = new ArrayList();
 
-   /** Should the context use session cookies or use default */
-   private int sessionCookies=SESSION_COOKIES_DEFAULT;
-
-   public static final int SESSION_COOKIES_DEFAULT=0;
-   public static final int SESSION_COOKIES_ENABLED=1;
-   public static final int SESSION_COOKIES_DISABLED=2;
-
-   public static final int SESSION_INVALIDATE_SET_AND_GET =0;
-   public static final int SESSION_INVALIDATE_SET_AND_NON_PRIMITIVE_GET =1;
-   public static final int SESSION_INVALIDATE_SET =2;
+   public static final int SESSION_INVALIDATE_ACCESS =0;
+   public static final int SESSION_INVALIDATE_SET_AND_GET =1;
+   public static final int SESSION_INVALIDATE_SET_AND_NON_PRIMITIVE_GET =2;
+   public static final int SESSION_INVALIDATE_SET =3;
 
    private int invalidateSessionPolicy = SESSION_INVALIDATE_SET_AND_NON_PRIMITIVE_GET;
 
    public static final int REPLICATION_TYPE_SYNC = 0;
    public static final int REPLICATION_TYPE_ASYNC = 1;
 
+   /**
+    * @deprecated Since JBoss3.2.6.
+    */
    private int replicationType = REPLICATION_TYPE_SYNC;
+
+   /** Specify the session replication granularity level: session --- whole session level,
+    * attribute --- per attribute change, field --- fine grained user object level.
+    *
+    */
+   public static final int REPLICATION_GRANULARITY_SESSION = 0;
+   public static final int REPLICATION_GRANULARITY_ATTRIBUTE = 1;
+   public static final int REPLICATION_GRANULARITY_FIELD = 2;
+   private int replicationGranularity = REPLICATION_GRANULARITY_SESSION;
+
+   /** Should the context use session cookies or use default */
+   private int sessionCookies = SESSION_COOKIES_DEFAULT;
+
+   public static final int SESSION_COOKIES_DEFAULT=0;
+   public static final int SESSION_COOKIES_ENABLED=1;
+   public static final int SESSION_COOKIES_DISABLED=2;
 
    /** The ClassLoader to load additional resources */
    private URLClassLoader resourceCl;
@@ -324,6 +337,11 @@ public class WebMetaData extends MetaData
    public int getReplicationType()
    {
       return replicationType;
+   }
+
+   public int getReplicationGranularity()
+   {
+      return replicationGranularity;
    }
 
    public void importXml(Element element) throws DeploymentException
@@ -682,6 +700,20 @@ public class WebMetaData extends MetaData
                   + "' (should be ['SYNC', 'ASYNC']) in jboss-web.xml");
          }
 
+         // ... then manage "replication-type".
+         //
+         Element replicationGranularityElement = MetaData.getOptionalChild(sessionReplicationRootElement, "replication-granularity");
+         if (replicationGranularityElement != null)
+         {
+            String repType = MetaData.getElementContent(replicationGranularityElement);
+            if ("SESSION".equalsIgnoreCase(repType))
+               this.replicationGranularity = REPLICATION_GRANULARITY_SESSION;
+            else if ("ATTRIBUTE".equalsIgnoreCase(repType))
+               this.replicationGranularity = REPLICATION_GRANULARITY_ATTRIBUTE;
+            else
+               throw new DeploymentException("replication-granularity value set to a non-valid value: '" + repType
+                  + "' (should be ['SESSION', 'ATTRIBUTE']) in jboss-web.xml");
+         }
       }
 
       // Check for a war level class loading config
