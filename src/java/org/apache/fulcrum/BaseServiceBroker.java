@@ -86,7 +86,7 @@ import org.apache.log4j.helpers.NullEnumeration;
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: BaseServiceBroker.java,v 1.1 2004/10/24 22:12:30 dep4b Exp $
+ * @version $Id: BaseServiceBroker.java,v 1.2 2004/10/28 18:37:33 dep4b Exp $
  */
 public abstract class BaseServiceBroker implements ServiceBroker
 {
@@ -177,9 +177,9 @@ public abstract class BaseServiceBroker implements ServiceBroker
         // first check for appenders in the root category and if that
         // returns no appenders to check in other categories.
 
-        Enumeration enum = Category.getRoot().getAllAppenders();
+        Enumeration appenders  = Category.getRoot().getAllAppenders();
 
-        if (!(enum instanceof NullEnumeration))
+        if (!(appenders instanceof NullEnumeration))
         {
             return true;
         }
