@@ -13,7 +13,7 @@
 		<tr>
 		
 		<td>
-		<div align="right" id="loginstatus">
+		<div align="right" id="login">
 		    #if ($data.User.FirstName)
 			<div>
 				Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
@@ -22,9 +22,9 @@
 <div>
 #if ($scarabR.CurrentModule)
    Current Module: 
-   <a href="$link.setPage("SelectModule.vm")"><strong class="username">$scarabR.CurrentModule.Name</strong></a>
+   <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
 #else
-   <a href="$link.setPage("SelectModule.vm")"><strong class="username">Select Module</strong></a>
+   <a href="$link.setPage("SelectModule.vm")"><strong>Select Module</strong></a>
 #end
 </div>
 
@@ -44,48 +44,53 @@
 		</table>
 	</div>
 
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-<tr>
-<td id="leftcol" nowrap="nowrap" width="20%">
-<!-- Structural Elements -->
-	
+<table border="0" cellspacing="12" cellpadding="0" width="97%">
+ <tr valign="top">
+  <td id="leftcol" width="20%">
 	<div id="navcolumn">
-		<div><strong>My start page</strong></div>
-		<div><strong>Projects &amp; categories</strong></div>
-		<div>Project tools</div>
-			<div>&nbsp;&raquo;&nbsp;Documents</div>
-			<div>&nbsp;&raquo;&nbsp;Issue tracking</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Queries</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Vote mgmt.</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Workflow optns.</div>
-			<div>&nbsp;&raquo;&nbsp;Mailing lists</div> 
-			<div>&nbsp;&raquo;&nbsp;Members</div>  
-			<div>&nbsp;&raquo;&nbsp;News</div>
-			<div>&nbsp;&raquo;&nbsp;Source code</div>
-		<div><strong>Admin functions</strong></div>
-	</div>
 
-	<div id="helptext">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-			<th><strong>Help Files...</strong></th>
-		</tr>
-		<tr>
-			<td>
-			<div><strong>How do I...?</strong></div>
-			<div>Use this page</div>
-			<div>Learn about a project</div>
-			<div>Join a project</div>
-			</td>
-		</tr>
-		</table>
-	</div>
+<div><strong><a href="#">My start page</a></strong></div>
+
+<div><strong><a href="#">Projects &amp; categories</a></strong></div> 
+
+ <div id="tools"><strong>Project tools</strong>
+      <div><small><a href="#">Members</a></small></div>
+ <div><small><a href="#"> Mailing lists</a></small></div> 
+<div><small><a href="#">Source code</a></small></div>
+<div><small><a href="#">Issue tracking</a></small>
+
+
+			<div><small><a href="#">Enter issue</a></small></div>
+			<div><small><a href="#">Queries</a></small></div>
+			<div><small><a href="#">Reports</a></small></div>
+			<div><small><a href="#">Vote mgmt.</a></small></div>
+			<div><small><a href="#">Workflow optns.</a></small></div>
+
+</div>
+     <div><small><a href="#">Documents</a></small></div>
+      <div><small><a href="#">News</a></small></div>  
+   </div>
+
+</div>
+  <div id="helptext">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+ <tr>
+ <th>How do I...?</th>
+ </tr>
+ <tr>
+ <td>
+  <div><a href="#">Learn 
+ more about this project?</a> </div> <div><a href="#">Print this page...</a></div>
+<div><a href="#">Troubleshoot...</a>
+</div>
+</td>
+</tr>
+</table>
+</div>
+
 
 </td>
-<td id="bodycol">
+<td width="100%" id="bodycol">
 
 	<!-- Scarab - App -->
 	<div id="topmodule">
@@ -98,14 +103,14 @@
 			<option>query one</option>
 			<option>query two</option>
 			</select> 
-			<input type="submit" name="query" value="Go" class="bttn" />
+			<input type="submit" name="query" value="Go" />
 			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
 
             <input type="text" name="id" size="15" maxlength="255" />
-            <input type="submit" name="Submit" value="Query" class="bttn" />
+            <input type="submit" name="Submit" value="Query" />
 
 			&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			Advanced&nbsp;|&nbsp;Custom
+			<small><a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a></small>
    </form>
 			</td>			
 		</tr>
