@@ -6,22 +6,24 @@
  */
 package org.jboss.ejb;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.MalformedURLException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.HashMap;
-import java.util.ArrayList;
-import javax.management.MBeanServer;
+
 import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
-import javax.management.ObjectName;
 
 import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
@@ -44,7 +46,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @see org.jboss.deployment.J2eeDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -243,7 +245,7 @@ public class AutoDeployer
       throws javax.management.MalformedObjectNameException
    {
       this.server = server;
-      return new ObjectName(OBJECT_NAME+deployerList);
+      return name==null ? new ObjectName(OBJECT_NAME) : name;
    }
 
    protected void startService()
