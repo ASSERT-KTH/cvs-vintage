@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import javax.sql.DataSource;
-import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -28,11 +27,11 @@ import org.jboss.logging.Logger;
 
 /**
  * JDBCStopCommand drops the table for this entity if specified in the xml.
- *    
+ *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCStopCommand {
 
@@ -40,7 +39,7 @@ public class JDBCStopCommand {
    private JDBCEntityBridge entity;
    private JDBCEntityMetaData entityMetaData;
    private Logger log;
- 
+
    public JDBCStopCommand(JDBCStoreManager manager) {
       this.manager = manager;
       entity = manager.getEntityBridge();
@@ -48,11 +47,11 @@ public class JDBCStopCommand {
 
       // Create the Log
       log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
+            this.getClass().getName() +
+            "." +
             manager.getMetaData().getName());
    }
-   
+
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
          log.info("Dropping table for entity " + entity.getEntityName());
@@ -65,14 +64,14 @@ public class JDBCStopCommand {
 
       // drop relation tables
       List cmrFields = entity.getCMRFields();
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) {
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
 
          JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          if(relationMetaData.isTableMappingStyle() &&
             relationMetaData.getTableExists()) {
-            
+
             if(relationMetaData.getRemoveTable()) {
                dropTable(
                      relationMetaData.getDataSource(),
@@ -82,7 +81,7 @@ public class JDBCStopCommand {
          }
       }
    }
-   
+
    private void dropTable(DataSource dataSource, String tableName) {
       Connection con = null;
       ResultSet rs = null;
@@ -121,7 +120,7 @@ public class JDBCStopCommand {
          try {
             con = dataSource.getConnection();
             statement = con.createStatement();
-         
+
             // execute sql
             String sql = "DROP TABLE " + tableName;
             log.debug("Executing SQL: " + sql);

@@ -41,6 +41,7 @@ import org.jboss.tm.DTXAResourceInterceptor;
 import org.jboss.tm.JBossRollbackException;
 import org.jboss.tm.JBossTransactionRolledbackException;
 import org.jboss.tm.JBossTransactionRolledbackLocalException;
+import org.jboss.tm.TxUtils;
 import org.jboss.util.UnreachableStatementException;
 
 
@@ -503,7 +504,7 @@ public abstract class TxSupport
                                              org.jboss.proxy.Interceptor next)
          throws Throwable
       {
-         if (tm.getTransaction() != null)
+         if (!TxUtils.isCompleted(tm))
          {
             throw new EJBException("Transaction not allowed");
          } // end of if ()
@@ -515,7 +516,7 @@ public abstract class TxSupport
                                              org.jboss.ejb.Interceptor next)
          throws Exception
       {
-         if (tm.getTransaction() != null)
+         if (!TxUtils.isCompleted(tm))
          {
             throw new IllegalStateException("Transaction present on server in Never call");
          } // end of if ()
@@ -552,7 +553,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (tx != null)
+         if (TxUtils.isActive(tx))
          {
             tm.suspend();
             try
@@ -592,7 +593,7 @@ public abstract class TxSupport
          throws Throwable
       {
          Transaction tx = tm.getTransaction();
-         if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+         if (TxUtils.isActive(tx))
          {
             setTransaction(invocation, tx);
          } // end of if ()
@@ -604,13 +605,14 @@ public abstract class TxSupport
                                              org.jboss.ejb.Interceptor next)
          throws Exception
       {
-         if (tm.getTransaction() == null)
+         Transaction tx = tm.getTransaction();
+         if (!TxUtils.isActive(tx))
          {
             return invokeInNoTx(invocation, next);
          } // end of if ()
          else
          {
-            return invokeInCallerTx(invocation, next, tm.getTransaction());
+            return invokeInCallerTx(invocation, next, tx);
          } // end of else
       }
 
@@ -634,7 +636,7 @@ public abstract class TxSupport
          throws Throwable
       {
          Transaction tx = tm.getTransaction();
-         if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+         if (TxUtils.isActive(tx))
          {
             setTransaction(invocation, tx);
          } // end of if ()
@@ -647,7 +649,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (tx == null)
+         if (!TxUtils.isActive(tx))
          {
             return invokeInOurTx(invocation, next, tm);
          } // end of if ()
@@ -686,7 +688,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (tx != null)
+         if (TxUtils.isActive(tx))
          {
             tm.suspend();
             try
@@ -724,7 +726,7 @@ public abstract class TxSupport
          throws Throwable
       {
          Transaction tx = tm.getTransaction();
-         if (tx == null || tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+         if (!TxUtils.isActive(tx))
          {
             throw new EJBException("Transaction required");
          } // end of if ()
@@ -738,7 +740,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (tx == null)
+         if (!TxUtils.isActive(tx))
          {
             throw new EJBException("Transaction required");
          } // end of if ()
@@ -775,7 +777,7 @@ public abstract class TxSupport
          throws Exception
       {
          Transaction tx = tm.getTransaction();
-         if (tx != null)
+         if (TxUtils.isActive(tx))
          {
             tm.suspend();
             try
@@ -800,6 +802,12 @@ public abstract class TxSupport
             ((EnterpriseContext) invocation.getEnterpriseContext());
          //if there is a transaction in the context from a previous invocation, resume it.
          Transaction initialTx = ctx.getTransaction();
+         //if there, it had better be active!
+         if (!TxUtils.isActive(initialTx))
+         {
+            throw new IllegalStateException("Found non-active transaction in stateful session bean enterprise context! ctx: " + ctx + ", tx: " + initialTx);
+         } // end of if ()
+
          if (initialTx != null)
          {
             tm.resume(initialTx);
@@ -852,7 +860,7 @@ public abstract class TxSupport
             return next.invoke(invocation);
          }
          Transaction tx = tm.getTransaction();
-         if (tx != null)
+         if (TxUtils.isActive(tx))
          {
             tm.suspend();
             try
@@ -880,7 +888,7 @@ public abstract class TxSupport
          finally
          {
             Transaction tx = tm.getTransaction();
-            if (tx != null)
+            if (!TxUtils.isCompleted(tx))
             {
                //ejb2.1 section 17.6.1
                String msg = "Application error, UserTransaction not complete on return of call to stateless session bean " + invocation.getObjectName();

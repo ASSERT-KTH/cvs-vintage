@@ -7,11 +7,8 @@
 package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,18 +17,14 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
-import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import javax.management.MBeanException;
-import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
@@ -55,17 +48,14 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
 
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCOptimisticLockingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCMetaDataMigrationUtil;
 
-import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
 
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.util.CachePolicy;
-import org.jboss.util.LRUCachePolicy;
 
 import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
+import org.jboss.tm.TxUtils;
 
 /**
  * JDBCStoreManager manages storage of persistence data into a table.
@@ -82,7 +72,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -211,21 +201,21 @@ public class JDBCStoreManager implements EntityPersistenceStore
       try
       {
          return container.getServer().invoke(
-               objectCopier, 
-               "copy", 
+               objectCopier,
+               "copy",
                new Object[] {source},
                copyArgs);
       }
       catch(MBeanException e)
       {
          throw new EJBException(
-               "Exception occured in copy", 
+               "Exception occured in copy",
                e.getTargetException());
       }
       catch(ReflectionException e)
       {
          throw new EJBException(
-               "Exception occured in copy", 
+               "Exception occured in copy",
                e.getTargetException());
       }
       catch(Exception e)
@@ -340,9 +330,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
             // do we have an existing map
             int status = tx.getStatus();
-            if(txDataMap == null &&
-            (status == Status.STATUS_ACTIVE ||
-            status == Status.STATUS_PREPARING))
+            if(txDataMap == null && TxUtils.isActive(tx))
             {
 
                // We want to be notified when the transaction commits

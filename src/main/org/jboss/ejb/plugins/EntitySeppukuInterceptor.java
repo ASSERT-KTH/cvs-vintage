@@ -27,6 +27,7 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.tm.TxUtils;
 
 import javax.jms.DeliveryMode;
 import javax.jms.Topic;
@@ -43,18 +44,18 @@ import javax.jms.JMSException;
 import org.w3c.dom.Element;
 
 /**
- * The role of this interceptor is to register synchronizations with the 
- * transaction manager when an Entity as changed.  The Synchronization will 
- * broadcast a seppuku message through a JMS topic if the change successfully 
+ * The role of this interceptor is to register synchronizations with the
+ * transaction manager when an Entity as changed.  The Synchronization will
+ * broadcast a seppuku message through a JMS topic if the change successfully
  * commits
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class EntitySeppukuInterceptor extends AbstractInterceptor
 {
    protected HashMap seppukuSynchs = new HashMap();
- 
+
    protected TopicConnection  conn = null;
    protected TopicSession session = null;
    protected Topic topic = null;
@@ -67,7 +68,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
    public void readConfiguration()
    {
       connectionFactoryName = config.getAttribute("connectionFactory");
-      if(connectionFactoryName == null || 
+      if(connectionFactoryName == null ||
             connectionFactoryName.trim().equals(""))
       {
          connectionFactoryName = "java:/ConnectionFactory";
@@ -77,14 +78,14 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       topicName = config.getAttribute("topic");
       if(topicName == null || topicName.trim().equals(""))
       {
-         topicName = "topic/" + 
-               getContainer().getBeanMetaData().getEjbName() + 
+         topicName = "topic/" +
+               getContainer().getBeanMetaData().getEjbName() +
                "_seppuku";
       }
       topicName = topicName.trim();
-      
+
       String strTransacted = config.getAttribute("transacted");
-      if(strTransacted == null || 
+      if(strTransacted == null ||
             "true".equals(strTransacted.toLowerCase().trim()))
       {
          transacted = true;
@@ -111,7 +112,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          }
       }
    }
- 
+
    protected void initialize()
    {
       try
@@ -124,7 +125,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          topic = (Topic) iniCtx.lookup(topicName);
          session = conn.createTopicSession(transacted, acknowledgeMode);
          conn.start();
-         pub = session.createPublisher(topic);     
+         pub = session.createPublisher(topic);
       }
       catch (Exception ex)
       {
@@ -153,7 +154,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          // DAIN: initialize can't throw an exception...
          log.error("Failed to start seppuku interceptor", ex);
       }
-   }      
+   }
 
    public void stop()
    {
@@ -172,35 +173,35 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          log.error("Failed to stop EntitySeppukuInterceptor: ", ex);
       }
    }
- 
+
    public InvocationResponse invoke(Invocation mi) throws Exception
    {
       if(mi.getType().isHome())
       {
-         return getNext().invoke(mi);  
+         return getNext().invoke(mi);
       }
 
       EntityContainer container = (EntityContainer)getContainer();
       EntityEnterpriseContext ctx = (
             EntityEnterpriseContext)mi.getEnterpriseContext();
       Object id = ctx.getId();
-  
+
       // The Tx coming as part of the Method Invocation
       Transaction tx = mi.getTransaction();
-  
+
       if(log.isTraceEnabled())
       {
          log.trace("invoke called for ctx " + ctx + ", tx=" + tx);
       }
 
       // Invocation with a running Transaction
-      if(tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
+      if(TxUtils.isActive(tx))
       {
-         InvocationResponse returnValue = getNext().invoke(mi);  
+         InvocationResponse returnValue = getNext().invoke(mi);
 
          // readonly does not synchronize, lock or belong with transaction.
          // nor does it modify data.
-         if(!container.isReadOnly()) 
+         if(!container.isReadOnly())
          {
             Method method = mi.getMethod();
             if(method == null ||
@@ -216,7 +217,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       {
          // No tx
          InvocationResponse returnValue = getNext().invoke(mi);
-         
+
          if(ctx.getId() != null)
          {
             if(!container.isReadOnly())
@@ -240,7 +241,7 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
          return returnValue;
       }
    }
- 
+
    protected void register(EntityEnterpriseContext ctx, Transaction tx)
       throws Exception
    {
@@ -269,26 +270,26 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       msg.setObject(ids);
       getPublisher().publish(msg);
    }
- 
+
    protected void sendSeppukuEvent(Object id) throws Exception
    {
       HashSet ids = new HashSet();
       ids.add(id);
       sendSeppukuSet(ids);
    }
- 
+
    protected class SeppukuSynchronization implements Synchronization
    {
       /**
        *  The transaction we follow.
        */
-      protected Transaction tx;
-  
+      protected final Transaction tx;
+
       /**
        *  The context we manage.
        */
       protected HashSet ids = new HashSet();
-  
+
       /**
        *  Create a new isynchronization instance.
        */
@@ -301,12 +302,12 @@ public class EntitySeppukuInterceptor extends AbstractInterceptor
       {
          ids.add(key);
       }
-  
+
       public void beforeCompletion()
       {
          // complete
       }
-  
+
       public void afterCompletion(int status)
       {
          // This is an independent point of entry. We need to make sure the

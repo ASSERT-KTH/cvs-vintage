@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.HashMap;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
-import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
@@ -48,6 +47,7 @@ import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
+import org.jboss.tm.TxUtils;
 
 /**
  * JDBCCMRFieldBridge a bean relationship. This class only supports
@@ -61,7 +61,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -176,7 +176,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    public void resolveRelationship() throws DeploymentException {
 
       //
-      // Set handles to the related entity's container, 
+      // Set handles to the related entity's container,
       // manager, and invoker
       //
 
@@ -1354,11 +1354,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                Transaction tx = tm.getTransaction();
 
                // if whe have a valid transaction...
-               if(tx != null &&
-                     (tx.getStatus() == Status.STATUS_ACTIVE ||
-                      tx.getStatus() == Status.STATUS_PREPARING)) {
+               if(TxUtils.isActive(tx))
+               {
 
-                  // crete the relation set and register for a tx callback
+                  // create the relation set and register for a tx callback
                   relationSet = new RelationSet(
                      JDBCCMRFieldBridge.this, ctx, setHandle);
                   TxSynchronization sync =

@@ -6,16 +6,10 @@
  */
 package org.jboss.ejb.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -40,7 +34,7 @@ import org.jboss.tm.TransactionLocal;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class EntityInvocationRegistry
 {
@@ -57,7 +51,7 @@ public final class EntityInvocationRegistry
 
    /**
     * Holds the entities registry for each thread.
-    * This registry holds information for all entities in the 
+    * This registry holds information for all entities in the
     * current thread, but not associated with a transaction.
     */
    private final ThreadLocal registryThreadLocal;
@@ -68,8 +62,8 @@ public final class EntityInvocationRegistry
    private final Logger log = Logger.getLogger(getClass());
 
    /**
-    * Creates a new EntityInvocationRegistry.  Normally there is one registry 
-    * for the entire JBoss server, but eventually we should move this to a 
+    * Creates a new EntityInvocationRegistry.  Normally there is one registry
+    * for the entire JBoss server, but eventually we should move this to a
     * domain level object.
     * @throws IllegalStateException if transaction manager is not regstered at
     * java:/TransactionManager
@@ -92,7 +86,7 @@ public final class EntityInvocationRegistry
       // Create the transaction local to hold the entity registry
       registryTxLocal = new TransactionLocal(new EntitySynchronization())
       {
-         protected Object initialValue() 
+         protected Object initialValue()
          {
             return new Registry();
          }
@@ -101,7 +95,7 @@ public final class EntityInvocationRegistry
       // Create the thread local to hold the entity registry
       registryThreadLocal = new ThreadLocal()
       {
-         protected Object initialValue() 
+         protected Object initialValue()
          {
             return new Registry();
          }
@@ -117,7 +111,7 @@ public final class EntityInvocationRegistry
       if(!ctx.isValid())
       {
          // Not valid... tell the persistence manager to load the state
-         // Note: make sure to not chnage anything befoe calling load 
+         // Note: make sure to not chnage anything befoe calling load
          // you can get an exception from load
          container.getPersistenceManager().loadEntity(ctx);
 
@@ -125,7 +119,7 @@ public final class EntityInvocationRegistry
          ctx.setValid(true);
       }
 
-      // before we add the new context to the invocation stack we need to 
+      // before we add the new context to the invocation stack we need to
       // mark the current head of the stack as dirty because it could have
       // been modified
       LinkedList invocationStack = registry.getInvocationStack();
@@ -148,7 +142,7 @@ public final class EntityInvocationRegistry
          if(log.isTraceEnabled())
          {
             log.trace("Associated new entity: " +
-                  "ejb=" + container.getBeanMetaData().getEjbName() + 
+                  "ejb=" + container.getBeanMetaData().getEjbName() +
                   ", id=" + key.getId());
          }
       }
@@ -215,7 +209,7 @@ public final class EntityInvocationRegistry
    }
 
    /**
-    * Gets the EntityEnterpriseContext for the current transaction in the 
+    * Gets the EntityEnterpriseContext for the current transaction in the
     * specified container with the specified key.
     */
    public synchronized EntityEnterpriseContext getContext(
@@ -224,9 +218,9 @@ public final class EntityInvocationRegistry
    {
       return getContext(container, id, getTransaction());
    }
-            
+
    /**
-    * Gets the EntityEnterpriseContext for the current transaction in the 
+    * Gets the EntityEnterpriseContext for the current transaction in the
     * specified container with the specified key.
     */
    public EntityEnterpriseContext getContext(
@@ -244,7 +238,7 @@ public final class EntityInvocationRegistry
     * Sync all EntityEnterpriseContext that are involved (and changed)
     * within a transaction.
     */
-   public void synchronizeEntities() 
+   public void synchronizeEntities()
    {
       synchronizeEntities(getTransaction());
    }
@@ -253,12 +247,12 @@ public final class EntityInvocationRegistry
     * Sync all EntityEnterpriseContext that are involved (and changed)
     * within a transaction.
     */
-   public void synchronizeEntities(Transaction tx) 
+   public void synchronizeEntities(Transaction tx)
    {
-      // First we synchronize the head context in the invocation.  We 
-      // always synchronize the current context, because there is 
-      // no way to detect if current context has been modified or not.  
-      // After that, we synchronize anything in the dirty map.  We 
+      // First we synchronize the head context in the invocation.  We
+      // always synchronize the current context, because there is
+      // no way to detect if current context has been modified or not.
+      // After that, we synchronize anything in the dirty map.  We
       // loop over that map because an ejbStore call back can modifiy
       // another bean.
       Registry registry = getRegistry(tx);
@@ -278,7 +272,7 @@ public final class EntityInvocationRegistry
          // it may modify another entity and we need to know the additional
          // entities to synchronize in the next iteration of the outer loop
          registry.setDirtyMap(new HashMap());
-         
+
          // synchronize the dirty entities
          while(entities.hasNext())
          {
@@ -294,14 +288,14 @@ public final class EntityInvocationRegistry
       {
          // any one can mark the tx rollback at any time so check
          // before continuing to the store
-         if(transactionManager.getStatus() == Status.STATUS_MARKED_ROLLBACK) 
+         if(transactionManager.getStatus() == Status.STATUS_MARKED_ROLLBACK)
          {
             // nothing else to do here
             return;
-         } 
+         }
 
-         // only synchronize if we are not already synchronizing 
-         // the context or the id is not null.  A null id means 
+         // only synchronize if we are not already synchronizing
+         // the context or the id is not null.  A null id means
          // that the entity has already been removed.
          if(ctx.isInStore() ||  ctx.getId() == null)
          {
@@ -310,8 +304,8 @@ public final class EntityInvocationRegistry
 
          if(log.isTraceEnabled())
          {
-            log.trace("Synchronizing entity: " + 
-                  "ejb=" + container.getBeanMetaData().getEjbName() + 
+            log.trace("Synchronizing entity: " +
+                  "ejb=" + container.getBeanMetaData().getEjbName() +
                   ", id=" + ctx.getId());
          }
 
@@ -332,9 +326,9 @@ public final class EntityInvocationRegistry
       catch (Exception e)
       {
          // EJB 1.1 section 12.3.2 and EJB 2 section 18.3.3
-         // exception during store must log exception, mark tx for 
+         // exception during store must log exception, mark tx for
          // rollback and throw a TransactionRolledback[Local]Exception
-         // if using caller's transaction.  All of this is handled by 
+         // if using caller's transaction.  All of this is handled by
          // the AbstractTxInterceptor and LogInterceptor.
          //
          // however we may need to ignore a NoSuchEntityException -- TODO
@@ -344,7 +338,7 @@ public final class EntityInvocationRegistry
             throw (EJBException)e;
          }
          throw new EJBException("Exception in store of entity: " +
-               "ejb=" + container.getBeanMetaData().getEjbName() + 
+               "ejb=" + container.getBeanMetaData().getEjbName() +
                ", id=" + ctx.getId(), e);
       }
    }
@@ -352,7 +346,7 @@ public final class EntityInvocationRegistry
    /**
     * Disassociate entity with transaction.
     */
-   private void disassociateEntity(boolean rollback, Object id, EntityEnterpriseContext ctx) 
+   private void disassociateEntity(boolean rollback, Object id, EntityEnterpriseContext ctx)
    {
       // Get the container associated with this context
       EntityContainer container = (EntityContainer)ctx.getContainer();
@@ -361,7 +355,7 @@ public final class EntityInvocationRegistry
       if(trace)
       {
          log.trace("Disassociate entity: " +
-               "ejb=" + container.getBeanMetaData().getEjbName() + 
+               "ejb=" + container.getBeanMetaData().getEjbName() +
                ", id=" + id);
       }
 
@@ -377,7 +371,7 @@ public final class EntityInvocationRegistry
          lock.sync();
          try
          {
-            ConfigurationMetaData configuration = 
+            ConfigurationMetaData configuration =
                container.getBeanMetaData().getContainerConfiguration();
             int commitOption = configuration.getCommitOption();
 
@@ -396,12 +390,12 @@ public final class EntityInvocationRegistry
                {
                   container.passivateEntity(ctx);
                }
-               catch (Exception ignored) 
+               catch (Exception ignored)
                {
                   log.warn("Error in passivation of entity: " +
-                     "ejb=" + container.getBeanMetaData().getEjbName() + 
+                     "ejb=" + container.getBeanMetaData().getEjbName() +
                      ", id=" + id +
-                     ", ctx=" + ctx + 
+                     ", ctx=" + ctx +
                      ", transaction=" + transaction);
                }
                container.getInstancePool().free(ctx);
@@ -431,7 +425,7 @@ public final class EntityInvocationRegistry
                   // Invalidate everything AND Passivate instance
                   try
                   {
-                     // Do not call release if getId() is null.  This means 
+                     // Do not call release if getId() is null.  This means
                      // that the entity has been removed from cache.
                      // Release will schedule a passivation and this removed
                      // ctx could be put back into the cache!
@@ -447,7 +441,7 @@ public final class EntityInvocationRegistry
                }
                else if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION)
                {
-                  // TODO:  Commot option D should be replace with a timed 
+                  // TODO:  Commot option D should be replace with a timed
                   // cache invalidator
                   ctx.setValid(true);
                }
@@ -458,9 +452,9 @@ public final class EntityInvocationRegistry
             if(trace)
             {
                log.trace("Clearing transaction lock: " +
-                     "ejb=" + container.getBeanMetaData().getEjbName() + 
+                     "ejb=" + container.getBeanMetaData().getEjbName() +
                      ", id=" + id +
-                     ", ctx=" + ctx + 
+                     ", ctx=" + ctx +
                      ", transaction=" + transaction);
             }
 
@@ -473,13 +467,13 @@ public final class EntityInvocationRegistry
                if(trace)
                {
                   log.trace("Sending notify on TxLock: " +
-                        "ejb=" + container.getBeanMetaData().getEjbName() + 
+                        "ejb=" + container.getBeanMetaData().getEjbName() +
                         ", id=" + id +
-                        ", ctx=" + ctx + 
+                        ", ctx=" + ctx +
                         ", transaction=" + transaction);
                }
-            } 
-            finally 
+            }
+            finally
             {
                lock.releaseSync();
             }
@@ -504,7 +498,7 @@ public final class EntityInvocationRegistry
     * Gets the transaction associated with the current thread.
     * @throws EJBException if an error occurs while getting the transaction
     */
-   private Transaction getTransaction() 
+   private Transaction getTransaction()
    {
       try
       {
@@ -577,7 +571,7 @@ public final class EntityInvocationRegistry
    {
       private final EntityContainer container;
       private final Object id;
-      
+
       public EntityContextKey(final EntityContainer container, final Object id)
       {
          if(container == null)
@@ -592,7 +586,7 @@ public final class EntityInvocationRegistry
          this.id = id;
       }
 
-      public EntityContainer getContainer() 
+      public EntityContainer getContainer()
       {
          return container;
       }
@@ -621,9 +615,9 @@ public final class EntityInvocationRegistry
          return result;
       }
    }
-   
+
    /**
-    * EntitySynchronization synchronizes the entity state before the 
+    * EntitySynchronization synchronizes the entity state before the
     * transaction completes, and handles the commit options after the
     * transaction completes.
     */
@@ -631,7 +625,7 @@ public final class EntityInvocationRegistry
    {
       public void beforeCompletion()
       {
-         if(log.isTraceEnabled()) 
+         if(log.isTraceEnabled())
          {
             log.trace("beforeCompletion called");
          }
@@ -646,7 +640,7 @@ public final class EntityInvocationRegistry
 
          // There should be only one thread associated with this tx at a time.
          // Therefore we should not need to synchronize on entityList to ensure
-         // exclusive access.  EntityList is correct since it was obtained in a 
+         // exclusive access.  EntityList is correct since it was obtained in a
          // synch block.
          Registry registry = getRegistry(getTransaction());
          Map entityMap = registry.getAssociatedMap();

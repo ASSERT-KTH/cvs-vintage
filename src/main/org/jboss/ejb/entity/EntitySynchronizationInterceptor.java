@@ -6,28 +6,14 @@
  */
 package org.jboss.ejb.entity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashSet;
 
-import javax.ejb.EJBException;
-import javax.transaction.Status;
 import javax.transaction.Transaction;
 
-import org.jboss.ejb.BeanLock;
-import org.jboss.ejb.BeanLockManager;
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
-import org.jboss.invocation.PayloadKey;
-import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.tm.TransactionLocal;
 
 /**
  * The role of this interceptor is to synchronize the state of the cache with
@@ -46,22 +32,22 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
-      EntityEnterpriseContext ctx = 
+      EntityEnterpriseContext ctx =
             (EntityEnterpriseContext)invocation.getEnterpriseContext();
       Transaction tx = invocation.getTransaction();
 
-      // mark the context as read only if this is a readonly method and the context 
+      // mark the context as read only if this is a readonly method and the context
       // was not already readonly
       boolean didSetReadOnly = false;
       if(!ctx.isReadOnly() &&
-            (container.isReadOnly() || 
+            (container.isReadOnly() ||
              container.getBeanMetaData().isMethodReadOnly(invocation.getMethod()) ))
       {
          ctx.setReadOnly(true);
@@ -79,7 +65,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
       boolean exceptionThrown = false;
       try
       {
-         return getNext().invoke(invocation);  
+         return getNext().invoke(invocation);
       }
       catch(Exception e)
       {
@@ -89,7 +75,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
       }
       finally
       {
-         // if we registed we need to tell the registry 
+         // if we registed we need to tell the registry
          // that the invocation is done
          if(id != null)
          {

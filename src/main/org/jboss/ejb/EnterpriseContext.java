@@ -22,13 +22,7 @@ import javax.ejb.TimerService;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.UserTransaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.Synchronization;
-import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
-import javax.transaction.RollbackException;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
 
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
@@ -52,7 +46,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public abstract class EnterpriseContext
 {
@@ -207,7 +201,7 @@ public abstract class EnterpriseContext
       }
 
       /**
-       * Get the Principal for the current caller. This method 
+       * Get the Principal for the current caller. This method
        * cannot return null according to the ejb-spec.
        */
       public Principal getCallerPrincipal()
@@ -232,7 +226,7 @@ public abstract class EnterpriseContext
                beanPrincipal = realmMapping.getPrincipal(principal);
             }
             else
-            {  
+            {
                // Check for a unauthenticated principal value
                ApplicationMetaData appMetaData = container.getBeanMetaData().getApplicationMetaData();
                String name = appMetaData.getUnauthenticatedPrincipal();
@@ -327,11 +321,11 @@ public abstract class EnterpriseContext
             throw new IllegalStateException("ctx.getRollbackOnly() not allowed for BMT beans.");
          }
 
-         try 
+         try
          {
             return container.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK;
          }
-         catch (SystemException e) 
+         catch (SystemException e)
          {
             log.warn("failed to get tx manager status; ignoring", e);
             return true;
@@ -346,10 +340,10 @@ public abstract class EnterpriseContext
             throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
          }
 
-         try 
+         try
          {
             container.getTransactionManager().setRollbackOnly();
-         } 
+         }
          catch (IllegalStateException e)
          {
             // ignore

@@ -6,32 +6,14 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.naming.InitialContext;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEntityException;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.InstanceCache;
-import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationResponse;
-import org.jboss.metadata.ConfigurationMetaData;
 
-import javax.jms.DeliveryMode;
 import javax.jms.Topic;
-import javax.jms.TopicPublisher;
 import javax.jms.TopicSubscriber;
 import javax.jms.TopicSession;
 import javax.jms.TopicConnection;
@@ -39,28 +21,25 @@ import javax.jms.TopicConnectionFactory;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import javax.jms.Session;
-import javax.jms.Connection;
 import javax.jms.JMSException;
 
-import org.w3c.dom.Element;
 
 /**
- * The role of this interceptor is to receive seppuku events and remove ids 
+ * The role of this interceptor is to receive seppuku events and remove ids
  * from cache
- * This really doesn't need to be an interceptor, but couldn't find a better 
+ * This really doesn't need to be an interceptor, but couldn't find a better
  * way to have access to the container's cache.
  *
  * FIXME: make this an MBean instead.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
       implements MessageListener
 {
    protected HashMap seppukuSynchs = new HashMap();
- 
+
    protected TopicConnection conn;
    protected TopicSession session;
    protected Topic topic;
@@ -96,8 +75,8 @@ public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
    protected void readConfiguration()
    {
       connectionFactoryName = config.getAttribute("connectionFactory");
-      if(connectionFactoryName == null || 
-            connectionFactoryName.trim().equals("")) 
+      if(connectionFactoryName == null ||
+            connectionFactoryName.trim().equals(""))
       {
          connectionFactoryName = "java:/ConnectionFactory";
       }
@@ -106,14 +85,14 @@ public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
       topicName = config.getAttribute("topic");
       if(topicName == null || topicName.trim().equals(""))
       {
-         topicName = "topic/" + 
-               getContainer().getBeanMetaData().getEjbName() + 
+         topicName = "topic/" +
+               getContainer().getBeanMetaData().getEjbName() +
                "_seppuku";
       }
       topicName = topicName.trim();
-      
+
       String strTransacted = config.getAttribute("transacted");
-      if(strTransacted == null || 
+      if(strTransacted == null ||
             "true".equals(strTransacted.toLowerCase().trim()))
       {
          transacted = true;
@@ -140,7 +119,7 @@ public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
          }
       }
    }
- 
+
    protected synchronized void initialize()
    {
       try
@@ -153,7 +132,7 @@ public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
          topic = (Topic) iniCtx.lookup(topicName);
          session = conn.createTopicSession(transacted, acknowledgeMode);
          conn.start();
-         subscriber = session.createSubscriber(topic);     
+         subscriber = session.createSubscriber(topic);
       }
       catch (Exception ex)
       {
@@ -172,7 +151,7 @@ public class EntitySeppukuInvalidatorInterceptor extends AbstractInterceptor
          // DAIN: initialze can't throw an exception...
          log.error("Failed to start seppuku interceptor", ex);
       }
-   }      
+   }
 
    public void stop()
    {
