@@ -55,8 +55,7 @@ public class NativeWrapperHandler implements NativeWrapper {
 
 	public NativeWrapperHandler() {
 
-		this.mediator = FrameModel.getInstance().getActiveFrameMediator()
-				.getFrameMediator();
+		
 
 		if (OSInfo.isWin32Platform()) {
 			try {
@@ -121,6 +120,10 @@ public class NativeWrapperHandler implements NativeWrapper {
 
 	public JPopupMenu getPopupMenu() {
 		if (menu == null) {
+			
+			this.mediator = FrameModel.getInstance().getActiveFrameMediator()
+			.getFrameMediator();
+			
 			menu = new JPopupMenu();
 			menu.add(new CMenuItem(new OpenNewMailWindowAction(mediator)));
 			menu

@@ -31,6 +31,7 @@ import org.columba.core.gui.util.DebugRepaintManager;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ComponentPluginHandler;
@@ -149,6 +150,9 @@ public class Main {
 			FrameModel.getInstance().openStoredViews();
 		}
 
+		// ensure that native libraries are correctly initialized
+		NativeWrapperHandler.getInstance();
+		
 		// call the postStartups of the modules
 		// e.g. check for default mailclient
 		handler.postStartup();
