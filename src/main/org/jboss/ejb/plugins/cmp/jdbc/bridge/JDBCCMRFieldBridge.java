@@ -42,6 +42,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
@@ -57,7 +58,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -115,12 +116,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
     * That data source used to acess the relation table if relevent.
     */
-   private final DataSource dataSource;
+   private DataSource dataSource;
 
    /**
     * That the relation table name if relevent.
     */
-   private final String tableName;
+   private String tableName;
 
    /**
     * Does this cmr field have foreign keys.
@@ -194,7 +195,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       this.entity = entity;
       this.manager = manager;
       this.metadata = metadata;
-      
 
       //  Creat the log
       String categoryName = this.getClass().getName() + 
@@ -210,8 +210,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
             metadata.getRelatedRole().getCMRFieldName();
       }
       this.log = Logger.getLogger(categoryName);
+   }
 
-      // Get the datasource
+   public void resolveRelationship() throws DeploymentException {
+      // Data Source
       dataSource = metadata.getRelationMetaData().getDataSource();
 
       // Fix table name
@@ -227,43 +229,69 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       // manager, and invoker
       //
       
-      // name of the related entity, name used in ejb-jar.xml
-      String relatedName = metadata.getRelatedRole().getEntity().getName();
+      // Related Entity Name
+      String relatedEntityName = 
+            metadata.getRelatedRole().getEntity().getName();
       
-      // get the related container
-      Container c = manager.getContainer().getEjbModule().getContainer(
-            relatedName);
-      if( !(c instanceof EntityContainer)) {
-         throw new DeploymentException("Relationships are not allowed " +
-               "between entity beans and other types of beans");
+      // Related Entity
+      Catalog catalog = (Catalog)manager.getApplicationData("CATALOG");
+      relatedEntity = 
+            (JDBCEntityBridge)catalog.getEntityByEJBName(relatedEntityName);
+      if(relatedEntity == null) {
+         throw new DeploymentException("Related entity not found: " +
+               "entity=" + entity.getEntityName() + ", " +
+               "cmrField=" + getFieldName() + ", " +
+               "relatedEntity=" + relatedEntityName); 
       }
-      EntityContainer theContainer = (EntityContainer) c;
-      relatedContainer = new WeakReference(c);
 
-      // get the related instance cache
+      // Related CMR Field
+      List cmrFields = relatedEntity.getCMRFields();
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+         if(metadata.getRelatedRole() == cmrField.getMetaData()) {
+            relatedCMRField = cmrField;
+            break;
+         }
+      }
+
+      // if we didn't find the related CMR field throw an exception
+      // with a detailed message
+      if(relatedCMRField == null) {
+         String message = "Related CMR field not found not found in " +
+               relatedEntity.getEntityName() + " for relationship from";
+
+         message += entity.getEntityName() + ".";
+         if(getFieldName() != null) {
+            message += getFieldName();
+         } else {
+            message += "<no-field>";
+         }
+
+         message += " to ";
+         message += relatedEntityName + ".";
+         if(metadata.getRelatedRole().getCMRFieldName() != null) {
+            message += metadata.getRelatedRole().getCMRFieldName();
+         } else {
+            message += "<no-field>";
+         }
+
+         throw new DeploymentException(message);
+      }
+
+      // Related Manager
+      relatedManager = relatedEntity.getManager();
+      
+      // Related Container
+      EntityContainer theContainer = relatedManager.getContainer();
+      relatedContainer = new WeakReference(theContainer);
+
+      // Related Local Interface (Class)
+      relatedLocalInterface = theContainer.getLocalClass();
+
+      // Related Instance Cache
       relatedCache = (EntityCache)theContainer.getInstanceCache();
-   
-      // is the realted persistence manager a cmp persistence manager?
-      if( !(theContainer.getPersistenceManager() instanceof 
-               CMPPersistenceManager)) {
-         throw new DeploymentException("Relationships are not allowed " +
-               "between bmp and cmp entity beans");
-      }                  
 
-      // get the related persistence manager
-      CMPPersistenceManager cmpPM = 
-            (CMPPersistenceManager)theContainer.getPersistenceManager();
-
-      // is the realted persistence store manager a jdbc store manager?
-      if( !(cmpPM.getPersistenceStore() instanceof JDBCStoreManager)) {
-         throw new DeploymentException("JDBCStoreManager can only manage a " +
-               "relationship with bean managed by another JDBCStoreManager");
-      }
-
-      // get the related store manager
-      relatedManager = (JDBCStoreManager)cmpPM.getPersistenceStore();
-      
-      // get the related container invoker      
+      // Related Container Invoker
       relatedInvoker = theContainer.getLocalProxyFactory();
 
       // 
@@ -301,73 +329,6 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
    }
       
-   /**
-    * Initialized is cmr field with data from the related cmr field.
-    * This method must be called after this cmr field is added to the
-    * entity bridge. This method attempts to load data from the related
-    * entity bridge. If the other side has not been initialized, it 
-    * simply returns. If the other side has been initizlised, the both
-    * sides are initialized.
-    */
-   public void initRelatedData() throws DeploymentException {
-      // if the other side has been created intitialize the related data
-      if(relatedManager.getEntityBridge() != null) {
-         initRelatedData(relatedManager.getEntityBridge());
-         relatedCMRField.initRelatedData(entity);
-      } else if(manager == relatedManager) {
-         // self relation: must be handled special because
-         // the entity is not added to the manager until after
-         // all of the fields have been initialized.
-         initRelatedData(entity);
-         relatedCMRField.initRelatedData(entity);
-      }
-   }
-   
-   /**
-    * Initialize this half of the relation with data from the related
-    * cmr field. See initRelatedData().
-    */
-   private void initRelatedData(JDBCEntityBridge relatedEntity) 
-         throws DeploymentException {
-
-      this.relatedEntity = relatedEntity;
-      
-      // get the related local interface
-      EntityContainer theContainer = (EntityContainer) relatedContainer.get();
-      relatedLocalInterface = theContainer.getLocalClass();
-
-      // find the cmrField for the other half of this relationship
-      List cmrFields = relatedEntity.getCMRFields();
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
-         if(metadata.getRelatedRole() == cmrField.getMetaData()) {
-            relatedCMRField = cmrField;
-            break;
-         }
-      }
-      if(relatedCMRField == null) {
-         String message = "Related CMR field not found not found in " +
-               relatedEntity.getEntityName() + " for relationship from";
-
-         message += entity.getEntityName() + ".";
-         if(metadata.getCMRFieldName() != null) {
-            message += metadata.getCMRFieldName();
-         } else {
-            message += "<no-field>";
-         }
-
-         message += " to ";
-         message += relatedEntity.getEntityName() + ".";
-         if(metadata.getRelatedRole().getCMRFieldName() != null) {
-            message += metadata.getRelatedRole().getCMRFieldName();
-         } else {
-            message += "<no-field>";
-         }
-
-         throw new DeploymentException(message);
-      }
-   }
-
    /**
     * Gets the manager of this entity.
     */

@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -134,9 +134,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
       if( container != null )
       {
          ejbModule = container.getEjbModule();
-         String categoryName = this.getClass().getName() +
-            "." + container.getBeanMetaData().getEjbName();
-         this.log = Logger.getLogger(categoryName);
+         log = Logger.getLogger(
+               this.getClass().getName() +
+               "." + 
+               container.getBeanMetaData().getEjbName());
       } else {
          ejbModule = null;
       }
@@ -304,14 +305,80 @@ public class JDBCStoreManager implements EntityPersistenceStore
    }
    
    /** 
-    * Store Manager Life Cycle Commands. Only a minimal
-    * amount of work can be done in create since services such
+    * Does almost nothing because other services such 
     * as JDBC data sources may not have been started.
     */
    public void create() throws Exception
    {
+      // Store a reference to this manager in an application level hashtable.
+      // This way in the start method other managers will be able to know
+      // the other managers.
+      HashMap managersMap = 
+            (HashMap)getApplicationData("CREATED_JDBCStoreManagers");
+      if(managersMap == null)
+      {
+         managersMap = new HashMap();
+         putApplicationData("CREATED_JDBCStoreManagers", managersMap);
+      }
+      managersMap.put(
+            container.getBeanMetaData().getEjbName(),
+            this);
+   }
+
+   /** 
+    * Bring the store to a fully initialized state
+    */
+   public void start() throws Exception
+   {
+      //
+      //
+      // Start Phase 1: create bridge and commands but 
+      // don't access other entities
+      initStoreManager();
+
+      
+      // If all managers have been started (this is the last manager),
+      // complete the other two phases of startup.  
+      Catalog catalog = (Catalog)getApplicationData("CATALOG");
+      HashMap managersMap = 
+            (HashMap)getApplicationData("CREATED_JDBCStoreManagers");
+      if(catalog.getEntityCount() == managersMap.size() && 
+            catalog.getEJBNames().equals(managersMap.keySet())) {
+
+         // Make a copy of the managers (for safty)
+         ArrayList managers = new ArrayList(managersMap.values());
+
+         // remove the managers list (it is no longer needed)
+         removeApplicationData("CREATED_JDBCStoreManagers");
+         
+         //
+         //
+         // Start Phase 2: resolve relationships
+         for(Iterator iter = managers.iterator(); iter.hasNext(); ) {
+            JDBCStoreManager manager = (JDBCStoreManager)iter.next();
+            manager.resolveRelationships();
+         }
+         
+         //
+         //
+         // Start Phase 3: create tables and compile queries
+         for(Iterator iter = managers.iterator(); iter.hasNext(); ) {
+            JDBCStoreManager manager = (JDBCStoreManager)iter.next();
+            manager.startStoreManager();
+         }
+      }
+   }
+
+   /**
+    * Preforms as much initialization as possible without referencing
+    * another entity.  
+    */
+   private void initStoreManager() throws Exception {
       log.debug("Initializing CMP plugin for " +
             container.getBeanMetaData().getEjbName());
+      
+      // get the transaction manager
+      tm = container.getTransactionManager();
       
       // initializes the generic data containers
       initApplicationDataMap();
@@ -351,7 +418,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       /// Create ejb life cycle commands
       createBeanClassInstanceCommand =
-      commandFactory.createCreateBeanClassInstanceCommand();
+            commandFactory.createCreateBeanClassInstanceCommand();
       initEntityCommand = commandFactory.createInitEntityCommand();
       findEntityCommand = commandFactory.createFindEntityCommand();
       findEntitiesCommand = commandFactory.createFindEntitiesCommand();
@@ -371,18 +438,19 @@ public class JDBCStoreManager implements EntityPersistenceStore
       initCommand.execute();
    }
 
-   /** Bring the store to a fully initialized state
-   */
-   public void start() throws Exception
-   {
-      // get the transaction manager
-      tm = container.getTransactionManager();
-      
-     
+   private void resolveRelationships() throws Exception {
+      entityBridge.resolveRelationships();
+   }
+
+   /**
+    * Brings the store manager into a completely running state.
+    * This method will create the database table and compile the queries.
+    */
+   private void startStoreManager() throws Exception {
       // Create the query manager
       queryManager = new JDBCQueryManager(this);
       
-      // Execute the start command
+      // Execute the start command, creates the tables
       startCommand.execute();
       
       // Start the query manager. At this point is creates all of the
@@ -413,11 +481,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
          destroyCommand.execute();
       }
       
-      if( readAheadCache != null )
+      if(readAheadCache != null) {
          readAheadCache.destroy();
+      }
+
       readAheadCache = null;
-      if( queryManager != null )
+      if(queryManager != null) {
          queryManager.clear();
+      }
       queryManager = null;
       //Remove proxy from proxy map so UnifiedClassloader may be released
       if (createBeanClassInstanceCommand != null) 

@@ -54,7 +54,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -109,7 +109,7 @@ public class JDBCEntityBridge implements EntityBridge {
 
       // CMR fields
       loadCMRFields(metadata);
-
+      
       // all fields list
       fields = new ArrayList(cmpFields.size() + cmrFields.size());
       fields.addAll(cmpFields);
@@ -120,13 +120,21 @@ public class JDBCEntityBridge implements EntityBridge {
       fieldsByName.putAll(cmrFieldsByName);
       fieldsByName = Collections.unmodifiableMap(fieldsByName);
 
-      // load groups
+      // ejbSelect methods
+      loadSelectors(metadata);
+   }
+
+   public void resolveRelationships() throws DeploymentException {
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) {
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+         cmrField.resolveRelationship();
+      }
+
+      // load groups:  cannot be created until relationships have 
+      // been resolved because loadgroups must check for foreign keys
       loadLoadGroups(metadata);
       loadEagerLoadGroup(metadata);
       loadLazyLoadGroups(metadata);
-      
-      // ejbSelect methods
-      loadSelectors(metadata);
    }
 
    private void loadCMPFields(JDBCEntityMetaData metadata)
@@ -188,11 +196,6 @@ public class JDBCEntityBridge implements EntityBridge {
       
       cmrFields = Collections.unmodifiableList(cmrFields);
       cmrFieldsByName = Collections.unmodifiableMap(cmrFieldsByName);
-
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
-         cmrField.initRelatedData();
-      }
    }
 
    private void loadLoadGroups(JDBCEntityMetaData metadata)

@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
@@ -72,6 +72,11 @@ public class RelationSet implements Set {
    }
 
    public boolean add(Object o) {
+      if(o == null) {
+         throw new IllegalArgumentException("Null cannot be added to a CMR " +
+               "relationship collection");
+      }
+
       List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
@@ -79,8 +84,15 @@ public class RelationSet implements Set {
       }
 
       if(!relatedLocalInterface.isInstance(o)) {
-         throw new IllegalArgumentException("Object must be an instance of " +
-               relatedLocalInterface.getName());
+         String msg = "Object must be an instance of " +
+               relatedLocalInterface.getName() + ", but is an isntance of [";
+         Class[] classes = o.getClass().getInterfaces();
+         for(int i=0; i < classes.length; i++) {
+            if(i > 0) msg += ", ";
+            msg += classes[i].getName();
+         }
+         msg += "]";
+         throw new IllegalArgumentException(msg);
       }
       
       Object id = ((EJBLocalObject)o).getPrimaryKey();
