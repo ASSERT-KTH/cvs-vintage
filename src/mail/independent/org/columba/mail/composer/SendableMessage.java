@@ -16,12 +16,17 @@
 
 package org.columba.mail.composer;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import org.columba.core.io.CloneStreamMaster;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
 
 public class SendableMessage extends ColumbaMessage {
+	
+	private CloneStreamMaster sourceStream;
 	
 	public SendableMessage() {
 		super();
@@ -49,6 +54,20 @@ public class SendableMessage extends ColumbaMessage {
 
 	public void setRecipients(List rcpt) {
 		((SendableHeader) getHeaderInterface()).setRecipients(rcpt);
+	}
+
+	/**
+	 * @return Returns the sourceStream.
+	 */
+	public InputStream getSourceStream() {
+		return sourceStream.getClone();
+	}
+
+	/**
+	 * @param sourceStream The sourceStream to set.
+	 */
+	public void setSourceStream(InputStream sourceStream) throws IOException {
+		this.sourceStream = new CloneStreamMaster( sourceStream );
 	}
 
 }

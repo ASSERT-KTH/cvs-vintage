@@ -530,7 +530,7 @@ public class MessageComposer {
 		root.getHeader().getHeader().merge(header.getHeader());
 
 		InputStream in = renderer.renderMimePart(root);
-		
+		/*
 		int next = in.read();
 		while (next != -1) {
 			composedMessage.append((char) next);
@@ -538,8 +538,9 @@ public class MessageComposer {
 		}
 		message.setStringSource(composedMessage.toString());
 		ColumbaLogger.log.debug("Message:\n" + composedMessage.toString());
-
+		*/
 		
+		message.setSourceStream(in);
 		//StreamUtils.streamCopy(message.getSourceStream(), System.out);
 		
 		// size

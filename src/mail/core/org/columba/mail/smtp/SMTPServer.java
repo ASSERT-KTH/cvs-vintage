@@ -256,9 +256,7 @@ public class SMTPServer {
 		try {
 			smtpProtocol.closePort();
 		} catch (Exception e) {
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(e);
-
+			e.printStackTrace();
 		}
 	}
 
@@ -372,7 +370,7 @@ public class SMTPServer {
 			message.getRecipients());
 
 		// now send message source
-		smtpProtocol.sendMessage(message.getStringSource());
+		smtpProtocol.sendMessage(message.getSourceStream());
 	}
 
 	/**

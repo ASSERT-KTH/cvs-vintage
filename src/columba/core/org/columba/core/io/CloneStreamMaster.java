@@ -115,4 +115,11 @@ public class CloneStreamMaster {
 		tempOut.write(copyBuffer,0,length);
 		return length;
 	}
+
+	/**
+	 * @return
+	 */
+	public int available() throws IOException {
+		return master.available();
+	}
 }

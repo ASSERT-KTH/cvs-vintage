@@ -57,4 +57,11 @@ public class CloneInputStream extends InputStream {
 		return model.read(id, arg0, arg1, arg2);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.io.InputStream#available()
+	 */
+	public int available() throws IOException {
+		return model.available();
+	}
+
 }

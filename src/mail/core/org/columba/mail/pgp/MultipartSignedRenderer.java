@@ -1,7 +1,6 @@
 package org.columba.mail.pgp;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.SequenceInputStream;
 import java.util.Vector;
 
 import org.columba.core.io.CloneStreamMaster;
@@ -13,6 +12,7 @@ import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.SequenceInputStream;
 
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
@@ -97,7 +97,7 @@ public class MultipartSignedRenderer extends MimePartRenderer {
 		// Create the closing boundary
 		streams.add(new ByteArrayInputStream(endBoundary));
 
-		return new SequenceInputStream(streams.elements());
+		return new SequenceInputStream(streams);
 	}
 
 }
