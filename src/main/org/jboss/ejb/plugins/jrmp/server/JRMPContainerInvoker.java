@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *  @version $Revision: 1.43 $
+ *  @version $Revision: 1.44 $
  */
 public class JRMPContainerInvoker
 extends RemoteServer
@@ -246,8 +246,7 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
       try
       {
          // Export CI
-         UnicastRemoteObject.exportObject(this, rmiPort,
-         clientSocketFactory, serverSocketFactory);
+         exportCI();
          GenericProxy.addLocal(container.getBeanMetaData().getJndiName(), this);
          
          InitialContext context = new InitialContext();
@@ -285,9 +284,10 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
          InitialContext ctx = new InitialContext();
          ctx.unbind(container.getBeanMetaData().getJndiName());
          ctx.unbind("invokers/"+container.getBeanMetaData().getJndiName());
-         
-         UnicastRemoteObject.unexportObject(this, true);
-      } catch (Exception e)
+
+         unexportCI();
+      } 
+      catch (Exception e)
       {
          // ignore.
       }
@@ -487,14 +487,7 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
       else
          jdk122 = true;
       
-      // Create delegate depending on JDK version
-      if (jdk122)
-      {
-         ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
-      } else
-      {
-         ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
-      }
+      createCIDelegate();
       
       try
       {
@@ -554,6 +547,30 @@ implements ContainerRemote, ContainerInvoker, XmlLoadable
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
+
+   protected void exportCI() throws Exception
+   {
+      UnicastRemoteObject.exportObject(this, rmiPort,
+                                       clientSocketFactory, serverSocketFactory);
+   }
+
+   protected void unexportCI() throws Exception
+   {
+      UnicastRemoteObject.unexportObject(this, true);
+   }
+
+   protected void createCIDelegate() throws DeploymentException
+   {
+      // Create delegate depending on JDK version
+      if (jdk122)
+      {
+         ciDelegate = new org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker(this);
+      } else
+      {
+         ciDelegate = new org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker(this);
+      }
+   }
+
    protected void rebind(Context ctx, String name, Object val)
    throws NamingException
    {
