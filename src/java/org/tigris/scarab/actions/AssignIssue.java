@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.17 2001/11/18 21:22:05 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.18 2001/12/04 23:29:31 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -128,6 +128,7 @@ public class AssignIssue extends RequireLoginFirstAction
         // re-populate removedusers
         addToParameters(data, ELIGIBLE_USERS, eligibleUserIds);
         context.put("actionLink", actionLink);
+        setTarget(data, getCurrentTemplate(data, null));
     }
 
     public void doRemove(RunData data, TemplateContext context) 
@@ -153,6 +154,7 @@ public class AssignIssue extends RequireLoginFirstAction
         data.getParameters().remove(ASSIGNEES);
         addToParameters(data, ASSIGNEES, assigneeIds);
         context.put("actionLink", actionLink);
+        setTarget(data, getCurrentTemplate(data, null));
     }
 
     private ScarabLink getActionLink(RunData data, String[] eligibleUsers, 
@@ -247,7 +249,13 @@ public class AssignIssue extends RequireLoginFirstAction
         Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
         Field note = group.get("DataAsString");
-        note.setRequired(true);
+        //note.setRequired(true);
+
+        // new assignee list (may contain previously assigned users)
+        String[] newUsernames = 
+           data.getParameters().getStrings(ASSIGNEES);
+        String[] eligibleUsers = 
+           data.getParameters().getStrings(ELIGIBLE_USERS);
 
         if (note.isValid()) 
         {
@@ -257,9 +265,6 @@ public class AssignIssue extends RequireLoginFirstAction
             
             ScarabUser modifyingUser = (ScarabUser)data.getUser();
             
-            // new assignee list (may contain previously assigned users)
-            String[] newUsernames = 
-                data.getParameters().getStrings(ASSIGNEES);
 
             List issues = scarabR.getIssues();
             if (issues == null) 
@@ -298,12 +303,9 @@ public class AssignIssue extends RequireLoginFirstAction
         }
         else 
         {                
-            String[] eligibleUsers = 
-                data.getParameters().getStrings(ELIGIBLE_USERS);
-            String[] assignees = 
-                data.getParameters().getStrings(ASSIGNEES);
             context.put("actionLink", 
-                        getActionLink(data, eligibleUsers, assignees));
+                      getActionLink(data, eligibleUsers, newUsernames));
+            data.setMessage("Please add a note before you submit.");
         }
     }
 
