@@ -24,10 +24,13 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableOwner;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.HeaderList;
@@ -56,17 +59,18 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	public void updateGUI() throws Exception {
 
 		// notify table selection handler 
-		
+
 		(
 			(TableSelectionHandler) frameController
 				.getSelectionManager()
 				.getHandler(
 				"mail.table")).setFolder(
 			folder);
-		
-		
+
 		// this should be called from TableController instead
-		((TableOwner) frameController).getTableController().showHeaderList(folder, headerList);
+		((TableOwner) frameController).getTableController().showHeaderList(
+			folder,
+			headerList);
 
 		MainInterface.treeModel.nodeChanged(folder);
 
@@ -82,13 +86,19 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 		//		register for status events
 		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		FolderItem item = folder.getFolderItem();
-		if (item.get("type").equals("IMAPFolder")) {
+		// this is a little hack !!
+
+		// check if this is an imap folder
+		FolderItem folderItem = folder.getFolderItem();
+		if (folderItem.get("type").equals("IMAPFolder")) {
+			IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
+			AccountItem accountItem = rootFolder.getAccountItem();
+			ImapItem item = accountItem.getImapItem();
+
 			boolean applyFilter =
-				item.getBoolean(
-					"property",
-					"automatically_apply_filter",
-					false);
+				item.getBoolean("automatically_apply_filter", false);
+
+			// if "automatically apply filter" is selected 
 			if (applyFilter == true) {
 				FilterList list = folder.getFilterList();
 
@@ -96,18 +106,22 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 					"Applying filter to " + folder.getName() + "...");
 				worker.setProgressBarMaximum(list.count());
 
+				// for every filter of this folder
 				for (int i = 0; i < list.count(); i++) {
 					worker.setProgressBarValue(i);
 					Filter filter = list.get(i);
 
+					// get search results of this filter
 					Object[] result = folder.searchMessages(filter);
 					if (result.length != 0) {
+
+						// fire commands
 						CompoundCommand command =
 							filter.getCommand(folder, result);
 
 						MainInterface.processor.addOp(command);
 					}
-					//processAction( srcFolder, filter, result, worker );
+
 				}
 			}
 		}

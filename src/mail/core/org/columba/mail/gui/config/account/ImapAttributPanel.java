@@ -26,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.util.MailResourceLoader;
@@ -41,9 +42,8 @@ public class ImapAttributPanel extends JPanel {
 
 	private JCheckBox secureCheckBox;
 	private JCheckBox storePasswordCheckBox;
-	/* TODO: reactivate it
-	 private JCheckBox automaticallyApplyFilterCheckBox;
-	 */
+
+	private JCheckBox automaticallyApplyFilterCheckBox;
 
 	private JCheckBox intervalCheckingCheckBox;
 	private JPanel jPanel1;
@@ -71,10 +71,10 @@ public class ImapAttributPanel extends JPanel {
 			if ( item.isSavePassword() )
 			    storePasswordCheckBox.setSelected(true);
 			    */
-			/* TODO: reactivate it
+
 			automaticallyApplyFilterCheckBox.setSelected(
 				item.getBoolean("automatically_apply_filter"));
-				*/
+
 		} else {
 
 			/*
@@ -83,34 +83,31 @@ public class ImapAttributPanel extends JPanel {
 			else
 			    item.setSavePassword("false");
 			    */
-			/* TODO: reactivate it
+
 			item.set(
 				"automatically_apply_filter",
 				automaticallyApplyFilterCheckBox.isSelected());
-				*/
-			// TODO: delete this if the automatically_apply_filter action is reactivated
-			item.set("automatically_apply_filter", false);
-			// end Todo
+
 		}
 
 	}
 
 	public void createPanel(DefaultFormBuilder builder) {
-		// all options are de-actived right now
-		
-		// re-activate this
-		/*
-		builder.append(automaticallyApplyFilterCheckBox, 3);
+
+		builder.appendSeparator(
+			MailResourceLoader.getString("dialog", "account", "options"));
+
+		builder.append(automaticallyApplyFilterCheckBox, 4);
 		builder.nextLine();
-				
+
+		/*	
 		builder.append(cleanupCheckBox, 3);
 		builder.nextLine();
 		*/
-		
+
 	}
 
 	protected void initComponents() {
-		
 
 		cleanupCheckBox = new JCheckBox();
 		cleanupCheckBox.setEnabled(false);
@@ -120,31 +117,23 @@ public class ImapAttributPanel extends JPanel {
 				"account",
 				"Expunge_Inbox_on_Exit"));
 
-		// TODO: reactivate it
-		/*
 		automaticallyApplyFilterCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"apply_filter"));
-		automaticallyApplyFilterCheckBox.setMnemonic(
-			MailResourceLoader.getMnemonic(
-				"dialog",
-				"account",
-				"apply_filter_mnemonic"));
-		*/
 
 	}
 
 	/*
 	private void initComponents() {
-
+	
 		
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		setLayout(layout);
-
+	
 		JPanel intervalCheckingPanel = new JPanel();
 		//intervalCheckingPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
 		intervalCheckingPanel.setLayout(
@@ -171,9 +160,9 @@ public class ImapAttributPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(intervalCheckingPanel, c);
 		add(intervalCheckingPanel);
-
+	
 		
-
+	
 		JPanel cleanupPanel = new JPanel();
 		//cleanupPanel.add( Box.createRigidArea( new java.awt.Dimension(10,0) ) );
 		cleanupPanel.setLayout(new BoxLayout(cleanupPanel, BoxLayout.X_AXIS));

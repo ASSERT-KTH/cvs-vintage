@@ -195,6 +195,7 @@ public class ReceiveOptionsPanel
 
 		} else {
 
+			imapPanel.createPanel(builder);
 			//attributPanel.add(imapPanel, BorderLayout.CENTER);
 
 		}
