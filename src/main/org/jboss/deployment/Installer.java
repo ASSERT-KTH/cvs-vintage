@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class Installer
 {
@@ -141,8 +141,18 @@ public class Installer
 		{
 			localCopy = makeLocalCopy();
 
+                        // <code author="cgjung">
+                        // we include the manifest into the deployment
+                        try{
+                            d.manifest=new JarFile(localCopy).getManifest();
+                        } catch(IOException e) {
+                            // wrecked manifest is ignored
+                        }
+                        // </code>
+                        
 			// determine the type...
 			int type = determineType (new JarFile(localCopy));
+                        
 
 			log.log ("Create application " + d.name);
 			switch (type)
