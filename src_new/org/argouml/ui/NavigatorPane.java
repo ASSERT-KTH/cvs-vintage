@@ -128,13 +128,13 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.42 2003/05/23 10:49:14 mkl Exp $
+ * $Id: NavigatorPane.java,v 1.43 2003/05/31 10:38:44 kataka Exp $
  */
 public class NavigatorPane
     extends JPanel
     implements ItemListener, PropertyChangeListener, QuadrantPanel, MElementListener {
 
-    protected static Category cat = Category.getInstance(NavigatorPane.class);
+    protected transient Category cat = Category.getInstance(this.getClass());
 
     public static final int MAX_HISTORY = 10;
 

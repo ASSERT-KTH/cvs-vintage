@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.72 2003/05/24 13:59:53 bobtarling Exp $
+// $Id: Main.java,v 1.73 2003/05/31 10:38:44 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -286,9 +286,9 @@ public class Main {
 
         pb.setVisible(true);
         Object model = p.getUserDefinedModels().elementAt(0);
-        Object diag = p.getDiagrams().elementAt(0);
+        Object diag = p.getDiagrams().elementAt(0);       
         pb.getNavigatorPane().setSelection(model, diag);
-
+            
         st.mark("close splash");
         if (doSplash) {
             SplashScreen splash = pb.getSplashScreen();
@@ -298,7 +298,6 @@ public class Main {
         }
 
         st.mark("start critics");
-
         Runnable startCritics = new StartCritics();
         Main.addPostLoadAction(startCritics);
 

@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.16 2003/05/30 14:53:03 kataka Exp $
+// $Id: TargetManager.java,v 1.17 2003/05/31 10:38:44 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -338,8 +338,17 @@ public final class TargetManager {
     public synchronized void setTarget(Object o) {
         if (!isInTargetTransaction()) {
             startTargetTransaction();
+
             Object[] targets = new Object[] { o };
-            if (!targets.equals(_targets)) {
+            List _targetsList = Arrays.asList(_targets);
+            boolean equal = true;
+            for (int i = 0; i < targets.length; i++) {
+                if (!_targetsList.contains(targets[i])) {
+                    equal = false;
+                    break;
+                }
+            }
+            if (!equal) {
                 _newTarget = o;
                 _figTarget = determineFigTarget(_newTarget);
                 _modelTarget = determineModelTarget(_newTarget);
@@ -375,8 +384,16 @@ public final class TargetManager {
         if (!isInTargetTransaction()) {
             startTargetTransaction();
             if (targetsList != null && !targetsList.isEmpty()) {
+                List _targetsList = Arrays.asList(_targets);
                 Object[] targets = targetsList.toArray();
-                if (!targets.equals(_targets)) {
+                boolean equal = true;
+                for (int i = 0; i < targets.length; i++) {
+                    if (!_targetsList.contains(targets[i])) {
+                        equal = false;
+                        break;
+                    }
+                }
+                if (!equal) {
                     _newTarget = targets[0];
                     _figTarget = determineFigTarget(_newTarget);
                     _modelTarget = determineModelTarget(_newTarget);
@@ -644,7 +661,7 @@ public final class TargetManager {
         _historyManager.clean();
     }
 
-    public void removeHistoryElement(Object o) {      
+    public void removeHistoryElement(Object o) {
         _historyManager.removeHistoryTarget(o);
     }
 

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.22 2003/05/24 21:12:08 kataka Exp $
+// $Id: TabDiagram.java,v 1.23 2003/05/31 10:38:45 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -325,8 +325,8 @@ class ArgoJGraph extends JGraph {
 
     public boolean equals(Object o) {
         if (o instanceof ArgoJGraph) {
-            ArgoJGraph a = (ArgoJGraph)o;
-            if (this._currentDiagramId.equals(a._currentDiagramId)
+            ArgoJGraph a = (ArgoJGraph)o;            
+            if (((this._currentDiagramId != null && this._currentDiagramId.equals(a._currentDiagramId)) || (this._currentDiagramId == null && a._currentDiagramId == null))
                 && this.getEditor().equals(a.getEditor()))
                 return true;
         }
