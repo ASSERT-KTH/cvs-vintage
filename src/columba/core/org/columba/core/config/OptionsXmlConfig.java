@@ -16,6 +16,7 @@ package org.columba.core.config;
 
 import java.io.File;
 
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PGPItem;
 
 public class OptionsXmlConfig extends DefaultXmlConfig
@@ -87,16 +88,9 @@ public class OptionsXmlConfig extends DefaultXmlConfig
     }
 
 
-    public AdapterNode getMimeTypeNode()
-    {
-    	/*
-        AdapterNode rootNode = getRootNode();
-        AdapterNode node = rootNode.getChild("mimetypes");
-
-        return node;
-        */
-        
-        return null;
+    public XmlElement getMimeTypeNode()
+    {        
+        return getRoot().getElement("/options/mimetypes");
     }
 
 

@@ -84,6 +84,10 @@ public class MailFrameController extends FrameController {
 		//messageController.setSelectionManager( selectionManager);
 
 		attachmentController = new AttachmentController(this);
+		treeController.getTreeSelectionManager().addFolderSelectionListener(
+			attachmentController.getAttachmentSelectionManager());
+		tableController.getTableSelectionManager().addMessageSelectionListener(
+		attachmentController.getAttachmentSelectionManager());
 
 		//attachmentController.setSelectionManager( selectionManager);
 

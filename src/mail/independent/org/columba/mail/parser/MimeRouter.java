@@ -17,9 +17,9 @@ package org.columba.mail.parser;
 import java.lang.reflect.Array;
 import java.util.Hashtable;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.Config;
 import org.columba.core.config.OptionsXmlConfig;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.message.MimeHeader;
 
 public class MimeRouter {
@@ -94,15 +94,7 @@ public class MimeRouter {
 	public String getViewer(MimeHeader input) {
 		String output;
 
-		output = getValue(input.contentType, input.contentSubtype, "viewer");
-
-		return output;
-	}
-
-	public String getViewer(String contentType, String contentSubtype) {
-		String output;
-
-		output = getValue(contentType, contentSubtype, "viewer");
+		output = getViewer(input.contentType, input.contentSubtype);
 
 		return output;
 	}
@@ -111,104 +103,79 @@ public class MimeRouter {
 		setViewer(input.contentType, input.contentSubtype, viewer);
 	}
 
-	private String getValue(String contentType, String subType, String key) {
+	public String getViewer(String contentType, String subType) {
 
-		AdapterNode section = config.getMimeTypeNode();
+		XmlElement mimetype = config.getMimeTypeNode();
 
-		AdapterNode actMime = null;
-		AdapterNode type = null;
+		XmlElement type, subtype;
 
-		for (int i = 0; i < section.getChildCount(); i++) {
-			actMime = section.getChild(i);
-
-			type = actMime.getChild("type");
-
-			if (type.getValue().equals(contentType))
-				break;
-			actMime = null;
-		}
-		if (actMime == null) {
-			return null;
-		}
-
-		String output = null;
-
-		AdapterNode outputNode = actMime.getChild(key);
-		if (outputNode != null)
-			output = outputNode.getValue();
-
-		AdapterNode subMime;
-		AdapterNode subParserNode;
-
-		for (int i = 0; i < actMime.getChildCount(); i++) {
-			subMime = actMime.getChild(i);
-
-			//System.out.println("i="+i+ " -> " + subMime.getName() );
-
-			if (subMime.getName().equals("subtype")) {
-				if (subMime.getChild("type").getValue().equals(subType)) {
-					subParserNode = subMime.getChild(key);
-					if (subParserNode != null)
-						output = subParserNode.getValue();
+		for (int i = 0; i < mimetype.count(); i++) {
+			type = mimetype.getElement(i);
+			if (type.getAttribute("name").equals(contentType)) {
+				// Search for subtype viewer
+				for (int j = 0; j < type.count(); j++) {
+					subtype = type.getElement(j);
+					if (subtype.getAttribute("name").equals(subType)) {
+						if (subtype.getAttribute("viewer") != null) {
+							return subtype.getAttribute("viewer");
+						}
+					}
 				}
+
+				// No subtype viewer found ->return type viewer	
+				return type.getAttribute("viewer");
 			}
 		}
 
-		return output;
+		return null;
 	}
 
 	public void setViewer(String contentType, String subType, String value) {
-		
-		// FIXME
-		/*
-		AdapterNode section = config.getMimeTypeNode();
+		XmlElement mimetype = config.getMimeTypeNode();
 
-		AdapterNode actMime = null;
-		AdapterNode type = null;
+		XmlElement type = null;
+		XmlElement subtype = null;
+		XmlElement temp;
 
-		for (int i = 0; i < section.getChildCount(); i++) {
-			actMime = section.getChild(i);
-
-			type = actMime.getChild("type");
-
-			if (type.getValue().equals(contentType))
+		// Search for contentType node
+		for (int i = 0; i < mimetype.count(); i++) {
+			temp = mimetype.getElement(i);
+			if (temp.getAttribute("name").equals(contentType)) {
+				type = temp;
 				break;
-			actMime = null;
-		}
-		if (actMime == null) {
-			actMime = section.addElement(config.createElementNode("mimetype"));
-			actMime.addElement(
-				config.createTextElementNode("type", contentType));
-			actMime.addElement(config.createTextElementNode("viewer", value));
-
-			return;
-		}
-
-		AdapterNode subMime;
-		AdapterNode viewerNode;
-
-		for (int i = 0; i < actMime.getChildCount(); i++) {
-			subMime = actMime.getChild(i);
-
-			if (subMime.getName().equals("subtype")) {
-				if (subMime.getChild("type").getValue().equals(subType)) {
-					viewerNode = subMime.getChild("viewer");
-					if (viewerNode != null) {
-						viewerNode.setValue(value);
-						return;
-					}
-
-					subMime.addElement(
-						config.createTextElementNode("viewer", value));
-					return;
-				}
 			}
 		}
-		subMime = actMime.addElement(config.createElementNode("subtype"));
-		subMime.addElement(config.createTextElementNode("type", subType));
-		subMime.addElement(config.createTextElementNode("viewer", value));
-		
-		*/
+
+		// If no node is found create new one
+		if (type == null) {
+			type = new XmlElement("type");
+			type.addAttribute("name", contentType);
+			type.addAttribute("viewer", value);
+			mimetype.addElement(type);			
+		}
+		// Set to default viewer for this type if none is present
+		else if (type.getAttribute("viewer") == null) {
+			type.addAttribute("viewer", value);
+		}
+
+		// Search for subtype node
+		for (int j = 0; j < type.count(); j++) {
+			temp = type.getElement(j);
+			if (temp.getAttribute("name").equals(subType)) {
+				subtype = temp;
+			}
+		}
+
+		// No subtype node found -> create one
+		if (subtype == null) {
+			subtype = new XmlElement("subtype");
+			subtype.addAttribute("name", subType);
+			subtype.addAttribute("viewer", value);
+			type.addElement(subtype);
+		} else {
+			subtype.addAttribute("viewer", value);
+		}
+
 	}
 
 	private void loadAllParser() {
@@ -226,8 +193,8 @@ public class MimeRouter {
 
 					MimeTypeParser parser =
 						(MimeTypeParser) actClass.newInstance();
-							
-					parserTable.put( parser.getRegisterString(), parser);
+
+					parserTable.put(parser.getRegisterString(), parser);
 				}
 			}
 		} catch (Exception e) {

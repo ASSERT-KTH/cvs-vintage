@@ -6,6 +6,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.table.MessageSelectionListener;
 import org.columba.mail.gui.table.TableSelectionManager;
 
 /**
@@ -16,7 +17,7 @@ import org.columba.mail.gui.table.TableSelectionManager;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AttachmentSelectionManager extends TableSelectionManager {
+public class AttachmentSelectionManager extends TableSelectionManager implements MessageSelectionListener {
 
 	protected Integer[] address;
 
@@ -69,4 +70,11 @@ public class AttachmentSelectionManager extends TableSelectionManager {
 		this.uids = uids;
 	}
 	
+	/**
+	 * @see org.columba.mail.gui.table.MessageSelectionListener#messageSelectionChanged(java.lang.Object)
+	 */
+	public void messageSelectionChanged(Object[] newUidList) {
+		uids = newUidList;
+	}
+
 }

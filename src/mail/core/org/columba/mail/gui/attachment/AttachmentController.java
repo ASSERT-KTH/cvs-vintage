@@ -27,7 +27,6 @@ import org.columba.mail.gui.attachment.action.AttachmentActionListener;
 import org.columba.mail.gui.attachment.menu.AttachmentMenu;
 import org.columba.mail.gui.attachment.util.IconPanel;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.table.MessageSelectionListener;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
@@ -39,7 +38,7 @@ import org.columba.mail.message.MimePartTree;
  * @author Timo Stich
  */
 
-public class AttachmentController implements MessageSelectionListener {
+public class AttachmentController {
 
 	public JScrollPane scrollPane;
 	private boolean ready = true;
@@ -107,20 +106,6 @@ public class AttachmentController implements MessageSelectionListener {
 		
 	public AttachmentSelectionManager getAttachmentSelectionManager() {
 		return attachmentSelectionManager;
-	}
-
-	/*
-	public void setSelectionManager(SelectionManager m) {
-		this.selectionManager = m;
-	
-		//selectionManager.addMessageSelectionListener(this);
-	}
-	*/
-
-	public void messageSelectionChanged(Object[] newUidList) {
-		System.out.println(
-			"attachment-controller: received new message-selection changed event");
-
 	}
 
 	public AttachmentView getView() {
