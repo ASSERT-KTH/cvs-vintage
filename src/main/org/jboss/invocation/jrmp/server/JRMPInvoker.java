@@ -53,7 +53,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.1 $
+*  @version $Revision: 1.2 $
 */
 
 public class JRMPInvoker
@@ -63,9 +63,9 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
 {
    // Constants -----------------------------------------------------
    protected final static int ANONYMOUS_PORT = 0;
-   protected static Logger log = Logger.getLogger(JRMPInvoker.class);
    
    // Attributes ----------------------------------------------------
+   protected Logger log = Logger.getLogger(JRMPInvoker.class);
    
    /** The port the container will be exported on */
    protected int rmiPort = ANONYMOUS_PORT;
@@ -174,7 +174,7 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
       GenericProxy.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
       
-      JRMPInvokerProxy delegateInvoker = new JRMPInvokerProxy(this);
+      Invoker delegateInvoker = createDelegateInvoker();
       
       // Export references to the bean
       Registry.bind(serviceName, delegateInvoker);   
@@ -313,6 +313,11 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
    // Package protected ---------------------------------------------
    
    // Protected -----------------------------------------------------
+
+   protected Invoker createDelegateInvoker()
+   {
+      return new JRMPInvokerProxy(this);
+   }
    
    protected void exportCI() throws Exception
    {
