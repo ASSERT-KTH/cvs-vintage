@@ -101,13 +101,13 @@ insert into SCARAB_SCOPE(SCOPE_ID, SCOPE_NAME)
 /*
  * root module
  */
-insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_DESCRIPTION, MODULE_URL, CLASS_KEY)
-        values(0, "Global", "Built-in root module, parent for all top-level modules(projects)", "/", 1);
+insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, CLASS_KEY)
+        values(0, 'Global', 'GLO', 'Built-in root module, parent for all top-level modules(projects)', '/', 0, 1);
 
 /*
  * for issues entered against the global module, if any are allowed
  */
-insert into ID_TABLE (table_name, next_id, quantity) VALUES ('GLO', 0, 1);
+insert into ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (0, 'GLO', 0, 1);
 
 
 /*
