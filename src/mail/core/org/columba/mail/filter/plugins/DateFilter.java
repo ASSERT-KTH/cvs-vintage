@@ -3,6 +3,7 @@ package org.columba.mail.filter.plugins;
 import java.util.Date;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.HeaderInterface;
@@ -22,12 +23,7 @@ public class DateFilter extends AbstractFilter {
 	 */
 	public DateFilter() {
 		super();
-		System.out.println("test");
-	}
-	
-	public void test()
-	{
-		System.out.println("tes2");
+
 	}
 
 	/**
@@ -69,26 +65,32 @@ public class DateFilter extends AbstractFilter {
 
 		boolean result = false;
 
+		//((Rfc822Header) header).printDebug();
+
 		Date d = (Date) header.get("columba.date");
+		
 		if (d == null)
+		{
+			ColumbaLogger.log.error("field date not found");
 			return false;
+		}
 
 		switch (condition) {
 			case FilterCriteria.DATE_BEFORE :
 				{
-					if (date.before(d))
+					if (d.before(date))
 						result = true;
 					break;
 				}
 			case FilterCriteria.DATE_AFTER :
 				{
-					if (date.after(d))
+					if (d.after(date))
 						result = true;
 					break;
 				}
 		}
 
-		return false;
+		return result;
 	}
 
 }

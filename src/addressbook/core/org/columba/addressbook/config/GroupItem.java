@@ -16,9 +16,8 @@
 
 package org.columba.addressbook.config;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.xml.XmlElement;
+
+import org.w3c.dom.Document;
 
 
 public class GroupItem extends DefaultItem
@@ -26,7 +25,7 @@ public class GroupItem extends DefaultItem
     private AdapterNode name, uid, list;
 
     
-    public GroupItem( XmlElement root)
+    public GroupItem(Document root)
     {
         super( root );
     

@@ -32,8 +32,23 @@ public class PriorityFilter extends AbstractFilter {
 	}
 
 	protected Integer transformPriority(String pattern) {
-		Integer priority = Integer.valueOf(pattern);
-		return priority;
+		Integer searchPattern = new Integer(3);
+
+		if (pattern.equalsIgnoreCase("Highest")) {
+			searchPattern = new Integer(1);
+		} else if (pattern.equalsIgnoreCase("High")) {
+			searchPattern = new Integer(2);
+		} else if (pattern.equalsIgnoreCase("Normal")) {
+			searchPattern = new Integer(3);
+		} else if (pattern.equalsIgnoreCase("Low")) {
+			searchPattern = new Integer(4);
+		} else if (pattern.equalsIgnoreCase("Lowest")) {
+			searchPattern = new Integer(5);
+		}
+
+		//Integer priority = Integer.valueOf(pattern);
+		//return priority;
+		return searchPattern;
 	}
 
 	/**
@@ -47,7 +62,7 @@ public class PriorityFilter extends AbstractFilter {
 		throws Exception {
 
 		boolean result = false;
-		
+
 		HeaderInterface header = folder.getMessageHeader(uid, worker);
 
 		int condition = FilterCriteria.getCriteria((String) args[0]);

@@ -17,7 +17,7 @@ package org.columba.mail.config;
 import java.io.File;
 import java.util.Vector;
 
-import org.columba.core.config.AdapterNode;
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
 
 public class AccountXmlConfig extends DefaultXmlConfig {

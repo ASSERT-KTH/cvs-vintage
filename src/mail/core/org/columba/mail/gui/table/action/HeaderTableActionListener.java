@@ -20,8 +20,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;

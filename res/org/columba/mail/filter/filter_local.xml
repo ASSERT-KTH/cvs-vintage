@@ -2,15 +2,48 @@
 
 
 <filterlist type="local" >
- <filter name="Subject" main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter name="From" main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter name="To" main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter name="Cc" main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter name="Bcc" main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
- <filter name="Custom Headerfield" main_class="org.columba.mail.filter.plugins.CustomHeaderfieldCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.CustomHeaderfieldCriteriaRow" />
- <filter name="Body" main_class="org.columba.mail.filter.plugins.BodyCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.BodyCriteriaRow" />
- <filter name="Date" main_class="org.columba.mail.filter.plugins.DateCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.DateCriteriaRow" />
- <filter name="Flags" main_class="org.columba.mail.filter.plugins.FlagsCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.FlagsCriteriaRow" />
- <filter name="Priority" main_class="org.columba.mail.filter.plugins.PriorityCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.PriorityCriteriaRow" />
- <filter name="Size" main_class="org.columba.mail.filter.plugins.SizeCriteria" gui_class="org.columba.mail.gui.config.filter.plugins.SizeCriteriaRow" />
+ <filter 
+ 	name="Subject" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <filter 
+ 	name="From" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <filter 
+ 	name="To" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <filter 
+ 	name="Cc" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <filter 
+ 	name="Bcc" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.HeaderCriteriaRow" />
+ <filter 
+ 	name="Custom Headerfield" 
+ 	main_class="org.columba.mail.filter.plugins.HeaderfieldFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.CustomHeaderfieldCriteriaRow" />
+ <filter 
+ 	name="Body" 
+ 	main_class="org.columba.mail.filter.plugins.BodyFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.BodyCriteriaRow" />
+ <filter 
+ 	name="Date" 
+ 	main_class="org.columba.mail.filter.plugins.DateFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.DateCriteriaRow" />
+ <filter 
+ 	name="Flags" 
+ 	main_class="org.columba.mail.filter.plugins.FlagsFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.FlagsCriteriaRow" />
+ <filter 
+ 	name="Priority" 
+ 	main_class="org.columba.mail.filter.plugins.PriorityFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.PriorityCriteriaRow" />
+ <filter 
+ 	name="Size" 
+ 	main_class="org.columba.mail.filter.plugins.SizeFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.SizeCriteriaRow" />
 </filterlist>

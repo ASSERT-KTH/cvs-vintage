@@ -16,7 +16,7 @@ package org.columba.mail.filter;
 
 import java.util.Vector;
 
-import org.columba.core.config.AdapterNode;
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 

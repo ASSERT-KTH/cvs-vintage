@@ -52,20 +52,23 @@ public class SizeFilter extends AbstractFilter {
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		Integer size = transformSize((String) args[1]);
 
+		
 		Integer s = (Integer) header.get("columba.size");
+		
+		
 		if (s == null)
 			return false;
 
 		switch (condition) {
 			case FilterCriteria.SIZE_SMALLER :
 				{
-					if (size.compareTo(s) < 0)
+					if (size.compareTo(s) > 0)
 						result = true;
 					break;
 				}
 			case FilterCriteria.SIZE_BIGGER :
 				{
-					if (size.compareTo(s) > 0)
+					if (size.compareTo(s) < 0)
 						result = true;
 					break;
 				}

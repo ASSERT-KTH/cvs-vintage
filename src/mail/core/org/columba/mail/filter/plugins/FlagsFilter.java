@@ -44,14 +44,14 @@ public class FlagsFilter extends AbstractFilter {
 		boolean result = false;
 		
 		String headerField = (String) args[1];
-		int condition = FilterCriteria.getCriteria((String) args[1]);
+		int condition = FilterCriteria.getCriteria((String) args[0]);
 		
 		String searchHeaderField = null;
 
 		if (headerField.equalsIgnoreCase("Answered")) {
 			searchHeaderField = new String("columba.flags.answered");
 		} else if (headerField.equalsIgnoreCase("Deleted")) {
-			searchHeaderField = new String("columba.flags.deleted");
+			searchHeaderField = new String("columba.flags.expunged");
 		} else if (headerField.equalsIgnoreCase("Flagged")) {
 			searchHeaderField = new String("columba.flags.flagged");
 		} else if (headerField.equalsIgnoreCase("Recent")) {
@@ -65,7 +65,11 @@ public class FlagsFilter extends AbstractFilter {
 		HeaderInterface header = folder.getMessageHeader(uid, worker);
 
 		Boolean flags = (Boolean) header.get(searchHeaderField);
-		if (flags == null) return false;
+		if (flags == null) 
+		{
+			
+			
+			return false;} 
 
 		switch (condition) {
 

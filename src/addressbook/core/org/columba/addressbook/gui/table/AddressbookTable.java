@@ -30,8 +30,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.config.AddressbookConfig;
-
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
@@ -44,7 +44,6 @@ import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.TableItem;
 
 public class AddressbookTable extends JPanel implements ListSelectionListener
@@ -205,21 +204,22 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 
 	public void setupRenderer()
 	{
-		/*
+		
 		TableItem headerItemList =
-			AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
+			new TableItem(AddressbookConfig.get("options").getElement("/options/gui/table"));
 
 		HeaderColumn c;
 
 		for (int i = 0; i < headerItemList.count(); i++)
 		{
-
-			String name = headerItemList.getName(i);
+			org.columba.core.config.HeaderItem e = headerItemList.getHeaderItem(i);
+			
+			String name = e.get("name");
 			//System.out.println("name:" + name);
 			name = name.toLowerCase();
-			int size = headerItemList.getSize(i);
-			int position = headerItemList.getPosition(i);
-			boolean enabled = headerItemList.getEnabled(i);
+			int size = e.getInteger("size");
+			int position = e.getInteger("position");
+			boolean enabled = e.getBoolean("enabled");
 			if ( enabled == false ) continue;
 			
 			int index = name.indexOf(";");
@@ -247,19 +247,22 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 
 		for (int i = 0; i < headerItemList.count(); i++)
 		{
-			String name = headerItemList.getName(i);
-			boolean enabled = headerItemList.getEnabled(i);
+			org.columba.core.config.HeaderItem e = headerItemList.getHeaderItem(i);
+			
+			String name = e.get("name");
+			boolean enabled = e.getBoolean("enabled");
+			
 			if ( enabled == false ) continue;
 			
 			name = name.toLowerCase();
 			setupColumn(name);
 		}
-		*/
+	
 	}
 
 	public void setFolder(Folder folder)
 	{
-			/*
+			
 		Folder f = (Folder) folder;
 		if ( f == null ) 
 		{
@@ -268,6 +271,10 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 		}
 		
 		FolderItem item = f.getFolderItem();
+		HeaderItemList list = folder.getHeaderItemList();
+
+					addressbookModel.setHeaderList(list);
+		/*
 		if (item.getType().equals("root"))
 			addressbookModel.setHeaderList(null);
 		else
@@ -277,6 +284,8 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 			addressbookModel.setHeaderList(list);
 		}
 		*/
+		
+		
 	}
 
 	public void setHeaderItemList(HeaderItemList list)

@@ -33,8 +33,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.folder.ContactCard;
-import org.columba.core.config.AdapterNode;
 
 /**
  * @version 	1.0

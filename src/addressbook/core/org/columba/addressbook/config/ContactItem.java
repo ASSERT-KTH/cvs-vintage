@@ -16,9 +16,8 @@
 
 package org.columba.addressbook.config;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.xml.XmlElement;
+
+import org.w3c.dom.Document;
 
 
 public class ContactItem extends DefaultItem
@@ -26,13 +25,13 @@ public class ContactItem extends DefaultItem
     private AdapterNode address, uid, firstname, lastname, displayName;
         
     
-    public ContactItem( XmlElement root )
+    public ContactItem( Document root)
     {
         super( root );
     
     }
     
-    /*
+    
         
     public void setAddressNode( AdapterNode node )
     {
@@ -124,7 +123,7 @@ public class ContactItem extends DefaultItem
         return getTextValue( displayName );
     }
 
-    */    
+     
 }
     
 

@@ -61,9 +61,22 @@ public class VirtualFolder extends Folder {
 			/*
 			filterElement = new XmlElement("filter");
 			*/
-			Filter filter = FilterList.createEmptyFilter();
-			
-			getFolderItem().getRoot().addElement(filter.getRoot());
+			XmlElement filter = new XmlElement("filter");
+			filter.addAttribute("description", "new filter");
+			filter.addAttribute("enabled", "true");
+			XmlElement rules = new XmlElement("rules");
+			rules.addAttribute("condition", "match_all");
+			XmlElement criteria = new XmlElement("criteria");
+			criteria.addAttribute("type", "Subject");
+			criteria.addAttribute("headerfield", "Subject");
+			criteria.addAttribute("criteria", "contains");
+			criteria.addAttribute("pattern", "pattern");
+			rules.addElement(criteria);
+			filter.addElement(rules);
+
+			Filter f = new Filter(filter);
+
+			getFolderItem().getRoot().addElement(f.getRoot());
 		}
 
 		//searchFilter = new Search(this);

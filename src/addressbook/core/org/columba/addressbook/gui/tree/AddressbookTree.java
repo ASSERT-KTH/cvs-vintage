@@ -20,13 +20,13 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.AdapterNode;
 
 public class AddressbookTree implements TreeSelectionListener
 {

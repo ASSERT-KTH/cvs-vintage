@@ -192,6 +192,18 @@ public class Rfc822Header implements HeaderInterface
 
         return header;
     }
+    
+	public void printDebug()
+		{
+			for (Enumeration keys = hashTable.keys(); keys.hasMoreElements();) {
+				String key = (String) keys.nextElement();
+				
+				Object value = hashTable.get(key);
+				
+				System.out.println("key="+key+" value="+value.toString());
+			}	
+	
+		}
 
 
 

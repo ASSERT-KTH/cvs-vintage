@@ -15,6 +15,10 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 import org.columba.addressbook.config.AddressbookConfig;
@@ -70,8 +74,12 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		headerList = new HeaderItemList();
 
-		headerFile = new File(directoryFile.toString() + "/header");
+		headerFile = new File(directoryFile.toString() + "/.header");
 
+
+		headerTableItemList =
+					new TableItem(AddressbookConfig.get("options").getElement("/options/gui/table"));
+					
 		// FIXME
 		/*
 		headerTableItemList =
@@ -256,9 +264,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 		return l;
 	}
 
+
 	protected void addHeaderItem(ContactCard card, Object uid) {
-		// FIXME
-		/*
+		
 		System.out.println("addheaderItem() contact");
 		HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
 		String column;
@@ -266,7 +274,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 		for (int j = 0; j < headerTableItemList.count(); j++) {
 
 			//item.setUid(uid);
-			column = (String) headerTableItemList.getName(j);
+			org.columba.core.config.HeaderItem h = headerTableItemList.getHeaderItem(j);
+			column = (String)h.get("name");
+			
 			int index = column.indexOf(";");
 
 			if (index != -1) {
@@ -291,7 +301,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 		headerList.add(item);
 
 		nextUid = ((Integer) uid).intValue() + 1;
-		*/
+		
 	}
 
 	protected void addHeaderItem(GroupListCard card, Object uid) {
@@ -339,8 +349,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 	public void load(WorkerStatusController worker) throws Exception {
 
-		// FIXME
-		/*
+		
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
 
@@ -382,7 +391,8 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			String column;
 			Object o;
 			for (int j = 0; j < headerTableItemList.count(); j++) {
-				column = (String) headerTableItemList.getName(j);
+				org.columba.core.config.HeaderItem h = headerTableItemList.getHeaderItem(j);
+			column = (String)h.get("name");
 				//int index = column.indexOf(";");
 
 				o = p.readObject();
@@ -399,14 +409,13 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		// close stream
 		p.close();
-		*/
+		
 		
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {
 
-		// FIXME
-		/*
+		
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
 
@@ -435,7 +444,8 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			//HeaderItem item;
 			Object o;
 			for (int j = 0; j < headerTableItemList.count(); j++) {
-				column = (String) headerTableItemList.getName(j);
+				org.columba.core.config.HeaderItem h = headerTableItemList.getHeaderItem(j);
+			column = (String)h.get("name");
 
 				o = item.get(column);
 				p.writeObject(o);
@@ -446,7 +456,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 		//p.flush();
 		p.close();
 
-		*/
+		
 	}
 
 	public void recreateIndex() {

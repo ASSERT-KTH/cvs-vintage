@@ -16,7 +16,7 @@ package org.columba.addressbook.folder;
 
 import java.util.Hashtable;
 
-import org.columba.core.config.AdapterNode;
+import org.columba.addressbook.config.AdapterNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

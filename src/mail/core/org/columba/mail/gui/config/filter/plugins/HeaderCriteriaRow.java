@@ -43,6 +43,7 @@ public class HeaderCriteriaRow extends DefaultCriteriaRow {
 		} else {
 			criteria.setCriteria((String) matchComboBox.getSelectedItem());
 			criteria.setPattern((String) textField.getText());
+			criteria.setHeaderItem( criteria.getType() );
 		}
 
 	}

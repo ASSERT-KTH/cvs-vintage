@@ -31,9 +31,9 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.config.ContactItem;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.CPanel;
 import org.columba.core.gui.util.DialogStore;

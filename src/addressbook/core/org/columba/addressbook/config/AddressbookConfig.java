@@ -45,7 +45,7 @@ public class AddressbookConfig extends DefaultConfig {
 			new DefaultXmlConfig(addressbookFile));
 
 		addressbookOptionsFile =
-			new File(configDirectory, "addressbookoptions.xml");
+			new File(configDirectory, "options.xml");
 		registerPlugin(
 			addressbookOptionsFile.getName(),
 			new DefaultXmlConfig(addressbookOptionsFile));
