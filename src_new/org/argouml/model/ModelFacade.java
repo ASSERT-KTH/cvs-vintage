@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.151 2003/10/27 20:24:14 kataka Exp $
+// $Id: ModelFacade.java,v 1.152 2003/11/05 08:32:20 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3306,6 +3306,10 @@ public class ModelFacade {
                 upper = end.getMultiplicity().getUpper();
             return upper;
         }
+	if (isAMultiplicity(handle)) {
+	    MMultiplicity up = (MMultiplicity)handle;
+	    return up.getUpper();
+	}
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
@@ -3335,7 +3339,11 @@ public class ModelFacade {
                 lower = end.getMultiplicity().getLower();
             return lower;
         }
-        throw new IllegalArgumentException("Unrecognized object " + handle);
+	if (isAMultiplicity(handle)) {
+	    MMultiplicity low = (MMultiplicity) handle;
+	    return low.getLower();
+	}
+        throw new IllegalArgumentException("Unrecognized object " + handle.getClass());
     }
 
     /**
