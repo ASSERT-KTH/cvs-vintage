@@ -115,28 +115,6 @@ public class WorkDirSetup extends BaseInterceptor {
     
     // -------------------- Callbacks --------------------
     
-    /** Adjust context manager paths
-     */
-    public void engineInit( ContextManager cm )
-    	throws TomcatException
-    {
-	initWorkDir(cm);
-    }
-
-    private void initWorkDir(ContextManager cm) {
-	String workDir=cm.getWorkDir();
-	if( workDir==null ) {
-	    workDir= DEFAULT_WORK_DIR;
-	}
-	
-	if( ! FileUtil.isAbsolute( workDir )) {
-	    workDir=FileUtil.
-		getCanonicalPath(cm.getHome() + File.separator+
-				 workDir);
-	}
-	cm.setWorkDir( workDir );
-    }
-
     public void addContext(ContextManager cm, Context ctx) {
 	// not explicitely configured
 	if( ctx.getWorkDir() == null)
