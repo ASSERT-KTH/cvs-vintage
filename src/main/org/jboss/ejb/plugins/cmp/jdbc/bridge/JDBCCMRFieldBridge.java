@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -264,7 +264,25 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
          }
       }
       if(relatedCMRField == null) {
-         throw new DeploymentException("Related CMR field not found.");
+         String message = "Related CMR field not found not found in " +
+               relatedEntity.getEntityName() + " for relationship from";
+
+         message += entity.getEntityName() + ".";
+         if(metadata.getCMRFieldName() != null) {
+            message += metadata.getCMRFieldName();
+         } else {
+            message += "<no-field>";
+         }
+
+         message += " to ";
+         message += relatedEntity.getEntityName() + ".";
+         if(metadata.getRelatedRole().getCMRFieldName() != null) {
+            message += metadata.getRelatedRole().getCMRFieldName();
+         } else {
+            message += "<no-field>";
+         }
+
+         throw new DeploymentException(message);
       }
    }
 
