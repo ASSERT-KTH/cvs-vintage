@@ -45,7 +45,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -894,7 +894,7 @@ class TxCapsule implements TimeoutTarget
 
       if (locked) {
          Logger.warning("TxCapsule: Lock contention, tx=" + toString());
-         Thread.currentThread().dumpStack();
+         //DEBUG Thread.currentThread().dumpStack();
 
          long myIncarnation = incarnationCount;
 
