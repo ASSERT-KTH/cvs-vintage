@@ -124,6 +124,22 @@ public class AutoDeploy extends BaseInterceptor {
      *  Find all wars, expand them, register dependency.
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+
+	// For all contexts in <server.xml > or loaded by differen means,
+	// check if the docBase ends with .war - and expand it if so,
+	// after that replace the docBase with the dir. See bug 427.
+	/* XXX not ready yet.
+	Enumeration loadedCtx=cm.getContexts();
+	while( loadedCtx.hasMoreElements() ) {
+	    Context ctx=(Context)loadedCtx.nextElement();
+	    String docBase=ctx.getDocBase();
+	    if( docBase.endsWith( ".war" ) ) {
+		expandWar( ctx, docBase);
+	    }
+	}
+	*/
+	
+	// expand all the wars from srcDir ( webapps/*.war ).
 	String home=cm.getHome();
 
 	File webappS;
