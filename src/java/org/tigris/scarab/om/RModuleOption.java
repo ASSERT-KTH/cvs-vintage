@@ -70,6 +70,8 @@ public class RModuleOption
     implements Persistent
 {
 
+    private int level;
+
     private static final Comparator comparator = new Comparator()
         {
             public int compare(Object obj1, Object obj2)
@@ -90,8 +92,6 @@ public class RModuleOption
             }            
         };
 
-    private int level;
-
 
     /**
      * Compares numeric value and in cases where the numeric value
@@ -102,6 +102,9 @@ public class RModuleOption
         return comparator;
     }
 
+    /**
+     * Get the AttributeOption associated with this Module
+     */
     public AttributeOption getAttributeOption()
         throws Exception
     {

@@ -57,7 +57,7 @@ import org.tigris.scarab.om.AttributeOption;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.11 $ $Date: 2001/08/02 07:11:37 $
+ * @version $Revision: 1.12 $ $Date: 2001/09/11 03:41:45 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {
@@ -70,7 +70,7 @@ public abstract class OptionAttribute extends AttributeValue
     {
         /*
         Criteria crit = new Criteria()
-            .addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
+            .addOrderByColumn(AttributeOptionPeer.WEIGHT);
         
         Vector opts = getAttribute().getAttributeOptions(crit);
 
@@ -81,7 +81,7 @@ public abstract class OptionAttribute extends AttributeValue
         {
             AttributeOption opt = (AttributeOption)opts.get(i);
             optsById.put(opt.getPrimaryKey(), opt);
-            optsByNum.put(new Integer(opt.getNumericValue()), opt);
+            optsByNum.put(new Integer(opt.getWeight()), opt);
         }
         Object[] res = {opts, optsById, optsByNum};
         

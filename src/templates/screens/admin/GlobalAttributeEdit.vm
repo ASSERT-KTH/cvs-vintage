@@ -1,0 +1,174 @@
+$page.setTitle("Attribute / Options Editor")
+
+#set ($module = $scarabR.CurrentModule)
+
+#set ($attribute = $scarabR.Attribute)
+#set ($attType = $attribute.AttributeType)
+#set ($attgroup = $intake.Attribute.Default )
+#set ($atttgroup = $intake.AttributeType.Default )
+
+<div class="app" id="div3-0-2-0">
+
+<h2>$page.Title</h2>
+
+<p>
+On this screen, one can modify system wide Attribute information. 
+</p>
+
+<p>
+Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute Show</a>
+</p>
+
+<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
+    <input type="hidden" name="action" value="admin.GlobalAttributes"/>
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
+    <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
+
+#datatitle ( "Attribute Info" )
+
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+ <tr>
+  <th width="120">input type:</th>
+  <td>
+    <select name="$atttgroup.AttributeTypeId.Key" size="1">
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      <option value="$atype.AttributeTypeId" #if($attType.AttributeTypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+    #end
+    </select>
+  </td>
+
+ <tr>
+  <th width="120">attribute name:</th>
+  <td>
+    <input type="text" name="$attgroup.Name.Key" value="$attribute.Name"/>
+    #fieldErrorMsg($attgroup.Name "")
+  </td>
+ </tr>
+
+ <tr>
+  <th width="120">attribute description:</th>
+  <td>
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    #fieldErrorMsg($attgroup.Description "")
+  </td>
+ </tr>
+
+ <tr>
+  <th width="120">created by:</th>
+  <td>
+  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+  <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  </td>
+ </tr>
+
+ <tr>
+  <th width="120">creation date:</th>
+  <td>
+    $attribute.CreatedDate
+  </td>
+ </tr>
+
+</tr>
+</table>
+</div>
+
+<p class="functnbar">
+  <input type="submit" name="eventSubmit_doModifyattributedata" 
+        value="Save"/> General Info
+</p>
+$intake.declareGroups()
+</form>
+
+<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
+    <input type="hidden" name="action" value="admin.GlobalAttributes"/>
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
+    <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
+
+#if ($attType.AttributeClass.Name.equals("select-one"))
+
+#datatitle ("Attribute Options")
+
+#set ($pcaos = $attribute.ParentChildAttributeOptions)
+#set ($maxNum = $pcaos.size())
+
+<div class="grouper">
+<div class="datatable">
+<table width="70%" border="0" cellspacing="2" cellpadding="2">
+<tr>
+#if ($maxNum > 0)
+ <th>Deleted:</th>
+ <th>Id:</th>
+#else
+ <th colspan="2">&nbsp;</th>
+#end
+ <th>Parent Id:</th>
+ <th>Attribute Option:</th>
+ <th>Preferred Order:</th>
+ <th>Weight:</th>
+</tr>
+
+#foreach ($pcao in $pcaos)
+    #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
+    #if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
+
+     <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
+     <td>$pcaoGroup.OptionId</td>
+     <td>
+        <input type="text" name="$pcaoGroup.ParentId.Key" 
+                value="$pcaoGroup.ParentId" size="5">
+     </td>
+     <td><input type="text" size="25" class="text" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name"/></td>
+     <td>
+        #numericSelect( $pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1 )
+     </td>
+     <td>
+        #numericSelect( $pcaoGroup.Weight.Key 1 $maxNum $pcaoGroup.Weight.Value 1 )
+     </td>
+    </tr>
+#end
+
+#set ($newPCAO = $scarabR.ParentChildAttributeOption)
+#set ($newPCAOGroup = $intake.ParentChildAttributeOption.mapTo($newPCAO))
+#if ( ($maxNum + 1) % 2 > 0 )<tr class="a">#else<tr class="b">#end
+     <td colspan="2">New</td>
+     <td>
+        <input type="text" name="$newPCAOGroup.ParentId.Key" 
+                value="$newPCAOGroup.ParentId" size="5">
+     </td>
+     <td><input type="text" size="25" class="text" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName"/></td>
+     <td>
+#set ( $maxNum = $maxNum + 1 )
+#if ($newPCAOGroup.PreferredOrder.Value != 0)
+    #set ( $selected = $newPCAOGroup.PreferredOrder.Value )
+#else
+    #set ( $selected = $maxNum )
+#end
+#numericSelect( $newPCAOGroup.PreferredOrder.Key 1 $maxNum $selected 1 )
+     </td>
+     <td>
+#if ($newPCAOGroup.Weight.Value != 0)
+    #set ( $selected = $newPCAOGroup.Weight.Value )
+#else
+    #set ( $selected = $maxNum )
+#end
+#numericSelect( $newPCAOGroup.Weight.Key 1 $maxNum $selected 1 )
+     </td>
+</tr>
+
+</table>
+
+<p class="functnbar">
+  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
+        value="Save"/> Attribute Options
+</p>
+
+#end #* if select-one *#
+
+
+</div>
+</div>
+$intake.declareGroups()
+</form>
+
+</div>

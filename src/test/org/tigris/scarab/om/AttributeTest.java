@@ -1,4 +1,4 @@
-package org.tigris.scarab.attribute;
+package org.tigris.scarab.om;
 
 /* ================================================================
  * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
@@ -46,32 +46,69 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.NumberKey;
+
+import org.tigris.scarab.test.BaseTestCase;
+import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
 
-import java.util.Enumeration;
-import java.util.Vector;
-
 /**
- *  This is a Bugzilla-style attribute. The result is the sum of all votes.
+ * A Testing Suite for the om.Attribute class.
  *
- * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.6 $ $Date: 2001/09/11 03:41:45 $
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @version $Id: AttributeTest.java,v 1.1 2001/09/11 03:41:47 jon Exp $
  */
-public class VotedTotalAttribute extends VotedAttribute
+public class AttributeTest extends BaseTestCase
 {
-    
-    /** 
-     * This method calculates result of the vote
+    /**
+     * Creates a new instance.
+     *
      */
-    public String computeResult()
+    public AttributeTest()
     {
-        int total = 0;
-        Enumeration votes = getVotes().elements();
-        Vector opts = getOptions();
-        while (votes.hasMoreElements())
+        super("AttributeTest");
+    }
+
+    public static junit.framework.Test suite()
+    {
+        return new AttributeTest();
+    }
+
+    protected void runTest()
+        throws Throwable
+    {
+//        createROptionOptionMapping();
+//        testSortAttributeOptions();
+    }
+/*
+    private void createROptionOptionMapping()
+        throws Exception
+    {
+        Attribute.createROptionOptionMapping();
+    }
+*/    
+    private void testSortAttributeOptions()
+        throws Exception
+    {
+        Attribute attribute = 
+            Attribute.getInstance((ObjectKey)new NumberKey(6));
+        List before = (List) attribute.getAttributeOptions();
+        List after = (List) attribute.getAttributeOptions();
+        System.out.println ("Options Size Before: " + before.size());
+        System.out.println ("Options Size After: " + after.size());
+//        attribute.sortOptions(new ArrayList(after));
+
+        for (int i=0; i<after.size(); i++)
         {
-            total += ((AttributeOption)votes.nextElement()).getWeight();
+//            System.out.println (((AttributeOption)after.get(i)).getName());
+//            System.out.println (
+//                "Before: '" + ((AttributeOption)before.get(i)).getName() + 
+//                "' - After: '" + ((AttributeOption)after.get(i)).getName() + "'");
         }
-        return Integer.toString(total);
     }
 }

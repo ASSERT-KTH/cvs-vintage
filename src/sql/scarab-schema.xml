@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.41 2001/09/08 01:47:29 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.42 2001/09/11 03:41:46 jon Exp $ -->
 
 <app-data>
 <database>
@@ -240,7 +240,6 @@
 </table>
 
 
-
 <!--
     Attribute option is possible value of an attribute of an issue.
     Example: DOS 3.1 (for attribute Operating System)
@@ -260,10 +259,12 @@
     -->
     <column name="OPTION_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
     <!--
-        Value of the atttribute that represents the option.
-        Can be used for sorting in UI and computing averages of votes.
+        This gives "weight" to an option. In other words, it can be used
+        to set the "importance" of one option vs. another option. P1 can 
+        be made more "important" than P2. This may become more useful in 
+        the future when we have outside workflow logic.
     -->
-    <column name="NUMERIC_VALUE" required="false" type="INTEGER"></column>
+    <column name="WEIGHT" required="false" type="INTEGER"></column>
     <!--
         Flag, which marks that option has been deleted.
     -->
@@ -464,7 +465,7 @@
             join with SCARAB_ATTRIBUTE_OPTION
          - For "voted" attributes this would be the vote result. For bugzilla-style votes it is sum
             of all votes casted. For average vote this result is DISPLAY_VALUE of OPTION which has
-            NUMERIC_VALUE computed as: round(sum(votes.numeric_value)/count(votes)). For "Tracking"
+             computed as: round(sum(votes.numeric_value)/count(votes)). For "Tracking"
             attribute which is also considered a voted attribute this value is a list of login_IDs
             of users tracking the issue.
 
@@ -618,10 +619,9 @@
     <column name="REQUIRED" required="true" type="BOOLEANINT" 
         default="0" size="1"></column>
     <!--
-        Allows the template engineer and module owner some means to 
-        order Attribute listings.
+        Column order.
     -->
-    <column name="PREFERRED_ORDER" required="true" default="0" type="INTEGER"/>
+    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
     <!--
         Flag, which marks this attribute as being useful for deduping.
     -->
@@ -712,14 +712,16 @@
     <column name="OPTION2_ID" primaryKey="true" required="true" 
             type="INTEGER"/>
     <!--
-        Type.
+        The type of relationship. See the SCARAB_OPTION_RELATIONSHIP
+        table for the different types
     -->
     <column name="RELATIONSHIP_ID" required="true" type="INTEGER"/>
     <!--
-        Flag, which marks that association has been deleted.
+        The preferred order that these options should be shown in.
+        Each option should have a 1-N ordering for all of its
+        options (regardless of nesting).
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"/>
+    <column name="PREFERRED_ORDER" required="true" type="INTEGER"/>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION1_ID" foreign="OPTION_ID"/>

@@ -517,7 +517,7 @@ public class ScarabModule
         {
             AttributeOption option =
                 ((RModuleOption)rModOpts.get(i)).getAttributeOption();
-            List descendants = option.getDescendants();
+            List descendants = option.getChildren();
             if ( descendants != null )
             {
                 for ( int j=descendants.size()-1; j>=0; j-- )

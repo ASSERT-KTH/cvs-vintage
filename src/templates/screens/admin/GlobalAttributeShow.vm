@@ -1,8 +1,7 @@
+<div id="globalattributeshow" class="app">
 $page.setTitle("Global Attribute Editor")
 
-#set ($module = $scarabR.CurrentModule)
-
-<h1>Global Attributes</h1>
+<h2>Global Attributes</h2>
 
 <p>
 This page is for editing the Global Attributes.
@@ -28,8 +27,10 @@ This page is for editing the Global Attributes.
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/>
-<img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></th>
+<th>
+<img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/>
+<img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0"/>
+</th>
 <th>attribute name:</th>
 <th>input type:</th>
 <th>description:</th>
@@ -37,18 +38,17 @@ This page is for editing the Global Attributes.
 <th>creation date:</th>
 </tr>
 
-#set ( $attgroup = $intake.Attribute.Default ) 
-#set ( $allAttributes = $scarabG.AllAttributes )
+#set ($attgroup = $intake.Attribute.Default) 
+#set ($allAttributes = $scarabG.AllAttributes)
 
 #foreach( $attribute in $allAttributes )
-#set ($attribute = $rma.Attribute)
 #if ( $velocityCount % 2 > 0 )
 <tr class="a">
 #else
 <tr class="b">
 #end
 <td><input type="checkbox"/></td>
-<td>$attribute.Name (<a href="$link.setPage("admin,AttributeShow.vm").setAction("admin.ModifyAttributes").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("eventSubmit_doSelectattribute", "Modify Attribute").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId").addPathInfo("nextTemplate","admin,AttributeEdit.vm")">edit</a>)</td>
+<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("nextTemplate","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId")">edit</a>)</td>
 <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -64,7 +64,6 @@ This page is for editing the Global Attributes.
 </tr>
 #end
 </table>
-
 </div>
 
 $intake.declareGroups()
@@ -76,4 +75,4 @@ $intake.declareGroups()
 </p>
 </form>
 
-#end
+</div>

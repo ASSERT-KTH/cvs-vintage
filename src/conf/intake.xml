@@ -31,18 +31,54 @@
         </field>
         <field name="Deleted" key="del" type="boolean" />
 </group>
+
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
+        <field name="OptionId" key="aoid" type="NumberKey" mapToProperty="PrimaryKey">
+           <rule name="mask" value="[0-9]+">Invalid Id</rule>
+           <required-message>No Attribute Option was selected.</required-message>
+        </field>
         <field name="AttributeId" key="attid" type="NumberKey">
            <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
         </field>
+<!--        
         <field name="ParentIds" key="parentid" type="String">
            <rule name="mask" value="[0-9|,]+">Invalid Option Id(s)</rule>
+        </field>
+-->
+        <field name="Name" key="name" type="String">
+            <rule name="minLength" value="1">Option name is not allowed to be empty</rule>
+            <rule name="maxLength" value="255">Option name must be less than 255 characters long</rule>
+        </field>
+        <field name="Weight" key="weight" type="int">
+           <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="NewName" key="newname" type="String"
+               mapToProperty="Name">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Deleted" key="del" type="boolean"/>
+</group>
+
+<!-- Combination of AttributeOption and ROptionOption primarily for the GlobalAttributeEdit.vm page -->
+<group name="ParentChildAttributeOption" key="pcao" mapToObject="om.ParentChildAttributeOption">
+        <field name="OptionId" key="oid" type="NumberKey">
+           <rule name="mask" value="[0-9]+">Invalid Id</rule>
+           <required-message>No Attribute Option was selected.</required-message>
+        </field>
+        <field name="AttributeId" key="attid" type="NumberKey">
+           <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="ParentId" key="parentid" type="NumberKey">
+           <rule name="mask" value="[0-9|,]+">Invalid Option Id</rule>
         </field>
         <field name="Name" key="name" type="String">
             <rule name="minLength" value="1">Option name is not allowed to be empty</rule>
             <rule name="maxLength" value="255">Option name must be less than 255 characters long</rule>
         </field>
-        <field name="NumericValue" key="numval" type="int">
+        <field name="PreferredOrder" key="order" type="int">
+           <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="Weight" key="weight" type="int">
            <rule name="mask" value="[0-9]+">Please select a valid choice</rule>
         </field>
         <field name="NewName" key="newname" type="String"
@@ -61,7 +97,6 @@
         </field>
 </group>
 
-
 <group name="RModuleAttribute" key="rma" mapToObject="om.RModuleAttribute">
         <field name="DisplayValue" key="name" type="String">
             <rule name="maxLength" value="255"/>
@@ -70,21 +105,24 @@
         <field name="Required" key="req" type="boolean"/>
         <field name="Dedupe" key="dedupe" type="boolean"/>
         <field name="QuickSearch" key="qs" type="boolean"/>
+<!--
         <field name="Order" key="order" type="int" 
                 mapToProperty="PreferredOrder">
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
+-->
 </group>
 
 <group name="RModuleUserAttribute" key="rmua" mapToObject="om.RModuleUserAttribute">
+<!--
         <field name="Selected" key="sel" type="boolean"/> 
+-->
         <field name="Order" key="order" type="int" >
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
 </group>
-
 
 <group name="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
@@ -229,7 +267,6 @@
     </field>
 </group>
 
-
 <group name="Query" key="query" mapToObject="om.Query">
     <field name="Id" key="o" type="NumberKey" mapToProperty="PrimaryKey">
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
@@ -273,6 +310,5 @@
         <rule name="mask" value="[0-9]+">badIdMessage</rule>
     </field>
 </group>
-
 
 </input-data>

@@ -46,10 +46,10 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine
+import java.util.List;
+
 import org.apache.turbine.services.pull.ApplicationTool;
 
-// Velocity
 import org.apache.velocity.app.FieldMethodizer;
 
 /**
@@ -64,7 +64,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.2 2001/07/17 21:40:31 jon Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.3 2001/09/11 03:41:46 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -73,4 +73,19 @@ public interface ScarabGlobalScope extends ApplicationTool
      * as $scarabG.Constant.CONSTANT_NAME.
      */
     public FieldMethodizer getConstant();
+
+    /**
+     * This is used to get the format for a date
+     * right now, it returns "M/d/yy". In the future, we 
+     * can write code to return the correct date based on
+     * Localization needs.
+     */
+    public String getDateFormat();
+
+    /**
+     * Gets a List of all of the Attribute objects.
+     */
+    public List getAllAttributes() 
+        throws Exception;
+
 }

@@ -46,9 +46,8 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Vector;
+import java.util.List;
 
-// Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.ObjectKey;
@@ -56,28 +55,24 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.intake.model.BooleanField;
 
-// Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
-    This class will store the form data for a project modification
-        
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.18 2001/09/11 03:41:45 jon Exp $
-*/
-public class ModifyAttributes extends RequireLoginFirstAction
+ * This class deals with modifying Global Attributes.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: GlobalAttributes.java,v 1.1 2001/09/11 03:41:45 jon Exp $
+ */
+public class GlobalAttributes extends RequireLoginFirstAction
 {
     /**
-     * On the admin,AttributeShow.vm page, when you click the button,
-     * this will get the right Attribute from the database and put it into
-     * the $scarabR tool.
+     * On the admin,GlobalAttributeShow.vm page
      */
     public void doSelectattribute( RunData data, TemplateContext context ) 
         throws Exception
@@ -101,7 +96,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
     }
 
     /**
-     * Used on AttributeEdit.vm to modify Attribute Name/Description/Type
+     * Used on GlobalAttributeEdit.vm to modify Attribute Name/Description/Type
      * Use doAddormodifyattributeoptions to modify the options.
      */
     public void doModifyattributedata( RunData data, TemplateContext context )
@@ -141,102 +136,67 @@ public class ModifyAttributes extends RequireLoginFirstAction
 
         if ( intake.isAllValid() ) 
         {
-            Attribute attribute = ((ScarabRequestTool)context
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL))
-                    .getRModuleAttribute().getAttribute();
+            // get the Attribute that we are working on
+            Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
+            String attributeID = attGroup.get("Id").toString();
+            Attribute attribute = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
 
-            AttributeOption option = null;
-            Vector attributeOptions = (Vector)attribute
-                .getAttributeOptions().clone(); 
-            // go in reverse because we may be removing from the list
-            for (int i=attributeOptions.size()-1; i>=0; i--) 
+            // get the list of ParentChildAttributeOptions's used to display the page
+            List pcaoList = attribute.getParentChildAttributeOptions();
+            for (int i=pcaoList.size()-1; i>=0; i--) 
             {
-                option = (AttributeOption)attributeOptions.get(i);
-                Group group = intake.get("AttributeOption", 
-                                         option.getQueryKey());
-                // in case the template is not showing all the options at once
-                if ( group != null ) 
-                {
-                    // there could be an error with attempting to assign
-                    // an invalid parent attribute option to an attribute
-                    // option.
-                    try
-                    {
-                        group.setProperties(option);
-                    }
-                    catch (Exception se)
-                    {
-                        intake.remove(group);
-                        data.setMessage(se.getMessage());
-                        return;
-                    }
+                ParentChildAttributeOption pcao = (ParentChildAttributeOption)pcaoList.get(i);
+                
+                Group pcaoGroup = intake.get("ParentChildAttributeOption", 
+                                         pcao.getQueryKey());
 
-                    // check for a deleted flag.  AttributeOptions are marked
-                    // as deleted.
- /*                   BooleanField deletedField = 
-                        (BooleanField)group.get("Deleted");
-                    if ( deletedField != null && deletedField.booleanValue() ) 
-                    {
-                        // remove from the Attribute's list
-                        attributeOptions.remove(i);
-                    }
-*/
-                    option.save();
-
-                    // we need this because we are accepting duplicate
-                    // numeric values and resorting, so we do not want
-                    // to show the actual value entered by the user.
-                    intake.remove(group);
-                }
-            }
-//            attribute.sortOptions(attributeOptions);
-
-            // was a new option added?
-            option = AttributeOption.getInstance();
-            Group group = intake.get("AttributeOption", 
-                                     option.getQueryKey());
-            if ( group != null ) 
-            {
+                // there could be errors here so catch and re-display
+                // the same screen again.
                 try
                 {
-                    group.setProperties(option);
+                    // map the form data onto the objects
+                    pcaoGroup.setProperties(pcao);
+                    pcao.save();
+                    intake.remove(pcaoGroup);
                 }
                 catch (Exception se)
                 {
-                    intake.remove(group);
+                    // on error, reset to previous values
+                    intake.remove(pcaoGroup);
+                    data.setMessage(se.getMessage());
+                    se.printStackTrace();
+                    return;
+                }
+            }
+            
+            // handle adding the new line.
+            ParentChildAttributeOption newPCAO = ParentChildAttributeOption.getInstance();
+            Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
+                                     newPCAO.getQueryKey());
+            if ( newPCAOGroup != null ) 
+            {
+                try
+                {
+                    // assign the form data to the object
+                    newPCAOGroup.setProperties(newPCAO);
+                }
+                catch (Exception se)
+                {
+                    intake.remove(newPCAOGroup);
                     data.setMessage(se.getMessage());
                     return;
                 }
-                if ( option.getName() != null 
-                     && option.getName().length() != 0 ) 
+                // only add a new entry if there is a name defined
+                if (newPCAO.getName() != null && newPCAO.getName().length() > 0)
                 {
-                    try
-                    {
-                        attribute.addAttributeOption(option);
-                    }
-                    catch (ScarabException se)
-                    {
-                        data.setMessage("Please select a unique name.");
-                    }
+                    // save the new PCAO
+                    newPCAO.setAttributeId(new NumberKey(attributeID));
+                    newPCAO.save();
                 }
 
-                // we need this because we are accepting duplicate
-                // numeric values and resorting, so we do not want
-                // to show the actual value entered by the user.
-                intake.remove(group);
-
-                for (int i=attributeOptions.size()-1; i>=0; i--) 
-                {
-                    option = (AttributeOption)attributeOptions.get(i);
-                    group = intake.get("AttributeOption", 
-                                             option.getQueryKey());
-                    // in case the template is not showing all the options
-                    if ( group != null ) 
-                    {
-                        intake.remove(group);
-                    }
-                }
-            }                           
+                // now remove the group to set the page stuff to null
+                intake.remove(newPCAOGroup);
+            }
         }
     }
 

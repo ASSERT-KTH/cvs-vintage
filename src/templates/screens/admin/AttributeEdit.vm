@@ -115,7 +115,7 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
      </td>
      <td><input type="text" size="25" class="text" name="$intakeOption.Name.Key" value="$intakeOption.Name"/></td>
      <td>
-        #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value 1 )
+        #numericSelect( $intakeOption.Weight.Key 1 $maxNum $intakeOption.Weight.Value 1 )
      </td>
     </tr>
 #end
@@ -131,12 +131,12 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
      <td><input type="text" size="25" class="text" name="$intakeOption.NewName.Key" value="$intakeOption.NewName"/></td>
      <td>
 #set ( $maxNum = $maxNum + 1 )
-#if ($intakeOption.NumericValue.Value != 0)
-    #set ( $selected = $intakeOption.NumericValue.Value )
+#if ($intakeOption.Weight.Value != 0)
+    #set ( $selected = $intakeOption.Weight.Value )
 #else
     #set ( $selected = $maxNum )
 #end
-#numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $selected 1 )
+#numericSelect( $intakeOption.Weight.Key 1 $maxNum $selected 1 )
      </td>
 </tr>
 

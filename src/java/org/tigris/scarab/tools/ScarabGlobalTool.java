@@ -46,10 +46,13 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine
+import java.util.List;
 
-// Velocity
 import org.apache.velocity.app.FieldMethodizer;
+
+import org.tigris.scarab.om.AttributePeer;
+
+import org.apache.torque.util.Criteria;
 
 /**
  * This scope is an object that is made available as a global
@@ -63,7 +66,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.4 2001/08/17 00:42:27 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.5 2001/09/11 03:41:46 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -112,5 +115,14 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public String getDateFormat()
     {
         return MDYY_DATE;
+    }
+
+    /**
+     * Gets a List of all of the Attribute objects.
+     */
+    public List getAllAttributes()
+        throws Exception
+    {
+        return AttributePeer.getAllAttributes();
     }
 }

@@ -79,10 +79,12 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentPeer;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -144,6 +146,16 @@ public class ScarabRequestTool
     private AttributeOption attributeOption = null;
 
     /**
+     * A ROptionOption
+     */
+    private ROptionOption roo = null;
+
+    /**
+     * A ParentChildAttributeOption
+     */
+    private ParentChildAttributeOption pcao = null;
+
+    /**
      * A AttributeOption object for use within the Scarab API.
      */
     private int nbrPages = 0;
@@ -197,6 +209,38 @@ public class ScarabRequestTool
     }
 
     /**
+     * Get the intake tool. FIXME: why is it getting it
+     * from the Module and not from the IntakeService?
+     */
+    private IntakeTool getIntakeTool()
+    {
+        return (IntakeTool)Module.getTemplateContext(data)
+            .get(ScarabConstants.INTAKE_TOOL);
+    }
+
+    /**
+     * Gets an instance of a ROptionOption from this tool.
+     * if it is null it will return a new instance of an 
+     * empty ROptionOption and set it within this tool.
+     */
+    public ROptionOption getROptionOption()
+    {
+        if (roo == null)
+        {
+            roo = ROptionOption.getInstance();
+        }
+        return roo;
+    }
+
+    /**
+     * Sets an instance of a ROptionOption
+     */
+    public void setROptionOption(ROptionOption roo)
+    {
+        this.roo = roo;
+    }
+
+    /**
      * A IssueTemplate object for use within the Scarab API.
      */
     public void setIssueTemplate (IssueTemplate template)
@@ -204,12 +248,27 @@ public class ScarabRequestTool
         this.template = template;
     }
 
-    private IntakeTool getIntakeTool()
+    /**
+     * Gets an instance of a ParentChildAttributeOption from this tool.
+     * if it is null it will return a new instance of an 
+     * empty ParentChildAttributeOption and set it within this tool.
+     */
+    public ParentChildAttributeOption getParentChildAttributeOption()
     {
-        return (IntakeTool)Module.getTemplateContext(data)
-            .get(ScarabConstants.INTAKE_TOOL);
+        if (pcao == null)
+        {
+            pcao = ParentChildAttributeOption.getInstance();
+        }
+        return pcao;
     }
 
+    /**
+     * Sets an instance of a ParentChildAttributeOption
+     */
+    public void setParentChildAttributeOption(ParentChildAttributeOption roo)
+    {
+        this.pcao = pcao;
+    }
 
     /**
      * A Attribute object for use within the Scarab API.
@@ -228,11 +287,12 @@ public class ScarabRequestTool
 try{
         if (attributeOption == null)
         {
-            String optId = data.getParameters()
-                .getString("currentAttributeOption"); 
-            if ( optId == null )
+            String optId = getIntakeTool()
+                .get("AttributeOption", IntakeTool.DEFAULT_KEY)
+                .get("OptionId").toString();
+            if ( optId == null || optId.length() == 0 )
             {
-                attributeOption = new AttributeOption();                
+                attributeOption = AttributeOption.getInstance();
             }
             else 
             {
@@ -300,7 +360,8 @@ try{
         if (attribute == null)
         {
             String attId = getIntakeTool()
-                .get("Attribute", IntakeTool.DEFAULT_KEY).get("Id").toString();
+                .get("Attribute", IntakeTool.DEFAULT_KEY)
+                .get("Id").toString();
             if ( attId == null || attId.length() == 0 )
             {
                 attribute = Attribute.getInstance();
@@ -327,7 +388,6 @@ try{
             {
                 String queryId = data.getParameters()
                     .getString("queryId"); 
-
                 if ( queryId == null || queryId.length() == 0 )
                 {
                     query = Query.getInstance();
@@ -343,8 +403,7 @@ try{
             e.printStackTrace();
         }
         return query;
- 
-   }
+    }
 
     /**
      * A IssueTemplate object for use within the Scarab API.
@@ -365,7 +424,8 @@ try{
                 }
                 else 
                 {
-                    template = IssueTemplatePeer.retrieveByPK(new NumberKey(templateId));
+                    template = IssueTemplatePeer
+                        .retrieveByPK(new NumberKey(templateId));
                 }
             }        
         }        
@@ -374,8 +434,7 @@ try{
             e.printStackTrace();
         }
         return template;
- 
-   }
+    }
 
     /**
      * A Depend object for use within the Scarab API.
@@ -404,8 +463,7 @@ try{
             e.printStackTrace();
         }
         return depend;
- 
-   }
+    }
 
     /**
      * A Attachment object for use within the Scarab API.
@@ -438,8 +496,7 @@ try{
         }        
 }catch(Exception e){e.printStackTrace(); throw e;}
         return attachment;
- 
-   }
+    }
 
     /**
      * Get an RModuleAttribute object. 
@@ -593,7 +650,39 @@ try{
                 issue = new Issue();
             }
         }        
+        return issue;
+    }
 
+    /**
+     * The id may be a primary key or an issue id.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Issue</code> value
+     */
+    public Issue getIssue(String key)
+    {
+        Issue issue = null;
+        try
+        {
+            issue = IssuePeer.retrieveByPK(new NumberKey(key));
+        }
+        catch (Exception e)
+        {
+            // was not a primary key, try fid
+            try
+            {
+                Issue.FederatedId fid = new Issue.FederatedId(key);
+                if ( fid.getDomain() == null ) 
+                {
+                    // handle null (always null right now)
+                }
+                issue = Issue.getIssueById(fid);
+            }
+            catch (NumberFormatException nfe)
+            {
+                // invalid id, just return null
+            }
+        }
         return issue;
     }
 
@@ -633,10 +722,8 @@ try{
                            .retrieveByPK(new NumberKey(issueIdStrings[i])));
             }
         }
-        
         return issues;
     }
-
 
     /**
      * Get a new SearchIssue object. 
@@ -700,40 +787,6 @@ System.out.println(parameter + "was NOT null: " + parser);
         }
         
         return search.getMatchingIssues();
-    }
-
-
-    /**
-     * The id may be a primary key or an issue id.
-     *
-     * @param key a <code>String</code> value
-     * @return a <code>Issue</code> value
-     */
-    public Issue getIssue(String key)
-    {
-        Issue issue = null;
-        try
-        {
-            issue = IssuePeer.retrieveByPK(new NumberKey(key));
-        }
-        catch (Exception e)
-        {
-            // was not a primary key, try fid
-            try
-            {
-                Issue.FederatedId fid = new Issue.FederatedId(key);
-                if ( fid.getDomain() == null ) 
-                {
-                    // handle null (always null right now)
-                }
-                issue = Issue.getIssueById(fid);
-            }
-            catch (NumberFormatException nfe)
-            {
-                // invalid id, just return null
-            }
-        }
-        return issue;
     }
 
     /**

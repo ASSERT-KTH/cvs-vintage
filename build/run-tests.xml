@@ -36,16 +36,43 @@
     </exec>  
   </target>
 
-  <target name="test-all" depends="test-issue">
+  <target name="test-all" depends="test-issue,
+                                   test-attribute">
   </target>
 
-  <target name="test-issue">
+  <target name="test-issue" depends="compile">
     <echo>Running Issue tests...</echo>
 
     <java     classname="${test.runner}" fork="yes" 
             failonerror="${testbed.failonerror}">
       <jvmarg value="${config.dir}"/>
       <arg value="org.tigris.scarab.om.IssueTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-attribute" depends="compile">
+    <echo>Running Attribute tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AttributeTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-attributeoption" depends="compile">
+    <echo>Running AttributeOption tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AttributeOptionTest"/>
       <classpath>
         <path refid="classpath"/>
       </classpath>
