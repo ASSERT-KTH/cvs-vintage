@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.20 2002/01/30 08:06:40 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.21 2002/02/04 06:26:10 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -1041,6 +1041,12 @@ public class DockableWindowManager extends JPanel
 			this.position = jEdit.getProperty(name + ".dock-position",
 				FLOATING);
 			title = jEdit.getProperty(name + ".title");
+			if(title == null)
+			{
+				Log.log(Log.WARNING,this,name + ".title property"
+					+ " not defined");
+				title = name;
+			}
 
 			if(position == null)
 				position = FLOATING;

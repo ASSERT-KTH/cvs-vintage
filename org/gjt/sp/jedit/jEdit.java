@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.43 2002/01/28 11:40:33 spestov Exp $
+ * @version $Id: jEdit.java,v 1.44 2002/02/04 06:26:10 spestov Exp $
  */
 public class jEdit
 {
@@ -2699,6 +2699,17 @@ public class jEdit
 		// Add an EditBus component that will reload edit modes and
 		// macros if they are changed from within the editor
 		EditBus.addToBus(new SettingsReloader());
+
+		// Perhaps if Xerces wasn't slightly brain-damaged, we would
+		// not need this
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				Thread.currentThread().setContextClassLoader(
+					new JARClassLoader());
+			}
+		});
 	} //}}}
 
 	//{{{ initSystemProperties() method
