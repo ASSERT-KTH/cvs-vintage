@@ -137,8 +137,9 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		}
 
-		if (CachedHeaderfields.getUserDefinedHeaderfieldArray().length
-			>= additionalHeaderfieldsCount) {
+		String[] userDefinedHeaders = CachedHeaderfields.getUserDefinedHeaderfieldArray();
+		if ((userDefinedHeaders != null) && 
+			(userDefinedHeaders.length >= additionalHeaderfieldsCount)) {
 
 			configurationChanged = true;
 		}
