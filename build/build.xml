@@ -328,7 +328,7 @@
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             todir="${torque.dir.scarab}/config"/>
-        <ant antfile="torque.xml" dir="${torque.dir.scarab}"
+        <ant antfile="build.xml" dir="${torque.dir.scarab}"
             target="project-datadump">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
@@ -349,7 +349,7 @@
             todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" overwrite="true"
             todir="${torque.dir.scarab}/config"/>
-        <ant antfile="torque.xml" dir="${torque.dir.scarab}"
+        <ant antfile="build.xml" dir="${torque.dir.scarab}"
             target="project-datasql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
@@ -541,6 +541,4 @@
     </target>
 
 </project>
-
-
 
