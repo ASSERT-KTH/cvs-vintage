@@ -84,11 +84,60 @@
     #fieldErrorMsg($moduleGroup.Code "")
    </td>
   </tr>
+#if ($createNew.equals("true") || $moduleId != "0")
+  <tr>
+   <th>* $l10n.ParentModule</th>
+   <td> 
+    <select name="$moduleGroup.ParentId.Key">
+    #if ($editModule)
+      #foreach ($userModule in $userModules)
+        #if ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()))
+          <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #else
+          <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+        #end
+      #end
+    #else
+      #foreach ($userModule in $userModules)
+        <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+      #end
+    #end
+    </select>
+    #fieldErrorMsg($moduleGroup.ParentId "")
+   </td>
+  </tr>
+#end
+#*
   <tr>
    <th>$l10n.URL</th>
    <td>
     <input name="$moduleGroup.Url.Key" value="$moduleGroup.Url" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.Url "")
+   </td>
+  </tr>
+*#
+  <tr>
+   <th>$l10n.Domain</th>
+   <td>
+    <input name="$moduleGroup.Domain.Key" value="$moduleGroup.Domain" type="text" size="25" />
+    #fieldErrorMsg($moduleGroup.Domain "")
+   </td>
+  </tr>
+  <tr>
+   <th>$l10n.Port</th>
+   <td>
+    <input name="$moduleGroup.Port.Key" value="$moduleGroup.Port" type="text" size="10" />
+    #fieldErrorMsg($moduleGroup.Port "")
+   </td>
+  </tr>
+  <tr>
+   <th>$l10n.Scheme</th>
+   <td>
+    <select name="$moduleGroup.Scheme.Key">
+      <option value="http" #if ($editModule && $editModule.Scheme.equals("http"))selected #end>http</option>
+      <option value="https" #if ($editModule && $editModule.Scheme.equals("https"))selected #end>https</option>
+    </select>
+    #fieldErrorMsg($moduleGroup.Scheme "")
    </td>
   </tr>
   <tr>
@@ -120,32 +169,9 @@
  </tr>
  #end
 
-#if ($createNew.equals("true") || $moduleId != "0")
-  <tr>
-   <th>* $l10n.ParentModule</th>
-   <td> 
-    <select name="$moduleGroup.ParentId.Key">
-    #if ($editModule)
-      #foreach ($userModule in $userModules)
-        #if ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()))
-          <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
-        #else
-          <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
-        #end
-      #end
-    #else
-      #foreach ($userModule in $userModules)
-        <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
-      #end
-    #end
-    </select>
-    #fieldErrorMsg($moduleGroup.ParentId "")
-   </td>
-  </tr>
-#end
 #if ($editModule || $createNew != "true")
   <tr>
-    <th>* $l10n.Deleted</td>
+    <th>$l10n.Deleted</td>
     <td>
         #booleanCheckbox($moduleGroup.Deleted)
     </td>
