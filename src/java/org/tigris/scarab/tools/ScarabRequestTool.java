@@ -1361,9 +1361,11 @@ try{
     {
         IssueSearch is = null;
         MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
-        if (mitList == null) 
+        IssueType it = getCurrentIssueType();
+        Module cum = getCurrentModule();
+        if (mitList == null && (it != null || cum != null))
         {
-            is = new IssueSearch(getCurrentModule(), getCurrentIssueType());
+            is = new IssueSearch(cum, it);
         }
         else 
         {

@@ -16,7 +16,6 @@
   </table>
 </div>
 
-
 <form method="post" action="$link.setPage("home,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
 <input type="hidden" name="queryString" value="$!queryString" />
@@ -39,6 +38,11 @@
   <input type="submit" name="eventSubmit_doChooselist" value="Go" />
 </div>
 		
+#if (!$user.CurrentMITList || $user.CurrentMITList.isEmpty())
+<p class="alert">
+No issue types have been selected.  Please select from the list below.
+</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th nowrap="nowrap">Select</th>
@@ -47,26 +51,19 @@
     <th>Number of issues</th>
     <th>Description</th>
   </tr>
-#if (!$user.CurrentMITList || $user.CurrentMITList.isEmpty())
-    <td colspan="5">
-    <strong class="alert">
-    No issue types have been selected.  Please select from the list below.
-    </strong>
-    </td>
-#else
  #foreach ($item in $user.CurrentMITList.MITListItems)
   #indexedRows($velocityCount)
     <td>
     <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
     </td>
     <td>$item.Module.Name</td>
-    <td><a href="#">$item.IssueType.Name</a></td>
+    <td>$item.IssueType.Name</td>
     <td>$item.IssueCount</td>
     <td>$item.IssueType.Description</td>
   </tr>        
  #end
-#end
 </table>  
+#end
 
 #if ($user.CurrentMITList && !$user.CurrentMITList.isEmpty())
  <div class="functnbar3">
@@ -104,25 +101,23 @@
 <div>p. 1 <a href="#">2</a> <a href="#">3</a></div></div>
 -->
 
+#set ($searchableRMITs = $user.getSearchableRMITs())
+#if ($searchableRMITs.isEmpty())
+<p class="alert">
+There are no more issue types to select.
+</p>
+#else
 <div class="directory">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
-#set ($searchableRMITs = $user.getSearchableRMITs())
-#if ($searchableRMITs.isEmpty())
-    <td colspan="5">
-    <strong class="alert">
-    There are no more issue types to select.
-    </strong>
-    </td>
-#else
 	  <th nowrap="nowrap">Select</th>
 	  <th>
-          <a href="#"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" 
-              width="13" height="8" alt="sort descending" border="0" /></a>
+          <img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" 
+              width="13" height="8" alt="sort descending" border="0" />
           &nbsp;Module
       </th>
-	  <th><a href="#">Issue type</a></th>
-	  <th><a href="#">Description</a></th>
+	  <th>Issue type</th>
+	  <th>Description</th>
     </tr>
 
 #foreach ($rmit in $searchableRMITs)
@@ -131,13 +126,13 @@
     <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
     </td>
     <td>$rmit.Module.Name</td>
-    <td><a href="#">$rmit.IssueType.Name</a></td>
+    <td>$rmit.IssueType.Name</td>
     <td>$rmit.IssueType.Description</td>
 #end
   </tr>        
-#end      
 </table>  
 </div>
+#end      
 
 <!-- commented out until paging is implemented
 <div class="colbar">p. 1 <a href="#">2</a> <a href="#">3</a></div>
