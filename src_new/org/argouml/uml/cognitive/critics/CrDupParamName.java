@@ -26,7 +26,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.4 2002/08/19 08:18:16 kataka Exp $
+// $Id: CrDupParamName.java,v 1.5 2003/01/18 17:04:21 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,7 +37,8 @@ import ru.novosoft.uml.foundation.data_types.*;
 
 import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
-import org.argouml.model.uml.UmlHelper;import org.argouml.uml.*;
+import org.argouml.model.uml.UmlHelper;
+import org.argouml.uml.*;
 
 /** Well-formedness rule [1] for MBehavioralFeature. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
