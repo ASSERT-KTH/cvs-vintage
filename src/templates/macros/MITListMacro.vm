@@ -74,7 +74,7 @@
 <a name="add"></a>
 
 #set ($currentModule = $scarabR.CurrentModule)
-#set ($currentRmits = $currentModule.RModuleIssueTypes)
+#set ($currentRmits = $user.getUnusedRModuleIssueTypes($currentModule))
 #set ($savedLists = $user.MITLists)
 #set ($isMoreThanOne = $currentRmits.size() > 1)
 #set ($atLeastOneRMIT = $currentRmits && !$currentRmits.isEmpty())
@@ -151,11 +151,21 @@ $l10n.CurrentModuleTypesIntro
 #set ($searchField = $data.Parameters.getString("searchField", ""))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity", "asc"))
-#set ($sortColumn = $data.Parameters.getString("sortColumn", ""))
-#if ($sortColumn.length() == 0)
-  #set ($putCurrentModuleFirst = true)
-  #set ($sortColumn = "module")
+#set ($sortColumn = $data.Parameters.getString("sortColumn", "module"))
+
+#set ($searchableRMITs = $user.getSearchableRMITs($searchField, $searchString, $sortColumn, $sortPolarity, $currentModule))
+#if ($searchableRMITs.isEmpty() && $searchField.length() != 0 && $searchString.length() != 0)
+ ## try one more time with no search criteria
+ #set ($searchableRMITs = $user.getSearchableRMITs("", "", $sortColumn, $sortPolarity, $currentModule))
+ #if (!$searchResults.isEmpty())
+   #set ($filterIgnored = true)
+ #end
 #end
+
+#if ($searchableRMITs.isEmpty())
+    <p><em>$l10n.NoMoreIssueTypes</em></p>
+#else
+
 
 ## FILTERING
 <div class="axial">
@@ -174,20 +184,9 @@ $l10n.CurrentModuleTypesIntro
 </table>
 </div>
 
-#set ($searchableRMITs = $user.getSearchableRMITs($searchField, $searchString, $sortColumn, $sortPolarity))
-#if ($searchableRMITs.isEmpty() && $searchField.length() != 0 && $searchString.length() != 0)
- ## try one more time with no search criteria
- #set ($searchableRMITs = $user.getSearchableRMITs("", "", $sortColumn, $sortPolarity))
- #if (!$searchResults.isEmpty())
+#if ($filterIgnored)
    <p class="infomark"><em>$l10n.FilterNoResults</em></p>
- #end
 #end
-
-#if ($searchableRMITs.isEmpty())
-<p><em>
-$l10n.NoMoreIssueTypes
-</em></p>
-#else
 
 ## PAGINATION
 ## if results exceed limit, get subset list

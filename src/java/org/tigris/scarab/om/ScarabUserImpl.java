@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.107 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.108 2003/08/21 00:10:24 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -830,14 +830,24 @@ public class ScarabUserImpl
     }
   
     /**
-     * @see ScarabUser#getSearchableRMITs(String, String, String, String)
+     * @see ScarabUser#getSearchableRMITs(String, String, String, String, Module)
      */
     public List getSearchableRMITs(String searchField, String searchString, 
-                                   String sortColumn, String sortPolarity)
+                                   String sortColumn, String sortPolarity,
+                                   Module skipModule)
         throws Exception    
     {
         return internalUser.getSearchableRMITs(searchField, searchString, 
-                                               sortColumn, sortPolarity);
+            sortColumn, sortPolarity, skipModule);
+    }
+
+    /**
+     * @see ScarabUser#getUnusedRModuleIssueTypes(Module).
+     */
+    public List getUnusedRModuleIssueTypes(Module module)
+        throws Exception
+    {
+        return internalUser.getUnusedRModuleIssueTypes(module);
     }
 
     /**

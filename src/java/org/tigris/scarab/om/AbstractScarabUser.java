@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.88 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.89 2003/08/21 00:10:24 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -930,29 +930,27 @@ public abstract class AbstractScarabUser
         return moduleIds;
     }
 
+
     /**
-     * @see ScarabUser#getSearchableRMITs(String, String, String, String).
-     * This list does not include
-     * RModuleIssueTypes that are part of the current MITList.
+     * @see ScarabUser#getUnusedRModuleIssueTypes(Module).
      */
-    public List getSearchableRMITs(String searchField, String searchString, 
-                                   String sortColumn, String sortPolarity)
+    public List getUnusedRModuleIssueTypes(Module module)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleIssueTypePeer.MODULE_ID, module.getModuleId())
+            .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer.ISSUE_TYPE_ID)
+            .add(IssueTypePeer.PARENT_ID, 0)
+            .add(IssueTypePeer.DELETED, false);
+        addCurrentMITListExclusion(crit);
+        Log.get().info(crit);
+        return RModuleIssueTypePeer.doSelect(crit);
+    }
+
+    private void addCurrentMITListExclusion(Criteria crit)
         throws Exception    
     {
-        List moduleIds = getSearchableModuleIds();
-        List result;
-        if (moduleIds.isEmpty()) 
-        {
-            result = Collections.EMPTY_LIST;
-        }
-        else 
-        {
-            Criteria crit = new Criteria();
-            crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
-            crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
-                         IssueTypePeer.ISSUE_TYPE_ID);
-            crit.add(IssueTypePeer.PARENT_ID, 0);
-
             // do not include RMIT's related to current MITListItems.
             MITList mitList = getCurrentMITList(getGenThreadKey());            
             if (mitList != null && mitList.getMITListItems() != null
@@ -989,6 +987,39 @@ public abstract class AbstractScarabUser
                 crit.add(IssueTypePeer.ISSUE_TYPE_ID, 
                          (Object)sb.toString(), Criteria.CUSTOM);
             }
+    }
+
+    /**
+     * @see ScarabUser#getSearchableRMITs(String, String, String, String, Module).
+     * This list does not include
+     * RModuleIssueTypes that are part of the current MITList.
+     */
+    public List getSearchableRMITs(String searchField, String searchString, 
+                                   String sortColumn, String sortPolarity,
+                                   Module skipModule)
+        throws Exception    
+    {
+        List moduleIds = getSearchableModuleIds();
+        if (skipModule != null) 
+        {
+            moduleIds.remove(skipModule.getModuleId());
+        }
+        
+        List result;
+        if (moduleIds.isEmpty()) 
+        {
+            result = Collections.EMPTY_LIST;
+        }
+        else 
+        {
+            Criteria crit = new Criteria();
+            crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
+            crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
+                         IssueTypePeer.ISSUE_TYPE_ID);
+            crit.add(IssueTypePeer.PARENT_ID, 0);
+            crit.add(IssueTypePeer.DELETED, false);
+            addCurrentMITListExclusion(crit);
+
             // we could add the filter criteria here, but this might
             // result in full table scans.  Even if the table scan turns out
             // to be more efficient, I think it is better to move this

@@ -4,7 +4,7 @@ $user.setHomePage("query")
 
 #if ($user.hasAnySearchableRMITs())
 
-<form method="post" action="$link.setPage("home,XModuleList.vm")">
+<form method="post" action="$link.setPage("IssueTypeList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
  <input type="hidden" name="queryString" 
      value="$!data.Parameters.getString("queryString")" />

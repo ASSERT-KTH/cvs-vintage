@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.89 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.90 2003/08/21 00:10:24 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -350,11 +350,21 @@ public interface ScarabUser extends User
      * Returns a List of RModuleIssueTypes for which the user has the
      * permission to search for issues. 
      *
+     * @param skipModule do not include issue types for this module.  Useful
+     * for separating the current module.
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
     List getSearchableRMITs(String searchField, String searchString, 
-                                   String sortColumn, String sortPolarity)
+                            String sortColumn, String sortPolarity,
+                            Module skipModule)
+        throws Exception;
+
+    /**
+     * returns a list of RModuleIssueTypes for the given module, excluding
+     * any that that have a corresponding MITListItem in the CurrentMITList.
+     */
+    public List getUnusedRModuleIssueTypes(Module module)
         throws Exception;
 
     void addRMITsToCurrentMITList(List rmits)
