@@ -58,6 +58,12 @@
 
 #if (!$isEdit)
 <div class="colbar">
+  <p>
+    A previously saved list can be used as a starting point to create a 
+    set of module / issue type pairs.  The list currently being created and
+    any saved list are independent and later changes to either do not affect
+    the other.
+  </p>
   <select name="list_id">
     <option value="">Select a saved cross module query...</option>
   #foreach ($list in $user.MITLists)
