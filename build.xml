@@ -300,6 +300,22 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- this is also the release target ;-0 -->
 	<target name="release" depends="zip-bin-unix,zip-bin-win32,zip-source-unix,zip-source-win32"/>
 
+	<!-- signing jar-files for Java WebStart -->
+        <!-- all libs and columba.jar need to be signed -->
+        <!-- you need to specify the alias and the passwords on the commandline -->
+	<property name="alias" value="columba_key"/>
+        <property name="storepass" value="storepass"/>
+        <property name="keypass" value="keypass"/>
+
+        <target name="webstart" depends="jar">
+         <signjar alias="${alias}" storepass="${storepass}" keypass="${keypass}">
+          <fileset dir="${dest}">
+           <!--<include name="columba.jar"/>-->
+           <include name="**/*.jar"/>
+          </fileset>
+         </signjar>
+        </target>
+
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
 	

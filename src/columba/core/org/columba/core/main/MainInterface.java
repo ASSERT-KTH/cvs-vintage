@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
-import java.util.Date;
-
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.columba.addressbook.main.AddressbookInterface;
@@ -32,7 +30,7 @@ import org.columba.mail.pop3.POP3ServerCollection;
 
 public class MainInterface {
 
-	public static String version = "0.11.0 cvs";
+	public static String version = "2-14-2003 cvs";
 
 	public static Boolean DEBUG = Boolean.FALSE;
 
