@@ -1,5 +1,5 @@
 
-// $Id: Actions.java,v 1.54 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: Actions.java,v 1.55 2003/08/28 20:03:36 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,7 +193,7 @@ class ActionPrint extends UMLAction {
 /** Page setup for printing.
  */
 class ActionPageSetup extends UMLAction {
-    public ActionPageSetup() { super("Page Setup...", NO_ICON); }
+    public ActionPageSetup() { super("action.page-setup", HAS_ICON); }
 
     public void actionPerformed(ActionEvent ae) {
 	((ActionPrint) Actions.Print).getCmdPrint().doPageSetup();
@@ -521,7 +521,7 @@ class ActionSnooze extends ToDoItemAction {
  * System information dialog. 
  */
 class ActionSystemInfo extends UMLAction {
-    public ActionSystemInfo() { super("System Information", NO_ICON); }
+    public ActionSystemInfo() { super("System Information", HAS_ICON); }
 
     public void actionPerformed(ActionEvent ae) {
 	JFrame jFrame = (JFrame) ActionUtilities.getActionRoot(ae);
@@ -543,7 +543,7 @@ class ActionSystemInfo extends UMLAction {
  * About ArgoUML dialog.
  */
 class ActionAboutArgoUML extends UMLAction {
-    public ActionAboutArgoUML() { super("action.about-argouml", NO_ICON); }
+    public ActionAboutArgoUML() { super("action.about-argouml", HAS_ICON); }
 
     public void actionPerformed(ActionEvent ae) {
 	JFrame jFrame = (JFrame) ActionUtilities.getActionRoot(ae);
