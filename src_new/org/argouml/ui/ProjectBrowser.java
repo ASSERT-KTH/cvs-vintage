@@ -62,9 +62,11 @@ import org.argouml.swingext.Vertical;
 import org.argouml.ui.menubar.GenericArgoMenuBar;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.ui.ActionExit;
+import org.argouml.uml.ui.TabProps;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ui.IStatusBar;
 import org.tigris.gef.util.VectorSet;
+
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
@@ -125,17 +127,21 @@ public class ProjectBrowser extends JFrame
     private ArgoDiagram _activeDiagram;
 
     /**
-     * The splash screen shown at startup     */
+     * The splash screen shown at startup
+     */
     private SplashScreen _splash;
     
     /**
-     * The navigator pane containing the modelstructure     */
+     * The navigator pane containing the modelstructure
+     */
     private NavigatorPane _navPane;
     
     /**
-     * The todopane (lower left corner of screen)     */
+     * The todopane (lower left corner of screen)
+     */
     private ToDoPane _todoPane;
 
+    private Object _detailsTarget;
     ////////////////////////////////////////////////////////////////
     // constructors
 
@@ -170,7 +176,7 @@ public class ProjectBrowser extends JFrame
         if (_northPane != null) detailsPanesByCompassPoint.put(BorderSplitPane.NORTH, _northPane);
         if (_northEastPane != null) detailsPanesByCompassPoint.put(BorderSplitPane.NORTHEAST, _northEastPane);
 
-        getDetailsPane().getTabProps().addNavigationListener(this);
+        getTabProps().addNavigationListener(this);
 
         setAppName(appName);
 
@@ -214,7 +220,9 @@ public class ProjectBrowser extends JFrame
     }
 
     /**
-     * Creates the panels in the working area     * @return Component     */
+     * Creates the panels in the working area
+     * @return Component
+     */
     protected Component createPanels(boolean doSplash) {
         // Set preferred sizes from config file
         if (_southPane != null) {
@@ -338,6 +346,7 @@ public class ProjectBrowser extends JFrame
     }
 
     public void setDetailsTarget(Object o) {
+        _detailsTarget = o;
         Iterator it = detailsPanesByCompassPoint.values().iterator();
         while(it.hasNext()) {
             DetailsPane detailsPane = (DetailsPane)it.next();
@@ -346,7 +355,7 @@ public class ProjectBrowser extends JFrame
     }
 
     public Object getDetailsTarget() {
-        return getDetailsPane().getTarget();
+        return _detailsTarget;
     }
     
     /**
@@ -363,6 +372,26 @@ public class ProjectBrowser extends JFrame
         }
         return null;
     }
+    
+    /**
+     * Get the tab page containing the properties
+     * @return the TabProps tabpage
+     */
+    public TabProps getTabProps() {
+        // In theory there can be multiple details pane (work in
+        // progress). It must first be determined which details
+        // pabe contains the properties tab. Bob Tarling 7 Dec 2002
+        Iterator it = detailsPanesByCompassPoint.values().iterator();
+        while(it.hasNext()) {
+            DetailsPane detailsPane = (DetailsPane)it.next();
+            TabProps tabProps = detailsPane.getTabProps();
+            if (tabProps != null) {
+                return tabProps;
+            }
+        }
+        throw new IllegalStateException("No properties tab found");
+    }
+
 
     public StatusBar getStatusBar() { return _statusBar; }
 
@@ -565,7 +594,9 @@ public class ProjectBrowser extends JFrame
     }
     
     /**
-     * Returns the todopane.      * @return ToDoPane     */
+     * Returns the todopane. 
+     * @return ToDoPane
+     */
     public ToDoPane getTodoPane() {
         return _todoPane;    
     }
@@ -579,13 +610,17 @@ public class ProjectBrowser extends JFrame
     }
     
     /**
-     * Returns the splashscreen shown at startup.      * @return SplashScreen     */
+     * Returns the splashscreen shown at startup. 
+     * @return SplashScreen
+     */
     public SplashScreen getSplashScreen() {
         return _splash;
     }
     
     /**
-     * Sets the splashscreen. Sets the current splashscreen to invisible     * @param splash     */
+     * Sets the splashscreen. Sets the current splashscreen to invisible
+     * @param splash
+     */
     public void setSplashScreen(SplashScreen splash) {
         if (_splash != null && _splash != splash) {
             _splash.setVisible(false);
