@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.core.io;
 
 import java.io.BufferedReader;
@@ -28,17 +29,13 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.logging.Logger;
 
-
 /**
- * The startup default for installation directory is the system propertry "user.dir".
- *
+ * Utility methods for handling files and directories.
  */
 public final class DiskIO {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.io");
 
-    private static String installationDirectory = System.getProperties()
-                                                        .getProperty("user.dir");
     private static String resourceFolder = "";
 
     /**
@@ -59,20 +56,10 @@ public final class DiskIO {
      *  is a directory
      */
     public static boolean ensureDirectory(File dir) {
-        boolean success = true;
-
         if (dir == null) {
             throw new IllegalArgumentException("dir = null");
         }
-
-        // FIXME: do we really need this check here?
-        // --> this dependency on configuration should be removed
-
-        /*
-        if (!dir.isAbsolute()) {
-            dir = new File(MainInterface.config.getConfigDirectory(), dir.getPath());
-        }
-        */
+        boolean success = true;
         if (!dir.isDirectory()) {
             success = !dir.isFile() && dir.mkdirs();
 
@@ -206,20 +193,6 @@ public final class DiskIO {
     }
 
     // emptyDirectory
-
-    /** Delete a single disk file. Function reports errors. */
-    public static boolean deleteFile(String path) {
-        File f = new File(path);
-        boolean success;
-
-        if (!(success = f.delete())) {
-            LOG.severe("*** failed to delete file " + path);
-        }
-
-        return success;
-    }
-
-    // deleteFile
 
     /** General use columba resource InputStream getter.
      * @param path the full path and filename of the resource requested. If
