@@ -11,26 +11,26 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
+ * 
  * command:
  * 
- *  spamassassin -a --remove-addr-from-whitelist="address"
+ * spamassassin -a --remove-addr-from-whitelist="address"
  * 
  * command description:
  * 
  * -a, --auto-whitelist, --whitelist
- *   
- * Use auto-whitelists. Auto-whitelists track the long-term average 
- * score for each sender and then shift the score of new messages 
- * toward that long-term average. This can increase or decrease the 
- * score for messages, depending on the long-term behavior of the 
- * particular correspondent. See the README file for more details.
+ * 
+ * Use auto-whitelists. Auto-whitelists track the long-term average score for
+ * each sender and then shift the score of new messages toward that long-term
+ * average. This can increase or decrease the score for messages, depending on
+ * the long-term behavior of the particular correspondent. See the README file
+ * for more details.
  * 
  * --remove-addr-from-whitelist
  * 
- * Remove the named email address from the automatic whitelist. Note 
- * that you must be running spamassassin or spamd with the -a switch.
- *   
+ * Remove the named email address from the automatic whitelist. Note that you
+ * must be running spamassassin or spamd with the -a switch.
+ *  
  */
 public class RemoveAddressFromWhiteListAction
 	extends FrameAction
@@ -47,15 +47,14 @@ public class RemoveAddressFromWhiteListAction
 	 * @param keyStroke
 	 */
 	public RemoveAddressFromWhiteListAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Remove Address from Whitelist",
-			"Remove Address from Whitelist",
-			"REMOVE_ADDRESS_FROM_WHITELIST",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Remove Address from Whitelist");
+
+		// tooltip text
+		setTooltipText("Remove Address from Whitelist");
+
+		// action command
+		setActionCommand("REMOVE_ADDRESS_FROM_WHITELIST");
+
 		setEnabled(false);
 		(
 			(
@@ -64,9 +63,11 @@ public class RemoveAddressFromWhiteListAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -76,9 +77,11 @@ public class RemoveAddressFromWhiteListAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())

@@ -11,8 +11,8 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
- *
+ * 
+ *  
  */
 public class MarkMessageAsHamAction
 	extends FrameAction
@@ -29,15 +29,14 @@ public class MarkMessageAsHamAction
 	 * @param keyStroke
 	 */
 	public MarkMessageAsHamAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Mark Message as Ham",
-			"Mark selected messages as Ham",
-			"MARK_AS_HAM",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Mark Message as Ham");
+
+		// tooltip text
+		setTooltipText("Mark selected messages as Ham");
+
+		// action command
+		setActionCommand("MARK_AS_HAM");
+
 		setEnabled(false);
 		(
 			(
@@ -46,9 +45,11 @@ public class MarkMessageAsHamAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -58,9 +59,11 @@ public class MarkMessageAsHamAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())

@@ -11,17 +11,16 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
- * command:
- *  sa-learn --spam --dir <your-directory>
+ * 
+ * command: sa-learn --spam --dir <your-directory>
  * 
  * command description:
  * 
- * Learn the input message(s) as spam. If you have previously learnt 
- * any of the messages as ham, SpamAssassin will forget them first, 
- * then re-learn them as spam. Alternatively, if you have previously 
- * learnt them as spam, it'll skip them this time around.
- * 
+ * Learn the input message(s) as spam. If you have previously learnt any of the
+ * messages as ham, SpamAssassin will forget them first, then re-learn them as
+ * spam. Alternatively, if you have previously learnt them as spam, it'll skip
+ * them this time around.
+ *  
  */
 public class LearnSpamAction extends FrameAction implements SelectionListener {
 
@@ -36,15 +35,14 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 	 * @param keyStroke
 	 */
 	public LearnSpamAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Learn Spam",
-			"Learn Spam based on selected Folder",
-			"LEARN_SPAM",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Learn Spam");
+
+		// tooltip text
+		setTooltipText("Learn Spam based on selected Folder");
+
+		// action command
+		setActionCommand("LEARN_SPAM");
+
 		setEnabled(false);
 		(
 			(
@@ -53,9 +51,11 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
@@ -65,9 +65,11 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())

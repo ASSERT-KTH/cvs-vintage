@@ -11,8 +11,8 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
- *
+ * 
+ *  
  */
 public class AnalyzeMessageAction
 	extends FrameAction
@@ -29,15 +29,14 @@ public class AnalyzeMessageAction
 	 * @param keyStroke
 	 */
 	public AnalyzeMessageAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Analyze Messages",
-			"Analyze selected messages",
-			"ANALYZE_MESSAGES",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Analyze Messages");
+
+		// tooltip text
+		setTooltipText("Analyze selected messages");
+
+		// action command
+		setActionCommand("ANALYZE_MESSAGES");
+
 		setEnabled(false);
 		(
 			(
@@ -46,9 +45,11 @@ public class AnalyzeMessageAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -58,9 +59,11 @@ public class AnalyzeMessageAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())

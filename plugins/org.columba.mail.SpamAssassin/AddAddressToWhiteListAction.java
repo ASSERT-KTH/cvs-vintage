@@ -11,26 +11,26 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
+ * 
  * command:
  * 
- *  spamassassin -a --add-addr-to-whitelist="address"
+ * spamassassin -a --add-addr-to-whitelist="address"
  * 
  * command description:
  * 
  * -a, --auto-whitelist, --whitelist
- *   
- * Use auto-whitelists. Auto-whitelists track the long-term average 
- * score for each sender and then shift the score of new messages 
- * toward that long-term average. This can increase or decrease the 
- * score for messages, depending on the long-term behavior of the 
- * particular correspondent. See the README file for more details.
+ * 
+ * Use auto-whitelists. Auto-whitelists track the long-term average score for
+ * each sender and then shift the score of new messages toward that long-term
+ * average. This can increase or decrease the score for messages, depending on
+ * the long-term behavior of the particular correspondent. See the README file
+ * for more details.
  * 
  * --add-addr-to-whitelist
  * 
- * Add the named email address to the automatic whitelist. Note that 
- * you must be running spamassassin or spamd with the -a switch.
- *   
+ * Add the named email address to the automatic whitelist. Note that you must
+ * be running spamassassin or spamd with the -a switch.
+ *  
  */
 public class AddAddressToWhiteListAction
 	extends FrameAction
@@ -47,15 +47,14 @@ public class AddAddressToWhiteListAction
 	 * @param keyStroke
 	 */
 	public AddAddressToWhiteListAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Add Address to Whitelist",
-			"Add Address to Whitelist",
-			"ADD_ADDRESS_TO_WHITELIST",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Add Address to Whitelist");
+
+		//	tooltip text
+		setTooltipText("Add Address to Whitelist");
+
+		//	action command
+		setActionCommand("ADD_ADDRESS_TO_WHITELIST");
+		
 		setEnabled(false);
 		(
 			(
@@ -64,9 +63,11 @@ public class AddAddressToWhiteListAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -76,14 +77,16 @@ public class AddAddressToWhiteListAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())
 				.getTableSelection();
-				
+
 		MainInterface.processor.addOp(new AddAddressToWhiteListCommand(r));
 	}
 }

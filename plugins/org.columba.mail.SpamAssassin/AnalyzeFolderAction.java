@@ -9,14 +9,14 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
-
-
 /**
  * @author fdietz
- *
- *
+ * 
+ *  
  */
-public class AnalyzeFolderAction extends FrameAction implements SelectionListener {
+public class AnalyzeFolderAction
+	extends FrameAction
+	implements SelectionListener {
 
 	/**
 	 * @param frameController
@@ -29,15 +29,14 @@ public class AnalyzeFolderAction extends FrameAction implements SelectionListene
 	 * @param keyStroke
 	 */
 	public AnalyzeFolderAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Analyze Folder",
-			"Analyze all messages of selected Folder",
-			"ANALYZE_FOLDER",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Analyze Folder");
+
+		// tooltip text
+		setTooltipText("Analyze all messages of selected Folder");
+
+		//action command
+		setActionCommand("ANALYZE_FOLDER");
+
 		setEnabled(false);
 		(
 			(
@@ -46,9 +45,11 @@ public class AnalyzeFolderAction extends FrameAction implements SelectionListene
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
@@ -58,16 +59,16 @@ public class AnalyzeFolderAction extends FrameAction implements SelectionListene
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())
 				.getTreeSelection();
 
-		
 		MainInterface.processor.addOp(new AnalyzeFolderCommand(r));
 	}
 }
-

@@ -11,8 +11,8 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
- *
+ * 
+ *  
  */
 public class MarkMessageAsSpamAction
 	extends FrameAction
@@ -29,15 +29,14 @@ public class MarkMessageAsSpamAction
 	 * @param keyStroke
 	 */
 	public MarkMessageAsSpamAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Mark Message as Spam",
-			"Mark selected messages as Spam",
-			"MARK_AS_SPAM",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Mark Message as Spam");
+
+		// tooltip text
+		setTooltipText("Mark selected messages as Spam");
+
+		// action command
+		setActionCommand("MARK_AS_SPAM");
+
 		setEnabled(false);
 		(
 			(
@@ -46,9 +45,11 @@ public class MarkMessageAsSpamAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -58,9 +59,11 @@ public class MarkMessageAsSpamAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())

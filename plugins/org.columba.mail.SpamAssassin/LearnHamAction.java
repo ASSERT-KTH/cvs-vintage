@@ -9,21 +9,18 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
-
-
 /**
  * @author fdietz
- *
- * command:
- *  sa-learn --ham --dir <your-directory>
+ * 
+ * command: sa-learn --ham --dir <your-directory>
  * 
  * command description:
  * 
- * Learn the input message(s) as ham. If you have previously learnt any 
- * of the messages as spam, SpamAssassin will forget them first, then 
- * re-learn them as ham. Alternatively, if you have previously learnt 
- * them as ham, it'll skip them this time around.
- * 
+ * Learn the input message(s) as ham. If you have previously learnt any of the
+ * messages as spam, SpamAssassin will forget them first, then re-learn them as
+ * ham. Alternatively, if you have previously learnt them as ham, it'll skip
+ * them this time around.
+ *  
  */
 public class LearnHamAction extends FrameAction implements SelectionListener {
 
@@ -38,15 +35,14 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 	 * @param keyStroke
 	 */
 	public LearnHamAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Learn Ham",
-			"Learn Ham based on selected Folder",
-			"LEARN_HAM",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Learn Ham");
+
+		// tooltip text
+		setTooltipText("Learn Ham based on selected Folder");
+
+		// action command
+		setActionCommand("LEARN_HAM");
+
 		setEnabled(false);
 		(
 			(
@@ -55,9 +51,11 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
@@ -67,15 +65,16 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())
 				.getTreeSelection();
 
-		
 		MainInterface.processor.addOp(new LearnHamCommand(r));
 	}
 }

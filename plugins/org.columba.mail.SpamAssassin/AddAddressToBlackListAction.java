@@ -11,27 +11,27 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
  * @author fdietz
- *
+ * 
  * command:
  * 
- *  spamassassin -a --add-addr-to-blacklist="address"
+ * spamassassin -a --add-addr-to-blacklist="address"
  * 
  * command description:
  * 
  * -a, --auto-whitelist, --whitelist
- *   
- * Use auto-whitelists. Auto-whitelists track the long-term average 
- * score for each sender and then shift the score of new messages 
- * toward that long-term average. This can increase or decrease the 
- * score for messages, depending on the long-term behavior of the 
- * particular correspondent. See the README file for more details.
+ * 
+ * Use auto-whitelists. Auto-whitelists track the long-term average score for
+ * each sender and then shift the score of new messages toward that long-term
+ * average. This can increase or decrease the score for messages, depending on
+ * the long-term behavior of the particular correspondent. See the README file
+ * for more details.
  * 
  * --add-addr-to-blacklist
  * 
- * Add the named email address to the automatic whitelist with a high 
- * score (ensuring they will be ''blacklisted''). Note that you must be 
- * running spamassassin or spamd with the -a switch.
- *   
+ * Add the named email address to the automatic whitelist with a high score
+ * (ensuring they will be ''blacklisted''). Note that you must be running
+ * spamassassin or spamd with the -a switch.
+ *  
  */
 public class AddAddressToBlackListAction
 	extends FrameAction
@@ -48,15 +48,14 @@ public class AddAddressToBlackListAction
 	 * @param keyStroke
 	 */
 	public AddAddressToBlackListAction(AbstractFrameController frameController) {
-		super(
-			frameController,
-			"Add Address to Blacklist",
-			"Add Address to Blacklist",
-			"ADD_ADDRESS_TO_BLACKLIST",
-			null,
-			null,
-			'0',
-			null);
+		super(frameController, "Add Address to Blacklist");
+
+		// tooltip text
+		setTooltipText("Add Address to Blacklist");
+		
+		//	action command
+		setActionCommand("ADD_ADDRESS_TO_BLACKLIST");
+
 		setEnabled(false);
 		(
 			(
@@ -65,9 +64,11 @@ public class AddAddressToBlackListAction
 			this);
 	}
 
-	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TableSelectionChangedEvent) e).getUids().length > 0)
@@ -77,9 +78,11 @@ public class AddAddressToBlackListAction
 
 	}
 
-	/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			((AbstractMailFrameController) getFrameController())
