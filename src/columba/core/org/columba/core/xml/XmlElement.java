@@ -66,7 +66,7 @@ import java.util.Vector;
  *
  * @author       Tony Parent, fdietz
  */
-public class XmlElement extends Observable {
+public class XmlElement extends Observable implements Cloneable {
 	String name;
 	String data;
 	Hashtable attributes;
@@ -121,6 +121,7 @@ public class XmlElement extends Observable {
 		this.name = name;
 		this.data = data;
 		subElements = new Vector();
+		this.attributes = new Hashtable(10);
 	}
 
 	/**
@@ -514,23 +515,37 @@ public class XmlElement extends Observable {
 			// printNode((XmlElement) subs.get(i), indent + "    ");
 		}
 	}
-
+	
+	/** {@inheritDoc} */
 	public Object clone() {
-		XmlElement clone = new XmlElement(new String(getName()));
-		clone.setName(getName());
-		clone.setAttributes((Hashtable) getAttributes().clone());
-		clone.setData(new String(getData()));
+		try {
+			XmlElement clone = (XmlElement) super.clone(); // creates a shallow copy of this object
 
-		List childs = getElements();
-		XmlElement child;
-		for (Iterator it = childs.iterator(); it.hasNext();) {
-			child = (XmlElement) it.next();
-			// for( int i=0; i<childs.size(); i++ ) {
-			// child = (XmlElement) childs.get(i);
-			clone.addSubElement((XmlElement) child.clone());
+			// name - shallow copy is OK, since String is immutable/constant
+			// data - shallow copy is OK, since String is immutable/constant
+			
+			// must perform deep copy on mutable objects
+			if (attributes != null) {
+				clone.setAttributes((Hashtable) getAttributes().clone());	
+			}
+			if (subElements != null) {
+				clone.subElements = new Vector();
+	
+				List childs = getElements();
+				XmlElement child;
+				for (Iterator it = childs.iterator(); it.hasNext();) {
+					child = (XmlElement) it.next();
+					// for( int i=0; i<childs.size(); i++ ) {
+					// child = (XmlElement) childs.get(i);
+					clone.addSubElement((XmlElement) child.clone());
+				}
+			}
+			
+			return clone;
 		}
-
-		return clone;
+		catch (CloneNotSupportedException cnse) {
+			throw new InternalError("Could not clone XmlElement: " + cnse);
+		}
 	}
 	/**
 	 * Sets the name.
