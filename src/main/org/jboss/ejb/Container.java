@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.85 $
+* @version $Revision: 1.86 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -591,7 +591,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       this.webClassLoader = null;
       this.localClassLoader = null;
       this.ejbModule = null;
-      this.lockManager = null;
+      //      this.lockManager = null; Setting this to null causes AbstractCache to fail on undeployment
       this.methodPermissionsCache.clear();
    }
 
