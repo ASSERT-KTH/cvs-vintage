@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.41 2001/08/31 03:54:50 larryi Exp $
+rem $Id: tomcat.bat,v 1.42 2001/09/01 15:28:11 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -125,12 +125,12 @@ echo Starting Tomcat in new window
 if "%2" == "sandbox" goto startSecure
 if "%2" == "-sandbox" goto startSecure
 rem Note: Specify tomcat.policy in case -sandbox isn't the second argument
-%_STARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
+%_STARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
@@ -138,31 +138,31 @@ rem Backwards compatibility for enableAdmin
 if "%2" == "enableAdmin" goto oldEnbAdmin
 if "%2" == "-enableAdmin" goto oldEnbAdmin
 rem Running Tomcat in this window
-%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% start %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :enableAdmin
 rem Run enableAdmin
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% enableAdmin %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% enableAdmin %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :oldEnbAdmin
 rem Run enableAdmin
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% enableAdmin %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% enableAdmin %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :estart
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% estart %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% estart %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stopping the Tomcat Server
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% stop %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
 rem Run JSPC in Tomcat's Environment
-%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% %_MAIN% jspc %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home="%TOMCAT_HOME%" %_MAIN% jspc %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 rem ----- Set CLASSPATH to Tomcat's Runtime Environment ----------------------- 
