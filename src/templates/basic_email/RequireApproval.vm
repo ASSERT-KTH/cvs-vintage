@@ -1,1 +1,1 @@
-#parse("email/RequireApproval.vm)
+#parse("email/RequireApproval.vm")
