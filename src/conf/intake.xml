@@ -125,6 +125,7 @@
 <group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
         <field name="SearchWords" key="sw" type="String"/>
         <field name="TextScope" key="ts" type="NumberKey" multiValued="true"/>
+        <field name="ResultsPerPage" key="rpp" type="int"/>
 </group>
 
 <group name="Module" key="mod" mapToObject="om.Module">

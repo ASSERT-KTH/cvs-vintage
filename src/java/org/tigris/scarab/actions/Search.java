@@ -80,62 +80,11 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.10 2001/07/17 21:40:27 jon Exp $
+    @version $Id: Search.java,v 1.11 2001/07/24 04:56:21 jmcnally Exp $
 */
 public class Search extends TemplateAction
 {
     private static int DEFAULT_ISSUE_LIMIT = 25;
-
-    public void doIssueIdFind( RunData data, TemplateContext context )
-        throws Exception
-    {
-        // the IssueView page takes a string id, nothing
-    }
-
-    /*
-            Iterator i = issue.getModuleAttributeValuesMap()
-                .values().iterator();
-            while (i.hasNext()) 
-            {
-                aval = (AttributeValue)i.next();
-                group = intake.get("AttributeValue", aval.getQueryKey());
-                if ( group != null ) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
-            
-            // search for duplicate issues based on summary
-            Vocabulary voc = new Vocabulary(summary.toString());
-            issue.setVocabulary(voc);
-            BigDecimal[] matchingIssueIds = voc.getRelatedIssues();
-            // do not show more than 25 dupe guesses.
-            int matchingIssuesCount = matchingIssueIds.length;
-            if (matchingIssuesCount>25)
-                matchingIssuesCount=25;
-            //looks like we have to fetch them one by one to keep the order
-            Vector matchingIssues = new Vector(matchingIssuesCount);
-
-            for (int i=0; i<matchingIssuesCount; i++)
-            {
-                matchingIssues
-                    .add(IssuePeer
-                        .retrieveByPK(new NumberKey(matchingIssueIds[i])));
-            }
-
-            String template = null;
-            if ( matchingIssues.size() > 0 )
-            {
-                context.put("issueList", matchingIssues);
-                template = "entry,Wizard2.vm";
-            }
-            else
-            {
-                template = "entry,Wizard3.vm";
-            }
-            setTarget(data, template);
-        }
-        */
 
     public void doSearch( RunData data, TemplateContext context )
         throws Exception
@@ -151,9 +100,9 @@ public class Search extends TemplateAction
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
             IssueSearch search = new IssueSearch();
-            Group group = intake.get("SearchIssue", 
+            Group searchGroup = intake.get("SearchIssue", 
                                      scarab.getSearch().getQueryKey() );
-            group.setProperties(search);
+            searchGroup.setProperties(search);
 
             search.setModuleCast(user.getCurrentModule());
             SequencedHashtable avMap = search.getModuleAttributeValuesMap();
@@ -161,7 +110,7 @@ public class Search extends TemplateAction
             while (i.hasNext()) 
             {
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                group = intake.get("AttributeValue", aval.getQueryKey());
+                Group group = intake.get("AttributeValue", aval.getQueryKey());
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
@@ -169,10 +118,10 @@ public class Search extends TemplateAction
             }
             
             int issueLimit = DEFAULT_ISSUE_LIMIT;
-            String limit = data.getParameters().getString("issue_limit");
-            if (limit != null)
+            Field limitField = searchGroup.get("ResultsPerPage");
+            if ( limitField.getValue() != null ) 
             {
-                issueLimit = Integer.parseInt(limit);
+                issueLimit = 20 * ((Integer)limitField.getValue()).intValue();
             }
 
             List matchingIssues = search.getMatchingIssues(issueLimit);
@@ -190,18 +139,6 @@ public class Search extends TemplateAction
                 data.setMessage("No matching issues.");
             }            
         }
-    }
-
-    public void doAddvote( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        /*
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
-        issue.addVote();
-        */
-
-        
     }
 
     /**

@@ -1,24 +1,22 @@
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 
-<table>
+      <div class="app" id="CustomSearch.vm">
+       <h2>custom search (2.2.0.x)</h2>
+        (go to <a href="advancedsearch.html">advanced search</a>)
 
-<TR>
-<TD COLSPAN="3">
-    Search for existing issues 
-        (go to <A HREF="advancedsearch.html">advanced search</A>)
-</TD>
-</TR>
-
-<TR>
-<TD COLSPAN="3">
-    <TABLE BORDER="1" WIDTH="100%">
-    <TR>
-    <TD WIDTH="64%">
+       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
         <form action="$link.setPage("Search.vm")" method="GET">
         <input type="hidden" name="nextTemplate" value="IssueList.vm" />
         <input type="hidden" name="action" value="Search" />
+
+       <p class="functnbar">
+        <input type="submit" name="eventSubmit_doSearch" 
+            value="Search" />&#160;
+        <input type="submit" name="eventSubmit_doCancel" 
+            value="cancel" class="button" />
+       </p>
 
 #set ( $search = $scarabR.Search )
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) )
@@ -26,6 +24,16 @@
 #set ( $searchValues = $search.QuickSearchOptionAttributeValues )
 
 #if ($searchTextAttributes.size() != 0)
+
+       <h3>text search</h3>
+
+       <div class="axial">
+        <table border="1" cellspacing="2" cellpadding="3">
+         <tr>
+          <th width="120">select text attributes:</th>
+          <td>
+
+
     ## default to first attribute if none was selected previously
     #if ( $searchGroup.TextScope.isSet() )
         #set ($selectedIds = $searchGroup.TextScope.Value)
@@ -34,11 +42,12 @@
         #set ($selected = " selected")
     #end
 
-    ##actionErrorMsg
+
     <select name="$searchGroup.TextScope.Key" size="5" multiple>        
 
-    #if ($searchTextAttributes.size() != 1)
+    #if ($searchTextAttributes.size() > 4)
         <option value="$search.ALL_TEXT"$selected>Search All</option>
+        #set ($selected = "")
     #end
 
     #foreach ( $att in $searchTextAttributes )
@@ -56,12 +65,27 @@
     #end
 
     </select>
+          </td>
+         </tr>
 
-    <input type="text" name="$searchGroup.SearchWords.Key" size="36"
-        value="$searchGroup.SearchWords"><br>
+         <tr>
+          <th width="120">enter search string:</th>
+          <td>
+
+             <textarea name="$searchGroup.SearchWords.Key" 
+                 rows="2" cols="30">$!searchGroup.SearchWords</textarea> 
+
+          </td>
+         </tr>
+        </table>
+       </div>
 #end
 
-<br>
+       <h3>multiple / single choice search</h3>
+
+       <div class="axial">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+
 #foreach ( $attVal in $searchValues )
 
      ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
@@ -71,25 +95,47 @@
         #set ( $field = "OptionId" )
      #end
 
-    $attVal.Attribute.Name:
+         <tr>
+          <th width="120">$attVal.Attribute.Name:</th>
+          <td>
 
-    
         #attrValueErrorMsg ( $attVal $field )
-    
-    <br>
-    #attrValueHierarchySelect ($attVal $field "")
+        #attrValueHierarchySelect ($attVal $field "")
 
-<br><br>
+
+          </td>
+         </tr>
+
 #end
 
+        </table>
+       </div>
+
+<p>
+issues per page: 
+<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="25" /> 25 
+<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="50" /> 50 
+<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="75" /> 75 
+<input type="radio" name="$searchGroup.ResultsPerPage.Key" value="100" /> 100
+</p>
+       <p><a href="#">edit custom search - not implemented</a></p>
+
+       <p class="functnbar">
         <input type="submit" name="eventSubmit_doSearch" 
-                value="Search">
+            value="Search" />&#160;
+        <input type="submit" name="eventSubmit_doCancel" 
+            value="cancel" class="button" />
+       </p>
+
         $intake.declareGroups()
         </form>
 
-        <A HREF="advancedsearch.html">advanced search</A>
-    </TD>
-                                        
+      </div>
+
+
+
+#* old stuff 
+                                      
     <TD WIDTH="36%">
         <TABLE BORDER="0" WIDTH="100%">
 
@@ -119,14 +165,7 @@
         </table>                     
 
     </td>
-    </tr>
-    </table>
-
-</td>
-</tr>
-</table>
-<!-- end search -->
-
+*#
 
 
 
