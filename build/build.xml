@@ -5,9 +5,11 @@
 <project name="Scarab" default="compile" basedir=".">
 
     <!-- Allow the user to have multiple configuration files and
-         specify them using -Dconfiguration.file=filename -->         
+         specify them using -Dconfiguration.file=filename 
+    	 By default we load build.properties.     
+    -->         
     <property name="configuration.file" value="build.properties"/> 
-    <property file="${basedir}/build.properties" />    
+    <property file="${basedir}/${configuration.file}" />    
 
     <!-- Give user a chance to override without editing this file
          (and without using -D arguments each time they build) -->
@@ -258,7 +260,7 @@
     <target name="schema-check">
         <echo message="checking: ${build.sql.scarab}/${project}.sql"/>
         <uptodate property="schema.uptodate"
-            targetfile="${build.sql.scarab}/${project}.sql">
+            targetfile="${build.sql.scarab}/mysql/${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="turbine-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="id-table-schema.xml"/>
             <srcfiles dir="${src.sql.dir}" includes="scheduler-schema.xml"/>
