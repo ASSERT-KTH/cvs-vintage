@@ -23,7 +23,7 @@
     <dd>The issue types available to you in your project have been determined 
       by your project administrator. By accessing the <strong>Issue Type selection</strong> 
       screen you can see a description of each issue type and select the one that 
-      best describes your issue. For more information see the <a href="$link.setPage("help,UserIssues.vm")#types")">issue 
+      best describes your issue. For more information see the <a href="$link.setPage("help,UserIssues.vm")")#types">issue 
       types</a> discussion.</dd>
     <dt>Can I move an issue to a different issue type? how about to a different 
       project?</dt>
@@ -56,8 +56,8 @@
     appear in the User attributes drop down menu and can be associted with an 
     issue using that User attribute. The Assigned To attribute is a User attribute.</dd>
   <dt>&nbsp;</dt>
-  <dd>For more information see <a href=$link.setPage("UserIssues.vm#attributes")>Managing 
-    issues: overview</a> for Global attributes and <a href=$link.setPage("UserIssueModify.vm#manage")>Modifying 
+  <dd>For more information see <a href=$link.setPage("UserIssues.vm")#attributes>Managing 
+    issues: overview</a> for Global attributes and <a href=$link.setPage("UserIssueModify.vm")#manage>Modifying 
     Issues</a> for User attributes.</dd>
 </dl>
 
