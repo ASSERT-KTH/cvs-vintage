@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.17 2003/09/14 17:07:31 alexb Exp $
+// $Id: ClassDiagramRenderer.java,v 1.18 2004/05/27 07:57:46 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.17 2003/09/14 17:07:31 alexb Exp $
+// $Id: ClassDiagramRenderer.java,v 1.18 2004/05/27 07:57:46 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -34,6 +34,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper;
 import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
@@ -77,7 +78,6 @@ public class ClassDiagramRenderer
         else if (ModelFacade.isAModel(node)) return new FigModel(gm, node);
         else if (ModelFacade.isASubsystem(node)) return new FigSubsystem(gm, node);
         else if (ModelFacade.isAPackage(node)) return new FigPackage(gm, node);
-        else if (ModelFacade.isAModel(node)) return new FigPackage(gm, node);
         cat.debug("TODO ClassDiagramRenderer getFigNodeFor " + node);
         return null;
     }
@@ -125,32 +125,34 @@ public class ClassDiagramRenderer
         }
         if (ModelFacade.isADependency(edge)) {
             cat.debug("get fig for " + edge);
-            Object dep = /*(MDependency)*/ edge;
+            Object dep = /* (MDependency) */edge;
             Object stereotype = null;
+
             if (ModelFacade.getStereotypes(dep).size() > 0) {
                 stereotype = ModelFacade.getStereotypes(dep).iterator().next();
             }
-            cat.debug("stereo " + stereotype);
+            cat.debug("stereotype: " + ModelFacade.getName(stereotype));
             if (stereotype != null
-		 && ModelFacade.getName(stereotype).equals("realize")) {
+                    && ExtensionMechanismsHelper.getHelper().isStereotypeInh(
+                            stereotype, "realize", "Abstraction")) {
+                cat.debug("is a realisation");
                 FigRealization realFig = new FigRealization(dep);
-		  
+
                 Object supplier =
-		    /*(MModelElement)*/ ((ModelFacade.getSuppliers(dep).toArray())[0]);
+                /* (MModelElement) */((ModelFacade.getSuppliers(dep).toArray())[0]);
                 Object client =
-		    /*(MModelElement)*/ ((ModelFacade.getClients(dep).toArray())[0]);
-		  
+                /* (MModelElement) */((ModelFacade.getClients(dep).toArray())[0]);
+
                 FigNode supFN = (FigNode) lay.presentationFor(supplier);
                 FigNode cliFN = (FigNode) lay.presentationFor(client);
-		  
+
                 realFig.setSourcePortFig(cliFN);
                 realFig.setSourceFigNode(cliFN);
                 realFig.setDestPortFig(supFN);
                 realFig.setDestFigNode(supFN);
                 realFig.getFig().setLayer(lay);
                 return realFig;
-            }
-            else {
+            } else {
                 FigDependency depFig = new FigDependency(dep, lay);
                 return depFig;
             }
