@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.44 $ 
+ * @version $Revision: 1.45 $ 
  * 
  *   <p><b>Revisions:</b>
  *
@@ -334,6 +334,8 @@ public abstract class JDBCCommand
               // if this is an Oracle Blob only setBlob will work.
               if (jdbcType == Types.BLOB) {
                  stmt.setBlob(idx, new ByteArrayBlob(bytes));
+              } else if (value instanceof java.math.BigInteger) {
+                 stmt.setObject(idx, ((java.math.BigInteger)value), jdbcType);
               } else if (bytes.length < 2000) {
                  stmt.setBytes(idx, bytes);
               } else {
