@@ -333,10 +333,11 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    transp=(String)req.getNote( reqTransportNote );
 	}
 	    
-	// Check transport. We only verify "CONFIDENTIAL", other auth modules
-	// could do other tests
+	// Check transport. We verify "CONFIDENTIAL" and "INTEGRAL, 
+	// other auth modules could do other tests
 	if( debug > 0 ) log( "Transport " + transp );
-	if( "CONFIDENTIAL".equalsIgnoreCase(transp) ) {
+	if( "CONFIDENTIAL".equalsIgnoreCase(transp) || 
+	    "INTEGRAL".equalsIgnoreCase(transp) ) {
 	    if( ! req.scheme().equals("https")) {
 		// We could redirect or do something advanced - but the spec
 		// only requires us to deny access. A nice error handler
