@@ -22,11 +22,15 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiProtocolTests.java,v 1.11 2005/03/10 16:48:34 benoitf Exp $
+ * $Id: MultiProtocolTests.java,v 1.12 2005/03/11 14:07:36 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
 
+import java.util.Hashtable;
+import java.util.Properties;
+
+import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
@@ -46,6 +50,7 @@ import org.objectweb.carol.jtests.conform.basic.server.BasicMultiObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicRemoteObject;
 import org.objectweb.carol.jtests.conform.basic.server.BasicSerializableObject;
+import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 
 /**
  * Class <code>MultiProtocolTests</code> is a Junit BasicTest Test : Test The
@@ -282,8 +287,23 @@ public class MultiProtocolTests extends TestCase {
                 }
             }
             if (!found) {
-                fail("object bind was not find in the list");
+                fail("object bind was not find in ic.list(\"\")");
             }
+
+            // Use listBindings method now
+            ne = ic.listBindings("");
+            found = false;
+            while (ne.hasMore() && !found) {
+                Binding binding = (Binding) ne.next();
+                String n = binding.getName();
+                if (n.equals("testContextCommonContextMethods4")) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                fail("object bind was not find in ic.listBindings(\"\")");
+            }
+
             // unbind object
             ic.unbind("testContextCommonContextMethods4");
         } catch (Exception e) {
@@ -487,14 +507,102 @@ public class MultiProtocolTests extends TestCase {
     }
 
     /**
+     * Test InitialContext with specific Factory / URL
+     */
+    public void testSingleInitialContext() {
+        Hashtable testEnv = new Hashtable();
+        String protocolCurrent = CarolCurrentConfiguration.getCurrent().getCurrentRMIName();
+        Properties prop = CarolCurrentConfiguration.getCurrent().getRMIProperties(protocolCurrent);
+        String providerURL = prop.getProperty(Context.PROVIDER_URL);
+        testEnv.put(Context.PROVIDER_URL, providerURL);
+
+        Context tmpContext = null;
+        try {
+            tmpContext = new InitialContext(testEnv);
+        } catch (NamingException e) {
+            e.printStackTrace();
+            fail("Cannot build a new initial context with provider url = " + providerURL);
+        }
+
+        String id = "testSingleInitialContext";
+        BasicSerializableObject bso1 = new BasicSerializableObject(id);
+        // bind it
+        try {
+            tmpContext.bind(id, bso1);
+        } catch (Exception e) {
+            fail("Can't bind object 1: " + e);
+        }
+
+        // lookup
+        BasicSerializableObject bsoResult1 = null;
+        try {
+            bsoResult1 = (BasicSerializableObject) PortableRemoteObject.narrow(tmpContext.lookup(id),
+                    BasicSerializableObject.class);
+        } catch (Exception e) {
+            fail("Can't lookup object : " + e);
+        }
+
+        // Now compare objects and they should be the same
+        assertTrue("Should be the same", bso1.equals(bsoResult1));
+
+        // test with adding the JNDI factory now
+        Hashtable testEnv2  = new Hashtable();
+        String initFactory = prop.getProperty(Context.INITIAL_CONTEXT_FACTORY);
+        testEnv2.put(Context.PROVIDER_URL, providerURL);
+        testEnv2.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
+
+        Context tmpContext2 = null;
+        try {
+            tmpContext2 = new InitialContext(testEnv2);
+        } catch (NamingException e) {
+            e.printStackTrace();
+            fail("Cannot build a new initial context with provider url = " + providerURL + " and factory = "
+                    + initFactory);
+        }
+
+        String id2 = "testSingleInitialContext2";
+        BasicSerializableObject bso2 = new BasicSerializableObject(id);
+        // bind it
+        try {
+            tmpContext2.bind(id2, bso2);
+        } catch (Exception e) {
+            fail("Can't bind object 1: " + e);
+        }
+
+        // lookup
+        BasicSerializableObject bsoResult2 = null;
+        try {
+            bsoResult2 = (BasicSerializableObject) PortableRemoteObject.narrow(tmpContext2.lookup(id2),
+                    BasicSerializableObject.class);
+        } catch (Exception e) {
+            fail("Can't lookup object : " + e);
+        }
+
+        // Now compare objects and they should be the same
+        assertTrue("Should be the same", bso2.equals(bsoResult2));
+
+        // test that it fails with invalid properties
+        Hashtable env3 = new Hashtable();
+        env3.put(Context.PROVIDER_URL, "dummy://123.123.123.123:9876");
+        try {
+             new InitialContext(env3);
+             fail("The context should fail with invalid properties");
+        } catch (NamingException e) {
+            // awaited result
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
      * Suite method
      * @return the test suite to launch
      */
     public static Test suite() {
-         return new TestSuite(MultiProtocolTests.class);
+        return new TestSuite(MultiProtocolTests.class);
         // In case of launching only one test
         /*TestSuite testSuite = new TestSuite();
-        testSuite.addTest(new MultiProtocolTests("testJavaCompEnvironment"));
+        testSuite.addTest(new MultiProtocolTests("testSingleInitialContext"));
         return testSuite;*/
 
     }
