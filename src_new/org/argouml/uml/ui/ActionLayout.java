@@ -1,4 +1,4 @@
-// $Id: ActionLayout.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
+// $Id: ActionLayout.java,v 1.11 2004/12/25 08:48:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,47 +38,39 @@ import org.tigris.gef.base.SelectionManager;
 import org.tigris.gef.presentation.Fig;
 
 /**
- * Action to layout a diagram.
+ * Action to automatically lay out a diagram.
  *
  */
 public class ActionLayout extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
-    // instance variables
-
-    private String tabName;
-
-    ////////////////////////////////////////////////////////////////
     // constructors
-
+    
     /**
      * The constructor.
-     * @param theTabName the name of the tab
      */
-    public ActionLayout(String theTabName) {
-        super(theTabName, NO_ICON);
-        tabName = theTabName;
+    public ActionLayout() {
+        super("action.layout", NO_ICON);
     }
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
-    /** check whether we deal with a supported diagram type 
+    /** 
+     * Check whether we deal with a supported diagram type 
      * (currently only UMLClassDiagram).
      * Incremental Layout is not implemented for any diagram type,
      * so it is greyed out.
      * @see org.argouml.ui.ProjectBrowser
      */
     public boolean shouldBeEnabled() {
-        return (
-		super.shouldBeEnabled()
-                && (ProjectManager.getManager().getCurrentProject()
-                        .getActiveDiagram()
-                    instanceof UMLClassDiagram)
-                && "action.layout-automatic".equals(tabName));
+        return (super.shouldBeEnabled()
+            && (ProjectManager.getManager().getCurrentProject()
+                    .getActiveDiagram() instanceof UMLClassDiagram));
     }
 
-    /** This action performs the layout and triggers a redraw
+    /** 
+     * This action performs the layout and triggers a redraw
      * of the editor pane.
      *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
