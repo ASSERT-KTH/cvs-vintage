@@ -55,7 +55,7 @@ public class DatabaseRealmMapping implements RealmMapping
     try
     {
       InitialContext initial = new InitialContext();
-      DataSource ds = (DataSource) initial.lookup( "SecurityDS" );
+      DataSource ds = (DataSource) initial.lookup( "java:/SecurityDS" );
       con = ds.getConnection();
       PreparedStatement statement = con.prepareStatement(
         "select rolename from sec_roles where principal=? and setname=?");

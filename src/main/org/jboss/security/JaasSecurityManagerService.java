@@ -81,7 +81,7 @@ public class JaasSecurityManagerService
       RefAddr refAddr = new StringRefAddr("nns", "JSM");
       Reference jsmsRef = new Reference("javax.naming.Context", refAddr,getClass().getName(), null);
       Context ctx = (Context)new InitialContext();
-      ctx.rebind("java:jaas", jsmsRef);
+      ctx.rebind("java:/jaas", jsmsRef);
    }
 
    protected void startService()
@@ -95,7 +95,7 @@ public class JaasSecurityManagerService
       try
       {
          ic = new InitialContext();
-         ic.unbind("java:jaas");
+         ic.unbind("java:/jaas");
       } catch (CommunicationException e)
       {
          // Do nothing, the naming services is already stopped   

@@ -47,7 +47,7 @@ public class EJBSecurityManagerService
    implements EJBSecurityManagerServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "EJBSecurityManager";
+   public static String JNDI_NAME = "java:/EJBSecurityManager";
     
    // Attributes ----------------------------------------------------
     MBeanServer server;

@@ -47,7 +47,7 @@ public class DatabaseSecurityManagerService
    implements DatabaseSecurityManagerServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "DatabaseSecurityManager";
+   public static String JNDI_NAME = "java:/DatabaseSecurityManager";
     
    // Attributes ----------------------------------------------------
     MBeanServer server;

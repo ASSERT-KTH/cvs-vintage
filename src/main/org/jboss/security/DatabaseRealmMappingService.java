@@ -41,7 +41,7 @@ public class DatabaseRealmMappingService
    implements DatabaseRealmMappingServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "DatabaseRealmMapping";
+   public static String JNDI_NAME = "java:/DatabaseRealmMapping";
    private static DatabaseRealmMapping drm;
     
    // Attributes ----------------------------------------------------

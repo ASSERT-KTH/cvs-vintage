@@ -60,7 +60,7 @@ public class EJBSecurityManagerDatabaseImpl implements EJBSecurityManager
     try
     {
       InitialContext initial = new InitialContext();
-      DataSource ds = (DataSource) initial.lookup( "SecurityDS" );
+      DataSource ds = (DataSource) initial.lookup( "java:/SecurityDS" );
       con = ds.getConnection();
       PreparedStatement statement = con.prepareStatement(
         "select pass from sec_access where name=?");

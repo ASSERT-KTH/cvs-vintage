@@ -41,7 +41,7 @@ public class SimpleRealmMappingService
    implements SimpleRealmMappingServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "SimpleRealmMapping";
+   public static String JNDI_NAME = "java:/SimpleRealmMapping";
    private static SimpleRealmMapping srm;
     
    // Attributes ----------------------------------------------------

@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 public class TxManager
 implements TransactionManager
@@ -259,7 +259,7 @@ implements TransactionManager
             
          //One tx in naming
          Logger.log("Calling get manager from JNDI");
-         TxManager manager = (TxManager) context.lookup("TransactionManager");
+         TxManager manager = (TxManager) context.lookup("java:/TransactionManager");
          Logger.log("Returning TM " + manager.hashCode());
             
          return manager;

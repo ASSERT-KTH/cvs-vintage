@@ -36,14 +36,14 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see TxManager
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
    implements TransactionManagerServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "TransactionManager";
+   public static String JNDI_NAME = "java:/TransactionManager";
     
    // Attributes ----------------------------------------------------
     MBeanServer server;

@@ -41,7 +41,7 @@ public class CacheRealmMappingService
    implements EJBSecurityManagerServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
-   public static String JNDI_NAME = "CacheRealmMapping";
+   public static String JNDI_NAME = "java:/CacheRealmMapping";
     
    // Attributes ----------------------------------------------------
 	MBeanServer server;
