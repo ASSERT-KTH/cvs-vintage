@@ -10,6 +10,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.MetaData;
+import org.jboss.metadata.XmlLoadable;
 import org.jboss.tm.JBossTransactionRolledbackException;
 import org.jboss.tm.JBossTransactionRolledbackLocalException;
 import org.jboss.util.NestedException;
@@ -27,9 +28,13 @@ import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Iterator;
+
+import org.w3c.dom.Element;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -39,10 +44,11 @@ import java.util.Random;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.39 $
+ *  @author <a href="mailto:bill@jboss.org">Bill Burke</a>
+ *  @version $Revision: 1.40 $
  */
 public class TxInterceptorCMT
-extends AbstractTxInterceptor
+extends AbstractTxInterceptor implements XmlLoadable
 {
 
    // Attributes ----------------------------------------------------
@@ -61,6 +67,31 @@ extends AbstractTxInterceptor
 
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();
+
+   private TxRetryExceptionHandler[] retryHandlers = null;
+
+   public void importXml(Element ielement)
+   {
+      try
+      {
+         Element element = MetaData.getOptionalChild(ielement, "retry-handlers");
+         if (element == null) return;
+         ArrayList list = new ArrayList();
+         Iterator handlers = MetaData.getChildrenByTagName(element, "handler");
+         while (handlers.hasNext())
+         {
+            Element handler = (Element)handlers.next();
+            String className = MetaData.getElementContent(handler).trim();
+            Class clazz = Thread.currentThread().getContextClassLoader().loadClass(className);
+            list.add(clazz.newInstance());
+         }
+         retryHandlers = (TxRetryExceptionHandler[])list.toArray(new TxRetryExceptionHandler[list.size()]);
+      }
+      catch (Exception ex)
+      {
+         log.warn("Unable to importXml for the TxInterceptorCMT", ex);
+      }
+   }
 
    /**
     * Detects exception contains is or a ApplicationDeadlockException.
@@ -99,17 +130,7 @@ extends AbstractTxInterceptor
          }
          catch (Exception ex)
          {
-            ApplicationDeadlockException deadlock = isADE(ex);
-            if (deadlock != null)
-            {
-               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
-               log.debug(deadlock.getMessage() + " retrying " + (i + 1));
-               Thread.sleep(random.nextInt(1 + i), random.nextInt(1000) + 10);
-            }
-            else
-            {
-               throw ex;
-            }
+            checkRetryable(i, ex, oldTransaction);
          }
       }
       throw new RuntimeException("Unreachable");
@@ -129,21 +150,40 @@ extends AbstractTxInterceptor
          }
          catch (Exception ex)
          {
-            ApplicationDeadlockException deadlock = isADE(ex);
-            if (deadlock != null)
-            {
-               if (!deadlock.retryable() || oldTransaction != null || i + 1 >= MAX_RETRIES) throw deadlock;
-               log.debug(deadlock.getMessage() + " retrying " + (i + 1));
-
-               Thread.sleep(random.nextInt(1 + i), random.nextInt(1000));
-            }
-            else
-            {
-               throw ex;
-            }
+            checkRetryable(i, ex, oldTransaction);
          }
       }
       throw new RuntimeException("Unreachable");
+   }
+
+   private void checkRetryable(int i, Exception ex, Transaction oldTransaction) throws Exception
+   {
+      // if oldTransaction != null this means tx was propagated over the wire
+      // and we cannot retry it
+      if (i + 1 >= MAX_RETRIES || oldTransaction != null) throw ex;
+      // Keep ADE check for backward compatibility
+      ApplicationDeadlockException deadlock = isADE(ex);
+      if (deadlock != null)
+      {
+         if (!deadlock.retryable()) throw deadlock;
+         log.debug(deadlock.getMessage() + " retrying tx " + (i + 1));
+      }
+      else if (retryHandlers != null)
+      {
+         boolean retryable = false;
+         for (int j = 0; j < retryHandlers.length; j++)
+         {
+            retryable = retryHandlers[j].retry(ex);
+            if (retryable) break;
+         }
+         if (!retryable) throw ex;
+         log.debug(ex.getMessage() + " retrying tx " + (i + 1));
+      }
+      else
+      {
+         throw ex;
+      }
+      Thread.sleep(random.nextInt(1 + i), random.nextInt(1000));
    }
 
    // Private  ------------------------------------------------------
