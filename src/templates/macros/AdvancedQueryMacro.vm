@@ -51,19 +51,16 @@
         #set ( $field = "Value" )  
   #end
 
-  #if ( !$attVal.isSet() )
-
         <tr>
          <th width="120">$attVal.Attribute.Name:</th>
 
+  ## showing user attributes in separate section
+  #if ($attVal.Attribute.AttributeType.AttributeClass.Name != "user")
+
             <td>
-    #attrValueErrorMsg ( $attVal $field )
+                #attrValueErrorMsg ( $attVal $field )
 
-    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-
-          #userSelectBox ($attVal "")
-
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+    #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
 
           #attrValueLeafSelect ($attVal $field "")
 
@@ -101,7 +98,7 @@
     	<tr>
 			<th width="120">committed by:</th>
 			<td>
-            <select name="$query.CreatedBy.Key" multiple="multiple">
+            <select name="$query.CreatedByUserNames.Key" multiple="multiple">
 
 #foreach ( $createdBy in $module.EligibleIssueReporters )
     <option value="$createdBy.UserName">$createdBy.UserName</option>
@@ -109,18 +106,29 @@
 			</select>
             </td>
 	    </tr>
-			
-		<tr>
-			<th width="120">assignee(s):</th>
-			<td>
-            <select name="$query.Assignees.Key" multiple="multiple">
 
-#foreach ( $userAssignee in $module.EligibleAssignees )
-    <option value="$userAssignee.UserName">$userAssignee.UserName</option>
-#end
-			</select>
+#foreach ( $attKey in $attrValues.sequence() )
+  #set ( $attVal = $attrValues.get($attKey) )
+  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+
+  #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+
+    #if ( $attVal.Attribute.AttributeType.ValidationKey )
+        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+    #else
+        #set ( $field = "UserId" )
+    #end
+
+        <tr>
+         <th width="120">$attVal.Attribute.Name:</th>
+
+            <td>
+                #attrValueErrorMsg ( $attVal $field )
+                #userSelectBox ($attVal "5" "multiple")
             </td>
 		</tr>
+  #end
+#end
 	</table>
 </div>
 
@@ -235,6 +243,7 @@
 
          <td>
          <select name="$query.InitialSortAttributeId.Key">
+            <option value="">Choose...</option>
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attribute = $attrValues.get($attKey).Attribute )

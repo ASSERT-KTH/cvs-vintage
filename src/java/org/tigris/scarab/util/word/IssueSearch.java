@@ -74,6 +74,8 @@ import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.user.UserManager;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -99,6 +101,7 @@ public class IssueSearch
     private static final String CHILD_ID;
     private static final String AV_ISSUE_ID;
     private static final String AV_OPTION_ID;
+    private static final String AV_USER_ID;
     private static final DateFormat DATETIME_FORMATTER;
     private static final DateFormat DATE_FORMATTER;
 
@@ -109,6 +112,7 @@ public class IssueSearch
     private String minDate;
     private String maxDate;
     private int minVotes;
+    private String[] createdBy;
     
     private NumberKey stateChangeAttributeId;
     private NumberKey stateChangeFromOptionId;
@@ -131,6 +135,8 @@ public class IssueSearch
             AttributeValuePeer.OPTION_ID.indexOf('.')+1);
         AV_ISSUE_ID = AttributeValuePeer.ISSUE_ID.substring(
             AttributeValuePeer.ISSUE_ID.indexOf('.')+1);
+        AV_USER_ID = AttributeValuePeer.USER_ID.substring(
+            AttributeValuePeer.USER_ID.indexOf('.')+1);
 
         DATETIME_FORMATTER = new SimpleDateFormat("MM/dd/yy HH:mm");
         DATE_FORMATTER = new SimpleDateFormat("MM/dd/yy");
@@ -329,41 +335,13 @@ public class IssueSearch
     public void setMinVotes(int  v) 
     {
         this.minVotes = v;
-    }
-    
-    private String[] assignees;
-    private String[] createdBy;
-    
-    /**
-     * Get the value of Assignees.
-     * @return value of Assignees.
-     */
-    public String[] getAssignees() 
-    {
-        return assignees;
-    }
-    
-    /**
-     * Set the value of Assignees.
-     * @param v  Value to assign to Assignees.
-     */
-    public void setAssignees(String[]  v) 
-    {
-        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
-        {
-            this.assignees = null;
-        }
-        else 
-        {
-            this.assignees = v;            
-        }
-    }
+    }    
         
     /**
      * Get the value of createdBy.
      * @return value of createdBy.
      */
-    public String[] getCommitedBy() 
+    public String[] getCreatedByUserNames() 
     {
         return this.createdBy;
     }
@@ -372,7 +350,7 @@ public class IssueSearch
      * Set the value of createdBy.
      * @param v  Value to assign to createdBy.
      */
-    public void setCommitedBy(String[] v) 
+    public void setCreatedByUserNames(String[] v) 
     {
         if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
         {
@@ -763,16 +741,20 @@ public class IssueSearch
     {
         Date minUtilDate = parseDate(getMinDate(), false);
         Date maxUtilDate = parseDate(getMaxDate(), true);
-        addDateRange(TransactionPeer.CREATED_DATE, 
-                     minUtilDate, maxUtilDate, crit);
-        crit.addJoin(TransactionPeer.TRANSACTION_ID, 
-                     ActivityPeer.TRANSACTION_ID);
-        crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
-        crit.add(TransactionPeer.TYPE_ID, TransactionTypePeer.CREATE_ISSUE__PK);
-        // there could be multiple attributes modified during the creation
-        // which will lead to duplicate issue selection, so we need to 
-        // specify only unique issues
-        crit.setDistinct();
+        if ( minUtilDate != null || maxUtilDate != null ) 
+        {
+            addDateRange(TransactionPeer.CREATED_DATE, 
+                         minUtilDate, maxUtilDate, crit);
+            crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                         ActivityPeer.TRANSACTION_ID);
+            crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+            crit.add(TransactionPeer.TYPE_ID, 
+                     TransactionTypePeer.CREATE_ISSUE__PK);
+            // there could be multiple attributes modified during the creation
+            // which will lead to duplicate issue selection, so we need to 
+            // specify only unique issues
+            crit.setDistinct();
+        }
     }
 
 
@@ -867,7 +849,7 @@ public class IssueSearch
 
     /**
      * Returns a List of matching issues.  if no OptionAttributes were
-     * found in the input list null is returned.
+     * found in the input list, criteria is unaltered.
      *
      * @param attValues a <code>List</code> value
      */
@@ -877,9 +859,14 @@ public class IssueSearch
         Criteria.Criterion c = null;
         boolean atLeastOne = false;
         HashMap aliasIndices = new HashMap((int)(attValues.size()*1.25));
-        for ( int i=0; i<attValues.size(); i++ ) 
+        for ( int j=0; j<attValues.size(); j++ ) 
         {
-            AttributeValue aval = (AttributeValue)attValues.get(i);
+            List chainedValues = ((AttributeValue)attValues.get(j))
+                .getValueList();
+        for ( int i=0; i<chainedValues.size(); i++ ) 
+        {
+            //pull any chained values out to create a flat list
+            AttributeValue aval = (AttributeValue)chainedValues.get(i);
             if ( aval instanceof OptionAttribute 
                  || aval instanceof UserAttribute) 
             {
@@ -932,7 +919,7 @@ public class IssueSearch
                 }
             }
         }
-
+        }
         if ( atLeastOne ) 
         {
             crit.add(c);            
@@ -984,15 +971,36 @@ public class IssueSearch
     private Criteria.Criterion buildUserCriterion(AttributeValue aval)
         throws Exception
     {
-        /*
         Criteria crit = new Criteria();
-        Criteria.Criterion criterion = null;        
         String index = aval.getAttributeId().toString();
-            criterion = crit.getNewCriterion( "av"+index, AV_USER_ID,
-                                              ids, Criteria.IN);
-        */
-        
-        return null; //criterion;
+        Criteria.Criterion criterion = crit.getNewCriterion( 
+            "av"+index, AV_USER_ID, aval.getUserId(), Criteria.EQUAL);
+        return criterion;
+    }
+
+    private void addCreatedByUserIds(Criteria crit)
+        throws Exception
+    {
+        if ( createdBy != null && createdBy.length > 0 ) 
+        {
+            crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                         ActivityPeer.TRANSACTION_ID);
+            crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+            crit.add(TransactionPeer.TYPE_ID, 
+                     TransactionTypePeer.CREATE_ISSUE__PK);
+            // convert usernames to ids
+            List users = UserManager.getUsers(createdBy);
+            NumberKey[] ids = new NumberKey[users.size()];
+            for ( int i=0; i<users.size(); i++ ) 
+            {
+                ids[i] = ((ScarabUser)users.get(i)).getUserId();
+            }
+            
+            crit.add(TransactionPeer.CREATED_BY, ids, Criteria.IN);
+            // there could be multiple attributes modified during the creation
+            // which will lead to duplicates
+            crit.setDistinct();
+        }
     }
 
     private NumberKey[] addTextMatches(Criteria crit, List attValues)
@@ -1025,6 +1033,7 @@ public class IssueSearch
                         .addQuery(id, aval.getValue());
                 }
             }
+
             if ( atLeastOne ) 
             {
                 matchingIssueIds = searchIndex.getRelatedIssues();    
@@ -1112,7 +1121,6 @@ public class IssueSearch
             }
             else 
             {
-                // we need to join with the r_module_option table, so first 
                 // add the issue columns
                 IssuePeer.addSelectColumns(crit);
                 // there can be duplicate issues returned because attributes
@@ -1162,22 +1170,26 @@ public class IssueSearch
         // List matchingIssues = null;
         Criteria crit = new Criteria();
 
-        addIssueIdRange(crit);
-        addCreatedDateRange(crit);
-        addMinimumVotes(crit);
         // add option values
         Criteria tempCrit = new Criteria(2)
             .add(AttributeValuePeer.DELETED, false);        
         List attValues = getAttributeValues(tempCrit);
-        // remove unset AttributeValues before searching
+            // remove unset AttributeValues before searching
         removeUnsetValues(attValues);        
         addSelectedAttributes(crit, attValues);
+
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
         List matchingIssues = null;
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
         {            
+            addIssueIdRange(crit);
+            addCreatedDateRange(crit);
+            addMinimumVotes(crit);
+
+            // committed by
+            addCreatedByUserIds(crit);
             // state change query
             addStateChangeQuery(crit);
             

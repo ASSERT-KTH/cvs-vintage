@@ -134,6 +134,7 @@
         <field name="UserId" key="visid" type="NumberKey">
            <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
+        <field name="UserIds" key="visids" type="NumberKey" multiValued="true"/>
         <field name="Value" key="val" type="String">
             <rule name="maxLength" value="255">Value length cannot be &gt; 255</rule>
            <required-message>This module requires data for this attribute.</required-message>
@@ -181,8 +182,7 @@
             <rule name="mask" 
                 value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
         </field>
-        <field name="CreatedBy" key="cb" type="String" multiValued="true"/>
-        <field name="Assignees" key="asgnee" type="String" multiValued="true"/>
+        <field name="CreatedByUserNames" key="cb" type="String" multiValued="true"/>
         <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
         <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>
         <field name="StateChangeToOptionId" key="sctoi" type="NumberKey"/>

@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 // JDK classes
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.util.ObjectUtils;
 // Turbine classes
@@ -89,8 +90,10 @@ public abstract class AttributeValue
     private boolean oldOptionIdIsSet;
     private boolean oldUserIdIsSet;
     private boolean oldValueIsSet;
+    private AttributeValue chainedValue;
     
     private static String className = "AttributeValue";
+
     
     /** Creates a new attribute. Do not do anything here.
      * All initialization should be performed in init().
@@ -100,6 +103,112 @@ public abstract class AttributeValue
         oldOptionIdIsSet = false;
         oldUserIdIsSet = false;
         oldValueIsSet = false;
+    }
+
+    /**
+     * Get the value of chainedValue.
+     * @return value of chainedValue.
+     */
+    public AttributeValue getChainedValue() 
+    {
+        return chainedValue;
+    }
+    
+    /**
+     * Set the value of chainedValue.
+     * @param v  Value to assign to chainedValue.
+     */
+    public void setChainedValue(AttributeValue  v)
+        throws Exception
+    {
+        if ( v == null ) 
+        {
+            this.chainedValue = null;
+        }
+        else 
+        {        
+            if ( v.getAttributeId() == null ) 
+            {
+                v.setAttributeId(getAttributeId());
+            }
+            else if (!v.getAttributeId().equals(getAttributeId()))
+            {
+                throw new ScarabException(
+                    "Values for different Attributes cannot be chained: " +
+                    v.getAttributeId() + " and " + getAttributeId() );
+            }
+            
+            if ( v.getIssueId() == null ) 
+            {
+                v.setIssueId(getIssueId());
+            }
+            else if (!v.getIssueId().equals(getIssueId()))
+            {
+                throw new ScarabException(
+                    "Values for different Issues cannot be chained: " +
+                    v.getIssueId() + " and " + getIssueId() );
+            }
+            
+            if ( this.chainedValue == null ) 
+            {
+                this.chainedValue = v;
+            }
+            else 
+            {
+                chainedValue.setChainedValue(v);
+            }
+            
+            if ( transaction != null ) 
+            {
+                v.startTransaction(transaction);
+            }        
+        }
+    }
+
+    
+    /**
+     * This method returns a flat List of all AttributeValues that might
+     * be chained to this one. This AttributeValue will be first in the List.
+     *
+     * @return a <code>List</code> of AttributeValue's
+     */
+    public List getValueList()
+    {
+        List list = new ArrayList();
+        list.add(this);
+        AttributeValue av = getChainedValue();
+        while ( av != null ) 
+        {
+            list.add(av);
+            av = av.getChainedValue();
+        }
+        return list;
+    }
+
+    /**
+     * sets the AttributeId for this as well as any chained values.
+     */
+    public void setAttributeId(NumberKey nk)
+        throws Exception
+    {
+        super.setAttributeId(nk);
+        if ( chainedValue != null ) 
+        {
+            setAttributeId(nk);
+        }
+    }
+
+    /**
+     * sets the IssueId for this as well as any chained values.
+     */
+    public void setIssueId(NumberKey nk)
+        throws Exception
+    {
+        super.setIssueId(nk);
+        if ( chainedValue != null ) 
+        {
+            setIssueId(nk);
+        }
     }
 
     /**
@@ -133,6 +242,10 @@ public abstract class AttributeValue
         oldValueIsSet = false;
         oldOptionId = null;
         oldValue = null;
+        if ( chainedValue != null ) 
+        {
+            chainedValue.startTransaction(transaction);
+        }
     }
 
     private void endTransaction()
@@ -142,6 +255,10 @@ public abstract class AttributeValue
         oldValue = null;
         oldOptionIdIsSet = false;
         oldValueIsSet = false;
+        if ( chainedValue != null ) 
+        {
+            chainedValue.endTransaction();
+        }        
     }
 
     private void checkTransaction(String errorMessage)
@@ -242,7 +359,7 @@ public abstract class AttributeValue
             super.setOptionId(optionId);
         }  
     }
-    
+
     /**
      * Makes sure to set the Value as well, to make display of the
      * user easier
@@ -279,6 +396,25 @@ public abstract class AttributeValue
                 oldUserIdIsSet = true;
             }
             super.setUserId(value);
+        }
+    }
+
+    public void setUserIds(NumberKey[] ids)
+        throws Exception
+    {
+        if ( ids != null && ids.length > 0 ) 
+        {
+            setUserId(ids[0]);
+        }
+        if ( ids != null && ids.length > 1 ) 
+        {
+            for ( int i=1; i<ids.length; i++ ) 
+            {            
+                AttributeValue av = AttributeValue
+                    .getNewInstance(getAttributeId(), getIssue());
+                setChainedValue(av);
+                av.setUserId(ids[i]);
+            }
         }
     }
 
@@ -341,8 +477,6 @@ public abstract class AttributeValue
     {
         return getAttribute().getAttributeOption(getOptionId());
     }
-    //public abstract boolean isEquivalent(AttributeValue aval);
-
 
     /**
      * if the Attribute related to this value is marked as relevant
@@ -511,9 +645,14 @@ public abstract class AttributeValue
             activity.create(getIssue(), getAttribute(), desc, this.transaction,
                             oldOptionId, getOptionId(),
                             oldValue , getValue());
-            endTransaction();
-        }
+        }        
         super.save(dbcon);
+        if ( chainedValue != null ) 
+        {
+            chainedValue.save(dbcon);
+        }
+        
+        endTransaction();
     }
 
     // Not sure it is a good idea to save description in activity record

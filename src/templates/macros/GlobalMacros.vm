@@ -112,13 +112,21 @@ value="false" />
 <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
 #end
 
-#macro (userSelectBox $attrValue $size)
+#macro (userSelectBox $attrValue $size $multiple)
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
 #set ( $attr = $attrValue.Attribute )
 #set ( $module = $attrValue.Issue.ScarabModule )
 
-<select name="$attrInput.UserId.Key" 
-					#if($size.length())size="$size"#end>
+#if ($multiple == "true" || $multiple == "multiple")
+    #set ($multiple = ' multiple="multiple"')
+    #set ($userIdField = "UserIds")
+#else
+    #set ($multiple = "")
+    #set ($userIdField = "UserId")
+#end
+
+<select name="$attrInput.get($userIdField).Key" 
+					#if($size.length())size="$size"#end$multiple>
 	#if ($size.length() == 0)
 	<option value="">Choose...</option>
 	#end
