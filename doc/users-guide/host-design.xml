@@ -5,7 +5,7 @@
 
 <!-- This file contains a discussion of the host architecture -->
 <!-- in the jEdit Plugin API                                  -->
-<!-- $Id: host-design.xml,v 1.14 2002/05/17 06:41:08 spestov Exp $
+<!-- $Id: host-design.xml,v 1.15 2002/05/19 08:31:13 spestov Exp $
 -->
 
 <chapter id="host-design"><title>jEdit as a Plugin Host</title>
@@ -884,7 +884,7 @@ The DockableWindowManager</title>
   <function>addNotify()</function>.
 </para>
 
-<sect2 id="class-ebcomponent"><title>Class EBComponent</title>
+<sect2 id="class-ebcomponent"><title>Interface EBComponent</title>
 
 <para>
   Every plugin class that uses the EditBus for receiving
