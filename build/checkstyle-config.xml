@@ -23,7 +23,9 @@
     <module name="ConstantName">
         <property name="format" value="^[A-Z]([A-Z0-9_]*[A-Z0-9])?$"/>
     </module>
-    <module name="MethodName"/>
+    <module name="MethodName">
+        <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
+    </module>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
     <module name="MemberName"/>
