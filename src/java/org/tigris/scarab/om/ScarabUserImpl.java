@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.83 2002/08/09 02:03:41 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.84 2002/08/26 17:12:41 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -112,7 +112,6 @@ public class ScarabUserImpl
      */
     private static final int UNIQUE_ID_MAX_LEN = 10;
 
-    
     /**
      * Call the superclass constructor to initialize this object.
      */
@@ -992,5 +991,15 @@ public class ScarabUserImpl
        throws Exception
     {
        return null;
+    }
+
+    /**
+     * Report on size of several maps
+     */
+    public String getStats()
+    {
+        return internalUser.getStats() 
+            + "; TempStorage=" + getTempStorage().size() 
+            + "; PermStorage=" + getPermStorage().size(); 
     }
 }
