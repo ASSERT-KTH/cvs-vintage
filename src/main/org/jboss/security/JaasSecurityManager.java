@@ -92,14 +92,20 @@ public class JaasSecurityManager implements EJBSecurityManager, RealmMapping {
     }
     
     public boolean isValid(Principal principal, Object credential) {
+        boolean ok;
         char[] authenticated;
 
         authenticated = (char[]) _passwords.get(principal);
         if (authenticated == null) {
             return authenticate(_smName, principal, credential);
         } else  {
-            return (credential instanceof char[]) &&
-                    Arrays.equals(authenticated, (char[]) credential);
+            if ((credential instanceof char[]) &&
+                    Arrays.equals(authenticated, (char[]) credential)) {
+                return true;
+            } else {
+                // the password may have changed - reauthenticate
+                return authenticate(_smName, principal, credential);
+            }
         }
     }
     
