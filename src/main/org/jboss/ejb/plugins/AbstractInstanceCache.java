@@ -39,6 +39,8 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.Container;
+import org.jboss.ejb.BeanLock;
+import org.jboss.ejb.BeanLockManager;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.logging.Logger;
@@ -61,7 +63,7 @@ import org.jboss.monitor.MetricsConstants;
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 *
-* @version $Revision: 1.15 $
+* @version $Revision: 1.16 $
 *
 *   <p><b>Revisions:</b>
 *
@@ -74,6 +76,12 @@ import org.jboss.monitor.MetricsConstants;
 *   <li> Commented the getLock removeLock, temporarely, might need to come back when we go beyond
 *        locking at the context level and lock by ID  
 *   </ul>
+* <p><b>2001/07/26: billb</b>
+* <ol>
+*   <li>Locking is now separate from EntityEnterpriseContext objects and is now
+*   encapsulated in BeanLock and BeanLockManager.  Did this because the lifetime
+*   of an EntityLock is sometimes longer than the lifetime of the ctx.
+* </ol>
 */
 public abstract class AbstractInstanceCache
 implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -117,13 +125,13 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 			}
 		}
 	}
-  public Map retrieveStatistic()
-  {
-    return null;
-  }
-  public void resetStatistic()
-  {
-  }
+	public Map retrieveStatistic()
+	{
+		return null;
+	}
+	public void resetStatistic()
+	{
+	}
 	
 	// Public --------------------------------------------------------
 	public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
@@ -234,6 +242,9 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 				// run without having acquired the cache lock via getCacheLock()
 				throw new IllegalStateException("INSERTING AN ALREADY EXISTING BEAN, ID = " + key);
 			}
+			//Create a lock in the lock manager, as long as there an instance in cache we keep 
+			// the lock in the manager, since get will increase the ref count on the lock
+			getContainer().getLockManager().getLock(key);
 		}
 	}
 	/* From InstanceCache interface */
@@ -271,7 +282,9 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 				getCache().remove(id);
 			}
 		}
-	//	removeLock(id);
+		// When we introduced the bean in the cache we used the get to increase the lock count
+		// now we decrease it and if the count is zero the manager will release the object from memory
+		getContainer().getLockManager().removeLockRef(id);
 	}
 	
 	public boolean isActive(Object id)
@@ -279,41 +292,6 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 		// Check whether an object with the given id is available in the cache
 		return getCache().peek(id) != null;
 	}
-	/**
-	* Creates (if necessary) and returns an object used as mutex to sync passivation
-	* activity with other activities, in particular incoming invoking calls. <br>
-	* The mutex is automatically removed when the corrispondent id is removed from
-	* the cache, either by passivation or by removal.
-	* This method must be synchronized with its dual, {@link #removeLock}.
-	*/
-/*	public synchronized Sync getLock(Object id)
-	{
-		Sync mutex = (Sync)m_lockMap.get(id);
-		if (mutex == null)
-		{
-			mutex = new BeanSemaphore(1);
-			m_lockMap.put(id, mutex);
-		}
-		return mutex;
-	}
-	*/
-	/**
-	* Removes the mutex associated with the given id.
-	* This method must be synchronized with its dual, {@link #getLock}.
-	*/
-/*	protected synchronized void removeLock(Object id)
-	{
-		Object mutex = m_lockMap.get(id);
-		if (mutex != null)
-		{
-			if (mutex instanceof BeanSemaphore)
-			{
-				((BeanSemaphore)mutex).invalidate();
-			}
-			m_lockMap.remove(id);
-		}
-	}
-*/	
 	// XmlLoadable implementation ----------------------------------------------
 	public void importXml(Element element) throws DeploymentException
 	{
@@ -660,8 +638,9 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 						* marcf: this is still very valid but the first lock is on the ctx directly
 						* this is part of the rework of the buzy wait bug
 						*/
-						//Sync mutex = (Sync)getLock(id);
-						synchronized (ctx) {
+						BeanLock lock = getContainer().getLockManager().getLock(id);
+						lock.sync();
+						try { 
 							
 							// marcf: the mutex is not good as we need a thread reentrant one, for now we
 							// use straight synchronization on the ctx as there is a one-one relationship
@@ -725,7 +704,6 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 												// bean failed, and fix it. See EJB 1.1, 6.4.1
 												passivate(ctx);
 												executed();
-			//									removeLock(id);
 												freeContext(ctx);
 												
 												logPassivation(id);
@@ -742,6 +720,11 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 							}// synchronized(cacheLock)
 						
 						}//synchronized(ctx)
+						finally
+						{
+							lock.releaseSync();
+							getContainer().getLockManager().removeLockRef(id);
+						}
 					}//execute
 				};// Passivation job definition
 				
