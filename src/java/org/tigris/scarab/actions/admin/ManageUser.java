@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.2 2001/12/12 19:12:43 dr Exp $
+ * @version $Id: ManageUser.java,v 1.3 2002/01/09 01:05:08 jon Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -310,19 +310,14 @@ public class ManageUser extends RequireLoginFirstAction
         }
     }
     
-    
     /**
-     This manages clicking the Cancel button
+     * This manages clicking the Cancel button
      */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
         setTarget(data, data.getParameters()
                       .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
     }
-    
-    
-    
-    
     
     // all the goto's (button redirects) are here
     
@@ -342,7 +337,6 @@ public class ManageUser extends RequireLoginFirstAction
     public void doGotoeditroles( RunData data, TemplateContext context )
         throws Exception
     {
-        System.out.println("doEditRoles()");
         setTarget(data, "admin,EditUserRoles.vm");
     }
     
@@ -365,12 +359,12 @@ public class ManageUser extends RequireLoginFirstAction
     }
     
     /**
-     calls doCancel()
+     * calls doCancel()
      */
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
     {
-        System.out.println("doPerform();");
+        doCancel(data, context);
     }
 }
 
