@@ -220,7 +220,8 @@ public class Query
                     .getUsers(ScarabSecurity.ITEM__APPROVE);
                 String fromUser = "scarab.email.default";
                 if (!Email.sendEmail(new ContextAdapter(context), module, 
-                    fromUser, Arrays.asList(toUsers), null, subject, template))
+                    fromUser, null, Arrays.asList(toUsers), null, 
+                    subject, template))
                 {
                     success = false;
                 }
