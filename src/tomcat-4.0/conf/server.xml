@@ -45,7 +45,9 @@
     <!-- Define a non-SSL HTTP/1.1 Connector on port 8080 -->
     <Connector className="org.apache.catalina.connector.http.HttpConnector"
                port="8080" minProcessors="5" maxProcessors="75"
-               acceptCount="10" debug="0"/>
+               acceptCount="10" debug="0" connectionTimeout="60000"/>
+    <!-- Note : To disable connection timeouts, set connectionTimeout value 
+     to -1 -->
 
     <!-- Define an SSL HTTP/1.1 Connector on port 8443 -->
     <!--
@@ -59,7 +61,7 @@
 
     <!-- Define a non-SSL HTTP/1.0 Test Connector on port 8081 -->
     <!--
-    <Connector className="org.apache.catalina.connector.test.HttpConnector"
+    <Connector className="org.apache.catalina.connector.http10.HttpConnector"
                port="8081" minProcessors="5" maxProcessors="75"
                acceptCount="10" debug="0"/>
     -->
@@ -71,6 +73,24 @@
 
     <!-- Define the top level container in our container hierarchy -->
     <Engine name="Standalone" defaultHost="localhost" debug="0">
+
+      <!-- The request dumper valve dumps useful debugging information about
+           the request headers and cookies that were received, and the response
+           headers and cookies that were sent, for all requests received by
+           this instance of Tomcat.  If you care only about requests to a
+           particular virtual host, or a particular application, nest this
+           element inside the corresponding <Host> or <Context> entry instead.
+
+           For a similar mechanism that is portable to all Servlet 2.3
+           containers, check out the "RequestDumperFilter" Filter in the
+           example application (the source for this filter may be found in
+           "$CATALINA_HOME/webapps/examples/WEB-INF/classes/filters").
+
+           Request dumping is disabled by default.  Uncomment the following
+           element to enable it. -->
+      <!--
+      <Valve className="org.apache.catalina.valves.RequestDumperValve"/>
+      -->
 
       <!-- Global logger unless overridden at lower levels -->
       <Logger className="org.apache.catalina.logger.FileLogger"
@@ -109,7 +129,18 @@
       -->
 
       <!-- Define the default virtual host -->
-      <Host name="localhost" debug="0" appBase="webapps">
+      <Host name="localhost" debug="0" appBase="webapps" unpackWARs="true">
+
+        <!-- Normally, users must authenticate themselves to each web app
+             individually.  Uncomment the following entry if you would like
+             a user to be authenticated the first time they encounter a
+             resource protected by a security constraint, and then have that
+             user identity maintained across *all* web applications contained
+             in this virtual host. -->
+        <!--
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn"
+                   debug="0"/>
+        -->
 
         <!-- Access log processes all requests for this virtual host.  By
              default, log files are created in the "logs" directory relative to
@@ -135,7 +166,12 @@
              if you want to set non-default properties, or have web application
              document roots in places other than the virtual host's appBase
              directory.  -->
-        <!-- Tomcat Root Context --> 
+
+        <!-- Tomcat Root Context -->
+        <!--
+          <Context path="" docBase="ROOT" debug="0"/>
+        -->
+
         <Context path="/scarab" docBase="scarab" reloadable="true" debug="0">
            <Logger className="org.apache.catalina.logger.FileLogger"
                      prefix="scarab_log." suffix=".txt"

@@ -1,28 +1,27 @@
 // ============================================================================
-// catalina.policy - Security Policy Permissions for Tomcat 4.0
+// catalina.corepolicy - Security Policy Permissions for Tomcat 4.0
 //
 // This file contains a default set of security policies to be enforced (by the
 // JVM) when Catalina is executed with the "-security" option.  In addition
 // to the permissions granted here, the following additional permissions are
 // granted to the codebase specific to each web application:
-// * Read and write access to the configured temporary directory
+//
 // * Read access to the document root directory
 //
-// $Id: catalina.policy,v 1.1 2000/12/18 05:03:39 jon Exp $
+// $Id: catalina.policy,v 1.2 2001/02/23 21:53:45 jon Exp $
 // ============================================================================
 
 
 // ========== SYSTEM CODE PERMISSIONS =========================================
 
 
-// These permissions apply to the Java Virtual Machine's core code
+// These permissions apply to javac
 grant codeBase "file:${java.home}/lib/-" {
         permission java.security.AllPermission;
 };
 
-
 // These permissions apply to all shared system extensions
-grant codeBase "file:${java.home}/jre/lib/ext/*" {
+grant codeBase "file:${java.home}/jre/lib/ext/-" {
         permission java.security.AllPermission;
 };
 
@@ -35,10 +34,14 @@ grant codeBase "file:${java.home}/jre/lib/ext/*" {
 grant codeBase "file:${catalina.home}/bin/bootstrap.jar" {
         permission java.security.AllPermission;
 };
+
 grant codeBase "file:${catalina.home}/bin/servlet.jar" {
         permission java.security.AllPermission;
 };
 
+grant codeBase "file:${catalina.home}/bin/naming.jar" {
+        permission java.security.AllPermission;
+};
 
 // These permissions apply to the container's core code, plus any additional
 // libraries installed in the "server" directory
@@ -46,6 +49,10 @@ grant codeBase "file:${catalina.home}/server/-" {
         permission java.security.AllPermission;
 };
 
+// These permissions apply to the jasper page compiler
+grant codeBase "file:${catalina.home}/jasper/-" {
+        permission java.security.AllPermission;
+};
 
 // These permissions apply to all extension libraries (including Jasper,
 // if present) installed in the "lib" directory
@@ -58,6 +65,8 @@ grant codeBase "file:${catalina.home}/lib/-" {
 
 
 // These permissions are granted by default to all web applications
+// In addition, a web application will be given a read FilePermission
+// for all files and directories in its document root.
 grant { 
 	permission java.util.PropertyPermission "java.version", "read";
 	permission java.util.PropertyPermission "java.vendor", "read";
@@ -80,24 +89,8 @@ grant {
 	permission java.util.PropertyPermission "java.vm.version", "read";
 	permission java.util.PropertyPermission "java.vm.vendor", "read";
 	permission java.util.PropertyPermission "java.vm.name", "read";
+	permission java.io.FilePermission "jndi:/WEB-INF/-", "read";
 };
-
-
-// Also by default, each web application is granted a set of permissions based
-// on its document root.  These permission additions are hard coded into
-// Catalina, and can not be adjusted in this file.  Conceptually, the additions
-// for a given web application look like this, where "${doc.root}" is the
-// document root directory for this application, and "${work.dir}" is the
-// temporary work directory for this application:
-//
-// grant codeBase "file:${doc.root}/WEB-INF/-" {
-//      permission java.io.FilePermission "${doc.root}/-", "read";
-//      permission java.io.FilePermission "${work.dir}/-", "read,write,delete";
-// };
-// grant codeBase "file:${work.dir}/-" {
-//      permission java.io.FilePermission "${doc.root}/-", "read";
-//      permission java.io.FilePermission "${work.dir}/-", "read,write,delete";
-// };
 
 
 // You can assign additional permissions to particular web applications by
