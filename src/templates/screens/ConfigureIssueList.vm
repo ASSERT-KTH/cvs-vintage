@@ -48,9 +48,6 @@
  #end
 </table>
 
-<div class="functnbar3">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160; 
-</div>
 
 <div class="functnbar2">
 <!--  <input type="submit" value="$l10n.ResetToDefault"  name="eventSubmit_doUsedefaults" />&#160; -->
