@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.55 2002/06/23 17:56:32 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.56 2002/06/24 17:26:54 cazzius Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -91,7 +91,7 @@
 
   <mbean code="org.jboss.security.plugins.SecurityConfig"
 	 name="jboss.security:service=SecurityConfig">
-    <attribute name="LoginConfig">jboss.security:name=XMLLoginConfig</attribute>
+    <attribute name="LoginConfig">jboss.security:service=XMLLoginConfig</attribute>
   </mbean>
   <mbean code="org.jboss.security.auth.login.XMLLoginConfig"
 	 name="jboss.security:service=XMLLoginConfig">
