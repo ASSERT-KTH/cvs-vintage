@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.65 2002/02/09 09:13:20 spestov Exp $
+ * @version $Id: Buffer.java,v 1.66 2002/02/10 04:47:16 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2543,9 +2543,9 @@ public class Buffer implements EBComponent
 				for(int i = start; i <= line; i++)
 				{
 					newFoldLevel = foldHandler.getFoldLevel(this,i,seg);
-					offsetMgr.setFoldLevel(i,newFoldLevel);
 					if(newFoldLevel != offsetMgr.getFoldLevel(i))
 						changed = true;
+					offsetMgr.setFoldLevel(i,newFoldLevel);
 				}
 
 				if(changed && !getFlag(INSIDE_INSERT))

@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.16 2002/02/09 09:13:20 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.17 2002/02/10 04:47:17 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -332,7 +332,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 	//{{{ MouseHandler class
 	class MouseHandler extends MouseAdapter
 	{
-		//{{{ mouseClicked() method
 		public void mouseClicked(MouseEvent evt)
 		{
 			Object source = evt.getSource();
@@ -365,19 +364,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				Buffer buffer = view.getBuffer();
 				buffer.setStringProperty("folding",text);
 				buffer.propertiesChanged();
-
-				int collapseFolds = buffer.getIntegerProperty(
-					"collapseFolds",0);
-				if(collapseFolds != 0)
-				{
-					textArea.getFoldVisibilityManager()
-						.expandFolds(collapseFolds);
-				}
-				else
-				{
-					textArea.getFoldVisibilityManager()
-						.expandAllFolds();
-				}
 			}
 			else if(source == multiSelect)
 				view.getTextArea().toggleMultipleSelectionEnabled();
@@ -388,7 +374,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				if(evt.getClickCount() == 2)
 					jEdit.showMemoryDialog(view);
 			}
-		} //}}}
+		}
 	} //}}}
 
 	//{{{ VICaretStatus class

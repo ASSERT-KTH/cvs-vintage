@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.23 2002/01/21 11:36:47 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.24 2002/02/10 04:47:17 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -235,6 +235,10 @@ public class FoldVisibilityManager
 					+ buffer.getLineCount());
 			}
 
+			// optimization
+			if(getVirtualLineCount() == buffer.getLineCount())
+				return line;
+
 			while(!offsetMgr.isLineVisible(line,index) && line > 0)
 				line--;
 
@@ -352,6 +356,10 @@ public class FoldVisibilityManager
 				throw new ArrayIndexOutOfBoundsException(line + " > "
 					+ offsetMgr.getVirtualLineCount(index));
 			}
+
+			// optimization
+			if(getVirtualLineCount() == buffer.getLineCount())
+				return line;
 
 			if(lastVirtual == line)
 			{

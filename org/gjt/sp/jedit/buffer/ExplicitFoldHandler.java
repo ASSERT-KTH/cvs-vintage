@@ -30,15 +30,16 @@ import org.gjt.sp.jedit.Buffer;
  * ("{{{"
  * and "}}}").
  * @author Slava Pestov
- * @version $Id: ExplicitFoldHandler.java,v 1.3 2002/02/09 09:13:20 spestov Exp $
+ * @version $Id: ExplicitFoldHandler.java,v 1.4 2002/02/10 04:47:16 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ExplicitFoldHandler extends FoldHandler
 {
+	//{{{ ExplicitFoldHandler constructor
 	public ExplicitFoldHandler()
 	{
 		super("explicit");
-	}
+	} //}}}
 
 	//{{{ getFoldLevel() method
 	/**

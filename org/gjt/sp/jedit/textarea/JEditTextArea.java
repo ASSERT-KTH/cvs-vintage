@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.84 2002/02/08 02:37:17 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.85 2002/02/10 04:47:17 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5243,16 +5243,29 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ recalculateLastPhysicalLine() method
 	void recalculateLastPhysicalLine()
 	{
-		chunkCache.updateChunksUpTo(visibleLines);
-		for(int i = visibleLines; i >= 0; i--)
+		if(softWrap)
 		{
-			ChunkCache.LineInfo info = chunkCache.getLineInfo(i);
-			if(info.physicalLine != -1)
+			chunkCache.updateChunksUpTo(visibleLines);
+			for(int i = visibleLines; i >= 0; i--)
 			{
-				physLastLine = info.physicalLine;
-				screenLastLine = i;
-				break;
+				ChunkCache.LineInfo info = chunkCache.getLineInfo(i);
+				if(info.physicalLine != -1)
+				{
+					physLastLine = info.physicalLine;
+					screenLastLine = i;
+					break;
+				}
 			}
+		}
+		else
+		{
+			// this is faster
+			int virtLastLine = Math.min(foldVisibilityManager
+				.getVirtualLineCount() - 1,
+				firstLine + visibleLines);
+			screenLastLine = virtLastLine - firstLine;
+			physLastLine = foldVisibilityManager.virtualToPhysical(
+				virtLastLine);
 		}
 	} //}}}
 

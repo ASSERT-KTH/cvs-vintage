@@ -31,10 +31,14 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.9 2002/01/17 10:37:54 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.10 2002/02/10 04:47:16 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
+	public static long openTime;
+	public static long scanTime;
+	public static long resTime;
+
 	// no-args constructor is for loading classes from all plugins
 	// eg BeanShell uses one of these so that scripts can use
 	// plugin classes
@@ -45,9 +49,21 @@ public class JARClassLoader extends ClassLoader
 	public JARClassLoader(String path)
 		throws IOException
 	{
+		long start = System.currentTimeMillis();
 		zipFile = new ZipFile(path);
+		openTime += (System.currentTimeMillis() - start);
 		jar = new EditPlugin.JAR(path,this);
 
+		start = System.currentTimeMillis();
+		Enumeration _entires = zipFile.entries();
+		while(_entires.hasMoreElements())
+		{
+			_entires.nextElement();
+		}
+
+		scanTime += (System.currentTimeMillis() - start);
+
+		start = System.currentTimeMillis();
 		Enumeration entires = zipFile.entries();
 		while(entires.hasMoreElements())
 		{
@@ -81,6 +97,8 @@ public class JARClassLoader extends ClassLoader
 			}
 		}
 
+		resTime += (System.currentTimeMillis() - start);
+		
 		jEdit.addPluginJAR(jar);
 	}
 

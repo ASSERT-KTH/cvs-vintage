@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.22 2002/02/05 06:28:10 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.23 2002/02/10 04:47:17 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -147,7 +147,12 @@ public class DockableWindowManager extends JPanel
 		{
 			if("dockables.dtd".equals(systemId))
 			{
-				try
+				// this will result in a slight speed up, since we
+				// don't need to read the DTD anyway, as AElfred is
+				// non-validating
+				return new StringReader("<!-- -->");
+
+				/* try
 				{
 					return new BufferedReader(new InputStreamReader(
 						getClass().getResourceAsStream
@@ -158,7 +163,7 @@ public class DockableWindowManager extends JPanel
 					Log.log(Log.ERROR,this,"Error while opening"
 						+ " dockables.dtd:");
 					Log.log(Log.ERROR,this,e);
-				}
+				} */
 			}
 
 			return null;
