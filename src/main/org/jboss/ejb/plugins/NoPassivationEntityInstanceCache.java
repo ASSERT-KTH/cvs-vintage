@@ -31,7 +31,7 @@ import org.jboss.ejb.deployment.jBossEntity;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class NoPassivationEntityInstanceCache
    implements InstanceCache
@@ -94,7 +94,7 @@ public class NoPassivationEntityInstanceCache
             info = (InstanceInfo)ctx.getCacheContext();
             if (!info.isLocked())
                break;
-//            System.out.println("Cache is waiting for "+id+"("+info.isLocked()+","+ctx.getTransaction()+")");
+//DEBUG            System.out.println("Cache is waiting for "+id+"("+info.isLocked()+","+ctx.getTransaction()+")");
                
             // Check if same tx; reentrant call
             try
@@ -106,8 +106,17 @@ public class NoPassivationEntityInstanceCache
                      break;
                   } else
                   {
-                     throw new RemoteException("Reentrant call not allowed");
-                  }
+					// MF FIXME
+				    // This is wrong but doing it right requires time
+					// The problem is that the entity EJB calls from an instance
+				    // come back on the instance and in the presence of a 
+					// transaction it throws the exception....
+					// Since I suspect most people will use the EJBObject method calls before they set the reentrant right :)
+					// I would rather bypass the default for now. 
+					
+					//throw new RemoteException("Reentrant call not allowed");
+                  	break;
+				  }
                }
             } catch (SystemException e)
             {
