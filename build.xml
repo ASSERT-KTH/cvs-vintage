@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.12 2001/08/27 04:47:22 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.13 2001/08/27 08:30:07 user57 Exp $ -->
 
 <project default="main">
 
@@ -955,7 +955,7 @@
   <!-- ================================================================== -->
 
   <target name="help">
-    <projecthelp>
+    <projecthelp taskname="help">
       <header><![CDATA[
   The ${module.Name} module.
 ]]></header>
