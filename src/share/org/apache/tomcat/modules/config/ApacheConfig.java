@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.17 2001/07/16 00:00:41 costin Exp $
+/* $Id: ApacheConfig.java,v 1.18 2001/07/20 12:45:20 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -95,7 +95,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     initialized during startup.
     <p>
     This config interceptor is enabled by inserting an ApacheConfig
-    element in the <b>\<ContextManager></b> tag body inside
+    element in the <b>&lt;ContextManager&gt;</b> tag body inside
     the server.xml file like so:
     <pre>
     * < ContextManager ... >
@@ -106,26 +106,41 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     </pre>
     where <i>options</i> can include any of the following attributes:
     <ul>
-     <li><b>confighome</b> - default parent directory for the following paths.
+     <li><b>configHome</b> - default parent directory for the following paths.
                             If not set, this defaults to TOMCAT_HOME. Ignored
                             whenever any of the following paths is absolute.
                              </li>
-     <li><b>jkconfig</b> - path to write apacke mod_jk conf file to. If
+     <li><b>jkConfig</b> - path to write apacke mod_jk conf file to. If
                             not set, defaults to
                             "conf/jk/mod_jk.conf".</li>
-     <li><b>workersconfig</b> - path to workers.properties file used by 
+     <li><b>workersConfig</b> - path to workers.properties file used by 
                             mod_jk. If not set, defaults to
                             "conf/jk/workers.properties".</li>
-     <li><b>modjk</b> - path to Apache mod_jk plugin file.  If not set,
+     <li><b>modJk</b> - path to Apache mod_jk plugin file.  If not set,
                         defaults to "modules/mod_jk.dll" on windows,
                         "modules/mod_jk.nlm" on netware, and
                         "libexec/mod_jk.so" everywhere else.</li>
-     <li><b>jklog</b> - path to log file to be used by mod_jk.</li>                       
+     <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
+     <li><b>forwardAll</b> - If true, forward all requests to Tomcat.  IF
+                             false, let Apache serve static resources.
+                             Warning: When false, some configuration in
+                             the web.xml may not be duplicated in Apache.
+                             Review the mod_jk.conf file to see what
+                             configuration is actually being set in Apache.</li>
+     <li><b>useJkMount</b> - If true, use JkMount mount directives.  If false,
+                             &lt;Location&gt; and SetHandler directives are used.
+                             the default is true.</li>
+     <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
+                          If not set, defaults to no log.</li>
+     <li><b>noRoot</b> - If true, the root context is not mapped to
+                         Tomcat.  If false, Tomcat services all requests
+                         to the root context.  The default is true.
+                         This setting only applies if forwardAll is true.</li>
     </ul>
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.17 $ $Date: 2001/07/16 00:00:41 $
+	@version $Revision: 1.18 $ $Date: 2001/07/20 12:45:20 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -168,7 +183,7 @@ public class ApacheConfig  extends BaseInterceptor {
     
     private String jkDebug=null;
 
-    private boolean noRoot=false;
+    private boolean noRoot=true;
 
     // ssl settings 
     private boolean sslExtract=true;
@@ -230,11 +245,13 @@ public class ApacheConfig  extends BaseInterceptor {
     }
 
     /** Special option - do not generate mappings for the ROOT
-	context. The default is false, and will generate the mappings,
-	redirecting all pages to tomcat ( since / matches everything ).
-	If the ROOT webapp can be configured with apache serving static
-	files, there's no problem. If not, that means Apache will be
-	out of picture for all requests.
+        context. The default is true, and will not generate the mappings,
+        not redirecting all pages to tomcat (since /* matches everything).
+        This means that Apache's root remains intact but isn't completely
+        servlet/JSP enabled. If the ROOT webapp can be configured with
+        apache serving static files, there's no problem setting this
+        option to false. If not, then setting it false means Apache will
+        be out of picture for all requests.
     */
     public void setNoRoot( boolean b ) {
 	noRoot=b;
@@ -313,10 +330,10 @@ public class ApacheConfig  extends BaseInterceptor {
 
 
     /** Set the verbosity level for mod_jk.
-	( use debug, error, etc )
+	( use debug, error, etc, off or none disables )
      */
     public void setJkDebug( String level ) {
-	jkDebug=level;
+	jkDebug=null;
     }
 
     /** By default mod_jk is configured to collect SSL information from
@@ -564,6 +581,10 @@ public class ApacheConfig  extends BaseInterceptor {
 	} 
 	if( useJkMount ) {
 	    mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
+            if( "".equals(ctxPath) )
+                mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
+            else
+                mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
 	} else {
 	    mod_jk.println(indent + "<Location \"" + nPath + "\">");
 	    mod_jk.println(indent + "    SetHandler jakarta-servlet");
