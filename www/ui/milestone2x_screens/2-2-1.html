@@ -153,9 +153,9 @@
 			</table>
 		</div>
 		
-		<p id="functnbar"><input type="submit" value="save/submit" />&#160;<input type="submit" value="cancel" /></p>
+		<p id="functnbar"><input type="submit" value="save/submit" />&nbsp;<input type="submit" value="execute" />&nbsp;<input type="submit" value="cancel" /></p>
 		
-		<h3>Save your Query</h3>
+		<h3>Save Query Information</h3>
 
 		<div class="axial">
 			<table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -171,7 +171,7 @@
 			</tr>
 			
 			<tr>
-			<th width="120">Availability:</th>
+			<th width="120">availability:</th>
 			<td><select>
 			<option>
 			personal profile
@@ -188,8 +188,156 @@
 			</tr>
 			</table>
 		</div>
+		
+		<h3>Saved Query Contents</h3>
 
-		<p id="functnbar"><input type="submit" value="save/submit" />&#160;<input type="submit" value="cancel" /></p>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">issue ID# range:</th>
+			<td>from:&#160;<input type="text" size="20" value="" />&#160;&#160;to:&#160;<input type="text" size="20" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">issue creation date range:</th>
+			<td>from:&#160;<input type="text" size="20" value="" />&#160;&#160;to:&#160;<input type="text" size="20" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">votes:</th>
+			<td><input type="text" size="25" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">summary:</th>
+			<td><input type="text" size="25" value="" /></td>
+			</tr>
+			
+			<tr>
+			<th width="120">description:</th>
+			<td><textarea rows="4" cols="40">
+			</textarea></td>
+			</tr>
+			
+			<tr>
+			<th width="120">version:</th>
+			<td><select>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">platform:</th>
+			<td><select>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">os:</th>
+			<td><select>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">found during:</th>
+			<td><select>
+			<option>normal use</option>
+			<option>QA</option>
+			<option>Beta</option>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">issue type:</th>
+			
+			<td><select>
+			<option>change requirements</option>
+			<option>bug</option>
+			<option>enhancement</option>
+			<option>documentation change</option>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">functional area:</th>
+			<td><input type="checkbox" /> UI <input type="checkbox" />setup <input type="checkbox" />help</td>
+			</tr>
+			
+			<tr>
+			<th width="120">severity:</th>
+			<td><select>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">priority:</th>
+			<td><select>
+			<option>choice 1</option>
+			<option>choice 2</option>
+			<option>choice 3</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">URL:</th>
+			<td><input type="text" size="25" value="http://" /></td>
+			</tr>
+			</table>
+		</div>
+		
+		<h3>State Change Query</h3>
+		
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			<tr>
+			<th width="120">state change query:</th>
+			<td><select>
+			<option>unreported</option>
+			<option>open / unassigned</option>
+			<option>open / assigned</option>
+			<option>open / reassigned</option>
+			<option>closed</option>
+			<option>reopened / unassigned</option>
+			<option>reopened / assigned</option>
+			<option>reopened / reassigned</option>
+			</select>to<select>
+			<option>open / unassigned</option>
+			<option>open / assigned</option>
+			<option>open / reassigned</option>
+			<option>closed</option>
+			<option>reopened / unassigned</option>
+			<option>reopened / assigned</option>          
+			<option>reopened / reassigned</option> 
+			</select>
+			</td>
+			</tr>  
+			
+			<tr>
+			<th width="120">date range:</th>
+			<td><input type="text" size=9 value="XX/XX/XXXX">&nbsp;<input type="text" size=4 value="00:00"> to <input type="text" size=9 value="XX/XX/XXXX">&nbsp;<input type="text" size=4 value="00:00">
+			</td>
+			</tr>	
+			</table>
+		</div>
+
+		<p id="functnbar"><input type="submit" value="save/submit" />&nbsp;<input type="submit" value="execute" />&nbsp;<input type="submit" value="cancel" /></p>
 	</div>
 	<!-- Scarab - App -->
 
