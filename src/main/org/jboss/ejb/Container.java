@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.27 $
+ *   @version $Revision: 1.28 $
  */
 public abstract class Container
 {
@@ -402,6 +402,8 @@ public abstract class Container
                 {
                    // Internal link
                    Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
+                   if (getApplication().getContainer(ref.getLink()) == null)
+                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
                    bind(ctx, ref.getName(), new LinkRef(getApplication().getContainer(ref.getLink()).getBeanMetaData().getJndiName()));
                        
 //                   bind(ctx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
