@@ -21,7 +21,7 @@ import org.jboss.util.StringPropertyReplacer;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -152,7 +152,6 @@ public abstract class MetaData
     * @return           The attribute value or null.
     */
    public static String getElementAttribute(final Element element, final String attrName)
-      throws DeploymentException
    {
       if (element == null)
          return null;
@@ -171,7 +170,6 @@ public abstract class MetaData
     * @return           The content of the element or null.
     */
    public static String getElementContent(final Element element)
-      throws DeploymentException
    {
       return getElementContent(element, null);
    }
@@ -184,7 +182,6 @@ public abstract class MetaData
     * @return              The content of the element or the default.
     */
    public static String getElementContent(Element element, String defaultStr)
-      throws DeploymentException
    {
       if (element == null)
          return defaultStr;
@@ -211,7 +208,6 @@ public abstract class MetaData
    }
 
    public static String getFirstElementContent(Element element, String defaultStr)
-      throws DeploymentException
    {
       if (element == null)
          return defaultStr;
