@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEDeployedObject J2EEDeployedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -49,7 +49,7 @@ public abstract class J2EEDeployedObject
                                                    "META-INF/application.xml",
                                                    "WEB-INF/web.xml",
                                                    "META-INF/ejb-jar.xml",
-                                                   "META-INF/??AS??.xml"
+                                                   "META-INF/ra.xml"
                                                 };
    
    // Attributes ----------------------------------------------------

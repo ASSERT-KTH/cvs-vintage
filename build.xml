@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.74 2002/02/28 04:08:05 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.75 2002/03/06 01:07:46 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -412,6 +412,19 @@
       <session/>
       <deploymentdescriptor xmlencoding="UTF-8" destdir="${build.beans}/mejb/META-INF"/>
       <jboss xmlencoding="UTF-8" destdir="${build.beans}/mejb/META-INF"/>
+    </xdoclet>
+    
+    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask"/>
+    
+    <xdoclet sourcepath="${source.java}"
+	     destdir="${build.gen-src}"
+	     classpath="${xdoclet.task.classpath}"
+	     excludedtags="@version,@author"
+    >
+      <fileset dir="${source.java}">
+        <include name="org/jboss/management/j2ee/*Target.java"/>
+      </fileset>
+      <jbossxmbean/>
     </xdoclet>
   </target>
 

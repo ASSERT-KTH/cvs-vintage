@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -118,7 +118,7 @@ public class J2EEServer
          "J2EEApplication".equals( lType ) ||
          "J2EEModule".equals( lType ) ||
          "EjbModule".equals( lType ) ||
-         "ConnectorModule".equals( lType ) ||
+         "ResourceAdapterModule".equals( lType ) ||
          "WebModule".equals( lType )
       ) {
          mDeployedObjects.add( pChild );
@@ -128,12 +128,13 @@ public class J2EEServer
          mJVMs.add( pChild );
       } else
       if( "JNDI".equals( lType ) ||
-         "JMS".equals( lType ) ||
+         "JMSResource".equals( lType ) ||
          "URL".equals( lType ) ||
          "JTA".equals( lType ) ||
          "JavaMail".equals( lType ) ||
          "JDBC".equals( lType ) ||
-         "RMI IIOP".equals( lType )
+         "RMI IIOP".equals( lType ) ||
+         "JCAResource".equals( lType )
       ) {
          mResources.add( pChild );
       }
@@ -145,7 +146,7 @@ public class J2EEServer
          "J2EEApplication".equals( lType ) ||
          "J2EEModule".equals( lType ) ||
          "EjbModule".equals( lType ) ||
-         "ConnectorModule".equals( lType ) ||
+         "ResourceAdapterModule".equals( lType ) ||
          "WebModule".equals( lType )
       ) {
          mDeployedObjects.remove( pChild );
@@ -155,12 +156,13 @@ public class J2EEServer
          mJVMs.remove( pChild );
       } else
       if( "JNDI".equals( lType ) ||
-         "JMS".equals( lType ) ||
+         "JMSResource".equals( lType ) ||
          "URL".equals( lType ) ||
          "JTA".equals( lType ) ||
          "JavaMail".equals( lType ) ||
          "JDBC".equals( lType ) ||
-         "RMI IIOP".equals( lType )
+         "RMI IIOP".equals( lType ) ||
+         "JCAResource".equals( lType )
       ) {
          mResources.remove( pChild );
       }
