@@ -29,6 +29,7 @@ import javax.management.InvalidAttributeValueException;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
 import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
@@ -49,11 +50,23 @@ import javax.management.ReflectionException;
 * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface JMXConnector
-//AS	extends MBeanServer
+	extends MBeanServer
 {
 
 	// Constants -----------------------------------------------------
 	
+   /**
+   * If this type is used and you specify a valid QueueConnectorFactory
+   * then this connector will use JMS to transfer the events asynchronous
+   * back from the server to the client.
+   **/
+   public static final int NOTIFICATION_TYPE_JMS = 0;
+   /**
+   * If this type is used the Connector will use RMI Callback Objects to
+   * transfer the events back from the server synchronously.
+   **/
+   public static final int NOTIFICATION_TYPE_RMI = 1;
+   
 	// Public --------------------------------------------------------
 
 	/**

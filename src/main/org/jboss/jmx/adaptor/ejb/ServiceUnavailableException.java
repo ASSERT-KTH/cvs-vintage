@@ -1,16 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- saved from url=(0169)http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/~checkout~/jboss/jboss/src/main/org/jboss/jmx/adaptor/ejb/ServiceUnavailableException.java?rev=1.1&content-type=text/plain -->
-<HTML><HEAD>
-<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
-<META content="MSHTML 5.50.4522.1800" name=GENERATOR></HEAD>
-<BODY><XMP>// ----------------------------------------------------------------------------
-// File: ServiceUnavailableException
-// Copyright ( c ) 2001 eBuilt, Inc.  All rights reserved.
-// Version: $Revision: 1.3 $
-// Last Checked In: $Date: 2001/09/15 02:52:34 $
-// Last Checked In By: $Author: schaefera $
-// ----------------------------------------------------------------------------
-
+/*
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.jmx.adaptor.ejb;
 
 /**
@@ -18,7 +11,7 @@ package org.jboss.jmx.adaptor.ejb;
  * contains an invalid value.
  *
  * @author Andreas Schaefer
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  **/
 public class ServiceUnavailableException
    extends Exception
@@ -87,4 +80,3 @@ public class ServiceUnavailableException
 
 // ----------------------------------------------------------------------------
 // EOF
-</XMP></BODY></HTML>

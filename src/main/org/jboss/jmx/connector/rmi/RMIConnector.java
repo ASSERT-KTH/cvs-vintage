@@ -37,6 +37,7 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
 
+import org.jboss.jmx.connector.notification.JMSNotificationListener;
 import org.jboss.jmx.connector.notification.RMINotificationSender;
 
 /**
@@ -45,7 +46,7 @@ import org.jboss.jmx.connector.notification.RMINotificationSender;
 * has an additional RemoteException.
 *
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
+* @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface RMIConnector 
 	extends Remote
@@ -262,9 +263,26 @@ public interface RMIConnector
 		InstanceNotFoundException,
 		RemoteException;
 
+	public void addNotificationListener(
+		ObjectName pName,
+		JMSNotificationListener pListener,
+		NotificationFilter pFilter,
+		Object pHandback		
+	) throws
+		InstanceNotFoundException,
+		RemoteException;
+
 	public void removeNotificationListener(
 		ObjectName pName,
 		RMINotificationSender pSender
+	) throws
+		InstanceNotFoundException,
+		ListenerNotFoundException,
+		RemoteException;
+
+	public void removeNotificationListener(
+		ObjectName pName,
+		JMSNotificationListener pListener
 	) throws
 		InstanceNotFoundException,
 		ListenerNotFoundException,

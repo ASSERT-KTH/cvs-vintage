@@ -19,11 +19,14 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.ejb.EJBConnector;
 import org.jboss.jmx.connector.rmi.RMIClientConnectorImpl;
 
 /**
@@ -31,9 +34,8 @@ import org.jboss.jmx.connector.rmi.RMIClientConnectorImpl;
  * and after selected to initiate the connection This is just the (incomplete)
  * interface of it
  *
- *@author    <A href="mailto:andreas.schaefer@madplanet.com">Andreas
- *      &quot;Mad&quot; Schaefer</A>
- *@created   May 2, 2001
+ * @author    <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ * @created   May 2, 2001
  **/
 public class ConnectorFactoryImpl {
 
@@ -44,14 +46,38 @@ public class ConnectorFactoryImpl {
    // Attributes ----------------------------------------------------
 
    private MBeanServer mServer;
-
+   private int mNotificationType = JMXConnector.NOTIFICATION_TYPE_RMI;
+   private String mJMSName;
+   private String mEJBAdaptorName = "ejb/jmx/ejb/Adaptor";
 
    // Public --------------------------------------------------------
 
    public ConnectorFactoryImpl(
       MBeanServer pServer
    ) {
+      this( pServer, null, null );
+   }
+
+   public ConnectorFactoryImpl(
+      MBeanServer pServer,
+      String pJMSQueueName
+   ) {
+      this( pServer, pJMSQueueName, "ejb/jmx/ejb/adaptor" );
+   }
+
+   public ConnectorFactoryImpl(
+      MBeanServer pServer,
+      String pJMSName,
+      String pEJBAdaptorName
+   ) {
       mServer = pServer;
+      if( pJMSName != null ) {
+         mNotificationType = JMXConnector.NOTIFICATION_TYPE_JMS;
+         mJMSName = pJMSName;
+      }
+      if( pEJBAdaptorName != null && pEJBAdaptorName.trim().length() > 0 ) {
+         mEJBAdaptorName = pEJBAdaptorName;
+      }
    }
 
    /**
@@ -67,11 +93,14 @@ public class ConnectorFactoryImpl {
       Vector lConnectors = new Vector();
       try {
          InitialContext lNamingServer = new InitialContext( pProperties );
+         // AS Check if the lItem.getName() (below) is the right server name or if the
+         // lJNDIServer should be used
+         String lJNDIServer = (String) lNamingServer.getEnvironment().get( Context.PROVIDER_URL );
          // Lookup the JNDI server
          NamingEnumeration enum = lNamingServer.list( "" );
          while( enum.hasMore() ) {
             NameClassPair lItem = ( NameClassPair ) enum.next();
-            ConnectorName lName = pTester.check( lItem.getName(), lItem.getClass() );
+            ConnectorName lName = pTester.check( lNamingServer, lItem );
             if( lName != null ) {
                lConnectors.add( lName );
             }
@@ -95,15 +124,34 @@ public class ConnectorFactoryImpl {
       ConnectorName pConnector
    ) {
       JMXConnector lConnector = null;
-      // At the moment only RMI protocol is supported (on the client side)
+      // At the moment only RMI and EJB protocol is supported (on the client side)
       if( pConnector.getProtocol().equals( "rmi" ) ) {
          try {
             lConnector = new RMIClientConnectorImpl(
+               mNotificationType,
+               new String[] { mJMSName },
                pConnector.getServer()
             );
             mServer.registerMBean(
                lConnector,
                new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() )
+            );
+         }
+         catch( Exception e ) {
+            e.printStackTrace();
+         }
+      }
+      else if( pConnector.getProtocol().equals( "ejb" ) ) {
+         try {
+            lConnector = new EJBConnector(
+               mNotificationType,
+               new String[] { mJMSName },
+               pConnector.getJNDIName(),
+               pConnector.getServer()
+            );
+            mServer.registerMBean(
+               lConnector,
+               new ObjectName( "JBOSS-SYSTEM:name=EJBConnectorTo" + pConnector.getServer() )
             );
          }
          catch( Exception e ) {
@@ -121,8 +169,8 @@ public class ConnectorFactoryImpl {
    public void removeConnection(
       ConnectorName pConnector
    ) {
-      if( pConnector.getProtocol().equals( "rmi" ) ) {
-         try {
+      try {
+         if( pConnector.getProtocol().equals( "rmi" ) ) {
             Set lConnectors = mServer.queryMBeans(
                new ObjectName( "JBOSS-SYSTEM:name=RMIConnectorTo" + pConnector.getServer() ),
                null
@@ -143,9 +191,30 @@ public class ConnectorFactoryImpl {
                }
             }
          }
-         catch( Exception e ) {
-            e.printStackTrace();
+         else if( pConnector.getProtocol().equals( "ejb" ) ) {
+            Set lConnectors = mServer.queryMBeans(
+               new ObjectName( "JBOSS-SYSTEM:name=EJBConnectorTo" + pConnector.getServer() ),
+               null
+            );
+            if( !lConnectors.isEmpty() ) {
+               Iterator i = lConnectors.iterator();
+               while( i.hasNext() ) {
+                  ObjectInstance lConnector = ( ObjectInstance ) i.next();
+                  mServer.invoke(
+                     lConnector.getObjectName(),
+                     "stop",
+                     new Object[] {},
+                     new String[] {}
+                  );
+                  mServer.unregisterMBean(
+                     lConnector.getObjectName()
+                  );
+               }
+            }
          }
+      }
+      catch( Exception e ) {
+         e.printStackTrace();
       }
    }
 
@@ -165,7 +234,7 @@ public class ConnectorFactoryImpl {
        *
        * @return Connector Name instance if valid otherwise null
        **/
-      public ConnectorName check( String pName, Class pClass );
+      public ConnectorName check( Context pContext, NameClassPair pPair );
       
    }
 
@@ -178,16 +247,32 @@ public class ConnectorFactoryImpl {
       implements IConnectorTester
    {
       
-      public ConnectorName check( String pName, Class pClass ) {
+      public ConnectorName check( Context pContext, NameClassPair pPair ) {
          ConnectorName lConnector = null;
-         if( pName != null || pName.length() > 0 ) {
-            StringTokenizer lName = new StringTokenizer( pName, ":" );
-            if( lName.hasMoreTokens() && lName.nextToken().equals( "jmx" ) ) {
-               if( lName.hasMoreTokens() ) {
-                  String lServer = lName.nextToken();
-                  if( lName.hasMoreTokens() ) {
-                     lConnector = new ConnectorName( lServer, lName.nextToken(), pName );
+         if( pPair != null ) {
+            String lName = pPair.getName();
+            if( lName.startsWith( "jmx:" ) ) {
+               // Server-side Connector registered as MBean
+               StringTokenizer lTokens = new StringTokenizer( lName, ":" );
+               if( lTokens.hasMoreTokens() && lTokens.nextToken().equals( "jmx" ) ) {
+                  if( lTokens.hasMoreTokens() ) {
+                     String lServer = lTokens.nextToken();
+                     if( lTokens.hasMoreTokens() ) {
+                        lConnector = new ConnectorName( lServer, lTokens.nextToken(), lName );
+                     }
                   }
+               }
+            }
+            if( lName.equals( "ejb" ) ) {
+               try {
+                  Context lContext = (Context) pContext.lookup( "ejb" );
+                  lContext = (Context) lContext.lookup( "jmx" );
+                  lContext = (Context) lContext.lookup( "ejb" );
+                  if( lContext.lookup( "Adaptor" ) != null ) {
+                     lConnector = new ConnectorName( "" + pContext.getEnvironment().get( Context.PROVIDER_URL ), "ejb", "ejb/jmx/ejb/Adaptor" );
+                  }
+               }
+               catch( NamingException ne ) {
                }
             }
          }
@@ -252,4 +337,3 @@ public class ConnectorFactoryImpl {
    }
 
 }
-

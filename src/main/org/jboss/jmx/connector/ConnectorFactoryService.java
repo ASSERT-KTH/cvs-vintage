@@ -6,8 +6,6 @@
 */
 package org.jboss.jmx.connector;
 
-// import java.util.Arrays;
-// import java.util.Collection;
 import java.util.Iterator;
 import java.util.Hashtable;
 
@@ -43,13 +41,34 @@ public class ConnectorFactoryService
 	private MBeanServer				mServer;
 	/** Connector Factory instance **/
 	private ConnectorFactoryImpl	mFactory;
+   private String mJMSName;
+   private String mEJBAdaptorName;
 
 	// Public --------------------------------------------------------
 	
-	public ConnectorFactoryService(
-	) {
+	public ConnectorFactoryService() {
 	}
 	
+   public String getJMSName() {
+      return mJMSName;
+   }
+   
+   public void setJMSName( String pName ) {
+      mJMSName = pName;
+   }
+   
+   public String getEJBAdaptorName() {
+      return mEJBAdaptorName;
+   }
+   
+   public void setEJBAdaptorName( String pName ) {
+      if( pName == null ) {
+         mEJBAdaptorName = "ejb/jmx/ejb/adaptor";
+      } else {
+         mEJBAdaptorName = pName;
+      }
+   }
+
    public Iterator getConnectors( Hashtable pProperties, ConnectorFactoryImpl.IConnectorTester pTester ) {
 		return mFactory.getConnectors( pProperties, pTester );
    }
@@ -71,9 +90,11 @@ public class ConnectorFactoryService
 		ObjectName pName
 	) throws javax.management.MalformedObjectNameException {
 		mServer = pServer;
-		System.out.println( "ConnectorFactoryService.getObjectName(), server: " + mServer +
+		System.out.println(
+         "ConnectorFactoryService.getObjectName(), server: " + mServer +
 			", object name: " + OBJECT_NAME +
-			", instance: " + new ObjectName( OBJECT_NAME ) );
+			", instance: " + new ObjectName( OBJECT_NAME )
+      );
 		return new ObjectName( OBJECT_NAME );
 	}
 	
@@ -83,21 +104,12 @@ public class ConnectorFactoryService
 	
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
-            mFactory = new ConnectorFactoryImpl( mServer );
+      mFactory = new ConnectorFactoryImpl( mServer, mJMSName, mEJBAdaptorName );
 	}
 	
 	protected void startService() throws Exception {
-//AS		new InitialContext().bind( JNDI_NAME, mFactory );
 	}
 	
 	protected void stopService() {
-/* AS
-		try {
-			new InitialContext().unbind(JNDI_NAME);
-		}
-		catch( Exception e )	{
-			log.exception( e );
-		}
-*/
 	}
 }

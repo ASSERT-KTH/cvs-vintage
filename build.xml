@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.28 2001/09/13 07:38:14 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.29 2001/09/15 03:06:48 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -605,14 +605,14 @@ os.version:      ${os.version}
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- Build jmx-rmi-connector.jsr (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-rmi-connector.jsr"
-         manifest="${build.etc}/rmiconnector.mf">
+    <!-- Build jmx-rmi-connector-server.jsr (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-rmi-connector-server.jsr">
+         <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/rmi/RMIConnector**"/>
-        <include name="com/sun/jdmk/**"/>
+        <include name="org/jboss/jmx/connector/rmi/RMIClient**Stub.class"/>
       </fileset>
       <fileset dir="${source.java}/org/jboss/jmx/connector/rmi">
         <include name="META-INF/**"/>
@@ -622,6 +622,7 @@ os.version:      ${os.version}
     <!-- Build jmx-ejb-adaptor.jar --> 
     <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/adaptor/ejb/**"/>
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
       </fileset>
@@ -630,9 +631,9 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-connector.jar (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector.jar"
-         manifest="${build.etc}/ejb-connector.mf">
+    <!-- Build jmx-ejb-connector-client.jar (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-ejb-connector-client.jar"
+         manifest="${build.etc}/ejb-connector-client.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -644,8 +645,8 @@ os.version:      ${os.version}
     </jar>
 
     <!-- Build jmx-ejb-connector-server.jsr (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector-server.jsr"
-         manifest="${build.etc}/ejb-connector.mf">
+    <jar jarfile="${build.lib}/jmx-ejb-connector-server.jsr">
+         <!-- manifest="${build.etc}/ejb-connector-server.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
@@ -657,33 +658,33 @@ os.version:      ${os.version}
 
     <!-- Build jmx-html-adaptor.jsr (should try to use jlink for this)--> 
     <unjar src="${sun.jmx.lib}/jmxtools.jar" dest="${build.classes}"/>
-    <jar jarfile="${build.lib}/jmx-html-adaptor.jsr"
-         manifest="${build.etc}/rmiconnector.mf">
+    <jar jarfile="${build.lib}/jmx-html-adaptor.jsr">
+         <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/interfaces/**"/>
         <include name="org/jboss/jmx/server/**"/>
         <include name="org/jboss/jmx/client**"/>
-        <include name="com/sun/jdmk/**"/>
       </fileset>
       <fileset dir="${source.java}/org/jboss/jmx">
         <include name="META-INF/**"/>
       </fileset>
     </jar>
 
-    <!-- Build rmiconnector.jar -->
-    <jar jarfile="${build.lib}/rmiconnector.jar"
-         manifest="${build.etc}/rmiconnector.mf">
+    <!-- Build jmx-rmi-connector-server.jar -->
+    <jar jarfile="${build.lib}/jmx-rmi-connector-server.jar"
+         manifest="${build.etc}/rmi-connector-server.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/JMXConnector**"/>
-        <include name="org/jboss/jmx/connector/notification/RMI**"/>
-        <include name="org/jboss/jmx/connector/rmi/RMI**"/>
+        <include name="org/jboss/jmx/connector/notification/**"/>
+        <!-- <include name="org/jboss/jmx/connector/rmi/RMI**"/> -->
         <include name="org/jboss/jmx/connector/rmi/RMIConnector**"/>
+        <include name="org/jboss/jmx/connector/rmi/**Stub.class"/>
         <include name="org/jboss/jmx/ObjectHandler.class"/>
         <include name="org/jboss/system/Service**"/>
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
 
-        <!-- why ? AS Because it allows the client to test the JAR file by "java -jar" -->
+        <!-- why ? AS Because it allows the user to test the JAR file by "java -jar" -->
         <include name="org/jboss/jmx/connector/rmi/TestServer**"/>
       </fileset>
     </jar>
@@ -708,9 +709,9 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build connector.jar -->
-    <jar jarfile="${build.lib}/connector.jar"
-         manifest="${build.etc}/connector.mf">
+    <!-- Build jmx-rmi-connector-client.jar -->
+    <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
+         manifest="${build.etc}/rmi-connector-client.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler.class"/>
         <include name="org/jboss/jmx/connector/JMXConnector.class"/>
@@ -720,13 +721,21 @@ os.version:      ${os.version}
         <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
         <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
         <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
-        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
         <include name="org/jboss/system/Service.class"/>
         <include name="org/jboss/system/ServiceMBean*.class"/>
         <include name="org/jboss/logging/**"/>
+      </fileset>
+    </jar>
 
-        <!-- why ? AS Because it allows the client to test the JAR file by "java -jar" -->
-        <include name="org/jboss/jmx/connector/rmi/TestClient*.class"/>
+    <!-- Build jmx-connector-client-factory.jar -->
+    <jar jarfile="${build.lib}/jmx-connector-client-factory.jar"
+         manifest="${build.etc}/connector-client-factory.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
+        <include name="org/jboss/jmx/connector/TestClient*.class"/>
+        <include name="org/jboss/system/Service.class"/>
+        <include name="org/jboss/system/ServiceMBean*.class"/>
+        <include name="org/jboss/logging/**"/>
       </fileset>
     </jar>
 

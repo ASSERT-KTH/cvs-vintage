@@ -67,8 +67,11 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
 import org.jboss.jmx.ObjectHandler;
-import org.jboss.jmx.connector.notification.RMINotificationSender;
+import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
+import org.jboss.jmx.connector.notification.JMSListenerSet;
 import org.jboss.jmx.connector.notification.JMSNotificationListener;
+import org.jboss.jmx.connector.notification.RMINotificationSender;
 
 /**
 * This is the equivalent to the RMI Connector but uses the
@@ -82,27 +85,15 @@ import org.jboss.jmx.connector.notification.JMSNotificationListener;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 **/
 public class EJBConnector
-   implements MBeanServer
+   implements JMXConnector, EJBConnectorMBean
 {
 
    // -------------------------------------------------------------------------
    // Static
    // -------------------------------------------------------------------------
-   
-   /**
-   * If this type is used and you specify a valid QueueConnectorFactory
-   * then this connector will use JMS to transfer the events asynchronous
-   * back from the server to the client.
-   **/
-   public static final int NOTIFICATION_TYPE_JMS = 0;
-   /**
-   * If this type is used the Connector will use RMI Callback Objects to
-   * transfer the events back from the server synchronously.
-   **/
-   public static final int NOTIFICATION_TYPE_RMI = 1;
    
    // -------------------------------------------------------------------------
    // Members 
@@ -110,9 +101,9 @@ public class EJBConnector
 
    private Adaptor mAdaptor;
 
-   private String            mJNDIServer;
    private Hashtable         mHandbackPool = new Hashtable();
    private Vector            mListeners = new Vector();
+   private String            mJNDIServer;
    private int               mEventType = NOTIFICATION_TYPE_RMI;
    private String[]          mOptions = new String[ 0 ];
 
@@ -241,7 +232,9 @@ public class EJBConnector
          } else {
             lJNDIContext = new InitialContext();
          }
-         System.out.println( "JNDI Context properties: " + lJNDIContext.getEnvironment() );
+         System.out.println( "JNDI Context properties: " + lJNDIContext.getEnvironment() +
+            ", JNDI name: " + pJNDIName
+         );
          Object aEJBRef = lJNDIContext.lookup( pJNDIName );
          AdaptorHome aHome = (AdaptorHome) 
             PortableRemoteObject.narrow( aEJBRef, AdaptorHome.class );
@@ -693,7 +686,7 @@ public class EJBConnector
                JMSNotificationListener lRemoteListener = new JMSNotificationListener( mOptions[ 0 ], lQueue );
                mAdaptor.addNotificationListener( pName, lRemoteListener, pFilter, null );
                QueueReceiver lReceiver = lSession.createReceiver( lQueue, null );
-               lReceiver.setMessageListener( new LocalJMSListener( pListener, pHandback ) );
+               lReceiver.setMessageListener( new JMSClientNotificationListener( pListener, pHandback ) );
                mListeners.addElement( new JMSListenerSet( pName, pListener, lRemoteListener ) );
             }
             catch( Exception e ) {
@@ -873,6 +866,75 @@ public class EJBConnector
       );
    }
 
+	// JMXClientConnector implementation -------------------------------
+	public void start(
+		Object pServer
+	) throws IllegalArgumentException {
+/* Code from RMI Client Connector Impl. Right now not necessary because the
+*  Constructor already get the necessary info
+		if( pServer == null ) {
+			throw new IllegalArgumentException( "Server cannot be null. "
+				+ "To close the connection use stop()" );
+		}
+		try {
+			InitialContext lNamingContext = new InitialContext();
+			System.out.println( "RMIClientConnectorImp.start(), got Naming Context: " +	lNamingContext +
+				", environment: " + lNamingContext.getEnvironment() +
+				", name in namespace: " + lNamingContext.getNameInNamespace()
+			);
+			// This has to be adjusted later on to reflect the given parameter
+			mRemoteConnector = (RMIConnector) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
+			System.err.println( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteConnector );
+			mServer = pServer;
+		}
+		catch( Exception e ) {
+			e.printStackTrace();
+		}
+*/
+	}
+
+	public void stop() {
+      mAdaptor = null;
+/* Code from RMI Client Connector Impl. Right now not just ignore it
+		System.out.println( "RMIClientConnectorImpl.stop(), start" );
+		// First go through all the reistered listeners and remove them
+		Iterator i = mListeners.iterator();
+		while( i.hasNext() ) {
+			try {
+				Listener lRemoteListener = (Listener) i.next();
+				System.out.println( "RMIClientConnectorImpl.stop(), remove listener: " +
+					lRemoteListener
+				);
+				try {
+					mRemoteConnector.removeNotificationListener(
+						lRemoteListener.getObjectName(),
+						lRemoteListener
+					);
+				}
+				catch( RemoteException re ) {
+					re.printStackTrace();
+				}
+				finally {
+					i.remove();
+				}
+			}
+			catch( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+		mRemoteConnector = null;
+		mServer = "";
+*/
+	}
+	
+	public boolean isAlive() {
+		return mAdaptor != null;
+	}
+
+	public String getServerDescription() {
+		return "" + mJNDIServer;
+	}
+
    /**
    * Listener wrapper around the remote RMI Notification Listener
    **/
@@ -968,97 +1030,6 @@ public class EJBConnector
          return mLocalListener.hashCode();
       }
    }
-
-   /**
-   * Local JMX Listener to receive the message and send to the listener
-   **/
-   public class LocalJMSListener implements MessageListener {
-
-      private NotificationListener         mLocalListener;
-      private Object                      mHandback;
-      
-      public LocalJMSListener(
-         NotificationListener pLocalListener,
-         Object pHandback
-      ) {
-         mLocalListener = pLocalListener;
-         mHandback = pHandback;
-      }
-
-      public void onMessage( Message pMessage ) {
-         try {
-            Notification lNotification = (Notification) ( (ObjectMessage) pMessage ).getObject();
-            mLocalListener.handleNotification( lNotification, mHandback );
-         }
-         catch( JMSException je ) {
-            je.printStackTrace();
-         }
-      }
-
-      /** Redesign it (AS) **/
-      public NotificationListener getLocalListener() {
-         return mLocalListener;
-      }
-      /**
-      * Test if this and the given Object are equal. This is true if the given
-      * object both refer to the same local listener
-      *
-      * @param pTest                  Other object to test if equal
-      *
-      * @return                     True if both are of same type and
-      *                           refer to the same local listener
-      **/
-      public boolean equals( Object pTest ) {
-         if( pTest instanceof Listener ) {
-            return mLocalListener.equals(
-               ( (Listener) pTest).mLocalListener
-            );
-         }
-         return false;
-      }
-      /**
-      * @return                     Hashcode of the local listener
-      **/
-      public int hashCode() {
-         return mLocalListener.hashCode();
-      }
-   }
-
-   /**
-   * Container for a JMS Listener Set to find later on the
-   * Remote Listener based on the Object Name it is register
-   * on and the local Notification Listener
-   **/
-   private class JMSListenerSet {
-      
-      private ObjectName mName;
-      private NotificationListener mListener;
-      private JMSNotificationListener mRemoteListener;
-      
-      public JMSListenerSet(
-         ObjectName pName,
-         NotificationListener pListener,
-         JMSNotificationListener pRemoteListener
-      ) {
-         mName = pName;
-         mListener = pListener;
-         mRemoteListener = pRemoteListener;
-      }
-      
-      public NotificationListener getRemoteListener() {
-         return mRemoteListener;
-      }
-      
-      public boolean equals( Object pTest ) {
-         if( pTest instanceof JMSListenerSet ) {
-            JMSListenerSet lTest = (JMSListenerSet) pTest;
-            return mName.equals( lTest.mName ) &&
-               mListener.equals( lTest.mListener );
-         }
-         return false;
-      }
-   }
-
 }
 
 // ----------------------------------------------------------------------------

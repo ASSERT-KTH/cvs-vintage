@@ -1,0 +1,3 @@
+Main-Class: org.jboss.jmx.connector.rmi.TestServer
+Class-Path: ./ ./jmxri.jar ../lib/jmxri.jar ./jnpserver.jar ../lib/ext/jnpserver.jar ./log4j.jar
+

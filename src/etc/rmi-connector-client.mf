@@ -1,0 +1,1 @@
+Class-Path: ./ ./jmxri.jar ../lib/jmxri.jar ./jnp-client.jar ../lib/jnp-client.jar ./log4j.jar

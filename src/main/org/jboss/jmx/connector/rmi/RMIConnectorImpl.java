@@ -44,6 +44,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.system.ServiceMBeanSupport;
 
+import org.jboss.jmx.connector.notification.JMSNotificationListener;
 import org.jboss.jmx.connector.notification.RMINotificationSender;
 import org.jboss.jmx.ObjectHandler;
 
@@ -431,6 +432,30 @@ public class RMIConnectorImpl
 		mListeners.addElement( lRemoteListener );
 	}
 
+	/**
+	* Adds a given remote notification listeners to the given
+	* Broadcaster.
+	* Please note that this is not the same as within the
+	* MBeanServer because it is protocol specific.
+	*/
+	public void addNotificationListener(
+		ObjectName pName,
+		JMSNotificationListener pListener,
+		NotificationFilter pFilter,
+		Object pHandback
+	) throws
+		InstanceNotFoundException,
+		RemoteException
+	{
+		mServer.addNotificationListener(
+			pName,
+			pListener,
+			pFilter,
+			pHandback
+		);
+		mListeners.addElement( pListener );
+	}
+
 	public void removeNotificationListener(
 		ObjectName pName,
 		RMINotificationSender pSender
@@ -448,6 +473,23 @@ public class RMIConnectorImpl
 			mServer.removeNotificationListener(
 				pName,
 				(Listener) mListeners.elementAt( lIndex )
+			);
+		}
+	}
+
+	public void removeNotificationListener(
+		ObjectName pName,
+		JMSNotificationListener pListener
+	) throws
+		InstanceNotFoundException,
+		ListenerNotFoundException,
+		RemoteException
+	{
+		int lIndex = mListeners.indexOf( pListener );
+		if( lIndex >= 0 ) {
+			mServer.removeNotificationListener(
+				pName,
+				(NotificationListener) mListeners.elementAt( lIndex )
 			);
 		}
 	}

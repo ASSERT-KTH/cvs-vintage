@@ -3,13 +3,16 @@
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
-package org.jboss.jmx.connector.rmi;
+package org.jboss.jmx.connector;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
@@ -26,9 +29,6 @@ import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
 import javax.naming.InitialContext; 
-
-import org.jboss.jmx.connector.ConnectorFactoryImpl;
-import org.jboss.jmx.connector.JMXConnector;
 
 /**
 * Test Client for the JMX Client Connector. It cretes a local MBeanServer and
@@ -57,8 +57,8 @@ public class TestClient {
 		try {
 			System.out.println(  );
 			getUserInput(
-				"Testing JMX RMI-Connector from client to server\n" +
-				"===========================================\n\n" +
+				"Testing JMX Connectors\n" +
+				"======================\n\n" +
 				"1. Instantiate local MBeanServer and add connector " +
 				"factory as first MBean to search your net\n" +
 				"=> hit any key to proceed"
@@ -83,9 +83,51 @@ public class TestClient {
 				new Object[] {},
 				new String[] {}
 			);
+			int lType = -1;
+         while( lType != 1 && lType != 2 ) {
+            lType = getUserInput(
+               "\n" +
+               "2. Do you want to use RMI or JMS to transfer Notifications\n" +
+               "=> enter 1 from RMI or 2 for JMS and then hit enter"
+            );
+            System.out.println( "Type: " + lType );
+         }
+         switch( lType ) {
+            case 1:
+               lType = JMXConnector.NOTIFICATION_TYPE_RMI;
+               break;
+            case 2:
+               lType = JMXConnector.NOTIFICATION_TYPE_JMS;
+         }
+         String lJMSName = null;
+         if( lType == JMXConnector.NOTIFICATION_TYPE_JMS ) {
+            while( lJMSName == null || lJMSName.trim().length() == 0 ) {
+               lJMSName = getUserInputLine(
+                  "\n" +
+                  "2.a. Enter the JMS Queue Factory Name and hit enter\n"
+               );
+            }
+         }
+			lLocalServer.setAttribute(
+				lFactoryInstance.getObjectName(),
+            new Attribute( "JMSName", lJMSName )
+         );
+         String lEJBAdaptorName = getUserInputLine(
+            "\n" +
+            "3. When you are expecting EJB-Connectors and the EJB-Adaptor\n" +
+            "   and the EJB-Adaptor does not have the default JNDI-Name then\n" +
+            "   then specified it here and hit enter\n"
+         );
+         if( lEJBAdaptorName == null || lEJBAdaptorName.trim().length() == 0 ) {
+            lEJBAdaptorName = null;
+         }
+			lLocalServer.setAttribute(
+				lFactoryInstance.getObjectName(),
+            new Attribute( "EJBAdaptorName", lEJBAdaptorName )
+         );
 			getUserInput(
 				"\n" +
-				"2. Lookup for all available connectors with the JNDI defined by jndi.properties\n" +
+				"4. Lookup for all available connectors with the JNDI defined by jndi.properties\n" +
 				"=> hit any key to proceed"
 			);
 			// Now let's list the available JMX Connectors
@@ -120,27 +162,25 @@ public class TestClient {
             lTemp.addElement( lName );
 				lMessage.append( " - " + ( lCount++ ) + ". connector is: " + lName + "\n" );
 			}
-			lMessage.append( "\n" );
-			lMessage.append( "3. Select your connector by entering its number\n" );
-			lMessage.append( "=> hit any key to proceed" );
-			int lChoice = getUserInput( lMessage.toString() );
-			Iterator i = lTemp.iterator();
-			lCount = 0;
-			while( i.hasNext() ) {
-				if( ( lCount++ ) == lChoice ) {
-					break;
-				}
-			}
-			final ConnectorFactoryImpl.ConnectorName lConnectorName = (ConnectorFactoryImpl.ConnectorName) i.next();
+         int lChoice = -1;
+         while( lChoice < 0 || lChoice > lTemp.size() ) {
+            lMessage.append( "\n" );
+            lMessage.append( "5. Select your connector by entering its number\n" );
+            lMessage.append( "=> hit any key to proceed" );
+            lChoice = getUserInput( lMessage.toString() );
+         }
+			final ConnectorFactoryImpl.ConnectorName lConnectorName = (ConnectorFactoryImpl.ConnectorName) lTemp.get( lChoice );
 			lMessage.setLength( 0 );
 			lMessage.append(
 				"\n" +
 				"You selected connector: " + lConnectorName + "\n\n"
 			);
 			getUserInput(
-				"5. Connect to the given connector\n" +
+            lMessage.toString() + "\n" +
+				"6. Connect to the given connector\n" +
 				"=> hit any key to proceed"
 			);
+         lMessage.setLength( 0 );
 			// Take the first server and its first protoccol and create a
 			// connection to the remote MBeanServer
 			JMXConnector lConnector = (JMXConnector) lLocalServer.invoke(
@@ -155,14 +195,14 @@ public class TestClient {
 			);
 			getUserInput(
 				"\n" +
-				"6. List all available MBeans and its attributes\n" +
+				"7. List all available MBeans and its attributes\n" +
 				"=> hit any key to proceed"
 			);
 			// List all services
 			listServices( lConnector );
 			getUserInput(
 				"\n" +
-				"7. Try to add a listener to all available MBeans.\n" +
+				"8. Try to add a listener to all available MBeans.\n" +
 				"Please note that this will keep this test client up and running waiting\n" +
 				"for an event from the server. If there is no event comming then try\n" +
 				"to shutdown the JBoss server.\n" +
@@ -295,9 +335,22 @@ public class TestClient {
 	private static int getUserInput( String lMessage ) {
 		int lReturn = -1;
 		try {
+         String lInput = getUserInputLine( lMessage );
+         lReturn = new Integer( lInput ).intValue();
+		}
+      catch( NumberFormatException nfe ) {
+      }
+		catch( Exception e ) {
+			e.printStackTrace();
+		}
+		return lReturn;
+	}
+	
+	private static String getUserInputLine( String lMessage ) {
+		String lReturn = "";
+		try {
 			System.out.println( lMessage );
-			lReturn = System.in.read();
-			System.in.skip( System.in.available() );
+         lReturn = new BufferedReader( new InputStreamReader( System.in ) ).readLine();
 		}
 		catch( Exception e ) {
 			e.printStackTrace();
