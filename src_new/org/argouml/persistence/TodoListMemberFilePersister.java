@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.7 2005/01/09 21:10:37 linus Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.8 2005/02/09 19:20:26 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class TodoListMemberFilePersister extends MemberFilePersister {
                 File tempFile = File.createTempFile("todo", null);
                 tempFile.deleteOnExit();
                 FileWriter w = new FileWriter(tempFile);
-                expander.expand(w, this);
+                expander.expand(w, member);
                 w.close();
                 addXmlFileToWriter(
                         (PrintWriter) writer,
