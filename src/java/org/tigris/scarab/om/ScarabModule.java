@@ -58,11 +58,14 @@ import java.util.HashMap;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.apache.torque.util.BasePeer;
+import org.apache.torque.oid.IDBroker;
 import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -756,58 +759,51 @@ try{
     }
 
     /**
-    /**
      * Saves the module into the database
-    public void save() throws Exception
+     */
+    public void save() 
+        throws TurbineSecurityException
     {
         // if new, make sure the code has a value.
-        if ( isNew() )
-        {
-            String code = getCode();
-            if ( code == null || code.length() == 0 )
-            {
-                if ( getParentId().equals(ROOT_ID) )
-                {
-                    throw new ScarabException("A top level module addition was"
-                        + " attempted without assigning a Code");
-                }
-
-                setCode(getModuleRelatedByParentId().getCode());
-
-                // insert a row into the id_table.
-                Criteria criteria = new Criteria(
-                    ModulePeer.getTableMap().getDatabaseMap().getName(), 5)
-                    .add(IDBroker.TABLE_NAME, getCode())
-                    .add(IDBroker.NEXT_ID, 1)
-                    .add(IDBroker.QUANTITY, 1);
-                BasePeer.doInsert(criteria);
-            }
-        }
-        super.save();
-    }
-     */
-
-    /**
-     * Saves the module into the database
-     */
-    public void save() throws TurbineSecurityException
-    {
         try
         {
-            // if new, relate the Module to the user who created it.
-            if ( isNew() ) 
+            if ( isNew() )
             {
-                RModuleUserRole relation = new RModuleUserRole();
+                String code = getCode();
+                if ( code == null || code.length() == 0 )
+                {
+                    if ( getParentId().equals(ROOT_ID) )
+                    {
+                        throw new ScarabException(
+                            "A top level module addition was"
+                            + " attempted without assigning a Code");
+                    }
+                    
+                    setCode(getModuleRelatedByParentIdCast().getCode());
+                    
+                    // insert a row into the id_table.
+                    Criteria criteria = new Criteria(
+                        ScarabModulePeer.getTableMap()
+                        .getDatabaseMap().getName(), 5)
+                        .add(IDBroker.TABLE_NAME, getCode())
+                        .add(IDBroker.NEXT_ID, 1)
+                        .add(IDBroker.QUANTITY, 1);
+                    BasePeer.doInsert(criteria);
+                }
+                
+                // FIXME! should use the turbine_user_group_role table
+                // relate the Module to the user who created it.
+                TurbineUserGroupRole relation = new TurbineUserGroupRole();
                 if ( getOwnerId() == null ) 
                 {
                     throw new ScarabException(
-                    "Can't save a project without first assigning an owner.");
+                     "Can't save a project without first assigning an owner.");
                 }         
                 relation.setUserId(getOwnerId());
                 // !FIXME! this needs to be set to the Module Owner Role
                 relation.setRoleId(new NumberKey("1"));
-                relation.setDeleted(false);
-                addRModuleUserRole(relation);
+                relation.setGroupId(getModuleId());
+                relation.save();
             }
             super.save();
         }
@@ -816,7 +812,6 @@ try{
             throw new TurbineSecurityException(e.getMessage(), e);
         }
     }
-
 
     /*
     public class OptionInList
