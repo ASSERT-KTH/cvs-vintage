@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.42 2001/11/09 21:51:57 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.43 2001/11/10 02:26:47 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -194,23 +194,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         AttributeGroup ag = null;
     
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String issueTypeId = data.getParameters().getString("issueTypeId");
-        if (issueTypeId == null || issueTypeId.length() == 0)
-        {
-            data.setMessage("The artifact type id was not set");
-            return ag;
-        }
-        IssueType issueType = null;
-        try
-        {
-            issueType = (IssueType) IssueTypePeer
-                        .retrieveByPK(new NumberKey(issueTypeId));
-        }
-        catch (Exception e)
-        {
-            data.setMessage("The artifact type id was invalid.");
-            return ag;            
-        }
+        IssueType issueType = getIssueType(data);
 
         ModuleEntity module = scarabR.getCurrentModule();
         List groups = issueType.getAttributeGroups(module);
@@ -220,7 +204,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         ag.setName("attribute group " + Integer.toString(groups.size()+1));
         ag.setOrder(groups.size() +2);
         ag.setModuleId(module.getModuleId());
-        ag.setIssueTypeId(issueTypeId);
+        ag.setIssueTypeId(issueType.getIssueTypeId());
         ag.save();
         return ag;
     }
@@ -232,26 +216,11 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String issueTypeId = data.getParameters().getString("issueTypeId");
-        if (issueTypeId == null || issueTypeId.length() == 0)
-        {
-            data.setMessage("Please select an Artifact type.");
-            return;
-        }
-        try
-        {
-            IssueType issueType = (IssueType) IssueTypePeer
-                                .retrieveByPK(new NumberKey(issueTypeId));
-        }
-        catch (Exception e)
-        {
-            data.setMessage("The artifact type id was invalid.");
-            return;            
-        }
+        IssueType issueType = getIssueType(data);
 
         RModuleIssueType rmit = new RModuleIssueType();
         rmit.setModuleId(scarabR.getCurrentModule().getModuleId());
-        rmit.setIssueTypeId(issueTypeId);
+        rmit.setIssueTypeId(issueType.getIssueTypeId());
         rmit.setActive(false);
         rmit.setDisplay(false);
         rmit.save();
@@ -309,7 +278,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         rma.setAttributeId(attributeId);
         rma.setIssueTypeId(issueType.getIssueTypeId());
         rma.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
-        rma.setOrder(module.getHighestSequence(issueType) + 1);
+        rma.setOrder(module.getLastAttribute(issueType) + 1);
         rma.save();
 
         // add module-attributeoption mappings
@@ -348,6 +317,86 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         raag.save();
         data.getParameters().add("groupid", groupId);
         setTarget(data, "admin,AttributeGroup.vm");            
+    }
+
+    private IssueType getIssueType( RunData data )
+        throws Exception
+    {
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+        IssueType issueType = null;
+        if (issueTypeId == null || issueTypeId.length() == 0)
+        {
+            data.setMessage("The artifact type is missing.");
+        } 
+        else
+        {
+            try
+            {
+                issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
+            }
+            catch (Exception e)
+            {
+                data.setMessage("The artifact type id was invalid.");
+            }
+        }
+        return issueType;
+   }
+        
+    
+    private Attribute getAttribute( RunData data )
+        throws Exception
+    {
+        Attribute attribute = null;
+        String attributeId = data.getParameters().getString("attributeid");
+        if (attributeId == null || attributeId.length() == 0)
+        {
+            data.setMessage("Attribute id is missing.");
+        } 
+        else
+        {
+            attribute = Attribute.getInstance(new NumberKey(attributeId));
+        } 
+        return attribute;
+    }
+
+
+    /**
+     * Selects option to add to attribute.
+     */
+    public void doSelectattributeoption( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        String optionId = data.getParameters().getString("optionId");
+        if (optionId == null || optionId.length() == 0)
+        {
+            data.setMessage("Please select an attribute option.");
+            return;
+        } 
+        AttributeOption option = AttributeOption.getInstance(new NumberKey(optionId));
+        IssueType issueType = getIssueType(data);
+        ModuleEntity module = scarabR.getCurrentModule();
+
+        RModuleOption rmo = new RModuleOption();
+        rmo.setModuleId(module.getModuleId());
+        rmo.setIssueTypeId(issueType.getIssueTypeId());
+        rmo.setOptionId(optionId);
+        rmo.setDisplayValue(option.getName());
+        rmo.setOrder(module.getLastAttributeOption(option.getAttribute(),
+                                                            issueType) + 1);
+        rmo.save();
+
+        // add module-attributeoption mappings to template type
+        RModuleOption rmo2 = rmo.copy();
+        rmo2.setOptionId(optionId);
+        rmo2.setModuleId(module.getModuleId());
+        rmo2.setIssueTypeId(issueType.getTemplateId());
+        rmo2.save();
+
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
@@ -594,10 +643,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-
-        String issueTypeId = data.getParameters().getString("issueTypeId");
-        IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
+        IssueType issueType = getIssueType(data);
         ModuleEntity module = scarabR.getCurrentModule();
         List rmas = new ArrayList (module
                            .getRModuleAttributes(issueType, false));
@@ -685,19 +731,9 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Attribute attribute = getAttribute(data);
 
-        boolean isValid = true;
-        String attributeId = data.getParameters().getString("attributeid");
-        if (attributeId == null)
-        {
-            data.setMessage("Attribute id is missing.");
-            isValid = false;
-        } 
-       
-        Attribute attribute = Attribute
-                              .getInstance(new NumberKey(attributeId));
-
-        if ( intake.isAllValid() && isValid)
+        if ( intake.isAllValid())
         {
             ModuleEntity me = scarabR.getCurrentModule();
             IssueType issueType = scarabR.getCurrentIssueType();
@@ -729,9 +765,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ModuleEntity module = scarabR.getCurrentModule();
-        String issueTypeId = data.getParameters().getString("issueTypeId");
-        IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
+        IssueType issueType = getIssueType(data);
         List attributeGroups = issueType.getAttributeGroups(module);
 
         for (int i =0; i<keys.length; i++)
