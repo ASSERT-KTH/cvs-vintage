@@ -141,6 +141,11 @@ public final class Parameters extends MultiMap {
 	// create a new element in the linked list
 	// note that we reuse the child, if any - pop will not
 	// set child to null !
+	if( currentChild==null ) {
+	    currentChild=new Parameters();
+	    currentChild.parent=this;
+	    return;
+	}
 	if( currentChild.child==null ) {
 	    currentChild.child=new Parameters();
 	    currentChild.child.parent=currentChild;
@@ -198,7 +203,8 @@ public final class Parameters extends MultiMap {
      */
     private void merge() {
 	// recursive
-
+	//System.out.println("Merging " + this + " with " +
+	//   parent + " " + didMerge);
 	// Local parameters first - they take precedence as in spec.
 	handleQueryParameters();
 
@@ -235,6 +241,8 @@ public final class Parameters extends MultiMap {
 	if( didQueryParameters ) return;
 	
 	didQueryParameters=true;
+	if( queryMB==null )
+	    return;
 	String qString=queryMB.toString();
 	if(qString!=null) {
 	    processFormData( qString );
