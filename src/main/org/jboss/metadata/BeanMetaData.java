@@ -40,7 +40,7 @@ import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.74 $
+ * @version $Revision: 1.75 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -948,6 +948,8 @@ public abstract class BeanMetaData
       Element securityIdentityElement = getOptionalChild(element, "security-identity");
       if (securityIdentityElement != null)
       {
+         if( securityIdentity == null )
+            throw new DeploymentException(ejbName+", security-identity in jboss.xml has no match in ejb-jar.xml");
          String runAsPrincipal = getElementContent(getUniqueChild(securityIdentityElement,
                  "run-as-principal"), securityIdentity.getRunAsPrincipalName());
          securityIdentity.setRunAsPrincipalName(runAsPrincipal);
