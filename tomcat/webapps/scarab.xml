@@ -2,7 +2,8 @@
 The docBase attribute defines where Tomcat looks for the Scarab webapp.  
 -->
 
-<!--  Uncomment me for in-place development -->
+<!--  Run the Scarab for in-place development -->
+<!--
 <Context path="/scarab" docBase="..\..\src\webapp" debug="0" reloadable="true">
    <Logger className="org.apache.catalina.logger.FileLogger"
              prefix="scarab_log." suffix=".txt"
@@ -11,7 +12,9 @@ The docBase attribute defines where Tomcat looks for the Scarab webapp.
         className="org.apache.catalina.loader.WebappLoader"/>
    <Manager debug="99"/>
 </Context>
+-->
 
+<!--  Run the Scarab built by Ant or using Maven war:webapp goals -->
 <!--
 <Context path="/scarab" docBase="..\..\target\scarab" debug="0" reloadable="true">
    <Logger className="org.apache.catalina.logger.FileLogger"
@@ -22,3 +25,13 @@ The docBase attribute defines where Tomcat looks for the Scarab webapp.
    <Manager debug="99"/>
 </Context>
 -->
+
+<!--  Run the Scarab meant for the distribution -->
+<Context path="/scarab" docBase="..\..\scarab" debug="0" reloadable="true">
+   <Logger className="org.apache.catalina.logger.FileLogger"
+             prefix="scarabsample_log." suffix=".txt"
+          timestamp="true"/>
+   <Loader checkInterval="2"
+        className="org.apache.catalina.loader.WebappLoader"/>
+   <Manager debug="99"/>
+</Context>

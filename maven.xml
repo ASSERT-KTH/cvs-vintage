@@ -51,7 +51,24 @@
      </ant:delete>  
   </postGoal>
   
-    
+
+  <goal name="scarab:sample" prereqs="scarab:clean, war:webapp" description="Create an out of the box ready distribution">    
+  	<ant:mkdir dir="target/dist"/>
+  	<ant:copy todir="target/dist/scarab">
+      <ant:fileset dir="target/scarab"
+          includes="**/*.*"/>
+    </ant:copy>
+  	<ant:copy todir="target/dist/tomcat">
+      <ant:fileset dir="tomcat"
+          includes="**/*.*"/>
+    </ant:copy>
+    <ant:copy todir="target/dist/hypersonic">
+      <ant:fileset dir="src/sql/hypersonic"
+          includes="**/*.*"/>
+    </ant:copy>
+    <attainGoal name="nsis"/>
+  </goal>
+  
   <goal name="scarab:deploy_docs_head" description="Copy documentation to scarab-gen head">
     <ant:echo message="Copying Site Documentation to ${scarab.docs.head}"/>
         
@@ -129,6 +146,12 @@
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/classes"/>
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/conf"/>
      <ant:delete dir="${warWebappBuildDir}/WEB-INF/sql"/>
+     <ant:delete dir="tomcat/work/Standalone"/>
+     <ant:delete>
+        <ant:fileset dir="tomcat/logs"
+          includes="**/*.txt" excludes="**/README.txt">
+        </ant:fileset>
+     </ant:delete>
 
      <attainGoal name="clean"/>
           

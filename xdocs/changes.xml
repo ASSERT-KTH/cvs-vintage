@@ -8,6 +8,10 @@
   <body>
     <release version="b19" date="in cvs">
 	  <action dev="epugh" type="add">
+        Add goal scarab:sample that leverages NSIS to create an installer for windows that bundles a Scarab, 
+        Hypersonic, and Tomcat.  This is already to install and run!
+      </action>    
+	  <action dev="epugh" type="add">
         First cut at using Hypersonic as the embedded database.  The database must manually be started via
         a batch file, but then can be used for running unit tests or sampling the webapp.
       </action>         
