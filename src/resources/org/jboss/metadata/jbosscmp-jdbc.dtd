@@ -1,0 +1,333 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!--
+This is the XML DTD for the jbosscmp-jdbc deployment descriptor.
+  <!DOCTYPE jaws PUBLIC
+      "-//JBoss//DTD jbosscmp-jdbc//EN"
+      "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc.dtd">
+-->
+
+<!--                    jbosscmp-jdbc                              -->
+<!--                    Top level element for jboss cmp2 for jdbc
+                        datasources                                -->
+<!ELEMENT  jbosscmp-jdbc
+                        (defaults, (enterprise-beans, relationships?,
+                         dependent-value-classes?)?)                   >
+
+<!--                    defaults                                   -->
+<!--                    Default values for many entity bean
+                        settings                                   -->
+<!ELEMENT  defaults     (datasource, debug, create-table,
+                         remove-table, tuned-updates, read-only,
+                         time-out, select-for-update, pk-constraint,
+                         relation-mapping-style)                     >
+
+
+<!--                    datasource                                 -->
+<!--                    datasource for connections to underlying
+                        persistent store.                          -->
+<!ELEMENT  datasource   (#PCDATA)                                      >
+
+
+<!--                    debug                                      -->
+<!--                    Turns on sql logging                       -->
+<!ELEMENT  debug        (#PCDATA)                                      >
+
+
+
+
+<!--                    create-table                               -->
+<!--                    Should the persistence manager attempt to
+                        create tables if they are not present?
+                        (true/false)                               -->
+<!ELEMENT  create-table (#PCDATA)                                      >
+
+
+<!--                    remove-table                               -->
+<!--                    Should the persistence manager attempt to
+                        remove tables on shutdown? (true/false)    -->
+<!ELEMENT  remove-table (#PCDATA)                                      >
+
+
+<!--                    tuned-updates                              -->
+<!--                    Should the persistence manager include
+                        only modified fields in update statements?
+                        (true/false)                               -->
+<!ELEMENT  tuned-updates (#PCDATA)                                      >
+
+
+<!--                    read-only                                  -->
+<!--                    Is the bean read-only? (true/false)        -->
+<!ELEMENT  read-only    (#PCDATA)                                      >
+
+
+<!--                    time-out                                   -->
+<!--                    Timeout value for connection activity 
+                        (milliseconds).                            -->
+<!ELEMENT  time-out     (#PCDATA)                                      >
+
+
+<!--                    select-for-update                          -->
+<!--                    Should select statements lock using select
+                        for update? (true/false)                   -->
+<!ELEMENT  select-for-update
+                        (#PCDATA)                                      >
+
+
+<!--                    pk-constraint                              -->
+<!--                    Should the persistence manager generate
+                        primary keys for generated tables?
+                        (true/false)                               -->
+<!ELEMENT  pk-constraint(#PCDATA)                                      >
+
+
+<!--                    relation-mapping-style                     -->
+<!--                    Relation mapping style (foreign-key/??)    -->
+<!ELEMENT  relation-mapping-style
+                        (#PCDATA)                                      >
+
+
+
+<!--                    enterprise-beans                           -->
+<!--                    Element containing all enterprise beans
+                        for cmp-2                                  -->
+<!ELEMENT  enterprise-beans
+                        (entity*)                                    >
+
+<!--                    entity                                     -->
+<!--                    Metadata for one entity bean               -->
+<!ELEMENT  entity       (ejb-name, datasource?, table-name?, cmp-field*,
+                         eager-load?, lazy-load-groups*, query*)      >
+
+
+<!--                    ejb-name                                   -->
+<!--                    Name of the entity ejb                     -->
+<!ELEMENT  ejb-name     (#PCDATA)                                      >
+
+
+<!--                    table-name                                 -->
+<!--                    Name of the database table to store
+                        entities in                                -->
+<!ELEMENT  table-name   (#PCDATA)                                      >
+
+
+<!--                    cmp-field                                  -->
+<!--                    Metadata for one cmp field                 -->
+<!ELEMENT  cmp-field    (field-name, ((column-name, jdbc-type?,
+                         sql-type?) | (property*)))                                  >
+
+
+<!--                    field-name                                 -->
+<!--                    Name of entity cmp field                   -->
+<!ELEMENT  field-name   (#PCDATA)                                      >
+
+
+<!--                    column-name                                -->
+<!--                    Name of column in table.                   -->
+<!ELEMENT  column-name  (#PCDATA)                                      >
+
+
+<!--                    jdbc-type                                  -->
+<!--                    JDBC type for use with driver.             -->
+<!ELEMENT  jdbc-type    (#PCDATA)                                      >
+ 
+
+<!--                    sql-type                                   -->
+<!--                    SQL type specification for use in defining
+                        tables.                                    -->
+<!ELEMENT  sql-type     (#PCDATA)                                      >
+
+
+<!--                    property                                   -->
+<!--                    A component of a cmp-field                 -->
+<!ELEMENT  property     (property-name, column-name?, jdbc-type?,
+                         sql-type?)                                  >
+
+
+<!--                    property-name                              -->
+<!--                    Name of a property component of a cmp
+                        field.                                     -->
+<!ELEMENT  property-name
+                        (#PCDATA)                                      >
+
+
+<!--                    eager-load                                 -->
+<!--                    Fields to load by default                  -->
+<!ELEMENT  eager-load   (field-name*)                                >
+
+
+<!--                    lazy-load-groups                           -->
+<!--                    groups of fields to be loaded together.    -->
+<!ELEMENT  lazy-load-groups
+                        (lazy-load-group*)                           >
+
+
+<!--                    lazy-load-group                            -->
+<!--                    One named group of fields to be loaded
+                        together.                                  -->
+<!ELEMENT  lazy-load-group
+                        (description, field-name+)                   >
+
+
+<!--                    description                                -->
+<!--                    Descriptive text                           -->
+<!ELEMENT  description  (#PCDATA)                                      >
+
+
+<!--                    query                                      -->
+<!--                    Description of a query                     -->
+<!ELEMENT  query        (description, query-method, declared-sql?)   >
+
+
+<!--                    query-method                               -->
+<!--                    Name and parameters for the method that
+                        executes the query.                        -->
+<!ELEMENT  query-method (method-name, method-params)                >
+
+
+<!--                    method-name                                -->
+<!--                    Name of method that will execute query     -->
+<!ELEMENT  method-name  (#PCDATA)                                      >
+
+
+<!--                    method-params                              -->
+<!--                    Parameters for a query                     -->
+<!ELEMENT  method-params (method-param*)                              >
+
+
+<!--                    method-param                               -->
+<!--                    The java class of one parameter for a query-->
+<!ELEMENT  method-param (#PCDATA)                                      >
+
+
+<!--                    declared-sql                               -->
+<!--                    Explicitly declared sql fragments.         -->
+<!ELEMENT  declared-sql (select?, from?, where?, order?)                               >
+
+<!--                    select                                     -->
+<!--                    Select clause for sql query.               -->
+<!ELEMENT  select       (distinct?, ejb-name, field-name*)           >
+
+
+<!--                    from                                       -->
+<!--                    From clause for sql query.
+                        Example:   , FullAddressEJB as a           -->
+<!ELEMENT  from         (#PCDATA)                                      >
+
+<!--                    distinct                                   -->
+<!--                    Empty distinct element to specify distinct
+                        keyword                                    -->
+<!ELEMENT  distinct     EMPTY                                        >
+
+
+<!--                    where                                      -->
+<!--                    Where clause for sql query. Example: 
+                <where>TITLE={0} OR ARTIST={0} OR TYPE={0} OR NOTES={0}</where>  
+                                                                   -->
+<!ELEMENT  where        (#PCDATA)                                      >
+
+
+<!--                    order                                      -->
+<!--                    Order clause for sql statement             -->
+<!ELEMENT  order        (#PCDATA)                                      >
+
+
+<!--                    relationships                              -->
+<!--                    Describes relationships between cmp 2
+                        entity beans                               -->
+<!ELEMENT  relationships
+                        (ejb-relation*)                              >
+
+
+<!--                    ejb-relation                               -->
+<!--                    Describes a relationship between cmp 2
+                        entity beans                               -->
+<!ELEMENT  ejb-relation (ejb-relation-name, 
+                        (foreign-key-mapping | table-mapping))     >
+
+
+<!--                    ejb-relation-name                          -->
+<!--                    Name of an ejb-relation                    -->
+<!ELEMENT  ejb-relation-name
+                        (#PCDATA)                                      >
+
+
+<!--                    foreign-key-mapping                        -->
+<!--                    Mapping between columns in the
+                        relationship.                              -->
+<!ELEMENT  foreign-key-mapping
+                        (ejb-relationship-role, ejb-relationship-role)?
+                                                                     >
+
+
+<!--                    ejb-relationship-role                      -->
+<!--                    Role in an ejb-relationship                -->
+<!ELEMENT  ejb-relationship-role
+                        (ejb-relationship-role-name,
+                         (foreign-key-fields | table-key-fields))                         >
+
+
+<!--                    ejb-relationship-role-name                 -->
+<!--                    Name of an ejb relationship role           -->
+<!ELEMENT  ejb-relationship-role-name
+                        (#PCDATA)                                      >
+
+
+<!--                    foreign-key-fields                         -->
+<!--                    Set of foreign key fields in an ejb
+                        relationship                               -->
+<!ELEMENT  foreign-key-fields
+                        (foreign-key-field*)                         >
+
+<!--                    foreign-key-field                          -->
+<!--                    One foreign key field                      -->
+<!ELEMENT  foreign-key-field
+                        (field-name, column-name)                    >
+
+
+<!--                    table-mapping                              -->
+<!--                    Table mapping style of ejb-relation (many
+                        to many)                                   -->
+<!ELEMENT  table-mapping(table-name, create-table, remove-table,
+                         read-only, time-out, select-for-update,
+                         pk-constraint, 
+                         (ejb-relationship-role, ejb-relationship-role)?)>
+
+
+<!--                    table-key-fields                           -->
+<!--                    Table key fields in a table-mapping
+                        relationship.                              -->
+<!ELEMENT  table-key-fields
+                        (table-key-field*)                           >
+
+
+<!--                    table-key-field                            -->
+<!--                    One field in a table-key-fields            -->
+<!ELEMENT  table-key-field
+                        (field-name, column-name)                    >
+
+
+<!--There may be a problem.  It appears possible that the
+table/foreign key mapping choice is correlated with the
+table-key-fields/foreign-key-fields choices in
+ejb-relationship-role,-->
+
+
+
+<!--                    dependent-value-classes                    -->
+<!--                    Dependent value classes                    -->
+<!ELEMENT  dependent-value-classes
+                        (dependent-value-class*)                     >
+
+
+<!--                    dependent-value-class                      -->
+<!--                    dependent value class metadata             -->
+<!ELEMENT  dependent-value-class
+                        (description, class, property+)              >
+
+
+<!--                    class                                      -->
+<!--                    Class name of dependent value object       -->
+<!ELEMENT  class        (#PCDATA)                                      >
+
+
