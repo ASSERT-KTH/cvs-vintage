@@ -211,7 +211,6 @@ public class AddressParser {
                 }
             }
 
-            System.out.println("[DEBUG2!!!!] newaddress: " + new_address);
             out.add(new_address);
             new_address = "";
         }
