@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# The directory which the SQL scripts have been pre-processed into
+POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
+
+# Sanity check
+if [ ! -d "${POPULATION_SCRIPT_DIR}" ]; then
+    echo "Population script directory '${POPULATION_SCRIPT_DIR}' does not exist"
+    exit 1
+fi
+
 # Define these values if you need to
 if [ "$1" != "" ] ; then
     USER=$1
@@ -51,6 +60,6 @@ ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 FILES=`cat ${LOAD_ORDER}`
 
 for i in ${FILES} ; do
-    echo "Importing $i..."
-    ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < $i
+    echo "Importing ${i}..."
+    ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
 done
