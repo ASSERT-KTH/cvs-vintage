@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.19 2002/02/02 00:21:43 elicia Exp $
+    @version $Id: TemplateList.java,v 1.20 2002/02/06 22:28:50 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -91,33 +91,9 @@ public class TemplateList extends RequireLoginFirstAction
                                 "see error messages."; 
 
     /**
-        Saves template data.
-    */
-    public void doSavetemplatedata( RunData data, TemplateContext context )
-         throws Exception
-    {        
-        IntakeTool intake = getIntakeTool(context);        
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = scarabR.getIssueTemplate();
-        IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
-        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
-        Field name = infoGroup.get("Name");
-        name.setRequired(true);
-
-        if (intake.isAllValid() ) 
-        {
-            infoGroup.setProperties(info);
-            info.setIssueId(issue.getIssueId());
-            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
-            new ContextAdapter(context));
-        }
-    }
-
-    /**
         Saves template.
     */
-    public void doSaveattributes( RunData data, TemplateContext context )
+    public void doSubmit( RunData data, TemplateContext context )
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);        
@@ -129,9 +105,13 @@ public class TemplateList extends RequireLoginFirstAction
         AttributeValue aval = null;
         Group group = null;
         
+        IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
+        Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
         Group issueGroup = intake.get("Issue", issue.getQueryKey() );
         issueGroup.setProperties(issue);
 
+        Field name = infoGroup.get("Name");
+        name.setRequired(true);
 
         if (intake.isAllValid() ) 
         {
@@ -144,7 +124,6 @@ public class TemplateList extends RequireLoginFirstAction
             {
                 aval = (AttributeValue)avMap.get(iter.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
- 
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
@@ -155,6 +134,13 @@ public class TemplateList extends RequireLoginFirstAction
             // get issue type id = the child type of the current issue type
             issue.setTypeId(scarabR.getCurrentIssueType().getTemplateId());
             issue.save();
+
+            // Save template info
+            infoGroup.setProperties(info);
+            info.setIssueId(issue.getIssueId());
+            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
+                new ContextAdapter(context));
+
         } 
         else
         {
@@ -200,20 +186,5 @@ public class TemplateList extends RequireLoginFirstAction
         setTarget(data, template);
     }
     
-    public void doCreatenew( RunData data, TemplateContext context )
-        throws Exception
-    {
-        setTarget(data, "SaveTemplate.vm");            
-    }
 
-    /**
-        Saves both template info and attribute data, anc cancels.
-    */
-    public void doDone( RunData data, TemplateContext context )
-         throws Exception
-    {        
-         doSavetemplatedata (data, context);
-         doSaveattributes(data, context);
-         doCancel(data, context);
-    }
 }
