@@ -3,6 +3,7 @@
 #macro (assignIssue $issue)
     #set ($module = $issue.Module)
     #set ($issueType = $issue.IssueType)
+
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
 
@@ -70,7 +71,7 @@
   #set ($singleIssue = $scarabR.getIssue($singleIssueId))
   #set ($issueListSize = 1)
 #end
-#set ($userAttrs = $scarabR.getUserAttributes($issueList)) 
+#set ($userAttrs = $scarabR.getUserAttributes($issueList, true)) 
 #set ($reason = $data.Parameters.getString("reason" , ""))
 #if ($userAttrs.isEmpty())
  <p class="infomark"><em>$l10n.NoAssignableUserAttributes</em></p>
@@ -137,7 +138,7 @@
 </div>
 
 #set ($mitList = $scarabR.getMITList($issueList))
-#userList($mitList false false $parameters)
+#userList($mitList false false $parameters true)
 
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
