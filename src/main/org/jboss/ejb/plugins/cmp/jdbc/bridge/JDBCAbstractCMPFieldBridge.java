@@ -36,24 +36,24 @@ import org.jboss.logging.Logger;
  * by JDBCUtil. It is left to subclasses to implement the logic for getting
  * and setting instance values and dirty checking, as this is dependent on
  * the CMP version used.
- *
+ * <p/>
  * Life-cycle:
- *      Tied to the EntityBridge.
- *
+ * Tied to the EntityBridge.
+ * <p/>
  * Multiplicity:
- *      One for each entity bean cmp field.
+ * One for each entity bean cmp field.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.23 $
- *
- * <p><b>Revisions:</b>
- *
- * <p><b>20021023 Steve Coy:</b>
- * <ul>
- * <li>Changed {@link #loadArgumentResults} so that it passes the jdbc type to
- * </ul>
+ * @version $Revision: 1.24 $
+ *          <p/>
+ *          <p><b>Revisions:</b>
+ *          <p/>
+ *          <p><b>20021023 Steve Coy:</b>
+ *          <ul>
+ *          <li>Changed {@link #loadArgumentResults} so that it passes the jdbc type to
+ *          </ul>
  */
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
 {
@@ -102,17 +102,19 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       this.jdbcContextIndex = manager.getEntityBridge().getNextJDBCContextIndex();
 
       if(!metadata.isRelationTableField())
+      {
          tableIndex = manager.getEntityBridge().addTableField(this);
+      }
       else
+      {
          tableIndex = -1;
+      }
 
       final JDBCTypeFactory typeFactory = manager.getJDBCTypeFactory();
-      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(
-         typeFactory, metadata.getStateFactory(), fieldType
-      );
-      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(
-         typeFactory, metadata.getCheckDirtyAfterGet(), fieldType
-      );
+      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(typeFactory, metadata.getStateFactory(), fieldType);
+      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(typeFactory,
+         metadata.getCheckDirtyAfterGet(),
+         fieldType);
 
       this.log = createLogger(manager, fieldName);
    }
@@ -152,7 +154,9 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       return defaultFlags;
    }
 
-   /** get rid of it later */
+   /**
+    * get rid of it later
+    */
    public void addDefaultFlag(byte flag)
    {
       defaultFlags |= flag;
@@ -314,24 +318,43 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       if(!readOnly)
       {
          Object value;
-         if(fieldType == boolean.class)
+         boolean notNull = jdbcType.getNotNull()[0];
+         if(fieldType == boolean.class || (fieldType == Boolean.class && notNull))
+         {
             value = Boolean.FALSE;
-         else if(fieldType == byte.class)
-            value = new Byte((byte)0);
-         else if(fieldType == int.class)
+         }
+         else if(fieldType == byte.class || (fieldType == Byte.class && notNull))
+         {
+            value = new Byte((byte) 0);
+         }
+         else if(fieldType == int.class || (fieldType == Integer.class && notNull))
+         {
             value = new Integer(0);
-         else if(fieldType == long.class)
+         }
+         else if(fieldType == long.class || (fieldType == Long.class && notNull))
+         {
             value = new Long(0L);
-         else if(fieldType == short.class)
-            value = new Short((short)0);
-         else if(fieldType == char.class)
+         }
+         else if(fieldType == short.class || (fieldType == Short.class && notNull))
+         {
+            value = new Short((short) 0);
+         }
+         else if(fieldType == char.class || (fieldType == Character.class && notNull))
+         {
             value = new Character('\u0000');
-         else if(fieldType == double.class)
+         }
+         else if(fieldType == double.class || (fieldType == Double.class && notNull))
+         {
             value = new Double(0d);
-         else if(fieldType == float.class)
+         }
+         else if(fieldType == float.class || (fieldType == Float.class && notNull))
+         {
             value = new Float(0f);
+         }
          else
+         {
             value = null;
+         }
          setInstanceValue(ctx, value);
       }
    }
@@ -482,8 +505,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
 
    private Logger createLogger(JDBCStoreManager manager, String fieldName)
    {
-      return Logger.getLogger(
-         this.getClass().getName() +
+      return Logger.getLogger(this.getClass().getName() +
          "." +
          manager.getMetaData().getName() +
          "#" +
