@@ -120,6 +120,8 @@ public class LoaderInterceptor extends BaseInterceptor {
 	    } catch( MalformedURLException ex ) {
 	    }
 	}
+
+	// Add servlet.jar and jasper.jar
     }
     
     public void contextInit( Context context)
@@ -130,6 +132,10 @@ public class LoaderInterceptor extends BaseInterceptor {
 	
 	AdaptiveServletLoader loader=new AdaptiveServletLoader();
 	context.setServletLoader( loader );
+
+	// XXX Customize this - based on context prefs,
+	// select the right parent - it may be CM.getParentLoader()
+	loader.setParentLoader( this.getClass().getClassLoader());
 
 	URL classP[]=context.getClassPath();
 	for(int i=0; i<classP.length; i++ ) {

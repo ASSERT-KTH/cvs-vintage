@@ -144,7 +144,12 @@ public class LoaderInterceptor1 extends BaseInterceptor {
 	    dm=new DependManager();
 	    context.setDependManager( dm );
 	}
-	URLClassLoader urlLoader=URLClassLoader.newInstance( urls );
+
+	// XXX Customize this - based on context prefs,
+	// select the right parent - it may be CM.getParentLoader()
+	ClassLoader parent=this.getClass().getClassLoader();
+
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls, parent );
 	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
 
 	context.setClassLoader( dcl );
@@ -159,7 +164,11 @@ public class LoaderInterceptor1 extends BaseInterceptor {
 	DependManager dm=new DependManager();
 	context.setDependManager( dm );
 
-	URLClassLoader urlLoader=URLClassLoader.newInstance( urls );
+	// XXX Customize this - based on context prefs,
+	// select the right parent - it may be CM.getParentLoader()
+	ClassLoader parent=this.getClass().getClassLoader();
+
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls , parent);
 	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
 	
 	context.setClassLoader( dcl );
