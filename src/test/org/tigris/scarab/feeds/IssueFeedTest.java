@@ -1,5 +1,4 @@
-package org.tigris.scarab.test.mocks;
-
+package org.tigris.scarab.feeds;
 /* ================================================================
  * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
  * 
@@ -45,22 +44,32 @@ package org.tigris.scarab.test.mocks;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of CollabNet.
  */ 
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.test.BaseScarabTestCase;
+import org.tigris.scarab.test.mocks.MockScarabLink;
+import org.tigris.scarab.test.mocks.MockScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabToolManager;
 
-import org.tigris.scarab.services.security.ScarabSecurity;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedOutput;
 
 /**
  * @author Eric Pugh
- *
+ *  
  */
-public class MockScarabSecurity extends ScarabSecurity {
+public class IssueFeedTest extends BaseScarabTestCase {
 
-    public MockScarabSecurity() {
-        super();
+	public void testCreatingFeed() throws Exception {
+		ScarabToolManager stm = new ScarabToolManager(
+				new MockScarabLocalizationTool());
+		Issue issue = getIssue0();
+		Feed feed = new IssueFeed(issue, new MockScarabLink(), stm);
+		SyndFeed syndFeed = feed.getFeed();
+		syndFeed.setFeedType("rss_2.0");
+		SyndFeedOutput out = new SyndFeedOutput();
+		String stringOutput = out.outputString(syndFeed);
+		assertNotNull(stringOutput);
+		System.out.println(stringOutput);
+	}
 
-    }
-    protected String getPermissionImpl(String permConstant)
-    {
-        //return props.getString(MAP_PREFIX + permConstant,null);
-        return permConstant;
-    }
 }

@@ -46,21 +46,16 @@ package org.tigris.scarab.test.mocks;
  * individuals on behalf of CollabNet.
  */ 
 
-import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * @author Eric Pugh
  *
+ * Assist with unit testing code outside of Turbine
  */
-public class MockScarabSecurity extends ScarabSecurity {
-
-    public MockScarabSecurity() {
-        super();
-
-    }
-    protected String getPermissionImpl(String permConstant)
-    {
-        //return props.getString(MAP_PREFIX + permConstant,null);
-        return permConstant;
-    }
+public class MockScarabLocalizationTool extends ScarabLocalizationTool {
+		
+	public String get(String key){
+		return key;
+	}
 }

@@ -46,21 +46,23 @@ package org.tigris.scarab.test.mocks;
  * individuals on behalf of CollabNet.
  */ 
 
-import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.util.ScarabLink;
 
 /**
  * @author Eric Pugh
  *
+ * TODO To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Style - Code Templates
  */
-public class MockScarabSecurity extends ScarabSecurity {
+public class MockScarabLink extends ScarabLink {
 
-    public MockScarabSecurity() {
-        super();
 
-    }
-    protected String getPermissionImpl(String permConstant)
-    {
-        //return props.getString(MAP_PREFIX + permConstant,null);
-        return permConstant;
-    }
+	public ScarabLink getIssueIdAbsoluteLink(Issue issue) throws Exception {
+		return this;
+	}
+	
+	public String toString(){
+		return "http://MockLink";
+	}
 }
