@@ -1,3 +1,12 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
+// $Id: ClientDeployer.java,v 1.3 2003/11/22 21:33:36 tdiesler Exp $
+
 package org.jboss.deployment;
 
 import java.io.InputStream;
@@ -22,13 +31,17 @@ import org.jboss.naming.Util;
 import org.w3c.dom.Element;
 
 /** An XMBean resource implementation of a deployer for j2ee application
- * client jars 
- * 
+ * client jars
+ *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
+   public ClientDeployer()
+   {
+   }
+
    protected void startService() throws Exception
    {
       // register with MainDeployer
@@ -76,6 +89,23 @@ public class ClientDeployer extends SubDeployerSupport
       }
 
       return accepts;
+   }
+
+   /**
+    * Look for 'META-INF/webservicesclient.xml' and process it as nested deployment.
+    */
+   protected void processNestedDeployments(DeploymentInfo di) throws DeploymentException
+   {
+      super.processNestedDeployments(di);
+
+      // look for web service client deployments
+      URL webServiceClientUrl = di.localCl.getResource("META-INF/webservicesclient.xml");
+      if (webServiceClientUrl != null)
+      {
+         DeploymentInfo sub = new DeploymentInfo(webServiceClientUrl, di, getServer());
+         sub.localCl = di.localCl;
+         sub.localUrl = di.localUrl;
+      }
    }
 
    /** Parse the application-client.xml and jboss-client.xml descriptors.
