@@ -76,16 +76,17 @@
 <td><a href="$tabLink.addPathInfo("tab", "2")">$l10n.Personnel</a></td>
 #end
 #if ($tab.equals("3"))
-<th>$l10n.Comments</th>
+<th>$currentIssue.getComments(true).size() $l10n.Comments</th>
 #else
 #initializeTabLink()
-<td><a href="$tabLink.addPathInfo("tab", "3")">$l10n.Comments</a></td>
+<td><a href="$tabLink.addPathInfo("tab", "3")">$currentIssue.getComments(true).size() $l10n.Comments</a></td>
 #end
+#set ($nbDep  = ($currentIssue.Children.size() + $currentIssue.Parents.size()))
 #if ($tab.equals("4"))
-<th>$l10n.AttachmentsDependenciesURLs</th>
+<th>$l10n.format("AttachmentsDependenciesURLs",$currentIssue.ExistingAttachments.size(), $nbDep, $currentIssue.Urls.size())</th>
 #else
 #initializeTabLink()
-<td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.AttachmentsDependenciesURLs</a></td>
+<td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.format("AttachmentsDependenciesURLs",$currentIssue.ExistingAttachments.size(), $nbDep, $currentIssue.Urls.size())</a></td>
 #end
 #if ($tab.equals("5"))
 <th>$l10n.History</th>
