@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.28 $
+*   @version $Revision: 1.29 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -537,9 +537,10 @@ implements J2eeDeployerMBean
                Thread.currentThread().setContextClassLoader(appCl);
            }
        }
-       catch (MBeanException _mbe) {
+       catch (MBeanException e) {
            log.error("Starting "+moduleName+" failed!");
-           throw new J2eeDeploymentException("Error while starting "+moduleName+": " + _mbe.getTargetException().getMessage(), _mbe.getTargetException());
+           e.getTargetException().printStackTrace();
+           throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
        }
        catch (RuntimeErrorException e) {
            log.error("Starting "+moduleName+" failed!");
@@ -551,9 +552,10 @@ implements J2eeDeployerMBean
            e.getTargetException().printStackTrace();
            throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
        }
-       catch (JMException _jme) {
+       catch (JMException e) {
            log.error("Starting failed!");
-           throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + _jme.getMessage());
+           e.printStackTrace();
+           throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + e.getMessage());
        }
        finally {
            Thread.currentThread().setContextClassLoader(oldCl);
