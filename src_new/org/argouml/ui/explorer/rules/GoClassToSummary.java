@@ -1,4 +1,4 @@
-// $Id: GoClassToSummary.java,v 1.5 2003/12/26 17:56:35 alexb Exp $
+// $Id: GoClassToSummary.java,v 1.6 2004/03/24 20:04:42 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.argouml.i18n.Translator;
+//import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 
 /**
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  *
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  *
- * @author  alexb, $Author: alexb $
+ * @author  alexb, $Author: mvw $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoClassToSummary extends AbstractPerspectiveRule{

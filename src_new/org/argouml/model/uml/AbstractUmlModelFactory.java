@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.19 2004/02/24 08:02:50 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.20 2004/03/24 20:04:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.model.uml;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.UUIDManager;
 

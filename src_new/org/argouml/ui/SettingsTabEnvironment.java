@@ -1,4 +1,4 @@
-// $Id: SettingsTabEnvironment.java,v 1.15 2003/11/22 15:02:45 mvw Exp $
+// $Id: SettingsTabEnvironment.java,v 1.16 2004/03/24 20:04:42 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import java.awt.Insets;
 import java.io.File;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JFileChooser;
+//import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import org.argouml.application.ArgoVersion;

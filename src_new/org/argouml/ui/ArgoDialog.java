@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.8 2003/12/08 11:46:00 jhraigniac Exp $
+// $Id: ArgoDialog.java,v 1.9 2004/03/24 20:04:42 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ package org.argouml.ui;
 import java.awt.Frame;
 
 import javax.swing.AbstractButton;
-import javax.swing.JButton;
+//import javax.swing.JButton;
 
 import org.argouml.i18n.Translator;
 
