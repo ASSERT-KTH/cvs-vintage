@@ -156,7 +156,7 @@ public class Constants {
     public static final String 
         WEBAPP_DTD_PUBLIC_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
     public static final String
-        WEBAPP_DTD_RESOURCE = "/org/apache/tomcat/deployment/web.dtd";
+        WEBAPP_DTD_RESOURCE = "/org/apache/jasper/resources/web.dtd";
     
     /**
      * Default URLs to download the pluging for Netscape and IE.
