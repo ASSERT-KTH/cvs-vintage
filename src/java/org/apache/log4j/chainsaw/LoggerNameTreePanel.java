@@ -498,10 +498,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
       return;
     }
 
-    if (LogLog.isDebugEnabled())
-    {
       LogLog.debug("Collapsing all children of selected node");
-    }
 
     for (int i = 0; i < paths.length; i++)
     {
@@ -753,10 +750,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
 
   private void ensureRootExpanded()
   {
-    if (LogLog.isDebugEnabled())
-    {
       LogLog.debug("Ensuring Root node is expanded.");
-    }
 
     final DefaultMutableTreeNode root =
       (DefaultMutableTreeNode) logTreeModel.getRoot();
@@ -783,10 +777,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
       return;
     }
 
-    if (LogLog.isDebugEnabled())
-    {
       LogLog.debug("Expanding all children of selected node");
-    }
 
     for (int i = 0; i < paths.length; i++)
     {
@@ -1074,7 +1065,7 @@ final class LoggerNameTreePanel extends JPanel implements Rule
    * DOCUMENT ME!
    *
    * @author $author$
-   * @version $Revision: 1.21 $, $Date: 2003/12/17 04:28:04 $
+   * @version $Revision: 1.22 $, $Date: 2003/12/17 06:12:48 $
    *
    * @author Paul Smith <psmith@apache.org>
         *
