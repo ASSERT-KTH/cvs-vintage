@@ -28,17 +28,21 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
@@ -50,6 +54,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
+import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
 import org.columba.core.xml.XmlElement;
 
@@ -72,7 +77,8 @@ public class ProfileDialog extends JDialog
 	protected JButton helpButton;
 	protected JButton addButton;
 	protected JButton editButton;
-	protected JButton defaultButton;
+	//protected JButton defaultButton;
+	private DefaultListModel model;
 	protected JList list;
 	protected String selection;
 	protected JLabel nameLabel;
@@ -149,13 +155,15 @@ public class ProfileDialog extends JDialog
 		gridBagLayout.setConstraints(editButton, c);
 		eastPanel.add(editButton);
 
+		/*
 		Component strut2 = Box.createRigidArea(new Dimension(30, 5));
 		gridBagLayout.setConstraints(strut2, c);
 		eastPanel.add(strut2);
 
 		gridBagLayout.setConstraints(defaultButton, c);
 		eastPanel.add(defaultButton);
-
+		*/
+		
 		glue = Box.createVerticalGlue();
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
@@ -205,12 +213,14 @@ public class ProfileDialog extends JDialog
 		editButton.addActionListener(this);
 		editButton.setEnabled(false);
 
+		/*
 		// TODO: i18n
 		defaultButton = new ButtonWithMnemonic("Set &Default...");
 		defaultButton.setActionCommand("DEFAULT");
 		defaultButton.addActionListener(this);
 		defaultButton.setEnabled(false);
-
+		*/
+		
 		nameLabel = new JLabel("Choose Profile:");
 
 		checkBox = new JCheckBox("Don't ask on next startup.");
@@ -228,22 +238,23 @@ public class ProfileDialog extends JDialog
 				"extending_columba_2");
 
 		XmlElement profiles = ProfileManager.getInstance().getProfiles();
-		String[] profilesList = new String[profiles.count() + 1];
-		profilesList[0] = "Default";
+		model = new DefaultListModel();
+		model.addElement("Default");
 
 		for (int i = 0; i < profiles.count(); i++) {
 			XmlElement p = profiles.getElement(i);
 			String name = p.getAttribute("name");
-			profilesList[i+1] = name;
+			model.addElement(name);
 		}
 
-		list = new JList(profilesList);
+		list = new JList();
+		list.setModel(model);
 		list.addListSelectionListener(this);
-	
+
 		String selected = ProfileManager.getInstance().getSelectedProfile();
-		if ( selected != null)
+		if (selected != null)
 			list.setSelectedValue(selected, true);
-		
+
 		getRootPane().setDefaultButton(okButton);
 		getRootPane().registerKeyboardAction(this, "CLOSE",
 				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
@@ -257,9 +268,37 @@ public class ProfileDialog extends JDialog
 		if (action.equals("OK")) {
 			setVisible(false);
 		} else if (action.equals("ADD")) {
+			JFileChooser fc = new JFileChooser();
+			fc.setMultiSelectionEnabled(true);
+			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fc.setFileHidingEnabled(false);
+
+			if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				File location = fc.getSelectedFile();
+				Profile p = new Profile(location.getName(), location);
+				// add profile to profiles.xml
+				ProfileManager.getInstance().addProfile(p);
+
+				// add to listmodel
+				model.addElement(p.getName());
+				// select new item
+				list.setSelectedValue(p.getName(), true);
+			}
 
 		} else if (action.equals("EDIT")) {
 
+			String inputValue = JOptionPane.showInputDialog(
+					"Enter Profile Name:", selection);
+			
+			if ( inputValue == null ) return;
+			
+			// rename profile in profiles.xml
+			ProfileManager.getInstance().renameProfile(selection, inputValue);
+			
+			// modify listmodel
+			model.setElementAt(inputValue, model.indexOf(selection));
+			
+			selection = inputValue;
 		}
 	}
 
@@ -273,7 +312,7 @@ public class ProfileDialog extends JDialog
 		addButton.setEnabled(enabled);
 		editButton.setEnabled(enabled);
 		okButton.setEnabled(enabled);
-		defaultButton.setEnabled(enabled);
+		//defaultButton.setEnabled(enabled);
 
 		selection = (String) list.getSelectedValue();
 	}
@@ -284,7 +323,7 @@ public class ProfileDialog extends JDialog
 	public String getSelection() {
 		return selection;
 	}
-	
+
 	public boolean isDontAskedSelected() {
 		return checkBox.isSelected();
 	}

@@ -113,6 +113,19 @@ public class ProfileManager {
 		return null;
 	}
 
+	protected XmlElement getXmlElementForName(String name) {
+		for (int i = 0; i < profiles.count(); i++) {
+
+			XmlElement profile = profiles.getElement(i);
+			String n = profile.getAttribute("name");
+			if (name.equals(n)) {
+
+				return profile;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Get profile with location.
 	 * 
@@ -173,20 +186,21 @@ public class ProfileManager {
 	}
 
 	/**
-	 * Get formely selected profile. This was selected on the
-	 * previous startup of Columba.
+	 * Get formely selected profile. This was selected on the previous startup
+	 * of Columba.
 	 * 
-	 * @return		selected profile
+	 * @return selected profile
 	 */
 	public String getSelectedProfile() {
 		String selected = null;
 		selected = profiles.getAttribute("selected");
-		
-		if ( selected == null) selected = "Default";
-		
-		return selected; 
+
+		if (selected == null)
+			selected = "Default";
+
+		return selected;
 	}
-	
+
 	/**
 	 * Open dialog and prompt user for profile
 	 * 
@@ -194,26 +208,28 @@ public class ProfileManager {
 	 */
 	protected Profile promptForProfile() {
 		String s = profiles.getAttribute("dont_ask");
-		if ( s == null) s = "false";
-		
+		if (s == null)
+			s = "false";
+
 		boolean dontAsk = Boolean.valueOf(s).booleanValue();
-		
+
 		// use preselected profile
-		if ( dontAsk ) {
+		if (dontAsk) {
 			String selected = profiles.getAttribute("selected");
 			Profile p = getProfileForName(selected);
-			
+
 			return p;
-		} 
-		
+		}
+
 		// show profile choosing dialog
 		ProfileDialog d = new ProfileDialog();
 		String profileName = d.getSelection();
 
 		if (profileName.equals("Default")) {
 			profiles.addAttribute("selected", "Default");
-			profiles.addAttribute("dont_ask", new Boolean(d.isDontAskedSelected()).toString());
-			
+			profiles.addAttribute("dont_ask", new Boolean(d
+					.isDontAskedSelected()).toString());
+
 			// save to profiles.xml
 			try {
 				xml.save();
@@ -224,8 +240,9 @@ public class ProfileManager {
 			return new Profile("Default", location);
 		} else {
 			profiles.addAttribute("selected", profileName);
-			profiles.addAttribute("dont_ask", new Boolean(d.isDontAskedSelected()).toString());
-			
+			profiles.addAttribute("dont_ask", new Boolean(d
+					.isDontAskedSelected()).toString());
+
 			// save to profiles.xml
 			try {
 				xml.save();
@@ -244,6 +261,39 @@ public class ProfileManager {
 	 */
 	public XmlElement getProfiles() {
 		return profiles;
+	}
+
+	/**
+	 * Add new profile.
+	 * 
+	 * @param p
+	 *            new profile
+	 */
+	public void addProfile(Profile p) {
+		XmlElement profile = new XmlElement("profile");
+		profile.addAttribute("name", p.getName());
+		profile.addAttribute("location", p.getLocation().getPath());
+
+		profiles.addElement(profile);
+
+		// save to profiles.xml
+		try {
+			xml.save();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void renameProfile(String oldName, String newName) {
+		XmlElement element = getXmlElementForName(oldName);
+		element.addAttribute("name", newName);
+
+		// save to profiles.xml
+		try {
+			xml.save();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
