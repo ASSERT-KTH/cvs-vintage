@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.41 2003/10/26 16:40:02 alexb Exp $
+// $Id: TabProps.java,v 1.42 2003/11/05 12:56:58 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -185,10 +185,10 @@ public class TabProps
         _panels.put(FigText.class, new PropPanelString());
         // now a plugin
         // _panels.put(MModelImpl.class, new PropPanelModel());
-        _panels.put((Class)ModelFacade.USE_CASE/*MUseCaseImpl.class*/, new PropPanelUseCase());
+        //_panels.put((Class)ModelFacade.USE_CASE/*MUseCaseImpl.class*/, new PropPanelUseCase());
         //important: MStateImpl corresponds to PropPanelSimpleState not to PropPanelState!!
         //otherwise, spawing will not ne successful!!
-        _panels.put((Class)ModelFacade.STATE/*MStateImpl.class*/, new PropPanelSimpleState());       
+        _panels.put((Class)ModelFacade.STATEIMPL/*MStateImpl.class*/, new PropPanelSimpleState());       
     }
 
     /** Adds a property panel to the internal list. This allows a plugin to
@@ -264,7 +264,7 @@ public class TabProps
 
     public TabModelTarget findPanelFor(Class targetClass) {
         TabModelTarget p = (TabModelTarget) _panels.get(targetClass);
-        cat.debug("Getting prop panel for:" + targetClass + ", found" + p);
+        cat.info("Getting prop panel for:" + targetClass + ", found " + p);
         if (p == null) {
             Class panelClass = panelClassFor(targetClass);
             if (panelClass == null)
@@ -283,7 +283,7 @@ public class TabProps
             }
 
         } else
-            cat.debug("found props for " + targetClass.getName());
+            cat.info("found props for " + targetClass.getName());
         return p;
     }
 
@@ -293,6 +293,7 @@ public class TabProps
         String base = "";
 
         String targetClassName = targetClass.getName();
+	cat.info("Trying to locate panel for: " + targetClassName);
         int lastDot = targetClassName.lastIndexOf(".");
 
         //remove "ru.novosoft.uml"

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.152 2003/11/05 08:32:20 mkl Exp $
+// $Id: ModelFacade.java,v 1.153 2003/11/05 12:56:59 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,6 +87,7 @@ import ru.novosoft.uml.behavior.state_machines.MGuard;
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.behavior.state_machines.MSignalEvent;
 import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MStateImpl;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.behavior.state_machines.MSubmachineState;
@@ -232,6 +233,7 @@ public class ModelFacade {
     public static final Object MODEL = MModel.class;
     public static final Object SUBSYSTEM = MSubsystem.class;
     public static final Object STATE = MState.class;
+    public static final Object STATEIMPL = MStateImpl.class;
     public static final Object COMPOSITESTATE = MCompositeState.class;
     public static final Object STATEVERTEX = MStateVertex.class;
     public static final Object PSEUDOSTATE = MPseudostate.class;
