@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001 Slava Pestov
+ * Copyright (C) 2001, 2002 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@ import javax.swing.text.Segment;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: ContentManager.java,v 1.7 2002/02/20 03:17:23 spestov Exp $
+ * @version $Id: ContentManager.java,v 1.8 2002/05/31 06:52:16 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ContentManager
@@ -147,7 +147,7 @@ public class ContentManager
 	private void close(int newStart, int newEnd)
 	{
 		// Optimization
-		if(gapStart == newStart)
+		if(newStart == gapStart)
 		{
 			System.arraycopy(text,gapEnd,text,newEnd,length - gapStart);
 		}
