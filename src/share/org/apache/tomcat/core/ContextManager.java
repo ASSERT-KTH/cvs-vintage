@@ -514,7 +514,9 @@ public class ContextManager implements LogAware {
 	contextsV.removeElement(context);
     }
 
-    void doReload( Request req, Context context ) throws TomcatException {
+    public void doReload( Request req, Context context )
+	throws TomcatException
+    {
 	if( context==null ) return;
 
 	if( debug>0 ) log( "Reloading context " + context.toString());

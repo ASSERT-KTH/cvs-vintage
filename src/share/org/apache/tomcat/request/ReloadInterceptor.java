@@ -1,13 +1,9 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.5 2000/07/27 23:08:20 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/27 23:08:20 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,79 +55,55 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
-
-
-package org.apache.tomcat.util;
-
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.logging.*;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.io.FileNotFoundException;
-
-/**
- *
- * @author James Todd [gonzo@eng.sun.com
  */
 
-public class WARUtil {
 
-    static Logger.Helper log = new Logger.Helper("tc_log", "WARUtil");
-    
-    /** Expand a WAR/Jar file in a directory.
-     *  @param dir destination directory
-     *  @param war URL for the source WAR/JAR/ZIP file. Starting
-     *         and ending "/" will be removed
-     *
-     */ 
-    public static void expand(File dir, URL war)
-    throws MalformedURLException, IOException {
-        String s = trim(war.getFile(), "/");
-	URL u = new URL(s);
-	ZipInputStream zis = new ZipInputStream(u.openStream());
-	ZipEntry ze = null;
+package org.apache.tomcat.request;
 
-	while ((ze = zis.getNextEntry()) != null) {
-            try {
-		File f = new File(dir, ze.getName());
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-		if (ze.isDirectory()) {
-		    f.mkdirs(); 
-		} else {
-		    byte[] buffer = new byte[1024];
-		    int length = 0;
-		    FileOutputStream fos = new FileOutputStream(f);
-		    
-		    while ((length = zis.read(buffer)) >= 0) {
-			fos.write(buffer, 0, length);
-		    }
-		    
-		    fos.close();
-		}
-	    } catch( FileNotFoundException ex ) {
-		// ???
-		log.log("FileNotFoundException: " +  ze.getName() + " / " + s, Logger.ERROR );
-	    }
-	}
-
-	zis.close();
+/**
+ * This interceptor deals with context reloading.
+ *  This should be "AT_END" - just after the context is mapped, it
+ *  will determine if the context needs reload.
+ *
+ */
+public class ReloadInterceptor extends  BaseInterceptor
+{
+    public ReloadInterceptor() {
     }
 
-    private static String trim(String s, String t) {
-	if (s.startsWith(t)) {
-	    s = s.substring(t.length());
-	}
+    public int contextMap( Request request ) {
+	Context ctx=request.getContext();
+	if( ctx==null) return 0;
 	
-	if (s.endsWith(t)) {
-	    s = s.substring(0, s.length() - t.length());
-	}
+	// XXX This interceptor will be added per/context.
+	if( ! ctx.getReloadable() ) return 0;
 
-        return s;
+	if( ! ctx.shouldReload() ) return 0;
+
+	try {
+	    // Reload context.	
+	    ContextManager cm=ctx.getContextManager();
+	    ctx.reload();
+	    
+	    cm.doReload( request, ctx );
+	    
+
+	    // XXX XXX XXX
+	    // The right policy is ( IMHO ) to stop and start
+	    // the context. This way the requests that are executing
+	    // will finish, and all new requests will see a fresh new context.
+
+	    //	cm.removeContext( ctx );
+
+	} catch( TomcatException ex) {
+	    log( "Error reloading " + ex );
+	}
+	return 0;
     }
 }

@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.facade.*;
+import org.apache.tomcat.depend.*;
 import org.apache.tomcat.util.*;
 import java.security.*;
 import java.lang.reflect.*;
@@ -372,14 +373,20 @@ public class Context implements LogAware {
 	    // be able to access classloader and classpath
 	    
 	    if (name.equals("org.apache.tomcat.jsp_classpath")) {
-		String cp= getServletLoader().getClassPath();
-		return cp;
+		String separator = System.getProperty("path.separator", ":");
+		StringBuffer cpath=new StringBuffer();
+		for(int i=0; i< classPath.size(); i++ ) {
+		    URL cp = (URL)classPath.elementAt(i);
+		    if (cpath.length()>0) cpath.append( separator );
+		    cpath.append(cp.getFile());
+		}
+		return cpath.toString();
 	    }
 	    if( name.equals( "org.apache.tomcat.protection_domain") ) {
 		return getProtectionDomain();
 	    }
 	    if(name.equals("org.apache.tomcat.classloader")) {
-		return this.getServletLoader().getClassLoader();
+		return this.getClassLoader();
 	    }
 	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
 		if( ! allowAttribute(name) ) return null;
@@ -660,7 +667,7 @@ public class Context implements LogAware {
     boolean reload;
     // Vector<URL>, using URLClassLoader conventions
     Vector classPath=new Vector();
-    
+    DependManager dependM;
     
     /** The current class loader. This value may change if reload
      *  is used, you shouldn't cache the result
@@ -680,6 +687,8 @@ public class Context implements LogAware {
     public boolean shouldReload() {
 	if( servletL!=null) // backward compat
 	    return servletL.shouldReload();
+	if( dependM != null )
+	    return dependM.shouldReload();
 	return reload;
     }
 
@@ -690,6 +699,11 @@ public class Context implements LogAware {
     public void reload() {
 	if( servletL!=null) // backward compat
 	    servletL.reload();
+	Enumeration sE=servlets.elements();
+	while( sE.hasMoreElements() ) {
+	    ServletWrapper sw=(ServletWrapper)sE.nextElement();
+	    sw.reload();
+	}
 	// XXX todo
     }
 
@@ -705,15 +719,23 @@ public class Context implements LogAware {
 	}
 	return urls;
     }
-	
-    // deprecated
-    private ServletLoader servletL;
 
-    public void setServletLoader(ServletLoader loader ) {
+    public void setDependManager(DependManager dm ) {
+	dependM=dm;
+    }
+
+    public DependManager getDependManager( ) {
+	return dependM;
+    }
+    
+    // deprecated
+    private org.apache.tomcat.loader.AdaptiveServletLoader servletL;
+
+    public void setServletLoader(org.apache.tomcat.loader.AdaptiveServletLoader loader ) {
 	this.servletL=loader;
     }
 
-    private ServletLoader getServletLoader() {
+    private org.apache.tomcat.loader.AdaptiveServletLoader getServletLoader() {
 	return servletL;
     }
 
@@ -869,40 +891,18 @@ public class Context implements LogAware {
 
     // -------------------- Deprecated
     // tomcat specific properties
-    private boolean isWorkDirPersistent = false;
     private String engineHeader = null;
-    private URL documentBase;
-    private URL servletBase = null;
-    private boolean isInvokerEnabled = false;
-    // for serving WARs directly
-    private File warDir = null;
-    private boolean isWARExpanded = false;
-    private boolean isWARValidated = false;
-
-
 
     /**  @deprecated
      */
-    public boolean isInvokerEnabled() {
-        return isInvokerEnabled;
+    public String getEngineHeader() {
+	return engineHeader;
     }
 
     /**  @deprecated
      */
-    public void setInvokerEnabled(boolean isInvokerEnabled) {
-        this.isInvokerEnabled = isInvokerEnabled;
-    }
-
-    /**  @deprecated
-     */
-    public boolean isWorkDirPersistent() {
-        return this.isWorkDirPersistent;
-    }
-
-    /**  @deprecated
-     */
-    public void setWorkDirPersistent( boolean b ) {
-	isWorkDirPersistent=b;
+    public void setEngineHeader(String s) {
+        engineHeader=s;
     }
 
     /**  @deprecated
@@ -917,108 +917,6 @@ public class Context implements LogAware {
 	this.workDir = workDir;
     }
 
-    /** Set work dir using a String property
-     *  @deprecated
-     */
-    public void setWorkDirPath(String workDir) {
-	this.workDir=new File(workDir);
-    }
-
-    /**  @deprecated
-     */
-    public String getEngineHeader() {
-	return engineHeader;
-    }
-
-    /**  @deprecated
-     */
-    public void setEngineHeader(String s) {
-        engineHeader=s;
-    }
-
-//     /**  @deprecated
-//      */
-//     public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
-// 	this.rsProvider = rsProvider;
-//     }
-
-//     /**  @deprecated
-//      */
-//     public RequestSecurityProvider getRequestSecurityProvider() {
-// 	return this.rsProvider;
-//     }
-
-    /**  @deprecated
-     */
-    public File getWARDir() {
-        return this.warDir;
-    }
-
-    /**  @deprecated
-     */
-    public void setWARDir( File f ) {
-	warDir=f;
-    }
-
-    /**  @deprecated
-     */
-    public boolean isWARExpanded() {
-        return this.isWARExpanded;
-    }
-
-    /**  @deprecated
-     */
-    public void setIsWARExpanded(boolean isWARExpanded) {
-        this.isWARExpanded = isWARExpanded;
-    }
-
-    /**  @deprecated
-     */
-    public boolean isWARValidated() {
-        return this.isWARValidated;
-    }
-
-    /**  @deprecated
-     */
-    public void setIsWARValidated(boolean isWARValidated) {
-        this.isWARValidated = isWARValidated;
-    }
-
-    /**  @deprecated
-     */
-    public void addContextInterceptor( ContextInterceptor ci) {
-	getContainer().addContextInterceptor(ci);
-    }
-
-    /** @deprecated
-     */
-     public ContextInterceptor[] getContextInterceptors() {
-	 return getContainer().getContextInterceptors();
-     }
-
-    /**  @deprecated
-     */
-    public void addRequestInterceptor( RequestInterceptor ci) {
-	getContainer().addRequestInterceptor(ci);
-    }
-
-    /** @deprecated
-     */
-    public RequestInterceptor[] getRequestInterceptors() {
-	return getContainer().getRequestInterceptors();
-    }
- 
-     /**
-      * Get the SecurityManager Permissions for this Context.
-      *@deprecated Included in PD
-      */
-    public Object getPermissions() {
-	return perms;
-    }
-
-    public void setPermissions( Object o ) {
-	perms=o;
-    }
     
     public Object getProtectionDomain() {
 	return protectionDomain;
@@ -1028,44 +926,19 @@ public class Context implements LogAware {
 	protectionDomain=o;
     }
 
-
-    /** @deprecated - use getDocBase and URLUtil if you need it as URL
-     *  NOT USED INSIDE TOMCAT - ONLY IN OLD J2EE CONNECTORS !
-     */
-    public URL getDocumentBase() {
-	if( documentBase == null ) {
-	    if( docBase == null)
-		return null;
-	    try {
-		String absPath=docBase;
-
-		// detect absolute path ( use the same logic in all tomcat )
-		if (FileUtil.isAbsolute( docBase ) )
-		    absPath=docBase;
-	        else
-		    absPath = contextM.getHome() + File.separator + docBase;
-
-		try {
-		    absPath = new File(absPath).getCanonicalPath();
-		} catch (IOException npe) {
-		}
-
-		documentBase = new URL("file", "", absPath);
-
-	    } catch( MalformedURLException ex ) {
-		log("bad URL " + absPath, ex);
-	    }
-	}
-        return documentBase;
+    /**
+      * Get the SecurityManager Permissions for this Context.
+      */
+    public Object getPermissions() {
+	return perms;
     }
 
-    /** @deprecated - use setDocBase
-     */
-    public void setDocumentBase(URL s) {
-	// Used only by startup, will be removed
-        this.documentBase=s;
+    public void setPermissions( Object o ) {
+	perms=o;
     }
 
+    // -------------------- Virtual host support --------------------
+    
     /** Make this context visible as part of a virtual host
      */
     public void setHost( String h ) {

@@ -64,6 +64,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.depend.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -135,12 +136,33 @@ public class LoaderInterceptor1 extends BaseInterceptor {
     {
         ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
-	
-	URLClassLoader urlLoader=URLClassLoader.newInstance( urls );
 
-	context.setClassLoader( urlLoader );
+	DependManager dm=context.getDependManager();
+	if( dm==null ) {
+	    dm=new DependManager();
+	    context.setDependManager( dm );
+	}
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls );
+	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
+
+	context.setClassLoader( dcl );
     }
 
+    public void reload( Request req, Context context) throws TomcatException {
+	log( "Reload event " );
+	
+	ContextManager cm = context.getContextManager();
+	URL urls[]=context.getClassPath();
+
+	DependManager dm=new DependManager();
+	context.setDependManager( dm );
+
+	URLClassLoader urlLoader=URLClassLoader.newInstance( urls );
+	DependClassLoader dcl=new DependClassLoader( dm, urlLoader);
+	
+	context.setClassLoader( dcl );
+    }
+    
     private void getJars(Vector v, File f) {
         FilenameFilter jarfilter = new FilenameFilter() {
 		public boolean accept(File dir, String fname) {

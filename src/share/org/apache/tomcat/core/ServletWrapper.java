@@ -175,6 +175,19 @@ public class ServletWrapper extends Handler {
 	initialized=false;
     }
 
+    public void reload() {
+	if( initialized ) {
+	    try {
+		destroy();
+	    } catch(Exception ex ) {
+		log( "Error in destroy ", ex );
+	    }
+	}
+	servlet=null;
+	servletClass=null;
+	initialized=false;
+    }
+    
     /** Security Role Ref represent a mapping between servlet role names and
      *  server roles
      */
@@ -326,12 +339,12 @@ public class ServletWrapper extends Handler {
     */
     public void service(Request req, Response res) 
     {
-	try {
-	    handleReload(req);
-	} catch( TomcatException ex ) {
-	    // what to do ?
-	    log("in handleReload request=" + req, ex);
-	}
+// 	try {
+// 	    handleReload(req);
+// 	} catch( TomcatException ex ) {
+// 	    // what to do ?
+// 	    log("in handleReload request=" + req, ex);
+// 	}
 
 	// <servlet><jsp-file> case
 	if( path!=null ) {

@@ -135,6 +135,12 @@
         <RequestInterceptor 
             className="org.apache.tomcat.request.StaticInterceptor" 
             debug="0" listings="true" />
+        
+	<!-- Handle reloads - will be moved to per/context
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.ReloadInterceptor" 
+            debug="0" />
 
         <!-- Plug a session manager. You can plug in more advanced session
              modules.

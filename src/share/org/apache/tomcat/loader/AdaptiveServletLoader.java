@@ -73,7 +73,7 @@ import java.security.*;
  * @deprecated No longer needed.
  */
 public class AdaptiveServletLoader  extends AdaptiveClassLoader
-    implements ServletLoader
+    //    implements ServletLoader
 {
     AdaptiveClassLoader classL;
     static boolean jdk12=false;
