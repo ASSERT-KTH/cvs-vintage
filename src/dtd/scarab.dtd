@@ -19,10 +19,10 @@
 <!ELEMENT created-date (#PCDATA)>
 <!ATTLIST created-date format CDATA #REQUIRED>
 
-<!ELEMENT transaction (type, committed-by, attachment*, activity+)>
+<!ELEMENT transaction (type, committed-by, created-date, attachment*, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (attribute, description)>
+<!ELEMENT activity (attribute, description, end-date)>
 
 <!ELEMENT attribute (name, value, old-value?, type)>
 
@@ -43,5 +43,6 @@
 <!ELEMENT modified-by (#PCDATA)>
 <!ELEMENT committed-by (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
+<!ELEMENT end-date (#PCDATA)>
 <!ELEMENT value (#PCDATA)>
 <!ELEMENT old-value (#PCDATA)>
