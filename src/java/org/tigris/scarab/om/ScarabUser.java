@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Issue;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.36 2001/10/02 23:51:40 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.37 2001/10/03 00:52:44 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -86,5 +86,5 @@ public interface ScarabUser extends User
      * Implementation of the Retrievable interface because this object
      * is used with Intake
      */
-    public void setQueryKey(String key);
+    public void setQueryKey(String key) throws Exception;
 }
