@@ -96,13 +96,16 @@ public class ComposerView extends AbstractFrameView {
 		FormLayout layout =
 			new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",
 			// 2 columns
-	"fill:pref, 3dlu,fill:pref, 3dlu, fill:pref, 3dlu, fill:pref, 3dlu"); // 3 row 
+	"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu"); // 3 row 
 
 		PanelBuilder builder = new PanelBuilder(topPanel, layout);
 		CellConstraints cc = new CellConstraints();
 
+		
 		layout.setColumnGroups(new int[][] { { 1 }
 		});
+		
+		
 		layout.setRowGroups(new int[][] { { 1, 5, 7 }
 		});
 
@@ -110,17 +113,17 @@ public class ComposerView extends AbstractFrameView {
 
 		JPanel smtpPanel = new JPanel();
 		FormLayout l =
-			new FormLayout("default, 3dlu, right:default, 3dlu, right:default", "default");
+			new FormLayout("default, 3dlu, right:default:grow, 3dlu, right:default", "fill:default:grow");
 		PanelBuilder b = new PanelBuilder(smtpPanel, l);
-
+		
 		CellConstraints c = new CellConstraints();
-		b.add(controller.getAccountController().view, c.xy(1, 1));
+		b.add(controller.getAccountController().view, c.xy(1, 1 ));
 		b.add(priorityLabel, c.xy(3, 1));
 		b.add(controller.getPriorityController().view, c.xy(5, 1));
 
 		builder.add(smtpPanel, cc.xy(3, 1));
 		
-		builder.add(rightSplitPane, cc.xywh(1,3,4,1));
+		builder.add(rightSplitPane, cc.xywh(1,3,3,1));
 
 		builder.add(subjectLabel, cc.xy(1, 5));
 		
