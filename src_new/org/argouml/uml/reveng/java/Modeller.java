@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.91 2004/08/09 05:48:36 linus Exp $
+// $Id: Modeller.java,v 1.92 2004/08/25 08:58:32 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1037,8 +1037,10 @@ public class Modeller
         }
 
         if (mAbstraction == null) {
-            mAbstraction =
-		UmlFactory.getFactory().getCore().buildAbstraction(name);
+            mAbstraction = UmlFactory.getFactory().getCore().buildAbstraction(
+                   name, 
+                   parent, 
+                   child);
         }
         return mAbstraction;
     }
