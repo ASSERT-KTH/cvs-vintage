@@ -63,6 +63,7 @@ public class GTestTag extends TagSupport {
     String testFileName;
     String target;
     String testApp;
+    String debug;
     
     /** Set the name of the test.xml, relative to the base dir.
      *  For example, /WEB-INF/test-tomcat.xml
@@ -84,6 +85,10 @@ public class GTestTag extends TagSupport {
     public void setTestApp( String s ) {
 	testApp=s;
     }
+
+    public void setDebug( String s ) {
+	debug=s;
+    }
     
     // -------------------- Implementation methods --------------------
     
@@ -102,6 +107,8 @@ public class GTestTag extends TagSupport {
 	    // new one
 	    GTest.setDefaultWriter(out);
 	    GTest.setDefaultOutput("html");
+	    if(debug!=null)
+		GTest.setDefaultDebug(Integer.valueOf( debug ).intValue());
 	    
 	    Project project=new Project();
 	    
@@ -127,7 +134,8 @@ public class GTestTag extends TagSupport {
 	    if( ex instanceof BuildException ) {
 		Throwable ex1=((BuildException)ex).getException();
 		System.out.println("Root cause: " );
-		ex1.printStackTrace(out);
+		if( ex1!=null)
+		    ex1.printStackTrace(out);
 	    }
 	}
     }

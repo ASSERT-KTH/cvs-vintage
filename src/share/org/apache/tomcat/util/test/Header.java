@@ -136,8 +136,8 @@ public class Header {
 	if (colon < 0) {
 	    return;
 	}
-	String name = line.substring(0, colon).trim();
-	String value = line.substring(colon + 1).trim();
+	name = line.substring(0, colon).trim();
+	value = line.substring(colon + 1).trim();
     }
 
 

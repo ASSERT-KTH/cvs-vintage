@@ -79,14 +79,19 @@ public class HttpClient {
 
     int debug=0;
 
+    String method="GET";
+    String protocol="HTTP/1.0";
+    String path;
+    
     String requestLine;
-    Hashtable requestHeaders;
+    Hashtable requestHeaders=new Hashtable();
+    Vector headerVector=new Vector();// alternate
     Body body;
     
-    String requestBody;
+    String fullRequest;
     
     // Response resulted from this request
-    Response response;
+    Response response=new Response();
 
     public HttpClient() {
     }
@@ -120,7 +125,14 @@ public class HttpClient {
     public void addBody( Body b ) {
 	body=b;
     }
+
+    public void setProtocol( String s ) {
+	protocol=s;
+    }
     
+    public void setPath( String s ) {
+	path=s;
+    }
 
     public void addHeader( String n, String v ) {
 	requestHeaders.put(n, new Header( n, v) );
@@ -129,7 +141,7 @@ public class HttpClient {
     /** Add a header to the request
      */
     public void addHeader( Header rh ) {
-	requestHeaders.put( rh.getName(), rh );
+	headerVector.addElement( rh );
     }
 
     /** Add headers - string representation, will be parsed
@@ -150,8 +162,8 @@ public class HttpClient {
 
     /** Display debug info
      */
-    public void setDebug( String debugS ) {
-	debug=Integer.valueOf( debugS).intValue();
+    public void setDebug( int d ) {
+	debug=d;
     }
 
     /** Verbose request line - including method and protocol
@@ -166,14 +178,18 @@ public class HttpClient {
     
     /** Allow sending a verbose request
      */
-    public void setVerboseRequest( String s ) {
-	requestBody=s;
+    public void setFullRequest( String s ) {
+	fullRequest=s;
+    }
+
+    public String getFullRequest() {
+	return fullRequest;
     }
 
     /** Alternate method for sending a verbose request
      */
     public void addText(String s ) {
-	requestBody=s;
+	fullRequest=s;
     }
 
     // -------------------- Access the response --------------------
@@ -198,48 +214,65 @@ public class HttpClient {
 	throws Exception
     {
 	// explicitely set
-	if( requestBody != null ) return;
+	if( fullRequest != null ) return;
 
 	// use the existing info to compose what will be sent to the
 	// server
 	StringBuffer sb=new StringBuffer();
-	sb.append(requestLine).append(CRLF);
+	if( requestLine != null ) 
+	    sb.append(requestLine);
+	else {
+	    sb.append( method ).append(" ").append(path).append(" ");
+	    sb.append(protocol);
+	    requestLine=sb.toString();
+	}
+
+	sb.append(CRLF);
 
 	// We may test HTTP0.9 behavior. If it's post 1.0, it needs
 	// a LF
 	if( requestLine.indexOf( "HTTP/1." ) <0 ) {
-	    requestBody=sb.toString();
+	    fullRequest=sb.toString();
 	    return; // nothing to add
 	}
 
 	String contentL=null;
-	
+
+	Enumeration en=headerVector.elements();
+	while( en.hasMoreElements()) {
+	    Header rh=(Header)en.nextElement();
+	    requestHeaders.put( rh.getName(), rh );
+	}
+	 
 	// headers
 	Enumeration headersE=requestHeaders.elements();
 	while( headersE.hasMoreElements() ) {
 	    Header h=(Header)headersE.nextElement();
-	    sb.append(h.toString()).append( CRLF );
+	    sb.append(h.getName()).append(": ");
+	    sb.append(h.getValue()).append( CRLF );
 	    if( "Content-Length".equals( h.getName() )) {
 		contentL=h.getValue();
 	    }
 	}
-
+	
 	// If we have a body
 	if( body != null) {
 	    // If set explicitely ( maybe we're testing bad POSTs )
 	    if( contentL==null ) {
 		sb.append("Content-Length: ").append( body.getBody().length());
-		sb.append(CRLF);
+		sb.append(CRLF).append( CRLF);
 	    }
 	    
 	    sb.append(body.getBody());
 	    // no /n at the end -see HTTP specs!
 	    // If we want to test bad POST - set Content-Length
 	    // explicitely.
+	} else {
+	    sb.append( CRLF );
 	}
 
-	// set the requestBody
-	requestBody=sb.toString();
+	// set the fullRequest
+	fullRequest=sb.toString();
     }
 
     /** Invoke a request, set headers, responseLine, body
@@ -258,9 +291,15 @@ public class HttpClient {
 	OutputStreamWriter out=new OutputStreamWriter(os);
 	PrintWriter pw = new PrintWriter(out);
 
+	prepareRequest();
+	if( debug > 5 ) {
+	    System.out.println("--------------------Sending " );
+	    System.out.println(fullRequest);
+	    System.out.println("----------" );
+	}
 	// Write the request
 	try {
-	    os.write(requestBody.getBytes()); // XXX encoding !
+	    os.write(fullRequest.getBytes()); // XXX encoding !
 	    os.flush();
 	} catch (Exception ex1 ) {
 	    response.setThrowable( ex1 );
@@ -269,17 +308,25 @@ public class HttpClient {
 	
 	try {
 	    // http 1.0 +
-	    if( requestBody.indexOf( "HTTP/1." ) > -1) {
+	    if( fullRequest.indexOf( "HTTP/1." ) > -1) {
+		if( debug > 5 )
+		    System.out.println("Reading response " );
 		String responseLine = read( is );
+		if( debug > 5 )
+		    System.out.println("Got: " + responseLine );
 		response.setResponseLine( responseLine );
 		
 		Hashtable headers=Header.parseHeaders( is );
+		if( debug > 5 )
+		    System.out.println("Got headers: " + headers );
 		response.setHeaders( headers );
 	    }
 
 	    StringBuffer result = readBody( is );
 	    if(result!=null)
 		response.setResponseBody( result.toString() );
+	    if( debug > 5 )
+		System.out.println("Got body: " + result );
 	    
 	} catch( SocketException ex ) {
 	    response.setThrowable( ex );
@@ -328,7 +375,7 @@ public class HttpClient {
 	while (true) {
 	    try {
 		int ch = input.read();
-		//		log("XXX " + (char)ch );
+		// System.out.println("XXX " + (char)ch );
 		if (ch < 0) {
 		    if (sb.length() == 0) {
 			//  if(debug>0) log("Error reading line " + ch + " " +
@@ -360,4 +407,17 @@ public class HttpClient {
 	return (sb.toString());
     }
 
+    /** Return a URI (guessed) from the requestLine/fullRequest
+     */
+    public String getURI() {
+	String toExtract=fullRequest;
+	if( fullRequest==null ) toExtract=requestLine;
+	if( toExtract==null ) return null;
+
+	if( ! toExtract.startsWith("GET")) return null;
+	StringTokenizer st=new StringTokenizer( toExtract," " );
+	st.nextToken(); // GET
+	return st.nextToken();
+    }
+    
 }

@@ -22,7 +22,29 @@
      <property name="gdir" value="../Golden" />
      <property name="http.protocol" value="HTTP/1.0" />
      
-     <taskdef name="gtest" classname="org.apache.tomcat.task.GTest" />
+     <taskdef name="gtest" classname="org.apache.tomcat.util.test.GTest" />
+     <taskdef name="httpClient" 
+	      classname="org.apache.tomcat.util.test.HttpClient" />
+     <taskdef name="header" 
+	      classname="org.apache.tomcat.util.test.Header" />
+     <taskdef name="body" 
+	      classname="org.apache.tomcat.util.test.Body" />
+     <taskdef name="defaultMatcher" 
+	      classname="org.apache.tomcat.util.test.DefaultMatcher" />
+
+  <!-- ==================== File tests ==================== -->
+  <target name="new-style" >
+      <gtest host="${host}" port="${port}" >
+          <httpClient path="/test/index.html" debug="0">
+             <header name="foo" value="bar"/>
+             <body>RequestBody</body>
+          </httpClient>
+          <defaultMatcher returnCode="200">
+             <header name="Content-Type" value="text/html"/>
+          </defaultMatcher>
+      </gtest>
+   </target>
+
 
   <!-- ==================== File tests ==================== -->
   <target name="file">

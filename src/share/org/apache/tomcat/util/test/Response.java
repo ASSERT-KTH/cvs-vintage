@@ -72,7 +72,7 @@ public class Response {
 
     String responseLine;
     String responseBody;
-    Hashtable responseHeaders;
+    Hashtable responseHeaders=new Hashtable();
     
     Throwable exception;
 

@@ -74,12 +74,14 @@ public class DefaultMatcher {
     // Expected response
     boolean magnitude=true;
     boolean exactMatch=false;
+
     // Match the body against a golden file
     String goldenFile;
     // Match the body against a string
     String responseMatch;
     // the response should include the following headers
-    Hashtable expectHeaders;
+    Vector headerVector=new Vector(); // workaround for introspection problems
+    Hashtable expectHeaders=new Hashtable();
     // Match request line
     String returnCode="";
     String description;
@@ -89,7 +91,7 @@ public class DefaultMatcher {
     
     // Results of matching
     boolean result=false;
-    StringBuffer messageSB;
+    StringBuffer messageSB=new StringBuffer();
     
     public DefaultMatcher() {
     }
@@ -130,8 +132,9 @@ public class DefaultMatcher {
 
     /** Display debug info
      */
-    public void setDebug( String debugS ) {
-	debug=Integer.valueOf( debugS).intValue();
+    public void setDebug( int d ) {
+	//	debug=Integer.valueOf( debugS).intValue();
+	debug=d;
     }
 
     /** True if this is a positive test, false for negative
@@ -148,14 +151,13 @@ public class DefaultMatcher {
 
 
     public void addHeader( Header rh ) {
-	expectHeaders.put( rh.getName(), rh );
+	headerVector.addElement( rh );
     }
-    
+
     /** Verify that response includes the expected headers.
      *  The value is a "|" separated list of headers to expect.
      */
     public void setExpectHeaders( String s ) {
-       expectHeaders=new Hashtable();
        Header.parseHeadersAsString( s, expectHeaders );
     }
 
@@ -177,6 +179,7 @@ public class DefaultMatcher {
 	try {
 	    result=checkResponse( magnitude );
 	} catch(Exception ex ) {
+	    ex.printStackTrace();
 	    result=false;
 	}
     }
@@ -199,13 +202,18 @@ public class DefaultMatcher {
 			     responseLine.indexOf(returnCode) > -1);
 	    if( match != testCondition ) {
 		responseStatus = false;
-		log("ERROR");
 		log("    Expecting: " + returnCode );
 		log("    Got      : " + responseLine);
 	    }
 	}
 
-	if( expectHeaders != null ) {
+	Enumeration en=headerVector.elements();
+	while( en.hasMoreElements()) {
+	    Header rh=(Header)en.nextElement();
+	    expectHeaders.put( rh.getName(), rh );
+	}
+
+	if( expectHeaders.size() > 0 ) {
 	    // Check if we got the expected headers
 	    if(headers==null) {
 		log("ERROR no response header, expecting header");
@@ -213,11 +221,14 @@ public class DefaultMatcher {
 	    Enumeration e=expectHeaders.keys();
 	    while( e.hasMoreElements()) {
 		String key=(String)e.nextElement();
-		String value=(String)expectHeaders.get(key);
-		String respValue=(String)headers.get(key);
+		Header h=(Header)expectHeaders.get(key);
+		String value=h.getValue();
+		h=(Header)headers.get(key);
+		String respValue=h.getValue();
 		if( respValue==null || respValue.indexOf( value ) <0 ) {
 		    log("ERROR expecting header " + key + ":" +
-				       value + " GOT: " + respValue+ " HEADERS(" + headers + ")");
+			value + " GOT: " + respValue+ " HEADERS(" +
+			headers + ")");
 		    
 		    return false;
 		}

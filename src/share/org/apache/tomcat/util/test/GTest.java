@@ -75,23 +75,26 @@ public class GTest  {
     HttpClient httpClient=new HttpClient();
     DefaultMatcher matcher=new DefaultMatcher();
     
-    int debug=0;
     String description="No description";
 
     static PrintWriter defaultOutput=new PrintWriter(System.out);
     static String defaultOutType="text";
+    static int defaultDebug=0;
     
     PrintWriter out=defaultOutput;
     String outType=defaultOutType;
+    int debug=defaultDebug;
     boolean failureOnly=false;
     
     public GTest() {
+	matcher.setDebug( debug );
+	httpClient.setDebug( debug );
     }
 
-    // -------------------- GTest behavior --------------------
+    // -------------------- Defaults --------------------
 
-    public void setWriter( PrintWriter pw ) {
-	out=pw;
+    public static void setDefaultDebug( int d ) {
+	defaultDebug=d;
     }
 
     public static void setDefaultWriter( PrintWriter pw ) {
@@ -100,6 +103,11 @@ public class GTest  {
 
     public static void setDefaultOutput( String s ) {
 	defaultOutType=s;
+    }
+
+    // -------------------- GTest behavior --------------------
+    public void setWriter( PrintWriter pw ) {
+	out=pw;
     }
 
     /** text, xml, html
@@ -143,8 +151,8 @@ public class GTest  {
      */
     public void setDebug( String debugS ) {
 	debug=Integer.valueOf( debugS).intValue();
-	matcher.setDebug( debugS );
-	httpClient.setDebug( debugS );
+	matcher.setDebug( debug );
+	httpClient.setDebug( debug );
     }
 
     // -------------------- Client properties --------------------
@@ -234,40 +242,47 @@ public class GTest  {
 	    if( result && failureOnly ) return;
 	    
 	    if( "text".equals(outType) )
-		textReport( result , null );
+		textReport();
 	    if( "html".equals(outType) )
-		htmlReport( result , null );
+		htmlReport();
 	    if( "xml".equals(outType) )
-		xmlReport( result , null );
+		xmlReport();
 	} catch(Exception ex ) {
-	    textReport( false, ex );
+	    // no exception should be thrown in normal operation
+	    ex.printStackTrace();
 	}
     }
 
     
     // -------------------- Internal methods --------------------
 
-    private void textReport( boolean result, Exception ex ) {
+    private void textReport() {
 	String msg=null;
 	if(  "No description".equals( description )) 
 	    msg=" (" + httpClient.getRequestLine() + ")";
 	else
 	    msg=description + " (" + httpClient.getRequestLine() + ")";
 
-	if(result) 
-	    out.println("OK " + msg );
-	else 
+	if(matcher.getResult()) 
+	    out.println("OK " +  msg );
+	else {
 	    out.println("FAIL " + msg );
+	    out.println("Message: " + matcher.getMessage());
+	}
 
-	if( ex!=null)
-	    ex.printStackTrace(out);
     }
 
-    private void htmlReport( boolean result, Exception ex ) {
+    private void htmlReport() {
+	boolean result=matcher.getResult();
+	String uri=httpClient.getURI();
+	if( uri!=null )
+	    out.println("<a href='" + uri + "'>");
 	if( result )
 	    out.println( "OK " );
 	else
 	    out.println("<font color='red'>FAIL ");
+	if( uri!=null )
+	    out.println("</a>");
 
 	String msg=null;
 	if(  "No description".equals( description )) 
@@ -279,9 +294,33 @@ public class GTest  {
 	
 	if( ! result )
 	    out.println("</font>");
-
+	
 	out.println("<br>");
 
+	if( ! result ) {
+	    out.println("<b>Message:</b><pre>");
+	    out.println( matcher.getMessage());
+	    out.println("</pre>");
+	}
+
+	if( ! result && debug > 0 ) {
+	    out.println("<b>Request: </b><pre>" + httpClient.getFullRequest());
+	    out.println("</pre><b>Response:</b> " +
+			httpClient.getResponse().getResponseLine());
+	    out.println("<br><b>Response headers:</b><br>");
+	    Hashtable headerH=httpClient.getResponse().getHeaders();
+	    Enumeration hE=headerH.elements();
+	    while( hE.hasMoreElements() ) {
+		Header h=(Header) hE.nextElement();
+		out.println("<b>" + h.getName() + ":</b>" +
+			    h.getValue() + "<br>");
+	    }
+	    out.println("<b>Response body:</b><pre> ");
+	    out.println(httpClient.getResponse().getResponseBody());
+	    out.println("</pre>");
+	}
+
+	Throwable ex=httpClient.getResponse().getThrowable();
 	if( ex!=null) {
 	    out.println("<b>Exception</b><pre>");
 	    ex.printStackTrace(out);
@@ -289,7 +328,8 @@ public class GTest  {
 	}
     }
 
-    private void xmlReport( boolean result, Exception ex ) {
+    private void xmlReport() {
+	boolean result=matcher.getResult();
 	String msg=null;
 	if(  "No description".equals( description )) 
 	    msg=" (" + httpClient.getRequestLine() + ")";
@@ -301,8 +341,13 @@ public class GTest  {
 	else 
 	    out.println("FAIL " + msg );
 
-	if( ex!=null)
+	Throwable ex=httpClient.getResponse().getThrowable();
+	if( ex!=null) {
+	    out.println("<b>Exception</b><pre>");
 	    ex.printStackTrace(out);
+	    out.println("</pre><br>");
+	}
+
     }
 
     
