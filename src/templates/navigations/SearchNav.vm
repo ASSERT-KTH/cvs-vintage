@@ -47,9 +47,9 @@
 #end
   </select>
 ## give actionEvent as hidden field so user does not have to click Go,
-## if javascript is enabled
+## if javascript is enabled. show button only if script disabled.
   <input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
-  <input type="submit" value="Go" name="foo" tabindex="4" />
+  <noscript><input type="submit" value="Go" name="foo" tabindex="4" /></noscript>
 </form>
    </td>
   </tr>
