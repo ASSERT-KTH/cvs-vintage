@@ -23,7 +23,7 @@ import org.jboss.deployment.DeploymentException;
  
  * @author Scott.Stark@jboss.org
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -54,11 +54,14 @@ public class WebMetaData implements XmlLoadable
    private String securityDomain;
    /** we hold the webxml element such that we can do in memory transformations on it */
    protected Element webAppElement;
-   
+   /** The web context class loader used to create the java:comp context */
+   private ClassLoader encLoader;
+   private ArrayList depends = new ArrayList();
+
    public WebMetaData()
    {
    }
-   
+
    /** Return an iterator of the env-entry mappings.
     @return Iterator of EnvEntryMetaData objects.
     */
@@ -66,6 +69,7 @@ public class WebMetaData implements XmlLoadable
    {
       return environmentEntries.iterator();
    }
+
    /** Return an iterator of the ejb-ref mappings.
     @return Iterator of EjbRefMetaData objects.
     */
@@ -73,6 +77,7 @@ public class WebMetaData implements XmlLoadable
    {
       return ejbReferences.values().iterator();
    }
+
    /** Return an iterator of the ejb-local-ref mappings.
     @return Iterator of EjbLocalRefMetaData objects.
     */
@@ -88,6 +93,7 @@ public class WebMetaData implements XmlLoadable
    {
       return resourceReferences.values().iterator();
    }
+
    /** Return an iterator of the resource-ref mappings.
     @return Iterator of ResourceEnvRefMetaData objects.
     */
@@ -103,6 +109,7 @@ public class WebMetaData implements XmlLoadable
    {
       return contextRoot;
    }
+
    public void setContextRoot(String contextRoot)
    {
       this.contextRoot = contextRoot;
@@ -128,8 +135,8 @@ public class WebMetaData implements XmlLoadable
    }
 
    /**
-     The distributable flag.
-     @return true if the web-app is marked distributable
+    The distributable flag.
+    @return true if the web-app is marked distributable
     */
    public boolean getDistributable()
    {
@@ -150,33 +157,43 @@ public class WebMetaData implements XmlLoadable
    {
       return java2ClassLoadingCompliance;
    }
+
    public void setJava2ClassLoadingCompliance(boolean flag)
    {
       java2ClassLoadingCompliance = flag;
    }
 
+   public ClassLoader getENCLoader()
+   {
+      return encLoader;
+   }
+   public void setENCLoader(ClassLoader encLoader)
+   {
+      this.encLoader = encLoader;
+   }
+
    public void importXml(Element element) throws Exception
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
-      if( rootTag.equals("web-app") )
+      if (rootTag.equals("web-app"))
       {
          importWebXml(element);
       }
-      else if( rootTag.equals("jboss-web") )
+      else if (rootTag.equals("jboss-web"))
       {
          importJBossWebXml(element);
       }
    }
-   
+
    /** Parse the elements of the web-app element used by the integration layer.
     */
    protected void importWebXml(Element webApp) throws Exception
    {
-      webAppElement=webApp;
+      webAppElement = webApp;
       
       // Parse the web-app/resource-ref elements
       Iterator iterator = MetaData.getChildrenByTagName(webApp, "resource-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
          ResourceRefMetaData resourceRefMetaData = new ResourceRefMetaData();
@@ -196,7 +213,7 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the web-app/env-entry elements
       iterator = MetaData.getChildrenByTagName(webApp, "env-entry");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element envEntry = (Element) iterator.next();
          EnvEntryMetaData envEntryMetaData = new EnvEntryMetaData();
@@ -206,7 +223,7 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the web-app/ejb-ref elements
       iterator = MetaData.getChildrenByTagName(webApp, "ejb-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element ejbRef = (Element) iterator.next();
          EjbRefMetaData ejbRefMetaData = new EjbRefMetaData();
@@ -216,7 +233,7 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the web-app/ejb-local-ref elements
       iterator = MetaData.getChildrenByTagName(webApp, "ejb-local-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element ejbRef = (Element) iterator.next();
          EjbLocalRefMetaData ejbRefMetaData = new EjbLocalRefMetaData();
@@ -226,9 +243,9 @@ public class WebMetaData implements XmlLoadable
 
       // Is the web-app marked distributable?
       iterator = MetaData.getChildrenByTagName(webApp, "distributable");
-      if(iterator.hasNext())
+      if (iterator.hasNext())
       {
-	 distributable=true;
+         distributable = true;
       }
    }
 
@@ -238,27 +255,27 @@ public class WebMetaData implements XmlLoadable
    {
       // Parse the jboss-web/root-context element
       Element contextRootElement = MetaData.getOptionalChild(jbossWeb, "context-root");
-      if( contextRootElement != null )
+      if (contextRootElement != null)
          contextRoot = MetaData.getElementContent(contextRootElement);
 
       // Parse the jboss-web/security-domain element
       Element securityDomainElement = MetaData.getOptionalChild(jbossWeb, "security-domain");
-      if( securityDomainElement != null )
+      if (securityDomainElement != null)
          securityDomain = MetaData.getElementContent(securityDomainElement);
 
       // Parse the jboss-web/virtual-host element
       Element virtualHostElement = MetaData.getOptionalChild(jbossWeb, "virtual-host");
-      if( virtualHostElement != null )
+      if (virtualHostElement != null)
          virtualHost = MetaData.getElementContent(virtualHostElement);
 
       // Parse the jboss-web/resource-ref elements
       Iterator iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
          String resRefName = MetaData.getElementContent(MetaData.getUniqueChild(resourceRef, "res-ref-name"));
          ResourceRefMetaData refMetaData = (ResourceRefMetaData) resourceReferences.get(resRefName);
-         if( refMetaData == null )
+         if (refMetaData == null)
          {
             throw new DeploymentException("resource-ref " + resRefName
                + " found in jboss-web.xml but not in web.xml");
@@ -268,12 +285,12 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the jboss-web/resource-env-ref elements
       iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-env-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
          String resRefName = MetaData.getElementContent(MetaData.getUniqueChild(resourceRef, "resource-env-ref-name"));
          ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
-         if( refMetaData == null )
+         if (refMetaData == null)
          {
             throw new DeploymentException("resource-env-ref " + resRefName
                + " found in jboss-web.xml but not in web.xml");
@@ -283,12 +300,12 @@ public class WebMetaData implements XmlLoadable
 
       // Parse the jboss-web/ejb-ref elements
       iterator = MetaData.getChildrenByTagName(jbossWeb, "ejb-ref");
-      while( iterator.hasNext() )
+      while (iterator.hasNext())
       {
          Element ejbRef = (Element) iterator.next();
          String ejbRefName = MetaData.getElementContent(MetaData.getUniqueChild(ejbRef, "ejb-ref-name"));
          EjbRefMetaData ejbRefMetaData = (EjbRefMetaData) ejbReferences.get(ejbRefName);
-         if( ejbRefMetaData == null )
+         if (ejbRefMetaData == null)
          {
             throw new DeploymentException("ejb-ref " + ejbRefName
                + " found in jboss-web.xml but not in web.xml");
