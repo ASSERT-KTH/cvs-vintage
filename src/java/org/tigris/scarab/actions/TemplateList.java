@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.17 2002/01/18 22:26:03 jon Exp $
+    @version $Id: TemplateList.java,v 1.18 2002/01/21 22:53:40 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -180,6 +180,15 @@ public class TemplateList extends RequireLoginFirstAction
         } 
     } 
 
+    public void doUsetemplate(RunData data, TemplateContext context)
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
+        String template = getOtherTemplate(data);
+        setTarget(data, template);
+    }
+    
     public void doCreatenew( RunData data, TemplateContext context )
         throws Exception
     {
