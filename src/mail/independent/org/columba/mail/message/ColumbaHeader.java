@@ -62,7 +62,11 @@ public class ColumbaHeader implements HeaderInterface {
 		attributes.put("columba.fetchstate", new Boolean(false));
 		attributes.put("columba.priority", new Integer( basicHeader.getPriority()));
 		Address from = basicHeader.getFrom();
-		if( from != null ) attributes.put("columba.from", from.toString());
+		if( from != null ) {			
+			attributes.put("columba.from", from.toString());
+		} else {
+			attributes.put("columba.from", "");
+		}
 		attributes.put("columba.host", new String());
 		attributes.put("columba.date", basicHeader.getDate());
 		String subject = basicHeader.getSubject();
