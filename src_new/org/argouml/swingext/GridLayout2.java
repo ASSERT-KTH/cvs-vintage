@@ -1,4 +1,4 @@
-// $Id: GridLayout2.java,v 1.13 2004/09/27 19:49:41 mvw Exp $
+// $Id: GridLayout2.java,v 1.14 2004/10/03 07:30:14 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -563,6 +563,24 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
     }
 
 
+    /**
+     * Calculate the layout size.
+     * 
+     * @param parent the container
+     * @param theColWidth the column width
+     * @param theRowHeight the row height
+     * @param actualRows the number of rows specified for the grid.  
+     *      This should be a non negative integer, where '0' means
+     *      'any number' meaning that the number of rows in that
+     *      dimension depends on the other dimension.
+     * @param actualCols the number of columns specified for the grid.
+     *      This should be a non negative integer, where '0' means
+     *      'any number' meaning that the number of columns in that
+     *      dimension depends on the other dimension.
+     * @param theLargestWidth the largest width
+     * @param theLargestHeight the largest height
+     * @return the dimension of the layout
+     */
     protected Dimension calculateSizes(Container parent, 
 				       int theColWidth[], int theRowHeight[],
 				       int actualRows, int actualCols,
@@ -609,6 +627,13 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
         return largestWidth;
     }
 
+    /**
+     * @param comp the component to be positioned
+     * @param x the x
+     * @param y the y
+     * @param cellWidth the width of the cell
+     * @param cellHeight the height of the cell
+     */
     protected void positionComponentInCell(Component comp,
 					   int x, int y,
 					   int cellWidth, int cellHeight)
