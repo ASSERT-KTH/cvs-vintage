@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.7 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.8 2004/12/29 02:31:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class ActionRevertToSaved extends ActionFileOperations {
      * Constructor.
      */
     public ActionRevertToSaved() {
-        super("action.revert-to-saved", true, HAS_ICON);
+        super(Translator.localize("action.revert-to-saved"));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -90,16 +90,5 @@ public class ActionRevertToSaved extends ActionFileOperations {
         if (response == JOptionPane.YES_OPTION) {        
             loadProject(p.getURL());
         }
-    }
-    
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     *
-     * Overridden to return true only if project has pending changes.
-     */
-    public boolean shouldBeEnabled() {
-        super.shouldBeEnabled();
-        Project p = ProjectManager.getManager().getCurrentProject();
-        return (p != null && p.needsSave() && p.getURL() != null);
     }
 }

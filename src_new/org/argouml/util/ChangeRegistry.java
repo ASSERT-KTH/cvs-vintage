@@ -1,4 +1,4 @@
-// $Id: ChangeRegistry.java,v 1.7 2004/08/25 20:28:29 mvw Exp $
+// $Id: ChangeRegistry.java,v 1.8 2004/12/29 02:31:49 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,12 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.7 2004/08/25 20:28:29 mvw Exp $
+// $Id: ChangeRegistry.java,v 1.8 2004/12/29 02:31:49 bobtarling Exp $
 
 package org.argouml.util;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.uml.ui.ActionSaveProject;
 
 import org.tigris.gef.graph.GraphEvent;
 import org.tigris.gef.graph.GraphListener;
@@ -45,13 +46,13 @@ import org.tigris.gef.graph.GraphListener;
  */
 public class ChangeRegistry implements GraphListener
 {
-    private boolean changeFlag;
-
     /**
      * The constructor.
      * 
      */
-    public ChangeRegistry() { changeFlag = false; }
+    public ChangeRegistry() {
+        setChangeFlag(false);
+    }
 
     /**
      * Changes save state / notifies gui.
@@ -61,11 +62,11 @@ public class ChangeRegistry implements GraphListener
      */
     public void setChangeFlag( boolean newValue ) {
 		
-        boolean oldValue = changeFlag;
-        changeFlag = newValue;                
+        boolean oldValue = ActionSaveProject.getInstance().isEnabled();
         
 	if (oldValue != newValue) {
 	    // notify the gui to put a * on the title bar (swing gui):
+            ActionSaveProject.getInstance().setEnabled(newValue);
 	    ProjectManager.getManager().notifySavePropertyChanged(newValue);
 	}
                 
@@ -75,7 +76,7 @@ public class ChangeRegistry implements GraphListener
      * @return the change flag aka save state
      */
     public boolean hasChanged() {
-	return changeFlag;
+	return ActionSaveProject.getInstance().isEnabled();
     }
 
     /**

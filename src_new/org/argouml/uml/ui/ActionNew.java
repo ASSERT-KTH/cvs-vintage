@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.27 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionNew.java,v 1.28 2004/12/29 02:31:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,9 @@ package org.argouml.uml.ui;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Designer;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.FindDialog;
@@ -56,8 +58,9 @@ public class ActionNew extends ActionFileOperations {
      * The constructor.
      */
     protected ActionNew() { 
-        // this is not a "global" action, since it is never downlighted...
-        super("action.new", false, true); 
+        super(Translator.localize("action.new"), ResourceLoaderWrapper
+                .lookupIconResource(Translator.getImageBinding("New"),
+                        Translator.localize("New")));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -71,7 +74,9 @@ public class ActionNew extends ActionFileOperations {
         
         if (!askConfirmationAndSave()) return;
         
-	// we should remove all open dialogs. They have as parent the
+        // TODO yuk! Why is this needed? In fact how can anyone select
+        // the new action if there is a dialog?
+	// We should remove all open dialogs. They have as parent the
 	// ProjectBrowser
 	Window[] windows = ProjectBrowser.getInstance().getOwnedWindows();
 	for (int i = 0; i < windows.length; i++) {

@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.41 2004/12/28 19:04:50 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.42 2004/12/29 02:31:41 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,12 @@ public final class ProjectManager implements PropertyChangeListener {
      */
     public static final String CURRENT_PROJECT_PROPERTY_NAME =
         "currentProject";
+    
+    /**
+     * The name of the property that there is no project.
+     */
+    public static final String NO_PROJECT =
+        "noProject";
     
     /**
      * The name of the property that defines the save state.
@@ -189,7 +195,7 @@ public final class ProjectManager implements PropertyChangeListener {
 	    }
         }
         firePropertyChanged(CURRENT_PROJECT_PROPERTY_NAME,
-			    oldProject, newProject);
+                oldProject, newProject);
     }
 
     /**

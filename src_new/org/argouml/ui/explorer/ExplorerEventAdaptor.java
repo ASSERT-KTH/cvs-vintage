@@ -1,4 +1,4 @@
-// $Id: ExplorerEventAdaptor.java,v 1.5 2004/09/01 15:43:20 mvw Exp $
+// $Id: ExplorerEventAdaptor.java,v 1.6 2004/12/29 02:31:49 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,12 +121,19 @@ public class ExplorerEventAdaptor
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(java.beans.PropertyChangeEvent pce) {
+
+        // We don't care if the save state has changed
+        if (pce.getPropertyName().equals(ProjectManager.SAVE_STATE_PROPERTY_NAME)) {
+            return;
+        }
         
         // project events
         if (pce.getPropertyName()
                 .equals(ProjectManager.CURRENT_PROJECT_PROPERTY_NAME)) 
 	{
-            treeModel.structureChanged();
+            if (pce.getNewValue() != null) {
+                treeModel.structureChanged();
+            }
             return;
         }
         

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.29 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.30 2004/12/29 02:31:49 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.net.URL;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -62,7 +63,7 @@ public class ActionSaveProjectAs extends ActionSaveProject {
      * The constructor. 
      */
     protected ActionSaveProjectAs() {
-        super("action.save-project-as", true, HAS_ICON);
+        super(Translator.localize("action.save-project-as"));
     }
 
     ////////////////////////////////////////////////////////////////

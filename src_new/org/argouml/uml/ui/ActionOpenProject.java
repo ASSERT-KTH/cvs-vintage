@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.48 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionOpenProject.java,v 1.49 2004/12/29 02:31:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.CommandLineInterface;
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -65,7 +66,9 @@ public class ActionOpenProject extends ActionFileOperations
      */
     public ActionOpenProject() {
         // this is not a "global" action, since it is never downlighted...
-        super("action.open-project", false, true);
+        super(Translator.localize("action.open-project"), ResourceLoaderWrapper
+                .lookupIconResource(Translator.getImageBinding("OpenProject"),
+                        Translator.localize("OpenProject")));
     }
 
     ////////////////////////////////////////////////////////////////

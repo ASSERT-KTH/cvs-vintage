@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.41 2004/12/28 12:55:23 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.42 2004/12/29 02:31:49 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +31,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -80,19 +83,27 @@ public class ActionSaveProject extends ActionFileOperations {
      * The constructor.
      */
     protected ActionSaveProject() {
-        super("action.save-project", true, HAS_ICON);
+        super(Translator.localize("action.save-project"), ResourceLoaderWrapper
+                .lookupIconResource(Translator.getImageBinding("SaveProject"),
+                        Translator.localize("SaveProject")));
     }
 
     /**
      * The constructor.
-     * @param title the title for this action
-     * @param icon the icon for this action
-     * @param global if the action is global
+     * @param name the name of the action.
      */
-    protected ActionSaveProject(String title, boolean global, boolean icon) {
-        super(title, global, icon);
+    protected ActionSaveProject(String name) {
+        super(name);
     }
 
+    /**
+     * The constructor.
+     * @param name the name of the action.
+     * @param icon the icon to represent this action graphically.
+     */
+    protected ActionSaveProject(String name, Icon icon) {
+        super(name, icon);
+    }
 
     ////////////////////////////////////////////////////////////////
     // main methods
