@@ -28,9 +28,9 @@
 #if ($userModules.size() > 0)
 <form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
 #if ($nextTemplate && $nextTemplate.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate"/> 
 #else 
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm"/> 
 #end
 
 <div class="axial">
