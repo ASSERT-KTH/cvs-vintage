@@ -18,14 +18,12 @@
 
 package org.columba.core.command;
 
-import java.net.SocketException;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.util.SwingWorker;
 
 /**
@@ -143,7 +141,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     public void unregister() {
         taskManager.unregister(threadVar);
 
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(this,
                 getTimeStamp());
         e.setType(WorkerStatusChangedEvent.FINISHED);
         fireWorkerStatusChanged(e);
@@ -160,7 +158,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
      *            New max. value for progress bar
      */
     public void setProgressBarMaximum(int max) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(this,
                 getTimeStamp());
         e.setType(WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED);
         e.setOldValue(new Integer(progressBarMax));
@@ -178,7 +176,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
      *            New current value of progress bar
      */
     public void setProgressBarValue(int value) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(this,
                 getTimeStamp());
         e.setType(WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED);
         e.setOldValue(new Integer(progressBarValue));
@@ -225,7 +223,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
      *            Text to display in status bar
      */
     public void setDisplayText(String text) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(this,
                 getTimeStamp());
         e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED);
         e.setOldValue(displayText);
@@ -261,7 +259,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
      */
     private void clearDisplayText(int delay) {
         // init event
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(this,
                 getTimeStamp());
         e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED);
 

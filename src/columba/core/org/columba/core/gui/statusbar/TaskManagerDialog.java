@@ -39,176 +39,202 @@ import javax.swing.*;
  * Dialog showing all running tasks.
  * <p>
  * Lets the user cancel or kill tasks.
- *
+ * 
  * @author fdietz
  */
 public class TaskManagerDialog extends JDialog
-    implements TaskManagerListener, ActionListener,
-        WorkerStatusChangeListener {
-    
-    private static TaskManagerDialog instance;
-    
-    private TaskManager taskManager;
-    private JButton cancelButton;
-    private JButton killButton;
-    private JList list;
+		implements
+			TaskManagerListener,
+			ActionListener,
+			WorkerStatusChangeListener {
 
-    public TaskManagerDialog(TaskManager tm) {
-        super((JFrame)null, "Task Manager", false);
-        this.taskManager = tm;
+	private static TaskManagerDialog instance;
 
-        initComponents();
-        pack();
-        setLocationRelativeTo(null);
+	private TaskManager taskManager;
+	private JButton cancelButton;
+	private JButton killButton;
+	private JList list;
 
-        tm.addTaskManagerListener(this);
-    }
+	public TaskManagerDialog(TaskManager tm) {
+		super((JFrame) null, "Task Manager", false);
+		this.taskManager = tm;
 
-    public static TaskManagerDialog createInstance() {
-        if (instance == null) {
-            instance = new TaskManagerDialog(MainInterface.processor.getTaskManager());
-        }
+		initComponents();
+		pack();
+		setLocationRelativeTo(null);
 
-        if (!instance.isVisible()) {
-            instance.setVisible(true);
-        }
-        instance.toFront();
+		tm.addTaskManagerListener(this);
+	}
 
-        return instance;
-    }
+	public static TaskManagerDialog createInstance() {
+		if (instance == null) {
+			instance = new TaskManagerDialog(MainInterface.processor
+					.getTaskManager());
+		}
 
-    public void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        getContentPane().add(mainPanel);
+		if (!instance.isVisible()) {
+			instance.setVisible(true);
+		}
+		instance.toFront();
 
-        cancelButton = new ButtonWithMnemonic("Cancel");
-        cancelButton.setActionCommand("CANCEL");
-        cancelButton.addActionListener(this);
+		return instance;
+	}
 
-        killButton = new ButtonWithMnemonic("Kill");
-        killButton.setActionCommand("KILL");
-        killButton.setEnabled(false);
-        killButton.addActionListener(this);
+	public void initComponents() {
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		getContentPane().add(mainPanel);
 
-        GridBagLayout gridBagLayout = new GridBagLayout();
-        GridBagConstraints c = new GridBagConstraints();
+		cancelButton = new ButtonWithMnemonic("Cancel");
+		cancelButton.setActionCommand("CANCEL");
+		cancelButton.addActionListener(this);
 
-        JPanel eastPanel = new JPanel(gridBagLayout);
-        eastPanel.setLayout(gridBagLayout);
-        mainPanel.add(eastPanel, BorderLayout.EAST);
+		killButton = new ButtonWithMnemonic("Kill");
+		killButton.setActionCommand("KILL");
+		killButton.setEnabled(false);
+		killButton.addActionListener(this);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 1.0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        gridBagLayout.setConstraints(cancelButton, c);
-        eastPanel.add(cancelButton);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
 
-        Component strut1 = Box.createRigidArea(new Dimension(30, 6));
-        gridBagLayout.setConstraints(strut1, c);
-        eastPanel.add(strut1);
+		JPanel eastPanel = new JPanel(gridBagLayout);
+		eastPanel.setLayout(gridBagLayout);
+		mainPanel.add(eastPanel, BorderLayout.EAST);
 
-        gridBagLayout.setConstraints(killButton, c);
-        eastPanel.add(killButton);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		gridBagLayout.setConstraints(cancelButton, c);
+		eastPanel.add(cancelButton);
 
-        Component glue = Box.createVerticalGlue();
-        glue = Box.createVerticalGlue();
-        c.fill = GridBagConstraints.BOTH;
-        c.weighty = 1.0;
-        gridBagLayout.setConstraints(glue, c);
-        eastPanel.add(glue);
+		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
+		gridBagLayout.setConstraints(strut1, c);
+		eastPanel.add(strut1);
 
-        // centerpanel
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-        DefaultListModel model = new DefaultListModel();
-        Worker[] workers = taskManager.getWorkers();
-        for (int i = 0; i < workers.length; i++) {
-            model.addElement(workers[i]);
-        }
-        list = new JList(model);
-        list.setCellRenderer(new TaskRenderer());
-        
-        JScrollPane scrollPane = new JScrollPane(list);
-        scrollPane.setPreferredSize(new Dimension(300, 250));
-        scrollPane.getViewport().setBackground(Color.white);
-        scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
-        centerPanel.add(scrollPane);
+		gridBagLayout.setConstraints(killButton, c);
+		eastPanel.add(killButton);
 
-        mainPanel.add(centerPanel);
+		Component glue = Box.createVerticalGlue();
+		glue = Box.createVerticalGlue();
+		c.fill = GridBagConstraints.BOTH;
+		c.weighty = 1.0;
+		gridBagLayout.setConstraints(glue, c);
+		eastPanel.add(glue);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		// centerpanel
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
+		DefaultListModel model = new DefaultListModel();
+		Worker[] workers = taskManager.getWorkers();
+		for (int i = 0; i < workers.length; i++) {
+			model.addElement(workers[i]);
+		}
+		list = new JList(model);
+		list.setCellRenderer(new TaskRenderer());
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setPreferredSize(new Dimension(300, 250));
+		scrollPane.getViewport().setBackground(Color.white);
+		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
+		centerPanel.add(scrollPane);
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-                GlobalResourceLoader.getString("", "global", "close"));
-        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+		mainPanel.add(centerPanel);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-                GlobalResourceLoader.getString("", "global", "help"));
-        buttonPanel.add(helpButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
-            "organising_and_managing_your_email_3");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), 
-            "organising_and_managing_your_email_3");
-    }
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("", "global", "close"));
+		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
 
-        if (action.equals("CLOSE")) {
-            setVisible(false);
-        } else if (action.equals("CANCEL")) {
-            
-        } else if (action.equals("KILL")) {
-            
-        }
-    }
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("", "global", "help"));
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-    public void workerAdded(final TaskManagerEvent e) {
-        SwingUtilities.invokeLater(new Runnable() {
-           public void run() {
-               ((DefaultListModel)list.getModel()).addElement(e.getWorker());
-           }
-        });
-    }
-    
-    public void workerRemoved(final TaskManagerEvent e) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ((DefaultListModel)list.getModel()).removeElement(e.getWorker());
-            }
-        });
-    }
+		// associate with JavaHelp
+		HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+				"organising_and_managing_your_email_3");
+		HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+				"organising_and_managing_your_email_3");
+	}
 
-    public void workerStatusChanged(WorkerStatusChangedEvent e) {
-        switch (e.getType()) {
-            
-        case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED:
-            break;
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
 
-        case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED:
-            break;
+		if (action.equals("CLOSE")) {
+			setVisible(false);
+		} else if (action.equals("CANCEL")) {
+			Worker worker = (Worker) list.getSelectedValue();
+			worker.setCancel(true);
 
-        case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED:
-            break;
+		} else if (action.equals("KILL")) {
 
-        case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED:
-            break;
+		}
+	}
 
-        case WorkerStatusChangedEvent.FINISHED:}
-    }
+	public void workerAdded(final TaskManagerEvent e) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Worker worker = e.getWorker();
+
+				worker.addWorkerStatusChangeListener(TaskManagerDialog.this);
+
+				((DefaultListModel) list.getModel()).addElement(e.getWorker());
+			}
+		});
+	}
+
+	public void workerRemoved(final TaskManagerEvent e) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				Worker worker = e.getWorker();
+
+				((DefaultListModel) list.getModel()).removeElement(worker);
+			}
+		});
+	}
+
+	public void workerStatusChanged(WorkerStatusChangedEvent e) {
+		final WorkerStatusChangedEvent event = e;
+
+		switch (e.getType()) {
+
+			case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED :
+				break;
+
+			case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED :
+				break;
+
+			case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
+				break;
+
+			case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED :
+				break;
+
+			case WorkerStatusChangedEvent.FINISHED :
+		}
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				// force repaint
+				DefaultListModel m = ((DefaultListModel) list.getModel());
+				int index = m.indexOf(event.getSource());
+				if (index != -1)
+					m.setElementAt(event.getSource(), index);
+
+			}
+		});
+
+	}
 }

@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.statusbar.event;
 
+import org.columba.core.command.Worker;
+
 public class WorkerStatusChangedEvent {
     public final static int DISPLAY_TEXT_CHANGED = 0;
     public final static int PROGRESSBAR_VALUE_CHANGED = 1;
@@ -26,9 +28,11 @@ public class WorkerStatusChangedEvent {
     private Object oldValue;
     private Object newValue;
     private int timeStamp;
+    private Worker source;
 
-    public WorkerStatusChangedEvent(int timeStamp) {
+    public WorkerStatusChangedEvent(Worker source, int timeStamp) {
         this.timeStamp = timeStamp;
+        this.source = source;
     }
 
     public int getType() {
@@ -61,4 +65,10 @@ public class WorkerStatusChangedEvent {
     public int getTimeStamp() {
         return timeStamp;
     }
+	/**
+	 * @return Returns the source.
+	 */
+	public Worker getSource() {
+		return source;
+	}
 }

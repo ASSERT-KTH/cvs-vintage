@@ -121,7 +121,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 
         taskPanel.setBorder(new CompoundBorder(border, margin));
 
-        //taskPanel.add(taskButton, BorderLayout.CENTER);
+        taskPanel.add(taskButton, BorderLayout.CENTER);
 
         leftMainPanel.add(taskPanel, BorderLayout.WEST);
         JPanel labelPanel = new JPanel();
