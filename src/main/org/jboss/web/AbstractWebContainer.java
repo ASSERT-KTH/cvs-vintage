@@ -144,7 +144,7 @@ in the catalina module.
 
 @author  Scott.Stark@jboss.org
 @author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
-@version $Revision: 1.64 $
+@version $Revision: 1.65 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -177,6 +177,8 @@ public abstract class AbstractWebContainer
 
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
+   /** A flag indicating if war archives should be unpacked */
+   protected boolean unpackWars = true;
 
    /** objectname of a ws4ee deployer */
    private ObjectName ws4eeDeployer;
@@ -185,11 +187,35 @@ public abstract class AbstractWebContainer
    {
    }
 
+   /** Get the flag indicating if war archives should be unpacked. This may
+    * need to be set to false as long extraction paths under deploy can
+    * show up as deployment failures on some platforms.
+    * 
+    * @jmx:managed-attribute
+    * @return true is war archives should be unpacked
+    */ 
+   public boolean getUnpackWars()
+   {
+      return unpackWars;
+   }
+   /** Set the flag indicating if war archives should be unpacked. This may
+    * need to be set to false as long extraction paths under deploy can
+    * show up as deployment failures on some platforms.
+    * 
+    * @jmx:managed-attribute
+    * @param flag , true is war archives should be unpacked
+    */ 
+   public void setUnpackWars(boolean flag)
+   {
+      this.unpackWars = flag;
+   }
+
    /** 
     * returns the currently registered web service deployer
     * @jmx:managed-attribute
     */
-   public ObjectName getWS4EEDeployer() {
+   public ObjectName getWS4EEDeployer()
+   {
       return ws4eeDeployer;
    }
    
@@ -235,7 +261,7 @@ public abstract class AbstractWebContainer
 
          // Make sure the war is unpacked
          File warFile = new File(di.localUrl.getFile());
-         if( warFile.isDirectory() == false )
+         if( warFile.isDirectory() == false && unpackWars == true )
          {
             File tmp = new File(warFile.getAbsolutePath()+".tmp");
             if( warFile.renameTo(tmp) == false )
