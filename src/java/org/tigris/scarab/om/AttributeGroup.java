@@ -144,7 +144,11 @@ public  class AttributeGroup
                 .addJoin(RModuleAttributePeer.ATTRIBUTE_ID,
                          RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
                 .add(RAttributeAttributeGroupPeer.GROUP_ID,
-                         getAttributeGroupId());
+                         getAttributeGroupId())
+                .add(RModuleAttributePeer.MODULE_ID,
+                         getModuleId())
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID,
+                         getIssueTypeId());
             List results = RModuleAttributePeer.doSelect(c);
             for (int i=0; i<results.size(); i++)
             {
