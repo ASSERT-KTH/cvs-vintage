@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.122 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.123 2003/09/08 20:59:15 thierrylach Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,6 +178,8 @@ public class ModelFacade {
     ////////////////////////////////////////////////////////////////
     // constants
 
+	// TODO deprecate all of these constants in favor of a separate declaration
+	
     public static final short ACC_PUBLIC = 1;
     public static final short ACC_PRIVATE = 2;
     public static final short ACC_PROTECTED = 3;
