@@ -69,7 +69,7 @@
     <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
     <javac srcdir="src/examples/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
-           classpath="${tomcat.build}/classes,${servlet.jar}"/>
+           classpath="${tomcat.build}/classes;${servlet.jar}"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
            destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
@@ -78,21 +78,21 @@
     <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
     <javac srcdir="src/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
-           classpath="${tomcat.build}/classes,${servlet.jar}"/>
+           classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
     <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
     <copydir src="src/admin" dest="${tomcat.build}/webapps/admin"/>
     <javac srcdir="src/admin/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes"
-           classpath="${tomcat.build}/classes,${servlet.jar}"/>
+           classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
     <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
     <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
-           classpath="${tomcat.build}/classes,${servlet.jar}"/>
+           classpath="${tomcat.build}/classes;${servlet.jar}"/>
   </target>
 
 
