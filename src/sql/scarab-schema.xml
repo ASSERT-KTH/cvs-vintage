@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.106 2002/07/30 22:48:16 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.107 2002/09/04 22:05:37 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -505,7 +505,7 @@
     <!--
         Part of Id related to module.
     -->
-    <column name="ID_PREFIX" required="true" type="CHAR" size="4"/>
+    <column name="ID_PREFIX" required="true" type="VARCHAR" size="4"/>
     <!--
         Part of Id which is an integer.
     -->
@@ -821,7 +821,7 @@
         Abbreviation whose primary use to identify related issues.
     -->
     <column name="MODULE_CODE" javaName="Code" required="true" 
-            type="CHAR" size="4"/>
+            type="VARCHAR" size="4"/>
     <!--
         Description.
     -->
