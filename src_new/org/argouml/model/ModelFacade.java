@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.92 2003/08/31 11:09:56 alexb Exp $
+// $Id: ModelFacade.java,v 1.93 2003/08/31 16:11:05 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3372,6 +3372,19 @@ public class ModelFacade {
         }
     }
 
+    /**
+     *  Return the UUID of this element
+     *  @param base base element (MBase type)
+     *  @return UUID
+     */
+    public static void setUUID(Object base, String uuid) {
+        if (isABase(base)) {
+            ((MBase) base).setUUID(uuid);
+        }
+        //
+        throw new IllegalArgumentException("Unrecognized object " + base);
+    }
+    
     /**
      * Sets a tagged value of some modelelement.
      * @param model element

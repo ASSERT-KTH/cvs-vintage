@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.4 2003/06/30 21:59:32 linus Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.5 2003/08/31 16:11:06 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
-
-import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -148,7 +146,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             ModeManager modeManager = curEditor.getModeManager();
             Mode mode = (Mode) modeManager.top();
             Hashtable args = mode.getArgs();
-            MAggregationKind style = (MAggregationKind) args.get("aggregation");
+            Object style = args.get("aggregation");//MAggregationKind
             Boolean unidirectional = (Boolean) args.get("unidirectional");
             // Create the UML connection of the given type between the
             // given model elements.
