@@ -229,6 +229,7 @@
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
                 <include name="**/*.java"/>
+                <include name="**/*.xml"/>
                 <include name="**/*.properties"/>
                 <include name="**/package.html"/>
                 <exclude name="**/*Lucene*.java"/>
@@ -531,6 +532,14 @@
         </classpath>
 
         </javac>
+
+        <copy todir="${build.dest.scarab}/org" filtering="no">
+            <fileset dir="${build.src.scarab}/org">
+                <include name="**/*.xml"/>
+                <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
     </target>
 
     <target name="compile-tests" depends="compile">

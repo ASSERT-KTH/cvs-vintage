@@ -1,0 +1,23 @@
+<pipeline>
+  <name>TurbineClassicPipeline</name>
+  <valves>
+
+    <!-- reset the cache in the event an exception prevented it at the end -->
+    <valve className="org.tigris.scarab.services.cache.ResetCacheValve"/>
+
+    <!-- the following is a copy of conf/turbine-classic-pipeline -->
+    <valve className="org.apache.turbine.pipeline.DetermineActionValve"/>
+    <valve className="org.apache.turbine.pipeline.DetermineTargetValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultSessionTimeoutValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultLoginValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultSessionValidationValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultACLCreationValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultActionValve"/>
+    <valve className="org.apache.turbine.pipeline.RunModulesValve"/>
+    <valve className="org.apache.turbine.pipeline.DefaultTargetValve"/>
+
+    <!-- reset the cache as soon as we are done with the pipeline -->
+    <valve className="org.tigris.scarab.services.cache.ResetCacheValve"/>
+
+  </valves>
+</pipeline>
