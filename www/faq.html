@@ -1,0 +1,265 @@
+<html>
+<head>
+<title>Scarab - Frequently Asked Questions</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Frequently Asked Questions</h2>
+<h4>$Id: faq.html,v 1.1 2002/07/24 23:05:32 jon Exp $</h4>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>Is there suitable 'propaganda' material that I could use in 
+my company demo to try to convince my boss that it is a good
+idea to use Scarab?</strong>
+</p>
+
+<p>
+The website and use of Scarab itself are all we currently have.
+Scarab is very easy to <a href="http://scarab.tigris.org/source/browse/~checkout~/scarab/README.txt">install and setup</a>, 
+so it should not take you much time to become comfortable with 
+Scarab so that you can perform your own demonstration.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>Is Scarab ready for production use?</strong>
+</p>
+
+<p>
+Scarab is in pre-1.0 beta. It has been in development for over
+two years now and there is quite a lot of features in it. On
+July 9th, 2002, we became self hosting. This means that we now
+use Scarab to track Scarab so we feel it is ready enough for
+usage. We also know that there are several large corporations
+using Scarab. Please note that we do not promise anything. If
+Scarab eats your database, then we hope you have good backups.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>What are Scarab's disadvantages over Bugzilla?</strong>
+</p>
+
+<p>
+Scarab has many features and advantages over Bugzilla, which we
+are not going to get into here, but the primary disadvantages are:
+</p>
+
+<p>
+#1. implementation of workflow<br />
+        This means that Scarab does not have any logic
+        implemented within it that allows you to say things
+        like: when the State is changed to closed, change the 
+        resolution to resolved. There is an API for allowing
+        this to happen, however, it has not been implemented
+        in the Open Source version of Scarab yet. We are hoping
+        that the community will implement this for us since 
+        CollabNet is not making this part available at this time.
+</p>
+
+<p>
+#2. testing and deployment as wide as Bugzilla<br />
+        Bugzilla has been deployed far and wide over a number
+        of years and has undergone a great amount of testing
+        and visibility on the Mozilla.org website. Scarab has 
+        not had the same level of testing and usage.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>What problems might arise if I deploy Scarab now?</strong>
+</p>
+
+<p>
+We have not heard of any major data integrity issues. In other words, we
+have not heard of Scarab destroying its own database. However, we have
+found several bugs along the way where things were not being logged
+properly or other such annoyances.
+</p>
+
+<p>
+We recommend strongly that you make regular backups of your database by
+doing full dumps. That way, if something does go wrong, not only can you
+send us a copy of your database (if appropriate) but you can also revert
+to the previous state.
+</p>
+
+<p>
+You may also run into various bugs or missing features within Scarab. It
+is best to first search our <a
+href="http://scarab.tigris.org/issues.html">issue database</a> and <a
+href="http://scarab.tigris.org/source/browse/~checkout~/scarab/KNOWN_ISSUES.txt">KNOWN_ISSUES.txt</a> file to see if we know about the
+issue. If not, please let us know by reporting it to the issue tracker.
+Whatever you do, please don't send it to the mailing lists.
+</p>
+
+<p>
+Remember, Scarab is still pre-1.0 beta software and is still under
+heavy development.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>What documentation is available?</strong>
+</p>
+
+<p>
+There is two types of documentation for Scarab. There is <a
+href="http://scarab.tigris.org/project_docs.html">what is available on
+the website</a> (which tends towards administration and other questions) and
+there is user level documentation that is built into the application itself
+and is available in the left side navigation.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>Why am I getting an error connecting to MySQL?</strong>
+</p>
+
+<p>
+From the <a
+href="http://scarab.tigris.org/source/browse/~checkout~/scarab/README.txt">README.txt</a> file:
+</p>
+
+<p>
+NOTE: If you get a 'Server configuration denies access to data source'
+      or 'access denied' or 'Invalid authorization' error from MySQL in
+      the log files, please read the MySQL documentation on how to fix
+      this error. We will not provide support for this since it is
+      really a MySQL configuration issue. Here is a couple links to help
+      you solve your problem:
+</p>
+
+<p>      
+ <a href="http://www.mysql.com/documentation/mysql/bychapter/manual_MySQL_Database_Administration.html#Access_denied">MySQL documentation</a>
+</p>
+<p>
+ <a href="http://sourceforge.net/docman/display_doc.php?docid=8968&group_id=15923">MySQL driver documentation</a>
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>How can I contribute to Scarab and why?</strong>
+</p>
+
+<p>
+How: Please see our <a href="http://scarab.tigris.org/project_members.html">Getting involved</a> document.
+</p>
+
+<p>
+Why: Because the need for a first class issue tracking system that 
+is open source is badly needed.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p>
+<strong>What is CollabNet's involvement in Scarab?</strong>
+</p>
+
+<p>
+From the Lead Developer, Jon Stevens:
+</p>
+
+<p>
+I originally started Turbine, Torque and Village with the hopes and dreams
+that one day I would be able to create a great bug tracking system based on
+those technologies that kicked the shit out of everything else out there.
+</p>
+
+<p>
+I got lucky and was hired by CollabNet to make my dream a reality. The goal
+was to always create something that could be integrated into SourceCast (so
+that I could make CollabNet money to justify my hiring), but I have always
+fought any pressure to make Scarab 'SourceCast specific'.
+</p>
+
+<p>
+So, reality is that Scarab is unique in that it really is a homegrown
+project. I just got lucky to find a corporation to sponsor the development of it.
+</p>
+
+<p>
+Many thanks to Brian B. and CollabNet for supporting my dream.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>How do I populate the database with my own issue types, attributes
+and attribute options?</strong></p>
+
+<p>
+When you first install Scarab using the ./create-db.sh -e script,
+you will get an empty database that is only populated with the
+required data. Therefore, you will need to setup your installation
+with new Modules, Issue types, Attributes and Attribute options.
+</p>
+
+<p>
+Login as the Scarab Administer account that you created/defined
+in your build.properties when you built Scarab.
+</p>
+
+<p>
+#1. Create a new module.<br />
+    Admin -> Modules -> Manage modules -> Create new module
+</p>
+
+<p>
+#2. Select the module by clicking the 'Modules' link in the top-left
+    of the screen.
+</p>
+
+<p>
+#3. Now, create a new global issue type.<br />
+    Admin -> Global -> Global issue types
+</p>
+
+<p>
+#4. Add the new issue type to the module.<br />
+    Admin -> Modules -> Manage issue types -> Create new
+</p>
+
+<p>
+#5. Set the issue type to be active and shown in the left hand nav.<br />
+    (should be the next screen after #4. if not, then it is:
+    Admin -> Modules -> Manage issue types)
+</p>
+
+<p>
+#6. Edit the issue type and create attributes and attribute options.<br />
+    Admin -> Modules -> Manage issue types (click the issue type name).
+</p>
+
+<p>
+#7. Add attributes to an attribute group.<br />
+    (click the attribute group name on the 'Edit issue type' screen
+    and then click the 'Add new' button. If there are no global attributes
+    to add (most likely in this case), click the 'Create new' button to
+    define a global attribute.)
+</p>
+    
+<p>
+#8. Defining an attribute and its options.<br />
+    (Set the name/description/type of the attribute and then save it.
+     If you have created a Dropdown list, then the ability to create
+     attribute options will show up below. Simply add options and click
+     Save. When you are done, click done and it will take you back to
+     step #7. The attribute should also appear in the group.)
+</p>
+
+<p>
+Continue to repeat the steps above until all of your issue types, attributes
+and attribute options have been defined.
+</p>
+
+<hr noshade="noshade" size="1" />
