@@ -78,7 +78,11 @@ public class AccountList extends DefaultItem {
 
 		return null;
 	}
-/*
+
+	/*
+	 * search for PGPItem based on To headerfield
+	 * 
+	 */
 	public PGPItem getPGPItem(String to) {
 
 		System.out.println("------>to: " + to);
@@ -88,7 +92,8 @@ public class AccountList extends DefaultItem {
 		for (int i = 0; i < count(); i++) {
 			AccountItem item = (AccountItem) get(i);
 			PGPItem pgpItem = item.getPGPItem();
-			String id = pgpItem.getId();
+			String id = pgpItem.get("id");
+			
 			to = to.toLowerCase();
 			id = id.toLowerCase();
 
@@ -100,7 +105,7 @@ public class AccountList extends DefaultItem {
 
 		return null;
 	}
-*/
+
 	public AccountItem hostGetAccount(String host, String address) {
 
 		System.out.println("------>host: " + host);
