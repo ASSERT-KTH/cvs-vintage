@@ -15,8 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 import org.columba.core.command.Command;
@@ -24,6 +26,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
@@ -36,6 +39,7 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.pgp.PGPController;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -123,12 +127,19 @@ public class ViewMessageCommand extends FolderCommand {
 		PGPItem pgpItem = MailConfig.getAccountList().getPGPItem(to);
 
 		// decrypt string
-		String decryptedBodyPart = "";
-		//String decryptedBodyPart = PGPController.getInstance().decrypt(encryptedBodyPart, pgpItem);
-
-		// construct new Message from decrypted string
-		ColumbaMessage message;
+		// getting controller Instance
+		PGPController controller = PGPController.getInstance();
+		// creating Stream for encrypted Body part and decrypt it
+		InputStream decryptedStream = controller.decrypt(new ByteArrayInputStream(encryptedBodyPart.getBytes()),pgpItem);
 		try {
+//			TODO should be removed if we only use Streams!
+			String decryptedBodyPart = StreamUtils.readInString(decryptedStream).toString();
+			ColumbaLogger.log.debug(decryptedBodyPart);
+			//String decryptedBodyPart = PGPController.getInstance().decrypt(encryptedBodyPart, pgpItem);
+
+			// construct new Message from decrypted string
+			ColumbaMessage message;
+	
 			message =
 				new ColumbaMessage(
 					MessageParser.parse(new CharSequenceSource(decryptedBodyPart)));
@@ -142,6 +153,10 @@ public class ViewMessageCommand extends FolderCommand {
 		}
 	}
 
+	/**
+	 * TODO we need all BodyParts as one big bodyPart that is signed to verify the signature over the whole BodyContents
+	 * TODO we should replace all String with Streams ;-)
+	 */
 	protected void verifyMessage() {
 		//		Example message:
 		//
@@ -190,6 +205,42 @@ public class ViewMessageCommand extends FolderCommand {
 
 		// The "&"s in the previous example indicate the portion of the data
 		// over which the signature was calculated.
+		// get all MimeParts with contentType="text/plain"
+		LinkedList list =
+			mimePartTree.getLeafsWithContentType(
+				mimePartTree.getRootMimeNode(),
+				"text/plain");
+
+		// get first one -> this is the one we need to decrypt
+		LocalMimePart mimePart = (LocalMimePart) list.getFirst();
+
+		// get encrypted string
+		InputStream signedMessagePart = new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
+		// get all MimeParts with contentType="application/pgp-signature"
+		LinkedList list2 =
+			mimePartTree.getLeafsWithContentType(
+				mimePartTree.getRootMimeNode(),
+				"application/pgp-signature");
+
+		// get first one -> this is the one we need to decrypt
+		mimePart = (LocalMimePart) list.getFirst();
+		// get signed part
+		InputStream signedPart = new ByteArrayInputStream(mimePart.getBody().toString().getBytes());
+		// get PGPItem, use To-headerfield and search through
+		// all accounts to find a matching PGP id
+		String to = (String) header.get("To");
+		PGPItem pgpItem = MailConfig.getAccountList().getPGPItem(to);
+
+		// getting controller Instance
+		PGPController controller = PGPController.getInstance();
+		// verify
+		boolean ok = controller.verifySignature(signedMessagePart,signedPart, pgpItem);
+		if (!ok) {
+			ColumbaLogger.log.error(controller.getPGPResultStream());
+		} else {
+			ColumbaLogger.log.debug(controller.getPGPErrorStream());
+		}
+
 	}
 
 	protected void handlePGPMessage(HeaderInterface header, Worker wsc) {
