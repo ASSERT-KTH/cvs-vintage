@@ -37,10 +37,6 @@
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageModules.vm" /> 
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ManageModules.vm" /> 
 
-#ModifyModuleBar("")
-
-<h3>Module Details</h3>
-
 #if ($createNew && $createNew.equals("true"))
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="true" /> 
@@ -86,6 +82,7 @@
     #fieldErrorMsg($moduleGroup.Url "")
    </td>
   </tr>
+#if (($createNew == "true") || ($moduleId != "0"))
   <tr>
    <th>* Parent Module:</th>
    <td> 
@@ -103,6 +100,7 @@
     #fieldErrorMsg($moduleGroup.ParentId "")
    </td>
   </tr>
+#end  
  </table>
 </div>
 
