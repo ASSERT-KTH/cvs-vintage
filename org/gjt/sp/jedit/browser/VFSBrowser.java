@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.98 2003/10/09 00:00:31 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.99 2003/11/06 03:38:44 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -379,6 +379,15 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 				maybeReloadDirectory(MiscUtilities.getParentOfPath(
 					bmsg.getBuffer().getPath()));
 			} */
+		}
+		else if(msg instanceof PluginUpdate)
+		{
+			PluginUpdate pmsg = (PluginUpdate)msg;
+			if(pmsg.getWhat() == PluginUpdate.LOADED
+				|| pmsg.getWhat() == PluginUpdate.UNLOADED)
+			{
+				plugins.updatePopupMenu();
+			}
 		}
 		else if(msg instanceof VFSUpdate)
 		{
@@ -1026,6 +1035,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 	private HistoryTextField filterField;
 	private Box toolbarBox;
 	private FavoritesMenuButton favorites;
+	private PluginsMenuButton plugins;
 	private BrowserView browserView;
 	private RE filenameFilter;
 	private int mode;
@@ -1049,7 +1059,7 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 
 		menuBar.add(new CommandsMenuButton());
 		menuBar.add(Box.createHorizontalStrut(3));
-		menuBar.add(new PluginsMenuButton());
+		menuBar.add(plugins = new PluginsMenuButton());
 		menuBar.add(Box.createHorizontalStrut(3));
 		menuBar.add(favorites = new FavoritesMenuButton());
 
@@ -1280,6 +1290,12 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		} //}}}
 
 		JPopupMenu popup;
+
+		//{{{ updatePopupMenu() method
+		void updatePopupMenu()
+		{
+			popup = null;
+		} //}}}
 
 		//{{{ createPopupMenu() method
 		private void createPopupMenu()

@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.74 2003/10/22 04:38:23 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.75 2003/11/06 03:38:45 spestov Exp $
  */
 public class DisplayManager
 {
@@ -103,17 +103,6 @@ public class DisplayManager
 					liter.remove();
 				}
 			}
-		}
-	} //}}}
-
-	//{{{ _setScreenLineCount() method
-	private static void _setScreenLineCount(Buffer buffer, int line,
-		int oldCount, int count)
-	{
-		Iterator iter = ((List)bufferMap.get(buffer)).iterator();
-		while(iter.hasNext())
-		{
-			((DisplayManager)iter.next())._setScreenLineCount(line,oldCount,count);
 		}
 	} //}}}
 
@@ -587,7 +576,15 @@ public class DisplayManager
 		// this notifies each display manager editing this
 		// buffer of the screen line count change
 		if(count != oldCount)
-			_setScreenLineCount(buffer,line,oldCount,count);
+		{
+			Iterator iter = ((List)bufferMap.get(buffer))
+				.iterator();
+			while(iter.hasNext())
+			{
+				((DisplayManager)iter.next())._setScreenLineCount(
+					line,oldCount,count);
+			}
+		}
 	} //}}}
 
 	//{{{ updateWrapSettings() method
@@ -626,18 +623,23 @@ public class DisplayManager
 		// a reset anyway
 		if(textArea.getDisplayManager() == this)
 		{
-			if(firstLine.callReset)
-				firstLine.reset();
-			else if(firstLine.callChanged)
-				firstLine.changed();
+			try
+			{
+				if(firstLine.callReset)
+					firstLine.reset();
+				else if(firstLine.callChanged)
+					firstLine.changed();
 
-			if(scrollLineCount.callReset)
-				scrollLineCount.reset();
-			else if(scrollLineCount.callChanged)
-				scrollLineCount.changed();
-
-			firstLine.callReset = firstLine.callChanged = false;
-			scrollLineCount.callReset = scrollLineCount.callChanged = false;
+				if(scrollLineCount.callReset)
+					scrollLineCount.reset();
+				else if(scrollLineCount.callChanged)
+					scrollLineCount.changed();
+			}
+			finally
+			{
+				firstLine.callReset = firstLine.callChanged = false;
+				scrollLineCount.callReset = scrollLineCount.callChanged = false;
+			}
 		}
 	} //}}}
 
@@ -1087,7 +1089,7 @@ loop:		for(;;)
 				skew = screenLines - 1;
 
 			//{{{ Debug code
-			if(Debug.VERIFY_FIRST_LINE)
+			if(Debug.SCROLL_VERIFY)
 			{
 				int verifyScrollLine = 0;
 
@@ -1570,10 +1572,10 @@ loop:		for(;;)
 				/* collapse 2 */
 				else if(fvm[starti] == startLine)
 				{
-					int newStart = fvm[endi + 1] - 1;
+					//int newStart = fvm[endi + 1] - 1;
 					fvmput(starti,endi + 1,null);
-					fvm[starti] = newStart;
-					starti++;
+					//fvm[starti] = newStart;
+					//starti++;
 				}
 				/* shift */
 				else
@@ -1586,6 +1588,25 @@ loop:		for(;;)
 				/* update */
 				for(int i = starti; i < fvmcount; i++)
 					fvm[i] -= numLines;
+
+				if(firstLine.physicalLine
+					> getLastVisibleLine()
+					|| firstLine.physicalLine
+					< getFirstVisibleLine())
+				{
+					// will be handled later.
+				}
+				// very subtle... if we leave this for
+				// ensurePhysicalLineIsVisible(), an
+				// extra line will be added to the
+				// scroll line count.
+				else if(!isLineVisible(
+					firstLine.physicalLine))
+				{
+					firstLine.physicalLine =
+						getNextVisibleLine(
+						firstLine.physicalLine);
+				}
 
 				lastfvmget = -1;
 				fvmdump();
@@ -1676,27 +1697,51 @@ loop:		for(;;)
 							delayedUpdateEnd);
 					}
 
-					int firstLine = textArea.getFirstPhysicalLine();
-					int lastLine = textArea.getLastPhysicalLine();
+					int _firstLine = textArea.getFirstPhysicalLine();
+					int _lastLine = textArea.getLastPhysicalLine();
 
 					int line = delayedUpdateStart;
 					if(!isLineVisible(line))
 						line = getNextVisibleLine(line);
 					while(line != -1 && line <= delayedUpdateEnd)
 					{
-						if(line < firstLine
-							|| line > lastLine)
+						if(line < _firstLine
+							|| line > _lastLine)
 						{
 							getScreenLineCount(line);
 						}
 						line = getNextVisibleLine(line);
 					}
 
+					textArea.chunkCache.getLineInfo(
+						textArea.getVisibleLines()
+						- 1);
+
 					_notifyScreenLineChanges();
 				}
 
 				textArea._finishCaretUpdate();
 			}
+
+			//{{{ Debug code
+			if(Debug.SCROLL_VERIFY)
+			{
+				int scrollLineCount = 0;
+				for(int i = 0; i < textArea.getLineCount(); i++)
+				{
+					if(isLineVisible(i))
+					{
+						scrollLineCount +=
+							getScreenLineCount(i);
+					}
+				}
+				if(scrollLineCount != getScrollLineCount())
+				{
+					throw new InternalError(scrollLineCount
+						+ " != "
+						+ getScrollLineCount());
+				}
+			} //}}}
 
 			delayedUpdate = false;
 		} //}}}

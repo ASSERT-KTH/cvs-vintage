@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.12 2003/07/23 06:08:54 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.13 2003/11/06 03:38:44 spestov Exp $
  */
 public class BufferHistory
 {
@@ -269,10 +269,21 @@ public class BufferHistory
 		while(iter.hasNext())
 		{
 			Entry entry = (Entry)iter.next();
-			if(entry.path.equals(path))
+			if(pathsCaseInsensitive)
 			{
-				iter.remove();
-				return;
+				if(entry.path.equalsIgnoreCase(path))
+				{
+					iter.remove();
+					return;
+				}
+			}
+			else
+			{
+				if(entry.path.equals(path))
+				{
+					iter.remove();
+					return;
+				}
 			}
 		}
 	} //}}}
