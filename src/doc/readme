@@ -1,8 +1,8 @@
-$Id: readme,v 1.15 2001/06/21 22:35:32 larryi Exp $
+$Id: readme,v 1.16 2001/07/19 20:20:10 larryi Exp $
         
                            Release Notes for:
                            ====================
-                           TOMCAT Version 3.3m4
+                           TOMCAT Version 3.3b1
                            ====================
 
 
@@ -43,19 +43,19 @@ browser at the file "tomcat_ug.html" found in the same directory as this
 file.
 
 IMPORTANT NOTE: Some important changes have been recently added to
-Tomcat 3.3m4 which are not yet covered in the accompanying documentation.
-These changes make Tomcat 3.3m4 quite different from Tomcat 3.2 in a number
+Tomcat 3.3b1 which are not yet covered in the accompanying documentation.
+These changes make Tomcat 3.3b1 quite different from Tomcat 3.2 in a number
 of ways.  These changes include the following:
 
 - Class Loading:
 
-  Tomcat 3.3m4 now uses a new hierarchy of class loaders. It provides for the
+  Tomcat 3.3b1 now uses a new hierarchy of class loaders. It provides for the
   separation of the classes used by the Tomcat container and the classes used
   by web applications.  This solves a major problem in Tomcat 3.2 where all
   web applications had to share Tomcat's XML parser. Now each web applicaton
   can have its own XML parser, or if desired all web applications can share
   an XML parser different from the one used by Tomcat. As a side effect of
-  this change, web applications in Tomcat 3.3m4 are not provided an XML
+  this change, web applications in Tomcat 3.3b1 are not provided an XML
   parser by default.  You must supply one if your web application requires
   one. For details about where to place jar files, see the README files in the
   "lib/container", "lib/common", and "lib/apps" directories of your Tomcat
@@ -65,7 +65,7 @@ of ways.  These changes include the following:
 
   The configuration of Tomcat has been reorganized into separate configuration
   files.  The conf/modules.xml file contains module definitions for the modules
-  (a.k.a Interceptors) available in Tomcat 3.3m4. The conf/server.xml file
+  (a.k.a Interceptors) available in Tomcat 3.3b1. The conf/server.xml file
   specifies which modules and connectors the Tomcat container should use along
   with their settings.
 
@@ -80,24 +80,38 @@ of ways.  These changes include the following:
   Another change related to Tomcat configuration is that auto-generated
   web server configuration files, such as tomcat-apache.conf, are not generated
   by default.  To turn these on, add the following modules after the
-  <AutoWebApp ... /> module in the server.xml file:
+  <AutoWebApp ... /> module in the server.xml file.  The locations for their
+  configuration files is also shown.
 
-  Apache configs:  <ApacheConfig />
-  IIS config:      <IISConfig />
-  Netscape config: <NSConfig />
+  Apache mod_jk config:    <ApacheConfig />
+         Def conf file:    conf/auto/mod_jk.conf
+      Def workers file:    conf/jk/workers.properties
+
+  Apache mod_jserv config: <JservConfig />
+         Def conf file:    conf/jserv/tomcat-apache.conf
+
+  IIS config:              <IISConfig />
+              Reg file:    conf/jk/iis_redirect.reg-auto
+          Workers file:    conf/jk/workers.properties
+      Workers map file:    conf/jk/uriworkermap.properties
+
+  Netscape config:         <NSConfig />
+             Conf file:    conf/jk/obj.conf-auto
+          Workers file:    conf/jk/workers.properties
 
   Note: The old organization used in Tomcat 3.2 where all the configuration is
-  placed in server.xml is still supported by Tomcat 3.3m4.
+  placed in server.xml is still supported by Tomcat 3.3b1 for Apache.  However,
+  you will need to set the appropriate parameters on the interceptor.
 
 - Tomcat Testing:
 
   The "test" web application along with the test-tomcat.xml and
-  associated support files are not part of the binary Tomcat 3.3m4 distribution.
+  associated support files are not part of the binary Tomcat 3.3b1 distribution.
   The "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-m4/apps" directory of the Tomcat 3.3m4
+  may be downloaded from the "v3.3-b1/apps" directory of the Tomcat 3.3b1
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3m4 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3b1 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
@@ -105,7 +119,7 @@ of ways.  These changes include the following:
 	./bin/tomcat.sh run -enableAdmin    <-- Unix
 	bin\tomcat run -enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3m4 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3b1 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -191,14 +205,6 @@ most important are:
 
   See conf/server.xml for more information.
 
-- The jakarta-tomcat-jasper project has been created to support refactoring
-  and other improvements for Jasper, called as Jasper34. As a separate
-  project, this development can occur independent of Tomcat 3.x and 4.x.
-  Some preliminary work has been completed and the result is included in the
-  Tomcat 3.3 build and binary distributions.  If you wish to give Jasper34
-  a try, change "<JspInterceptor ...>" to "<JspInterceptor34 ...>" in your
-  server.xml file.
-
 - (more to be added)
 
 =============================================================================
@@ -281,15 +287,7 @@ reload support is not recommended for production applications because of
 its experimental nature, and the extra overhead required to perform the
 necessary checks on every request.
 
-6.5 Returned string from getRequestURI()
-
-The Servlet 2.2 Errata - April 27, 2000 specifies that HttpServletRequest
-methods getServletPath, getPathInfo, and getPathTranslated should return
-decoded strings, while getRequestURI() and getContextPath() remain encoded.
-Currently, Tomcat 3.3 returns the getRequestURI as decoded instead of
-encoded.  This should be fixed before the final release of Tomcat 3.3.
-
-6.6 Avoiding "Out of environment space" errors on Windows 95/98
+6.5 Avoiding "Out of environment space" errors on Windows 95/98
 
 This error can easily occur since the default amount of environment space is
 typically insufficient to run Tomcat.  Here are a couple of ways to avoid it.
@@ -321,7 +319,7 @@ typically insufficient to run Tomcat.  Here are a couple of ways to avoid it.
      line to your autoexec.bat or to the startup.bat and shutdown.bat files
      themselves.
 
-6.7 URL's are now case sensitive on all operating systems
+6.6 URL's are now case sensitive on all operating systems
 
 As of Tomcat 3.2, URL's are case sensitive for all operating systems,
 including operating systems which have case insensitive file systems, such as
@@ -350,7 +348,7 @@ URL. If that static page contains relative links to resources served by
 Tomcat, then invoking those links would carry the mismatched case to Tomcat
 where it cause the resource not to be found.
 
-6.8 Generated Configuration Files for Web Connectors
+6.7 Generated Configuration Files for Web Connectors
 
 At startup time, Tomcat normally generates configuration files like
 "tomcat-apache.conf" to reflect the contexts that are defined.  However, the
@@ -363,7 +361,7 @@ This is a known limitation of the design of the web connectors for Tomcat 3.2
 and later, and will be addressed by the introduction of the MOD_WARP connector
 in Tomcat 4.x.
 
-6.9 Limitation on Form Based Login
+6.8 Limitation on Form Based Login
 
 If the pages you specify for <form-login-page> or <form-error-page> are within
 the area protected by a security constraint, Tomcat 3.3 will be unable to
@@ -376,7 +374,7 @@ form error page in the document root directory, place all other pages in one
 or more subdirectories, and establish security constraints to protect the
 subdirectories.
 
-6.10 Limitation on Document Base Paths
+6.9 Limitation on Document Base Paths
 
 Tomcat 3.3 is unable to support Windows SMB paths in a <Context> directive
 like this:
