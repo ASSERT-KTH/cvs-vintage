@@ -1,5 +1,5 @@
 @echo off
-rem $Id: jspc.bat,v 1.3 2000/02/26 20:44:15 rubys Exp $
+rem $Id: jspc.bat,v 1.4 2000/03/31 20:16:58 craigmcc Exp $
 rem A batch file to run the JspC Compiler
 
 rem This batch file written and tested under Windows NT
@@ -18,6 +18,6 @@ echo Unable to determine the value of TOMCAT_HOME.
 goto eof
 
 :start
-call %TOMCAT_HOME%\bin\tomcat jspc %*
+call %TOMCAT_HOME%\bin\tomcat jspc %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 :eof
