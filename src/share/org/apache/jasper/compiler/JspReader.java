@@ -164,7 +164,12 @@ public class JspReader {
         }
 
 	// Register the file, and read its content:
-	int fileid    = registerSourceFile(file.getAbsolutePath());
+	String longName = (context == null)
+	    ? file.getAbsolutePath()
+	    : context.getRealPath(file.toString());
+
+	int fileid = registerSourceFile(longName);
+	
         if (fileid == -1)
             throw new ParseException(Constants.getString("jsp.error.file.already.registered",
                                                          new Object[] { 
