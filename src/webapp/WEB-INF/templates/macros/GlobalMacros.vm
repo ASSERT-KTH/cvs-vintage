@@ -56,7 +56,9 @@ $canMakeTransition
   #set ($newValues = $attrInput.get($optionFieldName).Value)
   #set ( $count = "#AllowedTransitionsForOption ( $attrValue $optionFieldName $size $multiple )")
 
-  #if  ($count.trim() == "1")  
+  #if ($count.trim() == "0" )
+      <input type="hidden" name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>  
+  #elseif ($count.trim() == "1" )
 
     #foreach ($option in $module.getOptionTree($attr, $issueType, false))
      #set ($canMakeTransition = "#CanMakeTransitionForOption ($newValues $option $issue $multiple)")
@@ -83,8 +85,8 @@ $canMakeTransition
 
 
  <select name="$attrInput.get($optionFieldName).Key"
-   #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
-  #if ($size.length() == 0 && $newValues == '')
+  #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
+  #if ($size.length() == 0 && (!$required || $newValues == '' ))
    <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $module.getOptionTree($attr, $issueType, false))
