@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.25 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: FigClass.java,v 1.26 2002/08/17 12:39:57 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -36,6 +36,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
+import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
@@ -609,7 +610,12 @@ public class FigClass extends FigNodeModelElement {
     if (i != -1) {
 	  highlightedFigText = (CompartmentFigText)ft;
 	  highlightedFigText.setHighlighted(true);
-	  ParserDisplay.SINGLETON.parseAttributeFig(cls,(MAttribute)highlightedFigText.getFeature(),highlightedFigText.getText().trim());
+	  try {
+	    ParserDisplay.SINGLETON.parseAttributeFig(cls,(MAttribute)highlightedFigText.getFeature(),highlightedFigText.getText().trim());
+	    ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+	  } catch (ParseException pe) {
+	    ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+	  }
 	  return;
 	}
 	i = _operVec.getFigs().indexOf(ft);
