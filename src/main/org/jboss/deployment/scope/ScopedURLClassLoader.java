@@ -104,12 +104,20 @@ public class ScopedURLClassLoader extends URLClassLoader {
         return result;
     }
     
+    /** what happens on deploy, could be overridden to setup down meta-data and such 
+     *  @throws J2eeDeploymentException if this stage of deployment fails for some reason
+     */
+    protected void onDeploy() throws J2eeDeploymentException {
+        // nothing
+    }
+
     /** what happens on undeploy, could be overridden to tear down meta-data and such 
      *  @throws J2eeDeploymentException if this last stage of undeployment fails for some reason
      */
     protected void onUndeploy() throws J2eeDeploymentException {
         // nothing
     }
+
 
     /** returns a set of relative urls in string spec that
      * point to applications to which this application

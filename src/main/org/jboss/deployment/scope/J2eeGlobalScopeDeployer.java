@@ -290,6 +290,9 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
             Thread.currentThread().setContextClassLoader(source);
             
             try{
+                // enable the scoped classloader to setup some
+                // metadata or such before entering application modules
+                source.onDeploy();
                 // redirect all modules to the responsible deployers
                 startModules(_d,source,oldCl);
                 // and report successful deployment to collector
