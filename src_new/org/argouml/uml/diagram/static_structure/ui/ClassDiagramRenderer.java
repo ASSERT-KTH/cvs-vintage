@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.8 2002/10/20 21:11:17 linus Exp $
+// $Id: ClassDiagramRenderer.java,v 1.9 2002/10/23 05:24:22 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -111,25 +111,13 @@ public class ClassDiagramRenderer
         }
         if (edge instanceof MPermission) {
             MPermission per = (MPermission) edge;
-            cat.debug("stereotype of Permission " + per.getStereotype());
-            FigPermission perFig = new FigPermission(per);
-
-            MModelElement supplier = 
-                (MModelElement)((per.getSuppliers().toArray())[0]);
-            MModelElement client = 
-                (MModelElement)((per.getClients().toArray())[0]);
-		  
-            FigNode supFN = (FigNode) lay.presentationFor(supplier);
-            FigNode cliFN = (FigNode) lay.presentationFor(client);
-		  
-            perFig.setSourcePortFig(cliFN);
-            perFig.setSourceFigNode(cliFN);
-            perFig.setDestPortFig(supFN);
-            perFig.setDestFigNode(supFN);
-            perFig.getFig().setLayer(lay);
-            perFig.getFig().setDashed(true);
+            FigPermission perFig = new FigPermission(per, lay);
             return perFig;
-
+        }
+        if (edge instanceof MUsage) {
+            MUsage usage = (MUsage) edge;
+            FigUsage usageFig = new FigUsage(usage, lay);
+            return usageFig;
         }
         if (edge instanceof MDependency) {
             cat.debug("get fig for "+edge);
@@ -153,20 +141,7 @@ public class ClassDiagramRenderer
                 return realFig;
             }
             else {
-                FigDependency depFig = new FigDependency(dep);
-		  
-                MModelElement supplier = (MModelElement)((dep.getSuppliers().toArray())[0]);
-                MModelElement client = (MModelElement)((dep.getClients().toArray())[0]);
-		  
-                FigNode supFN = (FigNode) lay.presentationFor(supplier);
-                FigNode cliFN = (FigNode) lay.presentationFor(client);
-		  
-                depFig.setSourcePortFig(cliFN);
-                depFig.setSourceFigNode(cliFN);
-                depFig.setDestPortFig(supFN);
-                depFig.setDestFigNode(supFN);
-                depFig.getFig().setLayer(lay);
-                depFig.getFig().setDashed(true);
+                FigDependency depFig = new FigDependency(dep, lay);
                 return depFig;
             }
         }
