@@ -95,7 +95,7 @@ public class TestServer {
 			System.out.println( "Load and register the JMX RMI-Connector" );
 			ObjectName lConnectorName = new ObjectName( lServer.getDefaultDomain(), "service", "RMIConnector" );
 			lServer.createMBean(
-				"org.jboss.jmx.connector.rmi.RMIConnectorService",
+				"org.jboss.jmx.connector.rmi.RMIAdaptorService",
 				lConnectorName
 			);
 			System.out.println( "Start the Connector" );

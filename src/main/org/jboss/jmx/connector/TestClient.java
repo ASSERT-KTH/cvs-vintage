@@ -71,24 +71,12 @@ public class TestClient {
 				new ObjectName( lLocalServer.getDefaultDomain(), "name", "ConnectorFactory" )
 			);
 			System.out.println( "Found Factory: " + lFactoryInstance.getObjectName() );
-			lLocalServer.invoke(
-				lFactoryInstance.getObjectName(),
-				"init",
-				new Object[] {},
-				new String[] {}
-			);
-			lLocalServer.invoke(
-				lFactoryInstance.getObjectName(),
-				"start",
-				new Object[] {},
-				new String[] {}
-			);
 			int lType = -1;
-         while( lType != 1 && lType != 2 ) {
+         while( lType < 1 || lType > 3 ) {
             lType = getUserInput(
                "\n" +
                "2. Do you want to use RMI or JMS to transfer Notifications\n" +
-               "=> enter 1 from RMI or 2 for JMS and then hit enter"
+               "=> enter 1 from RMI, 2 for JMS or 3 for Polling and then hit enter"
             );
             System.out.println( "Type: " + lType );
          }
@@ -98,7 +86,14 @@ public class TestClient {
                break;
             case 2:
                lType = JMXConnector.NOTIFICATION_TYPE_JMS;
+               break;
+            case 3:
+               lType = JMXConnector.NOTIFICATION_TYPE_POLLING;
          }
+			lLocalServer.setAttribute(
+				lFactoryInstance.getObjectName(),
+            new Attribute( "NotificationType", new Integer( lType ) )
+         );
          String lJMSName = null;
          if( lType == JMXConnector.NOTIFICATION_TYPE_JMS ) {
             while( lJMSName == null || lJMSName.trim().length() == 0 ) {
@@ -107,6 +102,9 @@ public class TestClient {
                   "2.a. Enter the JMS Queue Factory Name and hit enter\n"
                );
             }
+         }
+         if( lJMSName == null || lJMSName.trim().length() == 0 ) {
+            lJMSName = null;
          }
 			lLocalServer.setAttribute(
 				lFactoryInstance.getObjectName(),
@@ -125,6 +123,19 @@ public class TestClient {
 				lFactoryInstance.getObjectName(),
             new Attribute( "EJBAdaptorName", lEJBAdaptorName )
          );
+         // Init and start Factory because all attributes are set
+			lLocalServer.invoke(
+				lFactoryInstance.getObjectName(),
+				"init",
+				new Object[] {},
+				new String[] {}
+			);
+			lLocalServer.invoke(
+				lFactoryInstance.getObjectName(),
+				"start",
+				new Object[] {},
+				new String[] {}
+			);
 			getUserInput(
 				"\n" +
 				"4. Lookup for all available connectors with the JNDI defined by jndi.properties\n" +
@@ -303,20 +314,24 @@ public class TestClient {
 			Iterator i = pConnector.queryMBeans( null, null ).iterator();
 			int j = 0;
 			while( i.hasNext() ) {
-				ObjectInstance lBean = (ObjectInstance) i.next();
+				ObjectName lBean = ( (ObjectInstance) i.next() ).getObjectName();
 				try {
-					pConnector.addNotificationListener(
-						lBean.getObjectName(),
-						(NotificationListener) new Listener(),
-						(NotificationFilter) null,
-						new NotSerializableHandback(
-							lBean.getObjectName() + "" + j++
-						)
-					);
-					System.out.println( "Added notification listener to: " + lBean.getObjectName() );
+               if( pConnector.isInstanceOf( lBean, "javax.management.NotificationBroadcaster" ) ) {
+                  pConnector.addNotificationListener(
+                     lBean,
+                     (NotificationListener) new Listener(),
+                     (NotificationFilter) null,
+                     new NotSerializableHandback(
+                        lBean + "" + j++
+                     )
+                  );
+                  System.out.println( "Added notification listener to: " + lBean );
+               } else {
+                  System.out.println( "This MBean is not a notification broadcaster: " + lBean );
+               }
 				}
 				catch( RuntimeOperationsException roe ) {
-					System.out.println( "Could not add listener to: " + lBean.getObjectName() +
+					System.out.println( "Could not add listener to: " + lBean +
 						", reason could be that it is not a broadcaster" );
 				}
 				catch( Exception e ) {

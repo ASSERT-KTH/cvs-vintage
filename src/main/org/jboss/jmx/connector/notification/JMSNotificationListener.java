@@ -32,7 +32,7 @@ import javax.rmi.PortableRemoteObject;
 * Remote Listener using JMS to send the event
 **/
 public class JMSNotificationListener
-   implements NotificationListener, Serializable
+   implements JMSNotificationListenerMBean
 {
 
    // JMS Queue Session and Sender must be created on the server-side

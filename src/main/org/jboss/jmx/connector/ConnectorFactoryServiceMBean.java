@@ -32,6 +32,10 @@ public interface ConnectorFactoryServiceMBean
 	
 	// Public --------------------------------------------------------
 
+   public int getNotificationType();
+   
+   public void setNotificationType( int pNotificationType );
+
    /**
    * @return JMS Queue Name and if not null then JMS will be used
    **/

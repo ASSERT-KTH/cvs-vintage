@@ -12,7 +12,6 @@ import org.jboss.jmx.adaptor.interfaces.AdaptorHome;
 
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.rmi.server.UnicastRemoteObject;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
@@ -25,18 +24,6 @@ import java.util.Vector;
 
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Session;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -60,6 +47,7 @@ import javax.management.MBeanRegistrationException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
+import javax.management.RuntimeOperationsException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -68,10 +56,11 @@ import javax.rmi.PortableRemoteObject;
 
 import org.jboss.jmx.ObjectHandler;
 import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.notification.ClientNotificationListener;
 import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
-import org.jboss.jmx.connector.notification.JMSListenerSet;
-import org.jboss.jmx.connector.notification.JMSNotificationListener;
-import org.jboss.jmx.connector.notification.RMINotificationSender;
+import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
+import org.jboss.jmx.connector.notification.RMIClientNotificationListener;
+import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 
 /**
 * This is the equivalent to the RMI Connector but uses the
@@ -85,7 +74,7 @@ import org.jboss.jmx.connector.notification.RMINotificationSender;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 **/
 public class EJBConnector
    implements JMXConnector, EJBConnectorMBean
@@ -104,6 +93,7 @@ public class EJBConnector
    private Hashtable         mHandbackPool = new Hashtable();
    private Vector            mListeners = new Vector();
    private String            mJNDIServer;
+   private String            mJNDIName;
    private int               mEventType = NOTIFICATION_TYPE_RMI;
    private String[]          mOptions = new String[ 0 ];
 
@@ -161,26 +151,24 @@ public class EJBConnector
    *                    will be used.
    **/
    public EJBConnector( int pType, String[] pOptions, String pJNDIName, String pJNDIServer ) {
-      try {
-         if( pType == NOTIFICATION_TYPE_RMI || pType == NOTIFICATION_TYPE_JMS ) {
-            mEventType = pType;
-         }
-         if( pOptions != null ) {
-            mOptions = pOptions;
-         }
-         if( pJNDIName == null || pJNDIName.trim().length() == 0 ) {
-            pJNDIName = "ejb/jmx/ejb/Adaptor";
-         }
-         if( pJNDIServer == null || pJNDIServer.trim().length() == 0 ) {
-            mJNDIServer = null;
-         } else {
-            mJNDIServer = pJNDIServer;
-         }
-         mAdaptor = getAdaptorBean( pJNDIName );
+      if( pType == NOTIFICATION_TYPE_RMI || pType == NOTIFICATION_TYPE_JMS
+         || pType == NOTIFICATION_TYPE_POLLING ) {
+         mEventType = pType;
       }
-      catch( Exception e ) {
-         e.printStackTrace();
+      if( pOptions != null ) {
+         mOptions = pOptions;
       }
+      if( pJNDIName == null || pJNDIName.trim().length() == 0 ) {
+         mJNDIName = "ejb/jmx/ejb/Adaptor";
+      } else {
+         mJNDIName = pJNDIName;
+      }
+      if( pJNDIServer == null || pJNDIServer.trim().length() == 0 ) {
+         mJNDIServer = null;
+      } else {
+         mJNDIServer = pJNDIServer;
+      }
+      start( null );
    }
    
    // -------------------------------------------------------------------------
@@ -258,111 +246,10 @@ public class EJBConnector
       }
    }
    
-   /**
-   * Creates a SurveyManagement bean.
-   *
-   * @return Returns a SurveyManagement bean for use by the Survey handler.
-   **/
-   private QueueConnection getQueueConnection( String pJNDIName )
-      throws ServiceUnavailableException
-   {
-      try {
-         Context lJNDIContext = null;
-         if( mJNDIServer != null ) {
-            Hashtable lProperties = new Hashtable();
-            lProperties.put( Context.PROVIDER_URL, mJNDIServer );
-            lJNDIContext = new InitialContext( lProperties );
-         } else {
-            lJNDIContext = new InitialContext();
-         }
-         Object aRef = lJNDIContext.lookup( pJNDIName );
-         QueueConnectionFactory aFactory = (QueueConnectionFactory) 
-            PortableRemoteObject.narrow( aRef, QueueConnectionFactory.class );
-         QueueConnection lConnection = aFactory.createQueueConnection();
-         lConnection.start();
-         return lConnection;
-      }
-      catch( NamingException pNE ) {
-         pNE.printStackTrace();
-         throw new ServiceUnavailableException( 
-            "JNDI lookup failed: " + pNE.getMessage() 
-         );
-      }
-      catch( JMSException je ) {
-         throw new ServiceUnavailableException(
-            "Remote communication error: " + je.getMessage()
-         );
-      }
-   }
-   
    // -------------------------------------------------------------------------
    // MBeanServer Implementations
    // -------------------------------------------------------------------------  
    
-   public Object instantiate(
-      String pClassName
-   ) throws
-      ReflectionException,
-      MBeanException
-   {
-      try {
-         return mAdaptor.instantiate( pClassName );
-      }
-      catch( RemoteException re ) {
-         throw new MBeanException( re );
-      }
-   }
-   
-   public Object instantiate(
-      String pClassName,
-      ObjectName pLoaderName
-   ) throws
-      ReflectionException,
-      MBeanException,
-      InstanceNotFoundException
-   {
-      try {
-         return mAdaptor.instantiate( pClassName, pLoaderName );
-      }
-      catch( RemoteException re ) {
-         throw new MBeanException( re );
-      }
-   }
-
-   public Object instantiate(
-      String pClassName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      MBeanException
-   {
-      try {
-         return mAdaptor.instantiate( pClassName, pParams, pSignature );
-      }
-      catch( RemoteException re ) {
-         throw new MBeanException( re );
-      }
-   }
-
-   public Object instantiate(
-      String pClassName,
-      ObjectName pLoaderName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      MBeanException,
-      InstanceNotFoundException
-   {
-      try {
-         return mAdaptor.instantiate( pClassName, pLoaderName, pParams, pSignature );
-      }
-      catch( RemoteException re ) {
-         throw new MBeanException( re );
-      }
-   }
-
    public ObjectInstance createMBean(
       String pClassName,
       ObjectName pName
@@ -417,6 +304,7 @@ public class EJBConnector
          return mAdaptor.createMBean( pClassName, pName, pParams, pSignature );
       }
       catch( RemoteException re ) {
+         re.printStackTrace();
          throw new MBeanException( re );
       }
    }
@@ -443,36 +331,20 @@ public class EJBConnector
       }
    }
 
-   public ObjectInstance registerMBean(
-      Object pObject,
-      ObjectName pName
-   ) throws
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      NotCompliantMBeanException
-   {
-      try {
-         return mAdaptor.registerMBean( (ObjectHandler) pObject, pName );
-      }
-      catch( RemoteException re ) {
-         throw new MBeanRegistrationException( re );
-      }
-   }
-
-   public void unregisterMBean(
-      ObjectName pName
-   ) throws
-      InstanceNotFoundException,
-      MBeanRegistrationException
+	public void unregisterMBean(
+		ObjectName pName
+	) throws
+		InstanceNotFoundException,
+		MBeanRegistrationException
    {
       try {
          mAdaptor.unregisterMBean( pName );
       }
       catch( RemoteException re ) {
-         throw new MBeanRegistrationException( re );
+         throw new RuntimeException( "Remote access to perform this operation failed: " + re.getMessage() );
       }
    }
-
+   
    public ObjectInstance getObjectInstance(
       ObjectName pName
    ) throws
@@ -645,69 +517,52 @@ public class EJBConnector
    ) throws
       InstanceNotFoundException
    {
-      switch( mEventType ) {
-         case NOTIFICATION_TYPE_RMI:
-            // Because the it is not possible to create a remote
-            // NotificationListener directly a MBean must be loaded
-            // and then added as new listener
-            try {
-               // Create the remote Notification listener (from server view: sender)
-               Listener lRemoteListener = new Listener(
+      try {
+         ClientNotificationListener lListener = null;
+         switch( mEventType ) {
+            case NOTIFICATION_TYPE_RMI:
+               lListener = new RMIClientNotificationListener(
+                  pName,
                   pListener,
                   pHandback,
-                  pName
+                  pFilter,
+                  this
                );
-               // Export the RMI object to become a callback object
-               UnicastRemoteObject.exportObject( lRemoteListener );
-               // Register the listener as MBean on the remote JMX server
-               ObjectName lName = createMBean(
-                  "org.jboss.jmx.connector.notification.RMINotificationListener",
-                  new ObjectName( "EJBAdaptor:id=" + lRemoteListener.getId() ),
-                  new Object[] { lRemoteListener },
-                  new String[] { RMINotificationSender.class.getName() }
-               ).getObjectName();
-               // Add this MBean now as listener on the server
-               mAdaptor.addNotificationListener( pName, lName, pFilter, lRemoteListener.getHandback() );
-               // Add this listener on the client to remove it when the client goes down
-               mListeners.addElement( lRemoteListener );
-            }
-            catch( Exception e ) {
-               if( e instanceof RuntimeException ) {
-                  throw (RuntimeException) e;
-               }
-               if( e instanceof InstanceNotFoundException ) {
-                  throw (InstanceNotFoundException) e;
-               }
-               throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
-            }
-            break;
-         case NOTIFICATION_TYPE_JMS:
-            try {
-               // Get the JMS QueueConnectionFactory from the J2EE server
-               QueueConnection lConnection = getQueueConnection( mOptions[ 0 ] );
-               // Create JMS Session and create temporary Queue
-               QueueSession lSession = lConnection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
-               Queue lQueue = lSession.createTemporaryQueue();
-               // Create "remote" listener and register on the JMX server through the adaptor
-               JMSNotificationListener lRemoteListener = new JMSNotificationListener( mOptions[ 0 ], lQueue );
-               mAdaptor.addNotificationListener( pName, lRemoteListener, pFilter, null );
-               // Create JMS message receiver, create local message listener and set it as message
-               // listener to the receiver
-               QueueReceiver lReceiver = lSession.createReceiver( lQueue, null );
-               lReceiver.setMessageListener( new JMSClientNotificationListener( pListener, pHandback ) );
-               // Add the listener as registered listener to enable the connector to remove it
-               // when going down or the client request to remove it
-               mListeners.addElement( new JMSListenerSet( pName, pListener, lRemoteListener ) );
-            }
-            catch( Exception e ) {
-               if( e instanceof RuntimeException ) {
-                  throw (RuntimeException) e;
-               }
-               if( e instanceof InstanceNotFoundException ) {
-                  throw (InstanceNotFoundException) e;
-               }
-               throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
-            }
+               break;
+            case NOTIFICATION_TYPE_JMS:
+               lListener = new JMSClientNotificationListener(
+                  pName,
+                  pListener,
+                  pHandback,
+                  pFilter,
+                  mOptions[ 0 ],
+                  (String) mJNDIServer,
+                  this
+               );
+               break;
+            case NOTIFICATION_TYPE_POLLING:
+               lListener = new PollingClientNotificationListener(
+                  pName,
+                  pListener,
+                  pHandback,
+                  pFilter,
+                  5000, // Sleeping Period
+                  2500, // Maximum Pooled List Size
+                  this
+               );
+         }
+         // Add this listener on the client to remove it when the client goes down
+         mListeners.addElement( lListener );
+      }
+      catch( Exception e ) {
+         if( e instanceof RuntimeException ) {
+            throw (RuntimeException) e;
+         }
+         if( e instanceof InstanceNotFoundException ) {
+            throw (InstanceNotFoundException) e;
+         }
+         e.printStackTrace();
+         throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
       }
    }
 
@@ -741,67 +596,16 @@ public class EJBConnector
       InstanceNotFoundException,
       ListenerNotFoundException
    {
-      Iterator i = mListeners.iterator();
-      switch( mEventType ) {
-         case NOTIFICATION_TYPE_RMI:
-            Listener lCheck = new Listener( pListener, null, pName );
-            // Lookup if the given listener is registered
-            while( i.hasNext() ) {
-               Listener lListener = (Listener) i.next();
-               if( lCheck.equals( lListener ) ) {
-                  // If found then get the remote listener and remove it from the
-                  // the Connector
-                  try {
-                     ObjectName lName = new ObjectName( "EJBAdaptor:id=" + lListener.getId() );
-                     mAdaptor.removeNotificationListener(
-                        pName,
-                        lName
-                     );
-                     mAdaptor.unregisterMBean( lName );
-                  }
-                  catch( Exception e ) {
-                     if( e instanceof InstanceNotFoundException ) {
-                        throw (InstanceNotFoundException) e;
-                     }
-                     if( e instanceof ListenerNotFoundException ) {
-                        throw (ListenerNotFoundException) e;
-                     }
-                     throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
-                  }
-                  finally {
-                     i.remove();
-                  }
-               }
-            }
-            break;
-         case NOTIFICATION_TYPE_JMS:
-            JMSListenerSet lSet = new JMSListenerSet( pName, pListener, null );
-            // Lookup if the given listener is registered
-            while( i.hasNext() ) {
-               JMSListenerSet lJMSListener = (JMSListenerSet) i.next();
-               if( lSet.equals( lJMSListener ) ) {
-                  // If found then get the remote listener and remove it from the
-                  // the Connector
-                  try {
-                     mAdaptor.removeNotificationListener(
-                        pName,
-                        (NotificationListener) lJMSListener.getRemoteListener()
-                     );
-                  }
-                  catch( Exception e ) {
-                     if( e instanceof InstanceNotFoundException ) {
-                        throw (InstanceNotFoundException) e;
-                     }
-                     if( e instanceof ListenerNotFoundException ) {
-                        throw (ListenerNotFoundException) e;
-                     }
-                     throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
-                  }
-                  finally {
-                     i.remove();
-                  }
-               }
-            }
+      try {
+         ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
+         int i = mListeners.indexOf( lCheck );
+         if( i >= 0 ) {
+            ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
+            unregisterMBean( lListener.getRemoteListenerName() );
+         }
+      }
+      catch( MBeanRegistrationException mbre ) {
+         throw new RuntimeException( "Remote access to perform this operation failed: " + mbre.getMessage() );
       }
    }
 
@@ -835,106 +639,41 @@ public class EJBConnector
       }
    }
 
-   public ObjectInputStream deserialize(
-      ObjectName pName,
-      byte[] pData
-   ) throws
-      InstanceNotFoundException,
-      OperationsException,
-      UnsupportedOperationException
-   {
-      throw new UnsupportedOperationException(
-         "Remotely this method cannot be supported"
-      );
-   }
-
-   public ObjectInputStream deserialize(
-      String pClassName,
-      byte[] pData
-   ) throws
-      OperationsException,
-      ReflectionException,
-      UnsupportedOperationException
-   {
-      throw new UnsupportedOperationException(
-         "Remotely this method cannot be supported"
-      );
-   }
-
-   public ObjectInputStream deserialize(
-      String pClassName,
-      ObjectName pLoaderName,
-      byte[] pData
-   ) throws
-      InstanceNotFoundException,
-      OperationsException,
-      ReflectionException,
-      UnsupportedOperationException
-   {
-      throw new UnsupportedOperationException(
-         "Remotely this method cannot be supported"
-      );
-   }
-
 	// JMXClientConnector implementation -------------------------------
 	public void start(
 		Object pServer
 	) throws IllegalArgumentException {
-/* Code from RMI Client Connector Impl. Right now not necessary because the
-*  Constructor already get the necessary info
-		if( pServer == null ) {
-			throw new IllegalArgumentException( "Server cannot be null. "
-				+ "To close the connection use stop()" );
-		}
-		try {
-			InitialContext lNamingContext = new InitialContext();
-			System.out.println( "RMIClientConnectorImp.start(), got Naming Context: " +	lNamingContext +
-				", environment: " + lNamingContext.getEnvironment() +
-				", name in namespace: " + lNamingContext.getNameInNamespace()
-			);
-			// This has to be adjusted later on to reflect the given parameter
-			mRemoteConnector = (RMIConnector) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
-			System.err.println( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteConnector );
-			mServer = pServer;
-		}
-		catch( Exception e ) {
-			e.printStackTrace();
-		}
-*/
+      try {
+         mAdaptor = getAdaptorBean( mJNDIName );
+      }
+      catch( Exception e ) {
+         throw new IllegalArgumentException( "Adaptor could not be found or created: " + e.getMessage() );
+      }
 	}
 
 	public void stop() {
-      mAdaptor = null;
-/* Code from RMI Client Connector Impl. Right now not just ignore it
-		System.out.println( "RMIClientConnectorImpl.stop(), start" );
-		// First go through all the reistered listeners and remove them
-		Iterator i = mListeners.iterator();
-		while( i.hasNext() ) {
-			try {
-				Listener lRemoteListener = (Listener) i.next();
-				System.out.println( "RMIClientConnectorImpl.stop(), remove listener: " +
-					lRemoteListener
-				);
-				try {
-					mRemoteConnector.removeNotificationListener(
-						lRemoteListener.getObjectName(),
-						lRemoteListener
-					);
-				}
-				catch( RemoteException re ) {
-					re.printStackTrace();
-				}
-				finally {
-					i.remove();
-				}
-			}
-			catch( Exception e ) {
-				e.printStackTrace();
-			}
-		}
-		mRemoteConnector = null;
-		mServer = "";
-*/
+      if( mAdaptor != null ) {
+         // Loop through all the listeners and remove them
+         Iterator i = mListeners.iterator();
+         while( i.hasNext() ) {
+            ClientNotificationListener lListener = (ClientNotificationListener) i.next();
+            try {
+               removeNotificationListener(
+                  lListener.getSenderMBean(),
+                  lListener.getRemoteListenerName()
+               );
+            }
+            catch( Exception e ) {
+            }
+            try {
+               unregisterMBean( lListener.getRemoteListenerName() );
+            }
+            catch( Exception e ) {
+            }
+            i.remove();
+         }
+         mAdaptor = null;
+      }
 	}
 	
 	public boolean isAlive() {
@@ -944,103 +683,6 @@ public class EJBConnector
 	public String getServerDescription() {
 		return "" + mJNDIServer;
 	}
-
-   /**
-   * RMI Sender Instance working as listener to retrieve the
-   * notifications from the remote server and handing over to
-   * the clients listener.
-   * <br>
-   * From the client view it is a listener from the server view
-   * it is a sender.
-   **/
-   public class Listener implements RMINotificationSender {
-
-      private NotificationListener        mLocalListener;
-      private ObjectHandler               mHandbackHandler;
-      private Object                      mHandback;
-      private ObjectName                  mObjectName;
-      
-      public Listener(
-         NotificationListener pLocalListener,
-         Object pHandback,
-         ObjectName pName
-      ) {
-         mLocalListener = pLocalListener;
-         mHandback = pHandback;
-         mHandbackHandler = new ObjectHandler( this.toString() );
-         mObjectName = pName;
-      }
-
-      /**
-      * Handles the given notification by sending this to the remote
-      * client listener
-      *
-      * @param pNotification            Notification to be send
-      * @param pHandback               Handback object
-      **/
-      public void handleNotification(
-         Notification pNotification,
-         Object pHandback
-      ) throws
-         RemoteException
-      {
-         Object lHandback;
-         // Take the given handback object (which should be the same object
-         // as the stored one. If yes then replace it by the stored object
-         if( mHandbackHandler.equals( pHandback ) ) {
-            lHandback = mHandback;
-         }
-         else {
-            lHandback = pHandback;
-         }
-         mLocalListener.handleNotification(
-            pNotification,
-            lHandback
-         );
-      }
-      
-      /**
-      * @return Object Handler of the given Handback object
-      **/
-      public ObjectHandler getHandback() {
-         return mHandbackHandler;
-      }
-      /** Redesign it (AS) **/
-      public ObjectName getObjectName() {
-         return mObjectName;
-      }
-      /** Redesign it (AS) **/
-      public NotificationListener getLocalListener() {
-         return mLocalListener;
-      }
-      /** Redesign it (AS) **/
-      public long getId() {
-         return hashCode() * mObjectName.hashCode();
-      }
-      /**
-      * Test if this and the given Object are equal. This is true if the given
-      * object both refer to the same local listener
-      *
-      * @param pTest                  Other object to test if equal
-      *
-      * @return                     True if both are of same type and
-      *                           refer to the same local listener
-      **/
-      public boolean equals( Object pTest ) {
-         if( pTest instanceof Listener ) {
-            return mLocalListener.equals(
-               ( (Listener) pTest).mLocalListener
-            );
-         }
-         return false;
-      }
-      /**
-      * @return                     Hashcode of the local listener
-      **/
-      public int hashCode() {
-         return mLocalListener.hashCode();
-      }
-   }
 }
 
 // ----------------------------------------------------------------------------

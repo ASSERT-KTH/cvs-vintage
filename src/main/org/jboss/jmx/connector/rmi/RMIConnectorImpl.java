@@ -14,8 +14,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.ObjectMessage;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueReceiver;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.jms.Session;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
@@ -40,595 +53,557 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.rmi.PortableRemoteObject;
 
 import org.jboss.system.ServiceMBeanSupport;
 
-import org.jboss.jmx.connector.notification.JMSNotificationListener;
-import org.jboss.jmx.connector.notification.RMINotificationSender;
 import org.jboss.jmx.ObjectHandler;
+import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
+import org.jboss.jmx.connector.JMXConnector;
+import org.jboss.jmx.connector.JMXConnectorMBean;
+import org.jboss.jmx.connector.notification.ClientNotificationListener;
+import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
+import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
+import org.jboss.jmx.connector.notification.RMIClientNotificationListener;
+import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 
 /**
-* RMI Interface for the server side Connector which
-* is nearly the same as the MBeanServer Interface but
-* has an additional RemoteException.
-* <BR>
-* AS 8/18/00
-* <BR>
-* Add the ObjectHandler to enable this server-side implementation to instantiate
-* objects locally but enable the client to use them as parameter from the
-* client side transparently (except that the user cannot invoke a method on this
-* instance).
-*
+* Implementation of the JMX Connector over the RMI protocol 
+*      
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
-**/
+* @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+*/
 public class RMIConnectorImpl
-	extends UnicastRemoteObject
-	implements RMIConnector
+   implements JMXConnectorMBean, RMIConnectorImplMBean
 {
+   // Constants -----------------------------------------------------
+   
+   // Attributes ----------------------------------------------------
+   private RMIAdaptor        mRemoteAdaptor;
+   private Object            mServer = "";
+   private Vector            mListeners = new Vector();
+   private int               mEventType = NOTIFICATION_TYPE_RMI;
+   private String[]          mOptions = new String[ 0 ];
+   private Random            mRandom = new Random();
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   public RMIConnectorImpl(
+      int pNotificationType,
+      String[] pOptions,
+      String pServerName
+   ) {
+      super();
+      mEventType = pNotificationType;
+      if( pOptions == null ) {
+         mOptions = new String[ 0 ];
+      } else {
+         mOptions = pOptions;
+      }
+      start( pServerName );
+   }
+   
+   // JMXClientConnector implementation -------------------------------
+   public void start(
+      Object pServer
+   ) throws IllegalArgumentException {
+      if( pServer == null ) {
+         throw new IllegalArgumentException( "Server cannot be null. "
+            + "To close the connection use stop()" );
+      }
+      try {
+         InitialContext lNamingContext = new InitialContext();
+         System.out.println( "RMIClientConnectorImp.start(), got Naming Context: " +   lNamingContext +
+            ", environment: " + lNamingContext.getEnvironment() +
+            ", name in namespace: " + lNamingContext.getNameInNamespace()
+         );
+         // This has to be adjusted later on to reflect the given parameter
+         mRemoteAdaptor = (RMIAdaptor) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
+         System.err.println( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteAdaptor );
+         mServer = pServer;
+      }
+      catch( Exception e ) {
+         e.printStackTrace();
+      }
+   }
 
-	// Constants -----------------------------------------------------
-	
-	// Attributes ----------------------------------------------------
-	/**
-	* Reference to the MBeanServer all the methods of this Connector are
-	* forwarded to
-	**/
-	private MBeanServer					mServer;
-	/** Pool of object referenced by an object handler **/
-	private Hashtable					mObjectPool = new Hashtable();
-	/** Pool of registered listeners **/
-	private Vector						mListeners = new Vector();
-	
-	// Static --------------------------------------------------------
-	
-	// Public --------------------------------------------------------
+   public void stop() {
+      System.out.println( "RMIClientConnectorImpl.stop(), start" );
+      // First go through all the reistered listeners and remove them
+      if( mRemoteAdaptor != null ) {
+         // Loop through all the listeners and remove them
+         Iterator i = mListeners.iterator();
+         while( i.hasNext() ) {
+            ClientNotificationListener lListener = (ClientNotificationListener) i.next();
+            try {
+               removeNotificationListener(
+                  lListener.getSenderMBean(),
+                  lListener.getRemoteListenerName()
+               );
+            }
+            catch( Exception e ) {
+            }
+            try {
+               unregisterMBean( lListener.getRemoteListenerName() );
+            }
+            catch( Exception e ) {
+            }
+            i.remove();
+         }
+      }
+      mRemoteAdaptor = null;
+      mServer = "";
+   }
+   
+   public boolean isAlive() {
+      return mRemoteAdaptor != null;
+   }
 
-	// Constructors --------------------------------------------------
-	public RMIConnectorImpl(
-		MBeanServer pServer
-	) throws RemoteException {
-		super();
-		mServer = pServer;
-	}
-	
-	// RMIConnector implementation -------------------------------------
+   public String getServerDescription() {
+      return "" + mServer;
+   }
 
-	public Object instantiate(
-		String pClassName
-	) throws
-		ReflectionException,
-		MBeanException,
-		RemoteException
-	{
-		return assignObjectHandler(
-			mServer.instantiate( pClassName )
-		);
-	}
-		
+   /**
+   * Creates a Queue Connection
+   *
+   * @return Returns a QueueConnection if found otherwise null
+   **/
+   private QueueConnection getQueueConnection( String pJNDIName )
+      throws
+         NamingException,
+         JMSException
+   {
+      Context lJNDIContext = null;
+      if( mOptions.length > 0 && mOptions[ 0 ] != null ) {
+         Hashtable lProperties = new Hashtable();
+//         lProperties.put( Context.PROVIDER_URL, mOptions[ 0 ] );
+         lProperties.put( Context.PROVIDER_URL, (String) mServer );
+         lJNDIContext = new InitialContext( lProperties );
+      } else {
+         lJNDIContext = new InitialContext();
+      }
+      System.out.println( "JNDI Environment: " + lJNDIContext.getEnvironment() );
+      System.out.println( "Lookup Queue Connection Factory: " + pJNDIName );
+      Object aRef = lJNDIContext.lookup( pJNDIName );
+      System.out.println( "Narrow Queue Connection Factory" );
+      QueueConnectionFactory aFactory = (QueueConnectionFactory) 
+         PortableRemoteObject.narrow( aRef, QueueConnectionFactory.class );
+      System.out.println( "Narrow Queue Connection" );
+      QueueConnection lConnection = aFactory.createQueueConnection();
+      lConnection.start();
+      return lConnection;
+   }
+   
+   // JMXConnector implementation -------------------------------------
 
-	public Object instantiate(
-		String pClassName,
-		ObjectName pLoaderName
-	) throws
-		ReflectionException,
-		MBeanException,
-		InstanceNotFoundException,
-		RemoteException
-	{
-		return assignObjectHandler(
-			mServer.instantiate( pClassName, pLoaderName )
-		);
-	}
+   public ObjectInstance createMBean(
+      String pClassName,
+      ObjectName pName
+   ) throws
+      ReflectionException,
+      InstanceAlreadyExistsException,
+      MBeanRegistrationException,
+      MBeanException,
+      NotCompliantMBeanException
+   {
+      try {
+         return mRemoteAdaptor.createMBean( pClassName, pName );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public Object instantiate(
-		String pClassName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		MBeanException,
-		RemoteException
-	{
-		// First check the given parameters to see if there is an ObjectHandler
-		// to be replaced
-		checkForObjectHandlers(
-			pParams,
-			pSignature
-		);
-		return assignObjectHandler(
-			mServer.instantiate(
-				pClassName,
-				pParams, 
-				pSignature 
-			)
-		);
-	}
+   public ObjectInstance createMBean(
+      String pClassName,
+      ObjectName pName,
+      ObjectName pLoaderName
+   ) throws
+      ReflectionException,
+      InstanceAlreadyExistsException,
+      MBeanRegistrationException,
+      MBeanException,
+      NotCompliantMBeanException,
+      InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.createMBean( pClassName, pName, pLoaderName );
+      }
+      catch( RemoteException re ) {
+         throw new MBeanException( re );
+      }
+   }
 
-	public Object instantiate(
-		String pClassName,
-		ObjectName pLoaderName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		MBeanException,
-		InstanceNotFoundException,
-		RemoteException
-	{
-		// First check the given parameters to see if there is an ObjectHandler
-		// to be replaced
-		checkForObjectHandlers(
-			pParams,
-			pSignature
-		);
-		return assignObjectHandler(
-			mServer.instantiate( 
-				pClassName, 
-				pLoaderName, 
-				pParams, 
-				pSignature 
-			)
-		);
-	}
+   public ObjectInstance createMBean(
+      String pClassName,
+      ObjectName pName,
+      Object[] pParams,
+      String[] pSignature
+   ) throws
+      ReflectionException,
+      InstanceAlreadyExistsException,
+      MBeanRegistrationException,
+      MBeanException,
+      NotCompliantMBeanException
+   {
+      try {
+         return mRemoteAdaptor.createMBean( pClassName, pName, pParams, pSignature );
+      }
+      catch( RemoteException re ) {
+         throw new MBeanException( re );
+      }
+   }
 
-	public ObjectInstance createMBean(
-		String pClassName,
-		ObjectName pName
-	) throws
-		ReflectionException,
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		MBeanException,
-		NotCompliantMBeanException,
-		RemoteException
-	{
-		return mServer.createMBean( pClassName, pName );
-	}
+   public ObjectInstance createMBean(
+      String pClassName,
+      ObjectName pName,
+      ObjectName pLoaderName,
+      Object[] pParams,
+      String[] pSignature
+   ) throws
+      ReflectionException,
+      InstanceAlreadyExistsException,
+      MBeanRegistrationException,
+      MBeanException,
+      NotCompliantMBeanException,
+      InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
+      }
+      catch( RemoteException re ) {
+         throw new MBeanException( re );
+      }
+   }
 
-	public ObjectInstance createMBean(
-		String pClassName,
-		ObjectName pName,
-		ObjectName pLoaderName
-	) throws
-		ReflectionException,
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		MBeanException,
-		NotCompliantMBeanException,
-		InstanceNotFoundException,
-		RemoteException
-	{
-		return mServer.createMBean( pClassName, pName, pLoaderName );
-	}
+   public void unregisterMBean(
+      ObjectName pName
+   ) throws
+      InstanceNotFoundException,
+      MBeanRegistrationException
+   {
+      try {
+         mRemoteAdaptor.unregisterMBean( pName );
+      }
+      catch( RemoteException re ) {
+      }
+   }
 
-	public ObjectInstance createMBean(
-		String pClassName,
-		ObjectName pName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		MBeanException,
-		NotCompliantMBeanException,
-		RemoteException
-	{
-		// First check the given parameters to see if there is an ObjectHandler
-		// to be replaced
-		checkForObjectHandlers(
-			pParams,
-			pSignature
-		);
-		return mServer.createMBean( pClassName, pName, pParams, pSignature );
-	}
+   public ObjectInstance getObjectInstance(
+      ObjectName pName
+   ) throws
+      InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.getObjectInstance( pName );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public ObjectInstance createMBean(
-		String pClassName,
-		ObjectName pName,
-		ObjectName pLoaderName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		MBeanException,
-		NotCompliantMBeanException,
-		InstanceNotFoundException,
-		RemoteException
-	{
-		// First check the given parameters to see if there is an ObjectHandler
-		// to be replaced
-		checkForObjectHandlers(
-			pParams,
-			pSignature
-		);
-		return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
-	}
+   public Set queryMBeans(
+      ObjectName pName,
+      QueryExp pQuery
+   ) {
+      try {
+         return mRemoteAdaptor.queryMBeans( pName, pQuery );
+      }
+      catch( RemoteException re ) {
+         re.printStackTrace();
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public ObjectInstance registerMBean(
-		Object pObjectHandler,
-		ObjectName pNameToAssign
-	) throws
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		NotCompliantMBeanException,
-		RemoteException
-	{
-		if( !( pObjectHandler instanceof ObjectHandler ) ) {
-			throw new IllegalArgumentException(
-				"You can only register local objects referenced by ObjectHandler"
-			);
-		}
-		return mServer.registerMBean(
-			checkForObjectHandler( pObjectHandler ),
-			pNameToAssign
-		);
-	}
+   public Set queryNames(
+      ObjectName pName,
+      QueryExp pQuery
+   ) {
+      try {
+         return mRemoteAdaptor.queryNames( pName, pQuery );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public void unregisterMBean(
-		ObjectName pName
-	) throws
-		InstanceNotFoundException,
-		MBeanRegistrationException,
-		RemoteException
-	{
-		mServer.unregisterMBean( pName );
-	}
+   public boolean isRegistered(
+      ObjectName pName
+   ) {
+      try {
+         return mRemoteAdaptor.isRegistered( pName );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return false;
+      }
+   }
 
-	public ObjectInstance getObjectInstance(
-		ObjectName pName
-	) throws
-		InstanceNotFoundException,
-		RemoteException
-	{
-		return mServer.getObjectInstance( pName );
-	}
+   public boolean isInstanceOf(
+      ObjectName pName,
+      String pClassName
+   ) throws
+      InstanceNotFoundException
+   {
+      try {
+         return mRemoteAdaptor.isInstanceOf( pName, pClassName );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return false;
+      }
+   }
 
-	public Set queryMBeans(
-		ObjectName pName,
-		QueryExp pQuery
-	) throws
-		RemoteException
-	{
-		return mServer.queryMBeans( pName, pQuery );
-	}
+   public Integer getMBeanCount(
+   ) {
+      try {
+         return mRemoteAdaptor.getMBeanCount();
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public Set queryNames(
-		ObjectName pName,
-		QueryExp pQuery
-	) throws
-		RemoteException
-	{
-		return mServer.queryNames( pName, pQuery );
-	}
+   public Object getAttribute(
+      ObjectName pName,
+      String pAttribute
+   ) throws
+      MBeanException,
+      AttributeNotFoundException,
+      InstanceNotFoundException,
+      ReflectionException
+   {
+      try {
+         return mRemoteAdaptor.getAttribute( pName, pAttribute );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public boolean isRegistered(
-		ObjectName pName
-	) throws
-		RemoteException
-	{
-		return mServer.isRegistered( pName );
-	}
+   public AttributeList getAttributes(
+      ObjectName pName,
+      String[] pAttributes
+   ) throws
+      InstanceNotFoundException,
+      ReflectionException
+   {
+      try {
+         return mRemoteAdaptor.getAttributes( pName, pAttributes );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public boolean isInstanceOf(
-		ObjectName pName,
-		String pClassName
-	) throws
-		InstanceNotFoundException,
-		RemoteException
-	{
-		return mServer.isInstanceOf( pName, pClassName );
-	}
+   public void setAttribute(
+      ObjectName pName,
+      Attribute pAttribute
+   ) throws
+      InstanceNotFoundException,
+      AttributeNotFoundException,
+      InvalidAttributeValueException,
+      MBeanException,
+      ReflectionException
+   {
+      try {
+         mRemoteAdaptor.setAttribute( pName, pAttribute );
+      }
+      catch( RemoteException re ) {
+      }
+   }
 
-	public Integer getMBeanCount(
-	) throws
-		RemoteException
-	{
-		return mServer.getMBeanCount();
-	}
+   public AttributeList setAttributes(
+      ObjectName pName,
+      AttributeList pAttributes
+   ) throws
+      InstanceNotFoundException,
+      ReflectionException
+   {
+      try {
+         return mRemoteAdaptor.setAttributes( pName, pAttributes );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public Object getAttribute(
-		ObjectName pName,
-		String pAttribute
-	) throws
-		MBeanException,
-		AttributeNotFoundException,
-		InstanceNotFoundException,
-		ReflectionException,
-		RemoteException
-	{
-		return mServer.getAttribute( pName, pAttribute );
-	}
+   public Object invoke(
+      ObjectName pName,
+      String pActionName,
+      Object[] pParams,
+      String[] pSignature
+   ) throws
+      InstanceNotFoundException,
+      MBeanException,
+      ReflectionException
+   {
+      try {
+         return mRemoteAdaptor.invoke( pName, pActionName, pParams, pSignature );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         re.printStackTrace();
+         return null;
+      }
+   }
 
-	public AttributeList getAttributes(
-		ObjectName pName,
-		String[] pAttributes
-	) throws
-		InstanceNotFoundException,
-		ReflectionException,
-		RemoteException
-	{
-		return mServer.getAttributes( pName, pAttributes );
-	}
+   public String getDefaultDomain(
+   ) {
+      try {
+         return mRemoteAdaptor.getDefaultDomain();
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	public void setAttribute(
-		ObjectName pName,
-		Attribute pAttribute
-	) throws
-		InstanceNotFoundException,
-		AttributeNotFoundException,
-		InvalidAttributeValueException,
-		MBeanException,
-		ReflectionException,
-		RemoteException
-	{
-		mServer.setAttribute( pName, pAttribute );
-	}
+   /**
+   * Add a notification listener which was previously loaded
+   * as MBean. ATTENTION: note that the both the Notification-
+   * Filter and Handback must be serializable and the class
+   * definition must be available for the RMI-Connector
+   **/
+   public void addNotificationListener(
+      ObjectName pName,
+      ObjectName pListener,
+      NotificationFilter pFilter,
+      Object pHandback
+   ) throws
+      InstanceNotFoundException
+   {
+      try {
+         mRemoteAdaptor.addNotificationListener( pName, pListener, pFilter, pHandback );
+      }
+      catch( RemoteException re ) {
+         throw new RuntimeException( "Remote access to perform this operation failed: " + re.getMessage() );
+      }
+   }
 
-	public AttributeList setAttributes(
-		ObjectName pName,
-		AttributeList pAttributes
-	) throws
-		InstanceNotFoundException,
-		ReflectionException,
-		RemoteException
-	{
-		return mServer.setAttributes( pName, pAttributes );
-	}
+   public void addNotificationListener(
+      ObjectName pName,
+      NotificationListener pListener,
+      NotificationFilter pFilter,
+      Object pHandback
+   ) throws
+      InstanceNotFoundException
+   {
+      try {
+         ClientNotificationListener lListener = null;
+         switch( mEventType ) {
+            case NOTIFICATION_TYPE_RMI:
+               lListener = new RMIClientNotificationListener(
+                  pName,
+                  pListener,
+                  pHandback,
+                  pFilter,
+                  this
+               );
+               break;
+            case NOTIFICATION_TYPE_JMS:
+               lListener = new JMSClientNotificationListener(
+                  pName,
+                  pListener,
+                  pHandback,
+                  pFilter,
+                  mOptions[ 0 ],
+                  (String) mServer,
+                  this
+               );
+               break;
+            case NOTIFICATION_TYPE_POLLING:
+               lListener = new PollingClientNotificationListener(
+                  pName,
+                  pListener,
+                  pHandback,
+                  pFilter,
+                  5000, // Sleeping Period
+                  2500, // Maximum Pooled List Size
+                  this
+               );
+         }
+         // Add this listener on the client to remove it when the client goes down
+         mListeners.addElement( lListener );
+      }
+      catch( Exception e ) {
+         if( e instanceof RuntimeException ) {
+            throw (RuntimeException) e;
+         }
+         if( e instanceof InstanceNotFoundException ) {
+            throw (InstanceNotFoundException) e;
+         }
+         e.printStackTrace();
+         throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
+      }
+   }
 
-	public Object invoke(
-		ObjectName pName,
-		String pActionName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		InstanceNotFoundException,
-		MBeanException,
-		ReflectionException,
-		RemoteException
-	{
-		// First check the given parameters to see if there is an ObjectHandler
-		// to be replaced
-		checkForObjectHandlers(
-			pParams,
-			pSignature
-		);
-		return mServer.invoke( pName, pActionName, pParams, pSignature );
-	}
+   public void removeNotificationListener(
+      ObjectName pName,
+      NotificationListener pListener
+   ) throws
+      InstanceNotFoundException,
+      ListenerNotFoundException
+   {
+      try {
+         ClientNotificationListener lCheck = new SearchClientNotificationListener( pName, pListener );
+         int i = mListeners.indexOf( lCheck );
+         if( i >= 0 ) {
+            ClientNotificationListener lListener = (ClientNotificationListener) mListeners.get( i );
+            unregisterMBean( lListener.getRemoteListenerName() );
+         }
+      }
+      catch( MBeanRegistrationException mbre ) {
+         throw new RuntimeException( "Remote access to perform this operation failed: " + mbre.getMessage() );
+      }
+   }
 
-	public String getDefaultDomain(
-	) throws
-		RemoteException
-	{
-		return mServer.getDefaultDomain();
-	}
+   public void removeNotificationListener(
+      ObjectName pName,
+      ObjectName pListener
+   ) throws
+      InstanceNotFoundException,
+      ListenerNotFoundException
+   {
+      try {
+         mRemoteAdaptor.removeNotificationListener( pName, pListener );
+      }
+      catch( RemoteException re ) {
+         throw new RuntimeException( "Remote access to perform this operation failed: " + re.getMessage() );
+      }
+   }
 
-	/**
-	* Adds a given remote notification listeners to the given
-	* Broadcaster.
-	* Please note that this is not the same as within the
-	* MBeanServer because it is protocol specific.
-	*/
-	public void addNotificationListener(
-		ObjectName pName,
-		RMINotificationSender pSender,
-		NotificationFilter pFilter,
-		Object pHandback		
-	) throws
-		InstanceNotFoundException,
-		RemoteException
-	{
-		NotificationListener lRemoteListener = new Listener( pSender );
-		mServer.addNotificationListener(
-			pName,
-			lRemoteListener,
-			pFilter,
-			pHandback
-		);
-		mListeners.addElement( lRemoteListener );
-	}
+   public MBeanInfo getMBeanInfo(
+      ObjectName pName
+   ) throws
+      InstanceNotFoundException,
+      IntrospectionException,
+      ReflectionException
+   {
+      try {
+         return mRemoteAdaptor.getMBeanInfo( pName );
+      }
+      catch( RemoteException re ) {
+         //AS Not a good style but for now
+         return null;
+      }
+   }
 
-	/**
-	* Adds a given remote notification listeners to the given
-	* Broadcaster.
-	* Please note that this is not the same as within the
-	* MBeanServer because it is protocol specific.
-	*/
-	public void addNotificationListener(
-		ObjectName pName,
-		JMSNotificationListener pListener,
-		NotificationFilter pFilter,
-		Object pHandback
-	) throws
-		InstanceNotFoundException,
-		RemoteException
-	{
-		mServer.addNotificationListener(
-			pName,
-			pListener,
-			pFilter,
-			pHandback
-		);
-		mListeners.addElement( pListener );
-	}
+   // Protected -----------------------------------------------------
 
-	public void removeNotificationListener(
-		ObjectName pName,
-		RMINotificationSender pSender
-	) throws
-		InstanceNotFoundException,
-		ListenerNotFoundException,
-		RemoteException
-	{
-		int lIndex = mListeners.indexOf(
-			new Listener(
-				pSender
-			)
-		);
-		if( lIndex >= 0 ) {
-			mServer.removeNotificationListener(
-				pName,
-				(Listener) mListeners.elementAt( lIndex )
-			);
-		}
-	}
+   // Private -------------------------------------------------------
 
-	public void removeNotificationListener(
-		ObjectName pName,
-		JMSNotificationListener pListener
-	) throws
-		InstanceNotFoundException,
-		ListenerNotFoundException,
-		RemoteException
-	{
-		int lIndex = mListeners.indexOf( pListener );
-		if( lIndex >= 0 ) {
-			mServer.removeNotificationListener(
-				pName,
-				(NotificationListener) mListeners.elementAt( lIndex )
-			);
-		}
-	}
-
-	public MBeanInfo getMBeanInfo(
-		ObjectName pName
-	) throws
-		InstanceNotFoundException,
-		IntrospectionException,
-		ReflectionException,
-		RemoteException
-	{
-		return mServer.getMBeanInfo( pName );
-	}
-
-	/**
-	* Checks in the given list of object if there is one of type ObjectHandler
-	* and if it will replaced by the referenced object. In addition it checks
-	* if the given signature is of type ObjectHandler and if then it replace
-	* it by the type of the referenced object.
-	* <BR>
-	* Please note that this method works directly on the given arrays!
-	*
-	* @param pListOfObjects					Array of object to be checked
-	* @param pSignature						Array of class names (full paht)
-	*										beeing the signature for the object
-	*										on the according object (list above)
-	*/
-	private void checkForObjectHandlers(
-		Object[] pListOfObjects,
-		String[] pSignature
-	) {
-		for( int i = 0; i < pListOfObjects.length; i++ ) {
-			Object lEffective = checkForObjectHandler( pListOfObjects[ i ] );
-			if( pListOfObjects[ i ] != lEffective ) {
-				// Replace the Object Handler by the effective object
-				pListOfObjects[ i ] = lEffective;
-				if( i < pSignature.length ) {
-					if( pSignature[ i ].equals( ObjectHandler.class.getName() ) ) {
-						pSignature[ i ] = lEffective.getClass().getName();
-					}
-				}
-			}
-		}
-	}
-	/**
-	* Checks if the given object is of type ObjectHandler and if then
-	* it replaces by the object referenced by the ObjectHandler
-	*
-	* @param pObjectToCheck					Object to be checked
-	*
-	* @return								The given object if not a reference or
-	*										or the referenced object
-	*/
-	private Object checkForObjectHandler( Object pObjectToCheck ) {
-		if( pObjectToCheck instanceof ObjectHandler ) {
-			return mObjectPool.get(
-				pObjectToCheck
-			);
-		}
-		else {
-			return pObjectToCheck;
-		}
-	}
-	
-	/**
-	* Creates an ObjectHandler for the given object and store it on
-	* this side
-	*
-	* @param pNewObject						New object to be referenced by an
-	*										ObjectHandler
-	*
-	* @return								Object Handler which stands for a
-	*										remote reference to an object created
-	*										and only usable on this side
-	*/
-	private ObjectHandler assignObjectHandler( Object pNewObject ) {
-		ObjectHandler lObjectHandler = new ObjectHandler(
-			this.toString()
-		);
-		mObjectPool.put(
-			lObjectHandler,
-			pNewObject
-		);
-		return lObjectHandler;
-	}
-		
-	/**
-	* Listener wrapper around the remote RMI Notification Listener
-	*/
-	private class Listener implements NotificationListener {
-		
-		private RMINotificationSender		mRemoteSender;
-		
-		public Listener( RMINotificationSender pRemoteSender ) {
-			mRemoteSender = pRemoteSender;
-		}
-
-		/**
-		* Handles the given notification by sending this to the remote
-		* client listener
-		*
-		* @param pNotification				Notification to be send
-		* @param pHandback					Handback object
-		*/
-		public void handleNotification(
-			Notification pNotification,
-			Object pHandback
-		) {
-			try {
-				mRemoteSender.handleNotification( pNotification, pHandback );
-			}
-			catch( RemoteException re ) {
-				re.printStackTrace();
-			}
-		}
-		/**
-		* Test if this and the given Object are equal. This is true if the given
-		* object both refer to the same local listener
-		*
-		* @param pTest						Other object to test if equal
-		*
-		* @return							True if both are of same type and
-		*									refer to the same local listener
-		**/
-		public boolean equals( Object pTest ) {
-			if( pTest instanceof Listener ) {
-				return mRemoteSender.equals(
-					( (Listener) pTest).mRemoteSender
-				);
-			}
-			return false;
-		}
-		/**
-		* @return							Hashcode of the remote listener
-		**/
-		public int hashCode() {
-			return mRemoteSender.hashCode();
-		}
-	}
-}
+}   
 

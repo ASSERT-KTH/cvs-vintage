@@ -6,20 +6,16 @@
 */
 package org.jboss.jmx.connector.notification;
 
-import java.io.Serializable;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 import javax.management.Notification;
+import javax.management.NotificationListener;
 
 /**
-* Remote interface of the RMI Notification Sender using
-* RMI to transport the notifications over the wire.
+* MBean Interface of a Notification Listener MBean
 *
 * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 **/
-public interface RMINotificationSender
-	extends Remote, Serializable
+public interface ListenerMBean
+   extends NotificationListener
 {
 
 	// Constants -----------------------------------------------------
@@ -27,6 +23,7 @@ public interface RMINotificationSender
 	// Static --------------------------------------------------------
 
 	// Public --------------------------------------------------------
+   
 	/**
 	* Handles the given notifcation event and passed it to the registered
 	* listener
@@ -39,6 +36,5 @@ public interface RMINotificationSender
 	public void handleNotification(
 		Notification pNotification,
 		Object pHandback
-	) throws 
-		RemoteException;
+	);
 }

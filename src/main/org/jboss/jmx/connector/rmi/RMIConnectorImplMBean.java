@@ -12,7 +12,7 @@ import org.jboss.jmx.connector.JMXConnector;
 *
 * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
 **/
-public interface RMIClientConnectorImplMBean
+public interface RMIConnectorImplMBean
 	extends JMXConnector
 {
 	/**

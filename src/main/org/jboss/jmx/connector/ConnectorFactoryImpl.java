@@ -27,14 +27,14 @@ import javax.naming.NamingException;
 
 import org.jboss.jmx.connector.JMXConnector;
 import org.jboss.jmx.connector.ejb.EJBConnector;
-import org.jboss.jmx.connector.rmi.RMIClientConnectorImpl;
+import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 
 /**
  * Factory delivering a list of servers and its available protocol connectors
  * and after selected to initiate the connection This is just the (incomplete)
  * interface of it
  *
- * @author    <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ * @author    <A href="mailto:andreas@jboss.org">Andreas Schaefer</A>
  * @created   May 2, 2001
  **/
 public class ConnectorFactoryImpl {
@@ -53,20 +53,23 @@ public class ConnectorFactoryImpl {
    // Public --------------------------------------------------------
 
    public ConnectorFactoryImpl(
-      MBeanServer pServer
+      MBeanServer pServer,
+      int pNotificationType
    ) {
-      this( pServer, null, null );
+      this( pServer, pNotificationType, null, null );
    }
 
    public ConnectorFactoryImpl(
       MBeanServer pServer,
+      int pNotificationType,
       String pJMSQueueName
    ) {
-      this( pServer, pJMSQueueName, "ejb/jmx/ejb/adaptor" );
+      this( pServer, pNotificationType, pJMSQueueName, "ejb/jmx/ejb/adaptor" );
    }
 
    public ConnectorFactoryImpl(
       MBeanServer pServer,
+      int pNotificationType,
       String pJMSName,
       String pEJBAdaptorName
    ) {
@@ -74,6 +77,8 @@ public class ConnectorFactoryImpl {
       if( pJMSName != null ) {
          mNotificationType = JMXConnector.NOTIFICATION_TYPE_JMS;
          mJMSName = pJMSName;
+      } else {
+         mNotificationType = pNotificationType;
       }
       if( pEJBAdaptorName != null && pEJBAdaptorName.trim().length() > 0 ) {
          mEJBAdaptorName = pEJBAdaptorName;
@@ -127,7 +132,7 @@ public class ConnectorFactoryImpl {
       // At the moment only RMI and EJB protocol is supported (on the client side)
       if( pConnector.getProtocol().equals( "rmi" ) ) {
          try {
-            lConnector = new RMIClientConnectorImpl(
+            lConnector = new RMIConnectorImpl(
                mNotificationType,
                new String[] { mJMSName },
                pConnector.getServer()

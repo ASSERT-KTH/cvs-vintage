@@ -41,6 +41,7 @@ public class ConnectorFactoryService
 	private MBeanServer				mServer;
 	/** Connector Factory instance **/
 	private ConnectorFactoryImpl	mFactory;
+   private int mNotificationType;
    private String mJMSName;
    private String mEJBAdaptorName;
 
@@ -49,6 +50,14 @@ public class ConnectorFactoryService
 	public ConnectorFactoryService() {
 	}
 	
+   public int getNotificationType() {
+      return mNotificationType;
+   }
+   
+   public void setNotificationType( int pNotificationType ) {
+      mNotificationType = pNotificationType;
+   }
+   
    public String getJMSName() {
       return mJMSName;
    }
@@ -104,7 +113,10 @@ public class ConnectorFactoryService
 	
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
-      mFactory = new ConnectorFactoryImpl( mServer, mJMSName, mEJBAdaptorName );
+      System.out.println( "Init Connector Factory mNotificationTypeService: " +
+         "NT: " + mNotificationType + ", JMS: " + mJMSName
+      );
+      mFactory = new ConnectorFactoryImpl( mServer, mNotificationType, mJMSName, mEJBAdaptorName );
 	}
 	
 	protected void startService() throws Exception {

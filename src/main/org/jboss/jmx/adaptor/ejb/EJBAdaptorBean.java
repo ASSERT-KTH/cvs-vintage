@@ -43,19 +43,21 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.ObjectHandler;
+import org.jboss.jmx.connector.JMXConnector;
 
 /**
 * JMX EJB-Adaptor allowing a EJB client to work on a remote
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
-* @ejb:bean type="Stateless" name="jmx/ejb/Adaptor" jndi-name="ejb/jmx/ejb/Adaptor"
-* @ejb:env-entry name="Agent-Id" value="null"
-* @ejb:env-entry name="Server-Number" value="-1"
-*
+* @ejb:bean type="Stateless"
+*           name="jmx/ejb/Adaptor"
+*           jndi-name="ejb/jmx/ejb/Adaptor"
+* @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
+*                name="Server-Name"
+*                value="null"
 **/
 public class EJBAdaptorBean
    implements SessionBean
@@ -75,187 +77,12 @@ public class EJBAdaptorBean
    * Reference to the MBeanServer all the methods of this Connector are
    * forwarded to
    **/
-   private MBeanServer mServer;
-   /** Pool of object referenced by an object handler **/
-   private Hashtable               mObjectPool = new Hashtable();
-   /** Pool of registered listeners **/
-   private Vector                  mListeners = new Vector();
+   private JMXConnector mConnector;
    
    // -------------------------------------------------------------------------
    // Methods
    // -------------------------------------------------------------------------  
    
-   /**
-   * Instantiate the given class on the remote MBeanServer and returns a Object 
-   * Handler you can use to register it as a MBean with {@link #registerMBean
-   * registerMBean()} or as a parameter to createMBean() or instantiate()
-   * method which takes it as a parameter.
-   *
-   * @param pClassName Class name of the class to be loaded and instantiated
-   *
-   * @return Object handler. Please use this handler to register it as MBean
-   *         or as a parameter in the other methods as a parameter. The
-   *         server-side connector will look up for an object handler parameter
-   *         and then replace the object handler by the effective object.
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public ObjectHandler instantiate(
-      String pClassName
-   ) throws
-      ReflectionException,
-      MBeanException,
-      RemoteException
-   {
-      return assignObjectHandler(
-         mServer.instantiate( pClassName )
-      );
-   }
-   
-   /**
-   * Instantiate the given class on the remote MBeanServer and returns a Object 
-   * Handler you can use to register it as a MBean with {@link #registerMBean
-   * registerMBean()} or as a parameter to createMBean() or instantiate()
-   * method which takes it as a parameter.
-   *
-   * @param pClassName Class name of the class to be loaded and instantiated
-   * @param pLoaderName Name of the classloader to be used to
-   *                    load this class
-   *
-   * @return Object handler. Please use this handler to register it as MBean
-   *         or as a parameter in the other methods as a parameter. The
-   *         server-side connector will look up for an object handler parameter
-   *         and then replace the object handler by the effective object.
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public ObjectHandler instantiate(
-      String pClassName,
-      ObjectName pLoaderName
-   ) throws
-      ReflectionException,
-      MBeanException,
-      InstanceNotFoundException,
-      RemoteException
-   {
-      return assignObjectHandler(
-         mServer.instantiate( pClassName, pLoaderName )
-      );
-   }
-
-   /**
-   * Instantiate the given class on the remote MBeanServer and
-   * returns a Object Handler you can use to register it as a
-   * MBean with {@link #registerMBean registerMBean()}
-   *
-   * @param pClassName                  Class name of the class to be loaded 
-   *                              and instantiated
-   * @param pParams                  Array of parameter passed to the creator
-   *                              of the class. If one is of data type
-   *                              Object handler it will be replaced on
-   *                              the server-side by its effective
-   *                              object.
-   * @param pSignature                  Array of Class Names (full qualified)
-   *                              to find the right parameter. When there
-   *                              is an ObjectHandler as a parameter type
-   *                              then it will be replaced on the server-
-   *                              side by the class name of the effective
-   *                              object) otherwise it will be kept.
-   *
-   * @return                        Object handler. Please use this handler
-   *                              to register it as MBean or as a parameter
-   *                              in the other methods as a parameter. The
-   *                              server-side connector will look up for
-   *                              an object handler parameter and then
-   *                              replace the object handler by the
-   *                              effective object.
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public ObjectHandler instantiate(
-      String pClassName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      MBeanException,
-      RemoteException
-   {
-      // First check the given parameters to see if there is an ObjectHandler
-      // to be replaced
-      checkForObjectHandlers(
-         pParams,
-         pSignature
-      );
-      // Instantiate the Object on the Server and then create and return the
-      // remote reference
-      return assignObjectHandler(
-         mServer.instantiate(
-            pClassName,
-            pParams, 
-            pSignature 
-         )
-      );
-   }
-   
-   /**
-   * Instantiate the given class on the remote MBeanServer and
-   * returns a Object Handler you can use to register it as a
-   * MBean with {@link #registerMBean registerMBean()}
-   *
-   * @param pClassName Class name of the class to be loaded 
-   *                   and instantiated
-   * @param pLoaderName Name of the classloader to be used to
-   *                    load this class
-   * @param pParams Array of parameter passed to the creator
-   *                of the class. If one is of data type
-   *                Object handler it will be replaced on
-   *                the server-side by its effective
-   *                object.
-   * @param pSignature Array of Class Names (full qualified)
-   *                   to find the right parameter. When there
-   *                   is an ObjectHandler as a parameter type
-   *                   then it will be replaced on the server-
-   *                   side by the class name of the effective
-   *                   object) otherwise it will be kept.
-   *
-   * @return Object handler. Please use this handler
-   *         to register it as MBean or as a parameter
-   *         in the other methods as a parameter. The
-   *         server-side connector will look up for
-   *         an object handler parameter and then
-   *         replace the object handler by the
-   *         effective object.
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public ObjectHandler instantiate(
-      String pClassName,
-      ObjectName pLoaderName,
-      Object[] pParams,
-      String[] pSignature
-   ) throws
-      ReflectionException,
-      MBeanException,
-      InstanceNotFoundException,
-      RemoteException
-   {
-      // First check the given parameters to see if there is an ObjectHandler
-      // to be replaced
-      checkForObjectHandlers(
-         pParams,
-         pSignature
-      );
-      return assignObjectHandler(
-         mServer.instantiate( 
-            pClassName, 
-            pLoaderName, 
-            pParams, 
-            pSignature 
-         )
-      );
-   }
-
    /**
    * Instantiates the given class and registers it on the remote MBeanServer and
    * returns an Object Instance of the MBean.
@@ -280,7 +107,7 @@ public class EJBAdaptorBean
       NotCompliantMBeanException,
       RemoteException
    {
-      return mServer.createMBean( pClassName, pName );
+      return mConnector.createMBean( pClassName, pName );
    }
 
    /**
@@ -311,7 +138,7 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      return mServer.createMBean( pClassName, pName, pLoaderName );
+      return mConnector.createMBean( pClassName, pName, pLoaderName );
    }
 
    /**
@@ -351,13 +178,17 @@ public class EJBAdaptorBean
       NotCompliantMBeanException,
       RemoteException
    {
-      // First check the given parameters to see if there is an ObjectHandler
-      // to be replaced
-      checkForObjectHandlers(
-         pParams,
-         pSignature
+      try {
+      System.out.println( "Class: " + pClassName + ", name: " + pName +
+         ", params: " + java.util.Arrays.asList( pParams ) +
+         ", signature: " + java.util.Arrays.asList( pSignature )
       );
-      return mServer.createMBean( pClassName, pName, pParams, pSignature );
+      return mConnector.createMBean( pClassName, pName, pParams, pSignature );
+      }
+      catch( Exception e ) {
+         e.printStackTrace();
+         return null;
+      }
    }
 
    /**
@@ -401,41 +232,7 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      // First check the given parameters to see if there is an ObjectHandler
-      // to be replaced
-      checkForObjectHandlers(
-         pParams,
-         pSignature
-      );
-      return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
-   }
-
-   /**
-   * Register the given Object (already instantiated) as a MBean on the
-   * remote MBeanServer
-   *
-   * @param pObjectHandler               Object Handler of th given object
-   *                              to register as MBean
-   * @param pNaemToAssign               Object Name to MBean is assigned to
-   *
-   * @return                        Object Instance of the new MBean
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public ObjectInstance registerMBean(
-      ObjectHandler pObjectHandler,
-      ObjectName pNameToAssign
-   ) throws
-      InstanceAlreadyExistsException,
-      MBeanRegistrationException,
-      NotCompliantMBeanException,
-      RemoteException
-   {
-      return mServer.registerMBean(
-         // Replace the Remote Reference by the actual object
-         checkForObjectHandler( pObjectHandler ),
-         pNameToAssign
-      );
+      return mConnector.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
    }
 
    /**
@@ -452,7 +249,7 @@ public class EJBAdaptorBean
       MBeanRegistrationException,
       RemoteException
    {
-      mServer.unregisterMBean( pName );
+      mConnector.unregisterMBean( pName );
    }
 
    /**
@@ -469,7 +266,7 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      return mServer.getObjectInstance( pName );
+      return mConnector.getObjectInstance( pName );
    }
 
    /**
@@ -489,7 +286,7 @@ public class EJBAdaptorBean
    ) throws
       RemoteException
    {
-      return mServer.queryMBeans( pName, pQuery );
+      return mConnector.queryMBeans( pName, pQuery );
    }
 
    /**
@@ -509,7 +306,7 @@ public class EJBAdaptorBean
    ) throws
       RemoteException
    {
-      return mServer.queryNames( pName, pQuery );
+      return mConnector.queryNames( pName, pQuery );
    }
 
    /**
@@ -526,7 +323,7 @@ public class EJBAdaptorBean
    ) throws
       RemoteException
    {
-      return mServer.isRegistered( pName );
+      return mConnector.isRegistered( pName );
    }
     
    /**
@@ -546,7 +343,7 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      return mServer.isInstanceOf( pName, pClassName );
+      return mConnector.isInstanceOf( pName, pClassName );
    }
 
    /**
@@ -558,7 +355,7 @@ public class EJBAdaptorBean
    ) throws
       RemoteException
    {
-      return mServer.getMBeanCount();
+      return mConnector.getMBeanCount();
    }
 
    /**
@@ -581,7 +378,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      return mServer.getAttribute( pName, pAttribute );
+      return mConnector.getAttribute( pName, pAttribute );
    }
 
    /**
@@ -602,7 +399,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      return mServer.getAttributes( pName, pAttributes );
+      return mConnector.getAttributes( pName, pAttributes );
    }
 
    /**
@@ -625,7 +422,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      mServer.setAttribute( pName, pAttribute );
+      mConnector.setAttribute( pName, pAttribute );
    }
 
    /**
@@ -647,7 +444,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      return mServer.setAttributes( pName, pAttributes );
+      return mConnector.setAttributes( pName, pAttributes );
    }
 
    /**
@@ -674,13 +471,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      // First check the given parameters to see if there is an ObjectHandler
-      // to be replaced
-      checkForObjectHandlers(
-         pParams,
-         pSignature
-      );
-      return mServer.invoke( pName, pActionName, pParams, pSignature );
+      return mConnector.invoke( pName, pActionName, pParams, pSignature );
    }
 
    /**
@@ -692,78 +483,9 @@ public class EJBAdaptorBean
    ) throws
       RemoteException
    {
-      return mServer.getDefaultDomain();
+      return mConnector.getDefaultDomain();
    }
-
-   /**
-   * Adds the given Notification Listener in a way that
-   * the Notification Events are send back to the listener
-   * <BR>
-   * Please asume that the listening is terminated when
-   * the instance of these interface goes down.
-   *
-   * @param pBroadcasterName      Name of the Broadcaster MBean on
-   *                  the remote side
-   * @param pListener         Local notification listener
-   * @param pFilter            In general there are three ways this
-   *                  could work:
-   *                  1) A copy of the filter is send to the
-   *                  server but then the Filter cannot interact
-   *                  with the client. This is default.
-   *                  2) Wrapper around the filter therefore
-   *                  the server sends the filter call to the
-   *                  client to be performed. This filter must be
-   *                  a subclass of RemoteNotificationListener.
-   *                  3) All Notification events are sent to the
-   *                  client and the client performs the filtering.
-   *                  This filter must be a subclass of
-   *                  LocalNotificationListener.
-   * @param pHandback         Object to be send back to the listener. To
-   *                  make it complete transparent to the client
-   *                  an Object Handler is sent to the Server and
-   *                  and when a Notification comes back it will
-   *                  be looked up and send to the client. Therefore
-   *                  it must not be serializable.
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public void addNotificationListener(
-      ObjectName pName,
-      NotificationListener pListener,
-      NotificationFilter pFilter,
-      Object pHandback      
-   ) throws
-      InstanceNotFoundException,
-      RemoteException
-   {
-      mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
-   }
-
-   /**
-   * Remoes the given Notification Listener in a way that
-   * all involved instances are removed and the remote
-   * listener is removed from the broadcaster.
-   * <BR>
-   * Please asume that the listening is terminated when
-   * the instance of these interface goes down.
-   *
-   * @param pBroadcasterName      Name of the Broadcaster MBean on
-   *                  the remote side
-   * @param pListener         Local notification listener
-   *
-   * @ejb:interface-method type="remote"
-   **/
-   public void removeNotificationListener(
-      ObjectName pName,
-      NotificationListener pListener
-   ) throws
-      InstanceNotFoundException,
-      ListenerNotFoundException,
-      RemoteException
-   {
-      mServer.removeNotificationListener( pName, pListener );
-   }
-
+   
    /**
    * Returns the MBean Info of the requested MBean
    *
@@ -781,7 +503,7 @@ public class EJBAdaptorBean
       ReflectionException,
       RemoteException
    {
-      return mServer.getMBeanInfo( pName );
+      return mConnector.getMBeanInfo( pName );
    }
 
    /**
@@ -821,11 +543,11 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
+      mConnector.addNotificationListener( pName, pListener, pFilter, pHandback );
    }
 
    /**
-   * Remoes the given Notification Listener in a way that
+   * Removes the given Notification Listener in a way that
    * all involved instances are removed and the remote
    * listener is removed from the broadcaster.
    * <BR>
@@ -847,7 +569,7 @@ public class EJBAdaptorBean
       ListenerNotFoundException,
       RemoteException
    {
-      mServer.removeNotificationListener( pName, pListener );
+      mConnector.removeNotificationListener( pName, pListener );
    }
 
    /**
@@ -862,29 +584,40 @@ public class EJBAdaptorBean
       throws
          CreateException
    {
-      if( mServer == null ) {
+      if( mConnector == null ) {
          try {
             Context aJNDIContext = new InitialContext();
-            String lAgentId = null;
-            String lServerNumber = "-1";
-            lAgentId = (String) aJNDIContext.lookup( 
-               "java:comp/env/Agent-Id" 
-            );
-            lServerNumber = (String) aJNDIContext.lookup( 
-               "java:comp/env/Server-Number" 
-            );
-            if( lAgentId == null || lAgentId.equals( "" ) || lAgentId.equals( "null" ) ) {
-               lAgentId = null;
-            }
-            if( lServerNumber == null || lServerNumber.equals( "" ) ) {
-               lServerNumber = "-1";
-            }
-            int lNumber = new Integer( lServerNumber ).intValue();
-            ArrayList lServers = MBeanServerFactory.findMBeanServer( lAgentId );
-            if( lNumber >= 0 && lNumber < lServers.size() ) {
-               mServer = (MBeanServer) lServers.get( lNumber );
+            String lServerName = ( (String) aJNDIContext.lookup( 
+               "java:comp/env/Server-Name" 
+            ) ).trim();
+            if( lServerName == null || lServerName.length() == 0 || lServerName.equals( "null" ) ) {
+               ArrayList lServers = MBeanServerFactory.findMBeanServer( null );
+               if( lServers.size() > 0 ) {
+                  mConnector = new LocalConnector( (MBeanServer) lServers.get( 0 ) );
+               } else {
+                  throw new CreateException(
+                     "No local JMX MBeanServer available"
+                  );
+               }
             } else {
-               mServer = (MBeanServer) lServers.get( 0 );
+               Object lServer = aJNDIContext.lookup( lServerName );
+               if( lServer != null ) {
+                  if( lServer instanceof MBeanServer ) {
+                     mConnector = new LocalConnector( (MBeanServer) lServer );
+                  } else
+                  if( lServer instanceof JMXConnector ) {
+                     mConnector = (JMXConnector) lServer;
+                  } else {
+                     throw new CreateException(
+                        "Server: " + lServer + " reference by Server-Name: " + lServerName +
+                        " is not of type MBeanServer or JMXConnector: "
+                     );
+                  }
+               } else {
+                  throw new CreateException(
+                     "Server-Name " + lServerName + " does not reference an Object in JNDI"
+                  );
+               }
             }
          }
          catch( NamingException ne ) {
@@ -901,82 +634,6 @@ public class EJBAdaptorBean
    public String toString()
    {
       return "SurveyManagementBean [ " + " ]";
-   }
-   
-   // -------------------------------------------------------------------------
-   // Private Methods
-   // -------------------------------------------------------------------------  
-   
-   /**
-   * Checks in the given list of object if there is one of type ObjectHandler
-   * and if it will replaced by the referenced object. In addition it checks
-   * if the given signature is of type ObjectHandler and if then it replace
-   * it by the type of the referenced object.
-   * <BR>
-   * Please note that this method works directly on the given arrays!
-   *
-   * @param pListOfObjects               Array of object to be checked
-   * @param pSignature                  Array of class names (full paht)
-   *                              beeing the signature for the object
-   *                              on the according object (list above)
-   */
-   private void checkForObjectHandlers(
-      Object[] pListOfObjects,
-      String[] pSignature
-   ) {
-      for( int i = 0; i < pListOfObjects.length; i++ ) {
-         Object lEffective = checkForObjectHandler( pListOfObjects[ i ] );
-         if( pListOfObjects[ i ] != lEffective ) {
-            // Replace the Object Handler by the effective object
-            pListOfObjects[ i ] = lEffective;
-            if( i < pSignature.length ) {
-               if( pSignature[ i ].equals( ObjectHandler.class.getName() ) ) {
-                  pSignature[ i ] = lEffective.getClass().getName();
-               }
-            }
-         }
-      }
-   }
-   /**
-   * Checks if the given object is of type ObjectHandler and if then
-   * it replaces by the object referenced by the ObjectHandler
-   *
-   * @param pObjectToCheck               Object to be checked
-   *
-   * @return                        The given object if not a reference or
-   *                              or the referenced object
-   */
-   private Object checkForObjectHandler( Object pObjectToCheck ) {
-      if( pObjectToCheck instanceof ObjectHandler ) {
-         return mObjectPool.get(
-            pObjectToCheck
-         );
-      }
-      else {
-         return pObjectToCheck;
-      }
-   }
-   
-   /**
-   * Creates an ObjectHandler for the given object and store it on
-   * this side
-   *
-   * @param pNewObject                  New object to be referenced by an
-   *                              ObjectHandler
-   *
-   * @return                        Object Handler which stands for a
-   *                              remote reference to an object created
-   *                              and only usable on this side
-   */
-   private ObjectHandler assignObjectHandler( Object pNewObject ) {
-      ObjectHandler lObjectHandler = new ObjectHandler(
-         this.toString()
-      );
-      mObjectPool.put(
-         lObjectHandler,
-         pNewObject
-      );
-      return lObjectHandler;
    }
    
    // -------------------------------------------------------------------------
@@ -1052,6 +709,246 @@ public class EJBAdaptorBean
    {
    }
    
+   // -------------------------------------------------------------------------
+   // Private Classes
+   // -------------------------------------------------------------------------  
+   
+   private class LocalConnector implements JMXConnector {
+      
+      private MBeanServer mServer = null;
+      
+      public LocalConnector( MBeanServer pServer ) {
+         mServer = pServer;
+      }
+
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException
+      {
+         return mServer.createMBean( pClassName, pName );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         ObjectName pLoaderName
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException,
+         InstanceNotFoundException
+      {
+         return mServer.createMBean( pClassName, pName, pLoaderName );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException
+      {
+         return mServer.createMBean( pClassName, pName, pParams, pSignature );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         ObjectName pLoaderName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException,
+         InstanceNotFoundException
+      {
+         return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
+      }
+      
+      public void unregisterMBean(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException,
+         MBeanRegistrationException
+      {
+         mServer.unregisterMBean( pName );
+      }
+      
+      public ObjectInstance getObjectInstance(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException
+      {
+         return mServer.getObjectInstance( pName );
+      }
+      
+      public Set queryMBeans(
+         ObjectName pName,
+         QueryExp pQuery
+      ) {
+         return mServer.queryMBeans( pName, pQuery );
+      }
+      
+      public Set queryNames(
+         ObjectName pName,
+         QueryExp pQuery
+      ) {
+         return mServer.queryNames( pName, pQuery );
+      }
+      
+      public boolean isRegistered(
+         ObjectName pName
+      ) {
+         return mServer.isRegistered( pName );
+      }
+      
+      public boolean isInstanceOf(
+         ObjectName pName,
+         String pClassName
+      ) throws
+         InstanceNotFoundException
+      {
+         return mServer.isInstanceOf( pName, pClassName );
+      }
+      
+      public Integer getMBeanCount(
+      ) {
+         return mServer.getMBeanCount();
+      }
+      
+      public Object getAttribute(
+         ObjectName pName,
+         String pAttribute
+      ) throws
+         MBeanException,
+         AttributeNotFoundException,
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.getAttribute( pName, pAttribute );
+      }
+      
+      public AttributeList getAttributes(
+         ObjectName pName,
+         String[] pAttributes
+      ) throws
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.getAttributes( pName, pAttributes );
+      }
+      
+      public void setAttribute(
+         ObjectName pName,
+         Attribute pAttribute
+      ) throws
+         InstanceNotFoundException,
+         AttributeNotFoundException,
+         InvalidAttributeValueException,
+         MBeanException,
+         ReflectionException
+      {
+         mServer.setAttribute( pName, pAttribute );
+      }
+      
+      public AttributeList setAttributes(
+         ObjectName pName,
+         AttributeList pAttributes
+      ) throws
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.setAttributes( pName, pAttributes );
+      }
+      
+      public Object invoke(
+         ObjectName pName,
+         String pActionName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         InstanceNotFoundException,
+         MBeanException,
+         ReflectionException
+      {
+         return mServer.invoke( pName, pActionName, pParams, pSignature );
+      }
+      
+      public String getDefaultDomain(
+      ) {
+         return mServer.getDefaultDomain();
+      }
+      
+      public MBeanInfo getMBeanInfo(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException,
+         IntrospectionException,
+         ReflectionException
+      {
+         return mServer.getMBeanInfo( pName );
+      }
+      
+      public void addNotificationListener(
+         ObjectName pName,
+         NotificationListener pListener,
+         NotificationFilter pFilter,
+         Object pHandback		
+      ) throws
+         InstanceNotFoundException
+      {
+         mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
+      }
+      
+      public void removeNotificationListener(
+         ObjectName pName,
+         NotificationListener pListener
+      ) throws
+         InstanceNotFoundException,
+         ListenerNotFoundException
+      {
+         mServer.removeNotificationListener( pName, pListener );
+      }
+      
+      public void addNotificationListener(
+         ObjectName pName,
+         ObjectName pListener,
+         NotificationFilter pFilter,
+         Object pHandback		
+      ) throws
+         InstanceNotFoundException
+      {
+         mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
+      }
+      
+      public void removeNotificationListener(
+         ObjectName pName,
+         ObjectName pListener
+      ) throws
+         InstanceNotFoundException,
+         ListenerNotFoundException,
+         UnsupportedOperationException
+      {
+         mServer.removeNotificationListener( pName, pListener );
+      }
+      
+   }
 }
 
 // ----------------------------------------------------------------------------

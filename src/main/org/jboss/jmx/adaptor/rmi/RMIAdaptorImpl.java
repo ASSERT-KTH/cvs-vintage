@@ -4,25 +4,28 @@
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
-package org.jboss.jmx.connector.rmi;
+package org.jboss.jmx.adaptor.rmi;
 
 import java.io.ObjectInputStream;
 import java.rmi.server.UnicastRemoteObject;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.ObjectName;
 import javax.management.QueryExp;
 import javax.management.ObjectInstance;
+import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
+import javax.management.MBeanServer;
 import javax.management.MBeanInfo;
 
 import javax.management.AttributeNotFoundException;
@@ -37,68 +40,59 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.OperationsException;
 import javax.management.ReflectionException;
 
+import javax.naming.InitialContext;
+
+import org.jboss.system.ServiceMBeanSupport;
+
 import org.jboss.jmx.connector.notification.JMSNotificationListener;
-import org.jboss.jmx.connector.notification.RMINotificationSender;
+import org.jboss.jmx.connector.notification.RMINotificationListener;
 
 /**
 * RMI Interface for the server side Connector which
 * is nearly the same as the MBeanServer Interface but
 * has an additional RemoteException.
+* <BR>
+* AS 8/18/00
+* <BR>
+* Add the ObjectHandler to enable this server-side implementation to instantiate
+* objects locally but enable the client to use them as parameter from the
+* client side transparently (except that the user cannot invoke a method on this
+* instance).
 *
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+* @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
-public interface RMIConnector 
-	extends Remote
+public class RMIAdaptorImpl
+	extends UnicastRemoteObject
+	implements RMIAdaptor
 {
 
 	// Constants -----------------------------------------------------
 	
+	// Attributes ----------------------------------------------------
+	/**
+	* Reference to the MBeanServer all the methods of this Connector are
+	* forwarded to
+	**/
+	private MBeanServer					mServer;
+	/** Pool of object referenced by an object handler **/
+	private Hashtable					mObjectPool = new Hashtable();
+	/** Pool of registered listeners **/
+	private Vector						mListeners = new Vector();
+	
+	// Static --------------------------------------------------------
+	
 	// Public --------------------------------------------------------
 
-	/* AS 8/12/00
-	* Contains the same list of methods that the MBeanServer Interface
-	* does but have an additional RemoteException being thrown.
-	* AS 8/18/00
-	* Not all methods of the MBeanServer are supported and therefore
-	* removed from this interface.
-	*/
-
-	public Object instantiate(
-		String pClassName
-	) throws
-		ReflectionException,
-		MBeanException,
-		RemoteException;
-
-	public Object instantiate(
-		String pClassName,
-		ObjectName pLoaderName
-	) throws
-		ReflectionException,
-		MBeanException,
-		InstanceNotFoundException,
-		RemoteException;
-
-	public Object instantiate(
-		String pClassName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		MBeanException,
-		RemoteException;
-
-	public Object instantiate(
-		String pClassName,
-		ObjectName pLoaderName,
-		Object[] pParams,
-		String[] pSignature
-	) throws
-		ReflectionException,
-		MBeanException,
-		InstanceNotFoundException,
-		RemoteException;
+	// Constructors --------------------------------------------------
+	public RMIAdaptorImpl(
+		MBeanServer pServer
+	) throws RemoteException {
+		super();
+		mServer = pServer;
+	}
+	
+	// RMIConnector implementation -------------------------------------
 
 	public ObjectInstance createMBean(
 		String pClassName,
@@ -109,7 +103,10 @@ public interface RMIConnector
 		MBeanRegistrationException,
 		MBeanException,
 		NotCompliantMBeanException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.createMBean( pClassName, pName );
+	}
 
 	public ObjectInstance createMBean(
 		String pClassName,
@@ -122,7 +119,10 @@ public interface RMIConnector
 		MBeanException,
 		NotCompliantMBeanException,
 		InstanceNotFoundException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.createMBean( pClassName, pName, pLoaderName );
+	}
 
 	public ObjectInstance createMBean(
 		String pClassName,
@@ -135,7 +135,10 @@ public interface RMIConnector
 		MBeanRegistrationException,
 		MBeanException,
 		NotCompliantMBeanException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.createMBean( pClassName, pName, pParams, pSignature );
+	}
 
 	public ObjectInstance createMBean(
 		String pClassName,
@@ -150,57 +153,72 @@ public interface RMIConnector
 		MBeanException,
 		NotCompliantMBeanException,
 		InstanceNotFoundException,
-		RemoteException;
-
-	public ObjectInstance registerMBean(
-		Object pObject,
-		ObjectName pName
-	) throws
-		InstanceAlreadyExistsException,
-		MBeanRegistrationException,
-		NotCompliantMBeanException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
+	}
 
 	public void unregisterMBean(
 		ObjectName pName
 	) throws
 		InstanceNotFoundException,
 		MBeanRegistrationException,
-		RemoteException;
+		RemoteException
+	{
+		mServer.unregisterMBean( pName );
+	}
 
 	public ObjectInstance getObjectInstance(
 		ObjectName pName
 	) throws
 		InstanceNotFoundException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getObjectInstance( pName );
+	}
 
 	public Set queryMBeans(
 		ObjectName pName,
 		QueryExp pQuery
 	) throws
-		RemoteException;
+		RemoteException
+	{
+		return mServer.queryMBeans( pName, pQuery );
+	}
 
 	public Set queryNames(
 		ObjectName pName,
 		QueryExp pQuery
 	) throws
-		RemoteException;
+		RemoteException
+	{
+		return mServer.queryNames( pName, pQuery );
+	}
 
 	public boolean isRegistered(
 		ObjectName pName
 	) throws
-		RemoteException;
+		RemoteException
+	{
+		return mServer.isRegistered( pName );
+	}
 
 	public boolean isInstanceOf(
 		ObjectName pName,
 		String pClassName
 	) throws
 		InstanceNotFoundException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.isInstanceOf( pName, pClassName );
+	}
 
 	public Integer getMBeanCount(
 	) throws
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getMBeanCount();
+	}
 
 	public Object getAttribute(
 		ObjectName pName,
@@ -210,7 +228,10 @@ public interface RMIConnector
 		AttributeNotFoundException,
 		InstanceNotFoundException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getAttribute( pName, pAttribute );
+	}
 
 	public AttributeList getAttributes(
 		ObjectName pName,
@@ -218,7 +239,10 @@ public interface RMIConnector
 	) throws
 		InstanceNotFoundException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getAttributes( pName, pAttributes );
+	}
 
 	public void setAttribute(
 		ObjectName pName,
@@ -229,7 +253,10 @@ public interface RMIConnector
 		InvalidAttributeValueException,
 		MBeanException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		mServer.setAttribute( pName, pAttribute );
+	}
 
 	public AttributeList setAttributes(
 		ObjectName pName,
@@ -237,7 +264,10 @@ public interface RMIConnector
 	) throws
 		InstanceNotFoundException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.setAttributes( pName, pAttributes );
+	}
 
 	public Object invoke(
 		ObjectName pName,
@@ -248,45 +278,56 @@ public interface RMIConnector
 		InstanceNotFoundException,
 		MBeanException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.invoke( pName, pActionName, pParams, pSignature );
+	}
 
 	public String getDefaultDomain(
 	) throws
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getDefaultDomain();
+	}
 
+	/**
+	* Adds a given remote notification listeners to the given
+	* Broadcaster.
+	* Please note that this is not the same as within the
+	* MBeanServer because it is protocol specific.
+	*/
 	public void addNotificationListener(
 		ObjectName pName,
-		RMINotificationSender pSender,
+		ObjectName pListener,
 		NotificationFilter pFilter,
 		Object pHandback		
 	) throws
 		InstanceNotFoundException,
-		RemoteException;
-
-	public void addNotificationListener(
-		ObjectName pName,
-		JMSNotificationListener pListener,
-		NotificationFilter pFilter,
-		Object pHandback		
-	) throws
-		InstanceNotFoundException,
-		RemoteException;
-
-	public void removeNotificationListener(
-		ObjectName pName,
-		RMINotificationSender pSender
-	) throws
-		InstanceNotFoundException,
-		ListenerNotFoundException,
-		RemoteException;
+		RemoteException
+	{
+		mServer.addNotificationListener(
+			pName,
+			pListener,
+			pFilter,
+			pHandback
+		);
+		mListeners.addElement( pListener );
+	}
 
 	public void removeNotificationListener(
 		ObjectName pName,
-		JMSNotificationListener pListener
+		ObjectName pListener
 	) throws
 		InstanceNotFoundException,
 		ListenerNotFoundException,
-		RemoteException;
+		RemoteException
+	{
+		mServer.removeNotificationListener(
+			pName,
+			pListener
+      );
+		mListeners.removeElement( pListener );
+	}
 
 	public MBeanInfo getMBeanInfo(
 		ObjectName pName
@@ -294,6 +335,10 @@ public interface RMIConnector
 		InstanceNotFoundException,
 		IntrospectionException,
 		ReflectionException,
-		RemoteException;
+		RemoteException
+	{
+		return mServer.getMBeanInfo( pName );
+	}
 
 }
+

@@ -28,7 +28,7 @@ public class RMINotificationListener
    // Members 
    // -------------------------------------------------------------------------  
 
-   private RMINotificationSender mRemoteSender;
+   private RMIClientNotificationListenerInterface mClientListener;
 
    // -------------------------------------------------------------------------
    // Constructor
@@ -40,11 +40,12 @@ public class RMINotificationListener
     * and then send the notification over the provided RMI Notification
     * sender to the client
     *
-    * @param pNotificationSender The Notification Sender using RMI to
-    *                            transport
+    * @param pClientListener RMI-Stub used to transfer the Notification over
+    *                        the wire.
     **/
-   public RMINotificationListener( RMINotificationSender pNotificationSender ) {
-      mRemoteSender = pNotificationSender;
+   public RMINotificationListener( RMIClientNotificationListenerInterface pClientListener ) {
+      System.out.println( "RMINotificationListener(), client listener: " + pClientListener );
+      mClientListener = pClientListener;
    }
 
    // -------------------------------------------------------------------------
@@ -62,12 +63,7 @@ public class RMINotificationListener
 		Notification pNotification,
 		Object pHandback
 	) {
-      try {
-         mRemoteSender.handleNotification( pNotification, pHandback );
-      }
-      catch( RemoteException re ) {
-         re.printStackTrace();
-      }
+      mClientListener.handleNotification( pNotification, pHandback );
    }
    
    /**
@@ -81,8 +77,8 @@ public class RMINotificationListener
    **/
    public boolean equals( Object pTest ) {
       if( pTest instanceof RMINotificationListener ) {
-         return mRemoteSender.equals(
-            ( (RMINotificationListener) pTest).mRemoteSender
+         return mClientListener.equals(
+            ( (RMINotificationListener) pTest).mClientListener
          );
       }
       return false;
@@ -92,6 +88,6 @@ public class RMINotificationListener
    * @return							Hashcode of the remote listener
    **/
    public int hashCode() {
-      return mRemoteSender.hashCode();
+      return mClientListener.hashCode();
    }
 }

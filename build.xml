@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.33 2001/09/28 22:02:10 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.34 2001/10/08 01:38:12 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -456,9 +456,8 @@ os.version:      ${os.version}
 
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionFactoryImpl.class"/>
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionImpl.class"/>
-      <include name="org/jboss/jmx/connector/ejb/EJBConnector*Listener.class"/>
-      <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl.class"/>
-      <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*Listener.class"/>
+      <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptorImpl.class"/>
+      <include name="org/jboss/jmx/connector/notification/RMIClientNotificationListener.class"/>
       <include name="org/jboss/ejb/plugins/jrmp/server/JRMPContainerInvoker.class"/>
     </rmic>
   </target>
@@ -621,16 +620,15 @@ os.version:      ${os.version}
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- Build jmx-rmi-connector-server.sar (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-rmi-connector-server.sar">
+    <!-- Build jmx-rmi-adaptor.sar (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar">
          <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/ObjectHandler**"/>
+        <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
-        <include name="org/jboss/jmx/connector/rmi/RMIConnector**"/>
-        <include name="org/jboss/jmx/connector/rmi/RMIClient**Stub.class"/>
+        <include name="org/jboss/jmx/connector/rmi/**"/>
       </fileset>
-      <fileset dir="${source.java}/org/jboss/jmx/connector/rmi">
+      <fileset dir="${source.java}/org/jboss/jmx/adaptor/rmi">
         <include name="META-INF/**"/>
       </fileset>
     </jar>
@@ -641,6 +639,7 @@ os.version:      ${os.version}
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/adaptor/ejb/**"/>
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
+        <include name="org/jboss/jmx/connector/JMXConnector.class"/>
       </fileset>
       <fileset dir="${build.metadata}">
         <include name="META-INF/*.xml"/>
@@ -686,16 +685,14 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build jmx-rmi-connector-server.jar -->
-    <jar jarfile="${build.lib}/jmx-rmi-connector-server.jar"
-         manifest="${build.etc}/rmi-connector-server.mf">
+    <!-- Build jmx-rmi-adaptor.jar -->
+    <jar jarfile="${build.lib}/jmx-rmi-adaptor.jar"
+         manifest="${build.etc}/rmi-adaptor.mf">
       <fileset dir="${build.classes}">
+        <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/JMXConnector**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
-        <!-- <include name="org/jboss/jmx/connector/rmi/RMI**"/> -->
-        <include name="org/jboss/jmx/connector/rmi/RMIConnector**"/>
-        <include name="org/jboss/jmx/connector/rmi/**Stub.class"/>
-        <include name="org/jboss/jmx/ObjectHandler.class"/>
+        <include name="org/jboss/jmx/connector/rmi/**"/>
         <include name="org/jboss/system/Service**"/>
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/naming/**"/>
@@ -729,15 +726,13 @@ os.version:      ${os.version}
     <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
          manifest="${build.etc}/rmi-connector-client.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/ObjectHandler.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
+        <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
         <include name="org/jboss/jmx/connector/JMXConnector.class"/>
         <include name="org/jboss/jmx/connector/JMXConnectorMBean.class"/>
         <include name="org/jboss/jmx/connector/notification/RMI**"/>
         <include name="org/jboss/jmx/connector/notification/JMSNotificationListener.class"/>
-        <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
-        <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
-        <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
-        <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
+        <include name="org/jboss/jmx/connector/rmi/**"/>
         <include name="org/jboss/system/Service.class"/>
         <include name="org/jboss/system/ServiceMBean*.class"/>
         <include name="org/jboss/logging/**"/>
