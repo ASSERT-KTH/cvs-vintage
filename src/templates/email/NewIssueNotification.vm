@@ -1,9 +1,9 @@
 #set ($user = $issue.ModifiedBy )
-Bug report $issue.UniqueId has just been filed by user $user.UserName.
+Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
 #set ($attrValues = $issue.AttributeValuesMap)
-#set($attVal =  $attrValues.get("SUMMARY"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+#set ($attVal = $attrValues.get("SUMMARY"))
+#set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
 $issue.UniqueId Summary:  $attrInput.Value 
 
@@ -13,7 +13,7 @@ You can view the report at the following URL:
 $issue.UniqueId Report 
 
 #foreach ( $attKey in $attrValues )
-  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()))
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+  #set ($attVal = $attrValues.get($attKey.toString().toUpperCase()))
+  #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
   $attVal.Attribute.Name: $attrInput.Value
 #end

@@ -1,18 +1,17 @@
-
 #if ($action.equals("copy"))
   #set ($actionWord = "copied")
 #else
   #set ($actionWord = "moved")
 #end
 
-#set ($user = $issue.ModifiedBy )
-#Issue $issue.UniqueId has just been $actionWord from $oldModule to $newModule by user $user.UserName.
+#set ($user = $issue.ModifiedBy)
+Issue '$issue.UniqueId' has just been '$actionWord' from '$oldModule' to 
+'$newModule' by user '$user.UserName'.
 
 You can view the issue detail at the following URL:
 
-   <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId)>
+   <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.IssueId).setEncodeURLOff()>
 
-
-#if ( $attachment.DataAsString )Comment:  $attachment.DataAsString #end
-
-
+#if ($attachment.DataAsString)
+Comment:  $attachment.DataAsString
+#end
