@@ -19,7 +19,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125b spring 1996
-// $Id: Fig.java,v 1.1 1998/01/26 22:19:21 jrobbins Exp $
+// $Id: Fig.java,v 1.2 1998/01/30 04:22:07 abonner Exp $
 
 package uci.gef;
 
@@ -406,7 +406,6 @@ implements Observer, java.io.Serializable  {
   public void addPoint(int x, int y) { } //@
   public void insertPoint(int i, int x, int y) { } //@
   public void removePoint(int i) { } //@
-
 
   public int getPerimeterLength() { return _w + _w + _h + _h; }
 

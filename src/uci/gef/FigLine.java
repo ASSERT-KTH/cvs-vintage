@@ -19,7 +19,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125b spring 1996
-// $Id: FigLine.java,v 1.2 1998/01/29 09:47:29 abonner Exp $
+// $Id: FigLine.java,v 1.3 1998/01/30 04:22:08 abonner Exp $
 
 package uci.gef;
 
@@ -171,7 +171,7 @@ public class FigLine extends Fig {
       g.setColor(_lineColor);
       g.drawLine(_x1, _y1, _x2, _y2);
 	  drawArrowHead(g);
-    }
+   }
   }
 
 
