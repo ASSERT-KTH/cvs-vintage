@@ -53,14 +53,14 @@ import org.apache.turbine.Log;
 
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.ScarabUserManager;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.15 $ $Date: 2002/01/18 22:26:06 $
+ * @version $Revision: 1.16 $ $Date: 2002/03/14 01:13:10 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -89,7 +89,7 @@ public class UserAttribute extends AttributeValue
         {
             if ( username != null ) 
             {
-                ScarabUser user = UserManager
+                ScarabUser user = ScarabUserManager
                     .getInstance(username, getIssue().getIdDomain());
                 setUserIdOnly(user.getUserId());
             }

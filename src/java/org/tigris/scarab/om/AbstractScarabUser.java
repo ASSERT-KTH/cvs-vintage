@@ -67,7 +67,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.19 2002/03/08 00:10:42 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.20 2002/03/14 01:13:10 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -145,9 +145,9 @@ public abstract class AbstractScarabUser
     public abstract String getLastName();
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, Module)
      */
-    public abstract boolean hasPermission(String perm, ModuleEntity module);
+    public abstract boolean hasPermission(String perm, Module module);
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getName()
@@ -199,9 +199,9 @@ public abstract class AbstractScarabUser
 
         for (int i=0; i<userModules.size(); i++)
         {
-            ModuleEntity module = (ModuleEntity)userModules.get(i);
+            Module module = (Module)userModules.get(i);
             if (hasPermission(ScarabSecurity.MODULE__EDIT, module)
-               && !(module.getModuleId().equals(ModuleEntity.ROOT_ID)))
+               && !(module.getModuleId().equals(Module.ROOT_ID)))
             {
                 editModules.add(module);
             }
@@ -211,9 +211,9 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(Module, IssueType)
      */
-    public List getRModuleUserAttributes(ModuleEntity module,
+    public List getRModuleUserAttributes(Module module,
                                          IssueType issueType)
         throws Exception
     {
@@ -249,9 +249,9 @@ public abstract class AbstractScarabUser
         throws TorqueException;
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(Module, Attribute, IssueType)
      */
-    public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
+    public RModuleUserAttribute getRModuleUserAttribute(Module module, 
                                                        Attribute attribute,
                                                        IssueType issueType)
         throws Exception
@@ -405,9 +405,9 @@ public abstract class AbstractScarabUser
 
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getDefaultQueryUser(ModuleEntity, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getDefaultQueryUser(Module, IssueType)
      */
-    public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
+    public RQueryUser getDefaultQueryUser(Module me, IssueType issueType)
         throws Exception
     {
         RQueryUser rqu = null;
@@ -444,9 +444,9 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getDefaultQuery(ModuleEntity, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getDefaultQuery(Module, IssueType)
      */
-    public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
+    public Query getDefaultQuery(Module me, IssueType issueType)
         throws Exception
     {
         Query query = null;
@@ -459,9 +459,9 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#resetDefaultQuery(ModuleEntity, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#resetDefaultQuery(Module, IssueType)
      */
-    public void resetDefaultQuery(ModuleEntity me, IssueType issueType)
+    public void resetDefaultQuery(Module me, IssueType issueType)
         throws Exception
     {
         RQueryUser rqu = getDefaultQueryUser(me, issueType);

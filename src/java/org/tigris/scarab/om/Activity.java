@@ -88,7 +88,7 @@ public class Activity
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
-            aAttribute = Attribute.getInstance(getAttributeId());
+            aAttribute = AttributeManager.getInstance(getAttributeId());
             
             // make sure the parent attribute is in synch.
             super.setAttribute(aAttribute);            
@@ -196,7 +196,8 @@ public class Activity
     {
         if ( oldAttributeOption==null && (getOldValue() != null) )
         {
-            oldAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getOldValue()));
+            oldAttributeOption = AttributeOptionManager
+                .getInstance(new NumberKey(getOldValue()));
         }
         return oldAttributeOption;
     }
@@ -218,7 +219,8 @@ public class Activity
     {
         if ( newAttributeOption==null && (getNewValue() != null) )
         {
-            newAttributeOption = AttributeOptionPeer.retrieveByPK(new NumberKey(getNewValue()));
+            newAttributeOption = AttributeOptionManager
+                .getInstance(new NumberKey(getNewValue()));
         }
         return newAttributeOption;
     }

@@ -52,7 +52,7 @@ import java.util.Iterator;
 
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.om.ScarabModuleManager;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 
@@ -62,7 +62,7 @@ import org.tigris.scarab.test.BaseTestCase;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.7 2002/03/13 01:16:46 elicia Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.8 2002/03/14 01:13:14 jmcnally Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
@@ -93,8 +93,8 @@ public class ScarabModuleTest extends BaseTestCase
     private void testGetParents() throws Exception
     {
         log("testGetParents()");
-        ModuleEntity module = (ModuleEntity) ScarabModulePeer
-                              .retrieveByPK(new NumberKey(7));
+        ModuleEntity module = (ModuleEntity) ScarabModuleManager
+            .getInstance(new NumberKey(7), false);
         List parents = module.getAncestors();
         Iterator itr = parents.iterator();
         while (itr.hasNext())

@@ -72,7 +72,7 @@ import org.apache.fulcrum.template.DefaultTemplateContext;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
@@ -80,13 +80,14 @@ import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.attribute.UserAttribute;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.TransactionTypePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -99,7 +100,7 @@ import org.tigris.scarab.tools.Email;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.40 2002/03/09 02:16:31 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.41 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -144,10 +145,10 @@ public class AssignIssue extends RequireLoginFirstAction
                         Field deleted = group.get("Deleted");
                         String oldAttributeId = attVal.getAttributeId().toString();
                         String newAttributeId = group.get("AttributeId").toString();
-                        Attribute oldAttribute = (Attribute)AttributePeer.
-                                  retrieveByPK(new NumberKey(oldAttributeId));
-                        Attribute newAttribute = (Attribute)AttributePeer.
-                                  retrieveByPK(new NumberKey(newAttributeId));
+                        Attribute oldAttribute = AttributeManager
+                            .getInstance(new NumberKey(oldAttributeId));
+                        Attribute newAttribute = AttributeManager
+                            .getInstance(new NumberKey(newAttributeId));
 
                         if (deleted.toString().equals("true"))
                         {
@@ -275,8 +276,8 @@ public class AssignIssue extends RequireLoginFirstAction
                 }
                 else
                 {
-                    Attribute attribute = 
-                        Attribute.getInstance(new NumberKey(attributeId));
+                    Attribute attribute = AttributeManager
+                        .getInstance(new NumberKey(attributeId));
                     othersAction = ("User " + user.getUserName() + " has added user " 
                               + assignee.getUserName() + " to " 
                               + attribute.getName() + ".");
@@ -355,7 +356,7 @@ public class AssignIssue extends RequireLoginFirstAction
         }
 
         boolean success = true;
-        ModuleEntity module = issue.getModule();
+        Module module = issue.getModule();
         context.put("issue", issue);
 
         String fromUser = "scarab.email.modifyissue";

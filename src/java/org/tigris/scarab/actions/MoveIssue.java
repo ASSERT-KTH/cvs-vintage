@@ -66,9 +66,9 @@ import org.apache.torque.util.Criteria;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Attachment;
@@ -78,7 +78,7 @@ import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.22 2002/01/23 22:37:33 maartenc Exp $
+ * @version $Id: MoveIssue.java,v 1.23 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -114,7 +114,7 @@ public class MoveIssue extends RequireLoginFirstAction
             NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
                 getValue());
             Issue issue = getScarabRequestTool(context).getIssue();
-            ModuleEntity oldModule = issue.getModule();
+            Module oldModule = issue.getModule();
 
             // it's wrong to move an issue to the same module
             // but it's allowed to copy an issue to the same module ???
@@ -160,13 +160,13 @@ public class MoveIssue extends RequireLoginFirstAction
         String selectAction = moveIssue.get("Action").toString();
 
         Issue issue = getScarabRequestTool(context).getIssue();
-        ModuleEntity oldModule = issue.getModule();
+        Module oldModule = issue.getModule();
         ScarabUser user = (ScarabUser)data.getUser();
 
         NumberKey newIssueId;
         Issue newIssue;
         StringBuffer descBuf = null;
-        ModuleEntity newModule;
+        Module newModule;
         Attachment attachment = new Attachment();
 
         List matchingAttributes = issue
@@ -257,7 +257,7 @@ public class MoveIssue extends RequireLoginFirstAction
                else if (attVal.getAttribute().getAttributeType()
                                              .getName().equals("user"))
                {
-                   ScarabUser assignedUser = UserManager
+                   ScarabUser assignedUser = ScarabUserManager
                             .getInstance((ObjectKey)attVal.getUserId());
                    field = assignedUser.getUserName();
                } 
@@ -300,8 +300,8 @@ public class MoveIssue extends RequireLoginFirstAction
 
         // Save activity record
         Activity activity = new Activity();
-        Attribute zeroAttribute = (Attribute) AttributePeer
-                                  .retrieveByPK(new NumberKey("0"));
+        Attribute zeroAttribute = AttributeManager
+            .getInstance(new NumberKey("0"));
         activity.create(newIssue, zeroAttribute, descBuf.toString(),
                         transaction, oldModule.getName(), newModule.getName());
 

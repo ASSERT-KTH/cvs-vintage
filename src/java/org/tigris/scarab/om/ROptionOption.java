@@ -70,7 +70,7 @@ import org.tigris.scarab.util.ScarabException;
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.9 2002/03/02 02:32:58 jmcnally Exp $
+  * @version $Id: ROptionOption.java,v 1.10 2002/03/14 01:13:11 jmcnally Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -188,7 +188,7 @@ public class ROptionOption
     public AttributeOption getOption1Option()
         throws TorqueException
     {
-        return AttributeOption.getInstance(getOption1Id());
+        return AttributeOptionManager.getInstance(getOption1Id());
     }
 
     /**
@@ -197,7 +197,7 @@ public class ROptionOption
     public AttributeOption getOption2Option()
         throws TorqueException
     {
-        return AttributeOption.getInstance(getOption2Id());
+        return AttributeOptionManager.getInstance(getOption2Id());
     }
 
     /**

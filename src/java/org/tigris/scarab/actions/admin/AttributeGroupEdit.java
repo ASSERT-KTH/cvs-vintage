@@ -67,14 +67,14 @@ import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeGroup;
-import org.tigris.scarab.om.AttributeGroupPeer;
+import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.15 2002/02/15 23:25:57 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.16 2002/03/14 01:13:10 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -96,10 +96,10 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         String groupId = data.getParameters().getString("groupId");
-        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
-                            .retrieveByPK(new NumberKey(groupId));
+        AttributeGroup ag = AttributeGroupManager
+                            .getInstance(new NumberKey(groupId), false);
         List attributes = ag.getAttributes();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
 
         if ( intake.isAllValid() )
         {
@@ -149,15 +149,15 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
         String attributeId;
         String groupId = data.getParameters().getString("groupId");
-        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
-                                         .retrieveByPK(new NumberKey(groupId));
+        AttributeGroup ag = AttributeGroupManager
+            .getInstance(new NumberKey(groupId), false);
 
         for (int i =0; i<keys.length; i++)
         {
@@ -165,8 +165,8 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             if (key.startsWith("att_delete_"))
             {
                attributeId = key.substring(11);
-               Attribute attribute = (Attribute)AttributePeer
-                                     .retrieveByPK(new NumberKey(attributeId));
+               Attribute attribute = AttributeManager
+                   .getInstance(new NumberKey(attributeId), false);
 
                // Remove attribute - module mapping
                RModuleAttribute rma = module

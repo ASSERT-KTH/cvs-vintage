@@ -86,7 +86,7 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentType;
 import org.tigris.scarab.om.AttachmentTypePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.util.ScarabConstants;
@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.116 2002/03/09 02:16:31 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.117 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {

@@ -74,8 +74,8 @@ import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
@@ -92,7 +92,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.54 2002/03/08 00:10:42 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.55 2002/03/14 01:13:11 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -158,7 +158,7 @@ public class ScarabUserImpl
                 return getPrivateRModuleUserAttributes(crit);
             }
             
-            public boolean hasPermission(String perm, ModuleEntity module)
+            public boolean hasPermission(String perm, Module module)
             {
                 return hasPrivatePermission(perm, module);
             }
@@ -170,7 +170,7 @@ public class ScarabUserImpl
                 String[] perms = new String[permList.size()];
                 perms = (String[])permList.toArray(perms);
                 
-                ModuleEntity[] modules = getPrivateModules(perms);
+                Module[] modules = getPrivateModules(perms);
                 return Arrays.asList(modules);
             }
         };
@@ -200,11 +200,11 @@ public class ScarabUserImpl
     {
         return getRModuleUserAttributes(crit);
     }
-    private boolean hasPrivatePermission(String perm, ModuleEntity module)
+    private boolean hasPrivatePermission(String perm, Module module)
     {
         return hasPermission(perm, module);
     }
-    private ModuleEntity[] getPrivateModules(String[] permissions)
+    private Module[] getPrivateModules(String[] permissions)
     {        
         return getModules(permissions);
     }
@@ -277,11 +277,11 @@ public class ScarabUserImpl
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, ModuleEntity)
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, Module)
      * Determine if a user has a permission, either within the specified
      * module or within the 'Global' module.
      */
-    public boolean hasPermission(String perm, ModuleEntity module)
+    public boolean hasPermission(String perm, Module module)
     {
         boolean hasPermission = false;
         
@@ -316,8 +316,8 @@ public class ScarabUserImpl
                 if (!hasPermission)
                 {
                     // check for the permission within the 'Global' module
-                    ModuleEntity globalModule = ModuleManager
-                        .getInstance(new NumberKey(ModuleEntity.ROOT_ID));
+                    Module globalModule = ModuleManager
+                        .getInstance(new NumberKey(Module.ROOT_ID));
                     hasPermission = acl.hasPermission(perm, 
                                                       (Group)globalModule);
                 }
@@ -357,7 +357,7 @@ public class ScarabUserImpl
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String)
      */
-    public ModuleEntity[] getModules(String permission)
+    public Module[] getModules(String permission)
     {
         String[] perms = {permission};
         return getModules(perms);
@@ -369,7 +369,7 @@ public class ScarabUserImpl
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[])
      */
-    public ModuleEntity[] getModules(String[] permissions)
+    public Module[] getModules(String[] permissions)
     {
         return getModules(permissions, false);
     }
@@ -377,9 +377,9 @@ public class ScarabUserImpl
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[], boolean)
      */
-    public ModuleEntity[] getModules(String[] permissions, boolean showDeleted)
+    public Module[] getModules(String[] permissions, boolean showDeleted)
     {        
-        ModuleEntity[] result = null;
+        Module[] result = null;
         Object obj = ScarabCache.get(this, GET_MODULES, permissions); 
         if ( obj == null ) 
         {        
@@ -404,18 +404,18 @@ public class ScarabUserImpl
                 // check for permissions in global, if so get all modules
                 for ( int i=scarabModules.size()-1; i>=0; i--) 
                 {
-                    if ( ModuleEntity.ROOT_ID.equals( 
-                     ((ModuleEntity)scarabModules.get(i)).getModuleId()) ) 
+                    if ( Module.ROOT_ID.equals( 
+                     ((Module)scarabModules.get(i)).getModuleId()) ) 
                     {
                         crit = new Criteria();
                         scarabModules = ScarabModulePeer.doSelect(crit);
                         break;
                     }
                 }
-                result = new ModuleEntity[scarabModules.size()];
+                result = new Module[scarabModules.size()];
                 for ( int i=scarabModules.size()-1; i>=0; i--) 
                 {
-                    result[i] = (ModuleEntity)scarabModules.get(i);
+                    result[i] = (Module)scarabModules.get(i);
                 }
             }
             catch (Exception e)
@@ -426,15 +426,15 @@ public class ScarabUserImpl
         }
         else 
         {
-            result = (ModuleEntity[])obj;
+            result = (Module[])obj;
         }
         return result;
     }
     
     /**
-     * @see org.tigris.scarab.om.ScarabUser#hasAnyRoleIn(ModuleEntity)
+     * @see org.tigris.scarab.om.ScarabUser#hasAnyRoleIn(Module)
      */ 
-    public boolean hasAnyRoleIn(ModuleEntity module)
+    public boolean hasAnyRoleIn(Module module)
         throws Exception
     {
         return getRoles(module).size() != 0;
@@ -444,14 +444,14 @@ public class ScarabUserImpl
         "getRoles";
 
     /* *
-     * @see org.tigris.scarab.om.ScarabUser#getRoles(ModuleEntity)
+     * @see org.tigris.scarab.om.ScarabUser#getRoles(Module)
      * !FIXME! need to define a Role interface (maybe the one in fulcrum is 
      * sufficient?) before making a method like this public.   
      * Right now it is only used in one place to determine
      * if the user has any roles available, so we will use a more specific
      * public method for that.
      */
-    private List getRoles(ModuleEntity module)
+    private List getRoles(Module module)
         throws Exception
     {
         List result = null;
@@ -467,12 +467,12 @@ public class ScarabUserImpl
             result = TurbineRolePeer.doSelect(crit);
             
             // check the global module
-            if ( !ModuleEntity.ROOT_ID.equals(module.getModuleId()) ) 
+            if ( !Module.ROOT_ID.equals(module.getModuleId()) ) 
             {
                 crit = new Criteria();
                 crit.setDistinct();
                 crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-                crit.add(TurbineUserGroupRolePeer.GROUP_ID, ModuleEntity.ROOT_ID);
+                crit.add(TurbineUserGroupRolePeer.GROUP_ID, Module.ROOT_ID);
                 crit.addJoin(TurbineRolePeer.ROLE_ID, 
                              TurbineUserGroupRolePeer.ROLE_ID);
                 List globalRoles = TurbineRolePeer.doSelect(crit);
@@ -521,9 +521,9 @@ public class ScarabUserImpl
     }
     
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(Module, IssueType)
      */
-    public List getRModuleUserAttributes(ModuleEntity module,
+    public List getRModuleUserAttributes(Module module,
                                          IssueType issueType)
         throws Exception
     {
@@ -532,9 +532,9 @@ public class ScarabUserImpl
     
     
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(ModuleEntity, Attribute, IssueType)
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttribute(Module, Attribute, IssueType)
      */
-    public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
+    public RModuleUserAttribute getRModuleUserAttribute(Module module, 
                                                         Attribute attribute,
                                                         IssueType issueType)
         throws Exception
@@ -599,7 +599,7 @@ public class ScarabUserImpl
     /**
      * Gets default query-user map for this module/issuetype.
      */
-    public RQueryUser getDefaultQueryUser(ModuleEntity module, 
+    public RQueryUser getDefaultQueryUser(Module module, 
                                           IssueType issueType)
         throws Exception
     {
@@ -609,7 +609,7 @@ public class ScarabUserImpl
     /**
      * gets default query for this module/issuetype.
      */
-    public Query getDefaultQuery(ModuleEntity module, IssueType issueType)
+    public Query getDefaultQuery(Module module, IssueType issueType)
         throws Exception
     {
         return internalUser.getDefaultQuery(module, issueType);
@@ -618,7 +618,7 @@ public class ScarabUserImpl
     /**
      * Clears default query for this module/issuetype.
      */
-    public void resetDefaultQuery(ModuleEntity module, IssueType issueType)
+    public void resetDefaultQuery(Module module, IssueType issueType)
         throws Exception
     {
         internalUser.resetDefaultQuery(module, issueType);

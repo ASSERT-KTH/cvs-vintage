@@ -61,7 +61,7 @@ import org.apache.turbine.Turbine;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
@@ -74,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.42 2002/01/28 20:19:35 elicia Exp $
+ * @version $Id: Default.java,v 1.43 2002/03/14 01:13:12 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -166,7 +166,7 @@ public class Default extends TemplateSecureScreen
                 (ScarabRequestTool)getTemplateContext(data)
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-            ModuleEntity currentModule = scarabR.getCurrentModule();
+            Module currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
             ScarabUser user = (ScarabUser)data.getUser();
             if (perm != null)

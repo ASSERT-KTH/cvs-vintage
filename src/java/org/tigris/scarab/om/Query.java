@@ -56,6 +56,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.Turbine;
 
+import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.Persistent;
@@ -63,9 +64,9 @@ import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.Email;
@@ -96,25 +97,25 @@ public class Query
 
     /**
      * Throws UnsupportedOperationException.  Use
-     * <code>setModule(ModuleEntity)</code> instead.
+     * <code>setModule(Module)</code> instead.
      *
      */
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(ModuleEntity). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new.");
     }
 
     /**
      * Use this instead of setScarabModule.  Note: module cannot be new.
      */
-    public void setModule(ModuleEntity me)
-        throws Exception
+    public void setModule(Module me)
+        throws TorqueException
     {
         NumberKey id = me.getModuleId();
         if (id == null) 
         {
-            throw new ScarabException("Modules must be saved prior to " +
+            throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
         }
         setModuleId(id);
@@ -123,12 +124,12 @@ public class Query
     /**
      * Module getter.  Use this method instead of getScarabModule().
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule()
-        throws Exception
+    public Module getModule()
+        throws TorqueException
     {
-        ModuleEntity module = null;
+        Module module = null;
         ObjectKey id = getModuleId();
         if ( id != null ) 
         {
@@ -146,7 +147,7 @@ public class Query
         return new Query();
     }
 
-    public boolean saveAndSendEmail( ScarabUser user, ModuleEntity module, 
+    public boolean saveAndSendEmail( ScarabUser user, Module module, 
                                      TemplateContext context )
         throws Exception
     {
@@ -292,7 +293,7 @@ public class Query
     public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
@@ -318,7 +319,7 @@ public class Query
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
           || (user.getUserId().equals(getUserId()) 

@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.Email;
 import org.tigris.scarab.util.ScarabConstants;
@@ -79,7 +79,7 @@ public  class IssueTemplateInfo
     }
 
 
-    public void saveAndSendEmail( ScarabUser user, ModuleEntity module, 
+    public void saveAndSendEmail( ScarabUser user, Module module, 
                                   TemplateContext context )
         throws Exception
     {
@@ -128,7 +128,7 @@ public  class IssueTemplateInfo
     public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
-        ModuleEntity module = getIssue().getModule();
+        Module module = getIssue().getModule();
 
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {

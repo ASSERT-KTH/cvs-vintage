@@ -8,7 +8,7 @@ import org.apache.torque.util.Criteria;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 // Local classes
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -26,7 +26,7 @@ public class IssueTemplateInfoPeer
      * List of Issue Template objects associated with this module.
      * And issue type.
      */
-    public static List getAllTemplates(ModuleEntity me, IssueType issueType,
+    public static List getAllTemplates(Module me, IssueType issueType,
                                 ScarabUser user, 
                                 String sortColumn, String sortPolarity)
         throws Exception

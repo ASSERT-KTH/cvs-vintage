@@ -60,9 +60,9 @@ import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeType;
-import org.tigris.scarab.om.AttributeTypePeer;
+import org.tigris.scarab.om.AttributeTypeManager;
 import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.ScarabUser;
@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.14 2002/03/13 22:52:20 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.15 2002/03/14 01:13:10 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -149,8 +149,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             Attribute attribute = scarabR.getAttribute();
             Group attGroup = intake.get("Attribute", attribute.getQueryKey());
             String attributeTypeId = attGroup.get("TypeId").toString();
-            AttributeType attributeType = (AttributeType)AttributeTypePeer
-                .retrieveByPK(new NumberKey(attributeTypeId));
+            AttributeType attributeType = AttributeTypeManager
+                .getInstance(new NumberKey(attributeTypeId), false);
 
             if (attributeType.getAttributeClass().getName()
                                                  .equals("select-one"))

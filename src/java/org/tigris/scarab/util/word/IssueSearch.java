@@ -64,6 +64,7 @@ import org.apache.commons.lang.Strings;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.Issue;
@@ -78,8 +79,8 @@ import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.user.UserManager;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.om.Module;
 
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -159,7 +160,7 @@ public class IssueSearch
         }
     }
 
-    public IssueSearch(ModuleEntity module, IssueType issueType)
+    public IssueSearch(Module module, IssueType issueType)
         throws Exception
     {
         super(module, issueType);
@@ -1243,7 +1244,7 @@ public class IssueSearch
         List unSortedIssues = IssuePeer.doSelect(crit);
         List sortedIssues = new ArrayList(unSortedIssues.size());
         NumberKey sortAttrId = getSortAttributeId();
-        Attribute att = Attribute.getInstance(sortAttrId);
+        Attribute att = AttributeManager.getInstance(sortAttrId);
 
         for (int j=0; j<unSortedIssues.size(); j++)
         {

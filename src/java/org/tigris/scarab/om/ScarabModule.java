@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 // JDK classes
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 import java.util.Iterator;
@@ -73,8 +74,8 @@ import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 
 // Scarab classes
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -95,20 +96,20 @@ import org.apache.fulcrum.security.impl.db.entity
 
 /**
  * The ScarabModule class is the focal point for dealing with
- * Modules. It implements the concept of a ModuleEntity which is a
+ * Modules. It implements the concept of a Module which is a
  * single module and is the base interface for all Modules. In code,
  * one should <strong>never reference ScarabModule directly</strong>
- * -- use its ModuleEntity interface instead.  This allows us to swap
- * out ModuleEntity implementations by modifying the Scarab.properties
+ * -- use its Module interface instead.  This allows us to swap
+ * out Module implementations by modifying the Scarab.properties
  * file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.93 2002/03/02 02:32:58 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.94 2002/03/14 01:13:11 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
-    implements Persistent, ModuleEntity, Group
+    implements Persistent, Module, Group
 {
     private static final String GET_USERS = 
         "getUsers";
@@ -118,7 +119,7 @@ public class ScarabModule
     protected static final NumberKey ROOT_ID = new NumberKey("0");
 
     /**
-     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String)
+     * @see org.tigris.scarab.om.Module#getUsers(String)
      */
     public ScarabUser[] getUsers(String permission)
     {
@@ -129,12 +130,13 @@ public class ScarabModule
 
 
     /**
-     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(List)
+     * @see org.tigris.scarab.om.Module#getUsers(List)
      */
     public ScarabUser[] getUsers(List permissions)
     {
         ScarabUser[] result = null;
-        Object obj = ScarabCache.get(this, GET_USERS, permissions); 
+        Object obj = ScarabCache.get(this, GET_USERS, 
+                                     (Serializable)permissions); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria();
@@ -176,7 +178,8 @@ public class ScarabModule
             {
                 result = new ScarabUser[0];
             }
-            ScarabCache.put(result, this, GET_USERS, permissions);
+            ScarabCache.put(result, this, GET_USERS, 
+                            (Serializable)permissions);
         }
         else 
         {
@@ -187,7 +190,7 @@ public class ScarabModule
 
 
     /**
-     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String, String, String, String, IssueType)
+     * @see org.tigris.scarab.om.Module#getUsers(String, String, String, String, IssueType)
      * This implementation adds wildcard prefix and suffix and performs an SQL 
      * LIKE query for each of the String args that are not null.
      * WARNING: This is potentially a very EXPENSIVE method.
@@ -197,8 +200,9 @@ public class ScarabModule
         throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_USERS, firstName, lastName, 
-                                     username, email, issueType); 
+        Serializable[] keys = {this, GET_USERS, firstName, lastName, 
+                               username, email, issueType};
+        Object obj = ScarabCache.get(keys); 
         if ( obj == null ) 
         {        
             ScarabUser[] eligibleUsers = getUsers(getUserPermissions(issueType));
@@ -231,8 +235,7 @@ public class ScarabModule
                          Criteria.LIKE);
             }
             result = ScarabUserImplPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_USERS, firstName, lastName, 
-                                     username, email, issueType);
+            ScarabCache.put(result, keys);
         }
         else 
         {
@@ -251,17 +254,17 @@ public class ScarabModule
      * Wrapper method to perform the proper cast to the BaseModule method
      * of the same name. FIXME: find a better way
      */
-    public void setParent(ModuleEntity v) throws Exception
+    public void setParent(Module v) throws Exception
     {
-        super.setScarabModuleRelatedByParentId((ScarabModule)v);
+        super.setModuleRelatedByParentId((ScarabModule)v);
     }
 
     /**
-     * Cast the getScarabModuleRelatedByParentId() to a ModuleEntity
+     * Cast the getScarabModuleRelatedByParentId() to a Module
      */
-    public ModuleEntity getParent() throws Exception
+    public Module getParent() throws Exception
     {
-        return (ModuleEntity) super.getScarabModuleRelatedByParentId();
+        return (Module) super.getModuleRelatedByParentId();
     }
 
     /**
@@ -342,7 +345,7 @@ public class ScarabModule
             Criteria crit = new Criteria();
             crit.add(ScarabModulePeer.MODULE_NAME, getRealName());
             crit.add(ScarabModulePeer.PARENT_ID, getParentId());
-            // FIXME: this should be done with a method in ModuleEntity
+            // FIXME: this should be done with a method in Module
             // that takes the two criteria values as a argument so that other 
             // implementations can benefit from being able to get the 
             // list of modules. -- do not agree - jdm
@@ -385,7 +388,7 @@ public class ScarabModule
             }
             try
             {
-                grant (UserManager.getInstance(getOwnerId()), 
+                grant (ScarabUserManager.getInstance(getOwnerId()), 
                        TurbineSecurity.getRole("Project Owner"));
         
                 setInitialAttributesAndIssueTypes();

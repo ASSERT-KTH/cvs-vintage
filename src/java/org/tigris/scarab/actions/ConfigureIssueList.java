@@ -52,7 +52,9 @@ import java.util.List;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
+import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.ParameterParser;
@@ -61,20 +63,21 @@ import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.RModuleUserAttribute;
+import org.tigris.scarab.om.RModuleUserAttributeManager;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.20 2002/02/12 01:28:27 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.21 2002/03/14 01:13:09 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -85,7 +88,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
 
         ScarabRequestTool scarab = getScarabRequestTool(context);
-        ModuleEntity module = scarab.getCurrentModule();
+        Module module = scarab.getCurrentModule();
         IssueType issueType = scarab.getCurrentIssueType();
         NumberKey moduleId = module.getModuleId();
         ScarabUser user = (ScarabUser)data.getUser();
@@ -100,11 +103,15 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         {
             try
             {
-                mua = (RModuleUserAttribute)RModuleUserAttributePeer
-                       .retrieveByPK(moduleId, user.getUserId(), 
-                       issueType.getIssueTypeId(),
-                      ((RModuleUserAttribute)currentAttributes.get(i))
-                      .getAttributeId());
+                SimpleKey key1 = moduleId;
+                SimpleKey key2 = user.getUserId();
+                SimpleKey key3 = issueType.getIssueTypeId();
+                SimpleKey key4 = 
+                    ((RModuleUserAttribute)currentAttributes.get(i))
+                    .getAttributeId();
+                SimpleKey[] key = {key1, key2, key3, key4};
+                mua = RModuleUserAttributeManager
+                       .getInstance(new ComboKey(key), false);
                 mua.delete();
             }
             catch (Exception e)
@@ -122,8 +129,8 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             if (key.startsWith("selected_"))
             {
                 NumberKey attributeId =  new NumberKey(key.substring(9));
-                Attribute attribute = (Attribute)AttributePeer.
-                                      retrieveByPK(attributeId);
+                Attribute attribute = AttributeManager
+                    .getInstance(attributeId);
 
                 mua = user.getRModuleUserAttribute(module, 
                                                    attribute, issueType);

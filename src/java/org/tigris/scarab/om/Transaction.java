@@ -121,8 +121,8 @@ public class Transaction
         {
             if ( aAttachment == null && getAttachmentId() != null )
             {
-                aAttachment = AttachmentPeer.
-                    retrieveByPK(new NumberKey(getAttachmentId()));
+                aAttachment = AttachmentManager
+                    .getInstance(new NumberKey(getAttachmentId()), false);
                 
                 // make sure the parent attribute is in synch.
                 super.setAttachment(aAttachment);            

@@ -66,7 +66,7 @@ import org.apache.fulcrum.intake.model.Field;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.AttributeValue;
@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.26 2002/03/09 02:16:31 jmcnally Exp $
+    @version $Id: TemplateList.java,v 1.27 2002/03/14 01:13:09 jmcnally Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -161,8 +161,8 @@ public class TemplateList extends RequireLoginFirstAction
             if (key.startsWith("delete_"))
             {
                templateId = key.substring(7);
-               Issue issue = (Issue) IssuePeer
-                  .retrieveByPK(new NumberKey(templateId));
+               Issue issue = IssueManager
+                  .getInstance(new NumberKey(templateId), false);
                try
                {
                    issue.delete(user);

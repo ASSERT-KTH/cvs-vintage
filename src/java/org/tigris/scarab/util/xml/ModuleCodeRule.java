@@ -49,7 +49,7 @@ package org.tigris.scarab.util.xml;
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.ScarabModule;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.ModuleManager;
 
 import org.apache.torque.om.NumberKey;
 

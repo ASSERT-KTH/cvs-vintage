@@ -56,14 +56,14 @@ import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssueTypePeer;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  *  This class will allow you to set the selected Issue Type for a user.
  *       
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectIssueType.java,v 1.6 2002/01/18 22:26:03 jon Exp $
+ *  @version $Id: SelectIssueType.java,v 1.7 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
@@ -83,8 +83,8 @@ public class SelectIssueType extends RequireLoginFirstAction
         data.getParameters().setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
             newIssueType);
         
-        IssueType issueType = (IssueType)IssueTypePeer.
-                               retrieveByPK(new NumberKey(newIssueType));
+        IssueType issueType = IssueTypeManager
+            .getInstance(new NumberKey(newIssueType), false);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         scarabR.setCurrentIssueType(issueType);
         scarabR.setReportingIssue(null);

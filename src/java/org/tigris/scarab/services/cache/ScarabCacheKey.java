@@ -46,59 +46,161 @@ package org.tigris.scarab.services.cache;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.io.Serializable;
 import org.apache.commons.lang.Objects;
 import org.apache.log4j.Category;
 import org.apache.fulcrum.pool.RecyclableSupport;
 
 public class ScarabCacheKey
     extends RecyclableSupport
+    implements Serializable
 {
     private static final Category log = 
         Category.getInstance("org.apache.torque");
 
     int n;
-    private Object obj1;
-    private Object obj2;
-    private Object obj3;
-    private Object obj4;
-    private Object obj5;
-    private Object obj6;
-    private Object obj7;
+    private Serializable instanceOrClass;
+    private String method;
+    private Serializable arg1;
+    private Serializable arg2;
+    private Serializable arg3;
+    private Serializable[] moreThanThree;
 
     public ScarabCacheKey()
     {
     }
     
-    public ScarabCacheKey(int numArgs, Object o1, Object o2, Object o3, 
-                          Object o4, Object o5, Object o6, Object o7)
+    public ScarabCacheKey(Serializable instanceOrClass, String method)
     {
-        init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+        init(instanceOrClass, method);
     }
-    
-    /**
-     * Describe <code>init</code> method here.
-     *
-     * @param numArgs, 0-5
-     * @param o1 the Object on which the method is invoked.  if the method is
-     * is static, a String representing the class name is used.
-     * @param o2 the method name
-     * @param o3 first method arg, may be null
-     * @param o4 2nd method arg, may be null
-     * @param o5 3rd method arg, may be null
-     * @param o6 4th method arg, may be null
-     * @param o7 5th method arg, may be null
-     */
-    public void init(int numArgs, Object o1, Object o2, Object o3, Object o4, 
-                     Object o5, Object o6, Object o7)
+
+    public ScarabCacheKey(Serializable instanceOrClass, String method, 
+                          Serializable arg1)
     {
-        n = numArgs;
-        obj1 = o1;
-        obj2 = o2;
-        obj3 = o3;
-        obj4 = o4;
-        obj5 = o5;
-        obj6 = o6;
-        obj7 = o7;
+        init(instanceOrClass, method, arg1);
+    }
+
+    public ScarabCacheKey(Serializable instanceOrClass, String method,
+                          Serializable arg1, Serializable arg2)
+    {
+        init(instanceOrClass, method, arg1, arg2);
+    }
+
+    public ScarabCacheKey(Serializable instanceOrClass, String method,
+                          Serializable arg1, Serializable arg2, 
+                          Serializable arg3)
+    {
+        init(instanceOrClass, method, arg1, arg2, arg3);
+    }
+
+    public ScarabCacheKey(Serializable[] moreThanThree)
+    {
+        init(moreThanThree);
+    }
+
+    /**
+     * Initialize key for method with no arguments.
+     *
+     * @param instanceOrClass the Object on which the method is invoked.  if 
+     * the method is static, a String representing the class name is used.
+     * @param method the method name
+     */
+    public void init(Serializable instanceOrClass, String method) 
+    {
+        n = 0;
+        this.instanceOrClass = instanceOrClass;
+        this.method = method;
+    }
+
+    /**
+     * Initialize key for method with one argument.
+     *
+     * @param instanceOrClass the Object on which the method is invoked.  if 
+     * the method is static, a String representing the class name is used.
+     * @param method the method name
+     * @param arg1 first method arg, may be null
+     */
+    public void init(Serializable instanceOrClass, String method, 
+                     Serializable arg1)
+    {
+        n = 1;
+        this.instanceOrClass = instanceOrClass;
+        this.method = method;
+        this.arg1 = arg1;
+    }
+
+    /**
+     * Initialize key for method with two arguments.
+     *
+     * @param instanceOrClass the Object on which the method is invoked.  if 
+     * the method is static, a String representing the class name is used.
+     * @param method the method name
+     * @param arg1 first method arg, may be null
+     * @param arg2 second method arg, may be null
+     */
+    public void init(Serializable instanceOrClass, String method, 
+                     Serializable arg1, Serializable arg2)
+    {
+        n = 2;
+        this.instanceOrClass = instanceOrClass;
+        this.method = method;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+    }
+
+
+    /**
+     * Initialize key for method with two arguments.
+     *
+     * @param instanceOrClass the Object on which the method is invoked.  if 
+     * the method is static, a String representing the class name is used.
+     * @param method the method name
+     * @param arg1 first method arg, may be null
+     * @param arg2 second method arg, may be null
+     */
+    public void init(Serializable instanceOrClass, String method, 
+                     Serializable arg1, Serializable arg2,
+                     Serializable arg3)
+    {
+        n = 3;
+        this.instanceOrClass = instanceOrClass;
+        this.method = method;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.arg3 = arg3;
+    }
+
+    /**
+     * Initialize key for method with more than two arguments.
+     *
+     * @param Serializable[] where 
+     * [0]=>the Object on which the method is invoked
+     * if the method is static, a String representing the class name is used.
+     * [1]=>the method name
+     * [n] where n>1 are the method arguments
+     */
+    public void init(Serializable[] keys)
+    {
+        n = keys.length-2;
+        this.instanceOrClass = keys[0];
+        this.method = (String)keys[1];
+        if (n>0) 
+        {
+            this.arg1 = keys[2];
+            if (n>1) 
+            {
+                this.arg2 = keys[3];
+                if (n>2) 
+                {
+                    this.arg2 = keys[4];
+                    if (n>3) 
+                    {
+                        this.moreThanThree = keys;                
+                    }
+                }
+            }
+        }
     }
 
     public boolean equals(Object obj)
@@ -107,62 +209,63 @@ public class ScarabCacheKey
         if ( obj instanceof ScarabCacheKey ) 
         {
             ScarabCacheKey sck = (ScarabCacheKey)obj;
-            equal = Objects.equals(sck.obj1, obj1);
-            equal &= Objects.equals(sck.obj2, obj2);
+            equal = sck.n == n;
+            equal &= Objects.equals(sck.instanceOrClass, instanceOrClass);
+            equal &= Objects.equals(sck.method, method);
             if (n > 0) 
             {
-                equal &= Objects.equals(sck.obj3, obj3);
+                equal &= Objects.equals(sck.arg1, arg1);
                 if (n > 1) 
                 {
-                    equal &= Objects.equals(sck.obj4, obj4);
+                    equal &= Objects.equals(sck.arg2, arg2);
                     if (n > 2) 
                     {
-                        equal &= Objects.equals(sck.obj5, obj5);
+                        equal &= Objects.equals(sck.arg3, arg3);
                         if (n > 3) 
                         {
-                            equal &= Objects.equals(sck.obj6, obj6);
-                            if (n > 4) 
+                            for (int i=5; i<n+2; i++) 
                             {
-                                equal &= Objects.equals(sck.obj7, obj7);
+                                equal &= Objects.equals(sck.moreThanThree[i], 
+                                                        moreThanThree[i]);
                             }
                         }
                     }
                 }
             }
-            
-        }
+
             if (equal) 
             {
-                log.debug("Saved db hit on " + obj1 + "::" + obj2 + ". YAY!");
+                log.debug("Saved db hit on " + instanceOrClass + "::" 
+                          + method + ". YAY!");
             }
-            
-            return equal;
-        }
+        }            
+        return equal;
+    }
 
         public int hashCode()
         {
-            int h = obj1.hashCode();
-            h += obj2.hashCode();
-            if (n > 0 && obj3 != null) 
+            int h = instanceOrClass.hashCode();
+            h += method.hashCode();
+            if (n > 0) 
             {
-                h += obj3.hashCode();
+                h += (arg1 == null ? 0 : arg1.hashCode());
+                if (n > 1) 
+                {
+                    h += (arg2 == null ? 0 : arg2.hashCode());
+                    if (n > 2) 
+                    {
+                        h += (arg3 == null ? 0 : arg3.hashCode());
+                        if (n > 3) 
+                        {
+                            for (int i=5; i<n+2; i++) 
+                            {
+                                h+= (moreThanThree[i] == null ?
+                                     0 : moreThanThree[i].hashCode());
+                            }
+                        }        
+                    }    
+                }
             }
-            if (n > 1 && obj4 != null) 
-            {
-                h += obj4.hashCode();
-            }
-            if (n > 2 && obj5 != null) 
-            {
-                h += obj5.hashCode();
-            }            
-            if (n > 3 && obj6 != null) 
-            {
-                h += obj6.hashCode();
-            }            
-            if (n > 4 && obj7 != null) 
-            {
-                h += obj7.hashCode();
-            }            
             return h;
         }
 
@@ -176,12 +279,11 @@ public class ScarabCacheKey
     public void dispose()
     {
         super.dispose();
-        obj1 = null;
-        obj2 = null;
-        obj3 = null;
-        obj4 = null;
-        obj5 = null;
-        obj6 = null;
-        obj7 = null;
+        instanceOrClass = null;
+        method = null;
+        arg1 = null;
+        arg2 = null;
+        arg3 = null;
+        moreThanThree = null;
     }
 }

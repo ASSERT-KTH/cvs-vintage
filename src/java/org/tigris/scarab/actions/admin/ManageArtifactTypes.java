@@ -66,13 +66,13 @@ import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.8 2002/02/19 22:16:13 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.9 2002/03/14 01:13:10 jmcnally Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -85,7 +85,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         List rmits = module.getRModuleIssueTypes();
         int navCount = 0;
         Group rmitGroup = null;
@@ -135,7 +135,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         IssueType issueType = scarabR.getIssueType();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
 
         if (issueType.getIssueTypeId() == null)
         {
@@ -175,7 +175,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         ParameterParser params = data.getParameters();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         Object[] keys = params.getKeys();
         String key;
         String issueTypeId;

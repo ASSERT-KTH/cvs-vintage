@@ -8,7 +8,7 @@ import org.apache.torque.util.Criteria;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 // Local classes
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -30,9 +30,9 @@ public class QueryPeer
      * List of private queries associated with this module.
      * Created by this user.
      */
-    public static List getQueries(ModuleEntity me, IssueType issueType,
-                                     ScarabUser user, String sortColumn,   
-                                     String sortPolarity, String type)
+    public static List getQueries(Module me, IssueType issueType,
+                                  ScarabUser user, String sortColumn,   
+                                  String sortPolarity, String type)
         throws Exception
     {
         List queries = null;
@@ -112,14 +112,14 @@ public class QueryPeer
         return queries;
     }
 
-    public static List getQueries(ModuleEntity me, IssueType issueType,
+    public static List getQueries(Module me, IssueType issueType,
                                      ScarabUser user)
         throws Exception
     {
         return getQueries(me, issueType, user, "avail", "asc", "all");
     }
 
-    public static List getQueries(ModuleEntity me, IssueType issueType,
+    public static List getQueries(Module me, IssueType issueType,
                                      ScarabUser user, String sortColumn,   
                                      String sortPolarity)
         throws Exception

@@ -66,7 +66,7 @@ import org.tigris.scarab.om.ScarabUser;
 // FIXME: remove the methods that reference this
 import org.tigris.scarab.om.ScarabUserImpl;
 import org.tigris.scarab.om.ScarabModulePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
@@ -76,7 +76,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Confirm.java,v 1.29 2002/01/18 22:26:02 jon Exp $
+ * @version $Id: Confirm.java,v 1.30 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class Confirm extends ScarabTemplateAction
 {
@@ -180,10 +180,10 @@ public class Confirm extends ScarabTemplateAction
                         // only give access to the non-global modules
                         if (!group.getName()
                             .startsWith(ScarabConstants.GLOBAL_MODULE_NAME + 
-                                ModuleEntity.NAME_DELIMINATOR))
+                                Module.NAME_DELIMINATOR))
                         {
                             group.grant((User)confirmedUser, role);
-                            ((ModuleEntity)group).save();
+                            ((Module)group).save();
                         }
                     }
                 }

@@ -53,7 +53,7 @@ import org.apache.fulcrum.security.entity.Role;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.util.ScarabException;
 
@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.56 2002/03/08 00:10:42 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.57 2002/03/14 01:13:11 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -161,19 +161,19 @@ public interface ScarabUser extends User
     /**
      * Gets default query-user map for this module/issue type.
      */
-    public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
+    public RQueryUser getDefaultQueryUser(Module me, IssueType issueType)
         throws Exception;
 
     /**
      * Gets default query for this module/issuetype.
      */
-    public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
+    public Query getDefaultQuery(Module me, IssueType issueType)
         throws Exception;
 
     /**
      * Clears default query for this module/issuetype.
      */
-    public void resetDefaultQuery(ModuleEntity me, IssueType issueType)
+    public void resetDefaultQuery(Module me, IssueType issueType)
         throws Exception;
 
 
@@ -195,14 +195,14 @@ public interface ScarabUser extends User
      * User and Module -- the attributes the user has selected
      * To appear on the IssueList for this module.
      */
-    public List getRModuleUserAttributes(ModuleEntity module, 
+    public List getRModuleUserAttributes(Module module, 
                                          IssueType issueType)
             throws Exception;
 
     /**
      * Returns an RModuleUserAttribute object.
      */
-    public RModuleUserAttribute getRModuleUserAttribute(ModuleEntity module, 
+    public RModuleUserAttribute getRModuleUserAttribute(Module module, 
                                                         Attribute attribute,
                                                         IssueType issueType)
             throws Exception;
@@ -225,41 +225,41 @@ public interface ScarabUser extends User
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
+     * @param module a <code>Module</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String perm, ModuleEntity module);
+    public boolean hasPermission(String perm, Module module);
 
     /**
-     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * Get a list of <code>Module</code>'s that where a user has
      * the permissions given. Does not show deleted modules.
      * (showDeleted = false)
      * @param permissions a <code>String</code> value
-     * @return a <code>ModuleEntity[]</code> value
+     * @return a <code>Module[]</code> value
      */
-    public ModuleEntity[] getModules(String permission) 
+    public Module[] getModules(String permission) 
         throws Exception;
 
     /**
-     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * Get a list of <code>Module</code>'s that where a user has
      * at least one of the permissions given. Does not show deleted modules.
      * (showDeleted = false)
      * @param permissions a <code>String[]</code> value
-     * @return a <code>ModuleEntity[]</code> value
+     * @return a <code>Module[]</code> value
      */
-    public ModuleEntity[] getModules(String[] permissions) 
+    public Module[] getModules(String[] permissions) 
         throws Exception;
 
     /**
-     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * Get a list of <code>Module</code>'s that where a user has
      * at least one of the permissions given. Does not show deleted modules.
      *
      * @param permissions a <code>String[]</code> value
      * @param showDeleted a <code>boolean</code> value
-     * @return a <code>ModuleEntity[]</code> value
+     * @return a <code>Module[]</code> value
      */
-    public ModuleEntity[] getModules(String[] permissions, boolean showDeleted) 
+    public Module[] getModules(String[] permissions, boolean showDeleted) 
         throws Exception;
 
     /**
@@ -267,10 +267,10 @@ public interface ScarabUser extends User
      * This translates to a check whether the user has any permissions within
      * the module.
      *
-     * @param module a <code>ModuleEntity</code> value
+     * @param module a <code>Module</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean hasAnyRoleIn(ModuleEntity module)
+    public boolean hasAnyRoleIn(Module module)
         throws Exception;
 
     /**

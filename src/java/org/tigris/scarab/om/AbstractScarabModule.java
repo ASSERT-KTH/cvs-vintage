@@ -1,4 +1,4 @@
-package org.tigris.scarab.services.module;
+package org.tigris.scarab.om;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -73,8 +73,8 @@ import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRole;
 
 // Scarab classes
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ReportPeer;
@@ -87,6 +87,7 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.RModuleIssueTypePeer;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
@@ -112,11 +113,11 @@ import org.apache.turbine.Log;
 /**
  * <p>
  * The ScarabModule class is the focal point for dealing with
- * Modules. It implements the concept of a ModuleEntity which is a
+ * Modules. It implements the concept of a Module which is a
  * single module and is the base interface for all Modules. In code,
  * one should <strong>never reference ScarabModule directly</strong>
- * -- use its ModuleEntity interface instead.  This allows us to swap
- * out ModuleEntity implementations by modifying the Scarab.properties
+ * -- use its Module interface instead.  This allows us to swap
+ * out Module implementations by modifying the Scarab.properties
  * file.
  * </p>
  * 
@@ -127,15 +128,15 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.42 2002/03/12 02:22:00 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.1 2002/03/14 01:13:10 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
-    implements ModuleEntity, Comparable
+    implements Module, Comparable
 {
 
     private static final Category log = 
-        Category.getInstance("org.tigris.scarab.AbstractScarabModule");
+        Category.getInstance("org.tigris.scarab.om.AbstractScarabModule");
 
     // the following Strings are method names that are used in caching results
     private static final String GET_R_MODULE_ATTRIBUTES = 
@@ -218,13 +219,13 @@ public abstract class AbstractScarabModule
     private String name = null;
 
     /**
-     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String)
+     * @see org.tigris.scarab.om.Module#getUsers(String)
      */
     public abstract ScarabUser[] getUsers(String permission)
         throws Exception;
 
     /**
-     * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String)
+     * @see org.tigris.scarab.om.Module#getUsers(String)
      */
     public abstract ScarabUser[] getUsers(List permissions)
         throws Exception;
@@ -248,6 +249,7 @@ public abstract class AbstractScarabModule
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 log.error(e);
                 return null;
             }
@@ -255,25 +257,19 @@ public abstract class AbstractScarabModule
             boolean firstTime = true;
             while (itr.hasNext())
             {
-                ModuleEntity me = (ModuleEntity) itr.next();
+                Module me = (Module) itr.next();
                 if (!firstTime)
                 {
-                    sb.append(ModuleEntity.NAME_DELIMINATOR);
+                    sb.append(Module.NAME_DELIMINATOR);
                 }
                 sb.append(me.getRealName());
                 firstTime = false;
             }
-            boolean isRoot = getModuleId().toString().equals(ROOT_ID);
-            // Make sure we have parents and if we are root, don't show ourselves again.
-            if (parents.size() >= 1 && !isRoot)
+            if (parents.size() >= 1)
             {
-                sb.append(ModuleEntity.NAME_DELIMINATOR);
+                sb.append(Module.NAME_DELIMINATOR);
             }
-            // If we are root, don't show ourselves again.
-            if (!isRoot)
-            {
-                sb.append(getRealName());
-            }
+            sb.append(getRealName());
             name = sb.toString();
         }
         return name;
@@ -308,23 +304,10 @@ public abstract class AbstractScarabModule
         if (parentModules == null)
         {
             parentModules = new ArrayList();
-            ModuleEntity parent = getParent();
+            Module parent = getParent();
             addAncestors(parent);
         }
         return parentModules;
-    }
-
-    /**
-     * recursive helper method for getAncestors()
-     */
-    private void addAncestors(ModuleEntity module)
-        throws Exception
-    {
-        if (!module.getParentId().equals(ROOT_ID))
-        {
-            addAncestors(module.getParent());
-        }
-        parentModules.add(module);
     }
 
     /**
@@ -481,6 +464,19 @@ public abstract class AbstractScarabModule
         return sequence;
     }    
 
+    /**
+     * recursive helper method for getAncestors()
+     */
+    private void addAncestors(Module module)
+        throws Exception
+    {
+        if (!module.getParentId().equals(ROOT_ID))
+        {
+            addAncestors(module.getParent());
+        }
+        parentModules.add(module);
+    }
+
     public ScarabUser[] getEligibleIssueReporters()
         throws Exception
     {
@@ -521,13 +517,13 @@ public abstract class AbstractScarabModule
     /**
      * Set this module's immediate parent module
      */
-    public abstract void setParent(ModuleEntity v) 
+    public abstract void setParent(Module v) 
         throws Exception;
 
     /**
      * Get this module's immediate parent module
      */
-    public abstract ModuleEntity getParent() 
+    public abstract Module getParent() 
         throws Exception;
 
 
@@ -1051,8 +1047,8 @@ public abstract class AbstractScarabModule
         rma.save();
 
         // Add to template type
-        IssueType templateType = (IssueType)IssueTypePeer.
-                  retrieveByPK(issueType.getTemplateId());
+        IssueType templateType = IssueTypeManager
+            .getInstance(issueType.getTemplateId(), false);
         RModuleAttribute rma2 = new RModuleAttribute();
         rma2.setModuleId(getModuleId());
         rma2.setIssueTypeId(templateType.getIssueTypeId());
@@ -1715,7 +1711,7 @@ try{
         // Add defaults for issue types and attributes 
         // from parent module
         NumberKey newModuleId = getModuleId();
-        ModuleEntity parentModule = ModuleManager.getInstance(getParentId());
+        Module parentModule = ModuleManager.getInstance(getParentId());
         getCategory().debug("[ASM] parent name=" + parentModule.getRealName());
         AttributeGroup ag1;
         AttributeGroup ag2;

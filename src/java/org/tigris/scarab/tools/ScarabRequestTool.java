@@ -63,7 +63,6 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.RunData;
-import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.intake.Intake;
@@ -75,39 +74,44 @@ import org.apache.commons.collections.SequencedHashMap;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Query;
+import org.tigris.scarab.om.QueryManager;
 import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.IssueTemplateInfoManager;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
-import org.tigris.scarab.om.DependPeer;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.DependManager;
 import org.tigris.scarab.om.ScopePeer;
 import org.tigris.scarab.om.FrequencyPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeGroup;
-import org.tigris.scarab.om.AttributeGroupPeer;
+import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentPeer;
+import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.ROptionOption;
-import org.tigris.scarab.om.AttributeOptionPeer;
+import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.om.RModuleAttributePeer;
+import org.tigris.scarab.om.RModuleAttributeManager;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ParentChildAttributeOption;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.om.Report;
-import org.tigris.scarab.om.ReportPeer;
+import org.tigris.scarab.om.ReportManager;
+//import org.tigris.scarab.om.TransactionManager;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.ActivityPeer;
@@ -173,10 +177,10 @@ public class ScarabRequestTool
     private AttributeGroup group = null;
 
     /**
-     * A ModuleEntity object which represents the current module
+     * A Module object which represents the current module
      * selected by the user within a request.
      */
-    private ModuleEntity currentModule = null;
+    private Module currentModule = null;
 
     /**
      * A IssueType object which represents the current issue type
@@ -190,9 +194,9 @@ public class ScarabRequestTool
     private Issue reportingIssue = null;
 
     /**
-     * A ModuleEntity object
+     * A Module object
      */
-    private ModuleEntity module = null;
+    private Module module = null;
 
     /**
      * A AttributeOption object for use within the Scarab API.
@@ -324,7 +328,7 @@ public class ScarabRequestTool
      */
     private IntakeTool getIntakeTool()
     {
-        return (IntakeTool)Module.getTemplateContext(data)
+        return (IntakeTool)org.apache.turbine.modules.Module.getTemplateContext(data)
             .get(ScarabConstants.INTAKE_TOOL);
     }
 
@@ -416,8 +420,8 @@ try{
             }
             else 
             {
-                attributeOption = AttributeOptionPeer
-                    .retrieveByPK(new NumberKey(optId));
+                attributeOption = AttributeOptionManager
+                    .getInstance(new NumberKey(optId));
             }
         }
 }catch(Exception e){e.printStackTrace();}
@@ -461,7 +465,7 @@ try{
             {
                 pk = (ObjectKey)new NumberKey(id.toString());
             }
-            su = UserManager.getInstance(pk);
+            su = ScarabUserManager.getInstance(pk);
         }
         catch (Exception e)
         {
@@ -476,7 +480,7 @@ try{
     public ScarabUser getUserByUserName(String username)
      throws Exception
     {
-        return UserManager.getInstance(username, getIssue().getIdDomain());
+        return ScarabUserManager.getInstance(username, getIssue().getIdDomain());
     }
 
     /**
@@ -497,16 +501,16 @@ try{
             attId = data.getParameters().getString("attId");
             if ( attId == null || attId.length() == 0 )
             { 
-                attribute = Attribute.getInstance();
+                attribute = AttributeManager.getInstance();
             }
             else 
             {
-                attribute = Attribute.getInstance(new NumberKey(attId));
+                attribute = AttributeManager.getInstance(new NumberKey(attId));
             }
         }
         else 
         {
-            attribute = Attribute.getInstance(new NumberKey(attId));
+            attribute = AttributeManager.getInstance(new NumberKey(attId));
         }
      } 
 }catch(Exception e){e.printStackTrace();}
@@ -521,7 +525,7 @@ try{
     {
         try
         {
-           attribute = Attribute.getInstance(pk);
+           attribute = AttributeManager.getInstance(pk);
         }
         catch(Exception e){e.printStackTrace();}
         return attribute;
@@ -535,7 +539,7 @@ try{
     {
         try
         {
-           attributeOption = AttributeOption.getInstance(pk);
+           attributeOption = AttributeOptionManager.getInstance(pk);
         }
         catch(Exception e){e.printStackTrace();}
         return attributeOption;
@@ -559,7 +563,8 @@ try{
                 }
                 else 
                 {
-                    query = QueryPeer.retrieveByPK(new NumberKey(queryId));
+                    query = QueryManager
+                        .getInstance(new NumberKey(queryId), false);
                 }
             }        
         }        
@@ -589,8 +594,8 @@ try{
                 }
                 else 
                 {
-                    templateInfo = IssueTemplateInfoPeer
-                        .retrieveByPK(new NumberKey(templateId));
+                    templateInfo = IssueTemplateInfoManager
+                        .getInstance(new NumberKey(templateId), false);
                 }
             }        
         }        
@@ -619,8 +624,8 @@ try{
             }
             else 
             {
-                template = IssuePeer
-                    .retrieveByPK(new NumberKey(templateId));
+                template = IssueManager
+                    .getInstance(new NumberKey(templateId), false);
             }
         }        
         catch (Exception e)
@@ -645,8 +650,8 @@ try{
             }
             else 
             {
-                template = IssuePeer
-                    .retrieveByPK(new NumberKey(templateId));
+                template = IssueManager
+                    .getInstance(new NumberKey(templateId), false);
             }
         }        
         catch (Exception e)
@@ -674,7 +679,8 @@ try{
                 }
                 else 
                 {
-                    depend = DependPeer.retrieveByPK(new NumberKey(dependId));
+                    depend = DependManager
+                        .getInstance(new NumberKey(dependId), false);
                 }
             }        
         }        
@@ -705,8 +711,8 @@ try{
                 }
                 else 
                 {
-                    attachment = AttachmentPeer
-                        .retrieveByPK(new NumberKey(attId));
+                    attachment = AttachmentManager
+                        .getInstance(new NumberKey(attId), false);
                 }
             }
             else 
@@ -735,8 +741,8 @@ try{
             }
             else 
             {
-                group = (AttributeGroup) 
-                    AttributeGroupPeer.retrieveByPK(new NumberKey(attGroupId));
+                group = AttributeGroupManager
+                    .getInstance(new NumberKey(attGroupId), false);
             }
 }catch(Exception e){e.printStackTrace();}
         return group;
@@ -750,8 +756,8 @@ try{
         AttributeGroup group = null;
         try
         {
-            group = (AttributeGroup) 
-                AttributeGroupPeer.retrieveByPK(new NumberKey(key));
+            group = AttributeGroupManager
+                .getInstance(new NumberKey(key), false);
         }
         catch (Exception e)
         {
@@ -772,8 +778,8 @@ try{
         IssueType issueType = null;
         try
         {
-            issueType = (IssueType) 
-                IssueTypePeer.retrieveByPK(new NumberKey(key));
+            issueType = IssueTypeManager
+                .getInstance(new NumberKey(key), false);
         }
         catch (Exception e)
         {
@@ -800,8 +806,8 @@ try{
             {
                 try
                 {
-                    issueType = (IssueType) IssueTypePeer
-                                 .retrieveByPK(new NumberKey(key));
+                    issueType = IssueTypeManager
+                        .getInstance(new NumberKey(key), false);
                 }
                 catch (Exception e)
                 {
@@ -841,11 +847,12 @@ try{
                 NumberKey attId = (NumberKey)getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").getValue();
-                ModuleEntity currentModule = getCurrentModule();
+                Module currentModule = getCurrentModule();
                 if ( attId != null && currentModule != null )
                 {
                     NumberKey[] nka = {attId, currentModule.getModuleId()};
-                    rma = RModuleAttributePeer.retrieveByPK(new ComboKey(nka));
+                    rma = RModuleAttributeManager
+                        .getInstance(new ComboKey(nka), false);
                 }
                 else 
                 {
@@ -854,7 +861,7 @@ try{
             }
             else 
             {
-                rma = RModuleAttributePeer.retrieveByPK(rModAttId);
+                rma = RModuleAttributeManager.getInstance(rModAttId, false);
             }
       }catch(Exception e){e.printStackTrace();}
         return rma;
@@ -871,7 +878,7 @@ try{
     /**
      * A Module object for use within the Scarab API.
      */
-    public void setModule(ModuleEntity module)
+    public void setModule(Module module)
     {
         this.module = module;
     }
@@ -879,9 +886,9 @@ try{
     /**
      * Get an Module object. 
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule()
+    public Module getModule()
         throws Exception
     {
       try{
@@ -906,9 +913,9 @@ try{
      * @param key a <code>String</code> value
      * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule(String key)
+    public Module getModule(String key)
     {
-        ModuleEntity me = null;
+        Module me = null;
         if ( key != null && key.length() > 0 ) 
         {
             try
@@ -925,11 +932,11 @@ try{
     }
 
     /**
-     * Gets the ModuleEntity associated with the information
+     * Gets the Module associated with the information
      * passed around in the query string. Returns null if
      * the Module could not be found.
      */
-    public ModuleEntity getCurrentModule()
+    public Module getCurrentModule()
     {
         if (currentModule == null)
         {
@@ -1011,9 +1018,9 @@ try{
     }
 
     /**
-     * Sets the current ModuleEntity
+     * Sets the current Module
      */
-    public void setCurrentModule(ModuleEntity me)
+    public void setCurrentModule(Module me)
     {
         currentModule = me;
     }
@@ -1080,7 +1087,7 @@ try{
         Issue issue = null;
         try
         {
-            issue = IssuePeer.retrieveByPK(new NumberKey(key));
+            issue = IssueManager.getInstance(new NumberKey(key), false);
         }
         catch (Exception e)
         {
@@ -1140,7 +1147,7 @@ try{
                 issues = new ArrayList(issueIds.length);
                 for ( int i=0; i<issueIds.length; i++ ) 
                 {
-                    issues.add(IssuePeer.retrieveByPK(issueIds[i]));
+                    issues.add(IssueManager.getInstance(issueIds[i], false));
                 }
             }
         }
@@ -1151,8 +1158,8 @@ try{
             issues = new ArrayList(issueIdStrings.length);
             for ( int i=0; i<issueIdStrings.length; i++ ) 
             {
-                issues.add(IssuePeer
-                           .retrieveByPK(new NumberKey(issueIdStrings[i])));
+                issues.add(IssueManager
+                    .getInstance(new NumberKey(issueIdStrings[i]), false));
             }
         }
         return issues;
@@ -1570,7 +1577,7 @@ try{
             else 
             {
                 reportGenerator = 
-                    ReportPeer.retrieveByPK(new NumberKey(id));
+                    ReportManager.getInstance(new NumberKey(id), false);
                 //reportGenerator
                 //    .setQueryString(getReportQueryString(parameters));
                 System.out.println("Old key " + key); 
@@ -1636,7 +1643,7 @@ try{
     public List getUsers( ) throws Exception
     {
         List users = new ArrayList();
-        ModuleEntity module = getCurrentModule();  
+        Module module = getCurrentModule();  
         ScarabUser[] userArray = module
             .getUsers(module.getUserPermissions(getCurrentIssueType()));
         for (int i=0;i<userArray.length;i++)
@@ -1655,7 +1662,7 @@ try{
                .getString("searchString"); 
         String searchField = data.getParameters()
                .getString("searchField"); 
-        ModuleEntity module = getCurrentModule();  
+        Module module = getCurrentModule();  
         if (searchField == null)
         {
             data.setMessage("Please enter a search field.");
@@ -1816,7 +1823,7 @@ try{
         boolean hasPermission = false;
         try
         {
-            ModuleEntity module = getCurrentModule();
+            Module module = getCurrentModule();
             hasPermission = hasPermission(permission, module);
         }
         catch (Exception e)
@@ -1833,11 +1840,11 @@ try{
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
+     * @param module a <code>Module</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, ModuleEntity module)
+    public boolean hasPermission(String permission, Module module)
     {
         boolean hasPermission = false;
         try

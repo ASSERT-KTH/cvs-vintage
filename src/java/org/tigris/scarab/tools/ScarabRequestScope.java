@@ -62,7 +62,7 @@ import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.ScarabUser;
 
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 import org.tigris.scarab.util.word.IssueSearch;
 
@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.27 2002/02/09 01:19:21 dlr Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.28 2002/03/14 01:13:13 jmcnally Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -129,11 +129,11 @@ public interface ScarabRequestScope extends ApplicationTool
     public List getCurrentSearchResults() throws Exception;
 
     /**
-     * Gets the ModuleEntity associated with the information
+     * Gets the Module associated with the information
      * passed around in the query string. Returns null if
      * the Module could not be found.
      */
-    public ModuleEntity getCurrentModule();
+    public Module getCurrentModule();
 
     /**
      * A Depend object for use within the Scarab API.
@@ -198,22 +198,22 @@ public interface ScarabRequestScope extends ApplicationTool
     /**
      * Get an Module object. 
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule() throws Exception;
+    public Module getModule() throws Exception;
 
     /**
      * A Module object for use within the Scarab API.
      */
-    public void setModule(ModuleEntity module);
+    public void setModule(Module module);
 
     /**
      * Get a specific module by key value.
      *
      * @param key a <code>String</code> value
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule(String key) throws Exception;
+    public Module getModule(String key) throws Exception;
 
     /**
      * Get a specific issue by key value.
@@ -295,9 +295,9 @@ public interface ScarabRequestScope extends ApplicationTool
      *
      * @param permission a <code>String</code> permission value, which should
      * be a constant in this interface.
-     * @param module a <code>ModuleEntity</code> value
+     * @param module a <code>Module</code> value
      * @return true if the permission exists for the user within the
      * given module, false otherwise
      */
-    public boolean hasPermission(String permission, ModuleEntity module);
+    public boolean hasPermission(String permission, Module module);
 }

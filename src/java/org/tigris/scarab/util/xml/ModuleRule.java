@@ -52,7 +52,7 @@ import org.apache.commons.digester.Digester;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.om.ScarabModule;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.ModuleManager;
 
 /**
  * Handler for xpath "scarab/module"

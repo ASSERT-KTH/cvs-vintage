@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.util.Iterator;
+import java.io.Serializable;
 import org.apache.log4j.Category;
 import org.apache.stratum.configuration.Configuration;
 import org.apache.fulcrum.Service;
@@ -65,7 +66,7 @@ import org.tigris.scarab.om.ScarabUser;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.2 2002/02/19 05:01:11 jmcnally Exp $
+ * @version $Id: ScarabCache.java,v 1.3 2002/03/14 01:13:13 jmcnally Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -130,15 +131,14 @@ public class ScarabCache
         }
     }
 
-    protected Object getImpl(int numArgs, Object o1, Object o2, Object o3,  
-                             Object o4, Object o5, Object o6, Object o7)
+    protected Object getImpl(Serializable instanceOrClass, String method)
     {
         Object result = null;
         try
         {
             ScarabCacheKey key = 
                 (ScarabCacheKey)TurbinePool.getInstance(keyClass);
-            key.init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+            key.init(instanceOrClass, method);
             result = getMapImpl().get(key);
         }
         catch (Exception e)
@@ -148,15 +148,150 @@ public class ScarabCache
         return result;
     }
 
-    protected void putImpl(Object value, int numArgs, Object o1, Object o2,  
-                           Object o3, Object o4, Object o5, Object o6, 
-                           Object o7)
+    protected Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1)
+    {
+        Object result = null;
+        try
+        {
+            ScarabCacheKey key = 
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1);
+            result = getMapImpl().get(key);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return result;
+    }
+
+    protected Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2)
+    {
+        Object result = null;
+        try
+        {
+            ScarabCacheKey key = 
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1, arg2);
+            result = getMapImpl().get(key);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return result;
+    }
+
+    protected Object getImpl(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2,
+                             Serializable arg3)
+    {
+        Object result = null;
+        try
+        {
+            ScarabCacheKey key = 
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1, arg2, arg3);
+            result = getMapImpl().get(key);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return result;
+    }
+
+    protected Object getImpl(Serializable[] keys)
+    {
+        Object result = null;
+        try
+        {
+            ScarabCacheKey key = 
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(keys);
+            result = getMapImpl().get(key);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+        return result;
+    }
+
+    protected void putImpl(Object value, Serializable instanceOrClass, 
+                           String method)
     {
         try
         {
             ScarabCacheKey key =  
                 (ScarabCacheKey)TurbinePool.getInstance(keyClass);
-            key.init(numArgs, o1, o2, o3, o4, o5, o6, o7);
+            key.init(instanceOrClass, method);
+            getMapImpl().put(key, value);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+    }
+
+    protected void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1)
+    {
+        try
+        {
+            ScarabCacheKey key =  
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1);
+            getMapImpl().put(key, value);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+    }
+
+    protected void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2)
+    {
+        try
+        {
+            ScarabCacheKey key =  
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1, arg2);
+            getMapImpl().put(key, value);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+    }
+
+    protected void putImpl(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2,
+                           Serializable arg3)
+    {
+        try
+        {
+            ScarabCacheKey key =  
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(instanceOrClass, method, arg1, arg2, arg3);
+            getMapImpl().put(key, value);
+        }
+        catch (Exception e)
+        {
+            log.error(e);
+        }
+    }
+
+    protected void putImpl(Object value, Serializable[] keys)
+    {
+        try
+        {
+            ScarabCacheKey key =  
+                (ScarabCacheKey)TurbinePool.getInstance(keyClass);
+            key.init(keys);
             getMapImpl().put(key, value);
         }
         catch (Exception e)
@@ -180,80 +315,57 @@ public class ScarabCache
         getService().clearImpl();
     }
 
-
-    public static Object get(Object o1, Object o2, Object o3, Object o4, 
-                             Object o5, Object o6, Object o7)
+    public static Object get(Serializable instanceOrClass, String method)
     {
-        return getService().getImpl(5, o1, o2, o3, o4, o5, o6, o7);
+        return getService().getImpl(instanceOrClass, method);
+    }
+    public static Object get(Serializable instanceOrClass, String method,
+                             Serializable arg1)
+    {
+        return getService().getImpl(instanceOrClass, method, arg1);
+    }
+    public static Object get(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2)
+    {
+        return getService().getImpl(instanceOrClass, method, arg1, arg2);
+    }
+    public static Object get(Serializable instanceOrClass, String method,
+                             Serializable arg1, Serializable arg2,
+                             Serializable arg3)
+    {
+        return getService().getImpl(instanceOrClass, method, arg1, arg2);
+    }
+    public static Object get(Serializable[] keys)
+    {
+        return getService().getImpl(keys);
     }
 
-    public static Object get(Object o1, Object o2, Object o3, Object o4, 
-                             Object o5, Object o6)
+    public static void put(Object value, Serializable instanceOrClass, 
+                           String method)
     {
-        return getService().getImpl(4, o1, o2, o3, o4, o5, o6, null);
+        getService().putImpl(value, instanceOrClass, method);
+    }
+    public static void put(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1)
+    {
+        getService().putImpl(value, instanceOrClass, method, arg1);
+    }
+    public static void put(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2)
+    {
+        getService().putImpl(value, instanceOrClass, method, arg1, arg2);
+    }
+    public static void put(Object value, Serializable instanceOrClass, 
+                           String method, Serializable arg1, Serializable arg2,
+                           Serializable arg3)
+    {
+        getService().putImpl(value, instanceOrClass, method, arg1, arg2, arg3);
+    }
+    public static void put(Object value, Serializable[] keys)
+    {
+        getService().putImpl(value, keys);
     }
 
-    public static Object get(Object o1, Object o2, Object o3, Object o4, 
-                             Object o5)
-    {
-        return getService().getImpl(3, o1, o2, o3, o4, o5, null, null);
-    }
-
-    public static Object get(Object o1, Object o2, Object o3, Object o4)
-    {
-        return getService().getImpl(2, o1, o2, o3, o4, null, null, null);
-    }
-
-    public static Object get(Object o1, Object o2, Object o3)
-    {
-        return getService().getImpl(1, o1, o2, o3, null, null, null, null);
-    }
-
-    public static Object get(Object o1, Object o2)
-    {
-        return getService().getImpl(0, o1, o2, null, null, null, null, null);
-    }
-
-    public static void put(Object value, Object o1, Object o2, Object o3, 
-                           Object o4, Object o5, Object o6, Object o7)
-    {
-        getService().putImpl(value, 5, o1, o2, o3, o4, o5, o6, o7);
-    }
-
-    public static void put(Object value, Object o1, Object o2, Object o3, 
-                           Object o4, Object o5, Object o6)
-    {
-        getService().putImpl(value, 4, o1, o2, o3, o4, o5, o6, null);
-    }
-
-    public static void put(Object value, Object o1, Object o2, Object o3, 
-                           Object o4, Object o5)
-    {
-        getService().putImpl(value, 3, o1, o2, o3, o4, o5, null, null);
-    }
-
-    public static void put(Object value, Object o1, Object o2, Object o3, 
-                           Object o4)
-    {
-        getService().putImpl(value, 2, o1, o2, o3, o4, null, null, null);
-    }
-
-    public static void put(Object value, Object o1, Object o2, Object o3)
-    {
-        getService().putImpl(value, 1, o1, o2, o3, null, null, null, null);
-    }
-
-    public static void put(Object value, Object o1, Object o2)
-    {
-        getService().putImpl(value, 0, o1, o2, null, null, null, null, null);
-    }
-
-    /*
-    public static Configuration getProps()
-    {
-        return getService().getConfiguration();
-    }
-    */
 
     /**
      * Gets the <code>LocalizationService</code> implementation.

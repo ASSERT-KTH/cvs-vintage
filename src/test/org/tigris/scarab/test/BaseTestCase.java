@@ -53,14 +53,14 @@ import org.apache.torque.om.NumberKey;
 
 import junit.framework.TestCase;
 
-import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.om.ScarabModuleManager;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.ScarabUserImplManager;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
@@ -73,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.10 2002/03/12 01:36:55 elicia Exp $
+ * @version $Id: BaseTestCase.java,v 1.11 2002/03/14 01:13:15 jmcnally Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -138,7 +138,7 @@ public class BaseTestCase extends TestCase
     private void initScarab()
         throws Exception
     {
-        module = (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(5));
+        module = (ModuleEntity) ScarabModuleManager.getInstance(new NumberKey(5), false);
     }
 
     /**
@@ -157,7 +157,7 @@ public class BaseTestCase extends TestCase
     {
         if (user0 == null)
         {
-            user0 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(0));
+            user0 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(0), false);
         }
         return user0;
     }
@@ -167,7 +167,7 @@ public class BaseTestCase extends TestCase
     {
         if (user1 == null)
         {
-            user1 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(2));
+            user1 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(2), false);
         }
         return user1;
     }
@@ -177,7 +177,7 @@ public class BaseTestCase extends TestCase
     {
         if (user2 == null)
         {
-            user2 = (ScarabUser) ScarabUserImplPeer.retrieveByPK(new NumberKey(3));
+            user2 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(3), false);
         }
         return user2;
     }
@@ -187,7 +187,7 @@ public class BaseTestCase extends TestCase
     {
         if (issue0 == null)
         {
-            issue0 = IssuePeer.retrieveByPK(new NumberKey(1));
+            issue0 = IssueManager.getInstance(new NumberKey(1), false);
         }
         return issue0;
     }
@@ -197,7 +197,7 @@ public class BaseTestCase extends TestCase
     {
         if (platformAttribute == null)
         {
-            platformAttribute  = AttributePeer.retrieveByPK(new NumberKey(5));
+            platformAttribute  = AttributeManager.getInstance(new NumberKey(5));
         }
         return platformAttribute;
     }

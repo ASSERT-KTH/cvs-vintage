@@ -61,7 +61,7 @@ import org.tigris.scarab.om.AttributeOption;
  * A Testing Suite for the om.Attribute class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: AttributeTest.java,v 1.2 2002/01/18 22:26:17 jon Exp $
+ * @version $Id: AttributeTest.java,v 1.3 2002/03/14 01:13:14 jmcnally Exp $
  */
 public class AttributeTest extends BaseTestCase
 {
@@ -96,7 +96,7 @@ public class AttributeTest extends BaseTestCase
         throws Exception
     {
         Attribute attribute = 
-            Attribute.getInstance((ObjectKey)new NumberKey(6));
+            AttributeManager.getInstance(new NumberKey(6));
         List before = (List) attribute.getAttributeOptions();
         List after = (List) attribute.getAttributeOptions();
         System.out.println ("Options Size Before: " + before.size());

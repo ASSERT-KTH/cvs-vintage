@@ -61,12 +61,12 @@ import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
-import org.tigris.scarab.om.QueryPeer;
+import org.tigris.scarab.om.QueryManager;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -75,7 +75,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.13 2002/03/07 22:24:06 elicia Exp $
+    @version $Id: QueryList.java,v 1.14 2002/03/14 01:13:09 jmcnally Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -86,7 +86,7 @@ public class QueryList extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ModuleEntity me = scarabR.getCurrentModule();
+        Module me = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getCurrentIssueType();
        
         if (intake.isAllValid())
@@ -128,8 +128,8 @@ public class QueryList extends RequireLoginFirstAction
        String queryId = data.getParameters().getString("default");
        if (queryId != null && queryId.length() > 0)
        {
-           Query defaultQuery = (Query) QueryPeer
-                                .retrieveByPK(new NumberKey(queryId));
+           Query defaultQuery = QueryManager
+               .getInstance(new NumberKey(queryId), false);
            RQueryUser rqu = defaultQuery.getRQueryUser(user);
            rqu.setIsdefault(true);
            rqu.save();
@@ -150,8 +150,8 @@ public class QueryList extends RequireLoginFirstAction
             if (key.startsWith("action_"))
             {
                queryId = key.substring(7);
-               Query query = (Query) QueryPeer
-                                     .retrieveByPK(new NumberKey(queryId));
+               Query query = QueryManager
+                   .getInstance(new NumberKey(queryId), false);
                try
                {
                    query.delete(user);
@@ -187,8 +187,8 @@ public class QueryList extends RequireLoginFirstAction
             if (key.startsWith("action_"))
             {
                queryId = key.substring(7);
-               query = (Query) QueryPeer
-                      .retrieveByPK(new NumberKey(queryId));
+               query = QueryManager
+                   .getInstance(new NumberKey(queryId), false);
                query.copyQuery((ScarabUser)data.getUser());
              }
          }

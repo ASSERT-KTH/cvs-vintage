@@ -5,7 +5,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -24,7 +24,7 @@ public  class RAttributeAttributeGroup
      */
     public void delete(ScarabUser user) throws Exception 
     { 
-        ModuleEntity module = getAttributeGroup().getModule();
+        Module module = getAttributeGroup().getModule();
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {

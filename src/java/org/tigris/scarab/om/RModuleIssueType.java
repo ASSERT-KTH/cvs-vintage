@@ -12,8 +12,8 @@ import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -38,25 +38,25 @@ public  class RModuleIssueType
 
     /**
      * Throws UnsupportedOperationException.  Use
-     * <code>setModule(ModuleEntity)</code> instead.
+     * <code>setModule(Module)</code> instead.
      *
      */
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(ModuleEntity). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new.");
     }
 
     /**
      * Use this instead of setScarabModule.  Note: module cannot be new.
      */
-    public void setModule(ModuleEntity me)
-        throws Exception
+    public void setModule(Module me)
+        throws TorqueException
     {
         NumberKey id = me.getModuleId();
         if (id == null) 
         {
-            throw new ScarabException("Modules must be saved prior to " +
+            throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
         }
         setModuleId(id);
@@ -65,12 +65,12 @@ public  class RModuleIssueType
     /**
      * Module getter.  Use this method instead of getScarabModule().
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule()
-        throws Exception
+    public Module getModule()
+        throws TorqueException
     {
-        ModuleEntity module = null;
+        Module module = null;
         ObjectKey id = getModuleId();
         if ( id != null ) 
         {
@@ -87,7 +87,7 @@ public  class RModuleIssueType
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {

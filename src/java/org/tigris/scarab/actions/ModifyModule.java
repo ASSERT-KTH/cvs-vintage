@@ -67,14 +67,14 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 
 /**
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.17 2002/02/08 18:19:33 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.18 2002/03/14 01:13:09 jmcnally Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -90,7 +90,7 @@ public class ModifyModule extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
-            ModuleEntity me = null;
+            Module me = null;
             try
             {
                 me = getScarabRequestTool(context).getModule();
@@ -133,7 +133,7 @@ public class ModifyModule extends RequireLoginFirstAction
         {
             Group moduleGroup = intake.get
                 ("Module",IntakeTool.DEFAULT_KEY, false);
-            ModuleEntity me = ModuleManager.getInstance();
+            Module me = ModuleManager.getInstance();
             if (moduleGroup == null)
             {
                 throw new Exception("Could not locate module");

@@ -57,7 +57,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.5 2002/01/18 22:26:17 jon Exp $
+ * @version $Id: QueryTest.java,v 1.6 2002/03/14 01:13:14 jmcnally Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -108,7 +108,7 @@ public class QueryTest extends BaseTestCase
         //
         // Make sure the query was persisted correctly.
         //
-        Query retQuery = (Query) QueryPeer.retrieveByPK(query.getQueryId());
+        Query retQuery = QueryManager.getInstance(query.getQueryId());
         assertEquals(query.getName(), retQuery.getName());
         assertEquals(query.getValue(), retQuery.getValue());
 
@@ -128,7 +128,7 @@ public class QueryTest extends BaseTestCase
         //
         // Make sure the query was persisted correctly.
         //
-        Query retQuery = (Query) QueryPeer.retrieveByPK(query1.getQueryId());
+        Query retQuery = QueryManager.getInstance(query1.getQueryId(), false);
         assertEquals(query1.getName(), retQuery.getName());
         assertEquals(query1.getValue(), retQuery.getValue());
 
@@ -210,11 +210,11 @@ public class QueryTest extends BaseTestCase
         {
             caught = true;
         }
-        Query retQuery = (Query) QueryPeer.retrieveByPK(query.getQueryId());
+        Query retQuery = QueryManager.getInstance(query.getQueryId(), false);
         assert(!retQuery.getDeleted());
         assert(caught);
         query.delete(getUser1());
-        retQuery = (Query) QueryPeer.retrieveByPK(query.getQueryId());
+        retQuery = QueryManager.getInstance(query.getQueryId(), false);
         assert(retQuery.getDeleted());
     }
 }

@@ -69,7 +69,7 @@ import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.TurbineServices;
 
 // Scarab classes
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.ScarabUserManager;
 
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -83,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.43 2002/03/08 00:10:42 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.44 2002/03/14 01:13:10 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -135,45 +135,6 @@ public class Attribute
              .append(className).append(keyString).toString();
     }
 
-    /**
-     * A new Attribute
-     */
-    public static Attribute getInstance() 
-    {
-        return new Attribute();
-    }
-
-    /**
-     * Return an instance of Attribute based on the passed in attribute id
-     */
-    public static Attribute getInstance(ObjectKey attId) 
-        throws TorqueException
-    {
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        String key = getCacheKey(attId);
-        Attribute attribute = null;
-        try
-        {
-            attribute = (Attribute)tgcs.getObject(key).getContents();
-        }
-        catch (ObjectExpiredException oee)
-        {
-            try
-            {
-                attribute = AttributePeer.retrieveByPK(attId);
-            }
-            catch (Exception e)
-            {
-                throw new TorqueException("Attribute with ID " + attId + 
-                                          " can not be found");
-            }
-            tgcs.addObject(key, new CachedObject(attribute));
-        }
-        return attribute;
-    }
 
     /**
      * Return an instance based on the passed in attribute id as an int
@@ -182,7 +143,7 @@ public class Attribute
     public static Attribute getInstance(int id)
         throws TorqueException
     {
-        return getInstance((ObjectKey)new NumberKey(id));
+        return AttributeManager.getInstance((ObjectKey)new NumberKey(id));
     }
 
 
@@ -250,7 +211,7 @@ public class Attribute
         }
         else
         {
-            ScarabUser su = UserManager.getInstance(new NumberKey(userId));
+            ScarabUser su = ScarabUserManager.getInstance(new NumberKey(userId));
             userName = su.getFirstName() + su.getLastName();
         }
         return userName;

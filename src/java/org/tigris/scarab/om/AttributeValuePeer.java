@@ -92,7 +92,7 @@ public class AttributeValuePeer
         {
         NumberKey attId = new NumberKey(record.getValue(offset-1 + 3)
                                         .asString());
-        Attribute attribute = Attribute.getInstance(attId);
+        Attribute attribute = AttributeManager.getInstance(attId);
         String className = attribute.getAttributeType().getJavaClassName(); 
 
         TurbineGlobalCacheService tgcs = 

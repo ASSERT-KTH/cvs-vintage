@@ -86,7 +86,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.23 2002/03/02 02:32:58 jmcnally Exp $
+  * @version $Id: AttributeOption.java,v 1.24 2002/03/14 01:13:10 jmcnally Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -175,7 +175,7 @@ public class AttributeOption
     {
         if ( aAttribute==null && (getAttributeId() != null) )
         {
-            aAttribute = Attribute.getInstance(getAttributeId());
+            aAttribute = AttributeManager.getInstance(getAttributeId());
             
             // make sure the parent attribute is in synch.
             super.setAttribute(aAttribute);            
@@ -200,49 +200,12 @@ public class AttributeOption
         return new AttributeOption();
     }
 
-    /**
-     * Get an instance of a particular AttributeOption by
-     * primary key.
-     */
-    public static AttributeOption getInstance(ObjectKey attId) 
-        throws TorqueException
-    {
-        if (attId == null)
-        {
-           return getInstance();
-        }
-
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        String key = getCacheKey(attId);
-        AttributeOption option = null;
-        try
-        {
-            option = (AttributeOption)tgcs.getObject(key).getContents();
-        }
-        catch (ObjectExpiredException oee)
-        {
-            try
-            {
-                option = AttributeOptionPeer.retrieveByPK(attId);
-            }
-            catch (Exception e)
-            {
-                throw new TorqueException("AttributeOption with ID " + attId + 
-                                          " can not be found");
-            }
-            tgcs.addObject(key, new CachedObject(option));
-        }
-        return option;
-    }
 
     /**
      * Get an instance of a particular AttributeOption by
      * Attribute and Name.
      */
-    public static AttributeOption getInstance(Attribute attribute, String name) 
+    public static AttributeOption getInstance(Attribute attribute, String name)
         throws Exception
     {
         AttributeOption ao = null;

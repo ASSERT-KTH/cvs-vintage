@@ -74,10 +74,10 @@ import org.apache.turbine.ParameterParser;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentPeer;
+import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.AttachmentType;
 import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.AttributePeer;
@@ -88,7 +88,7 @@ import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.AttributeOption;
-import org.tigris.scarab.om.AttributeOptionPeer;
+import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.DependType;
@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.80 2002/03/09 02:16:31 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.81 2002/03/14 01:13:09 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -130,7 +130,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
        
         // Comment field is required to modify attributes
-        Attachment attachment = new Attachment();
+        Attachment attachment = AttachmentManager.getInstance();
         Group commentGroup = intake.get("Attachment", "attCommentKey", false);
         Field commentField = null;
         commentField = commentGroup.get("DataAsString");
@@ -180,7 +180,9 @@ public class ModifyIssue extends RequireLoginFirstAction
 
         if (intake.isAllValid()) 
         {
-            issue.save();
+            // there is nothing to save directly in the issue, it is not 
+            // modified. so commenting out to test.
+            // issue.save();
 
             // Save explanatory comment
             commentGroup.setProperties(attachment);
@@ -188,15 +190,14 @@ public class ModifyIssue extends RequireLoginFirstAction
                                      Attachment.MODIFICATION__PK);
             attachment.save();
 
-            // Set the attribute values entered 
-            SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
-            Iterator iter2 = avMap.iterator();
-
             // Save transaction record
             Transaction transaction = new Transaction();
             transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
                                user, attachment);
 
+            // Set the attribute values entered 
+            SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
+            Iterator iter2 = avMap.iterator();
             while (iter2.hasNext())
             {
                 aval = (AttributeValue)avMap.get(iter2.next());
@@ -217,16 +218,16 @@ public class ModifyIssue extends RequireLoginFirstAction
                         {
                             newOptionId = new NumberKey(newValue);
                             AttributeOption newAttributeOption = 
-                              AttributeOptionPeer
-                              .retrieveByPK(new NumberKey(newValue));
+                              AttributeOptionManager
+                              .getInstance(new NumberKey(newValue));
                             newValue = newAttributeOption.getName();
                         }
                         if (!oldValue.equals(""))
                         {
                             oldOptionId = aval.getOptionId();
                             AttributeOption oldAttributeOption = 
-                              AttributeOptionPeer
-                              .retrieveByPK(oldOptionId);
+                              AttributeOptionManager
+                              .getInstance(oldOptionId);
                             oldValue = oldAttributeOption.getName();
                         }
                         
@@ -471,8 +472,8 @@ public class ModifyIssue extends RequireLoginFirstAction
             {
                attachmentId = key.substring(13);
                newComment = params.getString(key, "");
-               Attachment attachment = (Attachment) AttachmentPeer
-                                     .retrieveByPK(new NumberKey(attachmentId));
+               Attachment attachment = AttachmentManager
+                   .getInstance(new NumberKey(attachmentId), false);
                String oldComment = attachment.getDataAsString();
                if (!newComment.equals(oldComment)) 
                {
@@ -514,8 +515,8 @@ public class ModifyIssue extends RequireLoginFirstAction
             if (key.startsWith("url_delete_"))
             {
                attachmentId = key.substring(11);
-               Attachment attachment = (Attachment) AttachmentPeer
-                                     .retrieveByPK(new NumberKey(attachmentId));
+               Attachment attachment = AttachmentManager
+                   .getInstance(new NumberKey(attachmentId), false);
                attachment.setDeleted(true);
                attachment.save();
 
@@ -553,8 +554,8 @@ public class ModifyIssue extends RequireLoginFirstAction
             if (key.startsWith("file_delete_"))
             {
                attachmentId = key.substring(12);
-               Attachment attachment = (Attachment) AttachmentPeer
-                                     .retrieveByPK(new NumberKey(attachmentId));
+               Attachment attachment = AttachmentManager
+                   .getInstance(new NumberKey(attachmentId), false);
                attachment.setDeleted(true);
                attachment.save();
 
@@ -645,13 +646,13 @@ public class ModifyIssue extends RequireLoginFirstAction
                     if (currentIssue.getIssueId().toString()
                         .equals(depend.getObservedId().toString()))
                     {
-                        otherIssue = (Issue)IssuePeer.
-                                     retrieveByPK(depend.getObserverId());
+                        otherIssue = IssueManager
+                            .getInstance(depend.getObserverId(), false);
                     }
                     else
                     {
-                        otherIssue = (Issue)IssuePeer.
-                                     retrieveByPK(depend.getObservedId());
+                        otherIssue = IssueManager
+                            .getInstance(depend.getObservedId(), false);
                     }
 
                     currentIssue.save();

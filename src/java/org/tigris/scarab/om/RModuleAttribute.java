@@ -58,8 +58,8 @@ import org.apache.turbine.Log;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 
@@ -82,10 +82,6 @@ public class RModuleAttribute
     private static final String GET_RMAS = 
         "getRMAs";
 
-    // need a local reference
-    private Attribute aAttribute = null;
-
-
     /**
      * Throws UnsupportedOperationException.  Use
      * <code>getModule()</code> instead.
@@ -100,25 +96,25 @@ public class RModuleAttribute
 
     /**
      * Throws UnsupportedOperationException.  Use
-     * <code>setModule(ModuleEntity)</code> instead.
+     * <code>setModule(Module)</code> instead.
      *
      */
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(ModuleEntity). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new.");
     }
 
     /**
      * Use this instead of setScarabModule.  Note: module cannot be new.
      */
-    public void setModule(ModuleEntity me)
-        throws Exception
+    public void setModule(Module me)
+        throws TorqueException
     {
         NumberKey id = me.getModuleId();
         if (id == null) 
         {
-            throw new ScarabException("Modules must be saved prior to " +
+            throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
         }
         setModuleId(id);
@@ -127,12 +123,12 @@ public class RModuleAttribute
     /**
      * Module getter.  Use this method instead of getScarabModule().
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule()
-        throws Exception
+    public Module getModule()
+        throws TorqueException
     {
-        ModuleEntity module = null;
+        Module module = null;
         ObjectKey id = getModuleId();
         if ( id != null ) 
         {
@@ -140,25 +136,6 @@ public class RModuleAttribute
         }
         
         return module;
-    }
-
-    
-    public Attribute getAttribute() throws TorqueException
-    {
-        if ( aAttribute==null && (getAttributeId() != null) )
-        {
-            aAttribute = Attribute.getInstance(getAttributeId());
-            
-            // make sure the parent attribute is in synch.
-            super.setAttribute(aAttribute);            
-        }
-        return aAttribute;
-    }
-
-    public void setAttribute(Attribute v) throws TorqueException
-    {
-        aAttribute = v;
-        super.setAttribute(v);
     }
 
     /**
@@ -187,7 +164,7 @@ public class RModuleAttribute
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {

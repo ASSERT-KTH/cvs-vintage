@@ -59,7 +59,7 @@ import junit.framework.*;
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.2 2002/01/18 22:26:17 jon Exp $
+ * @version $Id: ActivityTest.java,v 1.3 2002/03/14 01:13:14 jmcnally Exp $
  */
 public class ActivityTest extends BaseTestCase
 {
@@ -99,7 +99,8 @@ public class ActivityTest extends BaseTestCase
         assertEquals("getTransaction expected: " + trans.getTransactionId() +
         " got: " + newtrans.getTransactionId(),
         trans.getTransactionId().toString(), newtrans.getTransactionId().toString());
-        Activity retActivity = (Activity)ActivityPeer.retrieveByPK(activity.getActivityId());
+        Activity retActivity = ActivityManager
+            .getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());
         assertEquals("NewValue", activity.getNewValue(), retActivity.getNewValue());
         assertEquals("Attribute", activity.getAttribute(), retActivity.getAttribute());
@@ -116,7 +117,8 @@ public class ActivityTest extends BaseTestCase
         assertEquals("getTransaction expected: " + trans.getTransactionId() +
         " got: " + newtrans.getTransactionId(),
         trans.getTransactionId().toString(), newtrans.getTransactionId().toString());
-        Activity retActivity = (Activity)ActivityPeer.retrieveByPK(activity.getActivityId());
+        Activity retActivity = ActivityManager
+            .getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());
         assertEquals("NewValue", activity.getNewValue(), retActivity.getNewValue());
         assertEquals("Attribute", activity.getAttribute(), retActivity.getAttribute());
@@ -125,7 +127,8 @@ public class ActivityTest extends BaseTestCase
     public void testGetAttribute() throws Exception
     {
         System.out.println("\ntestGetAttribute()");
-        Activity retActivity = (Activity)ActivityPeer.retrieveByPK(new NumberKey(1));
+        Activity retActivity = ActivityManager
+            .getInstance(new NumberKey(1), false);
         NumberKey key = retActivity.getAttribute().getAttributeId();
         assertTrue("AttId expected: 11 got: " + key, key.equals("11"));
     }

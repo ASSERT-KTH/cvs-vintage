@@ -47,11 +47,13 @@ package org.tigris.scarab.om;
  */ 
 
 // JDK classes
+import java.io.Serializable;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Date;
 import java.sql.Connection;
 
@@ -60,6 +62,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.pool.DBConnection;
@@ -69,11 +72,11 @@ import org.apache.torque.util.BasePeer;
 import org.apache.fulcrum.upload.FileItem;
 
 // Scarab classes
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
-import org.tigris.scarab.services.user.UserManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -92,7 +95,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
   */
 public class Issue 
     extends BaseIssue
-    implements Persistent
+    implements Persistent, CacheListener
 {
     // the following Strings are method names that are used in caching results
     private static final String ISSUE = 
@@ -148,7 +151,6 @@ public class Issue
     private static final String GET_DEFAULT_TEXT = 
         "getDefaultText";
 
-
     /**
      * new issues are created only when the issuetype and module are known
      * Or by the Peer when retrieving from db
@@ -157,7 +159,7 @@ public class Issue
     {
     }
 
-    protected Issue(ModuleEntity module, IssueType issueType)
+    protected Issue(Module module, IssueType issueType)
         throws Exception
     {
         this();
@@ -166,14 +168,22 @@ public class Issue
     }
 
     /**
-     * Gets an issue associated to a ModuleEntity
+     * Gets an issue associated to a Module
      */
-    public static Issue getNewInstance(ModuleEntity module, 
+    public static Issue getNewInstance(Module module, 
                                        IssueType issueType)
         throws Exception
     {
         Issue issue = new Issue(module, issueType);
         return issue;
+    }
+
+    /** overriding to handle caching */
+    public void setIssueId(NumberKey id)
+        throws TorqueException
+    {
+        super.setIssueId(id);
+        AttributeValueManager.addCacheListener(this);
     }
 
     /**
@@ -213,6 +223,7 @@ public class Issue
      * The domain can also be null.
      */
     public static class FederatedId
+        implements Serializable
     {
         String domainId;
         String prefix;
@@ -376,25 +387,25 @@ public class Issue
 
     /**
      * Throws UnsupportedOperationException.  Use
-     * <code>setModule(ModuleEntity)</code> instead.
+     * <code>setModule(Module)</code> instead.
      *
      */
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(ModuleEntity). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new.");
     }
 
     /**
      * Use this instead of setScarabModule.  Note: module cannot be new.
      */
-    public void setModule(ModuleEntity me)
-        throws Exception
+    public void setModule(Module me)
+        throws TorqueException
     {
         NumberKey id = me.getModuleId();
         if (id == null) 
         {
-            throw new ScarabException("Modules must be saved prior to " +
+            throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
         }
         setModuleId(id);
@@ -403,12 +414,12 @@ public class Issue
     /**
      * Module getter.  Use this method instead of getScarabModule().
      *
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule()
+    public Module getModule()
         throws TorqueException
     {
-        ModuleEntity module = null;
+        Module module = null;
         ObjectKey id = getModuleId();
         if ( id != null ) 
         {
@@ -469,7 +480,8 @@ public class Issue
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = ScarabCache.get(this, GET_MODULE_ATTRVALUES_MAP); 
+        Object obj = IssueManager.getMethodResult()
+            .get(this, GET_MODULE_ATTRVALUES_MAP); 
         if ( obj == null ) 
         {        
             Attribute[] attributes = null;
@@ -494,7 +506,8 @@ public class Issue
                     result.put(key, aval);
                 }
             }
-            ScarabCache.put(result, this, GET_MODULE_ATTRVALUES_MAP);
+            IssueManager.getMethodResult()
+                .put(result, this, GET_MODULE_ATTRVALUES_MAP);
         }
         else 
         {
@@ -798,7 +811,7 @@ public class Issue
                 AttributeValue attVal = (AttributeValue)userAttVals.get(i);
                 try
                 {
-                    ScarabUser su = UserManager.getInstance(attVal.getUserId());
+                    ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
                     users.add(su);
                 }
                 catch (Exception e)
@@ -856,7 +869,7 @@ public class Issue
                 for ( int i=0; i<attValues.size(); i++ ) 
                 {
                     AttributeValue attVal = (AttributeValue) attValues.get(i);
-                    ScarabUser su = UserManager.getInstance(attVal.getUserId());
+                    ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
                     result.add(su);
                 }
             }
@@ -985,7 +998,7 @@ public class Issue
                 if (transactions.size() > 0)
                 {
                     Transaction t = (Transaction)transactions.get(0);
-                    result = UserManager.getInstance(t.getCreatedBy());
+                    result = ScarabUserManager.getInstance(t.getCreatedBy());
                 }
                 ScarabCache.put(result, this, GET_CREATED_BY);
             }
@@ -1026,7 +1039,7 @@ public class Issue
                 if ( transactions.size() > 0 ) 
                 {
                     Transaction t = (Transaction)transactions.get(0);
-                    result = UserManager.getInstance(t.getCreatedBy());
+                    result = ScarabUserManager.getInstance(t.getCreatedBy());
                 }
                 else 
                 {
@@ -1378,7 +1391,7 @@ public class Issue
         if ( isNew() ) 
         {
             // set the issue id
-            ModuleEntity module = getModule();
+            Module module = getModule();
             setIdDomain(module.getDomain());
             setIdPrefix(module.getCode());
             try
@@ -1446,7 +1459,7 @@ public class Issue
     private String getIdTableKey()
         throws Exception
     {
-        ModuleEntity module = getModule();        
+        Module module = getModule();        
         String prefix = module.getCode();
 
         String domain = module.getDomain();            
@@ -1555,7 +1568,7 @@ public class Issue
         if ( obj == null ) 
         {        
             AttributeValue status = getAttributeValue(
-                Attribute.getInstance(AttributePeer.STATUS__PK));
+                AttributeManager.getInstance(AttributePeer.STATUS__PK));
             if ( status != null && status.getOptionId()
                  .equals(AttributeOption.STATUS__CLOSED__PK) ) 
             {
@@ -1669,7 +1682,7 @@ public class Issue
     {
         AttributeValue aval = null;
         List matchingAttributes = new ArrayList();
-        ModuleEntity module = ModuleManager.getInstance(moduleId);
+        Module module = ModuleManager.getInstance(moduleId);
 
         HashMap setMap = this.getAttributeValuesMap();
         Iterator iter = setMap.keySet().iterator();
@@ -1729,7 +1742,7 @@ public class Issue
         {        
             AttributeValue aval = null;
             orphanAttributes = new ArrayList();
-            ModuleEntity module = ModuleManager.getInstance(moduleId);
+            Module module = ModuleManager.getInstance(moduleId);
             
             HashMap setMap = this.getAttributeValuesMap();
             Iterator iter = setMap.keySet().iterator();
@@ -1859,7 +1872,7 @@ public class Issue
          throws Exception, ScarabException
 
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module))
         {
@@ -1886,7 +1899,7 @@ public class Issue
     public void delete( ScarabUser user )
          throws Exception, ScarabException
     {                
-        ModuleEntity module = getModule();
+        Module module = getModule();
 
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
           || (user.equals(getCreatedBy()) 
@@ -1966,15 +1979,53 @@ public class Issue
         return result;
     }
 
+
+    // -------------------------------------------------------------------
+    // CacheListener implementation
+
+    public void addedObject(Persistent om)
+    {
+        if (om instanceof AttributeValue) 
+        {
+            IssueManager.getMethodResult()
+                .removeAll(this, GET_MODULE_ATTRVALUES_MAP);
+        }
+    }
+
+    public void refreshedObject(Persistent om)
+    {
+        if (om instanceof AttributeValue) 
+        {
+            IssueManager.getMethodResult()
+                .removeAll(this, GET_MODULE_ATTRVALUES_MAP);
+        }
+    }
+
+    /** fields which interest us with respect to cache events */
+    public List getInterestedFields()
+    {
+        if (getIssueId() == null) 
+        {
+            throw new IllegalStateException(
+                "Cannot register a new Issue as a cache event listener.");
+        }
+        List interestedCacheFields = new LinkedList();
+        Object[] key = new Object[2];
+        key[0] = AttributeValuePeer.ISSUE_ID;
+        key[1] = getIssueId();
+        interestedCacheFields.add(key);
+        return interestedCacheFields;
+    }
+
     // *******************************************************************
-    // Permissions methods
+    // Permissions methods - these are deprecated
     // *******************************************************************
 
     /**
      * Checks if user has permission to enter issue.
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__ENTER, module)
      */
-    public boolean hasEnterPermission( ScarabUser user, ModuleEntity module)
+    public boolean hasEnterPermission( ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -1991,7 +2042,7 @@ public class Issue
      * Checks if user has permission to edit issue.
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
      */
-    public boolean hasEditPermission( ScarabUser user, ModuleEntity module)
+    public boolean hasEditPermission( ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;

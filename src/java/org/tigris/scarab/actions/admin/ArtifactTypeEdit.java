@@ -68,14 +68,14 @@ import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeGroup;
-import org.tigris.scarab.om.AttributeGroupPeer;
+import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
-import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.13 2002/02/21 02:28:15 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.14 2002/03/14 01:13:10 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -97,7 +97,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
 
@@ -215,7 +215,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
 
         if (intake.isAllValid())
@@ -243,7 +243,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         return module.createNewGroup(issueType);
     }
@@ -260,7 +260,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         String key;
         String groupId;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         List attributeGroups = module.getAttributeGroups(issueType);
 
@@ -279,8 +279,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     try
                     {
                         groupId = key.substring(13);
-                        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
-                                            .retrieveByPK(new NumberKey(groupId));
+                        AttributeGroup ag = AttributeGroupManager
+                            .getInstance(new NumberKey(groupId), false);
                         ag.delete(user);
                     }
                     catch (Exception e)
@@ -300,7 +300,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
@@ -312,8 +312,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             if (key.startsWith("att_delete_"))
             {
                attributeId = key.substring(11);
-               Attribute attribute = (Attribute)AttributePeer
-                                     .retrieveByPK(new NumberKey(attributeId));
+               Attribute attribute = AttributeManager
+                   .getInstance(new NumberKey(attributeId), false);
 
                // Remove attribute - module mapping
                IssueType issueType = scarabR.getIssueType();
@@ -365,7 +365,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         IssueType templateType = 
             scarabR.getIssueType(issueType.getTemplateId().toString());

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.87 2002/03/05 17:28:12 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.88 2002/03/14 01:13:14 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -737,7 +737,8 @@
     Example: Scarab
 -->
 <table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" 
-    baseClass="org.tigris.scarab.services.module.AbstractScarabModule">
+    baseClass="org.tigris.scarab.om.AbstractScarabModule"
+    interface="Module">
     <!--
         Unique identifier.
     -->
@@ -1066,7 +1067,8 @@
 -->
 <table name="TURBINE_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
     baseClass="org.apache.fulcrum.security.impl.db.entity.TurbineUser"
-    basePeer="org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer">
+    basePeer="org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer"
+    interface="ScarabUser">
     <!--
         Unique identifier.
     -->

@@ -66,15 +66,16 @@ import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.7 2002/03/13 23:16:51 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.8 2002/03/14 01:13:10 jmcnally Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -90,7 +91,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
 
         if ( intake.isAllValid())
         {
-            ModuleEntity me = scarabR.getCurrentModule();
+            Module me = scarabR.getCurrentModule();
             IssueType issueType = scarabR.getIssueType();
             List rmos = me.getRModuleOptions(attribute, issueType, false);
             for (int i=rmos.size()-1; i>=0; i--) 
@@ -113,7 +114,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getCurrentIssueType();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
@@ -126,7 +127,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             if (key.startsWith("delete_"))
             {
                optionId = key.substring(7);
-               AttributeOption option = AttributeOption
+               AttributeOption option = AttributeOptionManager
                   .getInstance(new NumberKey(optionId));
 
                RModuleOption rmo = module.getRModuleOption(option, issueType);
@@ -164,7 +165,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
+        Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
         IssueType templateType = 
             scarabR.getIssueType(issueType.getTemplateId().toString());

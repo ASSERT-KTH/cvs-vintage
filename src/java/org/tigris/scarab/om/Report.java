@@ -65,6 +65,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.pool.DBConnection;
+import org.apache.torque.TorqueException;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.GlobalCacheService;
@@ -79,9 +80,9 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.user.UserManager;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
@@ -181,8 +182,8 @@ public  class Report
      * Get the value of module.
      * @return value of module.
      */
-    public ModuleEntity getModule() 
-        throws Exception
+    public Module getModule() 
+        throws TorqueException
     {
         return ModuleManager.getInstance(getModuleId());
     }
@@ -191,8 +192,8 @@ public  class Report
      * Set the value of module.
      * @param v  Value to assign to module.
      */
-    public void setModule(ModuleEntity  v) 
-        throws Exception
+    public void setModule(Module  v) 
+        throws TorqueException
     {
         setModuleId(v.getModuleId());
     }
@@ -227,7 +228,7 @@ public  class Report
         {
             if ( getUserId() != null ) 
             {
-                generatedBy = UserManager.getInstance(getUserId());
+                generatedBy = ScarabUserManager.getInstance(getUserId());
             }
         }
         
@@ -390,7 +391,7 @@ public  class Report
     private List getSelectedOptions(String[] keys)
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         int start = 0;
@@ -458,7 +459,7 @@ public  class Report
     private List getSelectedAttributeAndUsers(String[] keys)
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List ausers = new ArrayList(7*rmas.size());
         int start = 0;
@@ -528,7 +529,7 @@ public  class Report
     private List getSelectedCommitters(String[] keys)
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List users = Arrays.asList(module.getEligibleIssueReporters());
         List committers = new ArrayList(users.size());
         int start = 0;
@@ -607,7 +608,7 @@ public  class Report
     public List getAllOptionsForGrouping()
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List allOptions = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
@@ -746,7 +747,7 @@ public  class Report
     public List getOptionsMinusGroupedOptions()
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 
@@ -776,7 +777,7 @@ public  class Report
     public List getUserOptions()
         throws Exception
     {
-        ModuleEntity module = getModule();
+        Module module = getModule();
         List rmas = module.getRModuleAttributes(getIssueType(), true);
         List options = new ArrayList(7*rmas.size());
         for ( int i=0; i<rmas.size(); i++ ) 

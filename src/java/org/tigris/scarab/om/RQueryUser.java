@@ -52,7 +52,7 @@ import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -60,7 +60,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * long as it does not already exist in the output directory.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: RQueryUser.java,v 1.7 2002/01/18 22:26:07 jon Exp $
+ * @version $Id: RQueryUser.java,v 1.8 2002/03/14 01:13:11 jmcnally Exp $
  */
 public  class RQueryUser 
     extends org.tigris.scarab.om.BaseRQueryUser

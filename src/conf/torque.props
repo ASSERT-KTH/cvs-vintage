@@ -70,6 +70,7 @@ addGetByNameMethod=true
 complexObjectModel=true
 addTimeStamp=false
 addIntakeRetrievable=true
+useManagers=true
 
 extend=TurbineMapBuilder
 mapname=TurbineMap

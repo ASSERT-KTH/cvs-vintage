@@ -57,7 +57,7 @@ import org.apache.fulcrum.template.TemplateEmail;
 
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 /**
  * Sends a notification email.
@@ -65,7 +65,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
 public class Email
 {
     public static boolean sendEmail( TemplateContext context, 
-                                     ModuleEntity module, Object fromUser,
+                                     Module module, Object fromUser,
                                      List toUsers, List ccUsers,
                                      String subject, String template )
         throws Exception
@@ -158,7 +158,7 @@ public class Email
     /**
      * Single user recipient.
      */ 
-    public static boolean sendEmail( TemplateContext context, ModuleEntity module,
+    public static boolean sendEmail( TemplateContext context, Module module,
                                   Object fromUser, ScarabUser toUser, 
                                   String subject, String template )
         throws Exception
