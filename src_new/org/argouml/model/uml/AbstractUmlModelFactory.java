@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.21 2004/03/25 22:29:19 mvw Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.22 2004/03/26 13:04:44 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public abstract class AbstractUmlModelFactory {
     protected void initialize(Object o) {
         if (o instanceof MBase) {
             if (((MBase) o).getUUID() == null) {
-                ((MBase) o).setUUID(UUIDManager.SINGLETON.getNewUUID());
+                ((MBase) o).setUUID(UUIDManager.getInstance().getNewUUID());
             }            
             addListenersToModelElement(o);
             UmlModelEventPump pump = UmlModelEventPump.getPump();
