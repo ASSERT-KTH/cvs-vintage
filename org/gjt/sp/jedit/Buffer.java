@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.12 2001/10/12 09:12:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.13 2001/10/13 13:32:19 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -2034,7 +2034,6 @@ public class Buffer extends PlainDocument implements EBComponent
 
 		LineInfo info = null, prev = null;
 
-		//System.err.println("i=" + lineIndex + ",start=" + start);
 		Element map = getDefaultRootElement();
 
 		for(int i = start + 1; i <= lineIndex; i++)
@@ -2258,7 +2257,7 @@ public class Buffer extends PlainDocument implements EBComponent
 		}
 	} //}}}
 
-	//{{{ getFoldVisibilityManager() method
+	//{{{ _getFoldVisibilityManager() method
 	/**
 	 * Returns the fold visibility method for the specified text area.
 	 * Instead of calling this method, call
@@ -2266,7 +2265,7 @@ public class Buffer extends PlainDocument implements EBComponent
 	 * @param textArea The text area
 	 * @since jEdit 4.0pre1
 	 */
-	public FoldVisibilityManager getFoldVisibilityManager(
+	public FoldVisibilityManager _getFoldVisibilityManager(
 		JEditTextArea textArea)
 	{
 		FoldVisibilityManager mgr = (FoldVisibilityManager)
@@ -2292,11 +2291,11 @@ public class Buffer extends PlainDocument implements EBComponent
 		throw new InternalError("Too many text areas editing this buffer");
 	} //}}}
 
-	//{{{ releaseFoldVisibilityManager() method
-	public void releaseFoldVisibilityManager(FoldVisibilityManager mgr)
+	//{{{ _releaseFoldVisibilityManager() method
+	public void _releaseFoldVisibilityManager(FoldVisibilityManager mgr)
 	{
-		mgr._release();
 		inUseFVMs[mgr._getIndex()] = null;
+		mgr._release();
 	} //}}}
 
 	//{{{ Marker methods
