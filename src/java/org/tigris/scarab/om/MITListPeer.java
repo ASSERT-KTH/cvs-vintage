@@ -1,11 +1,7 @@
 package org.tigris.scarab.om;
 
-import java.util.*;
-import com.workingdogs.village.*;
-import org.apache.torque.map.*;
+import org.apache.torque.om.NumberKey;
 
-// Local classes
-import org.tigris.scarab.om.map.*;
 
 /** 
  *  You should add additional methods to this class to meet the
@@ -15,4 +11,12 @@ import org.tigris.scarab.om.map.*;
 public class MITListPeer 
     extends org.tigris.scarab.om.BaseMITListPeer
 {
+    public static final NumberKey ALL_MODULES_ISSUETYPES
+        = new NumberKey("1");
+
+    public static final NumberKey CURRENT_MODULE_ALL_ISSUETYPES
+        = new NumberKey("2");
+
+    public static final NumberKey ALL_MODULES_CURRENT_ISSUETYPES
+        = new NumberKey("3");
 }
