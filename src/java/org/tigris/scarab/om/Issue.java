@@ -62,6 +62,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.manager.MethodResultCache;
 import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
@@ -183,7 +184,7 @@ public class Issue
         throws TorqueException
     {
         super.setIssueId(id);
-        AttributeValueManager.addCacheListener(this);
+        registerAsListener();
     }
 
     /**
@@ -480,8 +481,7 @@ public class Issue
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = IssueManager.getMethodResult()
-            .get(this, GET_MODULE_ATTRVALUES_MAP); 
+        Object obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP); 
         if ( obj == null ) 
         {        
             Attribute[] attributes = null;
@@ -506,8 +506,7 @@ public class Issue
                     result.put(key, aval);
                 }
             }
-            IssueManager.getMethodResult()
-                .put(result, this, GET_MODULE_ATTRVALUES_MAP);
+            getMethodResult().put(result, this, GET_MODULE_ATTRVALUES_MAP);
         }
         else 
         {
@@ -895,7 +894,7 @@ public class Issue
     public List getUserAttributeValues() throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_USER_ATTRIBUTEVALUES); 
+        Object obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUES); 
         if ( obj == null ) 
         {        
             List attributeList = getModule().getUserAttributes(getIssueType(), true);
@@ -919,7 +918,7 @@ public class Issue
             {
                 result = new ArrayList(0);
             }
-            ScarabCache.put(result, this, GET_USER_ATTRIBUTEVALUES);
+            getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUES);
         }
         else 
         {
@@ -1089,7 +1088,8 @@ public class Issue
     public List getComments(boolean full) throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_COMMENTS, new Boolean(full)); 
+        Boolean fullBool = (full ? Boolean.TRUE : Boolean.FALSE);
+        Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1104,7 +1104,7 @@ public class Issue
                 crit.setLimit(getCommentsLimit());
             }
             result = AttachmentPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_COMMENTS, new Boolean(full));
+            getMethodResult().put(result, this, GET_COMMENTS, fullBool);
         }
         else 
         {
@@ -1121,7 +1121,7 @@ public class Issue
     public List getUrls() throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_URLS); 
+        Object obj = getMethodResult().get(this, GET_URLS); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1132,7 +1132,7 @@ public class Issue
                      Attachment.URL__PK)
                 .add(AttachmentPeer.DELETED, 0);
             result = AttachmentPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_URLS);
+            getMethodResult().put(result, this, GET_URLS);
         }
         else 
         {
@@ -1148,7 +1148,7 @@ public class Issue
     public List getExistingAttachments() throws Exception
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_EXISTING_ATTACHMENTS); 
+        Object obj = getMethodResult().get(this, GET_EXISTING_ATTACHMENTS); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1159,7 +1159,7 @@ public class Issue
                      Attachment.FILE__PK)
                 .add(AttachmentPeer.DELETED, 0);
             result = AttachmentPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_EXISTING_ATTACHMENTS);
+            getMethodResult().put(result, this, GET_EXISTING_ATTACHMENTS);
         }
         else 
         {
@@ -1237,7 +1237,7 @@ public class Issue
     {
         List result = null;
         Boolean fullHistoryObj = fullHistory ? Boolean.TRUE : Boolean.FALSE;
-        Object obj = ScarabCache.get(this, GET_ACTIVITY, fullHistoryObj,
+        Object obj = getMethodResult().get(this, GET_ACTIVITY, fullHistoryObj,
                                      new Integer(limit)); 
         if ( obj == null ) 
         {        
@@ -1249,7 +1249,7 @@ public class Issue
                 crit.setLimit(limit);
             }
             result = ActivityPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_ACTIVITY, fullHistoryObj,
+            getMethodResult().put(result, this, GET_ACTIVITY, fullHistoryObj,
                             new Integer(limit));
         }
         else 
@@ -1267,14 +1267,14 @@ public class Issue
     public List getChildren() throws Exception  
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_CHILDREN); 
+        Object obj = getMethodResult().get(this, GET_CHILDREN); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
                 .add(DependPeer.OBSERVED_ID, getIssueId())
                 .add(DependPeer.DELETED, false);
             result = DependPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_CHILDREN);
+            getMethodResult().put(result, this, GET_CHILDREN);
         }
         else 
         {
@@ -1291,14 +1291,14 @@ public class Issue
     public List getParents() throws Exception  
     {
         List result = null;
-        Object obj = ScarabCache.get(this, GET_PARENTS); 
+        Object obj = getMethodResult().get(this, GET_PARENTS); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
                 .add(DependPeer.OBSERVER_ID, getIssueId())
                 .add(DependPeer.DELETED, false);
             result = DependPeer.doSelect(crit);
-            ScarabCache.put(result, this, GET_PARENTS);
+            getMethodResult().put(result, this, GET_PARENTS);
         }
         else 
         {
@@ -1311,21 +1311,11 @@ public class Issue
     /**
      * Returns list of all types of dependencies an issue can have
      * On another issue.
+     * @deprecated use DependencyTypeManager.getAll();
      */
     public List getAllDependencyTypes() throws Exception
     {
-        List result = null;
-        Object obj = ScarabCache.get(this, GET_ALL_DEPENDENCY_TYPES); 
-        if ( obj == null ) 
-        {        
-            result = DependTypePeer.doSelect(new Criteria());
-            ScarabCache.put(result, this, GET_ALL_DEPENDENCY_TYPES);
-        }
-        else 
-        {
-            result = (List)obj;
-        }
-        return result;
+        return DependTypeManager.getAll();
     }
 
 
@@ -1980,6 +1970,20 @@ public class Issue
     }
 
 
+    private MethodResultCache getMethodResult()
+    {
+        return IssueManager.getMethodResult();
+    }
+
+    private void registerAsListener()
+    {
+        AttributeValueManager.addCacheListener(this);
+        AttachmentManager.addCacheListener(this);
+        DependManager.addCacheListener(this);
+        ActivityManager.addCacheListener(this);
+    }
+
+
     // -------------------------------------------------------------------
     // CacheListener implementation
 
@@ -1987,18 +1991,29 @@ public class Issue
     {
         if (om instanceof AttributeValue) 
         {
-            IssueManager.getMethodResult()
-                .removeAll(this, GET_MODULE_ATTRVALUES_MAP);
+            getMethodResult().remove(this, GET_MODULE_ATTRVALUES_MAP);
+            getMethodResult().remove(this, GET_USER_ATTRIBUTEVALUES);
+        }
+        else if (om instanceof Attachment) 
+        {
+            getMethodResult().remove(this, GET_URLS);
+            getMethodResult().removeAll(this, GET_COMMENTS);
+            getMethodResult().removeAll(this, GET_EXISTING_ATTACHMENTS);
+        }
+        else if (om instanceof Depend) 
+        {
+            getMethodResult().remove(this, GET_PARENTS);
+            getMethodResult().remove(this, GET_CHILDREN);
+        }
+        else if (om instanceof Activity) 
+        {
+            getMethodResult().removeAll(this, GET_ACTIVITY);
         }
     }
 
     public void refreshedObject(Persistent om)
     {
-        if (om instanceof AttributeValue) 
-        {
-            IssueManager.getMethodResult()
-                .removeAll(this, GET_MODULE_ATTRVALUES_MAP);
-        }
+        addedObject(om);
     }
 
     /** fields which interest us with respect to cache events */
@@ -2012,6 +2027,17 @@ public class Issue
         List interestedCacheFields = new LinkedList();
         Object[] key = new Object[2];
         key[0] = AttributeValuePeer.ISSUE_ID;
+        key[1] = getIssueId();
+        interestedCacheFields.add(key);
+        key = new Object[2];
+        key[0] = AttachmentPeer.ISSUE_ID;
+        key[1] = getIssueId();
+        interestedCacheFields.add(key);
+        key = new Object[2];
+        key[0] = DependPeer.OBSERVER_ID;
+        key[1] = getIssueId();
+        key = new Object[2];
+        key[0] = DependPeer.OBSERVED_ID;
         key[1] = getIssueId();
         interestedCacheFields.add(key);
         return interestedCacheFields;

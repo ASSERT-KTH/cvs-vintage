@@ -2,7 +2,11 @@
 
 package org.tigris.scarab.om;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -25,8 +29,26 @@ public class ActivityManager
         throws TorqueException
     {
         super();
+        validFields = new HashMap();
+        validFields.put(ActivityPeer.ISSUE_ID, null);
     }
 
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        // super method checks for correct class, so just cast it
+        Activity a = (Activity)om;
+
+        Map subsetMap = (Map)listenersMap.get(ActivityPeer.ISSUE_ID);
+        if (subsetMap != null) 
+        {
+            ObjectKey issue_id = a.getIssueId();
+            List listeners = (List)subsetMap.get(issue_id);
+            notifyListeners(listeners, oldOm, om);
+        }
+        return oldOm;
+    }
 }
 
 

@@ -2,10 +2,14 @@
 
 package org.tigris.scarab.om;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ObjectKey;
 
 /** 
  * This class manages RModuleIssueType objects.  
@@ -25,7 +29,26 @@ public class RModuleIssueTypeManager
         throws TorqueException
     {
         super();
+        validFields = new HashMap();
+        validFields.put(RModuleIssueTypePeer.MODULE_ID, null);
     }
+
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        // super method checks for correct class, so just cast it
+        RModuleIssueType rmit = (RModuleIssueType)om;
+
+        Map subsetMap = (Map)listenersMap.get(RModuleIssueTypePeer.MODULE_ID);
+        if (subsetMap != null) 
+        {
+            ObjectKey module_id = rmit.getModuleId();
+            List listeners = (List)subsetMap.get(module_id);
+            notifyListeners(listeners, oldOm, om);
+        }
+        return oldOm;
+    }                
 
 }
 

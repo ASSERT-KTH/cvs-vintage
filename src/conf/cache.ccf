@@ -26,7 +26,6 @@ jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes=org.apache.stratum.jc
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=1200
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
 
-
 jcs.region.org_tigris_scarab_om_Attribute=
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=1200
@@ -42,3 +41,7 @@ jcs.region.org_tigris_scarab_om_Issue.cacheattributes=org.apache.stratum.jcs.eng
 jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MaxObjects=1200
 jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
 
+jcs.region.org_tigris_scarab_om_RModuleIssueType=
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MaxObjects=1200
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache

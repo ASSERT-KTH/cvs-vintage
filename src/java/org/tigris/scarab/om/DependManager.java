@@ -2,7 +2,11 @@
 
 package org.tigris.scarab.om;
 
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -25,8 +29,34 @@ public class DependManager
         throws TorqueException
     {
         super();
+        validFields = new HashMap();
+        validFields.put(DependPeer.OBSERVER_ID, null);
+        validFields.put(DependPeer.OBSERVED_ID, null);
     }
 
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        // super method checks for correct class, so just cast it
+        Depend d = (Depend)om;
+
+        Map subsetMap = (Map)listenersMap.get(DependPeer.OBSERVER_ID);
+        if (subsetMap != null) 
+        {
+            ObjectKey issue_id = d.getObserverId();
+            List listeners = (List)subsetMap.get(issue_id);
+            notifyListeners(listeners, oldOm, om);
+        }
+        subsetMap = (Map)listenersMap.get(DependPeer.OBSERVED_ID);
+        if (subsetMap != null) 
+        {
+            ObjectKey issue_id = d.getObservedId();
+            List listeners = (List)subsetMap.get(issue_id);
+            notifyListeners(listeners, oldOm, om);
+        }
+        return oldOm;
+    }
 }
 
 

@@ -60,9 +60,13 @@ import org.apache.log4j.Category;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.manager.MethodResultCache;
+import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
@@ -128,11 +132,11 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.9 2002/03/15 16:47:49 dlr Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.10 2002/03/15 23:28:14 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
-    implements Module, Comparable
+    implements Module, Comparable, CacheListener
 {
 
     private static final Category log = 
@@ -159,6 +163,8 @@ public abstract class AbstractScarabModule
         "getRequiredAttributes";
     private static final String GET_ALL_R_MODULE_OPTIONS = 
         "getAllRModuleOptions";
+    private static String GET_LEAF_R_MODULE_OPTIONS = 
+        "getLeafRModuleOptions";
     private static final String GET_R_MODULE_ISSUE_TYPES = 
         "getRModuleIssueTypes";
     private static final String GET_R_MODULE_ISSUE_TYPE = 
@@ -367,8 +373,9 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List groups = null;
-        Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUPS, 
-                                     issueType, new Boolean(activeOnly)); 
+        Boolean activeBool = activeOnly ? Boolean.TRUE : Boolean.FALSE;
+        Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS, 
+                                           issueType, activeBool); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -377,11 +384,11 @@ public abstract class AbstractScarabModule
                 .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
             if (activeOnly)
             {
-            crit.add(AttributeGroupPeer.ACTIVE, true);
+                crit.add(AttributeGroupPeer.ACTIVE, true);
             }
             groups = AttributeGroupPeer.doSelect(crit);
-            ScarabCache.put(groups, this, GET_ATTRIBUTE_GROUPS, 
-                            issueType, new Boolean(activeOnly));
+            getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS, 
+                                  issueType, activeBool);
         }
         else 
         {
@@ -929,7 +936,6 @@ public abstract class AbstractScarabModule
         return types;
     }
 
-
     /**
      * gets a list of the Issue Types for this module.
      * that get listed in the left navigation. only shows active issue types.
@@ -938,7 +944,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List types = null;
-        Object obj = ScarabCache.get(this, "getNavIssueTypes"); 
+        Object obj = getMethodResult().get(this, GET_NAV_ISSUE_TYPES); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria();
@@ -952,7 +958,7 @@ public abstract class AbstractScarabModule
             crit.addAscendingOrderByColumn(
                 RModuleIssueTypePeer.PREFERRED_ORDER);
             types = IssueTypePeer.doSelect(crit);
-            ScarabCache.put(types, this, "getNavIssueTypes");
+            getMethodResult().put(types, this, GET_NAV_ISSUE_TYPES);
         }
         else 
         {
@@ -1195,7 +1201,6 @@ public abstract class AbstractScarabModule
                 break;
             }
         }
-
         return rma;
     }
 
@@ -1225,8 +1230,9 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List rmas = null;
-        Object obj = ScarabCache.get(this, GET_R_MODULE_ATTRIBUTES, issueType, 
-                                     new Boolean(activeOnly), attributeType); 
+        Boolean activeBool = (activeOnly ? Boolean.TRUE : Boolean.FALSE);
+        Object obj = getMethodResult().get(this, GET_R_MODULE_ATTRIBUTES, 
+            issueType,  activeBool, attributeType); 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria();
@@ -1259,8 +1265,8 @@ public abstract class AbstractScarabModule
             }
             
             rmas = RModuleAttributePeer.doSelect(crit);
-            ScarabCache.put(rmas, this, GET_R_MODULE_ATTRIBUTES, issueType, 
-                            new Boolean(activeOnly), attributeType);
+            getMethodResult().put(rmas, this, GET_R_MODULE_ATTRIBUTES, 
+                issueType, activeBool, attributeType);
         }
         else 
         {
@@ -1431,7 +1437,12 @@ if (allRModuleOptions != null)
                                       boolean activeOnly)
         throws Exception
     {
-        List rModOpts = null;
+        List rModOpts = null;        
+        Boolean activeBool = (activeOnly ? Boolean.TRUE : Boolean.FALSE);
+        Object obj = getMethodResult().get(this, GET_LEAF_R_MODULE_OPTIONS, 
+                                           attribute, issueType, activeBool); 
+        if ( obj == null ) 
+        {        
         rModOpts = getRModuleOptions(attribute, issueType, activeOnly);
         if (rModOpts != null)
      {
@@ -1465,6 +1476,14 @@ if (allRModuleOptions != null)
             }
         }
 }
+            getMethodResult().put(rModOpts, this, GET_LEAF_R_MODULE_OPTIONS, 
+                                  attribute, issueType, activeBool); 
+        }
+        else 
+        {
+            rModOpts = (List)obj;
+        }
+
         return rModOpts;
     }
 
@@ -1592,27 +1611,8 @@ try{
     public RModuleIssueType getRModuleIssueType(IssueType issueType)
         throws Exception
     {
-        RModuleIssueType rmit = null;
-        Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPE, issueType);
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria(2);
-            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-                .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                     issueType.getIssueTypeId());
-            List results = RModuleIssueTypePeer.doSelect(crit);
-            if (results.size() > 0)
-            {
-                rmit = (RModuleIssueType)results.get(0);
-            }
-
-            ScarabCache.put(rmit, this, GET_R_MODULE_ISSUE_TYPE, issueType);
-        }
-        else 
-        {
-            rmit = (RModuleIssueType)obj;
-        }
-        return rmit;
+        SimpleKey[] keys = {getModuleId(), issueType.getIssueTypeId()};
+        return RModuleIssueTypeManager.getInstance(new ComboKey(keys));
     }
 
 
@@ -1861,5 +1861,74 @@ try{
             name = getClass().getName();
         }
         return name;
+    }
+
+    private MethodResultCache getMethodResult()
+    {
+        return ModuleManager.getMethodResult();
+    }
+
+    protected void registerAsListener()
+    {
+        RModuleIssueTypeManager.addCacheListener(this);
+        RModuleAttributeManager.addCacheListener(this);
+        AttributeGroupManager.addCacheListener(this);
+        RModuleOptionManager.addCacheListener(this);
+    }
+
+    // -------------------------------------------------------------------
+    // CacheListener implementation
+
+    public void addedObject(Persistent om)
+    {
+        if (om instanceof RModuleAttribute)
+        {
+            getMethodResult().removeAll(this, GET_R_MODULE_ATTRIBUTES);
+        }
+        else if (om instanceof RModuleOption)
+        {
+            getMethodResult().removeAll(this, GET_LEAF_R_MODULE_OPTIONS);
+        }
+        else if (om instanceof RModuleIssueType) 
+        {
+            getMethodResult().remove(this, GET_NAV_ISSUE_TYPES);
+        }
+        else if (om instanceof AttributeGroup)
+        {
+            getMethodResult().removeAll(this, GET_ATTRIBUTE_GROUPS);
+        }
+    }
+
+    public void refreshedObject(Persistent om)
+    {
+        addedObject(om);
+    }
+
+    /** fields which interest us with respect to cache events */
+    public List getInterestedFields()
+    {
+        if (getModuleId() == null) 
+        {
+            throw new IllegalStateException(
+                "Cannot register a new Module as a cache event listener.");
+        }
+        List interestedCacheFields = new LinkedList();
+        Object[] key = new Object[2];
+        key[0] = RModuleOptionPeer.MODULE_ID;
+        key[1] = getModuleId();
+        interestedCacheFields.add(key);
+        key = new Object[2];
+        key[0] = RModuleAttributePeer.MODULE_ID;
+        key[1] = getModuleId();
+        interestedCacheFields.add(key);
+        key = new Object[2];
+        key[0] = RModuleIssueTypePeer.MODULE_ID;
+        key[1] = getModuleId();
+        interestedCacheFields.add(key);
+        key = new Object[2];
+        key[0] = AttributeGroupPeer.MODULE_ID;
+        key[1] = getModuleId();
+        interestedCacheFields.add(key);
+        return interestedCacheFields;
     }
 }
