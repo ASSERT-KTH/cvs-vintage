@@ -580,12 +580,16 @@ public class Context {
     public void logServlet( String msg , Throwable t ) {
 	if (firstLog == true) {
 	    csLog = Logger.getLogger("servlet_log");
-	    csLog.setCustomOutput("true");
-	    csLog.setVerbosityLevel(Logger.INFORMATION);
-	    firstLog = false;
+	    if( csLog!= null ) {
+		csLog.setCustomOutput("true");
+		csLog.setVerbosityLevel(Logger.INFORMATION);
+		firstLog = false;
+	    }
 	}
 	if (csLog != null) {
 	    csLog.log("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
+	} else {
+	    System.out.println("<l:context path=\"" + path  + "\" >" + msg + "</l:context>");
 	}
     }
     

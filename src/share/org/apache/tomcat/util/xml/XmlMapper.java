@@ -68,20 +68,43 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	    matchStart( this);
 	    body="";
 	} catch (Exception ex) {
-	    ex.printStackTrace();
+	    // do not ignore messages, caller should handle it
+	    throw new SAXException( positionToString(), ex );
 	}
     }
 
+    private String positionToString() {
+	StringBuffer sb=new StringBuffer();
+	if( locator!=null ) sb.append("Line ").append(locator.getLineNumber()).append(" ");
+	sb.append("/");
+	for( int i=0; i< sp ; i++ ) sb.append( tagStack[i] ).append( "/" );
+	sb.append(" ");
+	AttributeList attributes=(AttributeList) attributeStack[sp-1];
+	if( attributes!=null) 
+	    for (int i = 0; i < attributes.getLength (); i++) {
+		sb.append(attributes.getName(i)).append( "=" ).append(attributes.getValue(i));
+		sb.append(" ");
+	    }
+	
+	return sb.toString();
+    }
+    
     public void endElement (String tag) throws SAXException
     {
-	// Find a match for the current tag in the context
-	matchEnd( this);
+	try {
+	    // Find a match for the current tag in the context
+	    matchEnd( this);
 	    
-	if( sp > 1 ) {
-	    tagStack[sp] = null;
-	    attributeStack[sp]=null;
+	    if( sp > 1 ) {
+		tagStack[sp] = null;
+		attributeStack[sp]=null;
+	    }
+	    sp--;
+	} catch (Exception ex) {
+	    // do not ignore messages, caller should handle it
+	    throw new SAXException(  positionToString(), ex );
 	}
-	sp--;
+
     }
 
     public void characters (char buf [], int offset, int len)
@@ -190,10 +213,12 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 		" due to: " + ioe;
 	    throw new Exception(msg);
 	} catch (SAXException se) {
-	    se.printStackTrace();
-	    String msg = "Can't open config file: " + xmlFile +
-		" due to: " + se;
-	    throw new Exception(msg);
+	    System.out.println("ERROR reading " + xmlFile);
+	    System.out.println("At " + se.getMessage());
+	    //	    se.printStackTrace();
+	    System.out.println();
+	    Exception ex1=se.getException();
+	    throw ex1;
 	}
     }
 
@@ -283,27 +308,19 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 	return matchCount;
     }
 
-    void matchStart(SaxContext ctx ) {
-	try {
-	    int matchCount=match( ctx, matching );
-	    for ( int i=0; i< matchCount; i++ ) {
-		matching[i].action.start( ctx );
-	    }
-	} catch(Exception ex) {
-	    ex.printStackTrace();
+    void matchStart(SaxContext ctx ) throws Exception {
+	int matchCount=match( ctx, matching );
+	for ( int i=0; i< matchCount; i++ ) {
+	    matching[i].action.start( ctx );
 	}
     }
 
-    void matchEnd(SaxContext ctx ) {
-	try {
-	    int matchCount=match( ctx, matching );
-	    for ( int i=0; i< matchCount; i++ ) 
-		matching[i].action.end( ctx );
-	    for ( int i=0; i< matchCount; i++ ) 
-		matching[i].action.cleanup( ctx );
-	} catch(Exception ex) {
-	    ex.printStackTrace();
-	}
+    void matchEnd(SaxContext ctx ) throws Exception {
+	int matchCount=match( ctx, matching );
+	for ( int i=0; i< matchCount; i++ ) 
+	    matching[i].action.end( ctx );
+	for ( int i=0; i< matchCount; i++ ) 
+	    matching[i].action.cleanup( ctx );
     }
 
     /** Trick for off-line usage

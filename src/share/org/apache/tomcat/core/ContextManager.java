@@ -719,15 +719,18 @@ public class ContextManager {
     public final void doLog(String msg) {
 	if (firstLog == true) {
 	    cmLog = Logger.getLogger("tc_log");
-	    cmLog.setCustomOutput("true");
-	    cmLog.setVerbosityLevel(Logger.INFORMATION);
+	    if( cmLog!= null ) {
+		cmLog.setCustomOutput("true");
+		cmLog.setVerbosityLevel(Logger.INFORMATION);
+	    }
 	    firstLog = false;
 	}
 
 	if (cmLog != null) {
-	    // customOutput !
 	    cmLog.log(msg + "\n");
 	    // XXX \n should be added to logger, portable
+	} else {
+	    System.out.println(msg);
 	}
     }
     

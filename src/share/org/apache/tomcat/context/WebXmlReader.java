@@ -118,7 +118,9 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    Object ctx1=xh.readXml(f, ctx);
 	} catch(Exception ex ) {
+	    System.out.println("ERROR reading " + file);
 	    ex.printStackTrace();
+	    // XXX we should invalidate the context and un-load it !!!
 	}
     }
 

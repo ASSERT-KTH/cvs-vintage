@@ -90,7 +90,13 @@ public class Tomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setHelper( xh );
-	xh.readXml(f,cm);
+	try {
+	    xh.readXml(f,cm);
+	} catch( Exception ex ) {
+	    System.out.println("FATAL: configuration error" );
+	    ex.printStackTrace();
+	    System.exit(1);
+	}
 
 	// Generate Apache configs
 	//
