@@ -158,6 +158,7 @@ $page.setTitle("Queue list")
 #end
  </p>
   </td>
+#end
   </tr>
 </table>
 </div>
