@@ -39,7 +39,7 @@ security via the SecurityProxy delegation model.
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.12 $
+@version $Revision: 1.13 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -53,12 +53,25 @@ public class SecurityInterceptor extends AbstractInterceptor
      * @supplierCardinality 1 
      */
     protected Container container;
+
+    /**
+     * @supplierCardinality 0..1
+     * @supplierQualifier authentication
+     * @clientCardinality 1..* 
+     */
     protected EJBSecurityManager securityManager;
+
+    /**
+     * @supplierCardinality 0..1
+     * @clientCardinality 1..*
+     * @supplierQualifier identity mapping 
+     */
     protected RealmMapping realmMapping;
 
     /**
      * @supplierCardinality 0..1
      * @clientCardinality 1 
+     * @supplierQualifier custom security
      */
     protected SecurityProxy securityProxy;
 

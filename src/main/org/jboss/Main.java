@@ -32,13 +32,13 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.29 $
+ *   @version $Revision: 1.30 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-   String versionIdentifier = "2.1-BETA-Mar-24-2001";
+   String versionIdentifier = "2.1-BETA-Mar-26-2001";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
@@ -67,6 +67,19 @@ public class Main
       }
 
       System.getProperties().load(propertiesIn);
+
+      /* Set a jboss.home property from the location of the Main.class jar
+         if the property does not exist.
+      */
+      if( System.getProperty("jboss.home") == null )
+      {
+          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+          File runJar = new File(path);
+          // Home dir should be the parent of the dir containing run.jar
+          File homeDir = new File(runJar.getParent(), "..");
+          System.setProperty("jboss.home", homeDir.getCanonicalPath());
+      }
+      System.out.println("jboss.home = "+System.getProperty("jboss.home"));
 
       // Set security
       URL serverPolicy = Main.class.getClassLoader().getResource(confName+"/server.policy");
