@@ -7,3 +7,5 @@ scarab-?.?-*-dev
 junit*.properties
 *.ser
 .tomcatplugin
+.classpath
+.project
