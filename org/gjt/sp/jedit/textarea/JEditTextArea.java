@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.308 2004/03/28 00:07:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.309 2004/04/06 18:13:12 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -771,12 +771,11 @@ public class JEditTextArea extends JComponent
 			&& visibleLines - 1 > electricScroll * 2
 			? electricScroll : 0); //}}}
 
-		if(visibleLines == 0)
+		if(visibleLines <= 1)
 		{
 			if(Debug.SCROLL_TO_DEBUG)
-				Log.log(Log.DEBUG,this,"visibleLines == 0");
+				Log.log(Log.DEBUG,this,"visibleLines <= 0");
 			setFirstPhysicalLine(line,_electricScroll);
-			// it will figure itself out after being added...
 			return;
 		}
 

@@ -57,11 +57,12 @@ import org.gjt.sp.util.Log;
  *
  * If you are not using the dialog to undertake a search or replace, you may
  * call any of the search and replace methods (including
- * {@link #hyperSearch(View)}) without concern for the value of these properties.
+ * {@link #hyperSearch(View)}) without concern for the value of these
+ * properties.
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.61 2004/04/05 03:11:47 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.62 2004/04/06 18:13:11 spestov Exp $
  */
 public class SearchAndReplace
 {
