@@ -343,7 +343,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
 						Object[] lastSelUids = new Object[1];
 						lastSelUids[0] = ((Folder) folder).getLastSelection();
 						// selecting the message
-						if (lastSelUids == null)
+						if (lastSelUids[0] == null)
 							break;
 
 						setSelected(lastSelUids);
