@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.21 2001/03/15 07:33:19 costin Exp $
+# $Id: tomcat.sh,v 1.22 2001/03/21 06:41:36 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -19,6 +19,7 @@ if [ -f $HOME/.tomcatrc ] ; then
 fi
 
 # -------------------- Guess TOMCAT_HOME --------------------
+DEBUG_HOMEFIND=false
 # Follow symbolic links to the real tomcat.sh
 # Extract the base dir.
 # Look in well-known places if this fails
@@ -38,10 +39,14 @@ if [ "$TOMCAT_HOME" = "" ] ; then
   done
   
   TOMCAT_HOME_1=`dirname "$PRG"`/..
-  echo "Guessing TOMCAT_HOME from tomcat.sh to ${TOMCAT_HOME_1}" 
+  if [ "$DEBUG_HOMEFIND" != "false" ] ; then
+    echo "Guessing TOMCAT_HOME from tomcat.sh to ${TOMCAT_HOME_1}" 
+  fi
     if [ -d ${TOMCAT_HOME_1}/conf ] ; then 
 	TOMCAT_HOME=${TOMCAT_HOME_1}
-	echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
+        if [ "$DEBUG_HOMEFIND" != "false" ] ; then
+          echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
+	fi
     fi
 fi
 
@@ -50,12 +55,16 @@ if [ "$TOMCAT_HOME" = "" ] ; then
   # try to find tomcat
   if [ -d ${HOME}/opt/tomcat/conf ] ; then 
     TOMCAT_HOME=${HOME}/opt/tomcat
-    echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+    if [ "$DEBUG_HOMEFIND" != "false" ] ; then
+      echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+    fi
   fi
 
   if [ -d /opt/tomcat/conf ] ; then 
     TOMCAT_HOME=/opt/tomcat
-    echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+    if [ "$DEBUG_HOMEFIND" != "false" ] ; then
+      echo "Defaulting TOMCAT_HOME to $TOMCAT_HOME"
+    fi
   fi
  
   # Add other "standard" locations for tomcat
@@ -116,9 +125,6 @@ export CLASSPATH
 #   2) You should use `stop` option instead of ^C to bring down the server
 if [ "$1" = "start" ] ; then 
   shift 
-  echo Using classpath: ${CLASSPATH}
-  echo Using JAVA_HOME: ${JAVA_HOME}
-  echo Using TOMCAT_HOME: ${TOMCAT_HOME}
 
   #Old code for -security: -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy 
   # not needed, java starter will do that automatically
@@ -136,14 +142,17 @@ if [ "$1" = "start" ] ; then
 
   if [ "$1" = "-noout" ] ; then
     shift
-    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" >${TOMCAT_HOME}/stdout.log 2>&1 &
+    $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" >${TOMCAT_HOME}/logs/stdout.log 2>&1 &
   else
+    echo Using classpath: ${CLASSPATH}
+    echo Using JAVA_HOME: ${JAVA_HOME}
+    echo Using TOMCAT_HOME: ${TOMCAT_HOME}
     $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  $MAIN "$@" &
   fi
 
 
   JAVA_PID=$!
-  echo $JAVA_PID > ${TOMCAT_HOME}/conf/tomcat.pid
+  echo $JAVA_PID > ${TOMCAT_HOME}/logs/tomcat.pid
 
   # Wait for ajp12.id signaling end of startup
   if [ ! "$WAIT" = "0" ] ; then 
@@ -151,7 +160,7 @@ if [ "$1" = "start" ] ; then
         sleep 1
 
         WAIT=`expr $WAIT - 1`
-        if [ "$i" = "0" ] ; then
+        if [ "$WAIT" = "0" ] ; then
             echo "Tomcat was no ready after 120 seconds, giving up waiting "
 	    break;
         fi
@@ -165,6 +174,11 @@ elif [ "$1" = "stop" ] ; then
   echo Using TOMCAT_HOME: ${TOMCAT_HOME}
   CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/stop-tomcat.jar
   $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.StopTomcat "$@"
+
+  if [ "$1" = "-force" ] ; then
+    shift
+    kill -9 `cat $TOMCAT_HOME/logs/tomcat.pid`
+  fi
 
 elif [ "$1" = "run" ] ; then 
   shift 
