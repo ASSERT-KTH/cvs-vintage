@@ -22,7 +22,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.message.HeaderInterface;
+import org.columba.ristretto.message.Header;
 
 /**
  * @author freddy
@@ -68,7 +68,7 @@ public class HeaderfieldFilter extends AbstractFilter {
 		throws Exception {
 
 		// get message header
-		ColumbaHeader header = folder.getMessageHeader(uid);
+		Header header = folder.getHeaderFields( uid, new String[] {(String) args[0] });
 		if (header == null)
 			return false;
 
