@@ -350,6 +350,20 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Load anonymous user                                                -->
+    <!-- ================================================================== -->
+    <target name="load-anonymous-user-data" depends="create-db-schema">
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${database.instance.sql.dir}/${project}-anonymous.sql"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Load seed data unless bypassed by setting "skip.seed.data"         -->
     <!-- to any value in "build.properties"                                 -->
     <!-- ================================================================== -->
@@ -383,6 +397,6 @@
     <!-- ================================================================== -->
     <!-- Create DB from Torque                                              -->
     <!-- ================================================================== -->
-    <target name="create-db" depends="clean,load-seed-data"/>
+    <target name="create-db" depends="clean,load-seed-data,load-anonymous-user-data"/>
 
 </project>

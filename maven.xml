@@ -19,6 +19,8 @@
     <goal name="scarab:database">
         <i:ask question="Please enter the adminstrator username to use:" 
             answer="askAdminstratorUsername" default="administrator"/>
+        <i:ask question="Please enter the anonymous username to use:" 
+            answer="askAnonymousUsername" default="${scarab.anonymous.username}"/>
         <i:ask question="Please enter the database type to use {mysql,hypersonic,postgres,db2,oracle,mssql}:" 
             answer="mavenDatabaseType" default="mysql"/>            
         <j:set var="scarab.database.type" value="${mavenDatabaseType}"/>                    
@@ -48,6 +50,8 @@
         <ant:filterset id="scarab.sql.filter">
             <ant:filter token="ADMIN_USERNAME" 
                 value="${askAdminstratorUsername}" />
+            <ant:filter token="ANONYMOUS_USERNAME" 
+                value="${askAnonymousUsername}" />
             <ant:filter token="SCARAB_MODULE_CODE_LENGTH" 
                 value="${scarab.module.code.length}" />
             <ant:replacestring from="integer (1)" to="integer"/>
@@ -76,6 +80,11 @@
         
         <attainGoal name="scarab:load-default-data"/>
         <attainGoal name="scarab:load-sample-data"/>
+
+        <!-- experimental: generate the anonymous user[HD] -->
+        <attainGoal name="scarab:load-anonymous-user"/>
+        <!-- experimental:end[HD] -->
+        
     </goal>
     
     <goal name="scarab:load-default-data">
@@ -109,7 +118,15 @@
             <transaction src="${torque.sql.dir}/scarab-required-data.sql"/>
             <transaction src="${torque.sql.dir}/scarab-default-data.sql"/>
             <transaction src="${torque.sql.dir}/scarab-security.sql"/>
-
+        </sql>
+    </goal>
+    
+    <goal name="scarab:load-anonymous-user">
+        <sql driver="${torque.database.driver}" 
+            url="${torque.database.buildUrl}" userid="${torque.database.user}" 
+            password="${torque.database.password}">
+            <classpath refid="maven.dependency.classpath"/>
+            <transaction src="${torque.sql.dir}/scarab-anonymous.sql"/>
         </sql>
     </goal>
     
@@ -119,7 +136,7 @@
             driver="${torque.database.driver}"
             url="${torque.database.buildUrl}"
             userid="${torque.database.user}"
-            password="${torque.database.password}">
+            password="${torque.database.password}"
             transaction src="${torque.sql.dir}/scarab-sample-data.sql
         </echo>/>
 

@@ -391,12 +391,17 @@
     </target>
     <!-- ================================================================== -->
 
+    <target name="prepare-create-db">
+      <copy file="${src.conf.dir}/conf/build-torque.xml" 
+       tofile="build-torque.xml"
+       filtering="true" overwrite="true"/>
+    </target>
 
     <!-- ================================================================== -->
     <!-- Create database                                              -->
     <!-- ================================================================== -->
-    <target name="create-db">
-
+    <target name="create-db" depends="prepare-create-db">
+    
         <ant antfile="${runtime.config.dir}/build-database.xml"
              target="create-db" inheritAll="true">
             <property name="webapp.dir" value="${build.project}"/>
