@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.20 $
+ *  @version $Revision: 1.21 $
  */
 public class TxManager
 implements TransactionManager
@@ -267,7 +267,7 @@ implements TransactionManager
     */
    void releaseTxCapsule(TxCapsule txCapsule)
    {
-      activeCapsules.remove(txCapsule);
+      activeCapsules.remove(txCapsule.getXid());
 
       SoftReference ref = new SoftReference(txCapsule);
       synchronized (inactiveCapsules) {

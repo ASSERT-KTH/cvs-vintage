@@ -43,7 +43,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -188,6 +188,11 @@ class TxCapsule implements TimeoutTarget
    }
 
    // Package protected ---------------------------------------------
+
+   XidImpl getXid()
+   {
+	  return xid;
+   }
 
    /**
     *  Import a transaction encapsulated here.
