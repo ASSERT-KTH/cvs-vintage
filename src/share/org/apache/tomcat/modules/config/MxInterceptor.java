@@ -1,4 +1,4 @@
-/* $Id: MxInterceptor.java,v 1.3 2002/09/18 07:57:09 hgomez Exp $
+/* $Id: MxInterceptor.java,v 1.4 2002/09/19 07:58:07 hgomez Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -76,6 +76,9 @@ public class MxInterceptor  extends BaseInterceptor {
 	MBeanServer 	mserver;
     private int 	port=-1;
     private String host;
+    private String	auth;
+    private String user;
+    private String password;
 	
     // -------------------- Tomcat callbacks --------------------
 
@@ -118,6 +121,23 @@ public class MxInterceptor  extends BaseInterceptor {
         return host;
     }
 
+    public void setAuthentification( String auth ) {
+    	if ("none".equals(auth) || "basic".equals(auth) || "digest".equals(auth))
+        	this.auth=auth;
+    }
+
+    public String getAuthentification() {
+        return auth;
+    }
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
     /* ==================== Start/stop ==================== */
     ObjectName serverName=null;
     
@@ -133,7 +153,10 @@ public class MxInterceptor  extends BaseInterceptor {
                 mserver.setAttribute(serverName, new Attribute("Host", host));
             
             mserver.setAttribute(serverName, new Attribute("Port", new Integer(port)));
-            
+
+            if( auth!=null && user!=null && password!=null) 
+                mserver.setAttribute(serverName, new Attribute("AuthenticationMethod", auth));
+                        
            	ObjectName processorName = new ObjectName("Http:name=XSLTProcessor");
             mserver.createMBean("mx4j.adaptor.http.XSLTProcessor", processorName, null);
 			mserver.setAttribute(serverName, new Attribute("ProcessorName", processorName));
