@@ -7,9 +7,10 @@
 package org.jboss.jmx.service;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.MalformedURLException;
-   
+
 import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanException;
@@ -21,7 +22,7 @@ import javax.management.RuntimeErrorException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.jmx.connector.rmi.JMXConnector;
+import org.jboss.jmx.connector.JMXConnector;
 
 /**
 * A JMX client to deploy an application into a running JBoss server.
@@ -30,7 +31,7 @@ import org.jboss.jmx.connector.rmi.JMXConnector;
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class Deployer
 {

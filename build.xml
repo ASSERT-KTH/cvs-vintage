@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.26 2001/09/12 02:10:23 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.27 2001/09/12 20:41:48 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -445,7 +445,6 @@ os.version:      ${os.version}
 
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionFactoryImpl.class"/>
       <include name="org/jboss/tm/usertx/server/UserTransactionSessionImpl.class"/>
-      <include name="org/jboss/jmx/server/JMXAdaptorImpl.class"/>
       <include name="org/jboss/jmx/connector/ejb/EJBConnector*Listener.class"/>
       <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl.class"/>
       <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*Listener.class"/>
@@ -670,21 +669,17 @@ os.version:      ${os.version}
     <jar jarfile="${build.lib}/deploy.jar"
          manifest="${build.etc}/deploy.mf">
       <fileset dir="${build.classes}">
-         <include name="org/jboss/jmx/client/Deployer.class"/>
-         <include name="org/jboss/jmx/interfaces/JMXAdaptor.class"/>
-         <include name="org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"/>
-         <include name="org/jboss/ejb/CacheKey.class"/>
-         <include name="org/jboss/util/FastKey.class"/>
-      </fileset>
-    </jar>
-
-    <!-- Build stop.jar -->
-    <jar jarfile="${build.lib}/stop.jar"
-         manifest="${build.etc}/stop.mf">
-      <fileset dir="${build.classes}">
-         <include name="org/jboss/jmx/client/Stop.class"/>
-         <include name="org/jboss/jmx/interfaces/JMXAdaptor.class"/>
-         <include name="org/jboss/jmx/server/JMXAdaptorImpl_Stub.class"/>
+         <include name="org/jboss/jmx/service/Deployer.class"/>
+         <include name="org/jboss/jmx/connector/JMXConnector**"/>
+         <include name="org/jboss/jmx/connector/notification/RMI**"/>
+         <include name="org/jboss/jmx/connector/rmi/RMIConnector.class"/>
+         <include name="org/jboss/jmx/connector/rmi/RMINotificationListener.class"/>
+         <include name="org/jboss/jmx/connector/rmi/RMIClientConnectorImpl*.class"/>
+         <include name="org/jboss/jmx/connector/rmi/RMIConnectorImpl_Stub.class"/>
+         <include name="org/jboss/jmx/connector/ConnectorFactory*.class"/>
+         <include name="org/jboss/system/Service.class"/>
+         <include name="org/jboss/system/ServiceMBean*.class"/>
+         <include name="org/jboss/logging/**"/>
          <include name="org/jboss/ejb/CacheKey.class"/>
          <include name="org/jboss/util/FastKey.class"/>
       </fileset>
