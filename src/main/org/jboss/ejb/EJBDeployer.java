@@ -8,23 +8,10 @@
 package org.jboss.ejb;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import javax.management.MBeanException;
-import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import javax.management.RuntimeMBeanException;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.transaction.TransactionManager;
 
 import org.apache.log4j.NDC;
 
@@ -34,19 +21,13 @@ import org.jboss.deployment.DeploymentException;
 
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceControllerMBean;
-import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.util.jmx.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
-import org.jboss.web.WebClassLoader;
-import org.jboss.web.WebServiceMBean;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.metadata.XmlLoadable;
-
-import org.w3c.dom.Element;
 
 /**
  * A EJBDeployer is used to deploy EJB applications. It can be given a
@@ -59,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.30 $</tt>
+ * @version <tt>$Revision: 1.31 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -316,8 +297,6 @@ public class EJBDeployer
    public synchronized void create(DeploymentInfo di)
       throws DeploymentException
    {
-      boolean debug = log.isDebugEnabled();
-
       try
       {
          // Create a file loader with which to load the files
