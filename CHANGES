@@ -1,3 +1,19 @@
+Columba v1.0 M1.1
+
+Bugs:
+- wasn't able to enter chinese or other more advanced character sets in
+  composer subject textfield (forum member Turbo Chen)
+- fixed garbage appended to larger messages (tstich)
+- fixed problems with \n lineendings which should be converted 
+  to \r\n when sending (cburkey/tstich)
+- fixed wheel mouse scrolling support in message viewer (fdietz)
+- fixed SMTP SSL enabling/disabling configuration bug (karlpeder)
+- fixed JavaWebstart problems with forms.jar and JavaHelp support (fdietz)
+- cleanup of toolbar options (javaprog)
+- nicer handling of plugin loader exceptions (fdietz)
+- cleanup of external tools plugin method signature (javaprog)
+- more i18n cleanups (javaprog)
+
 Columba v1.0 M1 ::Black Mamba::
 
 Bugs:
