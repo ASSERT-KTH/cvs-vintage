@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.27 2000/10/05 06:18:13 larryi Exp $
- * $Revision: 1.27 $
- * $Date: 2000/10/05 06:18:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.28 2000/10/05 22:46:56 larryi Exp $
+ * $Revision: 1.28 $
+ * $Date: 2000/10/05 22:46:56 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -373,7 +373,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
             } else if (tname.equals("uri")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
-                    this.uri = t.getData();
+                    this.urn = t.getData();
             } else if (tname.equals("info")) {
                 Text t = (Text) e.getFirstChild();
                 if (t != null)
