@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.23 2003/01/03 21:12:05 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.24 2003/01/06 00:57:51 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -177,6 +177,9 @@ public abstract class OptionsDialog extends EnhancedDialog
 		optionPane.init();
 
 		((CardLayout)cardPanel.getLayout()).show(cardPanel, name);
+
+		// workaround...
+		addNotify();
 
 		Dimension currentSize = getSize();
 		Dimension requestedSize = getPreferredSize();
