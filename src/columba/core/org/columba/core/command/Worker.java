@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,35 +10,39 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
 package org.columba.core.command;
 
+import java.net.SocketException;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Logger;
+
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.util.SwingWorker;
 
-import java.util.List;
-import java.util.Vector;
-import java.util.logging.Logger;
-
 /**
- * Worker additionally sends status information updates to the {@link TaskManager}.
+ * Worker additionally sends status information updates to the
+ * {@link TaskManager}.
  * <p>
  * This updates get displayed in the StatusBar.
  * <p>
- * Note that {@link Command}objects get {@link Worker}objects only 
- * when executed.
- *
+ * Note that {@link Command}objects get {@link Worker}objects only when
+ * executed.
+ * 
  * @author fdietz
  */
 public class Worker extends SwingWorker implements WorkerStatusController {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.command");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.core.command");
 
     /**
      * Constant definining the delay used when using
@@ -91,24 +96,25 @@ public class Worker extends SwingWorker implements WorkerStatusController {
         op.releaseAllFolderLocks(operationMode);
     }
 
-    /*
-     * private void setWorkerStatusController() { FolderController[] controller = op.getFolderLocks(); int size = Array.getLength(controller);
-     *
-     * for( int i=0; i <size; i++ ) { controller[i].setWorkerStatusController(this); } }
+    /**
+     * Method runs in background. Every Command.execute method is wrapped here.
+     * <p>
+     * All general exceptions are caught here, nice error dialogs shown to the
+     * users.
+     * 
+     * @see org.columba.core.util.SwingWorker#construct()
      */
     public Object construct() {
-        //setWorkerStatusController();
+
         try {
             op.process(this, operationMode);
 
         } catch (CommandCancelledException e) {
             LOG.info("Command cancelled: " + this);
         } catch (Exception e) {
-            // Must create a ExceptionProcessor
-            e.printStackTrace();
 
-            new ExceptionDialog(e);
-
+            // exception handler should handle all error handling stuff
+            new ExceptionHandler().processException(e);
         }
 
         returnLocks(operationMode);
@@ -137,7 +143,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     public void unregister() {
         taskManager.unregister(threadVar);
 
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+                getTimeStamp());
         e.setType(WorkerStatusChangedEvent.FINISHED);
         fireWorkerStatusChanged(e);
         workerStatusChangeListeners.clear();
@@ -148,11 +155,13 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     /**
      * Sets the maximum value for the progress bar.
-     *
-     * @param max New max. value for progress bar
+     * 
+     * @param max
+     *            New max. value for progress bar
      */
     public void setProgressBarMaximum(int max) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+                getTimeStamp());
         e.setType(WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED);
         e.setOldValue(new Integer(progressBarMax));
 
@@ -164,11 +173,13 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     /**
      * Sets the current value of the progress bar.
-     *
-     * @param value New current value of progress bar
+     * 
+     * @param value
+     *            New current value of progress bar
      */
     public void setProgressBarValue(int value) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+                getTimeStamp());
         e.setType(WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED);
         e.setOldValue(new Integer(progressBarValue));
 
@@ -179,8 +190,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     }
 
     /**
-     * Sets the progress bar value to zero, i.e. clears the progress bar.
-     * This is the same as calling setProgressBarValue(0)
+     * Sets the progress bar value to zero, i.e. clears the progress bar. This
+     * is the same as calling setProgressBarValue(0)
      */
     public void resetProgressBar() {
         setProgressBarValue(0);
@@ -209,11 +220,13 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     /**
      * Set the text to be displayed in the status bar
-     *
-     * @param text Text to display in status bar
+     * 
+     * @param text
+     *            Text to display in status bar
      */
     public void setDisplayText(String text) {
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+                getTimeStamp());
         e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED);
         e.setOldValue(displayText);
 
@@ -231,9 +244,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     }
 
     /**
-     * Clears the text displayed in the status bar - with a given delay.
-     * The delay used is 500 ms.
-     * <br>
+     * Clears the text displayed in the status bar - with a given delay. The
+     * delay used is 500 ms. <br>
      * If a new text is set within this delay, the text is not cleared.
      */
     public void clearDisplayTextWithDelay() {
@@ -241,14 +253,16 @@ public class Worker extends SwingWorker implements WorkerStatusController {
     }
 
     /**
-     * Clears the text displayed in the status bar - with a given delay.
-     * If a new text is set within this delay, the text is not cleared.
-     *
-     * @param delay Delay in milliseconds before clearing the text
+     * Clears the text displayed in the status bar - with a given delay. If a
+     * new text is set within this delay, the text is not cleared.
+     * 
+     * @param delay
+     *            Delay in milliseconds before clearing the text
      */
     private void clearDisplayText(int delay) {
         // init event
-        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
+        WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(
+                getTimeStamp());
         e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED);
 
         // "new value" is used to pass on the delay
@@ -277,7 +291,8 @@ public class Worker extends SwingWorker implements WorkerStatusController {
         // it.hasNext();) {
         // ((WorkerStatusChangeListener) it.next()).workerStatusChanged(e);
         for (int i = 0; i < workerStatusChangeListeners.size(); i++) {
-            ((WorkerStatusChangeListener) workerStatusChangeListeners.get(i)).workerStatusChanged(e);
+            ((WorkerStatusChangeListener) workerStatusChangeListeners.get(i))
+                    .workerStatusChanged(e);
         }
     }
 
@@ -291,7 +306,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
     /**
      * Returns the timeStamp.
-     *
+     * 
      * @return int
      */
     public int getTimeStamp() {
