@@ -36,6 +36,8 @@ Remote address: <%= request.getRemoteAddr() %>
 Remote host: <%= request.getRemoteHost() %>
 <br>
 Authorization scheme: <%= request.getAuthType() %> 
+<br>
+Locale: <%= request.getLocale() %>
 <hr>
 The browser you are using is <%= request.getHeader("User-Agent") %>
 <hr>
