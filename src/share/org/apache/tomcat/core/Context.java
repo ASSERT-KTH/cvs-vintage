@@ -136,6 +136,7 @@ public class Context {
     private RequestSecurityProvider rsProvider;
 
     private Vector contextInterceptors = new Vector();
+    private Vector requestInterceptors = new Vector();
     
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
@@ -423,76 +424,6 @@ public class Context {
     public void setIsWARValidated(boolean isWARValidated) {
         this.isWARValidated = isWARValidated;
     }
-
-    
-    /**
-     * Adds an interceptor for init() method.
-     * If Interceptors a, b and c are added to a context, the
-     * implementation would guarantee the following call order:
-     * (no matter what happens, for eg.Exceptions ??)
-     *
-     * <P>
-     * <BR> a.preInvoke(...)
-     * <BR> b.preInvoke(...)
-     * <BR> c.preInvoke(...)
-     * <BR> init()
-     * <BR> c.postInvoke(...)
-     * <BR> b.postInvoke(...)
-     * <BR> a.postInvoke(...)
-     */
-    public void addInitInterceptor(LifecycleInterceptor interceptor) {
-	initInterceptors.addElement(interceptor);
-    }
-
-    /**
-     * Adds an interceptor for destroy() method.
-     * If Interceptors a, b and c are added to a context, the
-     * implementation would guarantee the following call order:
-     * (no matter what happens, for eg.Exceptions ??)
-     *
-     * <P>
-     * <BR> a.preInvoke(...)
-     * <BR> b.preInvoke(...)
-     * <BR> c.preInvoke(...)
-     * <BR> destroy()
-     * <BR> c.postInvoke(...)
-     * <BR> b.postInvoke(...)
-     * <BR> a.postInvoke(...)
-     */
-    public void addDestroyInterceptor(LifecycleInterceptor interceptor) {
-	destroyInterceptors.addElement(interceptor);
-    }
-
-    /**
-     * Adds an interceptor for service() method.
-     * If Interceptors a, b and c are added to a context, the
-     * implementation would guarantee the following call order:
-     * (no matter what happens, for eg.Exceptions ??)
-     *
-     * <P>
-     * <BR> a.preInvoke(...)
-     * <BR> b.preInvoke(...)
-     * <BR> c.preInvoke(...)
-     * <BR> service()
-     * <BR> c.postInvoke(...)
-     * <BR> b.postInvoke(...)
-     * <BR> a.postInvoke(...)
-     */
-    public void addServiceInterceptor(ServiceInterceptor interceptor) {
-	serviceInterceptors.addElement(interceptor);
-    }
-
-    Vector getInitInterceptors() {
-	return initInterceptors;
-    }
-
-    Vector getDestroyInterceptors() {
-	return destroyInterceptors;
-    }
-
-    Vector getServiceInterceptors() {
-	return serviceInterceptors;
-    }
     
     /**
      * Initializes this context to take on requests. This action
@@ -518,8 +449,44 @@ public class Context {
 	contextInterceptors.addElement( ci );
     }
 
-    public Enumeration getContextInterceptors() {
-	return contextInterceptors.elements();
+    ContextInterceptor cInterceptors[];
+
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public ContextInterceptor[] getContextInterceptors() {
+	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
+	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
+	    for( int i=0; i<cInterceptors.length; i++ ) {
+		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
+	    }
+	}
+	return cInterceptors;
+    }
+
+    public void addRequestInterceptor( RequestInterceptor ci) {
+	requestInterceptors.addElement( ci );
+    }
+
+    RequestInterceptor rInterceptors[];
+    
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public RequestInterceptor[] getRequestInterceptors() {
+	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
+	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
+	    for( int i=0; i<rInterceptors.length; i++ ) {
+		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
+	    }
+	}
+	return rInterceptors;
     }
 
     public SessionManager getSessionManager() {
@@ -862,10 +829,10 @@ public class Context {
     }
 
     public ServletWrapper getServletMapping( String path ) {
-	return mappings.get(path);
+	return (ServletWrapper)mappings.get(path);
     }
 
-    public void removeMapping( String path ) {
+    public void removeMappingNew( String path ) {
 	log( "Removing " + path + " -> " + mappings.get(path) );
 	mappings.remove( path );
     }

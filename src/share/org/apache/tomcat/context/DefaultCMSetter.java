@@ -127,8 +127,8 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
 
 	// If no ContextInterceptors are set up use defaults
-	Enumeration enum=ctx.getContextInterceptors();
-	if( ! enum.hasMoreElements() ) {
+	ContextInterceptor cI[]=ctx.getContextInterceptors();
+	if( cI.length==0 ) {
 	    // set up work dir ( attribute + creation )
 	    ctx.addContextInterceptor(new WorkDirInterceptor());
 	    

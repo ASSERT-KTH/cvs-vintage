@@ -158,12 +158,12 @@ public class Startup {
 		// Register the global service and lifecycle interceptors
 		// with each new context
 		for (Enumeration e=contextConfig.getServiceInterceptors();e.hasMoreElements(); ) {
-		    context.addServiceInterceptor((ServiceInterceptor)e.nextElement());
+		    InterceptorAdapter.addServiceInterceptor(context, (ServiceInterceptor)e.nextElement());
 		}
 		for (Enumeration e=contextConfig.getLifecycleInterceptors();e.hasMoreElements(); ) {
 		    LifecycleInterceptor interceptor=(LifecycleInterceptor)e.nextElement();
-		    context.addInitInterceptor(interceptor);
-		    context.addDestroyInterceptor(interceptor);
+		    InterceptorAdapter.addInitInterceptor(context, interceptor);
+		    InterceptorAdapter.addDestroyInterceptor(context, interceptor);
 		}                 
 
 	    }
