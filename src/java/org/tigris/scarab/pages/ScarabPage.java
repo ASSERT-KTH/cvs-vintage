@@ -60,16 +60,16 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImpl;
 
+//import org.tigris.scarab.om.ScarabUserImpl;
 
 /**
-    This class is responsible for building the Context up
-    for the Default Page.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.14 2001/10/08 04:08:22 jon Exp $
-*/
+ * This class is responsible for building the Context up
+ * for the Default Page.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ScarabPage.java,v 1.15 2001/10/24 06:09:40 jon Exp $
+ */
 public class ScarabPage extends ClassicPipeline
 {
     /**
@@ -97,7 +97,8 @@ public class ScarabPage extends ClassicPipeline
         ScarabRequestTool scarabR = (ScarabRequestTool)
             context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-        // create a fake user for now          
+        // create a fake user for now
+        /*
         if ( data.getUser() == null ) 
         {
             ScarabUser user = (ScarabUser) TurbineSecurity.getAnonymousUser();
@@ -107,6 +108,7 @@ public class ScarabPage extends ClassicPipeline
             scarabR.setUser(user);
             data.setUser(user);
         }
+        */
     }
 
     // a temporary fix for losing TemplateInfo !FIXME!
@@ -119,5 +121,4 @@ public class ScarabPage extends ClassicPipeline
         }
         return temp;
     }
-
 }
