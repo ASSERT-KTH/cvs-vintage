@@ -120,4 +120,29 @@
         </init-param>
     </servlet>          
 
+
+    <security-constraint>
+      <web-resource-collection>
+         <web-resource-name>a<web-resource-name>
+         <url-pattern>/foo/*</url-pattern>
+         <url-pattern>/bar/*</url-pattern>
+         <http-method>GET</http-method>
+         <http-method>POST</http-method>
+      </web-resource-collection>
+
+      <web-resource-collection>
+         <web-resource-name>a<web-resource-name>
+         <url-pattern>/foo1/*</url-pattern>
+         <url-pattern>/bar1/*</url-pattern>
+      </web-resource-collection>
+
+      <auth-constraint>
+         <role-name>manager</role-name>
+         <role-name>role1</role-name>
+      </auth-constraint>
+
+      <user-data-constraint>
+         <transport-guarantee>CONFIDENTIAL<transport-guarantee>
+      </user-data-constraint>
+    </security-constraint>
 </web-app>

@@ -144,6 +144,36 @@ public class LogEvents extends BaseInterceptor {
 	ctx.log( "Remove mapping ");
     }
 
+    /** 
+     */
+    public void addSecurityConstraint( Context ctx, String path[], String methods[],
+				       String transport, String roles[] )
+	throws TomcatException
+    {
+	StringBuffer sb=new StringBuffer();
+	sb.append("Add security constraint ");
+	if( methods!=null ) {
+	    sb.append("Methods: ");
+	    for( int i=0; i< methods.length; i++ ) {
+		sb.append(" " + methods[i]);
+	    }
+	}
+	if( path!=null) {
+	    sb.append(" Paths: ");
+	    for( int i=0; i< path.length; i++ ) {
+		sb.append(" " + path[i]);
+	    }
+	}
+	if( roles!=null) {
+	    sb.append(" Roles: ");
+	    for( int i=0; i< roles.length; i++ ) {
+		sb.append(" " + roles[i]);
+	    }
+	}
+	sb.append(" Transport " + transport );
+	ctx.log(sb.toString());
+    }
+
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {

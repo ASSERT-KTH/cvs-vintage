@@ -101,7 +101,7 @@ public class WarWebXmlInterceptor extends BaseInterceptor implements ContextInte
 		s = s.substring(0, s.length() - 1);
 	    
 	    URL webURL = null;
-	    webURL = new URL(s + "!/" + Constants.Context.ConfigFile);
+	    webURL = new URL(s + "!/WEB-INF/web.xml"  );
 	    
 	    InputStream is = webURL.openConnection().getInputStream();
 	    

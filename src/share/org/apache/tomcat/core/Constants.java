@@ -91,70 +91,54 @@ public class Constants {
 
     public static final String LOCALE_DEFAULT="en";
     
-    public static class Context {
-        public static final String WebInfDir = "WEB-INF";
-        public static final String WARInfDir = "META-INF";
-        public static final String ConfigFile = WebInfDir + "/web.xml";
-        public static final String WARExpandDir = "docBase";
+//         public static final String ConfigFile = WebInfDir + "WEB-INF/web.xml";
+//         public static final String WARExpandDir = "docBase";
 
-        public static final String[] MASKED_DIR = {
-            WebInfDir,
-            WARInfDir
-        };
-    }
 
-    public static class Property {
-        public static final String Name = "core.properties";
-        public static final String EngineHeader = "engine.header";
-        public static final String MimeType = "mimeType";
-    }
+//     public static class Property {
+//         public static final String Name = "core.properties";
+//         public static final String EngineHeader = "engine.header";
+//         public static final String MimeType = "mimeType";
+//     }
 
-    public static class Cookie {
-        public static final String SESSION_COOKIE_NAME = "JSESSIONID";
-    }
 
     //	        "org.apache.tomcat.core.DefaultServlet";
 
-    public static class JSP {
-        public static final String NAME = "jsp";
-	public static final String CLASSNAME = "org.apache.jasper.runtime.JspServlet";
+    // 	public static final String JSP_CLASSNAME = "org.apache.jasper.runtime.JspServlet";
      
-        public static class Directive {
-            public static class Compile {
-                public static final String Name = "jsp_precompile";
-                public static final String Value = "true";
-            }
-        }
-    }
 
 
-    public static class Attribute {
-        public static final String RequestURI =
-            "javax.servlet.include.request_uri";
-        public static final String ServletPath =
-            "javax.servlet.include.servlet_path";
-        public static final String PathInfo =
-            "javax.servlet.include.path_info";
-        public static final String QueryString =
-            "javax.servlet.include.query_string";
-        public static final String Dispatch =
-            "javax.servlet.dispatch.request_uri";
-        public static final String ERROR_EXCEPTION_TYPE =
-            "javax.servlet.error.exception_type";
-        public static final String ERROR_MESSAGE =
-            "javax.servlet.error.message";
-        public static final String RESOLVED_SERVLET =
-            "org.apache.tomcat.servlet.resolved";
-    }
+    public static final String ATTRIBUTE_RequestURI =
+	"javax.servlet.include.request_uri";
+    public static final String ATTRIBUTE_ServletPath =
+	"javax.servlet.include.servlet_path";
+    public static final String ATTRIBUTE_PathInfo =
+	"javax.servlet.include.path_info";
+    public static final String ATTRIBUTE_QueryString =
+	"javax.servlet.include.query_string";
+    public static final String ATTRIBUTE_Dispatch =
+	"javax.servlet.dispatch.request_uri";
+    public static final String ATTRIBUTE_ERROR_EXCEPTION_TYPE =
+	"javax.servlet.error.exception_type";
+    public static final String ATTRIBUTE_ERROR_MESSAGE =
+	"javax.servlet.error.message";
+    public static final String ATTRIBUTE_RESOLVED_SERVLET =
+	"org.apache.tomcat.servlet.resolved";
+    
+    public static final String WEB_XML_PublicId =
+	"-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
+    public static final String WEB_XML_Resource =
+	"/org/apache/tomcat/deployment/web.dtd";
 
-    public static class ContentType {
-        public static final String Default = "text/plain";
-        public static final String HTML = "text/html";
-        public static final String Plain = Default;
-    }
+    public static final String HTML = "text/html";
 
-    public static class CharacterEncoding {
-        public static final String Default = "8859_1";
-    }
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
+    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+
+
+    // deprecated
+    public static final String[] MASKED_DIR = {
+	"META-INF","WEB-INF"
+    };
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.13 2000/02/03 07:11:52 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/02/03 07:11:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.14 2000/02/14 04:59:39 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/02/14 04:59:39 $
  *
  * ====================================================================
  *
@@ -85,9 +85,9 @@ public class ResponseImpl implements Response {
     protected Request request;
     protected HttpServletResponseFacade responseFacade;
     protected Vector userCookies = new Vector();
-    protected String contentType = Constants.ContentType.Default;
+    protected String contentType = Constants.DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
-    protected String characterEncoding = Constants.CharacterEncoding.Default;
+    protected String characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
     protected String sessionId;
     protected int contentLength = -1;
     protected int status = 200;
@@ -130,9 +130,9 @@ public class ResponseImpl implements Response {
 
     public void recycle() {
 	userCookies.removeAllElements();
-	contentType = Constants.ContentType.Default;
+	contentType = Constants.DEFAULT_CONTENT_TYPE;
         locale = new Locale(Constants.LOCALE_DEFAULT, "");
-	characterEncoding = Constants.CharacterEncoding.Default;
+	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
 	headers.clear();
@@ -250,9 +250,9 @@ public class ResponseImpl implements Response {
         // stream before resetting the output stream
         //
 	userCookies.removeAllElements();  // keep system (session) cookies
-	contentType = Constants.ContentType.Default;
+	contentType = Constants.DEFAULT_CONTENT_TYPE;
         locale = new Locale(Constants.LOCALE_DEFAULT, "");
-	characterEncoding = Constants.CharacterEncoding.Default;
+	characterEncoding = Constants.DEFAULT_CHAR_ENCODING;
 	contentLength = -1;
 	status = 200;
 
@@ -410,7 +410,7 @@ public class ResponseImpl implements Response {
     public void doWrite( byte buffer[], int pos, int count) throws IOException {
         // XXX fix if charset is other than default.
         body.append(new String(buffer, pos, count, 
-                    Constants.CharacterEncoding.Default) );
+                    Constants.DEFAULT_CHAR_ENCODING) );
     }
 
     public StringBuffer getBody() {

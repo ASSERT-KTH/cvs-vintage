@@ -641,7 +641,6 @@ class  MethodSetter extends 	    XmlAction {
 	    }
 	}
 
-	//	System.out.println(" XXX  " + parent.getClass().getName() + " " + mName + " " + paramT[0]);
 	Method m=parent.getClass().getMethod( mName, paramT );
 	m.invoke( parent, realParam );
 	    

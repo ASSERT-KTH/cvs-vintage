@@ -40,6 +40,7 @@
         <!-- Request processing -->
         <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" />
         <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
+        <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
 
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
             <Parameter name="port" value="8080"/>

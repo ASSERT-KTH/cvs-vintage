@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Ascii.java,v 1.1 1999/10/09 00:20:55 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Ascii.java,v 1.2 2000/02/14 04:59:42 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/14 04:59:42 $
  *
  * ====================================================================
  *
@@ -192,7 +192,7 @@ public class Ascii {
 
 	if (b == null || len <= 0 || !isDigit(c = b[off++])) {
             StringManager sm =
-                StringManager.getManager(Constants.Package);
+                StringManager.getManager("org.apache.tomcat.util");
             String msg = sm.getString("ascii.parseInit.nfe", b);
 
 	    throw new NumberFormatException(msg);
@@ -203,7 +203,7 @@ public class Ascii {
 	while (--len > 0) {
 	    if (!isDigit(c = b[off++])) {
                 StringManager sm =
-                    StringManager.getManager(Constants.Package);
+                    StringManager.getManager("org.apache.tomcat.util");
                 String msg = sm.getString("ascii.parseInit.nfe", b);
 
 		throw new NumberFormatException(msg);

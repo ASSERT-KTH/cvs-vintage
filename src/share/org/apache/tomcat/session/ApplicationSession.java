@@ -79,7 +79,7 @@ import javax.servlet.http.*;
 public class ApplicationSession implements HttpSession {
 
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.session");
     private Hashtable values = new Hashtable();
     private String id;
     private ServerSession serverSession;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.3 2000/01/26 17:45:10 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/26 17:45:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.4 2000/02/14 04:59:41 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/14 04:59:41 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2000/01/26 17:45:10 $
+ * @version $Revision: 1.4 $ $Date: 2000/02/14 04:59:41 $
  */
 
 final class StandardSession
@@ -180,7 +180,7 @@ final class StandardSession
      * The string manager for this package.
      */
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.session");
 
 
     /**

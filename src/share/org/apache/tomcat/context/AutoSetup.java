@@ -131,11 +131,11 @@ public class AutoSetup extends BaseInterceptor {
 	    
 	    if( cm.getContext(path) == null ) {
 		// if no explicit set up
-		System.out.println("Automatic addContext( " + path + ", webapps/" + name + ")");
 		Context ctx=new Context();
 		ctx.setContextManager( cm );
 		ctx.setPath(path);
 		ctx.setDocBase(  "webapps/" + name);
+		ctx.log("Automatic addContext webapps/" + name + ")");
 		cm.addContext(ctx);
 	    } else {
 		//System.out.println("Already set up: " + path + " " + cm.getContext(path));

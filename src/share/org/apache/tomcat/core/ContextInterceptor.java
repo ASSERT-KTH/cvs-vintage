@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.6 2000/02/12 03:38:50 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/12 03:38:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.7 2000/02/14 04:59:39 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/14 04:59:39 $
  *
  * ====================================================================
  *
@@ -115,6 +115,22 @@ public interface ContextInterceptor {
     /** Notify when a mapping is deleted  from  a context
      */
     public void removeMapping( Context ctx, String path ) throws TomcatException;
+
+    
+    /** Add a security restriction.
+     *
+     *  We treat the security-constraint as in Apache and most web servers,
+     *  and reverse from web.xml - instead of defining a set of roles and the
+     *  patterns that will be constrainted, we associate some constraints with
+     *  url patterns. ( i.e. path->constraint instead of constraint -> path-set )
+     *
+     *  XXX We should unify method + path
+     *  here and path in addMapping into UrlMatch and transport, roles and wrapper
+     *  under UrlAction ( or something like that ).
+     */
+    public void addSecurityConstraint( Context ctx, String path[], String methods[],
+				       String transport, String roles[] ) throws TomcatException;
+
 
     /** Servlet Init  notification
      */

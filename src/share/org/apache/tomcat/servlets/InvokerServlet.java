@@ -92,14 +92,14 @@ public class InvokerServlet extends HttpServlet {
     {
         String requestPath = request.getRequestURI();
 	String pathInfo = (String)request.getAttribute(
-            Constants.Attribute.PathInfo);
+            Constants.ATTRIBUTE_PathInfo);
 
 	if (pathInfo == null) {
 	    pathInfo = request.getPathInfo();
 	}
 
 	String includedRequestURI = (String)request.getAttribute(
-	    Constants.Attribute.RequestURI);
+	    Constants.ATTRIBUTE_RequestURI);
 	boolean inInclude = false;
 
 	// XXX XXX XXX in the new model we are _never_ inInclude
@@ -132,7 +132,7 @@ public class InvokerServlet extends HttpServlet {
 		    "/" + servletName;
 	    } else {
 		newServletPath = (String)request.getAttribute
-		    (Constants.Attribute.ServletPath)  + "/" +
+		    (Constants.ATTRIBUTE_ServletPath)  + "/" +
                     servletName;
 	    }
 	    
@@ -227,9 +227,9 @@ public class InvokerServlet extends HttpServlet {
 	    savedServletPath=realRequest.getServletPath();
 	} else {
 	    savedServletPath = (String)realRequest.getAttribute(
-			       Constants.Attribute.ServletPath);
+			       Constants.ATTRIBUTE_ServletPath);
 	    savedPathInfo = (String)realRequest.getAttribute(
-			       Constants.Attribute.PathInfo);
+			       Constants.ATTRIBUTE_PathInfo);
 	}
 	
 	if (! inInclude) {
@@ -238,19 +238,19 @@ public class InvokerServlet extends HttpServlet {
 	} else {
 	    if (newServletPath != null) {
 		realRequest.setAttribute(
-                    Constants.Attribute.ServletPath, newServletPath);
+                    Constants.ATTRIBUTE_ServletPath, newServletPath);
 	    }
 
 	    if (newPathInfo != null) {
 		realRequest.setAttribute(
-                    Constants.Attribute.PathInfo, newPathInfo);
+                    Constants.ATTRIBUTE_PathInfo, newPathInfo);
 	    }
 
 	    if (newPathInfo == null) {
 		// Can't store a null, so remove for same effect
 
 		realRequest.removeAttribute(
-                    Constants.Attribute.PathInfo);
+                    Constants.ATTRIBUTE_PathInfo);
 	    }
 	}
 
@@ -262,18 +262,18 @@ public class InvokerServlet extends HttpServlet {
 	} else {
 	    if (savedServletPath != null) {
 		realRequest.setAttribute(
-                    Constants.Attribute.ServletPath, savedServletPath);
+                    Constants.ATTRIBUTE_ServletPath, savedServletPath);
 	    } else {
 		realRequest.removeAttribute(
-                    Constants.Attribute.ServletPath);
+                    Constants.ATTRIBUTE_ServletPath);
 	    }
 
 	    if (savedPathInfo != null) {
 		realRequest.setAttribute(
-                    Constants.Attribute.PathInfo, savedPathInfo);
+                    Constants.ATTRIBUTE_PathInfo, savedPathInfo);
 	    } else {
 		realRequest.removeAttribute(
-                    Constants.Attribute.PathInfo);
+                    Constants.ATTRIBUTE_PathInfo);
 	    }
 	}
     }

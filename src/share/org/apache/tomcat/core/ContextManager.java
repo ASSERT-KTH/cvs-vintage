@@ -347,6 +347,16 @@ public class ContextManager {
 	}
     }
 
+    public void addSecurityConstraint( Context ctx, String path[], String methods[],
+				       String transport, String roles[] )
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addSecurityConstraint( ctx, path, methods, transport, roles );
+	}
+    }
+
 
     // -------------------- Connectors and Interceptors --------------------
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.2 2000/01/26 17:45:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/26 17:45:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SessionUtil.java,v 1.3 2000/02/14 04:59:43 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:43 $
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ package org.apache.tomcat.util;
 
 import javax.servlet.http.Cookie;
 import org.apache.tomcat.catalina.Request;
-
+import org.apache.tomcat.core.Constants;
 
 
 /**
@@ -75,7 +75,7 @@ import org.apache.tomcat.catalina.Request;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/01/26 17:45:10 $
+ * @version $Revision: 1.3 $ $Date: 2000/02/14 04:59:43 $
  */
 
 public final class SessionUtil {
@@ -103,7 +103,7 @@ public final class SessionUtil {
      */
     public static Cookie createCookie(Request req, String id) {
 
-	Cookie cookie = new Cookie(Constants.SESSION.COOKIE_NAME, id);
+	Cookie cookie = new Cookie(Constants.SESSION_COOKIE_NAME, id);
 	String serverName = req.getRequest().getServerName();
 	if (serverName != null)
 	    cookie.setDomain(serverName);
@@ -211,7 +211,7 @@ public final class SessionUtil {
 	if (cookies == null)
 	    return (null);
 	for (int i = 0; i < cookies.length; i++) {
-	    if (Constants.SESSION.COOKIE_NAME.equals(cookies[i].getName()))
+	    if (Constants.SESSION_COOKIE_NAME.equals(cookies[i].getName()))
 		return (cookies[i].getValue());
 	}
 	return (null);
@@ -230,7 +230,7 @@ public final class SessionUtil {
     public static String parseSessionId(String uri) {
 
 	// Search for the required match string in the URI
-	String match = ";" + Constants.SESSION.PARAMETER_NAME + "=";
+	String match = ";" + Constants.SESSION_PARAMETER_NAME + "=";
 	int m = uri.indexOf(match);
 	if (m < 0)
 	    return (null);
@@ -281,7 +281,7 @@ public final class SessionUtil {
 	else
 	    buf.append(url.substring(0, question));
 	buf.append(';');
-	buf.append(Constants.SESSION.PARAMETER_NAME);
+	buf.append(Constants.SESSION_PARAMETER_NAME);
 	buf.append('=');
 	buf.append(id);
 	if (question >= 0)

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.2 1999/10/24 16:53:21 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/24 16:53:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.3 2000/02/14 04:59:43 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:43 $
  *
  * ====================================================================
  *
@@ -101,7 +101,7 @@ import java.util.NoSuchElementException;
 public class MimeHeaders {
 
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.util");
 
     /**
      * The header fields.
@@ -594,7 +594,7 @@ public class MimeHeaders {
 
 class MimeHeadersEnumerator implements Enumeration {
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.util");
     private Hashtable hash;
     private Enumeration delegate;
 

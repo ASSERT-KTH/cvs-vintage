@@ -171,8 +171,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	String requestURI = path + "?jsp_precompile=true";
 	
 	request.setRequestURI(context.getPath() + path);
-	request.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
-			     Constants.JSP.Directive.Compile.Value );
+	request.setQueryString( "jsp_precompile=true" );
 	
 	request.setContext(context);
 	request.getSession(true);

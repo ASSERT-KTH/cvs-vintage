@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HttpDate.java,v 1.2 2000/01/08 21:31:41 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/08 21:31:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HttpDate.java,v 1.3 2000/02/14 04:59:42 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:42 $
  *
  * ====================================================================
  *
@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 import java.text.*;
+import org.apache.tomcat.core.Constants;
 
 /**
  * This class can be used to efficiently parse and write an RFC 1123
@@ -83,7 +84,7 @@ import java.text.*;
 public class HttpDate extends Ascii {
 
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.util");
 
     // ONLY FOR COMPAT -- KILL ASAP -- just make sure that dependant
     // classes know what's up. ref. MimeHeaderField
@@ -172,7 +173,7 @@ public class HttpDate extends Ascii {
         // ok -- so this is pretty stoopid, but the old version of this
         // source took this arg set, so we will too for now (backwards compat)
         try {
-            String dateString = new String(b, off, len, Constants.CharacterEncoding.Default);
+            String dateString = new String(b, off, len, Constants.DEFAULT_CHAR_ENCODING);
             parse(dateString);
         } catch (java.io.UnsupportedEncodingException e) {
             // It seems rather unlikely that the string encoding would ever fail...

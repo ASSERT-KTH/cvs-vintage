@@ -77,7 +77,7 @@ import javax.servlet.http.*;
 public class ServerSessionManager implements SessionManager {
 
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.session");
     private static ServerSessionManager manager; // = new ServerSessionManager();
 
     static {

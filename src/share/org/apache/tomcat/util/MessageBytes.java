@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.2 2000/01/09 17:24:41 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/09 17:24:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MessageBytes.java,v 1.3 2000/02/14 04:59:43 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:43 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.util;
 
 import java.io.OutputStream;
 import java.io.IOException;
+import org.apache.tomcat.core.Constants;
 
 /**
  * This class is used to represent a subarray of bytes in an HTTP message.
@@ -77,7 +78,7 @@ import java.io.IOException;
 public class MessageBytes extends Ascii {
 
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.util");
 
     /**
      * The message bytes.
@@ -178,7 +179,7 @@ public class MessageBytes extends Ascii {
         }
 
         try {
-            return new String(bytes, offset, length, Constants.CharacterEncoding.Default);
+            return new String(bytes, offset, length, Constants.DEFAULT_CHAR_ENCODING);
         } catch (java.io.UnsupportedEncodingException e) {
             return null;        // could return something - but why?
         }

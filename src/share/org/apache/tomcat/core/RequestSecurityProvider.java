@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestSecurityProvider.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestSecurityProvider.java,v 1.3 2000/02/14 04:59:39 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:39 $
  *
  * ====================================================================
  *
@@ -65,6 +65,8 @@
 package org.apache.tomcat.core;
 
 import javax.servlet.http.HttpServletRequest;
+
+// Not part of tomcat, will be moved to j2ee soon !
 
 /**
  * 

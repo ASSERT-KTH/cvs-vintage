@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.2 2000/01/26 17:45:10 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/26 17:45:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.3 2000/02/14 04:59:41 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/14 04:59:41 $
  *
  * ====================================================================
  *
@@ -103,7 +103,7 @@ import org.w3c.dom.Node;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/01/26 17:45:10 $
+ * @version $Revision: 1.3 $ $Date: 2000/02/14 04:59:41 $
  */
 
 public final class StandardManager
@@ -142,7 +142,7 @@ public final class StandardManager
      * The string manager for this package.
      */
     private StringManager sm =
-        StringManager.getManager(Constants.Package);
+        StringManager.getManager("org.apache.tomcat.session");
 
 
     /**

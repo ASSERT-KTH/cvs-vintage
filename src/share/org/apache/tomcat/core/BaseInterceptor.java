@@ -138,6 +138,14 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     public void removeMapping( Context ctx, String path ) throws TomcatException {
     }
 
+    /** 
+     */
+    public void addSecurityConstraint( Context ctx, String path[], String methods[],
+				       String transport, String roles[] )
+	throws TomcatException
+    {
+    }
+
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {

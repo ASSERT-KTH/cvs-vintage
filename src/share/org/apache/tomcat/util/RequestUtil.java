@@ -61,6 +61,7 @@
 package org.apache.tomcat.util;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -154,7 +155,7 @@ public class RequestUtil {
 	// will probably try to read into the next request... bad!
         String encoding = request.getCharacterEncoding();
         if (encoding == null) {
-            encoding = Constants.CharacterEncoding.Default;
+            encoding = Constants.DEFAULT_CHAR_ENCODING;
         }
 	InputStreamReader r =
             new InputStreamReader(request.getInputStream(), encoding);

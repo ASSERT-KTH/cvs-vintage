@@ -97,9 +97,9 @@ public class WarFileServlet extends HttpServlet {
         HttpServletResponse response)
     throws ServletException, IOException {
 	String pathInfo = (String)request.getAttribute(
-            Constants.Attribute.PathInfo);
+            Constants.ATTRIBUTE_PathInfo);
 	String requestURI = (String)request.getAttribute(
-	    Constants.Attribute.RequestURI);
+	    Constants.ATTRIBUTE_RequestURI);
 
 	if (pathInfo == null) {
 	    pathInfo = request.getPathInfo();
@@ -173,7 +173,7 @@ public class WarFileServlet extends HttpServlet {
         HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 	String requestURI = (String)request.getAttribute(
-	    Constants.Attribute.RequestURI);
+	    Constants.ATTRIBUTE_RequestURI);
 
 	if (requestURI == null) {
 	    requestURI = request.getRequestURI();
@@ -239,7 +239,7 @@ public class WarFileServlet extends HttpServlet {
 		} else {
 		    boolean inInclude = false;
 		    Object o = request.getAttribute(
-                        Constants.Attribute.Dispatch);
+                        Constants.ATTRIBUTE_Dispatch);
 
 		    if (o != null) {
 		        inInclude = true;
@@ -322,7 +322,7 @@ public class WarFileServlet extends HttpServlet {
 	    // To do a good error msg, first figure out what we're serving
 
 	    String requestURI = (String)request.getAttribute(
-		Constants.Attribute.RequestURI);
+		Constants.ATTRIBUTE_RequestURI);
 
    	    if (requestURI == null) {
 	    	requestURI = request.getRequestURI();
@@ -396,7 +396,7 @@ public class WarFileServlet extends HttpServlet {
 	    // Figure out what we're serving
 
 	    String requestURI = (String)request.getAttribute(
-		Constants.Attribute.RequestURI);
+		Constants.ATTRIBUTE_RequestURI);
 
    	    if (requestURI == null) {
 	    	requestURI = request.getRequestURI();
@@ -456,8 +456,8 @@ public class WarFileServlet extends HttpServlet {
     }
     
     private boolean isFileMasked(String docBase, String requestedFile) {
-        for (int i = 0; i < Constants.Context.MASKED_DIR.length; i++) {
-            String maskFile = Constants.Context.MASKED_DIR[i];
+        for (int i = 0; i < Constants.MASKED_DIR.length; i++) {
+            String maskFile = Constants.MASKED_DIR[i];
 
             // case insensitive check
             if (requestedFile.toLowerCase().startsWith(
@@ -477,8 +477,8 @@ public class WarFileServlet extends HttpServlet {
         // contained another context, since the subcontext would have its
         // hidden dirs displayed.  So for now all masked dirs are masked.
         //
-        for (int i = 0; i < Constants.Context.MASKED_DIR.length; i++) {
-            if (subdir.equalsIgnoreCase(Constants.Context.MASKED_DIR[i])) {
+        for (int i = 0; i < Constants.MASKED_DIR.length; i++) {
+            if (subdir.equalsIgnoreCase(Constants.MASKED_DIR[i])) {
                 return true;
             }
         }
@@ -583,7 +583,7 @@ public class WarFileServlet extends HttpServlet {
 	// see if we are in an include
 
 	boolean inInclude = false;
-        Object o = request.getAttribute(Constants.Attribute.Dispatch);
+        Object o = request.getAttribute(Constants.ATTRIBUTE_Dispatch);
 
 	if (o != null) {
 	    inInclude = true;

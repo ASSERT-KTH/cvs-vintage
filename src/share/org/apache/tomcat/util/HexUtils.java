@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.3 1999/10/29 05:13:30 craigmcc Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/29 05:13:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HexUtils.java,v 1.4 2000/02/14 04:59:42 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/14 04:59:42 $
  *
  * ====================================================================
  *
@@ -102,7 +102,7 @@ public final class HexUtils {
      * The string manager for this package.
      */
     private static StringManager sm =
-	StringManager.getManager(Constants.Package);
+	StringManager.getManager("org.apache.tomcat.util");
 
 
     /**

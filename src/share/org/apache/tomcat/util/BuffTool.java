@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.3 2000/01/08 21:31:41 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/08 21:31:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.4 2000/02/14 04:59:42 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/14 04:59:42 $
  *
  * ====================================================================
  *
@@ -65,6 +65,7 @@
 package org.apache.tomcat.util;
 
 import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.core.Constants;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
 
@@ -106,7 +107,7 @@ public class BuffTool {
     public static String getString( byte b[] , int pos, int len ) 
         throws UnsupportedEncodingException
     {
-	return new String( b, pos, len, Constants.CharacterEncoding.Default );
+	return new String( b, pos, len, Constants.DEFAULT_CHAR_ENCODING );
     }
 
 
@@ -121,9 +122,9 @@ public class BuffTool {
 		}
 	    }
 	    if( i+8 <len )
-		System.out.print( new String( buff, i, 8, Constants.CharacterEncoding.Default ));
+		System.out.print( new String( buff, i, 8, Constants.DEFAULT_CHAR_ENCODING ));
 	    else
-		System.out.print( new String( buff, i, len-i, Constants.CharacterEncoding.Default ));
+		System.out.print( new String( buff, i, len-i, Constants.DEFAULT_CHAR_ENCODING ));
 	    System.out.println();
 	}
 	System.out.println();

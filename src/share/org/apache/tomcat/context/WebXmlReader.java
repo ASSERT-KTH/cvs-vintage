@@ -81,10 +81,6 @@ public class WebXmlReader extends BaseInterceptor {
 
 	    xh.addRule("web-app/welcome-file-list/welcome-file", xh.methodSetter("addWelcomeFile", 0) );
 
-	    //	    xh.addRule("web-app/taglib", xh.methodSetter("addTagLib", 2) );
-	    //	    xh.addRule("web-app/taglib/taglib-uri", xh.methodParam(0) );
-	    //	    xh.addRule("web-app/taglib/taglib-location", xh.methodParam(1) ); 
-
 	    xh.addRule("web-app/error-page", xh.methodSetter("addErrorPage",2) );
 	    xh.addRule("web-app/error-page/error-code", xh.methodParam(0) );
 	    xh.addRule("web-app/error-page/exception-type", xh.methodParam(0) );
@@ -109,25 +105,189 @@ public class WebXmlReader extends BaseInterceptor {
 	    xh.addRule("web-app/servlet/init-param/param-name", xh.methodParam(0) );
 	    xh.addRule("web-app/servlet/init-param/param-value", xh.methodParam(1) );
 
-	    xh.addRule("web-app/servlet/icon/small-icon", xh.methodSetter("setIcon",0) ); // icon, body
+	    xh.addRule("web-app/servlet/icon/small-icon", xh.methodSetter("setIcon",0 )); // icon, body
 	    xh.addRule("web-app/servlet/description", xh.methodSetter("setDescription", 0) ); // description, body
 	    xh.addRule("web-app/servlet/load-on-startup", xh.methodSetter("setLoadOnStartUp", 0 ));
-	    //	    xh.addRule("web-app/servlet/security-role-ref", new SetProperty() ); // xxx, body
-	    
-	    // 	    xh.addRule("",
-	    // 		       new XmlAction() {
-	    // 			       public void end( SaxContext ctx) {
-	    // 				   for( int i=0; i<ctx.getTagCount(); i++) System.out.print( ctx.getTag(i)+"/");
-	    // 				   System.out.println();
-	    // 			       }
-	    // 			   });
-	    
+
+
+	    addSecurity( xh );
+
 	    Object ctx1=xh.readXml(f, ctx);
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
 	}
     }
 
+    // Add security rules - complex code
+    void addSecurity( XmlMapper xh ) {
+	xh.addRule("web-app/security-constraint",
+		   new SCAction() );
+	
+	xh.addRule("web-app/security-constraint/user-data-constraint/transport-guarantee",
+		   new XmlAction() {
+			   public void end( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       SecurityConstraint rc=(SecurityConstraint)st.peek();
+			       String  body=ctx.getBody().trim();
+			       rc.setTransport( body );
+			   }
+		       }
+		   );
+	xh.addRule("web-app/security-constraint/auth-constraint/role-name",
+		   new XmlAction() {
+			   public void end( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       SecurityConstraint rc=(SecurityConstraint)st.peek();
+			       String  body=ctx.getBody().trim();
+			       rc.addRole( body );
+			   }
+		       }
+		   );
+	
+	xh.addRule("web-app/security-constraint/web-resource-collection",
+		   new XmlAction() {
+			   public void start( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       st.push(new ResourceCollection());
+			   }
+			   public void end( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       ResourceCollection rc=(ResourceCollection)st.pop();
+			       SecurityConstraint sc=(SecurityConstraint)st.peek();
+			       st.push( rc );
+			       sc.addResourceCollection( rc );
+			   }
+			   public void cleanup( SaxContext ctx) {
+			       Stack st=ctx.getObjectStack();
+			       Object o=st.pop();
+			   }
+		       }
+		   );
+
+	xh.addRule("web-app/security-constraint/web-resource-collection/url-pattern",
+		   new XmlAction() {
+			   public void end( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       ResourceCollection rc=(ResourceCollection)st.peek();
+			       String  body=ctx.getBody().trim();
+			       rc.addUrlPattern( body );
+			   }
+		       }
+		   );
+	xh.addRule("web-app/security-constraint/web-resource-collection/http-method",
+		   new XmlAction() {
+			   public void end( SaxContext ctx) throws Exception {
+			       Stack st=ctx.getObjectStack();
+			       ResourceCollection rc=(ResourceCollection)st.peek();
+			       String  body=ctx.getBody().trim();
+			       rc.addHttpMethod( body );
+			   }
+		       }
+		   );
+    }
     
 }
 
+/** Specific action for Security-constraint
+ */
+class SCAction extends XmlAction {
+    public void start( SaxContext ctx) throws Exception {
+	Stack st=ctx.getObjectStack();
+	st.push(new SecurityConstraint());
+    }
+    public void end( SaxContext ctx) throws Exception {
+	Stack st=ctx.getObjectStack();
+	String tag=ctx.getTag(ctx.getTagCount()-1);
+	SecurityConstraint sc=(SecurityConstraint)st.pop();
+	Context context=(Context)st.peek();
+	ContextManager cm=context.getContextManager();
+	
+	st.push( sc ); // restore stack
+	// add all patterns that will need security
+	
+	String roles[]=sc.getRoles();
+	String transport=sc.getTransport();
+	Enumeration en=sc.getResourceCollections();
+	while( en.hasMoreElements()) {
+	    ResourceCollection rc=(ResourceCollection)en.nextElement();
+	    String paths[]=rc.getPatterns();
+	    String meths[]=rc.getMethods();
+	    cm.addSecurityConstraint( context, paths, meths ,
+				      transport, roles);
+	}
+    }
+    public void cleanup( SaxContext ctx) {
+	Stack st=ctx.getObjectStack();
+	Object o=st.pop();
+    }
+}
+
+class SecurityConstraint {
+    Vector roles=new Vector();
+    String transport;
+    Vector resourceC=new Vector();
+    
+    public SecurityConstraint() {
+    }
+
+    public void setTransport( String transport ) {
+	this.transport=transport;
+    }
+
+    public String getTransport() {
+	return this.transport;
+    }
+
+    public void addRole(String role ) {
+	roles.addElement( role );
+    }
+
+    public void addResourceCollection( ResourceCollection rc ) {
+	resourceC.addElement( rc );
+    }
+
+    public String []getRoles() {
+	String rolesA[]=new String[roles.size()];
+	for( int i=0; i< rolesA.length; i++ ) {
+	    rolesA[i]=(String)roles.elementAt( i );
+	}
+	return rolesA;
+    }
+    public Enumeration getResourceCollections() {
+	return resourceC.elements();
+    }
+}
+
+class ResourceCollection {
+    Vector urlP=new Vector();
+    Vector methods=new Vector();
+    
+    public ResourceCollection() {
+    }
+
+    public void addUrlPattern( String pattern ) {
+	urlP.addElement( pattern );
+    }
+
+    public void addHttpMethod( String method ) {
+	methods.addElement( method );
+    }
+
+    public String []getMethods() {
+	String methodsA[]=new String[methods.size()];
+	for( int i=0; i< methodsA.length; i++ ) {
+	    methodsA[i]=(String)methods.elementAt( i );
+	}
+	return methodsA;
+    }
+
+    public String []getPatterns() {
+	String patternsA[]=new String[urlP.size()];
+	for( int i=0; i< patternsA.length; i++ ) {
+	    patternsA[i]=(String)urlP.elementAt( i );
+	}
+	return patternsA;
+    }
+
+
+}
