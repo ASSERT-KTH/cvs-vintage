@@ -9,14 +9,7 @@ body, body div, body p, body th, body td, body li, body dl, body dd, input, sele
 html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dl, html>body dd, input, select, textarea, .app h3, .app h4	{
 	font-size: x-small;
 	}
-a:link, a:visted {
-	color: blue;
-	text-decoration: underline;
-	}
-a:active, a:hover {
-	color: red;
-	text-decoration: underline;
-	}
+
 p, ul, ol, dl {
 	margin-top:	.67em;
 	margin-bottom: .67em;
