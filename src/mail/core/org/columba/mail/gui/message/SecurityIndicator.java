@@ -13,16 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
-
+import org.columba.mail.util.MailResourceLoader;
 
 public class SecurityIndicator extends JPanel
 {
@@ -32,73 +32,62 @@ public class SecurityIndicator extends JPanel
     public static final int VERIFICATION_FAILURE = 3;
     public static final int NOKEY = 4;
     public static final int NOOP = 5;
+    
+    protected JLabel display;
 
     public SecurityIndicator()
     {
-	setLayout( new BorderLayout() );
-	setValue( NOOP );
+	super(new BorderLayout());
+        display = new JLabel();
+        display.setHorizontalAlignment(JLabel.RIGHT);
+        add(display);
+	setValue(NOOP);
     }
 
-
-    public void setValue( int value )
+    public void setValue(int value)
     {
-	removeAll();
-
-	JLabel label = new JLabel();
-	//label.setMargins( new Insets(0,0,0,0) );
-	label.setHorizontalAlignment( SwingConstants.RIGHT );
-	label.setText(" ");
-	switch ( value )
+	switch (value)
 	    {
 	        case  DECRYPTION_SUCCESS:
 		{
-
-		    label.setIcon( ImageLoader.getImageIcon(
-							    "pgp-signature-ok.png" ) );
-		    label.setToolTipText("Message was encrypted successfully");
+		    display.setIcon( ImageLoader.getImageIcon(
+                                        		    "pgp-signature-ok.png" ) );
+		    display.setToolTipText("Message was encrypted successfully");
 		    break;
 		}
 		case  DECRYPTION_FAILURE:
 		{
-		    label.setIcon( ImageLoader.getImageIcon(
+		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-bad.png" ) );
-		    label.setToolTipText("Message encryption failed");
+		    display.setToolTipText("Message encryption failed");
 		    break;
 		}
 		case  VERIFICATION_SUCCESS:
 		{
-		    label.setIcon( ImageLoader.getImageIcon(
+		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-ok.png" ) );
-		    label.setToolTipText("Message was verified successfully");
+		    display.setToolTipText("Message was verified successfully");
 		    break;
 		}
 		case  VERIFICATION_FAILURE:
 		{
-		    label.setIcon( ImageLoader.getImageIcon(
+		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-bad.png" ) );
-
-		    label.setToolTipText("Message verification failed");
+		    display.setToolTipText("Message verification failed");
 		    break;
 		}
 		case  NOKEY:
 		{
-		    label.setIcon( ImageLoader.getImageIcon(
+		    display.setIcon( ImageLoader.getImageIcon(
 							    "pgp-signature-nokey.png" ) );
-		    label.setToolTipText("You don't have the right key\n\nto verify this message");
+		    display.setToolTipText("You don't have the right key\n\nto verify this message");
 		    break;
 		}
 		case  NOOP:
 		{
-		    label.setText("");
+		    display.setText("");
 		    break;
 		}
-
 	    }
-
-	add( label );
-
-	revalidate();
-
-        repaint();
     }
 }
