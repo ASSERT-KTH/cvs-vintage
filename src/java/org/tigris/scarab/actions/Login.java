@@ -71,7 +71,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.27 2002/01/18 22:26:02 jon Exp $
+ * @version $Id: Login.java,v 1.28 2002/03/14 04:10:51 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -155,7 +155,7 @@ public class Login extends ScarabTemplateAction
             // store the user object
             data.setUser(user);
             // mark the user as being logged in
-            user.setHasLoggedIn(new Boolean(true));
+            user.setHasLoggedIn(Boolean.TRUE);
             // set the last_login date in the database
             user.updateLastLogin();
             // update the password expire
