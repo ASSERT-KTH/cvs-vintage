@@ -116,7 +116,7 @@
 #macro (alert $text)
 	<p class="alert">
 	<strong>
-	<img src="/images/icon_alertsml.gif" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
+	<img src="$data.Request.ContextPath/images/icon_alertsml.gif" width="16" height="14" alt="Alert notification" border="0" />&#160;Alert!
 	</strong>
 	<small>$text</small>
 	</p>
