@@ -1,6 +1,6 @@
 
 /*
- * $Id: Post.java,v 1.3 1999/10/22 22:09:51 costin Exp $
+ * $Id: Post.java,v 1.4 1999/10/25 22:49:08 costin Exp $
  */
 
 /**
@@ -100,6 +100,7 @@ public class Post extends TestableBase {
 	
 	if( testCondition!=responseStatus) {
 	    System.out.println("POST error in " + testId );
+	    System.out.println("Expecting: " + responseKey);
 	    System.out.println("Response: " + response);
 	}
         return testCondition==responseStatus;
@@ -220,7 +221,7 @@ public class Post extends TestableBase {
 	} catch(java.net.SocketException ex ) {
 	    // server closed connection before reading the request.
 	    // Happens on Linux - it is safe to ignore the request.
-	    System.out.println("Connection reset by peer - before full request read ");
+	    //	    System.out.println("Connection reset by peer - before full request read ");
 	}
 
         if (this.debug)

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.3 1999/10/24 16:53:20 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/24 16:53:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.4 1999/10/25 22:49:03 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/25 22:49:03 $
  *
  * ====================================================================
  *
@@ -185,6 +185,12 @@ public class Startup {
 	        String msg = sm.getString("startup.server.hse");
 
 	        System.out.println(msg);
+		hse.printStackTrace();
+		// "problem starting server" can't help
+		// the user detect that the port is taken.
+		// ( or another tcp-related problem )
+		// Please, let the stack trace until we have a better
+		// message ( that shows what failed)
 	    } catch (RemoteException re) {
 	        String msg = sm.getString("startup.server.re");
 

@@ -1,6 +1,6 @@
 
 /*
- * $Id: Get.java,v 1.3 1999/10/22 22:09:51 costin Exp $
+ * $Id: Get.java,v 1.4 1999/10/25 22:49:07 costin Exp $
  */
 
 /**
@@ -275,7 +275,7 @@ public class Get extends TestableBase {
 	} catch(java.net.SocketException ex ) {
 	    // server closed connection before reading the request.
 	    // Happens on Linux - it is safe to ignore the request.
-	    System.out.println("Connection reset by peer - before full request read ");
+	    //	    System.out.println("Connection reset by peer - before full request read ");
 	}
         if (this.debug)
 	        System.out.println("-------->"); 
