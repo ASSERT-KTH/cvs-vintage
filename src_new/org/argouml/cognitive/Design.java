@@ -24,7 +24,7 @@
 // File: Design.java
 // Classes: Design
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Design.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: Design.java,v 1.2 2002/07/14 23:44:58 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -107,7 +107,6 @@ public class Design extends DesignMaterial {
     while (cur.hasMoreElements()) {
       DesignMaterial dm = (DesignMaterial) cur.nextElement();
       dm.critique(d);
-      Thread.yield();
     }
   }
 

@@ -26,7 +26,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.2 2001/02/03 23:49:41 carnold Exp $
+// $Id: Agency.java,v 1.3 2002/07/14 23:44:58 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -296,7 +296,6 @@ public class Agency extends Observable { //implements java.io.Serialization
 	//Dbg.log("debugActivation","Deactivated: " + c.toString());
 	c.beInactive();
       }
-	Thread.yield();
     }
     //}
   }
