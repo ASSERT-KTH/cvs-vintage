@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +36,7 @@ import org.jboss.ejb.EnterpriseContext;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class MessageDrivenContainer
    extends Container
@@ -55,12 +56,6 @@ public class MessageDrivenContainer
     * The last interceptor must be provided by the container itself.
     */
    protected Interceptor interceptor;
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   // Public --------------------------------------------------------
 
    public LocalProxyFactory getLocalProxyFactory()
    {
@@ -167,7 +162,6 @@ public class MessageDrivenContainer
       }
       catch (Exception e)
       {
-         log.error("Serious error in init: ", e);
          throw e;
       }
       finally
@@ -374,15 +368,15 @@ public class MessageDrivenContainer
          msgInterfaceClass = Class.forName(msgInterface);
          argumentClass = Class.forName(msgArgument);
       } catch (ClassNotFoundException ex) {
-         log.error("Could not get the classes for message interface" + msgInterface, ex);
          // Hackish
-         throw new NoSuchMethodException("Could not get the classes for message interface" + msgInterface + ": " + ex);
+         throw new NoSuchMethodException("Could not get the classes for message interface" +
+                                         msgInterface + ": " + ex);
       }
 
       Method m = msgInterfaceClass.getMethod(msgMethod, new Class[] {argumentClass});
       // Implemented by bean
       map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
-      //DEBUG Logger.debug("Mapped "+m.getName()+" "+m.hashCode()+"to "+map.get(m));
+      log.debug("Mapped "+m.getName()+" "+m.hashCode()+"to "+map.get(m));
       beanMapping = map;
    }
 
@@ -461,15 +455,19 @@ public class MessageDrivenContainer
             }
          }
       }
+      
       // Monitorable implementation ------------------------------------
+      
       public void sample(Object s)
       {
          // Just here to because Monitorable request it but will be removed soon
       }
+      
       public Map retrieveStatistic()
       {
          return null;
       }
+      
       public void resetStatistic()
       {
       }
