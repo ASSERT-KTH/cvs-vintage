@@ -12,13 +12,16 @@ import java.util.Iterator;
 import javax.management.ObjectName;
 
 import org.jboss.metadata.WebMetaData;
+import org.w3c.dom.Element;
 
 /** A WebApplication represents the information for a war deployment.
 
 @see AbstractWebContainer
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.6 $
+@author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+
+@version $Revision: 1.7 $
 */
 public class WebApplication
 {
@@ -48,7 +51,6 @@ public class WebApplication
      * - unregister WebModule and its Servlets MBean
      **/
     ObjectName managementParent;
-        
 
     /** Create an empty WebApplication instance
      */
@@ -160,7 +162,11 @@ public class WebApplication
     public void setManagementParent( ObjectName parent ) {
        managementParent = parent;
     }
-    
+
+    public Element getWebAppElement() {
+       return metaData.getWebAppElement();     
+    }
+        
     public String toString()
     {
         StringBuffer buffer = new StringBuffer("{WebApplication: ");

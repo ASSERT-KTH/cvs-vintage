@@ -22,7 +22,8 @@ import org.jboss.deployment.DeploymentException;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ * @version $Revision: 1.10 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -42,7 +43,9 @@ public class WebMetaData implements XmlLoadable
    /** The JNDI name of the security domain implementation
     */
    private String securityDomain;
-
+   /** we hold the webxml element such that we can do in memory transformations on it */
+   protected Element webAppElement;
+   
    public WebMetaData()
    {
    }
@@ -124,6 +127,11 @@ public class WebMetaData implements XmlLoadable
       return distributable;
    }
 
+   /** returns the in-memory rep of web.xml */
+   public Element getWebAppElement() {
+      return webAppElement;
+   }
+   
    public void importXml(Element element) throws Exception
    {
       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
@@ -141,6 +149,8 @@ public class WebMetaData implements XmlLoadable
     */
    protected void importWebXml(Element webApp) throws Exception
    {
+      webAppElement=webApp;
+      
       // Parse the web-app/resource-ref elements
       Iterator iterator = MetaData.getChildrenByTagName(webApp, "resource-ref");
       while( iterator.hasNext() )

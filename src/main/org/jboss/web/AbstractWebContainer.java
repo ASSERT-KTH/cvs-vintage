@@ -42,6 +42,7 @@ import org.jboss.util.file.JarUtils;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import javax.management.ObjectName;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -56,6 +57,9 @@ into the JBoss server JNDI namespace:
 - ejb-local-ref
 - security-domain
 
+It also caters for delegating incorporated webservices.xml to an associated
+W24EEDeployer according to the J2EE1.4, Web-App2.4 and JAXRPC1.0 specifications.
+ 
 Subclasses need to implement the {@link #performDeploy(WebApplication, String,
  WebDescriptorParser) performDeploy()}
 and {@link #performUndeploy(String) performUndeploy()} methods to perform the
@@ -139,7 +143,8 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.63 $
+@author  <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+@version $Revision: 1.64 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -173,9 +178,29 @@ public abstract class AbstractWebContainer
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
 
+   /** objectname of a ws4ee deployer */
+   private ObjectName ws4eeDeployer;
 
    public AbstractWebContainer()
    {
+   }
+
+   /** 
+    * returns the currently registered web service deployer
+    * @jmx:managed-attribute
+    */
+   public ObjectName getWS4EEDeployer() {
+      return ws4eeDeployer;
+   }
+   
+   /**
+    * Set the web service deployer to delegate to
+    *
+    * @jmx:managed-attribute
+    */
+   public void setWS4EEDeployer(ObjectName deployer)
+   {
+      this.ws4eeDeployer = deployer;
    }
 
    public boolean accepts(DeploymentInfo sdi) 
@@ -228,6 +253,8 @@ public abstract class AbstractWebContainer
                log.debug("Deleted war archive");
             // Reset the localUrl to end in a '/'
             di.localUrl = warFile.toURL();
+            // Reset the localCl to point to the file
+            di.localCl=new URLClassLoader(new URL[] {di.localUrl});
          }
 
       }
@@ -236,6 +263,21 @@ public abstract class AbstractWebContainer
          log.error("Problem in init ", e); throw new DeploymentException(e);
       }
       
+      // if ok, and we have got a ws4ee deployer attached
+      if(ws4eeDeployer!=null) {
+         // try to find webservices info
+         URL webservicesUrl = di.localCl.getResource("WEB-INF/webservices.xml");
+         if(webservicesUrl!=null) {
+            // if found, we delegate that part
+            try{
+               return ((Boolean) server.invoke(ws4eeDeployer,"init",new Object[] {di},new String[] {di.getClass().getName()})).booleanValue();
+            } catch(Exception e) {
+               // need to convert better
+               throw new DeploymentException("failed to delegate ws4ee initialization.",e);
+            }
+         }
+      }
+
       log.debug("End init");
       return true;
    }
@@ -245,6 +287,17 @@ public abstract class AbstractWebContainer
    public void create(DeploymentInfo di) throws DeploymentException
    {
       super.create(di);
+      
+      // since web container does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"create",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            // need to convert better
+            throw new DeploymentException("could not delegate ws4ee creation.",e);
+         }
+      }
    }
 
    /** A template pattern implementation of the deploy() method. This method
@@ -302,6 +355,20 @@ public abstract class AbstractWebContainer
          // Parse the web.xml and jboss-web.xml descriptors
          WebMetaData metaData = parseMetaData(webContext, warURL);
          WebApplication warInfo = new WebApplication(metaData);
+
+         // register metadata in the di structure
+         di.metaData=metaData;
+         
+         // need to intercept here to transform webxml
+         if(ws4eeDeployer!=null && di.getDocument()!=null) {
+            try{
+               server.invoke(ws4eeDeployer,"start",new Object[] {di},new String[] {di.getClass().getName()});
+            } catch(Exception e) {
+               // need to convert better
+               throw new DeploymentException("could not delegate ws42ee startup.",e);
+            }
+         }
+
          performDeploy(warInfo, warURL.toString(), webAppParser);
          deploymentMap.put(warURL.toString(), warInfo);
          super.start(di);
@@ -318,6 +385,7 @@ public abstract class AbstractWebContainer
       {
          thread.setContextClassLoader(appClassLoader);
       }
+      
    }
 
    /** This method is called by the deploy() method template and must be overriden by
@@ -344,6 +412,16 @@ public abstract class AbstractWebContainer
    public synchronized void stop(DeploymentInfo di) 
       throws DeploymentException 
    {
+      // since web container does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"stop",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            log.error("could not delegate ws4ee stopping.",e);
+         }
+      }
+      
       URL warURL = di.localUrl != null ? di.localUrl : di.url;
       String warUrl = warURL.toString();
       try
@@ -363,10 +441,20 @@ public abstract class AbstractWebContainer
       }
    }
 
-   public void destroy(DeploymentInfo sdi) 
+   public void destroy(DeploymentInfo di) 
       throws DeploymentException 
    {
-      super.destroy(sdi);
+      // since web container does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"destroy",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            log.error("could not delegate ws4ee destruction.",e);
+         }
+      }
+
+      super.destroy(di);
    }
    /** Called as part of the undeploy() method template to ask the
    subclass for perform the web container specific undeployment steps.
