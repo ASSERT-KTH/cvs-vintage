@@ -29,7 +29,7 @@ import org.gjt.sp.jedit.search.RESearchMatcher;
 /**
  * A parser rule.
  * @author mike dillon, Slava Pestov
- * @version $Id: ParserRule.java,v 1.7 2002/08/16 19:18:23 spestov Exp $
+ * @version $Id: ParserRule.java,v 1.8 2002/08/20 16:25:11 spestov Exp $
  */
 public class ParserRule
 {
@@ -167,7 +167,7 @@ public class ParserRule
 			((noWordBreak) ? NO_WORD_BREAK : 0);
 
 		return new ParserRule(ruleAction, hashChar,
-			null, new RE(begin,(ignoreCase ? RE.REG_ICASE : 0),
+			null, new RE("\\A" + begin,(ignoreCase ? RE.REG_ICASE : 0),
 			RESearchMatcher.RE_SYNTAX_JEDIT),
 			end.toCharArray(), delegate, id);
 	} //}}}
@@ -202,7 +202,7 @@ public class ParserRule
 			| NO_LINE_BREAK;
 
 		return new ParserRule(ruleAction, hashChar,
-			null, new RE(seq,(ignoreCase ? RE.REG_ICASE : 0)), null,
+			null, new RE("\\A" + seq,(ignoreCase ? RE.REG_ICASE : 0)), null,
 			delegate, id);
 	} //}}}
 
