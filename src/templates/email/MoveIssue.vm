@@ -9,7 +9,7 @@ $l10n.format("IssueMoved", $issue.UniqueId, $actionWord) $l10n.format("IssueMove
 
 $l10n.YouCanViewIssue:
 
-    $link.getIssueIdAbsoluteLink($issue)
+    $link.getIssueIdLink($issue)
 
 $l10n.Details:
 ---------------------------------------------------------------------

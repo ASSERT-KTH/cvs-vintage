@@ -2,7 +2,7 @@
 #set ($defaultText = $issue.DefaultText)
 $l10n.YouCanViewIssue:
 
-    $link.getIssueIdAbsoluteLink($issue)
+    $link.getIssueIdLink($issue)
 
 $l10n.Type:        $issue.RModuleIssueType.DisplayName
 $l10n.IssueId:    $issue.UniqueId #if($defaultText && $defaultText.length() > 0)($defaultText.trim())#end
