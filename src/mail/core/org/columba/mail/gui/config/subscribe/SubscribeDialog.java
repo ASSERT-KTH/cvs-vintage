@@ -294,8 +294,8 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 	 */
 	public void syncFolderListDone(DefaultTreeModel model) {
 		tree.setModel(model);
+		tree.setRootVisible(true);
 		tree.expandRow(0);
-		tree.expandRow(1);
 
 		treeModel = model;
 

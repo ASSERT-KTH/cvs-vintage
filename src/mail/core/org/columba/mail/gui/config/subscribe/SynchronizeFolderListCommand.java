@@ -35,6 +35,8 @@ import org.columba.core.util.ListTools;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.imap.IMAPServer;
 import org.columba.ristretto.imap.ListInfo;
+import org.columba.ristretto.imap.Namespace;
+import org.columba.ristretto.imap.NamespaceCollection;
 import org.frappucino.checkabletree.CheckableItemImpl;
 
 public class SynchronizeFolderListCommand extends Command {
@@ -70,23 +72,77 @@ public class SynchronizeFolderListCommand extends Command {
 	}
 
 	private List fetchUnsubscribedFolders(String reference) throws Exception {
-		ListInfo[] list = store.list(reference, "*");
-		ArrayList result = new ArrayList(Arrays.asList(list));
-		
-		for( int i=0; i< list.length; i++) {
-			if( ! list[i].getName().equals(reference)) {
-				result.addAll( fetchUnsubscribedFolders(list[i].getName() + store.getDelimiter()));
+		NamespaceCollection namespaces;
+
+		//Does the server support the namespace extension?
+		if (store.isSupported("NAMESPACE")) {
+			namespaces = store.fetchNamespaces();
+		} else {
+			// create default namespace
+			namespaces = new NamespaceCollection();
+			namespaces.addPersonalNamespace(new Namespace("", "/"));
+		}
+
+		ArrayList result = new ArrayList();
+		Iterator it;
+
+		//Process personal namespaces
+		if (namespaces.getPersonalNamespaceSize() > 0) {
+			it = namespaces.getPersonalIterator();
+			while (it.hasNext()) {
+				Namespace pN = (Namespace) it.next();
+
+				ListInfo[] list = store.list("", pN.getPrefix() + '%');
+				result.addAll(Arrays.asList(list));
+			}
+		}
+
+		//Process other users namespaces
+		if (namespaces.getOtherUserNamespaceSize() > 0) {
+			it = namespaces.getOtherUserIterator();
+			while (it.hasNext()) {
+				Namespace pN = (Namespace) it.next();
+
+				ListInfo[] list = store.list("", pN.getPrefix() + '%');
+				result.addAll(Arrays.asList(list));
+			}
+		}
+
+		//Process shared namespaces
+		if (namespaces.getSharedNamespaceSize() > 0) {
+			it = namespaces.getSharedIterator();
+			while (it.hasNext()) {
+				Namespace pN = (Namespace) it.next();
+
+				ListInfo[] list = store.list("", pN.getPrefix() + '%');
+				result.addAll(Arrays.asList(list));
+			}
+		}
+
+		// Handle special case in which INBOX has a NIL delimiter
+		// -> there  might exist a pseudo hierarchy under INBOX+delimiter
+		it = result.iterator();
+		while( it.hasNext() ) {
+			ListInfo info = (ListInfo) it.next();
+			if( info.getName().equalsIgnoreCase("INBOX")) {
+				if( info.getDelimiter() == null) {
+					result.addAll(Arrays.asList(store.list("", "INBOX" + store.getDelimiter() +'%')));
+				}				
+				break;
 			}
 		}
 		
 		return result;
 	}
-	
+
 	private TreeNode createTreeStructure() throws Exception {
 		ListInfo[] lsub = store.fetchSubscribedFolders();
 
 		// Create list of unsubscribed folders
-		List subscribedFolders = Arrays.asList(lsub);
+		List subscribedFolders = new ArrayList(Arrays.asList(lsub));		
+		// INBOX is always subscribed
+		subscribedFolders.add(new ListInfo("INBOX",null,0));
+		
 		List unsubscribedFolders = fetchUnsubscribedFolders("");
 		ListTools.substract(unsubscribedFolders, subscribedFolders);
 
@@ -101,38 +157,39 @@ public class SynchronizeFolderListCommand extends Command {
 		delimiterPattern = Pattern.compile(pattern);
 		delimiter = store.getDelimiter();
 
-		Iterator it = subscribedFolders.iterator();
 
-		while (it.hasNext()) {
-			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
-			node.setSelected(true);
-		}
-
-		it = unsubscribedFolders.iterator();
+		Iterator it = unsubscribedFolders.iterator();
 
 		while (it.hasNext()) {
 			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
 			node.setSelected(false);
 		}
 
+		it = subscribedFolders.iterator();
+
+		while (it.hasNext()) {
+			ListInfoTreeNode node = insertTreeNode((ListInfo) it.next(), root);
+			node.setSelected(true);
+		}
 		return root;
 	}
 
 	private ListInfoTreeNode insertTreeNode(ListInfo listInfo,
 			DefaultMutableTreeNode parent) {
-		Matcher matcher = delimiterPattern.matcher(listInfo.getName());
+		//split the hierarchical name with at the delimiters
+		String[] hierarchy = listInfo.getName().split("\\" + listInfo.getDelimiter());
+		
 		DefaultMutableTreeNode actParent = parent;
 		StringBuffer mailboxName = new StringBuffer();
-
-		matcher.find();
-		mailboxName.append(matcher.group(1));
-		actParent = ensureChild(matcher.group(1), mailboxName.toString(),
+		
+		mailboxName.append(hierarchy[0]);
+		actParent = ensureChild(hierarchy[0], mailboxName.toString(),
 				actParent);
 
-		while (matcher.find()) {
-			mailboxName.append(delimiter);
-			mailboxName.append(matcher.group(1));
-			actParent = ensureChild(matcher.group(1), mailboxName.toString(),
+		for( int i=1; i<hierarchy.length; i++) {
+			mailboxName.append(listInfo.getDelimiter());
+			mailboxName.append(hierarchy[i]);
+			actParent = ensureChild(hierarchy[i], mailboxName.toString(),
 					actParent);
 		}
 

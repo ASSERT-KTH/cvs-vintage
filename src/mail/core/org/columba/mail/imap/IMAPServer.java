@@ -66,6 +66,7 @@ import org.columba.ristretto.imap.IMAPProtocol;
 import org.columba.ristretto.imap.IMAPResponse;
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.MailboxStatus;
+import org.columba.ristretto.imap.NamespaceCollection;
 import org.columba.ristretto.imap.SearchKey;
 import org.columba.ristretto.imap.SequenceSet;
 import org.columba.ristretto.io.CharSequenceSource;
@@ -379,7 +380,7 @@ public class IMAPServer {
 	 * @param command
 	 * @return
 	 */
-	private boolean isSupported(String command) throws IOException {
+	public boolean isSupported(String command) throws IOException {
 		fetchCapas();
 
 		for (int i = 0; i < capabilities.length; i++) {
@@ -951,6 +952,16 @@ public class IMAPServer {
 		}
 	}
 
+	public NamespaceCollection fetchNamespaces() throws IOException, IMAPException, CommandCancelledException {
+		try {
+			ensureLoginState();
+			return protocol.namespace();
+			
+		} catch (IMAPDisconnectedException e) {
+			return fetchNamespaces();
+		}		
+	}
+	
 	/**
 	 * @param headerString
 	 * @return
