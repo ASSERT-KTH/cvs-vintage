@@ -9,10 +9,11 @@
 
 package org.jboss.invocation.trunk.client;
 
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-
+import javax.resource.spi.work.WorkManager;
 import org.jboss.logging.Logger;
 
 /**
@@ -48,6 +49,8 @@ public abstract class AbstractClient implements ITrunkListner
     */
    HashMap requestListners = new HashMap();
    int requestListnerCounter = 0;
+
+   protected WorkManager workManager;
 
    synchronized public void keepOpen(boolean enabled)
    {
@@ -178,6 +181,35 @@ public abstract class AbstractClient implements ITrunkListner
    {
       this.connectionManager = connectionManager;
    }
+
+   
+   
+   /**
+    * mbean get-set pair for field workManager
+    * Get the value of workManager
+    * @return value of workManager
+    *
+    * @jmx:managed-attribute
+    */
+   public WorkManager getWorkManager()
+   {
+      return workManager;
+   }
+   
+   
+   /**
+    * Set the value of workManager
+    * @param workManager  Value to assign to workManager
+    *
+    * @jmx:managed-attribute
+    */
+   public void setWorkManager(WorkManager workManager)
+   {
+      this.workManager = workManager;
+   }
+   
+   
+
 
    /**
     * Established a connection to the server.

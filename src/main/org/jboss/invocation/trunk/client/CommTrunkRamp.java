@@ -9,17 +9,20 @@
 
 package org.jboss.invocation.trunk.client;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import org.jboss.logging.Logger;
 
 import EDU.oswego.cs.dl.util.concurrent.Channel;
 import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.Slot;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import javax.resource.spi.work.Work;
+import javax.resource.spi.work.WorkManager;
+import org.jboss.logging.Logger;
+import javax.resource.spi.work.WorkException;
 
 /**
  * The CommTrunkRamp acts like the on and off ramps on a highway.  It merges the Invocation traffic from 
@@ -67,17 +70,23 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    /**
     * The Trunk that this ramp is attached to.
     */
-   ICommTrunk trunk;
+   private final ICommTrunk trunk;
+
+   /**
+    * The <code>workManager</code> supplying threads..
+    *
+    */
+   private final WorkManager workManager;
 
    /**
     * The thread pool used to service incoming requests..
     */
-   static PooledExecutor pool;
+   //static PooledExecutor pool;
 
    /**
     * The number of pool threads created so far
     */
-   private static int poolCounter = 0;
+   //private static int poolCounter = 0;
 
    /**
     * Constructor for the OILServerIL object
@@ -85,9 +94,11 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * @param a     Description of Parameter
     * @param port  Description of Parameter
     */
-   public CommTrunkRamp(ICommTrunk trunk)
+   public CommTrunkRamp(ICommTrunk trunk, WorkManager workManager)
    {
       this.trunk = trunk;
+      this.workManager = workManager;
+      /*
       synchronized (CommTrunkRamp.class)
       {
          if (pool == null)
@@ -107,7 +118,7 @@ public final class CommTrunkRamp implements java.lang.Cloneable
                }
             });
          }
-      }
+         }*/
    }
 
    /**
@@ -194,22 +205,30 @@ public final class CommTrunkRamp implements java.lang.Cloneable
     * The Trunk should deliver requests to the Ramp via this 
     * method.
     */
-   public void deliverTrunkRequest(TunkRequest request) throws InterruptedException
+   public void deliverTrunkRequest(TunkRequest request) throws InterruptedException, WorkException
    {
-      pool.execute(new RequestRunner(request));
+      //Could use explicit ExecutionContext for tx etc.
+      workManager.scheduleWork(new RequestRunner(request));
+      //pool.execute(new RequestRunner(request));
    }
    
 
-   public class RequestRunner implements Runnable
+   public class RequestRunner implements Work
    {
       TunkRequest request;
       RequestRunner(TunkRequest request)
       {
          this.request = request;
       }
+
       public void run()
       {
          trunkListner.requestEvent(trunk, request);
+      }
+
+      public void release()
+      {
+         //maybe should interrupt??
       }
    }
 

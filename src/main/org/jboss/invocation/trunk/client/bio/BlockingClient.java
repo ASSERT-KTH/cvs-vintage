@@ -9,13 +9,14 @@
 
 package org.jboss.invocation.trunk.client.bio;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
+import javax.resource.spi.work.WorkManager;
 import org.jboss.invocation.trunk.client.AbstractClient;
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.ICommTrunk;
@@ -38,7 +39,8 @@ public class BlockingClient extends AbstractClient
    private Socket socket;
    private ServerAddress serverAddress;
 
-   public void connect(ServerAddress serverAddress, ThreadGroup threadGroup) throws IOException
+   public void connect(ServerAddress serverAddress, 
+                       ThreadGroup threadGroup) throws IOException
    {
       this.serverAddress = serverAddress;
       boolean tracing = log.isTraceEnabled();
@@ -49,7 +51,7 @@ public class BlockingClient extends AbstractClient
       socket.setTcpNoDelay(serverAddress.enableTcpNoDelay);
 
       trunk = new BlockingSocketTrunk(socket, threadGroup);
-      CommTrunkRamp ramp = new CommTrunkRamp(trunk);
+      CommTrunkRamp ramp = new CommTrunkRamp(trunk, workManager);
       trunk.setCommTrunkRamp(ramp);
       ramp.setTrunkListner(this);
       

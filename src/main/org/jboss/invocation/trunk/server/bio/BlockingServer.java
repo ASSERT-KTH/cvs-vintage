@@ -9,12 +9,13 @@
 
 package org.jboss.invocation.trunk.server.bio;
 
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
+import javax.resource.spi.work.WorkManager;
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.bio.BlockingSocketTrunk;
 import org.jboss.invocation.trunk.server.IServer;
@@ -68,16 +69,20 @@ public final class BlockingServer implements java.lang.Runnable, IServer
 
    TrunkInvoker optimizedInvoker;
 
+   private WorkManager workManager;
+
    public ServerSocket bind(
       TrunkInvoker optimizedInvoker,
       InetAddress address,
       int port,
       int connectBackLog,
-      boolean enableTcpNoDelay)
+      boolean enableTcpNoDelay,
+      WorkManager workManager)
       throws IOException
    {
       this.optimizedInvoker = optimizedInvoker;
       this.enableTcpNoDelay = enableTcpNoDelay;
+      this.workManager = workManager;
 
       serverSocket = new ServerSocket(port, connectBackLog, address);
       serverSocket.setSoTimeout(SO_TIMEOUT);
@@ -145,7 +150,7 @@ public final class BlockingServer implements java.lang.Runnable, IServer
                socket.setTcpNoDelay(enableTcpNoDelay);
 
                BlockingSocketTrunk trunk = new BlockingSocketTrunk(socket, threadGroup);
-               CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk);
+               CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk, workManager);
                trunk.setCommTrunkRamp(trunkRamp);
                trunkRamp.setTrunkListner(optimizedInvoker);
                trunk.start();

@@ -9,15 +9,17 @@
 
 package org.jboss.invocation.trunk.client;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 
-import org.jboss.invocation.trunk.client.bio.BlockingClient;
-import org.jboss.logging.Logger;
 
 import EDU.oswego.cs.dl.util.concurrent.ClockDaemon;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import javax.resource.spi.work.WorkManager;
+import org.jboss.invocation.trunk.client.bio.BlockingClient;
+import org.jboss.logging.Logger;
+import java.lang.reflect.Method;
 
 /**
  * This is a singleton class on that lives on a client which is used find existing 
@@ -71,6 +73,8 @@ public class ConnectionManager
     */
    public ThreadGroup threadGroup = new ThreadGroup("Client Sockets");
 
+   private WorkManager workManager;
+
    /**
     * We check the connections here.
     */
@@ -94,6 +98,21 @@ public class ConnectionManager
 
    protected ConnectionManager()
    {
+      //This sucks.  Should be an mbean, this should be running with jmx
+      //on the client.
+      try
+      {
+      ClassLoader cl = Thread.currentThread().getContextClassLoader(); 
+      Class wmClass = cl.loadClass("org.jboss.resource.work.BaseWorkManager");
+      workManager = (WorkManager)wmClass.newInstance();
+      Method m = wmClass.getMethod("setMaxSize", new Class[] {Integer.TYPE});
+      m.invoke(workManager, new Object[] {new Integer(50)});
+      }
+      catch (Exception e)
+      {
+         throw new RuntimeException("unexpected problem setting up trunk client" + e);
+      } // end of catch
+      
       clientClass = BlockingClient.class;
       
       // Try to use the NonBlockingClient if possible
@@ -110,7 +129,6 @@ public class ConnectionManager
             log.debug("Using the Blocking version of the client");
          }
       }
-      
       log.debug("Setting the clockDaemon's thread factory");
       clockDaemon.setThreadFactory(new ThreadFactory()
       {
@@ -180,6 +198,7 @@ public class ConnectionManager
          }
 
          c.setConnectionManager(this);
+         c.setWorkManager(workManager);
          c.connect(serverAddress, threadGroup);
          c.start();
 

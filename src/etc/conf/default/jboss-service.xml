@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.66 2002/09/24 21:14:55 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.67 2002/10/03 17:50:41 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -204,16 +204,25 @@
   </mbean>
 
   <!-- Trunk invoker -->
+  <mbean code="org.jboss.resource.work.BaseWorkManager" 
+         name="jboss:service=WorkManager,type=TrunkInvoker">
+    <depends optional-attribute-name="TransactionManager">jboss:service=TransactionManager</depends>
+    <attribute name="MinThreads">0</attribute>
+    <attribute name="MaxThreads">50</attribute>
+    <attribute name="KeepAliveTime">10000</attribute>
+  </mbean>
+
   <mbean code="org.jboss.invocation.trunk.server.TrunkInvoker" 
          name="jboss:service=invoker,type=trunk">
     <attribute name="EnableTcpNoDelay">true</attribute>
     <attribute name="ServerBindPort">4445</attribute>
+    <depends optional-attribute-name="WorkManager">jboss:service=WorkManager,type=TrunkInvoker</depends>
+    <depends optional-attribute-name="TransactionManagerService">jboss:service=TransactionManager</depends>
     <!--
     <attribute name="ServerBindAddress">192.168.1.1</attribute>
     <attribute name="ClientConnectAddress">192.168.1.1</attribute>
     <attribute name="ClientConnectPort">4445</attribute>
     -->
-    <depends>jboss:service=TransactionManager</depends>
   </mbean>
 
   <!-- ==================================================================== -->

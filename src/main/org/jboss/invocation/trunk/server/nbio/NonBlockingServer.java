@@ -9,6 +9,7 @@
 
 package org.jboss.invocation.trunk.server.nbio;
 
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -16,7 +17,7 @@ import java.net.ServerSocket;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-
+import javax.resource.spi.work.WorkManager;
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.ConnectionManager;
 import org.jboss.invocation.trunk.client.nbio.NonBlockingSocketTrunk;
@@ -59,16 +60,20 @@ public final class NonBlockingServer implements IServer
 
    TrunkInvoker optimizedInvoker;
 
+   private WorkManager workManager;
+
    public ServerSocket bind(
       TrunkInvoker optimizedInvoker,
       InetAddress address,
       int port,
       int connectBackLog,
-      boolean enableTcpNoDelay)
+      boolean enableTcpNoDelay,
+      WorkManager workManager)
       throws IOException
    {
       this.optimizedInvoker = optimizedInvoker;
       this.enableTcpNoDelay = enableTcpNoDelay;
+      this.workManager = workManager;
 
       selectorManager = SelectorManager.getInstance(ConnectionManager.oiThreadGroup);
 
@@ -113,7 +118,7 @@ public final class NonBlockingServer implements IServer
             // Accept the client connection
             SocketChannel client = server.accept();
             NonBlockingSocketTrunk trunk = new NonBlockingSocketTrunk(client, selectorManager.getSelector());
-            CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk);
+            CommTrunkRamp trunkRamp = new CommTrunkRamp(trunk, workManager);
             trunk.setCommTrunkRamp(trunkRamp);
             trunkRamp.setTrunkListner(optimizedInvoker);
             trunk.start();

@@ -9,6 +9,7 @@
 
 package org.jboss.invocation.trunk.client.nbio;
 
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -19,7 +20,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-
+import javax.resource.spi.work.WorkManager;
 import org.jboss.invocation.trunk.client.AbstractClient;
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.ConnectionManager;
@@ -44,7 +45,8 @@ public class NonBlockingClient extends AbstractClient
    private ServerAddress serverAddress;
    private SelectorManager selectorManager;
    
-   public void connect(ServerAddress serverAddress, ThreadGroup threadGroup) throws IOException
+   public void connect(ServerAddress serverAddress, 
+                       ThreadGroup threadGroup) throws IOException
    {
       this.serverAddress = serverAddress;
       boolean tracing = log.isTraceEnabled();
@@ -62,7 +64,7 @@ public class NonBlockingClient extends AbstractClient
       socket.socket().setTcpNoDelay(serverAddress.enableTcpNoDelay);
 
       trunk = new NonBlockingSocketTrunk(socket, selectorManager.getSelector());
-      CommTrunkRamp ramp = new CommTrunkRamp(trunk);
+      CommTrunkRamp ramp = new CommTrunkRamp(trunk, workManager);
       trunk.setCommTrunkRamp(ramp);
       ramp.setTrunkListner(this);
       

@@ -9,32 +9,34 @@
 
 package org.jboss.invocation.trunk.server;
 
+
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.rmi.MarshalledObject;
-
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import javax.resource.spi.work.WorkManager;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.ITrunkListner;
-import org.jboss.invocation.trunk.client.TrunkInvokerProxy;
 import org.jboss.invocation.trunk.client.ServerAddress;
+import org.jboss.invocation.trunk.client.TrunkInvokerProxy;
 import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TunkRequest;
 import org.jboss.invocation.trunk.server.bio.BlockingServer;
 import org.jboss.logging.Logger;
+import org.jboss.naming.Util;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
@@ -89,6 +91,20 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    private IServer serverProtocol;
 
    /**
+    * object name of the  <code>workManager</code> thread pool used.
+    *
+    */
+   private ObjectName workManagerName;
+
+   private WorkManager workManager;
+
+   /**
+    * ObjectName of the <code>transactionManagerService</code> we use.
+    * Probably should not be here -- used to set txInterceptor tx mananger.
+    */
+   private ObjectName transactionManagerService;
+
+   /**
     * The proxy object that will sent to clients so that they 
     * know how to connect to the server.
     */
@@ -131,7 +147,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       tpcImporter = (TransactionPropagationContextImporter) ctx.lookup("java:/TransactionPropagationContextImporter");
 
       // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
+      TransactionInterceptor.setTransactionManager((TransactionManager)getServer().getAttribute(transactionManagerService, "TransactionManager"));
+      //TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       ///////////////////////////////////////////////////////////      
@@ -163,8 +180,9 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       }
             
       serverProtocol = (IServer)serverClass.newInstance();
+      WorkManager workManager = (WorkManager)getServer().getAttribute(workManagerName, "WorkManager");
 
-      ServerSocket serverSocket = serverProtocol.bind(this, bindAddress, serverBindPort, 50, enableTcpNoDelay);
+      ServerSocket serverSocket = serverProtocol.bind(this, bindAddress, serverBindPort, 50, enableTcpNoDelay, workManager);
       serverProtocol.start();
 
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
@@ -182,7 +200,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       Registry.bind(getServiceName(), optimizedInvokerProxy);
       // Bind the invoker in the JNDI invoker naming space
       // It should look like so "invokers/<hostname>/trunk" 
-      rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", optimizedInvokerProxy);
+      Util.rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", optimizedInvokerProxy);
 
       log.debug("Bound invoker for JMX node");
       ctx.close();
@@ -207,7 +225,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
          ctx.close();
       }
    }
-
+   /*
    protected void rebind(Context ctx, String name, Object val) throws NamingException
    {
       // Bind val to name in ctx, and make sure that all 
@@ -230,7 +248,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       ctx.rebind(n.get(0), val);
    }
-
+   */
    protected void destroyService() throws Exception
    {
       // Unexport references to the bean
@@ -334,11 +352,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       return null;
    }
 
-   ////////////////////////////////////////////////////////////////////////
-   //
-   // The following methods implement the OptimizedInvokerMBean interface
-   //
-   ////////////////////////////////////////////////////////////////////////
+   //The following are the mbean attributes for TrunkInvoker
 
    /**
     * Getter for property serverBindPort.
@@ -373,33 +387,17 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    /**
     * @jmx:managed-attribute
     */
-   public int getClientConnectPort()
-   {
-      return clientConnectPort;
-   }
-
-   /**
-    * @jmx:managed-attribute
-    */
-   public boolean isEnableTcpNoDelay()
-   {
-      return enableTcpNoDelay;
-   }
-
-   /**
-    * @jmx:managed-attribute
-    */
-   public String getServerBindAddress()
-   {
-      return serverBindAddress;
-   }
-
-   /**
-    * @jmx:managed-attribute
-    */
    public void setClientConnectAddress(String clientConnectAddress)
    {
       this.clientConnectAddress = clientConnectAddress;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getClientConnectPort()
+   {
+      return clientConnectPort;
    }
 
    /**
@@ -413,9 +411,25 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    /**
     * @jmx:managed-attribute
     */
+   public boolean isEnableTcpNoDelay()
+   {
+      return enableTcpNoDelay;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
    public void setEnableTcpNoDelay(boolean enableTcpNoDelay)
    {
       this.enableTcpNoDelay = enableTcpNoDelay;
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public String getServerBindAddress()
+   {
+      return serverBindAddress;
    }
 
    /**
@@ -425,6 +439,62 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       this.serverBindAddress = serverBindAddress;
    }
+
+   
+   
+   /**
+    * mbean get-set pair for field workManager
+    * Get the value of workManager
+    * @return value of workManager
+    *
+    * @jmx:managed-attribute
+    */
+   public ObjectName getWorkManager()
+   {
+      return workManagerName;
+   }
+   
+   
+   /**
+    * Set the value of workManager
+    * @param workManager  Value to assign to workManager
+    *
+    * @jmx:managed-attribute
+    */
+   public void setWorkManager(final ObjectName workManagerName)
+   {
+      this.workManagerName = workManagerName;
+   }
+   
+   
+   
+   /**
+    * mbean get-set pair for field transactionManagerService
+    * Get the value of transactionManagerService
+    * @return value of transactionManagerService
+    *
+    * @jmx:managed-attribute
+    */
+   public ObjectName getTransactionManagerService()
+   {
+      return transactionManagerService;
+   }
+   
+   
+   /**
+    * Set the value of transactionManagerService
+    * @param transactionManagerService  Value to assign to transactionManagerService
+    *
+    * @jmx:managed-attribute
+    */
+   public void setTransactionManagerService(ObjectName transactionManagerService)
+   {
+      this.transactionManagerService = transactionManagerService;
+   }
+   
+   
+
+
 
    /**
     * @jmx:managed-attribute

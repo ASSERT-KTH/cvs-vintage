@@ -12,6 +12,7 @@ package org.jboss.invocation.trunk.server;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import javax.resource.spi.work.WorkManager;
 
 /**
  * The TrunkInvoker abstracts the Blocking and Non-block implementations of the service via
@@ -26,7 +27,7 @@ public interface IServer
     * 
     * @return the server socket that was created to accept client connections.
     */
-   ServerSocket bind(TrunkInvoker oi, InetAddress address, int port, int connectBackLog, boolean enableTcpNoDelay)
+   ServerSocket bind(TrunkInvoker oi, InetAddress address, int port, int connectBackLog, boolean enableTcpNoDelay, WorkManager workManager)
       throws IOException;
 
    /**
