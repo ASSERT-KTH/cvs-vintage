@@ -15,18 +15,16 @@ import javax.management.*;
 import org.jboss.logging.Log;
 
 
-
-/**
- *   <description> 
- *      
- *   @see <related>
+/** ServiceControl manages the JBoss services lifecycle.
+ * 
+ *   @see org.jboss.util.Service
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
- *   @version $Revision: 1.8 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.9 $
  */
 public class ServiceControl
-
-   implements ServiceControlMBean, MBeanRegistration, NotificationListener
+   implements ServiceControlMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=ServiceControl";
@@ -36,8 +34,6 @@ public class ServiceControl
    Log log = Log.createLog("Service Control");
    
    List mbeans = new ArrayList();
-   MBeanServer server;
-   
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -53,27 +49,15 @@ public class ServiceControl
       int serviceCounter = 0;
       while (enum.hasNext())
       {
-         ObjectName name = (ObjectName)enum.next();
+         Service service = (Service)enum.next();
          try
          {
-            server.invoke(name, "init", new Object[0], new String[0]);
+            service.init();
             serviceCounter++;
-            
-            // Register start/stop listener
-            server.addNotificationListener(name,
-                                          this,
-                                          null,
-                                          name);
-         } catch (ReflectionException e)
+         }
+         catch(Throwable e)
          {
-           // Not a service - ok 
-         } catch (RuntimeMBeanException e)
-         {
-            log.error("Could not initialize "+name);
-            log.exception(e.getTargetException());
-         } catch (Exception e)
-         {
-            log.error("Could not initialize "+name);
+            log.error("Could not initialize "+service);
             log.exception(e);
          }
       }
@@ -90,31 +74,16 @@ public class ServiceControl
       int serviceCounter = 0;
       while (enum.hasNext())
       {
-         ObjectName name = (ObjectName)enum.next();
+         Service service = (Service)enum.next();
          
          try
          {
-            server.invoke(name, "start", new Object[0], new String[0]);
+            service.start();
             serviceCounter++;
-         } catch (ReflectionException e)
+         }
+         catch(Throwable e)
          {
-           // Not a service - ok 
-         } catch (Throwable e)
-         {
-            log.error("Could not start "+name);
-            
-            if (e instanceof RuntimeErrorException)
-            {
-               e = ((RuntimeErrorException)e).getTargetError();
-            }
-            else if( e instanceof RuntimeMBeanException )
-            {
-               e = ((RuntimeMBeanException)e).getTargetException();
-            }
-            else if( e instanceof MBeanException )
-            {
-               e = ((MBeanException)e).getTargetException();
-            }
+            log.error("Could not start "+service);
             log.exception(e);
          }
       }
@@ -131,24 +100,16 @@ public class ServiceControl
       while (enum.hasNext()) enum.next(); // pass them all
       while (enum.hasPrevious())
       {
-         ObjectName name = (ObjectName)enum.previous();
+         Service service = (Service) enum.previous();
          
          try
          {
-            server.invoke(name, "stop", new Object[0], new String[0]);
+            service.stop();
             serviceCounter++;
-         } catch (ReflectionException e)
+         }
+         catch (Throwable e)
          {
-           // Not a service - ok 
-         } catch (Throwable e)
-         {
-            log.error("Could not stop "+name);
-            
-            if (e instanceof RuntimeErrorException)
-            {
-               e = ((RuntimeErrorException)e).getTargetError();
-            }
-            
+            log.error("Could not stop "+service);           
             log.exception(e);
          }
       }
@@ -165,89 +126,51 @@ public class ServiceControl
       while (enum.hasNext()) enum.next(); // pass them all
       while (enum.hasPrevious())
       {
-         ObjectName name = (ObjectName)enum.previous();
+         Service service = (Service) enum.previous();
          
          try
          {
-            server.invoke(name, "destroy", new Object[0], new String[0]);
+            service.destroy();
             serviceCounter++;
-         } catch (ReflectionException e)
+         }
+         catch (Throwable e)
          {
-           // Not a service - ok 
-         } catch (Throwable e)
-         {
-            log.error("Could not destroy "+name);
-            
-            if (e instanceof RuntimeErrorException)
-            {
-               e = ((RuntimeErrorException)e).getTargetError();
-            }
-            
+            log.error("Could not destroy"+service);           
             log.exception(e);
          }
       }
       log.log("Destroyed "+mbeansCopy.size()+" services");
    }
-   
-   
+
+   public void register(Service service)
+   {
+       mbeans.add(service);
+   }
+   public void unregister(Service service)
+   {
+       mbeans.remove(service);
+   }
+
    // MBeanRegistration implementation ------------------------------
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      this.server = server;
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
    
    public void postRegister(java.lang.Boolean registrationDone)
    {
-      try
-      {
-         server.addNotificationListener(new ObjectName("JMImplementation:type=MBeanServerDelegate"),
-                                       this,
-                                       null,
-                                       null);
-         log.log("Registered with server");
-      } catch (Exception e)
-      {
-         log.error("Could not register with server");
-         log.exception(e);
-      }
    }
    
    public void preDeregister()
       throws java.lang.Exception
    {
-      server.removeNotificationListener(new ObjectName("JMImplementation:type=MBeanServerDelegate"), this);
-      log.log("Deregistered from server");
    }
    
    public void postDeregister()
    {
    }
-   
-   // NotificationListener implementation ---------------------------
-   public void handleNotification(Notification notification,
-                               java.lang.Object handback)
-   {
-      if (notification instanceof AttributeChangeNotification)
-      {
-         AttributeChangeNotification attrChg = (AttributeChangeNotification)notification;
-//         log.log(handback+":"+attrChg.getAttributeName()+":"+attrChg.getNewValue());
-      } else if (notification instanceof MBeanServerNotification)
-      {
-         MBeanServerNotification reg = (MBeanServerNotification)notification;
-      
-         if (reg.getType().equals(MBeanServerNotification.REGISTRATION_NOTIFICATION))
-         {
-            mbeans.add(reg.getMBeanName());
-         } else if (reg.getType().equals(MBeanServerNotification.UNREGISTRATION_NOTIFICATION))
-         {
-            mbeans.remove(reg.getMBeanName());
-         }
-      }
-   }
-   
-   
+
 }
 
 

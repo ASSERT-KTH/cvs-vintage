@@ -9,9 +9,12 @@ package org.jboss.configuration;
 
 import java.io.*;
 import java.beans.*;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -23,15 +26,22 @@ import javax.xml.parsers.*;
 
 
 import org.jboss.logging.Log;
+import org.jboss.util.Service;
+import org.jboss.util.ServiceFactory;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.util.XmlHelper;
 
-/**
- *   <description>
+/** The ConfigurationService MBean is loaded when JBoss starts up by the
+JMX MLet. The ConfigurationService in turn loads the jboss.jcml configuration
+when loadConfiguration() is invoked. This instantiates JBoss specific mbean
+services that wish to be controlled by the JBoss ServiceControl/Service
+lifecycle service.
  *
- *   @see <related>
+ *   @see org.jboss.util.Service
+ *   @see org.jboss.util.ServiceControl
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.20 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.21 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -53,6 +63,7 @@ public class ConfigurationService
     Log log = Log.createLog(getName());
 
     MBeanServer server;
+    ObjectName serviceControl;
 
    // Static --------------------------------------------------------
 
@@ -74,8 +85,13 @@ public class ConfigurationService
     public void load(Document configuration)
         throws Exception
     {
+        // Get the ServiceControl MBean
+        serviceControl = new ObjectName(server.getDefaultDomain(), "service", "ServiceControl");
+        if( server.isRegistered(serviceControl) == false )
+            throw new IllegalStateException("Failed to find ServiceControl mbean, name="+serviceControl);
+
         try
-        {
+        {          
             // Set configuration to MBeans from XML
             NodeList nl = configuration.getElementsByTagName("mbean");
             for (int i = 0; i < nl.getLength(); i++)
@@ -137,6 +153,9 @@ public class ConfigurationService
                     }
 
                 }
+
+                // Register the mbean with the JBoss ServiceControl mbean
+                registerService(objectName, info, mbeanElement);
             }
         } catch (Throwable e)
         {
@@ -240,10 +259,9 @@ public class ConfigurationService
     public void loadConfiguration()
        throws Exception
     {
-      // This is a 3-step process
+      // This is a 2-step process
       // 1) Load user conf. and create MBeans from that
-      // 2) Load auto-saved conf and apply to created MBeans
-      // 3) Apply user conf to created MBeans, overwriting any auto-saved conf.
+      // 2) Apply user conf to created MBeans
 
        // Load user config from XML, and create the MBeans
        InputStream conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss.jcml");
@@ -261,7 +279,6 @@ public class ConfigurationService
        try
        {
            userConf = parser.parse(new InputSource(new StringReader(cfg)));
-           //userConf = xdb.getDocument();
        }
        catch (SAXException se)
        {
@@ -269,31 +286,6 @@ public class ConfigurationService
        }
 
        create(userConf);
-
-       // Load auto-saved configuration from XML, and apply it
-       conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss-auto.jcml");
-       if (conf != null) // The auto file is optional
-       {
-          arr = new byte[conf.available()];
-          conf.read(arr);
-          conf.close();
-          cfg = new String(arr);
-
-          // Parse XML
-          Document autoConf;
-
-          try
-          {
-              autoConf = parser.parse(new InputSource(new StringReader(cfg)));
-              //autoConf = xdb.getDocument();
-          }
-          catch (SAXException se)
-          {
-               throw new IOException(se.getMessage());
-          }
-          create(autoConf);
-          load(autoConf);
-       }
 
        // Apply user conf
        conf = Thread.currentThread().getContextClassLoader().getResourceAsStream("jboss.jcml");
@@ -337,7 +329,8 @@ public class ConfigurationService
                      try
                      {
                         // Create MBean
-                        ObjectInstance instance = server.createMBean(code, objectName, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
+                        ObjectInstance instance = server.createMBean(code, objectName,
+                            new ObjectName(server.getDefaultDomain(), "service", "MLet"));
                         info = server.getMBeanInfo(instance.getObjectName());
                      } catch (Throwable ex)
                      {
@@ -409,6 +402,162 @@ public class ConfigurationService
         } catch(NoSuchMethodException e) {}
         return false;
     }
+
+    /** Register the mbean given by objectName with the ServiceControl service.
+    */
+    void registerService(ObjectName objectName, MBeanInfo info, Element mbeanElement)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        // Check for a serviceFactory attribute
+        String serviceFactory = mbeanElement.getAttribute("serviceFactory");
+        Service service = getServiceInstance(objectName, info, serviceFactory);
+        if( service != null )
+        {
+            Object[] args = {service};
+            String[] signature = {"org.jboss.util.Service"};
+            try
+            {
+                server.invoke(serviceControl, "register", args, signature);
+            }
+            catch(Exception e)
+            {
+                logException(e);
+            }
+        }
+    }
+
+    /** Get the Service interface through which the mbean given by objectName will
+        be managed.
+    */
+    Service getServiceInstance(ObjectName objectName, MBeanInfo info, String serviceFactory)
+        throws ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        Service service = null;
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if( serviceFactory != null && serviceFactory.length() > 0 )
+        {
+            Class clazz = loader.loadClass(serviceFactory);
+            ServiceFactory factory = (ServiceFactory) clazz.newInstance();
+            service = factory.createService(server, objectName);
+        }
+        else
+        {
+            MBeanOperationInfo[] opInfo = info.getOperations();
+            Class[] interfaces = { org.jboss.util.Service.class };
+            InvocationHandler handler = new ServiceProxy(objectName, opInfo);
+            service = (Service) Proxy.newProxyInstance(loader, interfaces, handler);
+        }
+        return service;
+    }
+
+    /** A mapping from the Service interface method names to the
+    corresponding index into the ServiceProxy.hasOp array.
+    */
+    static HashMap serviceOpMap = new HashMap();
+    static
+    {
+        serviceOpMap.put("init", new Integer(0));
+        serviceOpMap.put("start", new Integer(1));
+        serviceOpMap.put("destroy", new Integer(2));
+        serviceOpMap.put("stop", new Integer(3));
+    }
+    /** An implementation of InvocationHandler used to proxy of the Service
+    interface for mbeans. It determines which of the init/start/stop/destroy
+    methods of the Service interface an mbean implements by inspecting its
+    MBeanOperationInfo values. Each Service interface method that has a
+    matching operation is forwarded to the mbean by invoking the method
+    through the MBeanServer object.
+    */
+    class ServiceProxy implements InvocationHandler
+    {
+
+        private boolean[] hasOp = {false, false, false, false};
+        private ObjectName objectName;
+
+        /** Go through the opInfo array and for each operation that
+        matches on of the Service interface methods set the corresponding
+        hasOp array value to true.
+        */
+        ServiceProxy(ObjectName objectName, MBeanOperationInfo[] opInfo)
+        {
+            this.objectName = objectName;
+            for(int op = 0; op < opInfo.length; op ++)
+            {
+                MBeanOperationInfo info = opInfo[op];
+                String name = info.getName();
+                Integer opID = (Integer) serviceOpMap.get(name);
+                if( opID == null )
+                   continue;
+
+                // Validate that is a no-arg void return type method
+                if( info.getReturnType().equals("void") == false )
+                    continue;
+                if( info.getSignature().length != 0 )
+                    continue;
+                hasOp[opID.intValue()] = true;
+            }
+        }
+
+        /** Map the method name to a Service interface method index and
+        if the corresponding hasOp array element is true, dispatch the
+        method to the mbean we are proxying.
+        @return null always.
+        */
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+        {
+            String name = method.getName();
+            Integer opID = (Integer) serviceOpMap.get(name);
+            if( opID != null && hasOp[opID.intValue()] == true )
+            {
+                try
+                {
+                    String[] sig = {};
+                    server.invoke(objectName, name, args, sig);
+                }
+                catch(JMRuntimeException e)
+                {
+                    logException(e);
+                }
+                catch(JMException e)
+                {
+                    logException(e);
+                }
+            }
+            return null;
+        }
+    }
+
+    /** Go through the myriad of nested JMX exception to pull out the
+        true exception if possible and log it.
+    */
+    void logException(Exception e)
+    {
+        if( e instanceof RuntimeErrorException )
+        {
+            Throwable t = ((RuntimeErrorException)e).getTargetError();
+            log.exception(t);
+        }
+        else if( e instanceof RuntimeMBeanException)
+        {
+            Throwable t = ((RuntimeMBeanException)e).getTargetException();
+            log.exception(t);
+        }
+        else if( e instanceof RuntimeOperationsException)
+        {
+            Throwable t = ((RuntimeOperationsException)e).getTargetException();
+            log.exception(t);
+        }
+        else if( e instanceof MBeanException)
+        {
+            Throwable t = ((MBeanException)e).getTargetException();
+            log.exception(t);
+        }
+        else if( e instanceof ReflectionException)
+        {
+            Throwable t = ((ReflectionException)e).getTargetException();
+            log.exception(t);
+        }
+        else
+            log.exception(e);
+    }
 }
-
-

@@ -6,16 +6,19 @@
  */
 package org.jboss.util;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** The interface for the ServiceControl MBean. This service
+manages the lifecycle of JBoss services.
+
+ *   @see org.jboss.util.Service
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.2 $
  */
 public interface ServiceControlMBean
    extends Service
 {
    // Public --------------------------------------------------------
+    public void register(Service service);
+    public void unregister(Service service);
 }
 

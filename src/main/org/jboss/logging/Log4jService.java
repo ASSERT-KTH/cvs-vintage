@@ -33,14 +33,14 @@ import org.apache.log4j.PropertyConfigurator;
 
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
 {
 
 // Attributes ----------------------------------------------------
-    private Category cat;
+    private Category category;
     private String configurationPath;
     private int refreshPeriod;
     private boolean refreshFlag;
@@ -104,6 +104,7 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         URL url = loader.getResource(configurationPath);
         if( url == null )
             throw new FileNotFoundException("Failed to find logj4 props: "+configurationPath);
+        this.category = Category.getRoot();
         if( refreshFlag )
         {
             // configurationPath is a file path
@@ -114,8 +115,7 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         {
             PropertyConfigurator.configure(url);
         }
-        cat = Category.getRoot();
-        cat.info("Started Log4jService, config="+url);
+        category.info("Started Log4jService, config="+url);
     }
     /** Stops the log4j framework by calling the Category.shutdown() method.
     @see org.apache.log4j.Category#shutdown()
@@ -123,8 +123,8 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
     public void stop()
     {
         Category.shutdown();
-        if( cat != null )
-            cat.info("Stopped Log4jService");
+        if( category != null )
+            category.info("Stopped Log4jService");
     }
 
 // Public --------------------------------------------------------
@@ -138,25 +138,29 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
     */
     public void handleNotification(Notification n, Object handback)
     {
+        if( category == null )
+            return;
+
         String msg = n.getMessage();
         char type = n.getType().charAt(0);
         String source = (String) n.getUserData();
         if( source == null || source.length() == 0 )
             source = "Default";
+
         NDC.push(source);
         switch( type )
         {
             case 'W':
-                cat.warn(msg);
+                category.warn(msg);
             break;
             case 'D':
-                cat.debug(msg);
+                category.debug(msg);
             break;
             case 'E':
-                cat.error(msg);
+                category.error(msg);
             break;
             default:
-                cat.info(msg);
+                category.info(msg);
             break;
         }
         NDC.pop();
