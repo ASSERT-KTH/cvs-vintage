@@ -9,20 +9,25 @@
 
 package org.jboss.cmp.query;
 
-
-public class Parameter extends Expression
+public class IsNull extends Condition
 {
-   private int index;
+   private boolean not;
+   private Expression expr;
 
-   public Parameter(Query query, int index)
+   public IsNull(boolean not, Expression expr)
    {
-      super(query.getParameters()[index]);
-      this.index = index;
+      this.not = not;
+      this.expr = expr;
    }
 
-   public int getIndex()
+   public boolean isNot()
    {
-      return index;
+      return not;
+   }
+
+   public Expression getExpr()
+   {
+      return expr;
    }
 
    public Object accept(QueryVisitor visitor, Object param)

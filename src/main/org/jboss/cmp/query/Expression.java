@@ -11,7 +11,7 @@ package org.jboss.cmp.query;
 
 import org.jboss.cmp.schema.AbstractType;
 
-public class Expression extends BaseNode
+public abstract class Expression extends BaseNode
 {
    protected AbstractType type;
 
@@ -28,10 +28,4 @@ public class Expression extends BaseNode
    {
       return type;
    }
-
-   public Object accept(QueryVisitor visitor, Object param)
-   {
-      return visitor.visit(this, param);
-   }
-
 }

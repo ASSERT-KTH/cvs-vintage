@@ -77,7 +77,7 @@ public class RelationshipEnd implements AbstractAssociationEnd
       StringBuffer buf = new StringBuffer(50);
       String[] rightColumns = peer.getColumnNames();
       buf.append("(");
-      for (int i=0; i < columnNames.length; i++)
+      for (int i = 0; i < columnNames.length; i++)
       {
          if (i > 0)
          {

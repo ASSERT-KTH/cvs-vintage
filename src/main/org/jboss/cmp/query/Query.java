@@ -25,7 +25,7 @@ public class Query extends BaseNode
    private AbstractType[] parameters;
    private Relation relation;
    private Projection projection;
-   private QueryNode filter;
+   private Condition filter;
 
    private final Map aliases = new HashMap();
 
@@ -68,6 +68,11 @@ public class Query extends BaseNode
       aliases.put(relation.getAlias(), relation);
    }
 
+   public boolean isCorrelated(String alias)
+   {
+      return aliases.keySet().contains(alias) == false;
+   }
+
    /**
     * Return a specific Relation identified by its alias
     * @param alias the alias used to identify the Relation
@@ -78,12 +83,12 @@ public class Query extends BaseNode
       return (NamedRelation) aliases.get(alias);
    }
 
-   public QueryNode getFilter()
+   public Condition getFilter()
    {
       return filter;
    }
 
-   public void setFilter(QueryNode filter)
+   public void setFilter(Condition filter)
    {
       this.filter = filter;
    }

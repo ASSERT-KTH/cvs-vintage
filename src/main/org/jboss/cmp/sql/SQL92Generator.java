@@ -16,8 +16,10 @@ import org.jboss.cmp.query.Comparison;
 import org.jboss.cmp.query.Condition;
 import org.jboss.cmp.query.ConditionExpression;
 import org.jboss.cmp.query.CrossJoin;
-import org.jboss.cmp.query.Expression;
+import org.jboss.cmp.query.Exists;
 import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.IsNull;
+import org.jboss.cmp.query.JoinCondition;
 import org.jboss.cmp.query.Literal;
 import org.jboss.cmp.query.NamedRelation;
 import org.jboss.cmp.query.Parameter;
@@ -27,6 +29,8 @@ import org.jboss.cmp.query.Query;
 import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
+import org.jboss.cmp.query.Relation;
+import org.jboss.cmp.query.SubQuery;
 import org.jboss.cmp.schema.AbstractType;
 
 /**
@@ -62,10 +66,16 @@ public class SQL92Generator implements QueryVisitor
       return buf;
    }
 
+   public Object visit(SubQuery subquery, Object param)
+   {
+      return this.visit((Query) subquery, param);
+   }
+
    public Object visit(Projection projection, Object param)
    {
       StringBuffer buf = (StringBuffer) param;
-      if (projection.isDistinct()) {
+      if (projection.isDistinct())
+      {
          buf.append("DISTINCT ");
       }
       for (Iterator i = projection.getChildren().iterator(); i.hasNext();)
@@ -87,7 +97,7 @@ public class SQL92Generator implements QueryVisitor
       {
          NamedRelation root = path.getRoot();
          String alias = root.getAlias();
-         String[] pkColumns = ((Table)root.getType()).getPkFields();
+         String[] pkColumns = ((Table) root.getType()).getPkFields();
          for (int i = 0; i < pkColumns.length; i++)
          {
             if (i != 0)
@@ -130,8 +140,9 @@ public class SQL92Generator implements QueryVisitor
    public Object visit(InnerJoin join, Object param)
    {
       StringBuffer buf = (StringBuffer) param;
-      join.getLeft().accept(this, buf);
+      Relation left = join.getLeft();
       NamedRelation right = (NamedRelation) join.getRight();
+      left.accept(this, buf);
       buf.append(" INNER JOIN ");
       right.accept(this, buf);
       RelationshipEnd end = (RelationshipEnd) join.getAssociationEnd();
@@ -145,6 +156,14 @@ public class SQL92Generator implements QueryVisitor
       comparison.getLeft().accept(this, buf);
       buf.append(' ').append(comparison.getOperator()).append(' ');
       comparison.getRight().accept(this, buf);
+      return buf;
+   }
+
+   public Object visit(JoinCondition joinCondition, Object param)
+   {
+      RelationshipEnd end = (RelationshipEnd) joinCondition.getEnd();
+      StringBuffer buf = (StringBuffer) param;
+      buf.append(end.getJoinCondition(joinCondition.getLeft().getAlias(), joinCondition.getRight().getAlias()));
       return buf;
    }
 
@@ -174,9 +193,23 @@ public class SQL92Generator implements QueryVisitor
       return buf;
    }
 
-   public Object visit(Expression expression, Object param)
+   public Object visit(IsNull expression, Object param)
    {
-      throw new UnsupportedOperationException();
+      StringBuffer buf = (StringBuffer) param;
+      expression.getExpr().accept(this, buf);
+      buf.append(expression.isNot() ? " IS NOT NULL" : " IS NULL");
+      return buf;
+   }
+
+   public Object visit(Exists expression, Object param)
+   {
+      StringBuffer buf = (StringBuffer) param;
+      if (expression.isNot())
+         buf.append("NOT ");
+      buf.append("EXISTS(");
+      expression.getSubquery().accept(this, buf);
+      buf.append(')');
+      return buf;
    }
 
    public Object visit(Literal literal, Object param)
@@ -197,7 +230,7 @@ public class SQL92Generator implements QueryVisitor
    private void escape(StringBuffer buf, String s)
    {
       buf.append('\'');
-      for (int i=0; i < s.length(); i++)
+      for (int i = 0; i < s.length(); i++)
       {
          char c = s.charAt(i);
          if (c == '\'')

@@ -9,14 +9,14 @@
 
 package org.jboss.cmp.sql;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
-import java.sql.Types;
 
 import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractSchema;
-import org.jboss.cmp.schema.DuplicateNameException;
 import org.jboss.cmp.schema.AbstractType;
+import org.jboss.cmp.schema.DuplicateNameException;
 
 /**
  * Implementaion of an AbstractSchema for SQL92 based systems.

@@ -9,20 +9,26 @@
 
 package org.jboss.cmp.query;
 
-
-public class Parameter extends Expression
+public class SubQuery extends Query
 {
-   private int index;
+   private final Query parent;
 
-   public Parameter(Query query, int index)
+   public SubQuery(Query parent)
    {
-      super(query.getParameters()[index]);
-      this.index = index;
+      this.parent = parent;
    }
 
-   public int getIndex()
+   public Query getQuery()
    {
-      return index;
+      return parent;
+   }
+
+   public NamedRelation getRelation(String alias)
+   {
+      NamedRelation relation = super.getRelation(alias);
+      if (relation == null)
+         relation = parent.getRelation(alias);
+      return relation;
    }
 
    public Object accept(QueryVisitor visitor, Object param)

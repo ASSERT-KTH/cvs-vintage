@@ -15,13 +15,13 @@ import java.util.List;
 
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractAttribute;
-import org.jboss.cmp.schema.AbstractType;
 
 public class Path extends Expression
 {
    private final NamedRelation root;
    private final List steps;
    private boolean collection;
+   private Object lastStep;
 
    public Path(NamedRelation root)
    {
@@ -39,6 +39,7 @@ public class Path extends Expression
    public void addStep(AbstractAttribute attr)
    {
       steps.add(attr);
+      lastStep = attr;
       type = attr.getType();
       collection = false;
    }
@@ -46,6 +47,7 @@ public class Path extends Expression
    public void addStep(AbstractAssociationEnd end)
    {
       steps.add(end);
+      lastStep = end;
       type = end.getPeer().getType();
       collection = end.getPeer().isCollection();
    }
@@ -55,6 +57,11 @@ public class Path extends Expression
       return steps.iterator();
    }
 
+   public Object getLastStep()
+   {
+      return lastStep;
+   }
+
    public boolean isCollection()
    {
       return collection;
@@ -62,11 +69,16 @@ public class Path extends Expression
 
    public String toString()
    {
+      return toString(".");
+   }
+
+   public String toString(String delim)
+   {
       StringBuffer buf = new StringBuffer();
       buf.append(root.getAlias());
       for (Iterator i = steps.iterator(); i.hasNext();)
       {
-         buf.append(".").append(i.next());
+         buf.append(delim).append(i.next());
       }
       return buf.toString();
    }

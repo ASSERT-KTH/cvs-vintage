@@ -13,18 +13,21 @@ import java.util.Iterator;
 
 import org.jboss.cmp.query.CollectionRelation;
 import org.jboss.cmp.query.Comparison;
+import org.jboss.cmp.query.ConditionExpression;
 import org.jboss.cmp.query.CrossJoin;
+import org.jboss.cmp.query.Exists;
 import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.IsNull;
+import org.jboss.cmp.query.JoinCondition;
 import org.jboss.cmp.query.Literal;
+import org.jboss.cmp.query.Parameter;
 import org.jboss.cmp.query.Path;
 import org.jboss.cmp.query.Projection;
 import org.jboss.cmp.query.Query;
 import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
-import org.jboss.cmp.query.Expression;
-import org.jboss.cmp.query.Parameter;
-import org.jboss.cmp.query.ConditionExpression;
+import org.jboss.cmp.query.SubQuery;
 
 /**
  * Transformer that produces EJB-QL text of a query against a EJB schema.
@@ -53,10 +56,16 @@ public class EJBQLGenerator implements QueryVisitor
       return buf;
    }
 
+   public Object visit(SubQuery subquery, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
    public Object visit(Projection projection, Object param)
    {
       StringBuffer buf = (StringBuffer) param;
-      if (projection.isDistinct()) {
+      if (projection.isDistinct())
+      {
          buf.append(" DISTINCT");
       }
       for (Iterator i = projection.getChildren().iterator(); i.hasNext();)
@@ -121,12 +130,22 @@ public class EJBQLGenerator implements QueryVisitor
       throw new UnsupportedOperationException();
    }
 
+   public Object visit(JoinCondition joinCondition, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
    public Object visit(ConditionExpression expression, Object param)
    {
       throw new UnsupportedOperationException();
    }
 
-   public Object visit(Expression expression, Object param)
+   public Object visit(IsNull expression, Object param)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   public Object visit(Exists expression, Object param)
    {
       throw new UnsupportedOperationException();
    }

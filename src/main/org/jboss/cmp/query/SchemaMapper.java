@@ -51,14 +51,15 @@ public class SchemaMapper extends QueryCloner
     * @return an equivalent query against the target schema
     * @throws UnmappedEntryException if an entry cannot be mapped
     */
-   public Query map(Query query) throws UnmappedEntryException {
+   public Query map(Query query) throws UnmappedEntryException
+   {
       try
       {
          return (Query) query.accept(this, null);
       }
       catch (InternalNoMapException e)
       {
-         throw new UnmappedEntryException("No map entry found for "+e.cause, e.cause);
+         throw new UnmappedEntryException("No map entry found for " + e.cause, e.cause);
       }
    }
 
@@ -78,7 +79,7 @@ public class SchemaMapper extends QueryCloner
       newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
       newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
       if (query.getFilter() != null)
-         newQuery.setFilter((QueryNode) query.getFilter().accept(this, newQuery));
+         newQuery.setFilter((Condition) query.getFilter().accept(this, newQuery));
       return newQuery;
    }
 
@@ -107,13 +108,27 @@ public class SchemaMapper extends QueryCloner
 
    public Object visit(InnerJoin join, Object param)
    {
-      return new InnerJoin((Relation) join.getLeft().accept(this, param),
+      Relation left = join.getLeft();
+      if (left != null)
+      {
+         left = (Relation) left.accept(this, param);
+      }
+      return new InnerJoin(left,
                            (NamedRelation) join.getJoin().accept(this, param),
                            (Relation) join.getRight().accept(this, param),
-                           (AbstractAssociationEnd)map(join.getAssociationEnd()));
+                           (AbstractAssociationEnd) map(join.getAssociationEnd()));
    }
 
-   private class InternalNoMapException extends RuntimeException {
+   public Object visit(JoinCondition joinCondition, Object param)
+   {
+      NamedRelation left = (NamedRelation) joinCondition.getLeft().accept(this, param);
+      NamedRelation right = (NamedRelation) joinCondition.getRight().accept(this, param);
+      AbstractAssociationEnd end = (AbstractAssociationEnd) map(joinCondition.getEnd());
+      return new JoinCondition(left, right, end);
+   }
+
+   private class InternalNoMapException extends RuntimeException
+   {
       private Object cause;
 
       public InternalNoMapException(Object cause)

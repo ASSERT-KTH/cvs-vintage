@@ -21,7 +21,8 @@ import org.jboss.cmp.schema.AbstractAttribute;
  */
 public class QueryCloner implements QueryVisitor
 {
-   public Query cloneQuery(Query source) {
+   public Query cloneQuery(Query source)
+   {
       return (Query) source.accept(this, null);
    }
 
@@ -31,7 +32,17 @@ public class QueryCloner implements QueryVisitor
       newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
       newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
       if (query.getFilter() != null)
-         newQuery.setFilter((QueryNode) query.getFilter().accept(this, newQuery));
+         newQuery.setFilter((Condition) query.getFilter().accept(this, newQuery));
+      return newQuery;
+   }
+
+   public Object visit(SubQuery subquery, Object param)
+   {
+      SubQuery newQuery = new SubQuery((Query) param);
+      newQuery.setRelation((Relation) subquery.getRelation().accept(this, newQuery));
+      newQuery.setProjection((Projection) subquery.getProjection().accept(this, newQuery));
+      if (subquery.getFilter() != null)
+         newQuery.setFilter((Condition) subquery.getFilter().accept(this, newQuery));
       return newQuery;
    }
 
@@ -83,15 +94,15 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(CrossJoin join, Object param)
    {
-      return new CrossJoin((Relation)join.getLeft().accept(this, param), (Relation)join.getRight().accept(this, param));
+      return new CrossJoin((Relation) join.getLeft().accept(this, param), (Relation) join.getRight().accept(this, param));
    }
 
    public Object visit(InnerJoin join, Object param)
    {
       return new InnerJoin(
-            (Relation)join.getLeft().accept(this, param),
-            (NamedRelation)join.getJoin().accept(this, param),
-            (Relation)join.getRight().accept(this, param),
+            (Relation) join.getLeft().accept(this, param),
+            (NamedRelation) join.getJoin().accept(this, param),
+            (Relation) join.getRight().accept(this, param),
             join.getAssociationEnd());
    }
 
@@ -103,20 +114,32 @@ public class QueryCloner implements QueryVisitor
       return new Comparison(left, operator, right);
    }
 
+   public Object visit(JoinCondition joinCondition, Object param)
+   {
+      NamedRelation left = (NamedRelation) joinCondition.getLeft().accept(this, param);
+      NamedRelation right = (NamedRelation) joinCondition.getRight().accept(this, param);
+      return new JoinCondition(left, right, joinCondition.getEnd());
+   }
+
    public Object visit(ConditionExpression expression, Object param)
    {
       ConditionExpression expr = new ConditionExpression(expression.getOperator());
       for (Iterator i = expression.getChildren().iterator(); i.hasNext();)
       {
          Condition condition = (Condition) i.next();
-         expr.addChild((QueryNode)condition.accept(this, param));
+         expr.addChild((QueryNode) condition.accept(this, param));
       }
       return expr;
    }
 
-   public Object visit(Expression expression, Object param)
+   public Object visit(IsNull expression, Object param)
    {
-      throw new UnsupportedOperationException();
+      return new IsNull(expression.isNot(), (Expression) expression.getExpr().accept(this, param));
+   }
+
+   public Object visit(Exists expression, Object param)
+   {
+      return new Exists(expression.isNot(), (SubQuery) expression.getSubquery().accept(this, param));
    }
 
    public Object visit(Literal literal, Object param)
@@ -126,6 +149,6 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(Parameter queryParam, Object param)
    {
-      return new Parameter((Query)param, queryParam.getIndex());
+      return new Parameter((Query) param, queryParam.getIndex());
    }
 }

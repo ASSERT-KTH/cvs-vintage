@@ -9,20 +9,25 @@
 
 package org.jboss.cmp.query;
 
-
-public class Parameter extends Expression
+public class Exists extends Condition
 {
-   private int index;
+   private boolean not;
+   private SubQuery subquery;
 
-   public Parameter(Query query, int index)
+   public Exists(boolean not, SubQuery subquery)
    {
-      super(query.getParameters()[index]);
-      this.index = index;
+      this.not = not;
+      this.subquery = subquery;
    }
 
-   public int getIndex()
+   public boolean isNot()
    {
-      return index;
+      return not;
+   }
+
+   public SubQuery getSubquery()
+   {
+      return subquery;
    }
 
    public Object accept(QueryVisitor visitor, Object param)

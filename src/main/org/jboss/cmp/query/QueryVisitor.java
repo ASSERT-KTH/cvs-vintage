@@ -16,6 +16,8 @@ public interface QueryVisitor
 {
    public Object visit(Query query, Object param);
 
+   public Object visit(SubQuery subquery, Object param);
+
    public Object visit(Projection projection, Object param);
 
    public Object visit(Path path, Object param);
@@ -30,9 +32,13 @@ public interface QueryVisitor
 
    public Object visit(Comparison comparison, Object param);
 
+   public Object visit(JoinCondition joinCondition, Object param);
+
    public Object visit(ConditionExpression expression, Object param);
 
-   public Object visit(Expression expression, Object param);
+   public Object visit(IsNull expression, Object param);
+
+   public Object visit(Exists expression, Object param);
 
    public Object visit(Literal literal, Object param);
 

@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.jboss.cmp.schema.AbstractClass;
 import org.jboss.cmp.schema.AbstractSchema;
-import org.jboss.cmp.schema.DuplicateNameException;
 import org.jboss.cmp.schema.AbstractType;
+import org.jboss.cmp.schema.DuplicateNameException;
 
 /**
  * An implementation of an AbstractSchema for EJB based systems.

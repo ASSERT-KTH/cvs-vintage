@@ -33,103 +33,111 @@ public class PathUnnester extends QueryCloner
       return query;
    }
 
-//   public Object visit(Query query, Object param)
-//   {
-//      Query newQuery = new Query();
-//      newQuery.setRelation((Relation) query.getRelation().accept(this, newQuery));
-//      newQuery.setProjection((Projection) query.getProjection().accept(this, newQuery));
-//      return newQuery;
-//   }
-
    public Object visit(CrossJoin join, Object param)
    {
       Query newQuery = (Query) param;
 
       // process the left hand side of the join
-      Relation left = (Relation)join.getLeft().accept(this, param);
+      Relation left = (Relation) join.getLeft().accept(this, param);
       newQuery.setRelation(left);
 
       Relation right = join.getRight();
-      if (right instanceof CollectionRelation) {
+      if (right instanceof CollectionRelation)
+      {
          left = (Relation) right.accept(this, newQuery);
       }
       else
       {
-         left = new CrossJoin(left, (Relation)right.accept(this, param));
+         left = new CrossJoin(left, (Relation) right.accept(this, param));
+         newQuery.setRelation(left);
       }
-      newQuery.setRelation(left);
       return left;
    }
 
    public Object visit(CollectionRelation relation, Object param)
    {
       Query newQuery = (Query) param;
-      Relation joinTree = newQuery.getRelation();
-
       Path path = relation.getPath();
-      NamedRelation left = path.getRoot();
-      RangeRelation right;
+      NamedRelation left = addJoinsFromPath(newQuery, path);
 
-      StringBuffer pathAlias = new StringBuffer(left.getAlias());
-      AbstractAssociationEnd step = null;
-      for (Iterator i = path.listSteps(); i.hasNext();)
-      {
-         step = (AbstractAssociationEnd) i.next();
-         if (i.hasNext()) {
-            pathAlias.append('_').append(step.getName());
-            String alias = pathAlias.toString();
-            right = (RangeRelation) newQuery.getRelation(alias);
-            if (right == null)
-            {
-               right = new RangeRelation(alias, step.getPeer().getType());
-               newQuery.addAlias(right);
-               joinTree = new InnerJoin(joinTree, left, right, step);
-            }
-            left = right;
-         }
-      }
-      right = new RangeRelation(relation.getAlias(), relation.getType());
+      RangeRelation right = new RangeRelation(relation.getAlias(), relation.getType());
       newQuery.addAlias(right);
-      return new InnerJoin(joinTree, left, right, step);
-   }
 
-   public Object visit(RangeRelation relation, Object param)
-   {
-      return super.visit(relation, param);
+      addJoin(newQuery, left, right, (AbstractAssociationEnd) path.getLastStep());
+      return newQuery.getRelation();
    }
 
    public Object visit(Path path, Object param)
    {
       Query newQuery = (Query) param;
-      Relation joinTree = newQuery.getRelation();
+      Object lastStep = path.getLastStep();
+      if (lastStep == null)
+      {
+         return new Path(path.getRoot());
+      }
+      else
+      {
+         NamedRelation left = addJoinsFromPath(newQuery, path);
+         Path newPath = new Path(left);
+         newPath.addStep((AbstractAttribute) lastStep);
+         return newPath;
+      }
+   }
 
+   private NamedRelation addJoinsFromPath(Query query, Path path)
+   {
       NamedRelation left = path.getRoot();
+      RangeRelation right;
+
       StringBuffer pathAlias = new StringBuffer(left.getAlias());
       for (Iterator i = path.listSteps(); i.hasNext();)
       {
          Object o = i.next();
-         if (o instanceof AbstractAssociationEnd)
+         if (i.hasNext())
          {
             AbstractAssociationEnd step = (AbstractAssociationEnd) o;
             pathAlias.append('_').append(step.getName());
             String alias = pathAlias.toString();
-            NamedRelation right = newQuery.getRelation(alias);
+            right = (RangeRelation) query.getRelation(alias);
             if (right == null)
             {
                right = new RangeRelation(alias, step.getPeer().getType());
-               newQuery.addAlias(right);
-               joinTree = new InnerJoin(joinTree, left, right, step);
-               newQuery.setRelation(joinTree);
+               query.addAlias(right);
+               addJoin(query, left, right, step);
             }
             left = right;
          }
+      }
+      return left;
+   }
+
+   private Relation addJoin(Query query, NamedRelation left, NamedRelation right, AbstractAssociationEnd end)
+   {
+      Relation joinTree = query.getRelation();
+      if (joinTree == null)
+      {
+         joinTree = right;
+         JoinCondition joinCondition = new JoinCondition(left, right, end);
+         Condition filter = query.getFilter();
+         if (filter == null)
+         {
+            filter = joinCondition;
+         }
          else
          {
-            Path newPath = new Path(left);
-            newPath.addStep((AbstractAttribute) o);
-            return newPath;
+            ConditionExpression newFilter = new ConditionExpression(ConditionExpression.AND);
+            newFilter.addChild(filter);
+            newFilter.addChild(joinCondition);
+            filter = newFilter;
          }
+         query.setFilter(filter);
       }
-      return new Path(left);
+      else
+      {
+         joinTree = new InnerJoin(joinTree, left, right, end);
+      }
+      query.setRelation(joinTree);
+      return joinTree;
    }
+
 }
