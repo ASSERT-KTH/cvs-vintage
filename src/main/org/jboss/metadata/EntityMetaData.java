@@ -14,20 +14,25 @@ import org.jboss.ejb.DeploymentException;
 
 /** The meta data information specific to entity beans.
  *      
- *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.8 $
+ *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ *   @version $Revision: 1.9 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
+	public final static int CMP_VERSION_1 = 1;
+	public final static int CMP_VERSION_2 = 2;
     
     // Attributes ----------------------------------------------------
 	private boolean cmp;
-    private String primaryKeyClass;
-    private boolean reentrant;
-    private ArrayList cmpFields = new ArrayList();
+	private String primaryKeyClass;
+	private boolean reentrant;
+	private int cmpVersion;
+	private String abstractSchemaName;
+	private ArrayList cmpFields = new ArrayList();
 	private String primKeyField;
+	private ArrayList queries = new ArrayList();
 	
     // Static --------------------------------------------------------
     
@@ -37,10 +42,33 @@ public class EntityMetaData extends BeanMetaData {
 	}
 
     // Public --------------------------------------------------------
-	public boolean isCMP() { return cmp; }
-	public boolean isBMP() { return !cmp; }
-	public boolean isReentrant() { return reentrant; }
-	public String getPrimaryKeyClass() { return primaryKeyClass; }
+	public boolean isCMP() {
+		return cmp;
+	}
+
+	public boolean isCMP1x() {
+		return cmp && (cmpVersion==1);
+	}
+	
+	public boolean isCMP2x() {
+		return cmp && (cmpVersion==2);
+	}
+	
+	public boolean isBMP() {
+		return !cmp;
+	}
+
+	public String getPrimaryKeyClass() { 
+		return primaryKeyClass;
+	}
+	
+	public boolean isReentrant() {
+		return reentrant;
+	}
+	
+	public String getAbstractSchemaName() {
+		return abstractSchemaName;
+	}
 	
 	/**
 	 * Gets the container managed fields.
@@ -50,13 +78,31 @@ public class EntityMetaData extends BeanMetaData {
 		return cmpFields.iterator(); 
 	}
 	
-	public String getPrimKeyField() { return primKeyField; }
+	public String getPrimKeyField() { 
+		return primKeyField; 
+	}
+	
+	public Iterator getQueries() {
+		return queries.iterator();		
+	}
 	
 	public String getDefaultConfigurationName() {
 		if (isCMP()) {
-			return jdk13Enabled() ? ConfigurationMetaData.CMP_13 : ConfigurationMetaData.CMP_12;
+			if(jdk13Enabled()) {
+				if(isCMP2x()) {
+					return ConfigurationMetaData.CMP_2x_13;
+				} else {
+		   		return ConfigurationMetaData.CMP_1x_13;
+				}
+			} else { 
+				return ConfigurationMetaData.CMP_12;
+			}
 		} else {
-			return jdk13Enabled() ? ConfigurationMetaData.BMP_13 : ConfigurationMetaData.BMP_12;
+			if(jdk13Enabled()) {
+		   	return ConfigurationMetaData.BMP_13;
+			} else {
+				return ConfigurationMetaData.BMP_12;
+			}
 		}
 	}
 	
@@ -79,21 +125,57 @@ public class EntityMetaData extends BeanMetaData {
 	 	// set reentrant
 		reentrant = Boolean.valueOf(getElementContent(getUniqueChild(element, "reentrant"))).booleanValue();
 		
-		// set the cmp fields
 		if (isCMP()) {
+			// cmp-version
+			if(getApplicationMetaData().isEJB2x()) {
+				String cmpVersionString = getElementContent(getOptionalChild(element, "cmp-version"));
+				
+            if(cmpVersionString == null) {
+					// default for ejb 2.0 apps is cmp 2.x
+					cmpVersion = CMP_VERSION_2;					
+				} else {
+					if("1.x".equals(cmpVersionString)) {
+						cmpVersion = 1;
+					} else if("2.x".equals(cmpVersionString)) {
+						cmpVersion = 2;
+					} else {
+						throw new DeploymentException("cmp-version must be '1.x' or '2.x', if specified");
+					}
+				}			
+			} else {
+				// default for 1.0 DTDs is version 2
+				cmpVersion = CMP_VERSION_1;
+			}
+ 			
+			// abstract-schema-name
+			if(isCMP2x()) {
+				abstractSchemaName = getElementContent(getUniqueChild(element, "abstract-schema-name"));
+			}
+			
+			// cmp-fields
 			Iterator iterator = getChildrenByTagName(element, "cmp-field");			
 			while (iterator.hasNext()) {
 				Element field = (Element)iterator.next();
 				cmpFields.add(getElementContent(getUniqueChild(field, "field-name")));
 			}
-		}
-		
-		// set the primary key field
-		if (isCMP()) {
-			primKeyField = getElementContent(getOptionalChild(element, "primkey-field"));
-			
+
+			// set the primary key field
+			primKeyField = getElementContent(getOptionalChild(element, "primkey-field"));			
 			if (primKeyField != null && !cmpFields.contains(primKeyField)) {
 				throw new DeploymentException("primkey-field " + primKeyField + " is not a cmp-field");
+			}
+			
+			// queries
+			if(isCMP2x()) {
+				iterator = getChildrenByTagName(element, "query");				
+				while (iterator.hasNext()) {
+					Element queryElement = (Element) iterator.next();
+					
+					QueryMetaData queryMetaData = new QueryMetaData();
+					queryMetaData.importEjbJarXml(queryElement);
+					
+					queries.add(queryMetaData);
+				}
 			}
 		}
 	}

@@ -13,12 +13,13 @@ import org.jboss.ejb.DeploymentException;
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class ConfigurationMetaData extends MetaData {
 
 	// Constants -----------------------------------------------------
-    public static final String CMP_13 = "Standard CMP EntityBean";
+	public static final String CMP_2x_13 = "Standard CMP 2.x EntityBean";
+	public static final String CMP_1x_13 = "Standard CMP EntityBean";
 	public static final String BMP_13 = "Standard BMP EntityBean";
 	public static final String STATELESS_13 = "Standard Stateless SessionBean";
 	public static final String STATEFUL_13 = "Standard Stateful SessionBean";
