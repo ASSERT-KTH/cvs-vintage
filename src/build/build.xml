@@ -16,9 +16,9 @@
     <property name="bin.dir" value="${basedir}/bin"/>
     <property name="src.bin.dir" value="${basedir}/src/bin"/>
     <property name="src.dir" value="${basedir}/src/main"/>
-    
+
     <property name="verifier.src.dir" value="${basedir}/src/main/org/jboss/verifier"/>
-    
+
     <property name="src.client.dir" value="${basedir}/src/client"/>
     <property name="src.resources" value="${basedir}/src/resources"/>
     <property name="db.dir" value="${basedir}/db"/>
@@ -33,8 +33,8 @@
     <property name="build.classes.dir" value="${build.dir}/classes"/>
     <property name="build.javadocs.dir" value="${build.dir}/docs/api"/>
     <property name="dist.dir" value="dist"/>
-    
-    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejb2.0.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jaas.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/openjms-client-patched-0.5.1.jar;${src.lib.dir}/exolabcore-0.1.jar;${src.lib.dir}/jboss-jms.jar;${src.lib.dir}/openjms-pool.jar;${src.lib.dir}/jaxp.jar;${src.lib.dir}/connector.jar;${src.lib.dir}/mail.jar"/>
+
+    <property name="classpath" value="${lib.dir}/jmxri.jar;${build.classes.dir};${src.lib.dir}/awt.jar;${lib.dir}/xml.jar;${src.lib.dir}/ejb.jar;${src.lib.dir}/ejb2.0.jar;${src.lib.dir}/ejxeditor.jar;${src.lib.dir}/jndi.jar;${src.lib.dir}/ejxejb.jar;${src.lib.dir}/jta-spec1_0_1.jar;${src.lib.dir}/jnpserver.jar;${src.lib.dir}/dynaserver.jar;${src.lib.dir}/hsql.jar;${src.lib.dir}/webserver.jar;${src.lib.dir}/idb.jar;${src.lib.dir}/jdbc2_0-stdext.jar;${src.lib.dir}/jaas.jar;${src.lib.dir}/jpl-util-0_5b.jar;${src.lib.dir}/jms.jar;${src.lib.dir}/openjms-client-patched-0.5.1.jar;${src.lib.dir}/exolabcore-0.1.jar;${src.lib.dir}/jboss-jms.jar;${src.lib.dir}/openjms-pool.jar;${src.lib.dir}/jaxp.jar;${src.lib.dir}/connector.jar;${src.lib.dir}/mail.jar;${src.lib.dir}/minerva-1_0b2.jar"/>
 
     <property name="packages" value="org.jboss,org.jboss.configuration,org.jboss.dependencies,org.jboss.deployment,org.jboss.ejb,org.jboss.ejb.plugins,org.jboss.ejb.plugins.jaws,org.jboss.ejb.plugins.jaws.deployment,org.jboss.ejb.plugins.jaws.jdbc,org.jboss.ejb.plugins.jaws.metadata,org.jboss.ejb.plugins.jrmp.server,org.jboss.ejb.plugins.jrmp.interfaces,org.jboss.ejb.plugins.jrmp12.server,org.jboss.ejb.plugins.jrmp12.interfaces,org.jboss.ejb.plugins.jrmp13.server,org.jboss.ejb.plugins.jrmp13.interfaces,org.jboss.ejb.plugins.jms,org.jboss.jdbc,org.jboss.jmx.client,org.jboss.jmx.interfaces,org.jboss.jmx.server,org.jboss.logging,org.jboss.metadata,org.jboss.minerva.datasource,org.jboss.minerva.factories,org.jboss.minerva.jdbc,org.jboss.minerva.pools,org.jboss.minerva.xa,org.jboss.naming,org.jboss.naming.java,org.jboss.proxy,org.jboss.resource,org.jboss.resource.pool,org.jboss.resource.security,org.jboss.security,org.jboss.spydermq,org.jboss.security.plugins,org.jboss.security.plugins.samples,org.jboss.tm,org.jboss.tomcat,org.jboss.util,org.jboss.util.timeout,org.jboss.verifier,org.jboss.verifier.event,org.jboss.verifier.factory,org.jboss.web,org.jboss.jms.asf,org.jboss.jms.jndi"/>
 
@@ -128,7 +128,7 @@
   <!-- =================================================================== -->
   <target name="jar" depends="xmlbeans,compileTest">
     <copy todir="${build.classes.dir}">
-    	<fileset dir="${src.resources}"/>
+        <fileset dir="${src.resources}"/>
     </copy>
 
     <mkdir dir="${build.bin.dir}"/>
@@ -221,36 +221,36 @@
      <copy file="${etc.dir}/tmp.properties" tofile="${dist.dir}/tmp/tmp.properties"/>
 
      <copy todir="${dist.dir}/conf">
-     	<fileset dir="${etc.dir}/conf"/>
+        <fileset dir="${etc.dir}/conf"/>
      </copy>
      <copy todir="${dist.dir}/bin">
-     	<fileset dir="${src.bin.dir}"/>
+        <fileset dir="${src.bin.dir}"/>
      </copy>
      <chmod file="${dist.dir}/bin/run.sh" perm="+x" />
      <copy todir="${dist.dir}/lib">
-     	<fileset dir="${src.lib.dir}"
-     			 includes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
-     	/>
+        <fileset dir="${src.lib.dir}"
+                 includes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
+        />
      </copy>
      <copy todir="${dist.dir}/lib/ext">
-     	<fileset dir="${src.lib.dir}"
-     			 excludes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
-     	/>
+        <fileset dir="${src.lib.dir}"
+                 excludes="parser.jar,jaxp.jar,jaas.jar,jdbc2_0-stdext.jar"
+        />
      </copy>
      <copy todir="${dist.dir}/bin">
-     	<fileset dir="${build.bin.dir}"/>
+        <fileset dir="${build.bin.dir}"/>
      </copy>
      <copy todir="${dist.dir}/lib/ext">
-     	<fileset dir="${build.lib.dir}/ext"/>
+        <fileset dir="${build.lib.dir}/ext"/>
      </copy>
      <copy todir="${dist.dir}/lib">
-     	<fileset dir="${build.lib.dir}"/>
+        <fileset dir="${build.lib.dir}"/>
      </copy>
      <copy todir="${dist.dir}/client">
-     	<fileset dir="${build.dir}/client"/>
+        <fileset dir="${build.dir}/client"/>
      </copy>
      <copy todir="${dist.dir}/client">
-     	<fileset dir="${src.client.dir}"/>
+        <fileset dir="${src.client.dir}"/>
      </copy>
   </target>
 
@@ -277,7 +277,7 @@
   <!-- =================================================================== -->
   <target name="verifier" depends="init">
     <mkdir dir="${build.verifier.classes.dir}"/>
-   
+
     <javac srcdir="${src.dir}"
            destdir="${build.verifier.classes.dir}"
            classpath="${verifier.classpath}"
@@ -288,13 +288,13 @@
                      org/jboss/metadata/**,
                      org/jboss/ejb/DeploymentException.java"
     />
-  
+
     <copy todir="${build.verifier.classes.dir}/org/jboss/verifier">
-    	<fileset dir="${src.resources}/org/jboss/verifier"/>
+        <fileset dir="${src.resources}/org/jboss/verifier"/>
     </copy>
     <copy file="${etc.dir}/conf/default/standardjboss.xml" tofile="${build.verifier.classes.dir}/standardjboss.xml"/>
-    
-    
+
+
     <mkdir dir="${dist.dir}/bin"/>
     <jar jarfile="${dist.dir}/bin/verifier.jar"
          basedir="${build.verifier.classes.dir}"
@@ -306,7 +306,7 @@
     />
 
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
@@ -314,15 +314,15 @@
      <mkdir dir="${dist.dir}/docs"/>
      <mkdir dir="${dist.dir}/docs/api"/>
      <copy todir="${dist.dir}/docs">
-     	<fileset dir="${docs.dir}"/>
+        <fileset dir="${docs.dir}"/>
      </copy>
      <copy todir="${dist.dir}/docs/api">
-     	<fileset dir="${build.javadocs.dir}"/>
+        <fileset dir="${build.javadocs.dir}"/>
      </copy>
 
      <mkdir dir="${dist.dir}/src"/>
      <copy todir="${dist.dir}/src">
-     	<fileset dir="${src.dir}"/>
+        <fileset dir="${src.dir}"/>
      </copy>
   </target>
 

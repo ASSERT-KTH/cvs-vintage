@@ -17,15 +17,15 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.opentools.minerva.jdbc.JDBCPoolDataSource;
 import org.jboss.logging.LogWriter;
-import org.jboss.minerva.datasource.JDBCPoolDataSource;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
 
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {
@@ -203,7 +203,7 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         }
     }
 
-	// Private -------------------------------------------------------
+    // Private -------------------------------------------------------
 
     private void initializePool() throws NamingException, SQLException {
         source.initialize();

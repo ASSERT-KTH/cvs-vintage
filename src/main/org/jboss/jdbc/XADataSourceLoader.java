@@ -20,8 +20,8 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.sql.XADataSource;
+import org.opentools.minerva.jdbc.xa.XAPoolDataSource;
 import org.jboss.logging.LogWriter;
-import org.jboss.minerva.datasource.XAPoolDataSource;
 import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Log;
 
@@ -30,12 +30,12 @@ import org.jboss.logging.Log;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
-public class XADataSourceLoader 
+public class XADataSourceLoader
    extends ServiceMBeanSupport
-   implements XADataSourceLoaderMBean 
+   implements XADataSourceLoaderMBean
 {
    // Settings
    String name;
@@ -56,9 +56,9 @@ public class XADataSourceLoader
    float maxIdleTimeoutPercent;
    boolean invalidateOnError;
    boolean timestampUsed;
-   
+
    XAPoolDataSource source;
-   
+
    public XADataSourceLoader()
    {
    }
@@ -73,184 +73,184 @@ public class XADataSourceLoader
       this.name = name;
       log = Log.createLog(name);
    }
-   
+
    public String getPoolName()
    {
       return name;
    }
-   
+
    public void setDataSourceClass(String clazz)
    {
       dataSourceClass = clazz;
    }
-   
+
    public String getDataSourceClass()
    {
       return dataSourceClass;
    }
-   
+
    public void setURL(String url)
    {
       this.url = url;
    }
-   
+
    public String getURL()
    {
       return url;
    }
-   
+
    public void setJDBCUser(String userName)
    {
       this.userName = userName;
    }
-   
+
    public String getJDBCUser()
    {
       return userName;
    }
-   
+
    public void setPassword(String password)
    {
       this.password = password;
    }
-   
+
    public String getPassword()
    {
       return password;
    }
-   
+
    public void setProperties(String properties)
    {
       this.properties = properties;
    }
-   
+
    public String getProperties()
    {
       return properties;
    }
-   
+
    public void setLoggingEnabled(boolean enabled)
    {
       this.loggingEnabled = enabled;
    }
-   
+
    public boolean getLoggingEnabled()
    {
       return loggingEnabled;
    }
-   
+
    public void setMinSize(int minSize)
    {
       this.minSize = minSize;
    }
-   
+
    public int getMinSize()
    {
       return minSize;
    }
-   
+
    public void setMaxSize(int maxSize)
    {
       this.maxSize = maxSize;
    }
-   
+
    public int getMaxSize()
    {
       return maxSize;
    }
-   
+
    public void setBlocking(boolean blocking)
    {
       this.blocking = blocking;
    }
-   
+
    public boolean getBlocking()
    {
       return blocking;
    }
-   
+
    public void setGCEnabled(boolean gcEnabled)
    {
       this.gcEnabled = gcEnabled;
    }
-   
+
    public boolean getGCEnabled()
    {
       return gcEnabled;
    }
-   
+
    public void setGCInterval(long interval)
    {
       this.gcInterval = interval;
    }
-   
+
    public long getGCInterval()
    {
       return gcInterval;
    }
-   
+
    public void setGCMinIdleTime(long idleMillis)
    {
       this.gcMinIdleTime = idleMillis;
    }
-   
+
    public long getGCMinIdleTime()
    {
       return gcMinIdleTime;
    }
-   
+
    public void setIdleTimeoutEnabled(boolean enabled)
    {
       this.idleTimeoutEnabled = enabled;
    }
-   
+
    public boolean getIdleTimeoutEnabled()
    {
       return idleTimeoutEnabled;
    }
-   
+
    public void setIdleTimeout(long idleMillis)
    {
       this.idleTimeout = idleMillis;
    }
-   
+
    public long getIdleTimeout()
    {
       return idleTimeout;
    }
-   
+
    public void setMaxIdleTimeoutPercent(float percent)
    {
       this.maxIdleTimeoutPercent = percent;
    }
-   
+
    public float getMaxIdleTimeoutPercent()
    {
       return maxIdleTimeoutPercent;
    }
-   
+
    public void setInvalidateOnError(boolean invalidate)
    {
       this.invalidateOnError = invalidate;
    }
-   
+
    public boolean getInvalidateOnError()
    {
       return invalidateOnError;
    }
-   
+
    public void setTimestampUsed(boolean timestamp)
    {
       this.timestampUsed = timestamp;
    }
-   
+
    public boolean getTimestampUsed()
    {
       return timestampUsed;
    }
 
    // ServiceMBeanSupport implementation ----------------------------
-   public ObjectName getObjectName(MBeanServer server, ObjectName objectName) 
+   public ObjectName getObjectName(MBeanServer server, ObjectName objectName)
       throws javax.management.MalformedObjectNameException
    {
       return (objectName == null) ? new ObjectName(OBJECT_NAME+",name="+getSource().getPoolName()) : objectName;
@@ -265,19 +265,19 @@ public class XADataSourceLoader
    {
       // Transfer settings
       getSource().setPoolName(name);
-      
+
       XADataSource vendorSource = null;
       Class cls = Class.forName(dataSourceClass);
       vendorSource = (XADataSource)cls.newInstance();
       getSource().setDataSource(vendorSource);
-   
+
       cls = vendorSource.getClass();
       if(url != null && url.length() > 0)
       {
          Method setURL = cls.getMethod("setURL", new Class[] { String.class });
          setURL.invoke(vendorSource, new Object[] { url });
       }
-   
+
       cls = vendorSource.getClass();
       if(properties != null && properties.length() > 0)
       {
@@ -285,13 +285,13 @@ public class XADataSourceLoader
          Method setProperties = cls.getMethod("setProperties", new Class[] { Properties.class });
          setProperties.invoke(vendorSource, new Object[] { props });
       }
-   
+
       if(userName != null && userName.length() > 0)
          getSource().setJDBCUser(userName);
-   
+
       if(password != null && password.length() > 0)
          getSource().setJDBCPassword(password);
-   
+
       PrintWriter writer = loggingEnabled ? new LogWriter(log) : null;
       getSource().setLogWriter(writer);
       getSource().getDataSource().setLogWriter(writer);
@@ -306,7 +306,7 @@ public class XADataSourceLoader
       getSource().setMaxIdleTimeoutPercent(maxIdleTimeoutPercent);
       getSource().setInvalidateOnError(invalidateOnError);
       getSource().setTimestampUsed(timestampUsed);
-      
+
       // Initialize pool
       Context ctx = null;
       Object mgr = null;
@@ -376,9 +376,9 @@ public class XADataSourceLoader
    private static Properties parseProperties(String string)
    {
       Properties props = new Properties();
-      
+
       StringTokenizer tokens = new StringTokenizer(string, ";=");
-      
+
       while (tokens.hasMoreTokens())
       {
          String key = tokens.nextToken();

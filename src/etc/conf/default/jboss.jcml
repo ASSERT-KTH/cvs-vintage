@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This is where you can add and configure your MBeans
   ATTENTION: The order of the listing here is the same order as
-	the MBeans are loaded. Therefore if a MBean depends on another
-	MBean to be loaded and started it has to be listed after all
-	the MBeans it depends on.
+    the MBeans are loaded. Therefore if a MBean depends on another
+    MBean to be loaded and started it has to be listed after all
+    the MBeans it depends on.
 -->
 
 <server>
@@ -16,13 +16,13 @@
   <mbean code="org.jboss.naming.NamingService" name="DefaultDomain:service=Naming">
     <attribute name="Port">1099</attribute>
   </mbean>
-  
+
   <!-- Transactions -->
   <mbean code="org.jboss.tm.TransactionManagerService" name="DefaultDomain:service=TransactionManager">
     <attribute name="TransactionTimeout">300</attribute>
   </mbean>
 
-  <!-- Security -->  
+  <!-- Security -->
   <!-- JAAS security manager and realm mapping -->
   <mbean code="org.jboss.security.plugins.JaasSecurityManagerService" name="DefaultDomain:service=JaasSecurityManager" />
 
@@ -43,10 +43,10 @@
     <attribute name="Database">default</attribute>
     <attribute name="Trace">false</attribute>
   </mbean>
-  
+
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=InstantDB">
     <attribute name="PoolName">InstantDB</attribute>
-    <attribute name="DataSourceClass">org.jboss.minerva.xa.XADataSourceImpl</attribute>
+    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties"></attribute>
     <attribute name="URL">jdbc:idb:../conf/default/instantdb.properties</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
@@ -64,10 +64,10 @@
     <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
     <attribute name="MinSize">0</attribute>
   </mbean>
-  
+
   <mbean code="org.jboss.jdbc.XADataSourceLoader" name="DefaultDomain:service=XADataSource,name=DefaultDS">
     <attribute name="PoolName">DefaultDS</attribute>
-    <attribute name="DataSourceClass">org.jboss.minerva.xa.XADataSourceImpl</attribute>
+    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties"></attribute>
     <attribute name="URL">jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
@@ -85,9 +85,9 @@
     <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
     <attribute name="MinSize">0</attribute>
   </mbean>
-  
+
   <!-- J2EE deployment -->
-    
+
   <mbean code="org.jboss.ejb.ContainerFactory" name=":service=ContainerFactory">
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="MetricsEnabled">false</attribute>
@@ -95,7 +95,7 @@
     <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
   </mbean>
 
-  <!-- Uncomment to add embedded tomcat service  
+  <!-- Uncomment to add embedded tomcat service
   <mbean code="org.jboss.tomcat.EmbeddedTomcatService" name="DefaultDomain:service=EmbeddedTomcat" />
    -->
 
@@ -104,7 +104,7 @@
     <attribute name="Configuration">file URL to jetty.xml e.g. file:/usr/local/jboss/dist/conf/default/jetty.xml</attribute>
   </mbean>
    -->
-  
+
   <!-- For Message Driven Beans -->
   <mbean code="org.jboss.spydermq.SpyderMQService" name="DefaultDomain:service=SpyderMQ" />
   <mbean code="org.jboss.jms.jndi.JMSProviderLoader" name=":service=JMSProviderLoader,name=SpyderMQProvider">
@@ -123,7 +123,7 @@
     <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
     <attribute name="WarDeployerName">:service=EmbeddedTomcat</attribute>
   </mbean>
-  
+
   <mbean code="org.jboss.ejb.AutoDeployer" name="EJB:service=AutoDeployer">
     <attribute name="Deployer">J2EE:service=J2eeDeployer</attribute>
     <attribute name="URLs">../deploy</attribute>
@@ -137,7 +137,7 @@
   <mbean code="org.jboss.jdbc.RawXADataSourceLoader"
          name="DefaultDomain:service=RawXADataSourceLoader,name=DefaultXADS">
     <attribute name="PoolName">BlackBoxXADS</attribute>
-    <attribute name="DataSourceClass">org.jboss.minerva.xa.XADataSourceImpl</attribute>
+    <attribute name="DataSourceClass">org.opentools.minerva.jdbc.xa.wrapper.XADataSourceImpl</attribute>
     <attribute name="Properties">
       URL=jdbc:HypersonicSQL:hsql://localhost:1476
     </attribute>
@@ -163,7 +163,7 @@
     -->
 
     <!-- Connection pooling properties - see
-         org.jboss.minerva.pools.ObjectPool -->
+         org.opentools.minerva.pool.ObjectPool -->
     <attribute name="MinSize">0</attribute>
     <attribute name="MaxSize">10</attribute>
     <attribute name="GCMinIdleTime">1200000</attribute>
@@ -177,10 +177,10 @@
     <attribute name="LoggingEnabled">false</attribute>
     <attribute name="MaxIdleTimeoutPercent">1.0</attribute>
   </mbean>
-  
+
   <!-- JMX adaptors -->
   <mbean code="org.jboss.jmx.server.JMXAdaptorService" name="Adaptor:name=RMI" />
-  
+
   <mbean code="org.jboss.jmx.server.RMIConnectorService" name="Connector:name=RMI" />
 
   <mbean code="com.sun.jdmk.comm.HtmlAdaptorServer" name="Adaptor:name=html">
@@ -191,16 +191,16 @@
 
   <!-- Mail Connection Factory -->
   <mbean code="org.jboss.mail.MailService" name=":service=Mail">
-  	<attribute name="JNDIName">Mail</attribute>
-  	<attribute name="ConfigurationFile">mail.properties</attribute>
-  	<attribute name="User">user_id</attribute>
-  	<attribute name="Password">password</attribute>
+    <attribute name="JNDIName">Mail</attribute>
+    <attribute name="ConfigurationFile">mail.properties</attribute>
+    <attribute name="User">user_id</attribute>
+    <attribute name="Password">password</attribute>
   </mbean>
 
-  <!-- Uncomment to enable JMX monitoring of the bean cache  
+  <!-- Uncomment to enable JMX monitoring of the bean cache
   <mbean code="org.jboss.monitor.BeanCacheMonitor" name="Monitor:name=BeanCacheMonitor"/>
   -->
-  
+
   <!-- Add your custom MBeans here -->
-  
+
 </server>
