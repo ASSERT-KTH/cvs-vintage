@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.35 2002/03/15 01:19:11 jon Exp $
+$Id: README.txt,v 1.36 2002/03/19 00:02:14 jon Exp $
 
 Welcome to Scarab!
 
@@ -255,7 +255,7 @@ if you have MySQL up and running with no username/password for localhost
 access, you can simply execute the following:
 
     cd src/sql
-    ./create-db.sh mysql         <-- Unix
+    ./create-db.sh               <-- Unix
     create-mysql-database.bat    <-- Win32
 
 If you need to specify a host/username/password/databasename, you will
@@ -264,7 +264,7 @@ or edit the create-mysql-database.bat script (Win32) in order to specify
 these settings to the MySQL client. For example:
 
     cd src/sql
-    ./create-db.sh -u jon --password -P 3306 -h mysql.server.com mysql
+    ./create-db.sh -u jon --password -P 3306 -h mysql.server.com
 
 Also make sure to define your own scarab.database.* properties in your
 local build.properties (see above for the explanation about how to use
