@@ -2,7 +2,7 @@
     "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
 <html>
  <head>
-  <title>Select attributes for bulk edit (2.6.1.0)</title>
+  <title>Bulk edit selected issues (2.6.1.0)</title>
 <!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
 <!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
   <meta http-equiv="Content-type" content="text/html" />
@@ -105,70 +105,139 @@
 	
 	<!-- Scarab - App -->
 	<div class="app" id="div2-6-0-1">
-		<h2>Select attributes for bulk edit (2.6.1.0)</h2>
+		<h2>Bulk edit selected issues (2.6.1.0)</h2>
 
-		<div class="functnbar"><input type="submit" value="Next" />&nbsp;<input type="submit" value="cancel" />&nbsp;</div>
+		<div class="functnbar"><input type="submit" value="Done" />&nbsp;<input type="submit" value="Cancel" />&nbsp;</div>
 
-		<h3>Select which attributes to edit</h3>
+
+		<h3>Issues in bulk edit</h3>
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th><a href="#" title="sort">Select</a></th>
-		<th><a href="#" title="sort">attribute name</a></th>
-		<th><a href="#" title="sort">Input type</a></th>
+		<th>&nbsp;</th>
+		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Issue ID#</th>
+		<th>Issue summary</th>
+		<th>Platform</th>
+		<th>OS</th>
 		</tr>
 		
 		<tr class="a">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>Issue description</td>
-		<td>
-		Text input
-		</td>
+		<td><input type="checkbox" /></td>
+		<td><a href="#">E123</a></td>
+		<td>Crash on refresh</td>
+		<td>PC</td>
+		<td>Linux</td>
 		</tr>
 		
 		<tr class="b">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>Issue summary</td>
-		<td>
-		Text input
-		</td>
+		<td><input type="checkbox" /></td>
+		<td><a href="#">E124</a></td>
+		<td>Crash on refresh</td>
+		<td>PC</td>
+		<td>Linux</td>
 		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>Platform</td>
-		<td>
-		Pop-up menu
-		</td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>OS</td>
-		<td>
-		Pop-up menu
-		</td>
-		</tr>        
-		
-		<tr class="a">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>Functional area</td>
-		<td>
-		Select multiple
-		</td>
+ 
+ 		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">E125</a></td>
+		<td>Crash on refresh</td>
+		<td>PC</td>
+		<td>Linux</td>
 		</tr>
 		
 		<tr class="b">
-		<td><input type="checkbox" name="show-hide" /></td>
-		<td>Platform</td>
-		<td>
-		Pop-up menu		
-		</td>
+		<td><input type="checkbox" /></td>
+		<td><a href="#">E129</a></td>
+		<td>Crash on refresh</td>
+		<td>PC</td>
+		<td>Linux</td>
 		</tr>
+     
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" value="Remove from edit list" />
+</div>
+
+		<h3>Attribute group N</h3>
 		
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+              <tr>
+      <th>Summary</th>
+      <td>
+                               <input name= "attv116val"
+               value="--" size="20" type="text" />
+                  </td>
+     </tr>
+                 <tr>
+      <th>Platform</th>
+      <td>
+            <select name="attv117optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="16">all</option>
+              <option value="17">DEC</option>
+              <option value="18">HP</option>
+              <option value="19">Macintosh</option>
+              <option value="20">PC</option>
+              <option value="21">SGI</option>
+              <option value="22">sun</option>
+              <option value="23">other</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Operating System</th>
+      <td>
+            <select name="attv118optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="25">windows 3.1</option>
+              <option value="26">windows 95</option>
+              <option value="27">windows 98</option>
+              <option value="28">windows ME</option>
+              <option value="29">windows 2000</option>
+              <option value="30">windows NT</option>
+              <option value="31">mac system 7</option>
+              <option value="32">mac system 7.5</option>
+              <option value="33">mac system 7.6.1</option>
+              <option value="34">mac system 8.0</option>
+              <option value="35">mac system 8.5</option>
+              <option value="36">mac system 8.6</option>
+              <option value="37">mac system 9.0</option>
+              <option value="38">Linux</option>
+              <option value="39">BSDI</option>
+              <option value="40">FreeBSD</option>
+              <option value="41">NetBSD</option>
+              <option value="42">OpenBSD</option>
+              <option value="43">AIX</option>
+              <option value="44">BeOS</option>
+              <option value="45">HP-UX</option>
+              <option value="46">IRIX</option>
+              <option value="50">OSF/1</option>
+              <option value="51">Solaris</option>
+              <option value="52">SunOS</option>
+              <option value="53">Other</option>
+              <option value="77">OSX</option>
+              <option value="84">Realtime/Embedded</option>
+              <option value="85">Handheld/PDA</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Description</th>
+      <td>
+              <textarea name="attv119val" cols="60"
+               rows="5">--</textarea>
+                  </td>
+     </tr>
+
 		</table>
+		<div class="functnbar3"><input type="submit" value="Save changes" />&nbsp;</div>
 		
-		<div class="functnbar2"><input type="submit" value="Next" />&nbsp;<input type="submit" value="cancel" />&nbsp;</div>
+		<div class="functnbar2"><input type="submit" value="Done" />&nbsp;<input type="submit" value="Cancel" />&nbsp;</div>
 
 	</div>
 	<!-- Scarab - App -->
