@@ -11,6 +11,9 @@ mysql scarab < mysql-scarab.sql
 echo Importing mysql-turbine.sql...
 mysql scarab < mysql-turbine.sql
 
+echo Importing mysql-turbine-scheduler.sql...
+mysql scarab < mysql-turbine-scheduler.sql
+
 echo Importing mysql-id-table-schema.sql...
 mysql scarab < mysql-id-table-schema.sql
 
