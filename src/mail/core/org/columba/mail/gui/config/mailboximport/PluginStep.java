@@ -65,8 +65,7 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 		GridBagLayout layout = new GridBagLayout();
 		middlePanel.setLayout(layout);
                 JList list = new JList(((ImportPluginHandler)data.getData("Plugin.handler")).getPluginIdList());
-                list.setCellRenderer(new MailboxImportListRenderer());
-                
+                list.setCellRenderer(new PluginListCellRenderer());
                 Method method = null;
                 try {
                         method = list.getClass().getMethod("getSelectedValue", null);

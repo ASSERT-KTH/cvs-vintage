@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.mailboximport;
 
 import java.awt.Component;
@@ -26,20 +27,13 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.plugin.ImportPluginHandler;
 
-/**
- * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-public class MailboxImportListRenderer extends DefaultListCellRenderer {
+public class PluginListCellRenderer extends DefaultListCellRenderer {
 
 	protected ImportPluginHandler pluginHandler;
 
-	public MailboxImportListRenderer() {
+	public PluginListCellRenderer() {
 		super();
 		try {
-
 			pluginHandler =
 				(ImportPluginHandler) MainInterface.pluginManager.getHandler(
 					"org.columba.mail.import");
@@ -66,7 +60,6 @@ public class MailboxImportListRenderer extends DefaultListCellRenderer {
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
 		}
-
 		setBorder(
 			(cellHasFocus)
 				? UIManager.getBorder("List.focusCellHighlightBorder")
@@ -74,11 +67,8 @@ public class MailboxImportListRenderer extends DefaultListCellRenderer {
 
 		// id = org.columba.example.HelloWorld$HelloWorldPlugin
 		String id = (String) value;
-
 		String userVisibleName = pluginHandler.getUserVisibleName(id);
-
 		setText(userVisibleName);
-
 		return this;
 	}
 }
