@@ -108,6 +108,21 @@ public class BaseInterceptor
     }
 
     // -------------------- Request notifications --------------------
+
+    /**
+     *  Called immediately after the request has been received, before
+     *  any mapping.
+     *
+     *  This allows modules to alter the request before it is mapped, and
+     *  implement decoding/encoding, detect charsets, etc.
+     *  The request URI and (some) headers will be available.
+     * 
+     *  Similar with Apache's post_read_request
+     */
+    public int postReadRequest(Request request ) {
+	return 0;
+    }
+
     
     /** Handle mappings inside a context.
      *  You are required to respect the mappings in web.xml.
@@ -115,6 +130,7 @@ public class BaseInterceptor
     public int requestMap(Request request ) {
 	return 0;
     }
+
     /** Will detect the context path for a request.
      *  It need to set: context, contextPath, lookupPath
      *
