@@ -24,6 +24,12 @@ public class JDBCTimestampVersionFieldBridge extends JDBCCMP2xVersionFieldBridge
       super(manager, metadata);
    }
 
+   public JDBCTimestampVersionFieldBridge(JDBCCMP2xFieldBridge cmpField)
+      throws DeploymentException
+   {
+      super(cmpField);
+   }
+
    public void setFirstVersion(EntityEnterpriseContext ctx)
    {
       Object version = new java.util.Date();

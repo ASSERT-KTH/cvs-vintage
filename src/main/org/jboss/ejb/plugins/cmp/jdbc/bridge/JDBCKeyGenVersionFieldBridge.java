@@ -30,13 +30,24 @@ public class JDBCKeyGenVersionFieldBridge extends JDBCCMP2xVersionFieldBridge
       throws DeploymentException
    {
       super(manager, metadata);
+      keyGenerator = initKeyGenerator(keygenFactoryName);
+   }
 
+   public JDBCKeyGenVersionFieldBridge(JDBCCMP2xFieldBridge cmpField, String keygenFactoryName)
+      throws DeploymentException
+   {
+      super(cmpField);
+      keyGenerator = initKeyGenerator(keygenFactoryName);
+   }
+
+   private KeyGenerator initKeyGenerator(String keygenFactoryName) throws DeploymentException
+   {
       try
       {
          InitialContext ctx = new InitialContext();
          KeyGeneratorFactory keygenFactory = (KeyGeneratorFactory)
             ctx.lookup(keygenFactoryName);
-         keyGenerator = keygenFactory.getKeyGenerator();
+         return keygenFactory.getKeyGenerator();
       }
       catch(NamingException e)
       {

@@ -63,7 +63,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -135,7 +135,7 @@ public class JDBCEntityBridge implements EntityBridge
       try
       {
          InitialContext ic = new InitialContext();
-         dataSource = (DataSource) ic.lookup(metadata.getDataSourceName());
+         dataSource = (DataSource)ic.lookup(metadata.getDataSourceName());
       }
       catch(NamingException e)
       {
@@ -158,23 +158,37 @@ public class JDBCEntityBridge implements EntityBridge
       if(lockMetaData != null && lockMetaData.getLockingField() != null)
       {
          Integer strategy = lockMetaData.getLockingStrategy();
-         JDBCCMPFieldMetaData fieldMD = lockMetaData.getLockingField();
+         JDBCCMPFieldMetaData versionMD = lockMetaData.getLockingField();
+         versionField = getCMPFieldByName(versionMD.getFieldName());
+         boolean hidden = versionField == null;
          if(strategy == JDBCOptimisticLockingMetaData.VERSION_COLUMN_STRATEGY)
          {
-            versionField = new JDBCLongVersionFieldBridge(manager, fieldMD);
-         }
-         else
-            if(strategy == JDBCOptimisticLockingMetaData.TIMESTAMP_COLUMN_STRATEGY)
-            {
-               versionField = new JDBCTimestampVersionFieldBridge(manager, fieldMD);
-            }
+            if(hidden)
+               versionField = new JDBCLongVersionFieldBridge(manager, versionMD);
             else
-               if(strategy == JDBCOptimisticLockingMetaData.KEYGENERATOR_COLUMN_STRATEGY)
-               {
-                  versionField = new JDBCKeyGenVersionFieldBridge(
-                     manager, fieldMD, lockMetaData.getKeyGeneratorFactory());
-               }
-         addCMPField(versionField);
+               versionField = new JDBCLongVersionFieldBridge((JDBCCMP2xFieldBridge)versionField);
+         }
+         else if(strategy == JDBCOptimisticLockingMetaData.TIMESTAMP_COLUMN_STRATEGY)
+         {
+            if(hidden)
+               versionField = new JDBCTimestampVersionFieldBridge(manager, versionMD);
+            else
+               versionField = new JDBCTimestampVersionFieldBridge((JDBCCMP2xFieldBridge)versionField);
+         }
+         else if(strategy == JDBCOptimisticLockingMetaData.KEYGENERATOR_COLUMN_STRATEGY)
+         {
+            if(hidden)
+               versionField = new JDBCKeyGenVersionFieldBridge(
+                  manager, versionMD, lockMetaData.getKeyGeneratorFactory());
+            else
+               versionField = new JDBCKeyGenVersionFieldBridge(
+                  (JDBCCMP2xFieldBridge)versionField, lockMetaData.getKeyGeneratorFactory());
+         }
+
+         if(hidden)
+            addCMPField(versionField);
+         else
+            tableFields[versionField.getTableIndex()] = versionField;
       }
 
       // audit fields
@@ -223,7 +237,7 @@ public class JDBCEntityBridge implements EntityBridge
             else
             {
                updatedPrincipalField = new JDBCCMP2xUpdatedPrincipalFieldBridge(
-                  (JDBCCMP2xFieldBridge) updatedPrincipalField);
+                  (JDBCCMP2xFieldBridge)updatedPrincipalField);
                tableFields[updatedPrincipalField.getTableIndex()] = updatedPrincipalField;
             }
          }
@@ -243,7 +257,7 @@ public class JDBCEntityBridge implements EntityBridge
             }
             else
             {
-               updatedTimeField = new JDBCCMP2xUpdatedTimeFieldBridge((JDBCCMP2xFieldBridge) updatedTimeField);
+               updatedTimeField = new JDBCCMP2xUpdatedTimeFieldBridge((JDBCCMP2xFieldBridge)updatedTimeField);
                tableFields[updatedTimeField.getTableIndex()] = updatedTimeField;
             }
          }
@@ -479,7 +493,7 @@ public class JDBCEntityBridge implements EntityBridge
 
    public boolean[] getLoadGroupMask(String name)
    {
-      return (boolean[]) loadGroupMasks.get(name);
+      return (boolean[])loadGroupMasks.get(name);
    }
 
    public FieldIterator getLoadIterator(JDBCCMPFieldBridge requiredField,
@@ -513,7 +527,7 @@ public class JDBCEntityBridge implements EntityBridge
          loadGroup[requiredInd] = true;
          for(Iterator groups = lazyLoadGroupMasks.iterator(); groups.hasNext();)
          {
-            boolean[] lazyGroup = (boolean[]) groups.next();
+            boolean[] lazyGroup = (boolean[])groups.next();
             if(lazyGroup[requiredInd])
             {
                for(int i = 0; i < loadGroup.length; ++i)
@@ -609,12 +623,12 @@ public class JDBCEntityBridge implements EntityBridge
 
    public void initInstance(EntityEnterpriseContext ctx)
    {
-      //for(int i = 0; i < tableFields.length; ++i)
-      //   tableFields[i].initInstance(ctx);
-      for(int i = 0; i < primaryKeyFields.length; ++i)
-         primaryKeyFields[i].initInstance(ctx);
-      for(int i = 0; i < cmpFields.length; ++i)
-         cmpFields[i].initInstance(ctx);
+      for(int i = 0; i < tableFields.length; ++i)
+         tableFields[i].initInstance(ctx);
+      //for(int i = 0; i < primaryKeyFields.length; ++i)
+      //   primaryKeyFields[i].initInstance(ctx);
+      //for(int i = 0; i < cmpFields.length; ++i)
+      //   cmpFields[i].initInstance(ctx);
       for(int i = 0; i < cmrFields.length; ++i)
       {
          JDBCCMRFieldBridge cmrField = cmrFields[i];
@@ -672,9 +686,9 @@ public class JDBCEntityBridge implements EntityBridge
       Object instance = ctx.getInstance();
       if(instance instanceof Proxies.ProxyTarget)
       {
-         InvocationHandler handler = ((Proxies.ProxyTarget) instance).getInvocationHandler();
+         InvocationHandler handler = ((Proxies.ProxyTarget)instance).getInvocationHandler();
          if(handler instanceof EntityBridgeInvocationHandler)
-            ((EntityBridgeInvocationHandler) handler).setContext(ctx);
+            ((EntityBridgeInvocationHandler)handler).setContext(ctx);
       }
       ctx.setPersistenceContext(new JDBCContext(jdbcContextSize, new EntityState()));
    }
@@ -699,9 +713,9 @@ public class JDBCEntityBridge implements EntityBridge
       Object instance = ctx.getInstance();
       if(instance instanceof Proxies.ProxyTarget)
       {
-         InvocationHandler handler = ((Proxies.ProxyTarget) instance).getInvocationHandler();
+         InvocationHandler handler = ((Proxies.ProxyTarget)instance).getInvocationHandler();
          if(handler instanceof EntityBridgeInvocationHandler)
-            ((EntityBridgeInvocationHandler) handler).setContext(null);
+            ((EntityBridgeInvocationHandler)handler).setContext(null);
       }
       ctx.setPersistenceContext(null);
    }
@@ -852,7 +866,7 @@ public class JDBCEntityBridge implements EntityBridge
 
    private static EntityState getEntityState(EntityEnterpriseContext ctx)
    {
-      JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
       EntityState entityState = jdbcCtx.getEntityState();
       if(entityState == null)
          throw new IllegalStateException("Entity state is null.");
@@ -872,7 +886,7 @@ public class JDBCEntityBridge implements EntityBridge
       Iterator iter = metadata.getCMPFields().iterator();
       while(iter.hasNext())
       {
-         JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData) iter.next();
+         JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)iter.next();
          JDBCCMPFieldBridge cmpField = createCMPField(metadata, cmpFieldMetaData);
          if(cmpField.isPrimaryKeyMember())
             pkFieldsList.add(cmpField);
@@ -883,13 +897,13 @@ public class JDBCEntityBridge implements EntityBridge
       // save the pk fields in the pk field array
       primaryKeyFields = new JDBCCMPFieldBridge[pkFieldsList.size()];
       for(int i = 0; i < pkFieldsList.size(); ++i)
-         primaryKeyFields[i] = (JDBCCMPFieldBridge) pkFieldsList.get(i);
+         primaryKeyFields[i] = (JDBCCMPFieldBridge)pkFieldsList.get(i);
 
       // add the pk fields to the front of the cmp list, per guarantee above
       cmpFields = new JDBCCMPFieldBridge[metadata.getCMPFields().size() - primaryKeyFields.length];
       int cmpFieldIndex = 0;
       for(int i = 0; i < cmpFieldsList.size(); ++i)
-         cmpFields[cmpFieldIndex++] = (JDBCCMPFieldBridge) cmpFieldsList.get(i);
+         cmpFields[cmpFieldIndex++] = (JDBCCMPFieldBridge)cmpFieldsList.get(i);
    }
 
    private void loadCMRFields(JDBCEntityMetaData metadata)
@@ -900,7 +914,7 @@ public class JDBCEntityBridge implements EntityBridge
       int cmrFieldIndex = 0;
       for(Iterator iter = metadata.getRelationshipRoles().iterator(); iter.hasNext();)
       {
-         JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData) iter.next();
+         JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData)iter.next();
          JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole);
          cmrFields[cmrFieldIndex++] = cmrField;
       }
@@ -921,33 +935,32 @@ public class JDBCEntityBridge implements EntityBridge
             defaultLockGroupMask[versionField.getTableIndex()] = true;
             versionField.setLockingStrategy(LockingStrategy.VERSION);
          }
-         else
-            if(olMD.getGroupName() != null)
+         else if(olMD.getGroupName() != null)
+         {
+            defaultLockGroupMask = loadGroupMask(olMD.getGroupName(), null);
+            for(int i = 0; i < tableFields.length; ++i)
             {
-               defaultLockGroupMask = loadGroupMask(olMD.getGroupName(), null);
-               for(int i = 0; i < tableFields.length; ++i)
+               if(defaultLockGroupMask[i])
                {
-                  if(defaultLockGroupMask[i])
-                  {
-                     JDBCCMPFieldBridge tableField = tableFields[i];
-                     tableField.setLockingStrategy(LockingStrategy.GROUP);
-                     tableField.addDefaultFlag(ADD_TO_WHERE_ON_UPDATE);
-                  }
+                  JDBCCMPFieldBridge tableField = tableFields[i];
+                  tableField.setLockingStrategy(LockingStrategy.GROUP);
+                  tableField.addDefaultFlag(ADD_TO_WHERE_ON_UPDATE);
                }
             }
-            else // read or modified strategy
+         }
+         else // read or modified strategy
+         {
+            LockingStrategy strategy =
+               (olMD.getLockingStrategy() == JDBCOptimisticLockingMetaData.READ_STRATEGY ?
+               LockingStrategy.READ : LockingStrategy.MODIFIED
+               );
+            for(int i = 0; i < tableFields.length; ++i)
             {
-               LockingStrategy strategy =
-                  (olMD.getLockingStrategy() == JDBCOptimisticLockingMetaData.READ_STRATEGY ?
-                  LockingStrategy.READ : LockingStrategy.MODIFIED
-                  );
-               for(int i = 0; i < tableFields.length; ++i)
-               {
-                  JDBCCMPFieldBridge field = tableFields[i];
-                  if(!field.isPrimaryKeyMember())
-                     field.setLockingStrategy(strategy);
-               }
+               JDBCCMPFieldBridge field = tableFields[i];
+               if(!field.isPrimaryKeyMember())
+                  field.setLockingStrategy(strategy);
             }
+         }
       }
 
       // add the * load group
@@ -960,7 +973,7 @@ public class JDBCEntityBridge implements EntityBridge
       while(groupNames.hasNext())
       {
          // get the group name
-         String groupName = (String) groupNames.next();
+         String groupName = (String)groupNames.next();
          boolean[] loadGroup = loadGroupMask(groupName, defaultLockGroupMask);
          loadGroupMasks.put(groupName, loadGroup);
       }
@@ -976,17 +989,17 @@ public class JDBCEntityBridge implements EntityBridge
          System.arraycopy(defaultGroup, 0, group, 0, group.length);
       for(Iterator iter = fieldNames.iterator(); iter.hasNext();)
       {
-         String fieldName = (String) iter.next();
-         JDBCFieldBridge field = (JDBCFieldBridge) getFieldByName(fieldName);
+         String fieldName = (String)iter.next();
+         JDBCFieldBridge field = (JDBCFieldBridge)getFieldByName(fieldName);
          if(field == null)
             throw new DeploymentException(
                "Field " + fieldName + " not found for entity " + getEntityName());
 
          if(field instanceof JDBCCMRFieldBridge)
          {
-            if(((JDBCCMRFieldBridge) field).hasForeignKey())
+            if(((JDBCCMRFieldBridge)field).hasForeignKey())
             {
-               JDBCCMPFieldBridge[] fkFields = ((JDBCCMRFieldBridge) field).getForeignKeyFields();
+               JDBCCMPFieldBridge[] fkFields = ((JDBCCMRFieldBridge)field).getForeignKeyFields();
                for(int i = 0; i < fkFields.length; ++i)
                {
                   group[fkFields[i].getTableIndex()] = true;
@@ -1001,7 +1014,7 @@ public class JDBCEntityBridge implements EntityBridge
          }
          else
          {
-            group[((JDBCCMPFieldBridge) field).getTableIndex()] = true;
+            group[((JDBCCMPFieldBridge)field).getTableIndex()] = true;
          }
       }
       return group;
@@ -1013,7 +1026,7 @@ public class JDBCEntityBridge implements EntityBridge
       if(eagerLoadGroupName == null)
          eagerLoadGroupMask = defaultLockGroupMask;
       else
-         eagerLoadGroupMask = (boolean[]) loadGroupMasks.get(eagerLoadGroupName);
+         eagerLoadGroupMask = (boolean[])loadGroupMasks.get(eagerLoadGroupName);
    }
 
    private void loadLazyLoadGroups(JDBCEntityMetaData metadata)
@@ -1022,7 +1035,7 @@ public class JDBCEntityBridge implements EntityBridge
       lazyLoadGroupMasks = new ArrayList(lazyGroupNames.size());
       for(Iterator lazyLoadGroupNames = lazyGroupNames.iterator(); lazyLoadGroupNames.hasNext();)
       {
-         String lazyLoadGroupName = (String) lazyLoadGroupNames.next();
+         String lazyLoadGroupName = (String)lazyLoadGroupNames.next();
          lazyLoadGroupMasks.add(loadGroupMasks.get(lazyLoadGroupName));
       }
       lazyLoadGroupMasks = Collections.unmodifiableList(lazyLoadGroupMasks);
@@ -1049,7 +1062,7 @@ public class JDBCEntityBridge implements EntityBridge
       Iterator definedFinders = manager.getMetaData().getQueries().iterator();
       while(definedFinders.hasNext())
       {
-         JDBCQueryMetaData q = (JDBCQueryMetaData) definedFinders.next();
+         JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
          if(q.getMethod().getName().startsWith("ejbSelect"))
             selectorsByMethod.put(q.getMethod(), new JDBCSelectorBridge(manager, q));
       }
