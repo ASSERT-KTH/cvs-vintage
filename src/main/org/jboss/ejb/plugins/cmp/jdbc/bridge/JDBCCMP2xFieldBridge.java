@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
@@ -50,7 +50,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
          JDBCType jdbcType) throws DeploymentException {
 
       super(manager, metadata, jdbcType);
-   } 
+   }
 
    /**
     * This constructor is used to create a foreign key field that is
@@ -87,10 +87,18 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       if(!fieldState.isLoaded) {
          getManager().loadField(this, ctx);
          if(!fieldState.isLoaded) {
-            throw new EJBException("Could not load field value: " + 
-                  getFieldName());
+            throw new EJBException("Could not load field value: " +
+               getFieldName());
          }
+
+         // notify the optimistic lock
+         // not used
+         // getManager().fieldStateEventCallback(ctx, CMPMessage.LOADED, this, fieldState.value);
       }
+
+      // notify optimistic lock
+      getManager().fieldStateEventCallback(ctx, CMPMessage.ACCESSED, this, fieldState.value);
+
       return fieldState.value;
    }
    
@@ -102,10 +110,21 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       // if it has changed
       fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || 
             changed(fieldState.value, value);
-      
-      // we are loading the field right now so it isLoaded 
+
+      // notify optimistic lock, but only if the bean is created
+      if(ctx.getId() != null) {
+         if(fieldState.isLoaded()) {
+            getManager().fieldStateEventCallback(ctx, CMPMessage.CHANGED, this, fieldState.value);
+         }
+         else {
+            // not used
+            //getManager().fieldStateEventCallback(ctx, CMPMessage.LOADED, this, value);
+         }
+      }
+
+      // we are loading the field right now so it isLoaded
       fieldState.isLoaded = true;
-      
+
       // update current value
       fieldState.value = value;
    }
@@ -122,7 +141,6 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       if(isReadOnly() || isPrimaryKeyMember()) {
          return false; 
       }
-      
       return getFieldState(ctx).isDirty;
    }
    
@@ -144,6 +162,10 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
       if(isReadTimedOut(ctx)) {
          JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
          jdbcCtx.put(this, new FieldState());
+
+         // notify optimistic lock
+         // not used
+         //getManager().fieldStateEventCallback(ctx, CMPMessage.RESETTED, this, null);
       }
    }
    
