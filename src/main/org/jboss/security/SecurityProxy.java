@@ -16,7 +16,7 @@ Custom security checks are those that cannot be described using the
 standard EJB deployment time declarative role based security.
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public interface SecurityProxy
 {
@@ -47,12 +47,12 @@ public interface SecurityProxy
     @param m , the EJB home or local home interface method
     @param args , the invocation args
     */
-    public void invokeHome(Method m, Object[] args) throws SecurityException;
+    public void invokeHome(Method m, Object[] args) throws Exception;
     /** Called to allow the security proxy to perform any custom security
         checks required for the EJB remote or local interface method.
     @param m , the EJB remote or local interface method
     @param args , the invocation args
     @param bean, the EJB implementation class instance
     */
-    public void invoke(Method m, Object[] args, Object bean) throws SecurityException;
+    public void invoke(Method m, Object[] args, Object bean) throws Exception;
 }
