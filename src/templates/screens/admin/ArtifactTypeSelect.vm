@@ -8,35 +8,27 @@
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,ArtifactTypeSelect.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
+<div class="functnbar">
+#if (!$issueTypes.isEmpty())
+      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
+#end
+#if ($canEditDomain)
+      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+
+
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
-
-<div class="functnbar">
-    #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
-    #end
-       <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-</div>
 
     <h3>Issue types</h3>
 
     <p><strong class="alert">There are no more issue types to add to
     this module.</strong></p>
 
-<div class="functnbar2">
-    #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
-    #end
-</div>
-
 #else
 
-<div class="functnbar">
-      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
-    #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
-    #end
-</div>
         
     <h3>Issue Types</h3>
 
@@ -56,15 +48,19 @@
 #end
 </table>
 
-<div class="functnbar2">
-      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
-    #if ($canEditDomain)
-       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
-    #end
-       <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-</div>
         
 #end
+
+<div class="functnbar2">
+#if (!$issueTypes.isEmpty())
+      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
+#end
+#if ($canEditDomain)
+      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+
 
 </form>
 </div>
