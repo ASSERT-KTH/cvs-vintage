@@ -1,5 +1,3 @@
-#if ($template != "AdvancedQuery.vm" && $template != "Search.vm")
-  $renderer.render("navigations", $data, "SearchNav.vm")
-#end
+$renderer.render("navigations", $data, "SearchNav.vm")
 #actionErrorMsg()
 $renderer.render("screens", $data, $template)
