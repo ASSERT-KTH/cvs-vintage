@@ -34,7 +34,7 @@ import java.util.*;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ActionContext.java,v 1.1 2003/04/29 03:21:49 spestov Exp $
+ * @version $Id: ActionContext.java,v 1.2 2003/04/30 21:22:34 spestov Exp $
  */
 public abstract class ActionContext
 {
@@ -116,14 +116,7 @@ public abstract class ActionContext
 	 */
 	public ActionSet getActionSetForAction(String action)
 	{
-		for(int i = 0; i < actionSets.size(); i++)
-		{
-			ActionSet set = (ActionSet)actionSets.elementAt(i);
-			if(set.contains(action))
-				return set;
-		}
-
-		return null;
+		return (ActionSet)actionHash.get(action);
 	} //}}}
 
 	//{{{ getActionNames() method

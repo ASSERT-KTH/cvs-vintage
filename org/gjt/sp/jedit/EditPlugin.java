@@ -88,7 +88,7 @@ import org.gjt.sp.jedit.gui.OptionsDialog;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.25 2003/04/29 03:31:42 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.26 2003/04/30 21:22:35 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -338,6 +338,11 @@ public abstract class EditPlugin
 			return null;
 		}
 
+		public String toString()
+		{
+			return "Deferred[" + clazz + "]";
+		}
+
 		// private members
 		private String clazz;
 	} //}}}
@@ -348,9 +353,9 @@ public abstract class EditPlugin
 	 */
 	public static class JAR extends PluginJAR
 	{
-		JAR(String path)
+		JAR(java.io.File file)
 		{
-			super(path);
+			super(file);
 		}
 	}
 	//}}}

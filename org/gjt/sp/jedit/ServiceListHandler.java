@@ -22,25 +22,28 @@
 
 package org.gjt.sp.jedit;
 
+//{{{ Imports
 import com.microstar.xml.*;
 import java.io.*;
 import java.net.URL;
-import java.util.Stack;
+import java.util.*;
 import org.gjt.sp.util.Log;
+//}}}
 
 /**
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceListHandler.java,v 1.2 2003/04/26 20:05:13 spestov Exp $
+ * @version $Id: ServiceListHandler.java,v 1.3 2003/04/30 21:22:37 spestov Exp $
  */
 class ServiceListHandler extends HandlerBase
 {
 	//{{{ ServiceListHandler constructor
-	ServiceListHandler(URL uri, PluginJAR plugin)
+	ServiceListHandler(PluginJAR plugin, URL uri)
 	{
-		this.uri = uri;
 		this.plugin = plugin;
+		this.uri = uri;
 		stateStack = new Stack();
+		cachedServices = new LinkedList();
 	} //}}}
 
 	//{{{ resolveEntity() method
@@ -119,8 +122,11 @@ class ServiceListHandler extends HandlerBase
 		{
 			if(tag == "SERVICE")
 			{
-				ServiceManager.registerService(serviceClass,
-					serviceName,code,plugin);
+				ServiceManager.Descriptor d =
+					new ServiceManager.Descriptor(
+					serviceClass,serviceName,code,plugin);
+				ServiceManager.registerService(d);
+				cachedServices.add(d);
 			}
 
 			popElement();
@@ -145,17 +151,26 @@ class ServiceListHandler extends HandlerBase
 		}
 	} //}}}
 
+	//{{{ getCachedServices() method
+	public ServiceManager.Descriptor[] getCachedServices()
+	{
+		return (ServiceManager.Descriptor[])cachedServices.toArray(
+			new ServiceManager.Descriptor[cachedServices.size()]);
+	} //}}}
+
 	//{{{ Private members
 
 	//{{{ Instance variables
-	private URL uri;
 	private PluginJAR plugin;
+	private URL uri;
 
 	private String serviceName;
 	private String serviceClass;
 	private String code;
 
 	private Stack stateStack;
+
+	private List cachedServices;
 	//}}}
 
 	//{{{ pushElement() method

@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.16 2003/04/29 22:31:14 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.17 2003/04/30 21:22:34 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -371,7 +371,7 @@ public class ActionSet
 			return;
 
 		loaded = true;
-		actions.clear();
+		//actions.clear();
 
 		try
 		{
@@ -399,16 +399,6 @@ public class ActionSet
 
 	//{{{ Package-private members
 	ActionContext context;
-
-	//{{{ getActions() method
-	void getActions(ArrayList vec)
-	{
-		load();
-
-		Enumeration enum = actions.elements();
-		while(enum.hasMoreElements())
-			vec.add(enum.nextElement());
-	} //}}}
 
 	//{{{ getActionNames() method
 	void getActionNames(ArrayList vec)

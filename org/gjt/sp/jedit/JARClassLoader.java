@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.28 2003/04/26 20:51:48 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.29 2003/04/30 21:22:35 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -188,22 +188,31 @@ public class JARClassLoader extends ClassLoader
 	//{{{ activate() method
 	void activate()
 	{
-		Iterator iter = jar.getClasses().iterator();
-		while(iter.hasNext())
+		String[] classes = jar.getClasses();
+		if(classes == null)
 		{
-			String clazz = (String)iter.next();
-			classHash.put(clazz,this);
+			Log.log(Log.WARNING,this,"No classes: " + jar.getPath());
+		}
+		else
+		{
+			for(int i = 0; i < classes.length; i++)
+			{
+				classHash.put(classes[i],this);
+			}
 		}
 	} //}}}
 
 	//{{{ deactivate() method
 	void deactivate()
 	{
-		Iterator iter = jar.getClasses().iterator();
-		while(iter.hasNext())
+		String[] classes = jar.getClasses();
+		for(int i = 0; i < classes.length; i++)
 		{
-			String clazz = (String)iter.next();
-			classHash.remove(clazz);
+			Object loader = classHash.get(classes[i]);
+			if(loader == this)
+				classHash.remove(classes[i]);
+			else
+				/* two plugins provide same class! */;
 		}
 	} //}}}
 

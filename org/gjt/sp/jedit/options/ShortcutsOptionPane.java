@@ -31,7 +31,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Key binding editor.
  * @author Slava Pestov
- * @version $Id: ShortcutsOptionPane.java,v 1.6 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: ShortcutsOptionPane.java,v 1.7 2003/04/30 21:22:40 spestov Exp $
  */
 public class ShortcutsOptionPane extends AbstractOptionPane
 {
@@ -93,23 +93,21 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 			if(actionSet.getActionCount() != 0)
 			{
 				models.addElement(createModel(actionSet.getLabel(),
-					actionSet.getActions()));
+					actionSet.getActionNames()));
 			}
 		}
 		currentModel = (ShortcutsModel)models.elementAt(0);
 	}
 
-	private ShortcutsModel createModel(String modelLabel, EditAction[] actions)
+	private ShortcutsModel createModel(String modelLabel, String[] actions)
 	{
 		Vector bindings = new Vector(actions.length);
 
 		for(int i = 0; i < actions.length; i++)
 		{
-			EditAction action = actions[i];
-
-			String name = action.getName();
-			String label = action.getLabel();
-			// Skip certain actions this way (ENTER, TAB)
+			String name = actions[i];
+			String label = jEdit.getProperty(actions[i] + ".label");
+			// Skip certain actions this way
 			if(label == null)
 				continue;
 
