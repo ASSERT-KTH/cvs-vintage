@@ -68,6 +68,8 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.IssueTemplateInfo;
@@ -137,6 +139,11 @@ public class ScarabRequestTool
      * An IssueTemplateInfo object for use within the Scarab API.
      */
     private IssueTemplateInfo templateInfo = null;
+
+    /**
+     * An IssueType object for use within the Scarab API.
+     */
+    private IssueType issueType = null;
 
     /**
      * An AttributeGroup object
@@ -276,6 +283,15 @@ public class ScarabRequestTool
     {
         this.templateInfo = templateInfo;
     }
+
+    /**
+     * A IssueType object for use within the Scarab API.
+     */
+    public void setIssueType (IssueType issuetype)
+    {
+        this.issueType = issueType;
+    }
+
 
     /**
      * Gets an instance of a ParentChildAttributeOption from this tool.
@@ -552,6 +568,38 @@ try{
         }
         return group;
     }
+
+    /**
+     * Get an issue type object.
+     */
+    public IssueType getIssueType()
+        throws Exception
+    {
+        if ( issueType == null ) 
+        {
+            String key = data.getParameters()
+                .getString("issuetypeid");
+            if ( key == null ) 
+            {
+                // get new issue type
+                issueType = new IssueType();
+            }
+            else 
+            {
+                try
+                {
+                    issueType = (IssueType) IssueTypePeer
+                                 .retrieveByPK(new NumberKey(key));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return issueType;
+    }
+
 
     /**
      * Get an RModuleAttribute object. 
