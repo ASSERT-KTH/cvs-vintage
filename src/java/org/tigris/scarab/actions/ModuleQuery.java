@@ -99,7 +99,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.2 2002/07/02 00:06:14 jmcnally Exp $
+ * @version $Id: ModuleQuery.java,v 1.3 2002/07/11 00:53:31 jon Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -172,7 +172,15 @@ public class ModuleQuery extends RequireLoginFirstAction
             }
             data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, query);
             data.getParameters().add("queryString", query);
-            List searchResults = scarabR.getCurrentSearchResults();
+            List searchResults = null;
+            try
+            {
+                searchResults = scarabR.getCurrentSearchResults();
+            }
+            catch (java.lang.IllegalArgumentException e)
+            {
+                // Swallow this exception.
+            }
             if (searchResults != null && searchResults.size() > 0)
             {
                 context.put("issueList", searchResults);
