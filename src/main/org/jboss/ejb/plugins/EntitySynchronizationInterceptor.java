@@ -39,7 +39,7 @@ import org.jboss.util.NestedRuntimeException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.80 $
+ * @version $Revision: 1.81 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -280,7 +280,7 @@ public class EntitySynchronizationInterceptor
          {
             // readonly does not synchronize, lock or belong with transaction.
             boolean isReadOnly = container.isReadOnly();
-            if(isReadOnly == false) ;
+            if(isReadOnly == false)
             {
                Method method = mi.getMethod();
                if(method != null)
