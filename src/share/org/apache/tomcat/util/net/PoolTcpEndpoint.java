@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.3 2000/09/17 06:15:29 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/09/17 06:15:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.4 2000/09/24 17:33:44 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/09/24 17:33:44 $
  *
  * ====================================================================
  *
@@ -410,4 +410,6 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 	    }
 	}
     }
+
+    
 }

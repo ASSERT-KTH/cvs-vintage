@@ -62,6 +62,9 @@ package org.apache.tomcat.util;
 import java.text.*;
 import java.util.*;
 
+// XXX XXX Need StringBuffer support !
+
+
 /**
  * This class is used to represent a subarray of bytes in an HTTP message.
  *

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnectionHandler.java,v 1.1 2000/08/14 21:54:37 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/08/14 21:54:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnectionHandler.java,v 1.2 2000/09/24 17:33:45 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/09/24 17:33:45 $
  *
  * ====================================================================
  *
@@ -69,17 +69,27 @@ import java.util.*;
 import org.apache.tomcat.util.*;
 
 /**
- * 
+ * This interface will be implemented by any object that
+ * uses TcpConnections. It is supported by the pool tcp
+ * connection manager and should be supported by future
+ * managers.
+ * The goal is to decouple the connection handler from
+ * the thread, socket and pooling complexity.
  */
 public interface TcpConnectionHandler {
+    
     /** Add informations about the a "controler" object
      *  specific to the server. In tomcat it will be a
      *  ContextManager.
+     *  @deprecated This has nothing to do with TcpHandling,
+     *  was used as a workaround
      */
     public void setServer(Object manager);
 
     
     /** Used to pass config informations to the handler
+     *  @deprecated. This has nothing to do with Tcp,
+     *  was used as a workaround 
      */
     public void setAttribute(String name, Object value );
     
@@ -88,15 +98,18 @@ public interface TcpConnectionHandler {
      *
      *  It may look strange, but it's a _very_ good way to avoid synchronized
      *  methods and keep per thread data.
-     *  You are not required to implement it, but if you do - you can save a lot
-     *  in allocation ( since this will be called outside critical path ).
+     *
+     *  Assert: the object returned from init() will be passed to
+     *  all processConnection() methods happening in the same thread.
+     * 
      */
     public Object[] init( );
 
     /**
      *  Assert: connection!=null
      *  Assert: connection.getSocket() != null
-     *  Assert: thData != null, result of calling init()
+     *  Assert: thData != null and is the result of calling init()
+     *  Assert: thData is preserved per Thread.
      */
     public void processConnection(TcpConnection connection, Object thData[]);    
 }
