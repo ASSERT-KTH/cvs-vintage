@@ -16,6 +16,8 @@ assume it is something like: 'issuetracker.domain.com'. Of course you
 would replace that string with your own domain in the SQL commands
 below.
 
+          BACKUP YOUR DATABASE FIRST BEFORE MAKING CHANGES!
+
 ------------------------------------------------------------------------
 Upgrading from b13 to b14 only
 ------------------------------------------------------------------------
@@ -66,32 +68,6 @@ released and you have noticed that newly created issues seem to have
 started over from scratch, you will need to make the following manual
 modifications:
 
-    select * from ID_TABLE;
-
-+-------------+--------------------------------+---------+----------+
-| ID_TABLE_ID | TABLE_NAME                     | NEXT_ID | QUANTITY |
-+-------------+--------------------------------+---------+----------+
-|           1 | TURBINE_PERMISSION             |     100 |       10 |
-|           2 | TURBINE_ROLE                   |     100 |       10 |
-|           3 | TURBINE_GROUP                  |     100 |       10 |
-|           4 | TURBINE_ROLE_PERMISSION        |     100 |       10 |
-|           5 | TURBINE_USER                   |    2828 |        1 |
-|           6 | TURBINE_USER_GROUP_ROLE        |     100 |       10 |
-|           7 | TURBINE_SCHEDULED_JOB          |     100 |       10 |
-.....
-|         999 | ID_TABLE                       |    1002 |        1 |
-|           0 | GLO                            |       0 |        1 |
-|        1000 | SCB                            |     750 |        1 |
-|        1001 | issuetracker.domain.com-SCB    |       4 |        1 |
-+-------------+--------------------------------+---------+----------+
-
-You will need to do the following:
-
-    update ID_TABLE set TABLE_NAME='ignore-me' where ID_TABLE_ID=1001;
-    update ID_TABLE set TABLE_NAME='issuetracker.domain.com-SCB' where ID_TABLE_ID=1000;
-
-Next, you will need to do this:
-
 select ISSUE_ID, ID_COUNT from SCARAB_ISSUE;
 
 +----------+----------+
@@ -126,3 +102,36 @@ your ID's with the ones we have shown in this example.
 update SCARAB_ISSUE set ID_COUNT=697 where ISSUE_ID=1698;
 update SCARAB_ISSUE set ID_COUNT=698 where ISSUE_ID=1699;
 update SCARAB_ISSUE set ID_COUNT=699 where ISSUE_ID=1700;
+
+Next, you will need to do this:
+
+    select * from ID_TABLE;
+
++-------------+--------------------------------+---------+----------+
+| ID_TABLE_ID | TABLE_NAME                     | NEXT_ID | QUANTITY |
++-------------+--------------------------------+---------+----------+
+|           1 | TURBINE_PERMISSION             |     100 |       10 |
+|           2 | TURBINE_ROLE                   |     100 |       10 |
+|           3 | TURBINE_GROUP                  |     100 |       10 |
+|           4 | TURBINE_ROLE_PERMISSION        |     100 |       10 |
+|           5 | TURBINE_USER                   |    2828 |        1 |
+|           6 | TURBINE_USER_GROUP_ROLE        |     100 |       10 |
+|           7 | TURBINE_SCHEDULED_JOB          |     100 |       10 |
+.....
+|         999 | ID_TABLE                       |    1002 |        1 |
+|           0 | GLO                            |       0 |        1 |
+|        1000 | SCB                            |     696 |        1 |
+|        1001 | issuetracker.domain.com-SCB    |       4 |        1 |
++-------------+--------------------------------+---------+----------+
+
+You will need to do the following:
+
+    update ID_TABLE set TABLE_NAME='ignore-me' where ID_TABLE_ID=1001;
+    update ID_TABLE set TABLE_NAME='issuetracker.domain.com-SCB' where ID_TABLE_ID=1000;
+
+Also, make sure that the ID_TABLE.NEXT_ID is greater than the largest
+SCARAB_ISSUE.ID_COUNT. You can see in the above examples that NEXT_ID is
+696 for the SCB module. In reality, it will need to be set to be 700 because
+three issues have been added while things were in this bad state.
+
+    update ID_TABLE set NEXT_ID=700 where ID_TABLE_ID=1000;
