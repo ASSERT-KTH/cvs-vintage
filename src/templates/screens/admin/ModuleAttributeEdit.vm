@@ -107,11 +107,11 @@ On this screen, one can modify a module's Attribute information.
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="save" name="eventSubmit_doSave" />&#160;
-<input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="copy" />&#160;
-<input type="submit" value="delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
-<input type="submit" value="resort" name="eventSubmit_doSave" />
+<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSave" />
 </div>
 #end
 
