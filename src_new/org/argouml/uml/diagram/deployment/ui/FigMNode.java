@@ -24,7 +24,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.2 2000/09/18 12:57:25 1sturm Exp $
+// $Id: FigMNode.java,v 1.3 2000/09/26 09:54:37 toby Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -80,6 +80,8 @@ public class FigMNode extends FigNodeModelElement {
   public FigMNode(GraphModel gm, Object node) {
     this();
     setOwner(node);
+    if (node instanceof MClassifier && (((MClassifier)node).getName() != null))
+	_name.setText(((MModelElement)node).getName());
   }
 
   public String placeString() { return "new Node"; }

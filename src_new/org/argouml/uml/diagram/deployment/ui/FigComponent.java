@@ -24,7 +24,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.2 2000/09/18 12:57:25 1sturm Exp $
+// $Id: FigComponent.java,v 1.3 2000/09/26 09:54:37 toby Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -100,7 +100,9 @@ public class FigComponent extends FigNodeModelElement {
   public FigComponent(GraphModel gm, Object node) {
     this();
     setOwner(node);
-    _name.setText(placeString());
+    if (node instanceof MClassifier && (((MClassifier)node).getName() != null))
+	_name.setText(((MModelElement)node).getName());
+//     _name.setText(placeString());
     updateBounds();					
   }
 
