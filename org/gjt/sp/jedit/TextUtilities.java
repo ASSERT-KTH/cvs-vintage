@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.syntax.*;
 /**
  * Class with several text utility functions.
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.17 2001/12/31 03:24:59 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.18 2002/01/01 00:39:29 spestov Exp $
  */
 public class TextUtilities
 {
@@ -191,7 +191,9 @@ public class TextUtilities
 						if(first != null)
 							out.add(first);
 						first = null;
-						x = newChunk.width;
+						newChunk.x = firstNonWhiteSpace;
+						x = firstNonWhiteSpace
+							+ newChunk.width;
 					}
 					else
 					{
@@ -206,6 +208,8 @@ public class TextUtilities
 						current.next = newChunk;
 						current = newChunk;
 					}
+
+					seenNonWhiteSpace = true;
 				}
 			}
 
