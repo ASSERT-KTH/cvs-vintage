@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.6 2003/11/10 12:13:12 jhraigniac Exp $
+// $Id: StartCritics.java,v 1.7 2003/12/09 14:37:39 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,8 @@ package org.argouml.application;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Designer;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -48,6 +50,9 @@ public class StartCritics implements Runnable {
         org.argouml.uml.cognitive.critics.Init.init();
         org.argouml.uml.cognitive.checklist.Init.init(Locale.getDefault());
         Project p = ProjectManager.getManager().getCurrentProject();
+        // set the icon for this poster
+        dsgr.setClarifier(ResourceLoaderWrapper.getResourceLoaderWrapper().
+            lookupIconResource("PostItD0"));
         dsgr.spawnCritiquer(p);
         dsgr.setChildGenerator(new ChildGenUML());
         java.util.Enumeration models = (p.getUserDefinedModels()).elements();
