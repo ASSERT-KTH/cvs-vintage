@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetMultiplicity.java,v 1.1 2003/01/06 20:03:04 kataka Exp $
+// $Id: ActionSetMultiplicity.java,v 1.2 2003/02/09 14:18:43 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -52,7 +52,8 @@ public abstract class ActionSetMultiplicity extends UMLChangeAction {
         if (source instanceof UMLComboBox2) {
             Object selected = ((UMLComboBox2)source).getSelectedItem();
             Object target = ((UMLComboBox2)source).getTarget();
-            setSelectedItem(selected, target);
+            if (target != null && selected != null)
+                setSelectedItem(selected, target);
         }
     }
     

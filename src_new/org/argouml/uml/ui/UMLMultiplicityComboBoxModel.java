@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.1 2003/01/06 20:03:04 kataka Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.2 2003/02/09 14:18:43 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
@@ -73,7 +73,8 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#addElement(java.lang.Object)
      */
     public void addElement(Object o) {
-        if (!multiplicityList.contains(o)) {
+        if (o == null) return;
+        if (!multiplicityList.contains(o) && isValidElement(o)) {
             multiplicityList.add(o);
         }
         super.addElement(o);        
@@ -84,10 +85,10 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
     /**
      * @see javax.swing.ComboBoxModel#setSelectedItem(java.lang.Object)
      */
-    public void setSelectedItem(Object anItem) {
-        if (!contains(anItem)) {
+    public void setSelectedItem(Object anItem) {        
+        if (!contains(anItem) && anItem instanceof MMultiplicity) {
             addElement(anItem);
-        }
+        }        
         super.setSelectedItem(anItem);        
     }
 
