@@ -125,6 +125,7 @@ public class AccessLogInterceptor extends BaseInterceptor {
     private static boolean useFlush = false;
     private static String logformat = LOGFORMAT_COMBINED;
     private static DateFormat df = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss");
+    private static String crlf = System.getProperty("line.separator");
     
     /** Creates a new AccessLogInterceptor */
     public AccessLogInterceptor() {}
@@ -277,7 +278,7 @@ public class AccessLogInterceptor extends BaseInterceptor {
 			    fw.write(c);
 			}
 		    }
-		    fw.write('\n');
+		    fw.write(crlf);
 		    if (useFlush) {
 			fw.flush();
 		    }
