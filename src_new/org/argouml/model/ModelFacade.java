@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.185 2004/05/30 06:11:09 mvw Exp $
+// $Id: ModelFacade.java,v 1.186 2004/06/02 20:16:31 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,6 +360,10 @@ public class ModelFacade {
      * Create a model object from the implementation.<P>
      *
      * This will allow abstraction of the create mechanism at a single point.
+     *
+     * TODO: Document the intention of this function.
+     * It is not used anywhere in ArgoUML. 
+     * BTW: Does it work? I (MVW) once did a test, and it didn't.
      *
      * @param entity Class to create -
      * must implement {@link org.argouml.model.UmlModelEntity}
