@@ -63,7 +63,7 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.21 $
+*  @version $Revision: 1.22 $
 */
 public class StatefulSessionFilePersistenceManager
 implements StatefulSessionPersistenceManager
@@ -107,8 +107,8 @@ implements StatefulSessionPersistenceManager
 		String ejbName = con.getBeanMetaData().getEjbName();
 		
 		// Base dir
-		File databaseDir = new File(getClass().getResource("/db.properties").getFile()).getParentFile();
-		
+		File homeDir = new File(System.getProperty("jboss.system.home"));
+		File databaseDir = new File(homeDir, "db"+File.separator);
 		File database = new File(databaseDir, "sessions");
 		
 		dir = new File(database, ejbName);
