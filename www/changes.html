@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.147 2002/05/13 16:53:46 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.148 2002/05/13 21:50:50 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -28,7 +28,6 @@
                     characters, while the description was unlimited.  These 
                     size limitations have been reversed.(JDM)</li>
                  <li>Storing Issue View tab setting in user session. (EWD)</li>
-
             </ul>
          </td>
     </tr>
@@ -47,6 +46,11 @@
                     regardless of the actual content type. (JDM)</li>
                 <li>fixed c/p error for Move Issue email parameters in 
                     Scarab.properties. (JDM) </li>
+                 <li>Updated turbine jar to solve a 
+                     ConcurrentModificationException when changing password.
+                     For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=229">
+                    329</a>. (JDM)</li>
             </ul>
          </td>
     </tr>
