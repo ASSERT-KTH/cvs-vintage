@@ -117,7 +117,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.114 2003/09/18 15:30:20 parun Exp $
+ * @version $Id: IssueSearch.java,v 1.115 2003/09/18 18:45:50 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1049,7 +1049,7 @@ public class IssueSearch
             .retrieveQuickSearchAttributeIDs(getModuleId().toString(), 
                                              getTypeId().toString());
 
-        for (Iterator i = searchValues.iterator(); i.hasNext();) 
+        for (Iterator i = searchValues.values().iterator(); i.hasNext();) 
         {
             AttributeValue searchValue = (AttributeValue)i.next();
             if (quickSearchIDs.contains(
@@ -1095,7 +1095,7 @@ public class IssueSearch
             .retrieveQuickSearchAttributeIDs(getModuleId().toString(), 
                                              getTypeId().toString());
 
-        for (Iterator i = searchValues.iterator(); i.hasNext();) 
+        for (Iterator i = searchValues.values().iterator(); i.hasNext();) 
         {
             AttributeValue searchValue = (AttributeValue)i.next();
             if (quickSearchIDs.contains(
