@@ -122,6 +122,11 @@ public final class OutputBuffer extends Writer {
 	ccount=0;
 	count=0;
         closed=false;
+	if( conv!= null ) {
+	    conv.reset(); // reset ?
+	} else {
+	    log( "Recycle without conv ??");
+	}
     }
 
     // -------------------- Adding bytes to the buffer -------------------- 
@@ -203,6 +208,7 @@ public final class OutputBuffer extends Writer {
     String enc;
     boolean gotEnc=false;
     public char cbuf[];
+    /** character count - first free possition */
     public int ccount;
     int charsWritten;
 
@@ -223,7 +229,7 @@ public final class OutputBuffer extends Writer {
 
     public void write(char c[], int off, int len) throws IOException {
 	state=CHAR_STATE;
-	if( debug > 0 ) log("write(c,off,len)");
+	if( debug > 0 ) log("write(c,off,len)" + ccount + " " + len);
 	int avail=cbuf.length - ccount;
 
 	charsWritten += len;
@@ -266,7 +272,7 @@ public final class OutputBuffer extends Writer {
 
     public void write( StringBuffer sb ) throws IOException {
 	state=CHAR_STATE;
-	if( debug > 0 ) log("write(s,off,len)");
+	if( debug > 1 ) log("write(s,off,len)");
 	int len=sb.length();
 	charsWritten += len;
 
@@ -286,7 +292,7 @@ public final class OutputBuffer extends Writer {
 
     public void write(String s, int off, int len) throws IOException {
 	state=CHAR_STATE;
-	if( debug > 0 ) log("write(s,off,len)");
+	if( debug > 1 ) log("write(s,off,len)");
 	charsWritten += len;
 	if (s==null) s="null";
 	
@@ -341,9 +347,10 @@ public final class OutputBuffer extends Writer {
     WriteConvertor conv;
 
     void cWrite( char c[], int off, int len ) throws IOException {
-	if( debug > 0 ) log("cWrite(c,o,l) " + ccount);
+	if( debug > 0 ) log("cWrite(c,o,l) " + ccount + " " + len);
 	if( !gotEnc ) setConverter();
-
+	
+	if( debug > 0 ) log("encoder:  " + conv + " " + gotEnc);
 	conv.write(c, off, len);
 	conv.flush();	// ???
     }
@@ -372,6 +379,8 @@ public final class OutputBuffer extends Writer {
     
     // --------------------  BufferedOutputStream compatibility
 
+    /** Real write - this buffer will be sent to the client
+     */
     public void flushBytes() throws IOException {
 	if( debug > 0 ) log("flushBytes() " + count);
 	if( count > 0) {
@@ -408,12 +417,15 @@ public final class OutputBuffer extends Writer {
 }
 
 class WriteConvertor extends OutputStreamWriter {
+    IntermediateOutputStream ios;
+    
     /* Has a private, internal byte[8192]
      */
-    public WriteConvertor( OutputStream out, String enc )
+    public WriteConvertor( IntermediateOutputStream out, String enc )
 	throws UnsupportedEncodingException
     {
 	super( out, enc );
+	ios=out;
     }
 
     public void close() throws IOException {
@@ -431,11 +443,24 @@ class WriteConvertor extends OutputStreamWriter {
 	// will do the conversion and call write on the output stream
 	super.write( cbuf, off, len );
     }
+
+    void reset() {
+	ios.resetFlag=true;
+	try {
+	    //	    System.out.println("Reseting writer");
+	    flush();
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	}
+	ios.resetFlag=false;
+    }
+	
 }
 
 
 class IntermediateOutputStream extends OutputStream {
     OutputBuffer tbuff;
+    boolean resetFlag=false;
     
     public IntermediateOutputStream(OutputBuffer tbuff) {
 	this.tbuff=tbuff;
@@ -454,7 +479,12 @@ class IntermediateOutputStream extends OutputStream {
 
     public void write(byte cbuf[], int off, int len) throws IOException {
 	//	System.out.println("IOS: " + len );
-	tbuff.writeBytes( cbuf, off, len );
+	// will do the conversion and call write on the output stream
+	if( resetFlag ) {
+	    //	    System.out.println("Reseting buffer ");
+	} else {
+	    tbuff.writeBytes( cbuf, off, len );
+	}
     }
 
     public void write( int i ) throws IOException {
