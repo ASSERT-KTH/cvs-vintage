@@ -88,11 +88,12 @@ public class IIOPReferenceContextWrapper implements Context {
      */
     private Object resolveObject(Object o) throws NamingException {
 	try {
+	    //TODO: May we can do a narrow ? 
 	    if (o instanceof IIOPRemoteReference) {
 		// build of the Referenceable object with is Reference
 		Reference objRef = ((IIOPRemoteReference)o).getReference();
 		ObjectFactory objFact = (ObjectFactory)(Class.forName(objRef.getFactoryClassName())).newInstance(); 
-		return (Referenceable)objFact.getObjectInstance(objRef,null,null,null);
+		return objFact.getObjectInstance(objRef,null,null,null);
 	    } else if (o instanceof IIOPRemoteResource) {
 		return ((IIOPRemoteResource)o).getResource();
 	    } else {
@@ -117,6 +118,20 @@ public class IIOPReferenceContextWrapper implements Context {
 	try {
 	    if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
 		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper(((Referenceable)o).getReference());
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
+		if (oldObj != null) {
+		    if (replace) {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+		    } else {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+			wrapperHash.put(name, oldObj);
+			throw new NamingException("Object already bind");
+		    }
+		} 
+		return irw;
+	    } if ((!(o instanceof Remote)) && (o instanceof Reference)) {
+		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper((Reference)o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
 		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
 		if (oldObj != null) {

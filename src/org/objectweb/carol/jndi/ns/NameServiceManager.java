@@ -150,4 +150,25 @@ public class NameServiceManager {
 	    currentNS.stop();
 	}
     }
+
+    /**
+     * Main function: start all registry and wait for control C function
+     */
+    public static void main(String args []) {
+	try {
+	    NameServiceManager.startNonStartedNS();
+	    // add a shudown hook for this process
+	    Runtime.getRuntime().addShutdownHook(new Thread() {
+		    public void run() {
+			try {
+			    NameServiceManager.stopNS();
+			} catch (Exception e) {
+			    TraceCarol.error("Carol Naming ShutdownHook problem" ,e);
+			}
+		    }
+		});
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    } 
 }

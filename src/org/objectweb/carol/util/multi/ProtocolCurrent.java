@@ -105,7 +105,9 @@ public class ProtocolCurrent {
 	    }
 	    
 	} catch (Exception e) {
-	    TraceCarol.error("ProtocolCurrent() Exception", e); 
+	    if (TraceCarol.isDebugCarol()) {
+		TraceCarol.debugCarol("ProtocolCurrent.ProtocolCurrent() Exception:" + e);
+	    } 
 	}
     }
     
