@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.221 2004/03/25 23:13:24 spestov Exp $
+ * @version $Id: jEdit.java,v 1.222 2004/03/28 01:42:45 spestov Exp $
  */
 public class jEdit
 {
@@ -2251,7 +2251,13 @@ public class jEdit
 	 */
 	public static View getActiveView()
 	{
-		return activeView;
+		if(activeView == null)
+		{
+			// eg user just closed a view and didn't focus another
+			return viewsFirst;
+		}
+		else
+			return activeView;
 	} //}}}
 
 	//}}}

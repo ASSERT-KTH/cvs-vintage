@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.34 2004/01/25 01:38:29 spestov Exp $
+ * @version $Id: Java14.java,v 1.35 2004/03/28 01:42:45 spestov Exp $
  */
 public class Java14
 {
@@ -460,6 +460,7 @@ public class Java14
 	static class DropHandler extends DropTargetAdapter
 	{
 		JEditTextArea textArea;
+		Buffer savedBuffer;
 		int savedCaret;
 
 		DropHandler(JEditTextArea textArea)
@@ -470,6 +471,7 @@ public class Java14
 		public void dragEnter(DropTargetDragEvent dtde)
 		{
 			Log.log(Log.DEBUG,this,"Drag enter");
+			savedBuffer = textArea.getBuffer();
 			textArea.setDragInProgress(true);
 			//textArea.getBuffer().beginCompoundEdit();
 			savedCaret = textArea.getCaretPosition();
@@ -495,8 +497,12 @@ public class Java14
 			Log.log(Log.DEBUG,this,"Drag exit");
 			textArea.setDragInProgress(false);
 			//textArea.getBuffer().endCompoundEdit();
-			textArea.moveCaretPosition(savedCaret,
-				JEditTextArea.ELECTRIC_SCROLL);
+			if(textArea.getBuffer() == savedBuffer)
+			{
+				textArea.moveCaretPosition(savedCaret,
+					JEditTextArea.ELECTRIC_SCROLL);
+			}
+			savedBuffer = null;
 		}
 
 		public void drop(DropTargetDropEvent dtde)

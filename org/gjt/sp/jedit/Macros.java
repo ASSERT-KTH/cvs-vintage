@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2003 Slava Pestov
+ * Copyright (C) 1999, 2004 Slava Pestov
  * Portions copyright (C) 2002 mike dillon
  *
  * This program is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.37 2003/08/20 20:23:53 spestov Exp $
+ * @version $Id: Macros.java,v 1.38 2004/03/28 01:42:45 spestov Exp $
  */
 public class Macros
 {
@@ -666,6 +666,12 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 				{
 					Macro newMacro = handler.createMacro(
 						path + fileName, file.getPath());
+					if(macroHash.get(newMacro.getName())
+						!= null)
+					{
+						continue;
+					}
+
 					vector.addElement(newMacro.getName());
 					macroActionSet.addAction(newMacro);
 					macroHash.put(newMacro.getName(),newMacro);
