@@ -359,9 +359,8 @@
 
 ## ATTACHMENT
 #set ($attachments = $currentIssue.ExistingAttachments)
-#if ($attachments.size() > 0 )
-    <h3>Attachment</h3>
-    <div>
+<h3>Attachment</h3>
+<div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">
        #set ($atch = $scarabR.Attachment)
        #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
@@ -402,23 +401,6 @@
                </td>
             </tr>
        #end
-
-       #if ($atch.Name)
-            <tr>
-               <th>Attachment description</th>
-               <td>
-                 $!atch.Name
-               </td>
-            </tr>
-       #end
-       #if ( $atch.DataAsString)
-            <tr>
-               <th>Attachment file content</th>
-               <td>
-                 <pre>$!atch.DataAsString</pre>
-               </td>
-            </tr>
-       #end
     </table>
     </div>
     <div class="functnbar3">
@@ -426,9 +408,8 @@
             <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
             <input type="submit" value="Delete file" name="eventSubmit_doDeletefile"  />&#160;
         #end
-    </div>
+</div>
     
-#end
 
 ## ISSUE HISTORY
 #if ($fullHistory.equals("true"))
