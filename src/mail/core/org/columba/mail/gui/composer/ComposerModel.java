@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
@@ -63,6 +64,14 @@ public class ComposerModel {
 	private boolean signMessage;
 
 	private boolean encryptMessage;
+	
+	/**
+	 * source reference
+	 * <p>
+	 * When replying/forwarding this is the original message
+	 * you selected in the message-list and replied to
+	 */
+	private FolderCommandReference[] ref;
 
 	/**
 	 * Flag indicating whether this model holds a html message (true) or plain
@@ -121,6 +130,28 @@ public class ComposerModel {
 		ccList = new Vector();
 		bccList = new Vector();
 		attachments = new Vector();
+	}
+	
+	/**
+	 * Set source reference.
+	 * <p>
+	 * The message you are for example replying to.
+	 * 
+	 * @param ref	source reference
+	 */
+	public void setSourceReference(FolderCommandReference[] ref) {
+		this.ref = ref;
+	}
+	
+	/**
+	 * Get source reference.
+	 * <p>
+	 * The message you are for example replying to.
+	 * 
+	 * @return		source reference
+	 */
+	public FolderCommandReference[] getSourceReference() {
+		return ref;
 	}
 
 	public void setTo(Address[] a) {

@@ -15,14 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.ComposerCommandReference;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -30,51 +33,61 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.event.ActionEvent;
-
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class SendLaterAction extends AbstractColumbaAction {
-    public SendLaterAction(FrameMediator FrameController) {
-        super(FrameController,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_file_sendlater"));
+	public SendLaterAction(FrameMediator FrameController) {
+		super(FrameController, MailResourceLoader.getString("menu", "composer",
+				"menu_file_sendlater"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "composer",
-                "menu_file_sendlater").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"composer", "menu_file_sendlater").replaceAll("&", ""));
 
-        // small icon for menu
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-later-16.png"));
-    }
+		// small icon for menu
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-later-16.png"));
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        final ComposerController composerController = (ComposerController) getFrameMediator();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		final ComposerController composerController = (ComposerController) getFrameMediator();
 
-        if (composerController.checkState()) {
-            return;
-        }
+		if (composerController.checkState()) {
+			return;
+		}
 
-        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
-        SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-        OutboxFolder destFolder = (OutboxFolder) MailInterface.treeModel.getFolder(103);
+		AccountItem item = ((ComposerModel) composerController.getModel())
+				.getAccountItem();
+		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
+		OutboxFolder destFolder = (OutboxFolder) MailInterface.treeModel
+				.getFolder(103);
 
-        ComposerCommandReference[] r = new ComposerCommandReference[1];
-        r[0] = new ComposerCommandReference(composerController, destFolder);
+		ComposerCommandReference[] r = new ComposerCommandReference[1];
+		r[0] = new ComposerCommandReference(composerController, destFolder);
 
-        SaveMessageCommand c = new SaveMessageCommand(r);
+		SaveMessageCommand c = new SaveMessageCommand(r);
+		MainInterface.processor.addOp(c);
 
-        MainInterface.processor.addOp(c);
+		//      -> get source reference of message
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref2 = composerController.getModel()
+				.getSourceReference();
+		if (ref2 != null) {
+			// mark message as answered
+			ref2[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
+			MarkMessageCommand c1 = new MarkMessageCommand(ref2);
+			MainInterface.processor.addOp(c1);
+		}
 
-        composerController.close();
-    }
+		composerController.close();
+	}
 }

@@ -27,7 +27,6 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.message.BasicHeader;
@@ -43,78 +42,78 @@ import org.columba.ristretto.message.MimeType;
  */
 public class ForwardCommand extends FolderCommand {
 
-    protected ComposerController controller;
+	protected ComposerController controller;
 
-    protected ComposerModel model;
+	protected ComposerModel model;
 
-    /**
-     * Constructor for ForwardCommand.
-     * 
-     * @param frameMediator
-     * @param references
-     */
-    public ForwardCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for ForwardCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ForwardCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void updateGUI() throws Exception {
-        // open composer frame
-        controller = (ComposerController) MainInterface.frameModel
-                .openView("Composer");
+	public void updateGUI() throws Exception {
+		// open composer frame
+		controller = (ComposerController) MainInterface.frameModel
+				.openView("Composer");
 
-        // apply model
-        controller.setComposerModel(model);
+		// apply model
+		controller.setComposerModel(model);
 
-        // model->view update
-        controller.updateComponents(true);
-    }
+		// model->view update
+		controller.updateComponents(true);
+	}
 
-    public void execute(WorkerStatusController worker) throws Exception {
-        // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
-                .getFolder();
+	public void execute(WorkerStatusController worker) throws Exception {
+		// get selected folder
+		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+				.getFolder();
 
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		// get first selected message
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        // mark message as answered
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(folder, uids);
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        MarkMessageCommand c = new MarkMessageCommand(ref);
-        c.execute(worker);
+		//      ->set source reference in composermodel
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref = new FolderCommandReference[1];
+		ref[0] = new FolderCommandReference(folder, uids);
+		model.setSourceReference(ref);
 
-        // get headerfields
-        Header header = folder.getHeaderFields(uids[0],
-                new String[] { "Subject"});
+		// get headerfields
+		Header header = folder.getHeaderFields(uids[0],
+				new String[] { "Subject" });
 
-        // create composer model
-        model = new ComposerModel();
+		// create composer model
+		model = new ComposerModel();
 
-        // set subject
-        model.setSubject(MessageBuilderHelper
-                .createForwardSubject(new BasicHeader(header).getSubject()));
+		// set subject
+		model.setSubject(MessageBuilderHelper
+				.createForwardSubject(new BasicHeader(header).getSubject()));
 
-        // initialize MimeHeader as RFC822-compliant-message
-        MimeHeader mimeHeader = new MimeHeader();
-        mimeHeader.setMimeType(new MimeType("message", "rfc822"));
+		// initialize MimeHeader as RFC822-compliant-message
+		MimeHeader mimeHeader = new MimeHeader();
+		mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
-        // add mimepart to model
+		// add mimepart to model
 
-        InputStream messageSourceStream = folder
-                .getMessageSourceStream(uids[0]);
-        model.addMimePart(new InputStreamMimePart(mimeHeader,
-                messageSourceStream));
-    }
+		InputStream messageSourceStream = folder
+				.getMessageSourceStream(uids[0]);
+		model.addMimePart(new InputStreamMimePart(mimeHeader,
+				messageSourceStream));
+	}
 
-    /**
-     * Get composer model.
-     * <p>
-     * Needed for testcases.
-     * 
-     * @return Returns the model.
-     */
-    public ComposerModel getModel() {
-        return model;
-    }
+	/**
+	 * Get composer model.
+	 * <p>
+	 * Needed for testcases.
+	 * 
+	 * @return Returns the model.
+	 */
+	public ComposerModel getModel() {
+		return model;
+	}
 }

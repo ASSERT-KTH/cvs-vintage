@@ -27,7 +27,6 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
 import org.columba.mail.main.MailInterface;
@@ -42,107 +41,109 @@ import org.columba.ristretto.message.MimeTree;
  */
 public class ReplyWithTemplateCommand extends ReplyCommand {
 
-    /**
-     * @param references
-     */
-    public ReplyWithTemplateCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * @param references
+	 */
+	public ReplyWithTemplateCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void execute(WorkerStatusController worker) throws Exception {
-        // create composer model
-        model = new ComposerModel();
+	public void execute(WorkerStatusController worker) throws Exception {
+		// create composer model
+		model = new ComposerModel();
 
-        // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
-                .getFolder();
+		// get selected folder
+		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+				.getFolder();
 
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		// get first selected message
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        // mark message as answered
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(folder, uids);
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        MarkMessageCommand c = new MarkMessageCommand(ref);
-        c.execute(worker);
+		//      ->set source reference in composermodel
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref = new FolderCommandReference[1];
+		ref[0] = new FolderCommandReference(folder, uids);
+		model.setSourceReference(ref);
 
-        // setup to, references and account
-        initHeader(folder, uids);
+		// setup to, references and account
+		initHeader(folder, uids);
 
-        // get mimeparts
-        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
+		// get mimeparts
+		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
-                .getRoot().getElement("/options/html");
+		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
 
-        // Which Bodypart shall be shown? (html/plain)
-        MimePart bodyPart = null;
+		// Which Bodypart shall be shown? (html/plain)
+		MimePart bodyPart = null;
 
-        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
-            bodyPart = mimePartTree.getFirstTextPart("html");
-        } else {
-            bodyPart = mimePartTree.getFirstTextPart("plain");
-        }
+		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
 
-        if (bodyPart != null) {
-            // setup charset and html
-            initMimeHeader(bodyPart);
+		if (bodyPart != null) {
+			// setup charset and html
+			initMimeHeader(bodyPart);
 
-            StringBuffer bodyText;
-            Integer[] address = bodyPart.getAddress();
+			StringBuffer bodyText;
+			Integer[] address = bodyPart.getAddress();
 
-            String quotedBodyText = createQuotedBody(bodyPart.getHeader(), folder, uids, address);
+			String quotedBodyText = createQuotedBody(bodyPart.getHeader(),
+					folder, uids, address);
 
-            // get answer from template
-            String templateBody = getTemplateBody();
+			// get answer from template
+			String templateBody = getTemplateBody();
 
-            model.setBodyText(quotedBodyText + templateBody);
-        } else {
-            model.setBodyText(getTemplateBody());
-        }
-    }
+			model.setBodyText(quotedBodyText + templateBody);
+		} else {
+			model.setBodyText(getTemplateBody());
+		}
+	}
 
-    private String getTemplateBody() throws Exception,
-            CommandCancelledException, IOException {
-        // template folder has uid=107
-        MessageFolder templateFolder = (MessageFolder) MailInterface.treeModel
-                .getFolder(107);
+	private String getTemplateBody() throws Exception,
+			CommandCancelledException, IOException {
+		// template folder has uid=107
+		MessageFolder templateFolder = (MessageFolder) MailInterface.treeModel
+				.getFolder(107);
 
-        // retrieve headerlist of tempate folder
-        HeaderList list = templateFolder.getHeaderList();
+		// retrieve headerlist of tempate folder
+		HeaderList list = templateFolder.getHeaderList();
 
-        // choose template
-        ChooseTemplateDialog d = new ChooseTemplateDialog(getFrameMediator().getView().getFrame(), list);
+		// choose template
+		ChooseTemplateDialog d = new ChooseTemplateDialog(getFrameMediator()
+				.getView().getFrame(), list);
 
-        Object uid = null;
+		Object uid = null;
 
-        if (d.isResult()) {
-            // user pressed OK
-            uid = d.getUid();
-        } else {
-            throw new CommandCancelledException();
-        }
+		if (d.isResult()) {
+			// user pressed OK
+			uid = d.getUid();
+		} else {
+			throw new CommandCancelledException();
+		}
 
-        // get bodytext of template message
-        MimeTree tree = templateFolder.getMimePartTree(uid);
+		// get bodytext of template message
+		MimeTree tree = templateFolder.getMimePartTree(uid);
 
-        // *20030926, karlpeder* Added html support
-        //MimePart mp = tree.getFirstTextPart("plain");
-        MimePart mp;
+		// *20030926, karlpeder* Added html support
+		//MimePart mp = tree.getFirstTextPart("plain");
+		MimePart mp;
 
-        if (model.isHtml()) {
-            mp = tree.getFirstTextPart("html");
-        } else {
-            mp = tree.getFirstTextPart("text");
-        }
+		if (model.isHtml()) {
+			mp = tree.getFirstTextPart("html");
+		} else {
+			mp = tree.getFirstTextPart("text");
+		}
 
-        InputStream bodyStream = templateFolder.getMimePartBodyStream(uid, mp
-                .getAddress());
+		InputStream bodyStream = templateFolder.getMimePartBodyStream(uid, mp
+				.getAddress());
 
-        String body = StreamUtils.readInString(bodyStream).toString();
+		String body = StreamUtils.readInString(bodyStream).toString();
 
-        bodyStream.close();
-        return body;
-    }
+		bodyStream.close();
+		return body;
+	}
 }

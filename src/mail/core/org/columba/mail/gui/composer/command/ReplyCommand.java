@@ -32,7 +32,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
@@ -103,12 +102,12 @@ public class ReplyCommand extends FolderCommand {
         // get first selected message
         Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
         
-        // mark message as answered
+        // ->set source reference in composermodel
+        // when replying this is the original sender's message
+		// you selected and replied to
         FolderCommandReference[] ref = new FolderCommandReference[1];
         ref[0] = new FolderCommandReference(folder, uids);
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        MarkMessageCommand c = new MarkMessageCommand(ref);
-        c.execute(worker);
+        model.setSourceReference(ref);
         
         // setup to, references and account
         initHeader(folder, uids);

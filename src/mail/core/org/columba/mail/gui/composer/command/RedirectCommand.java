@@ -30,7 +30,6 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
@@ -79,12 +78,12 @@ public class RedirectCommand extends ForwardCommand {
 		// get first selected message
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		// mark message as answered
-		FolderCommandReference[] ref = new FolderCommandReference[1];
-		ref[0] = new FolderCommandReference(folder, uids);
-		ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-		MarkMessageCommand c = new MarkMessageCommand(ref);
-		c.execute(worker);
+//		 ->set source reference in composermodel
+        // when replying this is the original sender's message
+		// you selected and replied to
+        FolderCommandReference[] ref = new FolderCommandReference[1];
+        ref[0] = new FolderCommandReference(folder, uids);
+        model.setSourceReference(ref);
 
 		// setup to, references and account
 		initHeader(folder, uids);

@@ -23,7 +23,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.message.InputStreamMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -37,47 +36,47 @@ import org.columba.ristretto.message.MimeType;
  */
 public class ReplyAsAttachmentCommand extends ReplyCommand {
 
-    /**
-     * Constructor for ReplyCommand.
-     * 
-     * @param frameMediator
-     * @param references
-     */
-    public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for ReplyCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void execute(WorkerStatusController worker) throws Exception {
-        // create composer model
-        model = new ComposerModel();
+	public void execute(WorkerStatusController worker) throws Exception {
+		// create composer model
+		model = new ComposerModel();
 
-        // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
-                .getFolder();
+		// get selected folder
+		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+				.getFolder();
 
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		// get first selected message
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        //      mark message as answered
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(folder, uids);
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        MarkMessageCommand c = new MarkMessageCommand(ref);
-        c.execute(worker);
+		//      ->set source reference in composermodel
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref = new FolderCommandReference[1];
+		ref[0] = new FolderCommandReference(folder, uids);
+		model.setSourceReference(ref);
 
-        // setup to, references and account
-        initHeader(folder, uids);
+		// setup to, references and account
+		initHeader(folder, uids);
 
-        // initialize MimeHeader as RFC822-compliant-message
-        MimeHeader mimeHeader = new MimeHeader();
-        mimeHeader.setMimeType(new MimeType("message", "rfc822"));
+		// initialize MimeHeader as RFC822-compliant-message
+		MimeHeader mimeHeader = new MimeHeader();
+		mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
-        // add mimepart to model
+		// add mimepart to model
 
-        InputStream messageSourceStream = folder
-                .getMessageSourceStream(uids[0]);
-        model.addMimePart(new InputStreamMimePart(mimeHeader,
-                messageSourceStream));
-        messageSourceStream.close();
-    }
+		InputStream messageSourceStream = folder
+				.getMessageSourceStream(uids[0]);
+		model.addMimePart(new InputStreamMimePart(mimeHeader,
+				messageSourceStream));
+		messageSourceStream.close();
+	}
 }

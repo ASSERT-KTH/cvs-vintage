@@ -31,7 +31,6 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.main.MailInterface;
@@ -57,192 +56,194 @@ import org.columba.ristretto.message.MimeTree;
  */
 public class ForwardInlineCommand extends ForwardCommand {
 
-    protected final String[] headerfields = new String[] { "Subject", "Date",
-            "From", "To"};
+	protected final String[] headerfields = new String[] { "Subject", "Date",
+			"From", "To" };
 
-    /**
-     * Constructor for ForwardInlineCommand.
-     * 
-     * @param frameMediator
-     * @param references
-     */
-    public ForwardInlineCommand(DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for ForwardInlineCommand.
+	 * 
+	 * @param frameMediator
+	 * @param references
+	 */
+	public ForwardInlineCommand(DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    public void execute(WorkerStatusController worker) throws Exception {
-        // create composer model
-        model = new ComposerModel();
+	public void execute(WorkerStatusController worker) throws Exception {
+		// create composer model
+		model = new ComposerModel();
 
-        // get selected folder
-        MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
-                .getFolder();
+		// get selected folder
+		MessageFolder folder = (MessageFolder) ((FolderCommandReference) getReferences()[0])
+				.getFolder();
 
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+		// get first selected message
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-        // mark message as answered
-        FolderCommandReference[] ref = new FolderCommandReference[1];
-        ref[0] = new FolderCommandReference(folder, uids);
-        ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
-        MarkMessageCommand c = new MarkMessageCommand(ref);
-        c.execute(worker);
+		//      ->set source reference in composermodel
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref = new FolderCommandReference[1];
+		ref[0] = new FolderCommandReference(folder, uids);
+		model.setSourceReference(ref);
 
-        // setup to, references and account
-        initHeader(folder, uids);
+		// setup to, references and account
+		initHeader(folder, uids);
 
-        // get mimeparts
-        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
+		// get mimeparts
+		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
-        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
-                .getRoot().getElement("/options/html");
+		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+				.getRoot().getElement("/options/html");
 
-        // Which Bodypart shall be shown? (html/plain)
-        MimePart bodyPart = null;
-        Integer[] bodyPartAddress=null;
-        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
-            bodyPart = mimePartTree.getFirstTextPart("html");
-        } else {
-            bodyPart = mimePartTree.getFirstTextPart("plain");
-        }
+		// Which Bodypart shall be shown? (html/plain)
+		MimePart bodyPart = null;
+		Integer[] bodyPartAddress = null;
+		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+			bodyPart = mimePartTree.getFirstTextPart("html");
+		} else {
+			bodyPart = mimePartTree.getFirstTextPart("plain");
+		}
 
-        if (bodyPart != null) {
-            // setup charset and html
-            initMimeHeader(bodyPart);
+		if (bodyPart != null) {
+			// setup charset and html
+			initMimeHeader(bodyPart);
 
-            StringBuffer bodyText;
-            bodyPartAddress = bodyPart.getAddress();
+			StringBuffer bodyText;
+			bodyPartAddress = bodyPart.getAddress();
 
-            String quotedBodyText = createQuotedBody(bodyPart.getHeader(), folder, uids, bodyPartAddress);
+			String quotedBodyText = createQuotedBody(bodyPart.getHeader(),
+					folder, uids, bodyPartAddress);
 
-            /*
-             * *20040210, karlpeder* Remove html comments - they are not
-             * displayed properly in the composer
-             */
-            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-                quotedBodyText = HtmlParser.removeComments(quotedBodyText);
-            }
+			/*
+			 * *20040210, karlpeder* Remove html comments - they are not
+			 * displayed properly in the composer
+			 */
+			if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+				quotedBodyText = HtmlParser.removeComments(quotedBodyText);
+			}
 
-            model.setBodyText(quotedBodyText);
-        }
-        
-        //  add all attachments
-        MimeTree mt = folder.getMimePartTree(uids[0]);
-        Iterator it = mt.getAllLeafs().iterator();
-        while (it.hasNext()) {
-        	MimePart mp = (MimePart) it.next();
-        	Integer[] address = mp.getAddress();
-        	// skip if bodypart (already added as quoted text)
-        	if ( Arrays.equals(address, bodyPartAddress) ) continue;
-        	
-        	// add attachment
-        	InputStream stream = folder.getMimePartBodyStream(uids[0], address);
-            model.addMimePart(new InputStreamMimePart(mp.getHeader(),
-                    stream));
-        }
-        
-    }
+			model.setBodyText(quotedBodyText);
+		}
 
-    private void initMimeHeader(MimePart bodyPart) {
-        MimeHeader bodyHeader = bodyPart.getHeader();
+		//  add all attachments
+		MimeTree mt = folder.getMimePartTree(uids[0]);
+		Iterator it = mt.getAllLeafs().iterator();
+		while (it.hasNext()) {
+			MimePart mp = (MimePart) it.next();
+			Integer[] address = mp.getAddress();
+			// skip if bodypart (already added as quoted text)
+			if (Arrays.equals(address, bodyPartAddress))
+				continue;
 
-        if (bodyHeader.getMimeType().getSubtype().equals("html")) {
-            model.setHtml(true);
-        } else {
-            model.setHtml(false);
-        }
+			// add attachment
+			InputStream stream = folder.getMimePartBodyStream(uids[0], address);
+			model.addMimePart(new InputStreamMimePart(mp.getHeader(), stream));
+		}
 
-        // Select the charset of the original message
-        String charset = bodyHeader.getContentParameter("charset");
+	}
 
-        if (charset != null) {
-            model.setCharset(Charset.forName(charset));
-        }
-    }
+	private void initMimeHeader(MimePart bodyPart) {
+		MimeHeader bodyHeader = bodyPart.getHeader();
 
-    private void initHeader(MessageFolder folder, Object[] uids)
-            throws Exception {
-        // get headerfields
-        Header header = folder.getHeaderFields(uids[0],
-                new String[] { "Subject"});
+		if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+			model.setHtml(true);
+		} else {
+			model.setHtml(false);
+		}
 
-        BasicHeader rfcHeader = new BasicHeader(header);
+		// Select the charset of the original message
+		String charset = bodyHeader.getContentParameter("charset");
 
-        // set subject
-        model.setSubject(MessageBuilderHelper.createForwardSubject(rfcHeader
-                .getSubject()));
-    }
+		if (charset != null) {
+			model.setCharset(Charset.forName(charset));
+		}
+	}
 
-    protected String createQuotedBody(MimeHeader header, MessageFolder folder, Object[] uids,
-            Integer[] address) throws IOException, Exception {
-        InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
+	private void initHeader(MessageFolder folder, Object[] uids)
+			throws Exception {
+		// get headerfields
+		Header header = folder.getHeaderFields(uids[0],
+				new String[] { "Subject" });
 
-        // Do decoding stuff
-        switch( header.getContentTransferEncoding() ) {
-        	case MimeHeader.QUOTED_PRINTABLE : {
-        		bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-        		break;
-        	}
-        	
-        	case MimeHeader.BASE64 : {
-        		bodyStream = new Base64DecoderInputStream(bodyStream);
-        	}
-        }
-        String charset = header.getContentParameter("charset");
-        if( charset != null ) {
-        	bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
-        }
-        
-        String quotedBody;
-        // Quote original message - different methods for text and html
-        if (model.isHtml()) {
-            // Html: Insertion of text before and after original message
-            // get necessary headerfields
-            BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
-                    uids[0], headerfields));
-            String subject = rfcHeader.getSubject();
-            String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
-                    DateFormat.MEDIUM).format(rfcHeader.getDate());
-            String from = AddressListRenderer.renderToHTMLWithLinks(
-                    new Address[] { rfcHeader.getFrom()}).toString();
-            String to = AddressListRenderer.renderToHTMLWithLinks(
-                    rfcHeader.getTo()).toString();
+		BasicHeader rfcHeader = new BasicHeader(header);
 
-            // build "quoted" message
-            StringBuffer buf = new StringBuffer();
-            buf.append("<html><body><p>");
-            buf.append(MailResourceLoader.getString("dialog", "composer",
-                    "original_message_start"));
-            buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header",
-                            "subject") + ": " + subject);
-            buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header", "date")
-                    + ": " + date);
-            buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header", "from")
-                    + ": " + from);
-            buf.append("<br>"
-                    + MailResourceLoader.getString("header", "header", "to")
-                    + ": " + to);
-            buf.append("</p>");
-            buf.append(HtmlParser.removeComments( // comments are not displayed
-                                                  // correctly in composer
-                    HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
-                            .toString())));
-            buf.append("<p>");
-            buf.append(MailResourceLoader.getString("dialog", "composer",
-                    "original_message_end"));
-            buf.append("</p></body></html>");
+		// set subject
+		model.setSubject(MessageBuilderHelper.createForwardSubject(rfcHeader
+				.getSubject()));
+	}
 
-            quotedBody = buf.toString();
-        } else {
-            // Text: Addition of > before each line
-            quotedBody = StreamUtils.readInString(
-                    new QuoteFilterInputStream(bodyStream)).toString();
-        }
+	protected String createQuotedBody(MimeHeader header, MessageFolder folder,
+			Object[] uids, Integer[] address) throws IOException, Exception {
+		InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
-        bodyStream.close();
-        return quotedBody;
-    }
+		// Do decoding stuff
+		switch (header.getContentTransferEncoding()) {
+		case MimeHeader.QUOTED_PRINTABLE: {
+			bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			break;
+		}
+
+		case MimeHeader.BASE64: {
+			bodyStream = new Base64DecoderInputStream(bodyStream);
+		}
+		}
+		String charset = header.getContentParameter("charset");
+		if (charset != null) {
+			bodyStream = new CharsetDecoderInputStream(bodyStream, Charset
+					.forName(charset));
+		}
+
+		String quotedBody;
+		// Quote original message - different methods for text and html
+		if (model.isHtml()) {
+			// Html: Insertion of text before and after original message
+			// get necessary headerfields
+			BasicHeader rfcHeader = new BasicHeader(folder.getHeaderFields(
+					uids[0], headerfields));
+			String subject = rfcHeader.getSubject();
+			String date = DateFormat.getDateTimeInstance(DateFormat.LONG,
+					DateFormat.MEDIUM).format(rfcHeader.getDate());
+			String from = AddressListRenderer.renderToHTMLWithLinks(
+					new Address[] { rfcHeader.getFrom() }).toString();
+			String to = AddressListRenderer.renderToHTMLWithLinks(
+					rfcHeader.getTo()).toString();
+
+			// build "quoted" message
+			StringBuffer buf = new StringBuffer();
+			buf.append("<html><body><p>");
+			buf.append(MailResourceLoader.getString("dialog", "composer",
+					"original_message_start"));
+			buf.append("<br>"
+					+ MailResourceLoader.getString("header", "header",
+							"subject") + ": " + subject);
+			buf.append("<br>"
+					+ MailResourceLoader.getString("header", "header", "date")
+					+ ": " + date);
+			buf.append("<br>"
+					+ MailResourceLoader.getString("header", "header", "from")
+					+ ": " + from);
+			buf.append("<br>"
+					+ MailResourceLoader.getString("header", "header", "to")
+					+ ": " + to);
+			buf.append("</p>");
+			buf.append(HtmlParser.removeComments( // comments are not displayed
+					// correctly in composer
+					HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
+							.toString())));
+			buf.append("<p>");
+			buf.append(MailResourceLoader.getString("dialog", "composer",
+					"original_message_end"));
+			buf.append("</p></body></html>");
+
+			quotedBody = buf.toString();
+		} else {
+			// Text: Addition of > before each line
+			quotedBody = StreamUtils.readInString(
+					new QuoteFilterInputStream(bodyStream)).toString();
+		}
+
+		bodyStream.close();
+		return quotedBody;
+	}
 }
