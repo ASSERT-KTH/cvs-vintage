@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class JDBCStartCommand {
 
@@ -225,55 +225,67 @@ public class JDBCStartCommand {
       sql.append("CREATE TABLE ").append(entity.getTableName());
       
       sql.append(" (");
-         // add fields
-         // sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
-         for(Iterator iter = 
-            SQLUtil.getJDBCTypes(entity.getFields()).iterator();
-            iter.hasNext();) {
+      // add fields
+      // sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
 
-            JDBCType type = (JDBCType) iter.next();
+      boolean firstField = true;
+      for(Iterator iter = entity.getFields().iterator(); iter.hasNext();) {
 
-            // apply auto-increment template
-            if( type.getAutoIncrement()[0] ) {
-               String columnClause = 
-                  SQLUtil.getCreateTableColumnsClause( type );
+         JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
 
-               JDBCFunctionMappingMetaData autoIncrement = 
-                  manager.getMetaData().getTypeMapping().
-                  getAutoIncrementTemplate();
-               if(autoIncrement == null) {
-                  throw new IllegalStateException(
-                     "auto-increment template not found");
-               }
-
-               String[] args = new String[] { columnClause };
-               sql.append(autoIncrement.getFunctionSql(args));
-            } else {
-               sql.append(SQLUtil.getCreateTableColumnsClause(type));
-            }
-
-            if( iter.hasNext() ) {
-               sql.append( ", " );
-            }
+         // skip it if it is a foreign key that is a part of the primary key
+         if(field instanceof JDBCCMRFieldBridge
+            && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) {
+            continue;
          }
 
-         // add a pk constraint
-         if(entityMetaData.hasPrimaryKeyConstraint())  {
-            JDBCFunctionMappingMetaData pkConstraint = 
-               manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
-            if(pkConstraint == null) {
-               throw new IllegalStateException("Primary key constraint is " +
-                     "not allowed for this type of data source");
+         JDBCType type = field.getJDBCType();
+         // the side that doesn't have a foreign key has JDBCType null
+         if(type==null)
+            continue;
+
+         if(!firstField)
+            sql.append( ", " );
+         else
+            firstField = false;
+
+
+         // apply auto-increment template
+         if(type.getAutoIncrement()[0]) {
+            String columnClause = 
+            SQLUtil.getCreateTableColumnsClause( type );
+
+            JDBCFunctionMappingMetaData autoIncrement = 
+               manager.getMetaData().getTypeMapping().
+               getAutoIncrementTemplate();
+            if(autoIncrement == null) {
+               throw new IllegalStateException(
+                  "auto-increment template not found");
             }
 
-            String name = 
-               "pk_" + entity.getMetaData().getDefaultTableName();
-            name = SQLUtil.fixConstraintName(name, dataSource);
-            String[] args = new String[] {
-               name,
-               SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
-            sql.append(", ").append(pkConstraint.getFunctionSql(args));
+            String[] args = new String[] { columnClause };
+            sql.append(autoIncrement.getFunctionSql(args));
+         } else {
+            sql.append(SQLUtil.getCreateTableColumnsClause(type));
          }
+      }
+
+      // add a pk constraint
+      if(entityMetaData.hasPrimaryKeyConstraint())  {
+         JDBCFunctionMappingMetaData pkConstraint = 
+            manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
+         if(pkConstraint == null) {
+            throw new IllegalStateException("Primary key constraint is " +
+                  "not allowed for this type of data source");
+         }
+
+         String name = "pk_" + entity.getMetaData().getDefaultTableName();
+         name = SQLUtil.fixConstraintName(name, dataSource);
+         String[] args = new String[] {
+            name,
+            SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
+         sql.append(", ").append(pkConstraint.getFunctionSql(args));
+      }
 
       sql.append(")");
       
