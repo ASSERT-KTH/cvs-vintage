@@ -353,8 +353,8 @@
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
 #set ($attachments = $currentIssue.ExistingAttachments)
-<h3>Attachments</h3>
-#if ($attachments.size() > 0)
+#if ($attachments.size() > 0 || $canEdit)
+    <h3>Attachments</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>&#160;</th>
