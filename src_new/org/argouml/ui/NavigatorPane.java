@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.71 2004/10/13 05:52:24 linus Exp $
+// $Id: NavigatorPane.java,v 1.72 2004/10/30 09:25:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,8 +128,8 @@ public class NavigatorPane
         
         toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         toolbar.setFloatable(false);
-        toolbar.add(combo);
         toolbar.add(new ActionPerspectiveConfig());
+        toolbar.add(combo);
         
         ToolBar toolbar2 = new ToolBar();
         
