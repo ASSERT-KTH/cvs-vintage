@@ -61,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.17 2002/10/17 20:10:44 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.18 2002/10/22 21:16:53 elicia Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -107,6 +107,12 @@ public class ScarabSecurity
      */
     public static final String ISSUE__SEARCH = 
         getService().getPermissionImpl("Issue__Search");
+
+    /** 
+     * Specifies that a User is allowed to move or copy an issue.
+     */
+    public static final String ISSUE__MOVE = 
+        getService().getPermissionImpl("Issue__Move");
 
     /** 
      * Specifies that a User is allowed to search for issues.
@@ -217,6 +223,7 @@ public class ScarabSecurity
             addPerm(tmpPerms, ScarabSecurity.ISSUE__VIEW);
             addPerm(tmpPerms, ScarabSecurity.ISSUE__ASSIGN);
             addPerm(tmpPerms, ScarabSecurity.ISSUE__ATTACH);
+            addPerm(tmpPerms, ScarabSecurity.ISSUE__MOVE);
             addPerm(tmpPerms, ScarabSecurity.ITEM__APPROVE);
             addPerm(tmpPerms, ScarabSecurity.ITEM__DELETE);
             addPerm(tmpPerms, ScarabSecurity.DOMAIN__ADMIN);
