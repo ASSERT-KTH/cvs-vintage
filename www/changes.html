@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.118 2002/04/15 19:50:41 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.119 2002/04/17 05:36:16 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,6 +21,12 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b6</h3>
             <ul>
+                <li>Added two templates and associated code so that users can
+                    request a role within a module and project owners can
+                    approve/deny the request.  
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=229">
+                    229</a>. (JDM)</li>
                 <li>Using Porter stemmer algorithm for indexing and text 
                     searches.  For more information, see Bug Report
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=242">
@@ -54,6 +60,12 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b6</h3>
             <ul>
+                <li>Issue types that were not associated with a module were not
+                    showing up as possibilities when trying to add new issue
+                    types.  This has been fixed.   
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=264">
+                    264</a>. (JDM)</li>
                 <li>Emails are now sent to users with Item Approve permission
                     when a query needing approval are created. 
                     For more information, see Bug Report
