@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.15 2005/01/30 21:06:36 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.16 2005/02/01 20:56:50 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -55,6 +55,20 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+      <tbody valign="top">
+        <row>
+          <entry>2005-02-01</entry>
+          <entry>
+Change to Model subsystem.
+(See <xref linkend="comp-model-purpose"/>,
+<xref linkend="diagrams"/>).
+Added the Persistence subsystem. More work is needed.
+(See <xref linkend="subsystem-persistence"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
 
       <tbody valign="top">
         <row>

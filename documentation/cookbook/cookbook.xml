@@ -24,7 +24,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 -->
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
-<!-- $Id: cookbook.xml,v 1.111 2005/01/07 13:03:16 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.112 2005/02/01 20:56:50 linus Exp $ -->
 
 <!ENTITY changelog SYSTEM "changelog.xml">
 <!ENTITY building SYSTEM "building.xml">
@@ -36,6 +36,7 @@
 <!ENTITY subsystemmodel SYSTEM "compmdl.xml">
 <!ENTITY subsystemcritics SYSTEM "compcrit.xml">
 <!ENTITY subsystemdiagrams SYSTEM "compdiag.xml">
+<!ENTITY subsystempersistence SYSTEM "persist.xml">
 <!ENTITY subsystempropertypanels SYSTEM "compprpp.xml">
 <!ENTITY subsysteminternationalization SYSTEM "compi18n.xml">
 <!ENTITY cookbookmodules SYSTEM "cookbook_modules.xml">
@@ -1290,6 +1291,7 @@ Things that are not actually in place are: TargetManager
     &subsystemcritics;
     &subsystemdiagrams;
     &subsystempropertypanels;
+    &subsystempersistence;
 
     <sect1 id="reverseengineering">
       <title>Reverse Engineering Subsystem</title>
