@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.8 2004/08/24 17:37:03 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.9 2004/08/25 17:55:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -324,7 +324,8 @@ public class FigObjectFlowState extends FigNodeModelElement {
     public void keyPressed(KeyEvent ke) {
         if (!isReadyToEdit()) {
             if (ModelFacade.isAModelElement(getOwner())) {
-                ModelFacade.setName(getOwner(), "");
+                updateClassifierText();
+                updateStateText();
                 setReadyToEdit(true);
             } else {
                 //LOG.debug("not ready to edit name");
