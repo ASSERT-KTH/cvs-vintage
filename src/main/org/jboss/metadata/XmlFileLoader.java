@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
  *
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * Revisions:
  *
@@ -363,40 +363,56 @@ public class XmlFileLoader
       public LocalResolver()
       {
          // common schema
-         registerDTD("http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd","j2ee_1_4.xsd");
+         registerDTD("http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd", "j2ee_1_4.xsd");
+
          // ejb schemas
          registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
-         registerDTD("http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd","ejb-jar_2_1.xsd");
+         registerDTD("http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd", "ejb-jar_2_1.xsd");
+
          // j2ee schemas
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN", "application_1_3.dtd");
          registerDTD("http://java.sun.com/xml/ns/j2ee/application_1_4.xsd", "application_1_4.xsd");
+
          // jca schemas
          registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
          registerDTD("http://java.sun.com/xml/ns/j2ee/connector_1_5.xsd", "connector_1_5.xsd");
+
          // war schemas
          registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", "web-app_2_2.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", "web-app_2_3.dtd");
          registerDTD("http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd", "web-app_2_4.xsd");
+
          // web service schemas
-         registerDTD("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd","j2ee_web_services_client_1_1.xsd");
+         registerDTD("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd", "j2ee_web_services_client_1_1.xsd");
          registerDTD("-//IBM Corporation, Inc.//DTD J2EE Web services 1.0//EN", "j2ee_web_services_1_0.dtd");
          registerDTD("-//IBM Corporation, Inc.//DTD J2EE JAX-RPC mapping 1.0//EN", "j2ee_jaxrpc_mapping_1_0.dtd");
+
          // jboss schemas
+         registerDTD("-//JBoss//DTD J2EE Application 1.3//EN", "jboss-app_3_0.dtd");
+         registerDTD("-//JBoss//DTD J2EE Application 1.3V2//EN", "jboss-app_3_2.dtd");
+
          registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
          registerDTD("-//JBoss//DTD JAWS 2.4//EN", "jaws_2_4.dtd");
          registerDTD("-//JBoss//DTD JAWS 3.0//EN", "jaws_3_0.dtd");
-         registerDTD("-//JBoss//DTD JBOSS//EN","jboss.dtd");
-         registerDTD("-//JBoss//DTD JBOSS 2.4//EN","jboss_2_4.dtd");
-         registerDTD("-//JBoss//DTD JBOSS 3.0//EN","jboss_3_0.dtd");
-         registerDTD("-//JBoss//DTD JBOSS 3.1//EN","jboss_3_1.dtd");
-         registerDTD("-//JBoss//DTD JBOSS 3.2//EN","jboss_3_2.dtd");
+
+         registerDTD("-//JBoss//DTD JBOSS//EN", "jboss.dtd");
+         registerDTD("-//JBoss//DTD JBOSS 2.4//EN", "jboss_2_4.dtd");
+         registerDTD("-//JBoss//DTD JBOSS 3.0//EN", "jboss_3_0.dtd");
+         registerDTD("-//JBoss//DTD JBOSS 3.1//EN", "jboss_3_1.dtd");
+         registerDTD("-//JBoss//DTD JBOSS 3.2//EN", "jboss_3_2.dtd");
+         registerDTD("-//JBoss//DTD JBOSS 4.0//EN", "jboss_4_0.dtd");
+
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 3.0//EN", "jbosscmp-jdbc_3_0.dtd");
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 3.2//EN", "jbosscmp-jdbc_3_2.dtd");
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN", "jbosscmp-jdbc_4_0.dtd");
+
          registerDTD("-//JBoss//DTD Web Application 2.2//EN", "jboss-web.dtd");
          registerDTD("-//JBoss//DTD Web Application 2.3//EN", "jboss-web_3_0.dtd");
+         registerDTD("-//JBoss//DTD Web Application 2.3V2//EN", "jboss-web_3_2.dtd");
+
+         registerDTD("-//JBoss//DTD MBean Service 3.2//EN", "jboss-service_3_2.dtd");
       }
 
       /**
@@ -423,7 +439,7 @@ public class XmlFileLoader
       {
          hasDTD = false;
          // in case of schemaLocations, we will only get systemId
-         String dtd = publicId!=null ? (String)dtds.get(publicId) : (String) dtds.get(systemId);
+         String dtd = publicId != null ? (String) dtds.get(publicId) : (String) dtds.get(systemId);
          
          if (dtd != null)
          {
