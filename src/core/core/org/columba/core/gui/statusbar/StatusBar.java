@@ -16,7 +16,6 @@ package org.columba.core.gui.statusbar;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -39,6 +38,7 @@ import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.ToolbarButton;
 import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -81,16 +81,14 @@ public class StatusBar
 		label = new JLabel("");
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		onlineButton = new JButton(ImageLoader.getImageIcon("online.png"));
+		onlineButton = new ToolbarButton(ImageLoader.getImageIcon("online.png"));
 		onlineButton.setToolTipText("You are in ONLINE state");
 		onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		onlineButton.setRolloverEnabled(true);
-		onlineButton.setFocusable(false);
 		onlineButton.setActionCommand("ONLINE");
 		onlineButton.addActionListener(this);
 
 		progressBar = new JProgressBar(0, 100);
-		progressBar.setFocusable(false);
 		
 		//progressBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		//progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
@@ -98,11 +96,10 @@ public class StatusBar
 		progressBar.setBorderPainted(false);
 		progressBar.setValue(0);
 
-		taskButton = new JButton();
+		taskButton = new ToolbarButton();
 		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
 		taskButton.setToolTipText("Show list of running tasks");
 		taskButton.setRolloverEnabled(true);
-		taskButton.setFocusable(false);
 		//taskButton.setMargin(new Insets(0, 0, 0, 0));
 		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		//taskButton.setBorder(null);

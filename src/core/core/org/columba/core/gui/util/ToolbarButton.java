@@ -16,6 +16,7 @@ package org.columba.core.gui.util;
 
 import java.awt.Insets;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
@@ -30,6 +31,19 @@ public class ToolbarButton extends JButton {
 	static boolean WITH_TEXT = true;
 	static boolean ALIGNMENT = true;
 
+	public ToolbarButton()
+	{
+		
+		super();
+		setRequestFocusEnabled(false);
+	}
+	
+	public ToolbarButton(Icon icon)
+	{
+		super(icon);
+		setRequestFocusEnabled(false);
+	}
+	
 	public ToolbarButton(BasicAction a) {
 		super(a);
 

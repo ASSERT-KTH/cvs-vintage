@@ -23,6 +23,11 @@ public class CProgressBar extends JProgressBar
 	public CProgressBar()
 	{
 		super();
+		setRequestFocusEnabled(false);
+	}
+	
+	public boolean isFocusTraversable() {
+		return isRequestFocusEnabled();
 	}
 
 	public void setIndeterminate(boolean status)

@@ -22,14 +22,13 @@ import java.io.File;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.ToolbarButton;
 
 /**
  * Title:
@@ -39,7 +38,7 @@ import org.columba.core.gui.util.ImageLoader;
  * @author
  * @version 1.0
  */
-public class ImageSequenceTimer extends JButton implements ActionListener {
+public class ImageSequenceTimer extends ToolbarButton implements ActionListener {
 	private javax.swing.Timer timer;
 	private ImageIcon[] images;
 	private ImageIcon restImage;
@@ -63,11 +62,18 @@ public class ImageSequenceTimer extends JButton implements ActionListener {
 		setRolloverEnabled(true);
 		setBorder(null);
 		setContentAreaFilled(false);
-		setFocusable(false);
+		
 
+		setRequestFocusEnabled(false);
 		init();
 
 	}
+	
+	
+	public boolean isFocusTraversable() {
+		return isRequestFocusEnabled();
+	}
+
 
 	protected void initDefault() {
 		frameCount = 60;
