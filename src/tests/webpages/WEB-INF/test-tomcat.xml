@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.36 $" />  
+     <property name="revision" value="$Revision: 1.37 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1147,49 +1147,70 @@ mod_webapp into mod_jk )
 
    <target name="security_chk_url" depends="init">
       <httpClient >
-          <httpRequest path="/test/aaa/protected/a/../index.jsp" 
-		      method="GET" />
-          <httpStatusMatch match="200" magnitude="false"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/aaa/a/../protected/index.jsp" 
-		      method="GET" />
-          <httpStatusMatch match="200" magnitude="false"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/aaa//protected/index.jsp" 
-		      method="GET" />
-          <httpStatusMatch match="200" magnitude="false"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/../test/aaa/protected/a/../index.jsp" 
-		      method="GET" />
-          <httpStatusMatch match="200" magnitude="false"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/aaa/./protected/index.jsp" 
-		      method="GET" />
-          <httpStatusMatch match="200" magnitude="false"/>
-      </httpClient>
-      <httpClient >
-          <httpRequest path="/test/aaa/protected/../../snoop.jsp" 
+          <httpRequest path="/test/jsp/a/../ShowPathInfo.jsp" 
 		      method="GET" />
           <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
       <httpClient >
-          <httpRequest path="/test/snoop.jsp/." 
+          <httpRequest path="/test/jsp/../jsp/ShowPathInfo.jsp" 
 		      method="GET" />
           <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
       <httpClient >
-          <httpRequest path="/test/snoop.jsp/./" 
+          <httpRequest path="/test/jsp//ShowPathInfo.jsp" 
 		      method="GET" />
           <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
       <httpClient >
-          <httpRequest path="/test/snoop.jsp/foo/.." 
+          <httpRequest path="/test/../test/jsp/a/../ShowPathInfo.jsp" 
 		      method="GET" />
           <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/./ShowPathInfo.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/a/../../jsp/ShowPathInfo.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/ShowPathInfo.jsp/." 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/ShowPathInfo.jsp/foo/.." 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+          <responseMatch match="getPathInfo: null"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/ShowPathInfo.jsp/./" 
+		      method="GET" />
+          <httpStatusMatch match="404"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/jsp/ShowPathInfo.jsp;jsessionid=%25%2E%2F%5C" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/js%70/ShowPathInfo.jsp;jsessionid=%25%2E%2F%5C" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/js%70/ShowPathInfo.jsp"/>
       </httpClient>
    </target>
 
@@ -1201,12 +1222,12 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%2E HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%252E HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
@@ -1216,12 +1237,12 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%5C HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%255C HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
@@ -1231,7 +1252,7 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.jsp%2520 HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
@@ -1241,31 +1262,31 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /%2e%2e/%2e%2e/%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /%252e%252e/%252e%252e/%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /%2e%2e/%2e%2e/%5cLICENSE%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /%2e%2e/%2e%2e/%5cLICENSE/%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /%252e%252e/%252e%252e/%5cLICENSE%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
       <gtest description="This URL should return 404 Not Found"
            request="GET /%252e%252e/%252e%252e/%5cLICENSE/%00.jsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return HTML, not JSP source"
@@ -1276,17 +1297,16 @@ mod_webapp into mod_jk )
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld.js%2570 HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
       <gtest description="This URL should return HTML, not JSP source"
            request="GET /test/jsp/HelloWorld%2Ejsp HTTP/1.0"
-           returnCode="${http.protocol} 200" 
-           goldenFile="${gdir}/HelloWorld.txt"
+           returnCode="${http.protocol} 403" 
       />
 
       <gtest description="This URL should return 404 Not Found"
            request="GET /test/jsp/HelloWorld%252Ejsp HTTP/1.0"
-           returnCode="${http.protocol} 404" 
+           returnCode="${http.protocol} 403" 
       />
    </target>
 
@@ -1313,6 +1333,44 @@ mod_webapp into mod_jk )
           <httpRequest path="/test/aaa/protected/index.jsp" />
           <httpStatusMatch match="302" />
           <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+
+      <!-- Insure unnormalized URL's are handled correctly -->
+      <httpClient >
+          <httpRequest path="/test/aaa/protected/a/../index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="302"/>
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/a/../protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="302"/>
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa//protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="302"/>
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/../test/aaa/protected/a/../index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="302"/>
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/./protected/index.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="302"/>
+          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+      </httpClient>
+      <httpClient >
+          <httpRequest path="/test/aaa/protected/../../jsp/ShowPathInfo.jsp" 
+		      method="GET" />
+          <httpStatusMatch match="200"/>
+          <responseMatch match="getRequestURI: /test/jsp/ShowPathInfo.jsp"/>
       </httpClient>
    </target>
 
