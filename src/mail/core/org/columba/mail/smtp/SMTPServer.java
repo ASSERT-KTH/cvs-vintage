@@ -437,7 +437,13 @@ public class SMTPServer {
             try {
                 protocol.rcpt(Address.parse((String) recipients.next()));
             } catch (ParserException e1) {
-                e1.printStackTrace();
+                // the mail address is in a bogus format
+            	//TODO: show error/warning? dialog. see below
+            	
+            } catch (SMTPException e1) {
+            	//TODO: present the user with the choice to end the send
+            	// progress by throwing a CommandCancelledException or
+            	// continue without sending to the this address
             }
         }
 
