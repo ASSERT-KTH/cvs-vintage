@@ -83,7 +83,8 @@
   <td>&#160;</td>
 #end
   <td>
-    #if ($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+    #if (($scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
+         || ($template.CreatedBy.UserId.equals($user.UserId)))
       #set ($editLink = $link.setPathInfo("templateId", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
       <a href="$editLink">$template.TemplateInfo.Name</a>
     #else
