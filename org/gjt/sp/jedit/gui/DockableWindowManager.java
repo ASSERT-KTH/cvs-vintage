@@ -103,7 +103,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.80 2003/05/09 23:42:24 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.81 2003/05/31 20:08:29 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -982,8 +982,10 @@ public class DockableWindowManager extends JPanel implements EBComponent
 	} //}}}
 
 	//{{{ createPopupMenu() method
-	public JPopupMenu createPopupMenu(DockableWindowContainer container,
-		final String dockable, boolean clone)
+	public JPopupMenu createPopupMenu(
+		final DockableWindowContainer container,
+		final String dockable,
+		final boolean clone)
 	{
 		JPopupMenu popup = new JPopupMenu();
 		if(dockable == null && container instanceof PanelWindowContainer)
@@ -1064,7 +1066,10 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			{
 				public void actionPerformed(ActionEvent evt)
 				{
-					removeDockableWindow(dockable);
+					if(clone)
+						((FloatingWindowContainer)container).dispose();
+					else
+						removeDockableWindow(dockable);
 				}
 			});
 			popup.add(closeMenuItem);

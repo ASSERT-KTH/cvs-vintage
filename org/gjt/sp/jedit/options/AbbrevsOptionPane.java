@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.9 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.10 2003/05/31 20:08:29 spestov Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -98,6 +98,8 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 		abbrevsTable.getTableHeader().addMouseListener(new HeaderMouseHandler());
 		abbrevsTable.getSelectionModel().addListSelectionListener(
 			new SelectionHandler());
+		abbrevsTable.getSelectionModel().setSelectionMode(
+			ListSelectionModel.SINGLE_SELECTION);
 		abbrevsTable.addMouseListener(new TableMouseHandler());
 		Dimension d = abbrevsTable.getPreferredSize();
 		d.height = Math.min(d.height,200);

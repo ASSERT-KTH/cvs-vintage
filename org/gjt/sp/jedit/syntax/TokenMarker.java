@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.53 2003/04/28 18:52:35 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.54 2003/05/31 20:08:29 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -488,7 +488,7 @@ unwind:		while(context.parent != null)
 				 * ...
 				 * EOF
 				 */
-				if(charIndexed != null)
+				if(charIndexed != null && checkRule.end != null)
 				{
 					spanEndSubst = checkRule.startRegexp.substitute(
 						charIndexed,new String(checkRule.end));

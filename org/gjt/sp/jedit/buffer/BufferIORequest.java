@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.13 2003/05/28 01:59:01 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.14 2003/05/31 20:08:28 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -318,7 +318,8 @@ public class BufferIORequest extends WorkRequest
 	private void read(Buffer buffer, InputStream _in, long length)
 		throws IOException
 	{
-		IntegerArray endOffsets = new IntegerArray();
+		/* we guess an initial size for the array */
+		IntegerArray endOffsets = new IntegerArray((int)(length / 50));
 
 		// only true if the file size is known
 		boolean trackProgress = (!buffer.isTemporary() && length != 0);
