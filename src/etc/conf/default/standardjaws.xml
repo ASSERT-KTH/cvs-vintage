@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE jaws>
+
+<!DOCTYPE jbosscmp-jdbc PUBLIC
+    "-//JBoss//DTD JBOSSCMP-JDBC 3.0//EN"
+    "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_3_0.dtd">
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -7,7 +10,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.23 2001/11/05 05:25:25 schaefera Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.24 2001/11/25 04:08:57 dsundstrom Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
