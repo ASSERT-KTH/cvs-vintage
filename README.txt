@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.41 2002/07/18 23:43:32 jon Exp $
+$Id: README.txt,v 1.42 2002/07/31 21:12:27 jon Exp $
 
 Welcome to Scarab!
 
@@ -63,7 +63,8 @@ do not guarantee that Scarab will work on other databases.
 
 All of the necessary .jar files for building and running Scarab are
 included in the /lib directory and the build system is setup to include
-these into your classpath for you.
+these into your classpath for you. Please do not add any jar files to
+your classpath.
 
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
@@ -106,13 +107,13 @@ Within the /src directory are a number of sub directories...
                     live here.
     /dtd        <-- Scarab, Intake and Torque DTD's.
     /html       <-- Files which show up within the webapp directory.
-    /i18n       <-- Location of internationalized files. Not much there yet.
+    /i18n       <-- Location of internationalized files.
     /images     <-- Copied to the webapp/images directory.
     /java       <-- The Java source code for Scarab.
-    /resources  <-- Resources for the UI Tool. Not currently used.
+    /scripts    <-- Helper shell scripts.
     /sql        <-- SQL files for defining the database.
     /templates  <-- Velocity templates for the HTML and Email.
-    /test       <-- Test suite code. Not much there yet.
+    /test       <-- Test suite code.
     /tomcat-4.0 <-- A minimal copy of Tomcat 4.0 for use with the Scarab
                     sandbox.
 
@@ -123,8 +124,8 @@ Within the /src directory are a number of sub directories...
 
 The Scarab build process depends on having a few properties which are
 defined in the build/default.properties. The settings in the
-build/default.properties are fairly well documented. These properties
-should be set accordingly *before* you build Scarab.
+build/default.properties are fairly well documented within the file.
+These properties should be set accordingly *before* you build Scarab.
 
 If you would like to change the settings in the default.properties there
 is no need to edit the default.properties file, you can override the
@@ -272,7 +273,7 @@ the database binaries into your PATH environment variable.
 
 Simply put, the idea is that the database creation scripts and the Java
 database driver (JDBC) need the ability to connect to the database. In
-order to do this, the code needs to be told a host machine, database
+order to do this, the code needs to be given a host machine, database
 name, username and password.
 
 By default, the scripts assume a database called 'scarab' and no
@@ -298,6 +299,11 @@ build.properties) based on what is in the
 scarab/build/default.properties. Once you have done this, you will need
 to build the sandbox again in order to generate the right configuration
 files based on this information.
+
+NOTE: If you would like to only load the required database data and not
+      the sample/default data, you can do so by passing the -e flag to
+      the ./create-db.sh script or editing the .bat script to not load
+      the *default*.sql and *sample*.sql files.
 
 NOTE: More detailed instructions for setting up the database on
       different database vendors is available on our website.
@@ -339,20 +345,20 @@ bin\startup.bat <-- Win32
 
 Then, in your web browser, go to:
 
-    <http://localhost:8080/issues>
+    <http://my.server.com:8080/issues>
 
 The following URL's also work the same by default:
 
-    <http://localhost:8080/s>
-    <http://localhost:8080/issue>
-    <http://localhost:8080/scarab/servlet/scarab>
+    <http://my.server.com:8080/s>
+    <http://my.server.com:8080/issue>
+    <http://my.server.com:8080/scarab/servlet/scarab>
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
       using the Tomcat that comes with Scarab, you can safely undefine
       this environment variable.
 
-NOTE: Substitute 'localhost' for the DNS name that the server is running
-      on.
+NOTE: Substitute 'my.server.com' for the DNS name that the server is
+      running on.
 
 NOTE: You can define your own URL by editing src/conf/web.xml and defining
       a different servlet mapping and then rebuilding.
