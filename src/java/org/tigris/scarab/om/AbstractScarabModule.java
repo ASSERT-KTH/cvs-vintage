@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.72 2003/01/24 20:00:46 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.73 2003/01/31 19:34:23 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -2175,10 +2175,7 @@ public abstract class AbstractScarabModule
     private static final String REGEX_SUFFIX = 
         ")\\s*#?([:alpha:]*\\d+)";
 
-    /**
-     * @see org.tigris.scarab.om.Module#getIssueRegex()
-     */
-    public REProgram getIssueRegex()
+    public String getIssueRegexString()
         throws TorqueException
     {
         // regex =  /(issue|bug)\s+#?\d+/i
@@ -2192,15 +2189,25 @@ public abstract class AbstractScarabModule
                 .append( ((RModuleIssueType)rmits.next()).getDisplayName() );
         }
         regex.append(REGEX_SUFFIX);
+        return regex.toString();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.Module#getIssueRegex()
+     */
+    public REProgram getIssueRegex()
+        throws TorqueException
+    {
+        String regex = getIssueRegexString();
         RECompiler rec = new RECompiler();
         REProgram rep = null;
         try
         {
-            rep = rec.compile(regex.toString());
+            rep = rec.compile(regex);
         }
         catch (RESyntaxException e)
         {
-            log().error("Could not compile regex: " + regex.toString(), e);
+            log().error("Could not compile regex: " + regex, e);
             try
             {
                 rep = rec.compile(REGEX_PREFIX + REGEX_SUFFIX);
@@ -2220,7 +2227,7 @@ public abstract class AbstractScarabModule
                 }
             }
         }
-        // we should cache the above result
+        // FIXME: we should cache the above result
         return rep;
     }
 
