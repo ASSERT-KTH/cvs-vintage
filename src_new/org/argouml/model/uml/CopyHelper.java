@@ -1,4 +1,4 @@
-// $Id: CopyHelper.java,v 1.7 2004/08/08 12:43:09 mvw Exp $
+// $Id: CopyHelper.java,v 1.8 2004/09/27 19:49:42 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CopyHelper.java,v 1.7 2004/08/08 12:43:09 mvw Exp $
+// $Id: CopyHelper.java,v 1.8 2004/09/27 19:49:42 mvw Exp $
 
 package org.argouml.model.uml;
 
@@ -49,8 +49,8 @@ import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsF
 import org.argouml.model.uml.modelmanagement.ModelManagementFactory;
 
 class CopyFunction {
-    final Object object;
-    final Method method;
+    private final Object object;
+    private final Method method;
 
     public CopyFunction(Object obj, Method m) {
 	if (m == null)
@@ -62,6 +62,20 @@ class CopyFunction {
 
 	object = obj;
 	method = m;
+    }
+
+    /**
+     * @return Returns the object.
+     */
+    Object getObject() {
+        return object;
+    }
+
+    /**
+     * @return Returns the method.
+     */
+    Method getMethod() {
+        return method;
     }
 }
 
@@ -177,7 +191,7 @@ public final class CopyHelper {
 
 	try {
 	    Object args[] = {element, ns};
-	    return (MModelElement) f.method.invoke(f.object, args);
+	    return (MModelElement) f.getMethod().invoke(f.getObject(), args);
 	} catch (Exception e) {
 	    LOG.error("CopyHelper copy method exception", e);
 	    return null;

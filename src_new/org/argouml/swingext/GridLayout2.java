@@ -1,4 +1,4 @@
-// $Id: GridLayout2.java,v 1.12 2004/09/21 19:03:28 mvw Exp $
+// $Id: GridLayout2.java,v 1.13 2004/09/27 19:49:41 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -587,11 +587,23 @@ public class GridLayout2 implements LayoutManager, java.io.Serializable {
 			     + (actualRows - 1) * vgap);
     }
 
+    /**
+     * Calculate the cell height.
+     * 
+     * @param row the row for this cell
+     * @return the height
+     */
     protected int getComponentCellHeight(int row) {
         if (cellSizing == ROWCOLPREFERRED) return rowHeight[row];
         return largestHeight;
     }
 
+    /**
+     * Calculate the cell width.
+     * 
+     * @param col the column of this cell
+     * @return the width
+     */
     protected int getComponentCellWidth(int col) {
         if (cellSizing == ROWCOLPREFERRED) return colWidth[col];
         return largestWidth;

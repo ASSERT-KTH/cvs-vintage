@@ -1,4 +1,4 @@
-// $Id: ActionSettings.java,v 1.22 2004/09/08 05:40:38 linus Exp $
+// $Id: ActionSettings.java,v 1.23 2004/09/27 19:49:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,7 +100,7 @@ public class ActionSettings extends UMLAction
      * @param key The key to localize.
      * @return The localized String.
      */
-    protected String localize(String key) {
+    private String localize(String key) {
         return Translator.localize("CoreSettings", key);
     }
 
