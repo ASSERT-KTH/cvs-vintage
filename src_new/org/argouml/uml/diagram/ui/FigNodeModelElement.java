@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.135 2004/12/28 19:04:50 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.136 2005/01/01 18:23:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1502,34 +1502,6 @@ public abstract class FigNodeModelElement
             }
         }
     }
-
-    /**
-     * @see org.tigris.gef.presentation.FigNode#superTranslate(int, int)
-     *
-     * Overridden to notify project that save is needed when figure is moved.
-     */
-    public void superTranslate(int dx, int dy) {
-        super.superTranslate(dx, dy);
-        Project p = ProjectManager.getManager().getCurrentProject();
-        if (p != null) {      
-            p.setNeedsSave(true);
-        }
-    }
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setHandleBox(int, int, int, int)
-     *
-     * Overridden to notify project that save is needed when figure is resized.
-     */
-    public void setHandleBox(int x, int y, int w, int h) {
-        super.setHandleBox(x, y, w, h);
-        Project p = ProjectManager.getManager().getCurrentProject();
-        if (p != null) {      
-            p.setNeedsSave(true);
-        }
-    }
-    
-    
 
     /**
      * Adds a fig to this FigNodeModelElement and removes it from the

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.73 2004/12/28 19:04:50 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.74 2005/01/01 18:23:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -900,18 +900,6 @@ public abstract class FigEdgeModelElement
         if (this instanceof ArgoEventListener) {
             ArgoEventPump.removeListener(this);
             ArgoEventPump.addListener(this);
-        }
-    }
-
-    /**
-     * Overridden to notify project that save is needed when edge is moved.
-     * @see org.tigris.gef.presentation.FigEdgePoly#setPoint(Handle, int, int)
-     */
-    public void setPoint(Handle h, int x, int y) {
-        super.setPoint(h, x, y);
-        Project p = ProjectManager.getManager().getCurrentProject();
-        if (p != null) {      
-            p.setNeedsSave(true);
         }
     }
 
