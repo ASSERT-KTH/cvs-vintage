@@ -32,7 +32,7 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  */
 public class Main
 {
@@ -142,6 +142,8 @@ public class Main
                ((MBeanException)obj).getTargetException().printStackTrace(err);
             else if (obj instanceof RuntimeMBeanException)
                ((RuntimeMBeanException)obj).getTargetException().printStackTrace(err);
+            else if (obj instanceof ReflectionException)
+               ((ReflectionException)obj).getTargetException().printStackTrace(err);
             else if (obj instanceof Throwable)
                ((Throwable)obj).printStackTrace(err);
          }
