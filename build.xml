@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.24 2001/09/11 05:29:13 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.25 2001/09/12 00:08:43 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -145,6 +145,9 @@ os.version:      ${os.version}
     <call target="_configure-libraries"/>
     <call target="_configure-modules"/>
     <call target="_configure-tasks"/>
+
+    <!-- Load common task properties -->
+    <property resource="planet57/tools/buildmagic/task.properties"/>
   </target>
 
   <!-- Configure the thirdparty tools required to build this module. -->
@@ -293,9 +296,6 @@ os.version:      ${os.version}
 
   <!-- Configure the tasks used by this module. -->
   <target name="_configure-tasks" unless="configure-tasks.disable">
-    <!-- Load common task properties -->
-    <property resource="planet57/tools/buildmagic/task.properties"/>
-
     <!-- Where source files live -->
     <property name="source.java" value="${module.source}/main"/>
     <property name="source.etc" value="${module.source}/etc"/>
@@ -712,9 +712,8 @@ os.version:      ${os.version}
      | different type of docuementation that is to be generated.
    -->
 
-  <target name="docs" depends="init" description="Builds all documentation.">
-    <call target="docs-static"/>
-    <call target="docs-api"/>
+  <target name="docs" depends="init, docs-static, docs-api" 
+	  description="Builds all documentation.">
   </target>
 
   <!-- Compile static documents -->
@@ -835,9 +834,8 @@ os.version:      ${os.version}
      | Run all tests.
    -->
 
-  <target name="tests" depends="init" description="Execute all tests.">
-    <call target="tests-junit"/>
-    <call target="tests-reports"/>
+  <target name="tests" depends="init, tests-junit, tests-reports" 
+	  description="Execute all tests.">
   </target>
 
   <!--
