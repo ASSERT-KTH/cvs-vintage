@@ -278,6 +278,7 @@
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
         <filter token="LOCALIZATION_SERVICE" value="${scarab.localization.service}"/>
         <filter token="SCARAB_AUTOMATIC_ROLE_APPROVAL" value="${scarab.automatic.role.approval}"/>
+        <filter token="SCARAB_SITE_NAME" value="${scarab.site.name}"/>
         <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
         <filter token="SCARAB_STATIC_LINK" value="${scarab.pull.staticlink}"/>
         <filter token="SESSION_TIMEOUT" value="${scarab.session.timeout}"/>

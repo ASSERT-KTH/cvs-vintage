@@ -24,6 +24,9 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
   <td>
   <a href="$link.setPage("Index.vm")"><img src="$staticLink.setPath("/images/logo.gif")" alt="Scarab" width="118" height="23" border="0" /></a>
   </td>
+  <td valign="center">
+  $scarabG.SiteName
+  </td>
   <td>
   <div align="right" id="login">
    #if ($data.User.hasLoggedIn())

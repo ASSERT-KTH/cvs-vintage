@@ -46,6 +46,9 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -96,7 +99,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.37 2002/09/17 23:42:24 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.38 2002/10/04 14:15:14 thierrylach Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -548,6 +551,32 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public void print(String s)
     {
         System.out.println(s);
+    }
+
+    /**
+     * Provides the site name for the top banner.
+     *
+     * @return the configured site name, the hostname if the site name
+     * was not configured, or a "cute" message if unable to get the host name.
+     */
+    public String getSiteName()
+    {
+        String siteName;
+        siteName =  Turbine.getConfiguration().getString("scarab.site.name",
+                                                         "Unconfigured");
+        if ("Unconfigured".equals(siteName)) {
+            try {
+                String hostName = InetAddress.getLocalHost().getHostName();
+                siteName = hostName;
+            }
+            catch (UnknownHostException uhe) {
+                // Ignore
+            }
+        }
+        if ("Unconfigured".equals(siteName)) {
+            siteName = "Your Site Name Here!";
+        }
+        return siteName;
     }
 }
 
