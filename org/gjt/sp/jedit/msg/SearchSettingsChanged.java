@@ -25,11 +25,11 @@ import org.gjt.sp.jedit.EBMessage;
 /**
  * Message sent when search and replace settings change.
  * @author Slava Pestov
- * @version $Id: SearchSettingsChanged.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: SearchSettingsChanged.java,v 1.2 2002/05/14 07:55:49 spestov Exp $
  *
  * @since jEdit 2.3pre1
  */
-public class SearchSettingsChanged extends EBMessage.NonVetoable
+public class SearchSettingsChanged extends EBMessage
 {
 	/**
 	 * Creates a new search and replace settings changed message.

@@ -28,11 +28,11 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when a view-related change occurs.
  * @author Slava Pestov
- * @version $Id: ViewUpdate.java,v 1.2 2002/05/14 07:34:55 spestov Exp $
+ * @version $Id: ViewUpdate.java,v 1.3 2002/05/14 07:55:49 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
-public class ViewUpdate extends EBMessage.NonVetoable
+public class ViewUpdate extends EBMessage
 {
 	/**
 	 * View created.

@@ -25,11 +25,11 @@ import org.gjt.sp.jedit.EBMessage;
 /**
  * Message sent when the list of available macros changes.
  * @author Slava Pestov
- * @version $Id: MacrosChanged.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: MacrosChanged.java,v 1.2 2002/05/14 07:55:48 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
-public class MacrosChanged extends EBMessage.NonVetoable
+public class MacrosChanged extends EBMessage
 {
 	/**
 	 * Creates a new macros changed message.

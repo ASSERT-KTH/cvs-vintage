@@ -25,11 +25,11 @@ import org.gjt.sp.jedit.EBMessage;
 /**
  * Message sent just before jEdit exits.
  * @author Slava Pestov
- * @version $Id: EditorExiting.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: EditorExiting.java,v 1.2 2002/05/14 07:55:48 spestov Exp $
  *
  * @since jEdit 2.3pre2
  */
-public class EditorExiting extends EBMessage.NonVetoable
+public class EditorExiting extends EBMessage
 {
 	/**
 	 * Creates a new editor exiting message.

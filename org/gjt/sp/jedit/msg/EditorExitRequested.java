@@ -30,11 +30,11 @@ import org.gjt.sp.jedit.View;
  * jEdit is in background mode.
  *
  * @author Dirk Moebius
- * @version $Id: EditorExitRequested.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: EditorExitRequested.java,v 1.2 2002/05/14 07:55:48 spestov Exp $
  *
  * @since jEdit 3.1pre4
  */
-public class EditorExitRequested extends EBMessage.NonVetoable
+public class EditorExitRequested extends EBMessage
 {
 	/**
 	 * Creates a new editor exiting started message.

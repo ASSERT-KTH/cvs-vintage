@@ -26,11 +26,11 @@ import org.gjt.sp.jedit.EBMessage;
 /**
  * Message sent when multiple selection status changes.
  * @author Slava Pestov
- * @version $Id: MultiSelectStatusChanged.java,v 1.1 2002/03/17 04:11:46 spestov Exp $
+ * @version $Id: MultiSelectStatusChanged.java,v 1.2 2002/05/14 07:55:48 spestov Exp $
  *
  * @since jEdit 2.3pre1
  */
-public class MultiSelectStatusChanged extends EBMessage.NonVetoable
+public class MultiSelectStatusChanged extends EBMessage
 {
 	/**
 	 * Creates a new multiple selection status changed message.

@@ -27,11 +27,11 @@ import org.gjt.sp.jedit.EBMessage;
  * Message sent after jEdit has finished starting up, but before the initial
  * view is created.
  * @author Slava Pestov
- * @version $Id: EditorStarted.java,v 1.1 2001/09/02 05:37:34 spestov Exp $
+ * @version $Id: EditorStarted.java,v 1.2 2002/05/14 07:55:48 spestov Exp $
  *
  * @since jEdit 2.3pre2
  */
-public class EditorStarted extends EBMessage.NonVetoable
+public class EditorStarted extends EBMessage
 {
 	/**
 	 * Creates a new editor started message.
