@@ -8,16 +8,25 @@
 package org.jboss.system;
 
 import java.io.File;
+
 import java.net.URL;
+
+import javax.management.ObjectName;
+
+import org.jboss.util.SafeObjectNameFactory;
 
 /**
  * The JMX MBean interface for the <tt>ServerConfig</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface ServerConfigMBean
 {
+   /** The default object name. */
+   ObjectName OBJECT_NAME = SafeObjectNameFactory.create("jboss.system", 
+                                                         "service", 
+                                                         "ServerConfig");
    /**
     * Get the JMX domain for which the system is bound under.
     *

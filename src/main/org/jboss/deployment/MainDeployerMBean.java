@@ -7,8 +7,12 @@
 package org.jboss.deployment;
 
 import java.net.URL;
+import java.net.MalformedURLException;
+
 import java.util.Collection;
+
 import javax.management.ObjectName;
+
 import org.jboss.system.ServiceMBean;
 import org.jboss.util.SafeObjectNameFactory;
 
@@ -21,7 +25,7 @@ import org.jboss.util.SafeObjectNameFactory;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *      <p><b>20011223 marc fleury:</b>
 *      <ul> 
 *      <li>add/RemoveURL, added the capacity to dynamically add a URL to watch
@@ -51,8 +55,10 @@ public interface MainDeployerMBean
    
    
    /** Dynamically add directories to scan **/
-   void addDirectory(String url);
-   void removeDirectory(String url);
+   void addDirectory(String url) throws MalformedURLException;
+   void addDirectory(URL url);
+   void removeDirectory(String url) throws MalformedURLException;
+   void removeDirectory(URL url);
    
    /** Add the capacity to dynamically add a deployer to the list **/
    void addDeployer(DeployerMBean deployer);

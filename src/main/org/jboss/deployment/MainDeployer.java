@@ -7,10 +7,6 @@
 
 package org.jboss.deployment;
 
-
-
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,7 +35,9 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.util.DirectoryBuilder;
+import org.jboss.system.ServerConfigMBean;
+
+import org.jboss.util.MBeanProxy;
 
 /**
  * MainDeployer
@@ -47,13 +45,12 @@ import org.jboss.util.DirectoryBuilder;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
    implements MainDeployerMBean, Runnable
 {
-   
    /** Deployers **/
    private final Set deployers = new HashSet();
    
@@ -74,11 +71,15 @@ public class MainDeployer
    private int id = 0;
    
    /** Given a flat set of files, this is the order of deployment **/
-   private final String[] order = {"sar", "service.xml", "rar", "jar", "war", "ear", "zip"};
-   
-   /** Get on period **/
-   public void setPeriod(int period) 
-   { 
+   private String[] order = { "sar", "service.xml", "rar", "jar", "war", "ear", "zip" };
+
+   /** The temporary directory for deployments. */
+   private File tempDir;
+
+   /** The system home directory (for dealing with relative file names). */
+   private File homeDir;
+
+   public void setPeriod(int period) {
       this.period = period; 
    }
 
@@ -92,7 +93,7 @@ public class MainDeployer
     * Directory get set logic, these are "scanning" directories
     * on the local filesystem
     */
-   public void setDirectories(String urlList) 
+   public void setDirectories(String urlList) throws MalformedURLException
    {
       StringTokenizer urls = new StringTokenizer(urlList, ",");
       
@@ -103,60 +104,47 @@ public class MainDeployer
       } 
    }
    
-   public void addDirectory(String url) 
+   public void addDirectory(String url) throws MalformedURLException
    {
       // We are dealing with a relative path URL 
-      if (!( url.startsWith("file:") || url.startsWith("http:")))
-      {
-         url = "file:"+System.getProperty("jboss.system.home")+File.separator+url;
+      if (!( url.startsWith("file:") || url.startsWith("http:"))) {
+         addDirectory(new URL(homeDir.toURL(), url));
       }
-      // Only one entry
-      try 
-      { 
-         URL dir = new URL(url);
+      else {
+         addDirectory(new URL(url));
+      }
+   }
+
+   public void addDirectory(URL url) {
+      if (!directories.contains(url)) {
+         directories.add(url);
          
-         if (!directories.contains(dir)) 
-         {
-            directories.add(dir); 
+         if (log.isDebugEnabled()) {
+            log.debug("Added directory scan "+url);
          }
-      }
-      catch (MalformedURLException bad)
-      { 
-         log.warn("Failed to add directory scan " + url); 
-         return;
-      }
-      
-      if (log.isDebugEnabled())
-      {
-         log.debug("Added directory scan "+url);
       }
    }
    
-   public void removeDirectory(String url) 
+   public void removeDirectory(String url) throws MalformedURLException
    {
       // We are dealing with a relative path URL 
-      if (!( url.startsWith("file:") || url.startsWith("http:")))
-      {
-         url = System.getProperty("jboss.system.home") + url;
+      if (!(url.startsWith("file:") || url.startsWith("http:"))) {
+         removeDirectory(new URL(homeDir.toURL(), url));
       }
-      
-      try 
-      { 
-         int index = directories.lastIndexOf(new URL(url));
-         if (index != -1) 
-         {
-            directories.remove(index); 
+      else {
+         removeDirectory(new URL(url));
+      }
+   }
+
+   public void removeDirectory(URL url)
+   {
+      int index = directories.lastIndexOf(url);
+      if (index != -1) {
+         directories.remove(index); 
+         
+         if (log.isDebugEnabled()) {
+            log.debug("Removed directory scan " + url);
          }
-      }
-      catch (MalformedURLException bad)
-      { 
-         log.warn("Failed to remove directory scan " + url); 
-         return;
-      }
-      
-      if (log.isDebugEnabled())
-      {
-         log.debug("Removed directory scan "+url);
       }
    }
 
@@ -180,16 +168,6 @@ public class MainDeployer
    // ServiceMBeanSupport overrides ---------------------------------
    
    /**
-    * Gets the Name attribute of the AutoDeployer object
-    *
-    * @return The Name value
-    */
-   public String getName()
-   {
-      return "Main Deployer";
-   }
-   
-   /**
     * Gets the ObjectName attribute of the AutoDeployer object
     *
     * @param server Description of Parameter
@@ -202,6 +180,26 @@ public class MainDeployer
    {
       this.server = server;
       return name == null ? OBJECT_NAME : name;
+   }
+
+   /**
+    * Get the local state data directory from the server configuration.
+    */
+   public ObjectName preRegister(MBeanServer server, ObjectName name)
+      throws Exception
+   {
+      name = super.preRegister(server, name);
+      
+      // get the temporary directory to use
+      tempDir = (File)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "TempDir");
+      tempDir = new File(tempDir, "deploy");
+
+      // get the system home directory
+      homeDir = (File)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "HomeDir");
+      
+      return name;
    }
    
    protected void startService()
@@ -460,16 +458,10 @@ public class MainDeployer
          if (debug)
             log.debug("Done deploying " + deployment.shortName);
       }  
-      catch (DeploymentException de) 
-      { 
-         log.error("could not deploy :" + deployment.url, de);
-         deployment.status="Deployment FAILED reason: " + de.getMessage();         
-         throw de;
-      }
       catch (Throwable t) 
       { 
          log.error("could not deploy :" + deployment.url, t);
-         deployment.status="Deployment FAILED reason: "+t.getMessage();         
+         deployment.status = "Deployment FAILED reason: " + t.getMessage();         
          throw new DeploymentException("Could not deploy: " + deployment.url, t);
       }
       finally 
@@ -481,8 +473,7 @@ public class MainDeployer
          deployments.put(deployment.url, deployment);
          
          // Do we watch it?
-         if (!deployment.url.toString().startsWith("file:"+System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy"))
-         {
+         if (isWatched(deployment)) {
             deploymentsList.add(deployment);
             if (debug)
             {
@@ -491,7 +482,23 @@ public class MainDeployer
          }
       }
    }
-   
+
+   private boolean isWatched(DeploymentInfo deployment) {
+      String tmp = null;
+      try {
+         tmp = tempDir.toURL().toString();
+      }
+      catch (java.net.MalformedURLException e) {
+         // this will never happen, yet must make the compiler happy
+         throw new Error("Failed to convert File to URL: " + e);
+      }
+      
+      if (deployment.url.toString().startsWith(tmp)) {
+         return true;
+      }
+      return false;
+   }
+
    public void findDeployer(DeploymentInfo sdi) 
    {
       boolean debug = log.isDebugEnabled();
@@ -528,7 +535,6 @@ public class MainDeployer
       running = false;
    }
    
-   
    /**
     * ScanNew scans the directories that are given to it and returns a 
     * Set with the new deployments
@@ -539,6 +545,7 @@ public class MainDeployer
       {
          HashSet newDeployments = new HashSet();
          boolean trace = log.isTraceEnabled();
+         
          // Scan directories
          for (Iterator iterator = directories.listIterator(); iterator.hasNext();) 
          {
@@ -577,7 +584,7 @@ public class MainDeployer
    }
    
    /**
-    * scanRemoved scans the existing deployments and return a 
+    * scans the existing deployments and return a 
     * Set with the removed deployments
     */
    protected List scanRemoved()
@@ -615,6 +622,7 @@ public class MainDeployer
       }
       return sortDeployments(removed);
    }
+   
    /**
     * scanModified scans the existing deployments and return a 
     * Set with the modified deployments
@@ -739,25 +747,20 @@ public class MainDeployer
             {
                name = name.substring(name.lastIndexOf("/")+1);
             }
+            
             try 
             {
-               DirectoryBuilder builder = 
-               new DirectoryBuilder(System.getProperty("jboss.system.home"));
-               File localCopyDir = builder.cd("tmp").cd("deploy").get();
-               
                // We use the name of the entry as the name of the file under deploy 
-               File outFile = builder.cd(getNextID () + "." + name).get();
+               File outFile = new File(tempDir, getNextID() + "." + name);
                
                // Copy in and out 
                OutputStream out = new FileOutputStream(outFile); 
                InputStream in = jarFile.getInputStream(entry);
                
-               try
-               { 
+               try {
                   copy(in, out);
                }
-               finally
-               { 
+               finally {
                   out.close(); 
                }
 
@@ -772,7 +775,7 @@ public class MainDeployer
             { 
                log.error("Error in subDeployment with name "+name, ex);
                throw new DeploymentException
-               ("Could not deploy sub deployment "+name+" of deployment "+di.url);
+                  ("Could not deploy sub deployment "+name+" of deployment "+di.url, ex);
             }
          }
       
@@ -785,7 +788,6 @@ public class MainDeployer
          // works
          // We should encapsulate "opening and closing of the jarFile" in the DeploymentInfo
          // Here we let it be open and cached
-      
       }
       
       // Order the deployments
@@ -870,14 +872,9 @@ public class MainDeployer
    public void makeLocalCopy(DeploymentInfo sdi) 
       throws DeploymentException
    {
-      URL dest = null;
-      File localCopyDir = null;
-      
       try 
       {   
-         localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
-         
-         if (sdi.url.getProtocol().startsWith("file") && sdi.isDirectory)
+         if (sdi.url.getProtocol().equals("file") && sdi.isDirectory)
          {
             // FIXME TODO add support for Directory copying over
             
@@ -888,16 +885,14 @@ public class MainDeployer
          }
          
          // Are we already in the localCopyDir?
-         else if (sdi.url.toString().indexOf(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy") != -1) 
+         else if (sdi.url.toString().indexOf(tempDir.toString()) != -1)
          {
             sdi.localUrl = sdi.url;
             return;
          }
          else
          {
-            // return new URL("file:"+f.getCanonicalPath());
-            
-            sdi.localUrl =  new File (localCopyDir, getNextID ()+"."+sdi.shortName).toURL();
+            sdi.localUrl =  new File(tempDir, getNextID() + "." + sdi.shortName).toURL();
             copy(sdi.url, sdi.localUrl);
          }
       }
@@ -920,21 +915,21 @@ public class MainDeployer
    
    protected void copy (URL _src, URL _dest) throws IOException
    {
-      if (!_dest.getProtocol ().equals ("file"))
-         throw new IOException ("only file: protocol is allowed as destination!");
+      if (!_dest.getProtocol().equals("file"))
+         throw new IllegalArgumentException
+            ("only file: protocol is allowed as destination!");
       
       InputStream in;
       OutputStream out;
       
-      String s = _dest.getFile ();
-      File dir = new File (s.substring (0, s.lastIndexOf("/")));
-      if (!dir.exists ())
-      {
-         dir.mkdirs ();
+      String s = _dest.getFile();
+      File dir = new File(s.substring (0, s.lastIndexOf("/")));
+      if (!dir.exists()) {
+         dir.mkdirs();
       }
-
-      in = _src.openStream ();
-      out = new FileOutputStream (s); 
+      
+      in = _src.openStream();
+      out = new FileOutputStream(s); 
       
       byte[] buffer = new byte[1024];
       
@@ -948,10 +943,10 @@ public class MainDeployer
          out.write(buffer, 0, read);
       }
       
-      out.flush ();
+      out.flush();
       
-      out.close ();
-      in.close ();
+      out.close();
+      in.close();
    }
    
    public ArrayList sortURLs(Set urls)

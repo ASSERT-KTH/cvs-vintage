@@ -45,6 +45,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.system.ServerConfigMBean;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceLibraries;
@@ -66,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -112,6 +113,9 @@ public class SARDeployer
 
    /** A proxy to the MainDeployer. */
    private MainDeployerMBean mainDeployer;
+
+   /** The system state data directory. */
+   private File stateDataDir;
    
    // Public --------------------------------------------------------
    
@@ -154,7 +158,7 @@ public class SARDeployer
          
          else if(di.url.getProtocol().startsWith("file"))
          {
-            File file = new File (di.url.getFile());
+            File file = new File(di.url.getFile());
             
             // If not directory we watch the package
             if (!file.isDirectory()) {
@@ -188,23 +192,19 @@ public class SARDeployer
             if (debug) {
                log.debug("about to copy local directory at " + path);
             }
-            
-            File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
-            File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
-            
-            //Get the url of the local copy from the classloader.
+
+            // Get the url of the local copy from the classloader.
             if (debug) {
-               log.debug("copying from " + di.localUrl.toString() + path);
-               log.debug("copying to " + localBaseDir);
+               log.debug("copying from " + di.localUrl + path + " -> " + stateDataDir);
             }
             
-            inflateJar(di.localUrl, localBaseDir, path);
-         } // end of for ()
+            inflateJar(di.localUrl, stateDataDir, path);
+         }
       }
       catch (Exception e) 
       {
          log.error("Problem in init", e);
-         throw new DeploymentException(e.getMessage());
+         throw new DeploymentException(e);
       }
    }
 
@@ -554,10 +554,11 @@ public class SARDeployer
     * MBeanRegistration interface. Get the mbean server.
     * This is the only deployer that registers with the MainDeployer here
     *
-    * @param server                   Our mbean server.
-    * @param name                     our proposed object name.
-    * @return                         our actual object name
-    * @exception java.lang.Exception  Thrown if we are supplied an invalid name.
+    * @param server    Our mbean server.
+    * @param name      Our proposed object name.
+    * @return          Our actual object name
+    * 
+    * @throws Exception    Thrown if we are supplied an invalid name.
     */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
@@ -567,27 +568,25 @@ public class SARDeployer
       
       mainDeployer = (MainDeployerMBean)
 	 MBeanProxy.create(MainDeployerMBean.class,
-			   MainDeployerMBean.OBJECT_NAME);
+			   MainDeployerMBean.OBJECT_NAME,
+                           server);
 
       // Register with the main deployer
       mainDeployer.addDeployer(this);
-      
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
-   }
 
-   /**
-    * Once registration has finished, create a proxy to the ServiceController
-    * for later use.
-    */
-   public void postRegister(Boolean done) {
-      super.postRegister(done);
-
+      // get the controller proxy
       serviceController = (ServiceControllerMBean)
 	 MBeanProxy.create(ServiceControllerMBean.class,
 			   ServiceControllerMBean.OBJECT_NAME,
 			   server);
+      
+      // get the state directory
+      stateDataDir = (File)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "StateDataDir");
+      
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
-   
+
    public void preDeregister()
       throws Exception
    {

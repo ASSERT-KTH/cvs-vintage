@@ -23,7 +23,7 @@ import org.jboss.util.SafeObjectNameFactory;
  * @see Service
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -39,9 +39,9 @@ import org.jboss.util.SafeObjectNameFactory;
 public interface ServiceControllerMBean
 {
    /** The default object name. */
-    ObjectName OBJECT_NAME = SafeObjectNameFactory.create("jboss.system", 
-							  "service", 
-							  "ServiceController");
+   ObjectName OBJECT_NAME = SafeObjectNameFactory.create("jboss.system", 
+                                                         "service", 
+                                                         "ServiceController");
 
    /** Install a service, create the MBean and configure it**/
    ObjectName install(Element mbean) throws Exception;
