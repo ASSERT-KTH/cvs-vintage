@@ -13,7 +13,7 @@ $page.setTitle("Select Artifact Type")
 #foreach ($issueType in $scarabR.CurrentModule.IssueTypes)
          
         #rows() 
-        <td><a href="#">$issueType.Name</a></td>
+        <td><a href="$link.setPage("SelectIssueType.vm").setAction("SelectIssueType").addPathInfo("newissuetype", "$issueType.IssueTypeId")">$issueType.Name</a></td>
         <td>$!issueType.Description&#160</td>
         </tr>        
 #end        
