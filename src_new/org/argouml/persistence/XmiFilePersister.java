@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.15 2005/01/17 16:52:10 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.16 2005/01/21 18:20:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,9 +35,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.model.Model;
-import org.argouml.uml.ProjectMemberModel;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
-import org.argouml.uml.diagram.ProjectMemberDiagram;
 
 /**
  * To persist to and from XMI file storage.
@@ -113,14 +111,8 @@ public class XmiFilePersister extends AbstractFilePersister {
                               + ((ProjectMember) project.getMembers()
                                     .get(i)).getType());
                     }
-                    MemberFilePersister persister = null;
-                    if (projectMember instanceof ProjectMemberDiagram) {
-                        persister = new DiagramMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberTodoList) {
-                        persister = new TodoListMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberModel) {
-                        persister = new ModelMemberFilePersister();
-                    }
+                    MemberFilePersister persister
+                        = new ModelMemberFilePersister();
                     persister.save(projectMember, writer, null);
                 }
             }

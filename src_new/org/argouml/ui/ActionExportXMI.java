@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.16 2005/01/09 14:58:11 linus Exp $
+// $Id: ActionExportXMI.java,v 1.17 2005/01/21 18:20:03 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,14 +220,8 @@ public final class ActionExportXMI extends UMLAction implements PluggableMenu {
 
             try {
                 Writer writer = new FileWriter(selectedFile);
-                MemberFilePersister persister = null;
-                if (member instanceof ProjectMemberDiagram) {
-                    persister = new DiagramMemberFilePersister();
-                } else if (member instanceof ProjectMemberTodoList) {
-                    persister = new TodoListMemberFilePersister();
-                } else if (member instanceof ProjectMemberModel) {
-                    persister = new ModelMemberFilePersister();
-                }
+                MemberFilePersister persister
+                    = new ModelMemberFilePersister();
                 persister.save(member, writer, null);
             } catch (Exception ex) {
                 String sMessage =

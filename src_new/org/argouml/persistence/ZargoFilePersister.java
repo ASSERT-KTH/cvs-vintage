@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.21 2005/01/17 16:52:10 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.22 2005/01/21 18:20:04 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,14 +174,8 @@ public class ZargoFilePersister extends UmlFilePersister {
                     }
                     names.add(name);
                     stream.putNextEntry(new ZipEntry(name));
-                    MemberFilePersister persister = null;
-                    if (projectMember instanceof ProjectMemberDiagram) {
-                        persister = new DiagramMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberTodoList) {
-                        persister = new TodoListMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberModel) {
-                        persister = new ModelMemberFilePersister();
-                    }
+                    MemberFilePersister persister = 
+                        getMemberFilePersister(projectMember);
                     persister.save(projectMember, writer, null);
                     writer.flush();
                     stream.closeEntry();
@@ -199,14 +193,8 @@ public class ZargoFilePersister extends UmlFilePersister {
                     }
                     stream.putNextEntry(
                             new ZipEntry(projectMember.getZipName()));
-                    MemberFilePersister persister = null;
-                    if (projectMember instanceof ProjectMemberDiagram) {
-                        persister = new DiagramMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberTodoList) {
-                        persister = new TodoListMemberFilePersister();
-                    } else if (projectMember instanceof ProjectMemberModel) {
-                        persister = new ModelMemberFilePersister();
-                    }
+                    MemberFilePersister persister = 
+                        getMemberFilePersister(projectMember);
                     persister.save(projectMember, writer, null);
                 }
             }
