@@ -78,11 +78,14 @@ public class MetricsInterceptor extends AbstractInterceptor
      *
      * @param   container   set by the container initialization code
      */
-    public void setContainer(Container container) {
+    public void setContainer(Container container)
+    {
         this.container  = container;
-        
-        applicationName = container.getEjbModule().getName();
-        beanName        = container.getBeanMetaData().getJndiName();
+        if( container != null )
+        {
+           applicationName = container.getEjbModule().getName();
+           beanName = container.getBeanMetaData().getJndiName();
+        }
     }
     
     /**

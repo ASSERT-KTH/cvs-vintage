@@ -78,7 +78,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -419,29 +419,47 @@ public class EjbModule
 
    public void destroyService()
    {
+      WebServiceMBean webServer = 
+            (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
+                                               WebServiceMBean.OBJECT_NAME);
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
+         ObjectName jmxName =  con.getJmxName();
          // Remove JSR-77 EJB-Wrapper
-         if( con.mEJBObjectName != null ) {
+         if( con.mEJBObjectName != null )
+         {
             EJB.destroy( con.mbeanServer, con.mEJBObjectName );
          }
          try 
          {
-            serviceController.destroy(con.getJmxName());
+            serviceController.destroy(jmxName);
          }
          catch (Throwable e)
          {
-            log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
+            log.error("unexpected exception destroying Container: " + jmxName, e);
          } // end of try-catch
          try 
          {
-            serviceController.remove(con.getJmxName());
+            serviceController.remove(jmxName);
          }
          catch (Throwable e)
          {
-            log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
+            log.error("unexpected exception destroying Container: " + jmxName, e);
          } // end of try-catch
+         // Unregister the web classloader
+         ClassLoader wcl = con.getWebClassLoader();
+         if( wcl != null )
+         {
+            try
+            {
+               webServer.removeClassLoader(wcl);
+            }
+            catch(Throwable e)
+            {
+               log.warn("Failed to unregister webClassLoader", e);
+            }
+         }
       }
       log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
@@ -454,8 +472,11 @@ public class EjbModule
       {
          ejbModulesByDeploymentInfo.remove(deploymentInfo);
       }
+
+      this.containers.clear();
+      this.localHomes.clear();
    }
-	
+
    // ******************
    // Container Creation
    // ******************
@@ -626,7 +647,7 @@ public class EjbModule
       // Create the container's WebClassLoader 
       // and register it with the web service.
       String webClassLoaderName = conf.getWebClassLoader();
-      WebClassLoader wcl;
+      WebClassLoader wcl = null;
       try 
       {
          Class clazz = cl.loadClass(webClassLoaderName);
@@ -646,10 +667,13 @@ public class EjbModule
                                                WebServiceMBean.OBJECT_NAME);
       URL[] codebase = { webServer.addClassLoader(wcl) };
       wcl.setWebURLs(codebase);
+      container.setWebClassLoader(wcl);
       StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < codebase.length; i++) {
+      for (int i = 0; i < codebase.length; i++)
+      {
          sb.append(codebase[i].toString());
-         if (i < codebase.length - 1) {
+         if (i < codebase.length - 1)
+         {
             sb.append(" ");
          }
       }
@@ -666,11 +690,6 @@ public class EjbModule
       // Set security domain manager
       String securityDomain = bean.getApplicationMetaData().getSecurityDomain();
       String confSecurityDomain = conf.getSecurityDomain();
-      /* These are deprecated.
-      String securityManagerJNDIName = conf.getAuthenticationModule();
-      String roleMappingManagerJNDIName = conf.getRoleMappingManager();
-      */
-      
       if( securityDomain != null || confSecurityDomain != null )
       {   // Either the application has a security domain or the container has security setup
          try

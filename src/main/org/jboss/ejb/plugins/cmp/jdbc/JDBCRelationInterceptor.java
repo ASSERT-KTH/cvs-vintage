@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -89,20 +89,26 @@ public class JDBCRelationInterceptor extends AbstractInterceptor
       this.container = (EntityContainer)container;
 
       JDBCStoreManager manager = null;
-      try {
-         EntityContainer entityContainer = (EntityContainer)container;
-         CMPPersistenceManager cmpManager = 
-               (CMPPersistenceManager)entityContainer.getPersistenceManager();
-         manager = (JDBCStoreManager) cmpManager.getPersistenceStore();
-      } catch(ClassCastException e) {
-         throw new EJBException("JDBCRealtionInteceptor can only be used " +
-               "JDBCStoreManager", e);
+      if( container != null )
+      {
+         try
+         {
+            EntityContainer entityContainer = (EntityContainer)container;
+            CMPPersistenceManager cmpManager = 
+                  (CMPPersistenceManager)entityContainer.getPersistenceManager();
+            manager = (JDBCStoreManager) cmpManager.getPersistenceStore();
+         }
+         catch(ClassCastException e)
+         {
+            throw new EJBException("JDBCRealtionInteceptor can only be used " +
+                  "JDBCStoreManager", e);
+         }
+
+         log = Logger.getLogger(
+               this.getClass().getName() + 
+               "." + 
+               manager.getMetaData().getName());
       }
-      
-      log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
-            manager.getMetaData().getName());
    }
    
    public Container getContainer()

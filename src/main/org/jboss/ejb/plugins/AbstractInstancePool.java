@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010704 marcf:</b>
@@ -136,6 +136,7 @@ implements InstancePool, XmlLoadable
    public void destroy()
    {
      freeAll();
+     this.container = null;
    }
 
    /**
@@ -190,30 +191,27 @@ implements InstancePool, XmlLoadable
       }
       //pool is empty
       // The Pool feeder should avoid this
-      
+      if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled())
       {
-         if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled())
+         log.debug("The Pool for " + container.getBeanClass().getName()
+            + " has been overloaded.  You should change pool parameters.");
+      }
+      try
+      {
+         synchronized (this)
          {
-            log.debug("The Pool for " + container.getBeanClass().getName()
-               + " has been overloaded.  You should change pool parameters.");
-         }
-         try
-         {
-            synchronized (this)
+            if (useFeeder && ! poolFeeder.isStarted())
             {
-               if (useFeeder && ! poolFeeder.isStarted())
-               {
-                  poolFeeder.start();
-               }
+               poolFeeder.start();
             }
-            return create(container.createBeanClassInstance());
-         } catch (InstantiationException e)
-         {
-            throw new ServerException("Could not instantiate bean", e);
-         } catch (IllegalAccessException e)
-         {
-            throw new ServerException("Could not instantiate bean", e);
          }
+         return create(container.createBeanClassInstance());
+      } catch (InstantiationException e)
+      {
+         throw new ServerException("Could not instantiate bean", e);
+      } catch (IllegalAccessException e)
+      {
+         throw new ServerException("Could not instantiate bean", e);
       }
    }
 
@@ -363,9 +361,9 @@ implements InstancePool, XmlLoadable
          ec.clear();
          discard(ec);
       }
+      pool.clear();
    }
 
    // Inner classes -------------------------------------------------
 
 }
-

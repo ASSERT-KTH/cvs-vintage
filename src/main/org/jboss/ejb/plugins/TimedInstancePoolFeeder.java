@@ -77,6 +77,7 @@ public class TimedInstancePoolFeeder
       if (timer != null)
       {
          timer.cancel();
+         timer = null;
       }
    }
 

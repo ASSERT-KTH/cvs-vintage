@@ -29,7 +29,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -67,47 +67,50 @@ public class SecurityProxyInterceptor
    public void setContainer(Container container)
    {
       this.container = container;
-      securityManager = container.getSecurityManager();
-      Object secProxy = container.getSecurityProxy();
-      if( secProxy != null )
+      if( container != null )
       {
-         // If this is not a SecurityProxy instance then use the default
-         // SecurityProxy implementation
-         if( (secProxy instanceof SecurityProxy) == false )
+         securityManager = container.getSecurityManager();
+         Object secProxy = container.getSecurityProxy();
+         if( secProxy != null )
          {
+            // If this is not a SecurityProxy instance then use the default
+            // SecurityProxy implementation
+            if( (secProxy instanceof SecurityProxy) == false )
+            {
+               try
+               {
+                  // Get default SecurityProxyFactory from JNDI at
+                  InitialContext iniCtx = new InitialContext();
+                  SecurityProxyFactory proxyFactory =
+                     (SecurityProxyFactory)iniCtx.lookup(SECURITY_PROXY_FACTORY_NAME);
+                  securityProxy = proxyFactory.create(secProxy);
+               }
+               catch (Exception e)
+               {
+                  log.error("Failed to initialze DefaultSecurityProxy", e);
+               }
+            }
+            else
+            {
+               securityProxy = (SecurityProxy) secProxy;
+            }
+
+            // Initialize the securityProxy
             try
             {
-               // Get default SecurityProxyFactory from JNDI at
-               InitialContext iniCtx = new InitialContext();
-               SecurityProxyFactory proxyFactory =
-                  (SecurityProxyFactory)iniCtx.lookup(SECURITY_PROXY_FACTORY_NAME);
-               securityProxy = proxyFactory.create(secProxy);
+               ContainerInvokerContainer ic =
+                  (ContainerInvokerContainer)container;
+               Class beanHome = ic.getHomeClass();
+               Class beanRemote = ic.getRemoteClass();
+               securityProxy.init(beanHome, beanRemote, securityManager);
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-               log.error("Failed to initialze DefaultSecurityProxy", e);
+               log.error("Failed to initialze SecurityProxy", e);
             }
+            if (log.isInfoEnabled())
+               log.info("Initialized SecurityProxy=" + securityProxy);
          }
-         else
-         {
-            securityProxy = (SecurityProxy) secProxy;
-         }
-
-         // Initialize the securityProxy
-         try
-         {
-            ContainerInvokerContainer ic =
-               (ContainerInvokerContainer)container;
-            Class beanHome = ic.getHomeClass();
-            Class beanRemote = ic.getRemoteClass();
-            securityProxy.init(beanHome, beanRemote, securityManager);
-         }
-         catch(Exception e)
-         {
-            log.error("Failed to initialze SecurityProxy", e);
-         }
-         if (log.isInfoEnabled())
-            log.info("Initialized SecurityProxy=" + securityProxy);
       }
    }
 

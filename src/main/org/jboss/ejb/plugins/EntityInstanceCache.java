@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -44,14 +44,16 @@ public class EntityInstanceCache
 
 	// Public --------------------------------------------------------
 
-    public int getCacheSize() {
-	return getCache().size();
+    public int getCacheSize()
+    {
+      return getCache().size();
     }
 
-    public void flush() {
-	getCache().flush();
+    public void flush()
+    {
+      getCache().flush();
     }
-	
+
 	/* From ContainerPlugin interface */
 	public void setContainer(Container c) 
 	{
@@ -76,6 +78,11 @@ public class EntityInstanceCache
 	{
 		super.remove(id);
 	}
+
+   public void destroy()
+   {
+      this.m_container = null;
+   }
 
 	protected Object getKey(EnterpriseContext ctx) 
 	{

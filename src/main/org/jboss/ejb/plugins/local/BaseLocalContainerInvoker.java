@@ -169,9 +169,12 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       {
          return;
       }
-      
+
+      // Clean up the home proxy binding
       try
       {
+         String jndiName = container.getBeanMetaData().getLocalJndiName();
+         LocalHomeObjectFactory.unbind(jndiName);
          InitialContext ctx = new InitialContext();
          ctx.unbind(container.getBeanMetaData().getLocalJndiName());
       }
@@ -182,6 +185,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    }
    public void destroy()
    {
+      if( beanMethodInvokerMap != null )
+         beanMethodInvokerMap.clear();
+      if( homeMethodInvokerMap != null )
+         homeMethodInvokerMap.clear();
+      container = null;
    }
 
    // ContainerInvoker implementation -------------------------------

@@ -41,7 +41,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.38 $
+*  @version $Revision: 1.39 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -94,8 +94,11 @@ implements EntityPersistenceManager
    public void setContainer(Container c)
    {
       con = (EntityContainer)c;
-      ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
-      commitOption = configuration.getCommitOption();
+      if( con != null )
+      {
+         ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
+         commitOption = configuration.getCommitOption();
+      }
    }
 
    public void create()

@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.74 $
+* @version $Revision: 1.75 $
 *
 * <p><b>Revisions:</b>
 *
@@ -435,29 +435,33 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
 
       try
       {
-         // Call default destroy
-         super.destroy();
-
          // Destroy container invoker
          if (containerInvoker != null)
             containerInvoker.destroy();
 
          // Destroy instance cache
          instanceCache.destroy();
+         instanceCache.setContainer(null);
 
          // Destroy persistence
          persistenceManager.destroy();
+         persistenceManager.setContainer(null);
 
          // Destroy the pool
          instancePool.destroy();
+         instancePool.setContainer(null);
 
          // Destroy all the interceptors in the chain
          Interceptor in = interceptor;
          while (in != null)
          {
             in.destroy();
+            in.setContainer(null);
             in = in.getNext();
          }
+
+         // Call default destroy
+         super.destroy();
       }
       finally
       {

@@ -46,7 +46,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  *
  * Revisions:
  * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -94,8 +94,11 @@ public class CMPPersistenceManager
       con = (EntityContainer)c;
       if (store != null)
          store.setContainer(c);
-      ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
-      commitOption = configuration.getCommitOption();
+      if( con != null )
+      {
+         ConfigurationMetaData configuration = con.getBeanMetaData().getContainerConfiguration();
+         commitOption = configuration.getCommitOption();
+      }
    }
 
    /**

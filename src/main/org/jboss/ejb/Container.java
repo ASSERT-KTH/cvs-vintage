@@ -82,7 +82,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.84 $
+* @version $Revision: 1.85 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -131,7 +131,9 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * re-deployable
     */
    protected ClassLoader classLoader;
-   
+   /** The class loader for remote dynamic classloading */
+   protected ClassLoader webClassLoader;
+
    /**
     * This is the new metadata. it includes information from both ejb-jar and
     * jboss.xml the metadata for the application can be accessed trough
@@ -399,7 +401,20 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    {
       return classLoader;
    }
-   
+
+   /** Get the class loader for dynamic class loading via http.
+    */
+   public ClassLoader getWebClassLoader()
+   {
+      return webClassLoader;
+   }
+   /** Set the class loader for dynamic class loading via http.
+    */
+   public void setWebClassLoader(ClassLoader webClassLoader)
+   {
+      this.webClassLoader = webClassLoader;
+   }
+
    /**
     * Sets the meta data for this container. The meta data consists of the
     * properties found in the XML descriptors.
@@ -430,9 +445,12 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    {
       Set permissions;
       
-      if (methodPermissionsCache.containsKey(m)) {
+      if (methodPermissionsCache.containsKey(m))
+      {
          permissions = (Set) methodPermissionsCache.get( m );
-      } else {
+      }
+      else
+      {
          permissions = getBeanMetaData().
             getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
          methodPermissionsCache.put(m, permissions);
@@ -569,8 +587,14 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    {
       localContainerInvoker.destroy();
       ejbModule.removeLocalHome( this );
+      this.classLoader = null;
+      this.webClassLoader = null;
+      this.localClassLoader = null;
+      this.ejbModule = null;
+      this.lockManager = null;
+      this.methodPermissionsCache.clear();
    }
-   
+
    /**
     * This method is called by the ContainerInvoker when a method call comes
     * in on the Home object.  The Container forwards this call to the

@@ -27,7 +27,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.28 $
+@version $Revision: 1.29 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -62,16 +62,18 @@ public class SecurityInterceptor extends AbstractInterceptor
     public void setContainer(Container container)
     {
         this.container = container;
-        BeanMetaData beanMetaData = container.getBeanMetaData();
-        SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
-        if( secMetaData != null && secMetaData.getUseCallerIdentity() == false )
+        if( container != null )
         {
-            String roleName = secMetaData.getRunAsRoleName();
-            runAsRole = new SimplePrincipal(roleName);
+           BeanMetaData beanMetaData = container.getBeanMetaData();
+           SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
+           if( secMetaData != null && secMetaData.getUseCallerIdentity() == false )
+           {
+               String roleName = secMetaData.getRunAsRoleName();
+               runAsRole = new SimplePrincipal(roleName);
+           }
+           securityManager = container.getSecurityManager();
+           realmMapping = container.getRealmMapping();
         }
-        securityManager = container.getSecurityManager();
-        realmMapping = container.getRealmMapping();
-        
     }
 
     public Container getContainer()

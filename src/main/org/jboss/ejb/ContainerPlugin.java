@@ -15,7 +15,7 @@ import org.jboss.system.Service;
  *      
  * @see Service
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface ContainerPlugin
    extends Service
@@ -23,7 +23,8 @@ public interface ContainerPlugin
    /**
     * This callback is set by the container so that the plugin may access it
     *
-    * @param con    The container using this plugin.
+    * @param con The container using this plugin. This may be null if the
+    plugin is being disassociated from a container.
     */
    void setContainer(Container con);
 }
