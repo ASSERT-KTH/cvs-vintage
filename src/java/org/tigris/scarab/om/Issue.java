@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.196 2002/10/07 19:20:36 jon Exp $
+ * @version $Id: Issue.java,v 1.197 2002/10/09 00:12:56 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -603,7 +603,7 @@ public class Issue
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = null;
+        Object obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP);
         if ( obj == null ) 
         {        
             Attribute[] attributes = null;
