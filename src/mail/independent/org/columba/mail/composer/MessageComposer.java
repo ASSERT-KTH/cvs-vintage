@@ -18,6 +18,7 @@ package org.columba.mail.composer;
 import org.columba.addressbook.parser.ListParser;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.AccountItem;
@@ -48,6 +49,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,10 +83,14 @@ public class MessageComposer {
 
         header.set("columba.subject", model.getSubject());
         
-        header.set("Subject",
-            EncodedWord.encode(model.getSubject(),
-                Charset.forName(model.getCharsetName()),
-                EncodedWord.QUOTED_PRINTABLE).toString());
+		//header.set("Subject",
+		//	EncodedWord.encode(model.getSubject(),
+		//		Charset.forName(model.getCharsetName()),
+		//		EncodedWord.QUOTED_PRINTABLE).toString());
+		header.set("Subject",
+			EncodedWord.encode(model.getSubject(),
+				Charset.forName(getCharsetNameFromModel()),
+				EncodedWord.QUOTED_PRINTABLE).toString());
 
         AccountItem item = model.getAccountItem();
         IdentityItem identity = item.getIdentityItem();
@@ -188,8 +194,10 @@ public class MessageComposer {
         }
 
         try {
-            return new String(strbuf.toString().getBytes(),
-                model.getCharsetName());
+			//return new String(strbuf.toString().getBytes(),
+			//	model.getCharsetName());
+			return new String(strbuf.toString().getBytes(),
+					getCharsetNameFromModel());
         } catch (UnsupportedEncodingException e) {
         }
 
@@ -272,7 +280,8 @@ public class MessageComposer {
 
         // Init Mime-Header with Default-Values (text/html)	
         // Set Default Charset or selected		
-        String charsetName = model.getCharsetName();
+        String charsetName = getCharsetNameFromModel();
+        //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
         StringBuffer buf = new StringBuffer();
@@ -373,7 +382,8 @@ public class MessageComposer {
 
         // Init Mime-Header with Default-Values (text/plain)	
         // Set Default Charset or selected		
-        String charsetName = model.getCharsetName();
+        String charsetName = getCharsetNameFromModel();
+        //String charsetName = model.getCharsetName();
         bodyPart.getHeader().putContentParameter("charset", charsetName);
 
         String body = model.getBodyText();
@@ -544,5 +554,39 @@ public class MessageComposer {
         return message;
     }
 
+	/**
+	 * Private utility which fetches the charset name from the 
+	 * composer model. If the charset specified in the model
+	 * is not supported, the system default encoding is returned.
+	 * <br>
+	 * By calling this method, further handling of unsupported 
+	 * charsets is not necessary.
+	 * 
+	 * @return	Charset name from model, or system default if the
+	 * 			charset specified in the model is not supported.
+	 */
+	private String getCharsetNameFromModel() {
+		String charset = model.getCharsetName();
+		
+		// test if the given charset is supported
+		try {
+			if (Charset.isSupported(charset)) {
+				return charset;
+			} else {
+				// not supported - return system default
+				ColumbaLogger.log.severe("The charset " + 
+						charset + 
+						" is not supported. " + 
+						"System default encoding will be used.");
+				return System.getProperty("file.encoding");
+			}
+		} catch (IllegalCharsetNameException e) {
+			ColumbaLogger.log.severe("The charste name " + 
+					charset + 
+					" is illegal. " +
+					"System default encoding will be used.");
+			return System.getProperty("file.encoding");
+		}
+	}
 
 }
