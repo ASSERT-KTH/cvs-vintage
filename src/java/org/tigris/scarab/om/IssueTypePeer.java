@@ -65,6 +65,7 @@ public class IssueTypePeer
         {        
             Criteria c = new Criteria();
             c.add(IssueTypePeer.PARENT_ID, 0);
+            c.add(IssueTypePeer.ISSUE_TYPE_ID, 0, Criteria.NOT_EQUAL);
             if (deleted)
             {
                 c.add(IssueTypePeer.DELETED, 1);
