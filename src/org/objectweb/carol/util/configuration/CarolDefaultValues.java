@@ -30,6 +30,7 @@ package org.objectweb.carol.util.configuration;
 //java import 
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Enumeration;
 
 /*
  * Class <code>DefaultCarolValues</code> get default carol value for the properties file and
@@ -105,14 +106,17 @@ public class CarolDefaultValues {
     static {
 
 	// add jrmp default configuration 
+	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jrmpName); 
 	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+".PortableRemoteObjectClass",jrmpPROD); 
 	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, jrmpName); 
 	
 	// add iiop default configuration
+	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,iiopName); 
 	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+".PortableRemoteObjectClass",iiopPROD); 
 	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, iiopName);
 		
 	// add jeremie default configuration
+	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jeremieName); 
 	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+".PortableRemoteObjectClass",jeremiePROD); 
 	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX, jeremieName);
     }
@@ -126,26 +130,68 @@ public class CarolDefaultValues {
      * protocol (iiop, jrmp or jeremie)
      */
     public static Properties getCarolProperties(Properties rmiP, Properties jndiP) throws RMIConfigurationException {
-	if (rmiP == null) {
+	if (rmiP==null) {	    
+	    if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
 	    String url = jndiP.getProperty(URL_PREFIX);
 	    if (url != null) {
 		String protocol = getRMIProtocol(url);
-		if (protocol==jrmpName) {
+		if (protocol.equals(jrmpName)) {
 		    return jrmpProps;
-		} else if (protocol==iiopName) {
+		} else if (protocol.equals(iiopName)) {
 		    return iiopProps;
-		} else if (protocol==jeremieName){
+		} else if (protocol.equals(jeremieName)){
 		    return jeremieProps;
 		} else  {
-		    throw new RMIConfigurationException("Can not load default protocol configuration, rmi protocol unknow:" + protocol);   		} 
+		    throw new RMIConfigurationException("Can not load default protocol configuration, rmi protocol unknow:" + protocol);
+   		} 
 	    } else {
 	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
 	    }
-	} else {
+	} else if (!rmiConfigurationExist(rmiP)) {  //rmiP is not null but there is no rmi configuration inside
+	    	if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
+	    String url = jndiP.getProperty(URL_PREFIX);
+	    if (url != null) {
+		String protocol = getRMIProtocol(url);
+		Properties r = new Properties();
+		r.putAll(rmiP);
+		if (protocol.equals(jrmpName)) {
+		    r.putAll(jrmpProps);
+		    return r;
+		} else if (protocol.equals(iiopName)) {
+		    r.putAll(iiopProps);
+		    return r;
+		} else if (protocol.equals(jeremieName)){
+		    r.putAll(jeremieProps);
+		    return r;
+		} else  {
+		    throw new RMIConfigurationException("Can not load default protocol configuration, rmi protocol unknow:" + protocol);
+   		} 
+	    } else {
+	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
+	    }
+	} else { //rmiP is not null and there is rmi configuration inside 
 	    return rmiP;
-	}
-		
+	}		
     }
+
+
+    /**
+     * return false if there is no rmi configuration inside the properties
+     * @param p the properties to check
+     * @return boolean the result of this check
+     */
+    public static boolean rmiConfigurationExist(Properties p){
+	boolean result = false;
+	for (Enumeration e =  p.propertyNames() ; e.hasMoreElements() ;) {
+	    String pkey = ((String)e.nextElement()).trim();
+	    if  (pkey.startsWith(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX)) { 
+		//there is 
+		result=true;
+	    }
+	}
+	return result;
+    }
+
 
     /**
      * return protocol name from url
@@ -155,11 +201,11 @@ public class CarolDefaultValues {
     public static String getRMIProtocol(String url) {
 	StringTokenizer st = new StringTokenizer(url, "://");
 	String pref = st.nextToken().trim();
-	if (pref==jrmpJNDIPrefix) {
+	if (pref.equals(jrmpJNDIPrefix)) {
 	    return jrmpName;
-	} else if (pref==iiopJNDIPrefix) {
+	} else if (pref.equals(iiopJNDIPrefix)) {
 	    return iiopName;
-	} else if (pref==jeremieJNDIPrefix) {
+	} else if (pref.equals(jeremieJNDIPrefix)) {
 	    return jeremieName;
 	} else {
 	    return pref;

@@ -70,16 +70,7 @@
   <taskdef name="multipleAnt"
     classname="org.objectweb.util.ant.MultipleAnt"
     classpath="${test.config}/ow_util_ant_tasks.jar"/>
-  
-  <taskdef name="javadocMultipleLink"
-    classname="org.objectweb.util.ant.JavadocMultipleLink"
-    classpath="${test.config}/ow_util_ant_tasks.jar"/>
-  
-  <taskdef name="ls"
-    classname="org.objectweb.util.ant.Ls"
-    classpath="${test.config}/ow_util_ant_tasks.jar"/>
-  
-  
+
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
@@ -187,17 +178,9 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="test.all" description="Lauch all the test">   
-    <multipleAnt dir="${test.conform}" />
-  </target> 
-
-  <!-- ************************************-->
-  <!-- *********     JVM test   **********-->
-  <!-- ************************************-->
-  <target name="rjvm.shell" description="Lauch the jvm bootstraper and test on the local machine" depends="dist">   
-    <java classname="org.objectweb.carol.util.bootstrap.RJVMShell">
-      <classpath refid="test.classpath"/>
-    </java>
+  <target name="run.tests" description="Lauch all the test">
+    <ant antfile="conform/carol_all_tests.xml" target="test.single"/> 
+    <ant antfile="conform/carol_all_tests.xml" target="test.multiple"/>
   </target> 
 
   <!-- **********************************-->
@@ -211,7 +194,7 @@
     <echo message="  zip: creates all zip files of the product distributions into ${zip}"/>
     <echo message="  clean: removes all produced files."/>
     <echo message="  jar: creates all jars ${dist.lib}"/>
-    <echo message="  test: run all test"/>
+    <echo message="  run.tests: run all test"/>
     <echo message=""/>
     <echo message="There are some options to run tests:"/>
     <echo message="  -Dtest.group=&lt;group name&gt;  Only a group of test: The default target of"/>

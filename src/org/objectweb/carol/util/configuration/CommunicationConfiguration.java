@@ -164,6 +164,7 @@ public class CommunicationConfiguration {
       public static synchronized void loadCarolConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
 
 	Properties carolProps = CarolDefaultValues.getCarolProperties(rmiProps, jndiProps);
+
 	Properties jvmProps = new Properties();	    
 	jvmProps.putAll(System.getProperties());
  
@@ -199,9 +200,14 @@ public class CommunicationConfiguration {
 		throw new RMIConfigurationException("The properties " + pkey + "can not be set in the file " + CAROL_FILE_NAME);
 	    }
 	}
+
  	// add the jvm properties in the jvm 
 	System.setProperties(jvmProps);
 	configurationLoaded = true;
+
+	if (getDefaultProtocol() == null) {
+	    throw new RMIConfigurationException("The default protocol : " + defaultRMI + " must be configured inside the carol properties files");
+	}
       }
 
     

@@ -62,10 +62,6 @@
     classname="org.objectweb.util.ant.MultipleAnt"
     classpath="${config}/ow_util_ant_tasks.jar"/>
   
-  <taskdef name="javadocMultipleLink"
-    classname="org.objectweb.util.ant.JavadocMultipleLink"
-    classpath="${config}/ow_util_ant_tasks.jar"/>
-  
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
@@ -144,8 +140,8 @@
     <ant antfile="${test}/build.xml" dir="${test}" target="dist"/>
   </target>
 
-  <target name="dist.test" depends="build.test" description="Test the carol distribution">
-    <ant antfile="${test}/build.xml" dir="${test}" target="test.all"/>
+  <target name="run.tests" depends="build.test" description="Run Test the carol distribution">
+    <ant antfile="${test}/build.xml" dir="${test}" target="run.tests"/>
   </target> 
 
   <!-- *************************************-->
