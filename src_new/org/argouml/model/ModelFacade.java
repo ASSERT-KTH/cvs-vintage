@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.159 2003/11/18 08:40:31 linus Exp $
+// $Id: ModelFacade.java,v 1.160 2003/11/20 10:35:00 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -345,19 +345,7 @@ public class ModelFacade {
     public static final Object RETURN_PARAMETERDIRECTIONKIND =
         MParameterDirectionKind.RETURN;
 
-    /** Singleton instance */
-    private static ModelFacade singleton = new ModelFacade();
 
-    /** Constructor that forbids instantiation.
-     */
-    private ModelFacade() {}
-
-    /**
-     * @return the ModelFacade singleton object
-     */
-    public static ModelFacade getFacade() {
-        return singleton;
-    }
     ////////////////////////////////////////////////////////////////
     // Object Creation methods
 
@@ -365,12 +353,13 @@ public class ModelFacade {
      * 
      * This will allow abstraction of the create mechanism at a single point.
      * 
-     * @ entity Class to create - must implement {@link org.argouml.model.uml.Uml.Entity}
+     * @param entity Class to create - 
+     * must implement {@link org.argouml.model.uml.Uml.Entity}
      * @return the created object or null if it cannot create the class.
      */
-    public Object create(ModelEntity entity) {
+    public static Object create(ModelEntity entity) {
         if (entity instanceof UmlModelEntity) {
-            return UmlFactory.getFactory().create((UmlModelEntity)entity);
+            return UmlFactory.getFactory().create((UmlModelEntity) entity);
         }
         return null;
     }

@@ -1,4 +1,4 @@
-// $Id: TestModelFacade.java,v 1.8 2003/11/12 22:50:48 linus Exp $
+// $Id: TestModelFacade.java,v 1.9 2003/11/20 10:35:01 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -183,7 +183,7 @@ public class TestModelFacade extends TestCase {
      */
     protected void setUp() throws Exception {
 	super.setUp();
-	_facade = ModelFacade.getFacade();
+	_facade = new ModelFacade();
 	assertNotNull("Cound not get ModelFacade", _facade);
     }
 
