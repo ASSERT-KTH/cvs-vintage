@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.27 2002/09/19 09:45:00 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.28 2003/01/24 18:47:31 starksm Exp $
  */
 
 
@@ -27,31 +27,29 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 
 // non-standard class dependencies
-import org.jboss.verifier.Section;
-import org.jboss.verifier.factory.DefaultEventFactory;
-
+import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
+import org.jboss.verifier.Section;
+import org.jboss.verifier.factory.DefaultEventFactory;
 
 /**
  * EJB 2.0 bean verifier.
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
    extends AbstractVerifier
 {
+   private static Logger log = Logger.getLogger(EJBVerifier20.class);
    private static final String msgBundle = "EJB20Messages.properties";
 
    protected EJBVerifier11 cmp1XVerifier;
@@ -2426,15 +2424,17 @@ public class EJBVerifier20
                   {
                      if( cmp )
                      {
-                        fireSpecViolationEvent( entity,
-                           new Section("10.6.13.c"));
+                        // fireSpecViolationEvent(entity, new Section("10.6.13.c"));
+                        log.warn("Default instances of primary key: "+cls
+                           + " do not equate, check your equals method");
                      }
                      else
                      {
-                        fireSpecViolationEvent( entity,
-                           new Section("12.2.12.c"));
+                        //fireSpecViolationEvent(entity, new Section("12.2.12.c"));
+                        log.warn("Default instances of primary key: "+cls
+                           + " do not equate, check your equals method");
                      }
-                     status = false;
+                     status = true;
                   }
                }
                catch(NullPointerException e)
@@ -2449,15 +2449,17 @@ public class EJBVerifier20
                   {
                      if( cmp )
                      {
-                        fireSpecViolationEvent( entity,
-                           new Section("10.6.13.d"));
+                        //fireSpecViolationEvent(entity, new Section("10.6.13.d"));
+                        log.warn("Default instances of primary key: "+cls
+                           + " do not have the same hash, check your hashCode method");
                      }
                      else
                      {
-                        fireSpecViolationEvent( entity,
-                           new Section("12.2.12.d"));
+                        //fireSpecViolationEvent(entity, new Section("12.2.12.d"));
+                        log.warn("Default instances of primary key: "+cls
+                           + " do not have the same hash, check your hashCode method");
                      }
-                     status = false;
+                     status = true;
                   }
                } catch(NullPointerException e)
                {
