@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.52 2002/06/01 02:12:46 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.53 2002/06/04 15:17:37 lsanders Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -188,10 +188,10 @@
        |     any digits will be deployed last, and they will be sorted by
        |     extension as above with DeploymentSorter.
      -->
-    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
     <!--
-    <attribute name="URLComparator">org.jboss.deployment.scanner.PrefixDeploymentSorter</attribute>
+    <attribute name="URLComparator">org.jboss.deployment.DeploymentSorter</attribute>
     -->
+    <attribute name="URLComparator">org.jboss.deployment.scanner.PrefixDeploymentSorter</attribute>
 
     <!-- 
        | The Filter specifies a java.io.FileFilter for scanned
