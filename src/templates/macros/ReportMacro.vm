@@ -35,7 +35,7 @@
             #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
             #if ($model.isHeading($cell))
                 #if (!$cell.Label)
-                    #set ($label = "&nbsp;")
+                    #set ($label = " ")
                 #else
                     #set ($cellLabel = $cell.Label)
                     #if ($model.isDate($cellLabel))
@@ -59,10 +59,10 @@
                 #end
                 #if ($model.isColumnHeading($cell))
               <th#if ($cell.Colspan > 1) colspan="$cell.Colspan"#end>
-                    $label</th>
+                    #if ($label == " ")&nbsp;#else$label#end</th>
                 #else
               <td#if ($cell.Rowspan > 1) rowspan="$cell.Rowspan"#end>
-                    <strong>$label</strong></td>
+                    <strong>#if ($label == " ")&nbsp;#else$label#end</strong></td>
                 #end
             #else
                 <td>
