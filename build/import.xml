@@ -1,17 +1,22 @@
 <?xml version="1.0"?>
 
 <!-- Scarab XML Import -->
-<project name="import" default="xml-validate" basedir=".">
+<project name="import" default="import" basedir=".">
+
+  <!-- Allow the user to have multiple configuration files and
+       specify them using -Dscarab.build.configuration=filename -->
+  <property name="configuration.file" value="build.properties"/> 
 
   <!-- Give user a chance to override without editing this file
-      (and without typing -D each time it compiles it -->
+       (and without using -D arguments each time they build) -->
   <property file="${user.home}/scarab.build.properties" /> 
   <property file="${user.home}/build.properties" />
-  <property file="${basedir}/build.properties" />
+  <property file="${basedir}/${configuration.file}" />
+  <property file="${basedir}/default.${scarab.database.type}.properties" />
   <property file="${basedir}/default.properties" />
 
-  <property name="XMLImport.class" value="org.tigris.scarab.util.xml.XMLImport"/>
-  <property name="scarab.import.xml" value="../src/dtd/scarab-sample.xml"/>
+  <property name="ImportScarabIssues.class" value="org.tigris.scarab.util.xmlissues.ImportScarabIssues"/>
+  <property name="scarab.import.issues.xml" value="../src/dtd/scarab-issues-export.xml"/>
   <property name="scarab.import.config.file" value="/WEB-INF/conf/xmlimport.properties"/>
   <property name="scarab.import.trprops.file" value="/WEB-INF/conf/TurbineResources.properties"/>
 
@@ -24,73 +29,43 @@
     <fileset dir="${build.project.webinf.lib}">
       <include name="*.jar"/>
     </fileset>
+    <fileset dir="${tomcat.dist.dir}/common/lib">
+        <include name="**/servlet*.jar"/>
+    </fileset>
   </path>
 
   <target name="prepare">
   
     <echo>
-    Import file: ${scarab.import.xml}
+    Import file: ${scarab.import.issues.xml}
     </echo>
 
-    <available classname="${XMLImport.class}" 
-               property="XMLImport.present">
+    <available classname="${ImportScarabIssues.class}" 
+               property="ImportScarabIssues.present">
       <classpath refid="classpath"/>
     </available>
   </target>
 
-  <target name="prepare-error" depends="prepare" unless="XMLImport.present">
+  <target name="prepare-error" depends="prepare" unless="ImportScarabIssues.present">
     <echo>
-        XMLImport is not present! Please check to make sure that 
+        ImportScarabIssues is not present! Please check to make sure that 
         Scarab has been built properly.
     </echo>
   </target>
 
   <target name="taskdef" depends="prepare-error">
-    <taskdef name="XMLImport" 
-             classname="${XMLImport.class}">
+    <taskdef name="ImportScarabIssues" 
+             classname="${ImportScarabIssues.class}">
             <classpath refid="classpath"/>
     </taskdef>
   </target>
 
-  <target name="xml-validate" depends="taskdef"
-          description="Validate that the XML is correctly defined">
+  <target name="import" depends="taskdef"
+          description="Import XML into the database">
 
-    <XMLImport
-        xmlValidation="true"
-        dbValidation="false"
-        dbInsertion="false"
+    <ImportScarabIssues
         sendEmail="false"
-        xmlFile="${scarab.import.xml}"
-        configDir="${build.project}"
-        configFile="${scarab.import.config.file}"
-        turbineResources="${scarab.import.trprops.file}"
-        />
-  </target>
-
-  <target name="db-validate" depends="taskdef"
-          description="Validate that the XML import will go into the database correctly">
-
-    <XMLImport
-        xmlValidation="true"
-        dbValidation="true"
-        dbInsertion="false"
-        sendEmail="false"
-        xmlFile="${scarab.import.xml}"
-        configDir="${build.project}"
-        configFile="${scarab.import.config.file}"
-        turbineResources="${scarab.import.trprops.file}"
-        />
-  </target>
-
-  <target name="db-import" depends="taskdef"
-          description="Import the XML into the database">
-
-    <XMLImport
-        xmlValidation="false"
-        dbValidation="true"
-        dbInsertion="true"
-        sendEmail="false"
-        xmlFile="${scarab.import.xml}"
+        xmlFile="${scarab.import.issues.xml}"
         configDir="${build.project}"
         configFile="${scarab.import.config.file}"
         turbineResources="${scarab.import.trprops.file}"
