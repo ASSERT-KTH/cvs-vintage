@@ -1,0 +1,358 @@
+1 d none /opt/tomcat 0755 costin other
+1 f none /opt/tomcat/FAQ 0644 costin staff 9228 47873 945061157
+1 f none /opt/tomcat/README 0644 costin staff 2871 48744 945061157
+1 f none /opt/tomcat/ant 0644 costin staff 250 20818 945061157
+1 f none /opt/tomcat/env.tomcat 0644 costin staff 1520 55372 945061157
+1 d none /opt/tomcat/etc 0755 costin staff
+1 f none /opt/tomcat/etc/SimpleStartup.java 0644 costin staff 5243 27183 945061157
+1 f none /opt/tomcat/etc/server.dtd 0644 costin staff 785 59440 945061157
+1 f none /opt/tomcat/etc/server.xml 0644 costin staff 2658 12286 945061157
+1 f none /opt/tomcat/etc/tomcat.conf 0644 costin staff 1441 43213 945061157
+1 f none /opt/tomcat/etc/web.dtd 0644 costin staff 15472 6104 945061157
+1 f none /opt/tomcat/etc/web.xml 0644 costin staff 15531 8023 945061157
+1 d none /opt/tomcat/examples 0755 costin staff
+1 d none /opt/tomcat/examples/WEB-INF 0755 costin staff
+1 d none /opt/tomcat/examples/WEB-INF/classes 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/CookieExample.class 0644 costin staff 3260 30212 945061178
+1 f none /opt/tomcat/examples/WEB-INF/classes/CookieExample.java 0644 costin staff 3444 64014 945061172
+1 f none /opt/tomcat/examples/WEB-INF/classes/HelloWorldExample.class 0644 costin staff 1716 50598 945061174
+1 f none /opt/tomcat/examples/WEB-INF/classes/HelloWorldExample.java 0644 costin staff 1801 11732 945061166
+1 f none /opt/tomcat/examples/WEB-INF/classes/LocalStrings.properties 0644 costin staff 1320 58506 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestHeaderExample.class 0644 costin staff 2246 20059 945061165
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestHeaderExample.java 0644 costin staff 2230 41909 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestInfoExample.class 0644 costin staff 2459 35499 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestInfoExample.java 0644 costin staff 2875 27180 945061173
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestParamExample.class 0644 costin staff 2656 49701 945061172
+1 f none /opt/tomcat/examples/WEB-INF/classes/RequestParamExample.java 0644 costin staff 3029 39944 945061173
+1 f none /opt/tomcat/examples/WEB-INF/classes/SessionExample.class 0644 costin staff 3515 49844 945061173
+1 f none /opt/tomcat/examples/WEB-INF/classes/SessionExample.java 0644 costin staff 3539 12190 945061173
+1 f none /opt/tomcat/examples/WEB-INF/classes/SnoopServlet.class 0644 costin staff 5574 4665 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/SnoopServlet.java 0644 costin staff 5289 18667 945061176
+1 d none /opt/tomcat/examples/WEB-INF/classes/cal 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/Entries.class 0644 costin staff 1600 19033 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/Entries.java 0644 costin staff 1801 8558 945061172
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/Entry.class 0644 costin staff 725 32209 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/Entry.java 0644 costin staff 1318 37470 945061173
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/JspCalendar.class 0644 costin staff 3075 18371 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/JspCalendar.java 0644 costin staff 3581 11747 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/TableBean.class 0644 costin staff 2091 49466 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/cal/TableBean.java 0644 costin staff 2681 16273 945061172
+1 d none /opt/tomcat/examples/WEB-INF/classes/checkbox 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/checkbox/CheckTest.class 0644 costin staff 493 22214 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/checkbox/CheckTest.java 0644 costin staff 982 9175 945061174
+1 d none /opt/tomcat/examples/WEB-INF/classes/colors 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/colors/ColorGameBean.class 0644 costin staff 1830 13395 945061171
+1 f none /opt/tomcat/examples/WEB-INF/classes/colors/ColorGameBean.java 0644 costin staff 2624 11612 945061167
+1 d none /opt/tomcat/examples/WEB-INF/classes/dates 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/dates/JspCalendar.class 0644 costin staff 3592 63500 945061174
+1 f none /opt/tomcat/examples/WEB-INF/classes/dates/JspCalendar.java 0644 costin staff 3720 21726 945061174
+1 d none /opt/tomcat/examples/WEB-INF/classes/error 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/error/Smart.class 0644 costin staff 417 18061 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/error/Smart.java 0644 costin staff 984 10380 945061176
+1 d none /opt/tomcat/examples/WEB-INF/classes/examples 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/ExampleTagBase.class 0644 costin staff 1221 59222 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/ExampleTagBase.java 0644 costin staff 1123 24970 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/FooTag.class 0644 costin staff 1602 22349 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/FooTag.java 0644 costin staff 1478 45217 945061172
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/FooTagExtraInfo.class 0644 costin staff 539 32629 945061172
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/FooTagExtraInfo.java 0644 costin staff 426 28555 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/LogTag.class 0644 costin staff 1298 10629 945061174
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/LogTag.java 0644 costin staff 1017 11194 945061176
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/ShowSource.class 0644 costin staff 1613 36176 945061171
+1 f none /opt/tomcat/examples/WEB-INF/classes/examples/ShowSource.java 0644 costin staff 1224 23707 945061175
+1 d none /opt/tomcat/examples/WEB-INF/classes/num 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/num/NumberGuessBean.class 0644 costin staff 1224 59108 945061175
+1 f none /opt/tomcat/examples/WEB-INF/classes/num/NumberGuessBean.java 0644 costin staff 1051 14958 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/servletToJsp.class 0644 costin staff 1088 11304 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/servletToJsp.java 0644 costin staff 499 43403 945061177
+1 d none /opt/tomcat/examples/WEB-INF/classes/sessions 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/classes/sessions/DummyCart.class 0644 costin staff 1269 58971 945061177
+1 f none /opt/tomcat/examples/WEB-INF/classes/sessions/DummyCart.java 0644 costin staff 1786 9437 945061177
+1 d none /opt/tomcat/examples/WEB-INF/jsp 0755 costin staff
+1 d none /opt/tomcat/examples/WEB-INF/jsp/applet 0755 costin staff
+1 f none /opt/tomcat/examples/WEB-INF/jsp/applet/Clock2.java 0644 costin staff 8306 20754 945061174
+1 f none /opt/tomcat/examples/WEB-INF/jsp/example-taglib.tld 0644 costin staff 1679 2991 945061177
+1 f none /opt/tomcat/examples/WEB-INF/web.xml 0644 costin staff 1485 38351 945061172
+1 d none /opt/tomcat/examples/images 0755 costin staff
+1 f none /opt/tomcat/examples/images/code.gif 0644 costin staff 292 21345 945061177
+1 f none /opt/tomcat/examples/images/execute.gif 0644 costin staff 1242 18651 945061176
+1 f none /opt/tomcat/examples/images/return.gif 0644 costin staff 1231 35942 945061172
+1 d none /opt/tomcat/examples/jsp 0755 costin staff
+1 d none /opt/tomcat/examples/jsp/cal 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/cal/Entries.txt 0644 costin staff 1120 22173 945061172
+1 f none /opt/tomcat/examples/jsp/cal/Entry.txt 0644 costin staff 636 51075 945061172
+1 f none /opt/tomcat/examples/jsp/cal/JspCalendar.txt 0644 costin staff 2899 25352 945061177
+1 f none /opt/tomcat/examples/jsp/cal/TableBean.txt 0644 costin staff 1893 21408 945061177
+1 f none /opt/tomcat/examples/jsp/cal/cal1.jsp 0644 costin staff 1438 38881 945061169
+1 f none /opt/tomcat/examples/jsp/cal/cal1.txt 0644 costin staff 1438 38881 945061177
+1 f none /opt/tomcat/examples/jsp/cal/cal2.jsp 0644 costin staff 722 53405 945061176
+1 f none /opt/tomcat/examples/jsp/cal/cal2.txt 0644 costin staff 722 53405 945061175
+1 f none /opt/tomcat/examples/jsp/cal/calendar.html 0644 costin staff 932 7931 945061177
+1 f none /opt/tomcat/examples/jsp/cal/login.html 0644 costin staff 759 63500 945061177
+1 d none /opt/tomcat/examples/jsp/checkbox 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/checkbox/CheckTest.html 0644 costin staff 696 50558 945061172
+1 f none /opt/tomcat/examples/jsp/checkbox/check.html 0644 costin staff 545 44826 945061173
+1 f none /opt/tomcat/examples/jsp/checkbox/checkresult.jsp 0644 costin staff 875 3276 945061168
+1 f none /opt/tomcat/examples/jsp/checkbox/checkresult.txt 0644 costin staff 875 3244 945061177
+1 f none /opt/tomcat/examples/jsp/checkbox/cresult.html 0644 costin staff 699 56662 945061173
+1 d none /opt/tomcat/examples/jsp/colors 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/colors/ColorGameBean.html 0644 costin staff 1734 59587 945061175
+1 f none /opt/tomcat/examples/jsp/colors/clr.html 0644 costin staff 700 56729 945061176
+1 f none /opt/tomcat/examples/jsp/colors/colors.html 0644 costin staff 832 6270 945061173
+1 f none /opt/tomcat/examples/jsp/colors/colors.txt 0644 costin staff 981 11744 945061174
+1 f none /opt/tomcat/examples/jsp/colors/colrs.jsp 0644 costin staff 1635 62670 945061176
+1 d none /opt/tomcat/examples/jsp/dates 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/dates/date.html 0644 costin staff 586 47200 945061173
+1 f none /opt/tomcat/examples/jsp/dates/date.jsp 0644 costin staff 1043 23537 945061176
+1 f none /opt/tomcat/examples/jsp/dates/date.txt 0644 costin staff 1015 21356 945061176
+1 d none /opt/tomcat/examples/jsp/error 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/error/er.html 0644 costin staff 588 47499 945061171
+1 f none /opt/tomcat/examples/jsp/error/err.jsp 0644 costin staff 639 49374 945061174
+1 f none /opt/tomcat/examples/jsp/error/err.txt 0644 costin staff 639 49374 945061174
+1 f none /opt/tomcat/examples/jsp/error/error.html 0644 costin staff 583 45136 945061175
+1 f none /opt/tomcat/examples/jsp/error/errorpge.jsp 0644 costin staff 256 20253 945061174
+1 d none /opt/tomcat/examples/jsp/forward 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/forward/forward.jsp 0644 costin staff 385 30819 945061173
+1 f none /opt/tomcat/examples/jsp/forward/forward.txt 0644 costin staff 385 30819 945061169
+1 f none /opt/tomcat/examples/jsp/forward/fwd.html 0644 costin staff 594 48219 945061173
+1 f none /opt/tomcat/examples/jsp/forward/one.jsp 0644 costin staff 168 13335 945061174
+1 f none /opt/tomcat/examples/jsp/forward/two.html 0644 costin staff 168 13337 945061176
+1 d none /opt/tomcat/examples/jsp/include 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/include/foo.html 0644 costin staff 30 2679 945061174
+1 f none /opt/tomcat/examples/jsp/include/foo.jsp 0644 costin staff 165 13340 945061175
+1 f none /opt/tomcat/examples/jsp/include/inc.html 0644 costin staff 594 48168 945061177
+1 f none /opt/tomcat/examples/jsp/include/include.jsp 0644 costin staff 445 36799 945061173
+1 f none /opt/tomcat/examples/jsp/include/include.txt 0644 costin staff 445 36799 945061170
+1 f none /opt/tomcat/examples/jsp/index.html 0644 costin staff 6482 62597 945061176
+1 d none /opt/tomcat/examples/jsp/jsptoserv 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/jsptoserv/hello.jsp 0644 costin staff 235 19232 945061174
+1 f none /opt/tomcat/examples/jsp/jsptoserv/jsptoservlet.jsp 0644 costin staff 201 16430 945061172
+1 f none /opt/tomcat/examples/jsp/jsptoserv/jts.html 0644 costin staff 702 56716 945061175
+1 f none /opt/tomcat/examples/jsp/jsptoserv/jts.txt 0644 costin staff 201 16430 945061175
+1 f none /opt/tomcat/examples/jsp/jsptoserv/stj.txt 0644 costin staff 587 50231 945061176
+1 d none /opt/tomcat/examples/jsp/num 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/num/numguess.html 0644 costin staff 747 61843 945061173
+1 f none /opt/tomcat/examples/jsp/num/numguess.jsp 0644 costin staff 1261 38650 945061175
+1 f none /opt/tomcat/examples/jsp/num/numguess.txt 0644 costin staff 1261 38650 945061175
+1 d none /opt/tomcat/examples/jsp/plugin 0755 costin staff
+1 d none /opt/tomcat/examples/jsp/plugin/applet 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/plugin/applet/Clock2.class 0644 costin staff 4987 47192 945061171
+1 f none /opt/tomcat/examples/jsp/plugin/applet/Clock2.java 0644 costin staff 6792 34325 945061175
+1 f none /opt/tomcat/examples/jsp/plugin/plugin.html 0644 costin staff 591 47913 945061175
+1 f none /opt/tomcat/examples/jsp/plugin/plugin.jsp 0644 costin staff 566 46709 945061176
+1 f none /opt/tomcat/examples/jsp/plugin/plugin.txt 0644 costin staff 565 46592 945061176
+1 d none /opt/tomcat/examples/jsp/sessions 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/sessions/DummyCart.html 0644 costin staff 696 50742 945061176
+1 f none /opt/tomcat/examples/jsp/sessions/carts.html 0644 costin staff 682 54042 945061177
+1 f none /opt/tomcat/examples/jsp/sessions/carts.jsp 0644 costin staff 522 41357 945061172
+1 f none /opt/tomcat/examples/jsp/sessions/carts.txt 0644 costin staff 522 41357 945061166
+1 f none /opt/tomcat/examples/jsp/sessions/crt.html 0644 costin staff 689 55688 945061172
+1 d none /opt/tomcat/examples/jsp/simpletag 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/simpletag/foo.html 0644 costin staff 593 47915 945061173
+1 f none /opt/tomcat/examples/jsp/simpletag/foo.jsp 0644 costin staff 454 36638 945061175
+1 f none /opt/tomcat/examples/jsp/simpletag/foo.txt 0644 costin staff 454 36638 945061174
+1 d none /opt/tomcat/examples/jsp/snp 0755 costin staff
+1 f none /opt/tomcat/examples/jsp/snp/snoop.html 0644 costin staff 602 48929 945061172
+1 f none /opt/tomcat/examples/jsp/snp/snoop.jsp 0644 costin staff 1289 48037 945061174
+1 f none /opt/tomcat/examples/jsp/snp/snoop.txt 0644 costin staff 1289 48037 945061173
+1 f none /opt/tomcat/examples/jsp/source.jsp 0644 costin staff 137 11873 945061177
+1 d none /opt/tomcat/examples/servlets 0755 costin staff
+1 f none /opt/tomcat/examples/servlets/cookies.html 0644 costin staff 1911 19606 945061172
+1 f none /opt/tomcat/examples/servlets/helloworld.html 0644 costin staff 1860 20365 945061176
+1 f none /opt/tomcat/examples/servlets/index.html 0644 costin staff 4516 47865 945061175
+1 f none /opt/tomcat/examples/servlets/reqheaders.html 0644 costin staff 1477 55111 945061175
+1 f none /opt/tomcat/examples/servlets/reqinfo.html 0644 costin staff 2829 34285 945061168
+1 f none /opt/tomcat/examples/servlets/reqparams.html 0644 costin staff 1778 14991 945061165
+1 f none /opt/tomcat/examples/servlets/sessions.html 0644 costin staff 2428 63887 945061177
+1 d none /opt/tomcat/lib 0755 costin staff
+1 f none /opt/tomcat/lib/ant.jar 0644 costin staff 63580 22633 945061156
+1 f none /opt/tomcat/lib/jasper.jar 0644 costin staff 161627 35091 945061183
+1 f none /opt/tomcat/lib/servlet.jar 0644 costin staff 40089 17768 945061182
+1 f none /opt/tomcat/lib/xml.jar 0644 costin staff 132472 50023 945061157
+1 f none /opt/tomcat/server.xml 0644 costin staff 2658 12286 945061157
+1 f none /opt/tomcat/shutdown.bat 0644 costin staff 141 11661 945061157
+1 f none /opt/tomcat/shutdown.sh 0644 costin staff 548 47177 945061157
+1 d none /opt/tomcat/src 0755 costin staff
+1 d none /opt/tomcat/src/javax 0755 costin staff
+1 d none /opt/tomcat/src/javax/servlet 0755 costin staff
+1 f none /opt/tomcat/src/javax/servlet/GenericServlet.java 0644 costin staff 11035 26006 945061156
+1 f none /opt/tomcat/src/javax/servlet/LocalStrings.properties 0644 costin staff 154 13532 945061156
+1 f none /opt/tomcat/src/javax/servlet/RequestDispatcher.java 0644 costin staff 6446 11479 945061156
+1 f none /opt/tomcat/src/javax/servlet/Servlet.java 0644 costin staff 8701 56549 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletConfig.java 0644 costin staff 5128 16145 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletContext.java 0644 costin staff 20700 8406 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletException.java 0644 costin staff 5594 51419 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletInputStream.java 0644 costin staff 5038 8127 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletOutputStream.java 0644 costin staff 10366 16362 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletRequest.java 0644 costin staff 17467 60078 945061156
+1 f none /opt/tomcat/src/javax/servlet/ServletResponse.java 0644 costin staff 11335 39502 945061156
+1 f none /opt/tomcat/src/javax/servlet/SingleThreadModel.java 0644 costin staff 3744 45168 945061156
+1 f none /opt/tomcat/src/javax/servlet/UnavailableException.java 0644 costin staff 8733 48052 945061156
+1 d none /opt/tomcat/src/javax/servlet/http 0755 costin staff
+1 f none /opt/tomcat/src/javax/servlet/http/Cookie.java 0644 costin staff 16524 52581 945061155
+1 f none /opt/tomcat/src/javax/servlet/http/HttpServlet.java 0644 costin staff 33218 55482 945061155
+1 f none /opt/tomcat/src/javax/servlet/http/HttpServletRequest.java 0644 costin staff 18278 19321 945061155
+1 f none /opt/tomcat/src/javax/servlet/http/HttpServletResponse.java 0644 costin staff 20664 53 945061156
+1 f none /opt/tomcat/src/javax/servlet/http/HttpSession.java 0644 costin staff 12886 30063 945061155
+1 f none /opt/tomcat/src/javax/servlet/http/HttpSessionBindingEvent.java 0644 costin staff 4799 48968 945061156
+1 f none /opt/tomcat/src/javax/servlet/http/HttpSessionBindingListener.java 0644 costin staff 3892 46746 945061156
+1 f none /opt/tomcat/src/javax/servlet/http/HttpSessionContext.java 0644 costin staff 3837 40613 945061156
+1 f none /opt/tomcat/src/javax/servlet/http/HttpUtils.java 0644 costin staff 10551 46346 945061155
+1 f none /opt/tomcat/src/javax/servlet/http/LocalStrings.properties 0644 costin staff 636 59111 945061156
+1 d none /opt/tomcat/src/javax/servlet/jsp 0755 costin staff
+1 f none /opt/tomcat/src/javax/servlet/jsp/HttpJspPage.java 0644 costin staff 3184 60531 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspEngineInfo.java 0644 costin staff 3303 2317 945061155
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspException.java 0644 costin staff 2909 34884 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspFactory.java 0644 costin staff 6530 5268 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspPage.java 0644 costin staff 4602 44069 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspTagException.java 0644 costin staff 3048 46941 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/JspWriter.java 0644 costin staff 14618 8981 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/PageContext.java 0644 costin staff 18234 55961 945061155
+1 d none /opt/tomcat/src/javax/servlet/jsp/tagext 0755 costin staff
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/BodyContent.java 0644 costin staff 4707 47113 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/BodyTag.java 0644 costin staff 5443 46433 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/BodyTagSupport.java 0644 costin staff 6011 21749 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/Tag.java 0644 costin staff 6719 13064 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagAttributeInfo.java 0644 costin staff 5074 7798 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagData.java 0644 costin staff 5912 17950 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagExtraInfo.java 0644 costin staff 3927 52408 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagInfo.java 0644 costin staff 7158 39238 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagLibraryInfo.java 0644 costin staff 5220 13540 945061155
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/TagSupport.java 0644 costin staff 6956 19390 945061156
+1 f none /opt/tomcat/src/javax/servlet/jsp/tagext/VariableInfo.java 0644 costin staff 4299 18069 945061156
+1 f none /opt/tomcat/startup.bat 0644 costin staff 243 20951 945061157
+1 f none /opt/tomcat/startup.sh 0644 costin staff 544 46756 945061157
+1 f none /opt/tomcat/tomcat.bat 0644 costin staff 1299 44622 945061157
+1 f none /opt/tomcat/tomcat.sh 0644 costin staff 1988 36309 945061157
+1 f none /opt/tomcat/tomcatEnv.bat 0644 costin staff 635 49165 945061157
+1 d none /opt/tomcat/webpages 0755 costin staff
+1 d none /opt/tomcat/webpages/WEB-INF 0755 costin staff
+1 d none /opt/tomcat/webpages/WEB-INF/classes 0755 costin staff
+1 f none /opt/tomcat/webpages/WEB-INF/classes/SnoopServlet.class 0644 costin staff 5574 4665 945061161
+1 f none /opt/tomcat/webpages/WEB-INF/classes/SnoopServlet.java 0644 costin staff 5289 18669 945061159
+1 f none /opt/tomcat/webpages/WEB-INF/web.xml 0644 costin staff 206 15670 945061162
+1 d none /opt/tomcat/webpages/docs 0755 costin staff
+1 d none /opt/tomcat/webpages/docs/api 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/allclasses-frame.html 0644 costin staff 4276 31449 945061164
+1 f none /opt/tomcat/webpages/docs/api/deprecated-list.html 0644 costin staff 14353 60270 945061162
+1 f none /opt/tomcat/webpages/docs/api/help-doc.html 0644 costin staff 7943 43635 945061158
+1 f none /opt/tomcat/webpages/docs/api/index-all.html 0644 costin staff 150540 38491 945061159
+1 f none /opt/tomcat/webpages/docs/api/index.html 0644 costin staff 765 60458 945061164
+1 d none /opt/tomcat/webpages/docs/api/javax 0755 costin staff
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/GenericServlet.html 0644 costin staff 26066 51819 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/RequestDispatcher.html 0644 costin staff 12232 39635 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/Servlet.html 0644 costin staff 15819 11940 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletConfig.html 0644 costin staff 11214 4960 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletContext.html 0644 costin staff 39053 1875 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletException.html 0644 costin staff 12999 18285 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletInputStream.html 0644 costin staff 10834 24094 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletOutputStream.html 0644 costin staff 22184 11965 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletRequest.html 0644 costin staff 34805 63979 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/ServletResponse.html 0644 costin staff 23630 44675 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/SingleThreadModel.html 0644 costin staff 6367 7164 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/UnavailableException.html 0644 costin staff 18458 11180 945061164
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/class-use 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/GenericServlet.html 0644 costin staff 5935 35740 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/RequestDispatcher.html 0644 costin staff 7462 33870 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/Servlet.html 0644 costin staff 14867 32788 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletConfig.html 0644 costin staff 11277 62858 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletContext.html 0644 costin staff 8483 43130 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletException.html 0644 costin staff 21311 706 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletInputStream.html 0644 costin staff 7690 46319 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletOutputStream.html 0644 costin staff 6142 55390 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletRequest.html 0644 costin staff 14376 21 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletResponse.html 0644 costin staff 14420 4378 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/SingleThreadModel.html 0644 costin staff 4460 55240 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/class-use/UnavailableException.html 0644 costin staff 4473 56930 945061160
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/http 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/Cookie.html 0644 costin staff 27810 32389 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServlet.html 0644 costin staff 36630 53864 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServletRequest.html 0644 costin staff 38138 58916 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServletResponse.html 0644 costin staff 59783 52416 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSession.html 0644 costin staff 26180 61253 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionBindingEvent.html 0644 costin staff 12382 20093 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionBindingListener.html 0644 costin staff 9511 62796 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionContext.html 0644 costin staff 8696 49863 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/HttpUtils.html 0644 costin staff 13515 62113 945061161
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/Cookie.html 0644 costin staff 6893 43178 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServlet.html 0644 costin staff 4474 54839 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServletRequest.html 0644 costin staff 13710 28360 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServletResponse.html 0644 costin staff 12479 56239 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSession.html 0644 costin staff 10141 45476 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionBindingEvent.html 0644 costin staff 6959 59371 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionBindingListener.html 0644 costin staff 4587 878 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionContext.html 0644 costin staff 6288 65202 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpUtils.html 0644 costin staff 4460 53355 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/package-frame.html 0644 costin staff 1635 62836 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/package-summary.html 0644 costin staff 7354 24177 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/package-tree.html 0644 costin staff 6640 43530 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/http/package-use.html 0644 costin staff 9285 60808 945061159
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/jsp 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/HttpJspPage.html 0644 costin staff 9127 19992 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspEngineInfo.html 0644 costin staff 8911 61536 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspError.html 0644 costin staff 8638 40300 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspException.html 0644 costin staff 8558 36450 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspFactory.html 0644 costin staff 15635 24145 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspPage.html 0644 costin staff 9081 17234 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspWriter.html 0644 costin staff 38123 27595 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/PageContext.html 0644 costin staff 45171 1596 945061162
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/HttpJspPage.html 0644 costin staff 4477 54673 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspEngineInfo.html 0644 costin staff 6100 46849 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspError.html 0644 costin staff 6736 30513 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspException.html 0644 costin staff 8707 51341 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspFactory.html 0644 costin staff 6864 41107 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspPage.html 0644 costin staff 5943 32526 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspWriter.html 0644 costin staff 9868 15761 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/PageContext.html 0644 costin staff 10317 54513 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-frame.html 0644 costin staff 1617 57172 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-summary.html 0644 costin staff 7196 9186 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-tree.html 0644 costin staff 5941 45287 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-use.html 0644 costin staff 9403 6897 945061162
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyContent.html 0644 costin staff 17063 50323 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyJspWriter.html 0644 costin staff 15453 56281 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyTag.html 0644 costin staff 13350 25069 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyTagSupport.html 0644 costin staff 20196 47062 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/Tag.html 0644 costin staff 15373 46432 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagAttributeInfo.html 0644 costin staff 14068 4333 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagData.html 0644 costin staff 14152 23444 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagExtraInfo.html 0644 costin staff 12822 36711 945061162
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagInfo.html 0644 costin staff 19678 62715 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagLibraryInfo.html 0644 costin staff 18052 41008 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagSupport.html 0644 costin staff 22137 46472 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/VariableInfo.html 0644 costin staff 12968 37643 945061160
+1 d none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use 0755 costin staff
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyContent.html 0644 costin staff 9979 25409 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyJspWriter.html 0644 costin staff 9357 38566 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyTag.html 0644 costin staff 6081 43558 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyTagSupport.html 0644 costin staff 4564 61598 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/Tag.html 0644 costin staff 11100 42518 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagAttributeInfo.html 0644 costin staff 9429 59436 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagData.html 0644 costin staff 7918 61315 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagExtraInfo.html 0644 costin staff 7571 35907 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagInfo.html 0644 costin staff 9154 20414 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagLibraryInfo.html 0644 costin staff 7558 35046 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagSupport.html 0644 costin staff 6100 46247 945061158
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/VariableInfo.html 0644 costin staff 6956 50913 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-frame.html 0644 costin staff 1674 63412 945061161
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-summary.html 0644 costin staff 7452 29391 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-tree.html 0644 costin staff 6526 29498 945061159
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-use.html 0644 costin staff 9734 30896 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/package-frame.html 0644 costin staff 2024 27538 945061163
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/package-summary.html 0644 costin staff 7801 60588 945061160
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/package-tree.html 0644 costin staff 6342 20783 945061164
+1 f none /opt/tomcat/webpages/docs/api/javax/servlet/package-use.html 0644 costin staff 13299 9513 945061158
+1 f none /opt/tomcat/webpages/docs/api/overview-frame.html 0644 costin staff 1297 34711 945061159
+1 f none /opt/tomcat/webpages/docs/api/overview-summary.html 0644 costin staff 4817 17427 945061163
+1 f none /opt/tomcat/webpages/docs/api/overview-tree.html 0644 costin staff 10125 34197 945061161
+1 f none /opt/tomcat/webpages/docs/api/package-list 0644 costin staff 76 7419 945061164
+1 f none /opt/tomcat/webpages/docs/api/packages.html 0644 costin staff 684 53041 945061163
+1 f none /opt/tomcat/webpages/docs/api/serialized-form.html 0644 costin staff 10295 24340 945061160
+1 f none /opt/tomcat/webpages/docs/api/stylesheet.css 0644 costin staff 1240 38688 945061164
+1 f none /opt/tomcat/webpages/index.html 0644 costin staff 2452 16912 945061162
+1 f none /opt/tomcat/webpages/tomcat.gif 0644 costin staff 1934 30520 945061162
+1 f none /opt/tomcat/webserver.jar 0644 costin staff 357451 19763 945061181
+1 i pkginfo 197 15727 945061461
