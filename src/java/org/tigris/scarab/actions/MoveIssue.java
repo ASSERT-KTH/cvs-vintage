@@ -83,7 +83,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.55 2003/04/17 22:35:32 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.56 2003/04/17 22:49:06 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -108,7 +108,7 @@ public class MoveIssue extends RequireLoginFirstAction
         Issue issue = null;
         if (issueIds == null || issueIds.length == 0)
         {
-            scarabR.setAlertMessage("Please select an issue to move");
+            scarabR.setAlertMessage(l10n.get("SelectIssueToMove"));
             return;
         }
         else
@@ -234,7 +234,7 @@ public class MoveIssue extends RequireLoginFirstAction
         Issue issue = null;
         if (issueIds == null || issueIds.length == 0)
         {
-            scarabR.setAlertMessage("Please select an issue to move");
+            scarabR.setAlertMessage(l10n.get("SelectIssueToMove"));
             return;
         }
         else
