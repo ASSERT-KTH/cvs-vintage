@@ -54,6 +54,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.mail.SendFailedException;
+import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -81,7 +82,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.36 2003/06/08 18:24:52 dlr Exp $
+ * @version $Id: Email.java,v 1.37 2004/01/25 22:42:59 pledbrook Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -89,7 +90,8 @@ public class Email extends TemplateEmail
     private static final int CC = 1;
 
     /**
-     * Single user recipient.
+     * Sends email to a single recipient. Returns false if it fails
+     * to send the email for any reason.
      */ 
     public static boolean sendEmail(EmailContext context, Module module,
                                      Object fromUser, Object replyToUser, 
@@ -102,6 +104,10 @@ public class Email extends TemplateEmail
                           null, template);
     }
 
+    /** 
+     * Sends email to multiple recipients. Returns false if it fails
+     * to send the email for any reason.
+     */
     public static boolean sendEmail(EmailContext context, Module module, 
                                     Object fromUser, Object replyToUser,
                                     Collection toUsers, Collection ccUsers,
@@ -116,120 +122,139 @@ public class Email extends TemplateEmail
 
         boolean success = true;
 
-        // get reference to l10n tool, so we can alter the locale per email
-        ScarabLocalizationTool l10n = new ScarabLocalizationTool();
-        context.setLocalizationTool(l10n);
-
-        Map userLocaleMap = new HashMap();
-        for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
+        //
+        // To avoid any NullPointerExceptions, create
+        // empty lists of to: and cc: users if the
+        // collections are null.
+        //
+        if (toUsers == null)
         {
-            ScarabUser toUser = (ScarabUser)iter.next();
-            // remove any CC users that are also in the To
-            if (ccUsers != null)
-            {
-                ccUsers.remove(toUser);
-            }
-            fileUser(userLocaleMap, toUser, module, TO);
+            toUsers = new ArrayList();
         }
-
-        if (ccUsers != null)
+        
+        if (ccUsers == null)
         {
-            for (Iterator iter = ccUsers.iterator(); iter.hasNext();) 
-            {
-                ScarabUser ccUser = (ScarabUser)iter.next();
-                fileUser(userLocaleMap, ccUser, module, CC);
-            }
+            ccUsers = new ArrayList();
         }
+        
+        //
+        // Remove duplicate addresses from the cc: list
+        //
+        ccUsers.removeAll(toUsers);
 
-        Locale moduleLocale = null;
         String archiveEmail = module.getArchiveEmail();
-        boolean sendArchiveEmail = false;
-        if (archiveEmail != null && archiveEmail.trim().length() > 0)
+        if (archiveEmail != null && archiveEmail.trim().length() == 0)
         {
-            moduleLocale = chooseLocale(null, module);
-            Log.get().debug("archive email locale=" + moduleLocale);
-            sendArchiveEmail = true;
+            archiveEmail = null;
         }
-
+        
+        Map userLocaleMap = groupAddressesByLocale(module, toUsers, 
+                                                   ccUsers, archiveEmail);
+        
         for (Iterator i = userLocaleMap.keySet().iterator(); i.hasNext();) 
         {
             Locale locale = (Locale)i.next();
-            Log.get().debug("Sending email for locale=" + locale);
-            l10n.init(locale);
-            Email te = getEmail(context, module, fromUser, 
-                                replyToUser, template);
-            te.setCharset(getCharset(locale));
-       
             List[] toAndCC = (List[])userLocaleMap.get(locale);
-            boolean atLeastOneTo = false;
-            for (Iterator iTo = toAndCC[TO].iterator(); iTo.hasNext();) 
-            {
-                ScarabUser user = (ScarabUser)iTo.next();
-                te.addTo(user.getEmail(), user.getName());
-                atLeastOneTo = true;
-                Log.get().debug("Added To: " + user.getEmail());
-            }
-            for (Iterator iCC = toAndCC[CC].iterator(); iCC.hasNext();) 
-            {
-                ScarabUser user = (ScarabUser)iCC.next();
-                // template email requires a To: user, it does seem possible
-                // to send emails with only a CC: user, so not sure if this
-                // is a bug to be fixed in TemplateEmail.  Might not be good
-                // form anyway.  So if there are no To: users, upgrade CC's.
-                if (atLeastOneTo) 
-                {
-                    te.addCc(user.getEmail(), user.getName());
-                }
-                else 
-                {
-                    te.addTo(user.getEmail(), user.getName());
-                }
-                Log.get().debug("Added CC: " + user.getEmail());
-            }
-
-            if (sendArchiveEmail && locale.equals(moduleLocale)) 
-            {
-                te.addCc(archiveEmail, null);
-                sendArchiveEmail = false;
-                Log.get().debug("Archive was sent with other users.");
-            }
-
-            try
-            {
-                te.sendMultiple();
-            }
-            catch (SendFailedException e)
-            {
-                success = false;
-            }
+            List to = toAndCC[TO];
+            List cc = toAndCC[CC];
+            
+            sendEmailInLocale(context, module, fromUser, replyToUser,
+                              to, cc, template, locale);            
         }
-        
-        // make sure the archive email is sent
-        if (sendArchiveEmail) 
-        {
-            Log.get().debug("Archive was sent separately.");
-            l10n.init(moduleLocale);
-            Email te = getEmail(context, module, fromUser,
-                                replyToUser, template);
-            te.setCharset(getCharset(moduleLocale));
-            te.addTo(archiveEmail, null);
-            try
-            {
-                te.sendMultiple();
-            }
-            catch (SendFailedException e)
-            {
-                success = false;
-            }            
-        }
-        
+                
         return success;
     }
 
-    private static void fileUser(Map userLocaleMap, ScarabUser user, 
-                                 Module module, int toOrCC)
+    /** Sends email in a specific locale. */
+    private static void sendEmailInLocale(EmailContext context, Module module, 
+                                          Object fromUser, Object replyToUser,
+                                          List toAddresses, List ccAddresses,
+                                          String template,
+                                          Locale locale)
+        throws Exception
     {
-        Locale locale = chooseLocale(user, module);
+        Log.get().debug("Sending email for locale=" + locale);
+
+        // get reference to l10n tool, so we can alter the locale per email
+        ScarabLocalizationTool l10n = new ScarabLocalizationTool();
+        context.setLocalizationTool(l10n);
+        l10n.init(locale);
+
+        Email te = getEmail(context, module, fromUser, 
+                            replyToUser, template);
+        te.setCharset(getCharset(locale));
+       
+        boolean atLeastOneTo = false;
+        for (Iterator iTo = toAddresses.iterator(); iTo.hasNext();) 
+        {
+            InternetAddress a = (InternetAddress)iTo.next();
+            te.addTo(a.getAddress(), a.getPersonal());
+            atLeastOneTo = true;
+            Log.get().debug("Added To: " + a.getAddress());
+        }
+        for (Iterator iCC = ccAddresses.iterator(); iCC.hasNext();) 
+        {
+            InternetAddress a = (InternetAddress)iCC.next();
+            String email = a.getAddress();
+            String name = a.getPersonal();
+
+            // template email requires a To: user, it does seem possible
+            // to send emails with only a CC: user, so not sure if this
+            // is a bug to be fixed in TemplateEmail.  Might not be good
+            // form anyway.  So if there are no To: users, upgrade CC's.
+            if (atLeastOneTo) 
+            {
+                te.addCc(email, name);
+            }
+            else 
+            {                
+                te.addTo(email, name);
+                // We've added one To: user and TemplateEmail should be
+                // happy. No need to move all CC: into TO:
+                atLeastOneTo = true;
+            }
+            Log.get().debug("Added CC: " + email);
+        }                
+        te.sendMultiple();
+    }
+
+    /**
+     * Creates a map of Locale objects -> List[2], where the first
+     * element of the list array is a list of "To:" addresses, and
+     * the second is a list of "Cc:" addresses. For example, if
+     * user "Pierre" is in <code>toUsers</code> and requires emails
+     * in french, his email address will be in
+     * <code>userLocaleMap[Locale.FRANCE][TO]</code>. The same applies
+     * to "Cc:" addresses, while the archive email address is associated
+     * with the default module locale.
+     */ 
+    private static Map groupAddressesByLocale(Module module,
+                                              Collection toUsers,
+                                              Collection ccUsers,
+                                              String archiveEmail)
+        throws Exception
+    {
+        Map result = new HashMap();
+        for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
+        {
+            fileUser(result, (ScarabUser)iter.next(), module, TO);
+        }
+
+        for (Iterator iter = ccUsers.iterator(); iter.hasNext();) 
+        {
+            fileUser(result, (ScarabUser)iter.next(), module, CC);
+        }
+        if (archiveEmail != null)
+        {
+            fileAddress(result, new InternetAddress(archiveEmail), 
+                        chooseLocale(null, module), CC);
+        }
+        return result;
+    }
+
+    private static void fileAddress(Map userLocaleMap, InternetAddress address,
+                                    Locale locale, int toOrCC)
+    {
         List[] toAndCC = (List[])userLocaleMap.get(locale);
         if (toAndCC == null) 
         {
@@ -238,7 +263,16 @@ public class Email extends TemplateEmail
             toAndCC[1] = new ArrayList();
             userLocaleMap.put(locale, toAndCC);
         }
-        toAndCC[toOrCC].add(user);
+        toAndCC[toOrCC].add(address);
+    }
+
+    private static void fileUser(Map userLocaleMap, ScarabUser user,
+                                 Module module, int toOrCC)
+        throws Exception
+    {
+        fileAddress(userLocaleMap,
+                    new InternetAddress(user.getEmail(), user.getName()),
+                    chooseLocale(user, module), toOrCC);
     }
 
     /**
