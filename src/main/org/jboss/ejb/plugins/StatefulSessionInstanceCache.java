@@ -9,11 +9,8 @@ package org.jboss.ejb.plugins;
 
 import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Iterator;
-
 import java.rmi.RemoteException;
-
 import javax.transaction.Status;
 import javax.transaction.SystemException;
 
@@ -22,13 +19,14 @@ import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
 
 /**
  * Cache for stateful session beans.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class StatefulSessionInstanceCache extends AbstractInstanceCache
 {
@@ -39,14 +37,16 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
    /* The container */
    private StatefulSessionContainer m_container;
 
-   /* The map that holds passivated beans that will be removed */
-   private HashMap m_passivated = new HashMap();
-   
+   /** The map<id, Long> that holds passivated bean ids that have been removed
+    * from the cache and passivated to the pm along with the time of passivation
+    */
+   private ConcurrentReaderHashMap passivatedIDs = new ConcurrentReaderHashMap();
+
    /* Ids that are currently being activated */
    private HashSet activating = new HashSet();
 
    /* Used for logging */
-   private StringBuffer m_buffer = new StringBuffer();
+   private StringBuffer buffer = new StringBuffer();
 
    // Static --------------------------------------------------------
 
@@ -60,7 +60,7 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
     */
    public long getPassivatedCount()
    {
-      return m_passivated.size();
+      return passivatedIDs.size();
    }
 
    /* From ContainerPlugin interface */
@@ -75,7 +75,7 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
       {
          this.m_container = null;
       }
-      m_passivated.clear();
+      passivatedIDs.clear();
       super.destroy();
    }
 
@@ -91,13 +91,13 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
    protected void passivate(EnterpriseContext ctx) throws RemoteException
    {
       m_container.getPersistenceManager().passivateSession((StatefulSessionEnterpriseContext) ctx);
-      m_passivated.put(ctx.getId(), new Long(System.currentTimeMillis()));
+      passivatedIDs.put(ctx.getId(), new Long(System.currentTimeMillis()));
    }
 
    protected void activate(EnterpriseContext ctx) throws RemoteException
    {
       m_container.getPersistenceManager().activateSession((StatefulSessionEnterpriseContext) ctx);
-      m_passivated.remove(ctx.getId());
+      passivatedIDs.remove(ctx.getId());
    }
    
    protected boolean doActivate(EnterpriseContext ctx) throws RemoteException
@@ -180,7 +180,8 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
    {
       StatefulSessionPersistenceManager store = m_container.getPersistenceManager();
       long now = System.currentTimeMillis();
-      Iterator entries = m_passivated.entrySet().iterator();
+      log.debug("removePassivated, now="+now+", maxLifeAfterPassivation="+maxLifeAfterPassivation);
+      Iterator entries = passivatedIDs.entrySet().iterator();
       while (entries.hasNext())
       {
          Map.Entry entry = (Map.Entry) entries.next();
@@ -191,7 +192,7 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
             preRemovalPreparation(key);
             store.removePassivated(key);
             if (log.isTraceEnabled())
-               log(key);
+               log(key, passivationTime);
             // Must use iterator to avoid ConcurrentModificationException
             entries.remove();
             postRemovalCleanup(key);
@@ -213,16 +214,18 @@ public class StatefulSessionInstanceCache extends AbstractInstanceCache
 
    // Private -------------------------------------------------------
 
-   private void log(Object key)
+   private void log(Object key, long passivationTime)
    {
       if (log.isTraceEnabled())
       {
-         m_buffer.setLength(0);
-         m_buffer.append("Removing from storage bean '");
-         m_buffer.append(m_container.getBeanMetaData().getEjbName());
-         m_buffer.append("' with id = ");
-         m_buffer.append(key);
-         log.trace(m_buffer.toString());
+         buffer.setLength(0);
+         buffer.append("Removing from storage bean '");
+         buffer.append(m_container.getBeanMetaData().getEjbName());
+         buffer.append("' with id = ");
+         buffer.append(key);
+         buffer.append(", passivationTime=");
+         buffer.append(passivationTime);
+         log.trace(buffer.toString());
       }
    }
 
