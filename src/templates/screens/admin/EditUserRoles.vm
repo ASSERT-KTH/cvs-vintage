@@ -25,7 +25,7 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
 <table cellspacing="1" cellpadding="2">
   <tr>
     <td bgcolor="#ffffff">
-        &nbsp;
+        &#160;
     </td>
       
     #foreach ($role in $securityAdmin.Roles)

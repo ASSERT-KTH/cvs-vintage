@@ -69,16 +69,16 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap">&nbsp;</th>
+  <th nowrap="nowrap">&#160;</th>
 
   <th>
      #if (!$sortAttrId || $sortAttrId.length() == 0)
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").addPathInfo("sortAttrId", ""))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&nbsp;
+           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").addPathInfo("sortAttrId", ""))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&nbsp;
+           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
         #end
      Issue ID
      #else
@@ -97,10 +97,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
      #if ($sortAttrId.equals($userAttribute.AttributeId.toString()))
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&nbsp;
+           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&nbsp;
+           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #end
         $userAttribute.Name
      #else
