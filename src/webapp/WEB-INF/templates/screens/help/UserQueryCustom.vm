@@ -1,33 +1,33 @@
-<div class="docs" id="userquerycustom"> 
-  <div id="toc"> 
- <ul> 
-<li>$l10n.ScarabHelp 
-  <ul>
-    <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
-    <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
-    <li>$l10n.SearchingDatabase  
-            <ul>
-              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
-              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
-              <li><strong>$l10n.CustomQueries</strong></li>
-              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
-              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
-            </ul>
-    </li>
-    <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
-   
-      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
-      <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
-      <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
-    </ul></li>
-  </ul>
-  </div>
-
-  <h3><a name="top" id="top">$l10n.CustomQueries</a></h3>
-  <p>$l10n.UQCP1</p>
-  <p>$l10n.UQCP2S1
-    <strong>$l10n.SummaryDescr</strong> $l10n.and <strong>$l10n.ErrorMessage</strong> $l10n.UQCP3</p>
-  <p>$l10n.UQCP4</p>
-<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
-
-</div>
+<div class="docs" id="userquerycustom"> 
+  <div id="toc"> 
+ <ul> 
+<li>$l10n.ScarabHelp 
+  <ul>
+    <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+    <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+    <li>$l10n.SearchingDatabase  
+            <ul>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+              <li><strong>$l10n.CustomQueries</strong></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+            </ul>
+    </li>
+    <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+   
+      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+      <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+      <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+    </ul></li>
+  </ul>
+  </div>
+
+  <h3><a name="top" id="top">$l10n.CustomQueries</a></h3>
+  <p>$l10n.UQCP1</p>
+  <p>$l10n.UQCP2S1
+    <strong>$l10n.SummaryDescr</strong> $l10n.and <strong>$l10n.ErrorMessage</strong> $l10n.UQCP3</p>
+  <p>$l10n.UQCP4</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
+
+</div>

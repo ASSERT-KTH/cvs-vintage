@@ -1,53 +1,53 @@
-<div class="docs" id="userqueryadvanced"> 
-  <div id="toc"> 
-    <ul>
-      <li>$l10n.ScarabHelp 
-        <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
-          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
-          <li>$l10n.SearchingDatabase 
-            <ul>
-              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
-              <li><strong>$l10n.AdvancedQueries</strong> 
-                <ul>
-                  <li><a href="#knowledge">$l10n.SearchingKnowledge</a></li>
-                  <li><a href="#personnel">$l10n.SearchingPerson</a></li>
-                  <li><a href="#state">$l10n.SearchingChange</a></li>
-                </ul>
-              </li>
-              <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
-              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
-              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
-            </ul>
-          </li>
-          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-  <p> 
-  <h3><a name="top" id="top"></a>$l10n.AdvancedQueries</h3>
-  <p>$l10n.UQAP1 $l10n.UQAP1S2 <strong>$l10n.NewQuery</strong> $l10n.UQAP1S3 <strong>$l10n.Submit</strong> $l10n.UQAP1S4</p>
-  <p>$l10n.UQAP2</p>
-  <ul>
-    <li>$l10n.SearchKnowledgeBase</li>
-    <li> $l10n.Personnel</li>
-    <li>$l10n.StateChange</li>
-  </ul>
-
-  <p>$l10n.UQAP3</p>
-
-  <h3><a name="knowledge" id="knowledge"></a>$l10n.SearchingKnowledge</h3>
-  <p>$l10n.The <strong>$l10n.SearchKnowledgeBase</strong> $l10n.UQAP4</p>
-  <p>$l10n.UQAP5</p>
-  <h3><a name="personnel" id="personnel">$l10n.SearchingPerson</a></h3>
-  <p>$l10n.The <strong>$l10n.PersonnelSearch</strong> $l10n.UQAP6</p>
-  <h3><a name="state" id="state">$l10n.SearchingChange</a> </h3>
-  $l10n.UQAP7
-  
-<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
- 
-</div>
+<div class="docs" id="userqueryadvanced"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+          <li>$l10n.SearchingDatabase 
+            <ul>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><strong>$l10n.AdvancedQueries</strong> 
+                <ul>
+                  <li><a href="#knowledge">$l10n.SearchingKnowledge</a></li>
+                  <li><a href="#personnel">$l10n.SearchingPerson</a></li>
+                  <li><a href="#state">$l10n.SearchingChange</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
+              <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+            </ul>
+          </li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p> 
+  <h3><a name="top" id="top"></a>$l10n.AdvancedQueries</h3>
+  <p>$l10n.UQAP1 $l10n.UQAP1S2 <strong>$l10n.NewQuery</strong> $l10n.UQAP1S3 <strong>$l10n.Submit</strong> $l10n.UQAP1S4</p>
+  <p>$l10n.UQAP2</p>
+  <ul>
+    <li>$l10n.SearchKnowledgeBase</li>
+    <li> $l10n.Personnel</li>
+    <li>$l10n.StateChange</li>
+  </ul>
+
+  <p>$l10n.UQAP3</p>
+
+  <h3><a name="knowledge" id="knowledge"></a>$l10n.SearchingKnowledge</h3>
+  <p>$l10n.The <strong>$l10n.SearchKnowledgeBase</strong> $l10n.UQAP4</p>
+  <p>$l10n.UQAP5</p>
+  <h3><a name="personnel" id="personnel">$l10n.SearchingPerson</a></h3>
+  <p>$l10n.The <strong>$l10n.PersonnelSearch</strong> $l10n.UQAP6</p>
+  <h3><a name="state" id="state">$l10n.SearchingChange</a> </h3>
+  $l10n.UQAP7
+  
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+ 
+</div>

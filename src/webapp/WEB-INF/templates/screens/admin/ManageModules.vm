@@ -1,43 +1,43 @@
-#set ($userModules = $data.User.EditableModules)
-<div id="managemodule" class="app">
-
-<h3>$l10n.Modules</h3>
-#if ($userModules.size() > 0)
-<table border="1" cellspacing="2" cellpadding="3" width="100%">
-<tr>
-    <th>$l10n.Name</th>
-    <th>$l10n.Description</th>
-</tr>
-
-#foreach ($module in $userModules)
-#indexedRows($velocityCount)
-#set ($modDel = $module.Deleted)
-<td>
-#if ($modDel)<del>#end
-$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId).setLabel("$module.Name")
-#if ($modDel)</del>#end
-</td>
-<td>
-#if ($modDel)<del>#end
-$module.Description
-#if ($modDel)</del>#end
-</td>
-</tr>
-#end
-
-</table>
-#else
-<p><em>$l10n.NoModulesToEdit</em></p>
-#end
-
-#if ($data.User.getEditableModules().size() > 0)
-<form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("new", "true")" method="post">
-<div class="functnbar2">
-<input type="submit" name="maxumusDorkus" value="$l10n.CreateNew" />
-</div>
-</form>
-#else
-<p><em>$l10n.NoModuleEditPermission</em></p>
-#end
-
-</div>
+#set ($userModules = $data.User.EditableModules)
+<div id="managemodule" class="app">
+
+<h3>$l10n.Modules</h3>
+#if ($userModules.size() > 0)
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
+</tr>
+
+#foreach ($module in $userModules)
+#indexedRows($velocityCount)
+#set ($modDel = $module.Deleted)
+<td>
+#if ($modDel)<del>#end
+$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId).setLabel("$module.Name")
+#if ($modDel)</del>#end
+</td>
+<td>
+#if ($modDel)<del>#end
+$module.Description
+#if ($modDel)</del>#end
+</td>
+</tr>
+#end
+
+</table>
+#else
+<p><em>$l10n.NoModulesToEdit</em></p>
+#end
+
+#if ($data.User.getEditableModules().size() > 0)
+<form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("new", "true")" method="post">
+<div class="functnbar2">
+<input type="submit" name="maxumusDorkus" value="$l10n.CreateNew" />
+</div>
+</form>
+#else
+<p><em>$l10n.NoModuleEditPermission</em></p>
+#end
+
+</div>

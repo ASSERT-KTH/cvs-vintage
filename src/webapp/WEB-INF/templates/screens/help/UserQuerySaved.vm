@@ -1,56 +1,56 @@
-<div class="docs" id="userquerysaved"> 
-  <div id="toc"> 
-     
-    <ul>
-      <li>$l10n.ScarabHelp 
-       <ul> 
-         <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
-         <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
-         <li>$l10n.SearchingDatabase 
-          <ul>
-            <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
-            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
-            <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
-            <li><strong>$l10n.SavedQueries</strong> 
-              <ul>
-                <li><a href="#saving">$l10n.SavingQueries</a></li>
-                <li><a href="#managing">$l10n.ManagingQueries</a></li>
-                <!--<li><a href="#subscribing">$l10n.SubscribingQueries</a></li>-->
-              </ul>
-            </li>
-            <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
-          </ul>
-        </li>
-      <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
-      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
-      <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
-      <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
-     </ul>
-    </li>
-    </ul>
-  </div>
-  <h3><a name="top" id="top">$l10n.SavedQueries</a></h3>
-  <p>$l10n.UQSP1</p>
-  <p><strong><a name="saving">$l10n.SavingQueries</a></strong></p>
-  <p>$l10n.UQSP2S1<strong>$l10n.AdvancedQueries</strong> $l10n.UQSP2S2
-    <strong>$l10n.SaveThisQuery</strong> $l10n.UQSP2S3<strong>$l10n.SavedQueries</strong> $l10n.UQSP2S4</p>
-  <p>$l10n.The <strong>$l10n.SaveQuery</strong> $l10n.UQSP3</p>
-  <p>$l10n.UQSP4</p>
-  <p>$l10n.UQSP5</p>
-  <p>$l10n.ClickThe <strong>$l10n.Save</strong> $l10n.UQSP6</p>
-  <p><strong><a name="managing" id="managing">$l10n.ManagingQueries</a></strong></p>
-  <p>$l10n.The <strong>$l10n.StoredQuery</strong> $l10n.UQSP6S1<strong>$l10n.Initiatedby</strong> 
-    $l10n.UQSP6S2</p>
-  <p>$l10n.UQSP7</p>
-  <ul>
-    <li>$l10n.The <strong>$l10n.CopySelected</strong> $l10n.UQSP8</li>
-    <li>$l10n.The <strong>$l10n.DeleteSelected</strong> $l10n.UQSP9</li>
-  </ul>
-  <!--<p><strong><a name="subscribing" id="subscribing"> $l10n.SubscribingQueries</a></strong></p>
-  <p>$l10n.UQSP10S1 <strong>$l10n.SavedQueries</strong> $l10n.UQSP10S2 <strong>$l10n.Subscr</strong> $l10n.UQSP10S3 <strong>$l10n.SubscrFreq</strong> $l10n.UQSP10S4</p>
-  <p>$l10n.UQSP11</p>
-  <p>$l10n.UQSP12</a></strong></p>-->
-  
-<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
- 
-</div>
+<div class="docs" id="userquerysaved"> 
+  <div id="toc"> 
+     
+    <ul>
+      <li>$l10n.ScarabHelp 
+       <ul> 
+         <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+         <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+         <li>$l10n.SearchingDatabase 
+          <ul>
+            <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+            <li><strong>$l10n.SavedQueries</strong> 
+              <ul>
+                <li><a href="#saving">$l10n.SavingQueries</a></li>
+                <li><a href="#managing">$l10n.ManagingQueries</a></li>
+                <!--<li><a href="#subscribing">$l10n.SubscribingQueries</a></li>-->
+              </ul>
+            </li>
+            <li><a href="$link.setPage("help,UserQueryCrossProject.vm")">$l10n.CrossProjectQueries</a></li>
+          </ul>
+        </li>
+      <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+      <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+      <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+     </ul>
+    </li>
+    </ul>
+  </div>
+  <h3><a name="top" id="top">$l10n.SavedQueries</a></h3>
+  <p>$l10n.UQSP1</p>
+  <p><strong><a name="saving">$l10n.SavingQueries</a></strong></p>
+  <p>$l10n.UQSP2S1<strong>$l10n.AdvancedQueries</strong> $l10n.UQSP2S2
+    <strong>$l10n.SaveThisQuery</strong> $l10n.UQSP2S3<strong>$l10n.SavedQueries</strong> $l10n.UQSP2S4</p>
+  <p>$l10n.The <strong>$l10n.SaveQuery</strong> $l10n.UQSP3</p>
+  <p>$l10n.UQSP4</p>
+  <p>$l10n.UQSP5</p>
+  <p>$l10n.ClickThe <strong>$l10n.Save</strong> $l10n.UQSP6</p>
+  <p><strong><a name="managing" id="managing">$l10n.ManagingQueries</a></strong></p>
+  <p>$l10n.The <strong>$l10n.StoredQuery</strong> $l10n.UQSP6S1<strong>$l10n.Initiatedby</strong> 
+    $l10n.UQSP6S2</p>
+  <p>$l10n.UQSP7</p>
+  <ul>
+    <li>$l10n.The <strong>$l10n.CopySelected</strong> $l10n.UQSP8</li>
+    <li>$l10n.The <strong>$l10n.DeleteSelected</strong> $l10n.UQSP9</li>
+  </ul>
+  <!--<p><strong><a name="subscribing" id="subscribing"> $l10n.SubscribingQueries</a></strong></p>
+  <p>$l10n.UQSP10S1 <strong>$l10n.SavedQueries</strong> $l10n.UQSP10S2 <strong>$l10n.Subscr</strong> $l10n.UQSP10S3 <strong>$l10n.SubscrFreq</strong> $l10n.UQSP10S4</p>
+  <p>$l10n.UQSP11</p>
+  <p>$l10n.UQSP12</a></strong></p>-->
+  
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+ 
+</div>

@@ -1,50 +1,50 @@
-<div class="docs" id="userissuetemplates"> 
-  <div id="toc"> 
-    <ul>
-      <li>$l10n.ScarabHelp 
-        <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
-          <li>$l10n.ManagingIssues
-            <ul>
-              <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
- #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
-               <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
- #end
-              <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues</a> </li>
-              <li><strong>$l10n.UsingTemplates</strong> 
-                <ul>
-                  <li><a href="#creating">$l10n.CreatingTemplates</a></li>
-                  <li><a href="#using">$l10n.UsingTemplates</a></li>
-                </ul>
-              </li>
-              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
-            </ul>
-          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
-          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-  <h3><a name="top" id="top">$l10n.IssueEntryTemplate</a></h3>
-  <p>$l10n.UITP1 </p>
-  <p>$l10n.UITP2</p>
-  <p>$l10n.UITP3</p>
-  <p>$l10n.UITP4S1 <em>$l10n.TemplateList</em> $l10n.UITP4S2 <strong> $l10n.TemplateList</strong> $l10n.UITP4S3</p>
-  <h3><strong><a name="creating" id="creating">$l10n.CreatingTemplates</a></strong></h3>
-  <ol>
-    <li>$l10n.FromThe <em>$l10n.TemplateList</em> $l10n.ScreenClickThe <strong>$l10n.CreateNew</strong> $l10n.Button.</li>
-    <li>$l10n.UITP6 </li>
-    <li>$l10n.UITP7</li>
-    <li>$l10n.UITP8<strong> $l10n.EnterNewIssue</strong> 
-      $l10n.screen. </li>
-    <li>$l10n.ClickThe <strong>$l10n.Done</strong> $l10n.UITP9</li>
-  </ol>
-  <h3><strong><a name="using" id="using">$l10n.UsingTemplates</a></strong></h3>
-  <p>$l10n.UITP10S1<strong>$l10n.EnterNewIssue</strong> $l10n.UITP10S2<strong>$l10n.Select</strong> $l10n.UITP10S3<em>$l10n.ViewAllTemplates</em> $l10n.UITP10S4<strong>$l10n.Done</strong> $l10n.UITP10S5</p>
- 
-<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
-  
-</div>
+<div class="docs" id="userissuetemplates"> 
+  <div id="toc"> 
+    <ul>
+      <li>$l10n.ScarabHelp 
+        <ul>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
+          <li>$l10n.ManagingIssues
+            <ul>
+              <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
+ #if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
+               <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+ #end
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues</a> </li>
+              <li><strong>$l10n.UsingTemplates</strong> 
+                <ul>
+                  <li><a href="#creating">$l10n.CreatingTemplates</a></li>
+                  <li><a href="#using">$l10n.UsingTemplates</a></li>
+                </ul>
+              </li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
+            </ul>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3><a name="top" id="top">$l10n.IssueEntryTemplate</a></h3>
+  <p>$l10n.UITP1 </p>
+  <p>$l10n.UITP2</p>
+  <p>$l10n.UITP3</p>
+  <p>$l10n.UITP4S1 <em>$l10n.TemplateList</em> $l10n.UITP4S2 <strong> $l10n.TemplateList</strong> $l10n.UITP4S3</p>
+  <h3><strong><a name="creating" id="creating">$l10n.CreatingTemplates</a></strong></h3>
+  <ol>
+    <li>$l10n.FromThe <em>$l10n.TemplateList</em> $l10n.ScreenClickThe <strong>$l10n.CreateNew</strong> $l10n.Button.</li>
+    <li>$l10n.UITP6 </li>
+    <li>$l10n.UITP7</li>
+    <li>$l10n.UITP8<strong> $l10n.EnterNewIssue</strong> 
+      $l10n.screen. </li>
+    <li>$l10n.ClickThe <strong>$l10n.Done</strong> $l10n.UITP9</li>
+  </ol>
+  <h3><strong><a name="using" id="using">$l10n.UsingTemplates</a></strong></h3>
+  <p>$l10n.UITP10S1<strong>$l10n.EnterNewIssue</strong> $l10n.UITP10S2<strong>$l10n.Select</strong> $l10n.UITP10S3<em>$l10n.ViewAllTemplates</em> $l10n.UITP10S4<strong>$l10n.Done</strong> $l10n.UITP10S5</p>
+ 
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
+  
+</div>
