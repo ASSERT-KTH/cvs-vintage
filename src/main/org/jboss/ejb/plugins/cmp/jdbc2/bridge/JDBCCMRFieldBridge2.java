@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -548,14 +548,16 @@ public class JDBCCMRFieldBridge2
          invocation.setType(InvocationType.LOCAL);
          */
 
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
+
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.REMOVE_RELATION);
          invocation.setEntrancy(Entrancy.NON_ENTRANT);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
 
          manager.getContainer().invoke(invocation);
@@ -586,14 +588,16 @@ public class JDBCCMRFieldBridge2
          invocation.setCredential(SecurityAssociation.getCredential());
          invocation.setType(InvocationType.LOCAL);
          */
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
+
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.ADD_RELATION);
          invocation.setEntrancy(Entrancy.NON_ENTRANT);
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
 
          manager.getContainer().invoke(invocation);
@@ -1631,38 +1635,60 @@ public class JDBCCMRFieldBridge2
       }
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
 
-      static Principal getPrincipal()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
+      {
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
-
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-
-      public Object run()
-      {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-
-      static Object getCredential()
-      {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
-   }
-
 }

@@ -11,87 +11,168 @@ import org.jboss.security.RunAsIdentity;
 
 /** A collection of privileged actions for this package
  * @author Scott.Stark@jboss.org
- * @version $Revison:$
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revison: $
  */
 public class SecurityActions
 {
-   private static class GetSubjectAction implements PrivilegedAction
+   interface SubjectActions
    {
-      static PrivilegedAction ACTION = new GetSubjectAction();
-      public Object run()
+      SubjectActions PRIVILEGED = new SubjectActions()
       {
-         Subject subject = SecurityAssociation.getSubject();
-         return subject;
-      }
-   }
-   private static class SetSubjectAction implements PrivilegedAction
-   {
-      Subject subject;
-      SetSubjectAction(Subject subject)
+         private final PrivilegedAction getSubjectAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getSubject();
+            }
+         };
+
+         public Subject get()
+         {
+            return (Subject)AccessController.doPrivileged(getSubjectAction);
+         }
+
+         public void set(final Subject subject)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     SecurityAssociation.setSubject(subject);
+                     return null;
+                  }
+               }
+            );
+         }
+      };
+
+      SubjectActions NON_PRIVILEGED = new SubjectActions()
       {
-         this.subject = subject;
-      }
-      public Object run()
-      {
-         SecurityAssociation.setSubject(subject);
-         return null;
-      }
-   }
-   private static class SetPrincipalInfoAction implements PrivilegedAction
-   {
-      Principal principal;
-      Object credential;
-      SetPrincipalInfoAction(Principal principal, Object credential)
-      {
-         this.principal = principal;
-         this.credential = credential;
-      }
-      public Object run()
-      {
-         SecurityAssociation.setCredential(credential);
-         credential = null;
-         SecurityAssociation.setPrincipal(principal);
-         principal = null;
-         return null;
-      }
-   }
-   private static class PeekRunAsRoleAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new PeekRunAsRoleAction();
-      public Object run()
-      {
-         RunAsIdentity principal = SecurityAssociation.peekRunAsIdentity();
-         return principal;
-      }
-   }
-   private static class PushRunAsRoleAction implements PrivilegedAction
-   {
-      RunAsIdentity principal;
-      PushRunAsRoleAction(RunAsIdentity principal)
-      {
-         this.principal = principal;
-      }
-      public Object run()
-      {
-         SecurityAssociation.pushRunAsIdentity(principal);
-         return null;
-      }
+         public Subject get()
+         {
+            return SecurityAssociation.getSubject();
+         }
+
+         public void set(Subject subject)
+         {
+            SecurityAssociation.setSubject(subject);
+         }
+      };
+
+      Subject get();
+
+      void set(Subject subject);
    }
 
-   private static class PopRunAsRoleAction implements PrivilegedAction
+   interface PrincipalInfoAction
    {
-      static PrivilegedAction ACTION = new PopRunAsRoleAction();
-      public Object run()
+      PrincipalInfoAction PRIVILEGED = new PrincipalInfoAction()
       {
-         RunAsIdentity principal = SecurityAssociation.popRunAsIdentity();
-         return principal;
-      }
+         public void set(final Principal principal, Object credential)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     SecurityAssociation.setPrincipal(principal);
+                     SecurityAssociation.setCredential(principal);
+                     return null;
+                  }
+               }
+            );
+         }
+      };
+
+      PrincipalInfoAction NON_PRIVILEGED = new PrincipalInfoAction()
+      {
+         public void set(Principal principal, Object credential)
+         {
+            SecurityAssociation.setPrincipal(principal);
+            SecurityAssociation.setCredential(credential);
+         }
+      };
+
+      void set(Principal principal, Object credential);
+   }
+
+   interface RunAsIdentityActions
+   {
+      RunAsIdentityActions PRIVILEGED = new RunAsIdentityActions()
+      {
+         private final PrivilegedAction peekAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.peekRunAsIdentity();
+            }
+         };
+
+         private final PrivilegedAction popAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.popRunAsIdentity();
+            }
+         };
+
+         public RunAsIdentity peek()
+         {
+            return (RunAsIdentity)AccessController.doPrivileged(peekAction);
+         }
+
+         public void push(final RunAsIdentity id)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     SecurityAssociation.pushRunAsIdentity(id);
+                     return null;
+                  }
+               }
+            );
+         }
+
+         public RunAsIdentity pop()
+         {
+            return (RunAsIdentity)AccessController.doPrivileged(popAction);
+         }
+      };
+
+      RunAsIdentityActions NON_PRIVILEGED = new RunAsIdentityActions()
+      {
+         public RunAsIdentity peek()
+         {
+            return SecurityAssociation.peekRunAsIdentity();
+         }
+
+         public void push(RunAsIdentity id)
+         {
+            SecurityAssociation.pushRunAsIdentity(id);
+         }
+
+         public RunAsIdentity pop()
+         {
+            return SecurityAssociation.popRunAsIdentity();
+         }
+      };
+
+      RunAsIdentity peek();
+
+      void push(RunAsIdentity id);
+
+      RunAsIdentity pop();
    }
 
    static ClassLoader getContextClassLoader()
    {
       return TCLAction.UTIL.getContextClassLoader();
    }
+
    static void setContextClassLoader(ClassLoader loader)
    {
       TCLAction.UTIL.setContextClassLoader(loader);
@@ -99,35 +180,68 @@ public class SecurityActions
 
    static Subject getSubject()
    {
-      Subject subject = (Subject) AccessController.doPrivileged(GetSubjectAction.ACTION);
-      return subject;
+      return System.getSecurityManager() == null ? SubjectActions.NON_PRIVILEGED.get() : SubjectActions.PRIVILEGED.get();
    }
+
    static void setSubject(Subject subject)
    {
-      SetSubjectAction action = new SetSubjectAction(subject);
-      AccessController.doPrivileged(action);
+      if(System.getSecurityManager() == null)
+      {
+         SubjectActions.NON_PRIVILEGED.set(subject);
+      }
+      else
+      {
+         SubjectActions.PRIVILEGED.set(subject);
+      }
    }
+
    static void setPrincipalInfo(Principal principal, Object credential)
    {
-      SetPrincipalInfoAction action = new SetPrincipalInfoAction(principal, credential);
-      AccessController.doPrivileged(action);
+      if(System.getSecurityManager() == null)
+      {
+         PrincipalInfoAction.NON_PRIVILEGED.set(principal, credential);
+      }
+      else
+      {
+         PrincipalInfoAction.PRIVILEGED.set(principal, credential);
+      }
    }
 
    
    static RunAsIdentity peekRunAsIdentity()
    {
-      RunAsIdentity principal = (RunAsIdentity) AccessController.doPrivileged(PeekRunAsRoleAction.ACTION);
-      return principal;
+      if(System.getSecurityManager() == null)
+      {
+         return RunAsIdentityActions.NON_PRIVILEGED.peek();
+      }
+      else
+      {
+         return RunAsIdentityActions.PRIVILEGED.peek();
+      }
    }
+
    static void pushRunAsIdentity(RunAsIdentity principal)
    {
-      PushRunAsRoleAction action = new PushRunAsRoleAction(principal);
-      AccessController.doPrivileged(action);
+      if(System.getSecurityManager() == null)
+      {
+         RunAsIdentityActions.NON_PRIVILEGED.push(principal);
+      }
+      else
+      {
+         RunAsIdentityActions.PRIVILEGED.push(principal);
+      }
    }
+
    static RunAsIdentity popRunAsIdentity()
    {
-      RunAsIdentity principal = (RunAsIdentity) AccessController.doPrivileged(PopRunAsRoleAction.ACTION);
-      return principal;
+      if(System.getSecurityManager() == null)
+      {
+         return RunAsIdentityActions.NON_PRIVILEGED.pop();
+      }
+      else
+      {
+         return RunAsIdentityActions.PRIVILEGED.pop();
+      }
    }
 
    interface TCLAction

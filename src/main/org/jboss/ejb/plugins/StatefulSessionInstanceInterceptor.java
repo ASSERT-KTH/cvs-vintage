@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  */
 public class StatefulSessionInstanceInterceptor
@@ -148,7 +148,7 @@ public class StatefulSessionInstanceInterceptor
    protected void register(EnterpriseContext ctx, Transaction tx, BeanLock lock)
    {
       // Create a new synchronization
-      InstanceSynchronization synch = new InstanceSynchronization(tx, ctx, lock);
+      InstanceSynchronization synch = new InstanceSynchronization(ctx, lock);
       
       try
       {
@@ -376,11 +376,6 @@ public class StatefulSessionInstanceInterceptor
    implements Synchronization
    {
       /**
-       *  The transaction we follow.
-       */
-      private Transaction tx;
-
-      /**
        *  The context we manage.
        */
       private EnterpriseContext ctx;
@@ -398,9 +393,8 @@ public class StatefulSessionInstanceInterceptor
       /**
        *  Create a new instance synchronization instance.
        */
-      InstanceSynchronization(Transaction tx, EnterpriseContext ctx, BeanLock lock)
+      InstanceSynchronization(EnterpriseContext ctx, BeanLock lock)
       {
-         this.tx = tx;
          this.ctx = ctx;
          this.lock = lock;
          this.lock.addRef();

@@ -55,7 +55,8 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * $Revision: 1.21 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * $Revision: 1.22 $
  */
 public class BaseLocalProxyFactory implements LocalProxyFactory
 {
@@ -135,7 +136,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
       // this is faster than newProxyInstance
       Class[] intfs = {localClass};
-      Class proxyClass = Proxy.getProxyClass(GetCLAction.getClassLoader(localClass), intfs);
+      Class proxyClass = Proxy.getProxyClass(ClassLoaderAction.UTIL.get(localClass), intfs);
       final Class[] constructorParams =
          {InvocationHandler.class};
 
@@ -213,13 +214,13 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    }
 
    // EJBProxyFactory implementation -------------------------------
-   public synchronized EJBLocalHome getEJBLocalHome()
+   public EJBLocalHome getEJBLocalHome()
    {
       if(home == null)
       {
          EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer) container;
          InvocationHandler handler = new LocalHomeProxy(localJndiName, this);
-         ClassLoader loader = GetCLAction.getClassLoader(cic.getLocalHomeClass());
+         ClassLoader loader = ClassLoaderAction.UTIL.get(cic.getLocalHomeClass());
          Class[] interfaces = {cic.getLocalHomeClass()};
 
          home = (EJBLocalHome) Proxy.newProxyInstance(loader,
@@ -236,7 +237,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
          EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer) container;
          InvocationHandler handler =
             new StatelessSessionProxy(localJndiName, this);
-         ClassLoader loader = GetCLAction.getClassLoader(cic.getLocalClass());
+         ClassLoader loader = ClassLoaderAction.UTIL.get(cic.getLocalClass());
          Class[] interfaces = {cic.getLocalClass()};
 
          statelessObject = (EJBLocalObject) Proxy.newProxyInstance(loader,
@@ -327,14 +328,15 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
          TCLAction.UTIL.setContextClassLoader(container.getClassLoader());
       }
 
+      SecurityActions sa = SecurityActions.UTIL.getSecurityActions();
       try
       {
          LocalEJBInvocation invocation = new LocalEJBInvocation(null,
             m,
             args,
             getTransaction(),
-            GetPrincipalAction.getPrincipal(),
-            GetCredentialAction.getCredential());
+            sa.getPrincipal(),
+            sa.getCredential());
          invocation.setType(InvocationType.LOCALHOME);
 
          return container.invoke(invocation);
@@ -397,14 +399,15 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
          TCLAction.UTIL.setContextClassLoader(container.getClassLoader());
       }
 
+      SecurityActions sa = SecurityActions.UTIL.getSecurityActions();
       try
       {
          LocalEJBInvocation invocation = new LocalEJBInvocation(id,
             m,
             args,
             getTransaction(),
-            GetPrincipalAction.getPrincipal(),
-            GetCredentialAction.getCredential());
+            sa.getPrincipal(),
+            sa.getCredential());
          invocation.setType(InvocationType.LOCAL);
 
          return container.invoke(invocation);
@@ -447,55 +450,103 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       }
    }
 
-   private static class GetCLAction implements PrivilegedAction
+   interface ClassLoaderAction
    {
-      Class c;
-      GetCLAction(Class c)
+      class UTIL
       {
-         this.c = c;
+         static ClassLoaderAction getClassLoaderAction()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
+
+         static ClassLoader get(Class clazz)
+         {
+            return getClassLoaderAction().get(clazz);
+         }
       }
-      public Object run()
+
+      ClassLoaderAction PRIVILEGED = new ClassLoaderAction()
       {
-         ClassLoader loader = c.getClassLoader();
-         c = null;
-         return loader;
-      }
-      static ClassLoader getClassLoader(Class c)
+         public ClassLoader get(final Class clazz)
+         {
+            return (ClassLoader)AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     return clazz.getClassLoader();
+                  }
+               }
+            );
+         }
+      };
+
+      ClassLoaderAction NON_PRIVILEGED = new ClassLoaderAction()
       {
-         GetCLAction action = new GetCLAction(c);
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(action);
-         return loader;
-      }
+         public ClassLoader get(Class clazz)
+         {
+            return clazz.getClassLoader();
+         }
+      };
+
+      ClassLoader get(Class clazz);
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
-      static Principal getPrincipal()
-      {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
-   }
 
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-      public Object run()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-      static Object getCredential()
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
       {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
 
    interface TCLAction

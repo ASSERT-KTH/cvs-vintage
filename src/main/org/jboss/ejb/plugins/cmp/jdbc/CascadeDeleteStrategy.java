@@ -26,14 +26,14 @@ import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Principal;
+import java.security.AccessController;
 
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -317,13 +317,14 @@ public abstract class CascadeDeleteStrategy
       try
       {
          EntityCache instanceCache = (EntityCache) container.getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          org.jboss.invocation.Invocation invocation = new org.jboss.invocation.Invocation();
          invocation.setId(instanceCache.createCacheKey(relatedId));
          invocation.setArguments(new Object[]{});
          invocation.setTransaction(container.getTransactionManager().getTransaction());
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(invocationType);
          invocation.setMethod(removeMethod);
 
@@ -339,33 +340,60 @@ public abstract class CascadeDeleteStrategy
       }
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
-      static Principal getPrincipal()
-      {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
-   }
 
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-      public Object run()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-      static Object getCredential()
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
       {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
 }

@@ -76,7 +76,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.88 $
+ * @version $Revision: 1.89 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -989,6 +989,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.SCHEDULE_FOR_CASCADE_DELETE);
@@ -996,8 +997,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
          return manager.getContainer().invoke(invocation);
       }
@@ -1019,6 +1020,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.SCHEDULE_FOR_BATCH_CASCADE_DELETE);
@@ -1026,8 +1028,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
          return manager.getContainer().invoke(invocation);
       }
@@ -1050,6 +1052,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.GET_RELATED_ID);
@@ -1057,8 +1060,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
          return manager.getContainer().invoke(invocation);
       }
@@ -1081,6 +1084,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.ADD_RELATION);
@@ -1088,8 +1092,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
          manager.getContainer().invoke(invocation);
       }
@@ -1112,6 +1116,7 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
+         SecurityActions actions = SecurityActions.UTIL.getSecurityActions();
 
          CMRInvocation invocation = new CMRInvocation();
          invocation.setCmrMessage(CMRMessage.REMOVE_RELATION);
@@ -1119,8 +1124,8 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
          invocation.setId(instanceCache.createCacheKey(myId));
          invocation.setArguments(new Object[]{this, relatedId});
          invocation.setTransaction(tx);
-         invocation.setPrincipal(GetPrincipalAction.getPrincipal());
-         invocation.setCredential(GetCredentialAction.getCredential());
+         invocation.setPrincipal(actions.getPrincipal());
+         invocation.setCredential(actions.getCredential());
          invocation.setType(InvocationType.LOCAL);
          manager.getContainer().invoke(invocation);
       }
@@ -2118,33 +2123,60 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       }
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
-      static Principal getPrincipal()
-      {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
-   }
 
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-      public Object run()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-      static Object getCredential()
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
       {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
 }

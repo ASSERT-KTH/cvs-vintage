@@ -30,7 +30,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -126,6 +126,7 @@ public class StatefulHandleImpl
     */
    public EJBObject getEJBObject() throws RemoteException
    {
+      SecurityActions sa = SecurityActions.UTIL.getSecurityActions();
       try
       {
          Invocation invocation = new Invocation(
@@ -135,8 +136,8 @@ public class StatefulHandleImpl
                //No transaction set up in here? it will get picked up in the proxy
                null,
                // fix for bug 474134 from Luke Taylor
-               GetPrincipalAction.getPrincipal(),
-               GetCredentialAction.getCredential());
+               sa.getPrincipal(),
+               sa.getCredential());
 
          invocation.setObjectName(new Integer(objectName));
          invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
@@ -167,39 +168,61 @@ public class StatefulHandleImpl
       return invokerID != null && invokerID.equals(Invoker.ID);
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
 
-      static Principal getPrincipal()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
+      {
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
-
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-
-      public Object run()
-      {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-
-      static Object getCredential()
-      {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
-   }
-
 }
 

@@ -17,7 +17,7 @@ import org.jboss.security.SecurityAssociation;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.9 $
+* @version $Revision: 1.10 $
 */
 public class SecurityInterceptor
    extends Interceptor
@@ -37,14 +37,16 @@ public class SecurityInterceptor
    public Object invoke(Invocation invocation)
       throws Throwable
    {
-      // Get Principal and credentials 
-      Principal principal = GetPrincipalAction.getPrincipal();
+      // Get Principal and credentials
+      SecurityActions sa = SecurityActions.UTIL.getSecurityActions();
+
+      Principal principal = sa.getPrincipal();
       if (principal != null)
       {
          invocation.setPrincipal(principal);
       }
 
-      Object credential = GetCredentialAction.getCredential();
+      Object credential = sa.getCredential();
       if (credential != null)
       {
          invocation.setCredential(credential);
@@ -53,33 +55,60 @@ public class SecurityInterceptor
       return getNext().invoke(invocation);
    }
 
-   private static class GetPrincipalAction implements PrivilegedAction
+   interface SecurityActions
    {
-      static PrivilegedAction ACTION = new GetPrincipalAction();
-      public Object run()
+      class UTIL
       {
-         Principal principal = SecurityAssociation.getPrincipal();
-         return principal;
+         static SecurityActions getSecurityActions()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
       }
-      static Principal getPrincipal()
-      {
-         Principal principal = (Principal) AccessController.doPrivileged(ACTION);
-         return principal;
-      }
-   }
 
-   private static class GetCredentialAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetCredentialAction();
-      public Object run()
+      SecurityActions NON_PRIVILEGED = new SecurityActions()
       {
-         Object credential = SecurityAssociation.getCredential();
-         return credential;
-      }
-      static Object getCredential()
+         public Principal getPrincipal()
+         {
+            return SecurityAssociation.getPrincipal();
+         }
+
+         public Object getCredential()
+         {
+            return SecurityAssociation.getCredential();
+         }
+      };
+
+      SecurityActions PRIVILEGED = new SecurityActions()
       {
-         Object credential = AccessController.doPrivileged(ACTION);
-         return credential;
-      }
+         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getPrincipal();
+            }
+         };
+
+         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getCredential();
+            }
+         };
+
+         public Principal getPrincipal()
+         {
+            return (Principal)AccessController.doPrivileged(getPrincipalAction);
+         }
+
+         public Object getCredential()
+         {
+            return AccessController.doPrivileged(getCredentialAction);
+         }
+      };
+
+      Principal getPrincipal();
+
+      Object getCredential();
    }
 }
