@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project>
+  <pomVersion>1</pomVersion>
+  <id>columba</id>
+  <name>columba</name>
+  <currentVersion>1.0M2-cvs</currentVersion>
+  <groupId>columba</groupId>
+  <url>http://columba.sf.net</url>
+  <siteAddress>www.ancoso-development.de</siteAddress>
+  <siteDirectory>/home/webmaster/webroot/ancoso-dev/opensource/columba</siteDirectory>
+  <logo>http://columba.sourceforge.net/img/logo3.gif</logo>
+  
+  <organisation>
+    <name>columba</name>
+    <url>http://columba.sf.net</url>
+    <logo>http://columba.sourceforge.net/img/logo3.gif</logo>
+  </organisation>
+  
+  <inceptionYear>2000</inceptionYear>
+  <package>org.columba</package>
+  
+  <gumpRepositoryId>columba</gumpRepositoryId>
+  <description> Columba is an Email Client written in Java, featuring a user-friendly graphical 
+                interface with wizards and internationalization support.
+                Its a powerful email management tool with features to enhance your productivity and 
+                communication. So, take control of your email before it takes control of you!
+  </description>
+  <shortDescription>Columba eMail for the 21st century</shortDescription>
+  
+  <repository>
+    <connection>scm:cvs:pserver:anonymous@cvs.columba.sourceforge.net:/cvsroot/columba:columba</connection>
+    <url>http://cvs.sourceforge.net/viewcvs.py/columba/</url>
+  </repository>
+  
+  <mailingLists>
+    <mailingList>
+      <name>columba developer mailinglist</name>
+      <archive>https://sourceforge.net/mailarchive/forum.php?forum_id=2388</archive>
+      <subscribe>https://lists.sourceforge.net/mailman/listinfo/columba-devel</subscribe>
+      <unsubscribe>https://lists.sourceforge.net/mailman/listinfo/columba-devel</unsubscribe>
+    </mailingList>
+  </mailingLists>
+  
+   <developers>
+    <developer>
+      <name>Frederik Dietz</name>
+      <id>fdietz</id>
+      <email>columba@frederikdietz.de</email>
+      <roles>
+        <role>Project Leader</role>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Timo Stich</name>
+      <id>tstich</id>
+      <email>tstisch@users.sourceforge.net</email>
+      <roles>
+        <role>Project Leader</role>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Eisvogel Flieg</name>
+      <id>eisvogel</id>
+      <email>eisvogel@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Jari Vuoksenranta</name>
+      <id>j4riv</id>
+      <email>j4riv@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Michael Rudolf</name>
+      <id>javaprog</id>
+      <email>javaprog@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Karl Peder Olesen</name>
+      <id>karlpeder</id>
+      <email>karlpeder@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Mark Livingstone</name>
+      <id>mlivingstone</id>
+      <email>mlivingstone@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>John Murga</name>
+      <id>murgaj</id>
+      <email>murgaj@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Paul E. Baclace</name>
+      <id>pbaclace</id>
+      <email>pbaclace@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Erik Mattsson</name>
+      <id>redsolo</id>
+      <email>redsolo@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Riyad Kalla</name>
+      <id>rsk</id>
+      <email>rsk@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Anthony Parent</name>
+      <id>tonyparent</id>
+      <email>tonyparent@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Nicolas B?theuil</name>
+      <id>wadouk</id>
+      <email>wadouk@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Thomas Wabner</name>
+      <id>waffel</id>
+      <email>waffel@users.sourceforge.net</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+   </developers>
+   
+   <dependencies>
+     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>3.8.1</version>
+        <url>http://sourceforge.net/projects/junit/</url>   
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>ristretto</artifactId>
+        <version>1.0pre1</version>
+      </dependency>
+      <dependency>
+        <groupId>jwizz</groupId>
+        <artifactId>jwizz</artifactId>
+        <version>0.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>clover</groupId>
+        <artifactId>clover</artifactId>
+        <version>0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jargs</groupId>
+        <artifactId>jargs</artifactId>
+        <version>0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>jhall</groupId>
+        <artifactId>jhall</artifactId>
+        <version>0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>plastic</groupId>
+        <artifactId>plastic</artifactId>
+        <version>1.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>usermanual</artifactId>
+        <version>0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>forms</groupId>
+        <artifactId>forms</artifactId>
+        <version>1.0.3</version>
+      </dependency>
+      <dependency>
+        <groupId>apache</groupId>
+        <artifactId>lucene</artifactId>
+        <version>1.3-final</version>
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>jscf</artifactId>
+        <version>0.1</version>
+        <url>http://sourceforge.net/projects/columba</url>
+      </dependency>
+      <dependency>
+        <groupId>columba</groupId>
+        <artifactId>macchiato</artifactId>
+        <version>1.0pre1</version>
+      </dependency>
+      <dependency>
+        <groupId>cloumba</groupId>
+        <artifactId>frappucino</artifactId>
+        <version>1.0pre1</version>
+      </dependency>
+    </dependencies>
+
+   <build>
+    <sourceDirectory>maven/java</sourceDirectory>
+    <unitTestSourceDirectory>maven/test</unitTestSourceDirectory>
+    <unitTest>
+      <includes>
+        <include>**/*Test.java</include>
+      </includes>
+      <excludes/>
+    </unitTest>
+    <integrationUnitTestSourceDirectory/>
+    <integrationUnitTest/>
+    <aspectSourceDirectory/>
+    <resources>
+      <resource>
+        <directory>res</directory>
+        <includes>**/*.xml</includes>
+        <includes>**/*.dtd</includes>
+				<includes>**/*.gif</includes>
+				<includes>**/*.jpeg</includes>
+				<includes>**/*.png</includes>
+				<includes>**/*.wav</includes>
+				<includes>**/*.properties</includes>
+				<includes>**/*.py</includes>
+        <includes>**/*.jar</includes>
+        <excludes>**/CVS</excludes>
+      </resource>
+    </resources>
+   </build>
+   
+   <reports>    
+    <report>maven-jdepend-plugin</report>    
+    <report>maven-checkstyle-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-developer-activity-plugin</report>
+    <report>maven-file-activity-plugin</report>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-jxr-plugin</report>
+    <report>maven-pmd-plugin</report>
+    <report>maven-jcoverage-plugin</report>
+    <report>maven-simian-plugin</report>
+    <report>maven-multiproject-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <report>maven-tasklist-plugin</report>
+   </reports>
+  
+</project>

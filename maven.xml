@@ -1,0 +1,86 @@
+<project
+  xmlns:j="jelly:core"
+  xmlns:m="maven"
+  xmlns:u="jelly:util"
+  xmlns:maven="jelly:maven"
+  xmlns:ant="jelly:ant"
+  xmlns:deploy="deploy"
+  default="columba">
+  
+  <goal name="init">
+   <mkdir dir="${basedir}/maven"/>
+   <mkdir dir="${basedir}/maven/java"/>
+   <mkdir dir="${basedir}/maven/test"/>
+   
+   <copy  todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/columba/core/">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+   <copy todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/addressbook/core">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+   <copy todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/addressbook/independent">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+  
+   <copy todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/mail/core">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+  
+   <copy todir="${basedir}/maven/java/">
+    <fileset dir="${basedir}/src/mail/independent">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+<!-- cop tests -->
+   <copy  todir="${basedir}/maven/test/">
+    <fileset dir="${basedir}/src/columba/test">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+   <copy todir="${basedir}/maven/test/">
+    <fileset dir="${basedir}/src/addressbook/test">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+   <copy todir="${basedir}/maven/test">
+    <fileset dir="${basedir}/src/mail/test">
+     <exclude name="**/*build.xml*"/>
+    </fileset>
+   </copy>
+   
+  </goal>
+  
+  <preGoal name="java:prepare-filesystem">
+    <attainGoal name="init"/>
+  </preGoal>
+  
+  <goal name="columba">
+    <!--attainGoal name="jar"/-->
+    <deploy:copy-deps todir="${basedir}/lib" excludes="junit"/>
+    <attainGoal name="site"/>
+  </goal>
+  
+  <postGoal name="jar:jar">
+    <copy 
+      file="${maven.build.dir}/${maven.final.name}.jar"
+      todir="${basedir}"/>
+  </postGoal>
+  
+  <preGoal name="clean:clean">
+    <delete dir="${basedir}/maven"/>
+  </preGoal>
+  
+</project>
