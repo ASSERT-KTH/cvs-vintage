@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.16 2003/06/30 18:00:23 linus Exp $
+// $Id: ArgoDiagram.java,v 1.17 2003/08/17 22:20:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,8 +138,8 @@ public class ArgoDiagram extends Diagram {
     }
     
     public void damage() {
-        if (_lay != null && _lay.getEditors() != null) {
-            Iterator it = _lay.getEditors().iterator();
+        if (getLayer() != null && getLayer().getEditors() != null) {
+            Iterator it = getLayer().getEditors().iterator();
             while (it.hasNext()) {
                 ((Editor) it.next()).damageAll();
             }
