@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.130 2003/05/01 21:48:44 dlr Exp $
+ * @version $Id: Search.java,v 1.131 2003/05/03 00:58:37 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -209,7 +209,10 @@ public class Search extends RequireLoginFirstAction
     public void doRedirecttosavequery(RunData data, TemplateContext context)
          throws Exception
     {
-        ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
+        if (data.getParameters().getString("refine") != null)
+        {
+            ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
+        }
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (scarabR.hasPermission(ScarabSecurity.USER__EDIT_PREFERENCES))
         {
@@ -398,6 +401,7 @@ public class Search extends RequireLoginFirstAction
     {
         String go = data.getParameters().getString("go");
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
 
         if (go != null && go.length() > 0)
         {
@@ -411,22 +415,32 @@ public class Search extends RequireLoginFirstAction
             else if (go.equals("AdvancedQuery.vm"))
             {
                 // reset current query
-                ((ScarabUser)data.getUser()).setMostRecentQuery(null);
+                user.setMostRecentQuery(null);
 
                 // reset selected users map
                 scarabR.resetSelectedUsers();
                 setTarget(data, go);
             }
+            else if (go.equals("mostRecent"))
+            {
+                setTarget(data, "IssueList.vm");
+            }
             else if (go.equals("IssueList.vm"))
             {
-                ScarabUser user = (ScarabUser)data.getUser();
                 String userId = user.getQueryKey();
                 StringBuffer sb = new StringBuffer(26 + 2*userId.length());
                 String query = sb.append("&user_list=").append(userId)
                     .append("&user_attr_").append(userId).append("=any")
                     .toString();
-                ((ScarabUser)data.getUser()).setMostRecentQuery(query);
-                data.getParameters().add("queryString", query);
+                user.setMostRecentQuery(query);
+                setTarget(data, go);
+            }
+            else
+            {
+                setTarget(data, go);
+            }
+            if (go.equals("IssueList.vm") || go.equals("mostRecent"))
+            {
                 List searchResults = null;
                 try
                 {
@@ -440,13 +454,7 @@ public class Search extends RequireLoginFirstAction
                 if (searchResults != null && searchResults.size() > 0)
                 {
                     context.put("issueList", searchResults);
-                    setTarget(data, go);
                 }
-
-            }
-            else
-            {
-                setTarget(data, go);
             }
         }
         else

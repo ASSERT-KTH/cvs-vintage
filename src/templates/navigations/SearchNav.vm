@@ -56,7 +56,7 @@
     <option value="Search.vm">&#160;$l10n.Custom</option>
     <option value="IssueList.vm">&#160;$l10n.MyIssues</option>
     #if ($currentIssueType && $user.hasMostRecentQuery())
-        <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
+        <option value="mostRecent">&#160;$l10n.MostRecent</option>
     #end
 
 #set ($privateQueries = $scarabR.PrivateQueries)

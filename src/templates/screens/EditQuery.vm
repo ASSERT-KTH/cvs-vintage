@@ -11,6 +11,7 @@
 <input type="hidden" name="$queryGroup.ModuleId.Key" value = "$queryGroup.ModuleId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="QueryList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
+<input type="hidden" name="searchType" value="advanced" />
 
 #if (!$currentQuery.canEdit($data.User))
 <p class="infomark"><em>$l10n.CannotEditQuery</em></p>
