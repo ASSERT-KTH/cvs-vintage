@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
 
 /** The meta data information for a resource-ref element.
- The resource-ref element contains a declaration of enterprise bean’s
+ The resource-ref element contains a declaration of enterprise beanï¿½s
  reference to an external resource. It consists of an optional description,
  the resource manager connection factory reference name, the
  indication of the resource manager connection factory type expected
@@ -22,7 +22,7 @@ import org.jboss.deployment.DeploymentException;
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class ResourceRefMetaData extends MetaData
 {
@@ -46,6 +46,7 @@ public class ResourceRefMetaData extends MetaData
     jboss/../resource-manager/res-url element value
     */
    private String jndiName;
+   private String resURL;
    /** The ejb-jar/../resource-ref/res-type element.
     The res-type element specifies the Java class or interface of the data source
     */
@@ -109,7 +110,10 @@ public class ResourceRefMetaData extends MetaData
    {
       return jndiName;
    }
-
+   public String getResURL()
+   {
+      return resURL;
+   }
    public String getType()
    {
       return type;
@@ -156,14 +160,19 @@ public class ResourceRefMetaData extends MetaData
       Element child = getOptionalChild(element, "resource-name");
       if (child == null)
       {
-         // There must be a resource-ref/res-url value if this is a URL resource
          if (type.equals("java.net.URL"))
          {
+            // First look for an explict res-url
             Element resUrl = getOptionalChild(element, "res-url");
-            if (resUrl == null) {
-                resUrl = getUniqueChild(element, "jndi-name");
+            if (resUrl != null)
+            {
+               resURL = getElementContent(resUrl);
             }
-            jndiName = getElementContent(resUrl);
+            else
+            {
+               Element name = getUniqueChild(element, "jndi-name");
+               jndiName = getElementContent(name);
+            }
          }
          // There must be a resource-ref/jndi-name value otherwise
          else
