@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.13 2002/12/29 19:01:24 spestov Exp $
+ * @version $Id: Java14.java,v 1.14 2003/01/11 03:56:48 spestov Exp $
  */
 public class Java14
 {
@@ -175,7 +175,10 @@ public class Java14
 
 		private void scrollPage(JEditTextArea textArea, int amt)
 		{
-			scrollLine(textArea,amt * textArea.getVisibleLines());
+			if(amt > 0)
+				textArea.scrollDownPage();
+			else
+				textArea.scrollUpPage();
 		}
 
 		private void moveCaret(JEditTextArea textArea, int amt, boolean select)
