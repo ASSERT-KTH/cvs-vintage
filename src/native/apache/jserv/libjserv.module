@@ -1,0 +1,5 @@
+Name: jserv_module
+ConfigStart
+	LIBS="-Lmodules/jserv -L../modules/jserv -L../../modules/jserv -ljserv $LIBS"
+	RULE_HIDE=yes
+ConfigEnd
