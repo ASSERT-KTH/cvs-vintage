@@ -18,7 +18,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -65,7 +65,7 @@ public abstract class EJB
          ).getObjectName();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+//         e.printStackTrace();
          return null;
       }
    }
@@ -76,7 +76,7 @@ public abstract class EJB
          pServer.unregisterMBean( new ObjectName( pEJBName ) );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+//         e.printStackTrace();
       }
    }
    

@@ -27,7 +27,7 @@ import java.security.InvalidParameterException;
  * {@link javax.management.j2ee.EjbModule EjbModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -75,6 +75,10 @@ public class EjbModule
       }
       try {
          // Now create the J2EEApplication
+         System.out.println( "Create EJB-Module, name: " + pName +
+            ", application: " + lApplication +
+            ", dd: " + lDD
+         );
          return pServer.createMBean(
             "org.jboss.management.j2ee.EjbModule",
             null,

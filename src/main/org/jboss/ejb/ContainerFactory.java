@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.100 $
+* @version $Revision: 1.101 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -391,13 +391,20 @@ public class ContainerFactory
       throws NamingException, Exception
    {
       // Create JSR-77 EJB-Module
-      String lModule = EjbModule.create(
+      int i = app.getName().lastIndexOf( "/" );
+      String lName = app.getName().substring(
+         i >= 0 ? i + 1 : 0
+      );
+      ObjectName lModule = EjbModule.create(
          getServer(),
          pParentId,
-         pAppId,
+         lName,
+//         pAppId,
          url
-      ).toString();
-      app.setModuleName( lModule );
+      );
+      if( lModule != null ) {
+         app.setModuleName( lModule.toString() );
+      }
 
       // Create a file loader with which to load the files
       XmlFileLoader efm = new XmlFileLoader(validateDTDs);
@@ -495,7 +502,9 @@ public class ContainerFactory
          // Remove deployment
          deployments.remove( url );
          // Remove JSR-77 Module
-         EjbModule.destroy( getServer(), app.getModuleName() );
+         if( app.getModuleName() != null ) {
+            EjbModule.destroy( getServer(), app.getModuleName() );
+         }
          // Done
          log.info( "Undeployed application: " + app.getName() );
       }
