@@ -1,4 +1,4 @@
-/* Script to fill the tables with default roles and permissions */
+-- Script to fill the tables with default roles and permissions
 
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (2, 'Partner');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (3, 'Observer');
@@ -7,7 +7,7 @@ INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (5, 'QA');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (6, 'Project Owner');
 INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (7, 'Root');
 
-/* Add some default permissions */
+-- Add some default permissions
 
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (1, 'Issue | Edit');
@@ -39,25 +39,23 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (14, 'Domain | Admin');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (17, 'Module | Configure');
-/*
- * User with this permission is allowed to approve roles requested by other
- * users.
- */
+-- User with this permission is allowed to approve roles requested by other
+-- users.
+
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (18, 'User | Approve Roles');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (19, 'Issue | Move');
 
-/*
- * Create an account for system administrator (also used for initial
- * data population, etc.).
- * Remember to set a good password for this user in a production system!
- */
+-- Create an account for system administrator (also used for initial
+-- data population, etc.).
+-- Remember to set a good password for this user in a production system!
+
 INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE) 
     VALUES (1, '@ADMIN_USERNAME@', '@ADMIN_PASSWORD@', '@ADMIN_FIRSTNAME@', '@ADMIN_LASTNAME@', '@ADMIN_EMAIL@', 'CONFIRMED');
 
 
-/* create a temporary table. */
+-- create a temporary table.
 create table xxxx_populate_RolePermission  (
     ROLE_ID		integer NOT NULL,
     PERMISSION_ID	        integer NOT NULL
@@ -65,9 +63,8 @@ create table xxxx_populate_RolePermission  (
 
 delete from xxxx_populate_RolePermission;
 
-/*
- *  PARTNER ROLE
- */
+--  PARTNER ROLE
+
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
@@ -79,10 +76,9 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
                   'Issue | View')
 ;
 
-/*
- *  OBSERVER ROLE
- *  Observer has all project permissions of partner.
- */
+--  OBSERVER ROLE
+--  Observer has all project permissions of partner.
+
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
          from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
@@ -103,10 +99,9 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
            and TURBINE_PERMISSION.PERMISSION_NAME = 'Issue | Enter'
 ;
 
-/*
- *  DEVELOPER ROLE
- *  Developer has all project permissions of observer.
- */
+--  DEVELOPER ROLE
+--  Developer has all project permissions of observer.
+
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
          from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
@@ -130,10 +125,9 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
                 'Issue | Assign')
 ;
 
-/*
- *  QA ROLE
- *  QA has all project permissions of developer.
- */
+--  QA ROLE
+--  QA has all project permissions of developer.
+
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
          from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
@@ -146,10 +140,9 @@ insert into TURBINE_ROLE_PERMISSION
 	select * from xxxx_populate_RolePermission;
 delete from xxxx_populate_RolePermission;
 
-/*
- *  PROJECT OWNER ROLE
- *  Project Owner has all project permissions of developer.
- */
+--  PROJECT OWNER ROLE
+--  Project Owner has all project permissions of developer.
+
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
          from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
@@ -175,10 +168,9 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
                 'Vote | Manage')
 ;
 
-/*
- *  ROOT ROLE
- *  Root has all project permissions of project owner.
- */
+--  ROOT ROLE
+--  Root has all project permissions of project owner.
+
 insert into xxxx_populate_RolePermission
 	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
          from  TURBINE_ROLE FromRole, TURBINE_ROLE ToRole,
@@ -204,7 +196,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
 drop table xxxx_populate_RolePermission;
 
 
-/* Assign the user 'turbine@tigris.org' a system-wide role 'Root' */
+-- Assign the user 'turbine@tigris.org' a system-wide role 'Root'
 
 INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID ) 
 SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from 

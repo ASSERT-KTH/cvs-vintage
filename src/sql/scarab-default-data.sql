@@ -1,139 +1,134 @@
-/*
- *  Attributes
- */
+-- Attributes
 
-/* Description */
+-- Description
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(1, 'Description', 12, 'Description', '2002-01-01 00:30:00');
-/* Assigned to */
+-- Assigned to
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION, CREATED_DATE)
        values(2, 'AssignedTo', 8, 'Issue | Edit', 'to', 'AssignedTo', '2002-01-01 00:30:00');
-/* Status */
+-- Status
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(3, 'Status', 5, 'Status', '2002-01-01 00:30:00');
-/* Resolution */
+-- Resolution
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(4, 'Resolution', 5, 'Resolution', '2002-01-01 00:30:00');
-/* Platform */
+-- Platform
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
        values(5, 'Platform', 5, 'Platform', '2002-01-01 00:30:00');
-/* Operating system */
+-- Operating system
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(6, 'OperatingSystem', 5, 'OperatingSystem', '2002-01-01 00:30:00');
-/* Priority select-one */
+-- Priority select-one
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(7, 'Priority', 5, 'Priority', '2002-01-01 00:30:00');
-/* Priority voted */
+-- Priority voted
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(8, 'Vote', 5, 'Vote', '2002-01-01 00:30:00');
-/* Severity */
+-- Severity
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(9, 'Severity', 5, 'Severity', '2002-01-01 00:30:00');
 
-/* cc attribute */
+-- cc attribute
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION, CREATED_DATE)
        values(13, 'AssignedCC', 8, 'Issue | View', 'cc', 'CcAttribute', '2002-01-01 00:30:00');
-/* Tracking */
-/* 
- * removing until further discussion
- * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
- *         values(10, 'Tracking', 10, 'Tracking', '2002-01-01 00:30:00')
- */
+-- Tracking 
+-- removing until further discussion
+-- insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+--         values(10, 'Tracking', 10, 'Tracking', '2002-01-01 00:30:00')
 
-/* Brief (one-line) Description */
+
+-- Brief (one-line) Description
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(11, 'Summary', 1, 'Summary', '2002-01-01 00:30:00');
-/* Functional area */
+-- Functional area
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
         values(12, 'FunctionalArea', 5, 'FunctionalArea', '2002-01-01 00:30:00');
 
 update SCARAB_ATTRIBUTE set CREATED_BY=null;
 
-/*
- * Attribute Options
- */
+-- Attribute Options
 
-/* Unconfirmed */
+
+-- Unconfirmed
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(1, 3, 'Unconfirmed');
-/* New */
+-- New
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(2, 3, 'New');
-/* Assigned */
+-- Assigned
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(3, 3, 'Assigned');
-/* Reopened */
+-- Reopened
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(4, 3, 'Reopened');
-/* Resolved */
+-- Resolved
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(5, 3, 'Resolved');
 
-/*
- * We need to do this mapping here because there is an integrity constraint
- * on having the Resolved ATTRIBUTE_OPTION exist before we can set it
- */
+-- We need to do this mapping here because there is an integrity constraint
+-- on having the Resolved ATTRIBUTE_OPTION exist before we can set it
+
 update SCARAB_ATTRIBUTE set REQUIRED_OPTION_ID=5 where ATTRIBUTE_ID=4;
         
-/* Verified */
+-- Verified
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(6, 3, 'Verified');
-/* Closed */
+-- Closed
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(7, 3, 'Closed');
-/* Fixed */
+-- Fixed
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(8, 4, 'Fixed');
-/* Invalid */
+-- Invalid
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(9, 4, 'Invalid');
-/* WONTFIX */
+-- WONTFIX
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(10, 4, 'Wontfix');
-/* LATER */
+-- LATER
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(11, 4, 'Later');
-/* REMIND */
+-- REMIND
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(12, 4, 'Remind');
-/* DUPLICATE */
+-- DUPLICATE
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(13, 4, 'Duplicate');
-/* WORKSFORME */
+-- WORKSFORME
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(14, 4, 'Worksforme');
-/* MOVED */
+-- MOVED
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(15, 4, 'Moved');
-/* All */
+-- All
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(16, 5, 'All');
-/* DEC */
+-- DEC
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(17, 5, 'DEC');
-/* HP */
+-- HP
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(18, 5, 'HP');
-/* Macintosh */
+-- Macintosh
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(19, 5, 'Macintosh');
-/* PC */
+-- PC
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(20, 5, 'PC');
-/* SGI */
+-- SGI
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(21, 5, 'SGI');
-/* Sun */
+-- Sun
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(22, 5, 'Sun');
-/* Other */
+-- Other
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(23, 5, 'Other');
-/* Operating systems */
+-- Operating systems
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(24, 6, 'All');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
@@ -221,7 +216,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(86, 6, 'PalmOS');
 
-/* Priorities select-one */
+-- Priorities select-one
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(54, 7, 'High');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
@@ -231,7 +226,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(57, 7, 'Undecided');
 
-/* Priorities voted */
+-- Priorities voted
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(58, 8, 'High');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
@@ -241,7 +236,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(61, 8, 'Undecided');
 
-/* Severities */
+-- Severities
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
         values(62, 9, 'Blocker');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
@@ -263,36 +258,31 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(71, 9, 'Undecided');
 
-/* Tracking options DISABLED */
+-- Tracking options DISABLED
 
-/* 
- * never send notification
- */
+-- 
+-- never send notification
 
-/*
- * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(72, 10, 'Never')
- */
 
-/*
- * send notification on major change
- */
+-- insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+--       values(72, 10, 'Never')
 
-/*
- * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(73, 10, 'Major')
- */
 
-/*
- * send notification on any change
- */
+-- send notification on major change
 
-/*
- * insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
- *       values(74, 10, 'Any')
- */
+
+-- insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+--       values(73, 10, 'Major')
+
+
+-- send notification on any change
+
+
+-- insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
+--       values(74, 10, 'Any')
+
  
-/* Functional area */
+-- Functional area
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(88, 12, 'UserInterface');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
@@ -300,10 +290,9 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(90, 12, 'Help');
 
-/*
- * Option_Option relationships
- * option1_id, option2_id, relationship_id, preferred_order, weight
- */
+-- Option_Option relationships
+-- option1_id, option2_id, relationship_id, preferred_order, weight
+
 insert into SCARAB_R_OPTION_OPTION values (0,1,1,1,1);
 insert into SCARAB_R_OPTION_OPTION values (0,2,1,2,2);
 insert into SCARAB_R_OPTION_OPTION values (0,3,1,3,3);
@@ -345,11 +334,11 @@ insert into SCARAB_R_OPTION_OPTION values (0,68,1,7,7);
 insert into SCARAB_R_OPTION_OPTION values (0,69,1,8,8);
 insert into SCARAB_R_OPTION_OPTION values (0,70,1,9,9);
 insert into SCARAB_R_OPTION_OPTION values (0,71,1,10,10);
-/* TRACKING disabled 
- * insert into SCARAB_R_OPTION_OPTION values (0,72,1,1,1)
- * insert into SCARAB_R_OPTION_OPTION values (0,73,1,2,2)
- * insert into SCARAB_R_OPTION_OPTION values (0,74,1,3,3)
- */
+-- TRACKING disabled 
+-- insert into SCARAB_R_OPTION_OPTION values (0,72,1,1,1)
+-- insert into SCARAB_R_OPTION_OPTION values (0,73,1,2,2)
+-- insert into SCARAB_R_OPTION_OPTION values (0,74,1,3,3)
+
 insert into SCARAB_R_OPTION_OPTION values (0,88,1,1,1);
 insert into SCARAB_R_OPTION_OPTION values (0,89,1,2,2);
 insert into SCARAB_R_OPTION_OPTION values (0,90,1,3,3);
@@ -400,9 +389,8 @@ insert into SCARAB_R_OPTION_OPTION values (87,82,1,19,19);
 insert into SCARAB_R_OPTION_OPTION values (87,83,1,29,29);
 
 
-/*
- * Types of issues (artifact/issue types).
- */
+-- Types of issues (artifact/issue types).
+
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID, ISDEFAULT)
         values(1, 'Defect', 'DefectDescription', 0, 1);
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID, ISDEFAULT)
@@ -424,10 +412,9 @@ insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID, ISDEF
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID, ISDEFAULT)
         values(10, 'EnhancementTemplate', '', 9, 0);
 
-/*
- * Insert attribute groups for project 0
- * group_id, name, description, module_id, issue_type_id, active, dedupe, preferred order
- */
+-- Insert attribute groups for project 0
+-- group_id, name, description, module_id, issue_type_id, active, dedupe, preferred order
+
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (1, 'AttributeGroupOne', 'dedupeAttributes', 0, 1, 1, 1, 1);
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (2, 'AttributeGroupTwo', 'nonDedupeAttributes', 0, 1, 1, 0, 3);
 
@@ -442,11 +429,10 @@ INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (8, 'AttributeGroupTwo', 'nonDedupeAtt
 
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (9, 'AttributeGroupOne', 'dedupeAttributes', 0, 9, 1, 1, 1);
 INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (10, 'AttributeGroupTwo', 'nonDedupeAttributes', 0, 9, 1, 0, 3);
+ 
+-- Insert mapping between attributes and groups 
+-- group_id, attribute_id, preferred order
 
-/* 
- * Insert mapping between attributes and groups 
- * group_id, attribute_id, preferred order
- */
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (1, 5, 1);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (1, 6, 2);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (1, 11, 3);
@@ -456,9 +442,9 @@ INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 4, 3);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 7, 4);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 8, 5);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 9, 6);
-/* Tracking DISABLED
- * INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 10, 8)
- */
+-- Tracking DISABLED
+-- INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 10, 8)
+
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (2, 12, 7);
 
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (3, 5, 1);
@@ -496,20 +482,18 @@ INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (10, 7, 4);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (10, 8, 5);
 INSERT INTO SCARAB_R_ATTRIBUTE_ATTRGROUP VALUES (10, 12, 6);
 
-/*
- * populate the root module with all issue types.
- * module_id, issue_type_id, active, show in nav, preferred order
- */
+-- populate the root module with all issue types.
+-- module_id, issue_type_id, active, show in nav, preferred order
+
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY, PREFERRED_ORDER) VALUES (0,1,1,1,1);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY, PREFERRED_ORDER) VALUES (0,3,1,1,2);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY, PREFERRED_ORDER) VALUES (0,5,1,1,3);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY, PREFERRED_ORDER) VALUES (0,7,1,1,4);
 INSERT INTO SCARAB_R_MODULE_ISSUE_TYPE (MODULE_ID, ISSUE_TYPE_ID, ACTIVE, DISPLAY, PREFERRED_ORDER) VALUES (0,9,1,1,5);
 
-/*
- * populate the root module with all attributes.
- * module_id, attr_id, issue_type_id, display_value, active, required, preferred order, quick search,default_text_flag
- */
+-- populate the root module with all attributes.
+-- module_id, attr_id, issue_type_id, display_value, active, required, preferred order, quick search,default_text_flag
+
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,1,1,'Description',1,1,100,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,2,1,'AssignedTo',1,0,200,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,3,1,'Status',1,0,300,0,0);
@@ -601,10 +585,9 @@ INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,8,10,'Vote',1,0,600,0,0);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,11,10,'Summary',1,1,1,1,1);
 INSERT INTO SCARAB_R_MODULE_ATTRIBUTE VALUES (0,12,10,'FunctionalArea',1,0,1000,0,0);
 
-/*
- * populate the root module with all options.
- * module_id, issue_type_id, option_id, display_value, active, preferred order
- */
+-- populate the root module with all options.
+-- module_id, issue_type_id, option_id, display_value, active, preferred order
+
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,1,16,NULL,1,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,2,16,NULL,1,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,1,17,NULL,1,2,2);
