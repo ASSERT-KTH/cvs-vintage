@@ -25,7 +25,7 @@
    <exclude name="build.xml"/>   
    <exclude name="plugin.xml"/>
    <manifest>
-     <attribute name="Class-Path" value="lib/hippolf.jar"/>
+     <attribute name="Class-Path" value="lib/winlaf-0.4.1.jar"/>
      <attribute name="Sealed" value="true"/>
    </manifest>
   </jar>
