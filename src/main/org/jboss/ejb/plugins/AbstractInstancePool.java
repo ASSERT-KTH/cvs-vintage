@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.security.Principal;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010704 marcf:</b>
@@ -62,7 +63,7 @@ import org.w3c.dom.Element;
  *  </ul>
  */
 public abstract class AbstractInstancePool
-implements InstancePool, XmlLoadable
+   implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
 
@@ -154,10 +155,10 @@ implements InstancePool, XmlLoadable
    /**
     * Add a instance in the pool
     */
-   public void add()
-   throws Exception
+   public void add(Principal callerPrincipal)
+      throws Exception
    {
-      EnterpriseContext ctx = create(container.createBeanClassInstance());
+      EnterpriseContext ctx = create(container.createBeanClassInstance(), callerPrincipal);
       if( log.isTraceEnabled() )
          log.trace("Add instance "+this+"#"+ctx);
       synchronized (pool)
@@ -173,8 +174,8 @@ implements InstancePool, XmlLoadable
     * @return     Context /w instance
     * @exception   RemoteException
     */
-   public EnterpriseContext get()
-   throws Exception
+   public EnterpriseContext get(Principal callerPrincipal)
+      throws Exception
    {
       if( log.isTraceEnabled() )
          log.trace("Get instance "+this+"#"+pool.isEmpty()+"#"+getContainer().getBeanClass());
@@ -206,7 +207,7 @@ implements InstancePool, XmlLoadable
                   poolFeeder.start();
                }
             }
-            return create(container.createBeanClassInstance());
+            return create(container.createBeanClassInstance(), callerPrincipal);
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -239,7 +240,8 @@ implements InstancePool, XmlLoadable
       ctx.clear();
 
       // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
-      try {
+      try
+      {
          mReadyBean.add();
          if (this.reclaim)
          {
@@ -345,8 +347,8 @@ implements InstancePool, XmlLoadable
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------
-   protected abstract EnterpriseContext create(Object instance)
-   throws Exception;
+   protected abstract EnterpriseContext create(Object instance, Principal callerPrincipal)
+      throws Exception;
 
    // Private -------------------------------------------------------
 
@@ -368,4 +370,3 @@ implements InstancePool, XmlLoadable
    // Inner classes -------------------------------------------------
 
 }
-

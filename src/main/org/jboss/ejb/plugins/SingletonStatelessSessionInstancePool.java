@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -102,7 +103,7 @@ public class SingletonStatelessSessionInstancePool
     * @return     Context /w instance
     * @exception   RemoteException
     */
-   public synchronized EnterpriseContext get()
+   public synchronized EnterpriseContext get(Principal caller)
       throws Exception
    {
       // Wait while someone else is using it
@@ -117,7 +118,7 @@ public class SingletonStatelessSessionInstancePool
          try
          {
             mInstantiate.add();
-            ctx = create(con.createBeanClassInstance(), con);
+            ctx = create(con.createBeanClassInstance(), con, caller);
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -174,7 +175,7 @@ public class SingletonStatelessSessionInstancePool
    /**
     * Add a instance in the pool
     */
-   public void add()
+   public void add(Principal caller)
       throws Exception
    {
       // Empty
@@ -217,10 +218,10 @@ public class SingletonStatelessSessionInstancePool
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance, Container con)
+   protected EnterpriseContext create(Object instance, Container con, Principal caller)
       throws Exception
    {
-      return new StatelessSessionEnterpriseContext(instance, con);
+      return new StatelessSessionEnterpriseContext(instance, con, caller);
    }
 
    // Private -------------------------------------------------------
@@ -228,4 +229,3 @@ public class SingletonStatelessSessionInstancePool
    // Inner classes -------------------------------------------------
 
 }
-

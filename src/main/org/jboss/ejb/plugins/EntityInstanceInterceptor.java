@@ -42,7 +42,7 @@ import org.jboss.security.SecurityAssociation;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.48 $
+* @version $Revision: 1.49 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -121,7 +121,8 @@ public class EntityInstanceInterceptor
       throws Exception
    {
       // Get context
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext)((EntityContainer)getContainer()).getInstancePool().get();
+      InstancePool pool = container.getInstancePool();
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext) pool.get(mi.getPrincipal());
 
 		// Pass it to the method invocation
       mi.setEnterpriseContext(ctx);
@@ -130,7 +131,7 @@ public class EntityInstanceInterceptor
       ctx.setTransaction(mi.getTransaction());
 
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
 
          // Invoke through interceptors
       Object rtn = getNext().invokeHome(mi);

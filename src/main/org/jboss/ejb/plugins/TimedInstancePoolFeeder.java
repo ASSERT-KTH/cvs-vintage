@@ -51,7 +51,8 @@ public class TimedInstancePoolFeeder
          {
             for (int i=0 ; i < increment ; i++)
             {
-               ip.add();
+               // This may not work with secured stateless sessions
+               ip.add(null);
             }
          }
       }

@@ -21,7 +21,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -124,7 +124,7 @@ public class EntityInstanceCache
 	}
 	protected EnterpriseContext acquireContext() throws Exception
 	{
-		return m_container.getInstancePool().get();
+		return m_container.getInstancePool().get(null);
 	}
 	protected void freeContext(EnterpriseContext ctx)
 	{

@@ -37,7 +37,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -110,8 +110,8 @@ public class StatefulSessionInstanceInterceptor
       // Get context
       
       // get a new context from the pool (this is a home method call)
-      EnterpriseContext ctx = container.getInstancePool().get();
-      
+      InstancePool pool = container.getInstancePool();
+      EnterpriseContext ctx = pool.get(mi.getPrincipal());
       
       // set the context on the Invocation
       mi.setEnterpriseContext(ctx);
@@ -120,7 +120,7 @@ public class StatefulSessionInstanceInterceptor
       ctx.lock();
       
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
       
       try
       {

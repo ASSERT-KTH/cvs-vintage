@@ -6,6 +6,8 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.security.Principal;
+
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
@@ -17,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.18 $
+ *	@version $Revision: 1.19 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -79,13 +81,13 @@ public class EntityInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance)
+   protected EnterpriseContext create(Object instance, Principal ignored)
       throws Exception
    {
       mInstantiate.add();
       return new EntityEnterpriseContext(instance, getContainer());
    }
-    
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------

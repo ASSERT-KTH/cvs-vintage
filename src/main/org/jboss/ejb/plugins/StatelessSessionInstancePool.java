@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
-
+import java.security.Principal;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
 
@@ -17,7 +17,7 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -54,11 +54,11 @@ public class StatelessSessionInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance)
+   protected EnterpriseContext create(Object instance, Principal callerPrincipal)
       throws Exception
    {
       mInstantiate.add();
-      return new StatelessSessionEnterpriseContext(instance, getContainer());
+      return new StatelessSessionEnterpriseContext(instance, getContainer(), callerPrincipal);
    }
     
    // Private -------------------------------------------------------

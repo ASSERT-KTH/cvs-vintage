@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.security.Principal;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MessageDrivenEnterpriseContext;
@@ -18,7 +19,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -55,7 +56,7 @@ public class MessageDrivenInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance)
+   protected EnterpriseContext create(Object instance, Principal ignored)
       throws Exception
    {
       mInstantiate.add();
@@ -67,9 +68,3 @@ public class MessageDrivenInstancePool
    // Inner classes -------------------------------------------------
 
 }
-
-
-
-
-
-

@@ -9,7 +9,7 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-
+import java.security.Principal;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
@@ -22,7 +22,7 @@ import javax.ejb.EJBException;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -39,10 +39,11 @@ public class StatelessSessionEnterpriseContext
    
    // Constructors --------------------------------------------------
    
-   public StatelessSessionEnterpriseContext(Object instance, Container con)
+   public StatelessSessionEnterpriseContext(Object instance, Container con,
+      Principal callerPrincipal)
       throws Exception
    {
-      super(instance, con);
+      super(instance, con, callerPrincipal);
       ctx = new SessionContextImpl();
       
       ((SessionBean)instance).setSessionContext(ctx);

@@ -8,10 +8,8 @@ package org.jboss.ejb;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-
-import java.security.Principal;
-
 import java.rmi.RemoteException;
+import java.security.Principal;
 
 import javax.ejb.EJBContext;
 import javax.ejb.EJBHome;
@@ -31,7 +29,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -51,7 +49,7 @@ public class MessageDrivenEnterpriseContext
    {
       super(instance, con);
       ctx = new MessageDrivenContextImpl();
-    
+
       ((MessageDrivenBean)instance).setMessageDrivenContext(ctx);
 
       try
@@ -59,7 +57,8 @@ public class MessageDrivenEnterpriseContext
          Method ejbCreate = instance.getClass().getMethod("ejbCreate",
                                                           new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
-      } catch (InvocationTargetException e)
+      }
+      catch (InvocationTargetException e)
       {
          Throwable ex = e.getTargetException();
          if (ex instanceof EJBException)
@@ -81,13 +80,15 @@ public class MessageDrivenEnterpriseContext
    // Here we have some problems. If we are to use the Stateless stuff,
    // should we inherit from StatelessSessionEnterpriseContext or what?
 
-   public void setEJBObject(EJBObject eo) {
+   public void setEJBObject(EJBObject eo)
+   {
       throw new Error("Not applicatable for MessageDrivenContext");
       //NOOP
       //ejbObject = eo;
    }
 
-   public EJBObject getEJBObject() {
+   public EJBObject getEJBObject()
+   {
       throw new Error("Not applicatable for MessageDrivenContext");
       //return ejbObject;
    }
