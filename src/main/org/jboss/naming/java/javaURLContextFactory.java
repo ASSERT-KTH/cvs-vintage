@@ -18,10 +18,13 @@ import org.jboss.ejb.BeanClassLoader;
 /**
  *   Implementation of "java:" namespace factory. The context is associated
  *   with the thread, so the root context must be set before this is used in a thread
- *      
+ *   
+ *   SA FIXME: the java: namespace should be global.  the java:comp/env subcontext should 
+ *   be threadlocal
+ *     
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
