@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.88 2003/08/27 04:31:52 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.89 2003/08/30 21:35:47 ejort Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -55,6 +55,22 @@
     </attribute>
   </mbean>
   -->
+
+  <!-- ==================================================================== -->
+  <!-- Aspect Management                                                    -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.aop.deployment.AspectManagerService"
+	 name="jboss.aop:service=AspectManager">
+     <attribute name="MethodFilter">ALL</attribute>
+     <attribute name="FieldFilter">ALL</attribute>
+     <attribute name="ConstructorFilter">ALL</attribute>
+     <attribute name="ConvertAll">true</attribute>
+  </mbean>
+ 
+  <mbean code="org.jboss.aop.deployment.AspectDeployer"
+       name="jboss.aop:service=AspectDeployer">
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Log4j Initialization                                                 -->
