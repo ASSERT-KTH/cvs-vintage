@@ -69,7 +69,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * not in the templates.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: SelectIssueType.java,v 1.11 2002/08/26 01:45:07 jmcnally Exp $
+ * @version $Id: SelectIssueType.java,v 1.12 2002/10/17 20:06:27 jmcnally Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
@@ -100,6 +100,12 @@ public class SelectIssueType extends RequireLoginFirstAction
         {
             scarabR.setReportingIssue(null);
             data.getParameters().remove(ScarabConstants.REPORTING_ISSUE);
+            setTarget(data, scarabR.getNextEntryTemplate());
+        }
+        // if the user has just changed issue types and their homepage
+        // tab is set Enter New... take them to the issue entry instead.
+        else if ("home,EnterNew.vm".equals(nextTemplate))
+        {
             setTarget(data, scarabR.getNextEntryTemplate());
         }
         else 
