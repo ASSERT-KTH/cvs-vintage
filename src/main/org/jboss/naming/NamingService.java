@@ -32,7 +32,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -210,16 +210,16 @@ public class NamingService
       super.postRegister( pRegistrationDone );
       if( pRegistrationDone.booleanValue() ) {
          // Create the JSR-77 management representation
-         mJNDI = JNDIResource.create( getServer(), "LocalJNDI", getServiceName() );
+         mJNDI = JNDIResource.create( server, "LocalJNDI", getServiceName() );
       }
    }
    
-   public void postDeregister()
+   public void preDeregister() throws Exception
    {
-      super.postDeregister();
+      super.preDeregister();
       if( mJNDI != null ) {
          // Destroy the JSR-77 management representation
-         JNDIResource.destroy( getServer(), "LocalJNDI" );
+         JNDIResource.destroy( server, "LocalJNDI" );
       }
    }
 }
