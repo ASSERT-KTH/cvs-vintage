@@ -211,6 +211,9 @@ static int JK_METHOD ws_read(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
+/* Works with 4096, fails with 8192 */
+#define CHUNK_SIZE 4096
+
 static int JK_METHOD ws_write(jk_ws_service_t *s,
                               const void *b,
                               unsigned l)
@@ -223,6 +226,7 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             size_t w = (size_t)l;
             size_t r = 0;
 	    long ll=l;
+	    char *bb=b;
 
             if(!p->response_started) {
                 if(!s->start_response(s, 200, NULL, NULL, NULL, 0)) {
@@ -232,14 +236,17 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             
 	    // Debug - try to get around rwrite
 	    while( ll > 0 ) {
-		long toSend=(ll>2048) ? 2048 : ll;
-		r = ap_rwrite((const char *)b, toSend, p->r );
-		ll-=2048;
-		
+		long toSend=(ll>CHUNK_SIZE) ? CHUNK_SIZE : ll;
+		r = ap_rwrite((const char *)bb, toSend, p->r );
 		// DEBUG 
+#ifdef JK_DEBUG
 		ap_log_error(APLOG_MARK, APLOG_STARTUP | APLOG_NOERRNO, 0, 
-			     NULL, "mod_jk: writing %ld (%ld) out of %ld bytes \n",  
+			     NULL, "mod_jk: writing %ld (%ld) out of %ld \n",
 			     toSend, r, ll );
+#endif
+		ll-=CHUNK_SIZE;
+		bb+=CHUNK_SIZE;
+		
 		if(toSend != r) { 
 		    return JK_FALSE; 
 		} 
