@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.121 2002/12/05 00:28:44 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.122 2002/12/08 21:25:22 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -59,6 +59,10 @@
     -->
     <column name="NEW_VALUE" required="false" type="LONGVARCHAR"></column>
     <!--
+        Value of the dependency change.
+    -->
+    <column name="DEPEND_ID" required="false" type="INTEGER"></column>
+    <!--
         System-generated description of modification.
     -->
     <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"></column>
@@ -99,6 +103,9 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTACHMENT">
         <reference local="ATTACHMENT_ID" foreign="ATTACHMENT_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_DEPEND">
+        <reference local="DEPEND_ID" foreign="DEPEND_ID"/>
     </foreign-key>
 
     <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
@@ -458,19 +465,23 @@
     Example: Issue is a duplicate of another issue.
     Example: Issue is blocking another issue.
 -->
-<table name="SCARAB_DEPEND" idMethod="none" javaName="Depend">
+<table name="SCARAB_DEPEND" idMethod="idbroker" javaName="Depend">
+    <!--
+        Unique identifier.
+    -->
+    <column name="DEPEND_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Issue that other issue depends upon.
         Example: Issue that blocks.
         Example: Issue that has duplicates.
     -->
-    <column name="OBSERVED_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="OBSERVED_ID" primaryKey="false" required="true" type="INTEGER"></column>
     <!--
         Issue that depends on other issue.
         Example: Issue that is being blocked.
         Example: Issue that is duplicate.
     -->
-    <column name="OBSERVER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="OBSERVER_ID" primaryKey="false" required="true" type="INTEGER"></column>
     <!--
         Type.
     -->
@@ -480,6 +491,7 @@
     -->
     <column name="DELETED" required="false" type="BOOLEANINT"
         default="0" size="1"></column>
+
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="OBSERVED_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -489,7 +501,15 @@
     <foreign-key foreignTable="SCARAB_DEPEND_TYPE">
         <reference local="DEPEND_TYPE_ID" foreign="DEPEND_TYPE_ID"/>
     </foreign-key>
+
+    <index name="IX_DEPEND">
+        <index-column name="DEPEND_ID"/>
+        <index-column name="OBSERVED_ID"/>
+        <index-column name="OBSERVER_ID"/>
+        <index-column name="DEPEND_TYPE_ID"/>
+    </index>
 </table>
+
 <!--
     Possible types of dependency between issues.
     Example: Duplicate
@@ -504,6 +524,13 @@
         Name.
     -->
     <column name="DEPEND_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="100"></column>
+
+    <!--
+        This column needs to be unique
+    -->
+    <unique>
+        <unique-column name="DEPEND_TYPE_NAME"/>
+    </unique>
 </table>
 
 <!--
