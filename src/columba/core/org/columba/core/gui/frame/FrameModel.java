@@ -64,17 +64,10 @@ public class FrameModel {
 	protected FramePluginHandler handler;
 
 	/**
-	 * we cache instances for later re-use
-	 */
-	protected Map frameMediatorCache;
-
-	/**
 	 * Obtains a reference to the frame plugin handler and registers a shutdown
 	 * hook with the ShutdownManager.
 	 */
 	public FrameModel() {
-
-		frameMediatorCache = new HashMap();
 
 		// get plugin handler for handling frames
 		try {
@@ -260,27 +253,15 @@ public class FrameModel {
 		if (c == null) {
 			c = new DefaultContainer(viewItem);
 			newContainer = true;
-		} else {
-			// re-use container
-
-			//	save old framemediator in cache (use containers's old id)
-			frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
 		}
 
 		FrameMediator frame = null;
-		if (frameMediatorCache.containsKey(id)) {
-			LOG.fine("use cached instance " + id);
 
-			// found cached instance
-			// -> re-use this instance and remove it from cache
-			frame = (FrameMediator) frameMediatorCache.remove(id);
-		} else {
-			LOG.fine("create new instance " + id);
-			Object[] args = { c, viewItem };
-			// create new instance
-			// -> get frame controller using the plugin handler found above
-			frame = (FrameMediator) handler.getPlugin(id, args);
-		}
+		LOG.fine("create new instance " + id);
+		Object[] args = { c, viewItem };
+		// create new instance
+		// -> get frame controller using the plugin handler found above
+		frame = (FrameMediator) handler.getPlugin(id, args);
 
 		c.setFrameMediator(frame);
 
@@ -403,9 +384,6 @@ public class FrameModel {
 		// Check if the frame controller has been registered, else do nothing
 		if (activeFrameCtrls.contains(c)) {
 			ViewItem v = c.getViewItem();
-
-			// save in cache
-			frameMediatorCache.put(v.get("id"), c.getFrameMediator());
 
 			saveDefaultView(v);
 			activeFrameCtrls.remove(c);
