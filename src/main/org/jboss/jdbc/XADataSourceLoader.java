@@ -30,8 +30,12 @@ import org.jboss.logging.Log;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * 
+ * Revision:<br>
+ * 20010701 danch added support for timeout in blocking.
  */
 public class XADataSourceLoader
    extends ServiceMBeanSupport
@@ -56,6 +60,7 @@ public class XADataSourceLoader
    float maxIdleTimeoutPercent;
    boolean invalidateOnError;
    boolean timestampUsed;
+   int blockingTimeout;
 
    XAPoolDataSource source;
 
@@ -169,6 +174,14 @@ public class XADataSourceLoader
       return blocking;
    }
 
+   public void setBlockingTimeout(int blockingTimeout) {
+      this.blockingTimeout = blockingTimeout;
+   }
+   
+   public int getBlockingTimeout() {
+      return blockingTimeout;
+   }
+   
    public void setGCEnabled(boolean gcEnabled)
    {
       this.gcEnabled = gcEnabled;
@@ -298,6 +311,7 @@ public class XADataSourceLoader
       getSource().setMinSize(minSize);
       getSource().setMaxSize(maxSize);
       getSource().setBlocking(blocking);
+      getSource().setBlockingTimeout(blockingTimeout);
       getSource().setGCEnabled(gcEnabled);
       getSource().setGCInterval(gcInterval);
       getSource().setGCMinIdleTime(gcMinIdleTime);

@@ -33,6 +33,8 @@ public interface XADataSourceLoaderMBean extends ServiceMBean {
     public int getMaxSize();
     public void setBlocking(boolean blocking);
     public boolean getBlocking();
+    public void setBlockingTimeout(int blockingTimeout);
+    public int getBlockingTimeout();
     public void setGCEnabled(boolean gcEnabled);
     public boolean getGCEnabled();
     public void setGCInterval(long interval);
