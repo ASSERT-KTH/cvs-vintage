@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.15 2002/01/08 21:32:14 thn Exp $
+// $Id: FigNodeModelElement.java,v 1.16 2002/01/29 18:02:27 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -498,6 +498,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	}
 
     /**
+     * Deletes this object including its owner.
      * Add the owner of this element to the trash, so other Argo components (i.e. critics)
      * realize, that it is deleted.
      */
@@ -505,6 +506,14 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 	if(getOwner() != null) {
 	    Trash.SINGLETON.addItemFrom( getOwner(), null);
 	}
+	super.delete();
+    }
+
+    /**
+     * Deletes just this object.
+     * The owner is preserved.
+     */
+    public void remove() {
 	super.delete();
     }
 
