@@ -220,7 +220,12 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put("MenuBar.border", new ThinDefaultBorder());
 
 		table.put("ToolBar.border", new ThinDefaultBorder());
-
+		
+		// default for Metal is 8, which is too big
+		table.put("TextField.tabSize", new Integer(4));
+		table.put("TextArea.tabSize", new Integer(4));
+		table.put("TextPane.tabSize", new Integer(4));
+		
 		/*
 		table.put("Menu.checkIcon", new ImageIcon("") );
 		table.put("MenuItem.checkIcon", new ImageIcon(""));
