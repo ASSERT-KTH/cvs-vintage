@@ -21,6 +21,28 @@
             </param-value>
         </init-param>
     </servlet>
+<!--
+    <servlet>
+        <servlet-name>
+           ant
+        </servlet-name>
+        <servlet-class>
+            org.tigris.scarab.util.AntServlet
+        </servlet-class>
+        <init-param>
+            <param-name>build_command</param-name>
+            <param-value>
+                /usr/local/ant/bin/ant -buildfile
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>build_file</param-name>
+            <param-value>
+                /Users/jon/checkout/scarab/build/build.xml
+            </param-value>
+        </init-param>
+    </servlet>
+-->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>templates</web-resource-name>
