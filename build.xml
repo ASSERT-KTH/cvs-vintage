@@ -88,13 +88,17 @@
   <property name="commons-pool.lib" location="${commons-pool.home}/dist"/>
   <property name="commons-pool.jar" location="${commons-pool.lib}/commons-pool.jar"/>
 
-  <property name="commons-logging.home" location="${jakarta-commons}/commons-logging-1.0.1" />
+  <property name="commons-logging.home" location="${jakarta-commons}/commons-logging-1.0.2" />
   <property name="commons-logging.lib" location="${commons-logging.home}" />
   <property name="commons-logging.jar" location="${commons-logging.lib}/commons-logging-api.jar" />
 
   <property name="commons-collections.home" location="${jakarta-commons}/collections"/>
   <property name="commons-collections.lib" location="${commons-collections.home}/dist"/>
   <property name="commons-collections.jar" location="${commons-collections.lib}/commons-collections.jar"/>
+
+  <property name="commons-modeler.home" location="${jakarta-commons}/commons-modeler-1.0" />
+  <property name="commons-modeler.lib" location="${commons-modeler.home}" />
+  <property name="commons-modeler.jar" location="${commons-modeler.lib}/commons-modeler.jar" />
 
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
@@ -386,10 +390,13 @@
             <property name="tomcat33.home" value="${tomcat.build}"/>
         </ant>
         
-        <ant dir="${jakarta-tomcat-connectors}/http11" inheritAll="false" />
+        <ant dir="${jakarta-tomcat-connectors}/http11" inheritAll="false">
+            <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
+        </ant>
             
         <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
             <property name="tomcat33.home" value="${tomcat.build}"/>
+            <property name="servlet-api.jar" value="${basedir}/${servlet22.jar}"/>
         </ant>
   </target>
 
@@ -743,14 +750,14 @@
        </classpath>
     </javac>
     <mkdir dir="${tomcat.build}/ant" />
-    <jar jarfile="${tomcat.build}/ant/tomcat-ant.jar"
-         basedir="${tomcat.build}/classes">
-       <include name="org/apache/tomcat/ant/*.class" />
-    </jar> 
-    <jar jarfile="${tomcat.build}/ant/tomcat-ant.jar"
-         basedir="src/share/org/apache/tomcat/ant"
-         update="yes">
-       <include name="META-INF/*.properties" />
+
+    <jar jarfile="${tomcat.build}/ant/tomcat-ant.jar">
+        <fileset dir="${tomcat.build}/classes">
+            <include name="org/apache/tomcat/ant/*.class"/>
+        </fileset>
+        <fileset dir="src/share/org/apache/tomcat/ant">
+            <include name="META-INF/*.properties"/>
+        </fileset>
     </jar>
   </target>
 
