@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.6 2005/03/03 16:09:40 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.7 2005/03/04 14:04:47 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -63,7 +63,7 @@ public class TransportStruct implements Serializable {
      * Gets current SSL port
      * @return the ssl port
      */
-    public int getSslPort() {
+    public static int getSslPort() {
         // Get system property :
         String sslPortStr = System.getProperty("OASSLPort", String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT));
         return Integer.parseInt(sslPortStr);
