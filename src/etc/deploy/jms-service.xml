@@ -34,6 +34,7 @@
     <!--make the rar deploy!-->
     <depends>jboss.jca:service=RARDeployer</depends>
 
+    <attribute name="JndiName">JmsXA</attribute>
     <depends optional-attribute-name="ManagedConnectionFactoryName">
       <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=XaTxDS,name=jmsra">
         <!--hack till better deployment system-->
@@ -49,7 +50,6 @@
             </config-property>
           </properties>
         </attribute>
-        <attribute name="JndiName">JmsXA</attribute>
       </mbean>
     </depends>
 
