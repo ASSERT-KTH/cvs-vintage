@@ -316,6 +316,6 @@ public  class AttributeGroup
                  addRModuleOption(templateType, option);
             rmo2.save();
         }
+        getAttributes().add(attribute);
     }
-
 }
