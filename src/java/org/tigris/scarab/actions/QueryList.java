@@ -74,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.27 2003/08/05 06:13:45 jmcnally Exp $
+ * @version $Id: QueryList.java,v 1.28 2003/08/19 23:56:36 jmcnally Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -90,7 +90,6 @@ public class QueryList extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Module me = scarabR.getCurrentModule();
-        IssueType issueType = scarabR.getCurrentIssueType();
        
         if (intake.isAllValid())
         {
@@ -198,6 +197,6 @@ public class QueryList extends RequireLoginFirstAction
         user.setCurrentMITList(null);
         // reset selected users map
         getScarabRequestTool(context).resetSelectedUsers();
-        setTarget(data, "AdvancedQuery.vm");
+        setTarget(data, user.getQueryTarget());
     }
 }

@@ -1,17 +1,24 @@
-#set ($module = $scarabR.CurrentModule)
 <div class="app" id="search">
+#set ($user = $data.User)
+$user.setHomePage("query")
+#set ($mitlist = $user.CurrentMITList)
+#if (!$mitlist.isSingleModuleIssueType())
+    <p class="infomark"><em>$l10n.IssueTypeListMoreThanOne</em></p> 
+    $renderer.render("screens", "AdvancedQuery.vm")
+#elseif ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
+    <p class="infomark"><em>$l10n.NoCustomSearch</em></p> 
+    $renderer.render("screens", "AdvancedQuery.vm")
+#else
 
+#set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.NewSearch)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($issueType = $mitlist.IssueType)
 #set ($searchTextAttributes = $search.QuickSearchTextAttributeValues)
 #set ($searchValues = $search.QuickSearchOptionAttributeValues)
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 
-#if ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
-    <p class="infomark"><em>$l10n.NoCustomSearch</em></p> 
-    $renderer.render("screens", "AdvancedQuery.vm")
-#else
+<div align="right"><a href="$link.setPage("AdvancedQuery.vm").addPathInfo("action", "Search").addPathInfo("eventSubmit_doSetquerytarget", "foo")">$l10n.AdvancedQuery</a></div>
 
 <form action="$link.setPage("Search.vm")" method="post">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />

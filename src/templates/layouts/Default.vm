@@ -41,9 +41,9 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
    #end
    <div>
     #if ($data.User.hasLoggedIn())
-    $link.omitModule().omitIssueType().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
+    $link.omitModule().setPage("Login.vm").setAction("Logout").setLabel("$l10n.Logout")
     #else
-    $link.omitModule().omitIssueType().setPage("Login.vm").setLabel("$l10n.Login")
+    $link.omitModule().setPage("Login.vm").setLabel("$l10n.Login")
     #end
    </div>
   </div>

@@ -627,22 +627,6 @@ public class ScarabRequestTool
         return getAttributeOption(new Integer(key));
     }    
 
-    public MITList getCurrentMITList()
-        throws Exception
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        MITList mitList = user.getCurrentMITList();
-        if (mitList == null)
-        {
-            mitList = new MITList();
-            MITListItem item = MITListItemManager.getInstance();
-            item.setModuleId(getCurrentModule().getModuleId());
-            item.setIssueTypeId(getCurrentIssueType().getIssueTypeId());
-            mitList.addMITListItem(item);        
-        }
-        return mitList;
-    }
-
     /**
      * First attempts to get the RModuleUserAttributes from the user.
      * If it is empty, then it will try to get the defaults from the module.
@@ -654,29 +638,24 @@ public class ScarabRequestTool
         List result = null;
         try
         {
-            Module module = getCurrentModule();
-            IssueType issueType = getCurrentIssueType();
             MITList currentList = user.getCurrentMITList();
             if (currentList != null)
             {
                 if (currentList.isSingleModuleIssueType()) 
                 {
-                    module = currentList.getModule();
-                    issueType = currentList.getIssueType();
+                    Module module = currentList.getModule();
+                    IssueType issueType = currentList.getIssueType();
+                    result = user.getRModuleUserAttributes(module, issueType);
+                    if (result.isEmpty())
+                    {
+                        result = module
+                            .getDefaultRModuleUserAttributes(issueType);
+                    }
                 }
                 else 
                 {
                     result = currentList.getCommonRModuleUserAttributes();
                 }                
-            }
-
-            if (result == null)
-            {
-                result = user.getRModuleUserAttributes(module, issueType);
-                if (result.isEmpty())
-                {
-                    result = module.getDefaultRModuleUserAttributes(issueType);
-                }
             }
         }
         catch (Exception e)
@@ -685,7 +664,7 @@ public class ScarabRequestTool
         }
         if (result == null)
         {
-            result = new ArrayList();
+            result = Collections.EMPTY_LIST;
         }
         return result;
     }
@@ -702,21 +681,6 @@ public class ScarabRequestTool
             {
                 result = currentList.getCommonAttributes(false);
             }
-            else 
-            {
-                Module module = getCurrentModule();
-                IssueType issueType = getCurrentIssueType();
-                List rmas = module.getRModuleAttributes(issueType, false);
-                if (rmas != null) 
-                {
-                    result = new ArrayList(rmas.size());
-                    Iterator i = rmas.iterator();
-                    while (i.hasNext()) 
-                    {
-                        result.add(((RModuleAttribute)i.next()).getAttribute());
-                    }
-                }
-            }
         }
         catch (Exception e)
         {
@@ -724,7 +688,7 @@ public class ScarabRequestTool
         }
         if (result == null)
         {
-            result = new ArrayList();
+            result = Collections.EMPTY_LIST;
         }
         return result;
     }
@@ -1199,12 +1163,7 @@ e.printStackTrace();
     public IssueType getCurrentIssueType() throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
-        IssueType currentIssueType = null;
-        if (user != null) 
-        {
-             currentIssueType = user.getCurrentIssueType();            
-        }
-        return currentIssueType;
+        return (user == null) ? null : user.getCurrentIssueType();            
     }
 
     public void setCurrentIssueType(IssueType type)
@@ -1216,46 +1175,42 @@ e.printStackTrace();
         }        
     }
 
-    public RModuleIssueType getCurrentRModuleIssueType()
-    {
-        RModuleIssueType rmit = null;
-        try
-        {
-            rmit = ((ScarabUser)data.getUser()).getCurrentRModuleIssueType();
-        }
-        catch (Exception e)
-        {
-            Log.get().debug("getCurrentRModuleIssueType: ", e);
-        }
-        return rmit;
-    }
-
     /**
      * Looks at the current RModuleIssueType and if it is null,
      * returns the users homepage. If it is not null, and is 
      * dedupe, returns Wizard1...else Wizard3.
      */
-    public String getNextEntryTemplate()
+    public String getNextEntryTemplate(IssueType issueType)
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
         RModuleIssueType rmit = null;
         String nextTemplate = null;
         try
         {
-            rmit = getCurrentRModuleIssueType();
-            if (rmit == null)
+            Module module = getCurrentModule();
+            if (module == null) 
             {
                 nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
-                setAlertMessage(l10n.get("ModuleIssueTypeRequiredToEnterIssue"));
+                setAlertMessage(l10n.get("ModuleIssueTypeRequiredToEnterIssue"));                
             }
-            else if (rmit.getDedupe() && !getCurrentModule()
-                     .getDedupeGroupsWithAttributes(getCurrentIssueType()).isEmpty())
-            {
-                nextTemplate = "entry,Wizard1.vm";
-            }
-            else
-            {
-                nextTemplate = "entry,Wizard3.vm";
+            else 
+            {            
+                rmit = module.getRModuleIssueType(issueType);
+                if (rmit == null)
+                {
+                    nextTemplate = ((ScarabUser)data.getUser()).getHomePage();
+                    setAlertMessage(
+                        l10n.get("ModuleIssueTypeRequiredToEnterIssue"));
+                }
+                else if (rmit.getDedupe() && !module
+                         .getDedupeGroupsWithAttributes(issueType).isEmpty())
+                {
+                    nextTemplate = "entry,Wizard1.vm";
+                }
+                else
+                {
+                    nextTemplate = "entry,Wizard3.vm";
+                }
             }
         }
         catch (Exception e)
@@ -1642,10 +1597,9 @@ e.printStackTrace();
             MITList mitList = user.getCurrentMITList();
             if (mitList == null)
             {
-                IssueType it = getCurrentIssueType();
-                Module cum = getCurrentModule();
-                issueSearch = 
-                    IssueSearchFactory.INSTANCE.getInstance(cum, it, user);
+                setAlertMessage(getLocalizationTool().get("NoIssueTypeList"));
+                Log.get().warn("Attempted to create a new IssueSearch and " +
+                               " issue types had not been selected.");
             }
             else 
             {
@@ -2100,43 +2054,36 @@ e.printStackTrace();
      * Returns all issue templates that are global, 
      * Plus those that are personal and created by logged-in user.
     */
-    public List getAllIssueTemplates()
+    public List getAllIssueTemplates(IssueType issueType)
         throws Exception
     {
-        String sortColumn = data.getParameters().getString("sortColumn");
-        String sortPolarity = data.getParameters().getString("sortPolarity");
-        if (sortColumn == null)
-        {
-            sortColumn = "name";
-        }
-        if (sortPolarity == null)
-        {
-            sortPolarity = "asc";
-        }
+        ValueParser params = data.getParameters();
+        String sortColumn = params.getString("sortColumn", "name");
+        String sortPolarity = params.getString("sortPolarity", "asc");
         return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               issueType, (ScarabUser)data.getUser(), 
                sortColumn, sortPolarity, IssueTemplateInfoPeer.TYPE_ALL);
     }
 
     /**
      * Returns templates that are personal and created by logged-in user.
     */
-    public List getPrivateTemplates()
+    public List getPrivateTemplates(IssueType issueType)
         throws Exception
     {
         return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               issueType, (ScarabUser)data.getUser(), 
                "name", "asc", IssueTemplateInfoPeer.TYPE_PRIVATE);
     }
 
     /**
      * Returns templates that are personal and created by logged-in user.
     */
-    public List getGlobalTemplates()
+    public List getGlobalTemplates(IssueType issueType)
         throws Exception
     {
         return IssueTemplateInfoPeer.getTemplates(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               issueType, (ScarabUser)data.getUser(), 
                "name", "asc", IssueTemplateInfoPeer.TYPE_GLOBAL);
     }
 
@@ -2158,7 +2105,7 @@ e.printStackTrace();
             sortPolarity = "desc";
         }
         return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               null, (ScarabUser)data.getUser(), 
                sortColumn, sortPolarity, IssueTemplateInfoPeer.TYPE_ALL);
     }
 
@@ -2169,7 +2116,7 @@ e.printStackTrace();
         throws Exception
     {
         return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               null, (ScarabUser)data.getUser(), 
                "name", "asc", IssueTemplateInfoPeer.TYPE_PRIVATE);
     }
 
@@ -2180,7 +2127,7 @@ e.printStackTrace();
         throws Exception
     {
         return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               null, (ScarabUser)data.getUser(), 
                "name", "asc", IssueTemplateInfoPeer.TYPE_GLOBAL);
     }
 
@@ -2191,27 +2138,29 @@ e.printStackTrace();
         throws Exception
     {
         if (reportGenerator == null) 
-        {
+       { 
             String key = data.getParameters()
                 .getString(ScarabConstants.CURRENT_REPORT);
             ValueParser parameters = data.getParameters();
             String id = parameters.getString("report_id");
             if (id == null || id.length() == 0) 
             {
+                ScarabUser user = (ScarabUser)data.getUser();
+                MITList mitlist = user.getCurrentMITList();
                 if (key == null) 
                 {
-                    reportGenerator = getNewReport();
+                    reportGenerator = getNewReport(mitlist);
                 }
                 else 
                 {
-                    reportGenerator = ((ScarabUser)data.getUser())
-                        .getCurrentReport(key);
+                    reportGenerator = user.getCurrentReport(key);
                     
                     // if reportingIssue is still null, the parameter must have
-                    // been stale, just get a new issue
-                    if (reportGenerator == null) 
+                    // been stale, just get a new report
+                    if (reportGenerator == null && 
+                        mitlist != null && !mitlist.isEmpty()) 
                     {
-                        reportGenerator = getNewReport();                    
+                        reportGenerator = getNewReport(mitlist);
                     }
                 }                
             }
@@ -2231,24 +2180,20 @@ e.printStackTrace();
         return reportGenerator;
     }
 
-    private ReportBridge getNewReport()
+    private ReportBridge getNewReport(MITList mitList)
         throws Exception
     {
+        if (mitList == null) 
+        {
+            throw new IllegalArgumentException(
+                "Cannot create a new report without any issue types.");
+        }
+        
         ScarabUser user = (ScarabUser)data.getUser();
         org.tigris.scarab.om.Report om  = new org.tigris.scarab.om.Report();
         ReportBridge report = new ReportBridge(om);
         report.setGeneratedBy(user);
-
-        MITList mitList = user.getCurrentMITList();
-        if (mitList == null) 
-        {
-            report.setModule(getCurrentModule());
-            report.setIssueType(getCurrentIssueType());
-        }
-        else 
-        {
-            report.setMITList(mitList);
-        }
+        report.setMITList(mitList);
         
         String key = ((ScarabUser)data.getUser()).setCurrentReport(report);
         data.getParameters().add(ScarabConstants.CURRENT_REPORT, key);
@@ -2261,57 +2206,6 @@ e.printStackTrace();
         this.reportGenerator = report;
     }
     
-    /*
-    private static String getReportQueryString(ValueParser params) 
-    {
-        StringBuffer query = new StringBuffer();
-        Object[] keys =  params.getKeys();
-        for (int i =0; i<keys.length; i++)
-        {
-            String key = keys[i].toString();
-            if (key.startsWith("rep") || key.startsWith("intake")
-                 || key.startsWith("ofg"))
-            {
-                String[] values = params.getStrings(key);
-                for (int j=0; j<values.length; j++)
-                {
-                    query.append('&').append(key);
-                    query.append('=').append(values[j]);
-                }
-            }
-         }
-         return query.toString();
-    }
-    */
-
-
-    /**
-     * Return all users for module and issue type.
-     */
-    public List getUsers(Module module, IssueType issueType)
-        throws Exception
-    {
-        List users = new ArrayList();
-        ScarabUser[] userArray = module
-            .getUsers(module.getUserPermissions(issueType));
-        for (int i=0;i<userArray.length;i++)
-        {
-            users.add(userArray[i]);
-        }
-        return sortUsers(users);
-    }
-        
-    /**
-     * Return all users for current module and issue type.
-     */
-    public List getUsers() throws Exception
-    {
-        Module module = getCurrentModule();  
-        IssueType issueType = getCurrentIssueType();  
-        return getUsers(module, issueType);
-    }
-
-
     /**
      *  Full featured, paginated, sorted method for returning the results 
      *  of user search.  Returns all users (no search criteria). 
@@ -2403,43 +2297,6 @@ e.printStackTrace();
         return list;
     }
                                 
-
-    /**
-     * Return results of user search.
-     */
-    public List getUserSearchResults() throws Exception
-    {
-        ScarabLocalizationTool l10n = getLocalizationTool();
-        String searchString = data.getParameters()
-               .getString("searchString"); 
-        String searchField = data.getParameters()
-               .getString("searchField"); 
-        Module module = getCurrentModule();  
-        if (searchField == null)
-        {
-            setInfoMessage(l10n.get("SearchFieldPrompt"));
-            return null ;
-        }
-        
-        String firstName = null;
-        String lastName = null;
-        String email = null;
-        if (searchField.equals("First Name"))
-        {
-            firstName = searchString;
-        }
-        else if (searchField.equals("Last Name"))
-        {
-            lastName = searchString;
-        }
-        else
-        {
-            email = searchString;
-        }
-
-        return sortUsers(module.getUsers(firstName, lastName, null, email, 
-                               getCurrentIssueType()));
-    }
 
     /**
      * Return results of attribute search.

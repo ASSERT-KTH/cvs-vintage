@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.106 2003/07/28 16:53:39 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.107 2003/08/19 23:59:20 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -794,6 +794,22 @@ public class ScarabUserImpl
         internalUser.setHomePage(homePage);
     }
 
+                
+    /**
+     * @see ScarabUser#getQueryTarget()
+     */
+    public String getQueryTarget()
+    {
+        return internalUser.getQueryTarget();
+    }
+    
+    /**
+     * @see ScarabUser#setSingleIssueTypeQueryTarget(IssueType, String)
+     */
+    public void setSingleIssueTypeQueryTarget(IssueType type, String target)
+    {
+        internalUser.setSingleIssueTypeQueryTarget(type, target);
+    }
 
     /**
      * @see ScarabUser#getMITLists()
@@ -855,6 +871,30 @@ public class ScarabUserImpl
     public void removeItemsFromCurrentMITList(String[] ids)
     {
         internalUser.removeItemsFromCurrentMITList(ids);
+    }
+
+    /**
+     * @see ScarabUser#getLastEnteredIssueTypeOrTemplate()
+     */
+    public Object lastEnteredIssueTypeOrTemplate()
+    {
+        return internalUser.lastEnteredIssueTypeOrTemplate();
+    }
+
+    /**
+     * @see ScarabUser#setLastEnteredIssueType(IssueType)
+     */
+    public void setLastEnteredIssueType(IssueType type)
+    {
+        internalUser.setLastEnteredIssueType(type);
+    }
+
+    /**
+     * @see ScarabUser#setLastEnteredTemplate(Issue)
+     */
+    public void setLastEnteredTemplate(Issue template)
+    {
+        internalUser.setLastEnteredTemplate(template);
     }
 
 

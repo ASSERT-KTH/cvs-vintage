@@ -1,30 +1,28 @@
 #set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($currentIssueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 #set ($canDeleteAtLeastOne = false)
-
 <div class="app" id="templateList">
-#if ($issueType)
 
-<form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
+#set ($issueTypes = $module.IssueTypes)
+#if (!$currentIssueType)
+  #foreach($issueTypeOption in $issueTypes)
+    #if (!$currentIssueType)
+        #set ($currentIssueType = $issueTypeOption)
+    #end
+  #end
+#end
 
+#if ($currentIssueType)
 
 ## SORTING
-#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
-#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
-#if (!$sortColumn || $sortColumn.length() == 0)
-   #set ($sortColumn = "name")
-#end
-#if (!$sortPolarity || $sortPolarity.length() == 0)
-   #set ($sortPolarity = "asc")
-#end
+#set ($sortColumn = $data.Parameters.getString("sortColumn", "name"))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity", "asc"))
 
 #if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-   #set ($templates = $scarabR.AllIssueTemplates)
+   #set ($templates = $scarabR.getAllIssueTemplates($currentIssueType))
 #else
-   #set ($templates = $scarabR.PrivateTemplates)
+   #set ($templates = $scarabR.getPrivateTemplates($currentIssueType))
 #end
 
 ## PAGINATION
@@ -45,7 +43,31 @@
 
 <h3>$l10n.EditTemplates</h3>
 
-#if ($templates.size() < 1)
+#if ($issueTypes && !$issueTypes.Empty)
+<div class="colbar">
+<form action="$link.setPage("TemplateList.vm")" method="get">
+ <select name="$scarabG.Constant.CURRENT_ISSUE_TYPE" tabindex="3" 
+    onchange="this.form.submit();">
+  #foreach($issueTypeOption in $issueTypes)
+    #set ($rmit = $module.getRModuleIssueType($issueTypeOption))
+    <option#if ($issueTypeOption.QueryKey == $currentIssueType.QueryKey) selected="selected"#end value="$issueTypeOption.QueryKey">$rmit.DisplayName</option>
+  #end
+ </select>
+## give actionEvent as hidden field so user does not have to click Go,
+## if javascript is enabled. show button only if script disabled.
+  <input type="hidden" value="foo" name="eventSubmit_doSelect" />
+  <noscript><input type="submit" value="$l10n.Go" name="foo" 
+      tabindex="4" /></noscript>
+  $l10n.TemplateListBriefInstructions
+</form>
+</div>
+#end
+
+<form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />
+
+#if ($templates.isEmpty())
 <p><em>
 $l10n.NoTemplates
 </em></p>
@@ -87,9 +109,9 @@ $l10n.NoTemplates
   </td>
   <td>
   #if (!$template.Approved)
-    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.NextEntryTemplate)">$l10n.Personal ($l10n.UntilApproved)</a>
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.getNextEntryTemplate($currentIssueType))">$l10n.Personal ($l10n.UntilApproved)</a>
   #else
-    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.NextEntryTemplate)">$template.Scope.Name</a>
+    <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage($scarabR.getNextEntryTemplate($currentIssueType))">$template.Scope.Name</a>
   #end
   </td>
    <td>
@@ -108,6 +130,7 @@ $l10n.NoTemplates
 #end
 
 <div class="functnbar2">
+  <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" value="$currentIssueType.QueryKey" />
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />
   #if ($canDeleteAtLeastOne)
     &#160;<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletetemplates" />
@@ -116,6 +139,7 @@ $l10n.NoTemplates
 
 </form>
 #else
+<h3>$l10n.EditTemplates</h3>
  <p class="warningmark"><strong>$l10n.IssueTypeUnavailable</strong></p>
 #end
 </div>

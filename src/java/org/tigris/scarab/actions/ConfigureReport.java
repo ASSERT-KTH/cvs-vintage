@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.24 2003/08/18 13:12:01 mpoeschl Exp $
+ * @version $Id: ConfigureReport.java,v 1.25 2003/08/19 23:56:35 jmcnally Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -1167,11 +1167,20 @@ public class ConfigureReport
         String key = data.getParameters()
             .getString(ScarabConstants.CURRENT_REPORT);
         data.getParameters().remove(ScarabConstants.CURRENT_REPORT);
+        ScarabUser user = (ScarabUser)data.getUser();
         if (key != null && key.length() > 0) 
         {
-            ((ScarabUser)data.getUser()).setCurrentReport(key, null);
+            user.setCurrentReport(key, null);
         }
-        setTarget(data, "reports,Info.vm");            
+        if (user.getCurrentMITList() == null) 
+        {
+            //context.add("report", Boolean.TRUE);  
+            setTarget(data, "reports,XModuleList.vm");
+        }
+        else 
+        {
+            setTarget(data, "reports,Info.vm");
+        }
     }
     
 

@@ -6,7 +6,7 @@
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
 #set ($selectedUsers =  $data.User.SelectedUsersMap)
 #set ($reason = $data.Parameters.getString("reason" , ""))
-#set ($mitList = $scarabR.CurrentMITList)
+#set ($mitList = $user.CurrentMITList)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
 
 #printCollisionInfo()

@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.66 2003/07/10 23:08:43 jmcnally Exp $
+ * @version $Id: ScarabLink.java,v 1.67 2003/08/20 00:02:25 jmcnally Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -86,7 +86,6 @@ public class ScarabLink extends TemplateLink
     private String currentModuleId;
     private Module currentModule;
     private boolean isOmitModule;
-    private boolean isOmitIssueType;
     private boolean overrideSecurity;
 
     /**
@@ -126,7 +125,6 @@ public class ScarabLink extends TemplateLink
         super.setPage(null);
         super.removePathInfo(ScarabConstants.TEMPLATE);
         isOmitModule = false;
-        isOmitIssueType = false;
         overrideSecurity = false;
     }
 
@@ -266,18 +264,6 @@ public class ScarabLink extends TemplateLink
         isOmitModule = true;
         return this;
     }
-  
-    /**
-     * Causes the link to not include the issue type id.  Useful for templates
-     * where a issue type is not required or desired.
-     *
-     * @return this
-     */
-    public ScarabLink omitIssueType()
-    {
-        isOmitIssueType = true;
-        return this;
-    }
 
     /**
      * Shuts off permission checking.  Use case: a user saves a query with
@@ -310,12 +296,6 @@ public class ScarabLink extends TemplateLink
         if (isSet(moduleid) && !isOmitModule)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
-        }
-        String issuetypeid = data.getParameters()
-            .getString(ScarabConstants.CURRENT_ISSUE_TYPE);
-        if (isSet(issuetypeid) && !isOmitIssueType)
-        {
-            addPathInfo(ScarabConstants.CURRENT_ISSUE_TYPE, issuetypeid);
         }
         String issueKey = data.getParameters()
             .getString(ScarabConstants.REPORTING_ISSUE);

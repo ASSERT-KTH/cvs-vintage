@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.137 2003/08/01 20:43:41 parun Exp $
+ * @version $Id: Search.java,v 1.138 2003/08/19 23:56:36 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -279,7 +279,8 @@ public class Search extends RequireLoginFirstAction
             MITList currentList = user.getCurrentMITList();
             if (currentList == null)
             {
-                query.setIssueType(scarabR.getCurrentIssueType());
+                scarabR.setAlertMessage(l10n.get("NoIssueTypeList"));
+                return;
             }
             else
             {
@@ -316,18 +317,9 @@ public class Search extends RequireLoginFirstAction
             else
             {
                 query.saveAndSendEmail(user, module, context);
-                String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE);
                 scarabR.resetSelectedUsers();
                 scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
-                if (scarabR.getCurrentIssueType() == null)
-                {
-                    setTarget(data, "home,XModuleList.vm");
-                }
-                else
-                {
-                    setTarget(data, template);
-                }
+                setTarget(data, "QueryList.vm");
             }
         }
         else
@@ -372,19 +364,18 @@ public class Search extends RequireLoginFirstAction
     public void doPreparequery(RunData data, TemplateContext context)
          throws Exception
     {        
-        ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
-        getScarabRequestTool(context).resetSelectedUsers();
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Query query = scarabR.getQuery();
+        ScarabUser user = (ScarabUser)data.getUser();
+        user.setCurrentMITList(query.getMITList());
         /* TODO! It would be better if the query could be viewed or
            edited without having to pass the query data via request parameters
            as would be done with the code below, but it caused a few bugs like
            losing users and maybe the mitlist, so revisit this later.
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabUser user = (ScarabUser)data.getUser();
-        Query query = scarabR.getQuery();
         user.setMostRecentQuery(query.getValue());
-        user.setCurrentMITList(query.getMITList());
-        scarabR.resetSelectedUsers();
         */
+        user.setMostRecentQuery(getQueryString(data));
+        scarabR.resetSelectedUsers();
     }
 
     /**
@@ -423,6 +414,7 @@ public class Search extends RequireLoginFirstAction
         setTarget(data, "IssueList.vm");
     }
 
+
     /** 
      * This method handles clicking the Go button in the SearchNav.vm
      * file. First it checks to see if the select box passed in a number
@@ -446,18 +438,23 @@ public class Search extends RequireLoginFirstAction
                 data.getParameters().setString("queryId", go);
                 doRunstoredquery(data, context);
             }
-            else if (go.equals("Search.vm") || go.equals("home,ModuleQuery.vm"))
+            else if (go.startsWith("newQuery"))
             {
+                // do this to load last mitlist
+                user.getMostRecentQuery();
+                if (go.endsWith("IT")) 
+                {
+                    user.setCurrentMITList(null);
+                }
                 // reset selected users map
-                scarabR.resetSelectedUsers();
-
-                setTarget(data, go);
+                scarabR.resetSelectedUsers();                
+                setTarget(data, user.getQueryTarget());
             }
             else if (go.equals("mostRecent"))
             {
                 setTarget(data, "IssueList.vm");
             }
-            else if (go.equals("IssueList.vm"))
+            else if (go.equals("myIssues"))
             {
                 String userId = user.getQueryKey();
                 StringBuffer sb = new StringBuffer(26 + 2*userId.length());
@@ -465,13 +462,13 @@ public class Search extends RequireLoginFirstAction
                     .append("&user_attr_").append(userId).append("=any")
                     .toString();
                 user.setMostRecentQuery(query);
-                setTarget(data, go);
+                setTarget(data, "IssueList.vm");
             }
             else
             {
                 setTarget(data, go);
             }
-            if (go.equals("IssueList.vm") || go.equals("mostRecent"))
+            if (go.equals("myIssues") || go.equals("mostRecent"))
             {
                 List searchResults = null;
                 try
@@ -727,29 +724,29 @@ public class Search extends RequireLoginFirstAction
        // we are only interested in users that can be assignees
        if (newUser != null)
        {
+           MITList mitList = user.getCurrentMITList();
+           List modules = mitList.getModules();
            if (ANY.equals(attrId))
            {
                success = false;
-               MITList mitList = scarabR.getCurrentMITList();
                // check that the user has at least one applicable attribute
                for (Iterator i = mitList.getCommonUserAttributes().iterator(); 
                     i.hasNext() && !success;) 
                {
                    success = newUser.hasPermission(
-                       ((Attribute)i.next()).getPermission(), 
-                       mitList.getModules());
+                       ((Attribute)i.next()).getPermission(), modules);
                }
                if (!success) 
                {
                    // check created by
                    success = newUser.hasPermission(ScarabSecurity.ISSUE__ENTER,
-                                                   mitList.getModules());
+                                                   modules);
                }
            }
            else if (CREATED_BY.equals(attrId))
            {
                success = newUser.hasPermission(ScarabSecurity.ISSUE__ENTER, 
-                   scarabR.getCurrentMITList().getModules());
+                                               modules);
            }
            else
            {
@@ -758,7 +755,7 @@ public class Search extends RequireLoginFirstAction
                    Attribute attribute = 
                        scarabR.getAttribute(new Integer(attrId));
                    success = newUser.hasPermission(attribute.getPermission(), 
-                       scarabR.getCurrentMITList().getModules());
+                                                   modules);
                }
                catch (Exception e)
                {
@@ -945,4 +942,32 @@ public class Search extends RequireLoginFirstAction
         }
     }
 
+    public void doSetquerytarget(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        MITList mitlist = user.getCurrentMITList();
+        if (mitlist != null && mitlist.isSingleModuleIssueType()) 
+        {
+            user.setSingleIssueTypeQueryTarget(
+                mitlist.getIssueType(), data.getTarget());
+        }
+        else 
+        {
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            if (mitlist == null) 
+            {
+                scarabR.setAlertMessage(l10n.get("NoIssueTypeList"));
+            }
+            else 
+            {
+                scarabR.setAlertMessage(l10n.get("IssueTypeListMoreThanOne"));
+            }
+            
+
+            Log.get().warn(
+                "Issue type list did not contain one and only one element.");
+        }
+    }
 }

@@ -1,7 +1,7 @@
 <div class="app" id="loginDONOTCHANGETHISID">
 
-<p>$l10n.format("IfYouAreNotRegistered", $link.omitModule().omitIssueType().setPage("Register.vm"))</p>
-<p>$l10n.format("ForgotYourPassword", $link.omitModule().omitIssueType().setPage("ForgotPassword.vm"))</p>
+<p>$l10n.format("IfYouAreNotRegistered", $link.omitModule().setPage("Register.vm"))</p>
+<p>$l10n.format("ForgotYourPassword", $link.omitModule().setPage("ForgotPassword.vm"))</p>
 
 <h3>$l10n.Login</h3>
 

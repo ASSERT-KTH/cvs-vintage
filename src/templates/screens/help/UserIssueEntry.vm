@@ -70,7 +70,7 @@
   <p>$l10n.IssueEntryP17</p>
   <p>$l10n.IssueEntryP18</p>
   <p>$l10n.IssueEntryP19</p>
-  <p><strong><a name="attachments" id="attachments">$l10n.IssueEntryP20Head</a> </strong>$l10n.IssueEntryP20S1 <strong>$l10n.AddAttachment</strong> $l10n.IssueEntryP20S2 <strong>$l10n.EnterNew</strong> $l10n.IssueEntryP20S3 <strong>$l10n.AddFile</strong> $l10n.IssueEntryP20S4</p>
+  <p><strong><a name="attachments" id="attachments">$l10n.IssueEntryP20Head</a> </strong>$l10n.IssueEntryP20S1 <strong>$l10n.AddAttachment</strong> $l10n.IssueEntryP20S2 <strong>$l10n.EnterNewIssue</strong> $l10n.IssueEntryP20S3 <strong>$l10n.AddFile</strong> $l10n.IssueEntryP20S4</p>
   <h3><a name="duplicates" id="duplicates">$l10n.IssueEntryP21Head</a></h3>
   <p>$l10n.IssueEntryP22</p>
   <ul>

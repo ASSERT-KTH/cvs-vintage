@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.60 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: Query.java,v 1.61 2003/08/19 23:59:20 jmcnally Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery
@@ -266,6 +266,18 @@ public class Query
         }
         save();
         return success;
+    }
+
+    public MITList getMITList()
+        throws TorqueException
+    {
+        MITList mitlist = super.getMITList();
+        if (mitlist == null) 
+        {
+            mitlist = MITListManager.getSingleItemList(getModule(),
+                getIssueType(), null);
+        }
+        return mitlist;
     }
 
     /**

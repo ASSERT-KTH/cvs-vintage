@@ -1,29 +1,12 @@
 <div id="home-enternew" class="app">
 
-<div class="tabs">
- <table cellpadding="3" cellspacing="0" border="0">
-  <tr>
-   #if ($link.setPage("home,ModuleQuery.vm").setAction("SetHomePage").isAllowed())
-    <td><a href="$link">$l10n.ModuleQuery</a></td>
-   #end
-    <th>$l10n.EnterNew$l10n.Dots</th>
-   #if ($link.setPage("home,XModuleList.vm").setAction("SetHomePage").isAllowed())
-	<td><a href="$link">$l10n.BuildXModuleQuery</a></td>
-   #end
-  </tr>
- </table>
-</div>
-
-<!-- commenting out until functionality is added
-<div class="functnbar">
-     <input type="submit" value="$l10n.Save" name="#" />
-</div>
--->       
-
 <h3>$l10n.IssueTypesInProject</h3>
+<div class="colbar">
+  $l10n.EnterNewBriefInstructions
+</div>
 
 #set ($currentModule = $scarabR.CurrentModule)
-#set ($currentModuleIssueTypes = $scarabR.CurrentModule.IssueTypes)
+#set ($currentModuleIssueTypes = $currentModule.IssueTypes)
 
 #if ($currentModuleIssueTypes.isEmpty())
 <p><em>$l10n.NoIssueTypesInModule</em></p>
@@ -35,17 +18,40 @@
     ##  <th>$l10n.ShowInLeftNav</th>
 
       <th>$l10n.Description</th>
+      <th>$l10n.Templates</th>
     </tr>
 
 #foreach ($issueType in $currentModuleIssueTypes)
 
     #indexedRows($velocityCount)
     #set ($rmit = $currentModule.getRModuleIssueType($issueType))
-      <td><a href="$link.setPage("entry,Wizard1.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $issueType.QueryKey).setAction("SelectIssueType")">$rmit.DisplayName</a></td>
+      <td><a href="$link.setPage($scarabR.getNextEntryTemplate($issueType)).addPathInfo($scarabG.Constant.CURRENT_ISSUE_TYPE, $issueType.QueryKey)">$rmit.DisplayName</a></td>
 <!-- commenting out until functionality is added
       <td><input type="checkbox" /></td>
 -->
       <td>$rmit.DisplayDescription</td>
+
+  ## TEMPLATE DROPDOWN
+      <td>
+  #set ($allTemplates = $scarabR.getAllIssueTemplates($issueType))
+  #if ($allTemplates.isEmpty())
+      $l10n.None
+  #else
+    <form action="$link.setPage("EnterNew.vm")" method="post">
+    <input type="hidden" name="action" value="TemplateList" />
+    <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
+    ##<input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
+    ##    value="$issueType.QueryKey" />
+    <select name="templateId" onchange="this.form.submit();">
+         <option value="">$l10n.SelectTemplate</option>
+     #foreach ($template in $allTemplates)
+         <option value="$template.Issue.IssueId">$template.Name</option>
+     #end
+    </select>
+    <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
+    </form>
+  #end
+      </td>
     </tr>        
 #end   
              

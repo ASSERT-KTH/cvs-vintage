@@ -1,9 +1,6 @@
 #if ($scarabR.CurrentModule)
   #set ($module = $scarabR.CurrentModule)
 #end
-#if ($scarabR.CurrentIssueType)
-  #set ($currentIssueType = $scarabR.CurrentIssueType)
-#end
 #set ($user = $data.User)
 
 #if ($user.hasLoggedIn() && $module)
@@ -22,40 +19,15 @@
 </form>
 </td>
 
-#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
-#if ($issueTypes && $issueTypes.size() > 1)
-<td>
-<form action="$link.setPage($user.HomePage).setAction("SelectIssueType")" 
-    method="get">
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
-    value="$user.HomePage" />
- <select name="$scarabG.Constant.NEW_ISSUE_TYPE" tabindex="3" 
-    onchange="this.form.submit();">
-  #foreach($issueType in $issueTypes)
-    #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
-    <option#if ($issueType.QueryKey == $currentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
-  #end
- </select>
-## give actionEvent as hidden field so user does not have to click Go,
-## if javascript is enabled. show button only if script disabled.
-  <input type="hidden" value="foo" name="eventSubmit_doSelect" />
-  <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelect" 
-      tabindex="4" /></noscript>
-</form>
-</td>
-#end
-
-#if ($currentIssueType)
 <td>
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
-<input type="hidden" name="$scarabG.Constant.REMOVE_CURRENT_MITLIST_QKEY" value="true" />
   <select name="go" tabindex="3" onchange="this.form.submit();">
-    <option value="home,ModuleQuery.vm">$l10n.SelectQuery</option>
-    <option value="home,ModuleQuery.vm">&#160;$l10n.NewModuleQuery</option>
-    <option value="Search.vm">&#160;$l10n.Custom</option>
-    <option value="IssueList.vm">&#160;$l10n.MyIssues</option>
-    #if ($currentIssueType && $user.hasMostRecentQuery())
+    <option value="newQuery">$l10n.SelectQuery</option>
+    <option value="newQuery">&#160;$l10n.NewQuery</option>
+    <option value="newQueryIT">&#160;$l10n.NewQueryWithNewIssueTypes</option>
+    <option value="myIssues">&#160;$l10n.MyIssues</option>
+    #if ($user.hasMostRecentQuery())
         <option value="mostRecent">&#160;$l10n.MostRecent</option>
     #end
 
@@ -82,33 +54,6 @@
   <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 </form>
   </td>
-#end
-
-#if ($currentIssueType &&  $scarabR.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
-  ## Add Template list to the top bar so that using a template will be easier
-  #set ($allTemplates = $scarabR.AllIssueTemplates)
-  #if ($allTemplates.size() > 0)    
-   <td>
-    <form action="$link.setPage("SaveTemplate.vm")" method="post">
-    <input type="hidden" name="action" value="TemplateList" />
-    <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
-    <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" 
-        value="$scarabR.NextEntryTemplate" />
-    ##set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
-    <select name="templateId" tabindex="5" onchange="this.form.submit();">
-         <option value="0">$l10n.SelectTemplate</option>
-     #foreach ($template in $allTemplates)
-       ##set ($isCreatedBy = $template.Issue.isCreatingUser($user))
-      ##if ($permItemDelete || $isCreatedBy)
-         <option value="$template.Issue.IssueId">$template.Name</option>
-       ##end
-     #end
-    </select>
-    <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
-    </form>
-   </td>
-  #end
-#end
   </tr>
  </table>
 </div>

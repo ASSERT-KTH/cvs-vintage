@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.35 2003/08/19 18:10:23 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.36 2003/08/19 23:59:20 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -1007,6 +1007,21 @@ public  class MITList
                 }
             }
             crit.add(c);
+        }
+    }
+
+    public void addAll(MITList list)
+        throws TorqueException
+    {
+        List currentList = getExpandedMITListItems();
+        for (Iterator i = list.getExpandedMITListItems().iterator(); 
+             i.hasNext();)
+        {
+            MITListItem item = (MITListItem)i.next();
+            if (!currentList.contains(item)) 
+            {
+                addMITListItem(item);
+            }
         }
     }
 

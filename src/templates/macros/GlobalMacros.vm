@@ -56,7 +56,8 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
   #set ($attr = $attrValue.Attribute)
-  #set ($module = $attrValue.Issue.Module)
+  #set ($issue = $attrValue.Issue)
+  #set ($module = $issue.Module)
   #if ($attrInput.get($optionFieldName).Value)
     #set($currentValue = $attrInput.get($optionFieldName).Value)
   #elseif ($templAttrInput.get($optionFieldName).Value)
@@ -67,7 +68,7 @@
   #if ($size.length() == 0)
   <option value="">$l10n.Choose</option>
   #end
-  #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
+  #foreach ($option in $module.getOptionTree($attr, $issue.IssueType.IssueTypeForTemplateType))
     #set ($selected = false)
     #if ($currentValue && $option.OptionId == $currentValue)
          #set ($selected = true)
@@ -859,7 +860,7 @@ Prints out a date entry form.
 #else
 
 #if ($showTemplates)
-#set ($allTemplates = $scarabR.IssueTemplates)
+#set ($allTemplates = $scarabR.getAllIssueTemplates($issueType))
 #if ($allTemplates.size() > 0)
 <h3>$l10n.format("ApplyTemplate", $module.getRModuleIssueType($issueType).DisplayName.toLowerCase())</h3>
 <div class="axial">
@@ -898,7 +899,10 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
 #set ($templateId = $data.Parameters.getString("templateId"))
 #if ($templateId && $templateId.trim().length() > 0)
   #set ($templ = $scarabR.getIssueTemplate($templateId))
+  $user.setLastEnteredTemplate($templ)
   <input type="hidden" name="templateId" value="$templateId"/>
+#else
+  $user.setLastEnteredIssueType($issueType)
 #end
 
 <div class="axial">

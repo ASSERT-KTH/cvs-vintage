@@ -55,7 +55,7 @@
   <p>$l10n.IssueEntryScreenP3 <a href="$link.setPage("help,UserIssueEntry.vm")#attachments">$l10n.Attachments</a>.</p>
   <p>$l10n.IssueEntryScreenP5</p>
   <ul>
-    <li>$l10n.EnterNew$l10n.Dots</li>
+    <li>$l10n.EnterNewIssue</li>
     <li>$l10n.AssignIssue</li>
     <li>$l10n.ViewThisIssue</li>
     <li>$l10n.StartPage</li>

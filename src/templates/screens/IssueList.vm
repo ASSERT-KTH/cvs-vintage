@@ -27,20 +27,14 @@
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 #end
 #exportFormats('')
-#if ($issueListSize <= 10 && (!$mitlist || $mitlist.isSingleModuleIssueType()))
+#if ($issueListSize <= 10 && $mitlist.isSingleModuleIssueType())
   #processQueryResults('')
 #end
 </div>
 #end
 #end
 #if ($issueListSize == 0)
-<h3>
-#if ($mitlist)
-  $page.Title  
-#else
-  $l10n.format("ForRModuleIssueType", $page.Title, $scarabR.CurrentRModuleIssueType.DisplayName)
-#end
-</h3>
+<h3>$page.Title</h3>
   <p><em>$l10n.NoMatchingIssues</em></p>
 #else
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
@@ -55,14 +49,10 @@
 #queryFunctionBar("")
 
 <h3>
-#if ($mitlist)
-  $l10n.format("ForFollowingModulesIssueTypes", $page.Title)
-#else
-  $l10n.format("ForRModuleIssueType", $page.Title, $scarabR.CurrentRModuleIssueType.DisplayName)
-#end
-$l10n.format("IssueListCount", $totalCount)</h3>
+$l10n.format("ForFollowingModulesIssueTypes", $page.Title)
+$l10n.format("IssueListCount", $totalCount)
+</h3>
 
-#if ($mitlist)
   <div class="colbar">
   #set ($list = $user.CurrentMITList)
   #if ($list.isModifiable())
@@ -73,7 +63,6 @@ $l10n.format("IssueListCount", $totalCount)</h3>
     <div>$list.Name</div>
   #end
   </div>
-#end
 
 <div class="colbar">
 <small>
@@ -134,19 +123,15 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
      #end
   </th>
 
-#if (!$mitlist)
-   #set ($module = $scarabR.CurrentRModuleIssueType.Module)
-   #set ($issueType = $scarabR.CurrentRModuleIssueType.IssueType)
-#end
-
 ## ISSUE ATTRIBUTE VALUES
 #if (!$noAttrs)
 #set ($rmuas = $scarabR.RModuleUserAttributes)
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
- #set ($value = $userAttribute.Name)
- #if (!$mitlist)
-   #set ($value = $module.getRModuleAttribute($userAttribute, $issueType).DisplayValue)
+ #if ($mitlist.isSingleModuleIssueType())
+   #set ($value = $mitlist.Module.getRModuleAttribute($userAttribute, $mitlist.IssueType).DisplayValue)
+ #else
+   #set ($value = $userAttribute.Name)
  #end
  <th>
      #if ($sortColumn.equals($userAttribute.AttributeId.toString()))

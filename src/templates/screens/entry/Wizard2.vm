@@ -1,8 +1,8 @@
 <div id="wizard2" class="app">
 
 #set ($currentIssue = $scarabR.ReportingIssue)
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($module = $currentIssue.Module)
+#set ($issueType = $currentIssue.IssueType)
 
 #set ($templateId = $data.Parameters.getString("templateId"))
 <form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
@@ -12,7 +12,7 @@
 <input type="hidden" name="templateId" value="$!templateId" />
 
 
-<h3>$l10n.format("NewIssue", $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase())</h3>
+<h3>$l10n.format("NewIssue", $module.getRModuleIssueType($issueType).DisplayName.toLowerCase())</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>

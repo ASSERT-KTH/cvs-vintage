@@ -54,12 +54,16 @@ import org.apache.turbine.TemplateContext;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.util.Log;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Wizard1.java,v 1.6 2003/08/01 20:43:40 parun Exp $
+ * @version $Id: Wizard1.java,v 1.7 2003/08/20 00:00:19 jmcnally Exp $
  */
 public class Wizard1 extends Default
 {
@@ -68,7 +72,22 @@ public class Wizard1 extends Default
                               RunData data, TemplateContext context)
         throws Exception
     {
-        String name = scarabR.getCurrentRModuleIssueType().getDisplayName();
+        Issue newIssue = scarabR.getReportingIssue();
+        IssueType issueType = newIssue.getIssueType();
+        RModuleIssueType rmit = newIssue.getModule()
+            .getRModuleIssueType(issueType);
+        String name;
+        if (rmit == null)
+        {
+            name = issueType.getName();
+            Log.get().warn("Used global name of issueType, " + name + 
+                           ", but the module version should be available.");
+        }
+        else
+        {
+            name = rmit.getDisplayName();
+        }
+
         return l10n.format("EnterNewIssueType", name);
     }
 }

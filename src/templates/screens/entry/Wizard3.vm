@@ -6,7 +6,7 @@
 <form method="post" action="$link.setPage("entry,Wizard3.vm")" enctype="multipart/form-data">
 <input type="hidden" name="action" value="ReportIssue" />
 
-<input type="hidden" name="issueType" value="$scarabR.CurrentRModuleIssueType.IssueType.IssueTypeId" />
+<input type="hidden" name="issueType" value="$issueType.IssueTypeId" />
 
 #set ($moduleAttributeGroups = $module.getAttributeGroups($issueType))
 #set ($showTemplates = true)

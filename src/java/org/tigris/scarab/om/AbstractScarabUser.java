@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.87 2003/08/19 18:10:23 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.88 2003/08/19 23:59:20 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -90,7 +90,7 @@ public abstract class AbstractScarabUser
         "getRModuleUserAttribute";
 
     private static final String[] HOME_PAGES = {"home,EnterNew.vm", 
-        "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
+        "query", "Index.vm"};
 
     private static final int MAX_INDEPENDENT_WINDOWS = 10;
 
@@ -154,6 +154,11 @@ public abstract class AbstractScarabUser
      */
     private Map mitListMap;
 
+    /**
+     * The last entered issue type
+     */
+    private Map enterIssueMap;
+
     private Map activeKeys = new HashMap();
     private transient ThreadLocal threadKey = null;
 
@@ -180,6 +185,7 @@ public abstract class AbstractScarabUser
         issueMap = new HashMap();
         reportMap = new HashMap();
         mitListMap = new HashMap();
+        enterIssueMap = new HashMap();
         mostRecentQueryMap = new HashMap();
         mostRecentQueryMITMap = new HashMap();
         associatedUsersMap = new HashMap();
@@ -753,10 +759,19 @@ public abstract class AbstractScarabUser
             {
                 UserPreference up = UserPreferenceManager.getInstance(uid);
                 homePage = up.getHomePage();
+                if ("query".equals(homePage)) 
+                {
+                    homePage = getQueryTarget();
+                }
+                
                 int i = 0;
                 while (homePage == null || !isHomePageValid(homePage, module)) 
                 {
                     homePage = HOME_PAGES[i++];
+                    if ("query".equals(homePage)) 
+                    {
+                        homePage = getQueryTarget();
+                    }
                 }
             }
         }
@@ -797,6 +812,51 @@ public abstract class AbstractScarabUser
         UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setHomePage(homePage);
         up.save();
+    }
+
+    // TODO: make this persist
+    private final Map queryTargetMap = new HashMap();
+    /**
+     * @see ScarabUser#getQueryTarget()
+     */
+    public String getQueryTarget()
+    {
+        MITList mitlist = getCurrentMITList();
+        String target = null;
+        if (mitlist == null)
+        {
+            target = "IssueTypeList.vm";
+        }
+        else if (mitlist.isSingleModuleIssueType())
+        {
+            try 
+            {
+                Integer issueTypeId = mitlist.getIssueType().getIssueTypeId();
+                target = (String)queryTargetMap.get(issueTypeId);
+            }
+            catch (Exception e)
+            {
+                Log.get().warn("Could not determine query target.", e);
+            }
+            
+            if (target == null) 
+            {
+                target = "Search.vm";
+            }
+        }
+        else 
+        {
+            target = "AdvancedQuery.vm";
+        }
+        return target;
+    }
+
+    /**
+     * @see ScarabUser#setSingleIssueTypeQueryTarget(IssueType, String)
+     */
+    public void setSingleIssueTypeQueryTarget(IssueType type, String target)
+    {
+        queryTargetMap.put(type.getIssueTypeId(), target);
     }
 
     /**
@@ -1082,6 +1142,7 @@ public abstract class AbstractScarabUser
     {
         activeKeys.remove(key);
         mitListMap.remove(key);
+        enterIssueMap.remove(key);
     }
 
     /**
@@ -1110,7 +1171,6 @@ public abstract class AbstractScarabUser
     private MITList getCurrentMITList(Object key)
     {
         Log.get().debug("Getting mitlist for key " + key);
-        MITList mitList = (MITList)mitListMap.get(key);
         return (MITList)mitListMap.get(key);
     }
 
@@ -1267,36 +1327,100 @@ public abstract class AbstractScarabUser
                 Log.get().error("Nonfatal error clearing old queries.  "
                                 + "This could be a memory leak.", e);
             }
-            mostRecentQueryMap.put(key, queryString);
             MITList list = getCurrentMITList(key);
-            /*
-            FIXME! currently searches that occur on the current issue type
-            do not save the issue type that they used along with the query
-            this means that if first, a query is run against defects that 
-            returns a list of defects, then the current issue type is changed
-            to patches, finally followed by executing the 'Most recent' query,
-            it will return patches (if anything).  The code below is my (jdm)
-            attempt to quickly fix this but had unforeseen consequences.
-            Need to think about it some more.
-
-            if (list == null) 
+            if (list != null) 
             {
-                try 
-                {
-                    list = MITListManager.getSingleItemList(getCurrentModule(),
-                         getCurrentIssueType(), null);
-                }
-                catch (Exception e)
-                {
-                    Log.get().warn(
-                        "Error setting module/issuetype for most recent query",
-                        e);
-                }
+                mostRecentQueryMITMap.put(key, list);                
+                mostRecentQueryMap.put(key, queryString);
             }
-            */            
-            mostRecentQueryMITMap.put(key, list);
+            else 
+            {
+                Log.get().warn(
+                    "Tried to set most recent query without any mitlist.");
+            }
         }
     }
+
+
+    public Object lastEnteredIssueTypeOrTemplate()
+    {
+        return lastEnteredIssueTypeOrTemplate(getGenThreadKey());
+    }
+    private Object lastEnteredIssueTypeOrTemplate(Object key)
+    {
+        Log.get().debug("Getting last entered type for key " + key);
+        return enterIssueMap.get(key);
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setLastEnteredIssueType(IssueType)
+     */
+    public void setLastEnteredIssueType(IssueType type)
+    {
+        setLastEnteredIssueTypeOrTemplate(type);
+    }
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setLastEnteredTemplate(Issue)
+     */
+    public void setLastEnteredTemplate(Issue template)
+    {
+        setLastEnteredIssueTypeOrTemplate(template);
+    }
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setLastEnteredIssueTypeOrTemplate(IssueType)
+     */
+    private void setLastEnteredIssueTypeOrTemplate(Object obj)
+    {
+        if (obj != null) 
+        {
+            setLastEnteredIssueTypeOrTemplate(getGenThreadKey(), obj);
+        }
+        else if (getThreadKey() != null)
+        {
+            setLastEnteredIssueTypeOrTemplate(getThreadKey(), null);
+        }
+    }
+    private void setLastEnteredIssueTypeOrTemplate(Object key, Object obj)
+    {
+        if (obj == null) 
+        {
+            enterIssueMap.remove(key);
+        }
+        else 
+        {
+            try
+            {
+                if (enterIssueMap.size() >= MAX_INDEPENDENT_WINDOWS) 
+                {
+                    // make sure lists are not being accumulated, set a 
+                    // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
+                    int intKey = Integer.parseInt(String.valueOf(key));
+                    int count = 0;
+                    for (int i=intKey-1; i>=0; i--) 
+                    {
+                        String testKey = String.valueOf(i);
+                        if (lastEnteredIssueTypeOrTemplate(testKey) != null)
+                        {
+                            if (++count >= MAX_INDEPENDENT_WINDOWS) 
+                            {
+                                enterIssueMap.remove(testKey);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.get().error("Nonfatal error clearing entered issue types. "
+                                + "This could be a memory leak.", e);
+            }
+            Log.get().debug("Set issue type for key " + key + " to " + obj);
+            
+            enterIssueMap.put(key, obj);
+        }
+    }
+
 
     private void setUsersMap(Map map, Map users)
         throws Exception
@@ -1395,27 +1519,7 @@ public abstract class AbstractScarabUser
     public IssueType getCurrentIssueType()
         throws Exception
     {
-        IssueType issueType = (IssueType)currentIssueType.get();
-        if (issueType == null && getCurrentModule() != null)
-        {
-            Module currentModule = getCurrentModule();
-            List navIssueTypes = currentModule.getNavIssueTypes();
-            if (navIssueTypes.size() > 0)
-            {
-                issueType = (IssueType)navIssueTypes.get(0);
-            }
-            else 
-            {
-                List activeIssueTypes = currentModule.getIssueTypes(true);
-                if (activeIssueTypes.size() > 0)
-                {
-                    issueType = (IssueType)activeIssueTypes.get(0);
-                }
-            }
-            setCurrentIssueType(issueType);
-        }
-        
-        return issueType;
+        return (IssueType)currentIssueType.get();
     }
     
     /**
@@ -1458,44 +1562,19 @@ public abstract class AbstractScarabUser
         IssueType issueType = null;
 
         // Delete current attribute selections for user
-        Iterator currentAttributes = null;
-        if (mitList == null) 
-        {
-            Criteria crit = new Criteria();
-            crit.add(RModuleUserAttributePeer.USER_ID, getUserId());
-            issueType = getCurrentIssueType();
-            module = getCurrentModule();
-            crit.add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                     issueType.getIssueTypeId());
-            currentAttributes = RModuleUserAttributePeer.doSelect(crit)
-                .iterator();
-        }
-        else 
-        {
-            currentAttributes = mitList.getSavedRMUAs().iterator();
-        }
-
-        while (currentAttributes.hasNext()) 
+        for (Iterator currentAttributes = mitList.getSavedRMUAs().iterator();
+               currentAttributes.hasNext();) 
         {
             deleteRModuleUserAttribute(
                 (RModuleUserAttribute)currentAttributes.next());
         }
 
-        Iterator iter = attributes.iterator();
         int i = 1;
-        while (iter.hasNext()) 
+        for (Iterator iter = attributes.iterator(); iter.hasNext();) 
         {
             Attribute attribute = (Attribute)iter.next();
-            RModuleUserAttribute rmua = null;
-            if (mitList != null)
-            {
-                rmua = mitList.getNewRModuleUserAttribute(attribute);
-            }
-            else 
-            {
-                rmua = getNewRModuleUserAttribute(attribute, module, issueType);
-            }
+            RModuleUserAttribute rmua = 
+                mitList.getNewRModuleUserAttribute(attribute);
             rmua.setOrder(i++);
             rmua.save();
         }
@@ -1515,7 +1594,8 @@ public abstract class AbstractScarabUser
             + "; ReportMap=" + reportMap.size()
             + "; MITListMap=" + mitListMap.size()
             + "; MostRecentQueryMap=" + mostRecentQueryMap.size()
-            + "; MostRecentQueryMITMap=" + mostRecentQueryMITMap.size();
+            + "; MostRecentQueryMITMap=" + mostRecentQueryMITMap.size()
+            + "; EnterIssueMap=" + enterIssueMap.size();
     }
 
     /**

@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.24 2003/08/01 20:43:41 parun Exp $
+ * @version $Id: FreshenUserValve.java,v 1.25 2003/08/19 23:59:51 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -85,6 +85,7 @@ public class FreshenUserValve
     {
         XMIT_SCREENS.put("home,XModuleList.vm", null);
         XMIT_SCREENS.put("AdvancedQuery.vm", null);
+        XMIT_SCREENS.put("Search.vm", null);
         XMIT_SCREENS.put("IssueList.vm", null);
         XMIT_SCREENS.put("ViewIssue.vm", null);
         XMIT_SCREENS.put("QueryList.vm", null);
@@ -169,8 +170,6 @@ public class FreshenUserValve
             }
         }
 
-        // should add the currently reporting issue here as well
-
         // Pass control to the next Valve in the Pipeline
         context.invokeNext(data);
     }
@@ -208,43 +207,9 @@ public class FreshenUserValve
                     ", but did not contain enough info to create issue.");
             }
         }
-        // If they have just changed modules,
-        // Set the current issue type to the new module's first active issue type.
-        Module currentModule = user.getCurrentModule();
-        if (module != null && currentModule != null &&
-            !module.getModuleId().equals(currentModule.getModuleId()))
-        {
-            IssueType issueType = null;
-            List navIssueTypes = module.getNavIssueTypes();
-            if (navIssueTypes.size() > 0)
-            {
-                issueType = (IssueType)navIssueTypes.get(0);
-            }
-            else 
-            {
-                List activeIssueTypes = module.getIssueTypes(true);
-                if (activeIssueTypes.size() > 0)
-                {
-                    issueType = (IssueType)activeIssueTypes.get(0);
-                }
-            }
-            user.setCurrentIssueType(issueType);
-            if (issueType != null)
-            {
-                 parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
-                            issueType.getQueryKey());
-            }
-            else
-            {
-                 parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, "");
-            }
-        }
         user.setCurrentModule(module);
     }
 
-    // FIXME! the setCurrentModule method now contains code setting the 
-    // issue type.  So the separation is now fuzzy, we should probably combine
-    // the methods to avoid confusion
     private void setCurrentIssueType(ScarabUser user, RunData data)
         throws TurbineException
     {
@@ -256,6 +221,8 @@ public class FreshenUserValve
             try
             {
                 issueType = IssueTypeManager.getInstance(new Integer(key));
+                System.out.println("setting issue type: " + 
+                                   issueType.getName() + " based on curit");
             }
             catch (NumberFormatException noIssueType)
             {
@@ -265,49 +232,29 @@ public class FreshenUserValve
                 throw new TurbineException(e);
             }
         }
-        else if (parameters.getString("id") != null)
+        else 
         {
-            try
+            String templateId = data.getParameters().getString("templateId");
+            if (templateId != null && templateId.length() > 0) 
             {
-                issueType =
-                    IssueManager.getIssueById(parameters.getString("id")).getIssueType();
-                parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE,
-                             issueType.getQueryKey());
-            }
-            catch (Exception e)
-            {
-                // ignore
-                Log.get().debug("'id' parameter was available, "
-                    + parameters.getString("id") +
-                    ", but did not contain enough info to create issue.");
-            }
-        }
-
-        boolean isActive = false;
-        if (issueType != null && !issueType.getDeleted())
-        {
-            try
-            {
-                RModuleIssueType rmit = user.getCurrentModule()
-                    .getRModuleIssueType(issueType);
-                isActive = rmit != null && rmit.getActive();
-            }
-            catch (Exception e)
-            {
-                Log.get().warn("Unable to locate a mapping between the " +
-                               "specified issue type and the current module",
-                               e);
+                try
+                {
+                    IssueType templateType = IssueManager.getInstance(
+                        new Long(templateId)).getIssueType();
+                    issueType = templateType.getIssueTypeForTemplateType();
+                    parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE,
+                                         issueType.getQueryKey());
+                    System.out.println("setting issue type: " + 
+                        issueType.getName() + " based on template");
+                }
+                catch (Exception e)
+                {
+                    Log.get().debug("'templateId' parameter was available, "
+                        + parameters.getString("templateId") +
+                        ", but invalid.", e);
+                }
             }
         }
-
-        if (isActive)
-        {
-            user.setCurrentIssueType(issueType);
-        }
-        else
-        {
-            user.setCurrentIssueType(null);
-            Log.get().debug("Set current IssueType to null");
-        }
+        user.setCurrentIssueType(issueType);
     }
 }

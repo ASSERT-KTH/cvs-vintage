@@ -73,7 +73,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for the user configuration of the issue list.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ConfigureIssueList.java,v 1.35 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: ConfigureIssueList.java,v 1.36 2003/08/19 23:56:35 jmcnally Exp $
  */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -108,6 +108,11 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                             .getString(ScarabConstants.TEMPLATE, 
                                        "ConfigureIssueList.vm"));
             return;
+        }
+        else if (((ScarabUser)data.getUser()).getCurrentMITList() == null) 
+        {
+            scarabR.setAlertMessage(l10n.get("NoIssueTypeList"));
+            return;            
         }
         else
         {

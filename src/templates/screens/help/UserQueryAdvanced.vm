@@ -30,7 +30,7 @@
   </div>
   <p> 
   <h3><a name="top" id="top"></a>$l10n.AdvancedQueries</h3>
-  <p>$l10n.UQAP1 $l10n.UQAP1S2 <strong>$l10n.NewModuleQuery</strong> $l10n.UQAP1S3 <strong>$l10n.Submit</strong> $l10n.UQAP1S4</p>
+  <p>$l10n.UQAP1 $l10n.UQAP1S2 <strong>$l10n.NewQuery</strong> $l10n.UQAP1S3 <strong>$l10n.Submit</strong> $l10n.UQAP1S4</p>
   <p>$l10n.UQAP2</p>
   <ul>
     <li>$l10n.SearchKnowledgeBase</li>

@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.88 2003/07/28 16:53:39 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.89 2003/08/19 23:59:20 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -319,6 +319,22 @@ public interface ScarabUser extends User
     void setHomePage(String homePage)
         throws Exception;
 
+    /**
+     * The template to show if the user is going to start a new query.
+     * if the user has not selected a set of issue types it will return
+     * IssueTypeList.vm.  If a list is already selected, then it will go to
+     * AdvancedQuery.vm unless the list is only one issue type and the user
+     * has last selected Custom query for that issue type.
+     */
+    public String getQueryTarget();
+
+    /**
+     * Setup the users preference when entering a query for the given
+     * issue type.  Valid values of target are AdvancedQuery.vm 
+     * and Search.vm (Custom query).
+     */
+    public void setSingleIssueTypeQueryTarget(IssueType type, String target);
+
 
     List getMITLists()
         throws TorqueException;
@@ -347,6 +363,10 @@ public interface ScarabUser extends User
     MITList getCurrentMITList();
     void setCurrentMITList(MITList list);
     void removeItemsFromCurrentMITList(String[] ids);
+
+    Object lastEnteredIssueTypeOrTemplate();
+    void setLastEnteredIssueType(IssueType type);
+    void setLastEnteredTemplate(Issue template);
 
     /**
      * The most recent query entered.  This method has the effect of loading
