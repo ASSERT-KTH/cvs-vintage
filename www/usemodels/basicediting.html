@@ -4,10 +4,11 @@
     <title>Basic Editing Use Cases</title>
   </head>
 
-  <body>
-    <h1>Basic Editing Use Cases</h1>
+  
+<body bgcolor="#FFFFFF">
+<h1>Basic Editing Use Cases</h1>
 
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 
 
 <a name="UC-08"></a>
@@ -101,24 +102,28 @@
   <tr>
     <td bgcolor="white" COLSPAN="2"
     valign="top"><b>Notes/Questions:</b><br>
-       <ul>
-         <li> In bugzilla, anyone can reassign any issue to anyone.  
+       
+      <ul>
+         
+        <li> In bugzilla, anyone can reassign any issue to anyone.  
               In Issuezilla, permissions are limited somewhat and assignees 
               are limited to project members.  What enterprise-level 
-              requirements are there on who can assign what to whom in scarab?
-         <li> Workload and relevant knowledge are factors in making good assignments.
-         <li> Estimated effort to resolve?
-         <li> Is this really more of a 'triage incoming issues' use case?
-         <li> Make this extend a general editing use case.
-        </ul>
+              requirements are there on who can assign what to whom in scarab? <font color="#00CC33">In Scarab, we will only want to be able to assign an issue to someone else in a given project.</font>
+        <li> Workload and relevant knowledge are factors in making good assignments.
+         
+        <li> Estimated effort to resolve?
+<font color="#339933">This can be an attribute on the issue.</font>         
+        <li> Is this really more of a 'triage incoming issues' use case?
+         
+        <li> Make this extend a general editing use case.
+        
+      </ul>
     </td>
   </tr>
 </table>
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
-
-
-<a name="UC-09"></a>
+<!-- *************************************************************** -->
+<a name="UC-09"></a> 
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
@@ -143,7 +148,7 @@
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
     <td bgcolor="white" valign="top">
-       User: Any Role (High Priority, High Frequency)<br> 
+       User: Change an issue permission (High Priority, High Frequency)<br> 
        Scarab: The scarab system.<br>
     </td>
   </tr>
@@ -209,7 +214,7 @@
   </tr>
 </table>
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 
 <a name="UC-10"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
@@ -226,7 +231,7 @@
   </tr>
 </table>
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 
 <a name="UC-11"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
@@ -242,7 +247,7 @@
   </tr>
 </table>
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 
 <a name="UC-12"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
@@ -260,13 +265,13 @@
 </table>
 
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 
 <a name="UC-13"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-    <td bgcolor="white" valign="top">UC-13: Reject invalid issue/td>
+    <td bgcolor="white" valign="top">UC-13: Reject invalid issue
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
@@ -279,7 +284,7 @@
 </table>
 
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 <a name="UC-14"></a>
       <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
         <TBODY>
@@ -313,8 +318,13 @@ vAlign=top><B>Extends:</B></TD>
             Want to have visibility into project activity and progress</TD></TR>
         <TR>
           <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
-          <TD bgColor=white vAlign=top>Logged In<BR>Project set up<BR>User has 
-            access to the project(s) that s/he is copying to and from</TD></TR>
+          <TD bgColor=white vAlign=top>
+      <p>Logged In<BR>
+        Project set up<br>
+        Issue Exists.<BR>
+        User has 
+            access to the issues and project(s) that s/he is copying to and from</p>
+      </TD></TR>
         <TR>
           <TD align=right bgColor=white vAlign=top><B>Results:</B></TD>
           <TD bgColor=white vAlign=top>Issue is copied within the same project 
@@ -328,10 +338,12 @@ vAlign=top><B>Extends:</B></TD>
           <TD bgColor=white vAlign=top>
             <P>Does the user have access to the project?<BR>If no edits are made 
             to the copied issue, prevent user from creating a duplicate.<BR>No 
-            anonymous users can copy and then create issues<BR>At what point do 
-            users have to log in?<BR>User can copy to either one or several 
+            anonymous users can copy and then create issues<BR>
+        At what point do 
+            users have to log in? <font color="#009966">Before they view the issue.</font><BR>
+        User can copy to either one or several 
             projects based on his/her permissions. Copy within the same project 
-            would require an edit. </P>
+            would require an edit.</P>
             <P>Is IssueChangedConfirmation screen the appropriate 
           response?</P></TD></TR>
         <TR>
@@ -367,7 +379,7 @@ vAlign=top><B>Extends:</B></TD>
             <UL>
               <LI>None </LI></UL></TD></TR></TBODY></TABLE>
 <br><hr><br>
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 <A name=UC-15></A>
       <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
         <TBODY>
@@ -405,7 +417,9 @@ vAlign=top><B>Extends:</B></TD>
           <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
           <TD bgColor=white vAlign=top>           
             Logged In<BR>
-            Project set up<BR>
+            Project set up<br>
+      Issue Exists.
+      <BR>
             User has access to the project(s) that s/he is moving the issue to 
             and from</TD>
         </TR>
@@ -455,7 +469,7 @@ vAlign=top><B>Extends:</B></TD>
             <UL>
               <LI>None </LI></UL></TD></TR></TBODY></TABLE><BR>
       
-<!-- --------------------------------------------------------------- -->
+<!-- *************************************************************** -->
 <A name=UC-17></A>
       <TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
         <TBODY>
@@ -529,7 +543,7 @@ vAlign=top><B>Extends:</B></TD>
           <TD align=right bgColor=white vAlign=top><B>Notes/Questions:</B></TD>
           
     <TD bgColor=white vAlign=top> 
-      <p>Does the user have access to the project?<br>
+      <p>Does the user have access to the project and issue?<br>
         Does it make sense to offer this as an option at the end of the issue 
         creation process? <br>
         Can the user attach file(s) to several projects at one time? <br>
@@ -573,9 +587,7 @@ vAlign=top><B>Extends:</B></TD>
               <LI>None </LI></UL></TD>
 
 <HR>
-      <BR><!-- project-specific footer --><!--
-WARNING: Include: Error reading file /usr/tigris/html/jrobbins/www/project_footer.html 
---><!-- end project-specific footer --><!-- End Servlet-Specific Content --><!-- Page End --><!-- End Main Window Table -->
+
   <TR>
     <TD align=left bgColor=#ffffff><FONT 
       face="Verdana, Arial, Helvetica, sans-serif" size=2><A 
