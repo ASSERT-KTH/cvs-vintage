@@ -54,7 +54,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import com.workingdogs.village.Record;
 
