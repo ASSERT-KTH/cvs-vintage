@@ -26,7 +26,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.11 2002/08/20 14:37:01 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.12 2002/08/20 22:48:45 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -236,7 +236,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
         MStimulus target = (MStimulus) getTarget();        
 	MModelElement newTarget = (MModelElement) target.getNamespace();
                 
-        UmlFactory.getFactory().getCommonBehavior().removeStimulus(target);
+        target.remove();
 		if(newTarget != null) { 
 			navigateTo(newTarget);
 		}

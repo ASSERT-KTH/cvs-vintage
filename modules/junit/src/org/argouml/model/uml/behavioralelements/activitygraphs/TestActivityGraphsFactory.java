@@ -49,5 +49,4 @@ public class TestActivityGraphsFactory extends TestCase {
 
 	CheckUMLModelHelper.createAndRelease(this, 
 	    ActivityGraphsFactory.getFactory(), objs);
-    }        public void testRemoves() {    	String [] objs = {	    "ActionState",	    "ActivityGraph",	    "CallState",	    "ClassifierInState",	    "ObjectFlowState",	    "Partition",	    "SubactivityState"	};	CheckUMLModelHelper.testRemove(this, 	    ActivityGraphsFactory.getFactory(), objs);    }
-}
+    }    }

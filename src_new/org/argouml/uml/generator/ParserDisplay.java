@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.27 2002/08/20 20:42:33 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.28 2002/08/20 22:48:45 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -1216,7 +1216,7 @@ nextProp:
 
       // don't forget to remove old internals!
       for (int i = 0; i < oldinternals.size(); i++)
-      UmlFactory.getFactory().getStateMachines().removeTransition((MTransition)oldinternals.elementAt(i));
+      ((MTransition)oldinternals.elementAt(i)).remove();
       internals.addAll(trans);
       st.setInternalTransitions(trans);
   }

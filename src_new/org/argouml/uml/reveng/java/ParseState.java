@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.4 2002/08/20 19:30:56 kataka Exp $
+// $Id: ParseState.java,v 1.5 2002/08/20 22:48:44 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -197,7 +197,7 @@ class ParseState
 	for(Iterator i = obsoleteInnerClasses.iterator(); i.hasNext(); ) {
 	    MModelElement element = (MModelElement)i.next();
 	    if(element instanceof MClassifier) {
-	    	UmlFactory.getFactory().getCore().removeClassifier((MClassifier)element);
+	    	((MClassifier)element).remove();
 	    }
 	}	
     }

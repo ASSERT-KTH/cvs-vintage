@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.25 2002/08/20 20:39:26 bobtarling Exp $
+// $Id: PropPanel.java,v 1.26 2002/08/20 22:48:45 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -603,7 +603,7 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
                     newTarget = ((MModelElement) base).getNamespace();
                 }
             }
-            UmlFactory.getFactory().remove(base);
+            base.remove();
             if(newTarget != null) {
                 navigateTo(newTarget);
             }

@@ -45,5 +45,4 @@ public class TestExtensionMechanismsFactory extends TestCase {
 	CheckUMLModelHelper.createAndRelease(this, 
 	    ExtensionMechanismsFactory.getFactory(),
 	    objs);
-    }        public void testRemoves() {    	String [] objs = {	    "Stereotype",	    "TaggedValue"	};	CheckUMLModelHelper.testRemove(this, 	    ExtensionMechanismsFactory.getFactory(), objs);    }
-}
+    }    }
