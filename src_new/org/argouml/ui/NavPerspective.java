@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.24 2003/04/13 10:08:34 alexb Exp $
+// $Id: NavPerspective.java,v 1.25 2003/04/15 00:29:39 alexb Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -129,7 +129,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  *   - a tree model
  *   - a collection of perspectives.
  *
- * $Id: NavPerspective.java,v 1.24 2003/04/13 10:08:34 alexb Exp $
+ * $Id: NavPerspective.java,v 1.25 2003/04/15 00:29:39 alexb Exp $
  */
 public class NavPerspective
     extends TreeModelComposite
@@ -659,37 +659,33 @@ public class NavPerspective
     public int getIndexOfChild(Object parent, Object child) {
         
         if (child == null || parent == null) return -1;
-        if (child instanceof TreeNode)
-            return super.getIndexOfChild(parent, child);
-        else {
-            int helperindex = -1;
-            for (int i = 0; i < _goRules.size(); i++) {
-                
-                AbstractGoRule rule =
-                    (AbstractGoRule) _goRules.get(i);
-                // the given parent turns up to have children
-                helperindex = rule.getIndexOfChild(parent, child);
-                if (helperindex > -1) { // we found the correct element
-                    return i + helperindex;
-                } else {
-                    helperindex = getHelperIndex(rule, parent, child);
-                    if (helperindex > -1) {
-                        return i + helperindex;
-                    }
-                }
-                
-            }
-        }
         
+        int helperindex = -1;
+        for (int i = 0; i < _goRules.size(); i++) {
+            
+            AbstractGoRule rule =
+            (AbstractGoRule) _goRules.get(i);
+            // the given parent turns up to have children
+            helperindex = rule.getIndexOfChild(parent, child);
+            if (helperindex > -1) { // we found the correct element
+                return i + helperindex;
+            } else {
+                helperindex = getHelperIndex(rule, parent, child);
+                if (helperindex > -1) {
+                    return i + helperindex;
+                }
+            }
+            
+        }
         return -1;
     }
 
-    /** needs documenting */
+    /** I think this only gets called during argo initialisation */
     private int getHelperIndex(
                     AbstractGoRule rule,
                     Object parent,
                     Object child) {
-            
+
         if (parent == child)
             throw new IllegalStateException("Parent cannot equal child");
         if (rule.getChildCount(parent) == 0)
