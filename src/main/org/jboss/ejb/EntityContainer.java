@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *   @see Container
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class EntityContainer
    extends Container
@@ -46,15 +46,6 @@ public class EntityContainer
 	
    // These are the mappings between the create methods and the ejbPostCreate methods
    protected Map postCreateMapping;
-	
-   // These are the mappings between the home interface methods and the container methods
-   protected Map homeMapping;
-	
-   // These are the mappings between the remote interface methods and the bean methods
-   protected Map beanMapping;
-   
-	// This is the container invoker for this container
-   protected ContainerInvoker containerInvoker;
 	
    // This is the persistence manager for this container
    protected EntityPersistenceManager persistenceManager;
