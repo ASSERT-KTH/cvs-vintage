@@ -51,6 +51,7 @@ import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
@@ -110,14 +111,14 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.117 $
+ * @version $Revision: 1.118 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
  */
 public abstract class Container extends ServiceMBeanSupport
    implements MBeanRegistration, DynamicMBean,
-              StatisticsProvider, InstancePoolContainer
+              StatisticsProvider, InstancePoolContainer, EJBProxyFactoryContainer
 {
    public final static String BASE_EJB_CONTAINER_NAME =
       "jboss.j2ee:service=EJB";
@@ -363,6 +364,8 @@ public abstract class Container extends ServiceMBeanSupport
       return metaData;
    }
 
+   //EJBProxyFactoryContainer implementation
+
    public Class getHomeClass()
    {
       return homeInterface;
@@ -382,6 +385,35 @@ public abstract class Container extends ServiceMBeanSupport
    {
       return localHomeInterface;
    }
+
+   public EJBProxyFactory getProxyFactory()
+   {
+      return (EJBProxyFactory)proxyFactoryTL.get();
+   }
+
+   public LocalProxyFactory getLocalProxyFactory()
+   {
+      return localProxyFactory;
+   }
+   //End of EJBProxyFactoryContainer implementation
+   //related methods:
+   public void setProxyFactory(Object factory)
+   {
+      proxyFactoryTL.set(factory);
+   }
+
+   public EJBProxyFactory lookupProxyFactory(String binding)
+   {
+      return (EJBProxyFactory)proxyFactories.get(binding);
+   }
+
+
+   public void addProxyFactory(String invokerBinding, EJBProxyFactory factory)
+   {
+      proxyFactories.put(invokerBinding, factory);
+   }
+
+   //other stuff:
 
    public void setInstancePool(InstancePool instancePool)
    {
@@ -467,12 +499,6 @@ public abstract class Container extends ServiceMBeanSupport
       this.lockManager = lockManager;
       lockManager.setContainer(this);
    }
-
-   public void addProxyFactory(String invokerBinding, EJBProxyFactory factory)
-   {
-      proxyFactories.put(invokerBinding, factory);
-   }
-
    public void setRealmMapping(final RealmMapping rm)
    {
       this.rm = rm;
@@ -491,26 +517,6 @@ public abstract class Container extends ServiceMBeanSupport
    public Object getSecurityProxy()
    {
       return securityProxy;
-   }
-
-   public EJBProxyFactory getProxyFactory()
-   {
-      return (EJBProxyFactory)proxyFactoryTL.get();
-   }
-
-   public void setProxyFactory(Object factory)
-   {
-      proxyFactoryTL.set(factory);
-   }
-
-   public LocalProxyFactory getLocalProxyFactory()
-   {
-      return localProxyFactory;
-   }
-
-   public EJBProxyFactory lookupProxyFactory(String binding)
-   {
-      return (EJBProxyFactory)proxyFactories.get(binding);
    }
 
    /**

@@ -34,7 +34,7 @@ import org.jboss.util.MethodHashing;
 /**
  * The container for <em>stateful</em> session beans.
  *
- * @version <tt>$Revision: 1.55 $</tt>
+ * @version <tt>$Revision: 1.56 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
@@ -43,41 +43,35 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
 public class StatefulSessionContainer extends Container
-   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
     */
    protected Map homeMapping;
-   
+
    /**
     * These are the mappings between the remote interface methods and the
     * bean methods.
     */
    protected Map beanMapping;
-   
+
    /** This is the persistence manager for this container */
    protected StatefulSessionPersistenceManager persistenceManager;
-   
-   public LocalProxyFactory getLocalProxyFactory()
-   {
-      return localProxyFactory;
-   }
-   
+
    public StatefulSessionPersistenceManager getPersistenceManager()
    {
       return persistenceManager;
    }
-   
+
    public void setPersistenceManager(StatefulSessionPersistenceManager pm)
    {
       persistenceManager = pm;
       pm.setContainer(this);
    }
-   
+
    // Container implementation --------------------------------------
-   
+
    protected void createService() throws Exception
    {
       typeSpecificInitialize();
@@ -174,7 +168,7 @@ public class StatefulSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    protected void stopService() throws Exception
    {
       // Associate thread with classloader
@@ -261,9 +255,9 @@ public class StatefulSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    // EJBObject implementation --------------------------------------
-   
+
    public void remove(Invocation mi)
       throws RemoteException, RemoveException
    {
@@ -275,14 +269,14 @@ public class StatefulSessionContainer extends Container
       if (((EnterpriseContext) mi.getEnterpriseContext()).getId() == null) {
          throw new RemoveException("SFSB has been removed already");
       }
-      
+
       // Remove from storage
       getPersistenceManager().removeSession((StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
-      
+
       // We signify "removed" with a null id
       ((EnterpriseContext) mi.getEnterpriseContext()).setId(null);
    }
-   
+
    /**
     * While the following methods are implemented in the client in the case
     * of JRMP we would need to implement them to fully support other transport
@@ -295,7 +289,7 @@ public class StatefulSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    /**
     * @return  Always null
     */
@@ -304,17 +298,17 @@ public class StatefulSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    public EJBHome getEJBHome(Invocation mi) throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null) {
          throw new IllegalStateException();
       }
-      
+
       return (EJBHome) ci.getEJBHome();
    }
-   
+
    /**
     * @return   Always false
     */
@@ -322,7 +316,7 @@ public class StatefulSessionContainer extends Container
    {
       return false; // TODO
    }
-   
+
    // Home interface implementation ---------------------------------
 
    private void createSession(final Method m,
@@ -331,14 +325,14 @@ public class StatefulSessionContainer extends Container
       throws Exception
    {
       boolean debug = log.isDebugEnabled();
-      
+
       // Create a new ID and set it
       Object id = getPersistenceManager().createId(ctx);
       if (debug) {
          log.debug("Created new session ID: " + id);
       }
       ctx.setId(id);
-        
+
       // Invoke ejbCreate()
       try
       {
@@ -346,19 +340,19 @@ public class StatefulSessionContainer extends Container
          if (debug) {
             log.debug("Using create method for session: " + createMethod);
          }
-         
+
          createMethod.invoke(ctx.getInstance(), args);
       }
       catch (IllegalAccessException e)
       {
          ctx.setId(null);
-         
+
          throw new EJBException(e);
       }
       catch (InvocationTargetException e)
       {
          ctx.setId(null);
-            
+
          Throwable t = e.getTargetException();
          if (t instanceof RuntimeException)
          {
@@ -390,30 +384,30 @@ public class StatefulSessionContainer extends Container
       // Create EJBObject
       if (getProxyFactory() != null)
          ctx.setEJBObject((EJBObject)getProxyFactory().getStatefulSessionEJBObject(id));
-      
+
       // Create EJBLocalObject
       if (getLocalHomeClass() != null)
          ctx.setEJBLocalObject(getLocalProxyFactory().getStatefulSessionEJBLocalObject(id));
    }
-   
+
    public EJBObject createHome(Invocation mi)
       throws Exception
    {
       createSession(mi.getMethod(), mi.getArguments(),
                     (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
-      
+
       return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
-   
+
    // local object interface implementation
-   
+
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
       return localProxyFactory.getEJBLocalHome();
    }
-   
+
    // local home interface implementation
-   
+
    /**
     * @throws Error    Not yet implemented
     */
@@ -422,16 +416,16 @@ public class StatefulSessionContainer extends Container
    {
       throw new Error("Not Yet Implemented");
    }
-   
+
    public EJBLocalObject createLocalHome(Invocation mi)
       throws Exception
    {
       createSession(mi.getMethod(), mi.getArguments(),
                     (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
-      
+
       return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
-   
+
    /**
     * A method for the getEJBObject from the handle
     */
@@ -444,14 +438,14 @@ public class StatefulSessionContainer extends Container
       }
       return (EJBObject) ci.getStatefulSessionEJBObject(mi.getArguments()[0]);
    }
-   
-   
+
+
    // EJBHome implementation ----------------------------------------
-   
+
    //
    // These are implemented in the local proxy
    //
-   
+
    /**
     * @throws Error    Not yet implemented
     */
@@ -460,7 +454,7 @@ public class StatefulSessionContainer extends Container
    {
       throw new Error("Not Yet Implemented");
    }
-   
+
    public EJBMetaData getEJBMetaDataHome(Invocation mi)
       throws RemoteException
    {
@@ -468,10 +462,10 @@ public class StatefulSessionContainer extends Container
       if (ci == null) {
          throw new IllegalStateException();
       }
-      
+
       return ci.getEJBMetaData();
    }
-   
+
    /**
     * @throws Error    Not yet implemented
     */
@@ -480,9 +474,9 @@ public class StatefulSessionContainer extends Container
    {
       throw new Error("Not Yet Implemented");
    }
-   
+
    // StatisticsProvider implementation ------------------------------------
-   
+
    public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
       getInterceptor().retrieveStatistics( container, reset );
@@ -495,16 +489,16 @@ public class StatefulSessionContainer extends Container
          getInstancePool().retrieveStatistics( container, reset );
       }
    }
-   
+
    // Private -------------------------------------------------------
-   
+
    protected void setupHomeMapping() throws Exception
    {
       // Adrian Brock: This should go away when we don't support EJB1x
       boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
 
       Map map = new HashMap();
-      
+
       if (homeInterface != null)
       {
 
@@ -529,7 +523,7 @@ public class StatefulSessionContainer extends Container
             }
          }
       }
-      
+
       if (localHomeInterface != null)
       {
          Method[] m = localHomeInterface.getMethods();
@@ -553,15 +547,15 @@ public class StatefulSessionContainer extends Container
             }
          }
       }
-      
+
       try
       {
          // Get getEJBObject from on Handle, first get the class
          Class handleClass = Class.forName("javax.ejb.Handle");
-         
+
          //Get only the one called handle.getEJBObject
          Method getEJBObjectMethod = handleClass.getMethod("getEJBObject", new Class[0]);
-         
+
          //Map it in the home stuff
          map.put(getEJBObjectMethod, getClass().getMethod("getEJBObject",
                                                           new Class[] {Invocation.class}));
@@ -570,11 +564,11 @@ public class StatefulSessionContainer extends Container
       {
          log.debug("Couldn't find getEJBObject method on container");
       }
-      
+
       homeMapping = map;
    }
-   
-   
+
+
    private void setUpBeanMappingImpl(Map map,
                                      Method[] m,
                                      String declaringClass)
@@ -603,26 +597,26 @@ public class StatefulSessionContainer extends Container
          }
       }
    }
-   
+
    protected void setupBeanMapping() throws NoSuchMethodException
    {
       Map map = new HashMap();
-      
+
       if (remoteInterface != null)
       {
          Method[] m = remoteInterface.getMethods();
          setUpBeanMappingImpl( map, m, "javax.ejb.EJBObject" );
       }
-      
+
       if (localInterface != null)
       {
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
       }
-      
+
       beanMapping = map;
    }
-   
+
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       // Create method mappings for container invoker
@@ -645,16 +639,16 @@ public class StatefulSessionContainer extends Container
       }
       // Get the getEJBObjectMethod
       Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
-      
+
       // Hash it
       marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-   
+
    protected Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }
-   
+
    /**
     * Describe <code>typeSpecificInitialize</code> method here.
     * stateful session specific initialization.
@@ -664,7 +658,7 @@ public class StatefulSessionContainer extends Container
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
       int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
-      
+
       genericInitialize(transType, cl, localCl );
       if (getBeanMetaData().getHome() != null)
       {
@@ -677,7 +671,7 @@ public class StatefulSessionContainer extends Container
       setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
       //Set the bean Lock Manager
       setLockManager(createBeanLockManager(false, conf.getLockConfig(), cl));
-      
+
    }
 
    /**
@@ -707,11 +701,11 @@ public class StatefulSessionContainer extends Container
             {
                log.trace("HOMEMETHOD m "+m);
                java.util.Iterator iterator = homeMapping.keySet().iterator();
-               while(iterator.hasNext()) 
+               while(iterator.hasNext())
                {
                   Method me = (Method) iterator.next();
 
-                  if (me.getName().endsWith("create")) 
+                  if (me.getName().endsWith("create"))
                   {
                      log.trace(me.toString());
                      log.trace(""+me.hashCode());
@@ -731,12 +725,12 @@ public class StatefulSessionContainer extends Container
             }
 
             // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();         
+            throw new org.jboss.util.UnreachableStatementException();
          }
-         else    
+         else
          {
-            // wire the transaction on the context, this is how the instance 
-            // remember the tx. Unlike Entity beans we can't do that in the 
+            // wire the transaction on the context, this is how the instance
+            // remember the tx. Unlike Entity beans we can't do that in the
             // previous interceptors (ordering)
             if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
                ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
@@ -774,7 +768,7 @@ public class StatefulSessionContainer extends Container
             }
 
             // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();         
+            throw new org.jboss.util.UnreachableStatementException();
          }
       }
    }

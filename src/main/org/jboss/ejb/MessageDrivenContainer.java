@@ -41,21 +41,15 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class MessageDrivenContainer extends Container
-   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the remote interface methods
     * and the bean methods.
     */
    protected Map beanMapping;
-
-   public LocalProxyFactory getLocalProxyFactory()
-   {
-      return localProxyFactory;
-   }
 
    /**
     * EJBProxyFactoryContainer - not needed, should we skip inherit this

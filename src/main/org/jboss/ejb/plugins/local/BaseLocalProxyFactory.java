@@ -32,18 +32,16 @@ import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRequiredException;
 import javax.transaction.TransactionRolledbackException;
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.ejb.LocalProxyFactory;
+import org.jboss.ejb.MessageDrivenContainer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.util.MethodHashing;
 import org.jboss.util.naming.Util;
-import org.jboss.proxy.Interceptor;
 
 
 /**
@@ -66,8 +64,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    protected static Map invokerMap = Collections.synchronizedMap(new HashMap());
 
    protected Container container;
-
-   private Interceptor next;
 
    /**
     * The JNDI name of the local home interface binding
@@ -110,15 +106,13 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    {
       //This is used only for logging in tx interceptor
       invocationContext.setObjectName(new Integer(container.getJmxName().hashCode()));
-      Interceptor containerInterceptor = new ContainerInterceptor(container);
-      next = containerInterceptor;
 
       BeanMetaData metaData = container.getBeanMetaData();
-      EJBProxyFactoryContainer invokerContainer =
-         (EJBProxyFactoryContainer) container;
-      Class localHomeClass = invokerContainer.getLocalHomeClass();
-      Class localClass = invokerContainer.getLocalClass();
-      if( localHomeClass == null || localClass == null )
+      Class localHomeClass = container.getLocalHomeClass();
+      Class localClass = container.getLocalClass();
+      if(localClass == null
+         || ( localHomeClass == null
+              && !(container instanceof MessageDrivenContainer)))
       {
          log.debug(metaData.getEjbName() + " cannot be Bound, doesn't " +
                    "have local and local home interfaces");
@@ -130,8 +124,8 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
-      transactionManager =
-         (TransactionManager) iniCtx.lookup("java:/TransactionManager");
+      transactionManager = container.getTransactionManager();
+      //(TransactionManager) iniCtx.lookup("java:/TransactionManager");
 
       // Create method mappings for container invoker
       Method[] methods = localClass.getMethods();
@@ -141,19 +135,21 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
          long hash = MethodHashing.calculateHash(methods[i]);
          beanMethodInvokerMap.put(new Long(hash), methods[i]);
       }
-
-      methods = localHomeClass.getMethods();
-      homeMethodInvokerMap = new HashMap();
-      for (int i = 0; i < methods.length; i++)
+      if (localHomeClass != null)
       {
-         long hash = MethodHashing.calculateHash(methods[i]);
-         homeMethodInvokerMap.put(new Long(hash), methods[i]);
-      }
+         methods = localHomeClass.getMethods();
+         homeMethodInvokerMap = new HashMap();
+         for (int i = 0; i < methods.length; i++)
+         {
+            long hash = MethodHashing.calculateHash(methods[i]);
+            homeMethodInvokerMap.put(new Long(hash), methods[i]);
+         }
 
-      // bind that referance to my name
-      Util.rebind(iniCtx, localJndiName, getEJBLocalHome());
-      invokerMap.put(localJndiName, this);
-      log.debug("Bound EJBLocalHome of " + beanName + " to " + localJndiName);
+         // bind that referance to my name
+         Util.rebind(iniCtx, localJndiName, getEJBLocalHome());
+         invokerMap.put(localJndiName, this);
+         log.debug("Bound EJBLocalHome of " + beanName + " to " + localJndiName);
+      }
    }
 
    public void stop()
@@ -170,7 +166,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       catch(Exception ignore)
       {
       }
-      next = null;
    }
 
    public void destroy()
@@ -187,15 +182,14 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    {
       if( home == null )
       {
-         EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer) container;
          InvocationHandler handler = new LocalHomeProxy(localJndiName, this);
-         ClassLoader loader = cic.getLocalHomeClass().getClassLoader();
-         Class[] interfaces = {cic.getLocalHomeClass()};
+         ClassLoader loader = container.getLocalHomeClass().getClassLoader();
+         Class[] interfaces = {container.getLocalHomeClass()};
 
          home = (EJBLocalHome) Proxy.newProxyInstance(
-               loader,
-               interfaces,
-               handler);
+            loader,
+            interfaces,
+            handler);
       }
       return home;
    }
@@ -204,45 +198,42 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    {
       if( statelessObject == null )
       {
-         EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer) container;
          InvocationHandler handler =
-               new StatelessSessionProxy(localJndiName, this);
-         ClassLoader loader = cic.getLocalClass().getClassLoader();
-         Class[] interfaces = {cic.getLocalClass()};
+            new StatelessSessionProxy(localJndiName, this);
+         ClassLoader loader = container.getLocalClass().getClassLoader();
+         Class[] interfaces = {container.getLocalClass()};
 
          statelessObject = (EJBLocalObject) Proxy.newProxyInstance(
-               loader,
-               interfaces,
-               handler);
+            loader,
+            interfaces,
+            handler);
       }
       return statelessObject;
    }
 
    public EJBLocalObject getStatefulSessionEJBLocalObject(Object id)
    {
-      EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer) container;
       InvocationHandler handler =
-            new StatefulSessionProxy(localJndiName, id, this);
-      ClassLoader loader = cic.getLocalClass().getClassLoader();
-      Class[] interfaces = {cic.getLocalClass()};
+         new StatefulSessionProxy(localJndiName, id, this);
+      ClassLoader loader = container.getLocalClass().getClassLoader();
+      Class[] interfaces = {container.getLocalClass()};
 
       return (EJBLocalObject) Proxy.newProxyInstance(
-            loader,
-            interfaces,
-            handler);
+         loader,
+         interfaces,
+         handler);
    }
 
    public EJBLocalObject getEntityEJBLocalObject(Object id)
    {
-      EJBProxyFactoryContainer cic = (EJBProxyFactoryContainer)container;
       InvocationHandler handler = new EntityProxy(localJndiName, id, this);
-      ClassLoader loader = cic.getLocalClass().getClassLoader();
-      Class[] interfaces = {cic.getLocalClass()};
+      ClassLoader loader = container.getLocalClass().getClassLoader();
+      Class[] interfaces = {container.getLocalClass()};
 
       return (EJBLocalObject) Proxy.newProxyInstance(
-            loader,
-            interfaces,
-            handler);
+         loader,
+         interfaces,
+         handler);
    }
 
    public Collection getEntityLocalCollection(Collection ids)
@@ -304,15 +295,15 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       try
       {
          Invocation invocation = new Invocation(
-               id,
-               m,
-               args,
-               getTransaction(),
-               getPrincipal(),
-               getCredential());
+            id,
+            m,
+            args,
+            getTransaction(),
+            getPrincipal(),
+            getCredential());
          invocation.setType(type);
          invocation.setInvocationContext(invocationContext);
-         return next.invoke(invocation).getResponse();
+         return container.invoke(invocation).getResponse();
       }
       catch (AccessException ae)
       {
@@ -329,7 +320,7 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       catch (TransactionRolledbackException trbe)
       {
          throw new TransactionRolledbackLocalException(
-               trbe.getMessage(), trbe );
+            trbe.getMessage(), trbe );
       }
       finally
       {

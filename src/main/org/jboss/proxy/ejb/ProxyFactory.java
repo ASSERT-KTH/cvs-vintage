@@ -11,7 +11,6 @@ package org.jboss.proxy.ejb;
 
 
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
 import java.rmi.ServerException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,14 +19,12 @@ import java.util.Iterator;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBObject;
-import javax.management.MBeanException;
 import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
-import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.Invoker;
@@ -69,7 +66,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -152,8 +149,8 @@ public class ProxyFactory
          }
       }
       ejbMetaData = new EJBMetaDataImpl(
-         ((EJBProxyFactoryContainer)container).getRemoteClass(),
-         ((EJBProxyFactoryContainer)container).getHomeClass(),
+         container.getRemoteClass(),
+         container.getHomeClass(),
          pkClass, //null if not entity
          isSession, //Session
          isSession && ((SessionMetaData)container.getBeanMetaData()).isStateless(),//Stateless
@@ -293,13 +290,12 @@ public class ProxyFactory
          ClientContainer client = new ClientContainer(context);
          loadInterceptorChain(homeInterceptorClasses, client);
 
-         EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
          // Create the EJBHome
          this.home = (EJBHome) Proxy.newProxyInstance(
             // Class loader pointing to the right classes from deployment
-            pfc.getHomeClass().getClassLoader(),
+            container.getHomeClass().getClassLoader(),
             // The classes we want to implement home and handle
-            new Class[] { pfc.getHomeClass(), Class.forName("javax.ejb.Handle")},
+            new Class[] { container.getHomeClass(), Class.forName("javax.ejb.Handle")},
             // The home proxy as invocation handler
             client);
 
@@ -318,9 +314,9 @@ public class ProxyFactory
             this.statelessObject =
                (EJBObject)Proxy.newProxyInstance(
                   // Correct CL
-                  pfc.getRemoteClass().getClassLoader(),
+                  container.getRemoteClass().getClassLoader(),
                   // Interfaces
-                  new Class[] { pfc.getRemoteClass() } ,
+                  new Class[] { container.getRemoteClass() } ,
                   // SLSB proxy as invocation handler
                   client
                   );
@@ -399,12 +395,11 @@ public class ProxyFactory
          throw new NestedRuntimeException("Failed to load interceptor chain", e);
       }
 
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
-         pfc.getRemoteClass().getClassLoader(),
+         container.getRemoteClass().getClassLoader(),
          // Interfaces
-         new Class[] { pfc.getRemoteClass() },
+         new Class[] { container.getRemoteClass() },
          // Proxy as invocation handler
          client);
    }
@@ -428,12 +423,11 @@ public class ProxyFactory
          throw new NestedRuntimeException("Failed to load interceptor chain", e);
       }
 
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
-         pfc.getRemoteClass().getClassLoader(),
+         container.getRemoteClass().getClassLoader(),
          // Interfaces
-         new Class[] { pfc.getRemoteClass() },
+         new Class[] { container.getRemoteClass() },
          // Proxy as invocation handler
          client);
    }
@@ -444,8 +438,6 @@ public class ProxyFactory
    {
       ArrayList list = new ArrayList(ids.size());
       Iterator idEnum = ids.iterator();
-      EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
-
       while(idEnum.hasNext())
       {
          InvocationContext context = setupInvocationContext(beanInvoker, false);
@@ -465,8 +457,8 @@ public class ProxyFactory
          }
 
          list.add(Proxy.newProxyInstance(
-                     pfc.getRemoteClass().getClassLoader(),
-                     new Class[] { pfc.getRemoteClass() },
+                     container.getRemoteClass().getClassLoader(),
+                     new Class[] { container.getRemoteClass() },
                      client));
       }
       return list;

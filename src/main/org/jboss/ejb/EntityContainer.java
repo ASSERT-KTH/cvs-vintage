@@ -77,10 +77,10 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.94 $
+ * @version $Revision: 1.95 $
  */
 public class EntityContainer
-   extends Container implements EJBProxyFactoryContainer,
+   extends Container implements
    InstancePoolContainer, StatisticsProvider
 {
    /**
@@ -88,14 +88,14 @@ public class EntityContainer
     * @todo replace this with a link to an MBean service.
     */
    private EntityPersistenceManager entityPersistenceManager;
-   
+
    /**
     * The primary key class of this entity.
     */
    private Class primaryKeyClass;
 
    /**
-    * Commit Option D cache invalidation thread. 
+    * Commit Option D cache invalidation thread.
     */
    private OptionDInvalidator optionDInvalidator;
 
@@ -118,9 +118,9 @@ public class EntityContainer
     * transaction EntitySynchronizationInterceptor and InstanceSynchronization
     * manage this instance.
     */
-   private static EntityInvocationRegistry entityInvocationRegistry = 
+   private static EntityInvocationRegistry entityInvocationRegistry =
          new EntityInvocationRegistry();
-   
+
    public static EntityInvocationRegistry getEntityInvocationRegistry()
    {
       return entityInvocationRegistry;
@@ -213,14 +213,14 @@ public class EntityContainer
          // Map the interfaces to Long
          setupMarshalledInvocationMapping();
 
-         ConfigurationMetaData conf = 
+         ConfigurationMetaData conf =
             getBeanMetaData().getContainerConfiguration();
 
          // Persistence Manager
-         EntityPersistenceManagerXMLFactory factory = 
+         EntityPersistenceManagerXMLFactory factory =
             new EntityPersistenceManagerXMLFactory();
          entityPersistenceManager = factory.create(
-               this, 
+               this,
                conf.getPersistenceManagerElement());
          entityPersistenceManager.setContainer(this);
          entityPersistenceManager.create();
@@ -242,7 +242,7 @@ public class EntityContainer
          for(Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
          {
             String invokerBinding = (String)it.next();
-            EJBProxyFactory proxyFactory = 
+            EJBProxyFactory proxyFactory =
                   (EJBProxyFactory) proxyFactories.get(invokerBinding);
             proxyFactory.create();
          }
@@ -315,7 +315,7 @@ public class EntityContainer
             optionDInvalidator.die();
             optionDInvalidator = null;
          }
-         
+
          //Stop items in reverse order from start
          //This assures that CachedConnectionInterceptor will get removed
          //from in between this and the pm before the pm is stopped.
@@ -418,16 +418,16 @@ public class EntityContainer
    {
       return entityPersistenceManager.createEntityInstance();
    }
- 
+
    /**
-    * Stores the entity in the persistence manager. 
+    * Stores the entity in the persistence manager.
     *
     * @todo This call sould be completely eliminated.  Only the persistence
-    * manager should determine when a store is called.  This means that the 
+    * manager should determine when a store is called.  This means that the
     * persistence manager will be listening for transaction demarcation events
-    * and invocation demarcation events. The concept of an invocation 
+    * and invocation demarcation events. The concept of an invocation
     * demarcation event does not currently exist in JBoss, but it will provide
-    * simmilar events to the transaction events and will be used in place of 
+    * simmilar events to the transaction events and will be used in place of
     * the transaction events when you are not running in a transaction.
     */
    public void storeEntity(EntityEnterpriseContext ctx) throws Exception
@@ -616,7 +616,7 @@ public class EntityContainer
    public Object invoke(String actionName, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {
-      if(params != null && params.length == 1 && 
+      if(params != null && params.length == 1 &&
             !(params[0] instanceof Invocation))
       {
          throw new MBeanException(new IllegalArgumentException(
@@ -673,13 +673,13 @@ public class EntityContainer
    {
       private long refreshRate;
       private volatile boolean shouldRun = true;
-  
+
       public OptionDInvalidator(long refreshRate)
       {
          super("Option D Invalidator");
          this.refreshRate = refreshRate;
       }
-  
+
       public void die()
       {
          shouldRun = false;

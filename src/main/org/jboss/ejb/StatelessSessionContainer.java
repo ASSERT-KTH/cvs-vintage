@@ -39,28 +39,23 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public class StatelessSessionContainer extends Container
-   implements EJBProxyFactoryContainer
 {
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
     */
    protected Map homeMapping;
-   
+
    /**
     * These are the mappings between the remote interface methods and the
     * bean methods.
     */
    protected Map beanMapping;
-   
-   public LocalProxyFactory getLocalProxyFactory()
-   {
-      return localProxyFactory;
-   }
-   
+
+
    protected void createService() throws Exception
    {
       typeSpecificInitialize();
@@ -114,7 +109,7 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    protected void startService() throws Exception
    {
       // Associate thread with classloader
@@ -144,8 +139,8 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
-   protected void stopService() throws Exception 
+
+   protected void stopService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -174,13 +169,13 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    protected void destroyService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-      
+
       stopTimers();
       try
       {
@@ -215,9 +210,9 @@ public class StatelessSessionContainer extends Container
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
-   
+
    // EJBObject implementation --------------------------------------
-   
+
    /**
     * No-op.
     */
@@ -226,7 +221,7 @@ public class StatelessSessionContainer extends Container
    {
       //TODO
    }
-   
+
    /**
     * @return    Always null
     */
@@ -236,7 +231,7 @@ public class StatelessSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    /**
     * @return    Always null
     */
@@ -246,7 +241,7 @@ public class StatelessSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    public EJBHome getEJBHome(Invocation mi)
       throws RemoteException
    {
@@ -256,7 +251,7 @@ public class StatelessSessionContainer extends Container
       }
       return (EJBHome) ci.getEJBHome();
    }
-   
+
    /**
     * @return Always false
     */
@@ -265,12 +260,12 @@ public class StatelessSessionContainer extends Container
    {
       return false; // TODO
    }
-   
+
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
       return localProxyFactory.getEJBLocalHome();
    }
-   
+
    public EJBLocalObject createLocalHome()
       throws CreateException
    {
@@ -278,7 +273,7 @@ public class StatelessSessionContainer extends Container
          throw new IllegalStateException();
       return localProxyFactory.getStatelessSessionEJBLocalObject();
    }
-   
+
    /**
     * No-op.
     */
@@ -286,7 +281,7 @@ public class StatelessSessionContainer extends Container
    {
       // todo
    }
-   
+
    public EJBObject createHome()
       throws RemoteException, CreateException
    {
@@ -297,7 +292,7 @@ public class StatelessSessionContainer extends Container
       Object obj = ci.getStatelessSessionEJBObject();
       return (EJBObject)obj;
    }
-   
+
    /**
     * No-op.
     */
@@ -306,7 +301,7 @@ public class StatelessSessionContainer extends Container
    {
       // TODO
    }
-   
+
    /**
     * No-op.
     */
@@ -315,7 +310,7 @@ public class StatelessSessionContainer extends Container
    {
       // TODO
    }
-   
+
    /**
     * @return    Always null.
     */
@@ -325,7 +320,7 @@ public class StatelessSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    /**
     * @return    Always null.
     */
@@ -335,7 +330,7 @@ public class StatelessSessionContainer extends Container
       // TODO
       return null;
    }
-   
+
    public void retrieveStatistics( List container, boolean reset ) {
       // Loop through all Interceptors and add statistics
       getInterceptor().retrieveStatistics( container, reset );
@@ -343,7 +338,7 @@ public class StatelessSessionContainer extends Container
          getInstancePool().retrieveStatistics( container, reset );
       }
    }
-   
+
    protected void setupHomeMapping()
       throws NoSuchMethodException
    {
@@ -394,7 +389,7 @@ public class StatelessSessionContainer extends Container
             {
                throw new org.jboss.util.NoSuchMethodException("Not found in bean class: ", m[i]);
             }
-            
+
             if (debug)
                log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
          }
@@ -419,7 +414,7 @@ public class StatelessSessionContainer extends Container
       throws NoSuchMethodException
    {
       Map map = new HashMap();
-      
+
       if (remoteInterface != null)
       {
          Method[] m = remoteInterface.getMethods();
@@ -437,14 +432,14 @@ public class StatelessSessionContainer extends Container
              beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
           );
       }
-      
+
       beanMapping = map;
    }
-   
+
    protected void setupMarshalledInvocationMapping() throws Exception
    {
       // Create method mappings for container invoker
-      if (homeInterface != null) 
+      if (homeInterface != null)
       {
          Method [] m = homeInterface.getMethods();
          for (int i = 0 ; i<m.length ; i++)
@@ -452,7 +447,7 @@ public class StatelessSessionContainer extends Container
             marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[i])), m[i]);
          }
       }
-      
+
       if (remoteInterface != null)
       {
          Method [] m = remoteInterface.getMethods();
@@ -461,19 +456,19 @@ public class StatelessSessionContainer extends Container
             marshalledInvocationMapping.put( new Long(MethodHashing.calculateHash(m[j])), m[j]);
          }
       }
-         
+
       // Get the getEJBObjectMethod
       Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
-      
+
       // Hash it
       marshalledInvocationMapping.put(new Long(MethodHashing.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-   
+
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
    }
-   
+
    //Moved from EjbModule-------------------
    /**
     * Describe <code>typeSpecificInitialize</code> method here.
@@ -484,7 +479,7 @@ public class StatelessSessionContainer extends Container
       ClassLoader cl = getDeploymentInfo().ucl;
       ClassLoader localCl = getDeploymentInfo().localCl;
       int transType = getBeanMetaData().isContainerManagedTx() ? CMT : BMT;
-      
+
       genericInitialize(transType, cl, localCl );
       if (getBeanMetaData().getHome() != null)
       {
@@ -516,11 +511,11 @@ public class StatelessSessionContainer extends Container
             }
 
             // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();         
+            throw new org.jboss.util.UnreachableStatementException();
          }
          else
          {
-            // wire the transaction on the context, this is how the instance 
+            // wire the transaction on the context, this is how the instance
             // remember the tx
             if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
                ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
@@ -528,7 +523,7 @@ public class StatelessSessionContainer extends Container
             // Get method and instance to invoke upon
             Method m = (Method)beanMapping.get(mi.getMethod());
 
-            //If we have a method that needs to be done by the container 
+            //If we have a method that needs to be done by the container
             // (EJBObject methods)
             if (m.getDeclaringClass().equals(StatelessSessionContainer.class))
             {
@@ -555,7 +550,7 @@ public class StatelessSessionContainer extends Container
             }
 
             // We will never get this far, but the compiler does not know that
-            throw new org.jboss.util.UnreachableStatementException();         
+            throw new org.jboss.util.UnreachableStatementException();
          }
       }
    }

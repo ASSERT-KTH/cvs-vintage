@@ -27,14 +27,14 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptors when the deployment descriptors specifies a security
  * proxy. It is added just before the container interceptor so that the
  * interceptor has access to the EJB instance and context.
- * 
+ *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
 {
-   /** 
+   /**
     * The JNDI name of the SecurityProxyFactory used to wrap security
     * proxy objects that do not implement the SecurityProxy interface
     */
@@ -45,7 +45,7 @@ public class SecurityProxyInterceptor
 
    /**
     * @supplierCardinality 0..1
-    * @clientCardinality 1 
+    * @clientCardinality 1
     * @supplierQualifier custom security
     */
    protected SecurityProxy securityProxy;
@@ -81,8 +81,7 @@ public class SecurityProxyInterceptor
          // Initialize the securityProxy
          try
          {
-            EJBProxyFactoryContainer  ic =
-               (EJBProxyFactoryContainer) getContainer();
+            EJBProxyFactoryContainer  ic = getContainer();
             Class beanHome = ic.getHomeClass();
             Class beanRemote = ic.getRemoteClass();
             Class beanLocalHome = ic.getLocalHomeClass();
@@ -111,7 +110,7 @@ public class SecurityProxyInterceptor
       // Apply any custom security checks
       if(securityProxy != null)
       {
-         EnterpriseContext ctx = 
+         EnterpriseContext ctx =
                (EnterpriseContext)invocation.getEnterpriseContext();
          if(ctx != null)
          {
@@ -124,16 +123,16 @@ public class SecurityProxyInterceptor
 
          try
          {
-            if(invocation.getType().isHome()) 
+            if(invocation.getType().isHome())
             {
                securityProxy.invokeHome(
-                     invocation.getMethod(), 
+                     invocation.getMethod(),
                      invocation.getArguments());
             }
             else
             {
                securityProxy.invoke(
-                     invocation.getMethod(), 
+                     invocation.getMethod(),
                      invocation.getArguments(),
                      ctx.getInstance());
             }
