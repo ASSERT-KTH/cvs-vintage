@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.12 2003/06/30 18:00:19 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.13 2003/09/01 18:20:46 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.model.uml;
 
 import org.apache.log4j.Category;
+import org.argouml.model.ModelFacade;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.UUIDManager;
 
@@ -44,7 +45,7 @@ public abstract class AbstractUmlModelFactory {
      * enabled modelelements that are added should also be added to the
      * navigatorpane.
      */
-    private static boolean GuiEnabled = true;
+    private static boolean guiEnabled = true;
 
     /** Log4j logging category.
      */
@@ -87,7 +88,7 @@ public abstract class AbstractUmlModelFactory {
      * @param gui flag to turn gui on off
      */
     public void setGuiEnabled(boolean gui) {
-        GuiEnabled = gui;
+        guiEnabled = gui;
     }
 
     /**
@@ -95,7 +96,7 @@ public abstract class AbstractUmlModelFactory {
      * @return the gui flag
      */
     public boolean isGuiEnabled() {
-        return GuiEnabled;
+        return guiEnabled;
     }
 
     /**
@@ -105,16 +106,15 @@ public abstract class AbstractUmlModelFactory {
      */
     // TODO: The model shall not reference the ProjectBrowser!
     public void addListenersToModelElement(Object handle) {
-        if (handle instanceof MBase) {
-            MBase base = (MBase) handle;
+        if (ModelFacade.isABase(handle)) {
+            Object base = handle;
             UmlModelEventPump pump = UmlModelEventPump.getPump();
-            base.addMElementListener(pump);
-            if (GuiEnabled) {
-                base.addMElementListener(ProjectBrowser.getInstance()
+            ((MBase)base).addMElementListener(pump);
+            if (guiEnabled) {
+                ((MBase)base).addMElementListener(ProjectBrowser.getInstance()
 					 .getNavigatorPane());
             }
-            base.addMElementListener(UmlModelListener.getInstance());
+            ((MBase)base).addMElementListener(UmlModelListener.getInstance());
         }
     }
-
 }
