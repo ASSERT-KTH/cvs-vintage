@@ -748,6 +748,7 @@ selected the radio button.
 
 #if ($paginated)
   #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
+#end
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
@@ -761,7 +762,6 @@ selected the radio button.
      </tr>
   </table>
 </div>
-#end
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
