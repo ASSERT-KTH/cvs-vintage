@@ -72,7 +72,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.28 2003/10/17 10:02:07 dep4b Exp $
+ * @version $Id: FreshenUserValve.java,v 1.29 2004/05/01 19:04:23 dabbous Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -164,7 +164,7 @@ public class FreshenUserValve
             }
             catch (TorqueException e)
             {
-                throw new TurbineException(e);
+                throw new TurbineException(e); //EXCEPTION
             }
         }
 
@@ -186,7 +186,7 @@ public class FreshenUserValve
             }
             catch (Exception e)
             {
-                throw new TurbineException(e);
+                throw new TurbineException(e); //EXCEPTION
             }
         }
         else if (parameters.getString("id") != null) 
@@ -230,7 +230,7 @@ public class FreshenUserValve
             }
             catch (Exception e)
             {
-                throw new TurbineException(e);
+                throw new TurbineException(e); //EXCEPTION
             }
         }
         else 

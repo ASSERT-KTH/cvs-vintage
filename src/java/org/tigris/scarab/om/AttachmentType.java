@@ -51,6 +51,7 @@ import java.util.List;
 // Turbine classes
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -74,7 +75,7 @@ public class AttachmentType
         List attachmentTypes = AttachmentTypePeer.doSelect(crit);
         if(attachmentTypes.size() > 1)
         {
-            throw new ScarabException("duplicate attachment type name found");
+            throw new ScarabException(L10NKeySet.ExceptionAttachementDuplicateTypename);
         }
         return (AttachmentType)attachmentTypes.get(0);
     }

@@ -54,7 +54,7 @@ import org.tigris.scarab.util.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.14 2002/04/26 23:34:53 jmcnally Exp $
+ * @version $Id: SearchFactory.java,v 1.15 2004/05/01 19:04:30 dabbous Exp $
  */
 public class SearchFactory
 {
@@ -103,7 +103,7 @@ public class SearchFactory
                     "to write the Index to the disk. The default is to " +
                     "write the Index into the WEB-INF/index directory.";
                 Log.get().error(str, e);
-                throw new InstantiationException(str);
+                throw new InstantiationException(str); //EXCEPTION
             }
         }
         return si;

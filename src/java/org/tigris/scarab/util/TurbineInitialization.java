@@ -60,7 +60,7 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.8 2003/03/28 01:11:24 jon Exp $
+ * @version $Id: TurbineInitialization.java,v 1.9 2004/05/01 19:04:29 dabbous Exp $
  */
 public class TurbineInitialization
 {
@@ -84,7 +84,7 @@ public class TurbineInitialization
         if (configDir == null || configFile == null)
         {
             System.err.println("config.dir System property was not defined");
-            throw new Exception ("configDir or configFile was null");
+            throw new Exception ("configDir or configFile was null"); //EXCEPTION
         }
 
         // set this so that the proper substitution will happen in the

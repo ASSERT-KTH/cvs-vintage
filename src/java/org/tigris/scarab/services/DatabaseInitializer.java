@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.16 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.17 2004/05/01 19:04:27 dabbous Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -133,7 +133,7 @@ public class DatabaseInitializer
         {
             e.printStackTrace();
             throw new InitializationException(
-                "Failed to localize default data!", e);
+                "Failed to localize default data!", e); //EXCEPTION
         }
 
         // indicate that the service initialized correctly

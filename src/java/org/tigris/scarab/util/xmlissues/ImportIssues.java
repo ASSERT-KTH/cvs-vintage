@@ -97,7 +97,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.31 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: ImportIssues.java,v 1.32 2004/05/01 19:04:31 dabbous Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues
@@ -359,7 +359,7 @@ public class ImportIssues
         catch (Exception e)
         {
             LOG.error(msg, e);
-            throw e;
+            throw e; //EXCEPTION
         }
         finally
         {
@@ -392,7 +392,7 @@ public class ImportIssues
         }
         else
         {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(); //EXCEPTION
         }
     }
 
@@ -701,7 +701,7 @@ public class ImportIssues
     {
         LOG.error("Parse Error at line " + e.getLineNumber() +
                   " column " + e.getColumnNumber() + ": " + e.getMessage(), e);
-        throw e;
+        throw e; //EXCEPTION
     }
 
     /** Receive notification of a non-recoverable error. */
@@ -710,7 +710,7 @@ public class ImportIssues
     {
         LOG.error("Parse Fatal Error at line " + e.getLineNumber() +
                   " column " + e.getColumnNumber() + ": " + e.getMessage(), e);
-        throw e;
+        throw e; //EXCEPTION
     }
 
     /** Receive notification of a warning. */

@@ -52,6 +52,7 @@ import java.util.Set;
 
 import org.apache.turbine.Turbine;
 import org.tigris.scarab.test.BaseScarabOMTestCase;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * Tests the AttributeAccess implementation.
@@ -69,7 +70,7 @@ public class AttributeAccessTest
  
 
  
-    public void testRetrieveQueryColumnIDs()
+    public void testRetrieveQueryColumnIDs() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String userID = "1";
@@ -86,7 +87,7 @@ public class AttributeAccessTest
      * Make sure delete doesn't break another testcase that needs the data!
      * Better would be to create a new set of data!
      */
-    public void OFFtestDeleteQueryColumnIDs()
+    public void OFFtestDeleteQueryColumnIDs() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String userID = "1";
@@ -97,7 +98,7 @@ public class AttributeAccessTest
         // TODO: finish
     }
 
-    public void testRetrieveRequiredAttributeIDs()
+    public void testRetrieveRequiredAttributeIDs() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String moduleID = "5";
@@ -126,7 +127,7 @@ public class AttributeAccessTest
         return expectedSize;
     }
 
-    public void testRetrieveQuickSearchAttributeIDs()
+    public void testRetrieveQuickSearchAttributeIDs() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String moduleID = "5";
@@ -135,7 +136,7 @@ public class AttributeAccessTest
         assertEquals (1, ids.size());
     }
 
-    public void testRetrieveActiveAttributeOMs()
+    public void testRetrieveActiveAttributeOMs() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String moduleID = "5";
@@ -166,7 +167,7 @@ public class AttributeAccessTest
         return expectedSize;
     }
 
-    public void testRetrieveDefaultTextAttributeID()
+    public void testRetrieveDefaultTextAttributeID() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String moduleID = "5";
@@ -176,7 +177,7 @@ public class AttributeAccessTest
         assertEquals("11", id);
     }
 
-    public void testRetrieveFirstActiveTextAttributeID()
+    public void testRetrieveFirstActiveTextAttributeID() throws ScarabException
     {
         AttributeAccess aa = DAFactory.getAttributeAccess();
         String moduleID = "5";

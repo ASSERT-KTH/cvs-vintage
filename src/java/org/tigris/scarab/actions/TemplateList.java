@@ -89,7 +89,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.61 2004/04/28 22:28:14 dabbous Exp $
+ * @version $Id: TemplateList.java,v 1.62 2004/05/01 19:04:22 dabbous Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -386,7 +386,7 @@ public class TemplateList extends RequireLoginFirstAction
                     if (issue == null)
                     {
                         throw new Exception(
-                            l10n.get("CouldNotLocateTemplateToDelete"));
+                            l10n.get("CouldNotLocateTemplateToDelete")); //EXCEPTION
                     }
                     issue.delete(user);
                 }
@@ -398,7 +398,7 @@ public class TemplateList extends RequireLoginFirstAction
                 catch (Exception e)
                 {
                     success = false;
-                    scarabR.setAlertMessage(e.getMessage());
+                    scarabR.setAlertMessage(l10n.getMessage(e));
                 }
             }
         } 

@@ -66,6 +66,8 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttachmentPeer;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 
@@ -83,7 +85,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.26 2003/03/28 00:02:23 jon Exp $
+ * @version $Id: LuceneAdapter.java,v 1.27 2004/05/01 19:04:30 dabbous Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -265,8 +267,10 @@ public class LuceneAdapter
                 }
                 catch (Throwable t)
                 {
-                    throw new ScarabException(PARSE_ERROR + fullQuery + 
-                        ". Reason given was: " +  t.getMessage());
+                    throw ScarabException.create(
+                            L10NKeySet.ExceptionParseError,
+                            fullQuery,
+                            t);
                 }
                 
                 IndexSearcher is = new IndexSearcher(path); 
@@ -360,16 +364,15 @@ public class LuceneAdapter
             Hits hits = is.search(q);
             if (hits.length() > 0) 
             {
-                String mesg = "An error in Lucene prevented removing " + 
-                    "stale data for AttributeValue with ID=" + valId;
-                Log.get().debug(mesg);
-                throw new ScarabException(mesg, npe);
+                L10NMessage l10nInstance = new L10NMessage(L10NKeySet.ExceptionLucene, valId, npe);
+                Log.get().debug(l10nInstance.toString());//[HD: create english message for logging!
+                throw new ScarabException(l10nInstance);
             }
         }
         if (deletedDocs > 1) 
         {
-            throw new ScarabException("Multiple AttributeValues in Lucene" +
-                                      "index with same ValueId: " + valId);
+            throw ScarabException.create(L10NKeySet.ExceptionMultipleAttValues,
+                                      valId);
         }
         /*
         System.out.println("deleting valId: " + valId);
@@ -476,16 +479,15 @@ public class LuceneAdapter
             Hits hits = is.search(q);
             if (hits.length() > 0) 
             {
-                String mesg = "An error in Lucene prevented removing " + 
-                    "stale data for Attachment with ID=" + attId;
-                Log.get().debug(mesg);
-                throw new ScarabException(mesg, npe);
+                L10NMessage l10nInstance = new L10NMessage(L10NKeySet.ExceptionLucene, attId, npe);
+                Log.get().debug(l10nInstance.toString());//[HD: create english message for logging!
+                throw new ScarabException(l10nInstance);
             }
         }
         if (deletedDocs > 1) 
         {
-            throw new ScarabException("Multiple Attachments in Lucene" +
-                                      "index with same Id: " + attId);
+            throw ScarabException.create(L10NKeySet.ExceptionMultipleAttachements,
+                                      attId);
         }
 
 

@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.117 2004/02/17 21:48:30 pledbrook Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.118 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -683,7 +683,7 @@ public class ScarabUserImpl
         Integer userid = getUserId();
         if (userid == null)
         {
-            throw new Exception("Userid cannot be null");
+            throw new Exception("Userid cannot be null"); //EXCEPTION
         }
         UserPreference up = UserPreferenceManager.getInstance(getUserId());
         if (expire == null)
@@ -710,7 +710,7 @@ public class ScarabUserImpl
         Integer userid = getUserId();
         if (userid == null)
         {
-            throw new Exception ("Userid cannot be null");
+            throw new Exception ("Userid cannot be null"); //EXCEPTION
         }
         Criteria crit = new Criteria();
         crit.add(UserPreferencePeer.USER_ID, userid);

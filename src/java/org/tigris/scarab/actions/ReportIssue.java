@@ -96,7 +96,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.182 2003/10/14 04:59:22 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.183 2004/05/01 19:04:22 dabbous Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -314,7 +314,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         if (issue == null)
         {
-            throw new Exception(Localization.getString("IssueNoLongerValid"));
+            throw new Exception(Localization.getString("IssueNoLongerValid")); //EXCEPTION
         }
         IssueType issueType = issue.getIssueType();
         List requiredAttributes = issueType
@@ -500,7 +500,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     }
                     catch (Exception se)
                     {
-                        scarabR.setAlertMessage(se.getMessage());
+                        scarabR.setAlertMessage(l10n.getMessage(se));
                         return;
                     }
 

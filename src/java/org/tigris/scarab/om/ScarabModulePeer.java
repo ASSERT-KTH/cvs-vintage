@@ -110,7 +110,7 @@ public class ScarabModulePeer
         if(results.size() > 1)
         {
             throw new DataBackendException("Multiple groups named '" +
-                name + "' exist!");
+                name + "' exist!"); //EXCEPTION
         }
         return (results.size()==1);
     }

@@ -85,7 +85,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.57 2003/09/15 23:45:49 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.58 2004/05/01 19:04:22 dabbous Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -153,7 +153,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
-        String msg = DEFAULT_MSG;
+        String l10nMsg = l10n.get(DEFAULT_MSG);
 
         // Check if issue type is locked
         if (!ag.isGlobal() && issueType.getLocked())
@@ -240,7 +240,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                         {
                             if (!rma.getRequired())
                             {
-                                msg = "ChangesSavedButDefaultTextAttributeRequired";
+                                l10nMsg = l10n.get("ChangesSavedButDefaultTextAttributeRequired");
                                 intake.remove(rmaGroup);
                             }
                             rma.setIsDefaultText(true);
@@ -256,11 +256,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                          raag.getQueryKey(), false);
                             raagGroup.setProperties(raag);
                             raag.save();
-                            scarabR.setConfirmMessage(l10n.get(msg));
+                            scarabR.setConfirmMessage(l10nMsg);
                         }
                         catch (TorqueException e) 
                         {
-                            msg = e.getMessage();
+                            String l10nKey = e.getMessage();
+                            l10nMsg = l10n.get(l10nKey);
+                            scarabR.setAlertMessage(l10nMsg);
                         }
                     }
 
@@ -317,7 +319,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 l10n.get("Attributes").toLowerCase()));
             return false;
         }
-        String msg = DEFAULT_MSG;
+        String l10nMsg = l10n.get(DEFAULT_MSG);
 
         if (intake.isAllValid())
         {
@@ -359,7 +361,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     {
                         if (!ria.getRequired())
                         {
-                            msg = "ChangesSavedButDefaultTextAttributeRequired";
+                            l10nMsg = l10n.get("ChangesSavedButDefaultTextAttributeRequired");
                         }
                         ria.setIsDefaultText(true);
                         ria.setRequired(true);
@@ -375,13 +377,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     raagGroup.setProperties(raag);
                     raag.save();
                 }
-                scarabR.setConfirmMessage(l10n.get(msg));
+                scarabR.setConfirmMessage(l10nMsg);
             }
         } 
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(msg));
+            scarabR.setAlertMessage(l10nMsg);
         }
         return success;
     }
@@ -445,7 +447,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     }
                     catch (ScarabException e)
                     {
-                        scarabR.setAlertMessage(e.getMessage());
+                        scarabR.setAlertMessage(l10n.getMessage(e));
                         Log.get().warn(
                             "This is an application error, if it is not permission related.", e);
                     }

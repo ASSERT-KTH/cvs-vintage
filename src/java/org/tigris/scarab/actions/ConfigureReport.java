@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.30 2004/04/28 22:28:14 dabbous Exp $
+ * @version $Id: ConfigureReport.java,v 1.31 2004/05/01 19:04:22 dabbous Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -327,8 +327,8 @@ public class ConfigureReport
                 params.setString("heading", "0");
             }
 
-            scarabR.setConfirmMessage(
-                l10n.get(getHeadingConfirmMessageKey(report)));
+            String l10nMsg = getHeadingConfirmMessageKey(report, l10n);
+            scarabR.setConfirmMessage(l10nMsg);
 
 /*
             //testing
@@ -343,21 +343,22 @@ public class ConfigureReport
     }
 
 
-    private static String getHeadingConfirmMessageKey(ReportBridge report)
+    private static String getHeadingConfirmMessageKey(ReportBridge report, ScarabLocalizationTool l10n)
     {
-        String key = null;
+        String l10nMsg = null;
         if (report.isReadyForCalculation()) 
         {
-            key = report.isNew() ? 
-                "ReportUpdatedDoMoreOrCalculate" :
-                "ReportUpdatedNotSavedDoMoreOrCalculate";
+            l10nMsg = report.isNew() ? 
+                l10n.get("ReportUpdatedDoMoreOrCalculate") :
+                l10n.get("ReportUpdatedNotSavedDoMoreOrCalculate");
         }
         else 
         {
-            key = report.isNew() ? 
-                "ReportUpdatedDoMore" : "ReportUpdatedNotSavedDoMore";
+            l10nMsg = report.isNew() ? 
+                l10n.get("ReportUpdatedDoMore") :
+                l10n.get("ReportUpdatedNotSavedDoMore");
         }
-        return key;
+        return l10nMsg;
     }
 
     /**
@@ -436,8 +437,8 @@ public class ConfigureReport
                 params.setString("heading", "0");
             }
 
-            scarabR.setConfirmMessage(
-                l10n.get(getHeadingConfirmMessageKey(report)));
+            String l10nMsg = getHeadingConfirmMessageKey(report, l10n);
+            scarabR.setConfirmMessage(l10nMsg);
         }
         else 
         {

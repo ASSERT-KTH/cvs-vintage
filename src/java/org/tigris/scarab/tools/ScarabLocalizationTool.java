@@ -62,6 +62,7 @@ import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ReferenceInsertionFilter;
 import org.tigris.scarab.util.SkipFiltering;
@@ -456,6 +457,8 @@ public class ScarabLocalizationTool extends LocalizationTool
         {
             locales = new ArrayList();
             locales.add(obj);
+            locales.add(DEFAULT_LOCALE);
+            locales.add(null);
         }
         properties = Turbine.getConfiguration();
     }
@@ -707,4 +710,31 @@ public class ScarabLocalizationTool extends LocalizationTool
                 + ".  See log for details.", e);
         return value;
     }
+
+
+    /**
+     * Extract a message from an exception. This method checks, if
+     * the exception is Localizable. If so, we now can retrieve the localized exception message.
+     * Otherwise we retrieve the standard message via e.getLocalizedMessage().
+     * @param e
+     * @return 
+     * throws NullPointerException if t is <code>null</code>
+     */
+    public String getMessage(Throwable t)
+    {
+        String result;            
+        if(t instanceof Localizable)
+        {    
+             result = ((Localizable) t).getMessage(this);
+        } 
+        else
+        {   
+            // note we reuse getLocalizedMessage() in case the exception 
+            // coming from a third party library is also localized.
+            result = t.getLocalizedMessage();
+        }
+        return result;    
+    }
+
+
 }

@@ -56,7 +56,7 @@ import org.apache.tools.ant.BuildException;
  * to make it possible to call this from Ant.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssuesTask.java,v 1.3 2003/03/28 00:02:24 jon Exp $
+ * @version $Id: ImportIssuesTask.java,v 1.4 2004/05/01 19:04:31 dabbous Exp $
  */
 public class ImportIssuesTask extends MatchingTask
 {
@@ -126,7 +126,7 @@ public class ImportIssuesTask extends MatchingTask
         }
         catch (Exception e)
         {
-            throw new BuildException(e);
+            throw new BuildException(e); //EXCEPTION
         }
     }
 }

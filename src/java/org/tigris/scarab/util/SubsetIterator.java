@@ -126,7 +126,7 @@ public class SubsetIterator
         }
         else 
         {
-            throw new NoSuchElementException("Iterator is exhausted");
+            throw new NoSuchElementException("Iterator is exhausted"); //EXCEPTION
         }
     }
 
@@ -151,12 +151,12 @@ class EmptySubsetIterator extends SubsetIterator
     
     public Object next()
     {
-        throw new NoSuchElementException("This is an empty list.");
+        throw new NoSuchElementException("This is an empty list."); //EXCEPTION
     }
     
     public void remove()
     {
         throw new IllegalStateException("next() will throw exception, it is "
-                                        + "not possible to call this method.");
+                                        + "not possible to call this method."); //EXCEPTION
     }
 }

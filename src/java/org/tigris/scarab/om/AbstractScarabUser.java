@@ -63,6 +63,7 @@ import org.apache.torque.om.BaseObject;
 import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.reports.ReportBridge;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -75,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.99 2004/02/05 07:33:29 pledbrook Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.100 2004/05/01 19:04:23 dabbous Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -498,8 +499,7 @@ public abstract class AbstractScarabUser
             }
             else 
             {
-                throw new ScarabException(
-                "Not sure, but this should probably only return one - jdm");
+                throw new ScarabException(L10NKeySet.ExceptionMultipleJDMs);
             }
             ScarabCache.put(result, this, GET_R_MODULE_USERATTRIBUTE, 
                             module, attribute, issueType);
@@ -547,7 +547,7 @@ public abstract class AbstractScarabUser
         String key = null;
         if (issue == null) 
         {
-            throw new ScarabException("Null Issue is not allowed.");
+            throw new ScarabException(L10NKeySet.ExceptionNullIssueForbidden);
         }
         else 
         {
@@ -620,7 +620,7 @@ public abstract class AbstractScarabUser
         String key = null;
         if (report == null) 
         {
-            throw new ScarabException("Null Report is not allowed.");
+            throw new ScarabException(L10NKeySet.ExceptionNullReportForbidden);
         }
         else 
         {
@@ -680,7 +680,7 @@ public abstract class AbstractScarabUser
      */
     public void save() throws Exception
     {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -689,7 +689,7 @@ public abstract class AbstractScarabUser
      */
     public void save(String dbName) throws Exception
     {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -698,7 +698,7 @@ public abstract class AbstractScarabUser
      */
     public void save(Connection dbCon) throws Exception
     {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new UnsupportedOperationException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -817,8 +817,7 @@ public abstract class AbstractScarabUser
     {
         if ("ModuleNotReady.vm".equals(homePage)) 
         {
-            throw new ScarabException(
-                "ModueNotReady.vm is not a valid homepage.");
+            throw new ScarabException(L10NKeySet.ExceptionForbiddenHomeModuleNotReady);
         }
         UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setHomePage(homePage);

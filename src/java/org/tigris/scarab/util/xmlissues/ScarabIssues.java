@@ -114,7 +114,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.60 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: ScarabIssues.java,v 1.61 2004/05/01 19:04:31 dabbous Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -289,7 +289,7 @@ public class ScarabIssues implements java.io.Serializable
                          getModule().getDomain());
                     if (user == null)
                     {
-                        throw new Exception();
+                        throw new Exception(); //EXCEPTION
                     }
                 }
                 catch (Exception e)
@@ -326,7 +326,7 @@ public class ScarabIssues implements java.io.Serializable
                     Issue parentIssueOM = IssueManager.getIssueById(parent);
                     if (parentIssueOM == null)
                     {
-                        throw new Exception();
+                        throw new Exception(); //EXCEPTION
                     }
                 }
                 catch (Exception e)
@@ -342,7 +342,7 @@ public class ScarabIssues implements java.io.Serializable
                     Issue childIssueOM = IssueManager.getIssueById(child);
                     if (childIssueOM == null)
                     {
-                        throw new Exception();
+                        throw new Exception(); //EXCEPTION
                     }
                 }
                 catch (Exception e)
@@ -415,7 +415,7 @@ public class ScarabIssues implements java.io.Serializable
                         Depend oldDependOM = parentIssueOM.getDependency(childIssueOM);
                         if (oldDependOM == null)
                         {
-                            throw new Exception ("Whoops! Could not find the original dependency!");
+                            throw new Exception ("Whoops! Could not find the original dependency!"); //EXCEPTION
                         }
                         // we definitely know we are doing an update here.
                         newDependOM.setDeleted(false);
@@ -429,7 +429,7 @@ public class ScarabIssues implements java.io.Serializable
                 catch (Exception e)
                 {
                     e.printStackTrace();
-                    throw e;
+                    throw e; //EXCEPTION
                 }
             }
         }
@@ -459,7 +459,7 @@ public class ScarabIssues implements java.io.Serializable
         catch (Exception e)
         {
             e.printStackTrace();
-            throw e;
+            throw e; //EXCEPTION
         }
         finally
         {
@@ -487,7 +487,7 @@ public class ScarabIssues implements java.io.Serializable
                                                  module.getCode());
             if (moduleOM == null)
             {
-                throw new Exception();
+                throw new Exception(); //EXCEPTION
             }
 
             // TODO: Handle user import.  Until then, ignore the
@@ -512,7 +512,7 @@ public class ScarabIssues implements java.io.Serializable
             issueTypeOM = IssueType.getInstance(issue.getArtifactType());
             if (issueTypeOM == null)
             {
-                throw new Exception();
+                throw new Exception(); //EXCEPTION
             }
         }
         catch (Exception e)
@@ -561,7 +561,7 @@ public class ScarabIssues implements java.io.Serializable
                     ActivitySetTypeManager.getInstance(activitySet.getType());
                 if (ttOM == null)
                 {
-                    throw new Exception();
+                    throw new Exception(); //EXCEPTION
                 }
             }
             catch (Exception e)
@@ -644,7 +644,7 @@ public class ScarabIssues implements java.io.Serializable
             attributeOM = Attribute.getInstance(activityAttribute);
             if (attributeOM == null)
             {
-                throw new Exception();
+                throw new Exception(); //EXCEPTION
             }
         }
         catch (Exception e)
@@ -697,7 +697,7 @@ public class ScarabIssues implements java.io.Serializable
                                          moduleOM, issueTypeOM);
                         if (attributeOptionOM == null)
                         {
-                            throw new Exception();
+                            throw new Exception(); //EXCEPTION
                         }
                     }
                     catch (Exception e)
@@ -717,7 +717,7 @@ public class ScarabIssues implements java.io.Serializable
                                          attributeOptionOM);
                         if (rmo == null)
                         {
-                            throw new Exception();
+                            throw new Exception(); //EXCEPTION
                         }
                     }
                     catch (Exception e)
@@ -741,7 +741,7 @@ public class ScarabIssues implements java.io.Serializable
                             .getInstance(attributeOM, activity.getOldOption());
                         if (attributeOptionOM == null)
                         {
-                            throw new Exception();
+                            throw new Exception(); //EXCEPTION
                         }
                     }
                     catch (Exception e)
@@ -760,7 +760,7 @@ public class ScarabIssues implements java.io.Serializable
                                          attributeOptionOM);
                         if (rmo == null)
                         {
-                            throw new Exception();
+                            throw new Exception(); //EXCEPTION
                         }
                     }
                     catch (Exception e)
@@ -792,7 +792,7 @@ public class ScarabIssues implements java.io.Serializable
             if ((xmlDate != null && xmlDate.getDate() == null) && required)
             {
                 // Trigger error handling.
-                throw new ParseException(null, -1);
+                throw new ParseException(null, -1); //EXCEPTION
             }
         }
         catch (ParseException e)

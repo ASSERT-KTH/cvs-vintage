@@ -74,9 +74,12 @@ import org.apache.fulcrum.security.entity.Role;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.ScarabUserManager;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabPaginatedList;
+import org.tigris.scarab.util.ScarabLocalizedTorqueException;
+import org.tigris.scarab.util.ScarabLocalizedTurbineSecurityException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 // FIXME! do not like referencing servlet inside of business objects
@@ -100,7 +103,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.149 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: ScarabModule.java,v 1.150 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -328,7 +331,7 @@ public class ScarabModule
                     // until the interface is changed, wrap it in a RuntimeExc.
                     throw new RuntimeException(
                         "Please check turbine.log for more info: " + 
-                        e.getMessage());
+                        e.getMessage()); //EXCEPTION
                 }
             }
             else 
@@ -635,7 +638,7 @@ public class ScarabModule
         }
         catch (Exception e)
         {
-            throw new TurbineSecurityException(e.getMessage(), e);
+            throw new ScarabLocalizedTurbineSecurityException(e); //EXCEPTION
         }
     }
 
@@ -658,12 +661,21 @@ public class ScarabModule
             // that takes the two criteria values as a argument so that other 
             // implementations can benefit from being able to get the 
             // list of modules. -- do not agree - jdm
-            List result = ScarabModulePeer.doSelect(crit);
+
+            List result;
+            try {
+                result = ScarabModulePeer.doSelect(crit);
+            }
+            catch (TorqueException te)
+            {
+             throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionTorqueGeneric, te));
+            }
+            
             if (result.size() > 0)
             {
-                throw new TorqueException(
-                    new ScarabException("Sorry, a module with that name " + 
-                                        "and parent already exist."));
+                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionModuleAllreadyExists,
+                                        getRealName(), 
+                                        getParentId()));
             }
 
             String code = getCode();
@@ -671,9 +683,7 @@ public class ScarabModule
             {
                 if (getParentId().equals(ROOT_ID))
                 {
-                    throw new TorqueException(new ScarabException(
-                        "A top level module addition was"
-                        + " attempted without assigning a Code"));
+                    throw new ScarabLocalizedTorqueException(new ScarabException(L10NKeySet.ExceptionTopLevelModuleWithoutCode));
                 }
 
                 try
@@ -682,7 +692,7 @@ public class ScarabModule
                 }
                 catch (Exception e)
                 {
-                    throw new TorqueException(e);
+                    throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionCantPropagateModuleCode, e));
                 }
             }
 
@@ -695,13 +705,12 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                throw new TorqueException(e);
+                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionGeneric, e));
             }
             
             if (getOwnerId() == null) 
             {
-                throw new TorqueException(new ScarabException(
-                    "Can't save a project without first assigning an owner."));
+                throw new ScarabLocalizedTorqueException(new  ScarabException(L10NKeySet.ExceptionSaveNeedsOwner));
             }
             // grant the ower of the module the Project Owner role
             try
@@ -715,7 +724,7 @@ public class ScarabModule
             }
             catch (Exception e)
             {
-                throw new TorqueException(e);
+                throw new ScarabLocalizedTorqueException(ScarabException.create(L10NKeySet.ExceptionGeneric, e));
             }
         }
         else
@@ -741,7 +750,7 @@ public class ScarabModule
     public void remove()
         throws TurbineSecurityException
     {
-        throw new TurbineSecurityException("Not implemented");
+        throw new TurbineSecurityException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -753,7 +762,7 @@ public class ScarabModule
     public void rename(String name)
         throws TurbineSecurityException
     {
-        throw new TurbineSecurityException("Not implemented");
+        throw new TurbineSecurityException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -781,7 +790,7 @@ public class ScarabModule
     public void grant(User user, RoleSet roleSet)
         throws TurbineSecurityException
     {
-        throw new TurbineSecurityException("Not implemented");
+        throw new TurbineSecurityException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -795,7 +804,7 @@ public class ScarabModule
     public void revoke(User user, Role role)
         throws TurbineSecurityException
     {
-        throw new TurbineSecurityException("Not implemented");
+        throw new TurbineSecurityException("Not implemented"); //EXCEPTION
     }
 
     /**
@@ -809,7 +818,7 @@ public class ScarabModule
     public void revoke(User user, RoleSet roleSet)
         throws TurbineSecurityException
     {
-        throw new TurbineSecurityException("Not implemented");
+        throw new TurbineSecurityException("Not implemented"); //EXCEPTION
     }
 
     /**

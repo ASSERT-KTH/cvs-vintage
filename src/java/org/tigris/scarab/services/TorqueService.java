@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * It also creates an instance of each scarab om object to avoid deadlock.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TorqueService.java,v 1.4 2003/07/25 17:37:02 thierrylach Exp $
+ * @version $Id: TorqueService.java,v 1.5 2004/05/01 19:04:27 dabbous Exp $
  */
 public class TorqueService
     extends BaseService
@@ -80,7 +80,7 @@ public class TorqueService
         }
         catch (Exception e)
         {
-            throw new InitializationException("Can't initialize Torque!", e);
+            throw new InitializationException("Can't initialize Torque!", e); //EXCEPTION
         }
 
         // indicate that the service initialized correctly

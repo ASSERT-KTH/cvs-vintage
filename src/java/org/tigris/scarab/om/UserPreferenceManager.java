@@ -52,7 +52,7 @@ import org.apache.torque.TorqueException;
  * This is the manager for the UserPreferences
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserPreferenceManager.java,v 1.7 2003/04/10 20:24:12 elicia Exp $
+ * @version $Id: UserPreferenceManager.java,v 1.8 2004/05/01 19:04:23 dabbous Exp $
  */
 public class UserPreferenceManager
     extends BaseUserPreferenceManager
@@ -78,7 +78,7 @@ public class UserPreferenceManager
     {
         if (userid == null)
         {
-            throw new IllegalArgumentException("User ID cannot be null");
+            throw new IllegalArgumentException("User ID cannot be null"); //EXCEPTION
         }
 
         UserPreference up = null;

@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MoveIssue.java,v 1.4 2003/08/20 22:08:24 dlr Exp $
+ * @version $Id: MoveIssue.java,v 1.5 2004/05/01 19:04:27 dabbous Exp $
  */
 public class MoveIssue extends Default
 {
@@ -80,13 +80,14 @@ public class MoveIssue extends Default
         {
             String action = ((IntakeTool) context.get("intake"))
                 .get("MoveIssue").getDefault().get("Action").toString();
+            String l10nKey = getKey();
             if (COPY.equals(action))
             {
-                title = l10n.format(getKey(), COPY_CHOICE);
+                title = l10n.format(l10nKey, COPY_CHOICE);
             }
             else if (MOVE.equals(action))
             {
-                title = l10n.format(getKey(), MOVE_CHOICE);
+                title = l10n.format(l10nKey, MOVE_CHOICE);
             }
             else 
             {

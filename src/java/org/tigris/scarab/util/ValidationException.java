@@ -1,5 +1,8 @@
 package org.tigris.scarab.util;
 
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
+
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
  * 
@@ -52,17 +55,19 @@ package org.tigris.scarab.util;
     would result in a bad state.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ValidationException.java,v 1.2 2003/05/02 16:18:50 jmcnally Exp $
+    @version $Id: ValidationException.java,v 1.3 2004/05/01 19:04:29 dabbous Exp $
 */
 public class ValidationException extends ScarabException
 {
     /**
-     * Constructs a new <code>ValidationException</code> without specified 
+     * Constructs a new <code>ValidationException</code> with specified 
      * detail message.
+     *
+     * @param msg the error message.
      */
-    public ValidationException()
+    public ValidationException(LocalizationKey l10nKey)
     {
-        super();
+        super(l10nKey);
     }
 
     /**
@@ -71,33 +76,44 @@ public class ValidationException extends ScarabException
      *
      * @param msg the error message.
      */
-    public ValidationException(String msg)
+    public ValidationException(L10NMessage l10nMessage)
     {
-        super(msg);
+        super(l10nMessage);
     }
  
     /**
      * Constructs a new <code>ValidationException</code> with specified 
-     * nested <code>Throwable</code>.
-     *
-     * @param nested the exception or error that caused this exception 
-     *               to be thrown.
-     */
-    public ValidationException(Throwable nested)
-    {
-        super(nested);
-    }
- 
-    /**
-     * Constructs a new <code>ValidationException</code> with specified 
-     * detail message and nested <code>Throwable</code>.
+     * detail message.
      *
      * @param msg the error message.
-     * @param nested the exception or error that caused this exception 
-     *               to be thrown.
      */
-    public ValidationException(String msg, Throwable nested)
+    public ValidationException(L10NMessage l10nMessage, Throwable nested)
     {
-        super(msg, nested);
+        super(l10nMessage, nested);
     }
+ 
+    /**
+     * Constructs a new <code>ValidationException</code> with specified 
+     * resource and a list of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        return new ValidationException(l10nMessage);
+    }
+
+ 
+    /**
+     * Convenience method: Constructs a new <code>ScarabException</code>
+     * with specified resource, nested Throwable and an aritrary set of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        ScarabException result = new ValidationException(l10nMessage, nested);
+        return result;
+    }
+    
 }

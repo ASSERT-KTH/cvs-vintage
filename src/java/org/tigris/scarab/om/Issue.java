@@ -80,6 +80,9 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
@@ -97,7 +100,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.333 2004/03/27 00:52:25 pledbrook Exp $
+ * @version $Id: Issue.java,v 1.334 2004/05/01 19:04:23 dabbous Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -436,7 +439,7 @@ public class Issue
                     throw new Exception(Localization.format
                                         (ScarabConstants.DEFAULT_BUNDLE_NAME,
                                          module.getLocale(),
-                                         "IssueIDPrefixNotForModule", args));
+                                         "IssueIDPrefixNotForModule", args)); //EXCEPTION
                 }
                 results.add(issues[i]);
             }
@@ -448,7 +451,7 @@ public class Issue
                     throw new Exception(Localization.format
                                         (ScarabConstants.DEFAULT_BUNDLE_NAME,
                                          module.getLocale(),
-                                         "IssueIDRangeNotValid", issues[i]));
+                                         "IssueIDRangeNotValid", issues[i])); //EXCEPTION
                 }
                 FederatedId fidStart = createFederatedId(module, issue[0]);
                 FederatedId fidStop = createFederatedId(module, issue[1]);
@@ -459,7 +462,7 @@ public class Issue
                                         (ScarabConstants.DEFAULT_BUNDLE_NAME,
                                          module.getLocale(),
                                          "IssueIDPrefixesNotForModule",
-                                         module.getCode()));
+                                         module.getCode())); //EXCEPTION
                 }
                 else if (!fidStart.getPrefix()
                          .equalsIgnoreCase(fidStop.getPrefix()))
@@ -469,7 +472,7 @@ public class Issue
                     throw new Exception(Localization.format
                                         (ScarabConstants.DEFAULT_BUNDLE_NAME,
                                          module.getLocale(),
-                                         "IssueIDPrefixesDoNotMatch", args));
+                                         "IssueIDPrefixesDoNotMatch", args)); //EXCEPTION
                 }
                 else if (fidStart.getCount() > fidStop.getCount())
                 {
@@ -504,7 +507,7 @@ public class Issue
         }
         catch (Exception e)
         {
-            throw new Exception("Invalid federated id: " + id);
+            throw new Exception("Invalid federated id: " + id); //EXCEPTION
         }
         return fid;
     }
@@ -598,11 +601,7 @@ public class Issue
         String comment = attachment.getData();
         if (comment == null || comment.length() == 0)
         {
-            throw new ScarabException(
-                Localization.getString(
-                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                getLocale(),
-                "NoDataInComment"));
+            throw new ScarabException(L10NKeySet.NoDataInComment);
         }
         if (activitySet == null)
         {
@@ -632,16 +631,11 @@ public class Issue
                                 comment, attachment);
 
         if (!activitySet.sendEmail(this))
-        {
-            String commentSaved = Localization.getString(
-                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                getLocale(),
-                "CommentSaved");
-            String emailError = Localization.getString(
-                ScarabConstants.DEFAULT_BUNDLE_NAME,
-                getLocale(),
-                "CouldNotSendEmail");
-            throw new ScarabException(commentSaved + " " + emailError);
+        {   L10NMessage commentSaved    = new L10NMessage(L10NKeySet.CommentSaved);
+            L10NMessage l10niSendFailed = new L10NMessage(L10NKeySet.CouldNotSendEmail);
+            throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                                      commentSaved,
+                                      l10niSendFailed);
         }
 
         return activitySet;
@@ -781,7 +775,7 @@ public class Issue
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -792,7 +786,7 @@ public class Issue
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -805,7 +799,7 @@ public class Issue
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+                                      "being associated with other objects."); //EXCEPTION
         }
         setModuleId(id);
     }
@@ -960,7 +954,7 @@ public class Issue
                 }
                 else if (avals.size() > 1)
                 {
-                    throw new Exception("Error in retrieving users.");
+                    throw new Exception("Error in retrieving users."); //EXCEPTION
                 }
             }
             ScarabCache.put(result, this, GET_ATTRVALUE, attribute);
@@ -1217,7 +1211,7 @@ public class Issue
             }
             catch (Exception e)
             {
-                throw new Exception("Error retrieving users to email");
+                throw new Exception("Error retrieving users to email"); //EXCEPTION
             }
         }
         return users;
@@ -1252,7 +1246,7 @@ public class Issue
             catch (Exception e)
             {
                 getLog().error("Issue.getUsersToEmail(): ", e);
-                throw new Exception("Error in retrieving users.");
+                throw new Exception("Error in retrieving users."); //EXCEPTION
             }
             ScarabCache.put(result, this, GET_ALL_USERS_TO_EMAIL, action);
         }
@@ -1748,7 +1742,7 @@ public class Issue
         }
         catch (Exception e)
         {
-            throw new TorqueException(e);
+            throw new TorqueException(e); //EXCEPTION
         }
         super.addActivity(activity);
         if (!activityList.contains(activity))
@@ -1916,7 +1910,7 @@ public class Issue
         Depend prevDepend = this.getDependency(childIssue, true);
         if (prevDepend != null)
         {
-            throw new ScarabException("DependencyExists");
+            throw new ScarabException(L10NKeySet.DependencyExists);
         }
 
         // we definitely want to do an insert here so force it.
@@ -2039,7 +2033,7 @@ public class Issue
         if (!module.allowsIssues() || (isNew() && !module.allowsNewIssues())) 
         {
             throw new UnsupportedOperationException(module.getName() + 
-                " does not allow issues.");
+                " does not allow issues."); //EXCEPTION
         }
         
         // remove unset AttributeValues before saving
@@ -2074,7 +2068,7 @@ public class Issue
                 }
                 catch (Exception e)
                 {
-                    throw new TorqueException(e);
+                    throw new TorqueException(e); //EXCEPTION
                 }
             }
         }
@@ -2119,9 +2113,8 @@ public class Issue
                             .error("Error trying to create ID_TABLE entry for "
                                    + getIdTableKey(), badException);
                         // throw the original
-                        throw new ScarabException(
-                            "Error retrieving an id for the new issue.  " + 
-                            "Please check turbine.log for reasons.", 
+                        throw ScarabException.create(
+                            L10NKeySet.ExceptionRetrievingIssueId,
                             badException);
                     }
                 }
@@ -2547,9 +2540,9 @@ public class Issue
         // check if the module accepts multiple votes
         if (!getModule().allowsMultipleVoting() && previousVotes > 0)
         {
-            throw new ScarabException("User " + user.getUserName() + 
-                " attempted to vote multiple times for issue " + getUniqueId()
-                + " which was not allowed in this project.");
+            throw ScarabException.create(L10NKeySet.ExceptionMultipleVoteForUnallowed,
+                                      user.getUserName(), 
+                                      getUniqueId());
         }
         
         // save the user's vote
@@ -2764,7 +2757,7 @@ public class Issue
         } 
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }            
     }
 
@@ -3359,15 +3352,11 @@ public class Issue
                                     oldDescription, newDescription);
             if (!activitySet.sendEmail(this))
             {
-                String urlDescSaved = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "UrlDescChangedDesc");
-                String emailError = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "CouldNotSendEmail");
-                throw new ScarabException(urlDescSaved + " " + emailError);
+                Localizable urlDescSaved = new L10NMessage(L10NKeySet.UrlDescChangedDesc);
+                Localizable emailError   = new L10NMessage(L10NKeySet.CouldNotSendEmail);
+                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                                       urlDescSaved,
+                                       emailError);
             }
         }
         return activitySet;
@@ -3410,15 +3399,11 @@ public class Issue
                                     oldUrl, newUrl);
             if (!activitySet.sendEmail(this))
             {
-                String urlChanged = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "UrlChangedDesc");
-                String emailError = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "CouldNotSendEmail");
-                throw new ScarabException(urlChanged + " " + emailError);
+                Localizable urlChanged = new L10NMessage(L10NKeySet.UrlChangedDesc, oldUrl, newUrl);
+                Localizable emailError = new L10NMessage(L10NKeySet.CouldNotSendEmail);
+                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                                          urlChanged,
+                                          emailError);
             }
         }
         return activitySet;
@@ -3501,7 +3486,7 @@ public class Issue
         String msg = doCheckInitialAttributeValueWorkflow(newValues, user);
         if (msg != null)
         {
-            throw new Exception(msg);
+            throw new Exception(msg); //EXCEPTION
         }
         
         if (activitySet == null)
@@ -3526,7 +3511,7 @@ public class Issue
             catch (ScarabException se)
             {
                 throw new Exception("Fatal Error: " + 
-                    se.getMessage() + " Please start over.");    
+                    se.getMessage() + " Please start over.");     //EXCEPTION
             }
         }        
         this.save();
@@ -3578,7 +3563,7 @@ public class Issue
             String msg = doCheckAttributeValueWorkflow(newAttVals, user);
             if (msg != null)
             {
-                throw new Exception(msg);
+                throw new Exception(msg); //EXCEPTION
             }
         }
         // save the attachment if it exists.
@@ -3775,15 +3760,11 @@ public class Issue
              
             if (!activitySet.sendEmail(this))
             {
-                String commentSaved = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "CommentSaved");
-                String emailError = Localization.getString(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "CouldNotSendEmail");
-                throw new ScarabException(commentSaved + " " + emailError);
+                Localizable commentSaved = new L10NMessage( L10NKeySet.CommentSaved,oldComment,newComment);
+                Localizable emailError   = new L10NMessage( L10NKeySet.CouldNotSendEmail);
+                throw ScarabException.create(L10NKeySet.ExceptionSavedButErrors,
+                                          commentSaved,
+                                          emailError);
             }
         }
         return activitySet;

@@ -46,7 +46,7 @@ import org.apache.fulcrum.intake.Retrievable;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportAxis.java,v 1.4 2003/03/28 00:00:16 jon Exp $
+ * @version $Id: ReportAxis.java,v 1.5 2004/05/01 19:04:24 dabbous Exp $
  */
 public class ReportAxis
     implements java.io.Serializable,
@@ -73,7 +73,7 @@ public class ReportAxis
             if (headings == null || headings.size() <= headingIndex) 
             {
                 throw new IllegalArgumentException(headingIndex + 
-                    " is larger than the number of headings");
+                    " is larger than the number of headings"); //EXCEPTION
             }
             else 
             {

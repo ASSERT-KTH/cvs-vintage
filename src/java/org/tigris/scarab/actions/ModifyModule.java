@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.35 2003/07/25 17:17:59 thierrylach Exp $
+ * @version $Id: ModifyModule.java,v 1.36 2004/05/01 19:04:22 dabbous Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -104,7 +104,7 @@ public class ModifyModule extends RequireLoginFirstAction
             }
             catch (Exception e)
             {
-                throw new Exception("Could not locate module");
+                throw new Exception("Could not locate module"); //EXCEPTION
             }
 
             Group moduleGroup = intake.get
@@ -173,7 +173,7 @@ public class ModifyModule extends RequireLoginFirstAction
                     }
                     else
                     {
-                        throw new Exception ("Did not get a ScarabModule");
+                        throw new Exception ("Did not get a ScarabModule"); //EXCEPTION
                     }
                 }
                 
@@ -220,7 +220,7 @@ public class ModifyModule extends RequireLoginFirstAction
             Module me = ModuleManager.getInstance();
             if (moduleGroup == null)
             {
-                throw new Exception("Could not locate module");
+                throw new Exception("Could not locate module"); //EXCEPTION
             }
             try
             {
@@ -234,7 +234,7 @@ public class ModifyModule extends RequireLoginFirstAction
                     me.getParent()))
                 {
                     throw new Exception ("You do not have permission to" + 
-                        " assign this module to the requested parent module.");
+                        " assign this module to the requested parent module."); //EXCEPTION
                 }
                 me.setOwnerId(user.getUserId());
                 me.save();
@@ -249,7 +249,8 @@ public class ModifyModule extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 Log.get().error(e);
-                scarabR.setAlertMessage(e.getMessage());
+                String msg = l10n.getMessage(e);
+                scarabR.setAlertMessage(msg);
                 return;
             }
             intake.remove(moduleGroup);

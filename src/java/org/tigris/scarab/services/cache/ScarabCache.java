@@ -63,7 +63,7 @@ import org.tigris.scarab.util.Log;
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.7 2004/02/17 22:01:27 pledbrook Exp $
+ * @version $Id: ScarabCache.java,v 1.8 2004/05/01 19:04:28 dabbous Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -93,7 +93,7 @@ public class ScarabCache
         catch (Exception x)
         {
             throw new InitializationException(
-                "Failed to initialize ScarabCache",x);
+                "Failed to initialize ScarabCache",x); //EXCEPTION
         }
         setInit(true);
     }

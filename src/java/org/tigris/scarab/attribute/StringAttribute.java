@@ -56,7 +56,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.12 $ $Date: 2003/02/04 11:26:00 $
+ * @version $Revision: 1.13 $ $Date: 2004/05/01 19:04:22 $
  */
 public class StringAttribute extends FreeFormAttribute
 {
@@ -79,7 +79,7 @@ public class StringAttribute extends FreeFormAttribute
         }
         catch (Exception e)
         {
-            throw new TorqueException(e);
+            throw new TorqueException(e); //EXCEPTION
         }
     }
 }

@@ -59,7 +59,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: RModuleUserAttribute.java,v 1.13 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: RModuleUserAttribute.java,v 1.14 2004/05/01 19:04:23 dabbous Exp $
  */
 public  class RModuleUserAttribute 
     extends org.tigris.scarab.om.BaseRModuleUserAttribute
@@ -100,7 +100,7 @@ public  class RModuleUserAttribute
         }
         else
         {
-            throw new TurbineSecurityException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new TurbineSecurityException(ScarabConstants.NO_PERMISSION_MESSAGE); //EXCEPTION
         }
     }
 }

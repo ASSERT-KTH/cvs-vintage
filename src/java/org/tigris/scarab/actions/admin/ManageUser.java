@@ -75,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.25 2004/03/28 18:45:12 dep4b Exp $
+ * @version $Id: ManageUser.java,v 1.26 2004/05/01 19:04:22 dabbous Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -143,7 +143,7 @@ public class ManageUser extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 data.getParameters().setString("lastAction","");
-                scarabR.setAlertMessage (e.getMessage());
+                scarabR.setAlertMessage (l10n.getMessage(e));
                 Log.get().error(e);
                 data.getParameters().setString("state","showadduser");
                 return;
@@ -240,7 +240,7 @@ public class ManageUser extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 data.getParameters().setString("lastAction","");
-                scarabR.setAlertMessage (e.getMessage());
+                scarabR.setAlertMessage (l10n.getMessage(e));
                 Log.get().error(e);
                 data.getParameters().setString("state","showedituser");
                 return;

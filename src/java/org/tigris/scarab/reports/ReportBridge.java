@@ -60,6 +60,7 @@ import org.apache.log4j.Logger;
 // Turbine classes
 import org.apache.torque.TorqueException;
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Module;
@@ -462,7 +463,7 @@ public  class ReportBridge
             
             if (!isOk) 
             {
-                throw new IncompatibleMITListException();
+                throw new IncompatibleMITListException(L10NKeySet.ExceptionIncompatibleMITListChanges); //EXCEPTION
             }
             
             reportDefn.setModuleIssueTypes(null);

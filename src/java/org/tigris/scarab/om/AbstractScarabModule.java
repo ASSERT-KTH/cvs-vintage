@@ -74,6 +74,9 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.turbine.Turbine;
 
 // Scarab classes
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ValidationException;
 import org.tigris.scarab.util.ScarabConstants;
@@ -100,7 +103,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.116 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.117 2004/05/01 19:04:23 dabbous Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -402,9 +405,9 @@ public abstract class AbstractScarabModule
             String permission = attribute.getPermission();
             if (permission == null) 
             {
-                throw new ScarabException("Attribute: " + attribute.getName() + 
-                         " has no permission associated with it, so no users"
-                         + " can be associated with it.");
+                throw ScarabException.create(
+                        L10NKeySet.ExceptionNoAttributePermission,
+                        attribute.getName());
             }
             else 
             {
@@ -1533,14 +1536,18 @@ public abstract class AbstractScarabModule
         // state
         if (issueType == null) 
         {
-            throw new ValidationException(getValidationMessage("NULL", "Issue type was null"));
+            throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                    "NULL",
+                    getName(),
+                    "Issue type was null");
         }
 
         // check that the issueType is not already added.
         if (includesIssueType(issueType)) 
         {
-            throw new ValidationException("Attempted double add issue type "
-                + issueType + " to module " + this);
+            throw ValidationException.create(L10NKeySet.ExceptionDuplicateIssueType,
+                    issueType,
+                    getName());
         }
 
         String typeName = issueType.getName();
@@ -1550,8 +1557,11 @@ public abstract class AbstractScarabModule
         {
             if (testGroups == null) 
             {
-                throw new ValidationException(getValidationMessage(typeName, 
-                    "List of groups was null"));
+                Localizable l10nMessage = new L10NMessage(L10NKeySet.IssueTypeWasNull);
+                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                        typeName,
+                        getName(),
+                        l10nMessage);
             }
             else 
             {
@@ -1568,8 +1578,11 @@ public abstract class AbstractScarabModule
                             Attribute attr = (Attribute)j.next();
                             if (attr == null) 
                             {
-                                throw new ValidationException(getValidationMessage(typeName, 
-                                    "List of attributes contained a null"));
+                                L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributesContainsNull);
+                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                        typeName,
+                                        getName(),
+                                        l10nMessage);
                             }                            
                             
                             // TODO: add workflow validation
@@ -1577,18 +1590,23 @@ public abstract class AbstractScarabModule
                             RAttributeAttributeGroup raag = group.getRAttributeAttributeGroup(attr);
                             if (raag == null) 
                             {
-                                throw new ValidationException(getValidationMessage(typeName, 
-                                    "Attribute to AttributeGroup mapping is missing for " + 
-                                    attr.getName()));
+                                L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributeMappingIsMissing, attr.getName());
+                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                        typeName,
+                                        getName(),
+                                        l10nMessage);
+                          
                             }
 
                             // check attribute-issue type maps
                             RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attr);
                             if (ria == null) 
                             {
-                                throw new ValidationException(getValidationMessage(typeName, 
-                                    "Attribute to IssueType mapping is missing for " + 
-                                    attr.getName()));
+                                L10NMessage l10nMessage = new L10NMessage(L10NKeySet.AttributeToIssueTypeMappingIsMissing, attr.getName());
+                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                        typeName,
+                                        getName(),
+                                        l10nMessage);
                             }
 
                             // check options
@@ -1599,9 +1617,11 @@ public abstract class AbstractScarabModule
                                 {
                                     if (k.next() == null) 
                                     {
-                                        throw new ValidationException(getValidationMessage(typeName, 
-                                            "List of options for " + attr.getName() +
-                                            " contained a null"));
+                                        L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ListOfOptionsMissing, attr.getName());
+                                                throw ValidationException.create(L10NKeySet.ExceptionIntegrityCheckFailure,
+                                                typeName,
+                                                getName(),
+                                                l10nMessage);
                                     }
                                 }
                             }
@@ -1616,8 +1636,7 @@ public abstract class AbstractScarabModule
         }
         catch (Exception e)
         {
-            throw new ValidationException("threw general exception during validation. " +
-                                          e.getMessage(), e);
+            throw ValidationException.create(L10NKeySet.ExceptionGeneral, new Object[]{e.getMessage()}, e);
         }
 
         // okay we passed, start modifying tables
@@ -1830,7 +1849,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         isInitializing = true;
-        ValidationException ve = null;
+        ScarabException ve = null;
         try
         {
         // Add defaults for issue types and attributes 
@@ -1858,9 +1877,10 @@ public abstract class AbstractScarabModule
                     }
                     else 
                     {
-                        ve = new ValidationException("Multiple problems encountered: '"
-                             + ve.getMessage() + "' and '" +
-                             e.getMessage() + "'", e);
+                        ve = ValidationException.create(
+                                L10NKeySet.ExceptionMultipleProblems,
+                                ve.getMessage(),
+                                e);//WORK: what about the stack trace ?
                         isInitializing = false;
                         throw ve;
                     }                    
@@ -2158,7 +2178,7 @@ public abstract class AbstractScarabModule
     {
         if (this.getClass() != obj.getClass())
         {
-            throw new ClassCastException();
+            throw new ClassCastException(); //EXCEPTION 
         }
         String name1 = ((Group)obj).getName();
         String name2 = this.getName();

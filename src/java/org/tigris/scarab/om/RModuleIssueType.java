@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -67,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.34 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: RModuleIssueType.java,v 1.35 2004/05/01 19:04:23 dabbous Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -83,7 +84,7 @@ public  class RModuleIssueType
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -94,7 +95,7 @@ public  class RModuleIssueType
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -107,7 +108,7 @@ public  class RModuleIssueType
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+                                      "being associated with other objects."); //EXCEPTION
         }
         setModuleId(id);
     }
@@ -228,7 +229,7 @@ public  class RModuleIssueType
         }
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }
     }
 

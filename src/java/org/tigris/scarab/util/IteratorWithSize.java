@@ -65,13 +65,13 @@ class EmptyIteratorWithSize implements IteratorWithSize
     
     public Object next()
     {
-        throw new NoSuchElementException("This is an empty list.");
+        throw new NoSuchElementException("This is an empty list."); //EXCEPTION
     }
     
     public void remove()
     {
         throw new IllegalStateException("next() will throw exception, so it is "
-                                        + "not possible to call this method.");
+                                        + "not possible to call this method."); //EXCEPTION
     }
     
     public int size()

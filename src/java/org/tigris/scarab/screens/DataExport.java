@@ -231,7 +231,7 @@ class DataExport extends Default
             if (writer == null)
             {
                 throw new IllegalArgumentException
-                    ("TSVPrinter constructor requires a non-null writer");
+                    ("TSVPrinter constructor requires a non-null writer"); //EXCEPTION
             }
             
             if (writer instanceof PrintWriter)

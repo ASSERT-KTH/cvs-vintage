@@ -73,7 +73,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.49 2004/02/05 07:33:29 pledbrook Exp $
+ * @version $Id: Login.java,v 1.50 2004/05/01 19:04:22 dabbous Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -216,7 +216,7 @@ public class Login extends ScarabTemplateAction
         }
         catch (TurbineSecurityException e)
         {
-            scarabR.setAlertMessage(e.getMessage());
+            scarabR.setAlertMessage(l10n.getMessage(e));
             return failAction(data, "Login.vm");
         }
         return true;

@@ -46,6 +46,8 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.util.ScarabException;
 
 /**
@@ -54,27 +56,64 @@ import org.tigris.scarab.util.ScarabException;
     searches are in process and another is requested.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ComplexQueryException.java,v 1.2 2003/09/10 00:50:31 jmcnally Exp $
+    @version $Id: ComplexQueryException.java,v 1.3 2004/05/01 19:04:29 dabbous Exp $
 */
 public class ComplexQueryException extends ScarabException
 {
     /**
-     * Constructs a new <code>ComplexQueryException</code> without
-     * specified detail message.
-     */
-    public ComplexQueryException()
-    {
-        super();
-    }
-
-    /**
-     * Constructs a new <code>ComplexQueryException</code> with 
-     * specified detail message.
+     * Constructs a new <code>ComplexQueryException</code> with specified 
+     * detail message.
      *
      * @param msg the error message.
      */
-    public ComplexQueryException(String msg)
+    public ComplexQueryException(LocalizationKey l10nKey)
     {
-        super(msg);
+        super(l10nKey);
+    }
+
+    /**
+     * Constructs a new <code>ComplexQueryException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public ComplexQueryException(L10NMessage l10nMessage)
+    {
+        super(l10nMessage);
+    }
+
+    /**
+     * Constructs a new <code>ComplexQueryException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public ComplexQueryException(L10NMessage l10nMessage, Throwable nested)
+    {
+        super(l10nMessage, nested);
+    }
+
+    /**
+     * Constructs a new <code>ComplexQueryException</code> with specified 
+     * resource and a list of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        return new ComplexQueryException(l10nMessage);
+    }
+
+ 
+    /**
+     * Convenience method: Constructs a new <code>ComplexQueryException</code>
+     * with specified resource, nested Throwable and an aritrary set of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        ScarabException result = new ComplexQueryException(l10nMessage, nested);
+        return result;
     }
 }

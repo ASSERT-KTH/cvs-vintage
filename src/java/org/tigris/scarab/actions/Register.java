@@ -82,7 +82,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.42 2004/04/28 22:28:14 dabbous Exp $
+ * @version $Id: Register.java,v 1.43 2004/05/01 19:04:22 dabbous Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -183,7 +183,7 @@ public class Register extends ScarabTemplateAction
             catch (Exception e)
             {
                 setTarget(data, template);
-                scarabR.setAlertMessage(e.getMessage());
+                scarabR.setAlertMessage(l10n.getMessage(e));
                 return;
             }
 
@@ -261,7 +261,7 @@ public class Register extends ScarabTemplateAction
                 // current template
                 template = getCancelTemplate(data, "Register.vm");
                 ScarabLocalizationTool l10n = getLocalizationTool(context);
-                throw new Exception(l10n.get("UserObjectNotInSession"));
+                throw new Exception(l10n.get("UserObjectNotInSession")); //EXCEPTION
             }
 
             try
@@ -291,8 +291,9 @@ public class Register extends ScarabTemplateAction
         }
         catch (Exception e)
         {
+            ScarabLocalizationTool l10n = this.getLocalizationTool(context);
             setTarget(data, template);
-            scarabR.setAlertMessage(e.getMessage());
+            scarabR.setAlertMessage(l10n.getMessage(e));
             Log.get().error(e);
             return;
         }
@@ -483,8 +484,9 @@ public class Register extends ScarabTemplateAction
         }
         catch (Exception e)
         {
+            ScarabLocalizationTool l10n = this.getLocalizationTool(context);
             setTarget(data, template);
-            scarabR.setAlertMessage (e.getMessage());
+            scarabR.setAlertMessage (l10n.getMessage(e));
             Log.get().error(e);
             return;
         }

@@ -67,7 +67,7 @@ import org.tigris.scarab.util.xmlissues.ImportIssues;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.18 2003/07/28 20:23:28 dlr Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.19 2004/05/01 19:04:27 dabbous Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -114,7 +114,7 @@ public class ViewXMLExportIssues extends Default
             catch (Exception e)
             {
                 data.setTarget("admin,XMLExportIssues.vm");
-                scarabR.setAlertMessage(e.getMessage());
+                scarabR.setAlertMessage(l10n.getMessage(e));
                 return;
             }
             List issueIdList = new ArrayList();

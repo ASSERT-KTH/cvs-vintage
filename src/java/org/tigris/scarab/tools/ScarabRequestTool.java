@@ -121,6 +121,7 @@ import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.*;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.ScarabConstants;
@@ -954,7 +955,7 @@ try
 }
 catch(Exception e)
 {
-e.printStackTrace(); throw e;
+e.printStackTrace(); throw e; //EXCEPTION
 }
         return attachment;
     }
@@ -1263,9 +1264,8 @@ e.printStackTrace();
         {
             // system would be messed up, if we are here.  Punt
             nextTemplate = "Index.vm";
-            String msg = "CannotDetermineIssueEntryTemplate";
-            setAlertMessage(l10n.get(msg));
-            Log.get().error(msg, e);
+            setAlertMessage(l10n.get("CannotDetermineIssueEntryTemplate"));
+            Log.get().error("CannotDetermineIssueEntryTemplate", e);
         }
         return nextTemplate;
     }
@@ -1539,7 +1539,7 @@ e.printStackTrace();
             {
                 throw new IllegalArgumentException(
                     "issue ids must be Strings or Longs, not " + 
-                    issueIds.get(0).getClass().getName());
+                    issueIds.get(0).getClass().getName()); //EXCEPTION
             }
         }        
         return issues;
@@ -1750,7 +1750,7 @@ e.printStackTrace();
         }
         catch (Exception e)
         {
-            setAlertMessage(e.getMessage());
+            setAlertMessage(l10n.getMessage(e));
             return null;
         }
         
@@ -1845,8 +1845,9 @@ e.printStackTrace();
         catch (Exception e)
         {
             matchingIssueIds = IteratorWithSize.EMPTY;
-            setAlertMessage(getLocalizationTool()
-                .format("ErrorProcessingQuery", e.getMessage()));
+            ScarabLocalizationTool l10n = getLocalizationTool();
+            L10NMessage l10nMessage = new L10NMessage(L10NKeySet.ErrorProcessingQuery,e);
+            setAlertMessage(l10nMessage.getMessage(l10n));
             Log.get().info("Error processing a query", e);
         }
         
@@ -1926,7 +1927,7 @@ e.printStackTrace();
             }
             else 
             {
-                throw e;
+                throw e; //EXCEPTION
             }
         }
         return queryResults;
@@ -2264,7 +2265,7 @@ e.printStackTrace();
         if (mitList == null) 
         {
             throw new IllegalArgumentException(
-                "Cannot create a new report without any issue types.");
+                "Cannot create a new report without any issue types."); //EXCEPTION
         }
         
         ScarabUser user = (ScarabUser)data.getUser();

@@ -49,6 +49,7 @@ package org.tigris.scarab.workflow;
 import java.util.List;
 
 import org.apache.turbine.Turbine;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 /**
@@ -58,7 +59,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: WorkflowFactory.java,v 1.12 2004/01/31 16:09:54 dep4b Exp $
+ * @version $Id: WorkflowFactory.java,v 1.13 2004/05/01 19:04:31 dabbous Exp $
  */
 public class WorkflowFactory 
 {
@@ -104,6 +105,7 @@ public class WorkflowFactory
     public static Workflow getInstance() throws ScarabException
     {
         Workflow wf = null;
+        String className = null;
         try
         {
             if (getForceUseDefault())
@@ -118,7 +120,6 @@ public class WorkflowFactory
                 // own configuration to the properties file and cannot 
                 // easily remove the existing one. so, take the second
                 // instance...
-                String className = null;
                 if (classNames.size() > 1)
                 {
                     className = (String) classNames.get(1);
@@ -133,9 +134,17 @@ public class WorkflowFactory
                 wf = (Workflow) wfClass.newInstance();
             }
         }
-        catch (Exception e)
+        catch (InstantiationException ie)
         {
-            throw new ScarabException(e);
+            throw ScarabException.create(L10NKeySet.ExceptionInstantiation, className, ie);
+        }
+        catch (IllegalAccessException iae)
+        {
+            throw ScarabException.create(L10NKeySet.ExceptionIllegalAccess, className, iae);
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+            throw ScarabException.create(L10NKeySet.ExceptionClassNotFound, className, cnfe);
         }
         return wf;
     }

@@ -52,6 +52,7 @@ import java.util.List;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -60,7 +61,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetTypeManager.java,v 1.3 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: ActivitySetTypeManager.java,v 1.4 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ActivitySetTypeManager
     extends BaseActivitySetTypeManager
@@ -95,13 +96,13 @@ public class ActivitySetTypeManager
             List activitySetTypes = ActivitySetTypePeer.doSelect(crit);
             if (activitySetTypes.size() < 1) 
             {
-                throw new ScarabException("ActivitySet type name: " + 
-                                          activitySetTypeName + " not found.");
+                throw ScarabException.create(L10NKeySet.ExceptionActivitySetTypenameNotFound, 
+                                          activitySetTypeName);
             }
             if (activitySetTypes.size() > 1)
             {
-                throw new ScarabException(
-                    "duplicate activitySet type name found");
+                throw ScarabException.create(L10NKeySet.ExceptionActivitySetDuplicateTypename,
+                                          activitySetTypeName);
             }
             ttype = (ActivitySetType)activitySetTypes.get(0);
             ScarabCache.put(ttype, "ActivitySetType", "getInstance", 

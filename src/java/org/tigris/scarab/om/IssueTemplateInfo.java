@@ -55,6 +55,7 @@ import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.ScarabConstants;
@@ -64,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.25 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.26 2004/05/01 19:04:23 dabbous Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
@@ -172,7 +173,7 @@ public  class IssueTemplateInfo
         } 
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }            
     }
 

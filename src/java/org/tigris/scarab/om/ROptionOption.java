@@ -57,13 +57,14 @@ import org.apache.fulcrum.cache.CachedObject;
 import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.TurbineServices;
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
   * This class represents the SCARAB_R_OPTION_OPTION table.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ROptionOption.java,v 1.13 2003/03/27 23:57:19 jon Exp $
+  * @version $Id: ROptionOption.java,v 1.14 2004/05/01 19:04:23 dabbous Exp $
   */
 public class ROptionOption 
     extends org.tigris.scarab.om.BaseROptionOption
@@ -128,10 +129,9 @@ public class ROptionOption
             }
             catch (Exception e)
             {
-                throw new ScarabException("ROptionOption with ID " + 
-                                            parent.toString() + ":" + 
-                                            child.toString() + 
-                                          " can not be found");
+                throw ScarabException.create(L10NKeySet.ExceptionOptionNotFound,
+                                          parent.toString(),
+                                          child.toString());
             }
             tgcs.addObject(key, new CachedObject(option));
         }

@@ -57,6 +57,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.IssueTypePeer;
@@ -67,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.45 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: RModuleAttribute.java,v 1.46 2004/05/01 19:04:23 dabbous Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -94,7 +95,7 @@ public class RModuleAttribute
                     ria = getIssueType().getRIssueTypeAttribute(getAttribute());
                     if ((ria != null && ria.getLocked()))
                     {
-                    throw new TorqueException(getAttribute().getName() + " is locked");
+                    throw new TorqueException(getAttribute().getName() + " is locked"); //EXCEPTION
                     }
                     else
                     {
@@ -103,7 +104,7 @@ public class RModuleAttribute
                 }
                 catch (Exception e)
                 {
-                    throw new TorqueException("An error has occurred.", e);
+                    throw new TorqueException("An error has occurred.", e); //EXCEPTION
                 }
             }
         }
@@ -118,7 +119,7 @@ public class RModuleAttribute
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -129,7 +130,7 @@ public class RModuleAttribute
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -142,7 +143,7 @@ public class RModuleAttribute
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+                                      "being associated with other objects."); //EXCEPTION
         }
         setModuleId(id);
     }
@@ -203,7 +204,7 @@ public class RModuleAttribute
                .getInstance(getIssueTypeId(), false);
             if (issueType.getLocked() && !overrideLock)
             { 
-                throw new ScarabException(Localization.getString("CannotDeleteAttributeFromLockedIssueType"));
+                throw new ScarabException(L10NKeySet.CannotDeleteAttributeFromLockedIssueType);
             }            
             else
             {

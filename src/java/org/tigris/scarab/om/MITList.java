@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.42 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: MITList.java,v 1.43 2004/05/01 19:04:23 dabbous Exp $
  */
 public class MITList
     extends org.tigris.scarab.om.BaseMITList
@@ -130,7 +130,7 @@ public class MITList
     {
         if (isEmpty())
         {
-            throw new IllegalStateException("method should not be called on an empty list.");
+            throw new IllegalStateException("method should not be called on an empty list."); //EXCEPTION
         }
     }
 
@@ -188,7 +188,7 @@ public class MITList
             }
             catch (TorqueException e)
             {
-                throw new TorqueRuntimeException(e);
+                throw new TorqueRuntimeException(e); //EXCEPTION
             }
 
             if (rawList.contains(currentObject))
@@ -201,7 +201,7 @@ public class MITList
             {
                 throw new UnsupportedOperationException(
                     "Removing items "
-                        + "from a list containing wildcards is not supported.");
+                        + "from a list containing wildcards is not supported."); //EXCEPTION
             }
         }
     }
@@ -335,7 +335,7 @@ public class MITList
         {
             throw new IllegalStateException(
                 "method should not be called on"
-                    + " a list including more than one module.");
+                    + " a list including more than one module."); //EXCEPTION
         }
         return getModule(getFirstItem());
     }
@@ -346,7 +346,7 @@ public class MITList
         {
             throw new IllegalStateException(
                 "method should not be called on"
-                    + " a list including more than one issue type.");
+                    + " a list including more than one issue type."); //EXCEPTION
         }
         return getFirstItem().getIssueType();
     }
@@ -374,7 +374,7 @@ public class MITList
     {
         if (v == null)
         {
-            throw new IllegalArgumentException("cannot set user to null.");
+            throw new IllegalArgumentException("cannot set user to null."); //EXCEPTION
         }
 
         super.setScarabUser(v);
@@ -1065,7 +1065,7 @@ public class MITList
             }
             catch (Exception e)
             {
-                throw new TorqueRuntimeException(e);
+                throw new TorqueRuntimeException(e); //EXCEPTION
             }
             expandedList = items;
         }

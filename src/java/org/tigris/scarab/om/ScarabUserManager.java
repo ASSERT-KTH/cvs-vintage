@@ -51,6 +51,7 @@ import java.util.List;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -61,7 +62,7 @@ import org.apache.fulcrum.security.util.UnknownEntityException;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserManager.java,v 1.9 2003/02/04 11:26:01 jon Exp $
+ * @version $Id: ScarabUserManager.java,v 1.10 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ScarabUserManager
     extends BaseScarabUserManager
@@ -115,7 +116,7 @@ public class ScarabUserManager
     public static List getUsers(String[] usernames, String domainName) 
         throws Exception
     {
-        return getManager().getUsers(usernames, domainName);
+        return ScarabUserManager.getUsers(usernames, domainName);
     }
 
     /**
@@ -137,7 +138,7 @@ public class ScarabUserManager
             }
             else if (users.size() > 1) 
             {
-                throw new ScarabException("duplicate usernames exist");
+                throw new ScarabException(L10NKeySet.ExceptionDuplicateUsername);
             }
         }
         return user;

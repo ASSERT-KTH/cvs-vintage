@@ -60,6 +60,7 @@ import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
@@ -67,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.42 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: RModuleOption.java,v 1.43 2004/05/01 19:04:23 dabbous Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
@@ -106,7 +107,7 @@ public class RModuleOption
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -117,7 +118,7 @@ public class RModuleOption
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -130,7 +131,7 @@ public class RModuleOption
         if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+                                      "being associated with other objects."); //EXCEPTION
         }
         setModuleId(id);
     }
@@ -243,8 +244,7 @@ public class RModuleOption
                .getInstance(getIssueTypeId(), false);
             if (issueType.getLocked())
             { 
-                throw new ScarabException("You cannot delete this option, " + 
-                                          "because this issue type is locked.");
+                throw new ScarabException(L10NKeySet.ExceptionDeleteOptionFromLockedIssueType);
             }            
             else
             {
@@ -300,7 +300,7 @@ public class RModuleOption
                     ria = getIssueType().getRIssueTypeAttribute(attr);
                     if (ria != null && ria.getLocked())
                     {
-                        throw new TorqueException(attr.getName() + "is locked");
+                        throw new TorqueException(attr.getName() + "is locked"); //EXCEPTION
                     }
                     else
                     {
@@ -309,7 +309,7 @@ public class RModuleOption
                 }
                 catch (Exception e)
                 {
-                    throw new TorqueException("An error has occurred.");
+                    throw new TorqueException("An error has occurred."); //EXCEPTION
                 }
             }
         }

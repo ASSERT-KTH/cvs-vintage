@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.75 2003/12/17 22:55:26 thierrylach Exp $
+  * @version $Id: Attribute.java,v 1.76 2004/05/01 19:04:23 dabbous Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -451,7 +451,7 @@ public class Attribute
     {
         if (optionID == null || optionID.length() == 0)
         {
-            throw new TorqueException("optionId is empty");
+            throw new TorqueException("optionId is empty"); //EXCEPTION
         }
         return getAttributeOption(new Integer(optionID));
     }

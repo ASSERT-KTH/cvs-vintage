@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.181 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: ModifyIssue.java,v 1.182 2004/05/01 19:04:22 dabbous Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -248,7 +248,7 @@ public class ModifyIssue extends BaseModifyIssue
             }
             catch (Exception se)
             {
-                scarabR.setAlertMessage(se.getMessage());
+                scarabR.setAlertMessage(l10n.getMessage(se));
             }
         } 
         else
@@ -398,7 +398,8 @@ public class ModifyIssue extends BaseModifyIssue
             }
             catch(Exception e)
             {
-                scarabR.setAlertMessage(e.getMessage());
+                String l10nMessage = l10n.getMessage(e);
+                scarabR.setAlertMessage(l10nMessage);
                 return;
             }
             scarabR.setConfirmMessage(l10n.get("CommentSaved"));
@@ -623,7 +624,7 @@ public class ModifyIssue extends BaseModifyIssue
                 }
                 catch (ScarabException se)
                 {
-                    scarabR.setAlertMessage(se.getMessage());
+                    scarabR.setAlertMessage(l10n.getMessage(se));
                 }
             }
         }
@@ -899,7 +900,8 @@ public class ModifyIssue extends BaseModifyIssue
             }
             catch (ScarabException se)
             {
-                childId.setMessage(l10n.get(se.getMessage()));
+                String l10nKey = se.getMessage();
+                childId.setMessage(l10n.get(l10nKey));
                 return false;
             }
             catch (Exception e)
@@ -973,7 +975,8 @@ public class ModifyIssue extends BaseModifyIssue
                 {
                     // it will error out if they attempt to delete
                     // a dep via a child dep.
-                    scarabR.setAlertMessage(l10n.get(se.getMessage()));
+                    String l10nKey = se.getMessage();
+                    scarabR.setAlertMessage(l10n.get(l10nKey));
                 }
                 catch (Exception e)
                 {

@@ -130,7 +130,7 @@ public class ChangePassword extends ScarabTemplateAction
                 }
                 catch (PasswordMismatchException pme)
                 {
-                    scarabR.setAlertMessage(pme.getMessage());
+                    scarabR.setAlertMessage(l10n.getMessage(pme));
                     setTarget(data, template);
                 }
             }

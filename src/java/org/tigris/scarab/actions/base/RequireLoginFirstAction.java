@@ -72,16 +72,14 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.52 2004/03/27 00:40:05 pledbrook Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.53 2004/05/01 19:04:22 dabbous Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
     private static final Logger LOG = Logger.getLogger("org.tigris.scarab");
 
-    protected static final String ERROR_MESSAGE = 
-        "MoreInformationWasRequired";
-    protected static final String NO_PERMISSION_MESSAGE = 
-        ScarabConstants.NO_PERMISSION_MESSAGE;
+    protected static final String ERROR_MESSAGE = "MoreInformationWasRequired";
+    protected static final String NO_PERMISSION_MESSAGE = "YouDoNotHavePermissionToAction";
     protected static final String DEFAULT_MSG = "YourChangesWereSaved";
     protected static final String EMAIL_ERROR = "CouldNotSendEmail";
     protected static final String NO_CHANGES_MADE = "NoChangesMade";

@@ -62,7 +62,7 @@ import org.tigris.scarab.util.Log;
  * This class manages Module objects.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ModuleManager.java,v 1.26 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.27 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ModuleManager
     extends BaseModuleManager
@@ -119,7 +119,7 @@ public class ModuleManager
         if (result.size() != 1)
         {
             throw new TorqueException ("Selected: " + result.size() + 
-                " rows. Expected 1.");
+                " rows. Expected 1."); //EXCEPTION
         }
         return (Module) result.get(0);
     }
@@ -138,7 +138,7 @@ public class ModuleManager
     {
         if (issues == null) 
         {
-            throw new IllegalArgumentException("Null issue list is not allowed.");
+            throw new IllegalArgumentException("Null issue list is not allowed."); //EXCEPTION
         }        
 
         List modules = new ArrayList();
@@ -156,7 +156,7 @@ public class ModuleManager
             }
             else
             {
-                throw new TorqueException("Null issue in list is not allowed.");
+                throw new TorqueException("Null issue in list is not allowed."); //EXCEPTION
             }
         }
         return modules;

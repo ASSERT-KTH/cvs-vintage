@@ -59,7 +59,7 @@ import org.apache.torque.om.ComboKey;
 /** 
  * This class manages RModuleIssueType objects.  
  *
- * @version $Id: RModuleIssueTypeManager.java,v 1.9 2003/03/28 17:14:10 jmcnally Exp $
+ * @version $Id: RModuleIssueTypeManager.java,v 1.10 2004/05/01 19:04:23 dabbous Exp $
  */
 public class RModuleIssueTypeManager
     extends BaseRModuleIssueTypeManager
@@ -101,13 +101,13 @@ public class RModuleIssueTypeManager
         if (key == null) 
         {
             throw new NullPointerException(
-                "Cannot request a RModuleIssueType using a null key.");
+                "Cannot request a RModuleIssueType using a null key."); //EXCEPTION
         }
         int colonPos = key.indexOf(':');
         if (colonPos == -1) 
         {
             throw new IllegalArgumentException(
-                "RModuleIssueType keys must be of the form N1:N2, not " + key);
+                "RModuleIssueType keys must be of the form N1:N2, not " + key); //EXCEPTION
         }
         // { module_id, issue_type_id } 
         SimpleKey[] keyArray = { new NumberKey(key.substring(1, colonPos)), 

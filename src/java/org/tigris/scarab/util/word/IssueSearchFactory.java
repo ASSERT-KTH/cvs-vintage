@@ -54,6 +54,8 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.util.ScarabException;
 
 /** 
  * Creates new IssueSearch objects and acts as a regulator on the number
@@ -61,7 +63,7 @@ import org.tigris.scarab.om.IssueType;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @since 0.16.25
- * @version $Id: IssueSearchFactory.java,v 1.3 2003/08/04 17:09:35 thierrylach Exp $
+ * @version $Id: IssueSearchFactory.java,v 1.4 2004/05/01 19:04:30 dabbous Exp $
  */
 public class IssueSearchFactory
 {
@@ -140,11 +142,11 @@ public class IssueSearchFactory
     }
 
     void register()
-        throws MaxConcurrentSearchException, InterruptedException
+        throws ScarabException, InterruptedException
     {
         if (maxInstances <= 0) 
         {
-            throw new MaxConcurrentSearchException("Search is not allowed.");
+            throw new MaxConcurrentSearchException(L10NKeySet.ExceptionSearchIsNotAllowed);
         }
         else 
         {
@@ -167,18 +169,24 @@ public class IssueSearchFactory
                         } 
                         else // maxWait == 0 
                         {
-                            throw new MaxConcurrentSearchException();
+                            throw MaxConcurrentSearchException.create(
+                                    L10NKeySet.ExceptionMaxConcurrentSearch,
+                                    ""+this.getMaxWait()
+                                    );
                         }
                     }
                     catch(InterruptedException e) 
                     {
                         notify();
-                        throw e;
+                        throw e; //EXCEPTION
                     }
                     if(maxWait > 0 && 
                        ((System.currentTimeMillis() - starttime) >= maxWait)) 
                     {
-                        throw new MaxConcurrentSearchException();
+                        throw MaxConcurrentSearchException.create(
+                                L10NKeySet.ExceptionMaxConcurrentSearch,
+                                ""+this.getMaxWait()
+                                );
                     }
                 }    
                 numActive++;

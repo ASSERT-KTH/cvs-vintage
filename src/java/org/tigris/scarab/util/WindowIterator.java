@@ -176,14 +176,14 @@ public class WindowIterator
         }
         else 
         {
-            throw new NoSuchElementException("Iterator is exhausted");
+            throw new NoSuchElementException("Iterator is exhausted"); //EXCEPTION
         }
     }
 
 
     public void remove()
     {
-        throw new UnsupportedOperationException("'remove' is not implemented");
+        throw new UnsupportedOperationException("'remove' is not implemented"); //EXCEPTION
     }
 
     /**
@@ -195,13 +195,13 @@ public class WindowIterator
         if (i < 0 && (-1 * i) > bsize) 
         {
             throw new ArrayIndexOutOfBoundsException("window was only defined "
-                + bsize + " in the negative direction. Argument was " + i);
+                + bsize + " in the negative direction. Argument was " + i); //EXCEPTION
         }
 
         if (i > 0 && i > fsize) 
         {
             throw new ArrayIndexOutOfBoundsException("window was only defined "
-                + fsize + " in the positive direction. Argument was " + i);
+                + fsize + " in the positive direction. Argument was " + i); //EXCEPTION
         }
         
         return window[bsize + i];
@@ -227,18 +227,18 @@ class EmptyWindowIterator extends WindowIterator
     
     public Object next()
     {
-        throw new NoSuchElementException("This is an empty list.");
+        throw new NoSuchElementException("This is an empty list."); //EXCEPTION
     }
     
     public void remove()
     {
         throw new IllegalStateException("next() will throw exception, it is "
-                                        + "not possible to call this method.");
+                                        + "not possible to call this method."); //EXCEPTION
     }
     
     public Object get(int i)
     {
-        throw new NoSuchElementException("This is an empty list.");
+        throw new NoSuchElementException("This is an empty list."); //EXCEPTION
     }
 
     public boolean hasValue(int i)

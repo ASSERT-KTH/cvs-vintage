@@ -59,9 +59,9 @@ import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.workflow.WorkflowFactory;
@@ -96,7 +96,7 @@ public  class AttributeGroup
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -107,7 +107,7 @@ public  class AttributeGroup
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -120,7 +120,7 @@ public  class AttributeGroup
         if ( id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
-                                      "being associated with other objects.");
+                                      "being associated with other objects."); //EXCEPTION
         }
         setModuleId(id);
     }
@@ -359,8 +359,10 @@ public  class AttributeGroup
         {
             if (issueType.getLocked())
             { 
-                throw new ScarabException("You cannot delete this group, " + 
-                                          "because this issue type is locked.");
+                
+                throw ScarabException.create(L10NKeySet.ExceptionGroupDeleteForbidden,
+                          this.getName(),
+                          issueType.getName());
             }            
             else
             {
@@ -486,7 +488,7 @@ public  class AttributeGroup
                 catch (Exception e)
                 {
                     Log.get().error("Exception saving rio", e);
-                    throw e;
+                    throw e; //EXCEPTION
                 }
             }
         }
@@ -563,7 +565,7 @@ public  class AttributeGroup
                 if (ria != null && ria.getLocked())
                 {
                     success = false;
-                    throw new TorqueException(attribute.getName() + "is locked");
+                    throw new TorqueException(attribute.getName() + "is locked"); //EXCEPTION
                 }
                 else
                 {
@@ -636,7 +638,7 @@ public  class AttributeGroup
          }
          else
          {
-             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+             throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
          }            
         getMethodResult().remove(this, AttributeGroup.GET_ATTRIBUTES);
     }

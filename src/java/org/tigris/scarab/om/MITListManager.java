@@ -159,11 +159,11 @@ public class MITListManager
     {
         if (issues == null) 
         {
-            throw new IllegalArgumentException("Null issue list is not allowed.");
+            throw new IllegalArgumentException("Null issue list is not allowed."); //EXCEPTION
         }        
         if (user == null) 
         {
-            throw new IllegalArgumentException("Null user is not allowed.");
+            throw new IllegalArgumentException("Null user is not allowed."); //EXCEPTION
         }
         
         MITList list = getInstance();

@@ -47,6 +47,9 @@ package org.tigris.scarab.da;
  */
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.LocalizationKey;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * The unchecked exception thrown to indicate data access layer
@@ -56,10 +59,63 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
  */
 public class DAException
-    extends NestableRuntimeException
+    extends ScarabException
 {
-    public DAException(String msg, Throwable t)
+
+    /**
+     * Constructs a new <code>DAException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public DAException(LocalizationKey l10nKey)
     {
-        super(msg, t);
+        super(l10nKey);
+    }
+
+    /**
+     * Constructs a new <code>DAException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public DAException(L10NMessage l10nMessage)
+    {
+        super(l10nMessage);
+    }
+
+    /**
+     * Constructs a new <code>DAException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public DAException(L10NMessage l10nMessage, Throwable nested)
+    {
+        super(l10nMessage, nested);
+    }
+
+    /**
+     * Constructs a new <code>DAException</code> with specified 
+     * resource and a list of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        return new DAException(l10nMessage);
+    }
+
+ 
+    /**
+     * Convenience method: Constructs a new <code>DAException</code>
+     * with specified resource, nested Throwable and an aritrary set of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    {
+        L10NMessage l10nMessage = new L10NMessage(theKey, theParams);
+        ScarabException result = new DAException(l10nMessage, nested);
+        return result;
     }
 }

@@ -103,6 +103,7 @@ import org.tigris.scarab.om.ScarabUser;
 
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.IteratorWithSize;
 import org.tigris.scarab.util.ScarabConstants;
@@ -115,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.124 2004/04/04 10:52:03 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.125 2004/05/01 19:04:30 dabbous Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -350,7 +351,7 @@ public class IssueSearch
         if (mitList == null || mitList.size() == 0) 
         {
             throw new IllegalArgumentException("A non-null list with at" +
-               " least one item is required.");
+               " least one item is required."); //EXCEPTION
         }
 
         String[] perms = {ScarabSecurity.ISSUE__SEARCH};
@@ -959,7 +960,7 @@ public class IssueSearch
     {
         if (userId == null) 
         {
-            throw new IllegalArgumentException("userId cannot be null.");
+            throw new IllegalArgumentException("userId cannot be null."); //EXCEPTION
         }
         if (searchCriteria == null) 
         {
@@ -1227,8 +1228,9 @@ public class IssueSearch
                 }
                 else 
                 {
-                    throw new ScarabException("Incompatible issue Ids: " +
-                                              minId + " and " + maxId);
+                    throw ScarabException.create(L10NKeySet.ExceptionIncompatibleIssueIds,
+                                              minId,
+                                              maxId);
                 }
             }
             if (domain != null) 
@@ -1377,7 +1379,7 @@ public class IssueSearch
            and throwing a ParseException when having a wrong input*/
         if (s == null) 
         {
-            throw new ParseException("Input string was null", -1);
+            throw new ParseException("Input string was null", -1); //EXCEPTION
         }
 
         if (formatter == null) 
@@ -1397,7 +1399,7 @@ public class IssueSearch
         }
         
         throw new ParseException("Date could not be parsed with any"
-                                 + " of the provided date patterns.", -1);
+                                 + " of the provided date patterns.", -1); //EXCEPTION
     }
     
     private Date parseDateWithFormat(String dateString, DateFormat format) {
@@ -1446,8 +1448,9 @@ public class IssueSearch
                 }
                 else 
                 {
-                    throw new ScarabException("maxDate " + maxUtilDate + 
-                        "is before minDate " + minUtilDate);
+                    throw ScarabException.create(L10NKeySet.ExceptionMaxdateBeforeMindate,
+                            this.maxDate,
+                            minUtilDate);
                 }
             }
         }
@@ -1827,7 +1830,7 @@ public class IssueSearch
         if (searchIndex == null)
         {
             // Check your configuration.
-            throw new Exception("No index available to search");
+            throw new Exception("No index available to search"); //EXCEPTION
         }
         if (getSearchWords() != null && getSearchWords().length() != 0)
         {
@@ -2003,7 +2006,7 @@ public class IssueSearch
                                                                  tableAliases);
             if (joinCounter > MAX_INNER_JOIN) 
             {
-                throw new ComplexQueryException("Query is too complex");
+                throw new ComplexQueryException(L10NKeySet.ExceptionQueryTooComplex);
             }
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
@@ -2054,7 +2057,7 @@ public class IssueSearch
                                                         new HashSet());
         if (joinCounter > MAX_INNER_JOIN) 
         {
-            throw new ComplexQueryException("Query is too complex");
+            throw new ComplexQueryException(L10NKeySet.ExceptionQueryTooComplex);
         }
         
         if (matchingIssueIds == null || matchingIssueIds.length > 0) 
@@ -2301,7 +2304,7 @@ public class IssueSearch
         catch (SQLException e)
         {
             close();
-            throw e;
+            throw e; //EXCEPTION
         }
         /*
         catch (TorqueException e)
@@ -2570,7 +2573,7 @@ public class IssueSearch
             {
                 Log.get(LOGGER).warn("Search sql:\n" + searchSql + 
                     "\nresulted in an exception: " + e.getMessage());
-                throw e;
+                throw e; //EXCEPTION
                 
             }
         }
@@ -2593,7 +2596,7 @@ public class IssueSearch
             }
             else 
             {
-                throw new NoSuchElementException("Iterator is exhausted");
+                throw new NoSuchElementException("Iterator is exhausted"); //EXCEPTION
             }
         }
 
@@ -2613,7 +2616,7 @@ public class IssueSearch
         public void remove()
         {
             throw new UnsupportedOperationException(
-                "'remove' is not implemented");
+                "'remove' is not implemented"); //EXCEPTION
         }
 
 

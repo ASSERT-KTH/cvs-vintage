@@ -100,7 +100,7 @@ public class DAFactory
             catch (Exception e)
             {
                 throw new LookupError("Unable to create instantance of class '"
-                                      + className + '\'', e);
+                                      + className + '\'', e); //EXCEPTION
             }
         }
         return da;

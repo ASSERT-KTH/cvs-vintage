@@ -9,6 +9,7 @@ import org.apache.torque.util.Criteria;
 
 // Scarab classes
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 
@@ -58,9 +59,8 @@ public class ReportPeer
         }
         else if (reports.size() > 1) 
         {
-            throw new ScarabException(
-                "Multiple reports are active under the name, " + name + 
-                ".  Application error, please notify the developers.");
+            throw ScarabException.create(L10NKeySet.ExceptionMultipleReports,
+                                      name);
         }
         
         return report;

@@ -59,6 +59,7 @@ import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -71,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.61 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: Query.java,v 1.62 2004/05/01 19:04:23 dabbous Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery
@@ -122,7 +123,7 @@ public class Query
     public ScarabModule getScarabModule()
     {
         throw new UnsupportedOperationException(
-            "Should use getModule");
+            "Should use getModule"); //EXCEPTION
     }
 
     /**
@@ -133,7 +134,7 @@ public class Query
     public void setScarabModule(ScarabModule module)
     {
         throw new UnsupportedOperationException(
-            "Should use setModule(Module). Note module cannot be new.");
+            "Should use setModule(Module). Note module cannot be new."); //EXCEPTION
     }
 
     /**
@@ -152,7 +153,7 @@ public class Query
             if (id == null) 
             {
                 throw new TorqueException("Modules must be saved prior to " +
-                    "being associated with other objects.");
+                    "being associated with other objects."); //EXCEPTION
             }
             setModuleId(id);
         }        
@@ -364,7 +365,7 @@ public class Query
         } 
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }            
     }
 
@@ -395,7 +396,7 @@ public class Query
         } 
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }            
     }
 

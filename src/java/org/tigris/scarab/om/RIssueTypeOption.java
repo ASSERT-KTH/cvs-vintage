@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.ArrayList;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -100,7 +101,7 @@ public  class RIssueTypeOption
         }
         else
         {
-            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+            throw new ScarabException(L10NKeySet.YouDoNotHavePermissionToAction);
         }            
     }
 

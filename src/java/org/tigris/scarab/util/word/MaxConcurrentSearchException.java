@@ -46,6 +46,10 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
+import org.tigris.scarab.tools.localization.LocalizationKey;
 import org.tigris.scarab.util.ScarabException;
 
 /**
@@ -54,27 +58,64 @@ import org.tigris.scarab.util.ScarabException;
     searches are in process and another is requested.
     
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: MaxConcurrentSearchException.java,v 1.1 2003/07/17 17:57:13 jmcnally Exp $
+    @version $Id: MaxConcurrentSearchException.java,v 1.2 2004/05/01 19:04:30 dabbous Exp $
 */
 public class MaxConcurrentSearchException extends ScarabException
 {
     /**
-     * Constructs a new <code>MaxConcurrentSearchException</code> without
-     * specified detail message.
-     */
-    public MaxConcurrentSearchException()
-    {
-        super();
-    }
-
-    /**
-     * Constructs a new <code>MaxConcurrentSearchException</code> with 
-     * specified detail message.
+     * Constructs a new <code>MaxConcurrentSearchException</code> with specified 
+     * detail message.
      *
      * @param msg the error message.
      */
-    public MaxConcurrentSearchException(String msg)
+    public MaxConcurrentSearchException(LocalizationKey l10nKey)
     {
-        super(msg);
+        super(l10nKey);
+    }
+
+    /**
+     * Constructs a new <code>MaxConcurrentSearchException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public MaxConcurrentSearchException(Localizable l10nMessage)
+    {
+        super(l10nMessage);
+    }
+
+    /**
+     * Constructs a new <code>MaxConcurrentSearchException</code> with specified 
+     * detail message.
+     *
+     * @param msg the error message.
+     */
+    public MaxConcurrentSearchException(Localizable l10nMessage, Throwable nested)
+    {
+        super(l10nMessage, nested);
+    }
+
+    /**
+     * Constructs a new <code>MaxConcurrentSearchException</code> with specified 
+     * resource and a list of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Object[] theParams)
+    {
+        Localizable l10nMessage = new L10NMessage(theKey, theParams);
+        return new MaxConcurrentSearchException(l10nMessage);
+    }
+
+ 
+    /**
+     * Convenience method: Constructs a new <code>MaxConcurrentSearchException</code>
+     * with specified resource, nested Throwable and an aritrary set of parameters.
+     * @param theKey the l10n error key.
+     */
+    public static ScarabException create(LocalizationKey theKey, Throwable nested, Object[] theParams)
+    {
+        Localizable l10nMessage = new L10NMessage(theKey, theParams);
+        ScarabException result = new MaxConcurrentSearchException(l10nMessage, nested);
+        return result;
     }
 }

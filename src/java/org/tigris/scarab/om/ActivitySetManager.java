@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.util.Date;
 
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.torque.TorqueException;
@@ -58,7 +59,7 @@ import org.apache.torque.om.NumberKey;
  *
  * @author <a href="mailto:jmcnally@collab.net">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivitySetManager.java,v 1.6 2003/03/28 02:08:17 jon Exp $
+ * @version $Id: ActivitySetManager.java,v 1.7 2004/05/01 19:04:23 dabbous Exp $
  */
 public class ActivitySetManager
     extends BaseActivitySetManager
@@ -123,7 +124,7 @@ public class ActivitySetManager
         {
             String mesg = 
                 "Attachment must be saved before starting activitySet";
-            throw new ScarabException(mesg);
+            throw new ScarabException(L10NKeySet.ExceptionNeedToSaveAttachement);
         }
         ActivitySet activitySet = new ActivitySet();
         activitySet.setTypeId(typeId);
