@@ -22,7 +22,6 @@ import java.net.URL;
 import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
@@ -51,13 +50,15 @@ public class HeaderViewer extends JTextPane {
 		"border=\"1\" cellspacing=\"1\" cellpadding=\"1\" align=\"left\" width=\"100%\" style=\"border-width:1px; border-style:solid;  background-color:#ebebeb\"";
 	private static final String INNER_TABLE_PROPERTIES =
 		"border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"left\" width=\"100%\"";
-	private static final String GLOBAL_CSS =
-		"td {font-family:Dialog; font-size:8pt}";
-	private static final String CSS =
-		"<style type=\"text/css\"><!--" + GLOBAL_CSS + "--></style>";
 
+	// stylesheet is created dynamically because
+	// user configurable fonts are used
+	private String css = "";
+
+	// contains headerfields which are to be displayed
 	String[] keys;
 
+	//	parser to transform text to html
 	DocumentParser parser;
 
 	public HeaderViewer() {
@@ -65,15 +66,19 @@ public class HeaderViewer extends JTextPane {
 		setEditable(false);
 
 		HTMLEditorKit editorKit = new HTMLEditorKit();
-		editorKit.setStyleSheet(initStyleSheet(editorKit));
+
 		setEditorKit(editorKit);
 
+		// setup base url in order to be able to display images
+		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		ColumbaLogger.log.debug(baseUrl.toString());
 		((HTMLDocument) getDocument()).setBase(baseUrl);
 
+		// initialse parser
 		parser = new DocumentParser();
 
+		// add headerfields which are about to show up
 		keys = new String[7];
 		keys[0] = "Subject";
 		keys[1] = "Date";
@@ -83,29 +88,34 @@ public class HeaderViewer extends JTextPane {
 		keys[5] = "Cc";
 		keys[6] = "Bcc";
 
-		//setFont(font);
+		initStyleSheet();
 
 	}
-
-	protected StyleSheet initStyleSheet(HTMLEditorKit editorKit) {
+	
+	
+	/**
+	* 
+	* read text-properties from configuration and 
+	* create a stylesheet for the html-document 
+	*
+	*/
+	protected void initStyleSheet() {
+		//	read configuration from options.xml file
 		XmlElement mainFont =
 			Config.get("options").getElement("/options/gui/mainfont");
 		String name = mainFont.getAttribute("name");
 		String size = mainFont.getAttribute("size");
-		size = "12";
 		Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));
 
-		StyleSheet style = editorKit.getStyleSheet();
-
-		String s =
+		// create css-stylesheet string 
+		// set font of html-element <TD> 
+		css =
 			"<style type=\"text/css\"><!--td {font-family:\""
 				+ name
 				+ "\"; font-size:\""
 				+ size
 				+ "pt\"}--></style>";
-		style.addRule(s);
 
-		return style;
 	}
 
 	void setHeader(HeaderInterface header, boolean hasAttachments)
@@ -116,32 +126,57 @@ public class HeaderViewer extends JTextPane {
 		// bright #d5d5d5
 
 		StringBuffer buf = new StringBuffer();
+		
+		// prepend HTML-code
 		buf.append(
 			"<HTML><HEAD>"
-				+ CSS
+				+ css
 				+ "</HEAD><BODY ><TABLE "
 				+ OUTTER_TABLE_PROPERTIES
 				+ ">");
+				
+		// for every existing headerfield 
 		for (int i = 0; i < keys.length; i++) {
+			// message doesn't contain this headerfield
 			if (header.get(keys[i]) == null)
 				continue;
 
+			// headerfield is empty
 			if (((String) header.get(keys[i])).length() == 0)
 				continue;
 
+			// create left column
 			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+			
+			// set left column text
 			buf.append("<B>" + keys[i] + " : </B></TD>");
 
+			// create right column
 			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			
+			// set right column text
+			String str = (String) header.get(keys[i]);
+			
+			// substitute special characters like:
+			//  <,>,&,\t,\n
+			str = parser.substituteSpecialCharactersInHeaderfields(str);
+			
+			// parse for email addresses and substite with HTML-code
+			str = parser.substituteEmailAddress(str);
+			
+			// append HTML-code
 			buf.append(
 				" "
-					+ parser.substituteEmailAddress((String) header.get(keys[i]))
+					+ str
 					+ "</TD>");
 
 			buf.append("</TR>");
 		}
 
 		if (hasAttachments) {
+			
+			// email has attachments 
+			//  -> display attachment icon
 			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
 
 			buf.append("<IMG SRC=\"stock_attach.png\"></TD>");
@@ -150,38 +185,12 @@ public class HeaderViewer extends JTextPane {
 			buf.append(" " + "</TD>");
 		}
 
+		// close HTML document
 		buf.append("</TABLE></BODY></HTML>");
 
+		// display html-text
 		setText(buf.toString());
 
 	}
 
-	/*
-	protected String parseHeader(String headerField, String value) {
-	
-		boolean addressList = false;
-	
-		for (int i = 2; i < keys.length; i++) {
-			if (headerField.equalsIgnoreCase(keys[i]))
-				addressList |= true;
-		}
-	
-		if (addressList) {
-			Vector v = ListParser.parseString(value);
-			StringBuffer buf = new StringBuffer();
-	
-			for (int i = 0; i < v.size(); i++) {
-				String s = ((String) v.get(i)).trim();
-	
-				buf.append("<A href=\"" + s + "\">" + s + "</A>");
-				if (i != v.size() - 1)
-					buf.append(" ,");
-			}
-	
-			return buf.toString();
-		} else
-			return value;
-	
-	}
-	*/
 }

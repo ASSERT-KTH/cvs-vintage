@@ -48,6 +48,11 @@ public class DocumentParser {
 	Pattern characterPattern;
 	PatternMatcher characterMatcher;
 
+	/*
+	 * parse text and transform every email-address
+	 * in a HTML-conform address
+	 * 
+	 */
 	public String substituteEmailAddress(String s) throws Exception {
 		//String pattern = "\\b(([\\w|.|\\-|_]*)@([\\w|.|\\-|_]*)(.)([a-zA-Z]{2,}))";
 
@@ -75,6 +80,11 @@ public class DocumentParser {
 		return result;
 	}
 
+	/*
+		 * parse text and transform every url
+		 * in a HTML-conform url
+		 * 
+		 */
 	public String substituteURL(String s) throws Exception {
 		String urls = "(http|https|ftp)";
 		String letters = "\\w";
@@ -127,6 +137,12 @@ public class DocumentParser {
 		return result;
 	}
 
+	/*	
+	 * 
+	 * substitute special characters like:
+	 *   <,>,&,\t,\n
+	 * 
+	 */
 	public String substituteSpecialCharacters(String s) throws Exception {
 
 		StringBuffer sb = new StringBuffer(s.length());
@@ -169,52 +185,65 @@ public class DocumentParser {
 		return sb.toString();
 
 	}
-	
-	public String substituteSpecialCharactersInHeaderfields(String s) throws Exception {
 
-			StringBuffer sb = new StringBuffer(s.length());
-			StringReader sr = new StringReader(s);
-			BufferedReader br = new BufferedReader(sr);
-			String ss = null;
+	/*	
+		 * 
+		 * substitute special characters like:
+		 *   <,>,&,\t,\n
+		 * 
+		 * same as above method, but doesn't insert extra 
+		 * newline character
+		 * 
+		 */
+	public String substituteSpecialCharactersInHeaderfields(String s)
+		throws Exception {
 
-			try {
+		StringBuffer sb = new StringBuffer(s.length());
+		StringReader sr = new StringReader(s);
+		BufferedReader br = new BufferedReader(sr);
+		String ss = null;
 
-				while ((ss = br.readLine()) != null) {
-					for (int i = 0; i < ss.length(); i++) {
-						switch (ss.charAt(i)) {
-							case '<' :
-								sb.append("&lt;");
-								break;
-							case '>' :
-								sb.append("&gt;");
-								break;
-							case '&' :
-								sb.append("&amp;");
-								break;
-							case '\t' :
-								sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
-								break;
-							case '\n' :
-								sb.append("<br>");
-								break;
-							default :
-								sb.append(ss.charAt(i));
-								break;
-						}
+		try {
+
+			while ((ss = br.readLine()) != null) {
+				for (int i = 0; i < ss.length(); i++) {
+					switch (ss.charAt(i)) {
+						case '<' :
+							sb.append("&lt;");
+							break;
+						case '>' :
+							sb.append("&gt;");
+							break;
+						case '&' :
+							sb.append("&amp;");
+							break;
+						case '\t' :
+							sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+							break;
+						case '\n' :
+							sb.append("<br>");
+							break;
+						default :
+							sb.append(ss.charAt(i));
+							break;
 					}
-					
 				}
 
-			} catch (Exception e) {
-				System.out.print("Parsing Exception: " + e.getMessage());
 			}
 
-			return sb.toString();
-
+		} catch (Exception e) {
+			System.out.print("Parsing Exception: " + e.getMessage());
 		}
-	
-	
 
+		return sb.toString();
+
+	}
+
+	/*
+	 * 
+	 * try to fix broken html-strings
+	 *
+	 */
 	public String validateHTMLString(String input) {
 		StringBuffer output = new StringBuffer(input);
 		int index = 0;

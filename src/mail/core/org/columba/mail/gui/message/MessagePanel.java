@@ -37,10 +37,13 @@ public class MessagePanel extends JPanel implements Scrollable {
 	/**
 	 * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
 	 */
+	
+	
 	public Dimension getPreferredScrollableViewportSize() {
 		return getPreferredSize();
+		
 	}
-
+	
 	/**
 	 * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle, int, int)
 	 */

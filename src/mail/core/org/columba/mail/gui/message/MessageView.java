@@ -55,6 +55,7 @@ public class MessageView extends CScrollPane {
 		getViewport().setBackground(Color.white);
 		
 		panel = new MessagePanel();
+		//panel = new JPanel();
 		panel.setLayout( new BorderLayout() );
 		
 		setViewportView(panel);
