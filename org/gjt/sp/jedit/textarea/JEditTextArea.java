@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.255 2003/05/12 03:05:20 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.256 2003/05/14 03:27:29 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5029,6 +5029,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	boolean bufferChanging;
 
 	int maxHorizontalScrollWidth;
+	boolean updateMaxHorizontalScrollWidth;
 
 	boolean hardWrap;
 	float tabSize;

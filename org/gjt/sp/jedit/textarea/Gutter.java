@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.38 2003/04/14 02:25:42 spestov Exp $
+ * @version $Id: Gutter.java,v 1.39 2003/05/14 03:27:29 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -112,6 +112,13 @@ public class Gutter extends JComponent implements SwingConstants
 		int lastLine = (clip.y + clip.height - 1) / lineHeight;
 
 		int y = (clip.y - clip.y % lineHeight);
+
+		int[] physicalLines = new int[lastLine - firstLine + 1];
+		int[] start = new int[physicalLines.length];
+		int[] end = new int[physicalLines.length];
+
+		extensionMgr.paintScreenLineRange(textArea,gfx,
+			firstLine,lastLine,y,lineHeight);
 
 		for (int line = firstLine; line <= lastLine;
 			line++, y += lineHeight)
@@ -554,18 +561,6 @@ public class Gutter extends JComponent implements SwingConstants
 
 		ChunkCache.LineInfo info = textArea.chunkCache.getLineInfo(line);
 		int physicalLine = info.physicalLine;
-
-		//{{{ Paint text area extensions
-		if(physicalLine != -1)
-		{
-			int start = textArea.getScreenLineStartOffset(line);
-			int end = textArea.getScreenLineEndOffset(line);
-
-			extensionMgr.paintValidLine(gfx,line,physicalLine,start,end,y);
-		}
-		else
-			extensionMgr.paintInvalidLine(gfx,line,y);
-		//}}}
 
 		// Skip lines beyond EOF
 		if(physicalLine == -1)
