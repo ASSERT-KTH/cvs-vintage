@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.42 2003/12/09 07:35:16 lepekhine Exp $
+// $Id: Import.java,v 1.43 2003/12/13 21:48:44 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.42 2003/12/09 07:35:16 lepekhine Exp $
+ * <p>$Id: Import.java,v 1.43 2003/12/13 21:48:44 alexb Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -533,6 +533,7 @@ public class Import {
 			    (UMLDiagram) _diagram.getModifiedDiagrams().elementAt(i);
                         ClassdiagramLayouter layouter =
 			    module.getLayout(diagram);
+                            
                         layouter.layout();
                         
                         // Resize the diagram???

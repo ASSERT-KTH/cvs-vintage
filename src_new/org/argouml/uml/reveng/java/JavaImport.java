@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.23 2003/11/10 12:35:02 jhraigniac Exp $
+// $Id: JavaImport.java,v 1.24 2003/12/13 21:48:44 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: JavaImport.java,v 1.23 2003/11/10 12:35:02 jhraigniac Exp $
+//$Id: JavaImport.java,v 1.24 2003/12/13 21:48:44 alexb Exp $
 
 package org.argouml.uml.reveng.java;
 
@@ -38,8 +38,8 @@ import java.io.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.23 $
- * $Date: 2003/11/10 12:35:02 $
+ * $Revision: 1.24 $
+ * $Date: 2003/12/13 21:48:44 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -80,8 +80,15 @@ public class JavaImport extends FileImportSupport {
 	    // exceptions to the file.
 	    cat.info("Parsing " + f.getAbsolutePath());
 
+            modeller.setAttribute("level", _import.getAttribute("level"));
+            
+            try{
 	    // start parsing at the compilationUnit rule
 	    parser.compilationUnit(modeller, lexer);
+            }catch(Exception e){
+                cat.error(e.getClass().getName()+" Exception in file: "+f.getCanonicalPath()+" "+f.getName());
+                throw e;
+            }
 	}
     }
 

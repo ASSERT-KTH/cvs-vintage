@@ -39,7 +39,7 @@ import antlr.collections.impl.BitSet;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: JavaRecognizer.java,v 1.24 2003/12/08 14:57:20 lepekhine Exp $
+ * <p>$Id: JavaRecognizer.java,v 1.25 2003/12/13 21:48:44 alexb Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>
@@ -164,6 +164,10 @@ public class JavaRecognizer extends antlr.LLkParser
 
 	void setModeller(Modeller modeller) {
 	    _modeller = modeller;
+            Object levelObj = _modeller.getAttribute("level");
+            if(levelObj instanceof Integer){
+                this.level = ((Integer)levelObj).intValue();
+            }
         }
 	
         // A reference to the last added MOperation (here: method)
