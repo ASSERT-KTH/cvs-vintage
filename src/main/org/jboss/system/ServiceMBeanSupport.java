@@ -29,7 +29,7 @@ import org.apache.log4j.NDC;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.9 $
+* @version $Revision: 1.10 $
 *   
 * <p><b>Revisions:</b>
 *
@@ -48,10 +48,10 @@ implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
    
-   private int state;
-   private MBeanServer server;
+   protected int state;
+   protected MBeanServer server;
    /** Own Object Name this MBean is registered with, see {@link #preRegister preRegister()}. **/
-   private ObjectName mServiceName;
+   protected ObjectName mServiceName;
    private int id = 0;
    
    protected Logger log;
@@ -97,7 +97,7 @@ implements ServiceMBean, MBeanRegistration
    throws Exception
    {
       NDC.push(getName());
-      log.info("Initializing");
+      log.info("Creating");
       try
       {
          createService();
@@ -111,7 +111,7 @@ implements ServiceMBean, MBeanRegistration
       {
          NDC.pop();
       }
-      log.info("Initialized");
+      log.info("Created");
    }
    
    public void start()
