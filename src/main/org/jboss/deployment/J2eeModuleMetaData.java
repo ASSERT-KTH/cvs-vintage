@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class J2eeModuleMetaData
    extends MetaData
@@ -25,99 +25,116 @@ public class J2eeModuleMetaData
    public static final int WEB = 1; 
    public static final int CLIENT = 2; 
    public static final int CONNECTOR = 3; 
-	private static final String[] tags = {"ejb", "web", "java", "connector"}; 
+   public static final int SERVICE = 4;
+   private static final String[] tags = {"ejb", "web", "java", "connector", "service"}; 
 	 
    // Attributes ----------------------------------------------------
-	int type;
+   int type;
    
-	String fileName;
+   String fileName;
    String alternativeDD;
-	String webContext;
+   String webContext;
 
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
-   public J2eeModuleMetaData (Element moduleElement)  throws DeploymentException
-	{
-		importXml (moduleElement);
-	}
+   public J2eeModuleMetaData (Element moduleElement, boolean jbossSpecific)  throws DeploymentException
+   {
+      importXml (moduleElement, jbossSpecific);
+   }
 	
    // Public --------------------------------------------------------
 
-	public boolean isEjb ()
-	{
-		return (type == EJB);
-	}
+   public boolean isEjb ()
+   {
+      return (type == EJB);
+   }
 
-	public boolean isWeb ()
-	{
-		return (type == WEB);
-	}
+   public boolean isWeb ()
+   {
+      return (type == WEB);
+   }
 	
-	public boolean isJava ()
-	{
-		return (type == CLIENT);
-	}
+   public boolean isJava ()
+   {
+      return (type == CLIENT);
+   }
 	
-	public boolean isConnector ()
-	{
-		return (type == CONNECTOR);
-	}
+   public boolean isConnector ()
+   {
+      return (type == CONNECTOR);
+   }
 	
 	
 	
-	public String getFileName ()
-	{
-		return fileName;
-	}
+   public String getFileName ()
+   {
+      return fileName;
+   }
 	
-	public String getAlternativeDD ()
-	{
-		return alternativeDD;
-	}
+   public String getAlternativeDD ()
+   {
+      return alternativeDD;
+   }
 	
-	public String getWebContext ()
-	{
-		if (type == WEB)
-			return webContext;
-		else
-			return null;
-	}
+   public String getWebContext ()
+   {
+      if (type == WEB)
+      {
+         return webContext;
+      }
+      else
+      {
+         return null;
+      }
+   }
 
 
-    public void importXml (Element element) throws DeploymentException 
-	 {
-		if (element.getTagName ().equals("module")) 
-		{
-  		 boolean done = false; // only one of the tags can hit! 
+   public void importXml (Element element, boolean jbossSpecific) throws DeploymentException 
+   {
+      if (element.getTagName ().equals("module")) 
+      {
+         boolean done = false; // only one of the tags can hit! 
          for (int i = 0; i < tags.length; ++i)
-			{
-				Element child = getOptionalChild (element, tags[i]);
-				if (child == null)
-					continue;
-				
+         {
+            Element child = getOptionalChild (element, tags[i]);
+            if (child == null)
+            {
+               continue;
+            }
             if (done)
+            {
 					throw new DeploymentException ("malformed module definition in application dd: "+ element);
-
+            }
             type = i;
-				switch (type)
-				{
-					case EJB:
-					case CLIENT:
-					case CONNECTOR:
-						fileName = getElementContent (child);
-					   alternativeDD = getElementContent (getOptionalChild (element, "alt-dd"));
-						break;
-					case WEB:
-						fileName = getElementContent (getUniqueChild (child, "web-uri"));
-						webContext = getElementContent (getOptionalChild (child, "context-root"));
-					    alternativeDD = getElementContent (getOptionalChild (element, "alt-dd"));
-				}
-				done = true;
-			}
-		 } else 
-			throw new DeploymentException ("unrecognized module tag in application dd: "+ element);
-	}
+            switch (type)
+            {
+            case  SERVICE:
+               if (!jbossSpecific) 
+               {
+                  throw new DeploymentException("Service archives must be in jboss-app.xml");
+               } // end of if ()
+               //fall through.
+            case EJB:
+            case CLIENT:
+            case CONNECTOR:
+               fileName = getElementContent (child);
+               alternativeDD = getElementContent (getOptionalChild (element, "alt-dd"));
+               break;
+            case WEB:
+               fileName = getElementContent (getUniqueChild (child, "web-uri"));
+               webContext = getElementContent (getOptionalChild (child, "context-root"));
+               alternativeDD = getElementContent (getOptionalChild (element, "alt-dd"));
+               break;
+            }
+            done = true;
+         }
+      }
+      else 
+      {
+         throw new DeploymentException ("unrecognized module tag in application dd: "+ element);
+      }
+   }
    
     
    // Y overrides ---------------------------------------------------

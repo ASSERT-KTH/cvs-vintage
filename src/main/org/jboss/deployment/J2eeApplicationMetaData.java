@@ -6,11 +6,12 @@
  */
 package org.jboss.deployment;
 
-import java.util.Vector;
+
+
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-
 import org.jboss.metadata.MetaData;
-
 import org.w3c.dom.Element;
 
 /**
@@ -18,7 +19,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <firstname> <lastname> (<email>)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class J2eeApplicationMetaData
    extends MetaData
@@ -29,86 +30,93 @@ public class J2eeApplicationMetaData
 	String displayName;
    String description;
    String smallIcon;
-	String largeIcon;
+   String largeIcon;
 	
-	Vector modules;
+   final Collection modules = new HashSet();
 	
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
    public J2eeApplicationMetaData (Element rootElement) throws DeploymentException
-	{
-		importXml (rootElement);
-	}
+   {
+      importXml (rootElement, false);
+   }
 	
    // Public --------------------------------------------------------
 
    public String getDisplayName ()
    {
-   	return displayName;
+      return displayName;
    }
    
    public String getDescription ()
    {
-   	return description;
+      return description;
    }
    
    public String getSmallIcon ()
    {
-   	return smallIcon;
+      return smallIcon;
    }
    
    public String getLargeIcon ()
    {
-   	return largeIcon;
+      return largeIcon;
    }
    
    public Iterator getModules ()
    {
-   	return modules.iterator ();
+      return modules.iterator ();
    }
    
 
 
 
-    public void importXml (Element element) throws DeploymentException
+    public void importXml (Element element, boolean jbossSpecific) throws DeploymentException
     {
-		String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
-		
-		if (rootTag.equals("application")) {
+       String rootTag = element.getOwnerDocument().getDocumentElement().getTagName();
+       
+       if ((rootTag.equals("application") && !jbossSpecific) ||
+           (rootTag.equals("jboss-app") && jbossSpecific)) 
+       {
 			
-			// get some general info
-         displayName = getElementContent (getUniqueChild (element, "display-name"));
-         Element e = getOptionalChild (element, "description");
-			description = e != null ? getElementContent (e) : "";
+          // get some general info
+          if (!jbossSpecific) 
+          {
+             displayName = getElementContent (getUniqueChild (element, "display-name"));
+          } // end of if ()
+          
+          Element e = getOptionalChild (element, "description");
+          description = e != null ? getElementContent (e) : "";
 
-         e = getOptionalChild (element, "icon");
-			if (e != null)
-			{
-            Element e2 = getOptionalChild (element, "small-icon");
-	 			smallIcon = e2 != null ? getElementContent (e2) : "";
-				
-            e2 = getOptionalChild (element, "large-icon");
-	 			largeIcon = e2 != null ? getElementContent (e2) : "";
-		   }
-         else
-		   {
-				smallIcon = "";
-				largeIcon = "";
-			}
+          e = getOptionalChild (element, "icon");
+          if (e != null)
+          {
+             Element e2 = getOptionalChild (element, "small-icon");
+             smallIcon = e2 != null ? getElementContent (e2) : "";
+             
+             e2 = getOptionalChild (element, "large-icon");
+             largeIcon = e2 != null ? getElementContent (e2) : "";
+          }
+          else
+          {
+             smallIcon = "";
+             largeIcon = "";
+          }
 			
-			// extract modules...
-			modules = new Vector ();
-			Iterator it = getChildrenByTagName (element, "module");
-			while (it.hasNext ())
-			{
-				modules.add (new J2eeModuleMetaData ((Element)it.next ()));
-			}
-		
-		} else 
-			throw new DeploymentException("Unrecognized root tag in EAR deployment descriptor: "+ element);
-	}
+          // extract modules...
+          for (Iterator it = getChildrenByTagName (element, "module"); it.hasNext (); )
+          {
+             modules.add (new J2eeModuleMetaData((Element)it.next(), jbossSpecific));
+          }
+       }		
+       else 
+       {
+          throw new DeploymentException("Unrecognized root tag in EAR deployment descriptor: "+ element);
+       }
+    }
    
+
     
    // Y overrides ---------------------------------------------------
    

@@ -155,7 +155,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.48 $
+@version $Revision: 1.49 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -298,12 +298,14 @@ public abstract class AbstractWebContainer
                outFile.getParentFile().mkdirs();
                if (!uclCreated) 
                {
-                  DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), di);
+                  DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), 
+                                                          di, 
+                                                          server);
                   // There is no copying over, just use the url for the UCL
                   sub.localUrl = sub.url;
 
                   // Create a URL for the sub
-                  sub.createClassLoaders(getServer());
+                  sub.createClassLoaders();
                   uclCreated = true;  
                   di.subDeployments.add(sub);
                }

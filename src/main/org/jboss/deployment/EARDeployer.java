@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -123,7 +123,7 @@ public class EARDeployer
                if (di.isDirectory)
                {
                   File f = new File(parentDir, fileName);
-                  sub = new DeploymentInfo(f.toURL(), di);
+                  sub = new DeploymentInfo(f.toURL(), di, server);
                }
                else
                {
@@ -131,7 +131,7 @@ public class EARDeployer
                   URL jarURL = new URL(entryURL);
                   // Extract the nested jar from its ear
                   URL nestedURL = JarUtils.extractNestedJar(jarURL, super.tempDeployDir);
-                  sub = new DeploymentInfo(nestedURL, di);
+                  sub = new DeploymentInfo(nestedURL, di, server);
 
                }
                // Set the context-root on web modules
