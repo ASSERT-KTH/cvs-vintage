@@ -30,14 +30,13 @@ import org.jboss.ejb.plugins.TxSupport;
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.17 $</tt>
+ * @version <tt>$Revision: 1.18 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class MessageDrivenEnterpriseContext
-   extends EnterpriseContext
+public class MessageDrivenEnterpriseContext extends EnterpriseContext
 {
    private MessageDrivenContext ctx;
 
@@ -70,22 +69,29 @@ public class MessageDrivenEnterpriseContext
       {
          Throwable t = e.getTargetException();
          
-         if (t instanceof RuntimeException) {
-            if (t instanceof EJBException) {
+         if(t instanceof RuntimeException)
+         {
+            if(t instanceof EJBException)
+            {
                throw (EJBException)t;
             }
-            else {
+            else
+            {
                // Transform runtime exception into what a bean *should* have thrown
+               // Dain: I don't think this is legal
                throw new EJBException((RuntimeException)t);
             }
          }
-         else if (t instanceof Exception) {
+         else if(t instanceof Exception)
+         {
             throw (Exception)t;
          }
-         else if (t instanceof Error) {
+         else if(t instanceof Error)
+         {
             throw (Error)t;
          }
-         else {
+         else
+         {
             throw new org.jboss.util.NestedError("Unexpected Throwable", t);
          }
       }
@@ -95,8 +101,6 @@ public class MessageDrivenEnterpriseContext
    {
       return ctx;
    }
-
-   // EnterpriseContext overrides -----------------------------------
 
    /**
     * Calls ejbRemove() on the MDB instance.
@@ -165,7 +169,7 @@ public class MessageDrivenEnterpriseContext
       /** Helper to check if the tx type is TX_REQUIRED. */
       private boolean isTxRequired()
       {
-         MessageDrivenMetaData md = (MessageDrivenMetaData)con.getBeanMetaData();
+         MessageDrivenMetaData md = (MessageDrivenMetaData)container.getBeanMetaData();
          return md.getMethodTransactionType() == TxSupport.REQUIRED;
       }
       
@@ -178,7 +182,8 @@ public class MessageDrivenEnterpriseContext
        */
       public boolean getRollbackOnly()
       {
-         if (!isContainerManagedTx()) {
+         if(!isContainerManagedTx())
+         {
             throw new IllegalStateException
                ("Bean managed MDB are not allowed getRollbackOnly (EJB 2.0 - 15.4.3)");
          }
@@ -189,7 +194,8 @@ public class MessageDrivenEnterpriseContext
          //        but still continue.
          //
          
-         if (!isTxRequired()) {
+         if(!isTxRequired())
+         {
             throw new IllegalStateException
                ("getRollbackOnly must only be called in the context of a transaction (EJB 2.0 - 15.5.1)");
          }
@@ -206,12 +212,14 @@ public class MessageDrivenEnterpriseContext
        */
       public void setRollbackOnly()
       {
-         if (!isContainerManagedTx()) {
+         if(!isContainerManagedTx())
+         {
             throw new IllegalStateException
                ("Bean managed MDB are not allowed setRollbackOnly (EJB 2.0 - 15.4.3)");
          }
 
-         if (!isTxRequired()) {
+         if(!isTxRequired())
+         {
             throw new IllegalStateException
                ("setRollbackOnly must only be called in the context of a transaction (EJB 2.0 - 15.5.1)");
          }

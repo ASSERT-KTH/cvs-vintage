@@ -27,32 +27,23 @@ import javax.transaction.UserTransaction;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
    implements Serializable
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
    private EJBObject ejbObject;
    private EJBLocalObject ejbLocalObject;
    private SessionContext ctx;
 
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   public StatefulSessionEnterpriseContext(Object instance, Container con)
+   public StatefulSessionEnterpriseContext(Object instance, Container container)
       throws RemoteException
    {
-      super(instance, con);
+      super(instance, container);
       ctx = new StatefulSessionContextImpl();
       ((SessionBean)instance).setSessionContext(ctx);
    }
-
-   // Public --------------------------------------------------------
 
    public void discard() throws RemoteException
    {
@@ -81,19 +72,23 @@ public class StatefulSessionEnterpriseContext
       }
    }
 
-   public void setEJBObject(EJBObject eo) {
+   public void setEJBObject(EJBObject eo)
+   {
       ejbObject = eo;
    }
 
-   public EJBObject getEJBObject() {
+   public EJBObject getEJBObject()
+   {
       return ejbObject;
    }
 
-   public void setEJBLocalObject(EJBLocalObject eo) {
+   public void setEJBLocalObject(EJBLocalObject eo)
+   {
       ejbLocalObject = eo;
    }
 
-   public EJBLocalObject getEJBLocalObject() {
+   public EJBLocalObject getEJBLocalObject()
+   {
       return ejbLocalObject;
    }
 
@@ -101,12 +96,6 @@ public class StatefulSessionEnterpriseContext
    {
       return ctx;
    }
-
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
 
    private void writeObject(ObjectOutputStream out)
       throws IOException, ClassNotFoundException
@@ -120,19 +109,20 @@ public class StatefulSessionEnterpriseContext
       // No state
    }
 
-   // Inner classes -------------------------------------------------
-
    protected class StatefulSessionContextImpl
       extends EJBContextImpl
       implements SessionContext
    {
       public EJBObject getEJBObject()
       {
-         if (((StatefulSessionContainer)con).getProxyFactory()==null)
+         if(((StatefulSessionContainer)container).getProxyFactory()==null)
+         {
             throw new IllegalStateException( "No remote interface defined." );
+         }
 
-         if (ejbObject == null) {
-               ejbObject = (EJBObject) ((StatefulSessionContainer)con).getProxyFactory().getStatefulSessionEJBObject(id);
+         if(ejbObject == null)
+         {
+               ejbObject = (EJBObject) ((StatefulSessionContainer)container).getProxyFactory().getStatefulSessionEJBObject(id);
          }
 
          return ejbObject;
@@ -140,11 +130,14 @@ public class StatefulSessionEnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
-         if (con.getLocalHomeClass()==null)
-            throw new IllegalStateException( "No local interface for bean." );
-         if (ejbLocalObject == null)
+         if(container.getLocalHomeClass()==null)
          {
-            ejbLocalObject = ((StatefulSessionContainer)con).getLocalProxyFactory().getStatefulSessionEJBLocalObject(id);
+            throw new IllegalStateException( "No local interface for bean." );
+         }
+
+         if(ejbLocalObject == null)
+         {
+            ejbLocalObject = ((StatefulSessionContainer)container).getLocalProxyFactory().getStatefulSessionEJBLocalObject(id);
          }
          return ejbLocalObject;
       }

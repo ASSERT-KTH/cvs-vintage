@@ -22,27 +22,18 @@ import javax.transaction.UserTransaction;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
-public class StatelessSessionEnterpriseContext
-   extends EnterpriseContext
+public class StatelessSessionEnterpriseContext extends EnterpriseContext
 {
-   // Constants -----------------------------------------------------
+   private EJBObject ejbObject;
+   private EJBLocalObject ejbLocalObject;
+   private SessionContext ctx;
 
-   // Attributes ----------------------------------------------------
-
-   EJBObject ejbObject;
-   EJBLocalObject ejbLocalObject;
-   SessionContext ctx;
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   public StatelessSessionEnterpriseContext(Object instance, Container con)
+   public StatelessSessionEnterpriseContext(Object instance, Container container)
       throws Exception
    {
-      super(instance, con);
+      super(instance, container);
       ctx = new SessionContextImpl();
 
       ((SessionBean)instance).setSessionContext(ctx);
@@ -51,43 +42,55 @@ public class StatelessSessionEnterpriseContext
       {
          Method ejbCreate = instance.getClass().getMethod("ejbCreate", new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
-      } catch (InvocationTargetException e)
+      }
+      catch(InvocationTargetException e)
       {
          Throwable ex = e.getTargetException();
-         if (ex instanceof EJBException)
+         if(ex instanceof EJBException)
+         {
             throw (Exception)ex;
-         else if (ex instanceof RuntimeException)
-            throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-         else if (ex instanceof Exception)
+         }
+         else if(ex instanceof RuntimeException)
+         {
+            // Transform runtime exception into what a bean *should* have thrown
+            // Dain: I don't think this is legal
+            throw new EJBException((Exception)ex);
+         }
+         else if(ex instanceof Exception)
+         {
             throw (Exception)ex;
+         }
          else
+         {
             throw (Error)ex;
+         }
       }
    }
 
-   // Public --------------------------------------------------------
-
-   public void setEJBObject(EJBObject eo) {
+   public void setEJBObject(EJBObject eo)
+   {
       ejbObject = eo;
    }
 
-   public EJBObject getEJBObject() {
+   public EJBObject getEJBObject()
+   {
       return ejbObject;
    }
 
-   public void setEJBLocalObject(EJBLocalObject eo) {
+   public void setEJBLocalObject(EJBLocalObject eo)
+   {
       ejbLocalObject = eo;
    }
 
-   public EJBLocalObject getEJBLocalObject() {
+   public EJBLocalObject getEJBLocalObject()
+   {
       return ejbLocalObject;
    }
 
-   public SessionContext getSessionContext() {
+   public SessionContext getSessionContext()
+   {
       return ctx;
    }
-
-   // EnterpriseContext overrides -----------------------------------
 
    public void discard() throws RemoteException
    {
@@ -99,25 +102,20 @@ public class StatelessSessionEnterpriseContext
       return ctx;
    }
 
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
-
    protected class SessionContextImpl
       extends EJBContextImpl
       implements SessionContext
    {
       public EJBObject getEJBObject()
       {
-         if (((StatelessSessionContainer)con).getProxyFactory()==null)
+         if(((StatelessSessionContainer)container).getProxyFactory()==null)
+         {
             throw new IllegalStateException( "No remote interface defined." );
+         }
 
-         if (ejbObject == null) {
-               ejbObject = (EJBObject) ((StatelessSessionContainer)con).getProxyFactory().getStatelessSessionEJBObject();
+         if(ejbObject == null)
+         {
+               ejbObject = (EJBObject) ((StatelessSessionContainer)container).getProxyFactory().getStatelessSessionEJBObject();
 
          }
 
@@ -126,13 +124,16 @@ public class StatelessSessionEnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
-         if (con.getLocalHomeClass()==null)
+         if(container.getLocalHomeClass()==null)
+         {
             throw new IllegalStateException( "No local interface for bean." );
-         if (ejbLocalObject == null) {
-            ejbLocalObject = ((StatelessSessionContainer)con).getLocalProxyFactory().getStatelessSessionEJBLocalObject();
+         }
+
+         if(ejbLocalObject == null)
+         {
+            ejbLocalObject = ((StatelessSessionContainer)container).getLocalProxyFactory().getStatelessSessionEJBLocalObject();
          }
          return ejbLocalObject;
       }
    }
 }
-
