@@ -8,8 +8,9 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.util.Collection; 
 import java.util.ConcurrentModificationException; 
-import java.util.HashSet; 
+import java.util.ArrayList; 
 import java.util.Iterator; 
+import java.util.List; 
 import java.util.Set; 
 import javax.ejb.EJBException; 
 import javax.ejb.EJBLocalObject; 
@@ -24,12 +25,12 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class RelationSet implements Set {
    private JDBCCMRFieldBridge cmrField;
    private EntityEnterpriseContext ctx;
-   private Set[] setHandle;
+   private List[] setHandle;
    private Class relatedLocalInterface;
 
    //
@@ -40,14 +41,14 @@ public class RelationSet implements Set {
    // CMR field sets my referance to the set to null, so that I know that
    // this set is no longer valid. See the ejb spec for more info.
    //
-   public RelationSet(JDBCCMRFieldBridge cmrField, EntityEnterpriseContext ctx, Set[] setHandle) {
+   public RelationSet(JDBCCMRFieldBridge cmrField, EntityEnterpriseContext ctx, List[] setHandle) {
       this.cmrField = cmrField;
       this.ctx = ctx;
       this.setHandle = setHandle;
       relatedLocalInterface = cmrField.getRelatedLocalInterface();   
    }
    
-   private Set getIdSet() {
+   private List getIdList() {
       if(setHandle[0] == null) {
          throw new IllegalStateException("A CMR collection may only be used within the transction in which it was created");
       }
@@ -55,22 +56,23 @@ public class RelationSet implements Set {
    }
    
    public int size() {
-      Set idSet = getIdSet();
-      return idSet.size();
+      List idList = getIdList();
+      return idList.size();
    }
 
    public boolean isEmpty() {
-      Set idSet = getIdSet();
-      return idSet.isEmpty();
+      List idList = getIdList();
+      return idList.isEmpty();
    }
 
+/*
    public int hashCode() {
-      Set idSet = getIdSet();
-      return idSet.hashCode();
+      List idList = getIdList();
+      return idList.hashCode();
    }
-
+*/
    public boolean add(Object o) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -81,7 +83,7 @@ public class RelationSet implements Set {
       }
       
       Object id = ((EJBLocalObject)o).getPrimaryKey();
-      if(idSet.contains(id)) {
+      if(idList.contains(id)) {
          return false;
       }
       cmrField.createRelationLinks(ctx, id);
@@ -89,7 +91,7 @@ public class RelationSet implements Set {
    }
    
    public boolean addAll(Collection c) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -109,7 +111,7 @@ public class RelationSet implements Set {
    }
 
    public boolean remove(Object o) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -120,7 +122,7 @@ public class RelationSet implements Set {
       }
 
       Object id = ((EJBLocalObject)o).getPrimaryKey();
-      if(!idSet.contains(id)) {
+      if(!idList.contains(id)) {
          return false;
       }
       cmrField.destroyRelationLinks(ctx, id);
@@ -128,7 +130,7 @@ public class RelationSet implements Set {
    }
 
    public boolean removeAll(Collection c) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -148,20 +150,20 @@ public class RelationSet implements Set {
    }
 
    public void clear() {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
       }
 
-      Iterator iterator = (new HashSet(idSet)).iterator();
+      Iterator iterator = (new ArrayList(idList)).iterator();
       while(iterator.hasNext()) {
          cmrField.destroyRelationLinks(ctx, iterator.next());
       }
    }
 
    public boolean retainAll(Collection c) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
       if(cmrField.isReadOnly()) {
          throw new EJBException("Field is read-only: " + 
                cmrField.getFieldName());
@@ -172,15 +174,15 @@ public class RelationSet implements Set {
       }
       
       // get a set of the argument collection's ids
-      HashSet argIds = new HashSet();
-      Iterator iterator = ((Set)c).iterator();
+      List argIds = new ArrayList();
+      Iterator iterator = c.iterator();
       while(iterator.hasNext()) {
          argIds.add(((EJBLocalObject)iterator.next()).getPrimaryKey());
       }
 
       boolean isModified = false;
 
-      iterator = idSet.iterator();
+      iterator = (new ArrayList(idList)).iterator();
       while(iterator.hasNext()) {
          Object id = iterator.next();
          if(!argIds.contains(id)) {
@@ -191,10 +193,11 @@ public class RelationSet implements Set {
       return isModified;
    }
 
+/*
    public boolean equals(Object o) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
-      if( !(o instanceof Set)) {
+      if( !(o instanceof List)) {
          return false;
       }
       
@@ -207,54 +210,54 @@ public class RelationSet implements Set {
 
       return idSet.equals(argIds);
    }
-
+*/
    public boolean contains(Object o) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
       if(!relatedLocalInterface.isInstance(o)) {
          throw new IllegalArgumentException("Object must be an instance of " + relatedLocalInterface.getName());
       }
       
       Object id = ((EJBLocalObject)o).getPrimaryKey();
-      return idSet.contains(id);
+      return idList.contains(id);
    }
 
    public boolean containsAll(Collection c) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
       if(c == null) {
          throw new IllegalArgumentException("Collection is null");
       }
       
       // get a set of the argument collection's ids
-      HashSet argIds = new HashSet();
+      List argIds = new ArrayList();
       Iterator iterator = c.iterator();
       while(iterator.hasNext()) {
          argIds.add(((EJBLocalObject)iterator.next()).getPrimaryKey());
       }
             
-      return idSet.containsAll(argIds);
+      return idList.containsAll(argIds);
    }
 
    public Object[] toArray(Object a[]) {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
-      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idSet);
+      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idList);
       return c.toArray(a);
    }
 
    public Object[] toArray() {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
-      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idSet);
+      Collection c = cmrField.getRelatedInvoker().getEntityLocalCollection(idList);
       return c.toArray();
    }
    
    public Iterator iterator() {
-      Set idSet = getIdSet();
+      List idList = getIdList();
 
       return new Iterator() {
-         private final Iterator idIterator = getIdSet().iterator();
+         private final Iterator idIterator = getIdList().iterator();
          private final LocalContainerInvoker containerInvoker = cmrField.getRelatedInvoker();
          private Object currentId;
 
