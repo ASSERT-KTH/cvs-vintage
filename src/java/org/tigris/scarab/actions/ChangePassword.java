@@ -75,8 +75,6 @@ public class ChangePassword extends ScarabTemplateAction
         throws Exception
     {
         String template = getCurrentTemplate(data, null);
-        String nextTemplate = getNextTemplate(data, template);
-        
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid())
         {
@@ -142,6 +140,11 @@ public class ChangePassword extends ScarabTemplateAction
                 setTarget(data, template);
             }
         }
+        else
+        {
+            getScarabRequestTool(context).setAlertMessage(
+                "Failed to process form input.");
+            setTarget(data, template);
+        }
     }
-    
 }
