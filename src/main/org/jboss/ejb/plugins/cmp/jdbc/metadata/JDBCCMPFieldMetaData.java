@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCCMPFieldMetaData {
    /**

@@ -23,9 +23,8 @@ import javax.jms.JMSException;
 
 import org.w3c.dom.Element;
 
-import org.apache.log4j.Category;
-
-import org.jboss.ejb.DeploymentException;
+import org.jboss.logging.Logger;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 
@@ -56,13 +55,13 @@ import org.jboss.metadata.MetaData;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author 
- * @version $Revision: 1.1 $ $Date: 2001/08/30 20:40:04 $
+ * @version $Revision: 1.2 $ $Date: 2001/11/26 03:12:28 $
  */
 
-public class DLQHandler {
+public class DLQHandler
+{
    /** Class logger. */
-   private static Category log =
-      Category.getInstance(DLQHandler.class);
+   private static Logger log = Logger.getLogger(DLQHandler.class);
 
    /** JMS property name holding original destination. */
    public static final String JBOSS_ORIG_DESTINATION ="JBOSS_ORIG_DESTINATION";

@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 import javax.ejb.EJBException;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    protected JDBCStoreManager manager;

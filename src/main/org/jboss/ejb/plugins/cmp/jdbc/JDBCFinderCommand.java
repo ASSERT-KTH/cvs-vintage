@@ -25,7 +25,7 @@ import javax.ejb.FinderException;
 
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.LocalContainerInvoker;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
@@ -44,7 +44,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand

@@ -28,8 +28,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
-import org.apache.log4j.Category;
-
+import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
@@ -48,7 +47,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -62,8 +61,8 @@ public abstract class EnterpriseContext
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   private Category log = Category.getInstance(this.getClass());
-   
+   protected Logger log = Logger.getLogger(this.getClass());
+
    /** The EJB instance */
    Object instance;
     

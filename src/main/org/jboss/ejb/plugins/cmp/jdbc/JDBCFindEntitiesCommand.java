@@ -18,7 +18,7 @@ import java.util.Map;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCAutomaticQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
@@ -38,7 +38,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    private final Map knownFinderCommands = new HashMap();

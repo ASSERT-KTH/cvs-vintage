@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 
@@ -22,7 +22,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
@@ -31,16 +31,17 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * Revison:
  * 20010621 danch: merged patch from David Jenks - null constraint on columns.
  */
-public class CMPFieldMetaData extends MetaData implements XmlLoadable {
+public class CMPFieldMetaData extends MetaData implements XmlLoadable
+{
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(CMPFieldMetaData.class);
+   protected static Logger log = Logger.getLogger(CMPFieldMetaData.class);
 
    /** The entity this field belongs to. */
    private JawsEntityMetaData jawsEntity;

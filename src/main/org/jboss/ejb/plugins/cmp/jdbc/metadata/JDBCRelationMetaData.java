@@ -7,7 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.util.Iterator;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.RelationMetaData;
 import org.jboss.metadata.RelationshipRoleMetaData;
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  * file's relationships elements.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;

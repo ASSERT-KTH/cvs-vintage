@@ -15,8 +15,8 @@ import java.util.Set;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.transaction.Transaction;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
-import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -43,7 +43,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------

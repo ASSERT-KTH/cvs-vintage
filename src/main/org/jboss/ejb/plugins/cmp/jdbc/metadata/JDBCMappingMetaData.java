@@ -7,7 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.sql.Types;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCMappingMetaData
 {

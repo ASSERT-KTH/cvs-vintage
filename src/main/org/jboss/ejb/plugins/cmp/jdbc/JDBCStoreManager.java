@@ -21,7 +21,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.ejb.plugins.cmp.CMPStoreManager;
@@ -54,7 +54,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCStoreManager extends CMPStoreManager {
    /**

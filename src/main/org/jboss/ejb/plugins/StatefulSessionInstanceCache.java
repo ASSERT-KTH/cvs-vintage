@@ -24,14 +24,13 @@ import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
-import org.jboss.logging.Logger;
 
 /**
  * Cache for stateful session beans.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -39,7 +38,6 @@ public class StatefulSessionInstanceCache
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
-   protected Logger log = Logger.create(StatefulSessionInstanceCache.class);
     /* The container */
     private StatefulSessionContainer m_container;
     /* The map that holds passivated beans that will be removed */

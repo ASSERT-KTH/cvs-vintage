@@ -20,7 +20,6 @@ import javax.ejb.MessageDrivenContext;
 import javax.ejb.MessageDrivenBean;
 import javax.ejb.SessionContext;
 import javax.ejb.EJBException;
-import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
@@ -32,7 +31,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -40,7 +39,6 @@ public class MessageDrivenEnterpriseContext
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(MessageDrivenEnterpriseContext.class);
    //EJBObject ejbObject;
    MessageDrivenContext ctx;
 

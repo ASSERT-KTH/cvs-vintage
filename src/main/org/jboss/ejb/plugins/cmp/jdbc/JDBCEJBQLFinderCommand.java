@@ -7,7 +7,7 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Assembly;
 import org.jboss.ejb.plugins.cmp.ejbql.Parser;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
 

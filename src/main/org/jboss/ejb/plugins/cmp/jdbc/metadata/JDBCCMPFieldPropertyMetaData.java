@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  *   This immutable class contains information about the an overriden field property.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCCMPFieldPropertyMetaData {
    /**

@@ -44,15 +44,15 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.25 $
+*  @version $Revision: 1.26 $
 */
 public class StatefulSessionFilePersistenceManager
-implements StatefulSessionPersistenceManager
+   implements StatefulSessionPersistenceManager
 {
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
-   private static Logger log = Logger.create(StatefulSessionFilePersistenceManager.class);
+   private static Logger log = Logger.getLogger(StatefulSessionFilePersistenceManager.class);
     private StatefulSessionContainer con;
     
     private Method ejbActivate;

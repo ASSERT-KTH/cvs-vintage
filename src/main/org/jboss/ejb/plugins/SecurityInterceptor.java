@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AnybodyPrincipal;
@@ -28,11 +27,10 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.25 $
+@version $Revision: 1.26 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
-    protected static Logger log = Logger.create(SecurityInterceptor.class);
     /**
      * @clientCardinality 0..1
      * @supplierCardinality 1

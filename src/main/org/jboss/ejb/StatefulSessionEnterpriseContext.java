@@ -19,7 +19,6 @@ import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
-import org.jboss.logging.Logger;
 
 
 /**
@@ -27,7 +26,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -36,7 +35,6 @@ public class StatefulSessionEnterpriseContext
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(StatefulSessionEnterpriseContext.class);
    private EJBObject ejbObject;
    private EJBLocalObject ejbLocalObject;
    private SessionContext ctx;

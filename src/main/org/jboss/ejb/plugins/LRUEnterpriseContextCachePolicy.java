@@ -13,7 +13,7 @@ import javax.jms.JMSException;
 
 import org.jboss.util.LRUCachePolicy;
 import org.jboss.util.TimerTask;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
@@ -27,7 +27,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy

@@ -18,9 +18,8 @@ import javax.naming.InitialContext;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.DeploymentException;
-
 import org.jboss.ejb.plugins.jaws.JPMCommandFactory;
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
 import org.jboss.ejb.plugins.jaws.JPMStartCommand;
@@ -64,7 +63,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  *   <p><b>Revisions:</b>
  *

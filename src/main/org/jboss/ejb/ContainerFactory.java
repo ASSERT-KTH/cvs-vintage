@@ -6,10 +6,6 @@
  */
 package org.jboss.ejb;
 
-
-
-
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,7 +23,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.TransactionManager;
+
 import org.apache.log4j.NDC;
+
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
@@ -69,7 +68,7 @@ import org.w3c.dom.Element;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.97 $
+* @version $Revision: 1.98 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport

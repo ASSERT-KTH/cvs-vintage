@@ -29,23 +29,22 @@ import javax.rmi.PortableRemoteObject;
 
 import org.w3c.dom.Element;
 
-import org.jboss.util.CachePolicy;
-import org.jboss.util.Executable;
-import org.jboss.util.WorkerQueue;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
-import org.jboss.logging.Logger;
-
 import org.jboss.monitor.Monitorable;
 import org.jboss.monitor.client.BeanCacheSnapshot;
 import org.jboss.monitor.MetricsConstants;
+import org.jboss.util.CachePolicy;
+import org.jboss.util.Executable;
+import org.jboss.util.WorkerQueue;
 
 /**
  * Base class for caches of entity and stateful beans. <p>
@@ -62,7 +61,7 @@ import org.jboss.monitor.MetricsConstants;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -92,7 +91,7 @@ public abstract class AbstractInstanceCache
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(AbstractInstanceCache.class);
+   protected static Logger log = Logger.getLogger(AbstractInstanceCache.class);
    /* The object that is delegated to implement the desired caching policy */
    private CachePolicy m_cache;
    /* The worker queue that passivates beans in another thread */
@@ -866,7 +865,7 @@ abstract class PassivationJob implements Executable
 
 class PassivatorQueue extends WorkerQueue
 {
-   protected static Logger log = Logger.create(PassivatorQueue.class);
+   protected static Logger log = Logger.getLogger(PassivatorQueue.class);
    /**
     * Used for debug purposes, holds the scheduled passivation jobs
     */

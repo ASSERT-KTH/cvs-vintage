@@ -20,9 +20,9 @@ import javax.naming.spi.ObjectFactory;
 /**
  * Based on Scott Stark's NonSerializableObjectFactory
  *
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class LocalHomeObjectFactory
    implements ObjectFactory

@@ -38,12 +38,12 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
 {
-   static Logger log = Logger.create(JRMPContainerInvoker.class);
+   static Logger log = Logger.getLogger(JRMPContainerInvoker.class);
    EJBHome home;
    EJBObject statelessObject;
 

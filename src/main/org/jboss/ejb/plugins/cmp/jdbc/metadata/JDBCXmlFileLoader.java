@@ -8,7 +8,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.net.URL;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public final class JDBCXmlFileLoader {
    private final ApplicationMetaData application;

@@ -40,21 +40,16 @@ import javax.naming.StringRefAddr;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.LocalContainerInvoker;
 import org.jboss.ejb.CacheKey;
-
-import org.jboss.tm.TransactionPropagationContextFactory;
-
 import org.jboss.security.SecurityAssociation;
-
-import org.jboss.logging.Logger;
-
-import org.jboss.ejb.DeploymentException;
+import org.jboss.tm.TransactionPropagationContextFactory;
 
 
 /**
@@ -65,7 +60,7 @@ import org.jboss.ejb.DeploymentException;
 public class BaseLocalContainerInvoker implements LocalContainerInvoker
 {
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(BaseLocalContainerInvoker.class);
+   protected static Logger log = Logger.getLogger(BaseLocalContainerInvoker.class);
    protected Container container;
    protected String jndiName;
    protected TransactionManager transactionManager;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List; 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * class.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCValueClassMetaData {
    private final Class javaType;

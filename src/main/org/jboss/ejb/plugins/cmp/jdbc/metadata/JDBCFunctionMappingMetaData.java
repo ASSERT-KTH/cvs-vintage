@@ -3,7 +3,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 

@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -29,7 +29,7 @@ public abstract class AbstractInterceptor
    /** The next interceptor in the chain. */
    protected Interceptor nextInterceptor;
    /** Use a JBoss custom log4j category for trace level logging */
-   protected Logger log = Logger.create(this.getClass());
+   protected Logger log = Logger.getLogger(this.getClass());
 
    // Static --------------------------------------------------------
 

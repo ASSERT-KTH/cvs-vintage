@@ -8,7 +8,7 @@ package org.jboss.ejb.plugins;
 
 
 import org.jboss.util.TimerTask;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 
 import org.w3c.dom.Element;
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
  * Least Recently Used cache policy for StatefulSessionEnterpriseContexts.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePolicy
 {

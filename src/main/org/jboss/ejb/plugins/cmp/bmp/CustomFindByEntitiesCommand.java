@@ -29,12 +29,12 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class CustomFindByEntitiesCommand implements FindEntitiesCommand
 {
    // Attributes ----------------------------------------------------
-   protected static Logger log = Logger.create(CustomFindByEntitiesCommand.class);
+   protected static Logger log = Logger.getLogger(CustomFindByEntitiesCommand.class);
 
    /**
     *  method that implements the finder

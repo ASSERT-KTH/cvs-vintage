@@ -18,7 +18,7 @@ import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 
 import org.w3c.dom.Element;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
@@ -37,7 +37,7 @@ import org.jboss.management.j2ee.CountStatistic;
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
 *   
-*  @version $Revision: 1.18 $
+*  @version $Revision: 1.19 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>

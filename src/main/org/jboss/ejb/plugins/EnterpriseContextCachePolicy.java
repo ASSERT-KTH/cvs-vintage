@@ -18,14 +18,14 @@ import org.jboss.util.CachePolicy;
  * 
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface EnterpriseContextCachePolicy extends CachePolicy
 {
 	// Constants -----------------------------------------------------
 
 	// Static --------------------------------------------------------
-	public static Logger log = Logger.create(EnterpriseContextCachePolicy.class);
+	public static Logger log = Logger.getLogger(EnterpriseContextCachePolicy.class);
 	public static Scheduler scheduler = new Scheduler();
 	
 	// Public --------------------------------------------------------

@@ -7,7 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.lang.reflect.Method;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * value object property.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCValuePropertyMetaData {
    private final String propertyName;

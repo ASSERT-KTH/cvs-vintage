@@ -22,12 +22,12 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
+import javax.management.j2ee.CountStatistic;
 import javax.transaction.Transaction;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
-
-import javax.management.j2ee.CountStatistic;
 
 /**
  * This is a Container for EntityBeans (both BMP and CMP).
@@ -41,7 +41,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  *
  * <p><b>Revisions:</b>
  *

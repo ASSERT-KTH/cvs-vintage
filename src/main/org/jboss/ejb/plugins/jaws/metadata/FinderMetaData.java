@@ -9,8 +9,7 @@ package org.jboss.ejb.plugins.jaws.metadata;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
-
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
@@ -22,7 +21,7 @@ import org.jboss.metadata.XmlLoadable;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="danch@nvisia.com">danch</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *
  *      Revisions:
  *      20010621 Bill Burke: setReadAhead added.

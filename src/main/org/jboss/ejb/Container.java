@@ -40,6 +40,7 @@ import javax.naming.NameNotFoundException;
 import javax.transaction.TransactionManager;
 
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
@@ -72,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  *
  * <p><b>Revisions:</b>
  *
@@ -92,7 +93,7 @@ public abstract class Container implements DynamicMBean
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   protected Logger log = Logger.create(this.getClass());
+   protected Logger log = Logger.getLogger(this.getClass());
 
    /** This is the application that this container is a part of */
    protected Application application;

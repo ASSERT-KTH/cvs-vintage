@@ -32,7 +32,7 @@ import javax.transaction.TransactionManager;
 import org.apache.log4j.Category;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.MethodInvocation;
 
 import org.jboss.jms.ConnectionFactoryHelper;
@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.32 $
+ * @version   $Revision: 1.33 $
  */
 public class JMSContainerInvoker
        implements ContainerInvoker, XmlLoadable

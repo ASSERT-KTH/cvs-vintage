@@ -34,10 +34,10 @@ import javax.transaction.TransactionManager;
 import javax.management.ObjectName;
 import javax.management.MBeanException;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.ContainerInvoker;
-import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeHandleImpl;
@@ -65,15 +65,15 @@ import org.w3c.dom.Element;
 *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
 *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
 *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
-*  @version $Revision: 1.45 $
+*  @version $Revision: 1.46 $
 */
 public class JRMPContainerInvoker
-extends RemoteServer
-implements ContainerRemote, ContainerInvoker, XmlLoadable
+   extends RemoteServer
+   implements ContainerRemote, ContainerInvoker, XmlLoadable
 {
    // Constants -----------------------------------------------------
    protected final static int ANONYMOUS_PORT = 0;
-   protected static Logger log = Logger.create(JRMPContainerInvoker.class);
+   protected static Logger log = Logger.getLogger(JRMPContainerInvoker.class);
    
    // Attributes ----------------------------------------------------
    protected boolean optimize = false;

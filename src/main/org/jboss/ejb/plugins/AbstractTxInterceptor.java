@@ -25,15 +25,13 @@ import org.jboss.logging.Logger;
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.6 $
+ *  @version $Revision: 1.7 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
 {
 
     // Attributes ----------------------------------------------------
-   protected Logger log = Logger.create(this.getClass());
-
     /** Local reference to the container's TransactionManager. */
     protected TransactionManager tm;
 

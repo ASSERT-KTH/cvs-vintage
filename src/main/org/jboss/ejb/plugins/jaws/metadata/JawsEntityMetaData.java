@@ -21,8 +21,7 @@ import javax.naming.NamingException;
 
 import org.w3c.dom.Element;
 
-import org.jboss.ejb.DeploymentException;
-
+import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
@@ -36,7 +35,7 @@ import org.jboss.metadata.XmlLoadable;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  *      Revisions:
  *      20010621 Bill Burke: made read-ahead defaultable in standardjboss.xml and jaws.xml

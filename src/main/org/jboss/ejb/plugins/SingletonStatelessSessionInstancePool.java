@@ -11,11 +11,11 @@ import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
-import org.jboss.ejb.DeploymentException;
 
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
@@ -29,7 +29,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

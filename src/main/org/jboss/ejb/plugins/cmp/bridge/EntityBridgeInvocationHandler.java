@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import javax.ejb.EJBException;
 
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.proxy.InvocationHandler;
@@ -33,7 +33,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    protected EntityContainer container;
