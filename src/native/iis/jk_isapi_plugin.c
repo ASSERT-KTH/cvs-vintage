@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -74,11 +74,25 @@
 
 #define VERSION_STRING "Jakarta/ISAPI/1.0b1"
 
+/*
+ * We use special two headers to pass values from the filter to the 
+ * extension. These values are:
+ *
+ * 1. The real URI before redirection took place
+ * 2. The name of the worker to be used.
+ *
+ */
+#define URI_HEADER_NAME         ("TOMCATURI:")
+#define WORKER_HEADER_NAME      ("TOMCATWORKER:")
+
+#define HTTP_URI_HEADER_NAME     ("HTTP_TOMCATURI")
+#define HTTP_WORKER_HEADER_NAME  ("HTTP_TOMCATWORKER")
+
 #define REGISTRY_LOCATION       ("Software\\Apache Software Foundation\\Jakarta Isapi Redirector\\1.0")
 #define EXTENSION_URI_TAG       ("extension_uri")
 
 #define GET_SERVER_VARIABLE_VALUE(name, place) {    \
-    place = NULL;                                   \
+    (place) = NULL;                                   \
     huge_buf_sz = sizeof(huge_buf);                 \
     if(get_server_value(private_data->lpEcb,        \
                         (name),                     \
@@ -104,16 +118,7 @@
         (place) = def;  \
     }           \
 }\
-/*
- * We use a TLS to pass values from the filter to the 
- * extension. These values are:
- *
- * 1. The real URI before redirection took place
- * 2. The name of the worker to be used.
- *
- */
 
-static DWORD tls_index = 0xFFFFFFFF;
 static int   is_inited = JK_FALSE;
 static jk_uri_worker_map_t *uw_map = NULL; 
 static jk_logger_t *logger = NULL; 
@@ -123,12 +128,6 @@ static char log_file[MAX_PATH * 2];
 static int  log_level = JK_LOG_EMERG_LEVEL;
 static char worker_file[MAX_PATH * 2];
 static char worker_mount_file[MAX_PATH * 2];
-
-struct filter_ext_record {
-    char *worker;
-    char *uri;
-};
-typedef struct filter_ext_record filter_ext_record_t;
 
 struct isapi_private_data {
     jk_pool_t p;
@@ -175,6 +174,20 @@ static int get_server_value(LPEXTENSION_CONTROL_BLOCK lpEcb,
                             char  *buf,
                             DWORD bufsz,
                             char  *def_val);
+
+static int uri_is_web_inf(char *uri)
+{
+    char *c = uri;
+    while(*c) {
+        *c = tolower(*c);
+        c++;
+    }                    
+    if(strstr(uri, "web-inf")) {
+        return JK_TRUE;
+    }
+
+    return JK_FALSE;
+}
 
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
@@ -375,67 +388,65 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
         char *query;
         DWORD sz = sizeof(uri);
 
-        if(p->GetHeader(pfc, "url", (LPVOID)uri, (LPDWORD)&sz)) {
-            if(strlen(uri)) {
-                char *worker;
-                query = strchr(uri, '?');
-                if(query) {
-                    *query = '\0';
+        /*
+         * Just in case somebody set these headers in the request!
+         */
+        p->SetHeader(pfc, URI_HEADER_NAME, NULL);
+	    p->SetHeader(pfc, WORKER_HEADER_NAME, NULL);
+        
+        if(!p->GetHeader(pfc, "url", (LPVOID)uri, (LPDWORD)&sz)) {
+            return SF_STATUS_REQ_ERROR;
+        }
+
+        if(strlen(uri)) {
+            char *worker;
+            query = strchr(uri, '?');
+            if(query) {
+                *query = '\0';
+            }
+            jk_log(logger, JK_LOG_DEBUG, "In HttpFilterProc test redirection of %s\n", uri);
+            worker = map_uri_to_worker(uw_map, uri, logger);                
+            if(query) {
+                *query = '?';
+            }
+
+            if(worker) {
+                /* This is a servlet, should redirect ... */
+                jk_log(logger, JK_LOG_DEBUG, 
+                       "In HttpFilterProc %s should redirect to %s\n", 
+                       uri, worker);
+
+                
+				if(!p->AddHeader(pfc, URI_HEADER_NAME, uri) || 
+                   !p->AddHeader(pfc, WORKER_HEADER_NAME, worker) ||
+                   !p->SetHeader(pfc, "url", extension_uri)) {
+                    return SF_STATUS_REQ_ERROR;
                 }
-                jk_log(logger, JK_LOG_DEBUG, "In HttpFilterProc test redirection of %s\n", uri);
-                worker = map_uri_to_worker(uw_map, uri, logger);                
-                if(query) {
-                    *query = '?';
-                }
+            } 
+            /*
+             * Check if somebody is feading us with his own TOMCAT data headers.
+             * We reject such postings !
+             */
+            if(uri_is_web_inf(uri)) {
+                char crlf[3] = { (char)13, (char)10, '\0' };
+                char ctype[30];
+                char *msg = "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>";
+                DWORD len = strlen(msg);
 
-                if(worker) {
-                    /* This is a servlet, should redirect ... */
-                    filter_ext_record_t *rec;
+                sprintf(ctype, 
+                        "Content-Type:text/html%s%s", 
+                        crlf, 
+                        crlf);
 
-                    jk_log(logger, JK_LOG_DEBUG, 
-                           "In HttpFilterProc %s should redirect to %s\n", 
-                           uri, worker);
+                /* reject !!! */
+                pfc->ServerSupportFunction(pfc, 
+                                           SF_REQ_SEND_RESPONSE_HEADER,
+                                           "403 Forbidden",
+                                           (DWORD)crlf,
+                                           (DWORD)ctype);
+                pfc->WriteClient(pfc, msg, &len, 0);
 
-                    rec = pfc->AllocMem(pfc, sizeof(filter_ext_record_t), 0);
-                    if(rec) {
-                        rec->uri = pfc->AllocMem(pfc, strlen(uri) + 1, 0);
-                        rec->worker = pfc->AllocMem(pfc, strlen(worker) + 1, 0);
-                        if(rec->uri && rec->worker && TlsSetValue(tls_index, rec)) {
-                            strcpy(rec->uri, uri);
-                            strcpy(rec->worker, worker);
-                            p->SetHeader(pfc, "url", extension_uri);
-                        }
-                    }
-                } else {
-                    /* check if asking for web-inf file */
-                    char *c = uri;                    
-
-                    while(*c) {
-                        *c = tolower(*c);
-                        c++;
-                    }                    
-                    if(strstr(uri, "web-inf")) {
-                        char crlf[3] = { (char)13, (char)10, '\0' };
-                        char ctype[30];
-                        char *msg = "<HTML><BODY><H1>Access is Forbidden</H1></BODY></HTML>";
-                        DWORD len = strlen(msg);
-
-                        sprintf(ctype, 
-                                "Content-Type:text/html%s%s", 
-                                crlf, 
-                                crlf);
-
-                        /* reject !!! */
-                        pfc->ServerSupportFunction(pfc, 
-                                                   SF_REQ_SEND_RESPONSE_HEADER,
-                                                   "403 Forbidden",
-                                                   (DWORD)crlf,
-                                                   (DWORD)ctype);
-                        pfc->WriteClient(pfc, msg, &len, 0);
-
-                        return SF_STATUS_REQ_FINISHED;
-                    }
-                }
+                return SF_STATUS_REQ_FINISHED;
             }
         }
     }
@@ -529,23 +540,10 @@ BOOL WINAPI DllMain(HINSTANCE hInst,        // Instance Handle of the DLL
     BOOL fReturn = TRUE;
 
     switch (ulReason) {
-        case DLL_PROCESS_ATTACH:
-            tls_index = TlsAlloc();
-            if(0xFFFFFFFF == tls_index) {
-                fReturn =  FALSE;
-            }
-            TlsSetValue(tls_index, NULL);
-        break;
-
         case DLL_PROCESS_DETACH:
             __try {
                 TerminateFilter(HSE_TERM_MUST_UNLOAD);
             } __except(1) {
-            }
-
-            if(0xFFFFFFFF != tls_index) {
-                TlsFree(tls_index);
-                tls_index = 0xFFFFFFFF;
             }
         break;
 
@@ -689,8 +687,8 @@ static int init_ws_service(isapi_private_data_t *private_data,
                            char **worker_name) 
 {
     char huge_buf[16 * 1024]; /* should be enough for all */
+
     DWORD huge_buf_sz;
-    filter_ext_record_t *from_filt = (filter_ext_record_t *)TlsGetValue(tls_index);
 
     s->jvm_route = NULL;
 
@@ -698,6 +696,25 @@ static int init_ws_service(isapi_private_data_t *private_data,
     s->read = read;
     s->write = write;
 
+    GET_SERVER_VARIABLE_VALUE(HTTP_WORKER_HEADER_NAME, (*worker_name));           
+    GET_SERVER_VARIABLE_VALUE(HTTP_URI_HEADER_NAME, s->req_uri);     
+
+    if(s->req_uri) {
+        char *t = strchr(s->req_uri, '?');
+        if(t) {
+            *t = '\0';
+            t++;
+            if(!strlen(t)) {
+                t = NULL;
+            }
+        }
+        s->query_string = t;
+    } else {
+        s->query_string = private_data->lpEcb->lpszQueryString;
+        *worker_name    = JK_AJP12_WORKER_NAME;
+        GET_SERVER_VARIABLE_VALUE("URL", s->req_uri);       
+    }
+    
     GET_SERVER_VARIABLE_VALUE("AUTH_TYPE", s->auth_type);
     GET_SERVER_VARIABLE_VALUE("REMOTE_USER", s->remote_user);
     GET_SERVER_VARIABLE_VALUE("SERVER_PROTOCOL", s->protocol);
@@ -710,25 +727,6 @@ static int init_ws_service(isapi_private_data_t *private_data,
 
     s->method           = private_data->lpEcb->lpszMethod;
     s->content_length   = private_data->lpEcb->cbTotalBytes;
-
-    if(from_filt) {
-        char *t = strchr(from_filt->uri, '?');
-        if(t) {
-            *t = '\0';
-            t++;
-            if(!strlen(t)) {
-                t = NULL;
-            }
-        }
-        s->query_string = t;
-        s->req_uri      = from_filt->uri;
-        *worker_name    = from_filt->worker;
-    } else {
-        s->query_string = private_data->lpEcb->lpszQueryString;
-        *worker_name    = JK_AJP12_WORKER_NAME;
-        GET_SERVER_VARIABLE_VALUE("URL", s->req_uri);       
-    }
-    TlsSetValue(tls_index, NULL);       
 
     s->ssl_cert     = NULL;
     s->ssl_cert_len = 0;
@@ -758,7 +756,8 @@ static int init_ws_service(isapi_private_data_t *private_data,
             char *headers_buf = jk_pool_strdup(&private_data->p, huge_buf);
             unsigned i;
             unsigned len_of_http_prefix = strlen("HTTP_");
-
+            
+            cnt -= 2; /* For our two special headers */
             s->headers_names  = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
             s->headers_values = jk_pool_alloc(&private_data->p, cnt * sizeof(char *));
 
@@ -766,11 +765,19 @@ static int init_ws_service(isapi_private_data_t *private_data,
                 return JK_FALSE;
             }
 
-            for(i = 0, tmp = headers_buf ; *tmp && i < cnt ; i++) {
+            for(i = 0, tmp = headers_buf ; *tmp && i < cnt ; ) {
+                int real_header = JK_TRUE;
 
                 /* Skipp the HTTP_ prefix to the beginning of th header name */
                 tmp += len_of_http_prefix;
-                s->headers_names[i] = tmp;
+
+                if(!strnicmp(tmp, URI_HEADER_NAME, strlen(URI_HEADER_NAME)) ||
+                   !strnicmp(tmp, WORKER_HEADER_NAME, strlen(WORKER_HEADER_NAME))) {
+                    real_header = JK_FALSE;
+                } else {
+                    s->headers_names[i]  = tmp;
+                }
+
                 while(':' != *tmp && *tmp) {
                     if('_' == *tmp) {
                         *tmp = '-';
@@ -787,8 +794,10 @@ static int init_ws_service(isapi_private_data_t *private_data,
                     tmp++;
                 }
 
-                s->headers_values[i]  = tmp;
-
+                if(real_header) {
+                    s->headers_values[i]  = tmp;
+                }
+                
                 while(*tmp != '\n' && *tmp != '\r') {
                     tmp++;
                 }
@@ -800,11 +809,19 @@ static int init_ws_service(isapi_private_data_t *private_data,
                     tmp++;
                 }
 
+                if(real_header) {
+                    i++;
+                }
             }
             s->num_headers = cnt;
+        } else {
+            /* We must have our two headers */
+            return JK_FALSE;
         }
+    } else {
+        return JK_FALSE;
     }
-   
+    
     return JK_TRUE;
 }
 
