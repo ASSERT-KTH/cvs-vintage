@@ -80,12 +80,14 @@ import org.apache.jasper.JspCompilationContext;
  * @author Anselm Baird-Smith
  * @author Harish Prabandham
  * @author Rajiv Mordani
+ * @author Mandar Raje
  */
 public class JspReader {
     protected Mark current  = null;
     String master = null;
 
     Vector sourceFiles = new Vector();
+    int currFileId = 0;
     int size = 0;
     
     private JspCompilationContext context;
@@ -105,7 +107,22 @@ public class JspReader {
             return -1;
 	sourceFiles.addElement(file);
 	this.size++;
-	return sourceFiles.size()-1;
+	return sourceFiles.size() - 1;
+    }
+    
+
+    /**
+     * Unregister the source file.
+     * This method is used to implement file inclusion. Each included file
+     * gets a uniq identifier (which is the index in the array of source files).
+     * @return The index of the now registered file.
+     */
+    protected int unregisterSourceFile(String file) {
+        if (!sourceFiles.contains(file))
+            return -1;
+	sourceFiles.removeElement(file);
+	this.size--;
+	return sourceFiles.size() - 1;
     }
 
     /**
@@ -153,7 +170,7 @@ public class JspReader {
                                                          new Object[] { 
                                                              file 
                                                          }));
-                                                         
+	currFileId = fileid;
                                      
 	InputStreamReader reader = null;
 	try {
@@ -179,9 +196,11 @@ public class JspReader {
 		caw.write(buf, 0, i);
 	    caw.close();
 	    if (current == null) {
-		current = new Mark( this, caw.toCharArray(), fileid, file.getParent(), encoding );
+		current = new Mark( this, caw.toCharArray(), fileid, getFile(fileid),
+				    file.getParent(), encoding );
 	    } else {
-		current.pushStream( caw.toCharArray(), fileid, file.getParent(), encoding );
+		current.pushStream( caw.toCharArray(), fileid, getFile(fileid),
+				    file.getParent(), encoding );
 	    }
 
         } catch (FileNotFoundException fnfe) {
@@ -200,14 +219,20 @@ public class JspReader {
 	}
     }
 
-    public boolean popFile() {
+    public boolean popFile() throws ParseException {
 	// Is stack created ? (will happen if the Jsp file we'r looking at is
 	// missing.
 	if (current == null) 
 		return false;
 
 	// Restore parser state:
-	size--;
+	//size--;
+	String fName = getFile(currFileId);
+	currFileId = unregisterSourceFile(fName);
+	if (currFileId < -1)
+	    throw new ParseException
+		(Constants.getString("jsp.error.file.not.registered",
+				     new Object[] {fName}));
 
 	return current.popStream();
     }
@@ -225,7 +250,7 @@ public class JspReader {
 	return new JspReader(file, ctx, encoding);
     }
 
-    public boolean hasMoreInput() {
+    public boolean hasMoreInput() throws ParseException {
 	if (current.cursor >= current.stream.length) {
 	    while (popFile()) {
 		if (current.cursor < current.stream.length) return true;
@@ -235,7 +260,7 @@ public class JspReader {
 	return true;
     }
     
-    public int nextChar() {
+    public int nextChar() throws ParseException {
 	if (!hasMoreInput())
 	    return -1;
 	
@@ -282,7 +307,7 @@ public class JspReader {
 	return new String(current.stream, cur_cursor, current.cursor-cur_cursor);
     };
 
-    char[] getChars(Mark start, Mark stop) {
+    char[] getChars(Mark start, Mark stop) throws ParseException {
 	Mark oldstart = mark();
 	reset(start);
 	CharArrayWriter caw = new CharArrayWriter();
@@ -305,7 +330,7 @@ public class JspReader {
 	current = new Mark(mark);
     }
 
-    public boolean matchesIgnoreCase(String string) {
+    public boolean matchesIgnoreCase(String string) throws ParseException {
 	Mark mark = mark();
 	int ch = 0;
 	int i = 0;
@@ -320,7 +345,7 @@ public class JspReader {
 	return true;
     }
 
-    public boolean matches(String string) {
+    public boolean matches(String string) throws ParseException {
 	Mark mark = mark();
 	int ch = 0;
 	int i = 0;
@@ -335,12 +360,12 @@ public class JspReader {
 	return true;
     }
     
-    public void advance(int n) {
+    public void advance(int n) throws ParseException {
 	while (--n >= 0)
 	    nextChar();
     }
 
-    public int skipSpaces() {
+    public int skipSpaces() throws ParseException {
 	int i = 0;
 	while (isSpace()) {
 	    i++;
@@ -357,7 +382,7 @@ public class JspReader {
      * <strong>null</strong> otherwise.
      */
     public Mark skipUntil(String limit)
-    {
+    throws ParseException {
 	Mark ret = null;
 	int limlen = limit.length();
 	int ch;
@@ -659,7 +684,7 @@ public class JspReader {
      * any space character as defined by <code>isSpace</code>.
      * @return A boolean.
      */
-    private boolean isDelimiter() {
+    private boolean isDelimiter() throws ParseException {
 	if ( ! isSpace() ) {
 	    int ch = peekChar();
 	    // Look for a single-char work delimiter:

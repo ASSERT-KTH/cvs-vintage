@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.2 1999/12/21 13:14:16 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/21 13:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.3 2000/04/24 22:53:12 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/04/24 22:53:12 $
  *
  * ====================================================================
  * 
@@ -70,6 +70,7 @@ import java.util.Stack;
 public final class Mark {
     int cursor, line, col;	// position within current stream
     int fileid;			// fileid of current stream
+    String fileName;            // name of the current file
     String baseDir;		// directory of file for current stream
     char[] stream = null;	// current stream
     Stack includeStack = null;	// stack of stream and stream state of streams
@@ -88,17 +89,20 @@ public final class Mark {
     class IncludeState {
 	int cursor, line, col;
 	int fileid;
+	String fileName;
 	String baseDir;
 	String encoding;
 	char[] stream = null;
 
 	IncludeState(int inCursor, int inLine, int inCol, int inFileid, 
-		     String inBaseDir, String inEncoding, char[] inStream) 
+		     String name, String inBaseDir, String inEncoding,
+		     char[] inStream) 
 	{
 	    cursor = inCursor;
 	    line = inLine;
 	    col = inCol;
 	    fileid = inFileid;
+	    fileName = name;
 	    baseDir = inBaseDir;
 	    encoding = inEncoding;
 	    stream = inStream;
@@ -114,13 +118,14 @@ public final class Mark {
     * @param inEncoding encoding of current file
     * @param inBaseDir base directory of requested jsp file
     */
-    Mark(JspReader reader, char[] inStream, int fileid, String inBaseDir, 
-	 String inEncoding) 
+    Mark(JspReader reader, char[] inStream, int fileid, String name,
+	 String inBaseDir, String inEncoding) 
     {
 	this.reader = reader;
 	this.stream = inStream;
 	this.cursor = this.line = this.col = 0;
 	this.fileid = fileid;
+	this.fileName = name;
 	this.baseDir = inBaseDir;
 	this.encoding = inEncoding;
 	this.includeStack = new Stack();
@@ -130,6 +135,7 @@ public final class Mark {
 	this.reader = other.reader;
 	this.stream = other.stream;
 	this.fileid = other.fileid;
+	this.fileName = other.fileName;
 	this.cursor = other.cursor;
 	this.line = other.line;
 	this.col = other.col;
@@ -150,12 +156,12 @@ public final class Mark {
      * @param inBaseDir directory of file
 	 * @param inEncoding encoding of new file
      */
-    public void pushStream(char[] inStream, int inFileid, String inBaseDir, 
-		           String inEncoding) 
+    public void pushStream(char[] inStream, int inFileid, String name,
+			   String inBaseDir, String inEncoding) 
     {
 
 	// store current state in stack
-	includeStack.push(new IncludeState(cursor, line, col, fileid, baseDir, 
+	includeStack.push(new IncludeState(cursor, line, col, fileid, name, baseDir, 
 					   encoding, stream) );
 
 	// set new variables
@@ -163,6 +169,7 @@ public final class Mark {
 	line = 0;
 	col = 0;
 	fileid = inFileid;
+	fileName = name;
 	baseDir = inBaseDir;
 	encoding = inEncoding;
 	stream = inStream;
@@ -184,6 +191,7 @@ public final class Mark {
 	line = state.line;
 	col = state.col;
 	fileid = state.fileid;
+	fileName = state.fileName;
 	baseDir = state.baseDir;
 	stream = state.stream;
 	return true;
@@ -196,7 +204,7 @@ public final class Mark {
     }
 
     public String getFile() {
-        return reader.getFile(fileid);
+        return this.fileName;
     }
     
     public String toShortString() {
