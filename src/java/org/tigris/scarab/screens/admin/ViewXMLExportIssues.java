@@ -66,7 +66,7 @@ import org.tigris.scarab.om.Issue;
  * Sends XML Export issues contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportIssues.java,v 1.1 2002/06/10 22:59:55 jon Exp $
+ * @version $Id: ViewXMLExportIssues.java,v 1.2 2002/07/11 01:09:51 jon Exp $
  */
 public class ViewXMLExportIssues extends Default
 {
@@ -149,7 +149,8 @@ public class ViewXMLExportIssues extends Default
             else if (!badIdList.isEmpty())
             {
                 data.setTarget("admin,XMLExportIssues.vm");
-                scarabR.setAlertMessage("The following issue ids are invalid: " + badIdList.toString());
+                scarabR.setAlertMessage("The following issue ids are invalid: " + 
+                    badIdList.toString());
                 return;
             }
             context.put("issueIdList", issueIdList);
