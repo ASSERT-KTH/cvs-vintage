@@ -24,17 +24,13 @@
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
-        <field name="OptionId" key="optionid" type="NumberKey">
-           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
-           <required-message>This module requires that you select an option for this attribute.</required-message>
-        </field>
-        <field name="AttributeId" key="attributeid" type="NumberKey">
+        <field name="AttributeId" key="attid" type="NumberKey">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
-        <field name="DisplayValue" key="displayvalue" type="String">
+        <field name="DisplayValue" key="dispval" type="String">
             <rule maxLength="255"/>
         </field>
-        <field name="NumericValue" key="numbericvalue" type="NumberKey">
+        <field name="NumericValue" key="numval" type="int">
            <rule mask="^$|[0-9]+">Please select a valid choice</rule>
         </field>
 </group>
