@@ -15,7 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment;
+package org.columba.mail.gui.attachment.selection;
 
 import java.util.logging.Logger;
 
@@ -23,6 +23,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.attachment.AttachmentView;
 import org.frappucino.iconpanel.IconPanelSelectionListener;
 
 public class AttachmentSelectionHandler extends SelectionHandler implements

@@ -30,7 +30,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -54,17 +53,7 @@ public class ViewHeaderListCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		// notify table selection handler
-		/*
-		((TableSelectionHandler) frameMediator.getSelectionManager()
-				.getHandler("mail.table")).setFolder(folder);
-				*/
-		
-		((TableSelectionHandler) frameMediator.getSelectionManager()
-				.getHandler("mail.table")).setSelection(getReference());
-		
 
-		// this should be called from TableController instead
 		((TableViewOwner) frameMediator).getTableController().showHeaderList(
 				folder, headerList);
 

@@ -22,8 +22,8 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.gui.attachment.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;
+import org.columba.mail.gui.attachment.selection.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 

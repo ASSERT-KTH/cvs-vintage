@@ -74,8 +74,7 @@ public class TreeSelectionHandler extends SelectionHandler implements
 		return reference;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
 	 */
@@ -109,18 +108,15 @@ public class TreeSelectionHandler extends SelectionHandler implements
 
 		fireSelectionChanged(new TreeSelectionChangedEvent(
 				(AbstractFolder[]) selectedFolders.toArray(FOLDER_ARRAY)));
+		
 	}
 
 	public void setSelection(DefaultCommandReference selection) {
-		view.clearSelection();
-		view.requestFocus();
-
+		
 		TreePath path = ((FolderCommandReference) selection).getFolder()
 				.getSelectionTreePath();
-		view.setLeadSelectionPath(path);
-		view.setAnchorSelectionPath(path);
+		view.setSelectionPath(path);
 		view.expandPath(path);
 
-		//view.setSelectionPaths(path);
 	}
 }

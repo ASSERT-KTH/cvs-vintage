@@ -61,10 +61,6 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 			c.getView().getSelectionModel().clearSelection();
 			c.clear();
 
-			// notify selection handler
-			((TableSelectionHandler) frameMediator.getSelectionManager()
-					.getHandler("mail.table")).setFolder(null);
-
 			// clear message-viewer
 			MessageController m = ((MessageViewOwner) getFrameMediator())
 					.getMessageController();

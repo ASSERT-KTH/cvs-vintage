@@ -29,7 +29,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
+import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
@@ -109,6 +109,8 @@ public class ViewMessageCommand extends FolderCommand {
 			// get attachment structure
 			mimePartTree = srcFolder.getMimePartTree(uid);
 
+			if ( mimePartTree == null ) return;
+			
 			// get flags
 			flags = srcFolder.getFlags(uid);
 		} catch (FolderInconsistentException ex) {

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.attachment;
+package org.columba.mail.gui.attachment.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.folder.MessageFolder;

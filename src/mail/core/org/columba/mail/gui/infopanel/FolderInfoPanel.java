@@ -31,6 +31,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.CInfoPanel;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
@@ -129,13 +130,15 @@ public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
         initComponents();
     }
 
-    public void setFolder(MessageFolder newFolder) {
+    public void setFolder(AbstractFolder newFolder) {
         item = newFolder.getConfiguration();
 
         if (item == null) {
             return;
         }
 
+        if  (!( newFolder instanceof MessageFolder) ) return;
+        
         info = ((MessageFolder) newFolder).getMessageFolderInfo();
 
         if (info == null) {

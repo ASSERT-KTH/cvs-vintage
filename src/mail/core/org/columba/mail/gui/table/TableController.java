@@ -334,9 +334,8 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		LOG.info("source folder=" + folder.getName());
 
 		// get current selection
-		FolderCommandReference r = (FolderCommandReference) frameController
-				.getSelectionManager().getSelection("mail.table");
-		MessageFolder srcFolder = (MessageFolder) r.getFolder();
+		FolderCommandReference r = (FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection();
+		AbstractFolder srcFolder = r.getFolder();
 
 		// its always possible that no folder is currenlty selected
 		if (srcFolder != null) {
@@ -493,16 +492,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 *  
 	 */
 	public void clear() {
-		//	send an update notification to the table model
-		TableModelChangedEvent ev = new TableModelChangedEvent(
-				TableModelChangedEvent.SET, previouslySelectedFolder,
-				new HeaderList());
-
-		try {
-			tableChanged(ev);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// clear model
+		updateManager.set(null);
+		
 	}
 
 	/** *********** implement getter/setter methods ******************** */

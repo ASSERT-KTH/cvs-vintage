@@ -51,14 +51,12 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
@@ -95,12 +93,12 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 	public SearchFrame(FrameMediator frameController, MessageFolder searchFolder) {
 		super(frameController.getView().getFrame(), true);
-		
+
 		this.frameController = frameController;
 		this.destFolder = (VirtualFolder) searchFolder;
-		
+
 		setTitle(MailResourceLoader.getString("dialog", "filter",
-		"searchdialog_title"));
+				"searchdialog_title"));
 
 		initComponents();
 		updateComponents(true);
@@ -108,22 +106,23 @@ public class SearchFrame extends JDialog implements ActionListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
-	public SearchFrame(FrameMediator frameController, MessageFolder searchFolder, MessageFolder sourceFolder) {
+
+	public SearchFrame(FrameMediator frameController,
+			MessageFolder searchFolder, MessageFolder sourceFolder) {
 		super(frameController.getView().getFrame(), true);
-		
+
 		this.frameController = frameController;
 		this.destFolder = (VirtualFolder) searchFolder;
-		
+
 		setTitle(MailResourceLoader.getString("dialog", "filter",
-		"searchdialog_title"));
-		
+				"searchdialog_title"));
+
 		initComponents();
-		
+
 		updateComponents(true);
-		
+
 		setSourceFolder(sourceFolder);
-		
+
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -378,14 +377,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 				ex.printStackTrace();
 			}
 
-			FolderCommandReference r =  new FolderCommandReference(destFolder);
-
+			FolderCommandReference r = new FolderCommandReference(destFolder);
 			((MailFrameMediator) frameController).setTreeSelection(r);
 
-			MainInterface.processor.addOp(new ViewHeaderListCommand(
-					frameController, r));
-
-			//frameMediator.treeController.setSelected(destFolder);
 		}
 	}
 }

@@ -29,6 +29,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
+import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.ristretto.message.MimeTree;
 import org.frappucino.swing.DynamicFileFactory;
 

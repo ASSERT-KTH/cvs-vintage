@@ -24,140 +24,161 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
-
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
 /**
- * TableSelectionHandler adds another abstraction layer to the
- * swing JTable selection model.
+ * TableSelectionHandler adds another abstraction layer to the swing JTable
+ * selection model.
  * <p>
- * It is responsible for providing a mapping between swing
- * table rows or tree nodes into message UIDs and back.
+ * It is responsible for providing a mapping between swing table rows or tree
+ * nodes into message UIDs and back.
  * <p>
- * Additionally it is able to encapsulate a message object transparently
- * for every action in Columba. This means actions don't need to care
- * about if this message is actually from a folder-/table-selection, as
- * it usually is (example: user selects a message in the table and does
- * a move operation on it), or if it is just a temporary message (
- * example: pgp-decrypted message ).
+ * Additionally it is able to encapsulate a message object transparently for
+ * every action in Columba. This means actions don't need to care about if this
+ * message is actually from a folder-/table-selection, as it usually is
+ * (example: user selects a message in the table and does a move operation on
+ * it), or if it is just a temporary message ( example: pgp-decrypted message ).
  * <p>
- * For this reason it uses a temporary folder to save such a message and
- * provide actions with the correctly mapped FolderCommandReference[] object.
- *
- *
- *
+ * For this reason it uses a temporary folder to save such a message and provide
+ * actions with the correctly mapped FolderCommandReference[] object.
+ * 
+ * 
+ * 
  * @author fdietz
  */
-public class TableSelectionHandler extends SelectionHandler
-    implements ListSelectionListener {
-    private final static MessageNode[] messageNodeArray = { null };
-    private TableView view;
-    private LinkedList messages;
-    private MessageFolder folder;
+public class TableSelectionHandler extends SelectionHandler implements
+		ListSelectionListener, SelectionListener {
+	private final static MessageNode[] messageNodeArray = { null };
 
-    // if this is set to true, we use the local selection, instead
-    // of using the table selection
-    private boolean useLocalSelection;
-    private FolderCommandReference local;
+	private TableController tableController;
 
-    /**
- * @param id
- */
-    public TableSelectionHandler(TableView view) {
-        super("mail.table");
-        this.view = view;
+	private TableView view;
 
-        view.getSelectionModel().addListSelectionListener(this);
+	private LinkedList messages;
 
-        messages = new LinkedList();
+	private AbstractFolder folder;
 
-        useLocalSelection = false;
-    }
+	// if this is set to true, we use the local selection, instead
+	// of using the table selection
+	private boolean useLocalSelection;
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.util.SelectionHandler#getSelection()
- */
-    public DefaultCommandReference getSelection() {
-        if (useLocalSelection == true) {
-            return local;
-        }
+	private FolderCommandReference local;
 
-        FolderCommandReference reference = new FolderCommandReference(folder, getUidArray());
+	/**
+	 * @param id
+	 */
+	public TableSelectionHandler(TableController tableController) {
+		super("mail.table");
 
-        return reference;
-    }
+		this.tableController = tableController;
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
- */
-    public void setSelection(DefaultCommandReference selection) {
-        FolderCommandReference ref = (FolderCommandReference) selection;
+		this.view = tableController.getView();
 
-        folder = (MessageFolder) ref.getFolder();
+		view.getSelectionModel().addListSelectionListener(this);
 
-        useLocalSelection = false;
-    }
+		messages = new LinkedList();
 
-    /**
- * Sets the folder.
- * @param folder The folder to set
- */
-    public void setFolder(MessageFolder folder) {
-        this.folder = folder;
-    }
+		useLocalSelection = false;
+	}
 
-    private Object[] getUidArray() {
-        Object[] result = new Object[messages.size()];
-        ListIterator it = messages.listIterator();
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
+	 */
+	public DefaultCommandReference getSelection() {
+		if (useLocalSelection == true) {
+			return local;
+		}
 
-        int i = 0;
+		FolderCommandReference reference = new FolderCommandReference(folder,
+				getUidArray());
 
-        while (it.hasNext()) {
-            result[i++] = ((MessageNode) it.next()).getUid();
-        }
+		return reference;
+	}
 
-        return result;
-    }
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+	 */
+	public void setSelection(DefaultCommandReference selection) {
+		FolderCommandReference ref = (FolderCommandReference) selection;
 
-    /* (non-Javadoc)
- * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
- */
-    public void valueChanged(ListSelectionEvent e) {
-        useLocalSelection = false;
+		folder = ref.getFolder();
 
-        // user is still manipulating the selection
-        if (e.getValueIsAdjusting() == true) {
-            return;
-        }
+		useLocalSelection = false;
 
-        messages = new LinkedList();
+		tableController.setSelected(getUidArray());
+	}
 
-        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+	private Object[] getUidArray() {
+		Object[] result = new Object[messages.size()];
+		ListIterator it = messages.listIterator();
 
-        if (lsm.isSelectionEmpty()) {
-            //no rows are selected
-        	
-        } else {
-            int[] rows = view.getSelectedRows();
+		int i = 0;
 
-            for (int i = 0; i < rows.length; i++) {
-                TreePath path = view.getTree().getPathForRow(rows[i]);
-                MessageNode node = (MessageNode) path.getLastPathComponent();
-                messages.add(node);
-            }
-        }
+		while (it.hasNext()) {
+			result[i++] = ((MessageNode) it.next()).getUid();
+		}
 
-        fireSelectionChanged(new TableSelectionChangedEvent(folder,
-                getUidArray()));
-    }
+		return result;
+	}
 
-    public void setLocalReference(FolderCommandReference r) {
-        this.local = r;
+	/**
+	 * 
+	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+	 */
+	public void valueChanged(ListSelectionEvent e) {
+		useLocalSelection = false;
 
-        useLocalSelection = true;
-    }
+		// user is still manipulating the selection
+		if (e.getValueIsAdjusting() == true) {
+			return;
+		}
+
+		messages = new LinkedList();
+
+		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+
+		if (lsm.isSelectionEmpty()) {
+			//no rows are selected
+
+		} else {
+			int[] rows = view.getSelectedRows();
+
+			for (int i = 0; i < rows.length; i++) {
+				TreePath path = view.getTree().getPathForRow(rows[i]);
+				MessageNode node = (MessageNode) path.getLastPathComponent();
+				messages.add(node);
+			}
+		}
+
+		fireSelectionChanged(new TableSelectionChangedEvent(folder,
+				getUidArray()));
+	}
+
+	public void setLocalReference(FolderCommandReference r) {
+		this.local = r;
+
+		useLocalSelection = true;
+	}
+
+	/**
+	 * 
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+		} else {
+			folder = null;
+		}
+	}
 }

@@ -26,7 +26,7 @@ import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
-import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
+import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
@@ -162,13 +162,16 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
 		// create selection handlers
 		TableSelectionHandler tableHandler = new TableSelectionHandler(
-				tableController.getView());
+				tableController);
 		getSelectionManager().addSelectionHandler(tableHandler);
 
 		TreeSelectionHandler treeHandler = new TreeSelectionHandler(
 				treeController.getView());
 		getSelectionManager().addSelectionHandler(treeHandler);
 
+		// table registers interest in tree selection events
+		treeHandler.addSelectionListener(tableHandler);
+		
 		getSelectionManager().addSelectionHandler(
 				new AttachmentSelectionHandler(attachmentController.getView()));
 
