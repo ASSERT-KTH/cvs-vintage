@@ -39,7 +39,7 @@
        instead of the org.jboss.tm.TransactionManagerService and comment out
        the TransactionManagerService above	
   <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService" name="DefaultDomain:service=TransactionManager">
-        <attribute name="ConfigFileName">../conf/tyrex/domain.xml</attribute>
+        <attribute name="ConfigFileName">../conf/default/domain.xml</attribute>
   </mbean>
   -->
 
