@@ -29,6 +29,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -55,10 +57,12 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ConfigFrame extends JDialog implements ListSelectionListener, ActionListener {
-	
+public class ConfigFrame
+	extends JDialog
+	implements ListSelectionListener, ActionListener {
 
 	/*
 	private JTextField textField;
@@ -109,12 +113,12 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
 	Folder folder;
-	
-	public ConfigFrame(Folder folder ) {
-		
+
+	public ConfigFrame(Folder folder) {
+
 		super();
 		this.folder = folder;
-		
+
 		setTitle(
 			MailResourceLoader.getString("dialog", "filter", "dialog_title"));
 		this.filterList = folder.getFilterList();
@@ -316,18 +320,27 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createCompoundBorder(new WizardTopBorder(),BorderFactory.createEmptyBorder(17,12,11,11)));
-		JPanel buttonPanel = new JPanel(new GridLayout(1,2,5,0));
+		bottomPanel.setBorder(
+			BorderFactory.createCompoundBorder(
+				new WizardTopBorder(),
+				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		closeButton = new CloseButton();
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		helpButton = new HelpButton();
+		helpButton.setActionCommand("HELP");
+		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		getRootPane().setDefaultButton(closeButton);
-		getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+		getRootPane().registerKeyboardAction(
+			this,
+			"CLOSE",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
@@ -360,7 +373,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
 		if (parent != null) {
 
-			FilterDialog dialog = new FilterDialog( parent);
+			FilterDialog dialog = new FilterDialog(parent);
 
 			/*
 			java.awt.Dimension dim = new Dimension( 400,400 );
@@ -414,6 +427,13 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 			showFilterDialog();
 
 			listView.update();
+		} else if (action.equals("HELP")) {
+			URLController c = new URLController();
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
+			} catch (MalformedURLException mue) {
+			}
 		}
 	}
 

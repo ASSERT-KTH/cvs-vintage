@@ -20,6 +20,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -41,6 +43,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class FilterDialog implements ActionListener {
@@ -62,7 +65,7 @@ public class FilterDialog implements ActionListener {
 	private ActionList actionList;
 
 	private JComboBox condList;
-	
+
 	public FilterDialog(Filter filter) {
 		dialog = DialogStore.getDialog();
 		dialog.setTitle(
@@ -80,9 +83,10 @@ public class FilterDialog implements ActionListener {
 
 	private void initComponents() {
 		JPanel namePanel = new JPanel();
-		namePanel.setBorder(BorderFactory.createEmptyBorder(12,12,10,11));
+		namePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 10, 11));
 		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
-		nameLabel = new JLabel(
+		nameLabel =
+			new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -97,25 +101,28 @@ public class FilterDialog implements ActionListener {
 		nameTextField = new JTextField(22);
 		nameLabel.setLabelFor(nameTextField);
 		namePanel.add(nameTextField);
-		dialog.getContentPane().add(namePanel,BorderLayout.NORTH);
-		
-		JPanel centerPanel = new JPanel(new BorderLayout(0,0));
-		centerPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(0,12,10,11),
+		dialog.getContentPane().add(namePanel, BorderLayout.NORTH);
+
+		JPanel centerPanel = new JPanel(new BorderLayout(0, 0));
+		centerPanel.setBorder(
+			BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(0, 12, 10, 11),
 				BorderFactory.createCompoundBorder(
-						BorderFactory.createTitledBorder(MailResourceLoader.getString("dialog", "filter", "if")),
-						BorderFactory.createEmptyBorder(10,10,10,10))));
-		
+					BorderFactory.createTitledBorder(
+						MailResourceLoader.getString("dialog", "filter", "if")),
+					BorderFactory.createEmptyBorder(10, 10, 10, 10))));
+
 		JPanel middleIfPanel = new JPanel(new BorderLayout());
-		centerPanel.add( middleIfPanel, BorderLayout.CENTER );
-		
+		centerPanel.add(middleIfPanel, BorderLayout.CENTER);
+
 		JPanel ifPanel = new JPanel();
 		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
 		ifPanel.add(Box.createHorizontalGlue());
 
-		nameLabel = new JLabel(
+		nameLabel =
+			new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -125,12 +132,13 @@ public class FilterDialog implements ActionListener {
 				"dialog",
 				"filter",
 				"execute_actions"));
-				
+
 		ifPanel.add(nameLabel);
 
 		ifPanel.add(Box.createHorizontalStrut(5));
 
-		String[] cond = {
+		String[] cond =
+			{
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -156,7 +164,7 @@ public class FilterDialog implements ActionListener {
 		//rootPanel.add( Box.createRigidArea( new java.awt.Dimension(0,10) ) );
 
 		JPanel middleThenPanel = new JPanel(new BorderLayout());
-		centerPanel.add( middleThenPanel, BorderLayout.SOUTH );
+		centerPanel.add(middleThenPanel, BorderLayout.SOUTH);
 		//middleThenPanel.setBorder(border);
 		//middleThenPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
 
@@ -164,7 +172,8 @@ public class FilterDialog implements ActionListener {
 		thenPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 		thenPanel.setLayout(new BoxLayout(thenPanel, BoxLayout.X_AXIS));
 
-		addActionButton = new JButton(
+		addActionButton =
+			new JButton(
 				MailResourceLoader.getString("dialog", "filter", "add_action"));
 		addActionButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "add_action"));
@@ -175,11 +184,17 @@ public class FilterDialog implements ActionListener {
 
 		//thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
 
-		JLabel actionLabel = new JLabel(MailResourceLoader.getString("dialog","filter","action_list") );
-		actionLabel.setDisplayedMnemonic( MailResourceLoader.getMnemonic("dialog", "filter", "action_list"));
-		thenPanel.add( Box.createRigidArea( new java.awt.Dimension(5,0) ) );
-		thenPanel.add( actionLabel );
-		
+		JLabel actionLabel =
+			new JLabel(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"action_list"));
+		actionLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "filter", "action_list"));
+		thenPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+		thenPanel.add(actionLabel);
+
 		thenPanel.add(Box.createHorizontalGlue());
 
 		middleThenPanel.add(thenPanel, BorderLayout.NORTH);
@@ -191,8 +206,9 @@ public class FilterDialog implements ActionListener {
 
 		dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
 
-		JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
-		bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
+		bottomPanel.setBorder(
+			BorderFactory.createCompoundBorder(
 				new WizardTopBorder(),
 				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
@@ -200,12 +216,18 @@ public class FilterDialog implements ActionListener {
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
+		helpButton.setActionCommand("HELP");
+		helpButton.addActionListener(this);
 		helpButton = new HelpButton();
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(closeButton);
-		dialog.getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CLOSE",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	public void updateComponents(boolean b) {
@@ -268,6 +290,13 @@ public class FilterDialog implements ActionListener {
 			//System.out.println( "add" );
 			actionList.add();
 
+		} else if (action.equals("HELP")) {
+			URLController c = new URLController();
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
+			} catch (MalformedURLException mue) {
+			}
 		}
 		/*
 		else if ( action.equals("REMOVE_ACTION") )

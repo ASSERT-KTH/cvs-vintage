@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
@@ -35,15 +37,16 @@ import org.columba.core.gui.button.OkButton;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 /**
  * Title:
@@ -54,8 +57,7 @@ import org.columba.core.main.MainInterface;
  * @version 1.0
  */
 
-public class AccountDialog implements ActionListener, ListSelectionListener
-{
+public class AccountDialog implements ActionListener, ListSelectionListener {
 	private JDialog dialog;
 
 	private AccountItem accountItem;
@@ -66,84 +68,78 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 	private SecurityPanel securityPanel;
 	private SpecialFoldersPanel specialFoldersPanel;
 	private ReceiveOptionsPanel receiveOptionsPanel;
-	
+
 	private OkButton okButton;
 	private CancelButton cancelButton;
 	private HelpButton helpButton;
-	
+
 	//private PanelChooser panelChooser;
-	
+
 	private JPanel selected = null;
 
-	public AccountDialog(AccountItem item)
-	{
+	public AccountDialog(AccountItem item) {
 		dialog = DialogStore.getDialog();
-		dialog.setTitle( MailResourceLoader.getString("dialog","account","dialog_title") );
+		dialog.setTitle(
+			MailResourceLoader.getString("dialog", "account", "dialog_title"));
 		this.accountItem = item;
-		dialog.addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
+		dialog.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
 				dialog.setVisible(false);
 			}
 		});
 
 		createPanels();
 		initComponents();
-		
+
 		//panelChooser.addListSelectionListener(this);
-		
+
 		dialog.pack();
-		
+
 		//dialog.setSize( new Dimension( 700,550 ) );
-		
+
 		/*
 		java.awt.Dimension dim = dialog.getSize();
-
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        dialog.setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
-        */
-        
-        dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
 		
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		dialog.setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
+		*/
+
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
+
 		//setSize( new Dimension( 600,500 ) );
 	}
 
-	protected void createPanels()
-	{
-		
-		IdentityItem identityItem = accountItem.getIdentityItem();
-		identityPanel = new IdentityPanel( accountItem, identityItem);
-		
-		receiveOptionsPanel = new ReceiveOptionsPanel( accountItem );
-		
-		incomingServerPanel =
-				new IncomingServerPanel( accountItem, receiveOptionsPanel);
+	protected void createPanels() {
 
-		outgoingServerPanel = new OutgoingServerPanel( accountItem );
+		IdentityItem identityItem = accountItem.getIdentityItem();
+		identityPanel = new IdentityPanel(accountItem, identityItem);
+
+		receiveOptionsPanel = new ReceiveOptionsPanel(accountItem);
+
+		incomingServerPanel =
+			new IncomingServerPanel(accountItem, receiveOptionsPanel);
+
+		outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
 		specialFoldersPanel =
 			new SpecialFoldersPanel(
 				accountItem,
 				accountItem.getSpecialFoldersItem());
-		
 
-		securityPanel = new SecurityPanel( accountItem.getPGPItem());
+		securityPanel = new SecurityPanel(accountItem.getPGPItem());
 	}
-	
-	
-	protected void initComponents()
-	{
+
+	protected void initComponents() {
 		dialog.getContentPane().setLayout(new BorderLayout());
-		
+
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout( new BorderLayout() );
-		mainPanel.setBorder( BorderFactory.createEmptyBorder(0,0,10,0) );		
-		dialog.getContentPane().add( mainPanel, BorderLayout.CENTER );
-		
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
+
 		CTabbedPane tp = new CTabbedPane();
 		tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
 
@@ -151,30 +147,27 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 		IdentityItem identityItem = accountItem.getIdentityItem();
 		identityPanel = new IdentityPanel( accountItem, identityItem);
 		*/
-		
+
 		tp.add(
-			MailResourceLoader.getString("dialog","account",  "identity"),
+			MailResourceLoader.getString("dialog", "account", "identity"),
 			identityPanel);
 		//$NON-NLS-1$
 
-		if (accountItem.isPopAccount())
-		{
+		if (accountItem.isPopAccount()) {
 			PopItem popItem = accountItem.getPopItem();
 
 			/*
 			incomingServerPanel =
 				new IncomingServerPanel( accountItem, popItem);
-			*/	
+			*/
 			tp.add(
 				MailResourceLoader.getString(
-					"dialog","account",
-					
+					"dialog",
+					"account",
 					"incomingserverpop3"),
 				incomingServerPanel);
 			//$NON-NLS-1$
-		}
-		else
-		{
+		} else {
 			ImapItem imapItem = accountItem.getImapItem();
 			/*
 			incomingServerPanel =
@@ -182,21 +175,21 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 				*/
 			tp.add(
 				MailResourceLoader.getString(
-					"dialog","account",
-				
+					"dialog",
+					"account",
 					"incomingserverimap"),
 				incomingServerPanel);
 			//$NON-NLS-1$
 		}
-		
-		tp.add( "Receive Options", receiveOptionsPanel );
+
+		tp.add("Receive Options", receiveOptionsPanel);
 
 		SmtpItem smtpItem = accountItem.getSmtpItem();
 		/*
 		outgoingServerPanel = new OutgoingServerPanel( smtpItem);
 		*/
 		tp.add(
-			MailResourceLoader.getString("dialog","account",  "outgoingserver"),
+			MailResourceLoader.getString("dialog", "account", "outgoingserver"),
 			outgoingServerPanel);
 		//$NON-NLS-1$
 
@@ -207,7 +200,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 				accountItem.getSpecialFoldersItem());
 		*/
 		tp.add(
-			MailResourceLoader.getString("dialog","account",  "specialfolders"),
+			MailResourceLoader.getString("dialog", "account", "specialfolders"),
 			specialFoldersPanel);
 		//$NON-NLS-1$
 
@@ -215,39 +208,38 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 		securityPanel = new SecurityPanel( accountItem.getPGPItem());
 		*/
 		tp.add(
-			MailResourceLoader.getString("dialog","account", "security"),
+			MailResourceLoader.getString("dialog", "account", "security"),
 			securityPanel);
 		//$NON-NLS-1$
 
-		mainPanel.add( tp, BorderLayout.CENTER );
-		
+		mainPanel.add(tp, BorderLayout.CENTER);
+
 		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		
-		
+
 		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder( new WizardTopBorder() );
-		bottomPanel.setLayout( new BorderLayout() );
-		
+		bottomPanel.setBorder(new WizardTopBorder());
+		bottomPanel.setLayout(new BorderLayout());
+
 		JPanel buttonPanel = createButtonPanel();
-		bottomPanel.add( buttonPanel, BorderLayout.CENTER );
-		
-		dialog.getContentPane().add( bottomPanel, BorderLayout.SOUTH );
+		bottomPanel.add(buttonPanel, BorderLayout.CENTER);
+
+		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
 		/*
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
 		bottom.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-
+		
 		//bottom.add( Box.createHorizontalStrut());
-
+		
 		
 		//cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
 		cancelButton = new CancelButton();
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
-
+		
 		//okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton = new OkButton();
@@ -255,28 +247,27 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
-
+		
 		//helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
 		helpButton = new HelpButton();
 		//$NON-NLS-1$ //$NON-NLS-2$
-
+		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 3, 10, 0));
 		buttonPanel.add(helpButton);
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(okButton);
-
-		//bottom.add( Box.createHorizontalGlue() );
-
-		bottom.add(buttonPanel, BorderLayout.EAST);
-
 		
-
+		//bottom.add( Box.createHorizontalGlue() );
+		
+		bottom.add(buttonPanel, BorderLayout.EAST);
+		
+		
+		
 		dialog.getContentPane().add(bottom, BorderLayout.SOUTH);
 		*/
 	}
-	
-	
+
 	/*
 	protected void initComponents()
 	{
@@ -301,9 +292,8 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 		
 	}
 	*/
-	
-	protected JPanel createButtonPanel()
-	{
+
+	protected JPanel createButtonPanel() {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
@@ -311,7 +301,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		
 		//cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
 		cancelButton = new CancelButton();
 		//$NON-NLS-1$ //$NON-NLS-2$
@@ -328,6 +317,8 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 
 		//helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
 		helpButton = new HelpButton();
+		helpButton.setActionCommand("HELP");
+		helpButton.addActionListener(this);
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();
@@ -340,18 +331,14 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 
 		bottom.add(buttonPanel, BorderLayout.EAST);
 
-		
-
 		return bottom;
 	}
-	
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("OK")) //$NON-NLS-1$
-		{
+			{
 
 			identityPanel.updateComponents(false);
 			incomingServerPanel.updateComponents(false);
@@ -360,67 +347,70 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 			securityPanel.updateComponents(false);
 			specialFoldersPanel.updateComponents(false);
 
-			if (accountItem.isPopAccount())
-			{
+			if (accountItem.isPopAccount()) {
 				// update pop3 fetch menu
 				// TODO
 				//MainInterface.frameModel.updatePop3Menu();
 
 				int uid = accountItem.getUid();
-				POP3ServerController c = MainInterface.popServerCollection.uidGet(uid);
+				POP3ServerController c =
+					MainInterface.popServerCollection.uidGet(uid);
 				c.restartTimer();
 
 				//MainInterface.popServerCollection.enableMailCheckIcon();
-			}
-			else
-			{
+			} else {
 				// update tree label
 				int uid = accountItem.getUid();
 
-				IMAPRootFolder folder = (IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
+				IMAPRootFolder folder =
+					(IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
 				//folder.setName(accountItem.getName());
-				
+
 				//folder.restartTimer();
-				
+
 			}
 
 			dialog.setVisible(false);
-		}
-		else if (action.equals("CANCEL")) //$NON-NLS-1$
-		{
+		} else if (action.equals("CANCEL")) //$NON-NLS-1$
+			{
 			dialog.setVisible(false);
+		} else if (action.equals("HELP")) {
+			URLController c = new URLController();
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
+			} catch (MalformedURLException mue) {
+			}
 		}
 
 	}
-	
-	protected void setSelection( JPanel panel )
-	{
+
+	protected void setSelection(JPanel panel) {
 		dialog.getContentPane().remove(selected);
-		dialog.getContentPane().add( panel, BorderLayout.CENTER );
+		dialog.getContentPane().add(panel, BorderLayout.CENTER);
 		dialog.validate();
 		dialog.repaint();
 		selected = panel;
 	}
-	
 
 	public void valueChanged(ListSelectionEvent e) {
-		JList lsm = (JList)e.getSource();
-		switch( lsm.getSelectedIndex() ){
-		case 0:
-			setSelection( identityPanel );
-			break;
-		case 1:
-			setSelection( incomingServerPanel );
-			break;
-		case 2:
-			setSelection( outgoingServerPanel );
-			break;
-		case 3:
-			setSelection( specialFoldersPanel );
-			break;
-		case 4:
-			setSelection( securityPanel );
-			break;
+		JList lsm = (JList) e.getSource();
+		switch (lsm.getSelectedIndex()) {
+			case 0 :
+				setSelection(identityPanel);
+				break;
+			case 1 :
+				setSelection(incomingServerPanel);
+				break;
+			case 2 :
+				setSelection(outgoingServerPanel);
+				break;
+			case 3 :
+				setSelection(specialFoldersPanel);
+				break;
+			case 4 :
+				setSelection(securityPanel);
+				break;
 		}
 	}
 }

@@ -6,9 +6,14 @@
  */
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -40,6 +45,17 @@ public class ShowHelpAction extends FrameAction {
 			'H',
 			null);
 
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		URLController c = new URLController();
+		try {
+			c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual"));
+		} catch (MalformedURLException mue) {
+		}
 	}
 
 }

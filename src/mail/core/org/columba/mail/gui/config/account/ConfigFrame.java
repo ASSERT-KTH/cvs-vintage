@@ -29,6 +29,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -51,13 +53,14 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.button.CloseButton;
 import org.columba.core.gui.button.HelpButton;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
+import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class ConfigFrame
 	implements ActionListener, ListSelectionListener //, TreeSelectionListener
@@ -115,7 +118,8 @@ public class ConfigFrame
 
 	public ConfigFrame() {
 		dialog = DialogStore.getDialog();
-		dialog.setTitle( MailResourceLoader.getString("dialog","account","dialog_title") );
+		dialog.setTitle(
+			MailResourceLoader.getString("dialog", "account", "dialog_title"));
 		config = MainInterface.config;
 		accountList = MailConfig.getAccountList();
 
@@ -126,7 +130,11 @@ public class ConfigFrame
 		});
 
 		initComponents();
-		dialog.getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CLOSE",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
@@ -141,10 +149,10 @@ public class ConfigFrame
 	}
 
 	public void initComponents() {
-		dialog.getContentPane().setLayout( new BorderLayout() );
+		dialog.getContentPane().setLayout(new BorderLayout());
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout(5,0));
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
+		mainPanel.setLayout(new BorderLayout(5, 0));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
 		/*
 		Border b1 = BorderFactory.createEtchedBorder();
@@ -154,7 +162,7 @@ public class ConfigFrame
 					"dialog",
 					"account",
 					"account_information"));
-
+		
 		Border emptyBorder = BorderFactory.createEmptyBorder(5, 5, 5, 5);
 		Border border = BorderFactory.createCompoundBorder(emptyBorder,b2);
 		Border border2 = BorderFactory.createCompoundBorder(border,emptyBorder);
@@ -162,20 +170,29 @@ public class ConfigFrame
 		*/
 
 		addButton.setText(MailResourceLoader.getString("dialog", "account", "addaccount")); //$NON-NLS-1$
-		addButton.setMnemonic(MailResourceLoader.getMnemonic("dialog","account","addacount"));
+		addButton.setMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "account", "addacount"));
 		//addButton.setIcon( ImageLoader.getImageIcon("stock_add_16.png") );
 		addButton.setActionCommand("ADD"); //$NON-NLS-1$
 		addButton.addActionListener(this);
 
 		removeButton.setText(MailResourceLoader.getString("dialog", "account", "removeaccount")); //$NON-NLS-1$
-		removeButton.setMnemonic(MailResourceLoader.getMnemonic("dialog","account","removeacount"));
+		removeButton.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
+				"removeacount"));
 		removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
 		//removeButton.setIcon( ImageLoader.getImageIcon("stock_remove_16.png") );
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
 		editButton.setText(MailResourceLoader.getString("dialog", "account", "editsettings")); //$NON-NLS-1$
-		editButton.setMnemonic(MailResourceLoader.getMnemonic("dialog","account","editsettings"));
+		editButton.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
+				"editsettings"));
 		editButton.setActionCommand("EDIT"); //$NON-NLS-1$
 		//editButton.setIcon( ImageLoader.getImageIcon("stock_properties_16.png") );
 		editButton.setEnabled(false);
@@ -286,28 +303,30 @@ public class ConfigFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder( new WizardTopBorder() );
-		bottomPanel.setLayout( new BorderLayout() );
-		bottomPanel.add( createButtonPanel(), BorderLayout.EAST );
-		dialog.getContentPane().add( bottomPanel, BorderLayout.SOUTH );
+		bottomPanel.setBorder(new WizardTopBorder());
+		bottomPanel.setLayout(new BorderLayout());
+		bottomPanel.add(createButtonPanel(), BorderLayout.EAST);
+		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 	}
-	
-	protected JPanel createButtonPanel()
-	{
+
+	protected JPanel createButtonPanel() {
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17,0,11,11));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
 		closeButton = new CloseButton();
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		helpButton = new HelpButton();
+		helpButton.setActionCommand("HELP");
+		helpButton.addActionListener(this);
 		buttonPanel.add(helpButton);
 		dialog.getRootPane().setDefaultButton(closeButton);
 		return buttonPanel;
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		if (e.getValueIsAdjusting())return;
+		if (e.getValueIsAdjusting())
+			return;
 		DefaultListSelectionModel theList =
 			(DefaultListSelectionModel) e.getSource();
 		if (theList.isSelectionEmpty()) {
@@ -336,11 +355,11 @@ public class ConfigFrame
 		String action = e.getActionCommand();
 		if (action.equals("CLOSE")) //$NON-NLS-1$
 			{
-				try {
-			Config.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+			try {
+				Config.save();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 			dialog.setVisible(false);
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
@@ -383,13 +402,26 @@ public class ConfigFrame
 			{
 			showAccountDialog();
 			listView.update();
+		} else if (action.equals("HELP")) {
+			URLController c = new URLController();
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
+			} catch (MalformedURLException mue) {
+			}
 		}
 	}
-	
+
 	public class WizardTopBorder extends AbstractBorder {
 		protected Insets borderInsets = new Insets(2, 0, 0, 0);
 
-		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+		public void paintBorder(
+			Component c,
+			Graphics g,
+			int x,
+			int y,
+			int w,
+			int h) {
 			g.setColor(UIManager.getColor("Button.darkShadow"));
 			g.drawLine(x, y, x + w - 1, y);
 			g.setColor(Color.white);
