@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.2 1999/11/09 23:18:50 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/09 23:18:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/BuffTool.java,v 1.3 2000/01/08 21:31:41 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/08 21:31:41 $
  *
  * ====================================================================
  *
@@ -103,12 +103,16 @@ public class BuffTool {
 	return  (b1<<8) + (b2<<0);
     }
 
-    public static String getString( byte b[] , int pos, int len ) {
-	return new String(  b, pos, len );
+    public static String getString( byte b[] , int pos, int len ) 
+        throws UnsupportedEncodingException
+    {
+	return new String( b, pos, len, Constants.CharacterEncoding.Default );
     }
 
 
-    public static void dump( byte buff[], int len ) {
+    public static void dump( byte buff[], int len )
+        throws UnsupportedEncodingException
+    {
 	for (int i=0; i<len; i+=8 ) {
 	    for(int j=i; j<i+8; j++ ) {
 		if( j<len) {
@@ -117,9 +121,9 @@ public class BuffTool {
 		}
 	    }
 	    if( i+8 <len )
-		System.out.print( new String( buff, i, 8 ));
+		System.out.print( new String( buff, i, 8, Constants.CharacterEncoding.Default ));
 	    else
-		System.out.print( new String( buff, i, len-i ));
+		System.out.print( new String( buff, i, len-i, Constants.CharacterEncoding.Default ));
 	    System.out.println();
 	}
 	System.out.println();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.1 1999/10/09 00:20:55 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Constants.java,v 1.2 2000/01/08 21:31:41 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/08 21:31:41 $
  *
  * ====================================================================
  *
@@ -92,4 +92,8 @@ public class Constants {
     public static class MIME {
         public static final String WAR = "war";
     }
+
+    public static class CharacterEncoding {
+        public static final String Default = "8859_1";
+     }
 }

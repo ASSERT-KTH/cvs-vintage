@@ -139,11 +139,16 @@ public class JspReader {
 	throws ParseException, FileNotFoundException 
     {
         // Default encoding if needed:
-	if (encoding == null)
-	    encoding = System.getProperty("file.encoding", "8859_1");
+	if (encoding == null) {
+            encoding = "8859_1";
+            // XXX - longer term, this should really be:
+	    //   System.getProperty("file.encoding", "8859_1");
+            // but this doesn't work right now, so we stick with ASCII
+        }
+
 	// Register the file, and read its content:
 	int fileid    = registerSourceFile(file.getAbsolutePath());
-	Reader reader = null;
+	InputStreamReader reader = null;
 	try {
             if (context == null)
                 reader = new InputStreamReader(new FileInputStream(file),
@@ -160,7 +165,7 @@ public class JspReader {
                     throw new FileNotFoundException(fileName);
                 
                 try {
-                    reader = new InputStreamReader(in);
+                    reader = new InputStreamReader(in, encoding);
                 } catch (Throwable ex) {
                     throw new FileNotFoundException(fileName + ": "+ ex.getMessage());
                 }
@@ -205,17 +210,17 @@ public class JspReader {
 	return current.popStream();
     }
 	
-    protected JspReader(String file, ServletContext ctx) 
+    protected JspReader(String file, ServletContext ctx, String encoding) 
 	throws ParseException, FileNotFoundException
     {
         this.context = ctx;
-	pushFile(file, null);
+	pushFile(file, encoding);
     }
 
-    public static JspReader createJspReader(String file, ServletContext ctx) 
+    public static JspReader createJspReader(String file, ServletContext ctx, String encoding) 
 	throws ParseException, FileNotFoundException
     {
-	return new JspReader(file, ctx);
+	return new JspReader(file, ctx, encoding);
     }
 
     public boolean hasMoreInput() {

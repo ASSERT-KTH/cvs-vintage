@@ -1,6 +1,6 @@
 
 /*
- * $Id: CounterClient.java,v 1.2 1999/10/14 23:49:00 akv Exp $
+ * $Id: CounterClient.java,v 1.3 2000/01/08 21:31:42 rubys Exp $
  */
 
 package tests.perf;
@@ -128,7 +128,7 @@ public class CounterClient extends TestableBase {
 
         try {
             in.read(b);
-            count = Integer.parseInt(new String(b).trim());
+            count = Integer.parseInt(new String(b,"UTF8").trim());
         } catch (IOException ioe) {
 	    if (this.Debug) {
                 ioe.printStackTrace();

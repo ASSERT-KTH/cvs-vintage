@@ -71,4 +71,8 @@ public class Constants {
 
     public static final int RequestBufferSize = 2048;
 
+    public static class CharacterEncoding {
+        public static final String Default = "8859_1";
+    }
+
 }

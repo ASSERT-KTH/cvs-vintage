@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.5 1999/12/28 16:25:54 rubys Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/28 16:25:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.6 2000/01/08 21:31:38 rubys Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/08 21:31:38 $
  *
  * ====================================================================
  * 
@@ -123,13 +123,26 @@ public abstract class Compiler {
         if (!isOutDated())
             return false;
         
-        JspReader reader = JspReader.createJspReader(ctxt.getJspFile(), ctxt.getServletContext());
+        // Need the encoding specified in the JSP 'page' directive for
+        //  - reading the JSP page
+        //  - writing the JSP servlet source
+        //  - compiling the generated servlets (pass -encoding to javac).
+        // XXX - There are really three encodings of interest.
+
+        String jspEncoding = "8859_1";          // default per JSP spec
+        String javaEncoding = "UTF8";           // perhaps debatable?
+
+        JspReader reader = JspReader.createJspReader(
+            ctxt.getJspFile(),
+            ctxt.getServletContext(),
+            jspEncoding
+        );
 
         ServletWriter writer = 
             (new ServletWriter
                 (new PrintWriter
-                    (new EscapeUnicodeWriter
-                        (new FileOutputStream(javaFileName)))));
+                    (new java.io.OutputStreamWriter(
+                        new FileOutputStream(javaFileName),javaEncoding))));
 
         ctxt.setReader(reader);
         ctxt.setWriter(writer);
@@ -142,28 +155,7 @@ public abstract class Compiler {
         listener.endPageProcessing();
         writer.close();
 
-        // For compiling the generated servlets, you need to 
-        // pass -encoding to javac.
-
-        String encoding = ctxt.getContentType();
         String classpath = ctxt.getClassPath(); 
-
-        // Pick up everything after ";charset="
-        if (encoding != null) {
-            int semi = encoding.indexOf(";");
-            if (semi == -1)
-                encoding = null;
-            else {
-                String afterSemi = encoding.substring(semi+1);
-                int charsetLocation = afterSemi.indexOf("charset=");
-                if (charsetLocation == -1)
-                    encoding = null;
-                else {
-                    String afterCharset = afterSemi.substring(charsetLocation+8);
-                    encoding = afterCharset.trim();
-                }
-            }
-        }
 
         // I'm nuking
         //          System.getProperty("jsp.class.path", ".") 
@@ -172,21 +164,14 @@ public abstract class Compiler {
         String sep = System.getProperty("path.separator");
         String[] argv = new String[] 
         {
+            "-encoding",
+            javaEncoding,
             "-classpath",
             System.getProperty("java.class.path")+ sep + classpath 
             + sep + ctxt.getOutputDir(),
             "-d", ctxt.getOutputDir(),
             javaFileName
         };
-
-        if (encoding != null && !encoding.equals("")) {
-            String[] args = new String[argv.length+2];
-            args[0] = "-encoding";
-            args[1] = encoding;
-            for(int i = 0; i < argv.length; i++)
-                args[i+2] = argv[i];
-            argv = args;
-        }
 
         StringBuffer b = new StringBuffer();
         for(int i = 0; i < argv.length; i++) {

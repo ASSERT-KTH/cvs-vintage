@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.2 1999/12/17 05:14:03 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/17 05:14:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.3 2000/01/08 21:31:41 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/08 21:31:41 $
  *
  * ====================================================================
  *
@@ -111,7 +111,7 @@ public class HttpRequestAdapter extends RequestAdapterImpl {
 	byte[] buf = new byte[Constants.RequestBufferSize];
 	int count = in.readLine(buf, 0, buf.length);
 	if (count >= 0) {
-	    line=new String(buf, 0, count);
+            line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
 	}
 
 	processRequestLine(response,line);

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseAdapterImpl.java,v 1.1 1999/11/01 20:09:22 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/01 20:09:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseAdapterImpl.java,v 1.2 2000/01/08 21:31:39 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/08 21:31:39 $
  *
  * ====================================================================
  *
@@ -135,7 +135,9 @@ public class ResponseAdapterImpl implements ResponseAdapter {
      *  Headers and status will be written before this method is exceuted.
      */
     public void doWrite( byte buffer[], int pos, int count) throws IOException {
-	body.append(new String(buffer, pos, count) );
+        // XXX fix if charset is other than default.
+        body.append(new String(buffer, pos, count, 
+                    Constants.CharacterEncoding.Default) );
     }
 
     public void recycle() {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.2 1999/10/29 23:40:44 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/29 23:40:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.3 2000/01/08 21:31:39 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/08 21:31:39 $
  *
  * ====================================================================
  * 
@@ -164,7 +164,7 @@ public class BufferedServletInputStream extends ServletInputStream {
 	byte[] buf = new byte[1024];
 	int count = readLine(buf, 0, buf.length);
 	if (count >= 0) {
-	    return new String(buf, 0, count);
+	    return new String(buf, 0, count, Constants.CharacterEncoding.Default);
 	} else {
 	    return ""; 
 	}

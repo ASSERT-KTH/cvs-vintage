@@ -247,12 +247,13 @@ public class HttpUtils {
 	    return nullHashtable;
 	}
 
-	// XXX we shouldn't assume that the only kind of POST body
-	// is FORM data encoded using ASCII or ISO Latin/1 ... or
-	// that the body should always be treated as FORM data.
-	//
-
-	postedBody = new String(postedBytes, 0, len);
+        try {
+            postedBody = new String(postedBytes, 0, len, "8859_1");
+        } catch (java.io.UnsupportedEncodingException e) {
+            // XXX function should accept an encoding parameter & throw this
+            // exception.  Otherwise throw something expected.
+            throw new IllegalArgumentException(e.getMessage());
+        }
 	
 	return parseQueryString(postedBody); 
     }

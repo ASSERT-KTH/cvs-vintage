@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/Constants.java,v 1.3 1999/12/14 22:32:16 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/14 22:32:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/Constants.java,v 1.4 2000/01/08 21:31:39 rubys Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/08 21:31:39 $
  *
  * ====================================================================
  *
@@ -106,4 +106,8 @@ public class Constants {
         public static final String Name = "server.properties";
         public static final String ServerHeader = "server.header";
     }
+
+    public static class CharacterEncoding {
+        public static final String Default = "8859_1";
+     }
 }

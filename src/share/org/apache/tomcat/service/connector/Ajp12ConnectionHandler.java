@@ -318,6 +318,9 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
 }
 
 class Ajpv12InputStream extends BufferedInputStream {
+
+    // UTF8 is a strict superset of ASCII.
+    final static String CHARSET = "UTF8";
     
     public Ajpv12InputStream(InputStream in) {
         super(in);
@@ -359,7 +362,7 @@ class Ajpv12InputStream extends BufferedInputStream {
             }
             p = p+r;
         }
-        return new String(b);
+        return new String(b, CHARSET);
     }
 }
 

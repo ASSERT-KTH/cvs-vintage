@@ -131,10 +131,16 @@ public class Post extends TestableBase {
 
         try {
             s = SocketHelper.getSocket();
-            pw = new PrintWriter(new OutputStreamWriter(
-                                   s.getOutputStream()));
-            br = new BufferedReader(new InputStreamReader(
-                                      s.getInputStream()));
+            pw = new PrintWriter(
+                new OutputStreamWriter(
+                    s.getOutputStream(),
+                    "8859_1"
+                    ));
+            br = new BufferedReader(
+                new InputStreamReader(
+                    s.getInputStream(),
+                    "8859_1"
+                    ));
         } catch (UnknownHostException uhe) {
             uhe.printStackTrace();
         } catch (UnsupportedEncodingException uee) {

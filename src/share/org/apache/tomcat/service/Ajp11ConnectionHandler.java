@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.9 1999/11/01 22:24:14 costin Exp $
- * $Revision: 1.9 $
- * $Date: 1999/11/01 22:24:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.10 2000/01/08 21:31:40 rubys Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/01/08 21:31:40 $
  *
  * ====================================================================
  *
@@ -216,6 +216,9 @@ class AJPRequestAdapter extends RequestAdapterImpl {
 class Ajp11 {
     public static final int CH_REQUEST_DATA=1;
 
+    // UTF8 is a strict superset of ASCII.
+    final static String CHARSET = "UTF8";
+
     public static void readAJPData(InputStream in, Hashtable env_vars, MimeHeaders headers ) throws IOException {
 	byte id = 0;
         int index = 0;
@@ -252,11 +255,11 @@ class Ajp11 {
                 // Read len bytes from the input stream
 		int len1=in.read(line, 0, len);
                 if ( len1 != len) {
-		    System.out.println( "REQUEST: " + new String(line, 0, len) );
+		    System.out.println( "REQUEST: " + new String(line, 0, len, CHARSET) );
                     throw new IOException("Malformed AJP request: error reading line data " + len1 + " " + len);
                 }
                     
-		//log(CH_REQUEST_DATA, "Read: " + new String(line, 0, len));
+		//log(CH_REQUEST_DATA, "Read: " + new String(line, 0, len, CHARSET));
 
                 // Get the identifier from the first character
                 id = line[0];
@@ -264,9 +267,9 @@ class Ajp11 {
                 // All id's take one or two pieces of data separated by a tab (09).
                 for (index = 1; (index < len) && (line[index] != 9); index++);
                 
-                token1 = new String(line, 1, index - 1);
+                token1 = new String(line, 1, index - 1, CHARSET);
                 if (index != len) {
-                    token2 = new String(line, index + 1, len - index - 1);
+                    token2 = new String(line, index + 1, len - index - 1, CHARSET);
                 } else {
                     token2 = "";
                 }

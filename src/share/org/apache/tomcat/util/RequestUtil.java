@@ -146,8 +146,7 @@ public class RequestUtil {
 	// will probably try to read into the next request... bad!
         String encoding = request.getCharacterEncoding();
         if (encoding == null) {
-            // Set a default of Latin-1 even for non-Latin-1 systems
-            encoding = "ISO-8859-1";
+            encoding = Constants.CharacterEncoding.Default;
         }
 	InputStreamReader r =
             new InputStreamReader(request.getInputStream(), encoding);
@@ -333,6 +332,7 @@ public class RequestUtil {
 	
 
     // Basically return everything after ";charset="
+    // If no charset specified, use the HTTP default (ASCII) character set.
     public static String getCharsetFromContentType(String type) {
         if (type == null) {
             return null;
