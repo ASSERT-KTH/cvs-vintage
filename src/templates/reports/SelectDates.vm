@@ -1,4 +1,4 @@
-<h3>$l10n.format("SelectDatesHeader", $axisIndex)</h3>	 	  
+<h3>$l10n.format("SelectDatesHeader", $axisIndex)</h3>
 		
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -29,7 +29,7 @@
  #end
 #end
 
-  $calendar.setTime($scarabG.addApproxOneHour($scarabG.Now))
+
   #set ($selectedMonth = $calendar.get($scarabG.CALENDAR_MONTH_FIELD) + 1)
   #indexedRows($finalCount)
     <td>&nbsp;</td>
