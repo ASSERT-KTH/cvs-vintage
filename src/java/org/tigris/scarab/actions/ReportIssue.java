@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.87 2002/01/12 00:05:41 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.88 2002/01/14 20:44:15 kminshull Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -371,6 +371,7 @@ public class ReportIssue extends RequireLoginFirstAction
                             .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
                         
                         attachment.setData(null);
+                        attachment.setCreatedBy(user.getUserId());
                         attachment.setAttachmentType(AttachmentType
                                                          .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
                         attachment.setIssue(issue);
