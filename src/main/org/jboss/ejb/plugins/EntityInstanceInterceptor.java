@@ -45,7 +45,7 @@ import org.jboss.util.Sync;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.29 $
+*   @version $Revision: 1.30 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -293,7 +293,11 @@ extends AbstractInterceptor
 			ctx.setTransaction(null);
 		    }
 		    
-		    if (exceptionThrown)
+		    // If an exception has been thrown, DO NOT remove the ctx
+		    // if the ctx has been registered in an InstanceSynchronization.
+		    // InstanceSynchronization will remove the key for us
+		    if (exceptionThrown && 
+			(tx == null || (mi.getTransaction() != null && !((EntityEnterpriseContext)ctx).isInvoked()))) 
 		    {
 			// Discard instance
 			// EJB 1.1 spec 12.3.1
