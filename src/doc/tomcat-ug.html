@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.20 2001/10/21 16:29:00 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.21 2001/11/07 13:46:02 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -879,34 +879,59 @@ Tomcat 3.3 looks like this:</p>
 
 <p>In this classloader hierarchy, classloaders can access classes in
 classloaders beneath them. They can not access classes in classloaders to the
-side or above! With this in mind, a brief inspection should reveal that in
-Tomcat 3.3, web applications, without some intervention, would not have access
-to an XML parser by default. The <code>crimson.jar</code> and
+side or above! To understand why this is important, consider whether web
+applications would have access to an XML parser in this classloader hierarchy.
+A brief inspection should reveal that in Tomcat 3.3, web applications would
+not normally have access to an XML parser. The <code>crimson.jar</code> and
 <code>xalan.jar</code> are tucked away in the <b>Server Classloader</b> where
-they are accessible only within that classloader. However, &quot;intervention&quot;
-is provided by default. The default configuration for the
-<a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a> is to
-provide an XML parser to web applications that don't already contain one.</p>
+they are accessible only within that classloader.  The same is true for the
+other jars in <code>Server Classloader</code> are not visible to web applications
+as well.</p>
 
-<p>Also note that if you have a jar containing classes that depend on
+<p>The primary benefit of this new classloader hierarchy is that you can put
+your own XML parser in your web application without running into conflicts with
+the XML parser being used by the server.  However, since having an XML parser
+by default has been the norm in the past, Tomcat 3.3 tries to maintain this
+behavior should your web application not already contain an XML parser.  The
+default configuration for the
+<a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a> in
+<code>server.xml</code> is to provide an XML parser to web applications
+that don't already contain one.  It accomplishes this by adding entries to
+the <code>Webapp Classloader</code> as if you had included the
+<code>crimson.jar</code> and <code>xalan.jar</code> in your web application's
+<code>WEB-INF/lib</code>.</p>
+
+<p>Along with this classloader hierarchy comes the need to decide which
+classloader is the appropriate one in which to add classes or jars.
+Note that if you have a jar containing classes that depend on
 <code>servlet.jar</code>, putting that jar on the CLASSPATH wouldn't work.
 <code>servlet.jar</code> isn't accessible to the <b>Application Classloader</b>.
-This is why in Tomcat 3.3, your CLASSPATH environment variable is ignored.  You
-must place such a jar in the <b>Common Classloader</b> or above.</p>
+This is why in Tomcat 3.3, your CLASSPATH environment variable is ignored.  The
+appropriate classloader would be the <b>Common Classloader</b> or above.</p>
 
 <p>Classes that are used in one particular web application should be placed
 in that web application's <code>WEB-INF/classes</code> or in a jar in the
 <code>WEB-INF/lib</code> as defined by the Servlet 2.2 specification.  If you
-want to give the classes wider scope, place the classes in a jar if they aren't
-already.  Then place the jar in the directory that corresponds to the
-classloader with the scope you desire.  In the <b>Apps Classloader</b>, the
-classes are shared among all the web applications.  In the <b>Common Classloader</b>,
-the classes are shared among all the web applications and the web server.</p>
+want to give the classes wider scope by putting them in the
+<code>Common Classloader</code> or <code>Apps Classloader</code>, or want them
+to be part of the <code>Server Classloader</code>, use one of the following two
+methods to have those classes included in that classloader:
 
-<p>A second method is available for adding classes to the <b>Common Classloader</b>
-and <b>Apps Classloader</b>.  Entries found in an <code>org.apache.tomcat.common.classpath</code>
-System property are added to the <b>Common Classloader</b> and entries found in
-an <code>org.apache.tomcat.apps.classpath</code> are added to the <b>Apps CLassloader</b>.</p>
+<ol>
+  <li>If the classes are in a jar file, place the jar file in the directory
+      that corresponds to the chosen classloader.  If the classes exist as
+      class files, create a <code>classes</code> under the corresponding
+      directory if it doesn't already exist.  Then add the class files into
+      the appropriate package directory under the <code>classes</code>
+      directory.</li>
+  <li>If the chosen classloader is the <code>Common Classloader</code> or
+      <code>Apps classloader</code> you include a directory or jar these
+      classloaders by listing them a System property. For the
+      <code>Common Classloader</code>, include the directory or jar file in a
+      System property named <code>org.apache.tomcat.common.classpath</code>.
+      For the <code>Apps classloader</code>, use a System property named
+      <code>org.apache.tomcat.apps.classpath</code>.</li>
+</ol>
 
 <p><b>Note:</b> In an instance of Tomcat 3.3 which is using
 <a href="serverxml.html#ReloadInterceptor">ReloadInterceptor</a> (the default),
