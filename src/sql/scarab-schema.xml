@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.22 2001/06/15 23:14:40 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.23 2001/06/29 02:56:29 jon Exp $ -->
 
 <app-data>
 <database>
@@ -863,7 +863,7 @@
 -->
 <table name="SCARAB_USER" javaName="ScarabUser" alias="TurbineUser" 
       baseClass="TurbineTorqueUser"
-      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer">
+      basePeer="org.apache.turbine.om.security.TurbineUserPeer">
     <!--
         Unique identifier.
     -->
