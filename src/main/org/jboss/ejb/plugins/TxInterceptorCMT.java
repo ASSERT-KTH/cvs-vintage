@@ -27,7 +27,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.23 $
+ *  @version $Revision: 1.24 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -89,8 +89,17 @@ extends AbstractTxInterceptor
          default:
             name = "TX_UNKNOWN";
       }
+
+      String methodName;
+      if(m != null) {
+         methodName = m.getName();
+      } else
+      {
+         methodName ="<no method>";
+      }
+ 
       if (log.isTraceEnabled())
-         log.trace(name+" for "+m.getName());
+         log.trace(name+" for " + methodName);
    }
    
     /*
@@ -298,6 +307,11 @@ extends AbstractTxInterceptor
    // This should be cached, since this method is called very often
    protected byte getTransactionMethod(Method m, boolean remoteInvocation)
    {
+      if(m == null)
+      {
+         return MetaData.TX_SUPPORTS;
+      }
+
       Byte b = (Byte)methodTx.get(m);
       if (b != null) return b.byteValue();
       
