@@ -49,9 +49,9 @@ $link.setPage("reports,Info.vm").setLabel("$report.Name").addPathInfo("report_id
  #else
   $report.Name
  #end
-</td>
+ </td>
 
-<td>$!report.Description</td>
+<td>#if ($!report.Description != '') $report.Description #else &nbsp; #end</td>
 
 <td>$link.setPage("reports,Report_1.vm").setLabel("$report.Scope.Name").addPathInfo("report_id", "$report.ReportId")</td>
 
