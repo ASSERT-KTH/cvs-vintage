@@ -86,7 +86,7 @@ import java.util.*;
  * @author costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public final class PoolTcpConnector implements ServerConnector {
+public final class PoolTcpConnector implements ServerConnector, LogAware {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
@@ -117,8 +117,6 @@ public final class PoolTcpConnector implements ServerConnector {
     
     Hashtable attributes = new Hashtable();
     Object cm;
-
-    private LogHelper loghelper = new LogHelper("tc_log", "PoolTcpConnector");
 
     private String vhost;
     private InetAddress address;
@@ -185,6 +183,7 @@ public final class PoolTcpConnector implements ServerConnector {
 	}
 	ep.setConnectionHandler( con );
 	ep.startEndpoint();
+
 	String classN=con.getClass().getName();
 	int lidot=classN.lastIndexOf( "." );
 	if( lidot >0 ) classN=classN.substring( lidot + 1 );
@@ -207,7 +206,10 @@ public final class PoolTcpConnector implements ServerConnector {
 
     // -------------------- Bean-setters for TcpConnector --------------------
     public void setServer( Object ctx ) {
-	    this.cm=ctx;
+	this.cm=ctx;
+	if (cm instanceof LogAware) {
+	    loghelper.setProxy(((LogAware)cm).getLoggerHelper());
+	}
     }
 
     public void setDebug( int i ) {
@@ -306,6 +308,9 @@ public final class PoolTcpConnector implements ServerConnector {
 	setAttribute( prop, value );
     }
 
+    // ----- Logging -----
+    private Logger.Helper loghelper = new Logger.Helper("tc_log", "PoolTcpConnector");
+        
     /**
      * Set a logger explicitly. Note that setLogger(null) will not
      * necessarily redirect log output to System.out; if there is a
@@ -315,6 +320,10 @@ public final class PoolTcpConnector implements ServerConnector {
 	loghelper.setLogger(logger);
     }
 
+    public Logger.Helper getLoggerHelper() {
+	return loghelper;
+    }
+    
     // -------------------- Implementation methods --------------------
 
 
