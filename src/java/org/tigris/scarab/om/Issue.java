@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.269 2003/02/07 20:36:57 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.270 2003/02/12 21:39:14 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1371,8 +1371,9 @@ public class Issue
                 crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                          ActivityPeer.TRANSACTION_ID);
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(ActivitySetPeer.TYPE_ID, 
-                         ActivitySetTypePeer.EDIT_ISSUE__PK);
+                NumberKey[] typeIds = {ActivitySetTypePeer.EDIT_ISSUE__PK, 
+                                       ActivitySetTypePeer.MOVE_ISSUE__PK};
+                crit.addIn(ActivitySetPeer.TYPE_ID, typeIds);
                 // there could be multiple attributes modified during the 
                 // creation which will lead to duplicates
                 crit.setDistinct();
