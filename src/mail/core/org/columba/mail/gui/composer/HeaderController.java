@@ -156,7 +156,10 @@ public class HeaderController implements FocusOwner {
 
 		}
 
-		Iterator it = ListParser.createListFromString(str).iterator();
+		List l = ListParser.createListFromString(str);
+		if ( l == null) return list;
+		
+		Iterator it = l.iterator();
 
 		while (it.hasNext()) {
 			String s = (String) it.next();

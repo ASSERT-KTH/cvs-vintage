@@ -43,6 +43,9 @@ public class ListParser {
 	 * @return list
 	 */
 	public static List createListFromString(String str) {
+		if ( str == null ) return null;
+		if ( str.length() == 0) return null;
+		
 		List result = new Vector();
 
 		int pos = 0;
@@ -91,6 +94,8 @@ public class ListParser {
 	 * @return String representation
 	 */
 	public static String createStringFromList(List list) {
+		if ( list == null ) return "";
+		
 		StringBuffer output = new StringBuffer();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {

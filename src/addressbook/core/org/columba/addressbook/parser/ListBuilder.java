@@ -49,6 +49,8 @@ public class ListBuilder {
 	 * @return list containing only contacts
 	 */
 	public static List createFlatList(List list) {
+		if ( list == null ) return null;
+		
 		List result = new Vector();
 	
 		for (Iterator it = list.iterator(); it.hasNext();) {

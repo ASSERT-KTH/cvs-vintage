@@ -72,20 +72,20 @@ public class MessageComposer {
 		SendableHeader header = new SendableHeader();
 
 		// RFC822 - Header
-		if (model.getToList().size() > 0) {
-			header.set("To", ListParser.createStringFromList(ListBuilder
-					.createFlatList(model.getToList())));
+		if (model.getToList() != null) {
+			String s = ListParser.createStringFromList(ListBuilder
+					.createFlatList(model.getToList()));
+			if ( s.length() != 0 )
+			header.set("To",s );
 		}
 
-		if (model.getCcList().size() > 0) {
-			header.set("Cc", ListParser.createStringFromList(ListBuilder
-					.createFlatList(model.getCcList())));
+		if (model.getCcList() != null) {
+			String s = ListParser.createStringFromList(ListBuilder
+					.createFlatList(model.getCcList()));
+			if ( s.length() != 0 )
+			header.set("Cc",s );
 		}
 
-		if (model.getBccList().size() > 0) {
-			header.set("Bcc", ListParser.createStringFromList(ListBuilder
-					.createFlatList(model.getBccList())));
-		}
 
 		header.set("columba.subject", model.getSubject());
 
@@ -534,7 +534,8 @@ public class MessageComposer {
 
 		headerItemList = model.getToList();
 
-		if (headerItemList.size() > 0) {
+	
+		if ( ( headerItemList != null ) && (headerItemList.size() > 0) ){
 			Address adr = null;
 			try {
 				adr = Address.parse((String) headerItemList.get(0));
@@ -547,7 +548,7 @@ public class MessageComposer {
 
 		headerItemList = model.getCcList();
 
-		if (headerItemList.size() > 0) {
+		if ( ( headerItemList != null ) && (headerItemList.size() > 0) ) {
 			Address adr = null;
 			try {
 				adr = Address.parse((String) headerItemList.get(0));

@@ -372,14 +372,19 @@ public class ComposerModel {
 	public List getRCPTVector() {
 		List output = new Vector();
 
-		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
-				.createFlatList(getToList())));
+		List l = AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getToList()));
+		if ( l != null)
+		output.addAll(l);
 
-		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
-				.createFlatList(getCcList())));
-
-		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
-				.createFlatList(getBccList())));
+		l = AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getCcList()));
+		if ( l != null)
+		output.addAll(l);
+		l = AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getBccList()));
+		if ( l != null)
+		output.addAll(l);
 
 		return output;
 	}

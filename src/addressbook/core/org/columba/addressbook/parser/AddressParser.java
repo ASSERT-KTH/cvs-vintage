@@ -55,6 +55,8 @@ public class AddressParser {
 	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
 	 */
 	public static List normalizeRCPTVector(List in) {
+		if ( in == null ) return null;
+		
 		int v_size = in.size();
 		String mailaddress = "";
 		String new_address = "";
