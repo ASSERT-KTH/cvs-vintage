@@ -8,6 +8,7 @@ package org.jboss.metadata;
 
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import org.w3c.dom.Element;
@@ -20,7 +21,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -38,7 +39,7 @@ public abstract class BeanMetaData extends MetaData {
 	private ArrayList ejbReferences = new ArrayList();
 	private ArrayList environmentEntries = new ArrayList();
     private ArrayList securityRoleReferences = new ArrayList();
-	private ArrayList resourceReferences = new ArrayList();
+	private HashMap resourceReferences = new HashMap();
 	
 	private ArrayList permissionMethods = new ArrayList();
 	private ArrayList transactionMethods = new ArrayList();
@@ -75,7 +76,7 @@ public abstract class BeanMetaData extends MetaData {
 	
 	public Iterator getSecurityRoleReferences() { return securityRoleReferences.iterator(); }
 	
-	public Iterator getResourceReferences() { return resourceReferences.iterator(); }
+	public Iterator getResourceReferences() { return resourceReferences.values().iterator(); }
 	
 	public String getJndiName() { 
 		// jndiName may be set in jboss.xml
@@ -192,7 +193,7 @@ public abstract class BeanMetaData extends MetaData {
 			ResourceRefMetaData resourceRefMetaData = new ResourceRefMetaData();
 			resourceRefMetaData.importEjbJarXml(resourceRef);
 			
-			resourceReferences.add(resourceRefMetaData);
+			resourceReferences.put(resourceRefMetaData.getRefName(), resourceRefMetaData);
 		}
 	}
 
@@ -205,10 +206,15 @@ public abstract class BeanMetaData extends MetaData {
 		// set the configuration (optional)
 		configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
 		
-		// TODO set the resource references (optional)
+		// update the resource references (optional)
 		Iterator iterator = getChildrenByTagName(element, "resource-ref");
-		
-	
+		while (iterator.hasNext()) {
+			Element resourceRef = (Element)iterator.next();
+			String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
+			String resourceName = getElementContent(getUniqueChild(resourceRef, "resource-name"));
+			ResourceRefMetaData resourceRefMetaData = (ResourceRefMetaData)resourceReferences.get(resRefName);
+		    resourceRefMetaData.setResourceName(resourceName);
+		}	
 	}
 	
 	

@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ResourceRefMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -46,6 +46,9 @@ public class ResourceRefMetaData extends MetaData {
 		return name;
 	}
 	
+	public void setResourceName(String resName) {
+		name = resName;
+	}
 	
 	public String getType() { return type; }
 
