@@ -53,6 +53,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.tigris.scarab.util.Log;
 
 public class PorterStemAnalyzer extends Analyzer
 {
@@ -80,8 +81,11 @@ public class PorterStemAnalyzer extends Analyzer
                         Token token = delegate.next();
                         if (token != null) 
                         {
-                            System.out.println("Token (" + token.type() + 
-                                               "): " + token.termText());   
+                            if (Log.get().isDebugEnabled()) 
+                            {
+                                Log.get().debug("Token (" + token.type() + 
+                                                "): " + token.termText());
+                            }
                         }        
                         return token;
                     }

@@ -84,7 +84,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.21 2002/12/10 15:50:40 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.22 2003/01/24 19:10:15 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -362,7 +362,7 @@ public class LuceneAdapter
             {
                 String mesg = "An error in Lucene prevented removing " + 
                     "stale data for AttributeValue with ID=" + valId;
-                System.out.println(mesg);
+                Log.get().debug(mesg);
                 throw new ScarabException(mesg, npe);
             }
         }
@@ -478,7 +478,7 @@ public class LuceneAdapter
             {
                 String mesg = "An error in Lucene prevented removing " + 
                     "stale data for Attachment with ID=" + attId;
-                System.out.println(mesg);
+                Log.get().debug(mesg);
                 throw new ScarabException(mesg, npe);
             }
         }
