@@ -56,11 +56,13 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.modules.Module;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
+import org.apache.torque.om.NumberKey;
 
 // Scarab
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
 
 /**
@@ -70,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.31 2002/01/20 18:31:08 jon Exp $
+    @version $Id: ScarabLink.java,v 1.32 2002/01/21 03:57:35 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -80,6 +82,7 @@ public class ScarabLink extends TemplateLink
     private String attributeText;
     private String alternateText;
     private String template;
+    private String currentModuleId;
 
     /**
      * Constructor.
@@ -108,6 +111,17 @@ public class ScarabLink extends TemplateLink
         setAbsolute(false);
     }
 
+    public void refresh()
+    {
+        super.refresh();
+        setAbsolute(false);
+        label = null;
+        template = null;
+        attributeText = null;
+        alternateText = null;
+        currentModuleId = null;
+    }
+
     /**
      * Sets the template variable used by the Template Service.
      *
@@ -117,6 +131,20 @@ public class ScarabLink extends TemplateLink
     public TemplateLink setPage(String t)
     {
         String moduleid = data.getParameters().getString(ScarabConstants.CURRENT_MODULE);
+        return setPage(t, moduleid);
+    }
+     
+    /**
+     * Sets the template variable used by the Template Service. The
+     * module id of the new selected module is given.
+     *
+     * @param t A String with the template name.
+     * @param moduleid The id of the new selected module.
+     * @return A TemplateLink.
+     */
+    protected TemplateLink setPage(String t, String moduleid)
+    {
+        currentModuleId = moduleid;
         if (moduleid != null && moduleid.length() > 0)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
@@ -258,28 +286,19 @@ public class ScarabLink extends TemplateLink
     {
         String tostring = null;
         String alternateText = this.alternateText;
+        // will reset link if false
         if(isAllowed())
         {
             tostring = getLink();
         }
         else
         {
-            // reset link
-            super.toString();
             tostring = (alternateText == null) ? "" : alternateText;
         }
-        resetProperties();
+        refresh();
         return tostring;
     }
 
-    private void resetProperties()
-    {
-        setAbsolute(false);
-        label = null;
-        template = null;
-        attributeText = null;
-        alternateText = null;
-    }
 
     /**
      * Check if the user has the permission to see the link. If the user
@@ -296,7 +315,7 @@ public class ScarabLink extends TemplateLink
         {
             // reset link
             super.toString();
-            resetProperties();
+            refresh();
         }
         
         return allowed;
@@ -309,13 +328,16 @@ public class ScarabLink extends TemplateLink
     public boolean isAllowed(String t)
     {
         boolean allowed = false;
+        try
+        {
         String perm = ScarabSecurity.getScreenPermission(t);
         if (perm != null)
         {
             ScarabRequestTool scarabR = 
                 (ScarabRequestTool)Module.getTemplateContext(data)
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-            ModuleEntity currentModule = scarabR.getCurrentModule();
+            ModuleEntity currentModule = ModuleManager
+                .getInstance(new NumberKey(currentModuleId));
             ScarabUser user = (ScarabUser)data.getUser();
             if (user.hasLoggedIn() 
                 && user.hasPermission(perm, currentModule))
@@ -326,6 +348,13 @@ public class ScarabLink extends TemplateLink
         else 
         {
             allowed = true;
+        }
+        }
+        catch (Exception e)
+        {
+            allowed = false;
+            org.apache.turbine.Log.info("Could not check permission due to: "
+                                        ,e);
         }
         return allowed;
     }
@@ -355,7 +384,8 @@ public class ScarabLink extends TemplateLink
         }
         return s;
     }
-        /**
+
+    /**
      * Give subclasses access to the RunData, so they do not have to 
      * reimplement the pooling code, just to get at it.
      */
@@ -386,10 +416,7 @@ public class ScarabLink extends TemplateLink
     public void dispose()
     {
         data = null;
-        label = null;
-        attributeText = null;
-        alternateText = null;
-        template = null;    
+        refresh();
         disposed = true;
     }
 

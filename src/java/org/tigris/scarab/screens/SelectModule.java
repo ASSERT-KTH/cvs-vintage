@@ -1,4 +1,4 @@
-package org.tigris.scarab.actions;
+package org.tigris.scarab.screens;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -46,60 +46,49 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.TemplateLink;
 
 // Scarab Stuff
-import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.ScarabLink;
 
 /**
- *  This class will allow you to set the selected Module for a user.
- *       
- *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectModule.java,v 1.6 2002/01/20 18:31:08 jon Exp $
+ * This class adds a special link tool that should only be used
+ * in SelectModule.vm
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: SelectModule.java,v 1.1 2002/01/21 03:57:35 jmcnally Exp $
  */
-public class SelectModule extends RequireLoginFirstAction
+public class SelectModule extends Default
 {
     /**
-        This manages clicking the Refresh button
-    */
-    public void doSelect( RunData data, TemplateContext context ) throws Exception
+     * builds up the context for display of variables on the page.
+     */
+    public void doBuildTemplate( RunData data, TemplateContext context )
+        throws Exception 
     {
-        // set the next module
-        String newModule = 
-            data.getParameters().getString(ScarabConstants.NEW_MODULE);
-        if (newModule == null)
-        {
-            setTarget(data, "SelectModule.vm");
-            return;
-        }
-
-        // set the current module to the new module
-        data.getParameters().setString(ScarabConstants.CURRENT_MODULE, 
-            newModule);
-        // the next request to get the current module will
-        // cause it to refresh with the newly selected module
-        ScarabRequestTool srt = getScarabRequestTool(context);
-        srt.setCurrentModule(null);
-
-        // set the next template
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, 
-            Turbine.getConfiguration()
-                       .getString("template.homepage", "SelectModule.vm") );
-
-        setTarget(data, nextTemplate);
+        super.doBuildTemplate(data, context);
+        context.put("modulelink", new ModuleSwitchingLink(data));
     }
 
-    /**
-        calls doSelect().
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public static class ModuleSwitchingLink extends ScarabLink
     {
-        doSelect(data, context);
+        private ModuleSwitchingLink(RunData data)
+        {
+            super();
+            init((Object)data);
+        }
+        
+        /**
+         * override super method and make it public
+         */
+        public TemplateLink setPage(String t, String moduleid)
+        {
+            return super.setPage(t, moduleid);
+        }
     }
 }
+
