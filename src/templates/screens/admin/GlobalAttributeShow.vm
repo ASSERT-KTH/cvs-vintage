@@ -54,7 +54,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 Global attributes
 </th>
 
-<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">User attributes</a></td>
+<td><a href="$link.setPage("admin,GlobalUserAttributes.vm")">Global user attributes</a></td>
 
 </tr>
 </table>
