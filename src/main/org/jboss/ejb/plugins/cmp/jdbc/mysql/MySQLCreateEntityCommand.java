@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class MySQLCreateEntityCommand
    extends JDBCCreateEntityCommand
@@ -168,13 +168,11 @@ public class MySQLCreateEntityCommand
 
          // execute statement
          rowsAffected = ps.executeUpdate();
-/* FIXME: this is temporarily commented!!!
-          it won't work w/o it. but HEAD isn't compiled.
          if( entity.isKeyDbGenerated() ) {
 
             // cast to the wrapped statement
-            org.jboss.resource.adapter.jdbc.WrappedStatement ws = 
-               (org.jboss.resource.adapter.jdbc.WrappedStatement) ps;
+            org.jboss.ejb.plugins.cmp.jdbc.WrappedStatement ws =
+               (org.jboss.ejb.plugins.cmp.jdbc.WrappedStatement) ps;
             // fetch underlying statement and cast it to MySQL native
             com.mysql.jdbc.PreparedStatement mySqlStmt =
                (com.mysql.jdbc.PreparedStatement) ws.getUnderlyingStatement();
@@ -197,7 +195,6 @@ public class MySQLCreateEntityCommand
                break;
             }
          }
-*/
       } catch(Exception e) {
          log.error("Could not create entity", e);
          throw new CreateException("Could not create entity:" + e);
