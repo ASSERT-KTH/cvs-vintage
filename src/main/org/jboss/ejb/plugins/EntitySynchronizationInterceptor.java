@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -309,7 +309,6 @@ public class EntitySynchronizationInterceptor
       {
          try
          {
-				System.out.println("Loading");
             // If not tell the persistence manager to load the state
             container.getPersistenceManager().loadEntity(ctx);
          }

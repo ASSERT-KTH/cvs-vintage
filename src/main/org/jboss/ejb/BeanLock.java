@@ -32,7 +32,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: billb</b>
@@ -172,7 +172,7 @@ public class BeanLock
 						
 						//Wait a thread coming out will wake you up
 						//lock.wait(txTimeout);
-                  lock.wait(txTimeout);
+                  lock.wait(5000);
               
 				   }
                if( trace ) log.trace("End wait on TxLock="+tx);
@@ -214,7 +214,7 @@ public class BeanLock
                      releaseSync();
       					if (numMethodLocks <= 0) lock.notify();
                      //lock.wait(txTimeout);
-                     lock.wait(txTimeout);
+                     lock.wait(5000);
 						}
                }
     
@@ -274,12 +274,9 @@ public class BeanLock
    { 
       numMethodLocks--;
       
-      if (numMethodLocks == 0) 
-      {
-         
-         //Wake up a thread to do work on the instance within the current transaction
-         synchronized(lock) {lock.notify();}
-      }
+		//Wake up a thread to do work on the instance within the current transaction
+      synchronized(lock) {lock.notify();}
+      
    }
    
    public void addRef() { refs++;}
