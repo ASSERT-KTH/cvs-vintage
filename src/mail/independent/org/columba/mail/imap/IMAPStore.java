@@ -310,6 +310,7 @@ public class IMAPStore {
 			} catch (CommandFailedException ex) {
 			} catch (DisconnectedException ex) {
 				state = STATE_NONAUTHENTICATE;
+				selectedFolderPath=null;
 				select(path);
 
 			}

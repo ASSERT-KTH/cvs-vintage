@@ -262,14 +262,13 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		// folder in which the update occurs
 		FolderTreeNode folder = event.getSrcFolder();
-		
+
 		// get current selection
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) mailFrameController
 				.getSelectionManager()
 				.getSelection("mail.table");
 		Folder srcFolder = (Folder) r[0].getFolder();
-
 
 		// make tree visible
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
@@ -279,13 +278,12 @@ public class TableController implements FocusOwner, ListSelectionListener {
 					.getView()
 					.makeVisible(srcFolder.getSelectionTreePath());
 		}
-		
-		
+
 		// only update table if, this folder is the same
 		// as the currently selected
 		if (!folder.equals(srcFolder))
 			return;
-			
+
 		//System.out.println("headertableviewer->folderChanged");
 
 		switch (event.getEventType()) {
@@ -316,8 +314,6 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 					updateManager.modify(event.getUids());
 
-
-
 					break;
 				}
 		}
@@ -335,8 +331,6 @@ public class TableController implements FocusOwner, ListSelectionListener {
 				.folderInfoPanel
 				.setFolder(srcFolder);
 		}
-
-		
 
 	}
 
@@ -394,9 +388,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 			Object uid = null;
 			if (ascending == true)
-				uid = view.selectFirstRow();
-			else
 				uid = view.selectLastRow();
+			else
+				uid = view.selectFirstRow();
 
 			// no messages in this folder
 			if (uid == null)

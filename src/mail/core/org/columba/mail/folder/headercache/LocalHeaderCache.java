@@ -17,6 +17,8 @@ package org.columba.mail.folder.headercache;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -25,6 +27,7 @@ import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.io.CharSequenceSource;
@@ -39,6 +42,8 @@ import org.columba.ristretto.parser.HeaderParser;
  * Window>Preferences>Java>Code Generation.
  */
 public class LocalHeaderCache extends AbstractFolderHeaderCache {
+	
+	private final int WEEK = 1000 * 60 * 60 * 24 * 7; 
 
 	public LocalHeaderCache(CachedFolder folder) {
 		super(folder);
@@ -211,11 +216,16 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 		Object[] uids = ds.getMessageUids();
 
 		headerList = new HeaderList(uids.length);
+		
+		Date today = Calendar.getInstance().getTime();
 
 		// parse all message files to recreate the header cache
 
 		ColumbaHeader header;
 		MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
+		messageFolderInfo.setExists(0);
+		messageFolderInfo.setRecent(0);
+		messageFolderInfo.setUnseen(0);
 
 		folder.setChanged(true);
 
@@ -232,6 +242,10 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 				header = new ColumbaHeader( HeaderParser.parse(new CharSequenceSource(source)) );
 				ColumbaHeader h = CachedHeaderfieldOwner.stripHeaders(header);
+
+				if( isOlderThanOneWeek(today, ((Date)header.getAttributes().get("columba.date"))) ) {
+					header.getFlags().set(Flags.SEEN);
+				}
 
 				int size = source.length() >> 10; // Size in KB
 				h.set("columba.size", new Integer(size));
@@ -284,5 +298,10 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
 		super.saveHeader(p, h);
 	}
+
+	public boolean isOlderThanOneWeek(Date arg0, Date arg1) {
+		return arg0.getTime() - WEEK > arg1.getTime();
+	}
+
 
 }
