@@ -128,7 +128,7 @@ public class ColumbaCmdLineParser
     checkComposer();
     checkSubject();
     checkMailurl();
-    checkAttachement();
+    checkAttachment();
   }
 
   /**
@@ -319,15 +319,15 @@ public class ColumbaCmdLineParser
   /**
    * Checks the option --attachment or -a, if this is true, the internal
    * attachmentValue is set, else the options is set to null. You can access
-   * this option via getAttachementOption.
+   * this option via getAttachmentOption.
    * 
-   * @see ColumbaCmdLineParser#getAttachementOption()
+   * @see ColumbaCmdLineParser#getAttachmentOption()
    * @see CmdLineParser.Option
    */
-  private void checkAttachement ()
+  private void checkAttachment ()
   {
     String attachmentValue = (String) parser.getOptionValue(attachment);
-    setAttachementOption(attachmentValue);
+    setAttachmentOption(attachmentValue);
   }
 
   /**
@@ -490,10 +490,10 @@ public class ColumbaCmdLineParser
    * Gives the value for the attachment Option back. If the option is not set,
    * null will be returned.
    * 
-   * @return the value for the AttachementOption or null, if the option is not
+   * @return the value for the AttachmentOption or null, if the option is not
    *         set.
    */
-  public String getAttachementOption ()
+  public String getAttachmentOption ()
   {
     return attachmentOption;
   }
@@ -553,12 +553,12 @@ public class ColumbaCmdLineParser
   }
 
   /**
-   * Sets the value for the Attachement Option.
+   * Sets the value for the Attachment Option.
    * 
    * @param string
-   *          the value for the Attachement Option.
+   *          the value for the Attachment Option.
    */
-  public void setAttachementOption (String string)
+  public void setAttachmentOption (String string)
   {
     attachmentOption = string;
   }
