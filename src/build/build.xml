@@ -15,8 +15,6 @@
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
   </target>
 
-    <taskdef name="xmlbean" classname="com.dreambean.xmlbeans.ant.XMLBeans"/>
-
     <property name="Name" value="JBoss"/>
     <property name="name" value="jboss"/>
     <property name="version" value="2.3 BETA"/>
@@ -55,6 +53,9 @@
     <property name="build.metadata.classes.dir" value="${build.dir}/metadata/classes"/>
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
     <property name="build.deployer.classes.dir" value="${build.dir}/deployer/classes/"/>
+
+    <taskdef name="xmlbean" classname="com.dreambean.xmlbeans.ant.XMLBeans"
+     classpath="${lib.dir}/xmlbeans.jar" />
 
 
     <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
