@@ -5,6 +5,10 @@
   </classpathentry>
   <classpathentry output="target\test-classes" kind="src" path="src\test">
   </classpathentry>
+  <classpathentry kind="src" path="src/conf/classes">
+  </classpathentry>
+  <classpathentry kind="src" path="src/conf/conf">
+  </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/junit/jars/junit-3.8.1.jar">
   </classpathentry>
   <classpathentry kind="var" rootpath="JRE_SRCROOT" path="JRE_LIB" sourcepath="JRE_SRC">
@@ -21,7 +25,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/commons-codec/jars/commons-codec-1.0-dev.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/commons-configuration/jars/commons-configuration-0.8.1.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/commons-configuration/jars/commons-configuration-20040130.152659.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/commons-digester/jars/commons-digester-1.5.jar">
   </classpathentry>
@@ -53,7 +57,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/dom4j/jars/dom4j-1.3.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/fulcrum/jars/fulcrum-3.0-b2-dev-20031125.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/fulcrum/jars/fulcrum-20040201.163302.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/oro/jars/oro-2.0.7.jar">
   </classpathentry>
@@ -71,10 +75,6 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/javamail/jars/javamail-1.3.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar">
-  </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/postgresql/jars/postgresql-7.3-jdbc2.jar">
-  </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/saaj/jars/saaj-1.1.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/stratum/jars/stratum-1.0-b3.jar">
@@ -85,7 +85,7 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/torque/jars/torque-gen-3.1.jar">
   </classpathentry>
-  <classpathentry kind="var" path="MAVEN_REPO/turbine/jars/turbine-3.0-alpha-1-20031125.jar">
+  <classpathentry kind="var" path="MAVEN_REPO/turbine/jars/turbine-20040202.092500.jar">
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/velocity/jars/velocity-1.4-dev.jar">
   </classpathentry>
@@ -99,6 +99,18 @@
   </classpathentry>
   <classpathentry kind="var" path="MAVEN_REPO/xerces/jars/xmlParserAPIs-2.0.2.jar">
   </classpathentry>
-  <classpathentry kind="output" path="target\classes">
+  <classpathentry kind="var" path="MAVEN_REPO/mm.mysql/jars/mm.mysql-2.0.14-bin.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/postgresql/jars/postgresql-7.4.1-jdbc3.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/hsqldb/jars/hsqldb-1.7.1.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/mssqlserver/jars/msbase.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/mssqlserver/jars/mssqlserver.jar">
+  </classpathentry>
+  <classpathentry kind="var" path="MAVEN_REPO/mssqlserver/jars/msutil.jar">
+  </classpathentry>
+  <classpathentry kind="output" path="src\webapp\WEB-INF\classes">
   </classpathentry>
 </classpath>
