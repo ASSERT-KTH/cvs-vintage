@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.9 2000/02/03 07:11:51 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/02/03 07:11:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.10 2000/03/21 19:19:39 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/03/21 19:19:39 $
  *
  * ====================================================================
  * 
@@ -239,9 +239,13 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 		sendHeaders();
 	        committed = true;
 	    }
-    
+
 	    if (bufferCount > 0) {
 		//	        out.write(buffer, 0, bufferCount);
+		Request req=resA.getRequest();
+		ContextManager cm=req.getContextManager();
+	    
+		cm.doBeforeCommit( req, resA );
 		doWrite( buffer, 0, bufferCount );
 	    }
 	}

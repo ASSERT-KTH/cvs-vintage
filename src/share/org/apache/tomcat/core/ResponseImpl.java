@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.15 2000/02/16 17:13:23 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/02/16 17:13:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.16 2000/03/21 19:19:40 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/03/21 19:19:40 $
  *
  * ====================================================================
  *
@@ -176,6 +176,7 @@ public class ResponseImpl implements Response {
 		writer.close();
 	    }
 	    out.reallyFlush();
+	    request.getContextManager().doAfterBody(request, this);
 	    out.close();
 	} catch (SocketException e) {
 	    if(request!=null) request.getContext().log("Socket Exception" + request.getRequestURI());	    	    

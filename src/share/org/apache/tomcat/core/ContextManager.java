@@ -385,6 +385,7 @@ public class ContextManager {
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
+	if(debug>0) log("<l:contextInterceptor javaClass=\"" + ci.getClass().getName() + "\" />");
 	contextInterceptors.addElement( ci );
     }
 
@@ -601,6 +602,20 @@ public class ContextManager {
     int doBeforeBody( Request req, Response res ) {
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeBody( req, res );
+	}
+	return 0;
+    }
+
+    int doBeforeCommit( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeCommit( req, res );
+	}
+	return 0;
+    }
+
+    int doAfterBody( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).afterBody( req, res );
 	}
 	return 0;
     }

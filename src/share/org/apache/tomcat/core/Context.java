@@ -882,6 +882,12 @@ public class Context {
 	@deprecated
     */
     public ContextInterceptor[] getContextInterceptors() {
+	if( contextInterceptors.size() == 0 ) {
+	    // this context was not set up with individual interceptors.
+	    // XXX no test done for context-specific interceptors, this will be the normal
+	    // case, we need to find out what is the best behavior and config 
+	    return contextM.getContextInterceptors();
+	}
 	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
 	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
 	    for( int i=0; i<cInterceptors.length; i++ ) {
@@ -907,6 +913,12 @@ public class Context {
 	@deprecated
     */
     public RequestInterceptor[] getRequestInterceptors() {
+	if( requestInterceptors.size() == 0 ) {
+	    // this context was not set up with individual interceptors.
+	    // XXX no test done for context-specific interceptors, this will be the normal
+	    // case, we need to find out what is the best behavior and config 
+	    return contextM.getRequestInterceptors();
+	}
 	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
 	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
 	    for( int i=0; i<rInterceptors.length; i++ ) {
