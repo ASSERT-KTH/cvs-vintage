@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.28 2002/05/21 14:53:36 starksm Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.29 2002/06/06 03:31:17 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -218,7 +218,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>instr(?1, ?2, ?3)</function-sql>
+            <function-sql>instr(?2, ?1, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>
@@ -341,7 +341,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>instr(?1, ?2, ?3)</function-sql>
+            <function-sql>instr(?2, ?1, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>
@@ -468,7 +468,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>instr(?1, ?2, ?3)</function-sql>
+            <function-sql>instr(?2, ?1, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>

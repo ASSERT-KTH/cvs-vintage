@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.8 2002/05/24 20:43:22 starksm Exp $ -->
+<!-- $Id: log4j.xml,v 1.9 2002/06/06 03:31:16 dsundstrom Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -119,11 +119,9 @@
     <priority value="INFO"/>
   </category>
 
-  <!-- Decrease the priority threshold for the org.jboss.varia category
-  <category name="org.jboss.varia">
+  <category name="org.jboss.plugins.cmp">
     <priority value="DEBUG"/>
   </category>
-  -->
 
   <!--
      | An example of enabling the custom TRACE level priority that is used
