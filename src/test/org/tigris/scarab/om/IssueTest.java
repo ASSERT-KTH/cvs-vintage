@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.20 2003/02/01 09:48:25 jon Exp $
+ * @version $Id: IssueTest.java,v 1.21 2003/02/02 09:09:39 jon Exp $
  */
 public class IssueTest extends BaseTestCase
 {

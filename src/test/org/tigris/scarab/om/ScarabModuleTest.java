@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Iterator;
 
 import org.apache.torque.om.NumberKey;
@@ -62,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * A Testing Suite for the om.ScarabModule class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.12 2003/02/01 09:48:25 jon Exp $
+ * @version $Id: ScarabModuleTest.java,v 1.13 2003/02/02 09:09:39 jon Exp $
  */
 public class ScarabModuleTest extends BaseTestCase
 {
