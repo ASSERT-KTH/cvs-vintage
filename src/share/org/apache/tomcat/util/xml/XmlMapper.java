@@ -341,46 +341,77 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
 
 //-------------------- "Core" actions --------------------
 
-/** Create an object
+/**
+ * Create a new object.
  */
 class ObjectCreate extends XmlAction {
     String className;
-    String attrib;
+    String attribute;
     
-    public ObjectCreate(String classN) {
-	className=classN;
+    /**
+     * Create a new object of the specified class only.
+     *
+     * @param className Class name of the object to be created
+     */
+    public ObjectCreate(String className) {
+	this.className = className;
     }
 
-    /** Create an object based on an attribute of the current
-	tag
-    */
-    public ObjectCreate(String classN, String attrib) {
-	className=classN;
-	this.attrib=attrib;
+    /**
+     * Create an object of a class whose name is stored in the specified
+     * attribute (if present), or defaults to the specified class name.
+     *
+     * @param className Default class name to use
+     * @param attribute Name of the attribute containing the override class
+     */
+    public ObjectCreate(String className, String attribute) {
+	this.className=className;
+	this.attribute=attribute;
     }
     
+    /**
+     * Create an object of the specified (or override) class.
+     *
+     * @param ctx Context in which this action takes place
+     */
     public void start( SaxContext ctx) throws Exception {
-	Stack st=ctx.getObjectStack();
-	int top=ctx.getTagCount()-1;
-	String tag=ctx.getTag(top);
-	String classN=className;
-	
-	if( attrib!=null) {
-	    AttributeList attributes = ctx.getAttributeList( top );
-	    classN= attributes.getValue(attrib);
+
+	// Initialize our local environment
+	Stack st = ctx.getObjectStack();
+	int top = ctx.getTagCount()-1;
+	String tag = ctx.getTag(top);
+	String className = this.className;
+
+	// Override the default class name if specified
+	if (attribute != null) {
+	    AttributeList attributes = ctx.getAttributeList(top);
+	    String value = attributes.getValue(attribute);
+	    if (value != null)
+		className = value;
 	}
-	Class c=Class.forName( classN );
-	Object o=c.newInstance();
+
+	// Create a new instance and push it on the stack
+	Class c = Class.forName( className );
+	Object o = c.newInstance();
 	st.push(o);
-	if( ctx.getDebug() > 0 ) ctx.log("new "  + attrib + " " + classN + " "  + tag  + " " + o);
+	if (ctx.getDebug() > 0)
+	    ctx.log("new "  + attribute + " " + className + " "  + tag  +
+		    " " + o);
     }
     
+    /**
+     * Clean up by popping the object we created off of the stack.
+     *
+     * @param ctx Context in which this action takes place
+     */
     public void cleanup( SaxContext ctx) {
-	Stack st=ctx.getObjectStack();
-	String tag=ctx.getTag(ctx.getTagCount()-1);
-	Object o=st.pop();
-	if( ctx.getDebug() > 0 ) ctx.log("pop " + tag + " " + o.getClass().getName() + ": " + o);
+	Stack st = ctx.getObjectStack();
+	String tag = ctx.getTag(ctx.getTagCount()-1);
+	Object o = st.pop();
+	if (ctx.getDebug() > 0)
+	    ctx.log("pop " + tag + " " + o.getClass().getName() + ": " + o);
     }
+
 }
 
 
