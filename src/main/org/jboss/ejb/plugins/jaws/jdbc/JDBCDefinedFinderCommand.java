@@ -9,6 +9,8 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.Set;
+import java.util.HashSet;
 
 import java.sql.PreparedStatement;
 
@@ -23,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -62,6 +64,75 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       for (int i = 0; i < parameterArray.length; i++)
          parameterArray[i] = ((Integer)parameters.get(i)).intValue();
       
+      // Since the fields in order clause also will form the select clause together with
+      // the pk field list, we have to clean the order clause from ASC/DESC's and fields
+      // that already are within the pk list
+      String strippedOrder = "";
+      if(f.getOrder()!=null && f.getOrder()!="")
+      {
+        //Split it into tokens. These tokens might contain ASC/DESC that we have to get rid of
+        StringTokenizer orderTokens = new StringTokenizer(f.getOrder(), ",");
+        String orderToken;
+        String[] checkedOrderTokens = new String[orderTokens.countTokens()];
+        int ix = 0;
+        while(orderTokens.hasMoreTokens())
+        {
+          orderToken = orderTokens.nextToken().trim();
+          //Get rid of ASC's
+          int i = orderToken.toUpperCase().indexOf(" ASC");
+          if(i!=-1) 
+            checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
+          else
+          {
+            //Get rid of DESC's
+            i = orderToken.toUpperCase().indexOf(" DESC");
+            if(i!=-1) 
+              checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
+            else
+            {
+              //No ASC/DESC - just use it as it is
+              checkedOrderTokens[ix] = new String(orderToken).trim();
+            }
+          }
+          ix++;
+        }
+        
+        //Next step is to make up a Set of all pk tokens
+        StringTokenizer pkTokens = new StringTokenizer(getPkColumnList(), ",");
+        Set setOfPkTokens = new HashSet(pkTokens.countTokens());
+        while(pkTokens.hasMoreTokens())
+        {
+          setOfPkTokens.add(pkTokens.nextToken().trim());
+        }
+        
+        //Now is the time to check for duplicates between pk and order tokens
+        int i = 0;
+        while(i < checkedOrderTokens.length)
+        {
+          //If duplicate token, null it away
+          if(setOfPkTokens.contains(checkedOrderTokens[i]))
+          {
+            checkedOrderTokens[i]=null;
+          }
+          i++;
+        }
+        
+        //Ok, build a new order string that we can use later on
+        StringBuffer orderTokensToUse = new StringBuffer("");
+        i = 0;
+        while(i < checkedOrderTokens.length)
+        {
+          if(checkedOrderTokens[i]!=null)
+          {
+            orderTokensToUse.append(", ");
+            orderTokensToUse.append(checkedOrderTokens[i]);
+          }
+          i++;
+        }
+        // Note that orderTokensToUse will always start with ", " if there is any order tokens
+        strippedOrder = orderTokensToUse.toString();
+      }
+
       // Construct SQL
       // In case of join query:
       // order must explicitly identify tablename.field to order on
@@ -69,24 +140,20 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       // <regular query with fully identified fields>"
       String sql = null;
       if (query.toLowerCase().startsWith(",")) {
-      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() +
-      	  	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) +
+      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() + strippedOrder +
       	  	" FROM " + jawsEntity.getTableName() + " " + query;
       } else 
       if (query.toLowerCase().startsWith("inner join")) {
-      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() +
-      	  	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) +
+      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() + strippedOrder +
       	  	" FROM " + jawsEntity.getTableName() + " " + query;
       } else {
       	// regular query; check if query is empty,
       	// if so, this is a select all and WHERE should not be used
       	if (f.getQuery() == null)  {
-	      	sql = "SELECT " + getPkColumnList() +
-	      	 	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+	      	sql = "SELECT " + getPkColumnList() + strippedOrder +
 	      	 	" FROM " + jawsEntity.getTableName();
       	} else {
-	      	sql = "SELECT " + getPkColumnList() +
-	         	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+	      	sql = "SELECT " + getPkColumnList() + strippedOrder +
 	         	" FROM " + jawsEntity.getTableName() + " WHERE " + query;
       	}
       }
