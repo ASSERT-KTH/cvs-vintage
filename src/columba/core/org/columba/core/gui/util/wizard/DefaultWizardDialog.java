@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.7  2003/04/18 17:44:11  fdietz
+//[intern]removed old todo-items, removed all warnings caused by wrong imports
+//
 //Revision 1.6  2003/04/07 15:55:30  fdietz
 //[bug]jdk1.3 compatibility fixes
 //
@@ -56,7 +59,6 @@ import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * @author frd

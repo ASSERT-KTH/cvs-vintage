@@ -20,8 +20,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * @author freddy
  *

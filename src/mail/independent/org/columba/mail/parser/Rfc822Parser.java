@@ -19,7 +19,6 @@ package org.columba.mail.parser;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;

@@ -35,7 +35,6 @@ import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.FrameModel;
-import org.columba.core.gui.frame.FrameModelManager;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;

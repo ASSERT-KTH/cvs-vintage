@@ -9,7 +9,6 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;

@@ -19,7 +19,6 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**

@@ -65,7 +65,7 @@ public class CloseComposerAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO composer doesn't close correctly
+		
 		
 		//getFrameController().close();
 		

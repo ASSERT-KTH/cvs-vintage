@@ -15,7 +15,6 @@ import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.pop3.POP3ServerController;
 
 /**

@@ -142,8 +142,6 @@ public class TableModelFilteredView extends TableModelPlugin {
 			if (o instanceof String) {
 				String item = (String) o;
 				
-				// TODO fix toLowerCase problems
-				//item = item.toLowerCase();
 				
 				String pattern = getPatternString().toLowerCase();
 
@@ -159,8 +157,6 @@ public class TableModelFilteredView extends TableModelPlugin {
 				
 				String item = (String) o;
 				
-				// TODO fix toLowerCase problems
-				//item = item.toLowerCase();
 				
 				String pattern = getPatternString().toLowerCase();
 

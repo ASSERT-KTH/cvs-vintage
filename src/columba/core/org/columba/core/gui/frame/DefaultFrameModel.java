@@ -16,10 +16,6 @@
 
 package org.columba.core.gui.frame;
 
-import java.util.Hashtable;
-
-import org.columba.core.config.ViewItem;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 public abstract class DefaultFrameModel {
