@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.7 2003/01/18 20:56:04 linus Exp $
+// $Id: CrEmptyPackage.java,v 1.8 2003/02/01 21:53:34 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class CrEmptyPackage extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
 	cat.debug("predicate2 on " + dm);
 	if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
-	Iterator enum = ModelFacade.getOwnedElements(dm);
+	Iterator enum = ModelFacade.getOwnedElements(dm).iterator();
 	if (!enum.hasNext()) return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.54 2002/12/21 18:55:35 thn Exp $
+// $Id: GeneratorJava.java,v 1.55 2003/02/01 21:53:34 kataka Exp $
 
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
@@ -818,7 +818,7 @@ implements PluggableNotation, FileGenerator {
             String tv = null; // helper for tagged values
 
             // add attributes
-            Collection strs = UmlHelper.getHelper().getCore().getAttributes(cls);
+            Collection strs = UmlHelper.getHelper().getCore().getStructuralFeatures(cls);
             //
             // 2002-06-08
             // Jaap Branderhorst

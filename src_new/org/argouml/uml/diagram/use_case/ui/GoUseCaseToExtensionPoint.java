@@ -24,7 +24,7 @@
 // File: GoUseCaseToExtensionPoint.java
 // Classes: GoUseCaseToExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: GoUseCaseToExtensionPoint.java,v 1.8 2003/01/24 20:47:30 kataka Exp $
+// $Id: GoUseCaseToExtensionPoint.java,v 1.9 2003/02/01 21:53:36 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // display of extension points in the navigator pane.
@@ -32,20 +32,14 @@
 
 package org.argouml.uml.diagram.use_case.ui;
 
-import java.util.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.use_cases.*;
+import java.util.Collection;
 
 import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
-import org.argouml.model.uml.UmlHelper;
-import org.argouml.ui.*;
-import org.argouml.uml.MMUtil;
+import org.argouml.ui.AbstractGoRule;
+
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+import ru.novosoft.uml.foundation.core.MClassifier;
 
 
 /**

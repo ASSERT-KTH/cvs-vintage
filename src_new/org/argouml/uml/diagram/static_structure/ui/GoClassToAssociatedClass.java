@@ -21,32 +21,29 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoProjectModel.java,v 1.10 2003/01/24 20:20:00 kataka Exp $
-
-package org.argouml.uml.diagram.ui;
+package org.argouml.uml.diagram.static_structure.ui;
 
 import java.util.Collection;
 
-import org.argouml.application.api.Argo;
-import org.argouml.kernel.Project;
+import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.AbstractGoRule;
 
-public class GoProjectModel extends AbstractGoRule {
+import ru.novosoft.uml.foundation.core.MClass;
 
-  public String getRuleName() {
-    return Argo.localize ("Tree", "misc.project.package");
-  }
- 
-  public Collection getChildren(Object parent) { 
-      if (parent instanceof Project) {
-          return ((Project)parent).getUserDefinedModels();
+public class GoClassToAssociatedClass extends AbstractGoRule {
+
+  public String getRuleName() { return "Class->Associated Class"; }
+
+  public Collection getChildren(Object parent) {
+      if (ModelFacade.isAClass(parent)) {
+          return UmlHelper.getHelper().getCore().getAssociatedClasses(parent);
       }
       return null;
   }
-  
+   
   public boolean isLeaf(Object node) {
-    return !(node instanceof Project && getChildCount(node) > 0);
+    return !(node instanceof MClass && getChildCount(node) > 0);
   }
-
 
 }

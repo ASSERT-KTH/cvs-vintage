@@ -24,7 +24,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.40 2003/01/01 18:13:37 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.41 2003/02/01 21:53:36 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -376,7 +376,7 @@ public class GeneratorDisplay extends Generator implements PluggableNotation {
         //     if (!interfaces.equals("")) s += "implements " + interfaces + " ";
         s += "{\n";
 
-        Collection strs = UmlHelper.getHelper().getCore().getAttributes(cls);
+        Collection strs = UmlHelper.getHelper().getCore().getStructuralFeatures(cls);
         if (strs != null) {
             s += "\n";
             //s += "////////////////////////////////////////////////////////////////\n";

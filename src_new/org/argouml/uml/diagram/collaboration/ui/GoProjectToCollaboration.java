@@ -21,28 +21,37 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.state.ui;
+package org.argouml.uml.diagram.collaboration.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.kernel.Project;
+import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
+import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 
-public class GoStateToOutgoingTrans extends AbstractGoRule {
+public class GoProjectToCollaboration extends AbstractGoRule {
 
-  public String getRuleName() { return "State->Outgoing Transitions"; }
+  
+  public String getRuleName() { return "Project->MCollaboration"; }
 
-  public Collection getChildren(Object parent) { 
-      if (ModelFacade.isAStateVertex(parent)) {
-          return ModelFacade.getOutgoings(parent);
+
+  public Collection getChildren(Object parent) {
+      Collection col = new ArrayList();
+      if (parent instanceof Project) {
+          Iterator it = ((Project)parent).getUserDefinedModels().iterator();
+          while (it.hasNext()) {
+              col.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(it.next(), MCollaboration.class));
+          }
       }
-      return null;
+      return col;
   }
-
+  
   public boolean isLeaf(Object node) {
-    return !(node instanceof MStateVertex && getChildCount(node) > 0);
+    return !(node instanceof Project && getChildCount(node) > 0);
   }
 
-} /* end class GoStateToOutgoingTrans */
+}

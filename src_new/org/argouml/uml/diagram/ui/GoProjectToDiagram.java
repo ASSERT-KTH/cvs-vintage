@@ -21,28 +21,30 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.state.ui;
+package org.argouml.uml.diagram.ui;
 
 import java.util.Collection;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.application.api.Argo;
+import org.argouml.kernel.Project;
 import org.argouml.ui.AbstractGoRule;
 
-import ru.novosoft.uml.behavior.state_machines.MStateVertex;
+public class GoProjectToDiagram extends AbstractGoRule {
 
-public class GoStateToOutgoingTrans extends AbstractGoRule {
-
-  public String getRuleName() { return "State->Outgoing Transitions"; }
-
+  public String getRuleName() {
+    return Argo.localize ("Tree", "misc.project.diagram");
+  }
+  
   public Collection getChildren(Object parent) { 
-      if (ModelFacade.isAStateVertex(parent)) {
-          return ModelFacade.getOutgoings(parent);
+      if (parent instanceof Project) {
+          return ((Project)parent).getDiagrams();
       }
       return null;
   }
-
+    
   public boolean isLeaf(Object node) {
-    return !(node instanceof MStateVertex && getChildCount(node) > 0);
+    // only for now
+    return !(node instanceof Project && getChildCount(node) > 0);
   }
 
-} /* end class GoStateToOutgoingTrans */
+}

@@ -24,7 +24,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.5 2002/10/20 21:11:15 linus Exp $
+// $Id: CrUtilityViolated.java,v 1.6 2003/02/01 21:53:34 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -72,7 +72,7 @@ public class CrUtilityViolated extends CrUML {
 	private Collection getInheritedStructuralFeatures(MClassifier cls,int depth)
 	{     
 		Collection res = new Vector();
-		res.addAll(UmlHelper.getHelper().getCore().getAttributes(cls));
+		res.addAll(UmlHelper.getHelper().getCore().getStructuralFeatures(cls));
 
 		Collection inh = cls.getGeneralizations();
 		for (Iterator iter = inh.iterator(); iter.hasNext();) {
