@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.HashMap;
 
@@ -58,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.4 2002/06/24 21:38:12 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.5 2002/07/19 01:28:36 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -93,5 +94,149 @@ public class ActivityManager
         throws TorqueException
     {
         return getInstance(new NumberKey(id));
+    }
+    
+    public static Activity createNumericActivity(Issue issue, Attribute attribute,
+                                                 Transaction transaction, 
+                                                 String description,
+                                                 Attachment attachment,
+                                                 int oldNumericValue,
+                                                 int newNumericValue)
+        throws TorqueException
+    {
+        return create(issue,attribute,transaction,description,attachment,
+                      oldNumericValue, newNumericValue,
+                      null, null, null, null, null, null);
+    }
+
+    public static Activity createUserActivity(Issue issue, Attribute attribute,
+                                                 Transaction transaction, 
+                                                 String description,
+                                                 Attachment attachment,
+                                                 NumberKey oldUserId,
+                                                 NumberKey newUserId)
+        throws TorqueException
+    {
+        return create(issue,attribute,transaction,description,attachment,
+                      0, 0,
+                      oldUserId, newUserId, 
+                      null, null, null, null);
+    }
+    
+    public static Activity createOptionActivity(Issue issue, Attribute attribute,
+                                                 Transaction transaction, 
+                                                 String description,
+                                                 Attachment attachment,
+                                                 NumberKey oldOptionId,
+                                                 NumberKey newOptionId)
+        throws TorqueException
+    {
+        return create(issue,attribute,transaction,description,attachment,
+                      0, 0,
+                      null, null,
+                      oldOptionId, newOptionId,
+                      null, null);
+    }
+
+    public static Activity createTextActivity(Issue issue, Attribute attribute,
+                                                 Transaction transaction, 
+                                                 String description,
+                                                 Attachment attachment,
+                                                 String oldTextValue,
+                                                 String newTextValue)
+        throws TorqueException
+    {
+        return create(issue,attribute,transaction,description,attachment,
+                      0, 0,
+                      null, null,
+                      null, null,
+                      oldTextValue, newTextValue);
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public static Activity create(Issue issue, Attribute attribute, 
+                       Transaction transaction, String description, 
+                       Attachment attachment, 
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
+                       NumberKey oldOptionId, NumberKey newOptionId,
+                       String oldTextValue, String newTextValue)
+         throws TorqueException
+    {
+        return create(issue,attribute,transaction,description,attachment,
+                      oldNumericValue, newNumericValue,
+                      oldUserId, newUserId,
+                      oldOptionId, newOptionId,
+                      oldTextValue, newTextValue, null);
+    }
+    
+    /**
+     * Populates a new Activity object.
+     */
+    public static Activity create(Issue issue, Attribute attribute, 
+                       Transaction transaction, String description, 
+                       Attachment attachment, 
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
+                       NumberKey oldOptionId, NumberKey newOptionId,
+                       String oldTextValue, String newTextValue, 
+                       Connection dbCon)
+         throws TorqueException
+    {
+        Activity activity = ActivityManager.getInstance();
+        activity.setIssue(issue);
+        if (attribute == null)
+        {
+            attribute = Attribute.getInstance(0);
+        }
+        activity.setAttribute(attribute);
+        activity.setDescription(description);
+        activity.setTransaction(transaction);
+        activity.setOldNumericValue(oldNumericValue);
+        activity.setNewNumericValue(newNumericValue);
+        activity.setOldUserId(oldUserId);
+        activity.setNewUserId(newUserId);
+        activity.setOldOptionId(oldOptionId);
+        activity.setNewOptionId(newOptionId);
+        activity.setOldValue(oldTextValue);
+        activity.setNewValue(newTextValue);
+        if (attachment != null)
+        {
+            activity.setAttachment(attachment);
+        }
+        if (dbCon == null) 
+        {
+            try
+            {
+                activity.save();
+            }
+            catch (Exception e)
+            {
+                if (e instanceof TorqueException) 
+                {
+                    throw (TorqueException)e;
+                }
+                else 
+                {
+                    throw new TorqueException(e);
+                }
+            }
+        }
+        else 
+        {
+            activity.save(dbCon);
+        }
+        // Make sure new activity is added to activity cache
+        try
+        {
+            issue.addActivity(activity);
+        }
+        catch (Exception e)
+        {
+            throw new TorqueException(e);
+        }
+        return activity;
     }
 }

@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.166 2002/07/17 22:06:28 jon Exp $
+ * @version $Id: Issue.java,v 1.167 2002/07/19 01:28:36 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1811,15 +1811,19 @@ public class Issue
         // Save activity record
         descBuf = new StringBuffer(comment).append(getUniqueId());
         descBuf.append(" in module ").append(oldModule.getName());
-        Activity activity = new Activity();
-        activity.create(newIssue, zeroAttribute, descBuf.toString(),
-                        transaction2, oldModule.getName(), newModule.getName());
+
+        ActivityManager
+            .createTextActivity(newIssue, zeroAttribute, transaction2,
+                                descBuf.toString(), null,
+                                oldModule.getName(), newModule.getName());
         // Save activity record for old issue
         descBuf2 = new StringBuffer(comment2).append(newIssue.getUniqueId());
         descBuf2.append(" in module ").append(newModule.getName());
-        Activity activity2 = new Activity();
-        activity2.create(this, zeroAttribute, descBuf2.toString(),
-                        transaction2, newModule.getName(), oldModule.getName());
+
+        ActivityManager
+            .createTextActivity(this, zeroAttribute, transaction2,
+                                descBuf.toString(), null,
+                                newModule.getName(), oldModule.getName());
 
         return newIssue;
     }
@@ -2430,10 +2434,10 @@ public class Issue
         attVal.startTransaction(transaction);
 
         // Save activity record
-        Activity activity = new Activity();
-        activity.create(attVal.getIssue(), attVal.getAttribute(),
-                        othersAction, transaction, 
-                        assignee.getUserId(), null, attachment);
+        ActivityManager
+            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), transaction,
+                                othersAction, attachment,
+                                assignee.getUserId(), null);
 
         attVal.setDeleted(true);
         attVal.save();

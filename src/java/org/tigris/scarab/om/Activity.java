@@ -62,46 +62,21 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
- * This class manages Activity records.
+ * This class represents Activity records.
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.33 2002/07/18 23:41:40 jon Exp $
+ * @version $Id: Activity.java,v 1.34 2002/07/19 01:28:36 jon Exp $
  */
 public class Activity 
     extends BaseActivity
     implements Persistent
 {
-    private Attribute aAttribute;                 
     private AttributeOption oldAttributeOption;                 
     private AttributeOption newAttributeOption;                 
 
     protected static final String GET_ATTACHMENT = 
         "getAttachment";
-
-    /**
-     * Gets the Attribute that was changed for this Activity record.
-     */
-    public Attribute getAttribute() throws TorqueException
-    {
-        if (aAttribute==null && (getAttributeId() != null))
-        {
-            aAttribute = AttributeManager.getInstance(getAttributeId());
-            
-            // make sure the parent attribute is in synch.
-            super.setAttribute(aAttribute);            
-        }
-        return aAttribute;
-    }
-
-    /**
-     * Sets the Attribute that was changed for this Activity record.
-     */
-    public void setAttribute(Attribute v) throws TorqueException
-    {
-        aAttribute = v;
-        super.setAttribute(v);
-    }
 
     /**
      * This method properly handles the case where there may not be
@@ -136,181 +111,6 @@ public class Activity
             attachment = (Attachment)obj;
         }
         return attachment;
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
-                       String oldValue, String newValue)
-         throws TorqueException, Exception
-    {
-        create(issue, attribute, desc, transaction,
-               oldNumericValue, newNumericValue,
-               oldUserId, newUserId,
-               oldOptionId, newOptionId,
-               oldValue, newValue, null, null);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       String oldValue, String newValue)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               0, 0, null, null, null, null,
-               oldValue, newValue, null, null);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       String oldValue, String newValue, 
-                       Connection dbCon)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               0, 0, null, null, null, null,
-               oldValue, newValue, null, dbCon);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       NumberKey oldUserId, NumberKey newUserId, 
-                       Attachment attachment)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               0, 0, oldUserId, newUserId, null, null,
-               null, null, attachment, null);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       String oldValue, String newValue, Attachment attachment)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               0, 0, null, null, null, null,
-               oldValue, newValue, attachment, null);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
-                       String oldValue, String newValue, 
-                       Attachment attachment)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               oldNumericValue, newNumericValue, 
-               oldUserId, newUserId, 
-               oldOptionId, newOptionId,
-               oldValue, newValue, attachment, null);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
-                       String oldValue, String newValue, 
-                       Connection dbCon)
-         throws TorqueException
-    {
-        create(issue, attribute, desc, transaction,
-               oldNumericValue, newNumericValue, 
-               oldUserId, newUserId, 
-               oldOptionId, newOptionId,
-               oldValue, newValue, null, dbCon);
-    }
-
-    /**
-     * Populates a new Activity object.
-     */
-    public void create(Issue issue, Attribute attribute, 
-                       String desc, Transaction transaction,
-                       int oldNumericValue, int newNumericValue,
-                       NumberKey oldUserId, NumberKey newUserId,
-                       NumberKey oldOptionId, NumberKey newOptionId,
-                       String oldValue, String newValue, 
-                       Attachment attachment, Connection dbCon)
-         throws TorqueException
-    {
-        setIssue(issue);
-        if (attribute == null)
-        {
-            attribute = Attribute.getInstance(0);
-        }
-        setAttribute(attribute);
-        setDescription(desc);
-        setTransaction(transaction);
-        setOldNumericValue(oldNumericValue);
-        setNewNumericValue(newNumericValue);
-        setOldUserId(oldUserId);
-        setNewUserId(newUserId);
-        setOldOptionId(oldOptionId);
-        setNewOptionId(newOptionId);
-        setOldValue(oldValue);
-        setNewValue(newValue);
-        if (attachment != null)
-        {
-            setAttachment(attachment);
-        }
-        if (dbCon == null) 
-        {
-            try
-            {
-                save();
-            }
-            catch (Exception e)
-            {
-                if (e instanceof TorqueException) 
-                {
-                    throw (TorqueException)e;
-                }
-                else 
-                {
-                    throw new TorqueException(e);
-                }
-            }
-        }
-        else 
-        {
-            save(dbCon);
-        }
-        // Make sure new activity is added to activity cache
-        try
-        {
-            issue.addActivity(this);
-        }
-        catch (Exception e)
-        {
-            throw new TorqueException(e);
-        }
     }
 
     /**
@@ -398,6 +198,3 @@ public class Activity
         return desc;
     }
 }
-
-
-

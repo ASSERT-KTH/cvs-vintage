@@ -85,7 +85,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionManager;
 import org.tigris.scarab.om.TransactionTypePeer;
-import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.ActivityManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.Depend;
@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.106 2002/07/17 22:06:51 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.107 2002/07/19 01:28:36 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -720,9 +720,10 @@ public class ModifyIssue extends BaseModifyIssue
         transaction.save();
 
         // Save activity record
-        Activity activity = new Activity();
-        activity.create(issue, null, description, transaction, 
-                        oldVal, newVal, attachment);
+        ActivityManager
+            .createTextActivity(issue, null, transaction,
+                                description, attachment,
+                                oldVal, newVal);
         sendEmail(transaction, issue, message, context, data);
     }
 
@@ -923,9 +924,11 @@ public class ModifyIssue extends BaseModifyIssue
                 .toString();
 
             // Save activity record
-            Activity activity = new Activity();
-            activity.create(issue, null, desc, transaction, 
-                            "", childIssue.getUniqueId());
+            // FIXME: test to see if null instead of "" is ok.
+            ActivityManager
+                .createTextActivity(issue, null, transaction,
+                                    desc, null,
+                                    "", childIssue.getUniqueId());
             sendEmail(transaction, childIssue, desc, context, data);
 
             // Save transaction record for child
@@ -936,9 +939,11 @@ public class ModifyIssue extends BaseModifyIssue
                 .toString();
 
             // Save activity record
-            activity = new Activity();
-            activity.create(childIssue, null, desc, transaction, 
-                            "", issue.getUniqueId());
+            // FIXME: test to see if null instead of "" is ok.
+            ActivityManager
+                .createTextActivity(childIssue, null, transaction,
+                                    desc, null,
+                                    "", issue.getUniqueId());
             sendEmail(transaction, issue, desc, context, data);
 
             data.setMessage(DEFAULT_MSG);

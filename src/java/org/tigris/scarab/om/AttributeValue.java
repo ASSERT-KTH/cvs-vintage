@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.64 2002/07/17 16:26:21 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.65 2002/07/19 01:28:36 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -737,13 +737,13 @@ public abstract class AttributeValue
                 throw new TorqueException(e);
             }
             // Save activity record
-            saveActivity = new Activity();
             String desc = getActivityDescription();
-            saveActivity.create(getIssue(), getAttribute(), desc, this.transaction,
-                            oldNumericValue, getNumericValue(),
-                            oldUserId, getUserId(),
-                            oldOptionId, getOptionId(),
-                            oldValue , getValue(), dbcon);
+            saveActivity = ActivityManager
+                            .create(getIssue(), getAttribute(), transaction, 
+                                    desc, null,
+                                    oldNumericValue, getNumericValue(), oldUserId,
+                                    getUserId(), oldOptionId, getOptionId(), 
+                                    oldValue, getValue(), dbcon);
         }        
         super.save(dbcon);
         if ( chainedValue != null ) 

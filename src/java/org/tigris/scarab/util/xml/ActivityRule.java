@@ -175,10 +175,12 @@ public class ActivityRule extends BaseRule
         }
         else
         {
+/*
             Activity activity = new Activity();
             activity.create(issue, attribute, activityInfo.getDescription(), 
                             transaction, activityInfo.getOldValue(), 
                             activityInfo.getValue());
+*/
         }
     }
     
