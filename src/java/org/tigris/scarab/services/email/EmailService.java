@@ -68,11 +68,11 @@ import org.apache.velocity.context.Context;
  * @author <a href="mailto:mbryson@mont.mindspring.com">Dave Bryson</a>
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: EmailService.java,v 1.2 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: EmailService.java,v 1.3 2003/05/04 09:30:52 jon Exp $
  */
 public interface EmailService extends Service
 {
-    static final String SERVICE_NAME = "EmailService";
+    final String SERVICE_NAME = "EmailService";
 
     /**
      * Process the request and fill in the template using the values

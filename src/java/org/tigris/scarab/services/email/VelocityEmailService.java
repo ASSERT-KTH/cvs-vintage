@@ -104,7 +104,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
- * @version $Id: VelocityEmailService.java,v 1.4 2003/05/03 22:37:24 jon Exp $
+ * @version $Id: VelocityEmailService.java,v 1.5 2003/05/04 09:30:52 jon Exp $
  */
 public class VelocityEmailService
     extends BaseTemplateEngineService
@@ -184,7 +184,7 @@ public class VelocityEmailService
     {
         String results = null;
         if (charset == null)
-	    {
+        {
             StringWriter writer = null;
             try
             {
