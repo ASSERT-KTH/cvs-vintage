@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingEdge.java,v 1.12 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionAddExistingEdge.java,v 1.13 2005/03/10 20:40:58 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,7 @@ public class ActionAddExistingEdge extends UMLAction {
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
-        Object target = TargetManager.getInstance().getTarget();
+        Object target = TargetManager.getInstance().getModelTarget();
         ArgoDiagram dia = ProjectManager.getManager().getCurrentProject().
             getActiveDiagram();
         if (dia == null) return false;
