@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.7 2000/03/06 23:59:36 shemnon Exp $
- * $Revision: 1.7 $
- * $Date: 2000/03/06 23:59:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.8 2000/03/07 00:03:27 shemnon Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/03/07 00:03:27 $
  *
  * ====================================================================
  * 
@@ -341,7 +341,7 @@ public class JspC implements Options { //, JspCompilationContext {
             targetClassName = null;
             if (mapout != null) {
                 String thisServletName;
-		if  (clc.getPackageName == null) {
+		if  (clc.getPackageName() == null) {
 		    thisServletName = clc.getClassName();
 		 } else {
 		    thisServletName = clc.getPackageName()
