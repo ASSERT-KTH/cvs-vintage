@@ -57,7 +57,7 @@ easier to work with.
                 <activity>
                     <attribute>
                         <name>Priority</name>
-                        </value>High</value>
+                        <value>High</value>
                         <old-value>NULL</old-value>
                     </attribute>
                     <description>

@@ -15,12 +15,11 @@
 <!ELEMENT transaction (type, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (old-value, new-value, attribute, description)>
+<!ELEMENT activity (attribute, description)>
 
 <!ELEMENT fullname (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
-<!ELEMENT type (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT value (#PCDATA)>
 <!ELEMENT type (#PCDATA)>
