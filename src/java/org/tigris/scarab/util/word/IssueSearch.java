@@ -2059,113 +2059,7 @@ public class IssueSearch
             close();
             throw e;
         }
-        return new QueryResultList(resultSet, valueListSize);
-    }
-
-    /**
-     * Assembles one or more rows from a <code>ResultSet</code> into a
-     * single {@link QueryResult} object.  Assumes that rows in the
-     * <code>ResultSet</code> are grouped by issue.
-     *
-     * @param resultSet The database cursor.
-     * @return A single {@link QueryResult} object.
-     * @exception SQLException If a database error occurs.
-     */
-    private QueryResult buildQueryResult(ResultSet resultSet,
-                                         int valueListSize)
-        throws SQLException
-    {
-        QueryResult qr = null;
-        Logger scarabLog = Log.get("org.tigris.scarab");
-
-        boolean buildingResult = true;
-        int fetchDirection = resultSet.getFetchDirection();
-        if ((fetchDirection == ResultSet.FETCH_FORWARD
-             && resultSet.isBeforeFirst())
-            || (fetchDirection == ResultSet.FETCH_REVERSE
-                && resultSet.isAfterLast()))
-        {
-            // Ready, steady...
-            buildingResult = resultSet.next();
-        }
-
-        while (buildingResult)
-        {
-            String pk = resultSet.getString(1);
-            // Each attribute can result in a different record.  We have
-            // sorted on the pk column in addition to any other sort, so that
-            // all attributes for a given issue will be grouped.  The following
-            // code maps these multiple records into a single QueryResult per
-            // issue
-            if (qr != null && pk.equals(qr.getIssueId())) 
-            {
-                if (valueListSize > 0) 
-                {
-                    List values = qr.getAttributeValues();
-                    for (int j=0; j < valueListSize; j++) 
-                    {
-                        String s = resultSet.getString(j + 6);
-                        // it's possible that multiple Records could have the
-                        // same value for a given attribute, but we do not want
-                        // to add the same value many times, so we check for
-                        // this possibility below.  See the code in the else
-                        // block about 10 lines down to see how the values
-                        // lists are arranged to allow for multiple values.
-                        List prevValues = (List)values.get(j);
-                        boolean newValue = true;
-                        for (int k=0; k<prevValues.size(); k++) 
-                        {
-                            if (ObjectUtils.equals(prevValues.get(k), s)) 
-                            {
-                                newValue = false;
-                                break;
-                            }
-                        }                    
-                        if (newValue) 
-                        {
-                            prevValues.add(s);
-                        }
-                    }
-                }
-            }
-            else if (qr == null)
-            {
-                // the current Record is a new issue
-                if (scarabLog.isDebugEnabled())
-                {
-                    scarabLog.debug("Building query result with ID of " + pk);
-                }
-                qr = new QueryResult(this);
-                qr.setIssueId(pk);
-                qr.setModuleId(new Integer(resultSet.getInt(2)));
-                qr.setIssueTypeId(new Integer(resultSet.getInt(3)));
-                qr.setIdPrefix(resultSet.getString(4));
-                qr.setIdCount(resultSet.getString(5));
-                if (valueListSize > 0) 
-                {
-                    List values = new ArrayList(valueListSize);
-                    for (int j = 0; j < valueListSize; j++) 
-                    {
-                        // some attributes can be multivalued, so store a list
-                        // for each attribute containing the values
-                        ArrayList multiVal = new ArrayList(2);
-                        multiVal.add(resultSet.getString(j + 6));
-                        values.add(multiVal);
-                    }
-                    qr.setAttributeValues(values);
-                }
-            }
-            else
-            {
-                // We've gotten a full QueryResult and are now looking
-                // at the start of the next one.
-                break;
-            }
-
-            buildingResult = resultSet.next();
-        }
-
-        return qr;
+        return new QueryResultList(this, resultSet, valueListSize);
     }
 
     /**
@@ -2261,10 +2155,12 @@ public class IssueSearch
      * Prefer sequential access of uncached QueryResult objects, as
      * non-sequential access does not scale.
      *
-     * FIXME: This should be an Iterator or Collection, not a List, as
-     * it does not support true random access.
+     * TODO: This should be an Iterator or Collection, not a List, as
+     * support of true random access is both unnecessary for our use
+     * case and inefficient.
      */
-    private class QueryResultList extends AbstractList
+    private static class QueryResultList extends AbstractList
+        implements QueryResultCollator
     {
         /**
          * The size of our cache of recently created {@link
@@ -2272,7 +2168,8 @@ public class IssueSearch
          */
         private static final int CACHE_SIZE = 5;
 
-        private ResultSet issues;
+        private IssueSearch search;
+        private QueryResultCursor cursor;
         private int valueListSize;
 
         // A LRU-ish cache of indices -> QueryResult
@@ -2282,39 +2179,25 @@ public class IssueSearch
         private int nextCreatedIndex = 0;
 
         /**
-         * Used to assure sequential access of uncached QueryResults,
-         * as non-sequential access would necessitate per-row offset
-         * caching.
-         */
-        private int lastListIndex = -1;
-
-        /**
          * @param issues The issue query results.
          */
-        public QueryResultList(ResultSet issues, int valueListSize)
+        public QueryResultList(IssueSearch search, ResultSet issues,
+                               int valueListSize)
             throws SQLException
         {
-            int type = issues.getType();
-            if (type != ResultSet.TYPE_SCROLL_INSENSITIVE
-                && type != ResultSet.TYPE_SCROLL_SENSITIVE)
-            {
-                throw new IllegalArgumentException
-                    ("ResultSet type must be TYPE_SCROLL_INSENSITIVE");
-            }
-            this.issues = issues;
+            this.cursor = new QueryResultCursor(issues);
+            this.search = search;
             this.valueListSize = valueListSize;
         }
 
         /**
-         * Delegates to {@link #buildQueryResult(ResultSet, int,
-         * int)}, and performs caching of most recently created {@link
-         * QueryResult} objects.  Since the number of rows in our
-         * ResultSet is usually greater than the number of
-         * QueryResults, we can only random access the beginning
-         * (TODO: or end) of the list.  Because of this, only
-         * sequential access is supported!
-         *
-         * @see #buildQueryResult(ResultSet, int, int)
+         * Delegates to <code>QueryResultCursor</code>, and performs
+         * caching of most recently created {@link QueryResult}
+         * objects.  Since the number of rows in our ResultSet is
+         * usually greater than the number of QueryResults, we can
+         * only random access the beginning (TODO: or end) of the
+         * list.  Because of this, only sequential access is
+         * supported!
          */
         public Object get(int index)
         {
@@ -2328,16 +2211,14 @@ public class IssueSearch
             {
                 try
                 {
-                    int fetchDirection = issues.getFetchDirection();
-                    if ((fetchDirection == ResultSet.FETCH_FORWARD
-                         && index - 1 != lastListIndex)
-                        || (fetchDirection == ResultSet.FETCH_REVERSE
-                            && index + 1 != lastListIndex))
+                    cursor.setDirection(index);
+
+                    if (cursor.isNonSequentialAccess(index))
                     {
-                        scrollResultSet(index);
+                        cursor.scroll(index);
                     }
 
-                    qr = buildQueryResult(issues, valueListSize);
+                    qr = cursor.fetchQueryResult(this);
                 }
                 catch (SQLException e)
                 {
@@ -2351,41 +2232,6 @@ public class IssueSearch
             }
 
             return qr;
-        }
-
-        /**
-         * Since the query result list index differs from the
-         * ResultSet list index, we must walk the ResultSet until we
-         * hit just before the desired query result list index.
-         *
-         * @param listIndex The new list index to scroll to
-         * immediately before.
-         */
-        private void scrollResultSet(int index)
-            throws SQLException
-        {
-            if (lastListIndex == -1 || index > lastListIndex)
-            {
-                issues.setFetchDirection(ResultSet.FETCH_FORWARD);
-            }
-            else if (index < lastListIndex)
-            {
-                issues.setFetchDirection(ResultSet.FETCH_REVERSE);
-            }
-            else  // index == lastListIndex
-            {
-                throw new IllegalArgumentException
-                    ("Request for lastListIndex should be handled by cache");
-            }
-
-            int i = (lastListIndex == -1 ? 0 : index);
-            while (Math.abs(index - lastListIndex) != 1)
-            {
-                // TODO: Use cheaper form of cursoring over ResultSet
-                // than buildQueryResult()
-                cacheRecentlyCreated(i++,
-                                     buildQueryResult(issues, valueListSize));
-            }
         }
 
         private QueryResult findRecentlyCreated(int index)
@@ -2414,21 +2260,79 @@ public class IssueSearch
                 {
                     nextCreatedIndex = 0;
                 }
+            }
+        }
 
-                lastListIndex = index;
+        public QueryResult queryResultStarted(ResultSet rs)
+            throws SQLException
+        {
+            QueryResult qr = new QueryResult(search);
+            qr.setIssueId(rs.getString(1));
+            qr.setModuleId(new Integer(rs.getInt(2)));
+            qr.setIssueTypeId(new Integer(rs.getInt(3)));
+            qr.setIdPrefix(rs.getString(4));
+            qr.setIdCount(rs.getString(5));
+            if (valueListSize > 0) 
+            {
+                // Some attributes can be multivalued.
+                List values = new ArrayList(valueListSize);
+                for (int j = 0; j < valueListSize; j++) 
+                {
+                    ArrayList multiVal = new ArrayList(2);
+                    multiVal.add(rs.getString(j + 6));
+                    values.add(multiVal);
+                }
+                qr.setAttributeValues(values);
+            }
+            return qr;
+        }
+
+        public void queryResultContinued(ResultSet rs, QueryResult qr)
+            throws SQLException
+        {
+            if (valueListSize > 0)
+            {
+                List values = qr.getAttributeValues();
+                for (int j = 0; j < valueListSize; j++)
+                {
+                    String s = rs.getString(j + 6);
+
+                    // As it's possible that multiple rows
+                    // could have the same value for a given
+                    // attribute, and we don't want to add the
+                    // same value many times, check for this
+                    // below.  See the code in the "else if"
+                    // block about 10 lines down to see how
+                    // the values lists are arranged to allow
+                    // for multiple values.
+                    List prevValues = (List) values.get(j);
+                    boolean newValue = true;
+                    for (int k = 0; k < prevValues.size(); k++)
+                    {
+                        if (ObjectUtils.equals(prevValues.get(k), s))
+                        {
+                            newValue = false;
+                            break;
+                        }
+                    }
+                    if (newValue) 
+                    {
+                        prevValues.add(s);
+                    }
+                }
             }
         }
 
         /**
-         * Delegates to {@link #getIssueCount()}.
+         * Delegates to {@link IssueSearch#getIssueCount()}.
          *
-         * @see #getIssueCount()
+         * @see IssueSearch#getIssueCount()
          */
         public final int size()
         {
             try
             {
-                return getIssueCount();
+                return search.getIssueCount();
             }
             catch (Exception e)
             {
@@ -2438,5 +2342,213 @@ public class IssueSearch
                     ("Unable to determine issue count: " + e.getMessage());
             }
         }
+    }
+
+    private static class QueryResultCursor implements QueryResultCollator
+    {
+        static final boolean FORWARD = true;
+        static final boolean REVERSE = false;
+
+        private ResultSet resultSet;
+
+        /**
+         * Used to assure sequential scrolling for access of uncached
+         * QueryResults.  Non-sequential access would necessitate
+         * per-row offset caching.
+         */
+        private int index = 0;
+
+        private boolean direction = FORWARD;
+
+        public QueryResultCursor(ResultSet resultSet)
+            throws SQLException
+        {
+            int type = resultSet.getType();
+            if (type != ResultSet.TYPE_SCROLL_INSENSITIVE
+                && type != ResultSet.TYPE_SCROLL_SENSITIVE)
+            {
+                throw new IllegalArgumentException
+                    ("ResultSet type must be TYPE_SCROLL_INSENSITIVE");
+            }
+            this.resultSet = resultSet;
+        }
+
+        /**
+         * Assembles one or more rows from a <code>ResultSet</code> into a
+         * single {@link QueryResult} object.  Assumes that rows in the
+         * <code>ResultSet</code> are grouped by issue.
+         *
+         * @return A single {@link QueryResult} object.
+         * @exception SQLException If a database error occurs.
+         */
+        private QueryResult fetchQueryResult(QueryResultCollator collator)
+            throws SQLException
+        {
+            QueryResult qr = null;
+            String queryResultPK = null;
+            Logger scarabLog = Log.get("org.tigris.scarab");
+
+            boolean buildingResult = true;
+            if ((direction == FORWARD && resultSet.isBeforeFirst())
+                || (direction == REVERSE && resultSet.isAfterLast()))
+            {
+                buildingResult = advanceRow();
+            }
+
+            // Each attribute can result in a separate record.  As we
+            // have sorted on the primary key column in addition to
+            // any other sort, all attributes for a given issue will
+            // be grouped.  Map these multiple records into a single
+            // QueryResult per issue.
+            while (buildingResult)
+            {
+                String pk = resultSet.getString(1);
+
+                if (pk.equals(queryResultPK))
+                {
+                    collator.queryResultContinued(resultSet, qr);
+                }
+                else if (queryResultPK == null)
+                {
+                    // The current row starts a new issue.
+                    queryResultPK = pk;
+                    if (scarabLog.isDebugEnabled())
+                    {
+                        scarabLog.debug("Fetching query result at index "
+                                        + this.index + " with ID of "
+                                        + queryResultPK);
+                    }
+                    qr = collator.queryResultStarted(resultSet);
+                }
+                else
+                {
+                    // We've gotten a full QueryResult and are now looking
+                    // at the start of the next one.
+                    index = (direction == FORWARD ? index + 1 : index - 1);
+                    break;
+                }
+
+                buildingResult = advanceRow();
+            }
+
+            return qr;
+        }
+
+        /**
+         * Moves the cursor one row in the desired direction.
+         */
+        private boolean advanceRow()
+            throws SQLException
+        {
+            return (direction ? resultSet.next() : resultSet.previous());
+        }
+
+        public void setDirection(int index)
+            throws SQLException
+        {
+            boolean lastDirection = this.direction;
+
+            // Determine new direction.
+            this.direction = (index >= this.index ? FORWARD : REVERSE);
+
+            // Handle direction change.
+            if (this.direction != lastDirection)
+            {
+                Logger scarabLog = Log.get("org.tigris.scarab");
+                if (scarabLog.isDebugEnabled())
+                {
+                    scarabLog.debug("Changing direction from "
+                                    + (lastDirection ? "forward" : "reverse")
+                                    + " to "
+                                    + (direction ? "forward" : "reverse")
+                                    + " to reach index " + index +
+                                    " from index " + this.index);
+                }
+
+                // Based on our new direction, reposition the cursor
+                // on the row starting the next QueryResult
+                if (direction == REVERSE)
+                {
+                    if (!resultSet.isAfterLast())
+                    {
+                        this.index--;
+                    }
+                    resultSet.previous();
+                }
+                else if (direction == FORWARD)
+                {
+                    if (!resultSet.isBeforeFirst())
+                    {
+                        this.index++;
+                    }
+                    resultSet.next();
+                }
+
+                // Optimize fetch direction.
+                resultSet.setFetchDirection(direction == FORWARD
+                                            ? ResultSet.FETCH_FORWARD
+                                            : ResultSet.FETCH_REVERSE);
+            }
+        }
+
+        /**
+         * @return Whether the next call to
+         * <code>fetchQueryResult()</code> will get the {@link
+         * QueryResult} at list position <code>index</code>.
+         */
+        public final boolean isNonSequentialAccess(int index)
+        {
+            return (index != this.index);
+        }
+
+        /**
+         * Since the query result list index differs from the
+         * ResultSet list index, we must walk the ResultSet until we
+         * hit just before the desired query result list index.
+         *
+         * @param index The new list index to scroll to immediately
+         * before.
+         */
+        public void scroll(int index)
+            throws SQLException
+        {
+            Logger scarabLog = Log.get("org.tigris.scarab");
+            if (scarabLog.isDebugEnabled())
+            {
+                scarabLog.debug("Scrolling ResultSet "
+                                + (direction ? "forward" : "reverse")
+                                + " from index " + this.index
+                                + " towards index " + index);
+            }
+
+            // Scroll over the proper number of query results.
+            int distance = Math.abs(index - this.index);
+            while (distance > 0)
+            {
+                fetchQueryResult(this);
+                distance--;
+            }
+        }
+
+        public QueryResult queryResultStarted(ResultSet rs)
+        {
+            return null;
+        }
+
+        public void queryResultContinued(ResultSet rs, QueryResult qr)
+        {
+        }
+    }
+
+    /**
+     * Defines callbacks invoked by <code>fetchQueryResult()</code>.
+     */
+    interface QueryResultCollator
+    {
+        QueryResult queryResultStarted(ResultSet rs)
+            throws SQLException;
+
+        void queryResultContinued(ResultSet rs, QueryResult qr)
+            throws SQLException;
     }
 }
