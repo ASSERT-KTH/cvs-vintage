@@ -18,12 +18,6 @@
 
 package org.columba.mail.gui.util;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -32,13 +26,24 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.io.File;
-
 import java.text.MessageFormat;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Password dialog asks user the password.
@@ -136,7 +141,7 @@ public class PasswordDialog implements ActionListener {
         checkbox.setActionCommand("SAVE");
         checkbox.addActionListener(this);
 
-        dialog = new JDialog(new JFrame(), true);
+        dialog = new JDialog(MainInterface.frameModel.getActiveFrame(), true);
         dialog.setTitle(MailResourceLoader.getString("dialog", "password",
                 "dialog_title"));
 

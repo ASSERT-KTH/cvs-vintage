@@ -20,7 +20,6 @@ package org.columba.core.gui.util;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +39,7 @@ import javax.swing.SwingConstants;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
 
@@ -71,7 +71,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 	private Throwable ex;
 
 	public ErrorDialog(String message, Throwable ex) {
-		super(new Frame(), true);
+		super(MainInterface.frameModel.getActiveFrame(), true);
 
 		this.message = message;
 		this.ex = ex;

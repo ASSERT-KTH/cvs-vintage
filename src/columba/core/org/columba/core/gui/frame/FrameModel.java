@@ -18,6 +18,12 @@
 
 package org.columba.core.gui.frame;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JFrame;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -25,10 +31,6 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.FramePluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * FrameModel manages all frames. It keeps a list of every controller.
@@ -152,6 +154,35 @@ public class FrameModel {
      */
     public FrameMediator[] getOpenFrames() {
         return (FrameMediator[]) activeFrameCtrls.toArray(new FrameMediator[0]);
+    }
+    
+    /**
+     * Get active/focused frame mediator.
+     * 
+     * @return		active frame mediator
+     */
+    public FrameMediator getActiveFrameMediator() {
+    	Iterator it = activeFrameCtrls.iterator();
+    	while (it.hasNext()) {
+    		FrameMediator m = (FrameMediator) it.next();
+    		JFrame frame = m.getView().getFrame();
+    		if ( frame.isActive() ) return m;
+    	}
+    	
+    	return null;
+    }
+    
+    /**
+     * Get active/focused JFrame.
+     * 
+     * @return		active frame
+     */
+    public JFrame getActiveFrame() {
+    	FrameMediator m = getActiveFrameMediator();
+    	if ( m != null) return m.getView().getFrame();
+    	
+    	// fall-back
+    	return new JFrame();
     }
 
     /**

@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.util;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,7 +23,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
 import java.text.MessageFormat;
 
 import javax.swing.BorderFactory;
@@ -36,11 +30,15 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 
 public class PGPPassphraseDialog implements ActionListener {
@@ -124,7 +122,7 @@ public class PGPPassphraseDialog implements ActionListener {
                     "password", "save_passphrase"));
         checkbox.setSelected(save);
 
-        dialog = new JDialog(new JFrame(), true);
+        dialog = new JDialog(MainInterface.frameModel.getActiveFrame(), true);
         dialog.setTitle(MailResourceLoader.getString("dialog", "password",
                 "dialog_title_passphrase"));
 
