@@ -1,4 +1,4 @@
-// $Id: ToDoTreeRenderer.java,v 1.11 2004/06/23 07:02:37 linus Exp $
+// $Id: ToDoTreeRenderer.java,v 1.12 2004/07/23 12:44:02 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,9 +68,7 @@ public class ToDoTreeRenderer extends DefaultTreeCellRenderer {
     protected UMLTreeCellRenderer _navRenderer = new UMLTreeCellRenderer();
     
     private static ImageIcon lookupIconResource(String name) {
-        ResourceLoaderWrapper w =
-	    ResourceLoaderWrapper.getResourceLoaderWrapper();
-        return w.lookupIconResource(name);
+        return ResourceLoaderWrapper.lookupIconResource(name);
     }
     
     ////////////////////////////////////////////////////////////////

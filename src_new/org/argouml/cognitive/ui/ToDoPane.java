@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.33 2004/07/17 22:29:06 linus Exp $
+// $Id: ToDoPane.java,v 1.34 2004/07/23 12:44:02 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,7 +88,7 @@ import org.tigris.gef.ui.ToolBar;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.33 2004/07/17 22:29:06 linus Exp $
+ * $Id: ToDoPane.java,v 1.34 2004/07/23 12:44:02 mkl Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -171,9 +171,9 @@ public class ToDoPane extends JPanel
         toolbarPanel.add(_toolbar, BorderLayout.WEST);
         
         ImageIcon hierarchicalIcon =
-	    ResourceLoaderWrapper.getResourceLoaderWrapper()
+	    ResourceLoaderWrapper
 	        .lookupIconResource("Hierarchical", "Hierarchical");
-        ImageIcon flatIcon = ResourceLoaderWrapper.getResourceLoaderWrapper()
+        ImageIcon flatIcon = ResourceLoaderWrapper
 	    .lookupIconResource("Flat", "Flat");
         _flatButton.setIcon(hierarchicalIcon);
         _flatButton.setSelectedIcon(flatIcon);
