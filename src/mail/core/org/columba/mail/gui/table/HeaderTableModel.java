@@ -110,6 +110,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			MessageNode node = (MessageNode) uidList.get(uids[i]);
 
 			if (node != null) {
+				/*
 				HeaderInterface header = node.getHeader();
 				switch (subMode) {
 					case MarkMessageCommand.MARK_AS_READ :
@@ -134,7 +135,7 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 							break;
 						}
 				}
-
+				*/
 				if (uids.length < 100)
 					nodeChanged(node);
 			} else {

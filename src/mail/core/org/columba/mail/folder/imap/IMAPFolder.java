@@ -402,6 +402,7 @@ public class IMAPFolder extends RemoteFolder {
 						getMessageFolderInfo().decUnseen();
 
 					h.set("columba.flags.seen", Boolean.TRUE);
+					h.set("columba.flags.recent", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
