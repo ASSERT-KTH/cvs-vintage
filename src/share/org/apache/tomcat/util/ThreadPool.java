@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.2 2000/02/22 21:06:47 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/22 21:06:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.3 2000/02/27 02:01:24 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/27 02:01:24 $
  *
  * ====================================================================
  *
@@ -263,7 +263,7 @@ public class ThreadPool  {
                     boolean checkSpare = false;
                     synchronized(this) {
                         if(!shouldRun && !shouldTerminate) {
-                            wait(WORK_WAIT_TIMEOUT);
+                            this.wait(WORK_WAIT_TIMEOUT);
                         }
                         if(!shouldRun && !shouldTerminate) {
                             checkSpare = true;
@@ -298,7 +298,7 @@ public class ThreadPool  {
         public synchronized void runIt(Runnable toRun) {
             this.toRun = toRun;
             shouldRun = true;
-            notify();
+            this.notify();
         }
 
         public synchronized void terminate() {

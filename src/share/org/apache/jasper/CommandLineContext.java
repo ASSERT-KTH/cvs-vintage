@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.2 2000/02/09 06:50:47 shemnon Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/09 06:50:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.3 2000/02/27 02:01:23 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/27 02:01:23 $
  *
  * ====================================================================
  * 
@@ -329,7 +329,7 @@ public class CommandLineContext implements JspCompilationContext {
             return uri;
         } else {
             return uriBase + uri;
-        };
+        }
     };
 
 

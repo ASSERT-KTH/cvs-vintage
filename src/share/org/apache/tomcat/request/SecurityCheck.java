@@ -331,10 +331,10 @@ class MemoryRealm {
 	// call addUser using attributes as parameters 
 	xh.addRule("tomcat-users/user",
 		   new XmlAction() {
-			   public void start( SaxContext ctx) throws Exception {
-			       int top=ctx.getTagCount()-1;
-			       MemoryRealm mr=(MemoryRealm)ctx.getRoot();
-			       AttributeList attributes = ctx.getAttributeList( top );
+			   public void start(SaxContext sctx) throws Exception {
+			       int top=sctx.getTagCount()-1;
+			       MemoryRealm mr=(MemoryRealm)sctx.getRoot();
+			       AttributeList attributes = sctx.getAttributeList( top );
 			       String user=attributes.getValue("name");
 			       String pass=attributes.getValue("password");
 			       String group=attributes.getValue("roles");

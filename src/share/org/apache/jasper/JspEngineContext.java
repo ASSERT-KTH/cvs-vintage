@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.6 2000/02/13 06:25:23 akv Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/13 06:25:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.7 2000/02/27 02:01:23 rubys Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/27 02:01:23 $
  *
  * ====================================================================
  * 
@@ -329,7 +329,7 @@ public class JspEngineContext implements JspCompilationContext {
             String actURI =  req.getServletPath();
             String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
             return baseURI + '/' + uri;
-       };
+        }
     };    
 
     /**
@@ -356,7 +356,7 @@ public class JspEngineContext implements JspCompilationContext {
         else
         {
             return path;
-        };
+        }
     };
 
    
