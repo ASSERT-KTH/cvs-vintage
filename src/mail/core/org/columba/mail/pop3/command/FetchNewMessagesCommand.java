@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.net.NoRouteToHostException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -103,13 +104,25 @@ public class FetchNewMessagesCommand extends Command {
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
 		} catch (UnknownHostException e) {
-			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "UnkownHostException", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(
+				null,
+				e.getLocalizedMessage(),
+				"UnkownHostException",
+				JOptionPane.ERROR_MESSAGE);
 		} catch (SocketTimeoutException e) {
-			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "TimeoutException", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(
+				null,
+				e.getLocalizedMessage(),
+				"TimeoutException",
+				JOptionPane.ERROR_MESSAGE);
 			server.forceLogout();
-		}
-		finally 
-		{
+		} catch (NoRouteToHostException e) {
+			JOptionPane.showMessageDialog(
+				null,
+				e.getLocalizedMessage(),
+				"NoRouteToHostException",
+				JOptionPane.ERROR_MESSAGE);
+		} finally {
 			// always enable the menuitem again 
 			r[0].getPOP3ServerController().enableActions(true);
 		}
@@ -277,7 +290,7 @@ public class FetchNewMessagesCommand extends Command {
 				// remove UID from server list
 				boolean remove = newUIDList.remove(serverUID);
 				*/
-				
+
 				// server message numbers start with 1
 				// whereas List numbers start with 0
 				//  -> always increase delete number

@@ -15,9 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
-import java.io.IOException;
+import java.net.NoRouteToHostException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
@@ -61,9 +65,9 @@ public class CheckForNewMessagesCommand extends Command {
 
 		command.log("Authenticating...", worker);
 
-		int totalMessageCount = server.getMessageCount(worker);
-
 		try {
+			int totalMessageCount = server.getMessageCount(worker);
+
 			List newUIDList = command.fetchUIDList(totalMessageCount, worker);
 
 			List messageSizeList = command.fetchMessageSizes(worker);
@@ -92,11 +96,19 @@ public class CheckForNewMessagesCommand extends Command {
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
-		} catch (IOException e ) {
-			server.forceLogout();			
+		} catch (UnknownHostException e) {
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "UnkownHostException", JOptionPane.ERROR_MESSAGE);
+		} catch (SocketTimeoutException e) {
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "TimeoutException", JOptionPane.ERROR_MESSAGE);
+			server.forceLogout();
+		} catch (NoRouteToHostException e ) {
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "NoRouteToHostException", JOptionPane.ERROR_MESSAGE);			
 		}
-		
-		r[0].getPOP3ServerController().enableActions(true);
+		finally 
+		{
+			// always enable the menuitem again 
+			r[0].getPOP3ServerController().enableActions(true);
+		}
 	}
 
 	protected void playSound() {
