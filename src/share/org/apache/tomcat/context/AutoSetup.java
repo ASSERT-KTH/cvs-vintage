@@ -83,23 +83,6 @@ public class AutoSetup extends BaseInterceptor {
     public AutoSetup() {
     }
 
-    /** Take note of the added contexts.
-     *  We can enhance the auto-setup for virtual hosts too,
-     *  but it's up to this class how it deals with that and
-     *  existing contexts. 
-     */
-    public void addContext(ContextManager cm, Context ctx)
-	throws TomcatException
-    {
-	if( ctx.getHost()== null ) {
-	    // this is a context that goes into the default server
-	    // we care only about the root context for autosetup
-	    // until we define a pattern for automatic vhost setup.
-	    definedContexts.put( ctx.getPath(), ctx );
-	    if(debug>0) log("Register explicit context " + ctx.getPath());
-	}
-    }
-    
     /** This will add all contexts to the default host.
      *	We need a mechanism ( or convention ) to configure
      *  virtual hosts too
@@ -112,7 +95,19 @@ public class AutoSetup extends BaseInterceptor {
 	    log("No webapps/ directory " + webappD );
 	    return ; // nothing to set up
 	}
-	
+
+    Enumeration en=cm.getContexts();
+    while (en.hasMoreElements()){
+        Context ctx=(Context)en.nextElement();
+        if( ctx.getHost()== null ) {
+            // this is a context that goes into the default server
+            // we care only about the root context for autosetup
+            // until we define a pattern for automatic vhost setup.
+            definedContexts.put( ctx.getPath(), ctx );
+            if(debug>0) log("Register explicit context " + ctx.getPath());
+        }
+    }
+
 	String[] list = webappD.list();
 	if( list.length==0 ) {
 	    log("No apps in webapps/ ");
@@ -123,7 +118,7 @@ public class AutoSetup extends BaseInterceptor {
 		String fname=name.substring(0, name.length()-4);
 		File appDir=new File( home + "/webapps/" + fname);
 		if( ! appDir.exists() ) {
-		    // no check if war file is "newer" than directory 
+		    // no check if war file is "newer" than directory
 		    // To update you need to "remove" the context first!!!
 		    appDir.mkdirs();
 		    // Expand war file
@@ -163,6 +158,7 @@ public class AutoSetup extends BaseInterceptor {
                 Context ctx=new Context();
                 ctx.setContextManager( cm );
                 ctx.setPath(path);
+                definedContexts.put( path, ctx );
                 // use absolute filename based on CM home instead of relative
                 // don't assume HOME==TOMCAT_HOME
                 ctx.setDocBase( f.getAbsolutePath() );
