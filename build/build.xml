@@ -1132,7 +1132,7 @@ diff -u -r1.5 project.xml
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${commons-sandbox-util.dir}">
+            <fileset dir="${commons-sandbox-util.dir}/target">
                 <include name="**/commons-util*.jar"/>
             </fileset>
         </copy>
@@ -1148,7 +1148,7 @@ diff -u -r1.5 project.xml
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${commons-sandbox-email.dir}">
+            <fileset dir="${commons-sandbox-email.dir}/target">
                 <include name="**/commons-email*.jar"/>
             </fileset>
         </copy>
