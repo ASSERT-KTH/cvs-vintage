@@ -20,7 +20,7 @@ import org.jboss.ejb.DeploymentException;
  * 
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -32,7 +32,8 @@ public class MessageDrivenMetaData
    public static final int CLIENT_ACKNOWLEDGE_MODE = Session.CLIENT_ACKNOWLEDGE;
    public static final byte DURABLE_SUBSCRIPTION = 0;
    public static final byte NON_DURABLE_SUBSCRIPTION = 1;
-    
+   public static final byte TX_UNSET = 9;
+
    // Attributes ----------------------------------------------------
    
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
@@ -43,7 +44,7 @@ public class MessageDrivenMetaData
    private String user; // = null;
    private String passwd; // = null;
    private String clientId; // = null;
-
+   private byte methodTransactionType= TX_UNSET;
    // Static --------------------------------------------------------
     
    // Constructors --------------------------------------------------
@@ -57,10 +58,32 @@ public class MessageDrivenMetaData
 
    /**
     * returns MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
-    * MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE
+    * MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE, or MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE
+    *
     */
    public int getAcknowledgeMode() {
-      return acknowledgeMode;
+      // My interpretation of the EJB and JMS spec leads
+      // me to that CLIENT_ACK is the only possible
+      // solution. A transaction is per session in JMS, and
+      // it is not possible to get access to the transaction.
+      // According to the JMS spec it is possible to 
+      // multithread handling of messages (but not session),
+      // but there is NO transaction support for this.
+      // I,e, we can not use the JMS transaction for
+      // message ack: hence we must use manual ack.
+      
+      // But for NOT_SUPPORTED this is not true here we 
+      // should have AUTO_ACKNOWLEDGE_MODE
+      
+      // This is not true for now. For JBossMQ we relly 
+      // completely on transaction handling. For JBossMQ, the
+      // ackmode is actually not relevant. We keep it here
+      // anyway, if we find that this is needed for other
+      // JMS provider, or is not good.
+      if ( getMethodTransactionType() == TX_REQUIRED)
+	 return  CLIENT_ACKNOWLEDGE_MODE;
+      else 
+	 return acknowledgeMode;
    }
    
    public String getDestinationType() {
@@ -85,6 +108,39 @@ public class MessageDrivenMetaData
    
    public String getClientId() {
       return clientId;
+   }
+   
+   /**
+    * Check MDB methods TX type, is cached here
+    */
+   public byte getMethodTransactionType() {
+      if (methodTransactionType == TX_UNSET) {
+	 if (isContainerManagedTx()) {
+	    //
+	    // Here we should have a way of looking up wich message class
+	    // the MessageDriven bean implements, by doing this we might
+	    // be able to use other MOM systems, aka XmlBlaser. TODO!
+	    // The MessageDrivenContainer needs this too!!
+	    //
+	    if(super.getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED) {
+	       methodTransactionType = TX_REQUIRED;
+	    } else {
+	       methodTransactionType = TX_NOT_SUPPORTED;
+	    }
+	 } else {
+	    methodTransactionType = TX_UNKNOWN;
+	 }
+      }
+      return methodTransactionType;
+   }
+   
+   /**
+    * Overide here, since a message driven bean only ever have one method, wich
+    * we might cache.
+    */
+   public byte getMethodTransactionType(String methodName, Class[] params, boolean remote) {
+      // An MDB may only ever have on method
+      return getMethodTransactionType();
    }
    
    /**
@@ -125,13 +181,6 @@ public class MessageDrivenMetaData
          }
       }
       
-//       // Skipp check of dest type, for flexibility
-//       } else if (destinationType.equals("javax.jms.Queue")) {
-//          //Noop
-//       } else {
-//          throw new DeploymentException("session type should be 'Stateful' or 'Stateless'");
-//       }
-      
       // set the transaction type
       String transactionType =
          getUniqueChildContent(element, "transaction-type");
@@ -149,34 +198,6 @@ public class MessageDrivenMetaData
          // else defaults to AUTO
       } else if (transactionType.equals("Container")) {
          containerManagedTx = true;
-         // My interpretation of the EJB and JMS spec leads
-         // me to that CLIENT_ACK is the only possible
-         // solution. A transaction is per session in JMS, and
-         // it is not possible to get access to the transaction.
-         // According to the JMS spec it is possible to 
-         // multithread handling of messages (but not session),
-         // but there is NO transaction support for this.
-         // I,e, we can not use the JMS transaction for
-         // message ack: hence we must use manual ack.
-
-         // But for NOT_SUPPORTED this is not true here we 
-         // should have AUTO_ACKNOWLEDGE_MODE
-
-         // This is not true for now. For JBossMQ we relly 
-         // completely on transaction handling. For JBossMQ, the
-         // ackmode is actually not relevant. We keep it here
-         // anyway, if we find that this is needed for other
-         // JMS provider, or is not good.
-        
-         //
-         // Here we should have a way of looking up wich message class
-         // the MessageDriven bean implements, by doing this we might
-         // be able to use other MOM systems, aka XmlBlaser. TODO!
-         // The MessageDrivenContainer needs this too!!
-         //
-         if (getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED) {
-            acknowledgeMode = CLIENT_ACKNOWLEDGE_MODE;
-         }
       } else {
          throw new DeploymentException
             ("transaction type should be 'Bean' or 'Container'");
