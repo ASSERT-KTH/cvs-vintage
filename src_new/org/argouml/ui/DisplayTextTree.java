@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.44 2004/08/20 19:28:26 mvw Exp $
+// $Id: DisplayTextTree.java,v 1.45 2004/11/21 18:57:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class DisplayTextTree extends JTree {
     private boolean reexpanding;
 
     /** Sets the label renderer, line style angled, enable tooltips,
-     *  sets row hieght to 18 pixels.
+     *  sets row height to 18 pixels.
      */
     public DisplayTextTree() {
 
@@ -81,7 +81,7 @@ public class DisplayTextTree extends JTree {
     // ------------ methods that override JTree methods ---------
 
     /**
-     * override default JTree implementation to display the
+     * Override the default JTree implementation to display the
      * appropriate text for any object that will be displayed in
      * the todo list.
      * 

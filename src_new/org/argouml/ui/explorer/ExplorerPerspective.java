@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.11 2004/11/19 15:08:15 mvw Exp $
+// $Id: ExplorerPerspective.java,v 1.12 2004/11/21 18:59:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,9 @@ import org.argouml.i18n.Translator;
 
 /**
  * Represents a perspective (or view) of the uml model for display in the
- * explorer.
+ * explorer.<p>
  *
- * This class replaces the old NavPerspective class. This is much simpler.
+ * This class replaces the old NavPerspective class. This is much simpler.<p>
  *
  * The rules in the perspective generate child nodes for any given parent
  * node in the explorer tree view. Those nodes are then stored as user objects

@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.73 2004/11/20 20:45:51 mvw Exp $
+// $Id: NavigatorPane.java,v 1.74 2004/11/21 18:57:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,10 +114,9 @@ public class NavigatorPane
      * Constructs a new navigator panel.
      * 
      * <p>This panel consists of a Combobox to select a navigation
-     * perspective, a JTree to display the UML model, some history
-     * (back and forward arrows) buttons that are currently disabled,
-     * and a configuration dialog to tailor the perspectives (but this
-     * is not saved).
+     * perspective, a combobox to select ordering,
+     * a JTree to display the UML model, 
+     * and a configuration dialog to tailor the perspectives.
      */
     private NavigatorPane(boolean doSplash) {
         
