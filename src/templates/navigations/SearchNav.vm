@@ -18,7 +18,7 @@
 </td>
 
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
-#if ($issueTypes && $issueTypes.size() > 0)
+#if ($issueTypes && $issueTypes.size() > 1)
 <td>
 <form action="$link.setPage("Wizard1.vm").setAction("SelectIssueType")" 
     method="get">
@@ -26,7 +26,6 @@
     value="$data.User.HomePage" />
  <select name="$scarabG.Constant.NEW_ISSUE_TYPE" tabindex="3" 
     onChange="this.form.submit();">
-
   #foreach($issueType in $issueTypes)
     #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
     <option#if ($issueType.QueryKey == $scarabR.CurrentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
