@@ -89,8 +89,9 @@ public class RMIConfiguration {
      */
     public RMIConfiguration(String name, Properties carolProperties) throws RMIConfigurationException {
 
-	String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." +  CarolDefaultValues.RMI_PREFIX + "." + name;
-	String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." +  CarolDefaultValues.JNDI_PREFIX + "." + name;
+	String rmiPref     = CarolDefaultValues.CAROL_PREFIX + "." + name;
+	String urlPref     = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.URL_PREFIX;
+	String factoryPref = CarolDefaultValues.CAROL_PREFIX + "." + name +"."+CarolDefaultValues.FACTORY_PREFIX;
 
 	// RMI Properties
 	rmiName=name;
@@ -102,19 +103,41 @@ public class RMIConfiguration {
 	if (carolProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ) != null) {
 	    nameServiceName = carolProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ).trim();
 	}	
-    
+	
+	//interceptors simplifications	
+	String interPref  = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
+						      CarolDefaultValues.INTERCEPTOR_PKGS_PREFIX);
+	String interValues = carolProperties.getProperty(CarolDefaultValues.CAROL_PREFIX + "." + name +"."+
+						      CarolDefaultValues.INTERCEPTOR_VALUES_PREFIX);
+
+	//set the jvm interceptors flag
+	if((interPref!=null)&&(interValues!=null)) {
+	    //Parse jvm the properties
+	    Properties jvmProps = new Properties();
+	    jvmProps.putAll(System.getProperties());
+	    String current;
+	    StringTokenizer st = new StringTokenizer(interValues,",");
+	    while (st.hasMoreTokens()) {
+		current = st.nextToken().trim();
+		jvmProps.setProperty(interPref+"."+current,"");
+	    }
+	    System.setProperties(jvmProps);
+	}
 	
 	this.jndiProperties= new Properties();
-
 	for (Enumeration e = carolProperties.propertyNames() ; e.hasMoreElements() ;) {
-	    String current = ((String)e.nextElement()).trim();
-	    if ((!current.trim().equals(CarolDefaultValues.PKGS_PREFIX))&&(current.startsWith(jndiPref))) {
-		jndiProperties.setProperty(current.substring(jndiPref.length()+1), carolProperties.getProperty(current));
-	    }		    
+	    String current = ((String)e.nextElement()).trim();	    
+	    // jndi configuration
+	    if (current.startsWith(urlPref)) {
+		jndiProperties.setProperty(CarolDefaultValues.JNDI_URL_PREFIX, carolProperties.getProperty(current));
+	    } else if (current.startsWith(factoryPref)) {
+		jndiProperties.setProperty(CarolDefaultValues.JNDI_FACTORY_PREFIX, carolProperties.getProperty(current));
+	    }
 	}
 
 	
-	port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.URL_PREFIX));
+	
+	port = getPortOfUrl(this.jndiProperties.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
     }
   
     /**

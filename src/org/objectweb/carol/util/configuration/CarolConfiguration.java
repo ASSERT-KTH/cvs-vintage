@@ -86,7 +86,7 @@ public class CarolConfiguration {
     /**
      * String of the actvated RMI
      */
-    private static String activated;
+    private static String protocols;
 
     /**
      * Boolean for multi RMI
@@ -209,8 +209,7 @@ public class CarolConfiguration {
             throw new RMIConfigurationException("Can't start Carol, configuration check fail");
 
         // translate existing jndi properties
-        if (jndiProps != null)
-            jndiProps = jndi2Carol(jndiProps);
+        if (jndiProps != null) jndiProps = jndi2Carol(jndiProps);
 
         // build a general properties object
         Properties allProps = new Properties();
@@ -218,11 +217,9 @@ public class CarolConfiguration {
         // default properties can not be null (if null, checkCarolConfiguration should stop)
         allProps.putAll(defaultsProps);
         // first the jndi (extented) file 
-        if (jndiProps != null)
-            allProps.putAll(jndiProps);
+        if (jndiProps != null) allProps.putAll(jndiProps);
         // second the carol file
-        if (carolProps != null)
-            allProps.putAll(carolProps);
+        if (carolProps != null) allProps.putAll(carolProps);
 
         loadCarolConfiguration(allProps);
 
@@ -235,29 +232,29 @@ public class CarolConfiguration {
     public static synchronized void loadCarolConfiguration(Properties allProps) throws RMIConfigurationException {
 
         // prefix
-        String rmiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX;
         String jvmPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JVM_PREFIX;
+        String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
 
         // get the general properties
         // activated property : if existe use it, else use the jndi url property, else use the default property
-        String act = allProps.getProperty(CarolDefaultValues.ACTIVATION_KEY);
+        String act = allProps.getProperty(CarolDefaultValues.PROTOCOLS_KEY);
         if (act != null) {
-            activated = act.trim();
-            allProps.remove(CarolDefaultValues.ACTIVATION_KEY);
+            protocols = act.trim();
+            allProps.remove(CarolDefaultValues.PROTOCOLS_KEY);
             if (TraceCarol.isDebugCarol()) {
-                TraceCarol.debugCarol("Carol use carol file to activate RMI: " + activated);
+                TraceCarol.debugCarol("Carol use carol file to activate RMI: " + protocols);
             }
         } else {
             //try the jndi rmi name 
             if (jndiRMIName != null) {
-                activated = jndiRMIName;
+                protocols = jndiRMIName;
                 if (TraceCarol.isDebugCarol()) {
-                    TraceCarol.debugCarol("Carol use jndi file to activate RMI: " + activated);
+                    TraceCarol.debugCarol("Carol use jndi file to activate RMI: " + protocols);
                 }
             } else { //use the default
-                activated = allProps.getProperty(CarolDefaultValues.DEFAULT_ACTIVATION_KEY).trim();
+                protocols = allProps.getProperty(CarolDefaultValues.DEFAULT_PROTOCOLS_KEY).trim();
                 if (TraceCarol.isDebugCarol()) {
-                    TraceCarol.debugCarol("Carol use default file to activate RMI " + activated);
+                    TraceCarol.debugCarol("Carol use default file to activate RMI " + protocols);
                 }
             }
         }
@@ -276,18 +273,15 @@ public class CarolConfiguration {
         }
 
         //get all rmi name
-        StringTokenizer pTok = new StringTokenizer(activated, ",");
+        StringTokenizer pTok = new StringTokenizer(protocols, ",");
         if (pTok.countTokens() > 1) {
             multiRMI = true;
             // get all multi rmi function
             for (Enumeration e = allProps.propertyNames(); e.hasMoreElements();) {
                 String pkey = ((String) e.nextElement()).trim();
                 if (pkey.startsWith(CarolDefaultValues.MULTI_RMI_PREFIX)) {
-                    allProps.setProperty(
-                        CarolDefaultValues.CAROL_PREFIX
-                            + "."
-                            + pkey.substring(CarolDefaultValues.MULTI_RMI_PREFIX.length() + 1),
-                        (allProps.getProperty(pkey)).trim());
+                    allProps.setProperty(pkey.substring(CarolDefaultValues.MULTI_RMI_PREFIX.length() + 1),
+					 (allProps.getProperty(pkey)).trim());
                     // set all multi rmi function
                     allProps.remove(pkey);
                 }
@@ -313,18 +307,18 @@ public class CarolConfiguration {
         defaultRMI = pTok.nextToken().trim();
         RMIConfiguration rmiConfDefault = new RMIConfiguration(defaultRMI, allProps);
         rmiConfigurationTable.put(defaultRMI, rmiConfDefault);
+
         // Trace Carol Default  configuration
         if (TraceCarol.isDebugCarol()) {
             TraceCarol.debugCarol("Carol RMI " + defaultRMI + " configuration:");
             TraceCarol.debugCarol(defaultRMI + " is default");
             // SortedMap of default rmi
-            String rmiDP = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX + "." + defaultRMI;
-            String jndiDP = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX + "." + defaultRMI;
+            String rmiDP = CarolDefaultValues.CAROL_PREFIX + "." + defaultRMI;
             TreeMap map = new TreeMap(allProps);
             String k;
             for (Iterator e = map.keySet().iterator(); e.hasNext();) {
                 k = (String) e.next();
-                if ((k.startsWith(rmiDP)) || (k.startsWith(jndiDP))) {
+                if (k.startsWith(rmiDP)) {
                     TraceCarol.debugCarol(k + "=" + allProps.getProperty(k));
                 }
             }
@@ -339,13 +333,12 @@ public class CarolConfiguration {
             if (TraceCarol.isDebugCarol()) {
                 TraceCarol.debugCarol("Carol RMI " + rmiName + " configuration:");
                 // SortedMap of default rmi
-                String rmiDP = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.RMI_PREFIX + "." + rmiName;
-                String jndiDP = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX + "." + rmiName;
+                String rmiDP = CarolDefaultValues.CAROL_PREFIX + "." + rmiName;
                 TreeMap map = new TreeMap(allProps);
                 String k;
                 for (Iterator e = map.keySet().iterator(); e.hasNext();) {
                     k = (String) e.next();
-                    if ((k.startsWith(rmiDP)) || (k.startsWith(jndiDP))) {
+                    if (k.startsWith(rmiDP)) {
                         TraceCarol.debugCarol(k + "=" + allProps.getProperty(k));
                     }
                 }
@@ -355,17 +348,29 @@ public class CarolConfiguration {
         if (TraceCarol.isDebugCarol()) {
             TraceCarol.debugCarol("--- Carol JVM configuration --- (without " + jvmPref + " prefix)");
         }
+
         //Parse jvm the properties
         Properties jvmProps = new Properties();
         jvmProps.putAll(System.getProperties());
 
-        // get all rmi configuration
+        // get all jvm configuration
         for (Enumeration e = allProps.propertyNames(); e.hasMoreElements();) {
             String pkey = ((String) e.nextElement()).trim();
             if (pkey.startsWith(jvmPref)) { // jvm properties
                 jvmProps.setProperty(pkey.substring(jvmPref.length() + 1), (allProps.getProperty(pkey)).trim());
                 if (TraceCarol.isDebugCarol()) {
                     TraceCarol.debugCarol(pkey.substring(jvmPref.length() + 1) + "=" + allProps.getProperty(pkey));
+                }
+            }
+        }
+
+        // get all jndi configuration (except rmi specific configuration)
+        for (Enumeration e = allProps.propertyNames(); e.hasMoreElements();) {
+            String pkey = ((String) e.nextElement()).trim();
+            if (pkey.startsWith(jndiPref)) { // jndi properties
+                jvmProps.setProperty(pkey.substring(jndiPref.length() + 1), (allProps.getProperty(pkey)).trim());
+                if (TraceCarol.isDebugCarol()) {
+                    TraceCarol.debugCarol(pkey.substring(jndiPref.length() + 1) + "=" + allProps.getProperty(pkey));
                 }
             }
         }
@@ -419,11 +424,9 @@ public class CarolConfiguration {
      */
     private static Properties jndi2Carol(Properties p) {
         TraceCarol.debugCarol("map properties found in jndi.properties to CAROL ones");
-        String jndiPref = CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX;
         Properties result = new Properties();
         // get the rmi name 
-        jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(CarolDefaultValues.URL_PREFIX));
-        TraceCarol.debugCarol("jndi prefix=" + jndiPref);
+        jndiRMIName = CarolDefaultValues.getRMIProtocol(p.getProperty(CarolDefaultValues.JNDI_URL_PREFIX));
         TraceCarol.debugCarol("rmi used=" + jndiRMIName);
         TraceCarol.debugCarol("initial properties = " + p);
         if (jndiRMIName == null) {
@@ -431,13 +434,20 @@ public class CarolConfiguration {
         } else {
             for (Enumeration e = p.propertyNames(); e.hasMoreElements();) {
                 String current = ((String) e.nextElement()).trim();
-                if (current.trim().equals(CarolDefaultValues.PKGS_PREFIX)) {
-                    // pkgs for other context, only in use for all protocol in the jvm
-                    result.setProperty(
-                        CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JVM_PREFIX + "." + current,
-                        p.getProperty(current));
-                } else {
-                    result.setProperty(jndiPref + "." + jndiRMIName + "." + current, p.getProperty(current));
+                if (current.trim().equals(CarolDefaultValues.JNDI_URL_PREFIX)) {
+                    // URL prefix for my context
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + 
+				       jndiRMIName + "." + 
+				       CarolDefaultValues.URL_PREFIX, p.getProperty(current));
+                } else if (current.trim().equals(CarolDefaultValues.JNDI_FACTORY_PREFIX)) {
+                    // CONTEXT FACTORY prefix for my 
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + 
+				       jndiRMIName + "." + 
+				       CarolDefaultValues.FACTORY_PREFIX, p.getProperty(current));
+		} else {
+		    // Other jndi properties
+                    result.setProperty(CarolDefaultValues.CAROL_PREFIX + "." + CarolDefaultValues.JNDI_PREFIX 
+				       + "." + current, p.getProperty(current));
                 }
             }
         }
@@ -614,6 +624,14 @@ public class CarolConfiguration {
             result += k + "=" + allProps.getProperty(k);
         }
         return result;
+    }
+
+    /**
+     * public static String, get activated carol protocols
+     * @return String activated protocols
+     */
+    public static String getProtocols() {
+	return protocols;
     }
 
 }

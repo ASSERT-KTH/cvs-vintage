@@ -43,11 +43,6 @@ public class CarolDefaultValues {
     public static String CAROL_PREFIX="carol";
 
     /**
-     * RMI Prefix 
-     */
-    public static String RMI_PREFIX="rmi";
-
-    /**
      * JNDI Prefix
      */
     public static String JNDI_PREFIX="jndi";
@@ -56,11 +51,6 @@ public class CarolDefaultValues {
      * JVM Prefix
      */
     public static String JVM_PREFIX="jvm";
-
-    /**
-     * activation Prefix
-     */
-    public static String ACTIVATION_PREFIX="activated";    
 
     /**
      * name service class prefix
@@ -75,33 +65,32 @@ public class CarolDefaultValues {
     /**
      * jndi factory Prefix
      */
-    public static String FACTORY_PREFIX="java.naming.factory.initial";
+    public static String JNDI_FACTORY_PREFIX="java.naming.factory.initial";
 
     /**
      * jndi url  Prefix
      */
-    public static String URL_PREFIX="java.naming.provider.url";
+    public static String JNDI_URL_PREFIX="java.naming.provider.url";
 
     /**
      * jndi pkgs  Prefix
      */
-    public static String PKGS_PREFIX="java.naming.factory.url.pkgs";
+    public static String JNDI_PKGS_PREFIX="java.naming.factory.url.pkgs";
+
+    /**
+     * carol url  Prefix
+     */
+    public static String URL_PREFIX="url";
+
+    /**
+     * carol factory Prefix
+     */
+    public static String FACTORY_PREFIX="context.factory";
 
     /**
      * start name service Prefix
      */
     public static String START_NS_PREFIX="start.ns";
-    
-
-    /**
-     * default activation key
-     */
-    public static String DEFAULT_ACTIVATION_KEY="carol.rmi.activated.default";   
-
-    /**
-     * acativation key
-     */
-    public static String ACTIVATION_KEY="carol.rmi.activated";   
 
     /**
      * start ns  key
@@ -117,12 +106,21 @@ public class CarolDefaultValues {
      * start jndi  key
      */ 
     public static String START_JNDI_KEY="carol.start.jndi";
+    
+    /**
+     * default activation key
+     */
+    public static String DEFAULT_PROTOCOLS_KEY="carol.protocols.default";   
+
+    /**
+     * acativation key
+     */
+    public static String PROTOCOLS_KEY="carol.protocols";   
 
    /**
      * start ns  key
      */
-    public static String MULTI_RMI_PREFIX="multi.carol";
-
+    public static String MULTI_RMI_PREFIX="multi";
 
    /**
      * start prod  key
@@ -135,6 +133,15 @@ public class CarolDefaultValues {
      */
     public static String MULTI_JNDI="org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory";
 
+    /**
+     * interceptor prefix
+     */
+    public static String INTERCEPTOR_PKGS_PREFIX = "interceptor.pkgs";
+
+    /**
+     * interceptor prefix
+     */
+    public static String INTERCEPTOR_VALUES_PREFIX = "interceptors";
 
     /**
      * Hashtable mapping between default en rmi name
