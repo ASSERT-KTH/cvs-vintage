@@ -28,10 +28,8 @@ public class ComposerSpellCheck {
 		this.composerController = composerController;
 		spellCheckConfig =
 			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
-		System.out.println("Filename is " + spellCheckConfig.get("executable"));
 		ASpellInterface.setAspellExeFilename(
 			spellCheckConfig.get("executable"));
-
 	}
 
 	public String checkText(String text) {
