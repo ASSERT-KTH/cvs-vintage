@@ -26,7 +26,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -117,21 +117,6 @@ public interface EntityPersistenceStore
     * @throws RemoteException    thrown if some system exception occurs
     */
    void loadEntity(EntityEnterpriseContext instance)
-      throws RemoteException;
-      
-   /**
-    * This method is called whenever a set of entities should be preloaded from
-    * the underlying storage. The persistence store is allowed to make this a 
-    * null operation
-    * 
-    * @param instances    the EntityEnterpriseContexts for the entities that
-    *                     must be loaded
-    * @param keys         a PagableKeyCollection previously returned from
-    *                     findEntities.
-    *
-    * @throws RemoteException    thrown if some system exception occurs
-    */
-   void loadEntities(FinderResults keys)
       throws RemoteException;
       
    /**
