@@ -31,7 +31,8 @@ import org.columba.mail.message.MimeHeader;
 public class WindowsViewer extends AbstractViewer {
 
 	public Process openWith(MimeHeader header, File tempFile) {
-		openDocument(tempFile.getPath());
+		// *20030714, karlpeder* openDocumentWidth now called
+		openDocumentWith(tempFile.getPath());
 		return null;
 	}
 
@@ -76,7 +77,8 @@ public class WindowsViewer extends AbstractViewer {
 	}
 
 	public Process openWithURL(URL url) {
-		openDocument(url.getPath());
+		// *20030714, karlpeder* openDocumentWidth now called
+		openDocumentWith(url.getPath());
 		return null;
 	}
 
@@ -124,12 +126,12 @@ public class WindowsViewer extends AbstractViewer {
 				proc = rt.exec(cmd);
 			}
 
-                        if (proc == null) {
+            if (proc == null) {
 				if (MainInterface.DEBUG) {
 					ColumbaLogger.log.debug("The underlying Windows version is unknown.");
 				}
 				return;
-                        }
+            }
 
 			// any error message?
 			StreamGobbler errorGobbler =
@@ -149,6 +151,65 @@ public class WindowsViewer extends AbstractViewer {
 			t.printStackTrace();
 		}
 	}
+
+	/**
+	 * Used to open a file with an application specified by the user
+	 * using the standard Windows Open With dialog.
+	 * @param	filename	Name of file to open
+	 * @author 	Karl Peder Olesen (karlpeder) 20030714
+	 */
+	protected void openDocumentWith(String filename) { 
+		
+		// TODO: Test with other platforms than Win2000
+		
+		try {
+			Process proc = null;
+			if (OSInfo.isWinNT() ||	OSInfo.isWin95() ||
+					OSInfo.isWin98() ||	OSInfo.isWinME() || 
+					OSInfo.isWin2K() || OSInfo.isWinXP()) {
+				
+				String[] cmd = new String[] { 
+						"rundll32.exe",
+						"SHELL32.DLL,OpenAs_RunDLL",
+						filename
+						};
+				
+				Runtime rt = Runtime.getRuntime();
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.info("Executing " + cmd[0]
+						 + " " + cmd[1] + " " + cmd[2]);
+				}
+				proc = rt.exec(cmd);
+			}
+
+			if (proc == null) {
+				if (MainInterface.DEBUG) {
+					ColumbaLogger.log.debug(
+							"The underlying Windows version is unknown.");
+				}
+				return;
+			}
+
+			// any error message?
+			StreamGobbler errorGobbler =
+				new StreamGobbler(proc.getErrorStream(), "ERROR");
+			errorGobbler.start();
+			// any output?
+			StreamGobbler outputGobbler =
+				new StreamGobbler(proc.getInputStream(), "OUTPUT");
+			outputGobbler.start();
+
+			// any error?
+			int exitVal = proc.waitFor();
+			if (MainInterface.DEBUG) {
+				ColumbaLogger.log.info("ExitValue: " + exitVal);
+			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		
+	}
+
 
 	class StreamGobbler extends Thread {
 		InputStream is;
