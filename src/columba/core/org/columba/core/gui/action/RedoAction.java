@@ -59,9 +59,6 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('R');
-
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
 		MainInterface.focusManager.setRedoAction(this);

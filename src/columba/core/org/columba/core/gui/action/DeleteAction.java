@@ -56,9 +56,6 @@ public class DeleteAction extends FrameAction {
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('D');
-
 		setEnabled(false);
 		MainInterface.focusManager.setDeleteAction(this);
 	}

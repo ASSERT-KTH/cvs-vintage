@@ -34,28 +34,6 @@ public class PluginManagerAction extends FrameAction {
 		// action command
 		setActionCommand("PLUGIN_MANAGER");
 
-		// TODO: Define mnemonic (using &)
-		/*		
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_pluginmanager"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_pluginmanager"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_pluginmanager"),
-			"PLUGIN_MANAGER",
-			null,
-			null,
-			0,
-			null);
-			*/
 	}
 
 	/* (non-Javadoc)

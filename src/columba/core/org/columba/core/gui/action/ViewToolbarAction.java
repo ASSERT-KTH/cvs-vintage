@@ -40,29 +40,6 @@ public class ViewToolbarAction extends CheckBoxAction implements Observer{
 		// action command
 		setActionCommand("SHOW_TOOLBAR");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('T');
-
-		/*
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-				"menu_view_showtoolbar"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-				"menu_view_showtoolbar"),
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-				"menu_view_showtoolbar"),
-			"SHOW_TOOLBAR",
-			null,
-			null,
-			'1',
-			null);*/
 	}
 
 	/* (non-Javadoc)

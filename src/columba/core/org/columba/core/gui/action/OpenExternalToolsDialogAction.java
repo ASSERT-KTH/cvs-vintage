@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.externaltools.ExternalToolsDialog;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Opens external tools configuration dialog.
@@ -33,8 +34,10 @@ public class OpenExternalToolsDialogAction extends FrameAction {
 	 * @param name
 	 */
 	public OpenExternalToolsDialogAction(AbstractFrameController frameController) {
-		super(frameController, "External Tools...");
-
+		super(
+				frameController, 
+				GlobalResourceLoader.getString(
+					null, null, "menu_utilities_externaltools"));
 	}
 
 	/* (non-Javadoc)

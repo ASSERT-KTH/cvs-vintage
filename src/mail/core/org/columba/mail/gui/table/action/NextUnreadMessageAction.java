@@ -64,9 +64,6 @@ public class NextUnreadMessageAction
 		// action command
 		setActionCommand("NEXT_UNREAD_MESSAGE");
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('U');
-		
 		// Shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke("N"));
 			

@@ -52,25 +52,6 @@ public class CloseAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('C');
-
-		/*		
-		super(
-			frameController,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"close"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"close"),
-			"CLOSE",
-			null,null,
-			'C',
-			KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-			*/
 	}
 
 	/* (non-Javadoc)

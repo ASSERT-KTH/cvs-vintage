@@ -62,32 +62,6 @@ public class PasteAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('P');
-		
-		
-		/*		
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_paste"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_paste"),
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_paste"),
-			"PASTE",
-			ImageLoader.getImageIcon("stock_paste-16.png"),
-			ImageLoader.getImageIcon("stock_paste.png"),
-			'V',
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
-			false);
-		*/	
 		setEnabled(false);
 		MainInterface.focusManager.setPasteAction(this);
 	}

@@ -47,9 +47,6 @@ public class SelectAllAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('A');
-		
 		setEnabled(false);
 		MainInterface.focusManager.setSelectAllAction(this);
 	}

@@ -59,9 +59,6 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 		// disable toolbar text
 		enableToolBarText(false);
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('U');
-		
 		setEnabled(false);
 			
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);

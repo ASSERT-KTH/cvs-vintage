@@ -27,8 +27,8 @@ import java.util.Vector;
 
 import javax.swing.JMenu;
 
+import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.util.CMenu;
-import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.util.MailResourceLoader;
 

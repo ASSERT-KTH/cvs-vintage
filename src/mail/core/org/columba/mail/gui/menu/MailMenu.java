@@ -7,11 +7,11 @@
 package org.columba.mail.gui.menu;
 
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.CMenu;
-import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;

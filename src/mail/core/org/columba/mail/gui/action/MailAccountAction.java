@@ -43,8 +43,6 @@ public class MailAccountAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("configure_16_mail.png"));
 
-		// TODO: Define mnemonic (using &)		
-		
 	}
 
 	/* (non-Javadoc)

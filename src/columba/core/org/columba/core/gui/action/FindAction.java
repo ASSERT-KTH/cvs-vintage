@@ -55,24 +55,6 @@ public class FindAction extends FrameAction {
 		
 		// TODO: Define mnemonic (using &)
 		
-		/*		
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-                                null,
-                                null,
-                                "menu_edit_find"),
-			null,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_find_tooltip"),
-			"FIND",
-			ImageLoader.getSmallImageIcon("stock_search-16.png"),
-			ImageLoader.getImageIcon("stock_search.png"),
-			'0',
-		KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-		*/
 		setEnabled(false);
 	}
 }

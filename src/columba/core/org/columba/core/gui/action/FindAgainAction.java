@@ -38,24 +38,6 @@ public class FindAgainAction extends FrameAction {
 		
 		// TODO: Define mnemonic (using &)
 		
-		/*
-		super(
-			controller,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_findagain"),
-			null,
-			GlobalResourceLoader.getString(
-				null,
-				null,
-				"menu_edit_findagain_tooltip"),
-			"FIND_AGAIN",
-			null,
-			null,
-			'0',
-			null);
-		*/
 		setEnabled(false);
 	}
 }

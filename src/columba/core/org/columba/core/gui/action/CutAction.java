@@ -57,9 +57,6 @@ public class CutAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_X, ActionEvent.CTRL_MASK));
 
-		// TODO: Use & to define mnemonic
-		setMnemonic('T');				
-		
 		setEnabled(false);	
 		MainInterface.focusManager.setCutAction(this);
 		

@@ -57,9 +57,6 @@ public class PreviousMessageAction
 		// icons
 		setLargeIcon(ImageLoader.getSmallImageIcon("previous-message.png"));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('M');
-		
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke("B"));
 		

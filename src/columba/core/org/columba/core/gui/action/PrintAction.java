@@ -63,33 +63,13 @@ public class PrintAction
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		
-		// TODO: Define mnemonic (using &)
-
-		/*		
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_print"),
-			null,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_print_tooltip"),
-			"PRINT",
-			ImageLoader.getSmallImageIcon("stock_print-16.png"),
-			ImageLoader.getImageIcon("stock_print.png"),
-			'0',
-			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-*/
-			// *20030614, karlpeder* In main view only enabled when 
-			// message(s) selected
-			if (frameController instanceof AbstractMailFrameController) {
-				((AbstractMailFrameController) frameController)
-						.registerTableSelectionListener(this);
-			}
-			setEnabled(false);
+		// *20030614, karlpeder* In main view only enabled when 
+		// message(s) selected
+		if (frameController instanceof AbstractMailFrameController) {
+			((AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(this);
+		}
+		setEnabled(false);
 	}
 
 	/* (non-Javadoc)

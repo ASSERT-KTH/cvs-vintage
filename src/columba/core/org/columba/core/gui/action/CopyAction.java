@@ -57,9 +57,6 @@ public class CopyAction extends FrameAction {
 		// disable toolbar text
 		enableToolBarText(false);
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('C');
-
 		setEnabled(false);
 		MainInterface.focusManager.setCopyAction(this);
 	}

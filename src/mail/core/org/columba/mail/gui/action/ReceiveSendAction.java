@@ -62,8 +62,6 @@ public class ReceiveSendAction extends FrameAction {
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
 		
-		// TODO: Define mnemonic (using &)
-		
 	}
 
 	/* (non-Javadoc)

@@ -39,25 +39,6 @@ public class PrintSetupAction extends FrameAction {
 		// action command
 		setActionCommand("PRINT_SETUP");
 		
-		// TODO: Define mnemonic (using &)
-
-		/*
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_printsetup"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_file_printsetup"),
-			"PRINT_SETUP",
-			null,
-			null,
-			'0',
-			null);
-		*/
 		setEnabled(false);
 	}
 

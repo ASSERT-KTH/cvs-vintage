@@ -305,8 +305,9 @@ public class ConfigFrame
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
-		JButton closeButton =
-			new JButton(MailResourceLoader.getString("global", "close"));
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);

@@ -55,9 +55,6 @@ public class ExitAction extends FrameAction {
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		
-		// TODO: Use & to define mnemonic
-		setMnemonic('X');
-
 	}
 
 	/* (non-Javadoc)

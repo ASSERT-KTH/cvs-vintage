@@ -14,6 +14,7 @@ import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.mail.gui.frame.MailFrameView;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -34,19 +35,12 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 	 * @param keyStroke
 	 */
 	public ViewFolderInfoPanelAction(AbstractFrameController frameController) {
-		super(frameController, "FolderInfoPanel");
-		setActionCommand("SHOW_FOLDERINFOPANEL");
-		/*
 		super(
-			frameController,
-			"FolderInfoPanel",
-			"FolderInfoPanel",
-			"SHOW_FOLDERINFOPANEL",
-			null,
-			null,
-			0,
-			null);
-		*/
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_view_folderinfopanel"));
+		
+		setActionCommand("SHOW_FOLDERINFOPANEL");
 
 	}
 

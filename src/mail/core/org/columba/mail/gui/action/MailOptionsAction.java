@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.mail.gui.config.general.MailOptionsDialog;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * 
@@ -36,10 +37,11 @@ public class MailOptionsAction extends FrameAction {
 	 * @param name
 	 */
 	public MailOptionsAction(
-		AbstractFrameController frameController) {
-		// TODO: LOCALIZE
-		super(frameController, "Mail Options...");
-		
+			AbstractFrameController frameController) {
+		super(
+				frameController,
+				MailResourceLoader.getString(
+					"menu", "mainframe", "menu_edit_mailoptions"));
 	}
 
 	
