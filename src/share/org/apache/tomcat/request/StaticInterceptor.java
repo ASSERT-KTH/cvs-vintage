@@ -59,7 +59,6 @@
 package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.util.*;
@@ -528,9 +527,9 @@ class DirHandler extends Handler  {
 	buf.append("<tr><td colspan=3 bgcolor=#ffffff>&nbsp;</td></tr>");
 	buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
 	buf.append("<font size=-1>");
-	buf.append(Constants.TOMCAT_NAME);
+	buf.append(ContextManager.TOMCAT_NAME);
 	buf.append(" v");
-	buf.append(Constants.TOMCAT_VERSION);
+	buf.append(ContextManager.TOMCAT_VERSION);
 	buf.append("</font></td></tr></table>");
 	
 	if (! inInclude)  buf.append("</body></html>\r\n");

@@ -70,7 +70,6 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.logging.*;
 import org.xml.sax.*;
-import org.apache.tomcat.core.Constants;
 
 /**
  *  Helper for reading server.xml

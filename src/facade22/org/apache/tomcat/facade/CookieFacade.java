@@ -70,7 +70,6 @@ import java.security.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.apache.tomcat.core.Constants;
 
 /**
  * Facade for a ServerCookie object. The ServerCookie is a recyclable

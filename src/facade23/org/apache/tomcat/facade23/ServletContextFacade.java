@@ -60,7 +60,6 @@
 package org.apache.tomcat.facade23;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
@@ -117,11 +116,11 @@ final class ServletContextFacade implements ServletContext {
     } 
     
     public int getMajorVersion() {
-        return Constants.SERVLET_MAJOR;
+        return 2;
     }
 
     public int getMinorVersion() {
-        return Constants.SERVLET_MINOR;
+        return 3; // Yes!
     }
 
     public String getMimeType(String filename) {

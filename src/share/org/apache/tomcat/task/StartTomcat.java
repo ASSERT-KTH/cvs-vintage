@@ -71,7 +71,6 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.logging.*;
 import org.xml.sax.*;
-import org.apache.tomcat.core.Constants;
 
 /**
  * Starter for Tomcat using server.XML.
@@ -80,7 +79,7 @@ import org.apache.tomcat.core.Constants;
  * @author costin@dnt.ro
  */
 public class StartTomcat {
-    // Passed to ContextManager - it have no other way
+    // Passed to ContxtManager - it have no other way
     // to find out. ( since java.class.path represent what
     // the VM knows, not what is used to load tomcat if
     // embeded )
@@ -174,7 +173,8 @@ public class StartTomcat {
 	System.out.println(sm.getString("tomcat.start", new Object[] { path }));
 	
 	cm.init(); // set up contexts
-	loghelper.log(Constants.TOMCAT_NAME + " " + Constants.TOMCAT_VERSION);
+	loghelper.log(ContextManager.TOMCAT_NAME + " " +
+		      ContextManager.TOMCAT_VERSION);
 	return cm;
     }
 

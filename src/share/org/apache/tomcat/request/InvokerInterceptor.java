@@ -61,7 +61,6 @@ package org.apache.tomcat.request;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.logging.*;
-import org.apache.tomcat.core.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
 

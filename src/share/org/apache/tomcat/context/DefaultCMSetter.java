@@ -61,7 +61,6 @@
 package org.apache.tomcat.context;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
@@ -84,9 +83,6 @@ public class DefaultCMSetter extends BaseInterceptor {
     public void contextInit( Context ctx)
 	throws TomcatException
     {
-	setEngineHeader( ctx );
-
-
 	ctx.addServlet( new ExceptionHandler());
 	ctx.addServlet( new StatusHandler());
 
@@ -95,41 +91,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 	ctx.addErrorPage( "302", "tomcat.redirectHandler");
 	ctx.addServlet( new NotFoundHandler());
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
-	
     }
-
-    // -------------------- implementation
-    private void setEngineHeader(Context ctx) {
-        String engineHeader=ctx.getEngineHeader();
-
-	if( engineHeader==null) {
-	    /*
-	     * Whoever modifies this needs to check this modification is
-	     * ok with the code in com.jsp.runtime.ServletEngine or talk
-	     * to akv before you check it in. 
-	     */
-	    // Default value for engine header
-	    // no longer use core.properties - the configuration comes from
-	    // server.xml or web.xml - no more properties.
-	    StringBuffer sb=new StringBuffer();
-	    sb.append(Constants.TOMCAT_NAME).append("/");
-	    sb.append(Constants.TOMCAT_VERSION);
-	    sb.append(" (").append(Constants.JSP_NAME).append(" ");
-	    sb.append(Constants.JSP_VERSION);
-	    sb.append("; ").append(Constants.SERVLET_NAME).append(" ");
-	    sb.append(Constants.SERVLET_MAJOR).append(".");
-	    sb.append(Constants.SERVLET_MINOR);
-	    sb.append( "; Java " );
-	    sb.append(System.getProperty("java.version")).append("; ");
-	    sb.append(System.getProperty("os.name") + " ");
-	    sb.append(System.getProperty("os.version") + " ");
-	    sb.append(System.getProperty("os.arch") + "; java.vendor=");
-	    sb.append(System.getProperty("java.vendor")).append(")");
-	    engineHeader=sb.toString();
-	}
-	ctx.setEngineHeader( engineHeader );
-    }
-
 }
 
 class NotFoundHandler extends Handler {

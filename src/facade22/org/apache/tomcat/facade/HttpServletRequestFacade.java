@@ -71,7 +71,6 @@ import java.security.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.apache.tomcat.core.Constants;
 
 /**
  * The facade to the request that a servlet will see.
@@ -293,7 +292,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	// XXX  provide recycleable objects
 	String encoding = request.getCharacterEncoding();
         if (encoding == null) {
-            encoding = Constants.DEFAULT_CHAR_ENCODING;
+            encoding = "8859_1"; // that's the default in HTTP and servlet spec
+;
         }
 	
 	InputStreamReader r =

@@ -100,6 +100,11 @@ import java.util.*;
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public final class ContextManager implements LogAware{
+    /** Official name and version
+     */
+    public static final String TOMCAT_VERSION = "3.3 dev";
+    public static final String TOMCAT_NAME = "Tomcat Web Server";
+    
     /** Contexts managed by this server
      */
     private Vector contextsV=new Vector();
