@@ -1,14 +1,12 @@
 # Properties file for QuickNotepad plugin
-# $Id: QuickNotepad.props,v 1.5 2001/11/11 03:02:31 jgellene Exp $
+# $Id: QuickNotepad.props,v 1.6 2001/11/14 06:51:03 spestov Exp $
 
 # general plugin information
 plugin.QuickNotepadPlugin.name=QuickNotepad
 plugin.QuickNotepadPlugin.author=John Gellene
 plugin.QuickNotepadPlugin.version=2.0
 plugin.QuickNotepadPlugin.docs=QuickNotepad.html
-plugin.QuickNotepadPlugin.depend.0=jdk 1.2
-plugin.QuickNotepadPlugin.depend.1=jedit 04.00.00.00
-plugin.QuickNotepadPlugin.depend.2=plugin EditBusPlugin 1.0
+plugin.QuickNotepadPlugin.depend.0=jedit 04.00.01.00
 
 # action labels for actions supplied by dockables.xml
 quicknotepad.label=QuickNotepad
