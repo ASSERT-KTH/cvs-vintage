@@ -374,6 +374,18 @@
            returnCode="HTTP/1.0 200 OK"
     />
 
+   <gtest request="GET /test/jsp/extend2.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+   <gtest request="GET /test/jsp/extend3.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
+   <gtest request="GET /test/jsp/extend4.jsp HTTP/1.0"
+           returnCode="HTTP/1.0 200 OK"
+    />
+
    </target>
 
   <target name="wrong_request">
