@@ -17,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.113 2002/09/11 19:40:12 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.114 2002/09/13 03:01:49 chirino Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -84,6 +84,7 @@
       <path refid="apache.crimson.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="apache.bcel.classpath"/>
+      <path refid="dom4j.dom4j.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
       <path refid="gnu.getopt.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
