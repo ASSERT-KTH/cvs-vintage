@@ -1,5 +1,5 @@
-// $Id: PredNotInstanceOf.java,v 1.5 2003/11/10 12:14:01 jhraigniac Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: PredNotInstanceOf.java,v 1.6 2004/01/28 07:17:46 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,7 +28,7 @@ package org.argouml.kernel;
  * Predicate to test if an Object is <B>NOT</B> an instance of a class.
  * This class belongs in org.argouml.util
  *
- * @deprecated as of 0.15.2, replace with nothing, remove in 0.15.3, alexb
+ * @deprecated as of 0.15.2, replace with nothing. alexb
  */
 public class PredNotInstanceOf extends PredInstanceOf {
 

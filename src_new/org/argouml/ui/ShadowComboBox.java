@@ -1,5 +1,5 @@
-// $Id: ShadowComboBox.java,v 1.5 2003/12/08 16:19:26 jhraigniac Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: ShadowComboBox.java,v 1.6 2004/01/28 07:17:46 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -65,7 +65,10 @@ public class ShadowComboBox extends JComboBox {
      * Renders each combo box entry as a shadowed diagram figure with the
      * associated level of shadow.
     **/
-    private class ShadowRenderer extends JComponent implements ListCellRenderer {        
+    private class ShadowRenderer
+	extends JComponent
+	implements ListCellRenderer {
+
         protected ShadowFig  _currentFig = null;
         
         public ShadowRenderer() {
@@ -133,7 +136,7 @@ public class ShadowComboBox extends JComboBox {
         public ShadowFig() {
             super();
             addFig(_bigPort);
-            addFig(_name);
+            addFig(getNameFig());
         }
     }
 }

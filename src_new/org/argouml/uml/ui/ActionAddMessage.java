@@ -1,5 +1,5 @@
-// $Id: ActionAddMessage.java,v 1.20 2003/10/27 22:41:32 alexb Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ActionAddMessage.java,v 1.21 2004/01/28 07:17:48 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -40,7 +40,7 @@ import org.tigris.gef.presentation.FigNode;
 /** Action to add a message.
  *  @stereotype singleton
  * @deprecated as of 0.15.2 replaced with {@link
- *  org.argouml.uml.diagram.ui.ActionAddMessage}, remove in 0.15.3, alexb
+ *  org.argouml.uml.diagram.ui.ActionAddMessage}, alexb
  */
 public class ActionAddMessage extends UMLChangeAction {
 

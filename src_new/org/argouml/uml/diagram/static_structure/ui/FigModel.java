@@ -1,5 +1,5 @@
-// $Id: FigModel.java,v 1.8 2003/09/04 20:18:11 thierrylach Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: FigModel.java,v 1.9 2004/01/28 07:17:48 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.8 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: FigModel.java,v 1.9 2004/01/28 07:17:48 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -33,6 +33,7 @@ import java.awt.Polygon;
 import org.apache.log4j.Logger;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigPoly;
+import org.argouml.model.ModelFacade;
 
 /** Class to display graphics for a UML model in a class diagram. */
 
@@ -73,8 +74,9 @@ public class FigModel extends FigPackage {
         // Don't know if this should rather be done in one of the super
         // classes, since similar code is used in FigClass.java etc.
         // Andreas Rueckert <a_rueckert@gmx.net>
-        if (org.argouml.model.ModelFacade.isAModel(node) && (org.argouml.model.ModelFacade.getName(node) != null))
-            _name.setText(org.argouml.model.ModelFacade.getName(node));
+        if (ModelFacade.isAModel(node) && ModelFacade.getName(node) != null) {
+            _name.setText(ModelFacade.getName(node));
+	}
     }
 
     public String placeString() {

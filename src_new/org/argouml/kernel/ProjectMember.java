@@ -1,5 +1,5 @@
-// $Id: ProjectMember.java,v 1.17 2003/11/10 20:36:25 alexb Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: ProjectMember.java,v 1.18 2004/01/28 07:17:46 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -128,6 +128,8 @@ public abstract class ProjectMember {
     /**
      * @deprecated As of 7 June 2003 (ArgoUml version 0.13.6).
      *             Will be removed in future.
+     *             TODO: What is this method replaced by?
+     *
      * @param path
      * @param overwrite
      * @throws Exception
@@ -137,6 +139,8 @@ public abstract class ProjectMember {
     /**
      * @deprecated As of 7 June 2003 (ArgoUml version 0.13.6).
      *             Will be removed in future.
+     *             TODO: What is this method replaced by?
+     *
      * @param path
      * @param overwrite
      * @param writer

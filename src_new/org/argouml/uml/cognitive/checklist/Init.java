@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.10 2004/01/11 22:25:33 linus Exp $
+// $Id: Init.java,v 1.11 2004/01/28 07:17:46 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class Init {
     /**
      * static initializer, register all appropriate critics<p>
      *
-     * @deprecated as of 0.15.3.
+     * @deprecated as of 0.15.3. use @see #init()
      */
     public static void init(Locale locale) {
 	init();

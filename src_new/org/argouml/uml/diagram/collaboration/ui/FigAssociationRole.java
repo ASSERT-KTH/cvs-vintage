@@ -1,5 +1,5 @@
-// $Id: FigAssociationRole.java,v 1.16 2004/01/03 00:20:34 bobtarling Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: FigAssociationRole.java,v 1.17 2004/01/28 07:17:47 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -95,7 +95,7 @@ public class FigAssociationRole extends FigAssociation {
 
 } /* end class FigAssociationRole */
 
-//TODO Should this be in its own source file?
+// TODO: Should this be in its own source file?
 class FigMessageGroup extends FigGroup {
 	
     /**
@@ -108,7 +108,7 @@ class FigMessageGroup extends FigGroup {
     /**
      * Constructor for FigMessageGroup.
      * @param figs
-     * @deprecated 0.16 in favour of FigMessageGroup(List)
+     * @deprecated in 0.15.3 in favour of FigMessageGroup(List)
      */
     public FigMessageGroup(Vector figs) {
 	super(figs);
@@ -165,7 +165,7 @@ class FigMessageGroup extends FigGroup {
                 if (i == 0) {
                     first = fig;
                 }
-                if (i == size-1) {
+                if (i == size - 1) {
                     last = fig;
                 }
                 
