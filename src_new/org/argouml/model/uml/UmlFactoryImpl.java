@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.27 2005/02/20 21:55:16 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.28 2005/02/26 00:58:01 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -729,7 +729,6 @@ class UmlFactoryImpl
         if (elem instanceof MBase) {
             ((MBase) elem).remove();
             UmlModelEventPump.getPump().cleanUp((MBase) elem);
-            UmlModelListener.getInstance().deleteElement(elem);
         }
     }
 

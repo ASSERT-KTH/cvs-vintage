@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.47 2005/01/09 14:58:06 linus Exp $
+// $Id: ProjectManager.java,v 1.48 2005/02/26 00:58:02 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
-import org.argouml.model.uml.UmlModelListener;
+import org.argouml.model.Model;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.ui.ActionSaveProject;
 import org.tigris.gef.graph.MutableGraphSupport;
@@ -117,10 +117,10 @@ public final class ProjectManager implements PropertyChangeListener {
      */
     private ProjectManager() {
         super();
-        // Register with the UmlModelListener
-        // so that any changes to the model will enable the
+        // Register with the save action with other subsystems so that
+        // any changes in those subsystems will enable the
         // save button/menu item etc.
-        UmlModelListener.getInstance().addPropertyChangeListener(this);
+        Model.getPump().setSaveAction(ActionSaveProject.getInstance());
         MutableGraphSupport.setSaveAction(ActionSaveProject.getInstance());
     }
 
@@ -279,15 +279,9 @@ public final class ProjectManager implements PropertyChangeListener {
         if (pce.getPropertyName().equals(
                 Designer.MODEL_TODOITEM_ADDED)) {
             setNeedsSave(true);
-        }
-        else if (pce.getPropertyName().equals(
+        } else if (pce.getPropertyName().equals(
                 Designer.MODEL_TODOITEM_DISMISSED)) {
             setNeedsSave(true);
         }
-        else if (pce.getPropertyName().equals(
-                UmlModelListener.SAVE_STATE_PROPERTY_NAME)) {
-            setNeedsSave(true);
-        }
-
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.1 2005/02/10 23:56:53 linus Exp $
+// $Id: ModelEventPump.java,v 1.2 2005/02/26 00:58:02 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 package org.argouml.model;
 
 import java.beans.PropertyChangeListener;
+
+import javax.swing.Action;
 
 /**
  * This is the interface for registering interest in events sent from
@@ -189,4 +191,17 @@ public interface ModelEventPump {
     void removeClassModelEventListener(PropertyChangeListener listener,
 				       Object modelClass,
 				       String eventName);
+    
+    /**
+     * Register an Action with the pump that is used to perform saving.
+     * This action will be enabled by any change to the model.
+     * @param saveAction the action to enable on change to model.
+     */
+    void setSaveAction(Action saveAction);
+    
+    /**
+     * Get the action that is registered with the pump that is used to perform saving.
+     * @return the relevant Action or null.
+     */
+    Action getSaveAction();
 }
