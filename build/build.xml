@@ -215,6 +215,7 @@
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
+        <filter token="SCARAB_AUTOMATIC_ROLE_APPROVAL" value="${scarab.automatic.role.approval}"/>
         <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
         <filter token="SCARAB_STATIC_LINK" value="${scarab.pull.staticlink}"/>
         <filter token="SESSION_TIMEOUT" value="${scarab.session.timeout}"/>
@@ -723,7 +724,7 @@
     <target name="upgrade-tomcat-coyote">
         <property name="coyote.base.url" 
                  value="http://jakarta.apache.org/builds/jakarta-tomcat-connectors/coyote/release"/>
-        <property name="coyote.version" value="v1.0-b8"/>
+        <property name="coyote.version" value="v1.0-rc2"/>
         <property name="coyote.url" value="${coyote.base.url}/${coyote.version}"/>
         <get src="${coyote.url}/tomcat-coyote.jar" 
             dest="${tomcat.dist.dir}/server/lib/tomcat-coyote.jar"/>
