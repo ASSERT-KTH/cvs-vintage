@@ -413,11 +413,11 @@
     </field>
     <!-- two different fields are used because there is an 'other' field -->
     <field name="MimeTypeA" key="mta" type="String" mapToProperty="">
-        <rule name="maxLength" value="25">MimeType length can't be greater than 25 characters.</rule>
+        <rule name="maxLength" value="255">MimeType length can't be greater than 255 characters.</rule>
         <required-message>Please specify a mime type</required-message>
     </field>
     <field name="MimeTypeB" key="mtb" type="String" mapToProperty="">
-        <rule name="maxLength" value="25">MimeType length can't be greater than 25 characters.</rule>
+        <rule name="maxLength" value="255">MimeType length can't be greater than 255 characters.</rule>
     </field>
 </group>
 

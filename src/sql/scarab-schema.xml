@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.95 2002/05/08 21:16:06 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.96 2002/05/09 02:16:14 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -137,7 +137,7 @@
         MIME type of the attachment.
         Describes type of information constituting an attachment.
     -->
-    <column name="ATTACHMENT_MIME_TYPE" javaName="MimeType" required="true" type="VARCHAR" size="25"></column>
+    <column name="ATTACHMENT_MIME_TYPE" javaName="MimeType" required="true" type="VARCHAR" size="255"/>
     <!--
         Person that made last modification to the attachment.
     -->
