@@ -44,12 +44,16 @@ public class WindowsViewer extends AbstractViewer {
 			Process proc = null;
              
 			try {
-                //BUG 980606 fixed. 20040630 SWITT: '"' removed from cmd[2] 			
-				String[] cmd = new String[]{"rundll32",
-						"url.dll,FileProtocolHandler",
-						 url.toString() };
+                //BUG 980606 fixed. 20040630 SWITT: '"' removed from cmd[2]
+                //BUGFIX Bugfixed : rundll32 url.dll,FileProtocolHandler <url> doesnt work for
+                //urls ending with html or htm. 
+                //now "start" is used 			
+				String[] cmd = new String[]{"cmd",
+									"/C",
+									"start",
+								 url.toString() };
 				Runtime rt = Runtime.getRuntime();
-				LOG.fine("Executing " + cmd[0] + " " + cmd[1] + " " + cmd[2]);
+				LOG.fine("Executing " + cmd[0] + " " + cmd[1]+ " " + cmd[2]+ " " + cmd[3]);
 				proc = rt.exec(cmd);
 
 				return proc;
