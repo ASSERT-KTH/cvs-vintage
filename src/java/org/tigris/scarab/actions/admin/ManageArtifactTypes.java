@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.2 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.3 2002/01/30 00:28:57 jon Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -120,8 +120,9 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
 
         } 
         String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, nextTemplate);            
+            .getString(ScarabConstants.NEXT_TEMPLATE, 
+            "admin,ManageArtifactTypes.vm");
+        setTarget(data, nextTemplate);
     }
 
 
