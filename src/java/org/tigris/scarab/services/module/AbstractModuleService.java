@@ -46,58 +46,79 @@ package org.tigris.scarab.services.module;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.om.ScarabModulePeer;
+import java.util.List;
+
+import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.BaseService;
+import org.apache.fulcrum.TurbineServices;
 
 import org.apache.torque.om.ObjectKey;
-import org.apache.fulcrum.TurbineServices;
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.commons.util.StringUtils;
-import org.apache.turbine.RunData;
 import org.apache.torque.util.Criteria;
 
+
+import org.tigris.scarab.services.AbstractOMService;
+import org.tigris.scarab.util.ScarabException;
+
 /**
- * This class has static methods for working with a Module object
- * <p>FIXME: {@link #getService()} and {@link #getInstance()} are
- * duplicate methods.  One should be deprecated.</p>
+ * This is the implementation of a ModuleService. It knows how to
+ * instantiate the right Module object depending on what is in the
+ * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.18 2001/11/01 00:20:11 jmcnally Exp $
+ * @author <a href="mailto:jon@collab.net">John McNally</a>
+ * @version $Id: AbstractModuleService.java,v 1.1 2001/11/01 00:20:11 jmcnally Exp $
  */
-public abstract class ModuleManager
+public abstract class AbstractModuleService 
+    extends AbstractOMService 
+    implements ModuleService
 {
     /**
-     * Retrieves an implementation of ModuleService, base on the settings in
-     * TurbineResources.
-     *
-     * @return an implementation of ModuleService.
+     * @see org.tigris.scarab.services.module.ModuleService#getInstance()
      */
-    public static ModuleService getService()
-    {
-        return (ModuleService)TurbineServices.getInstance().
-            getService(ModuleService.SERVICE_NAME);    
-    }
-
-    public static Class getOMClass()
+    public ModuleEntity getInstance()
         throws Exception
     {
-        return getService().getOMClass();
+        return (ModuleEntity) getOMInstance();
     }
 
-    public static ModuleEntity getInstance()
+    /**
+     * Return an instance of Module based on the passed in module id
+     */
+    public ModuleEntity getInstance(ObjectKey id) 
         throws Exception
     {
-        return getService().getInstance();
+        return (ModuleEntity) getOMInstance(id);
     }
 
-    public static ModuleEntity getInstance(ObjectKey id)
+    /**
+     * Gets a list of ModuleEntities based on id's.
+     *
+     * @param moduleIds a <code>NumberKey[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getModules(ObjectKey[] moduleIds) 
         throws Exception
     {
-        return getService().getInstance(id);
+        return getOMs(moduleIds);
     }
 
-    public static boolean exists(ModuleEntity module)
+    /**
+     * Gets a list of ModuleEntities based on id's.
+     *
+     * @param moduleIds a <code>NumberKey[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getModules(List moduleIds) 
         throws Exception
     {
-        return getService().exists(module);
+        return getOMs(moduleIds);
     }
+
+    /**
+     *   check for a duplicate project name
+     */
+    public abstract boolean exists(ModuleEntity module)
+        throws Exception;
 }

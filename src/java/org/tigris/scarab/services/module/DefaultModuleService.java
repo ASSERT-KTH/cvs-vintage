@@ -46,58 +46,72 @@ package org.tigris.scarab.services.module;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.om.ScarabModulePeer;
+import java.util.List;
+
+import org.apache.fulcrum.InitializationException;
+import org.apache.fulcrum.BaseService;
+import org.apache.fulcrum.TurbineServices;
 
 import org.apache.torque.om.ObjectKey;
-import org.apache.fulcrum.TurbineServices;
-import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.commons.util.StringUtils;
-import org.apache.turbine.RunData;
 import org.apache.torque.util.Criteria;
 
+import org.apache.fulcrum.cache.TurbineGlobalCacheService;
+import org.apache.fulcrum.cache.GlobalCacheService;
+import org.apache.fulcrum.cache.ObjectExpiredException;
+import org.apache.fulcrum.cache.CachedObject;
+
+import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.util.ScarabException;
+
 /**
- * This class has static methods for working with a Module object
- * <p>FIXME: {@link #getService()} and {@link #getInstance()} are
- * duplicate methods.  One should be deprecated.</p>
+ * This is an implementation of the ModuleService that will return 
+ * <code>ScarabModule</code>'s. 
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.18 2001/11/01 00:20:11 jmcnally Exp $
+ * @author <a href="mailto:jon@collab.net">John McNally</a>
+ * @version $Id: DefaultModuleService.java,v 1.1 2001/11/01 00:20:11 jmcnally Exp $
  */
-public abstract class ModuleManager
+public class DefaultModuleService 
+    extends AbstractModuleService 
 {
     /**
-     * Retrieves an implementation of ModuleService, base on the settings in
-     * TurbineResources.
-     *
-     * @return an implementation of ModuleService.
+     * check for a duplicate project name
      */
-    public static ModuleService getService()
-    {
-        return (ModuleService)TurbineServices.getInstance().
-            getService(ModuleService.SERVICE_NAME);    
-    }
-
-    public static Class getOMClass()
+    public boolean exists(ModuleEntity module)
         throws Exception
     {
-        return getService().getOMClass();
+        Criteria crit = new Criteria();
+        crit.add (ScarabModulePeer.MODULE_NAME, module.getRealName());
+        crit.add (ScarabModulePeer.PARENT_ID, module.getParentId());
+        return ScarabModulePeer.doSelect(crit).size() > 0;
     }
 
-    public static ModuleEntity getInstance()
-        throws Exception
+    /**
+     * Get the user classname that this implementation will instantiate
+     */
+    protected String getClassName()
     {
-        return getService().getInstance();
+        return "org.tigris.scarab.om.ScarabModule";
     }
 
-    public static ModuleEntity getInstance(ObjectKey id)
+    protected Object retrieveStoredOM(ObjectKey id)
         throws Exception
     {
-        return getService().getInstance(id);
+        return ScarabModulePeer.retrieveByPK(id);
     }
 
-    public static boolean exists(ModuleEntity module)
+    /**
+     * Gets a list of ModuleEntities based on id's.
+     *
+     * @param moduleIds a <code>NumberKey[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    protected List retrieveStoredOMs(List moduleIds) 
         throws Exception
     {
-        return getService().exists(module);
+        Criteria crit = new Criteria();
+        crit.addIn(ScarabModulePeer.MODULE_ID, moduleIds);
+        return ScarabModulePeer.doSelect(crit);            
     }
 }

@@ -56,17 +56,18 @@ import java.util.List;
  * This is the interface that describes a UserService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserService.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
+ * @version $Id: UserService.java,v 1.3 2001/11/01 00:20:11 jmcnally Exp $
  */
 public interface UserService extends Service
 {
     /** The name of the service */
-    public static final String SERVICE_NAME = "UserService";
+    String SERVICE_NAME = "UserService";
 
     /**
-     * Get the Class instance
+     * The class this service will instantiate.
      */
-    public Class getUserClass();
+    Class getOMClass()
+        throws Exception;
 
     /**
      * Gets a new instance of a ScarabUser.
@@ -74,7 +75,7 @@ public interface UserService extends Service
      * @return a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
      */
-    public ScarabUser getInstance() throws Exception;
+    ScarabUser getInstance() throws Exception;
 
     /**
      * Gets an existing ScarabUser by id.
@@ -83,21 +84,7 @@ public interface UserService extends Service
      * @return a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
      */
-    public ScarabUser getInstance(ObjectKey key) throws Exception;
-
-    /**
-     * Return an instance of User based on username
-     */
-    public ScarabUser getInstance(String username) throws Exception;
-
-    /**
-     * Gets a list of ScarabUsers based on usernames.
-     *
-     * @param usernames a <code>String[]</code> value
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    public List getUsers(String[] usernames) throws Exception;
+    ScarabUser getInstance(ObjectKey key) throws Exception;
 
     /**
      * Gets a list of ScarabUsers based on id's.
@@ -106,5 +93,21 @@ public interface UserService extends Service
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getUsers(ObjectKey[] userIds) throws Exception;
+    List getUsers(ObjectKey[] userIds) throws Exception;
+
+    /**
+     * Return an instance of User based on username
+     */
+    ScarabUser getInstance(String username, String domainName) 
+        throws Exception;
+
+    /**
+     * Gets a list of ScarabUsers based on usernames.
+     *
+     * @param usernames a <code>String[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    List getUsers(String[] usernames, String domainName) 
+        throws Exception;
 }

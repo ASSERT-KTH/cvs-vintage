@@ -63,64 +63,45 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineUserService.java,v 1.2 2001/09/13 17:26:47 jmcnally Exp $
+ * @version $Id: TurbineUserService.java,v 1.3 2001/11/01 00:20:11 jmcnally Exp $
  */
 public class TurbineUserService 
-    extends BaseService 
-    implements UserService
+    extends AbstractUserService 
 {
-    /** "org.tigris.scarab.om.TurbineUser" */
-    private static Class userClass = null;
-
     /**
-     * Initializes the BaseUserService, locating the apropriate ScarabUser
+     * Get the user classname that this implementation will instantiate
      */
-    public void init()
-        throws InitializationException
+    protected String getClassName()
     {
-        String USER_CLASS = "org.tigris.scarab.om.ScarabUserImpl";
-        try
-        {
-            userClass = Class.forName(USER_CLASS);
-        }
-        catch (ClassNotFoundException cnfe)
-        {
-            throw new InitializationException("Could not load " + USER_CLASS);
-        }
-        setInit(true);
-    }
-    
-    /**
-     * Get the Class instance
-     */
-    public Class getUserClass()
-    {
-        return userClass;
-    }
-    
-    /**
-     * Get a fresh instance of a User
-     */
-    public ScarabUser getInstance()
-        throws Exception
-    {
-        ScarabUser user = (ScarabUser) userClass.newInstance();
-        return user;
+        return "org.tigris.scarab.om.ScarabUserImpl";
     }
 
-    /**
-     * Return an instance of User based on the passed in module id
-     */
-    public ScarabUser getInstance(ObjectKey userId) 
+    protected Object retrieveStoredOM(ObjectKey userId)
         throws Exception
     {
         return ScarabUserImplPeer.retrieveScarabUserImplByPK(userId);
     }
 
     /**
-     * Return an instance of User based on username
+     * Gets a list of ScarabUsers based on id's.
+     *
+     * @param userIds a <code>NumberKey[]</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
      */
-    public ScarabUser getInstance(String username) 
+    protected List retrieveStoredOMs(List userIds) 
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+        return ScarabUserImplPeer.doSelect(crit);            
+    }
+
+    /**
+     * Return an instance of User based on username.  Domain is currently
+     * unused.
+     */
+    public ScarabUser getInstance(String username, String domainName) 
         throws Exception
     {
         ScarabUser user = null;
@@ -142,13 +123,14 @@ public class TurbineUserService
     }
 
     /**
-     * Gets a list of ScarabUsers based on usernames.
+     * Gets a list of ScarabUsers based on usernames.  Domain is currently
+     * unused.
      *
      * @param usernames a <code>String[]</code> value
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getUsers(String[] usernames) 
+    public List getUsers(String[] usernames, String domainName) 
         throws Exception
     {
         List users = null;
@@ -156,26 +138,6 @@ public class TurbineUserService
         {
             Criteria crit = new Criteria();
             crit.addIn(ScarabUserImplPeer.USERNAME, usernames);
-            users = ScarabUserImplPeer.doSelect(crit);            
-        }
-        return users;
-    }
-
-    /**
-     * Gets a list of ScarabUsers based on id's.
-     *
-     * @param userIds a <code>NumberKey[]</code> value
-     * @return a <code>List</code> value
-     * @exception Exception if an error occurs
-     */
-    public List getUsers(ObjectKey[] userIds) 
-        throws Exception
-    {
-        List users = null;
-        if ( userIds != null && userIds.length > 0 ) 
-        {
-            Criteria crit = new Criteria();
-            crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
             users = ScarabUserImplPeer.doSelect(crit);            
         }
         return users;
