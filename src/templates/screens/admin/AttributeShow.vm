@@ -1,21 +1,25 @@
 $page.setTitle("Attribute Editor")
 
 #set ($user = $data.User)
-#set ($module = $user.CurrentModule)
+#set ($module = $scarabR.getModule($data.Parameters.get($scarabG.Constant.CURRENT_MODULE)))
 
 <h1>Module Attributes</h1>
+
+#if (! $module )
+
+<div class="alert">Sorry, could not locate the requested module.</div>
+
+#else
 
 <p>
 This page is for editing the Attributes which are defined for Module: $module.Name
 </p>
 
-<div class="functnbar">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
- <td><input type="submit" value="create" class="buttonfunc"/>&#160;new attribute</td>
-</tr>
-</table>
-</div>
+<form>
+<p class="functnbar">
+<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+</p>
+</form>
 
 <div class="grouper">
 
@@ -59,8 +63,8 @@ This page is for editing the Attributes which are defined for Module: $module.Na
 </td>
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-<td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
-<td>$attribute.CreatedDate</td>
+<td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+<td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
 </tr>
 #end
 </table>
@@ -69,3 +73,11 @@ This page is for editing the Attributes which are defined for Module: $module.Na
 
 $intake.declareGroups()
 </form>
+
+<form>
+<p class="functnbar">
+<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+</p>
+</form>
+
+#end

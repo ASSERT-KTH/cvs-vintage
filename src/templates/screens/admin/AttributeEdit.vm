@@ -9,7 +9,9 @@ $page.setTitle("Attribute Editor")
 #set ($attgroup = $intake.Attribute.Default )
 #set ($atttgroup = $intake.AttributeType.Default )
 
-<h1>Add / Edit Attribute</h1>
+<div class="app" id="div3-0-2-0">
+
+<h2>Add / Edit Attribute</h2>
 
 <p>
 Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
@@ -22,11 +24,11 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 
 #datatitle ( "General Info" )
 
-<div class="listtable">
+<div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
  <tr>
-  <td width="120" class="a"><strong>input type:</strong></td>
-  <td class="b">
+  <th width="120">input type:</th>
+  <td>
     <select name="$atttgroup.AttributeTypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
       <option value="$atype.AttributeTypeId" #if($attType.AttributeTypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
@@ -35,30 +37,39 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
   </td>
 
  <tr>
-  <td width="120" class="a"><strong>attribute name:</strong></td>
-  <td class="b">
+  <th width="120">attribute name:</th>
+  <td>
     <input type="text" name="$attgroup.Name.Key" value="$attribute.Name"/>
   </td>
  </tr>
 
  <tr>
-  <td width="120" class="a"><strong>attribute description:</strong></td>
-  <td class="b">
+  <th width="120">attribute description:</th>
+  <td>
     <textarea rows="4" cols="40" name="$attgroup.Description.Key" class="text">$!attribute.Description</textarea>
   </td>
  </tr>
 
  <tr>
-  <td width="120" class="a"><strong>creation date:</strong></td>
-  <td class="b">
-    $attribute.CreatedDate</textarea>
+  <th width="120">created by:</th>
+  <td>
+  #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+  <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  </td>
+ </tr>
+
+ <tr>
+  <th width="120">creation date:</th>
+  <td>
+    $attribute.CreatedDate
   </td>
  </tr>
 
 </tr>
 </table>
 </div>
-</div>
+
+#datatitle ( "List options" )
 
 #set ( $maxNum = $attOptions.size() )
 
@@ -77,10 +88,10 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
  <th>numeric order:</th>
 </tr>
 
-#foreach ($option in $attOptions)
-#set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
-#if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
+#foreach ($option in $attOptions)
+    #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
+    #if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
 
      <td>#booleanCheckbox ($intakeOption.Deleted)</td>
      <td>$option.PrimaryKey</td>
@@ -92,8 +103,16 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
      <td>
         #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value 1 )
      </td>
-</tr>
+    </tr>
 #end
+
+
+
+
+
+
+
+
 
 #set ( $newOption = $scarabR.AttributeOption )
 #set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
@@ -125,7 +144,7 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 $intake.declareGroups()
 </form>
 
-
+</div>
 
 
 

@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUserImpl;
     for the Default Page.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabPage.java,v 1.10 2001/08/15 05:17:36 jon Exp $
+    @version $Id: ScarabPage.java,v 1.11 2001/08/25 01:21:45 jon Exp $
 */
 public class ScarabPage extends ClassicPipeline
 {
@@ -109,10 +109,17 @@ public class ScarabPage extends ClassicPipeline
           
         if ( ((ScarabUser)data.getUser()).getCurrentModule() == null ) 
         {
+            // set the users current module. eventually, this 
+            // should go away and be replaced with just tracking
+            // the module in the parameters, not associating it
+            // to a user.
             ModuleEntity module = 
                 ModuleManager.getInstance(
                     new NumberKey("5"));
             ((ScarabUser)data.getUser()).setCurrentModule(module);
+            // put the module number into the query string
+            data.getParameters()
+                .setString(ScarabConstants.CURRENT_MODULE, "5");
         }
     }
 

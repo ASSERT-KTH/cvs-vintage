@@ -60,7 +60,7 @@ import org.tigris.scarab.pages.ScarabPage;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.12 2001/08/24 23:21:58 jon Exp $
+    @version $Id: ScarabLink.java,v 1.13 2001/08/25 01:21:45 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -106,7 +106,6 @@ public class ScarabLink extends TemplateLink
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
         }
-        addPathInfo("template",t);
         super.setPage(t);
         return this;
     }

@@ -81,14 +81,16 @@ public class Attribute
 {
     private static final String className = "Attribute";
 
+    private static final String SELECT_ONE = "select-one";
+    
     private static Criteria allOptionsCriteria;
 
     /** should be cloned to use */
     private static Criteria moduleOptionsCriteria;
 
     private HashMap optionsMap;
-    private List optionsArray;
-    private List currentOptions;
+    private List attributeOptionsWithDeleted;
+    private List attributeOptionsWithoutDeleted;
     private static HashMap optionAttributeMap = new HashMap();
 
     static
@@ -151,12 +153,6 @@ public class Attribute
                 throw new ScarabException("Attribute with ID " + attId + 
                                           " can not be found");
             }
-            if ( attribute.getAttributeType().getAttributeClass().getName()
-                 .equals("select-one") ) 
-            {
-                attribute.buildOptionsMap();                
-            }
-
             tgcs.addObject(key, new CachedObject(attribute));
         }
         
@@ -181,73 +177,11 @@ public class Attribute
      * return the options (for attributes that have them).  They are put
      * into order by the numeric value.
      */
-    public List getAllAttributeOptions()
+    public List getattributeOptions()
         throws Exception
     {
         // return getAttributeOptions(new Criteria());  
         return getAttributeOptions(allOptionsCriteria);  
-    }
-
-    /**
-     * Adds a new option.  The list is resorted.
-     */
-    public synchronized void addAttributeOption(AttributeOption option)
-        throws Exception
-    {        
-        Vector v = getAttributeOptions();
-        
-        // Check that a duplicate name is not being added
-        int size = v.size();
-        for (int i=0; i<size; i++) 
-        {
-            AttributeOption opt = (AttributeOption)v.get(i);
-            if ( option.getName()
-                 .equalsIgnoreCase(opt.getName()) ) 
-            {
-                throw new ScarabException("Adding option " + 
-                    option.getName() + 
-                    " failed due to a non-unique name." );
-            }
-        }
-        
-        Vector sortedOptions = (Vector)v.clone();
-        sortedOptions.add(option);
-        option.setAttribute(this);
-        sortOptions(sortedOptions);
-
-    }
-
-    public synchronized void buildOptionsMap()
-        throws Exception
-    {
-        // synchronized method due to getAllAttributeOptions, this needs
-        // further investigation !FIXME!
-        List options = getAllAttributeOptions();
-        HashMap optionsMap = new HashMap((int)(1.25*options.size()+1));
-        List optionsArray = new ArrayList(options.size());
-
-        for ( int i=options.size()-1; i>=0; i-- ) 
-        {
-            AttributeOption option = (AttributeOption)options.get(i);
-            optionsArray.add(option);
-            optionsMap.put(option.getOptionId(), option);
-            optionAttributeMap.put(option.getOptionId(), this);
-        }
-
-        List optionsList = new ArrayList(optionsArray.size());
-        for ( int i=0; i<optionsArray.size(); i++ ) 
-        {
-            if ( !((AttributeOption)optionsArray.get(i)).getDeleted() ) 
-            {
-                optionsList.add(optionsArray.get(i));
-            }
-        }
-        List currentOptions = new ArrayList(optionsList.size());
-        currentOptions = optionsList;
-        
-        this.optionsArray = optionsArray;
-        this.currentOptions = currentOptions;
-        this.optionsMap = optionsMap;
     }
 
     /**
@@ -279,20 +213,80 @@ public class Attribute
     {
         if ( includeDeleted ) 
         {
-            if (optionsArray == null)
+            if (attributeOptionsWithDeleted == null)
             {
                 buildOptionsMap();
             }
-            return optionsArray;
+            return attributeOptionsWithDeleted;
         }
         else 
         {
-            if (currentOptions == null)
+            if (attributeOptionsWithoutDeleted == null)
             {
                 buildOptionsMap();
             }
-            return currentOptions; 
+            return attributeOptionsWithoutDeleted; 
         }
+    }
+
+    public synchronized void buildOptionsMap()
+        throws Exception
+    {
+        if ( this.getAttributeType().getAttributeClass().getName()
+             .equals(SELECT_ONE) ) 
+        {
+            // synchronized method due to getattributeOptionsWithDeleted, this needs
+            // further investigation !FIXME!
+            List options = getattributeOptions();
+    
+            optionsMap = new HashMap((int)(1.25*options.size()+1));
+            attributeOptionsWithDeleted = new ArrayList(options.size());
+    
+            for ( int i = options.size()-1; i >= 0; i-- ) 
+            {
+                AttributeOption option = (AttributeOption)options.get(i);
+                attributeOptionsWithDeleted.add(option);
+                optionsMap.put(option.getOptionId(), option);
+                optionAttributeMap.put(option.getOptionId(), this);
+            }
+    
+            attributeOptionsWithoutDeleted = new ArrayList(attributeOptionsWithDeleted.size());
+            for ( int i=0; i<attributeOptionsWithDeleted.size(); i++ ) 
+            {
+                if ( !((AttributeOption)attributeOptionsWithDeleted.get(i)).getDeleted() ) 
+                {
+                    attributeOptionsWithoutDeleted.add(attributeOptionsWithDeleted.get(i));
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds a new option.  The list is resorted.
+     */
+    public synchronized void addAttributeOption(AttributeOption option)
+        throws Exception
+    {        
+        Vector v = getAttributeOptions();
+        
+        // Check that a duplicate name is not being added
+        for (int i = 0; i < v.size(); i++) 
+        {
+            AttributeOption opt = (AttributeOption)v.get(i);
+            if ( option.getName()
+                 .equalsIgnoreCase(opt.getName()) ) 
+            {
+                throw new ScarabException("Adding option " + 
+                    option.getName() + 
+                    " failed due to a non-unique name." );
+            }
+        }
+        
+        Vector sortedOptions = (Vector)v.clone();
+        sortedOptions.add(option);
+        option.setAttribute(this);
+        sortOptions(sortedOptions);
+
     }
 
     /**
@@ -306,8 +300,7 @@ public class Attribute
 
         // set new numeric values in case any options duplicated
         // a numeric value
-        int size = sortedOptions.size();
-        for (int i=0; i<size; i++) 
+        for (int i = 0; i < sortedOptions.size(); i++) 
         {
             AttributeOption opt = (AttributeOption)sortedOptions.get(i);
             opt.setNumericValue(i+1);
