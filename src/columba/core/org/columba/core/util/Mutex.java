@@ -17,36 +17,23 @@ package org.columba.core.util;
 
 public class Mutex {
     private boolean mutex;
-    String name;
-    String lockingThreadName = null;
 
-    public Mutex(String name) {
+    public Mutex() {
         mutex = false;
-        this.name = name;
     }
 
     /**
      *
      * @return true the mutex was indeed taken anew, false if calling thread already had mutex.
      */
-    public synchronized boolean getMutex() {
-        if (mutex) {
-            if (lockingThreadName.equals(Thread.currentThread().getName())) {
-                // this Thread already has a lock, keep it but without nesting
-                return false;
-            }
-        }
-
+    public synchronized void lock() {
         while (mutex) {
             try {
-                //ColumbaLogger.log.info("thread " + Thread.currentThread().getName() + " waiting for " + name + " held by thread " + lockingThreadName);
                 wait();
             } catch (InterruptedException e) {
                 if (Thread.currentThread().isInterrupted()) {
                     // gota go now
-                    throw new RuntimeException("waiting for mutex, " + name +
-                        ", thread " + Thread.currentThread().getName() +
-                        " isInterrupted, throwing RuntimeException");
+                    throw new RuntimeException(e);
                 }
 
                 // else keep waiting
@@ -54,35 +41,9 @@ public class Mutex {
         }
 
         mutex = true;
-        lockingThreadName = Thread.currentThread().getName();
-
-        //ColumbaLogger.log.info("thread " + lockingThreadName + " now has mutex " + name);
-        return true;
     }
 
-    public synchronized void releaseMutex() {
-        if ((Thread.currentThread().getName()).equals(lockingThreadName)) {
+    public synchronized void release() {
             mutex = false;
-            lockingThreadName = null;
-
-            //ColumbaLogger.log.info("thread " + lockingThreadName + " now has mutex " + name);
-            notifyAll();
-        } else {
-            String msg = "";
-
-            if (mutex) {
-                msg = " held by thread " + lockingThreadName;
-            }
-
-            //ColumbaLogger.log.info("thread " + Thread.currentThread().getName() + " tried to release unheld mutex " + name + msg);
-        }
-    }
-
-    public String getLockingThreadName() {
-        return lockingThreadName;
-    }
-
-    public String getName() {
-        return name;
     }
 }
