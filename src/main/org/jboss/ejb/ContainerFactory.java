@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -234,7 +234,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 					{
 						boolean implemented = false;
 						
-						//if (!implemented) throw new Error("Stateful Container not implemented yet");
+						if (!implemented) throw new Error("Stateful Container not implemented yet");
 						
 						// Create container
 						con = new StatefulSessionContainer();
@@ -367,6 +367,7 @@ implements ContainerFactoryMBean, MBeanRegistration
 			{
 				Container con = (Container)containers.get(i);
 				System.out.println("Binding container "+con.getMetaData().getJndiName());
+				System.out.println("to "+con.getContainerInvoker());
 
                 // Use rebind to make sure you overwrite the name
 				rebind(ctx, con.getMetaData().getJndiName(), con.getContainerInvoker().getEJBHome());
