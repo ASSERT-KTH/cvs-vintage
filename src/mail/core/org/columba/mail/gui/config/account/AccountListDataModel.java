@@ -50,23 +50,18 @@ class AccountListDataModel extends AbstractTableModel
         return columnNames[col];
     }
 
-    public Object getValueAt(int row, int col)
-    {
+    public Object getValueAt(int row, int col) {
         AccountItem item = accountList.get(row);
-        if ( item == null ) return new String();
-        if ( col == 0 )
-        {
+        if (item == null) return new String();
+        if (col == 0) {
             /*
             String description = item.getName();
             if ( description == null ) return new String();
             return description;
             */
             return item;
-        }
-        else
-        {
-            if (item.isPopAccount()) return MailResourceLoader.getString("dialog","account", "pop3"); //$NON-NLS-1$
-            else return MailResourceLoader.getString("dialog","account", "imap4"); //$NON-NLS-1$
+        } else {
+            return item.isPopAccount() ? "POP3" : "IMAP4";
         }
     }
 
