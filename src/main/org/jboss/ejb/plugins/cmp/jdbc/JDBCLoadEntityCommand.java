@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -69,6 +69,9 @@ public class JDBCLoadEntityCommand
             throw new ServerException("Load failed", e);
          }
       }
+      
+      // mark the entity as created; if it was loaded it was created 
+      entity.setCreated(ctx);
    }
 
    // JDBCQueryCommand overrides ------------------------------------

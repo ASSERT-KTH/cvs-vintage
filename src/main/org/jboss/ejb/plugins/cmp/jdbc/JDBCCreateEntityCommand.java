@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCCreateEntityCommand
    extends JDBCUpdateCommand
@@ -93,6 +93,9 @@ public class JDBCCreateEntityCommand
          log.debug(e);
          throw new CreateException("Could not create entity:" + e);
       }
+
+      // mark the entity as created
+      entity.setCreated(ctx);
       
       return id;         
    }
