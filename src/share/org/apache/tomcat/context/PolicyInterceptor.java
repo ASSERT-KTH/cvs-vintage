@@ -154,14 +154,13 @@ public class PolicyInterceptor extends BaseInterceptor {
 	    URL url = new URL("file:" + dir.getAbsolutePath());
 	    CodeSource cs = new CodeSource(url,null);
 	    
-	    /* Try the context permissions ( set in the config file via
-	       API calls )
+	    /* We'll construct permissions for Jasper. 
+	       Tomcat uses normal policy and URLClassLoader.
+
+	       We may add fancy config later, if needed
 	     */
-	    Permissions p = (Permissions)context.getPermissions();
+	    Permissions p = new Permissions();
 	    
-	    if( p == null ) {
-		p = new Permissions();
-	    }
 	    
 	    // 	    // Add global permissions ( from context manager )
 	    // 	    // XXX maybe use imply or something like that
@@ -189,10 +188,14 @@ public class PolicyInterceptor extends BaseInterceptor {
 	    // This is used only for Jasper ! Should be replaced by
 	    // a standard URLClassLoader.
 	    ProtectionDomain pd = new ProtectionDomain(cs,p);
-	    context.setProtectionDomain(pd);
+	    // 	    context.setProtectionDomain(pd);
+
+	    context.setAttribute( Context.ATTRIB_PROTECTION_DOMAIN,
+				  pd);
+
 	    // new permissions - added context manager and file to whatever was
 	    // specified by default
-	    context.setPermissions( p );
+	    //	    context.setPermissions( p );
 
 	} catch(Exception ex) {
 	    log("Security init for Context " + base + " failed", ex);

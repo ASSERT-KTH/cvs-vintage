@@ -123,7 +123,6 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	throws TomcatException
     {
         ContextManager cm = context.getContextManager();
-	Object pd=context.getProtectionDomain();
 	
 	URL classP[]=context.getClassPath();
 	if( debug > 0 ) {

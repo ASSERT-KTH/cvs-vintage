@@ -240,7 +240,7 @@ public class EmbededTomcat { // extends WebService
 	    //contextM.getRealContext( sctx );
 	    contextM.initContext( ctx );
 
-	    Object pd=ctx.getProtectionDomain();
+	    //	    Object pd=ctx.getProtectionDomain();
 	    //	    log("Ctx.pd " + pd);
 
 	    // Add any extra cpaths

@@ -103,11 +103,20 @@ public class Context implements LogAware {
      */
     public static final String ATTRIB_PREFIX="org.apache.tomcat";
 
-    /** Workdir - a place where the servlets are allowed to write
+    /** Protection domain to be used to create new classes in this context.
+	This is used only by JspServlet, and should be avoided -
+	the preferred mechanism is to use the default policy file
+	and URLClassLoader.
+    */
+    public static final String ATTRIB_PROTECTION_DOMAIN=
+	"org.apache.tomcat.protection_domain";
+
+	/** Workdir - a place where the servlets are allowed to write
      */
     public static final String ATTRIB_WORKDIR="org.apache.tomcat.workdir";
 
-    /** This attribute will return the real context ( org.apache.tomcat.core.Context).
+    /** This attribute will return the real context (
+     *  org.apache.tomcat.core.Context).
      *  Only "trusted" applications will get the value. Null if the application
      * 	is not trusted.
      */
@@ -165,7 +174,7 @@ public class Context implements LogAware {
     Container defaultContainer = null; // generalization, will replace most of the
     // functionality. By using a default container we avoid a lot of checkings
     // and speed up searching, and we can get rid of special properties.
-    private Handler defaultServlet = null;
+    //    private Handler defaultServlet = null;
 
     // Authentication properties
     String authMethod;
@@ -173,14 +182,20 @@ public class Context implements LogAware {
     String formLoginPage;
     String formErrorPage;
 
+    // verbosity level 
     int debug=0;
+
+    // Servlet-Engine header ( default set by Servlet facade)
+    private String engineHeader = null;
+
     // are servlets allowed to access internal objects? 
     boolean trusted=false;
+
+    // Virtual host name ( null if default )
     String vhost=null;
+    // vhost aliases 
     Vector vhostAliases=new Vector();
 
-    String facadeClassName;
-    //    FacadeManager facadeM;
     
     public Context() {
 	defaultContainer=new Container();
@@ -195,8 +210,6 @@ public class Context implements LogAware {
 	I'm not sure if this method is good - it adds deps to upper layers.
      */
     public Object getFacade() {
-//         if(contextFacade==null )
-// 	    contextFacade = getFacadeManager().createServletContextFacade( this );
 	return contextFacade;
     }
 
@@ -208,7 +221,9 @@ public class Context implements LogAware {
 
 
     // -------------------- Settable context properties --------------------
-    // -------------------- Required properties
+
+    /** Returned the main server ( servlet container )
+     */
     public ContextManager getContextManager() {
 	return contextM;
     }
@@ -217,45 +232,16 @@ public class Context implements LogAware {
 	contextM=cm;
     }
 
-//     public void setFacadeClassName(String s ) {
-// 	facadeClassName=s;
-//     }
-
-//     public String getFacadeClassName() {
-// 	return facadeClassName;
-//     }
-
-//     private static final String DEFAULT_FACADE="org.apache.tomcat.facade.Servlet22Interceptor";
-
     /** The servlet API variant that will be used for requests in this
      *  context
      */ 
     public void setServletAPI( String s ) {
 	if( s!=null &&
 	    ( s.endsWith("23") || s.endsWith("2.3")) ) {
-	    //	    facadeClassName="org.apache.tomcat.facade23.Servlet23Manager";
 	} else {
-	    // facadeClassName=DEFAULT_FACADE;
 	}
     }
 
-//     public FacadeManager getFacadeManager() {
-// 	log( "getFacadeManager called ! " , new Throwable());
-// 	if( facadeM==null ) {
-// 	    if( facadeClassName==null) 
-// 		facadeClassName=DEFAULT_FACADE;
-// 	    try {
-// 		Class facadeMC=Class.forName( facadeClassName );
-// 		if( facadeMC==null )
-// 		    facadeMC=Class.forName( DEFAULT_FACADE );
-// 		Constructor cons=facadeMC.getConstructor( new Class[] { this.getClass() });
-// 		facadeM=(FacadeManager)cons.newInstance( new Object[] {this });
-// 	    } catch( Exception ex ) {
-// 		ex.printStackTrace();
-// 	    }
-// 	}
-// 	return facadeM;
-//     }
 
     /** Base URL for this context
      */
@@ -455,9 +441,6 @@ public class Context implements LogAware {
 		if( debug>9 ) log("Getting classpath " + cpath);
 		return cpath.toString();
 	    }
-	    if( name.equals( "org.apache.tomcat.protection_domain") ) {
-		return getProtectionDomain();
-	    }
 	    if(name.equals("org.apache.tomcat.classloader")) {
 		return this.getClassLoader();
 	    }
@@ -599,6 +582,8 @@ public class Context implements LogAware {
      *    extension mapped servlets (eg *jsp)
      *    default servlet
      *
+     * XXX XXX XXX
+     *
      */
     public void addServletMapping(String path, String servletName)
 	throws TomcatException
@@ -635,8 +620,8 @@ public class Context implements LogAware {
 	}
 
 	// override defaultServlet XXX do we need defaultServlet?
-	if( "/".equals(path) )
-	    defaultServlet = sw;
+// 	if( "/".equals(path) )
+// 	    defaultServlet = sw;
 
 	containers.put( path, map );
 	mappings.put( path, sw );
@@ -676,33 +661,35 @@ public class Context implements LogAware {
 	return containers.elements();
     }
 
+    /** Return an enumeration of Strings, representing
+     *  all URLs ( relative to this context ) having
+     *	associated properties ( handlers, security, etc)
+     */
     public Enumeration getContainerLocations() {
 	return containers.keys();
     }
 
+    /** Return the container ( properties ) associated
+     *  with a path ( relative to this context )
+     */
     public Container getContainer( String path ) {
 	return (Container)containers.get(path);
     }
 
-    // return the container associated with this context -
-    // which is also the default container
+    /** Default container for this context.
+     */
     public Container getContainer() {
 	return defaultContainer;
     }
 
+    /** Remove a container
+     */
     public void removeContainer( Container ct ) {
 	containers.remove(ct.getPath());
     }
 
-//     public Handler getDefaultServlet() {
-// 	if( defaultServlet==null)
-// 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
-// 	return defaultServlet;
-//     }
-
     // -------------------- Servlets management --------------------
 
-    // XXX do we need that ??
     /** Remove the servlet with a specific name
      */
     public void removeServletByName(String servletName)
@@ -711,20 +698,26 @@ public class Context implements LogAware {
 	servlets.remove( servletName );
     }
 
+    /**
+     *  
+     */
     public Handler getServletByName(String servletName) {
 	return (Handler)servlets.get(servletName);
     }
 
-//     public Handler createHandler() {
-// 	return getFacadeManager().createHandler();
-//     }
-    
+
     /**
      * Add a servlet with the given name to the container. The
      * servlet will be loaded by the container's class loader
      * and instantiated using the given class name.
      *
-     * Called to add a new servlet from web.xml
+     * Called to add a new servlet from web.xml or by interceptors
+     * to dynamically add servlets and mappings ( for example
+     * JspInterceptor is registering a new servlet after it compiles
+     * the jsp page, and an exact map to avoid further overhead )
+     *
+     * Handlers are keyed by name.
+     * XXX should be addHandler
      */
     public void addServlet(Handler wrapper)
     	throws TomcatException
@@ -742,27 +735,16 @@ public class Context implements LogAware {
 	servlets.put(name, wrapper);
     }
 
-//     public Handler addServlet(String name, String classN)
-// 	throws TomcatException
-//     {
-// 	Handler sw = new Handler();
-// 	sw.setContext(this);
-	
-// 	sw.setServletName(name);
-// 	if ( classN.startsWith("/")) {
-// 	    sw.setPath(classN);
-// 	} else {
-// 	    sw.setServletClass(classN);
-// 	}
-// 	addServlet( sw );
-// 	return sw;
-//     }
-
+    
+    /** Return all servlets registered with this Context
+     *  The elements will be of type Handler ( or sub-types ) 
+     */
     public Enumeration getServletNames() {
 	return servlets.keys();
     }
 
     // -------------------- Loading and sessions --------------------
+
     ClassLoader classLoader;
     boolean reload;
     // Vector<URL>, using URLClassLoader conventions
@@ -859,6 +841,11 @@ public class Context implements LogAware {
 	return debug;
     }
 
+    
+    public String toString() {
+	return "Ctx(" + (vhost==null ? "" : vhost + ":" )  +  path +  ")";
+    }
+
     // ------------------- Logging ---------------
 
     Logger.Helper loghelper = new Logger.Helper("tc_log", this);
@@ -882,7 +869,10 @@ public class Context implements LogAware {
 	loghelper.log(msg, t, level);
     }
 
-    /** User-level log method ( called from a servlet)
+    /** User-level log method ( called from a servlet).
+     *  Context supports 2 log streams - one is used by the
+     *  tomcat core ( internals ) and one is used by 
+     *  servlets
      */
     public void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
@@ -908,14 +898,18 @@ public class Context implements LogAware {
     public Logger.Helper getLoggerHelper() {
 	return loghelper;
     }
-    
-    public String toString() {
-	return "Ctx(" + (vhost==null ? "" : vhost + ":" )  +  path +  ")";
-    }
 
-    // -------------------- Facade methods --------------------
+    // -------------------- Path methods  --------------------
 
+    /**
+     *   Find a context by doing a sub-request and mapping the request
+     *   against the active rules ( that means you could use a /~costin
+     *   if a UserHomeInterceptor is present )
+     *
+     *   XXX I think this should be in ContextManager
+     */
     public Context getContext(String path) {
+	// XXX Servlet checks should be done in facade
 	if (! path.startsWith("/")) {
 	    return null; // according to spec, null is returned
 	    // if we can't  return a servlet, so it's more probable
@@ -931,6 +925,10 @@ public class Context implements LogAware {
     /** Implements getResource()
      *  See getRealPath(), it have to be local to the current Context -
      *  and can't go to a sub-context. That means we don't need any overhead.
+     *
+     *  XXX XXX Don't use - must be moved at a higher layer ( facade ).
+     *  or re-designed to support non-filesystem-based contexts. In
+     *  any case, this method shouldn't be in core
      */
     public URL getResource(String rpath) throws MalformedURLException {
         if (rpath == null) return null;
@@ -961,28 +959,23 @@ public class Context implements LogAware {
     }
 
 
-    /**   According to Servlet 2.2 the real path is interpreted as
-     *    relative to the current web app and _cannot_ go outside the 
-     *    box. If your intention is different or want the "other" behavior 
-     *    you'll have to first call getContext(path) and call getRealPath()
-     *    on the result context ( if any - the server may disable that from
-     *    security reasons !).
-     *    XXX find out how can we find the context path in order to remove it
-     *    from the path - that's the only way a user can do that unless he have
-     *    prior knowledge of the mappings !
+    /**
+     *  Return the absolute path, using the context base dir.
+     *  The parameter is interpreted as relative to the context
+     *  with a number of safety checks ( no .., etc)
+     *
+     *  If you want to find the path where an arbitrary request
+     *  lead you need a sub request.
+     *
+     *  XXX XXX Don't use this method - it's better to just call
+     *  safePath() when you need ( i.e. there are ways to factor
+     *  out the security checks, that method is not good )
      */
     public String getRealPath( String path) {
 	String base=getAbsolutePath();
-	if( path==null ) path="";
+	if( path==null ) return base;
 
 	String realPath=FileUtil.safePath( base, path );
-	// No need for a sub-request, that's a great simplification
-	// in servlet space.
-
-	// Important: that's different from what some people might
-	// expect and how other server APIs work, but that's how it's
-	// specified in 2.2. From a security point of view that's very
-	// good, it keeps inter-webapp communication under control.
 	
 	if( debug>5) {
 	    log("Get real path " + path + " " + realPath + " " + base );
@@ -990,57 +983,45 @@ public class Context implements LogAware {
 	return realPath;
     }
 
-    // -------------------- Deprecated
-    // tomcat specific properties
-    private String engineHeader = null;
-
-    /**  @deprecated
-     */
-    public String getEngineHeader() {
-	return engineHeader;
-    }
-
-    /**  @deprecated
+    /**  What is reported in the "Servlet-Engine" header
+     *   for this context. It is set automatically by
+     *   a facade interceptor.
+     *   XXX Do we want to allow user to customize it ?
      */
     public void setEngineHeader(String s) {
         engineHeader=s;
     }
 
-    /**  @deprecated
+    /**  
+     */
+    public String getEngineHeader() {
+	return engineHeader;
+    }
+    
+    /**
+     *  Work dir is a place where servlets are allowed
+     *  to write
+     */
+    public void setWorkDir(String workDir) {
+	this.workDir = new File(workDir);
+    }
+
+    /**  
      */
     public File getWorkDir() {
 	return workDir;
     }
 
-    /**  @deprecated
+    /**  
      */
     public void setWorkDir(File workDir) {
 	this.workDir = workDir;
     }
 
-    
-    public Object getProtectionDomain() {
-	return protectionDomain;
-    }
-
-    public void setProtectionDomain(Object o) {
-	protectionDomain=o;
-    }
-
-    /**
-      * Get the SecurityManager Permissions for this Context.
-      */
-    public Object getPermissions() {
-	return perms;
-    }
-
-    public void setPermissions( Object o ) {
-	perms=o;
-    }
-
     // -------------------- Virtual host support --------------------
     
-    /** Make this context visible as part of a virtual host
+    /** Make this context visible as part of a virtual host.
+     *  The host is the "default" name, it may also have aliases.
      */
     public void setHost( String h ) {
 	vhost=h;
@@ -1065,7 +1046,10 @@ public class Context implements LogAware {
 	return vhostAliases.elements();
     }
     // -------------------- Security - trusted code -------------------- 
-    
+
+    /** Mark the webapplication as trusted, i.e. it can
+     *  access internal objects and manipulate tomcat core
+     */
     public void setTrusted( boolean t ) {
 	trusted=t;
     }
@@ -1074,14 +1058,32 @@ public class Context implements LogAware {
 	return trusted;
     }
 
-    boolean allowAttribute( String name ) {
+    /** Check if "special" attributes can be used by
+     *   user application. Only trusted apps can get 
+     *   access to the implementation object.
+     */
+    public boolean allowAttribute( String name ) {
 	// check if we can access this attribute.
 	if( isTrusted() ) return true;
 	log( "Illegal access to internal attribute ", null, Logger.ERROR);
 	return false;
     }
 
-    public void addRequestInterceptor( BaseInterceptor ri ) {
+    // -------------------- Per-context interceptors ----------
+
+    /** Add a per-context interceptor. The hooks defined will
+     *  be used only for requests that are matched in this context.
+     *  contextMap hook is not called ( since the context is not
+     *	known at that time
+     */
+    public void addInterceptor( BaseInterceptor ri ) {
         defaultContainer.addRequestInterceptor(ri);
+    }
+
+
+    // -------------------- Deprecated --------------------
+    
+    public void addRequestInterceptor( BaseInterceptor ri ) {
+        addInterceptor( ri );
     }
 }
