@@ -54,14 +54,31 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.tool.LocalizationTool;
 
 /**
- * Scarab-specific localiztion tool.
+ * Scarab-specific localiztion tool.  Makes use of the property
+ * format:
+ *
+ * <blockquote><code><pre>
+ * [dir/]<scope>.<title>
+ * </pre></code></blockquote>
+ *
+ * Defaults for scope can be specified using the
+ * <code>default.somevar</code> syntax, where <code>somevar</code> is
+ * the variable you want to specify a default scope for.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
  */
 public class ScarabLocalizationTool
     extends LocalizationTool
 {
+    /**
+     * The portion of a key denoting the default scope (the default
+     * target name, for instance).
+     */
     private static final String DEFAULT_SCOPE = "default";
+
+    /**
+     * The portion of a key denoting the 
+     */
     private static final String TITLE_PROP = "title";
 
     /**
