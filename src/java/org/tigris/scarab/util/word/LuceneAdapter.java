@@ -83,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.14 2002/09/13 00:08:24 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.15 2002/10/01 00:02:54 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -480,7 +480,7 @@ public class LuceneAdapter
             attachment.getIssueId().toString());
         Field typeId = Field.Keyword(ATTACHMENT_TYPE_ID, 
             attachment.getTypeId().toString());
-        Field text = Field.UnStored(TEXT, attachment.getDataAsString());
+        Field text = Field.UnStored(TEXT, attachment.getData());
         doc.add(attachmentId);
         doc.add(issueId);
         doc.add(typeId);

@@ -394,7 +394,7 @@ public class ScarabIssues implements java.io.Serializable
         attachmentOM.setAttachmentType(@OM@.AttachmentType.getInstance(attachment.getType()));
         attachmentOM.setMimeType(attachment.getMimetype());
         attachmentOM.setFileName(attachment.getPath());
-        attachmentOM.setData(attachment.getData().getBytes());
+        attachmentOM.setData(attachment.getData());
         attachmentOM.setCreatedDate(attachment.getCreatedDate().getDate());
         attachmentOM.setModifiedDate(attachment.getModifiedDate().getDate());
         @OM@.ScarabUser creUser = @OM@.ScarabUserManager

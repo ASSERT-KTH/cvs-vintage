@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.110 2002/09/20 19:04:18 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.111 2002/10/01 00:02:55 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -138,7 +138,7 @@
     <!--
         Actual information constituting the attachment.
     -->
-    <column name="ATTACHMENT_DATA" javaName="Data" required="false" type="VARBINARY"></column>
+    <column name="ATTACHMENT_DATA" javaName="Data" required="false" type="LONGVARCHAR"></column>
     <!--
         Server side location of the file that contains attachment.
         Location is relative to the central file storage location

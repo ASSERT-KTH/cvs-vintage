@@ -102,7 +102,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.139 2002/09/17 23:41:27 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.140 2002/10/01 00:02:54 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -426,7 +426,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     Attachment comment = new Attachment();
                     commentField.setProperty(comment);
                     if ( comment.getData() != null 
-                         && comment.getData().length > 0) 
+                         && comment.getData().length() > 0) 
                     {
                         issue.addComment(comment, (ScarabUser)data.getUser());     
                     }
@@ -447,7 +447,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     // send email
                     if ( summary.length() == 0 ) 
                     {
-                        summary = comment.getDataAsString();
+                        summary = comment.getData();
                     }
                     if ( summary.length() > 60 ) 
                     {
@@ -558,7 +558,7 @@ public class ReportIssue extends RequireLoginFirstAction
             {
                 group.setProperties(attachment);
                 if (attachment.getData() != null 
-                    && attachment.getData().length > 0)
+                    && attachment.getData().length() > 0)
                 {
                     ScarabRequestTool scarabR = getScarabRequestTool(context);
                     List issues = scarabR.getIssues();

@@ -73,6 +73,6 @@ public class AttachmentDataRule extends BaseRule
         log().debug("(" + getImportBean().getState() + 
             ") attachment data body: " + text);
         Attachment attachment = getImportBean().getAttachment();
-        attachment.setDataAsString(text);
+        attachment.setData(text);
     }
 }
