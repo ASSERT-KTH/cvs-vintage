@@ -7,6 +7,7 @@ $page.setTitle("Add/remove attributes from view")
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ConfigureIssueList.vm").toString())
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
+## !FIXME! jdm add $scarabR.CurrentIssueType to args or get it some other way?
 #set ($moduleAttributes = $module.getRModuleAttributes(true))
 #set ($maxNum = $moduleAttributes.size())
 #set ($usedefaults = $moduleAttributes.size())
