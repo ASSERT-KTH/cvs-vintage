@@ -602,9 +602,14 @@ final class JasperLiaison {
 			       ctx.getAbsolutePath(),
 			       jspFile );
 
-	    // register the handler as dependend of the jspfile 
+	    // register the handler as dependent on the jspfile 
 	    if( dep==null ) {
 		dep=setDependency( ctx, mangler, handler );
+                // if dep is null then path is unsafe, return "not found"
+                if( dep == null ) {
+                    return 404;
+                }
+                
 		// update the servlet class name
 		handler.setServletClassName( mangler.getServletClassName() );
 
@@ -908,7 +913,11 @@ final class JasperLiaison {
 	// create a lastModified checker.
 	if( debug>0) log.log("Registering dependency for " + handler );
 	Dependency dep=new Dependency();
-	dep.setOrigin( new File(mangler.getJspFilePath()) );
+        String jspFilePath = mangler.getJspFilePath();
+        // if unsafe path, return null
+        if( jspFilePath == null )
+            return null;
+        dep.setOrigin( new File(jspFilePath) );
 	dep.setTarget( handler );
 	dep.setLocal( true );
 	File f=new File( mangler.getClassFileName() );
