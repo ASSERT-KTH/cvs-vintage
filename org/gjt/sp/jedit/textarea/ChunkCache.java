@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.76 2003/04/08 18:37:32 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.77 2003/04/11 00:59:49 spestov Exp $
  */
 class ChunkCache
 {
@@ -707,7 +707,7 @@ class ChunkCache
 			painter.getFontRenderContext(),
 			painter,out,
 			(textArea.getDisplayManager().softWrap
-			? textArea.wrapMargin : 0.0f));
+			? textArea.getDisplayManager().wrapMargin : 0.0f));
 		buffer.markTokens(physicalLine,tokenHandler);
 	} //}}}
 
