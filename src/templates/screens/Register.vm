@@ -41,10 +41,11 @@
  <td>
   <input name="$regGroup.Email.Key" value="$regGroup.Email" type="text" size="25"  tabindex="3"/>
   #fieldErrorMsg($regGroup.Email "")
-<p>
+<p><small>
  Note: Enter your valid email address - including your "@serviceprovider" domain.
  For example, if your AOL screen name is joe cool, your email address is joecool@aol.com.
-</p>
+ If you enter an invalid email address, you will not be able to log in and use the system.
+</small></p>
  </td>
 </tr>
 <tr>
