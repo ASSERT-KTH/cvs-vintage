@@ -294,7 +294,10 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      * Builds a pseudostate initialized as a branch pseudostate. The pseudostate
      * will be a subvertix of the given compositestate. The parameter compositeState
      * is of type Object to decouple the factory and NSUML as much as possible from
-     * the rest of ArgoUML.     * @param compositeState     * @return MPseudostate     */
+     * the rest of ArgoUML.
+     * @param compositeState
+     * @return MPseudostate
+     */
     public MPseudostate buildPseudoState(Object compositeState) {
         if (compositeState instanceof MCompositeState) {
             MPseudostate state = createPseudostate();
@@ -414,7 +417,10 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
     
     /**
      * Builds an internal transition for a given state. The parameter state is 
-     * of type Object to decouple the factory and NSUML as much as possible.       * @param state The state the internal transition should belong to     * @return MTransition The internal transition constructed     */
+     * of type Object to decouple the factory and NSUML as much as possible.  
+     * @param state The state the internal transition should belong to
+     * @return MTransition The internal transition constructed
+     */
     public MTransition buildInternalTransition(Object state) {
         if (state instanceof MState) {
             MTransition trans = createTransition();
@@ -476,7 +482,18 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
     
     public void deleteChangeEvent(MChangeEvent elem) {}
     
-    public void deleteCompositeState(MCompositeState elem) {}
+    /**
+     * deletes any associated subVertices.
+     */
+    public void deleteCompositeState(MCompositeState elem) {
+    
+        Collection vertices = elem.getSubvertices();
+        Iterator it = vertices.iterator();
+        while (it.hasNext()) {
+            MStateVertex vertex = (MStateVertex)it.next();
+            UmlFactory.getFactory().delete(vertex);
+        }
+    }
     
     public void deleteEvent(MEvent elem) {}
     
@@ -492,9 +509,14 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
     
     public void deleteState(MState elem) {}
     
+    /**
+     * deletes its top state, which is a composite state (state vertex).
+     */
     public void deleteStateMachine(MStateMachine elem) {
-    }    
-                
+        
+        MState top = elem.getTop();
+        UmlFactory.getFactory().delete(top);
+    }
     
     /**
      * Deletes the outgoing and incoming transitions of a statevertex.
