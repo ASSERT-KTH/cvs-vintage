@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
-<!DOCTYPE app-data SYSTEM
+<!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.65 2001/10/26 00:29:02 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.66 2001/10/28 19:55:01 jmcnally Exp $ -->
 
-<app-data>
 <database>
 <!--
     History of changes made to the attributes of an issue.
@@ -1406,4 +1405,3 @@
 
 
 </database>
-</app-data>
