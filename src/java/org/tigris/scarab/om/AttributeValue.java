@@ -693,7 +693,7 @@ public abstract class AttributeValue
     public void save(DBConnection dbcon)
         throws Exception
     {
-        if ( isModified() && !getIssue().isTemplate() ) 
+        if ( isModified())
         {
             checkTransaction("Cannot save a value outside a Transaction");
             // Save activity record
