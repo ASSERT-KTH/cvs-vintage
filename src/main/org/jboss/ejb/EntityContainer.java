@@ -64,7 +64,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.79 $
+ * @version $Revision: 1.80 $
  *
  * <p><b>Revisions:</b>
  *
@@ -158,12 +158,11 @@ public class EntityContainer
     * @throws Exception if an problem occures while storing the entities
     */
    public static void synchronizeEntitiesWithinTransaction(Transaction tx)
-      throws TransactionRolledbackException
    {
       // If there is no transaction, there is nothing to synchronize.
       if(tx != null)
       {
-	 getGlobalTxEntityMap().syncEntities(tx);
+         getGlobalTxEntityMap().syncEntities(tx);
       }
    }
    
