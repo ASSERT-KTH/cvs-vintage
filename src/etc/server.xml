@@ -40,7 +40,10 @@
             className="org.apache.tomcat.modules.config.ContextXmlReader" />
 
         <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.AutoSetup" />
+            className="org.apache.tomcat.modules.config.AutoDeploy" />
+
+        <ContextInterceptor 
+            className="org.apache.tomcat.modules.config.AutoWebApp" />
 
         <!-- Generate includeable Apache configuration files for mod_jserv
              and mod_jk.
