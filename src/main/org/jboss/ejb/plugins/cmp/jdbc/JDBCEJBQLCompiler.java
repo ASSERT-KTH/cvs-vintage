@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -803,12 +803,14 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          return buf;
       }
 
-      // check the path for cmr fields and add them to collection member join paths
-      for(Iterator pathIter = path.fieldList.iterator(); pathIter.hasNext();) {
-         Object pathEl = pathIter.next();
-         if(pathEl instanceof JDBCCMRFieldBridge) {
-            collectionMemberJoinPaths.put(alias, path);
-            break;
+      // check the path for cmr fields and add them to join paths
+      if(path.fieldList.size() > 2) {
+         for(Iterator pathIter = path.fieldList.iterator(); pathIter.hasNext();) {
+            Object pathEl = pathIter.next();
+            if(pathEl instanceof JDBCCMRFieldBridge) {
+               collectionMemberJoinPaths.put(alias, path);
+               break;
+            }
          }
       }
 
