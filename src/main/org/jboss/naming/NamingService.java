@@ -11,9 +11,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.Map;
 import java.util.Properties;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -37,7 +39,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -47,7 +49,7 @@ public class NamingService
    implements NamingServiceMBean
 {
    private Main naming;
-   private HashMap marshalledInvocationMapping = new HashMap();
+   private Map marshalledInvocationMapping = new HashMap();
 
    /** Object Name of the JSR-77 representant of this servie **/
    ObjectName mJNDI;
@@ -192,14 +194,15 @@ public class NamingService
          log.info("Listening on port "+naming.getPort());
 
       // Build the Naming interface method map
+      HashMap tmpMap = new HashMap(13);
       Method[] methods = Naming.class.getMethods();
       for(int m = 0; m < methods.length; m ++)
       {
          Method method = methods[m];
          Long hash = new Long(MarshalledInvocation.calculateHash(method));
-         marshalledInvocationMapping.put(hash, method);
+         tmpMap.put(hash, method);
       }
-
+      marshalledInvocationMapping = Collections.unmodifiableMap(tmpMap);
    }
 
    protected void stopService()
@@ -227,6 +230,17 @@ public class NamingService
          JNDIResource.destroy( server, "LocalJNDI" );
       }
       super.postDeregister();
+   }
+
+   /** Expose the Naming service interface mapping as a read-only attribute
+    *
+    * @jmx:managed-attribute
+    *
+    * @return A Map<Long hash, Method> of the Naming interface 
+    */
+   public Map getMethodMap()
+   {
+      return marshalledInvocationMapping;
    }
 
    /** Expose the Naming service via JMX to invokers.
