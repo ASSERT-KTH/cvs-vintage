@@ -199,13 +199,16 @@ public class GlobalResourceLoader {
 		Hypotetically this method should not be available to classes different from *ResourceLoader (example: MailResourceLoader, AddressbookResourceLoader); this means that *ResourceLoader classes *do know* how to call this method.
 	*/
 	public static String getString(String sPath, String sName, String sID) {
-		if (sPath == null || sName == null || sID == null)
+		if (sID == null || sID.equals(""))
 			return null;
-		if (sPath.equals("") || sName.equals("") || sID.equals(""))
-			return null;
-		//Find out if we already loaded the needed ResourceBundle object in the hashtable.
-		String sBundlePath = generateBundlePath(sPath, sName);
-		ResourceBundle bundle = (ResourceBundle) htBundles.get(sBundlePath);
+		ResourceBundle bundle = null;
+                String sBundlePath = null;
+                if (sPath != null && !sPath.equals("")) {
+                        //Find out if we already loaded the needed ResourceBundle
+                        //object in the hashtable.
+                        sBundlePath = generateBundlePath(sPath, sName);
+                        bundle = (ResourceBundle) htBundles.get(sBundlePath);
+                }
 		if (bundle == null) {
 			try {
 				// use ResourceBundle's internal classloader
