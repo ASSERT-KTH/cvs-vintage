@@ -54,6 +54,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collections;
 
 import org.apache.log4j.Category;
 
@@ -105,7 +106,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.103 2002/04/03 20:05:30 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.104 2002/04/23 15:27:55 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -208,37 +209,44 @@ public class ScarabModule
                                username, email, issueType};
         Object obj = ScarabCache.get(keys); 
         if ( obj == null ) 
-        {        
+        {
             ScarabUser[] eligibleUsers = getUsers(getUserPermissions(issueType));
-            List userIds = new ArrayList();
-            for (int i = 0; i < eligibleUsers.length; i++)
+            if (eligibleUsers == null || eligibleUsers.length == 0) 
             {
-                userIds.add(eligibleUsers[i].getUserId());
+                result = Collections.EMPTY_LIST;
             }
-            Criteria crit = new Criteria();
-            crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
-            
-            if (firstName != null)
+            else 
             {
-                crit.add(ScarabUserImplPeer.FIRST_NAME, addWildcards(firstName), 
-                         Criteria.LIKE);
+                List userIds = new ArrayList();
+                for (int i = 0; i < eligibleUsers.length; i++)
+                {
+                    userIds.add(eligibleUsers[i].getUserId());
+                }
+                Criteria crit = new Criteria();
+                crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+                
+                if (firstName != null)
+                {
+                    crit.add(ScarabUserImplPeer.FIRST_NAME, 
+                             addWildcards(firstName), Criteria.LIKE);
+                }
+                if (lastName != null)
+                {
+                    crit.add(ScarabUserImplPeer.LAST_NAME, 
+                             addWildcards(lastName), Criteria.LIKE);
+                }
+                if (username != null)
+                {
+                    crit.add(ScarabUserImplPeer.LOGIN_NAME, 
+                             addWildcards(username), Criteria.LIKE);
+                }
+                if (email != null)
+                {
+                    crit.add(ScarabUserImplPeer.EMAIL, addWildcards(email), 
+                             Criteria.LIKE);
+                }
+                result = ScarabUserImplPeer.doSelect(crit);
             }
-            if (lastName != null)
-            {
-                crit.add(ScarabUserImplPeer.LAST_NAME, addWildcards(lastName), 
-                         Criteria.LIKE);
-            }
-            if (username != null)
-            {
-                crit.add(ScarabUserImplPeer.LOGIN_NAME, addWildcards(username), 
-                         Criteria.LIKE);
-            }
-            if (email != null)
-            {
-                crit.add(ScarabUserImplPeer.EMAIL, addWildcards(email), 
-                         Criteria.LIKE);
-            }
-            result = ScarabUserImplPeer.doSelect(crit);
             ScarabCache.put(result, keys);
         }
         else 
