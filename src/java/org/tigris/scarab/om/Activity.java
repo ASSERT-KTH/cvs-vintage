@@ -71,7 +71,6 @@ public class Activity
 {
     private Attribute aAttribute;                 
     private Transaction aTransaction;                 
-    private Attachment aAttachment;                 
     private AttributeOption oldAttributeOption;                 
     private AttributeOption newAttributeOption;                 
 
@@ -105,7 +104,6 @@ public class Activity
      */
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
-                       Attachment attachment,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue)
          throws Exception
@@ -118,7 +116,6 @@ public class Activity
             setAttribute(attribute);
             setDescription(desc);
             setTransaction(transaction);
-            if (attachment != null) setAttachment(attachment);
             setOldOptionId(oldOptionId);
             setNewOptionId(newOptionId);
             setOldValue(oldValue);
@@ -148,35 +145,6 @@ public class Activity
     {
         aTransaction = v;
         super.setTransaction(v);
-    }
-
-    /**
-     * Gets the Attachment associated with this Activity record
-     */
-    public Attachment getAttachment() throws Exception
-    {
-      try{
-        if ( aAttachment==null && (getAttachmentId() != null) )
-        {
-            aAttachment = AttachmentPeer.retrieveByPK(new NumberKey(getAttachmentId()));
-            
-            // make sure the parent attribute is in synch.
-            super.setAttachment(aAttachment);            
-        }
-      } catch (Exception e) {
-         aAttachment = null;
-      }
-        return aAttachment;
-    }
-
-
-    /**
-     * Sets the Attachment associated with this Activity record
-     */
-    public void setAttachment(Attachment v) throws Exception
-    {
-        aAttachment = v;
-        super.setAttachment(v);
     }
 
 
