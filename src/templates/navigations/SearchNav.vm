@@ -84,7 +84,7 @@
   </td>
 #end
 
-#if ($currentIssueType)
+#if ($currentIssueType &&  $scarabR.hasPermission($scarabG.Permission.ISSUE__ENTER, $module))
   ## Add Template list to the top bar so that using a template will be easier
   #set ($allTemplates = $scarabR.AllIssueTemplates)
   #if ($allTemplates.size() > 0)    
