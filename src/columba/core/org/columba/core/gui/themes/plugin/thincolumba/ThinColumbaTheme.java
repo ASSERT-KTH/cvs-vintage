@@ -16,9 +16,12 @@
 
 package org.columba.core.gui.themes.plugin.thincolumba;
 
+import java.awt.Font;
+
 import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 
 import org.columba.core.config.Config;
@@ -45,21 +48,16 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 	private final ColorUIResource foreground;
 	private final ColorUIResource background;
 
-	/*
 	private FontUIResource mainFontResource;
 	private FontUIResource messageFontResource;
-	*/
 
 	protected static final String thinPackage =
 		"org.columba.core.gui.themes.plugin.thincolumba.";
 
 	public ThinColumbaTheme() {
 		GuiItem item = Config.getOptionsConfig().getGuiItem();
-		/*
-		mainFontResource = new FontUIResource(item.getMainFont());
-		messageFontResource = new FontUIResource(item.getTextFont());
-		*/
-
+		mainFontResource = new FontUIResource("Default", Font.PLAIN, 12);
+		messageFontResource = new FontUIResource("Default", Font.PLAIN, 12);
 		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));
 		foreground = new ColorUIResource(themeItem.getForeground());
 		background = new ColorUIResource(themeItem.getBackground());
@@ -94,7 +92,6 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 		return "Thin Columba";
 	}
 
-	/*
 	public FontUIResource getMenuTextFont() {
 		return mainFontResource;
 	}
@@ -114,7 +111,6 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 	public FontUIResource getUserTextFont() {
 		return mainFontResource;
 	}
-	*/
 
 	public void addCustomEntriesToTable(UIDefaults table) {
 		Object map[] =
@@ -354,7 +350,5 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 		table.put("ComboBox.listBackground", new ColorUIResource(255,255,255) );
 		
 		*/
-
 	}
-
 }
