@@ -23,7 +23,7 @@
   </tr>        
  #end
 </table>
-<h4>l10n.SaveNewList</h4>
+<h4>$l10n.SaveNewList</h4>
 #set ($intakeList = $intake.MITList.mapTo($mitList))
 <p>
 Name: 
