@@ -68,7 +68,7 @@ import org.tigris.scarab.om.*;
     right now though. :-(
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: DeleteComponent.java,v 1.2 2001/01/04 03:02:10 jon Exp $
+    @version $Id: DeleteComponent.java,v 1.3 2001/02/23 03:11:31 jmcnally Exp $
 */
 public class DeleteComponent extends RequireLoginFirstAction
 {
@@ -89,9 +89,9 @@ public class DeleteComponent extends RequireLoginFirstAction
             }
             // build the criteria
             Criteria crit = new Criteria();
-            crit.add(ScarabModulePeer.MODULE_ID, component_id);
+            crit.add(ModulePeer.MODULE_ID, component_id);
             // do the delete
-            ScarabModulePeer.doDelete(crit);
+            ModulePeer.doDelete(crit);
             data.setMessage("Component Deletion Successful!");
         }
         catch (Exception e)

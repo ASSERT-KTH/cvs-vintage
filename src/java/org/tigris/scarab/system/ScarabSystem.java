@@ -48,8 +48,13 @@ package org.tigris.scarab.system;
 
 // Turbine
 import org.apache.turbine.om.security.User;
+import org.apache.turbine.om.*;
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.baseom.*;
+import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.intake.IntakeSystem;
+
 // Velocity
 import org.apache.velocity.util.FieldMethodizer;
 
@@ -69,11 +74,18 @@ public class ScarabSystem
     private FieldMethodizer constants = null;
 
     /**
+     * provides access to the intake field objects
+     */
+    private IntakeSystem intake;
+
+    /**
      * Constructor does initialization stuff
      */    
     public ScarabSystem()
     {
-        constants = new FieldMethodizer("org.tigris.scarab.util.ScarabConstants");
+        constants = new FieldMethodizer(
+            "org.tigris.scarab.util.ScarabConstants");
+        intake = new IntakeSystem();
     }
 
     /**
@@ -100,5 +112,35 @@ public class ScarabSystem
         if (user == null)
             this.user = new ScarabUser();
         return this.user;
+    }
+
+    /**
+     * Get a specific module by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
+     */
+    public Module getModule(String key) throws Exception
+    {
+        return ModulePeer.retrieveByPK(new SimpleKey(key));
+    }
+
+    /**
+     * Get a specific issue by key value.
+     *
+     * @param key a <code>String</code> value
+     * @return a <code>Module</code> value
+     */
+    public Issue getIssue(String key) throws Exception
+    {
+        return IssuePeer.retrieveByPK(new SimpleKey(key));
+    }
+
+    /**
+     * provides access to the intake field objects
+     */
+    public IntakeSystem getIntake()
+    {
+        return intake; 
     }
 }

@@ -55,6 +55,7 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.screens.*;
 import org.apache.turbine.services.velocity.*; 
 import org.apache.turbine.util.*; 
+import org.apache.turbine.om.*; 
 // Scarab Stuff
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.om.*;
@@ -65,7 +66,7 @@ import org.tigris.scarab.screens.base.*;
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.2 2001/01/04 03:02:12 jon Exp $
+    @version $Id: ModifyProject.java,v 1.3 2001/02/23 03:11:38 jmcnally Exp $
 */
 public class ModifyProject extends ScarabContextLoginFirst
 {
@@ -76,17 +77,18 @@ public class ModifyProject extends ScarabContextLoginFirst
     {
         // put the projects list into the context.
 //        context.put (ModuleManager.CURRENT_PROJECT, ModuleManager.getProjectsBox(data, 1));
-
+        SimpleKey cur_project_id = new SimpleKey(data.getParameters()
+                                                 .getString("curra;ldkfj"));
         // get the currently select project information
-        ScarabModule sm = ModuleManager.getProject(cur_project_id);
+        Module sm = ModuleManager.getProject(cur_project_id);
         context.put ("project", sm );
         
         // get the owner username and id
         context.put ("owner", ScarabUser.getUserName(sm.getOwnerId()));
-        context.put ("ownerId", new Integer(sm.getOwnerId()).toString());
+        context.put ("ownerId", sm.getOwnerId().toString());
         // get the qucontact username and id
         context.put ("qaContact", ScarabUser.getUserName(sm.getQaContactId()));
-        context.put ("qaContactId", new Integer(sm.getQaContactId()).toString());
+        context.put ("qaContactId", sm.getQaContactId().toString());
         
         // deal with the form data from the new form stuff below
         // only do this if the submit button was clicked

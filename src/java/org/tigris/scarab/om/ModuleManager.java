@@ -56,6 +56,7 @@ import org.tigris.scarab.baseom.peer.*;
 
 // Turbine
 import org.apache.turbine.om.security.*;
+import org.apache.turbine.om.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.*;
 import org.apache.turbine.util.template.*;
@@ -65,7 +66,7 @@ import org.apache.turbine.services.security.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.6 2001/01/23 22:43:23 jmcnally Exp $
+    @version $Id: ModuleManager.java,v 1.7 2001/02/23 03:11:37 jmcnally Exp $
 */
 public class ModuleManager
 {
@@ -81,29 +82,29 @@ public class ModuleManager
         This is a utility method to quickly get the list of modules associated
         to a user.
     */
-    public static Vector getProjects(int visitorid)
+    public static Vector getProjects(ObjectKey visitorid)
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.addJoin (ScarabModulePeer.MODULE_ID, ScarabRModuleUserPeer.MODULE_ID);
-        crit.add (ScarabRModuleUserPeer.USER_ID, visitorid);
-        return ScarabModulePeer.doSelect(crit);
+        crit.addJoin (ModulePeer.MODULE_ID, RModuleUserPeer.MODULE_ID);
+        crit.add (RModuleUserPeer.USER_ID, visitorid);
+        return ModulePeer.doSelect(crit);
     }
     /**
         gets a single project
         @return null on error
     */
-    public static ScarabModule getProject(int project_id) throws Exception
+    public static Module getProject(ObjectKey project_id) throws Exception
     {
-        ScarabModule project = null;
+        Module project = null;
         try
         {
             Criteria criteria = new Criteria();
-            criteria.add(ScarabModulePeer.MODULE_ID, project_id);
+            criteria.add(ModulePeer.MODULE_ID, project_id);
             // get the Project object
-            Vector projectVec = ScarabModulePeer.doSelect(criteria);
+            Vector projectVec = ModulePeer.doSelect(criteria);
             if (projectVec.size() == 1)
-                project = (ScarabModule)projectVec.elementAt(0);
+                project = (Module)projectVec.elementAt(0);
         }
         catch (Exception e)
         {
@@ -125,12 +126,13 @@ public class ModuleManager
     public static SelectorBox getProjectsBox(RunData data, int size)
         throws Exception
     {
-        int visitorid = ((org.apache.turbine.om.security.TurbineUser)
-                         data.getUser()).getPrimaryKeyAsInt();
-        if (visitorid <= 0)
+        ObjectKey visitorid = ((org.apache.turbine.om.security.TurbineUser)
+                         data.getUser()).getPrimaryKey();
+        if (visitorid == null)
             return null;
         
-        Integer selectedModule = data.getParameters().getInteger(CURRENT_PROJECT, 1);
+        String selectedModule = data.getParameters()
+            .getString(CURRENT_PROJECT, "1");
 
         // get a list of the projects associated to the user.
         Vector result = getProjects(visitorid);
@@ -141,12 +143,12 @@ public class ModuleManager
         // build up the Object[]'s
         for (Enumeration e = result.elements();e.hasMoreElements(); )
         {
-            ScarabModule sm = (ScarabModule) e.nextElement();
-            names[i] = new Integer(sm.getPrimaryKeyAsInt()).toString();
+            Module sm = (Module) e.nextElement();
+            names[i] = sm.getPrimaryKey();
             values[i] = sm.getName();
 
             if (selectedModule != null
-                && sm.getPrimaryKeyAsInt() == selectedModule.intValue())
+                && sm.getPrimaryKey().equals(selectedModule) )
             {
                 selected[i++] = true;
             }
@@ -156,7 +158,7 @@ public class ModuleManager
             }
         }
         // store the first project as the "default" project
-        if ((selectedModule == null || selectedModule.intValue() <= 0) && names.length > 0)
+        if ( selectedModule == null && names.length > 0 )
             data.getParameters().add(CURRENT_PROJECT, (String)names[0]);
         return new SelectorBox(PROJECT_CHANGE_BOX, names, values, size, selected);
     }
@@ -164,12 +166,12 @@ public class ModuleManager
     /**
         give me a list of components that match the parent project id
     */
-    public static Vector getComponents(int parent_project_id)
+    public static Vector getComponents(ObjectKey parent_project_id)
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add (ScarabModulePeer.PARENT_ID, parent_project_id);
-        return ScarabModulePeer.doSelect(crit);
+        crit.add (ModulePeer.PARENT_ID, parent_project_id);
+        return ModulePeer.doSelect(crit);
     }
     /**
         create a new ScarabModule based on form input.
@@ -177,21 +179,21 @@ public class ModuleManager
         it will optionally try to validate the data. if there is an error, it will
         throw an exception.
     */
-    public static ScarabModule getModule(RunData data, boolean validate)
+    public static Module getModule(RunData data, boolean validate)
         throws Exception
     {
-        int project_id = data.getParameters().getInt("project_id", -1);
+        String project_id = data.getParameters().getString("project_id", null);
         String name = data.getParameters().getString("project_name",null);
         String desc = data.getParameters().getString("project_description",null);
 
-        ScarabModule sm = new ScarabModule();
+        Module sm = new Module();
         sm.setPrimaryKey(project_id);
         sm.setName( StringUtils.makeString( name ));
         sm.setDescription( StringUtils.makeString( desc ));
         sm.setUrl( StringUtils.makeString(data.getParameters().getString("project_url") ));
         if (validate)
         {
-            if (project_id == -1)
+            if (project_id == null)
                 throw new Exception ( "Missing project_id!" );
             if (! StringUtils.isValid(name))
                 throw new Exception ( "Missing project name!" );
@@ -208,19 +210,18 @@ public class ModuleManager
             if (project_qacontact == null )
                 throw new Exception ("Could not find a registered user for the project qa contact!");
 
-            sm.setOwnerId( ((org.apache.turbine.om.security.TurbineUser)
-                            project_owner).getPrimaryKeyAsInt() );
-            sm.setQaContactId( ((org.apache.turbine.om.security.TurbineUser)
-                                project_qacontact).getPrimaryKeyAsInt() );
+            sm.setOwnerId((SimpleKey)((ScarabUser)project_owner).getPrimaryKey() );
+            sm.setQaContactId((SimpleKey)((ScarabUser)
+                                project_qacontact).getPrimaryKey() );
         }
         return sm;
     }
     /**
         returns an empty module
     */
-    public static ScarabModule getEmptyModule()
+    public static Module getEmptyModule()
     {
-        ScarabModule sm = new ScarabModule();
+        Module sm = new Module();
         sm.setName("");
         sm.setDescription("");
         sm.setUrl("");
@@ -230,13 +231,13 @@ public class ModuleManager
     /**
         check for a duplicate project name
     */
-    public static void checkForDuplicateProject(ScarabModule module)
+    public static void checkForDuplicateProject(Module module)
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add (ScarabModulePeer.MODULE_NAME, module.getName());
+        crit.add (ModulePeer.MODULE_NAME, module.getName());
         crit.setSingleRecord(true);
-        Vector result = ScarabModulePeer.doSelect(crit);
+        Vector result = ModulePeer.doSelect(crit);
         if (result.size() > 0)
             throw new Exception ("Project: " + module.getName() + 
             " already exists. Please choose another name!" );        
@@ -250,20 +251,20 @@ public class ModuleManager
         throws Exception
     {
         // get a populated ScarabModule and do validation
-        ScarabModule module = getModule(data, true);
+        Module module = getModule(data, true);
         
         // check to see if we have a duplicate name!
         checkForDuplicateProject(module);
         
         // create the new module
-        ScarabModulePeer.doInsert(module);
+        ModulePeer.doInsert(module);
 
         // you are related to a new project
         Criteria crit = new Criteria(4)
-            .add (ScarabRModuleUserPeer.MODULE_ID, module.getPrimaryKey())
-            .add (ScarabRModuleUserPeer.USER_ID, 
+            .add (RModuleUserPeer.MODULE_ID, module.getPrimaryKey())
+            .add (RModuleUserPeer.USER_ID, 
                   ((org.apache.turbine.om.security.TurbineUser)
-                   data.getUser()).getPrimaryKeyAsLong());
-        ScarabRModuleUserPeer.doInsert(crit);
+                   data.getUser()).getPrimaryKey());
+        RModuleUserPeer.doInsert(crit);
     }
 }

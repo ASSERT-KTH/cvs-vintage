@@ -71,7 +71,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.8 2001/01/23 06:53:14 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.9 2001/02/23 03:11:31 jmcnally Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
@@ -128,6 +128,7 @@ public class RegisterConfirm extends VelocityAction
         {
             setTemplate (data, template);
             data.setMessage (e.getMessage());
+            Log.error(e);
             return;
         }
     }

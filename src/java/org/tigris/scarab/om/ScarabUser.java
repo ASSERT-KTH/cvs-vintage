@@ -50,7 +50,7 @@ package org.tigris.scarab.om;
 import java.util.*;
 
 // Turbine
-import org.apache.turbine.om.peer.BasePeer;
+import org.apache.turbine.om.*;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.*;
@@ -68,11 +68,13 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.11 2001/01/23 22:43:23 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.12 2001/02/23 03:11:37 jmcnally Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
     private static final String CURRENT_MODULE = "CURRENT_MODULE";
+    private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
+
     /**
         Call the superclass constructor to initialize this object.
     */
@@ -201,7 +203,7 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
         This will return the username for a given userid.
         return null if there is an error or if the user doesn't exist
     */
-    public static String getUserName(int userid)
+    public static String getUserName(ObjectKey userid)
     {
         try
         {
@@ -241,19 +243,19 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     public Vector getModules() throws Exception
     {
         Criteria crit = new Criteria(3)
-            .add(ScarabRModuleUserPeer.USER_ID, getPrimaryKey())
-            .add(ScarabRModuleUserPeer.DELETED, false)
-            .addJoin(ScarabModulePeer.MODULE_ID, 
-                     ScarabRModuleUserPeer.MODULE_ID);
+            .add(RModuleUserPeer.USER_ID, getPrimaryKey())
+            .add(RModuleUserPeer.DELETED, false)
+            .addJoin(ModulePeer.MODULE_ID, 
+                     RModuleUserPeer.MODULE_ID);
 
-        Vector srmvs = ScarabRModuleUserPeer.doSelectJoinScarabModule(crit);
+        Vector srmvs = RModuleUserPeer.doSelectJoinModule(crit);
         // each srmvs represents a unique ScarabModule, so we do not 
         // need to check for duplicates.  Just stuff into the new Vector.
         Vector modules = new Vector(srmvs.size());
         for ( int i=0; i<srmvs.size(); i++ ) 
         {
-            ScarabRModuleUser srmv = (ScarabRModuleUser)srmvs.get(i);
-            modules.add( new Module(srmv.getScarabModule()) );
+            RModuleUser srmv = (RModuleUser)srmvs.get(i);
+            modules.add( srmv.getModule() );
         }
         
         return modules;
@@ -267,6 +269,18 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     public void setCurrentModule(Module m)
     {
         setTemp(CURRENT_MODULE, m);
+    }
+
+    public Issue getReportingIssue() throws Exception
+    {
+        Issue issue = (Issue) getTemp(REPORTING_ISSUE);
+        if ( issue == null ) 
+        {
+            issue = getCurrentModule().getNewIssue(this);
+            setTemp(REPORTING_ISSUE, issue);            
+        }
+        
+        return issue;
     }
 
 }    

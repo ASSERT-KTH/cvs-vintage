@@ -1,5 +1,9 @@
-<form name="ReportForm" method="post" action="$link.setPage("Report.vm")">
-<input type="hidden" name="action" value="Report">
+#set $action = $link.setPage("Report.wm").setAction("ReportIssue").addPathInfo("nextScreen", "Report2.wm")
+#set $user = $scarab.User
+#set $module = $user.CurrentModule
+#set $issue = $user.ReportingIssue
+
+<form name="ReportForm" method="post" action="$action">
 
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
     <tr>
@@ -14,13 +18,21 @@
         <td valign="top">
         <font color="red">At the top of the page, we will first want to select a project and then make it obvious what project we are reporting the bug on. The project that is initially selected should be determined from the project selected on the Start page.</font>
 <p>
-
+#set ($mods = $user.Modules )
         Project:
-          <SELECT name="project">
-            <OPTION>PacMan JVM</OPTION>
-            <OPTION>Galaga JVM</OPTION>
-            <OPTION>Donkey Kong JVM</OPTION>
-          </SELECT>
+          <select 
+           name="$scarab.Intake.ModuleInput($module.PrimaryKey).ParentId.Key">
+            #foreach ($project in $user.Modules)
+              #if ($project.ParentId == 0)
+                #set ( $selected = "" )
+                #if ( $project.PrimaryKey == $user.CurrentModule.ParentId )
+                  #set ( $selected = " selected" )
+                #end
+              <option$selected 
+                value="$project.PrimaryKey">$project.Name</option>
+              #end
+            #end
+          </select>
 
 <p>
         <font color="red">List only the components available in the currently selected
@@ -28,32 +40,43 @@
 <p>
 
         Component:
-          <SELECT>
-            <OPTION>PacMan JVM</OPTION>
-            <OPTION>Galaga JVM</OPTION>
-            <OPTION>Donkey Kong JVM</OPTION>
-          </SELECT>
+          <select name="$scarab.Intake.ModuleInput($module.PrimaryKey).Id.Key">
+            #foreach ($component in $user.Modules)
+              #set ( $selected = "" )
+              #if ( $component.PrimaryKey == $module.PrimaryKey )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected 
+                  value="$component.PrimaryKey">$component.Name</option>
+            #end
+          </select>
+
 <p>        
         <font color="red">Allow the user to enter in a short description of the problem.
         This description will then be used like an "and" search to display results
         on the next page for issues that are in the selected component and project 
         as well as other attributes that are part of the search on this page (to be discussed).</font>
 
+#set ( $attributes = $issue.ModuleAttributes )
+#set ( $descAttr = $attributes.get("DESCRIPTION") )
 <p>
-         Summary:
-            <input name="summary" value="" size="20" type="text">
-            <br>
-            A short description of the issue.
+    Summary:
+#set ( $attrInput = $scarab.Intake.AttributeInput($descAttr.PrimaryKey) ) 
+   <input name= "$attrInput.Value.Key"
+        value="$!attrInput.Value.Value" size="20" type="text">
+    <br>
+    A short description of the issue.
 
 <p>
         </td>
         <td valign="top">
-            <input type="submit" name="eventSubmit_doReport" value="Next ->">
+            <input type="submit" 
+                name="eventSubmit_doSubmitattributes" value="Next ->">
         </td>
     </tr>
   <tr>
       <TD>
-        <SPAN CLASS="SectionHeader">Version:<BR>
+        <SPAN CLASS="SectionHeader">Version: (not in db)<BR>
         <SELECT NAME="selection2">
           <OPTION SELECTED VALUE="">Version 1</OPTION>
           <OPTION VALUE="">Option2</OPTION>
@@ -62,23 +85,33 @@
      </TD>
       <TD>
         <SPAN CLASS="SectionHeader">Platform:<BR>
-        <SELECT NAME="selection3">
-         <OPTION SELECTED VALUE="">All</OPTION>
-          <OPTION VALUE="">DEC</OPTION>
-          <OPTION VALUE="">HP</OPTION>
-          <OPTION VALUE="">Mac</OPTION>
-          <OPTION VALUE="">PC</OPTION>
-          <OPTION VALUE="">SGI</OPTION>
-          <OPTION VALUE="">Sun</OPTION>
-          <OPTION VALUE="">Other</OPTION>
+#set ( $attr = $attributes.get("PLATFORM") )
+#set ( $attrValue = $
+#set ( $attrInput = $scarab.Intake.AttributeValueInput($attr.PrimaryKey) ) 
+        <SELECT NAME="$attrInput.Id.Key">
+            <option value="">Choose...</option>
+            #foreach ($option in $attr.Options)
+#set ( $optionInput = $scarab.Intake.AttributeValueInput 
+              #set ( $selected = "" )
+              #if ( $option.DisplayValue == $attr.Value )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$option.Id">$option.DisplayValue</option>
+            #end
         </SELECT>
       </TD>
       <TD>
         <SPAN CLASS="SectionHeader">OS:<BR>
-        <SELECT NAME="selection4">
-         <OPTION SELECTED VALUE="">Mac System 8.5</OPTION>
-          <OPTION VALUE="">Option2</OPTION>
-          <OPTION VALUE="">Option3</OPTION>
+#set ( $attr = $attributes.get("OPERATING SYSTEM") )
+        <SELECT NAME="${attr.QueryKey}Id">
+            <option value="">Choose...</option>
+            #foreach ($option in $attr.Options)
+              #set ( $selected = "" )
+              #if ( $option.DisplayValue == $attr.Value )
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$option.Id">$option.DisplayValue</option>
+            #end
         </SELECT>
       </TD>
   </tr>

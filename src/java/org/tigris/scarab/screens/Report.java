@@ -54,6 +54,7 @@ import org.apache.velocity.*;
 import org.apache.velocity.context.*; 
 
 // Turbine Stuff 
+import org.apache.turbine.om.*; 
 import org.apache.turbine.modules.*; 
 import org.apache.turbine.modules.screens.*; 
 import org.apache.turbine.util.*; 
@@ -62,13 +63,15 @@ import org.apache.turbine.util.*;
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.util.*;
+import org.tigris.scarab.system.ScarabSystem;
 
 /**
     This class is responsible for building the Context up
     for the Report Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Report.java,v 1.3 2001/01/23 22:43:24 jmcnally Exp $
+    @version $Id: Report.java,v 1.4 2001/02/23 03:11:38 jmcnally Exp $
 */
 public class Report extends VelocityScreen
 {
@@ -78,36 +81,65 @@ public class Report extends VelocityScreen
     public void doBuildTemplate( RunData data, Context context ) 
         throws Exception 
     {
-        HashMap classes = new HashMap();
-        context.put("classes", classes);
+        // HashMap classes = new HashMap();
+        // context.put("classes", classes);
 
-        HashMap report = new HashMap();
-        context.put("report", report);
+        // HashMap report = new HashMap();
+        // context.put("report", report);
         
-        Module module = new Module( ScarabModulePeer.retrieveByPK(5) );
-
+        Module module = ModulePeer.retrieveByPK(new SimpleKey("5"));
+        
+        ScarabSystem scarab = (ScarabSystem)
+            context.get(ScarabConstants.SCARAB_SYSTEM);
+        
         ScarabUser user = new ScarabUser();
-        user.setPrimaryKey(new Integer(2));
+        user.setPrimaryKey(new SimpleKey("2"));
         user.setCurrentModule(module);
-        context.put("user", user );
+        scarab.setUser(user);
 
         System.out.println("getting user modules");
-        user.getModules();
+        // user.getModules();
         System.out.println("done");
 
 
-        classes.put("Module", module);
+        // classes.put("Module", module);
         
-        Issue issue = new Issue();
-        report.put( "issue", issue );
-        ScarabIssue sIssue = issue.getScarabIssue();
-        sIssue.setModuleId( module.getScarabModule().getModuleId() );
-        sIssue.setModifiedBy(user.getPrimaryKeyAsInt());
-        sIssue.setCreatedBy(user.getPrimaryKeyAsInt());
-        java.util.Date now = new java.util.Date();
-        sIssue.setModifiedDate(now);
-        sIssue.setCreatedDate(now);
-        sIssue.setDeleted(false);
+        /*
+        just testing some stuff
+        String email = org.apache.turbine.om.
+            security.peer.TurbineUserPeer.EMAIL;
+        java.math.BigDecimal big = null;
+        try
+        {
+            org.apache.turbine.util.db.map.DatabaseMap dbMap = 
+                org.apache.turbine.services.db.TurbineDB
+                .getDatabaseMap("default");
+
+            org.apache.turbine.util.db.map.TableMap[] tableMaps =
+                dbMap.getTables();
+            for ( int i=0; i<tableMaps.length; i++ ) 
+            {
+                System.out.println("Table: " + tableMaps[i].getName());
+            } // end of for ()
+            
+            
+            org.apache.turbine.util.db.map.TableMap tableMap = 
+                dbMap.getTable("TURBINE_USER");
+
+            org.apache.turbine.util.db.IdGenerator idGen = 
+                tableMap.getIdGenerator();
+
+            big = idGen
+                .getIdAsBigDecimal(null, "TURBINE_USER");
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+        System.out.println("Got a new ID: " + big);
+        */
     }
 }
 

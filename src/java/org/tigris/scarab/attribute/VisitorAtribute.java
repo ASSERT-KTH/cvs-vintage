@@ -57,25 +57,27 @@ import org.apache.turbine.util.db.Criteria;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/01/23 22:33:44 $
+ * @version $Revision: 1.5 $ $Date: 2001/02/23 03:11:32 $
  */
-public abstract class VisitorAtribute extends Attribute
+public abstract class VisitorAtribute extends AttributeValue
 {
     private Hashtable usersById;
     private Vector users;
     private ScarabUser user;
+    boolean loaded;
     public void init() throws Exception
     {
         Criteria crit = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
-                 getScarabIssue().getPrimaryKey())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
-                 getScarabAttribute().getPrimaryKey());
+            .add(AttributeValuePeer.ISSUE_ID, 
+                 getIssue().getPrimaryKey())
+            .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                 getAttribute().getPrimaryKey());
 
-        Vector results = ScarabIssueAttributeValuePeer.doSelect(crit);
+        Vector results = AttributeValuePeer.doSelect(crit);
         if (results.size() == 1)
         {
-            user = (ScarabUser)usersById.get(new Integer(((ScarabIssueAttributeValue)results.get(0)).getUserId()));
+            user = (ScarabUser)usersById.get(
+                ((AttributeValue)results.get(0)).getUserId());
             loaded = true;
         }
     }
@@ -98,19 +100,19 @@ public abstract class VisitorAtribute extends Attribute
     {
         user = (ScarabUser)usersById.get(new Integer(newValue));
         Criteria crit = new Criteria()
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, 
-                 getScarabIssue().getPrimaryKey())
-            .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, 
-                 getScarabAttribute().getPrimaryKey())
-            .add(ScarabIssueAttributeValuePeer.VALUE, user.getUserName())
-            .add(ScarabIssueAttributeValuePeer.USER_ID, user.getPrimaryKey());
+            .add(AttributeValuePeer.ISSUE_ID, 
+                 getIssue().getPrimaryKey())
+            .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                 getAttribute().getPrimaryKey())
+            .add(AttributeValuePeer.VALUE, user.getUserName())
+            .add(AttributeValuePeer.USER_ID, user.getPrimaryKey());
         if (loaded)
         {
-            ScarabIssueAttributeValuePeer.doUpdate(crit);
+            AttributeValuePeer.doUpdate(crit);
         }
         else
         {
-            ScarabIssueAttributeValuePeer.doInsert(crit);
+            AttributeValuePeer.doInsert(crit);
             loaded = true;
         }
     }
@@ -141,8 +143,7 @@ public abstract class VisitorAtribute extends Attribute
         for (i=0; i<users.size(); i++)
         {
             user = (ScarabUser)users.get(i);
-            usersById.put(new Integer(((ScarabUser)user)
-                                      .getPrimaryKeyAsInt()), user);
+            usersById.put(((ScarabUser)user).getPrimaryKey(), user);
         }
         Object[] res = {users, usersById};
         return res;

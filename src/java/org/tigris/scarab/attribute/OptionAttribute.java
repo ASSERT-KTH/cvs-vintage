@@ -45,21 +45,21 @@ package org.tigris.scarab.attribute;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
+import java.util.*;
+
+import org.apache.turbine.om.*;
+import org.apache.turbine.util.db.*;
 
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.baseom.peer.*;
-import org.apache.turbine.util.db.*;
 
-import com.workingdogs.village.*;
-
-import java.util.*;
 /**
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2001/01/23 22:33:44 $
+ * @version $Revision: 1.4 $ $Date: 2001/02/23 03:11:32 $
  */
-public abstract class OptionAttribute extends Attribute
+public abstract class OptionAttribute extends AttributeValue
 {
     private Vector options; // vector of Option
     private Hashtable optionsById;
@@ -69,17 +69,17 @@ public abstract class OptionAttribute extends Attribute
     public Object loadResources() throws Exception
     {
         Criteria crit = new Criteria()
-            .addOrderByColumn(ScarabAttributeOptionPeer.NUMERIC_VALUE);
+            .addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
         
-        Vector opts = getScarabAttribute().getScarabAttributeOptions(crit);
+        Vector opts = getAttribute().getAttributeOptions(crit);
 
         Hashtable optsById = new Hashtable(opts.size());
         Hashtable optsByNum = new Hashtable(opts.size());
         
         for (int i=0; i<opts.size(); i++)
         {
-            ScarabAttributeOption opt = (ScarabAttributeOption)opts.get(i);
-            optsById.put(new Integer(opt.getPrimaryKeyAsInt()), opt);
+            AttributeOption opt = (AttributeOption)opts.get(i);
+            optsById.put(opt.getPrimaryKey(), opt);
             optsByNum.put(new Integer(opt.getNumericValue()), opt);
         }
         Object[] res = {opts, optsById, optsByNum};
@@ -87,14 +87,14 @@ public abstract class OptionAttribute extends Attribute
         return res;
     }
 
-    public ScarabAttributeOption getOptionById(int id)
+    public AttributeOption getOptionById(ObjectKey id)
     {
-        return (ScarabAttributeOption)optionsById.get(new Integer(id));
+        return (AttributeOption)optionsById.get(id);
     }
     
-    public ScarabAttributeOption getOptionByNum(int numericValue)
+    public AttributeOption getOptionByNum(int numericValue)
     {
-        return (ScarabAttributeOption)optionsByNum
+        return (AttributeOption)optionsByNum
             .get(new Integer(numericValue));
     }
     

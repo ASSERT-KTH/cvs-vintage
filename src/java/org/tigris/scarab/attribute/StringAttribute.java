@@ -51,23 +51,8 @@ import org.apache.turbine.util.RunData;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
  */
 public class StringAttribute extends FreeFormAttribute
 {
-    /**  displays the attribute.
-     *
-     * @param value  Description of Parameter
-     * @return Object to display the property. May be a String containing HTML
-     */
-    public Object show(RunData data) 
-    {
-        return new StringBuffer("<INPUT type=\"text\" name=\"")
-                    .append(getControlName())
-                    .append("\" value=\"")
-                    .append(getValue())
-                    .append("\">")
-                .toString();
-    }
-    
 }

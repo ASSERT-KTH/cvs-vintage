@@ -50,6 +50,7 @@ package org.tigris.scarab.screens.admin;
 import org.apache.velocity.*; 
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
+import org.apache.turbine.om.*;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.modules.*; 
 import org.apache.turbine.modules.screens.*;
@@ -65,7 +66,7 @@ import org.tigris.scarab.screens.base.*;
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyComponent.java,v 1.2 2001/01/04 03:02:12 jon Exp $
+    @version $Id: ModifyComponent.java,v 1.3 2001/02/23 03:11:38 jmcnally Exp $
 */
 public class ModifyComponent extends RequireLoginFirst
 {
@@ -77,8 +78,8 @@ public class ModifyComponent extends RequireLoginFirst
         // put the projects list into the context.
         context.put (ModuleManager.PROJECT_CHANGE_BOX, ModuleManager.getProjectsBox(data, 1));
         // get the project id of the currently selected project.
-        int project_id = ((Integer)data.getUser()
-            .getTemp(ModuleManager.USER_SELECTED_MODULE)).intValue();
+        ObjectKey project_id = ((ScarabUser)data.getUser())
+            .getCurrentModule().getPrimaryKey();
         
         // the list of components
         context.put ("componentList", ModuleManager.getComponents(project_id));
@@ -119,9 +120,9 @@ public class ModifyComponent extends RequireLoginFirst
     /**
         utility method to create a new component from form data
     */
-    private static final ScarabModule createFromFormData (RunData data)
+    private static final Module createFromFormData (RunData data)
     {
-        ScarabModule component = new ScarabModule();
+        Module component = new Module();
         component.setName (data.getParameters().getString("compaddname", ""));
         component.setDescription (data.getParameters().getString("compadddescription", ""));
         component.setUrl (data.getParameters().getString("compaddurl", ""));

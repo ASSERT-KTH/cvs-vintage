@@ -56,28 +56,4 @@ import java.util.*;
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
  * @version 
  */
-public class ComboBoxAttribute extends SelectOneAttribute {
-    /** displays the attribute.
-     *
-     * @return Object to display the property. May be a String containing HTML
-     */
-    public Object show(RunData data)
-    {
-        ScarabAttributeOption opt;
-        Vector opts = getOptions();
-        StringBuffer res = new StringBuffer("<SELECT name=\"")
-            .append(getControlName())
-            .append("\">\n");
-        for(int i=0; i<opts.size(); i++)
-            {
-            opt = (ScarabAttributeOption)opts.get(i);
-            res.append(" <OPTION value=")
-                .append(opt.getNumericValue())
-                .append((opt==value)?" SELECTED>":">")
-                .append(opt.getDisplayValue())
-                .append("</OPTION>\n");
-            }
-        res.append("</SELECT>\n");
-        return res.toString();
-    }
-}
+public class ComboBoxAttribute extends SelectOneAttribute {}

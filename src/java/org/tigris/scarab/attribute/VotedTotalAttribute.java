@@ -55,21 +55,13 @@ import java.util.*;
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
  */
 public class VotedTotalAttribute extends VotedAttribute
 {
-    /** displays the attribute.
-     *
-     * @return Object to display the property. May be a String containing HTML
-     */
-    public Object show(RunData data)
-    {
-        return getValue();
-    }
     
-    /** This method calculates result of the vote
-     *
+    /** 
+     * This method calculates result of the vote
      */
     public String computeResult()
     {
@@ -78,7 +70,7 @@ public class VotedTotalAttribute extends VotedAttribute
         Vector opts = getOptions();
         while (votes.hasMoreElements())
         {
-            total += ((ScarabAttributeOption)votes.nextElement()).getNumericValue();
+            total += ((AttributeOption)votes.nextElement()).getNumericValue();
         }
         return Integer.toString(total);
     }
