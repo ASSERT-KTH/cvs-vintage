@@ -60,7 +60,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.12 $</tt>
+ * @version <tt>$Revision: 1.13 $</tt>
  * @author ???
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -160,6 +160,8 @@ public class DLQHandler
    protected void destroyService() throws Exception
    {
       // Help the GC
+      if (connection != null)
+         connection.close();
       connection = null;
       dlq = null;
       resentBuffer = null;
