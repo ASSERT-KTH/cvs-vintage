@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.pop3;
 
 import java.io.ObjectInputStream;
@@ -21,9 +22,11 @@ import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy
@@ -42,21 +45,26 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 	 */
 	public POP3HeaderCache(POP3Server server) {
 		super(server.getConfigFile());
-
 	}
 
 	public void load(WorkerStatusController worker) throws Exception {
-
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+                }
 		headerList = new HeaderList();
 
 		ObjectInputStream p = openInputStream();
 
 		int capacity = p.readInt();
-		ColumbaLogger.log.info("capacity=" + capacity);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("capacity=" + capacity);
+                }
 
 		if ( worker != null)
-		worker.setDisplayText("Loading headers from cache...");
+		worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "load_headers"));
 
 		if (worker != null)
 			worker.setProgressBarMaximum(capacity);
@@ -71,21 +79,20 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 			headerList.add(h, h.get("columba.pop3uid"));
 			//headerList.add(h, (String) h.get("columba.uid"));
-
 		}
 
 		// close stream
 		closeInputStream();
-
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {
-
-		//		we didn't load any header to save
+		// we didn't load any header to save
 		if (!isHeaderCacheLoaded())
 			return;
 
-		ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+                }
 
 		ObjectOutputStream p = openOutputStream();
 
@@ -106,7 +113,6 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		}
 
 		closeOutputStream();
-
 	}
 
 	/**
@@ -118,7 +124,6 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
 		Object uid = p.readObject();
 		h.set("columba.pop3uid", uid);
-
 	}
 
 	/**
@@ -128,6 +133,5 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 		throws Exception {
 		super.saveHeader(p, h);
 		p.writeObject(h.get("columba.pop3uid"));
-
 	}
 }

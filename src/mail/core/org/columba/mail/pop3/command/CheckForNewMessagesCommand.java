@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.pop3.command;
 
 import java.net.NoRouteToHostException;
@@ -28,20 +29,14 @@ import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.pop3.POP3Server;
+import org.columba.mail.util.MailResourceLoader;
 
-/**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
 public class CheckForNewMessagesCommand extends Command {
 
 	POP3Server server;
@@ -63,7 +58,10 @@ public class CheckForNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		command.log("Authenticating...", worker);
+		command.log(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "authenticating"), worker);
 
 		try {
 			int totalMessageCount = server.getMessageCount(worker);
@@ -112,12 +110,13 @@ public class CheckForNewMessagesCommand extends Command {
 	}
 
 	protected void playSound() {
-
 		AccountItem item = server.getAccountItem();
 		PopItem popItem = item.getPopItem();
 		String file = popItem.get("sound_file");
 
-		ColumbaLogger.log.info("playing sound file=" + file);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("playing sound file=" + file);
+                }
 
 		if (file.equalsIgnoreCase("default")) {
 			PlaySound.play("newmail.wav");
@@ -127,8 +126,6 @@ public class CheckForNewMessagesCommand extends Command {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
 		}
 	}
-
 }
