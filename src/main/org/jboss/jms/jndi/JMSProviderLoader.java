@@ -26,7 +26,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 
-import org.jboss.configuration.ConfigurationException;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JMSProviderLoader
    extends ServiceMBeanSupport
@@ -108,11 +108,11 @@ public class JMSProviderLoader
    {
       // validate the configuration
       if (queueFactoryRef == null)
-         throw new ConfigurationException
+         throw new DeploymentException
             ("missing required attribute: QueueFactoryRef");
 
       if (topicFactoryRef == null)
-         throw new ConfigurationException
+         throw new DeploymentException
             ("missing required attribute: TopicFactoryRef");
        
       Class cls = Class.forName(providerAdapterClass);
