@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <!DOCTYPE server PUBLIC
-      "-//JBoss//DTD JBOSS-SERVICE//EN"
-      "file:/usr/java/jboss/co6/jboss-all/server/src/resources/org/jboss/metadata/jboss-service.dtd">
 
 
 <!-- ===================================================================== -->
@@ -10,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.16 2001/11/27 02:56:05 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.17 2001/11/27 04:03:51 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
