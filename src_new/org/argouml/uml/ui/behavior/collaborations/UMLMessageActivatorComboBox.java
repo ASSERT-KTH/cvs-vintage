@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBox.java,v 1.5 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: UMLMessageActivatorComboBox.java,v 1.6 2004/09/22 17:55:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,8 +41,8 @@ public class UMLMessageActivatorComboBox extends UMLComboBox2 {
 
     /**
      * Constructor for UMLMessageActivatorComboBox.
-     * @param container
-     * @param arg0
+     * @param container the UI container
+     * @param arg0 the model
      */
     public UMLMessageActivatorComboBox(
         UMLUserInterfaceContainer container,

@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.14 2004/02/08 12:45:26 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.15 2004/09/22 17:55:56 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,14 +40,16 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLAssociationRoleBaseComboBoxModel() {
         super("base", true);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
+        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+                (Class) ModelFacade.NAMESPACE, "ownedElement");
     }
 
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        setElements(CollaborationsHelper.getHelper().getAllPossibleBases(/*(MAssociationRole)*/ getTarget())); 
+        setElements(CollaborationsHelper.getHelper().getAllPossibleBases(
+                /*(MAssociationRole)*/ getTarget())); 
     }
 
     /**
@@ -64,7 +66,8 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return CollaborationsHelper.getHelper().getAllPossibleBases(/*(MAssociationRole)*/ getTarget()).contains(element);
+        return CollaborationsHelper.getHelper().getAllPossibleBases(
+                /*(MAssociationRole)*/ getTarget()).contains(element);
     }
 
 }

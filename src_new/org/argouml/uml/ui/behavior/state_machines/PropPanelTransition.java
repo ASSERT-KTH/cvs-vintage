@@ -1,4 +1,4 @@
-// $Id: PropPanelTransition.java,v 1.28 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelTransition.java,v 1.29 2004/09/22 17:55:54 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.28 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelTransition.java,v 1.29 2004/09/22 17:55:54 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -42,12 +42,19 @@ import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * The properties panel for a Transition.
+ *
+ */
 public class PropPanelTransition extends PropPanelModelElement {
 
-    protected static Logger cat = Logger.getLogger(PropPanelTransition.class);
+    private static final Logger LOG = 
+        Logger.getLogger(PropPanelTransition.class);
 
-    ////////////////////////////////////////////////////////////////
-    // contructors
+    /**
+     * The constructor.
+     * 
+     */
     public PropPanelTransition() {
         super("Transition", ConfigLoader.getTabPropsOrientation());
 
@@ -70,11 +77,13 @@ public class PropPanelTransition extends PropPanelModelElement {
 
         addSeperator();
 
-        JList sourceList = new UMLLinkedList(new UMLTransitionSourceListModel());
+        JList sourceList = 
+            new UMLLinkedList(new UMLTransitionSourceListModel());
         sourceList.setVisibleRowCount(1);
         addField(Translator.localize("UMLMenu", "label.source"),
                 new JScrollPane(sourceList));
-        JList targetList = new UMLLinkedList(new UMLTransitionTargetListModel());
+        JList targetList = 
+            new UMLLinkedList(new UMLTransitionTargetListModel());
         targetList.setVisibleRowCount(1);
         addField(Translator.localize("UMLMenu", "label.target"),
                 new JScrollPane(targetList));

@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.15 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.16 2004/09/22 17:55:58 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,8 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLExtendBaseComboBoxModel() {
         super("base", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
+        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+                (Class) ModelFacade.NAMESPACE, "ownedElement");
     }
 
     /**
@@ -53,7 +54,8 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
     protected void buildModelList() {
         Object extend = /*(MExtend)*/ getTarget();
         if (extend == null) return;
-        setElements(ModelManagementHelper.getHelper().getAllModelElementsOfKind((Class)ModelFacade.USE_CASE));
+        setElements(ModelManagementHelper.getHelper()
+                .getAllModelElementsOfKind((Class) ModelFacade.USE_CASE));
         if (ModelFacade.getExtension(extend) != null) {
             removeElement(ModelFacade.getExtension(extend));
         }

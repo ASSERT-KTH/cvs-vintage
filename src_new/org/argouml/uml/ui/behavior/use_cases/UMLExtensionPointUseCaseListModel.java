@@ -1,4 +1,4 @@
-// $Id: UMLExtensionPointUseCaseListModel.java,v 1.12 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLExtensionPointUseCaseListModel.java,v 1.13 2004/09/22 17:55:58 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,8 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLExtensionPointUseCaseListModel extends UMLModelElementListModel2 {
+public class UMLExtensionPointUseCaseListModel 
+    extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLExtensionPointUseCaseListModel.
@@ -51,7 +52,8 @@ public class UMLExtensionPointUseCaseListModel extends UMLModelElementListModel2
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return org.argouml.model.ModelFacade.isAUseCase(o) && ModelFacade.getUseCase(getTarget()) == o;
+        return org.argouml.model.ModelFacade.isAUseCase(o) 
+            && ModelFacade.getUseCase(getTarget()) == o;
     }
 
 }

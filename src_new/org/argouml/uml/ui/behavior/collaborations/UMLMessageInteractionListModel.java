@@ -1,4 +1,4 @@
-// $Id: UMLMessageInteractionListModel.java,v 1.8 2004/02/08 12:45:26 mvw Exp $
+// $Id: UMLMessageInteractionListModel.java,v 1.9 2004/09/22 17:55:54 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,8 @@ public class UMLMessageInteractionListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
-        return org.argouml.model.ModelFacade.isAInteraction(element) && ModelFacade.getInteraction(getTarget()) == element;
+        return org.argouml.model.ModelFacade.isAInteraction(element) 
+            && ModelFacade.getInteraction(getTarget()) == element;
     }
 
 }

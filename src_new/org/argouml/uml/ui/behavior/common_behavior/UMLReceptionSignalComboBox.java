@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBox.java,v 1.6 2004/08/02 09:03:33 mkl Exp $
+// $Id: UMLReceptionSignalComboBox.java,v 1.7 2004/09/22 17:55:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,8 @@ public class UMLReceptionSignalComboBox extends UMLComboBox2 {
 
     /**
      * Constructor for UMLSignalComboBox.
-     * @param container
-     * @param arg0
+     * @param container the containing UI element
+     * @param arg0 the model
      */
     public UMLReceptionSignalComboBox(
         UMLUserInterfaceContainer container,

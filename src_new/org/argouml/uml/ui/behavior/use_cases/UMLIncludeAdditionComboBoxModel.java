@@ -1,4 +1,4 @@
-// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.16 2004/07/17 13:10:32 kataka Exp $
+// $Id: UMLIncludeAdditionComboBoxModel.java,v 1.17 2004/09/22 17:55:58 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,8 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
     public UMLIncludeAdditionComboBoxModel() {
 //      there is a bug in NSUML so this model listens for base modelevents
         super("base", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
+        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+                (Class) ModelFacade.NAMESPACE, "ownedElement");
     }
 
     /**
@@ -51,7 +52,8 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
         Object inc = /*(MInclude)*/ getTarget();
         if (inc == null) return;
         Object ns = ModelFacade.getNamespace(inc);
-        addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, (Class)ModelFacade.USE_CASE));
+        addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(ns, 
+                (Class) ModelFacade.USE_CASE));
         if (contains(ModelFacade.getAddition(inc)))
             removeElement(ModelFacade.getAddition(inc));
     }
@@ -70,7 +72,9 @@ public class UMLIncludeAdditionComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.isAUseCase(element) && ModelFacade.getNamespace(getTarget()) == ModelFacade.getNamespace(element);
+        return ModelFacade.isAUseCase(element) 
+            && ModelFacade.getNamespace(getTarget()) 
+                == ModelFacade.getNamespace(element);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UMLTransitionEffectList.java,v 1.6 2004/07/17 13:10:31 kataka Exp $
+// $Id: UMLTransitionEffectList.java,v 1.7 2004/09/22 17:55:54 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTransitionEffectList.java,v 1.6 2004/07/17 13:10:31 kataka Exp $
+// $Id: UMLTransitionEffectList.java,v 1.7 2004/09/22 17:55:54 mvw Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JPopupMenu;
@@ -40,7 +40,7 @@ public class UMLTransitionEffectList extends UMLMutableLinkedList {
 
     /**
      * Constructor for UMLTransitionTriggerList.
-     * @param dataModel
+     * @param dataModel the model
      */
     public UMLTransitionEffectList(
         UMLModelElementListModel2 dataModel) {

@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.1 2004/08/11 20:59:24 mvw Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.2 2004/09/22 17:55:59 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,17 +48,16 @@ public class UMLObjectFlowStateClassifierComboBoxModel
     public UMLObjectFlowStateClassifierComboBoxModel() {
         super("classifier", false);
         UmlModelEventPump.getPump().addClassModelEventListener(this, 
-                (Class)ModelFacade.CLASSIFIER, "type");
+                (Class) ModelFacade.CLASSIFIER, "type");
     }
     
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
-        return ModelFacade.isAClassifier(o) 
-        //&& CoreHelper.getHelper().isValidNamespace(
+        return ModelFacade.isAClassifier(o); 
+        // && CoreHelper.getHelper().isValidNamespace(
         //      /*(MModelElement)*/ getTarget(), /*(MNamespace)*/ o)
-        ;
     }
     
     /**  
