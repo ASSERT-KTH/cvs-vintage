@@ -94,7 +94,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.175 2003/07/17 17:57:13 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.176 2003/07/20 01:28:26 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -281,6 +281,10 @@ public class ReportIssue extends RequireLoginFirstAction
         }
         finally
         {
+            if (search != null) 
+            {
+                search.close();
+            }
             IssueSearchFactory.INSTANCE.notifyDone();
         }
         
