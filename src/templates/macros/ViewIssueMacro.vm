@@ -253,7 +253,7 @@
          #else 
             <tr class="b">
          #end
-          <td><a href="ViewIssue.vm?id=$parent.IssueId">$parent.IssueId</a></td>
+          <td><a href="ViewIssue.vm?id=$parent.IssueId">$parent.UniqueId</a></td>
 
           <td><a href="ViewIssue.vm?id=$parent.IssueId">
              #set ($parentAttrValues = $parent.AllAttributeValuesMap)
@@ -313,7 +313,7 @@
             <tr class="b">
          #end
 
-          <td><a href="ViewIssue.vm?id=$child.IssueId">$child.IssueId</a></td>
+          <td><a href="ViewIssue.vm?id=$child.IssueId">$child.UniqueId</a></td>
 
           <td><a href="ViewIssue.vm?id=$child.IssueId">
              #set ($childAttrValues = $child.AllAttributeValuesMap)
