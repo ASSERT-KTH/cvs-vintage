@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -82,27 +82,27 @@ extends AbstractInterceptor
 		this.container = (EntityContainer)container; 
 	}
 	
-   public void init()
-      throws Exception
-   {
+	public void init()
+	throws Exception
+	{
 		commitOption = container.getBeanMetaData().getContainerConfiguration().getCommitOption();
-      // Check for isModified method
-      try
-      {
-         isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
-         if (!isModified.getReturnType().equals(Boolean.TYPE))
-            isModified = null; // Has to have "boolean" as return type!
-      } catch (Exception e)
-      {
-         // Ignore
-      }
-   }
+		// Check for isModified method
+		try
+		{
+			isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
+			if (!isModified.getReturnType().equals(Boolean.TYPE))
+				isModified = null; // Has to have "boolean" as return type!
+		} catch (Exception e)
+		{
+			// Ignore
+		}
+	}
 	
 	public Container getContainer()
 	{
 		return container;
 	}
-
+	
 	/**
 	*  Register a transaction synchronization callback with a context.
 	*/
@@ -192,7 +192,7 @@ extends AbstractInterceptor
 		}
 		
 		// So we can go on with the invocation
-//DEBUG		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
+		//DEBUG		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
 		
 		// Invocation with a running Transaction
 		
@@ -248,16 +248,16 @@ extends AbstractInterceptor
 				// the EJB specification? Think of SequenceBean.getNext().
 				if (ctx.getId() != null)
 				{
-               boolean dirty = true;
-				   // Check isModified bean flag
-				   if (isModified != null)
-				   {
-				      dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
-				   }
-            
-               // Store entity
-               if (dirty)
-					((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+					boolean dirty = true;
+					// Check isModified bean flag
+					if (isModified != null)
+					{
+						dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+					}
+					
+					// Store entity
+					if (dirty)
+						((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
 				}
 				
 				return result;
@@ -308,7 +308,7 @@ extends AbstractInterceptor
 				// thread is associated with the right context class loader
 				ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 				Thread.currentThread().setContextClassLoader(container.getClassLoader());
-
+				
 				try {
 					
 					try {
@@ -360,7 +360,7 @@ extends AbstractInterceptor
 				}
 			}
 		}
-	
+		
 		
 		public void afterCompletion(int status)
 		{
@@ -370,75 +370,69 @@ extends AbstractInterceptor
 			ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 			Thread.currentThread().setContextClassLoader(container.getClassLoader());
 			
-			if (ctx.getId() != null) { 
+			try 
+			{
 				
-				try { 
+				//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
+				
+				// If rolled back -> invalidate instance
+				// If removed -> send back to the pool
+				if (status == Status.STATUS_ROLLEDBACK || ctx.getId() == null) { 
 					
-					//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
-					
-					// If rolled back -> invalidate instance
-					if (status == Status.STATUS_ROLLEDBACK) { 
+					try { 
 						
-						try { 
-							
-							// finish the transaction association
-							ctx.setTransaction(null);
-							
-							ctx.setValid(false); 
-							
-							// remove from the cache
-							container.getInstanceCache().remove(ctx.getCacheKey());
-							
-							// return to pool
-							container.getInstancePool().free(ctx); 
-							
-							// wake threads waiting
-							synchronized(ctx) { ctx.notifyAll();}
-							
-						} catch (Exception e) { 
-							// Ignore
-						}
-						
-					} else { 
-						// The transaction is done
+						// finish the transaction association
 						ctx.setTransaction(null);
 						
-						// We are afterCompletion so the invoked can be set to false (db sync is done)
-						ctx.setInvoked(false);
+						// remove from the cache
+						container.getInstanceCache().remove(ctx.getCacheKey());
 						
-						switch (commitOption) { 
-							// Keep instance cached after tx commit
+						// return to pool
+						container.getInstancePool().free(ctx); 
+					
+					} catch (Exception e) {
+						// Ignore
+					}
+					
+				} else { 
+						
+					// We are afterCompletion so the invoked can be set to false (db sync is done)
+					ctx.setInvoked(false);
+						
+					switch (commitOption) { 
+						// Keep instance cached after tx commit
 						case ConfigurationMetaData.A_COMMIT_OPTION:
 							// The state is still valid (only point of access is us)
 							ctx.setValid(true); 
-							break;
+						break;
 							
-							// Keep instance active, but invalidate state
+						// Keep instance active, but invalidate state
 						case ConfigurationMetaData.B_COMMIT_OPTION:
 							// Invalidate state (there might be other points of entry)
 							ctx.setValid(false); 
-							break;
+						break;
 							
-							// Invalidate everything AND Passivate instance
+						// Invalidate everything AND Passivate instance
 						case ConfigurationMetaData.C_COMMIT_OPTION:
 							try { 
 								container.getInstanceCache().release(ctx);	
 							} catch (Exception e) { 
 								Logger.debug(e);
 							}
-							break;
-						}
-						
+						break;
 					}
+					
+					// finish the transaction association
+					ctx.setTransaction(null);
 				}
+			}
+			
+			finally { 
 				
-				finally { 
-					
-					Thread.currentThread().setContextClassLoader(oldCl);
-					
-					// Notify all who are waiting for this tx to end, they are waiting since the locking logic
-					synchronized (ctx) {ctx.notifyAll();}
-				}
+				Thread.currentThread().setContextClassLoader(oldCl);
+				
+				// Notify all who are waiting for this tx to end, they are waiting since the locking logic
+				synchronized (ctx) {ctx.notifyAll();}
 			}
 		}
 	}
