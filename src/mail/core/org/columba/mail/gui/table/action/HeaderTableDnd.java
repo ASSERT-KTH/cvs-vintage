@@ -26,7 +26,8 @@ import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
 import java.awt.event.InputEvent;
 
-import javax.swing.JTable;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.gui.table.TableController;
 
 /**
  * Title:
@@ -39,17 +40,17 @@ import javax.swing.JTable;
 
 public class HeaderTableDnd
 	implements DragGestureListener, DragSourceListener {
-	private JTable table;
+	private TableController table;
 	private DragSource dragSource;
 
-	public HeaderTableDnd(JTable table) {
+	public HeaderTableDnd(TableController table) {
 		this.table = table;
 
 		dragSource = DragSource.getDefaultDragSource();
 		// creating the recognizer is all that?s necessary - it
 		// does not need to be manipulated after creation
 
-		dragSource.createDefaultDragGestureRecognizer(table,
+		dragSource.createDefaultDragGestureRecognizer(table.getView(),
 		// component where drag originates
 		DnDConstants.ACTION_COPY_OR_MOVE, // actions
 		this); // drag gesture listener
@@ -62,8 +63,14 @@ public class HeaderTableDnd
 		if ((mod & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
 			//System.out.println("middle button pressed");
 
-			if (table.getSelectedRowCount() > 0) {
+			if (table.getView().getSelectedRowCount() > 0) {
 				//mainInterface.treeViewer.saveTreePath();
+				
+				Object[] uids = table.getTableSelectionManager().getOldUids();
+				for ( int i=0; i<uids.length; i++ )
+				{
+					ColumbaLogger.log.debug("uid["+i+"]="+uids[i]);
+				}
 				//messageNodes = getSelectedNodes();
 				if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
 
@@ -79,7 +86,9 @@ public class HeaderTableDnd
 					this); // drag source listener
 
 				}
-
+				
+				
+				table.setSelection(uids);
 				//setSelection( oldMessageNodes );
 
 			}

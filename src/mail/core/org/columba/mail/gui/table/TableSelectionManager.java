@@ -37,7 +37,7 @@ public class TableSelectionManager extends TreeSelectionManager implements Folde
 
 	// these uids are MessageNode[] !!!!!
 	protected Object[] uids;
-
+	protected Object[] oldUids;
 	
 	protected Vector messageListenerList;
 	
@@ -58,6 +58,7 @@ public class TableSelectionManager extends TreeSelectionManager implements Folde
 	public void fireMessageSelectionEvent(
 		Object[] oldUidList,
 		Object[] newUidList) {
+		oldUids = oldUidList;
 		uids = newUidList;
 
 		for (int i = 0; i < messageListenerList.size(); i++) {
@@ -86,6 +87,13 @@ public class TableSelectionManager extends TreeSelectionManager implements Folde
 		fireFolderSelectionEvent( folder, treeNode );
 		
 		folder = treeNode;
+	}
+
+	/**
+	 * @return Object[]
+	 */
+	public Object[] getOldUids() {
+		return oldUids;
 	}
 
 }

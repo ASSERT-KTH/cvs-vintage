@@ -18,6 +18,8 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.util.MessageNode;
 
@@ -64,6 +66,9 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			headerTableViewer.getView().setRowSelectionInterval(row, row);
 		}
 
+		// enable/disable actions based on selection
+		headerTableViewer.getActionListener().changeMessageActions();
+			 
 		headerTableViewer.getPopupMenu().show(
 			event.getComponent(),
 			event.getX(),
@@ -88,8 +93,20 @@ public class HeaderTableMouseListener extends MouseAdapter {
 	}
 
 	public void mouseClicked(MouseEvent event) {
+		
+		// enable/disable actions based on selection
 		headerTableViewer.getActionListener().changeMessageActions();
-		headerTableViewer.showMessage();
+		
+		if ( event.isAltDown() || event.isControlDown() || event.isShiftDown() )
+		{
+			// do nothing
+		}
+		else
+		{
+			// show message
+			if ( SwingUtilities.isLeftMouseButton(event) )
+				headerTableViewer.showMessage();
+		}
 
 	}
 

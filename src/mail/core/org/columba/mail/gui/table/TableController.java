@@ -99,6 +99,7 @@ public class TableController
 
 	protected MailFrameController mailFrameController;
 
+	protected Object[] oldUidList;
 	protected Object[] newUidList;
 
 	protected MarkAsReadTimer markAsReadTimer;
@@ -132,7 +133,7 @@ public class TableController
 
 		menu = new HeaderTableMenu(this);
 
-		headerTableDnd = new HeaderTableDnd(view);
+		headerTableDnd = new HeaderTableDnd(this);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
@@ -411,6 +412,15 @@ public class TableController
 	public FilterActionListener getFilterActionListener() {
 		return filterActionListener;
 	}
+	
+	public void setSelection( Object[] uids)
+	{
+		oldUidList = newUidList;
+		newUidList = uids;
+		
+		getTableSelectionManager().fireMessageSelectionEvent(oldUidList, newUidList);
+
+	}
 
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node =
@@ -431,10 +441,11 @@ public class TableController
 		if (nodes.length == 0)
 			return;
 
+		oldUidList = newUidList;
 		newUidList = MessageNode.toUidArray(nodes);
 		
 
-		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
+		getTableSelectionManager().fireMessageSelectionEvent(oldUidList, newUidList);
 
 	}
 
