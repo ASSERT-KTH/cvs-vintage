@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.apache.tomcat.startup.EmbededTomcat
+Class-Path: servlet.jar jasper.jar jaxp.jar parser.jar xerces.jar crimson.jar xalan.jar
+
+
