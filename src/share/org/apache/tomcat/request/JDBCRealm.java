@@ -18,7 +18,7 @@
  *
  * 3. The end-user documentation included with the redistribution, if
  *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
@@ -86,10 +86,11 @@ import java.sql.*;
  *
  * TODO:
  *    - Work on authentication with non-plaintext passwords
- *    - Make sure no bad chars can get in and trick the auth and hasrole
  *
  * @author Craig R. McClanahan
  * @author Carson McDonald
+ * @author Ignacio J. Ortega 
+ * @author Bip Thelin
  *
  */
 
@@ -117,6 +118,16 @@ public final class JDBCRealm extends BaseInterceptor {
      * The connection URL to use when trying to connect to the databse
      */
     private String connectionURL = null;
+
+    /**
+     * The connection URL to use when trying to connect to the databse
+     */
+    private String connectionName = null;
+
+    /**
+     * The connection URL to use when trying to connect to the databse
+     */
+    private String connectionPassword = null;
 
     /**
      * The table that holds user data.
@@ -151,7 +162,8 @@ public final class JDBCRealm extends BaseInterceptor {
     /**
      * The string manager for this package.
      */
-    private static StringManager sm = StringManager.getManager("org.apache.tomcat.request");
+    private static StringManager sm =
+        StringManager.getManager("org.apache.tomcat.request");
 
 
     /**
@@ -202,6 +214,24 @@ public final class JDBCRealm extends BaseInterceptor {
      */
     public void setConnectionURL( String connectionURL ) {
       this.connectionURL = connectionURL;
+    }
+
+    /**
+     * Set the name to use to connect to the database.
+     *
+     * @param connectionName User name
+     */
+    public void setConnectionName(String connectionName) {
+        this.connectionName = connectionName;
+    }
+
+    /**
+     * Set the password to use to connect to the database.
+     *
+     * @param connectionPassword User password
+     */
+    public void setConnectionPassword(String connectionPassword) {
+        this.connectionPassword = connectionPassword;
     }
 
     /**
@@ -275,17 +305,20 @@ public final class JDBCRealm extends BaseInterceptor {
             }
           }
 
-          Statement statement = dbConnection.createStatement();
-
           if( debug > 1 ) {
              log( "JDBCRealm.authenticate: SELECT " + userCredCol +
                   " FROM " + userTable +
                   " WHERE " + userNameCol + " = '" + username + "'" );
           }
 
-          ResultSet rs = statement.executeQuery( "SELECT " + userCredCol +
-               " FROM " + userTable +
-               " WHERE " + userNameCol + " = '" + username + "'" );
+          PreparedStatement statement = dbConnection.prepareStatement(
+                   "SELECT " + userCredCol
+                  + " FROM " +  userTable
+                  + " WHERE " +   userNameCol + " = ?");
+          statement.clearParameters();
+          statement.setString(1, username);
+
+          ResultSet rs = statement.executeQuery();
 
           // If we found a user by this name check the credentials
           if( rs.next() ) {
@@ -298,11 +331,13 @@ public final class JDBCRealm extends BaseInterceptor {
           }
         }
         catch( SQLException ex ) {
-          // Set the connection to null. Next time we will try to get a new connection.
+          // Set the connection to null.
+          // Next time we will try to get a new connection.
           dbConnection = null;
 
           if (debug > 1)
-            log(sm.getString("jdbcRealm.authenticateSQLException", ex.getMessage()));
+            log(sm.getString("jdbcRealm.authenticateSQLException"
+                        ,ex.getMessage()));
         }
 
         if (debug > 1)
@@ -324,15 +359,23 @@ public final class JDBCRealm extends BaseInterceptor {
             }
           }
 
-          Statement statement = dbConnection.createStatement();
-
           if( debug > 1 ) {
-              log( "jdbcRealm.getUserRoles: SELECT 1 FROM " + userRoleTable +
-                   " WHERE " + userNameCol + " = '" + username +"'" );
+              log( "jdbcRealm.getUserRoles:"+
+                  " SELECT "+roleNameCol+
+                  " FROM " + userRoleTable +
+                  " WHERE " + userNameCol + " = '" + username +"'" );
           }
 
-          ResultSet rs = statement.executeQuery( "SELECT "+roleNameCol+" FROM " + userRoleTable +
-                                                 " WHERE " + userNameCol + " = '" + username +"'" );
+          PreparedStatement statement = dbConnection.prepareStatement(
+                    "SELECT "+roleNameCol+
+                    " FROM "+userRoleTable+
+                    " WHERE "+userNameCol+
+                    " = ?");
+          statement.clearParameters();
+          statement.setString(1, username);
+
+          ResultSet rs = statement.executeQuery();
+
           // Next we convert the resultset into a String[]
               Vector vrol=new Vector();
               while (rs.next()) {
@@ -344,7 +387,8 @@ public final class JDBCRealm extends BaseInterceptor {
               return res;
         }
         catch( SQLException ex ) {
-          // Set the connection to null. Next time we will try to get a new connection.
+          // Set the connection to null.
+          // Next time we will try to get a new connection.
           dbConnection = null;
 
           if (debug > 1)
@@ -355,13 +399,21 @@ public final class JDBCRealm extends BaseInterceptor {
     }
 
 
-    public void contextInit(Context ctx) throws org.apache.tomcat.core.TomcatException {
+    public void contextInit(Context ctx)
+            throws org.apache.tomcat.core.TomcatException {
 	// Validate and update our current component state
       if (!started) {
           started = true;
           try {
             Class.forName(driverName);
-            dbConnection = DriverManager.getConnection(connectionURL);
+            if ((connectionName == null || connectionName.equals("")) &&
+                (connectionPassword == null || connectionPassword.equals(""))) {
+                dbConnection = DriverManager.getConnection(connectionURL);
+            } else {
+                dbConnection = DriverManager.getConnection(connectionURL,
+                                                           connectionName,
+                                                           connectionPassword);
+            }
           }
           catch( ClassNotFoundException ex ) {
             throw new RuntimeException("JDBCRealm.start.readXml: " + ex);
@@ -372,7 +424,8 @@ public final class JDBCRealm extends BaseInterceptor {
       }
     }
 
-    public void contextShutdown(Context ctx) throws org.apache.tomcat.core.TomcatException {
+    public void contextShutdown(Context ctx)
+            throws org.apache.tomcat.core.TomcatException {
       // Validate and update our current component state
       if (started) {
             if( dbConnection != null ) {
@@ -397,7 +450,8 @@ public final class JDBCRealm extends BaseInterceptor {
       // set-up a per/container note for maps
       try {
           // XXX make the name a "global" static - after everything is stable!
-          reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE, "required.roles");
+          reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                , "required.roles");
       } catch( TomcatException ex ) {
           ex.printStackTrace();
           throw new RuntimeException( "Invalid state ");
@@ -422,7 +476,9 @@ public final class JDBCRealm extends BaseInterceptor {
         String user=(String)cred.get("username");
         String password=(String)cred.get("password");
         String userRoles[]=null;
-        if( debug > 0 ) log( "Controled access for " + user + " " + req + " " + req.getContainer() );
+        if( debug > 0 )
+            log( "Controled access for " + user + " " + req + " "
+                 + req.getContainer() );
 
         if( authenticate( user, password ) ) {
             req.setRemoteUser( user );
