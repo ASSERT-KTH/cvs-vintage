@@ -19,7 +19,7 @@
 // File: CrMultiComposite.java.java
 // Classes: CrMultiComposite.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.4 1998/04/23 23:51:43 jrobbins Exp $
+// $Id: CrMultiComposite.java,v 1.5 1998/06/28 02:55:01 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,7 +49,7 @@ public class CrMultiComposite extends CrUML {
   }
 
   protected void sd(String s) { setDescription(s); }
-  
+
   public boolean predicate(Object dm, Designer dsgr) {
     if (!(dm instanceof AssociationEnd)) return NO_PROBLEM;
     AssociationEnd ae = (AssociationEnd) dm;

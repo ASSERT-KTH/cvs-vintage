@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/argo/kernel
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.1 1998/06/24 14:58:55 jrobbins Exp $
+# $Id: Makefile,v 1.2 1998/06/28 02:52:40 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -48,6 +48,7 @@ CLASSES = \
 	HushOrder.class \
 	Poster.class \
 	StandardCM.class \
+	EnabledCM.class \
 	ToDoItem.class \
 	ToDoList.class \
 	ToDoListEvent.class \

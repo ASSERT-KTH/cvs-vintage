@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.10 1998/06/11 21:08:00 jrobbins Exp $
+// $Id: FigNode.java,v 1.11 1998/06/28 02:55:36 jrobbins Exp $
 
 package uci.gef;
 
@@ -112,18 +112,16 @@ implements MouseListener, PropertyChangeListener, Serializable {
    *  itself as a listener on the node. */
   public void setOwner(Object node) {
     Object oldOwner = getOwner();
-    if (oldOwner != null && oldOwner instanceof GraphNodeHooks) {
+    if (oldOwner != null && oldOwner instanceof GraphNodeHooks)
       ((GraphNodeHooks)oldOwner).removePropertyChangeListener(this);
-    }
-    if (oldOwner != null && oldOwner instanceof Highlightable) {
+    else if (oldOwner != null && oldOwner instanceof Highlightable)
       ((Highlightable)oldOwner).removePropertyChangeListener(this);
-    }
-    if (node instanceof GraphNodeHooks) {
+
+    if (node instanceof GraphNodeHooks)
       ((GraphNodeHooks)node).addPropertyChangeListener(this);
-    }
-    else if (node instanceof Highlightable) {
+    else if (node instanceof Highlightable)
       ((Highlightable)node).addPropertyChangeListener(this);
-    }
+
     super.setOwner(node);
   }
 
