@@ -17,7 +17,7 @@ import org.apache.tomcat.util.collections.*;
 
 /**
  * Main entry point to several Tomcat functions. Uses EmbededTomcat to
- * start and init tomcat, and special functiosn to stop, configure, etc.
+ * start and init tomcat, and special functions to stop, configure, etc.
  * 
  * It is intended as a replacement for the shell command - EmbededTomcat
  * is the "real" tomcat-specific object that deals with tomcat internals,
@@ -130,19 +130,19 @@ public class Tomcat {
 				      "conf" + File.separator +
 				      "apps-admin.xml" );
 	PrintWriter pw=new PrintWriter( fw );
+        pw.println( "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
 	pw.println( "<webapps>" );
-	pw.println( "  <Context path=\"/admin\"");
-	pw.println( "           docBase=\"webapps/admin\"");
-	pw.println( "           trusted=\"true\">");
-	pw.println( "    <SimpleRealm");
-        pw.println( "      filename=\"conf/users/admin-users.xml\" />");
-	pw.println( "  </Context>");
+        pw.println( "    <!-- Special rules for the admin webapplication -->");
+	pw.println( "    <Context path=\"/admin\"");
+	pw.println( "             docBase=\"webapps/admin\"");
+	pw.println( "             trusted=\"true\">");
+	pw.println( "            <SimpleRealm filename=\"conf/users/admin-users.xml\" />");
+	pw.println( "    </Context>");
 	pw.println( "</webapps>" );
 	pw.close();
     }
 	
     public void stopTomcat() throws TomcatException {
-	System.out.println(sm.getString("tomcat.stop"));
 	try {
 	    StopTomcat task=
 		new  StopTomcat();
@@ -193,11 +193,17 @@ public class Tomcat {
 	//System.out.println(sm.getString("tomcat.usage"));
 	System.out.println("Usage: java org.apache.tomcat.startup.Tomcat {options}");
 	System.out.println("  Options are:");
-	System.out.println("    -config file (or -f file)  Use this fileinstead of server.xml");
+        System.out.println("    -ajpid file                Use this file instead of conf/ajp12.id");
+        System.out.println("                                 Use with -stop option");
+	System.out.println("    -config file (or -f file)  Use this file instead of server.xml");
+        System.out.println("    -enableAdmin               Updates admin webapp config to \"trusted\"");
 	System.out.println("    -help (or help)            Show this usage report");
 	System.out.println("    -home dir (or -h dir)      Use this directory as tomcat.home");
 	System.out.println("    -install dir (or -i dir)   Use this directory as tomcat.install");
+        System.out.println("    -sandbox                   Enable security manager (includes java.policy)");
 	System.out.println("    -stop                      Shut down currently running Tomcat");
+        System.out.println();
+        System.out.println("In the absence of \"-enableAdmin\" and \"-stop\", Tomcat will be started");
     }
 
     /** Process arguments - set object properties from the list of args.
@@ -219,8 +225,6 @@ public class Tomcat {
 		fastStart=true;
 	    } else if (arg.equals("-enableAdmin")) {
 		action="enableAdmin";
-	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
-		// config generation is now a module. //doGenerate=true;
 	    } else if (arg.equals("-f") || arg.equals("-config")) {
 		i++;
 		if( i < args.length )
@@ -239,7 +243,12 @@ public class Tomcat {
 		    setInstall( args[i] );
 		else
 		    return false;
-	    }
+	    } else if (arg.equalsIgnoreCase("-ajpid") ) {
+                // accept this argument so it can pass through to StopTomcat
+		i++;
+		if (i >= args.length) 
+		    return false;
+            }
 	}
 	return true;
     }
