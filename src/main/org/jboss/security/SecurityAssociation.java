@@ -33,9 +33,13 @@ import org.jboss.logging.Logger;
  * When the server property is false, security information is maintained in
  * class variables which makes the information available to all threads within
  * the current VM.
+ * 
+ * Note that this is not a public API class. Its an implementation detail that
+ * is subject to change without notice.
+ * 
  * @author Daniel O'Connor (docodan@nycap.rr.com)
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public final class SecurityAssociation
 {
@@ -56,10 +60,6 @@ public final class SecurityAssociation
     * The SecurityAssociation credential used when the server flag is false
     */
    private static Object credential;
-   /**
-    * The SecurityAssociation Subject used when the server flag is false
-    */
-   private static Subject subject;
 
    /**
     * The SecurityAssociation principal used when the server flag is true
@@ -70,10 +70,6 @@ public final class SecurityAssociation
     */
    private static ThreadLocal threadCredential;
    /**
-    * The SecurityAssociation Subject used when the server flag is true
-    */
-   private static ThreadLocal threadSubject;
-   /**
     * The SecurityAssociation HashMap<String, Object>
     */
    private static ThreadLocal threadContextMap;
@@ -83,6 +79,12 @@ public final class SecurityAssociation
     * run-as identity propagation
     */
    private static RunAsThreadLocalStack threadRunAsStacks = new RunAsThreadLocalStack();
+   /**
+    * Thread local stacks of authenticated subject used to control the current
+    * caller security context
+    */ 
+   private static SubjectThreadLocalStack threadSubjectStacks = new SubjectThreadLocalStack();
+
    /**
     * The permission required to access getPrincpal, getCredential
     */
@@ -95,6 +97,7 @@ public final class SecurityAssociation
       new RuntimePermission("org.jboss.security.SecurityAssociation.getSubject");
    /**
     * The permission required to access setPrincpal, setCredential, setSubject
+    * pushSubjectContext, popSubjectContext
     */
    private static final RuntimePermission setPrincipalInfoPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo");
@@ -128,6 +131,7 @@ public final class SecurityAssociation
       }
       catch (SecurityException e)
       {
+         log.warn("org.jboss.security.SecurityAssociation.ThreadLocal", e);
          // Ignore and use the default
       }
 
@@ -136,7 +140,6 @@ public final class SecurityAssociation
       {
          threadPrincipal = new ThreadLocal();
          threadCredential = new ThreadLocal();
-         threadSubject = new ThreadLocal();
          threadContextMap = new ThreadLocal()
          {
             protected Object initialValue()
@@ -149,7 +152,6 @@ public final class SecurityAssociation
       {
          threadPrincipal = new InheritableThreadLocal();
          threadCredential = new InheritableThreadLocal();
-         threadSubject = new InheritableThreadLocal();
          threadContextMap = new InheritableThreadLocal()
          {
             protected Object initialValue()
@@ -247,10 +249,11 @@ public final class SecurityAssociation
       if (sm != null)
          sm.checkPermission(getSubjectPermission);
 
-      if (server)
-         return (Subject) threadSubject.get();
-      else
-         return subject;
+      SubjectContext sc = threadSubjectStacks.peek();
+      Subject subject = null;
+      if( sc != null )
+         subject = sc.getSubject();
+      return subject;
    }
 
    /**
@@ -273,6 +276,21 @@ public final class SecurityAssociation
          threadPrincipal.set(principal);
       else
          SecurityAssociation.principal = principal;
+      // Integrate with the new SubjectContext 
+      SubjectContext sc = threadSubjectStacks.peek();
+      if( sc == null )
+      {
+         // There is no active security context
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);
+      }
+      else if( (sc.getFlags() & SubjectContext.PRINCIPAL_WAS_SET) != 0 )
+      {
+         // The current security context has its principal set
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);         
+      }
+      sc.setPrincipal(principal);
    }
 
    /**
@@ -296,6 +314,21 @@ public final class SecurityAssociation
          threadCredential.set(credential);
       else
          SecurityAssociation.credential = credential;
+      // Integrate with the new SubjectContext 
+      SubjectContext sc = threadSubjectStacks.peek();
+      if( sc == null )
+      {
+         // There is no active security context
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);
+      }
+      else if( (sc.getFlags() & SubjectContext.CREDENTIAL_WAS_SET) != 0 )
+      {
+         // The current security context has its principal set
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);         
+      }
+      sc.setCredential(credential);
    }
 
    /**
@@ -314,10 +347,21 @@ public final class SecurityAssociation
 
       if (trace)
          log.trace("setSubject, s=" + subject + ", server=" + server);
-      if (server)
-         threadSubject.set(subject);
-      else
-         SecurityAssociation.subject = subject;
+      // Integrate with the new SubjectContext 
+      SubjectContext sc = threadSubjectStacks.peek();
+      if( sc == null )
+      {
+         // There is no active security context
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);
+      }
+      else if( (sc.getFlags() & SubjectContext.SUBJECT_WAS_SET) != 0 )
+      {
+         // The current security context has its subject set
+         sc = new SubjectContext();
+         threadSubjectStacks.push(sc);         
+      }
+      sc.setSubject(subject);
    }
 
    /**
@@ -360,6 +404,60 @@ public final class SecurityAssociation
    }
 
    /**
+    * Push the current authenticated context. This sets the authenticated subject
+    * along with the principal and proof of identity that was used to validate
+    * the subject. This context is used for authorization checks. Typically
+    * just the subject as seen by getSubject() is input into the authorization.
+    * When run under a security manager this requires the
+    * RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo")
+    * permission.
+    * @param subject - the authenticated subject
+    * @param principal - the principal that was input into the authentication
+    * @param credential - the credential that was input into the authentication
+    */ 
+   public static void pushSubjectContext(Subject subject,
+      Principal principal, Object credential)
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm != null)
+         sm.checkPermission(setPrincipalInfoPermission);
+
+      if (trace)
+         log.trace("pushSubjectContext, subject=" + subject + ", principal="+principal);
+      // Set the legacy single-value access points
+      if (server)
+      {
+         threadPrincipal.set(principal);
+         threadCredential.set(credential);
+      }
+      else
+      {
+         SecurityAssociation.principal = principal;
+         SecurityAssociation.credential = credential;
+      }
+      // Push the subject context
+      SubjectContext sc = new SubjectContext(subject, principal, credential);
+      threadSubjectStacks.push(sc);
+   }
+   /**
+    * Pop the current SubjectContext from the previous pushSubjectContext call
+    * and return the pushed SubjectContext ig there was one.
+    * When run under a security manager this requires the
+    * RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo")
+    * permission.
+    * @return the SubjectContext pushed previously by a pushSubjectContext call
+    */ 
+   public static SubjectContext popSubjectContext()
+   {
+      SecurityManager sm = System.getSecurityManager();
+      if (sm != null)
+         sm.checkPermission(setPrincipalInfoPermission);
+
+      SubjectContext sc = threadSubjectStacks.pop();
+      return sc;
+   }
+
+   /**
     * Clear all principal information. If a security manager is present, then
     * this method calls the security manager's <code>checkPermission</code>
     * method with a <code> RuntimePermission("org.jboss.security.SecurityAssociation.setPrincipalInfo")
@@ -378,14 +476,14 @@ public final class SecurityAssociation
       {
          threadPrincipal.set(null);
          threadCredential.set(null);
-         threadSubject.set(null);
       }
       else
       {
          SecurityAssociation.principal = null;
          SecurityAssociation.credential = null;
-         SecurityAssociation.subject = null;
       }
+      //
+      threadSubjectStacks.clear();
    }
 
    /**
@@ -508,4 +606,114 @@ public final class SecurityAssociation
          return runAs;
       }
    }
+
+   /**
+    * The encapsulation of the authenticated subject
+    */ 
+   public static class SubjectContext
+   {
+      public static final int SUBJECT_WAS_SET = 1;
+      public static final int PRINCIPAL_WAS_SET = 2;
+      public static final int CREDENTIAL_WAS_SET = 4;
+
+      private Subject subject;
+      private Principal principal;
+      private Object credential;
+      private int flags;
+
+      public SubjectContext()
+      {
+         this.flags = 0;
+      }
+      public SubjectContext(Subject s, Principal p, Object cred)
+      {
+         this.subject = s;
+         this.principal = p;
+         this.credential = cred;
+         this.flags = SUBJECT_WAS_SET | PRINCIPAL_WAS_SET | CREDENTIAL_WAS_SET;
+      }
+
+      public Subject getSubject()
+      {
+         return subject;
+      }
+      public void setSubject(Subject subject)
+      {
+         this.subject = subject;
+         this.flags |= SUBJECT_WAS_SET;
+      }
+
+      public Principal getPrincipal()
+      {
+         return principal;
+      }
+      public void setPrincipal(Principal principal)
+      {
+         this.principal = principal;
+         this.flags |= PRINCIPAL_WAS_SET;
+      }
+
+      public Object getCredential()
+      {
+         return credential;
+      }
+      public void setCredential(Object credential)
+      {
+         this.credential = credential;
+         this.flags |= CREDENTIAL_WAS_SET;
+      }
+
+      public int getFlags()
+      {
+         return this.flags;
+      }
+   }
+
+   private static class SubjectThreadLocalStack extends ThreadLocal
+   {
+      protected Object initialValue()
+      {
+         return new ArrayList();
+      }
+
+      void push(SubjectContext context)
+      {
+         ArrayList stack = (ArrayList) super.get();
+         stack.add(context);
+      }
+
+      SubjectContext pop()
+      {
+         ArrayList stack = (ArrayList) super.get();
+         SubjectContext context = null;
+         int lastIndex = stack.size() - 1;
+         if (lastIndex >= 0)
+            context = (SubjectContext) stack.remove(lastIndex);
+         return context;
+      }
+
+      /**
+       * Look for the first non-null run-as identity on the stack starting
+       * with the value at depth.
+       * @return The run-as identity if one exists, null otherwise.
+       */
+      SubjectContext peek()
+      {
+         ArrayList stack = (ArrayList) super.get();
+         SubjectContext context = null;
+         int lastIndex = stack.size() - 1;
+         if (lastIndex >= 0)
+            context = (SubjectContext) stack.get(lastIndex);
+         return context;
+      }
+      /**
+       * Remove all SubjectContext from the current thread stack
+       */ 
+      void clear()
+      {
+         ArrayList stack = (ArrayList) super.get();
+         stack.clear();
+      }
+   }
+
 }
