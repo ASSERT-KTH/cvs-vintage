@@ -157,9 +157,11 @@ public class DefaultErrorPage extends HttpServlet {
 	if( response.isUsingStream() ) {
 	    ServletOutputStream out = response.getOutputStream();
 	    out.print(body);
+	    out.flush();
 	} else {
 	    PrintWriter out = response.getWriter();
 	    out.print(body);
+	    out.flush();
 	}
     }
 

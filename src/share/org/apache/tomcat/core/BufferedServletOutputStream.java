@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.10 2000/03/21 19:19:39 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/03/21 19:19:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.11 2000/04/26 17:24:05 craigmcc Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/04/26 17:24:05 $
  *
  * ====================================================================
  * 
@@ -315,4 +315,3 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     }
 
 }
-
