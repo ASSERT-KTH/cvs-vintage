@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.31 2004/07/17 16:52:03 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.32 2004/10/03 17:59:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -321,7 +321,7 @@ public class ClassGenerationDialog
                         // This will only work for languages that have each node
                         // in a separate files (one or more).
                         if (path != null) {
-                            String fn = generator.GenerateFile(node, path);
+                            String fn = generator.generateFile2(node, path);
                             fileNames[i].add(fn);
                             // save the selected language in the model
                             // TODO: 1: no support of multiple checked

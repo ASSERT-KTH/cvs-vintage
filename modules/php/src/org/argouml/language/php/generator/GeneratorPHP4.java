@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.12 2004/08/27 14:59:46 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.13 2004/10/03 17:59:19 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -786,10 +786,10 @@ public class GeneratorPHP4
      * @return name of generated file on success;
      *         <code>null</code> otherwise.
      *
-     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
+     * @see org.argouml.uml.generator.FileGenerator#generateFile2(
      * java.lang.Object, java.lang.String)
      */
-    public String GenerateFile(Object modelElement, String sPath) {
+    public String generateFile2(Object modelElement, String sPath) {
         return generateFile(modelElement, sPath);
     }
 

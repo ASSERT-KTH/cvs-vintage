@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.13 2004/09/26 20:45:37 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.14 2004/10/03 17:59:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,10 +99,10 @@ public class GeneratorCSharp extends Generator2
      * call it through the Generatorinterface.
      * Returns the full path name of the the generated file.
      *
-     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
+     * @see org.argouml.uml.generator.FileGenerator#generateFile2(
      * java.lang.Object, java.lang.String)
      */
-    public String GenerateFile(Object cls, String path) {
+    public String generateFile2(Object cls, String path) {
 	sect = new Section();
 
 	String name = ModelFacade.getName(cls);

@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.7 2004/09/26 20:45:33 mvw Exp $
+// $Id: AbstractSection.java,v 1.8 2004/10/03 17:56:09 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public abstract class AbstractSection
     /**
      * @param id the string to generate
      * @param indent the current indentation
-     * @return
+     * @return the generated string
      */
     public static String generate(String id, String indent) {
         return "";
@@ -153,6 +153,10 @@ public abstract class AbstractSection
         }
     }
 
+    /**
+     * @param line the given line
+     * @return the section identifier
+     */
     public static String getSectId(String line) {
         final String begin = "// section ";
         final String end1 = " begin";

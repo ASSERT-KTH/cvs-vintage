@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.101 2004/09/29 20:40:36 thn Exp $
+// $Id: GeneratorJava.java,v 1.102 2004/10/03 17:59:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,10 +134,10 @@ public class GeneratorJava
      * Returns the full path name of the the generated file or
      * null if no file can be generated.
      *
-     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
+     * @see org.argouml.uml.generator.FileGenerator#generateFile2(
      * java.lang.Object, java.lang.String)
      */
-    public String GenerateFile(Object modelElement, String path) {
+    public String generateFile2(Object modelElement, String path) {
         String name = ModelFacade.getName(modelElement);
         if (name == null || name.length() == 0)
             return null;

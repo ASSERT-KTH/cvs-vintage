@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.19 2004/09/26 20:45:24 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.20 2004/10/03 17:59:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -238,10 +238,10 @@ public class GeneratorCpp extends Generator2
      *
      * Returns the full path name of the the generated file.
      *
-     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
+     * @see org.argouml.uml.generator.FileGenerator#generateFile2(
      * java.lang.Object, java.lang.String)
      */
-    public String GenerateFile(Object o, String path) {
+    public String generateFile2(Object o, String path) {
 	String packagePath = ModelFacade.getName(ModelFacade.getNamespace(o));
    	String pathname = null;
 

@@ -1,4 +1,4 @@
-// $Id: FileGenerator.java,v 1.10 2004/09/26 20:45:32 mvw Exp $
+// $Id: FileGenerator.java,v 1.11 2004/10/03 17:59:20 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,5 +44,5 @@ public interface FileGenerator {
      * @param path the path
      * @return filename the generated file
      */
-    public String GenerateFile(Object node, String path);
+    public String generateFile2(Object node, String path);
 }
