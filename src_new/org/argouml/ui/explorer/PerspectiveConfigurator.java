@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.12 2004/10/23 10:11:43 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.13 2004/10/23 18:18:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -462,6 +462,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
                 perspectiveListModel.set(sel, prevObj);
                 perspectiveListModel.set(sel - 1, selObj);
                 perspectiveList.setSelectedIndex(sel - 1);
+                perspectiveList.ensureIndexIsVisible(sel - 1);
             }
         }
     }
@@ -475,6 +476,7 @@ public class PerspectiveConfigurator extends ArgoDialog {
                 perspectiveListModel.set(sel, nextObj);
                 perspectiveListModel.set(sel + 1, selObj);
                 perspectiveList.setSelectedIndex(sel + 1);
+                perspectiveList.ensureIndexIsVisible(sel + 1);
             }
         }
     }
