@@ -30,7 +30,7 @@ import org.jboss.invocation.Invocation;
 *    
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.9 $
+* @version $Revision: 1.10 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/07/30: marcf</b>
@@ -113,7 +113,7 @@ public class EntityLockInterceptor
             // we are done with the method, decrease the count, if it reaches 0 it will wake up 
             // the next thread 
             lock.sync();
-            lock.releaseMethodLock();
+            lock.endInvocation(mi);
             lock.releaseSync(); 
          }
       }
