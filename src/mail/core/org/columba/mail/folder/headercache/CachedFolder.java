@@ -18,6 +18,7 @@ package org.columba.mail.folder.headercache;
 import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.util.Mutex;
 import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
@@ -40,12 +41,15 @@ public abstract class CachedFolder extends LocalFolder {
 
 	// header-cache implementation
 	protected AbstractHeaderCache headerCache;
+	protected Mutex mutex;
 
 	/**
 	 * @param item	<class>FolderItem</class> contains xml configuration of this folder
 	 */
 	public CachedFolder(FolderItem item) {
 		super(item);
+
+		mutex = new Mutex(getName());
 	}
 
 	/**
@@ -162,6 +166,23 @@ public abstract class CachedFolder extends LocalFolder {
 	 * 
 	 * Return headerlist from cache
 	 * 
+	 * This method is just another layer for getHeaderList() which
+	 * adds a mutex to it.
+	 * 
+	 * We lock folders to be sure that only one <code>Command</code>
+	 * at a time can modify the folder.
+	 * 
+	 * But we also allow to add messages at any time, because that 
+	 * doesn't interfere or causes problems ;-)
+	 * 
+	 * Adding the headercache here, makes it necessary to load
+	 * the headercache, for the first time before we do any 
+	 * operation.
+	 * 
+	 * This is a speciality of the headercache implementation which
+	 * has nothing to do with our Folder locking system and is
+	 * put here for this reason.
+	 * 
 	 * 
 	 * @param worker		<class>WorkerStatusController</class>
 	 * @return				<class>HeaderList</class>
@@ -170,7 +191,13 @@ public abstract class CachedFolder extends LocalFolder {
 	protected HeaderList getCachedHeaderList(WorkerStatusController worker)
 		throws Exception {
 		HeaderList result;
-		result = getHeaderCacheInstance().getHeaderList(worker);
+
+		try {
+			mutex.getMutex();
+			result = getHeaderCacheInstance().getHeaderList(worker);
+		} finally {
+			mutex.releaseMutex();
+		}
 
 		return result;
 	}
@@ -196,7 +223,9 @@ public abstract class CachedFolder extends LocalFolder {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
 				// -> no need to parse it again
-				return (AbstractMessage) aktMessage.clone();
+
+				//return (AbstractMessage) aktMessage.clone();
+				return (AbstractMessage) aktMessage;
 			}
 		}
 
@@ -208,8 +237,7 @@ public abstract class CachedFolder extends LocalFolder {
 			(ColumbaHeader) getCachedHeaderList(worker).get(uid);
 
 		// generate message object from source
-		AbstractMessage message =
-			new Rfc822Parser().parse(source, header);
+		AbstractMessage message = new Rfc822Parser().parse(source, header);
 
 		// set message uid
 		message.setUID(uid);
