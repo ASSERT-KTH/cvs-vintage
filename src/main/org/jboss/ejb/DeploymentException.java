@@ -13,7 +13,7 @@ package org.jboss.ejb;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class DeploymentException
    extends Exception
@@ -21,7 +21,7 @@ public class DeploymentException
    // Attributes ----------------------------------------------------
 
    /** The root cause of this exception */
-   protected Exception cause;
+   protected Throwable cause;
    
    // Static --------------------------------------------------------
 
@@ -32,15 +32,15 @@ public class DeploymentException
       super(message);
    }
    
-   public DeploymentException(String message, Exception e)
+   public DeploymentException(String message, Throwable cause)
    {
       super(message);
-      cause = e;
+      this.cause = cause;
    }
    
    // Public --------------------------------------------------------
    
-   public Exception getCause() {
+   public Throwable getCause() {
       return cause;
    }
    
