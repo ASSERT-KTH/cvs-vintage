@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.38 2002/02/22 03:19:32 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.39 2002/02/24 03:52:00 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -69,8 +69,9 @@ Bug No.  Description
          this logger is replaced a new logger set by the LogSetter module,
          its reduction in efficiency won't affect normal operation.
 
-         ServerXmlReader now logs a warning if the modules.xml file isn't
-         found.
+         Startup error output has been improved.  Messages will be shown if
+         modules.xml or server.xml isn't present.  Also, the port number is
+         now shown when JVM_Bind exceptions occur.
 
          The internal test script, test-tomcat.xml, has been made more
          configurable and the Admin app internal test page, test.jsp, has
@@ -134,6 +135,12 @@ Bug No.  Description
          to support automatic or explicit use of Ajp12 or Ajp13 protocol to
          shutdown Tomcat.  This includes use of an optional "secret" password
          with either protocol.
+
+         Added hostChar, hostDotChar, and pathSlashChar attributes to
+         AutoWebApp module.  These make configurable the special characters
+         used in the directory name to delimit a virtual host name and act
+         as substitution characters.  Also, fixed behavior so that hostChar
+         isn't included in the context path name.
 
 
 Server:
