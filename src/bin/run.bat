@@ -8,7 +8,7 @@ if not "%TOMCAT_HOME%" == "" if not "%SERVLETAPI_HOME%" == "" goto gotTomcatHome
 goto startJBoss
 
 :gotTomcatHome
-set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\classes
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib
 set CLASSPATH=%CLASSPATH%;%SERVLETAPI_HOME%\lib\servlet.jar
 
 :startJBoss
