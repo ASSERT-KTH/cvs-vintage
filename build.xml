@@ -17,7 +17,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.117 2002/09/14 06:38:39 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.118 2002/09/17 10:24:10 dsundstrom Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -79,7 +79,6 @@
 
     <!-- The combined library classpath -->
     <path id="library.classpath">
-      <path refid="sun.jndi.classpath"/>
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
       <path refid="sun.jts.classpath"/>
