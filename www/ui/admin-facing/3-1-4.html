@@ -56,19 +56,18 @@
 
 
  <div id="projecttools" class="toolgroup">
-  <div class="label"><strong>Scarab</strong></div>
+  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
   <div class="body">
+ <div><a href="#">Enter new defect</a></div>
  
- <div><a href="#">Defect</a>
-
  <div><a href="#">Queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
- 
+ <div><a href="#">Templates</a></div>
+  
  <div><a href="#">Reports</a></div>
  
- </div>
  </div> </div>
+
  <div id="admintools" class="toolgroup">
 
  
@@ -80,11 +79,13 @@
     
  <div><a href="#">Global data</a>
  
-  <div><a href="#" class="selfref">Issue types</a></div>
- <div><a href="#">Attributes</a></div>
+   <div><a href="#" class="selfref">Global issue types</a></div>
+  
+  <div><a href="#">Global attributes</a></div>
+  
+  <div><a href="#">Update search index</a></div>
 
  </div>
- 
  
  <div><a href="#">Project data</a></div>         
   
@@ -95,7 +96,6 @@
  </div>
  
  </div> </div>
-
 
 <div id="helptext" class="toolgroup">
 <div class="label"><strong>How do I...</strong></div>
@@ -128,11 +128,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -140,6 +135,21 @@ title="Note: link may open in new window">Get help?</a></div>
     	&#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 		</form>
 	</td>
+	<td id="issueid">
+		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
+		<input type="hidden" name="nextTemplate" value="Index.vm" />
+  		<select name="go" tabindex="3" onChange="this.form.submit();">
+    	<option value="AdvancedQuery.vm">Select issue type...</option>
+    	<option value="AdvancedQuery.vm">Defect</option>
+    	<option value="Search.vm">Patch</option>
+    	<option value="Search.vm">Enhancement</option>
+    	<option value="Search.vm">Task</option>
+ 	 	</select>
+  		<input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+		</form>
+  	</td>
+
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -157,6 +167,7 @@ title="Note: link may open in new window">Get help?</a></div>
  </table>
 </div>
 
+
 <div id="bodycol">
 
 <div id="apphead">
@@ -167,70 +178,116 @@ title="Note: link may open in new window">Get help?</a></div>
         
     <div class="app" id="div2-1-4-0">
                         
+		<div class="functnbar">
+<input type="submit" value="Done" />&#160;
+		</div>
+
+
+                        
         <h3>Artifact types</h3>
+
+<div class="colbar">* <strong>To add artifact types to current module:</strong> Select  from this list and click "done".</div>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-        <th nowrap="nowrap">&nbsp;</th>
-		<th><a href="#" title="sort"><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Artifact type name</th>
-        <th><a href="#">Artifact type description</a></th>
+        <th>&nbsp;</th>
+        <th>Name</th>
+        <th>Locked</th>
+        <th>Default</th>
         </tr>
 
         
         <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact T</td>
-        <td>This artifact type is difficult to describe</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact V</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>        
         
         <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact U</td>
-        <td>Useful for tracking the behaviour of lab rats</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact W</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>
         
         <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact U.1</td>
-        <td>Invented by wolves</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact X</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>
         
         
         <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact U.2</td>
-        <td>Bono and "the Edge" have many issues</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact X.1</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>        
 
         
         <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact V</td>
-        <td>For keeping track of al Queda prison revolts</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact X.2</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>
         
         
         <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact V.1</td>
-        <td>Defines the parameters of your favorite breakfast cereal</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact Y</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>       
 
         <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Artifact W</td>
-        <td>for tracking idle threats</td>
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact Z</a></td>
+        <td><input type="checkbox" checked="checked" /></td>
+        <td><input type="checkbox" /></td>
         </tr>
 
         </table>
 
 
 		<div class="functnbar3">
-<input type="submit" value="add new" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" />&#160;
+<input type="submit" value="Save" />&#160;<input type="submit" value="add new" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" />
 </div>
 
-<p>* <small><strong>To add artifact types to current module:</strong> Select  from this list and click "done".</p></small>
 
+                        
+        <h3>Deleted artifact types</h3>
+        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th>&nbsp;</th>
+        <th>Name</th>
+        </tr>
+
+        
+        <tr class="a">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact N</a></td>
+        </tr>        
+        
+        <tr class="b">
+        <td><input type="checkbox" /></td>
+        <td><a href="#">Artifact S</a></td>
+        </tr>
+
+        </table>
+
+
+		<div class="functnbar3">
+<input type="submit" value="Un-delete selected" />
+</div>
+
+
+		<div class="functnbar2">
+<input type="submit" value="Done" />&#160;
+		</div>
 
 
     <!-- Scarab - App -->
