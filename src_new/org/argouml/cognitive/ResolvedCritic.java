@@ -1,4 +1,4 @@
-// $Id: ResolvedCritic.java,v 1.6 2004/03/26 23:08:40 d00mst Exp $
+// $Id: ResolvedCritic.java,v 1.7 2004/03/27 09:58:21 d00mst Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class ResolvedCritic
     {
 	this.critic = critic;
 	if (offenders != null && offenders.size() > 0)
-	    offenders = new Vector(offenders);
+	    this.offenders = new Vector(offenders);
 	else
-	    offenders = null;
+	    this.offenders = null;
     }
 
     /**
