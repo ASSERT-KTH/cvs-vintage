@@ -204,7 +204,7 @@ $intake.declareGroups()
 #end
 
 
-<a name="add"><h3>Users</h3></a> 
+<a name="add"><h3>Possible users</h3></a> 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
