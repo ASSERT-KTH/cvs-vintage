@@ -19,7 +19,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * The log analysis service.
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  */
 public class LogAnalysis
@@ -78,7 +78,7 @@ public class LogAnalysis
         Analysis anal = (Analysis) e.getValue();
 
         // Skip correct loggings unless showing everything
-        if (!showAll && getColor(category, TracePriority.TRACE, anal.debug).equals("black")
+        if (!showAll && getColor(category, TracePriority.TRACE, anal.trace).equals("black")
             && getColor(category, Priority.DEBUG, anal.debug).equals("black")
             && getColor(category, Priority.INFO, anal.info).equals("black")
             && getColor(category, Priority.WARN, anal.warn).equals("black")
