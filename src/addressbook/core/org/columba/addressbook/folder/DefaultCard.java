@@ -58,9 +58,6 @@ public class DefaultCard {
             if (subchild != null) {
                 setCDATAValue(child, value);
             } else {
-                System.out.println("parent to add child to:" +
-                    getRootNode().getName());
-
                 Element sub = createElementNode(subkey);
 
                 CDATASection cdata = createCDATAElementNode(value);
@@ -70,9 +67,6 @@ public class DefaultCard {
                 child.add(newNode);
             }
         } else {
-            System.out.println("parent to add child to:" +
-                getRootNode().getName());
-
             Element e = createElementNode(key);
             Element sub = createElementNode(subkey);
             addElement(e, sub);
@@ -91,9 +85,6 @@ public class DefaultCard {
         if (child != null) {
             setCDATAValue(child, value);
         } else {
-            System.out.println("parent to add child to:" +
-                getRootNode().getName());
-
             Element e = createElementNode(key);
 
             CDATASection cdata = createCDATAElementNode(value);
@@ -110,9 +101,6 @@ public class DefaultCard {
         if (child != null) {
             setTextValue(child, value);
         } else {
-            System.out.println("parent to add child to:" +
-                getRootNode().getName());
-
             addKey(getRootNode(), key, value);
         }
     }
@@ -126,17 +114,11 @@ public class DefaultCard {
             if (subchild != null) {
                 setTextValue(subchild, value);
             } else {
-                System.out.println("parent to add child to:" +
-                    getRootNode().getName());
-
                 addKey(child, subkey, value);
 
                 //addKey( getRootNode(), key, value );	
             }
         } else {
-            System.out.println("parent to add child to:" +
-                getRootNode().getName());
-
             Element e = createElementNode(key);
 
             /*
