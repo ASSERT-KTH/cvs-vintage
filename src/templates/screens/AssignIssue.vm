@@ -4,6 +4,7 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
+#set ($issueListSize = $scarabG.sizeOfArray($issueList))
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
@@ -13,7 +14,7 @@
  <p><strong class="alert">
   There are no active user attributes to which to assign users.
  </strong></p>
-#elseif (!$issueList )
+#elseif ($issueListSize == 0)
  <p><strong class="alert">
  Please select an issue or issues with which to associate users.
  </strong></p>
@@ -34,21 +35,15 @@
 </div>
 </form>
 
-#set ($icount = 0)
-#foreach ($issueId in $issueList)
- #set ($icount = $icount + 1)
-#end
-
-#if ($icount == 1)
-    #set($thisIssue = "this issue")
+#if ($issueListSize > 0)
+  #set ($thisIssue = "these issues")
 #else
-    #set($thisIssue = "these issues")
+  #set ($thisIssue = "this issue")
 #end
 
 <p>
-<a href="#add">Click here</a> to select users to associate with $thisIssue.
+<a href="#add">Click here</a> to select users to associate with ${thisIssue}.
 </p>
-		
 
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
