@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.8 $
+* @version $Revision: 1.9 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -143,7 +143,7 @@ implements EARDeployerMBean
       ObjectName lApplication = J2EEApplication.create(
          server,
          di.shortName,
-         di.url
+         di.localUrl
       );
    }
    
