@@ -39,8 +39,8 @@ Attribute Options" button:
 
 #set ( $attOptions = $attribute.getAttributeOptions())
 
-##set ( $group = $intake.Attribute.Default )
-##<input type="hidden" name="$group.CID" value="$group.OID">
+#set ( $group = $intake.Attribute.Default )
+<input type="hidden" name="$group.CID" value="$group.OID">
 
 <select name="$group.Id.Key" size="5">
     #if ( $attOptions.size() > 0 )

@@ -192,7 +192,7 @@ Does this issue match yours?<a href="$link.setPage("Links.vm")">Yes</a>(Vote)
 
 <br>
 <br>
-<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm") )">None of these Issues Match Mine</a> (Report issue now)
+<a href="$link.addPathInfo($data.Parameters).setPathInfo("nextTempate", "entry,Wizard3.vm").setPage("entry,Wizard3.vm")">None of these Issues Match Mine</a> (Report issue now)
 <br>
 #*
 <input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
