@@ -46,6 +46,7 @@ import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy;
+import org.jboss.ejb.plugins.jrmp.interfaces.HomeHandleImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;
@@ -62,7 +63,7 @@ import org.jboss.logging.Logger;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.10 $
+ *      @version $Revision: 1.11 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -220,14 +221,14 @@ public abstract class JRMPContainerInvoker
       // Create metadata
       if (container.getMetaData() instanceof jBossEntity)
       {
-         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((jBossEntity)container.getMetaData()).getPrimaryKeyClass()), false, false, getEJBHome());
+         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((jBossEntity)container.getMetaData()).getPrimaryKeyClass()), false, false, new HomeHandleImpl(jndiName));
       }
       else
       {
          if (((jBossSession)container.getMetaData()).getSessionType().equals("Stateless"))
-            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, false, getEJBHome());
+            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, false, new HomeHandleImpl(jndiName));
          else
-            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, true, getEJBHome());
+            ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, true, new HomeHandleImpl(jndiName));
       }      
 
    }
