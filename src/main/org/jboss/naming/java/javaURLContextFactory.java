@@ -13,8 +13,6 @@ import javax.naming.spi.*;
 import org.jnp.interfaces.NamingContext;
 import org.jnp.server.NamingServer;
 
-import org.jboss.ejb.BeanClassLoader;
-
 /**
  *   Implementation of "java:" namespace factory. The context is associated
  *   with the thread, so the root context must be set before this is used in a thread
@@ -24,7 +22,7 @@ import org.jboss.ejb.BeanClassLoader;
  *     
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
