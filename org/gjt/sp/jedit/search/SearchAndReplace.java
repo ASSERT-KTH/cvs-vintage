@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.34 2002/08/12 16:55:59 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.35 2002/10/21 19:37:15 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -373,7 +373,7 @@ public class SearchAndReplace
 			if(matcher == null)
 			{
 				view.getToolkit().beep();
-				results.searchDone(0,0);
+				results.searchFailed();
 				return false;
 			}
 
@@ -383,7 +383,7 @@ public class SearchAndReplace
 				s = view.getTextArea().getSelection();
 				if(s == null)
 				{
-					results.searchDone(0,0);
+					results.searchFailed();
 					return false;
 				}
 			}
