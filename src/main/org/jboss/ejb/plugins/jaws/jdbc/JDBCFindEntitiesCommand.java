@@ -21,6 +21,7 @@ import javax.ejb.FinderException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
+import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
 
 /**
  * Keeps a map from finder name to specific finder command, and
@@ -31,7 +32,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -46,6 +47,32 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
    {
       this.factory = factory;
       
+      // If finder method uses custom implementation, then it is used. This overrides
+      // defined and automatic finders.
+      Class ejbClass = null;
+      try {
+      	ejbClass = Class.forName(factory.getMetaData().getEntity().getEjbClass());
+      } catch (ClassNotFoundException e) {
+      	e.printStackTrace();
+      }
+
+      Method[] customMethods = ejbClass.getMethods();
+      
+      for (int i = 0; i < customMethods.length; i++)
+      {
+         Method m = customMethods[i];
+         String name = m.getName();
+		 if (name.startsWith("ejbFindBy")) {
+			 String remoteName = "f"+name.substring(4);
+			 try {
+				 knownFinderCommands.put(remoteName, new CustomFindByEntitiesCommand(m));
+				 factory.getLog().debug("Added custom finder " + remoteName +".");
+			 } catch (IllegalArgumentException e) {
+			    factory.getLog().debug("Could not create the custom finder " + remoteName+".");
+			 }
+		 }
+	  }
+
       // Make commands for the defined finders
       
       Iterator definedFinders = factory.getMetaData().getFinders();
@@ -89,6 +116,7 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
             }
          }
       }
+
    }
    
    // JPMFindEntitiesCommand implementation -------------------------

@@ -22,7 +22,8 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
+ * @version $Revision: 1.6 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -60,9 +61,20 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
          parameterArray[i] = ((Integer)parameters.get(i)).intValue();
       
       // Construct SQL
-      String sql = "SELECT " + getPkColumnList() +
-         (f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
-         " FROM " + jawsEntity.getTableName() + " WHERE " + query;
+      // In case of join query:
+      // order must explicitly identify tablename.field to order on
+      // query must start with "INNER JOIN <table to join with> WHERE 
+      // <regular query with fully identified fields>"
+      String sql = null;
+      if (query.toLowerCase().startsWith("inner join")) {
+      	  sql = "SELECT " + jawsEntity.getTableName()+"."+getPkColumnList() +
+      	  	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) +
+      	  	" FROM " + jawsEntity.getTableName() + " " + query;
+      } else {
+      	sql = "SELECT " + getPkColumnList() +
+         	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+         	" FROM " + jawsEntity.getTableName() + " WHERE " + query;
+      }
       if (f.getOrder() != null && !f.getOrder().equals(""))
       {
          sql += " ORDER BY "+f.getOrder();
