@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 * An EJB home handle implementation.
 *      
 * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>.
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 */
 public class HomeHandleImpl
 implements HomeHandle
@@ -69,7 +69,6 @@ implements HomeHandle
    {
       try 
       {
-         System.out.println(" GETTING THE HOME");
          return (EJBHome) new InitialContext().lookup(jndiName);
       }   
       catch (NamingException e) {
