@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class WebMetaData extends MetaData
 {
@@ -85,7 +85,9 @@ public class WebMetaData extends MetaData
    /** The jboss-web.xml securityDomain flushOnSessionInvalidation attribute */
    private boolean flushOnSessionInvalidation;
    /** A HashMap<String, String> for webservice description publish locations */
-   private HashMap webserviceDescriptions = new HashMap();
+   private HashMap wsdlPublishLocationMap = new HashMap();
+   /** True if this is a web service deployment */
+   private boolean webServiceDeployment;
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
@@ -221,7 +223,17 @@ public class WebMetaData extends MetaData
    /** Get the optional wsdl publish location from jboss-web.xml. */
    public String getWsdlPublishLocationByName(String name)
    {
-      return (String) webserviceDescriptions.get(name);
+      return (String)wsdlPublishLocationMap.get(name);
+   }
+
+   public boolean isWebServiceDeployment()
+   {
+      return webServiceDeployment;
+   }
+
+   public void setWebServiceDeployment(boolean webServiceDeployment)
+   {
+      this.webServiceDeployment = webServiceDeployment;
    }
 
    public String getJaccContextID()
@@ -254,7 +266,7 @@ public class WebMetaData extends MetaData
    /** The flag indicating whether the associated security domain cache
     * should be flushed when the session is invalidated.
     * @return true if the flush should occur, false otherwise.
-    */ 
+    */
    public boolean isFlushOnSessionInvalidation()
    {
       return flushOnSessionInvalidation;
@@ -262,7 +274,7 @@ public class WebMetaData extends MetaData
    /** The flag indicating whether the associated security domain cache
     * should be flushed when the session is invalidated.
     * @param flag - true if the flush should occur, false otherwise.
-    */ 
+    */
    public void setFlushOnSessionInvalidation(boolean flag)
    {
       this.flushOnSessionInvalidation = flag;
@@ -295,7 +307,7 @@ public class WebMetaData extends MetaData
     * 
     * @param userName
     * @return Set<String>
-    */ 
+    */
    public Set getSecurityRoleNamesByPrincipal(String userName)
    {
       HashSet roleNames = new HashSet();
@@ -313,7 +325,7 @@ public class WebMetaData extends MetaData
     * Access the RunAsIdentity associated with the given servlet
     * @param servletName - the servlet-name from the web.xml
     * @return RunAsIdentity for the servet if one exists, null otherwise
-    */ 
+    */
    public RunAsIdentity getRunAsIdentity(String servletName)
    {
       RunAsIdentity runAs = (RunAsIdentity) runAsIdentity.get(servletName);
@@ -336,7 +348,7 @@ public class WebMetaData extends MetaData
    /**
     * Get the security-role names from the web.xml descriptor
     * @return Set<String> of the security-role names from the web.xml
-    */ 
+    */
    public Set getSecurityRoleNames()
    {
       return new HashSet(securityRoles.keySet());
@@ -354,7 +366,7 @@ public class WebMetaData extends MetaData
    /**
     * Get the servlet-name values from the web.xml descriptor
     * @return Set<String> of the servlet-names from the servlet-mappings
-    */ 
+    */
    public Set getServletNames()
    {
       return new HashSet(servletMappings.keySet());
@@ -404,7 +416,7 @@ public class WebMetaData extends MetaData
 
    /** Access the web application depends
     * @return Iterator of JMX ObjectNames the web app depends on.
-    */ 
+    */
    public Collection getDepends()
    {
       return depends;
@@ -489,7 +501,7 @@ public class WebMetaData extends MetaData
          importJBossWebXml(element);
       }
    }
-   
+
    /** Parse the elements of the web-app element used by the integration layer.
     */
    protected void importWebXml(Element webApp) throws DeploymentException
@@ -505,7 +517,7 @@ public class WebMetaData extends MetaData
          while( roleRefs.hasNext() )
          {
             Element roleRefElem = (Element) roleRefs.next();
-            SecurityRoleRefMetaData roleRef = new SecurityRoleRefMetaData(); 
+            SecurityRoleRefMetaData roleRef = new SecurityRoleRefMetaData();
             roleRef.importEjbJarXml(roleRefElem);
             roleNames.add(roleRef);
          }
@@ -616,7 +628,7 @@ public class WebMetaData extends MetaData
             {
                Element httpMethod = (Element) iter22.next();
                String method = getElementContent(httpMethod);
-               wrc.addHttpMethod(method);               
+               wrc.addHttpMethod(method);
             }
          }
 
@@ -857,7 +869,7 @@ public class WebMetaData extends MetaData
          Element wsd = (Element)iterator.next();
          String wsdName = getElementContent(getUniqueChild(wsd, "webservice-description-name"));
          String wsdlPublishLocation = getOptionalChildContent(wsd, "wsdl-publish-location");
-         webserviceDescriptions.put(wsdName, wsdlPublishLocation);
+         wsdlPublishLocationMap.put(wsdName, wsdlPublishLocation);
       }
 
       // Parse the jboss-web/depends elements
@@ -876,7 +888,7 @@ public class WebMetaData extends MetaData
          Element useCookiesElement = (Element) iterator.next();
          String useCookiesElementContent = getElementContent(useCookiesElement);
          Boolean useCookies=Boolean.valueOf(useCookiesElementContent);
-         
+
          if (useCookies.booleanValue())
          {
             sessionCookies=SESSION_COOKIES_ENABLED;
@@ -997,9 +1009,9 @@ public class WebMetaData extends MetaData
          else if( webXmlRunAs != null )
          {
             RunAsIdentity runAs = new RunAsIdentity(webXmlRunAs, null);
-            runAsIdentity.put(servletName, runAs);            
+            runAsIdentity.put(servletName, runAs);
          }
       }
-      
+
    }
 }

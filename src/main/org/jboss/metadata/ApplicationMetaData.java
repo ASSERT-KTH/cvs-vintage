@@ -32,7 +32,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -48,6 +48,8 @@ public class ApplicationMetaData
    private ArrayList beans = new ArrayList();
    /** A HashMap<String, String> for webservice description publish locations */
    private HashMap wsdlPublishLocationMap = new HashMap();
+   /** True if this is a web service deployment */
+   private boolean webServiceDeployment;
    /** List<RelationMetaData> of relations in this application. */
    private ArrayList relationships = new ArrayList();
    /** The assembly-descriptor */
@@ -161,6 +163,16 @@ public class ApplicationMetaData
    public void setWebServiceContextRoot(String webServiceContextRoot)
    {
       this.webServiceContextRoot = webServiceContextRoot;
+   }
+
+   public boolean isWebServiceDeployment()
+   {
+      return webServiceDeployment;
+   }
+
+   public void setWebServiceDeployment(boolean webServiceDeployment)
+   {
+      this.webServiceDeployment = webServiceDeployment;
    }
 
    /**
@@ -983,7 +995,6 @@ public class ApplicationMetaData
          }
       }
    }
-
 }
 
 /*
