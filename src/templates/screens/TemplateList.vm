@@ -37,7 +37,7 @@ $page.setTitle("Template List")
         <th>Template name</th>
         <th>Template desc</th>
         <th>Location</th>
-        <th>initiated by</th>
+        <th>Initiated By</th>
         </tr>
         
 #foreach ( $template in $module.getPrivateTemplates($user) )
@@ -52,8 +52,13 @@ $page.setTitle("Template List")
              (until approved)
            #end
         </td>
-        #set ($createdUser = $template.CreatedBy)
-         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+         #set ($createdUser = $template.CreatedBy)
+         <td>#if ($createdUser)
+         <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+         #else
+         &#160;
+         #end
+         </td>
         </tr>
 #end
 
@@ -79,8 +84,13 @@ $page.setTitle("Template List")
              (until approved)
            #end
         </td>
-        #set ($createdUser = $template.CreatedBy)
-         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+         #set ($createdUser = $template.CreatedBy)
+         <td>#if ($createdUser)
+         <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+         #else
+         &#160;
+         #end
+         </td>
         </tr>
 #end
         </table>
