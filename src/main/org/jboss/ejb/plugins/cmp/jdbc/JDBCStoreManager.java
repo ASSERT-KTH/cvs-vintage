@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -320,16 +320,7 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // load the metadata for this entity
       metaData = loadJDBCEntityMetaData();
-   }
 
-   /** Bring the store to a fully initialized state
-   */
-   public void start() throws Exception
-   {
-      
-      // get the transaction manager
-      tm = container.getTransactionManager();
-      
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
             metaData.getTypeMapping(),
@@ -337,6 +328,14 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
+   }
+
+   /** Bring the store to a fully initialized state
+   */
+   public void start() throws Exception
+   {
+      // get the transaction manager
+      tm = container.getTransactionManager();
       
       // add the entity bridge to the catalog
       Catalog catalog = (Catalog)getApplicationData("CATALOG");
