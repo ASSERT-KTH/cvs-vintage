@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.4 2003/02/01 21:57:09 jmcnally Exp $
+    @version $Id: ConfigureReport.java,v 1.5 2003/02/01 22:44:50 jon Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -177,7 +177,6 @@ public class ConfigureReport
     public void doAddoptions( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ReportBridge report = scarabR.getReport();
         Intake intake = getIntakeTool(context);
@@ -188,6 +187,8 @@ public class ConfigureReport
         }
         else if ( intake.isAllValid() ) 
         {
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+
             ValueParser params = data.getParameters();
             int axis = params.getInt("axis", 0); // 0=row; 1=column
             int level = params.getInt("heading", -1);
@@ -325,7 +326,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -333,6 +333,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -386,7 +388,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -394,6 +395,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -447,7 +450,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -455,6 +457,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -524,7 +528,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -532,6 +535,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -580,7 +585,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -588,6 +592,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axisIndex = params.getInt("axis", 0); // 0=row; 1=column
@@ -604,7 +610,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -612,6 +617,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -669,7 +676,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -678,6 +684,8 @@ public class ConfigureReport
             return;
         }
         
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+
         ValueParser params = data.getParameters();
         String[] groupIndices = params.getStrings("selectgroup");
         if ( groupIndices == null || groupIndices.length == 0) 
@@ -722,7 +730,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -731,6 +738,8 @@ public class ConfigureReport
             return;
         }
         
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+
         ValueParser params = data.getParameters();
         String[] groupIndices = params.getStrings("selectgroup");
         if ( groupIndices == null || groupIndices.length == 0) 
@@ -759,7 +768,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -767,6 +775,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -851,9 +861,8 @@ public class ConfigureReport
     public void doAdddate( RunData data, TemplateContext context )
         throws Exception
     {
-        ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -861,6 +870,8 @@ public class ConfigureReport
             setTarget(data, "reports,ReportList.vm");
             return;
         }
+
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         ValueParser params = data.getParameters();
         int axis = params.getInt("axis", 0); // 0=row; 1=column
@@ -901,7 +912,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -910,6 +920,8 @@ public class ConfigureReport
             return;
         }
         
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+
         ValueParser params = data.getParameters();
         String[] dateIndices = params.getStrings("selectdate");
         if (dateIndices == null || dateIndices.length == 0) 
@@ -947,7 +959,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -966,6 +977,9 @@ public class ConfigureReport
         {
             report.setMITList(mitList);
         }
+
+        // FIXME: do we need a confirmation message? -jss
+        
         setTarget(data, "reports,ConfineDataset.vm");
     }
 
@@ -974,7 +988,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -999,6 +1012,7 @@ public class ConfigureReport
         {
             report.setDefaultDate(null);
         }
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
         setTarget(data, "reports,ConfineDataset.vm");
     }
@@ -1009,7 +1023,6 @@ public class ConfigureReport
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
@@ -1034,6 +1047,8 @@ public class ConfigureReport
             // add back as column
             reportDefn.addReportAxis(row);            
         }
+        
+        // FIXME: do we need a confirmation message? -jon
     }
 
     public void doGeneratereport(RunData data, TemplateContext context)
