@@ -728,6 +728,9 @@
                 <include name="**/servlets-invoker.jar"/>
                 <include name="**/servlets-manager.jar"/>
                 <include name="**/catalina.jar"/>
+                <include name="**/tomcat-coyote.jar"/>
+                <include name="**/tomcat-http11.jar"/>
+                <include name="**/tomcat-util.jar"/>
             </fileset>
         </copy>
     </target>
