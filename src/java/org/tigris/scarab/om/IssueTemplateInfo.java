@@ -11,6 +11,8 @@ import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -72,4 +74,31 @@ public  class IssueTemplateInfo
         }
         save();
     }
+
+    /*
+     * Checks permission and approves or rejects template.
+     * If template is approved,template type set to "global", else set to "personal".
+     */
+    public void approve( ScarabUser user, boolean approved )
+         throws Exception
+    {                
+        ScarabSecurity security = SecurityFactory.getInstance();
+        ModuleEntity module = getIssue().getModule();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
+                                   module))
+        {
+            setApproved(true);
+            if (approved)
+            {
+                setScopeId(Scope.GLOBAL__PK);
+            }
+            save();
+        } 
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
+    }
+
 }

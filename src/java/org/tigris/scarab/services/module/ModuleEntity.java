@@ -64,7 +64,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.26 2001/10/18 00:34:41 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.27 2001/10/18 02:00:02 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -208,13 +208,13 @@ public interface ModuleEntity
     /**
      * List of Issue Template objects associated with this module.
      */
-    public List getPrivateTemplates(ScarabUser user)
+    public List getPrivateTemplates(ScarabUser user, IssueType issueType)
         throws Exception;
 
     /**
      * List of global Issue Template objects associated with this module.
      */
-    public List getGlobalTemplates()
+    public List getGlobalTemplates(IssueType issueType)
         throws Exception;
 
     /**

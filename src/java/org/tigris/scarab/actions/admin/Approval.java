@@ -66,6 +66,8 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.tools.Email;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
@@ -76,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.7 2001/09/30 19:07:44 jon Exp $
+    @version $Id: Approval.java,v 1.8 2001/10/18 02:00:02 elicia Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -149,7 +151,7 @@ public class Approval extends TemplateAction
             else if (key.startsWith("template_id_"))
             {
                String templateId = key.substring(12);
-               Issue issue = (Issue) IssuePeer
+               IssueTemplateInfo info = (IssueTemplateInfo) IssueTemplateInfoPeer
                                      .retrieveByPK(new NumberKey(templateId));
 
                action = params.getString("template_action_" + templateId);
@@ -159,13 +161,13 @@ public class Approval extends TemplateAction
                toUser = (ScarabUser) ScarabUserImplPeer
                                      .retrieveByPK(new NumberKey(userId));
                artifact = "issue entry template";
-               artifactName = issue.getTemplateInfo().getName();
+               artifactName = info.getName();
 
                if (action.equals("reject"))
                {
                    try
                    {
-                       issue.approve(user, false);
+                       info.approve(user, false);
                    }
                    catch(ScarabException e)
                    {
@@ -173,11 +175,12 @@ public class Approval extends TemplateAction
                    }
                    actionWord = "rejected";
                } 
-               else if (action.equals("approve"))
+               else if (action.equals("Approve"))
                {
+System.out.println("approve");
                    try
                    {
-                       issue.approve(user, true);
+                       info.approve(user, true);
                    }
                    catch(ScarabException e)
                    {
