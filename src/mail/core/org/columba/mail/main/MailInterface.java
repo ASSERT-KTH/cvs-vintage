@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.main;
 
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.mailchecking.MailCheckingManager;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
-
 
 /**
  * Main Interface keeping static instances of all objects
@@ -39,4 +40,7 @@ public class MailInterface {
     
     // mailchecking manager
     public static MailCheckingManager mailCheckingManager;
+    
+    // mail configuration
+    public static MailConfig config;
 }

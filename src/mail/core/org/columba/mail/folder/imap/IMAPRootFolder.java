@@ -26,7 +26,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.FolderTreeNode;
@@ -70,7 +70,7 @@ public class IMAPRootFolder extends FolderTreeNode implements RootFolder {
 		observable= new StatusObservableImpl();
 
 		accountItem=
-			MailConfig.getAccountList().uidGet(
+			MailInterface.config.getAccountList().uidGet(
 				folderItem.getInteger("account_uid"));
 
 		updateConfiguration();

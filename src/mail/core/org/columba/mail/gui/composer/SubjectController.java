@@ -17,7 +17,7 @@ package org.columba.mail.gui.composer;
 
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.util.SubjectDialog;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -47,7 +47,7 @@ public class SubjectController implements DocumentListener, Observer {
 
         view = new SubjectView(this);
 
-        XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+        XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                .getRoot().getElement("/options");
         subject = composerOptions.getElement("subject");
 

@@ -93,7 +93,7 @@ public class MailMenu extends Menu {
 
         /*
         HeaderTableItem v =
-                MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+                MailInterface.config.getMainFrameOptionsConfig().getHeaderTableItem();
 
         sortSubMenu.removeAll();
 

@@ -39,7 +39,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.message.ColumbaMessage;
@@ -210,7 +210,7 @@ public class PrintMessageCommand extends FolderCommand {
 
             // Does the user prefer html or plain text?
             XmlElement html =
-                MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+                MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
                     "/options/html");
             boolean viewhtml =
                 Boolean.valueOf(html.getAttribute("prefer")).booleanValue();

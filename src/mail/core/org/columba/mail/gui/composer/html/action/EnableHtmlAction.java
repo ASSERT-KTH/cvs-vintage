@@ -21,7 +21,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -52,7 +52,7 @@ public class EnableHtmlAction extends AbstractSelectableAction implements Action
                 "menu_format_enable_html"));
         
         // enable/disable menuitem, based on configuration text/html state
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
@@ -87,7 +87,7 @@ public class EnableHtmlAction extends AbstractSelectableAction implements Action
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 

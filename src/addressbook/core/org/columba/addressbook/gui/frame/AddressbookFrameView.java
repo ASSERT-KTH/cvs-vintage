@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.frame;
 
-import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.TableView;
 import org.columba.addressbook.gui.tree.TreeView;
@@ -29,7 +30,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JSplitPane;
-
 
 public class AddressbookFrameView extends AbstractFrameView {
     //private AddressbookInterface addressbookInterface;
@@ -75,8 +75,8 @@ public class AddressbookFrameView extends AbstractFrameView {
      * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
      */
     protected ToolBar createToolbar(FrameMediator controller) {
-        return new ToolBar(AddressbookConfig.get("main_toolbar").getElement("toolbar"),
-            controller);
+        return new ToolBar(AddressbookInterface.config.get("main_toolbar")
+                .getElement("toolbar"), controller);
     }
 
     public void init(TreeView tree, TableView table) {

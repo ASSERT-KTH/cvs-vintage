@@ -46,7 +46,7 @@ public class TreeView implements TreeSelectionListener {
         //root = new AddressbookTreeNode("Root");
         root = generateTree();
 
-        //model = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
+        //model = new AddressbookTreeModel( AddressbookInterface.config.get("tree").getElement("/tree") );
         model = AddressbookInterface.addressbookTreeModel;
 
         tree = new JTree(model);
@@ -104,7 +104,7 @@ public class TreeView implements TreeSelectionListener {
         root.add( child2 );
         */
         /*
-                        TreeXmlConfig config = AddressbookConfig.getTreeConfig();
+                        TreeXmlConfig config = AddressbookInterface.config.getTreeConfig();
 
                         return config.generateTree(addressbookInterface);
                         */

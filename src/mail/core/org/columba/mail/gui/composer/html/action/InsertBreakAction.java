@@ -19,7 +19,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.util.MailResourceLoader;
@@ -47,7 +47,7 @@ public class InsertBreakAction extends AbstractColumbaAction implements Observer
                 "menu_format_break_tooltip").replaceAll("&", ""));
 
         // register for changes to editor type (text / html)
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 

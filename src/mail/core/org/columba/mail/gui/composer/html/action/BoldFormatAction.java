@@ -24,7 +24,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
@@ -75,7 +75,7 @@ public class BoldFormatAction extends AbstractSelectableAction implements Observ
         ctrl.addContainerListenerForEditor(this);
 
         // register for changes to editor type (text / html)
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 

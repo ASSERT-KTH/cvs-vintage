@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.table;
 
 import java.awt.BorderLayout;
@@ -30,7 +31,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
@@ -42,6 +42,7 @@ import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 import org.columba.addressbook.gui.table.util.TableModelSorter;
 import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.frame.FrameMediator;
@@ -63,16 +64,16 @@ public class TableView extends JPanel {
 		this.frameController= frameController;
 
 		//this.addressbookInterface = i;
-		//	config = AddressbookConfig.getAddressbookConfig();
-		addressbookModel= new AddressbookTableModel();
+		//	config = AddressbookInterface.config.getAddressbookConfig();
+		addressbookModel = new AddressbookTableModel();
 
-		filteredView= new TableModelFilteredView(addressbookModel);
-		sorter= new TableModelSorter(addressbookModel);
+		filteredView = new TableModelFilteredView(addressbookModel);
+		sorter = new TableModelSorter(addressbookModel);
 
 		addressbookModel.registerPlugin(filteredView);
 		addressbookModel.registerPlugin(sorter);
 
-		table= new JTable(addressbookModel);
+		table = new JTable(addressbookModel);
 		table.setIntercellSpacing(new Dimension(0, 0));
 		table.setShowGrid(false);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -81,12 +82,12 @@ public class TableView extends JPanel {
 
 		setLayout(new BorderLayout());
 
-		scrollPane= new JScrollPane(table);
+		scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.white);
 
 		add(scrollPane, BorderLayout.CENTER);
 
-		toolbar= new FilterToolbar(this);
+		toolbar = new FilterToolbar(this);
 		add(toolbar, BorderLayout.NORTH);
 	}
 
@@ -99,7 +100,7 @@ public class TableView extends JPanel {
 	}
 
 	public JTable getTableView() {
-		JTable table= new JTable(addressbookModel);
+		JTable table = new JTable(addressbookModel);
 
 		return table;
 	}
@@ -115,10 +116,10 @@ public class TableView extends JPanel {
 	*/
 	public void setupColumn(String name) {
 		try {
-			TableColumn tc= table.getColumn(name);
+			TableColumn tc = table.getColumn(name);
 
 			if (tc != null) {
-				HeaderColumnInterface column=
+				HeaderColumnInterface column =
 					addressbookModel.getHeaderColumn(name);
 
 				//System.out.println("renderer set:");
@@ -151,15 +152,15 @@ public class TableView extends JPanel {
 	}
 
 	protected void addMouseListenerToHeaderInTable() {
-		final JTable tableView= table;
+		final JTable tableView = table;
 
 		tableView.setColumnSelectionAllowed(false);
 
 		MouseAdapter listMouseListener= new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				TableColumnModel columnModel= tableView.getColumnModel();
-				int viewColumn= columnModel.getColumnIndexAtX(e.getX());
-				int column= tableView.convertColumnIndexToModel(viewColumn);
+				TableColumnModel columnModel = tableView.getColumnModel();
+				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+				int column = tableView.convertColumnIndexToModel(viewColumn);
 
 				if ((e.getClickCount() == 1) && (column != -1)) {
 					sorter.sort(column);
@@ -170,7 +171,7 @@ public class TableView extends JPanel {
 			}
 		};
 
-		JTableHeader th= tableView.getTableHeader();
+		JTableHeader th = tableView.getTableHeader();
 		th.addMouseListener(listMouseListener);
 	}
 
@@ -178,40 +179,40 @@ public class TableView extends JPanel {
 		// FIXME
 		return null;
 
-		//return AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
+		//return AddressbookInterface.config.getAddressbookOptionsConfig().getHeaderTableItem();
 	}
 
 	public void setupRenderer() {
-		TableItem headerItemList=
+		TableItem headerItemList =
 			new TableItem(
-				AddressbookConfig.get("options").getElement(
+				AddressbookInterface.config.get("options").getElement(
 					"/options/gui/table"));
 
 		HeaderColumn c;
 
-		for (int i= 0; i < headerItemList.count(); i++) {
-			org.columba.core.config.HeaderItem e=
+		for (int i = 0; i < headerItemList.count(); i++) {
+			org.columba.core.config.HeaderItem e =
 				headerItemList.getHeaderItem(i);
 
-			String name= e.get("name");
+			String name = e.get("name");
 
 			//System.out.println("name:" + name);
-			int size= e.getInteger("size");
-			int position= e.getInteger("position");
-			boolean enabled= e.getBoolean("enabled");
+			int size = e.getInteger("size");
+			int position = e.getInteger("position");
+			boolean enabled = e.getBoolean("enabled");
 
 			if (enabled == false) {
 				continue;
 			}
 
-			int index= name.indexOf(";");
+			int index = name.indexOf(";");
 
 			if (index != -1) {
-				String prefix=
+				String prefix =
 					AddressbookResourceLoader.getString(
 						"header",
 						name.substring(0, index));
-				String suffix=
+				String suffix =
 					AddressbookResourceLoader.getString(
 						"header",
 						name.substring(index + 1, name.length()));
@@ -235,11 +236,11 @@ public class TableView extends JPanel {
 		}
 
 		for (int i= 0; i < headerItemList.count(); i++) {
-			org.columba.core.config.HeaderItem e=
+			org.columba.core.config.HeaderItem e =
 				headerItemList.getHeaderItem(i);
 
-			String name= e.get("name");
-			boolean enabled= e.getBoolean("enabled");
+			String name = e.get("name");
+			boolean enabled = e.getBoolean("enabled");
 
 			if (enabled == false) {
 				continue;
@@ -250,7 +251,7 @@ public class TableView extends JPanel {
 	}
 
 	public void setFolder(Folder folder) {
-		Folder f= (Folder) folder;
+		Folder f = (Folder) folder;
 
 		if (f == null) {
 			addressbookModel.setHeaderList(null);
@@ -258,8 +259,8 @@ public class TableView extends JPanel {
 			return;
 		}
 
-		FolderItem item= f.getFolderItem();
-		HeaderItemList list= folder.getHeaderItemList();
+		FolderItem item = f.getFolderItem();
+		HeaderItemList list = folder.getHeaderItemList();
 
 		addressbookModel.setHeaderList(list);
 
@@ -359,49 +360,49 @@ public class TableView extends JPanel {
 	}
 	*/
 	public HeaderItem[] getSelectedItems() {
-		int[] rows= table.getSelectedRows();
-		HeaderItem[] nodes= new HeaderItem[rows.length];
+		int[] rows = table.getSelectedRows();
+		HeaderItem[] nodes = new HeaderItem[rows.length];
 
 		for (int i= 0; i < rows.length; i++) {
-			nodes[i]= addressbookModel.getHeaderItem(rows[i]);
+			nodes[i] = addressbookModel.getHeaderItem(rows[i]);
 		}
 
 		return nodes;
 	}
 
 	public HeaderItem getSelectedItem() {
-		int row= table.getSelectedRow();
+		int row = table.getSelectedRow();
 
-		HeaderItem item= addressbookModel.getHeaderItem(row);
+		HeaderItem item = addressbookModel.getHeaderItem(row);
 
 		return item;
 	}
 
 	public Object getSelectedUid() {
 		//AdapterNode child = null;
-		int row= table.getSelectedRow();
+		int row = table.getSelectedRow();
 
 		if (row == -1) {
 			return null;
 		}
 
-		HeaderItem item= addressbookModel.getHeaderItem(row);
-		Object uid= item.getUid();
+		HeaderItem item = addressbookModel.getHeaderItem(row);
+		Object uid = item.getUid();
 
 		return uid;
 	}
 
 	public Object[] getSelectedUids() {
-		int[] rows= table.getSelectedRows();
-		Object[] uids= new Object[rows.length];
+		int[] rows = table.getSelectedRows();
+		Object[] uids = new Object[rows.length];
 
 		HeaderItem item;
 
 		for (int i= 0; i < rows.length; i++) {
-			item= addressbookModel.getHeaderItem(rows[i]);
+			item = addressbookModel.getHeaderItem(rows[i]);
 
-			Object uid= item.getUid();
-			uids[i]= uid;
+			Object uid = item.getUid();
+			uids[i] = uid;
 		}
 
 		return uids;

@@ -105,10 +105,10 @@ public class Config {
         
         ColumbaLogger.log.info("Loading configuration from " + path.toString());
         
-        DefaultConfig.registerPlugin("core", optionsFile.getName(),
+        registerPlugin("core", optionsFile.getName(),
             new OptionsXmlConfig(optionsFile));
 
-        DefaultConfig.registerPlugin("core", toolsFile.getName(),
+        registerPlugin("core", toolsFile.getName(),
             new DefaultXmlConfig(toolsFile));
 
         load();
@@ -122,6 +122,23 @@ public class Config {
      */
     public void registerPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
+
+        File directory;
+        if (moduleName.equals("core")) {
+            directory = getConfigDirectory();
+        } else {
+            directory = new File(getConfigDirectory(), moduleName);
+        }
+        
+        File destination = new File(directory, id);
+
+        if (!destination.exists()) {
+            String hstr = "org/columba/" + moduleName + "/config/" + id;
+            try {
+                DiskIO.copyResource(hstr, destination);
+            } catch (IOException e) {}
+        }
+        
         if (!pluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
             pluginList.put(moduleName, map);
@@ -132,6 +149,10 @@ public class Config {
 
     public void registerTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
+        
+        String hstr = "org/columba/" + moduleName + "/config/" + id;
+        configPlugin.setURL(DiskIO.getResourceURL(hstr));
+        
         if (!templatePluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
             templatePluginList.put(moduleName, map);

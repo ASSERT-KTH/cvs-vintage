@@ -17,7 +17,7 @@ package org.columba.mail.gui.composer;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -44,7 +44,7 @@ public class AccountController implements ItemListener {
 
         view = new AccountView(this);
 
-        AccountList config = MailConfig.getAccountList();
+        AccountList config = MailInterface.config.getAccountList();
 
         for (int i = 0; i < config.count(); i++) {
             view.addItem(config.get(i));

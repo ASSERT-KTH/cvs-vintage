@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-//$Log: LocalHeaderCacheFolder.java,v $
+
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.DefaultCardLoader;
 
 import org.columba.core.command.WorkerStatusController;
@@ -32,7 +32,6 @@ import java.io.ObjectOutputStream;
 
 import java.util.List;
 import java.util.Vector;
-
 
 /**
  *
@@ -83,7 +82,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
         headerFile = new File(directoryFile.toString() + "/.header");
 
-        headerTableItemList = new TableItem(AddressbookConfig.get("options")
+        headerTableItemList = new TableItem(AddressbookInterface.config.get("options")
                                                              .getElement("/options/gui/table"));
 
         // FIXME
@@ -173,8 +172,6 @@ public class LocalHeaderCacheFolder extends LocalFolder {
                     o = card.get(prefix, suffix);
                     item.add(column, o);
                 } else {
-                    System.out.println("column:" + column);
-
                     o = card.get(column);
 
                     item.add(column, o);
@@ -243,21 +240,13 @@ public class LocalHeaderCacheFolder extends LocalFolder {
         HeaderItemList l = new HeaderItemList();
 
         for (int i = 0; i < getHeaderItemList().count(); i++) {
-            System.out.println("i=" + i);
-
             HeaderItem item = getHeaderItemList().get(i);
             Integer uidInt = (Integer) item.getUid();
             String uid = uidInt.toString();
 
-            System.out.println("uid=" + uid);
-
             for (int j = 0; j < uids.length; j++) {
-                System.out.println("  j=" + j);
-                System.out.println("uids[j]=" + uids[j]);
-
                 if (uid.equals((String) uids[j])) {
                     l.add(item);
-                    System.out.println("------->uid:" + uid);
 
                     break;
                 }
@@ -268,8 +257,6 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     protected void addHeaderItem(ContactCard card, Object uid) {
-        System.out.println("addheaderItem() contact");
-
         HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
         String column;
         Object o;
@@ -304,8 +291,6 @@ public class LocalHeaderCacheFolder extends LocalFolder {
     }
 
     protected void addHeaderItem(GroupListCard card, Object uid) {
-        System.out.println("addheaderItem()gouplist");
-
         /*
         HeaderItem item = new HeaderItem();
         String column;
@@ -428,8 +413,6 @@ public class LocalHeaderCacheFolder extends LocalFolder {
             item = headerList.get(i);
 
             if (item == null) {
-                System.out.println("there appears to be a card file,");
-                System.out.println("but associated card index in folder");
                 throw new Exception(
                     "addressbookfolder->save() == message is null!");
             }

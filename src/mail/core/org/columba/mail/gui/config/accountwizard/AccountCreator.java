@@ -22,7 +22,7 @@ import net.javaprog.ui.wizard.WizardModelListener;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
@@ -39,7 +39,7 @@ class AccountCreator implements WizardModelListener {
 	public void wizardFinished(WizardModelEvent e) {
 		String type= (String) data.getData("IncomingServer.type");
 		AccountItem account=
-			MailConfig.getAccountList().addEmptyAccount(type.toLowerCase());
+			MailInterface.config.getAccountList().addEmptyAccount(type.toLowerCase());
 
 		if (account == null) {
 			//this should not happen, the templates seem to be missing

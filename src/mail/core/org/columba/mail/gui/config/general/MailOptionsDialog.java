@@ -44,7 +44,7 @@ import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -89,7 +89,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
     public void updateComponents(boolean b) {
         if (b) {
-            XmlElement options = MailConfig.get("options").getElement("/options");
+            XmlElement options = MailInterface.config.get("options").getElement("/options");
 
             XmlElement gui = options.getElement("gui");
 
@@ -141,7 +141,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                                         .booleanValue();
             preferHtmlCheckBox.setSelected(preferhtml);
 
-            XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+            XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                    .getRoot().getElement("/options");
             XmlElement subject = composerOptions.getElement("subject");
 
@@ -180,12 +180,12 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
             /*
             // composer
             String path =
-                    MailConfig.getComposerOptionsConfig().getSpellcheckItem().get(
+                    MailInterface.config.getComposerOptionsConfig().getSpellcheckItem().get(
                             "executable");
             spellButton.setText(path);
             */
         } else {
-            XmlElement options = MailConfig.get("options").getElement("/options");
+            XmlElement options = MailInterface.config.get("options").getElement("/options");
 
             XmlElement gui = options.getElement("gui");
 
@@ -240,7 +240,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
                 html.addAttribute("prefer", Boolean.FALSE.toString());
             }
 
-            XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+            XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                    .getRoot().getElement("/options");
 
             XmlElement subject = composerOptions.getElement("subject");
@@ -280,7 +280,7 @@ public class MailOptionsDialog extends JDialog implements ActionListener {
 
             /*
             // composer
-            MailConfig.getComposerOptionsConfig().getSpellcheckItem().set(
+            MailInterface.config.getComposerOptionsConfig().getSpellcheckItem().set(
                     "executable",
                     spellButton.getText());
             */

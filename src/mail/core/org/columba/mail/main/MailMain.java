@@ -68,7 +68,7 @@ public class MailMain extends DefaultMain {
         System.setProperty("java.protocol.handler.pkgs",
                 System.getProperty("java.protocol.handler.pkgs", "") +
                 "|org.columba.mail.url");
-        new MailConfig();
+        MailInterface.config = new MailConfig(MainInterface.config);
     }
 
     /* (non-Javadoc)
@@ -79,7 +79,7 @@ public class MailMain extends DefaultMain {
 
         MailInterface.mailCheckingManager = new MailCheckingManager();
         
-        MailInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
+        MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
         
         //TODO: move this to TreeModel constructor
         ShutdownManager.getShutdownManager().register(new Runnable() {
@@ -103,7 +103,7 @@ public class MailMain extends DefaultMain {
             }
         });
         
-        if (MailConfig.getAccountList().count() == 0) {
+        if (MailInterface.config.getAccountList().count() == 0) {
             new AccountWizardLauncher().launchWizard(true);
         }
     }

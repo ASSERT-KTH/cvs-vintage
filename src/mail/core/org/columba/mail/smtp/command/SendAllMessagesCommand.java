@@ -25,7 +25,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.folder.outbox.OutboxFolder;
@@ -102,7 +102,7 @@ public class SendAllMessagesCommand extends FolderCommand {
             if (message.getAccountUid() != actAccountUid) {
                 actAccountUid = message.getAccountUid();
 
-                AccountItem accountItem = MailConfig.getAccountList().uidGet(actAccountUid);
+                AccountItem accountItem = MailInterface.config.getAccountList().uidGet(actAccountUid);
 
                 // Sent folder
                 sentFolder = (Folder) MailInterface.treeModel.getFolder(Integer.parseInt(

@@ -16,9 +16,9 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.DefaultConfig;
+import org.columba.core.config.Config;
 import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.main.MainInterface;
+import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
@@ -31,15 +31,18 @@ import java.io.File;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class MailConfig extends DefaultConfig {
+public class MailConfig {
     public static final String MODULE_NAME = "mail";
-    private static File accountFile;
-    private static File accountTemplateFile;
-    private static File folderFile;
-    private static File mainFrameOptionsFile;
-    private static File pop3Directory;
-    private static File popManageOptionsFile;
-    private static File composerOptionsFile;
+    
+    protected Config config;
+    protected File path;
+    protected File accountFile;
+    protected File accountTemplateFile;
+    protected File folderFile;
+    protected File mainFrameOptionsFile;
+    protected File pop3Directory;
+    protected File popManageOptionsFile;
+    protected File composerOptionsFile;
 
     //private static File filterActionFile;
     //private static File localFilterFile;
@@ -48,74 +51,81 @@ public class MailConfig extends DefaultConfig {
     /**
      * @see java.lang.Object#Object()
      */
-    public MailConfig() {
-        File configDirectory = createConfigDir(MODULE_NAME);
-        pop3Directory = new File(configDirectory, "pop3server");
+    public MailConfig(Config config) {
+        this.config = config;
+        path = new File(config.getConfigDirectory(), MODULE_NAME);
+        DiskIO.ensureDirectory(path);
+        
+        pop3Directory = new File(path, "pop3server");
         if (!pop3Directory.exists() || !pop3Directory.isDirectory()) {
             pop3Directory.mkdir();
         }
 
-        accountFile = new File(configDirectory, "account.xml");
+        accountFile = new File(path, "account.xml");
         registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
 
         accountTemplateFile = new File("account_template.xml");
         registerTemplatePlugin(accountTemplateFile.getName(),
             new AccountTemplateXmlConfig(accountTemplateFile));
 
-        folderFile = new File(configDirectory, "tree.xml");
+        folderFile = new File(path, "tree.xml");
         registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
 
-        mainFrameOptionsFile = new File(configDirectory, "options.xml");
+        mainFrameOptionsFile = new File(path, "options.xml");
         registerPlugin(mainFrameOptionsFile.getName(),
             new MainFrameOptionsXmlConfig(mainFrameOptionsFile));
 
-        File mainToolBarFile = new File(configDirectory, "main_toolbar.xml");
+        File mainToolBarFile = new File(path, "main_toolbar.xml");
         registerPlugin(mainToolBarFile.getName(),
             new DefaultXmlConfig(mainToolBarFile));
 
-        File composerToolBarFile = new File(configDirectory,
+        File composerToolBarFile = new File(path,
                 "composer_toolbar.xml");
         registerPlugin(composerToolBarFile.getName(),
             new DefaultXmlConfig(composerToolBarFile));
 
-        File messageframeToolBarFile = new File(configDirectory,
+        File messageframeToolBarFile = new File(path,
                 "messageframe_toolbar.xml");
         registerPlugin(messageframeToolBarFile.getName(),
             new DefaultXmlConfig(messageframeToolBarFile));
 
         /*
         popManageOptionsFile =
-                new File(configDirectory, "popmanageoptions.xml");
+                new File(path, "popmanageoptions.xml");
         registerPlugin(
                 popManageOptionsFile.getName(),
                 new PopManageOptionsXmlConfig(popManageOptionsFile));
         */
-        composerOptionsFile = new File(configDirectory, "composer_options.xml");
+        composerOptionsFile = new File(path, "composer_options.xml");
         registerPlugin(composerOptionsFile.getName(),
             new ComposerOptionsXmlConfig(composerOptionsFile));
 
         /*
-        filterActionFile = new File(configDirectory, "filter_actions.xml");
+        filterActionFile = new File(path, "filter_actions.xml");
         registerPlugin(
                 filterActionFile.getName(),
                 new FilterActionXmlConfig(filterActionFile));
         */
         /*
-        localFilterFile = new File(configDirectory, "filter_local.xml");
+        localFilterFile = new File(path, "filter_local.xml");
         registerPlugin(
                 localFilterFile.getName(),
                 new LocalFilterXmlConfig(localFilterFile));
-        remoteFilterFile = new File(configDirectory, "filter_remote.xml");
+        remoteFilterFile = new File(path, "filter_remote.xml");
         registerPlugin(
                 remoteFilterFile.getName(),
                 new LocalFilterXmlConfig(remoteFilterFile));
         */
     }
+    
+    public File getConfigDirectory() {
+        return path;
+    }
 
     /**
      * Returns the POP3 directory.
      */
-    public static File getPOP3Directory() {
+    public File getPOP3Directory() {
         return pop3Directory;
     }
 
@@ -124,13 +134,13 @@ public class MailConfig extends DefaultConfig {
      * @param id
      * @param plugin
      */
-    protected static void registerPlugin(String id, DefaultXmlConfig plugin) {
-        DefaultConfig.registerPlugin(MODULE_NAME, id, plugin);
+    protected void registerPlugin(String id, DefaultXmlConfig plugin) {
+        config.registerPlugin(MODULE_NAME, id, plugin);
     }
 
-    protected static void registerTemplatePlugin(String id,
+    protected void registerTemplatePlugin(String id,
         DefaultXmlConfig plugin) {
-        DefaultConfig.registerTemplatePlugin(MODULE_NAME, id, plugin);
+        config.registerTemplatePlugin(MODULE_NAME, id, plugin);
     }
 
     /**
@@ -138,27 +148,27 @@ public class MailConfig extends DefaultConfig {
      * @param id
      * @return DefaultXmlConfig
      */
-    protected static DefaultXmlConfig getPlugin(String id) {
-        return MainInterface.config.getPlugin(MODULE_NAME, id);
+    protected DefaultXmlConfig getPlugin(String id) {
+        return config.getPlugin(MODULE_NAME, id);
     }
 
-    protected static DefaultXmlConfig getTemplatePlugin(String id) {
-        return MainInterface.config.getTemplatePlugin(MODULE_NAME, id);
+    protected DefaultXmlConfig getTemplatePlugin(String id) {
+        return config.getTemplatePlugin(MODULE_NAME, id);
     }
 
     /**
      * Method getAccountList.
      * @return AccountList
      */
-    public static AccountList getAccountList() {
+    public AccountList getAccountList() {
         return getAccountConfig().getAccountList();
     }
 
-    public static AccountTemplateXmlConfig getAccountTemplateConfig() {
+    public AccountTemplateXmlConfig getAccountTemplateConfig() {
         return (AccountTemplateXmlConfig) getTemplatePlugin(accountTemplateFile.getName());
     }
 
-    public static XmlElement get(String name) {
+    public XmlElement get(String name) {
         DefaultXmlConfig xml = getPlugin(name + ".xml");
 
         return xml.getRoot();
@@ -168,7 +178,7 @@ public class MailConfig extends DefaultConfig {
      * Method getAccountConfig.
      * @return AccountXmlConfig
      */
-    public static AccountXmlConfig getAccountConfig() {
+    public AccountXmlConfig getAccountConfig() {
         //return accountConfig;
         return (AccountXmlConfig) getPlugin(accountFile.getName());
     }
@@ -191,7 +201,7 @@ public class MailConfig extends DefaultConfig {
      * Method getFolderConfig.
      * @return FolderXmlConfig
      */
-    public static FolderXmlConfig getFolderConfig() {
+    public FolderXmlConfig getFolderConfig() {
         //return folderConfig;
         return (FolderXmlConfig) getPlugin(folderFile.getName());
     }
@@ -200,7 +210,7 @@ public class MailConfig extends DefaultConfig {
      * Method getMainFrameOptionsConfig.
      * @return MainFrameOptionsXmlConfig
      */
-    public static MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
+    public MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
         //return mainFrameOptionsConfig;
         return (MainFrameOptionsXmlConfig) getPlugin(mainFrameOptionsFile.getName());
     }
@@ -209,7 +219,7 @@ public class MailConfig extends DefaultConfig {
      * Method getComposerOptionsConfig.
      * @return ComposerOptionsXmlConfig
      */
-    public static ComposerOptionsXmlConfig getComposerOptionsConfig() {
+    public ComposerOptionsXmlConfig getComposerOptionsConfig() {
         //return composerOptionsConfig;
         return (ComposerOptionsXmlConfig) getPlugin(composerOptionsFile.getName());
     }

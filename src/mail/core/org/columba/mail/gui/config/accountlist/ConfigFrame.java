@@ -25,7 +25,7 @@ import org.columba.core.main.MainInterface;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
@@ -112,7 +112,7 @@ public class ConfigFrame implements ActionListener,
         dialog = DialogStore.getDialog();
         dialog.setTitle(MailResourceLoader.getString("dialog", "account",
                 "dialog_title"));
-        accountList = MailConfig.getAccountList();
+        accountList = MailInterface.config.getAccountList();
 
         initComponents();
         dialog.getRootPane().registerKeyboardAction(this, "CLOSE",

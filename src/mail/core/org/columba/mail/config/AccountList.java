@@ -13,20 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.config;
 
-
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
- */
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
+import org.columba.mail.main.MailInterface;
 
 public class AccountList extends DefaultItem {
     int nextUid;
@@ -111,8 +103,6 @@ public class AccountList extends DefaultItem {
     }
 
     public AccountItem hostGetAccount(String host, String address) {
-        System.out.println("------>host: " + host);
-
         XmlElement account;
         XmlElement server;
         XmlElement identity;
@@ -169,7 +159,7 @@ public class AccountList extends DefaultItem {
     }
     */
     public AccountItem addEmptyAccount(String type) {
-        AccountTemplateXmlConfig template = MailConfig.getAccountTemplateConfig();
+        AccountTemplateXmlConfig template = MailInterface.config.getAccountTemplateConfig();
 
         XmlElement emptyAccount = template.getRoot().getElement("/template/" +
                 type + "/account");

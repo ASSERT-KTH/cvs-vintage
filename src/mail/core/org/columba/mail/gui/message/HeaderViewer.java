@@ -19,7 +19,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
 
@@ -102,7 +102,7 @@ public class HeaderViewer extends JTextPane {
 	protected void initHeaderFields() {
 		// add headerfields which are about to show up
 		XmlElement headerviewerElement=
-			MailConfig.get("options").getElement("/options/headerviewer");
+			MailInterface.config.get("options").getElement("/options/headerviewer");
 		String list= headerviewerElement.getAttribute("headerfields");
 
 		StringTokenizer tok= new StringTokenizer(list, " ");

@@ -23,7 +23,7 @@ import java.util.Vector;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 
 /**
  * Manages automatic mail-checking for all accounts.
@@ -46,7 +46,7 @@ public class MailCheckingManager extends Observable{
 		list= new Vector();
 
 		// get list of all accounts
-		AccountList accountList= MailConfig.getAccountList();
+		AccountList accountList= MailInterface.config.getAccountList();
 
 		// for each account
 		for (int i= 0; i < accountList.count(); i++) {

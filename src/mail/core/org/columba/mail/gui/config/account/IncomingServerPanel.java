@@ -46,7 +46,7 @@ import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.pop3.protocol.POP3Exception;
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
@@ -148,7 +148,7 @@ public class IncomingServerPanel
                 serverItem.getBoolean("enable_ssl", false));
 
             defaultAccountCheckBox.setEnabled(
-                MailConfig.getAccountList().getDefaultAccountUid()
+                MailInterface.config.getAccountList().getDefaultAccountUid()
                     != accountItem.getInteger("uid"));
 
             if (defaultAccountCheckBox.isEnabled()

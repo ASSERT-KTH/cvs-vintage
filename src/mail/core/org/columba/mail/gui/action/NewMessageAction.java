@@ -21,7 +21,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -56,7 +56,7 @@ public class NewMessageAction extends AbstractColumbaAction {
         // Open a new composer. Choice btw. text and html will be based on
         // stored option
         // only open composer when at least one account exists
-        if (MailConfig.getAccountList().count() != 0) {
+        if (MailInterface.config.getAccountList().count() != 0) {
             new ComposerController();
         }
     }

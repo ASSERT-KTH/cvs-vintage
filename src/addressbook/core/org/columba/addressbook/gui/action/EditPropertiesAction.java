@@ -76,7 +76,7 @@ public class EditPropertiesAction extends AbstractColumbaAction {
 
         /*
         AddressbookXmlConfig config =
-                AddressbookConfig.getAddressbookConfig();
+                AddressbookInterface.config.getAddressbookConfig();
         */
         AddressbookFolder folder = (AddressbookFolder) addressbookFrameController.getTree()
                                                                                  .getView()

@@ -17,7 +17,7 @@ package org.columba.mail.facade;
 
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -37,7 +37,7 @@ public class MailFacade {
              * @return XmlElement        represents an xml-treenode
              */
     public static XmlElement getConfigElement(String configName) {
-        XmlElement root = MailConfig.get(configName);
+        XmlElement root = MailInterface.config.get(configName);
 
         return root;
     }

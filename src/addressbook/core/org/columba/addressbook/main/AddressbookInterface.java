@@ -13,8 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.main;
 
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.gui.action.AddressbookActionListener;
 import org.columba.addressbook.gui.frame.AddressbookFrameView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
@@ -24,7 +26,6 @@ import org.columba.addressbook.gui.tree.TreeView;
 
 import org.columba.core.command.TaskManager;
 import org.columba.core.gui.statusbar.StatusBar;
-
 
 public class AddressbookInterface {
     public AddressbookFrameView frame;
@@ -38,10 +39,12 @@ public class AddressbookInterface {
     public TaskManager taskManager;
     public AddressbookActionListener actionListener;
 
-	/** Addressbook treemodel */
-	// TODO: move this to the addressbook component
-	public static AddressbookTreeModel addressbookTreeModel;
+    /** Addressbook treemodel */
+    // TODO: move this to the addressbook component
+    public static AddressbookTreeModel addressbookTreeModel;
+    
+    /** Addressbook configuration */
+    public static AddressbookConfig config;
 
-    public AddressbookInterface() {
-    }
+    private AddressbookInterface() {}
 }

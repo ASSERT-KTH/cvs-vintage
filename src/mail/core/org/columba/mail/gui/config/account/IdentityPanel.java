@@ -25,7 +25,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -100,7 +100,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             attachsignatureCheckBox.setSelected(identityItem.getBoolean(
                     "attach_signature"));
 
-            defaultAccountCheckBox.setSelected(MailConfig.getAccountList()
+            defaultAccountCheckBox.setSelected(MailInterface.config.getAccountList()
                                                          .getDefaultAccountUid() == accountItem.getInteger(
                     "uid"));
         } else {
@@ -123,7 +123,7 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
             accountItem.setName(accountnameTextField.getText());
 
             if (defaultAccountCheckBox.isSelected()) {
-                MailConfig.getAccountList().setDefaultAccount(accountItem.getUid());
+                MailInterface.config.getAccountList().setDefaultAccount(accountItem.getUid());
             }
         }
     }

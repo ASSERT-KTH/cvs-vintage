@@ -46,7 +46,7 @@ import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.util.ListTools;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.auth.AuthenticationFactory;
@@ -140,7 +140,7 @@ public class OutgoingServerPanel
             }
 
             defaultAccountCheckBox.setEnabled(
-                MailConfig.getAccountList().getDefaultAccountUid()
+                MailInterface.config.getAccountList().getDefaultAccountUid()
                     != accountItem.getInteger("uid"));
 
             if (defaultAccountCheckBox.isEnabled()

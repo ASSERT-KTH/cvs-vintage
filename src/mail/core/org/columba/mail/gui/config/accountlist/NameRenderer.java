@@ -14,7 +14,7 @@
 package org.columba.mail.gui.config.accountlist;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.Component;
@@ -77,7 +77,7 @@ public class NameRenderer extends JLabel implements TableCellRenderer {
 
         buf.append(item.getName());
 
-        if (MailConfig.getAccountList().getDefaultAccountUid() == item.getUid()) {
+        if (MailInterface.config.getAccountList().getDefaultAccountUid() == item.getUid()) {
             buf.append(" (" +
                 MailResourceLoader.getString("dialog", "account", "standard") +
                 ")");

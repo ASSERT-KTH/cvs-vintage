@@ -33,7 +33,7 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -156,7 +156,7 @@ public class MailFrameView extends AbstractFrameView {
 			toolbarPane.add(folderInfoPanel);
 		}
 
-		int count= MailConfig.getAccountList().count();
+		int count= MailInterface.config.getAccountList().count();
 
 		if (count == 0) {
 			pack();
@@ -263,7 +263,7 @@ public class MailFrameView extends AbstractFrameView {
 	 */
 	protected ToolBar createToolbar(FrameMediator controller) {
 		return new ToolBar(
-			MailConfig.get("main_toolbar").getElement("toolbar"),
+			MailInterface.config.get("main_toolbar").getElement("toolbar"),
 			controller);
 	}
 

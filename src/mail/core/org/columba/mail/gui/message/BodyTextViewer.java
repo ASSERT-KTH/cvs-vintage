@@ -37,7 +37,7 @@ import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 
@@ -85,7 +85,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
 
         setContentType("text/html");
 
-        XmlElement gui = MailConfig.get("options").getElement("/options/gui");
+        XmlElement gui = MailInterface.config.get("options").getElement("/options/gui");
         XmlElement messageviewer = gui.getElement("messageviewer");
 
         if (messageviewer == null) {

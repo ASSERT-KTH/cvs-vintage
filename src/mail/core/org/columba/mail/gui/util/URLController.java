@@ -22,7 +22,7 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
@@ -94,7 +94,7 @@ public class URLController implements ActionListener {
         model.setTo(address);
 
         // init model to html or text according to stored option		
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 

@@ -21,7 +21,7 @@ import javax.swing.JComboBox;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
@@ -51,7 +51,7 @@ public class AccountCriteriaRow extends DefaultCriteriaRow {
         matchComboBox.addItem("is not");
 
         accountComboBox = new JComboBox();
-        AccountList accountList = MailConfig.getAccountList();
+        AccountList accountList = MailInterface.config.getAccountList();
         int size = accountList.count();
         for (int i = 0; i < size; i++) {
             accountComboBox.addItem(new AccountComboBoxItem(accountList.get(i)));

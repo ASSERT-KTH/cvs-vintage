@@ -37,7 +37,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
@@ -78,7 +78,7 @@ public class ComposerController
 		super(
 			"Composer",
 			new ViewItem(
-				MailConfig.get("composer_options").getElement(
+				MailInterface.config.get("composer_options").getElement(
 					"/options/gui/view")));
 
 		getView().loadWindowPosition();
@@ -309,7 +309,7 @@ public class ComposerController
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
 		XmlElement optionsElement=
-			MailConfig.get("composer_options").getElement("/options");
+			MailInterface.config.get("composer_options").getElement("/options");
 		XmlElement htmlElement= optionsElement.getElement("html");
 
 		// create default element if not available
@@ -389,7 +389,7 @@ public class ComposerController
 			switchEditor(composerModel.isHtml());
 
 			XmlElement optionsElement=
-				MailConfig.get("composer_options").getElement("/options");
+				MailInterface.config.get("composer_options").getElement("/options");
 			XmlElement htmlElement= optionsElement.getElement("html");
 
 			//	create default element if not available

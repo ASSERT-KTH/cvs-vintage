@@ -31,7 +31,7 @@ import org.columba.core.gui.util.AscendingIcon;
 import org.columba.core.gui.util.DescendingIcon;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.table.SortingStateObservable;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.message.HeaderList;
@@ -85,7 +85,7 @@ public class TableModelSorter extends BasicTableModelSorter {
 
     /*
     public void saveConfig() {
-        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
+        TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
                                                     .getTableItem();
     
         boolean ascending = getSortingOrder();
@@ -120,7 +120,7 @@ public class TableModelSorter extends BasicTableModelSorter {
         
 
         /*
-        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
+        TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
                                                     .getTableItem();
         
         Vector v = new Vector();

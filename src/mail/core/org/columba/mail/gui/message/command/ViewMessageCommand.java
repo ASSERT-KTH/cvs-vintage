@@ -32,7 +32,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderInconsistentException;
@@ -219,7 +219,7 @@ public class ViewMessageCommand extends FolderCommand {
 		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
 
 		PGPItem pgpItem = new PGPItem(new XmlElement());
-		//MailConfig.getAccountList().getPGPItem(toAddress.getMailAddress());
+		//MailInterface.config.getAccountList().getPGPItem(toAddress.getMailAddress());
 		pgpItem.set("id", fromAddress.getMailAddress());
 
 		// Set the digest-algorithm from content-paramater micalg, cut of "pgp-"
@@ -362,7 +362,7 @@ public class ViewMessageCommand extends FolderCommand {
 
 		if (firstPartMimeType.getSubtype().equals("encrypted")) {
 		    Integer accountuid = (Integer)header.getAttributes().get("columba.accountuid");
-		    AccountItem item = MailConfig.getAccountList().uidGet(accountuid.intValue());
+		    AccountItem item = MailInterface.config.getAccountList().uidGet(accountuid.intValue());
 		    PGPItem pgpitem;
 		    if( item != null ) {
 		        pgpitem = item.getPGPItem();
@@ -382,7 +382,7 @@ public class ViewMessageCommand extends FolderCommand {
 		
 		if (mimePartTree != null) { // user prefers html/text messages
 			XmlElement html =
-				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+				MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
 					"/options/html");
 			// Which Bodypart shall be shown? (html/plain)
 			if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())

@@ -29,7 +29,7 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
@@ -85,7 +85,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         controller.addContainerListenerForEditor(this);
 
         // register for changes to editor type (text / html)
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
@@ -128,7 +128,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         sizeComboBox.setFocusable(false);
 
         // set initial enabled state of combo boxes
-        XmlElement optionsElement = MailConfig.get("composer_options")
+        XmlElement optionsElement = MailInterface.config.get("composer_options")
                                               .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
         String s = htmlElement.getAttribute("enable", "false");

@@ -31,7 +31,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
@@ -225,7 +225,7 @@ public class ComposerView extends AbstractFrameView {
 	 */
 	protected ToolBar createToolbar(FrameMediator controller) {
 		return new ToolBar(
-			MailConfig.get("composer_toolbar").getElement("toolbar"),
+			MailInterface.config.get("composer_toolbar").getElement("toolbar"),
 			controller);
 	}
 

@@ -149,7 +149,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 
         } else if (item.getType().equals("imap")) {
                 AccountItem accountItem =
-                        MailConfig.getAccountList().uidGet(item.getAccountUid());
+                        MailInterface.config.getAccountList().uidGet(item.getAccountUid());
 
                 ImapItem item2 = accountItem.getImapItem();
 
@@ -165,7 +165,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
         } else if (item.getType().equals("imaproot")) {
 
                 AccountItem accountItem =
-                        MailConfig.getAccountList().uidGet(item.getAccountUid());
+                        MailInterface.config.getAccountList().uidGet(item.getAccountUid());
 
                 ImapItem item2 = accountItem.getImapItem();
 

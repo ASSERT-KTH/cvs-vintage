@@ -11,7 +11,7 @@ import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -36,7 +36,7 @@ public class MessageFrameController extends AbstractMailFrameController {
      */
     public MessageFrameController() {
         super("MessageFrame",
-            new ViewItem(MailConfig.get("options").getElement("/options/gui/messageframe/view")));
+            new ViewItem(MailInterface.config.get("options").getElement("/options/gui/messageframe/view")));
 
         getView().loadWindowPosition();
 

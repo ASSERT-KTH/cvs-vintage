@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.oundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
+import org.columba.mail.main.MailInterface;
 
 public class FolderItem extends DefaultItem {
     public FolderItem(XmlElement root) {
@@ -34,7 +35,6 @@ public class FolderItem extends DefaultItem {
 
         return property;
     }
-
     
     /**
      * Get global folder options.
@@ -43,10 +43,9 @@ public class FolderItem extends DefaultItem {
      */
     public static XmlElement getGlobalOptions() {
         //      use global table options
-        XmlElement tableElement = MailConfig.get("options").getElement("/options/gui/table");
+        XmlElement tableElement = MailInterface.config.get("options")
+                .getElement("/options/gui/table");
 
-        
-        
         return tableElement;
     }
 }

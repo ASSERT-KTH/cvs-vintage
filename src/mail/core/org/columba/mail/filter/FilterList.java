@@ -84,7 +84,7 @@ public class FilterList extends DefaultItem {
         /*
         //AdapterNode filterListNode = getFilterListNode();
 
-        AdapterNode node = MailConfig.getFolderConfig().addEmptyFilterNode( getFolder().getNode() );
+        AdapterNode node = MailInterface.config.getFolderConfig().addEmptyFilterNode( getFolder().getNode() );
         Filter filter = new Filter( node );
 
         add( filter );

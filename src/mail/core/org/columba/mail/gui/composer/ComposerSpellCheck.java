@@ -33,7 +33,7 @@ public class ComposerSpellCheck {
 
         /*
         spellCheckConfig =
-                MailConfig.getComposerOptionsConfig().getSpellcheckItem();
+                MailInterface.config.getComposerOptionsConfig().getSpellcheckItem();
         ASpellInterface.setAspellExeFilename(
                 spellCheckConfig.get("executable"));
         */

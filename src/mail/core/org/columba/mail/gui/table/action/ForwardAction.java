@@ -24,7 +24,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -80,7 +80,7 @@ public class ForwardAction extends AbstractColumbaAction implements SelectionLis
         setEnabled(false);
         ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
 
-        XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+        XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                .getRoot().getElement("/options");
 
         forward = composerOptions.getElement("forward");

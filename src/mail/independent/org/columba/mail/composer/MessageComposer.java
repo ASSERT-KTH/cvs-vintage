@@ -23,7 +23,7 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PGPMimePart;
@@ -457,7 +457,7 @@ public class MessageComposer {
 
         if (model.isHtml()) {
             // compose message body as multipart/alternative
-            XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+            XmlElement composerOptions = MailInterface.config.getComposerOptionsConfig()
                                                    .getRoot().getElement("/options");
             XmlElement html = composerOptions.getElement("html");
 

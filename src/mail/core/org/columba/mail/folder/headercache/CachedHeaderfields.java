@@ -20,7 +20,7 @@ package org.columba.mail.folder.headercache;
 
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class CachedHeaderfields {
     static {
         // see if we have to cache additional headerfields
         // which are added by the user
-        XmlElement options = MailConfig.get("options").getElement("/options");
+        XmlElement options = MailInterface.config.get("options").getElement("/options");
         headercache = options.getElement("headercache");
 
         if (headercache == null) {

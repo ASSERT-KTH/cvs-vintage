@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
-
+import org.columba.mail.main.MailInterface;
 
 public class AccountItem extends DefaultItem {
     private AccountItem defaultAccount;
@@ -46,7 +47,7 @@ public class AccountItem extends DefaultItem {
 
         if (folder.getBoolean("use_default_account")) {
             // return default-account ImapItem instead 
-            SpecialFoldersItem item = MailConfig.getAccountList()
+            SpecialFoldersItem item = MailInterface.config.getAccountList()
                                                 .getDefaultAccount()
                                                 .getSpecialFoldersItem();
 
@@ -58,7 +59,7 @@ public class AccountItem extends DefaultItem {
 
     private AccountItem getDefaultAccount() {
         if (defaultAccount == null) {
-            defaultAccount = MailConfig.getAccountList().getDefaultAccount();
+            defaultAccount = MailInterface.config.getAccountList().getDefaultAccount();
         }
 
         return defaultAccount;
@@ -71,7 +72,7 @@ public class AccountItem extends DefaultItem {
 
         if (pop.getBoolean("use_default_account")) {
             // return default-account ImapItem instead 
-            PopItem item = MailConfig.getAccountList().getDefaultAccount()
+            PopItem item = MailInterface.config.getAccountList().getDefaultAccount()
                                      .getPopItem();
 
             return item;
@@ -100,7 +101,7 @@ public class AccountItem extends DefaultItem {
 
         if (pgp.getBoolean("use_default_account")) {
             // return default-account ImapItem instead 
-            PGPItem item = MailConfig.getAccountList().getDefaultAccount()
+            PGPItem item = MailInterface.config.getAccountList().getDefaultAccount()
                                      .getPGPItem();
 
             return item;
@@ -116,7 +117,7 @@ public class AccountItem extends DefaultItem {
 
         if (imap.getBoolean("use_default_account")) {
             // return default-account ImapItem instead 
-            ImapItem item = MailConfig.getAccountList().getDefaultAccount()
+            ImapItem item = MailInterface.config.getAccountList().getDefaultAccount()
                                       .getImapItem();
 
             return item;
@@ -132,7 +133,7 @@ public class AccountItem extends DefaultItem {
 
         if (identity.getBoolean("use_default_account")) {
             // return default-account identityItem instead
-            IdentityItem item = MailConfig.getAccountList().getDefaultAccount()
+            IdentityItem item = MailInterface.config.getAccountList().getDefaultAccount()
                                           .getIdentityItem();
 
             return item;
@@ -167,7 +168,7 @@ public class AccountItem extends DefaultItem {
     }
 
     public boolean isDefault() {
-        if (MailConfig.getAccountList().getDefaultAccountUid() == getUid()) {
+        if (MailInterface.config.getAccountList().getDefaultAccountUid() == getUid()) {
             return true;
         }
 

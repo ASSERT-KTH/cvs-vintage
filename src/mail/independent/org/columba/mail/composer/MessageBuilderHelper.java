@@ -28,7 +28,7 @@ import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
@@ -272,7 +272,7 @@ public class MessageBuilderHelper {
 	 *  
 	 */
     public static AccountItem getAccountItem(Integer accountUid) {
-        AccountList list = MailConfig.getAccountList();
+        AccountList list = MailInterface.config.getAccountList();
         AccountItem accountItem = null;
         list.getDefaultAccount();
 
@@ -393,7 +393,7 @@ public class MessageBuilderHelper {
     public static boolean isHTMLEnabled() {
         // get configuration
         XmlElement optionsElement =
-            MailConfig.get("composer_options").getElement("/options");
+            MailInterface.config.get("composer_options").getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         // create html element, if it doesn't exist

@@ -30,7 +30,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -109,7 +109,7 @@ public class ReplyWithTemplateCommand extends FolderCommand {
         MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 
         XmlElement html =
-            MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+            MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
                 "/options/html");
 
         // Which Bodypart shall be shown? (html/plain)
