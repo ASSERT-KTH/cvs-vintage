@@ -146,5 +146,10 @@ Click Bypass Duplicates to continue entering your Issue.
 </div>
 
 $intake.declareGroups()
+#set ($intakeKeys = $wizard1_intake.keys())
+#foreach ($key in $intakeKeys)
+  <input type="hidden" name="$key" value="$wizard1_intake.get($key)" />
+#end
+
 </form>
 </div>

@@ -81,13 +81,13 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
               #if ($attVal.Attribute.isUserAttribute())
                  #userSelectBox ($attVal "3" "true") 
               #elseif ($attVal.Attribute.isOptionAttribute())
-                 #if ($templateId)
+                 #if ($templ)
                    #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
                  #else
                    #attrValueLeafSelect ($attVal $field "")
                  #end
               #else
-               #if ($templateId)
+               #if ($templ)
                  #templateAttrValueText ( $attVal "50" $templAttrInput.Value)
                #else
                  #attrValueText ( $attVal "50" )
@@ -110,5 +110,6 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 </p>
 
 $intake.declareGroups()
+
 </form>
 </div>

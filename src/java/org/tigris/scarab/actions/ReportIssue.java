@@ -46,6 +46,7 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.io.File;
@@ -95,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.75 2002/01/08 15:36:04 richard Exp $
+ * @version $Id: ReportIssue.java,v 1.76 2002/01/09 01:55:33 maartenc Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -121,7 +122,7 @@ public class ReportIssue extends RequireLoginFirstAction
         if (intake.isAllValid()) 
         {
             // set the values entered so far
-            setAttributeValues(issue, intake);
+            setAttributeValues(issue, intake, context);
 
             // check for duplicates, if there are none skip the dedupe page
             searchAndSetTemplate(data, context, 0, "entry,Wizard3.vm");
@@ -253,9 +254,10 @@ public class ReportIssue extends RequireLoginFirstAction
      * issue's attribute values.
      * @exception Exception pass thru
      */
-    private void setAttributeValues(Issue issue, IntakeTool intake)
+    private void setAttributeValues(Issue issue, IntakeTool intake, TemplateContext context)
         throws Exception
     {
+        Hashtable values = new Hashtable();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
@@ -266,8 +268,42 @@ public class ReportIssue extends RequireLoginFirstAction
             if (group != null) 
             {
                 group.setProperties(aval);
-            }                
+                
+                /*
+                 * The next piece of code is for storing the values
+                 * of the attributes into the context (which is than
+                 * used by Wizard2.vm) This is necessary because it 
+                 * seems that group.setProperties(aval) does not 
+                 * store the values so they are never passed to the
+                 * next template (Wizard3.vm). This code fixes bug 
+                 * http://scarab.tigris.org/issues/show_bug.cgi?id=70
+                 */
+                String field = null;
+                if (aval.getAttribute().getAttributeType()
+                    .getValidationKey() != null)
+                {
+                    field = aval.getAttribute().getAttributeType()
+                        .getValidationKey();
+                }
+                else if (aval.getAttribute().getAttributeType()
+                    .getName().equals("combo-box"))
+                {
+                    field = "OptionId";
+                }
+                else
+                {
+                    field = "Value";
+                }
+                Object key = group.get(field).getKey();
+                Object value = group.get(field).getValue();
+                if ((key != null) && (value != null)) 
+                {
+                    values.put(group.get(field).getKey()
+                            , group.get(field).getValue());
+                }
+            }
         }
+        context.put("wizard1_intake", values);
     }
 
     /**
@@ -287,7 +323,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
         if (intake.isAllValid())
         {
-            setAttributeValues(issue, intake);
+            setAttributeValues(issue, intake, context);
             if (issue.containsMinimumAttributeValues())
             {
                 // Save transaction record
@@ -478,7 +514,14 @@ public class ReportIssue extends RequireLoginFirstAction
     public void doGotowizard3(RunData data, TemplateContext context)
         throws Exception
     {
+/*        IntakeTool intake = getIntakeTool(context);
+        AttributeValue av = new AttributeValue();
+        Group group = intake.get("AttributeValue", IntakeTool.DEFAULT_KEY);        
+        group.getProperties(av);
+        //sout(av.*/
+        
         setTarget(data, "entry,Wizard3.vm");
+        data.getParameters().add("testje","testjevalue");
     }
 
     public void doUsetemplates(RunData data, TemplateContext context)
