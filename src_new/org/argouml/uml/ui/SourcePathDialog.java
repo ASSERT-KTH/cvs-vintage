@@ -1,4 +1,4 @@
-// $Id: SourcePathDialog.java,v 1.11 2004/09/08 19:31:37 mvw Exp $
+// $Id: SourcePathDialog.java,v 1.12 2004/10/22 20:30:00 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,10 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.Generator2;
 
 /**
+ * This dialog appears when selecting 
+ * <code>Generation -> Settings for Generate for Project...</code>
+ * in the menu.<p>
+ * 
  * Provides support for setting a "src_path" tagged value used in Java
  * round trip engineering.
  */
