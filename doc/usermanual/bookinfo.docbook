@@ -22,7 +22,7 @@
   </abstract>
   
   <copyright>
-    <year>1997-2002</year>
+    <year>1997-2003</year>
     <holder>INRIA</holder>
   </copyright>
 
@@ -43,7 +43,9 @@
     <keyword>objectweb</keyword>
     <keyword>rmi</keyword>
     <keyword>iiop</keyword>
-    <keyword>jrmp</keyword>
+    <keyword>cmi</keyword>
+    <keyword>lmi</keyword>
+    <keyword>jndi</keyword>
     <keyword>context</keyword>
   </keywordset>
   

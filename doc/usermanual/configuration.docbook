@@ -17,15 +17,18 @@
 	<listitem>
 	  <para>Local Method Invocation (LMI) for embedded server</para>
 	</listitem>
+	<listitem>
+	  <para>Cluster Method Invocation (CMI) for clustered rmi server</para>
+	</listitem>
       </itemizedlist>
-      CAROL allows to configure a remote (or local) Java server to be accessible by one,two or three of those RMI architectures, in the same time, by configuration.
+      CAROL allows to configure a remote (or local) Java server to be accessible by one,two or three of those RMI architectures, in the same time, through it's configuration.
     </para>
   </sect1>
   <sect1>
     <title>CAROL configuration</title>
     <sect2>
       <title>General configuration files</title>
-      <para>CAROL configuration is based on three properties files. The <filename>carol-defaults.properties</filename> file, the <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. The <filename>carol-defaults.properties</filename> file is mandatory to configure CAROL. This file is embedded in the carol jar file and the CAROL user is not suppose to modify those defaults properties. Carol load first this default file properties and erase all configuration property with the property find in the jndi file configuration and (after) with the property find in the carol file configuration. So, the only important file for the CAROL user is the <filename>carol-defaults.properties</filename>. We are going to describe, in the next section, only the content of this file.</para>
+      <para>CAROL configuration is based on three properties files. The <filename>carol-defaults.properties</filename> file, the <filename>carol.properties</filename> file and the <filename>jndi.properties</filename> file. The <filename>carol-defaults.properties</filename> file is mandatory to configure CAROL. This file is embedded in the carol jar file and the CAROL standard user is not suppose to modify those defaults properties. Carol load first this default file properties and erase all configuration property with the properties find in the jndi file configuration and (after) with the properties find in the carol file configuration. So, the only important file for the CAROL standard user is the <filename>carol.properties</filename>. We are going to describe, in the next section, only the content of this file.</para>
       <note>
 	<para>If there is an (rpc-)URL property in the <filename>jndi.properties</filename>, the RMI name of the url is use instead of the <filename>carol-defaults.properties</filename> configured one (jrmp). By default, in the <filename>carol.properties</filename>, no configuration is needed.</para>
       </note>
