@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.7 1999/11/03 20:38:51 costin Exp $
- * $Revision: 1.7 $
- * $Date: 1999/11/03 20:38:51 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -635,7 +631,10 @@ public class Context {
 	request.setServletPath(result.getServletPath());
 	request.setPathInfo(result.getPathInfo());
 
-        if (result.getMappedPath() != null) {
+        if (result.getResolvedServlet() != null) {
+            request.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
+                result.getResolvedServlet());
+        } else if (result.getMappedPath() != null) {
             request.setAttribute(Constants.Attribute.RESOLVED_SERVLET,
                 result.getMappedPath());
         } else {

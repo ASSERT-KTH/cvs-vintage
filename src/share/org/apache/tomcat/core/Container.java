@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Container.java,v 1.2 1999/11/03 20:38:51 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/03 20:38:51 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -266,7 +262,7 @@ public class Container {
 	if (sw != null &&
 	    (path.length() > 0)) {
 	    if (path.startsWith("/") &&
-                path.endsWith("/*")){ 
+                path.endsWith("/*")){
 	        prefixMappedServlets.put(path, sw);
 	    } else if (path.startsWith("*.")) {
 	        extensionMappedServlets.put(path, sw);
@@ -295,7 +291,7 @@ public class Container {
     }
 
     LookupResult lookupServlet(String lookupPath) {
-        RequestMapper requestMapper = new RequestMapper();
+        RequestMapper requestMapper = new RequestMapper(this);
 
 	requestMapper.setPathMaps(pathMappedServlets);
 	requestMapper.setPrefixMaps(prefixMappedServlets);
@@ -304,7 +300,7 @@ public class Container {
 	LookupResult lookupResult =
 	    requestMapper.lookupServlet(lookupPath);
 
-	if (lookupResult == null) {
+        if (lookupResult == null) {
 	    ServletWrapper wrapper = null;
 
 	    if (defaultServlet != null) {
@@ -368,6 +364,11 @@ public class Container {
         String className, Class clazz) {
         // XXX
         // check for duplicates!
+
+        if (servlets.get(name) != null) {
+            removeServlet(name);
+            removeServletByName(name);
+        }
 
         ServletWrapper wrapper = new ServletWrapper(this);
 
@@ -439,8 +440,9 @@ public class Container {
 	    String key = (String)enum.nextElement();
 	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
 
-	    if (sw.getServletClass() != null &&
-	        sw.getServletClass().equals(name)) {
+
+            if (sw.getServletClass() != null &&
+                sw.getServletClass().equals(name)) {
 	        servletWrappers.addElement(sw);
 	    }
 	}
@@ -453,7 +455,10 @@ public class Container {
         return wrappers;
     }
 
-    private ServletWrapper[] getServletsByPath(String path) {
+    // XXX
+    // made package protected so that RequestMapper can have access
+
+    ServletWrapper[] getServletsByPath(String path) {
         Vector servletWrappers = new Vector();
 	Enumeration enum = servlets.keys();
 

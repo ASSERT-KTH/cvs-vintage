@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.4 1999/11/03 20:55:00 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/03 20:55:00 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -74,6 +70,7 @@ import java.util.Hashtable;
  */
 
 public class RequestMapper {
+    private Container container = null;
     private Hashtable prefixMaps = null;
     private Hashtable extensionMaps = null;
     private Hashtable pathMaps = null;
@@ -82,7 +79,8 @@ public class RequestMapper {
     private String pathInfo = null;
     private String resourceName = null;
 
-    RequestMapper() {
+    RequestMapper(Container container) {
+        this.container = container;
     }
 
     void setPathMaps(Hashtable pathMaps) {
@@ -103,9 +101,11 @@ public class RequestMapper {
 
 	if (wrapper != null) {
             this.mapPath = getMapPath(wrapper);
+            String resolvedServlet = getResolvedServlet(this.mapPath);
 
             lookupResult = new LookupResult(wrapper,
-                this.servletPath, this.mapPath, this.pathInfo);
+                this.servletPath, this.mapPath, this.pathInfo,
+                resolvedServlet);
         }
 
 	return lookupResult;
@@ -237,7 +237,8 @@ public class RequestMapper {
             this.resourceName = this.servletPath;
 
             while (stillSearching) {
-                if (wrapper.getPath() != null &&
+                if (wrapper != null &&
+                    wrapper.getPath() != null &&
                     wrapper.getServletClass() == null) {
                         this.resourceName = wrapper.getPath();
                         wrapper = getMatch(wrapper.getPath() +
@@ -286,7 +287,7 @@ public class RequestMapper {
             this.resourceName != null) {
             // XXX
             // hack to differentiate amongst a mapped servlet and a jsp
-            if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
+	    if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
                 mapPath = "/" + wrapper.getServletClass();
             } else {
                 mapPath = this.resourceName;
@@ -294,5 +295,17 @@ public class RequestMapper {
         }
 
         return mapPath;
+    }
+
+    private String getResolvedServlet(String path) {
+        String resolvedServlet = null;
+        ServletWrapper[] sw = this.container.getServletsByPath(path);
+
+        if (sw.length > 0) {
+            // assume one
+            resolvedServlet = sw[0].getServletName();
+        }
+
+        return resolvedServlet;
     }
 }

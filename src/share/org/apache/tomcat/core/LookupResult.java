@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LookupResult.java,v 1.1 1999/10/09 00:30:14 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:14 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -76,20 +72,25 @@ class LookupResult {
     private String servletPath = null;
     private String mappedPath = null;
     private String pathInfo = null;
+    private String resolvedServlet = null;
 
     LookupResult(ServletWrapper wrapper, String servletPath,
         String pathInfo) {
-	this.wrapper = wrapper;
-	this.servletPath = servletPath;
-	this.pathInfo = pathInfo;
+        this(wrapper, servletPath, null, pathInfo, null);
     }
 
     LookupResult(ServletWrapper wrapper, String servletPath,
         String mappedPath, String pathInfo) {
+        this(wrapper, servletPath, mappedPath, pathInfo, null);
+    }
+
+    LookupResult(ServletWrapper wrapper, String servletPath,
+        String mappedPath, String pathInfo, String resolvedServlet) {
 	this.wrapper = wrapper;
 	this.servletPath = servletPath;
 	this.mappedPath = mappedPath;
 	this.pathInfo = pathInfo;
+	this.resolvedServlet = resolvedServlet;
     }
 
     ServletWrapper getWrapper() {
@@ -106,5 +107,9 @@ class LookupResult {
 
     String getPathInfo() {
 	return pathInfo;
+    }
+
+    String getResolvedServlet() {
+	return resolvedServlet;
     }
 }
