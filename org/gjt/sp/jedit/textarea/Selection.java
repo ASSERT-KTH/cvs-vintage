@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.MiscUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.12 2003/02/07 23:23:41 spestov Exp $
+ * @version $Id: Selection.java,v 1.13 2003/03/16 05:37:52 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -443,41 +443,46 @@ public abstract class Selection implements Cloneable
 
 				buffer.remove(rectStart + lineStart,rectEnd - rectStart);
 
-				int index = 2 * (i - startLine);
-
-				int endWhitespace;
-				if(rectEnd == lineLen)
-					endWhitespace = 0;
-				else if(i - startLine >= totalLines)
-					endWhitespace = maxWidth - startColumn;
-				else
-				{
-					endWhitespace = maxWidth
-						- ((Integer)lines.get(index+1))
-						.intValue();
-				}
-
-				String str = (i - startLine >= totalLines
-					? "" : (String)lines.get(index));
 				if(startWhitespace != 0)
 				{
 					buffer.insert(rectStart + lineStart,
 						MiscUtilities.createWhiteSpace(startWhitespace,0));
 				}
 
-				buffer.insert(rectStart + lineStart + startWhitespace,str);
+				int endWhitespace;
+				if(totalLines == 0)
+				{
+					if(rectEnd == lineLen)
+						endWhitespace = 0;
+					else
+						endWhitespace = maxWidth - startColumn;
+				}
+				else
+				{
+					int index = 2 * ((i - startLine) % totalLines);
+					String str = (String)lines.get(index);
+					buffer.insert(rectStart + lineStart + startWhitespace,str);
+					if(rectEnd == lineLen)
+						endWhitespace = 0;
+					else
+					{
+						endWhitespace = maxWidth
+							- ((Integer)lines.get(index+1))
+							.intValue();
+					}
+					startWhitespace += str.length();
+				}
 
 				if(endWhitespace != 0)
 				{
 					buffer.insert(rectStart + lineStart
-						+ startWhitespace + str.length(),
+						+ startWhitespace,
 						MiscUtilities.createWhiteSpace(endWhitespace,0));
 				}
 
 				endOffset = rectStart + lineStart
 					+ startWhitespace
-					+ endWhitespace
-					+ str.length();
+					+ endWhitespace;
 			} //}}}
 
 			//{{{ Move the caret down a line

@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: Autosave.java,v 1.7 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: Autosave.java,v 1.8 2003/03/16 05:37:50 spestov Exp $
  */
 class Autosave implements ActionListener
 {
@@ -73,8 +73,7 @@ class Autosave implements ActionListener
 			+ "%"); */
 
 		// save list of open files
-		if(jEdit.getFirstView() != null)
-			jEdit.saveOpenFiles(jEdit.getFirstView());
+		PerspectiveManager.savePerspective();
 
 		Buffer[] bufferArray = jEdit.getBuffers();
 		for(int i = 0; i < bufferArray.length; i++)

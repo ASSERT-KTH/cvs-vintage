@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.12 2003/03/11 16:09:55 spestov Exp $
+ * @version $Id: Registers.java,v 1.13 2003/03/16 05:37:51 spestov Exp $
  */
 public class Registers
 {
@@ -562,25 +562,8 @@ public class Registers
 					out.write((char)i);
 				out.write("\">");
 
-				String text = register.toString();
-				for(int j = 0; j < text.length(); j++)
-				{
-					char ch = text.charAt(j);
-					switch(ch)
-					{
-					case '&':
-						out.write("&amp;");
-						break;
-					case '<':
-						out.write("&lt;");
-						break;
-					case '>':
-						out.write("&gt;");
-						break;
-					default:
-						out.write(ch);
-					}
-				}
+				out.write(MiscUtilities.charsToEntities(
+					register.toString()));
 
 				out.write("</REGISTER>");
 				out.write(lineSep);

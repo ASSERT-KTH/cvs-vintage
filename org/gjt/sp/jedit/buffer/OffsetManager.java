@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.37 2003/03/14 22:27:16 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.38 2003/03/16 05:37:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -300,7 +300,8 @@ public class OffsetManager
 		}
 		else
 		{
-			foldLevel = (foldLevel - 1) * buffer.getIndentSize() + 1;
+			if(buffer.getFoldHandler() instanceof IndentFoldHandler)
+				foldLevel = (foldLevel - 1) * buffer.getIndentSize() + 1;
 
 			/* this ensures that the first line is always visible */
 			boolean seenVisibleLine = false;

@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.13 2003/03/08 19:01:14 spestov Exp $
+ * @version $Id: EditServer.java,v 1.14 2003/03/16 05:37:51 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -171,12 +171,10 @@ public class EditServer extends Thread
 	public static void handleClient(boolean restore, String parent,
 		String[] args)
 	{
-		String splitConfig = null;
-
 		boolean newView = jEdit.getBooleanProperty("client.newView");
 
 		// we have to deal with a huge range of possible border cases here.
-		if(jEdit.getFirstView() == null || newView)
+		if(jEdit.getFirstView() == null)
 		{
 			// coming out of background mode.
 			// no views open.
@@ -184,35 +182,32 @@ public class EditServer extends Thread
 
 			Buffer buffer = jEdit.openFiles(null,parent,args);
 
-			if(restore)
+			boolean restoreFiles = restore && jEdit.getBooleanProperty("restore")
+				&& (buffer == null || jEdit.getBooleanProperty("restore.cli"));
+
+			View view = PerspectiveManager.loadPerspective(restoreFiles);
+
+			if(view == null)
 			{
-				if(jEdit.getFirstBuffer() == null
-					|| (jEdit.getFirstBuffer().isUntitled()
-					&& jEdit.getBufferCount() == 1))
-					splitConfig = jEdit.restoreOpenFiles();
-				else if(jEdit.getBooleanProperty("restore.cli"))
-				{
-					// no initial split config
-					jEdit.restoreOpenFiles();
-				}
+				if(buffer == null)
+					buffer = jEdit.getFirstBuffer();
+				view = jEdit.newView(null,buffer);
 			}
-
-			// if session file is empty or -norestore specified,
-			// we need an initial buffer
-			if(jEdit.getFirstBuffer() == null
-					|| (jEdit.getFirstBuffer().isUntitled()
-                                        && jEdit.getBufferCount() == 1))
-				buffer = jEdit.newFile(null);
-
-			if(splitConfig != null)
-				jEdit.newView(null,splitConfig);
 			else
-				jEdit.newView(null,buffer);
+				view.setBuffer(buffer);
+		}
+		else if(newView)
+		{
+			// no background mode, and opening a new view
+			Buffer buffer = jEdit.openFiles(null,parent,args);
+			if(buffer == null)
+				buffer = jEdit.getFirstBuffer();
+			jEdit.newView(jEdit.getActiveView(),buffer,false);
 		}
 		else
 		{
 			// no background mode, and reusing existing view
-			View view = jEdit.getFirstView();
+			View view = jEdit.getActiveView();
 
 			jEdit.openFiles(view,parent,args);
 
@@ -227,9 +222,6 @@ public class EditServer extends Thread
 			view.setState(java.awt.Frame.NORMAL);
 			view.requestFocus();
 			view.toFront();
-
-			// do not create a new view
-			return;
 		}
 	} //}}}
 

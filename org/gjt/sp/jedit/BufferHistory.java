@@ -28,7 +28,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.7 2003/02/11 02:31:05 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.8 2003/03/16 05:37:51 spestov Exp $
  */
 public class BufferHistory
 {
@@ -69,7 +69,7 @@ public class BufferHistory
 	{
 		max = jEdit.getIntegerProperty("recentFiles",50);
 
-		Log.log(Log.MESSAGE,jEdit.class,"Loading recent file list " + file);
+		Log.log(Log.MESSAGE,BufferHistory.class,"Loading " + file);
 
 		RecentHandler handler = new RecentHandler();
 		XmlParser parser = new XmlParser();
@@ -88,7 +88,7 @@ public class BufferHistory
 		}
 		catch(FileNotFoundException fnf)
 		{
-			Log.log(Log.DEBUG,BufferHistory.class,fnf);
+			//Log.log(Log.DEBUG,BufferHistory.class,fnf);
 		}
 		catch(Exception e)
 		{
@@ -98,6 +98,8 @@ public class BufferHistory
 
 	public static void save(File file)
 	{
+		Log.log(Log.MESSAGE,BufferHistory.class,"Saving " + file);
+
 		String lineSep = System.getProperty("line.separator");
 
 		try
@@ -120,9 +122,9 @@ public class BufferHistory
 
 				Entry entry = (Entry)enum.nextElement();
 
-				out.write("<PATH><![CDATA[");
-				out.write(entry.path);
-				out.write("]]></PATH>");
+				out.write("<PATH>");
+				out.write(MiscUtilities.charsToEntities(entry.path));
+				out.write("</PATH>");
 				out.write(lineSep);
 
 				out.write("<CARET>");

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 1999, 2000, 2001 Slava Pestov
+ * Copyright (C) 1999, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.16 2003/03/14 04:40:59 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.17 2003/03/16 05:37:51 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -327,7 +327,10 @@ public class DefaultInputHandler extends InputHandler
 			invokeAction((EditAction)o);
 		}
 		else
+		{
+			setCurrentBindings(bindings);
 			userInput(c);
+		}
 	} //}}}
 
 	//{{{ setModifierMapping() method

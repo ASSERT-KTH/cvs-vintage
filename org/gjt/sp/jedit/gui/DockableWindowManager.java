@@ -101,7 +101,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.56 2003/03/14 22:27:19 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.57 2003/03/16 05:37:51 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -897,7 +897,7 @@ public class DockableWindowManager extends JPanel
 					public void actionPerformed(ActionEvent evt)
 					{
 						jEdit.setProperty(dockable + ".dock-position",pos);
-						propertiesChanged();
+						jEdit.propertiesChanged();
 						showDockableWindow(dockable);
 					}
 				});
@@ -927,7 +927,7 @@ public class DockableWindowManager extends JPanel
 				public void actionPerformed(ActionEvent evt)
 				{
 					jEdit.setProperty(dockable + ".dock-position",FLOATING);
-					propertiesChanged();
+					jEdit.propertiesChanged();
 				}
 			});
 			popup.add(undockMenuItem);

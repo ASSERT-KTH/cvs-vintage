@@ -64,7 +64,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.133 2003/03/15 22:06:49 spestov Exp $
+ * @version $Id: Buffer.java,v 1.134 2003/03/16 05:37:50 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2165,17 +2165,6 @@ public class Buffer implements EBComponent
 		return retVal;
 	} //}}}
 
-	//{{{ getTokenMarker() method
-	/**
-	 * This method is only public so that the <code>OffsetManager</code>
-	 * class can use it.
-	 * @since jEdit 4.0pre1
-	 */
-	public TokenMarker getTokenMarker()
-	{
-		return tokenMarker;
-	} //}}}
-
 	//}}}
 
 	//{{{ Indentation
@@ -3011,6 +3000,16 @@ loop:		for(int i = 0; i < seg.count; i++)
 			end--;
 
 		return new int[] { start, end };
+	} //}}}
+
+	//{{{ getFoldHandler() method
+	/**
+	 * Returns the current buffer's fold handler.
+	 * @since jEdit 4.2pre1
+	 */
+	public FoldHandler getFoldHandler()
+	{
+		return foldHandler;
 	} //}}}
 
 	//}}}

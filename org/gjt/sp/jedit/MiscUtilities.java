@@ -66,7 +66,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.36 2003/03/15 22:06:50 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.37 2003/03/16 05:37:51 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -893,6 +893,38 @@ loop:		for(int i = 0; i < str.length(); i++)
 			return false;
 		else
 			return o1.equals(o2);
+	} //}}}
+
+	//{{{ charsToEntities() method
+	/**
+	 * Converts &lt;, &gt;, &amp; in the string to their HTML entity
+	 * equivalents.
+	 * @param str The string
+	 * @since jEdit 4.2pre1
+	 */
+	public static String charsToEntities(String str)
+	{
+		StringBuffer buf = new StringBuffer(str.length());
+		for(int i = 0; i < str.length(); i++)
+		{
+			char ch = str.charAt(i);
+			switch(ch)
+			{
+			case '<':
+				buf.append("&lt;");
+				break;
+			case '>':
+				buf.append("&gt;");
+				break;
+			case '&':
+				buf.append("&amp;");
+				break;
+			default:
+				buf.append(ch);
+				break;
+			}
+		}
+		return buf.toString();
 	} //}}}
 
 	//}}}
