@@ -1356,10 +1356,15 @@ try{
         // Don't bother running search
         StringValueParser parser = new StringValueParser();
         parser.parse(currentQueryString, '&', '=', true);
+System.out.println(currentQueryString);
         String[] userList = parser.getStrings("user_list");
+System.out.println(userList);
         if ( userList != null && userList.length > 0)
         {
+
+System.out.println("not null");
             List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
+System.out.println(getIssueIdsFromUserSearch(parser));
             if (issueIdsFromUserSearch.size() > 0)
             {
                 search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
@@ -1522,7 +1527,8 @@ try{
                    // First get results of searching across user attributes
                    Criteria attrCrit = new Criteria()
                      .add(AttributeValuePeer.USER_ID, userId)
-                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+                     .add(AttributeValuePeer.DELETED, false);
                    List attrList = IssuePeer.doSelect(attrCrit);
                    List attrIdList = new ArrayList();
                    for (int j=0; j < attrList.size(); j++)
@@ -1569,7 +1575,8 @@ try{
                    // A user attribute was selected to search on 
                    tempCrit.add(AttributeValuePeer.ATTRIBUTE_ID, attrId)
                      .add(AttributeValuePeer.USER_ID, userId)
-                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID);
+                     .addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
+                     .add(AttributeValuePeer.DELETED, false);
                    tempIssueList = IssuePeer.doSelect(tempCrit);
                }
                if (tempIssueList.size() > 0)
