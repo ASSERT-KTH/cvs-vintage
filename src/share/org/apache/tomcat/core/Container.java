@@ -422,7 +422,7 @@ public class Container implements Cloneable{
 	bi.setContext( getContext() );
 
 	if( Hooks.hasHook( bi, "registerHooks" ) ) {
-	    bi.registerHooks( hooks );
+	    bi.registerHooks( hooks, contextM, context );
 	} else {
 	    hooks.addModule( bi );
 	}

@@ -587,7 +587,7 @@ public class BaseInterceptor
      *  Most modules are added to the Hooks automatically. A module
      *  overriding this method has full control over this process.
      */
-    public int registerHooks(Hooks h) {
+    public int registerHooks(Hooks h, ContextManager cm, Context ctx) {
 	return DECLINED;
     }
 
