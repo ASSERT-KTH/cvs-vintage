@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.130 2005/03/14 04:34:54 starksm Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.131 2005/03/14 15:54:48 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -559,7 +559,10 @@
          <property name="matches">.make.state,.nse_depinfo,CVS,CVS.admin,RCS,RCSLOG,SCCS,TAGS,core,tags</property>
       </attribute>
 
+      <!-- Frequency in milliseconds to rescan the URLs for changes -->
       <attribute name="ScanPeriod">5000</attribute>
+      <!-- A flag to disable the scans -->
+      <attribute name="ScanEnabled">true</attribute>
 
       <!-- URLs are comma separated and resolve relative to the server home URL
          unless the given path is absolute. If the URL ends in "/" it is
