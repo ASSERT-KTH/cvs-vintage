@@ -640,7 +640,7 @@ try{
                 {
                     result = new ArrayList(rmas.size());
                     Iterator i = rmas.iterator();
-                    if (i.hasNext()) 
+                    while (i.hasNext()) 
                     {
                         result.add( ((RModuleAttribute)i.next()).getAttribute() );
                     }
