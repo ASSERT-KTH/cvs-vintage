@@ -39,7 +39,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -94,8 +94,7 @@ public class JAWSPersistenceManager
 
    public void create() throws Exception
    {
-      if (log.isDebugEnabled())
-         log.debug("Initializing JAWS plugin for " +
+      log.debug("Initializing JAWS plugin for " +
                 container.getBeanMetaData().getEjbName());
 
       // Set up Commands
@@ -143,8 +142,21 @@ public class JAWSPersistenceManager
 
    public void destroy()
    {
+      log.debug("destroying JAWS plugin for " +
+                container.getBeanMetaData().getEjbName());
+
       if(destroyCommand != null) // On deploy errors, sometimes JAWS was never initialized!
+      {
          destroyCommand.execute();
+      }
+      if (commandFactory != null) 
+      {
+      log.debug("destroying JAWS plugin command factory for " +
+                container.getBeanMetaData().getEjbName());
+         commandFactory.destroy();
+         commandFactory = null;
+      } // end of if ()
+      
    }
 
    public Object createBeanClassInstance() throws Exception {

@@ -10,12 +10,16 @@ package org.jboss.ejb.plugins.jaws;
  * Interface for JAWSPersistenceManager Command Factories 
  *    
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface JPMCommandFactory
 {
    // Public --------------------------------------------------------
    
+   //command factory lifecycle commands
+
+   void destroy();
+
    // lifecycle commands
    
    public JPMInitCommand createInitCommand();

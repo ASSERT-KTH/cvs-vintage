@@ -60,7 +60,7 @@ import org.jboss.util.TimerTask;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -94,6 +94,12 @@ public class JDBCCommandFactory implements JPMCommandFactory
     *  handled entities
     */
    private static TimerQueue softRefHandler;
+
+   /**
+    * The variable <code>reqQue</code> is given to the soft ref que timer, and saved
+    * here so it may be unregistered.
+    */
+   private PreloadRefQueueHandlerTask reqQue;
    
    /** Timer queue used to get references to preload data who've been GC'ed */
    private ReferenceQueue preloadRefQueue = new ReferenceQueue();
@@ -148,9 +154,17 @@ public class JDBCCommandFactory implements JPMCommandFactory
       
       tm = (TransactionManager) container.getTransactionManager();
 
-      PreloadRefQueueHandlerTask reqQue = new PreloadRefQueueHandlerTask(preloadRefQueue,
+      reqQue = new PreloadRefQueueHandlerTask(preloadRefQueue,
          preloadedData, nonTransactionalPreloadData);
       softRefHandler.schedule(reqQue);
+   }
+
+   //lifecycle -- just need this one for now.
+
+   public void destroy()
+   {
+      reqQue.cancel();
+      reqQue = null;
    }
    
    // Public --------------------------------------------------------
@@ -427,6 +441,7 @@ if (result == null)
       ReferenceQueue preloadRefQueue;
       Map preloadedData;
       Map nonTransactionalPreloadData;
+
       PreloadRefQueueHandlerTask(ReferenceQueue preloadRefQueue,
          Map preloadedData, Map nonTransactionalPreloadData)
       {
