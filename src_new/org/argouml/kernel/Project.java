@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.47 2003/01/02 11:49:31 linus Exp $
+// $Id: Project.java,v 1.48 2003/01/09 20:35:22 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,8 +196,8 @@ public class Project implements java.io.Serializable {
         model.setName("untitledModel");
         setRoot(model);
         setCurrentNamespace(model);
-        addMember(new UMLClassDiagram("class diagram 1", model));
-        addMember(new UMLUseCaseDiagram("use case diagram 1", model));
+        addMember(new UMLClassDiagram(model));
+        addMember(new UMLUseCaseDiagram(model));
         setNeedsSave(false);
     }
 
@@ -1171,6 +1171,26 @@ public class Project implements java.io.Serializable {
         addMember(root);
         addModel(root);
         
+    }
+    
+    /**
+     * Returns true if the given name is a valid name for a diagram. Valid means
+     * that it does not occur as a name for a diagram yet.
+     * @param name The name to test
+     * @return boolean True if there are no problems with this name, false if
+     * it's not valid.
+     */
+    public boolean isValidDiagramName(String name) {
+        Iterator it = getDiagrams().iterator();
+        boolean rv = true;
+        while (it.hasNext()) {
+            ArgoDiagram diagram = (ArgoDiagram)it.next();
+            if (diagram.getName().equals(name)) {
+                rv = false;
+                break;
+            }
+        }
+        return rv;
     }
 
 } /* end class Project */

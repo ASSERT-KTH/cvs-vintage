@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ProjectManager.java,v 1.3 2003/01/01 22:36:57 kataka Exp $
+// $Id: ProjectManager.java,v 1.4 2003/01/09 20:35:23 kataka Exp $
 
 package org.argouml.kernel;
 
@@ -153,8 +153,8 @@ public final class ProjectManager {
         _creatingCurrentProject = true;
         Argo.log.info("making empty project");
         Project p = new Project();
-        p.makeUntitledProject();
         setCurrentProject(p);
+        p.makeUntitledProject();        
         _creatingCurrentProject = false;
         return p;
     }

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.6 2003/01/09 19:52:15 kataka Exp $
+// $Id: ActionAddDiagram.java,v 1.7 2003/01/09 20:35:23 kataka Exp $
 
 package org.argouml.uml.ui;
 
@@ -70,6 +70,7 @@ public abstract class ActionAddDiagram extends UMLChangeAction {
             p.addMember(diagram);
             ProjectBrowser.TheInstance.getNavigatorPane().addToHistory(diagram);
             ProjectBrowser.TheInstance.setTarget(diagram);
+            ProjectBrowser.TheInstance.getNavigatorPane().forceUpdate();
             super.actionPerformed(e);
         }
     }

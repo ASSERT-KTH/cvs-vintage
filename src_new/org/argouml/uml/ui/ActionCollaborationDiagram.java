@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.13 2003/01/09 19:52:15 kataka Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.14 2003/01/09 20:35:23 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
@@ -85,8 +86,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
      */
     public boolean isValidNamespace(MNamespace ns) {
-        if (ns instanceof MCollaboration) return true;
-        return false;
+        return (ns instanceof MCollaboration || ns instanceof MClassifier || ns == ProjectManager.getManager().getCurrentProject().getModel());
     }
 
 } /* end class ActionCollaborationDiagram */
