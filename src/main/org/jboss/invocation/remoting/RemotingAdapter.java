@@ -164,8 +164,8 @@ public class RemotingAdapter
     */
    protected void internalSetServiceName() throws Exception
    {
+      // TODO remove this method
       serviceName = ObjectNameFactory.create("jboss.ejb:service=RemotingAdapter");
-      getLog().info("internalSetServiceName called: " + serviceName);
    }
 
    private Object readResolve() throws ObjectStreamException

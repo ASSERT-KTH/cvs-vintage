@@ -36,7 +36,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/6/4: yarrumretep</b>
@@ -249,7 +249,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	if(trace)
 	    trace(transaction, "WRITE (UL)");
 
-	if (!synched)
+	if (synched == null)
 	    throw new IllegalStateException("ReadWriteEJBLock: Do not call nextTransaction while not synched!");
 
 	if(writer != null && !writer.equals(transaction))

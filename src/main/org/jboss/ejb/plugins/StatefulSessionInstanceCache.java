@@ -27,12 +27,11 @@ import org.jboss.tm.TxUtils;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class StatefulSessionInstanceCache
-   extends AbstractInstanceCache
+        extends AbstractInstanceCache
 {
-   // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
    /* The container */
@@ -60,12 +59,12 @@ public class StatefulSessionInstanceCache
    /* From ContainerPlugin interface */
    public void setContainer(Container c)
    {
-      m_container = (StatefulSessionContainer)c;
+      m_container = (StatefulSessionContainer) c;
    }
 
    public void destroy()
    {
-      synchronized( this )
+      synchronized (this)
       {
          this.m_container = null;
       }
@@ -80,24 +79,31 @@ public class StatefulSessionInstanceCache
    {
       return m_container;
    }
+
    protected void passivate(EnterpriseContext ctx) throws RemoteException
    {
-      m_container.getPersistenceManager().passivateSession((StatefulSessionEnterpriseContext)ctx);
+      m_container.getPersistenceManager().passivateSession((StatefulSessionEnterpriseContext) ctx);
       m_passivated.put(ctx.getId(), new Long(System.currentTimeMillis()));
    }
+
    protected void activate(EnterpriseContext ctx) throws RemoteException
    {
-      m_container.getPersistenceManager().activateSession((StatefulSessionEnterpriseContext)ctx);
+      log.debug("**** stateful session activating: " + ctx.getId());
+      ;
+      m_container.getPersistenceManager().activateSession((StatefulSessionEnterpriseContext) ctx);
       m_passivated.remove(ctx.getId());
    }
+
    protected EnterpriseContext acquireContext() throws Exception
    {
       return m_container.getInstancePool().get();
    }
+
    protected void freeContext(EnterpriseContext ctx)
    {
       m_container.getInstancePool().free(ctx);
    }
+
    protected boolean canPassivate(EnterpriseContext ctx)
    {
       if (ctx.isLocked())
@@ -107,19 +113,11 @@ public class StatefulSessionInstanceCache
       }
       else if (m_container.getLockManager().canPassivate(ctx.getId()))
       {
-         return false;
+         return true;
       }
       else
       {
-         try
-         {
-            return TxUtils.isCompleted(ctx.getTransaction());
-         }
-         catch (SystemException e)
-         {
-            // SA FIXME: not sure what to do here
-            return false;
-         }
+         return TxUtils.isCompleted(ctx.getTransaction());
       }
    }
 
@@ -134,16 +132,16 @@ public class StatefulSessionInstanceCache
       Iterator entries = m_passivated.entrySet().iterator();
       while (entries.hasNext())
       {
-         Map.Entry entry = (Map.Entry)entries.next();
+         Map.Entry entry = (Map.Entry) entries.next();
          Object key = entry.getKey();
-         long passivationTime = ((Long)entry.getValue()).longValue();
+         long passivationTime = ((Long) entry.getValue()).longValue();
          if (now - passivationTime > maxLifeAfterPassivation)
          {
             preRemovalPreparation(key);
             store.removePassivated(key);
-            if( log.isTraceEnabled() )
+            if (log.isTraceEnabled())
                log(key);
-                // Must use iterator to avoid ConcurrentModificationException
+            // Must use iterator to avoid ConcurrentModificationException
             entries.remove();
             postRemovalCleanup(key);
          }
@@ -151,20 +149,20 @@ public class StatefulSessionInstanceCache
    }
 
    // Protected -----------------------------------------------------
-    protected void preRemovalPreparation(Object key)
-    {
-        //  no-op...extending classes may add prep
-    }
+   protected void preRemovalPreparation(Object key)
+   {
+      //  no-op...extending classes may add prep
+   }
 
-    protected void postRemovalCleanup(Object key)
-    {
-        //  no-op...extending classes may add cleanup
-    }
+   protected void postRemovalCleanup(Object key)
+   {
+      //  no-op...extending classes may add cleanup
+   }
 
    // Private -------------------------------------------------------
    private void log(Object key)
    {
-      if( log.isTraceEnabled() )
+      if (log.isTraceEnabled())
       {
          m_buffer.setLength(0);
          m_buffer.append("Removing from storage bean '");

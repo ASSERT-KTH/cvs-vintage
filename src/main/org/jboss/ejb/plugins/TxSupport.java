@@ -438,8 +438,9 @@ public abstract class TxSupport
     * on the invocation's transaction and logs any exceptions than may
     * occur.
     *
-    * @param invocation an <code>Invocation</code> value
+    * @param tx
     */
+
    protected void setRollbackOnly(Transaction tx)
    {
       try

@@ -32,27 +32,27 @@ import org.jboss.invocation.InvocationResponse;
  * on the transaction that is associated with the retrieved instance.  If
  * there is a transaction associated with the target component and it is
  * different from the transaction associated with the Invocation
- * coming in then the policy is to wait for transactional commit. 
- *   
+ * coming in then the policy is to wait for transactional commit.
+ *
  * <p>We also implement serialization of calls in here (this is a spec
  * requirement). This is a fine grained notify, notifyAll mechanism. We
  * notify on ctx serialization locks and notifyAll on global transactional
  * locks.
- *   
+ *
  * <p><b>WARNING: critical code</b>, get approval from senior developers
  * before changing.
- *    
+ *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
-      EntityContainer container = (EntityContainer)getContainer();
+      EntityContainer container = (EntityContainer) getContainer();
       Object id = null;
       EntityEnterpriseContext ctx = null;
       boolean trace = log.isTraceEnabled();
@@ -60,21 +60,21 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
       try
       {
          // Get the context from the pool or cache
-         if(invocation.getType().isHome()) 
+         if (invocation.getType().isHome())
          {
-            if(trace)
+            if (trace)
                log.trace("Begin home invoke");
             ctx = (EntityEnterpriseContext) container.getInstancePool().get();
          }
          else
          {
             id = invocation.getId();
-            if(trace)
+            if (trace)
                log.trace("Begin invoke, id=" + id);
             ctx = (EntityEnterpriseContext) container.getInstanceCache().get(id);
          }
 
-         if(ctx == null)
+         if (ctx == null)
          {
             throw new EJBException("The instance cache returned a null context");
          }
@@ -85,11 +85,11 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          // Set the current security information
          ctx.setPrincipal(invocation.getPrincipal());
 
-         // Associate transaction, in the new design the lock already has the 
+         // Associate transaction, in the new design the lock already has the
          // transaction from the previous interceptor.
-         // Don't set the transction if a read-only method.  With a read-only 
+         // Don't set the transction if a read-only method.  With a read-only
          // method, the ctx can be shared between multiple transactions.
-         if(!isReadOnlyInvocation(invocation)) 
+         if (!isReadOnlyInvocation(invocation))
          {
             ctx.setTransaction(invocation.getTransaction());
          }
@@ -101,7 +101,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
             throw (Exception) t;
          else if (t instanceof Error)
             throw (Error) t;
-         else 
+         else
             throw new UndeclaredThrowableException(t);
       }
 
@@ -110,32 +110,32 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
       {
          return getNext().invoke(invocation);
       }
-      catch(RemoteException e)
+      catch (RemoteException e)
       {
          exceptionThrown = e;
          throw e;
       }
-      catch(RuntimeException e)
+      catch (RuntimeException e)
       {
          exceptionThrown = e;
          throw e;
       }
-      catch(Error e)
+      catch (Error e)
       {
          exceptionThrown = e;
          throw e;
       }
       finally
       {
-         if(invocation.getType().isHome())
+         if (invocation.getType().isHome() && exceptionThrown == null)
          {
             // when a home invocation comes back with an id we need to insert
             // into the cache
-            if(ctx.getId() != null)
+            if (ctx.getId() != null)
             {
                // lock all access to BeanLock while we stick it in the cache
                BeanLock lock = container.getLockManager().getLock(ctx.getId());
-               lock.sync(); 
+               lock.sync();
                try
                {
                   // Check there isn't a context already in the cache
@@ -154,10 +154,10 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
                   lock.releaseSync();
                }
 
-               if(trace)
+               if (trace)
                {
-                  log.trace("End home invocation, id=" + ctx.getId() + 
-                        ", ctx=" + ctx);
+                  log.trace("End home invocation, id=" + ctx.getId() +
+                          ", ctx=" + ctx);
                }
             }
             else
@@ -167,16 +167,31 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
                }
             }
          }
-         // The current code signals that an instance should be deleted by 
+         // The current code signals that an instance should be deleted by
          // setting the context id to null.  If it is null, we need to remove
          // the context from the cache here.
-         else if(ctx.getId() == null)
+         else if (ctx.getId() == null)
          {
-            // The id from the Invocation still identifies the 
+            // The id from the Invocation still identifies the
             // right cachekey
             container.getInstanceCache().remove(id);
 
-            if(trace)
+            if (trace)
+            {
+               log.trace("Ending invoke, cache removal, ctx=" + ctx);
+            }
+            // no more pool return
+         }
+         // The current code signals that an instance should be deleted by
+         // setting the context id to null.  If it is null, we need to remove
+         // the context from the cache here.
+         else if (exceptionThrown != null && !ctx.hasTxSynchronization())
+         {
+            // The id from the Invocation still identifies the
+            // right cachekey
+            container.getInstanceCache().remove(id);
+
+            if (trace)
             {
                log.trace("Ending invoke, cache removal, ctx=" + ctx);
             }
@@ -185,7 +200,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          // All is good.  Just log it.
          else
          {
-            if(trace)
+            if (trace)
             {
                log.trace("End invoke, id=" + id + ", ctx=" + ctx);
             }
@@ -195,25 +210,25 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
 
    private boolean isReadOnlyInvocation(Invocation invocation)
    {
-      EntityContainer container = (EntityContainer)getContainer();
+      EntityContainer container = (EntityContainer) getContainer();
 
-      if(invocation.getType().isHome() || !container.isReadOnly()) 
+      if (invocation.getType().isHome() || !container.isReadOnly())
       {
          return false;
       }
 
       Method method = invocation.getMethod();
       return method == null ||
-         !container.getBeanMetaData().isMethodReadOnly(method.getName());
+              !container.getBeanMetaData().isMethodReadOnly(method.getName());
    }
 
    private void clearTxLock(Invocation invocation, Throwable t, boolean trace)
-      throws Exception
+           throws Exception
    {
       if (invocation.getType().isHome() == false && isReadOnlyInvocation(invocation) == false)
       {
          Object key = invocation.getId();
-         EntityContainer container = (EntityContainer)getContainer();
+         EntityContainer container = (EntityContainer) getContainer();
          BeanLock lock = container.getLockManager().getLock(key);
          lock.sync();
          try
@@ -223,7 +238,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
             {
                if (trace)
                   log.trace("Clearing bean lock's tx: " + tx + " key: " + key, t);
-  
+
                lock.wontSynchronize(tx);
             }
          }

@@ -131,11 +131,10 @@ public class InvokerXAResource
    }
 
 
-   //Remove this!!
+   // TODO Remove this!!
    protected void internalSetServiceName() throws Exception
    {
       serviceName = ObjectNameFactory.create("jboss.client:service=InvokerXAResource," + getIdentityNameClause());
-      getLog().info("internalSetServiceName called: " + serviceName);
    }
 
    private Object readResolve() throws ObjectStreamException

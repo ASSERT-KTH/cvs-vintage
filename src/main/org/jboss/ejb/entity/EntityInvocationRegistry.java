@@ -34,7 +34,7 @@ import org.jboss.tm.TransactionLocal;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class EntityInvocationRegistry
 {
@@ -137,6 +137,7 @@ public final class EntityInvocationRegistry
 
       // if this is an previously unseen context log it
       EntityContextKey key = new EntityContextKey(container, ctx.getId());
+      if (tx != null) ctx.setTxSynchronization(true);
       if(registry.getAssociatedMap().put(key, ctx) == null)
       {
          if(log.isTraceEnabled())
@@ -460,6 +461,7 @@ public final class EntityInvocationRegistry
 
             // The context is no longer associated witht the tx
             ctx.setTransaction(null);
+            ctx.setTxSynchronization(false);;
             try
             {
                lock.endTransaction(transaction);

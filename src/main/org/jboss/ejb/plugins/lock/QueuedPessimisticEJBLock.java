@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -68,6 +68,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       public int id = 0;
       public String threadName;
       public boolean isQueued;
+
       public TxLock(Transaction trans)
       {
          this.threadName = Thread.currentThread().toString();
@@ -159,6 +160,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             return false;
          }
          setTransaction(transaction);
+         // remember stack trace of who acquired lock
+         traceOfLockHolder = new Exception();
          return true;
       }
       finally
@@ -324,10 +327,17 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          if( trace ) log.trace("End wait on " + txLock + " " + toString());
          if (isTxExpired(miTx))
          {
-            log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
-                      // +" On method: " + mi.getMethod().getName()
-                      // +" txWaitQueue size: " + txWaitQueue.size()
-                      );
+            if (traceOfLockHolder != null)
+            {
+               log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock of Thread with the following stack trace:", traceOfLockHolder);
+            }
+            else
+            {
+               log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
+                         // +" On method: " + mi.getMethod().getName()
+                         // +" txWaitQueue size: " + txWaitQueue.size()
+                         );
+            }
             if (txLock.isQueued)
             {
                // Remove the TxLock from the queue because this thread is exiting.
@@ -354,6 +364,8 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    
       // If we get here, this means that we have the txlock
       if (!wasScheduled) setTransaction(miTx);
+      // Remember stack trace of where lock was acquired.
+      traceOfLockHolder = new Exception();
       return wasScheduled;
    }
 
@@ -367,12 +379,13 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     */
    protected void nextTransaction(boolean trace) 
    {
-      if (!synched)
+      if (synched == null)
       {
          throw new IllegalStateException("do not call nextTransaction while not synched!");
       }
 
       setTransaction(null);
+      traceOfLockHolder = null;
       this.isReadOnlyTxLock = true;
       // is there a waiting list?
       TxLock thelock = null;
@@ -386,7 +399,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          if (thelock.waitingTx != null)
             removeWaiting(thelock.waitingTx);
          setTransaction(thelock.waitingTx);
-         synchronized(thelock) 
+         synchronized(thelock)
          { 
             // notify All threads waiting on this transaction.
             // They will enter the methodLock wait loop.

@@ -60,10 +60,9 @@ public final class TrunkInvokerProxy
       serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + serverID.toObjectNameClause());
    }
 
-   //Remove this!!
+   // TODO Remove this!!
    protected void internalSetServiceName() throws Exception
    {
-      getLog().info("internalSetServiceName called: " + getServerID().toObjectNameClause());
       serviceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + getServerID().toObjectNameClause());
    }
 

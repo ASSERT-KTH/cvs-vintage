@@ -49,8 +49,8 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.40 $</tt>
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version <tt>$Revision: 1.41 $</tt>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -293,7 +293,7 @@ public class StatefulSessionFilePersistenceManager
    {
       boolean debug = log.isDebugEnabled();
       if (debug) {
-         log.debug("Attempting to activate; ctx=" + ctx);
+         log.debug("Attempting to activate; ctx=" + ctx + " id=" + ctx.getId());
       }
       
       Object id = ctx.getId();

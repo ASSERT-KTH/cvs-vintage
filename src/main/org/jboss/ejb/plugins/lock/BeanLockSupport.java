@@ -26,23 +26,26 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
 {
    protected Container container = null;
-   
+
    /** The Cachekey corresponding to this Bean */
    protected Object id = null;
- 
+
    /** Logger instance */
    static Logger log = Logger.getLogger(BeanLock.class);
- 
+
    /** Transaction holding lock on bean */
    protected Transaction tx = null;
- 
-   protected boolean synched = false;
+   /** keep track of where lock was acquired.  This exception will be used as a stack trace */
+   protected Exception traceOfLockHolder = null;
+
+   protected Thread synched = null;
+   protected int synchedDepth = 0;
 
    protected int txTimeout;
 
@@ -53,59 +56,64 @@ public abstract class BeanLockSupport
    public void setTimeout(int timeout) {txTimeout = timeout;}
    public void setContainer(Container container) { this.container = container; }
    public void setConfiguration(Element config) { this.config = config; }
-	
+
    public void sync() throws InterruptedException
    {
       synchronized(this)
       {
-         while(synched)
+         Thread thread = Thread.currentThread();
+         while(synched != null && synched.equals(thread) == false)
          {
             this.wait();
          }
-         synched = true;
+         synched = thread;
+         ++synchedDepth;
       }
    }
- 
    public void releaseSync()
    {
       synchronized(this)
       {
-         synched = false;
+         if (--synchedDepth == 0)
+            synched = null;
          this.notify();
       }
    }
- 
-   public boolean lockNoWait(Transaction transaction) throws Exception 
-   { 
-      return false; 
+
+   public boolean lockNoWait(Transaction transaction) throws Exception
+   {
+      return false;
    }
 
    public abstract void schedule(Invocation mi) throws Exception;
-	
+
    /**
     * The setTransaction associates a transaction with the lock.
     * The current transaction is associated by the schedule call.
     */
-   public void setTransaction(Transaction tx){this.tx = tx;}
+   public void setTransaction(Transaction tx)
+   {
+      this.tx = tx;
+   }
    public Transaction getTransaction(){return tx;}
-   
+
    public abstract void endTransaction(Transaction tx);
    public abstract void wontSynchronize(Transaction tx);
-	
+
    public abstract void endInvocation(Invocation mi);
-   
+
    // This following is for deadlock detection
    protected static HashMap waiting = new HashMap();
 
    public void deadlockDetection(Transaction miTx)
       throws ApplicationDeadlockException
    {
-      if (miTx == null) 
+      if (miTx == null)
          return;
 
       HashSet set = new HashSet();
       set.add(miTx);
-      
+
       Object checkTx = this.tx;
 
       synchronized(waiting)

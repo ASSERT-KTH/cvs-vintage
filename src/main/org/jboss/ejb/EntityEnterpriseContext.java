@@ -24,17 +24,18 @@ import javax.ejb.TimerService;
  *
  * @see EnterpriseContext
  * 
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
    private EJBObject ejbObject;
    private EJBLocalObject ejbLocalObject;
    private EntityContext ctx;
-	
+   private boolean hasTxSynch = false;
+
    /**
     * True if this instances' state is valid when a bean is called the state
     * is not synchronized with the DB but "valid" as long as the transaction
@@ -132,6 +133,16 @@ public class EntityEnterpriseContext extends EnterpriseContext
    public boolean isInStore()
    {
       return inStore;
+   }
+
+   public boolean hasTxSynchronization()
+   {
+      return hasTxSynch;
+   }
+
+   public void setTxSynchronization(boolean hasTxSynch)
+   {
+      this.hasTxSynch = hasTxSynch;
    }
 
    public void setInStore(final boolean inStore)

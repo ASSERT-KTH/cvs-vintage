@@ -17,7 +17,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * we will put full query caching.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class FindByPrimaryKeyInterceptor 
       extends AbstractEntityTypeInterceptor
@@ -46,10 +46,6 @@ public final class FindByPrimaryKeyInterceptor
          if(getContainer().getInstanceCache().isActive(id))
          {
                return new InvocationResponse(Collections.singleton(id));
-         }
-         else
-         {
-            return new InvocationResponse(Collections.singleton(id));
          }
       }
       return getNext().invoke(invocation);
