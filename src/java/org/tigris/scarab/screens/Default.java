@@ -62,6 +62,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
 
 /**
@@ -72,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.79 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: Default.java,v 1.80 2004/02/17 21:48:31 pledbrook Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -229,7 +230,9 @@ public class Default extends TemplateSecureScreen
             // we don't check user.hasLoggedIn() here because guest
             // users could have a role in a module.
             else if (
-                currentModule != null && !user.hasAnyRoleIn(currentModule))
+                currentModule != null && !user.hasAnyRoleIn(currentModule) 
+                     && !user.hasAnyRoleIn(
+                         ModuleManager.getInstance(Module.ROOT_ID)))
             {
                 if (Log.get().isDebugEnabled())
                 {
