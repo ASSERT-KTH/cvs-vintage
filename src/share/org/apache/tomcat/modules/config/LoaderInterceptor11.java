@@ -146,13 +146,17 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    }
 	}
 
-	ClassLoader loader=constructLoader( context );
-	context.setClassLoader( loader );
-
-	// support for jasper and other applications
-	context.setAttribute( "org.apache.tomcat.classloader",loader);
+	// needed for modules using classes from the context
+	prepareClassLoader(context);
     }
 
+    public void contextInit( Context ctx )
+	throws TomcatException
+    {
+	// jsp will add it's own stuff
+	prepareClassLoader( ctx );
+    }
+    
     /** Construct another class loader, when the context is reloaded.
      */
     public void reload( Request req, Context context) throws TomcatException {
@@ -171,6 +175,17 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
 
+    /** Initialize the class loader.
+     *  
+     */
+    public void prepareClassLoader(Context context) throws TomcatException {
+	ClassLoader loader=constructLoader( context );
+	context.setClassLoader( loader );
+
+	// support for jasper and other applications
+	context.setAttribute( "org.apache.tomcat.classloader",loader);
+    }
+    
     /** Override this method to provide an alternate loader
      *  (or create a new interceptor )
      */
