@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.49 2003/05/19 09:22:20 mkl Exp $
+// $Id: ModelFacade.java,v 1.50 2003/05/19 09:40:11 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1987,6 +1987,18 @@ public class ModelFacade {
             && mc instanceof MConstraint) {
             ((MModelElement)me).addConstraint((MConstraint)mc);
         }
+    }
+
+    /** getUMLClassName returns the name of the UML Model class, e.g. it 
+     *  it will return Class for an object of type MClass.
+     * @param handle Modelelement
+     * @return classname of modelelement
+     */
+    public static String getUMLClassName(Object handle) {
+        if (handle instanceof MModelElement) {
+            return ((MModelElement) handle).getUMLClassName();
+        }
+        return null;
     }
 
     ////////////////////////////////////////////////////////////////
