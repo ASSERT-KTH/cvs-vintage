@@ -1,11 +1,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
-#if ($module.getTemplates($user, $issueType).isEmpty())
-   #set ($noTemplates = "true")
-#else
-   #set ($noTemplates = "false")
-#end
 
 #macro (TemplateListBar $val)
 <div class="functnbar$val">
@@ -62,7 +57,7 @@
 
 <h3>Templates</h3>
 
-#if ($noTemplates.equals("true"))
+#if ($allTemplates.size() < 1)
     <p><strong class="alert">
     There are no stored templates, click the Create new button to create
     a new template.
