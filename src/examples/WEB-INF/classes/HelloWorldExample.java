@@ -1,4 +1,4 @@
-/* $Id: HelloWorldExample.java,v 1.3 2000/07/05 15:44:31 nacho Exp $
+/* $Id: HelloWorldExample.java,v 1.4 2000/07/05 18:04:52 nacho Exp $
  *
  */
 
@@ -21,16 +21,17 @@ public class HelloWorldExample extends HttpServlet {
                       HttpServletResponse response)
         throws IOException, ServletException
     {
-        ResourceBundle rb = ResourceBundle.getBundle("LocalStrings",request.getLocale());
+        ResourceBundle rb =
+            ResourceBundle.getBundle("LocalStrings",request.getLocale());
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         out.println("<html>");
         out.println("<head>");
 
-	String title = rb.getString("helloworld.title");
+	    String title = rb.getString("helloworld.title");
 
-	out.println("<title>" + title + "</title>");
+	    out.println("<title>" + title + "</title>");
         out.println("</head>");
         out.println("<body bgcolor=\"white\">");
         out.println("<body>");
@@ -42,9 +43,9 @@ public class HelloWorldExample extends HttpServlet {
 
         // XXX
         // making these absolute till we work out the
-        // addition of a PathInfo issue 
+        // addition of a PathInfo issue
 
-	out.println("<a href=\"/examples/servlets/helloworld.html\">");
+	    out.println("<a href=\"/examples/servlets/helloworld.html\">");
         out.println("<img src=\"/examples/images/code.gif\" height=24 " +
                     "width=24 align=right border=0 alt=\"view code\"></a>");
         out.println("<a href=\"/examples/servlets/index.html\">");
