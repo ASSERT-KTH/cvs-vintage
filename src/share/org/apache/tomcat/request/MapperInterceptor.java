@@ -162,7 +162,8 @@ public class MapperInterceptor  implements  RequestInterceptor {
     private ServletWrapper getPrefixMatch(Context context, String path, Request req) {
 	ServletWrapper wrapper = null;
         String s = path;
-
+	//	System.out.println("GetPrefixMatch: " + path  + " ctx=" + context.getPath());
+	
 	while (s.length() > 0) {
 	    String suffix = (s.endsWith("/")) ? "*" : "/*";
  
@@ -175,12 +176,14 @@ public class MapperInterceptor  implements  RequestInterceptor {
 		    req.setServletPath( (t.trim().length() == 0) ? null : t );
 		    t = s.substring(s.length() - 1);
 		    req.setPathInfo(  (t.trim().length() == 0) ? null : t);
+		    //    System.out.println("Mapper: pathInfo=" + t + " ctx=" + context.getPath());
 		} else {
                     String t = s;
 
 		    req.setServletPath(  (t.trim().length() == 0) ? null : t);
                     t = path.substring(s.length(), path.length());
 		    req.setPathInfo((t.trim().length() == 0) ? null : t);
+		    //		    System.out.println("Mapper: pathInfo=" + t + " ctx=" + context.getPath());
 		}
 
 		s = "";

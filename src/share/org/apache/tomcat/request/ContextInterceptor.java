@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.1 2000/01/07 19:14:15 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/07 19:14:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/ContextInterceptor.java,v 1.2 2000/01/10 19:23:56 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/10 19:23:56 $
  *
  * ====================================================================
  *
@@ -131,8 +131,9 @@ public class ContextInterceptor implements RequestInterceptor {
 	    }
 	} while (ctx == null);
 
+	// no map - root context
 	if (ctx == null) {
-	    ctx = cm.getDefaultContext();
+	    ctx = cm.getContext( "" );
 	}
 
 	return ctx;

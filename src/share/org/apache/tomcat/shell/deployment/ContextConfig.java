@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ContextConfig.java,v 1.2 1999/12/31 01:18:37 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/31 01:18:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ContextConfig.java,v 1.3 2000/01/10 19:23:57 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/10 19:23:57 $
  *
  * ====================================================================
  *
@@ -98,14 +98,11 @@ public class ContextConfig {
     }
 
     void setPath(String path) {
-        String p = path;
-
-        if (p.equals("") ||
-            p.equals("/")) {
-            p = org.apache.tomcat.core.Constants.Context.Default.Path;
-        }
-
-        this.path = p;
+	// use "/" for empty path
+	if("/".equals(path))
+	    this.path="";
+	else
+	    this.path = path;
     }
 
     public URL getDocumentBase() {

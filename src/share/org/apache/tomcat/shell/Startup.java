@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.8 2000/01/10 01:48:52 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/10 01:48:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.9 2000/01/10 19:23:57 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/01/10 19:23:57 $
  *
  * ====================================================================
  *
@@ -154,12 +154,8 @@ public class Startup {
 		    contextConfig.isWorkDirPersistent());
 		context.setIsWARValidated(contextConfig.isWARValidated());
 
-		if (contextConfig.getPath().equals(
-                    org.apache.tomcat.core.Constants.Context.Default.Path)) {
-		    contextManager.setDefaultContext(context);
-		    contextManager.setServerInfo(
-		        contextManager.getDefaultContext().getEngineHeader());
-		}
+		// no need to check if it's the "default" context ( == root contex == "/"),
+		// we treat the root as a normal context
 
 		// Register the global service and lifecycle interceptors
 		// with each new context

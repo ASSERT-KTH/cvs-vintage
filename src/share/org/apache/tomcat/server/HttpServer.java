@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.7 2000/01/08 23:24:58 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/08 23:24:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/HttpServer.java,v 1.8 2000/01/10 19:23:56 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/01/10 19:23:56 $
  *
  * ====================================================================
  *
@@ -220,19 +220,8 @@ public class HttpServer {
 	setAddress( address );
 	setHostName( hostname );
 
-	// XXX need to rewrite it !
-	// contextM may already have contexts and default context 
-	if (contextM.getDefaultContext() == null) {
-	    Context defaultContext = contextM.addContext(
-	        org.apache.tomcat.core.Constants.Context.Default.Path,
-                null);
-	    
-	    // XXX isWorkDirPersistent is false, it may be a bug
-	    // Was isWorkDirPersistent
-	    contextM.setDefaultContext(defaultContext);
-	    contextM.setServerInfo(
-	        contextM.getDefaultContext().getEngineHeader());
-	}
+	// No need to worry about root context - someone may add it later,
+	// or an exception will be thrown 
     }
 
 
@@ -415,7 +404,7 @@ public class HttpServer {
      */
 
     public Context getDefaultContext() {
-        return contextM.getDefaultContext();
+        return contextM.getContext("");
     }
 
 
@@ -482,7 +471,7 @@ public class HttpServer {
      */
 
     public void start() throws HttpServerException {
-	Context defaultContext=contextM.getDefaultContext();
+	Context defaultContext=contextM.getContext("");
 
 	if (defaultContext == null ||
 	    defaultContext.getDocumentBase() == null) {
