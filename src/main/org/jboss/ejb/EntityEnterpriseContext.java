@@ -20,7 +20,8 @@ import javax.transaction.Transaction;
  *      
  *	@see EnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public class EntityEnterpriseContext
    extends EnterpriseContext
@@ -35,9 +36,6 @@ public class EntityEnterpriseContext
 	// True if this instances' state is synchronized with the DB
    boolean synched = false;
    
-   // Set to the tx currently using this context. May be null
-   Transaction tx;
-	
 	// The instance cache may attach any metadata it wishes to this context here
    Object cacheCtx;
 	
@@ -69,16 +67,7 @@ public class EntityEnterpriseContext
 		return ejbObject; 
 	}
    
-   public void setTransaction(Transaction tx) 
-	{ 
-		this.tx = tx; 
-	}
-	
-   public Transaction getTransaction() 
-	{ 
-		return tx; 
-	}
-	
+ 
    public void setPersistenceContext(Object ctx) 
 	{ 
 		this.persistenceCtx = ctx; 

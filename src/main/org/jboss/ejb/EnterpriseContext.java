@@ -33,7 +33,8 @@ import org.jboss.logging.Logger;
  *	@see StatelessSessionEnterpriseContext
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.3 $
  */
 public abstract class EnterpriseContext
 {
@@ -48,6 +49,12 @@ public abstract class EnterpriseContext
 	
 	// Set to the synchronization currently associated with this context. May be null
    Synchronization synch;
+   
+   // The transaction associated with the call
+   Transaction transaction;
+   
+   // The principal associated with the call
+   Principal principal;
 	
    Object id; // Not used for sessions
    // Static --------------------------------------------------------
@@ -68,16 +75,27 @@ public abstract class EnterpriseContext
    public abstract void discard()
       throws RemoteException;
       
-   public void setId(Object id) 
-	{ 
+   public void setId(Object id) { 
 		this.id = id; 
 	}
 	
-   public Object getId() 
-	{ 
+   public Object getId() { 
 		return id; 
 	}
 
+   public void setTransaction(Transaction transaction) { 
+		this.transaction = transaction; 
+	}
+	
+   public Transaction getTransaction() { 
+		return transaction; 
+	}
+	
+	public void setPrincipal(Principal principal) {
+		
+		this.principal = principal;
+	}
+	
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
@@ -100,7 +118,7 @@ public abstract class EnterpriseContext
       
       public Principal getCallerPrincipal() 
 		{ 
-			throw new Error("Not yet implemented");
+			return principal;
 		}
       
       public EJBHome getEJBHome() 
