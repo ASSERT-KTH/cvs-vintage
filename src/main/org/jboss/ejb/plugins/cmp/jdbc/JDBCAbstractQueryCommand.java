@@ -32,8 +32,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
 
 /**
  * Abstract superclass of finder commands that return collections.
@@ -44,7 +44,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -83,7 +83,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          selectReadAheadCache = selectManager.getReadAheadCache();
       }
 
-      Collection results = new ArrayList();
+      List results = new ArrayList();
 
       Connection con = null;
       PreparedStatement ps = null;
@@ -151,18 +151,13 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          return results;
       }
 
-      // Convert the pk collection into finder results
-      FinderResults finderResults = new FinderResults(
-            results, queryMetaData.getReadAhead(), null, null);
-
-      // add to the cache
-      if(!queryMetaData.getReadAhead().isNone()) {
-         selectReadAheadCache.addFinderResult(finderResults);
-      }
+      // add the results list to the cache
+      JDBCReadAheadMetaData readAhead = queryMetaData.getReadAhead();
+      selectReadAheadCache.addFinderResults(results, readAhead);
 
       // If this is a finder, we're done.
       if(queryMetaData.getMethod().getName().startsWith("find")) {
-         return finderResults;
+         return results;
       }
 
       // This is an ejbSelect, so we need to convert the pks to real ejbs.
@@ -171,11 +166,11 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
          LocalProxyFactory localFactory;
          localFactory = selectContainer.getLocalProxyFactory();
 
-         return localFactory.getEntityLocalCollection(finderResults);
+         return localFactory.getEntityLocalCollection(results);
       } else {
          EJBProxyFactory factory;
          factory = selectContainer.getProxyFactory();
-         return factory.getEntityCollection(finderResults);
+         return factory.getEntityCollection(results);
       }
    }
 
