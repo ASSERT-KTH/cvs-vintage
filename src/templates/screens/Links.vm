@@ -5,7 +5,7 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
 <li><a href="$link.setPage("Register.vm")">Register.vm</a></li>
 <li><a href="$link.setPage("Login.vm")">Login.vm</a></li>
-<li><a href="$link.setPage("IssueView.vm?id=1")">IssueView.vm?id=1</a> (Added ?id=1 at the end of the URL)</li>
+<li><a href="$link.setPage("IssueView.vm").addPathInfo("id", 1)">IssueView.vm?id=1</a> (Added ?id=1 at the end of the URL)</li>
 <li><a href="$link.setPage("Search.vm")">Search.vm</a></li>
 <li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue.vm</a></li>
 <li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue.vm (no deduplicate)</a></li>
