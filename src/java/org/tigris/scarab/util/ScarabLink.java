@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.54 2002/10/10 01:53:53 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.55 2002/10/24 22:26:53 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -94,7 +94,6 @@ public class ScarabLink extends TemplateLink
     /**
      * Constructor.
      *
-     * @param data A Turbine RunData object.
      */
     public ScarabLink()
     {
@@ -363,7 +362,7 @@ public class ScarabLink extends TemplateLink
      * Text that will be returned from toString if the user did not have
      * permission to see the link.  The default is the empty string
      *
-     * @param attributeText a <code>String</code> value
+     * @param alternateText a <code>String</code> value
      * @return a <code>ScarabLink</code> value
      */
     public ScarabLink setAlternateText(String alternateText)

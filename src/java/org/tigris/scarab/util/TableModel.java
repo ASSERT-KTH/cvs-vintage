@@ -48,7 +48,6 @@ package org.tigris.scarab.util;
 
 // JDK classes
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -58,7 +57,7 @@ import java.util.Date;
  * 
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TableModel.java,v 1.3 2002/01/18 22:26:13 jon Exp $
+ * @version $Id: TableModel.java,v 1.4 2002/10/24 22:26:53 jon Exp $
  */
 public abstract class TableModel
     // implements Retrievable

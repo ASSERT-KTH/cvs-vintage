@@ -49,7 +49,6 @@ package org.tigris.scarab.util;
 // JDK classes
 import java.util.List;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -57,7 +56,6 @@ import java.util.HashMap;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RE;
-import org.apache.regexp.RESyntaxException;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -70,7 +68,7 @@ import org.tigris.scarab.om.Issue;
  * This class contains logic for finding issue ids in generic text.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueIdParser.java,v 1.2 2002/09/05 00:38:01 jmcnally Exp $
+ * @version $Id: IssueIdParser.java,v 1.3 2002/10/24 22:26:53 jon Exp $
  */
 public class IssueIdParser
 {

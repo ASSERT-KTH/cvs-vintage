@@ -65,7 +65,7 @@ import org.apache.velocity.app.event.NullSetEventHandler;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.11 2002/05/03 01:48:38 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.12 2002/10/24 22:26:53 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
@@ -101,7 +101,7 @@ public class ReferenceInsertionFilter
                )
             {
                 // we are already a String
-                result = (Object) filter((String)value);
+                result = filter((String)value);
             }
         }
         else if (
@@ -111,7 +111,7 @@ public class ReferenceInsertionFilter
                 )
         {
             // We convert the object to a string and output the result
-            result = (Object) filter(value.toString());
+            result = filter(value.toString());
         }
 /*        
         long stop = System.currentTimeMillis();

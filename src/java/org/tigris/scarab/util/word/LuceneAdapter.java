@@ -54,7 +54,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 // Turbine classes
 import org.apache.turbine.Turbine;
@@ -84,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.17 2002/10/17 00:16:13 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.18 2002/10/24 22:26:53 jon Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex

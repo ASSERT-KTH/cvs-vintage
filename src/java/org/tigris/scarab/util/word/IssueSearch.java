@@ -48,7 +48,6 @@ package org.tigris.scarab.util.word;
 
 // JDK classes
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Vector;
@@ -59,7 +58,6 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import com.workingdogs.village.Record;
-import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
@@ -68,13 +66,11 @@ import org.apache.commons.lang.StringUtils;
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
-import org.tigris.scarab.om.ROptionOptionPeer;
 import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributePeer;
@@ -83,16 +79,12 @@ import org.tigris.scarab.om.ActivitySetPeer;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.RModuleOption;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListItem;
 
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 
 
@@ -111,9 +103,6 @@ public class IssueSearch
     public static final String ANY_KEY = "any";
 
     private static final NumberKey ALL_TEXT = new NumberKey("0");
-
-    private static final String PARENT_ID = ROptionOptionPeer.OPTION1_ID;
-    private static final String CHILD_ID = ROptionOptionPeer.OPTION2_ID;
 
     // column names only
     private static final String AV_OPTION_ID = 
@@ -878,7 +867,6 @@ public class IssueSearch
     }
 
     private void addMinimumVotes(Criteria crit)
-        throws ScarabException
     {
         if ( minVotes > 0 ) 
         {
@@ -1075,14 +1063,18 @@ public class IssueSearch
      * Date and Time given in 24 hour clock MM/DD/YYYY HH:mm.  Returns null
      * if the String did not contain a suitable format
      *
-     * @param dateString a <code>String</code> value
-     * @param addTwentyFourHours if no time is given in the date string and
+     * @param s a <code>String</code> value
+     * @param patterns if no time is given in the date string and
      * this flag is true, then 24 hours - 1 msec will be added to the date.
      * @return a <code>Date</code> value
+     * @throws ParseException if input String is null
      */
     private Date parseDate(String s, String[] patterns)
         throws ParseException
     {
+        /* FIXME: the contract for this method is strange
+           it is returning a null value when encountering a ParseException,
+           and throwing a ParseException when having a wrong input*/
         Date date = null;
 
         if ( s == null ) 
@@ -1553,8 +1545,7 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = getTextMatches(attValues);
 
-        List sortedIssues = null;
-        if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+        if ( matchingIssueIds == null || matchingIssueIds.length > 0 )
         {            
             addIssueIdRange(crit);
             addCreatedDateRange(crit);
