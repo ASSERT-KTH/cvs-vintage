@@ -1,6 +1,4 @@
-
-
-// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.8 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: UMLCollaborationRepresentedOperationListModel.java,v 1.9 2003/09/04 08:04:55 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +24,7 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
@@ -67,7 +66,7 @@ public class UMLCollaborationRepresentedOperationListModel
      */
     protected boolean isValidElement(MBase elem) {
         return org.argouml.model.ModelFacade.isAOperation(elem) && 
-            ((MCollaboration) getTarget()).getRepresentedOperation() == elem;
+            ModelFacade.getRepresentedOperation(getTarget()) == elem;
     }
 
 }
