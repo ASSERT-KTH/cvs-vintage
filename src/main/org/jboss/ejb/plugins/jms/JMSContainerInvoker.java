@@ -11,9 +11,10 @@ package org.jboss.ejb.plugins.jms;
 
 import java.lang.reflect.Method;
 import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import java.util.Collection;
-import java.util.Hashtable;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionConsumer;
@@ -33,19 +34,16 @@ import javax.management.ObjectName;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.naming.Name;
 import javax.naming.NamingException;
 
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.util.TCLStack;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
@@ -65,7 +63,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.61 $</tt>
+ * @version <tt>$Revision: 1.62 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -469,7 +467,7 @@ public class JMSContainerInvoker
       Element dlqEl = MetaData.getOptionalChild(mdbConfig, "DLQConfig");
       if (dlqEl != null)
       {
-         dlqConfig = (Element)((Node)dlqEl).cloneNode(true);
+         dlqConfig = (Element)(dlqEl).cloneNode(true);
          useDLQ = true;
       }
       else
@@ -604,7 +602,7 @@ public class JMSContainerInvoker
          TopicConnection tConnection = null;
          try
          {
-            tConnection = (TopicConnection) ConnectionFactoryHelper.createTopicConnection(factory, user, password);
+            tConnection = ConnectionFactoryHelper.createTopicConnection(factory, user, password);
             connection = tConnection;
          }
          catch (ClassCastException e)
@@ -687,7 +685,7 @@ public class JMSContainerInvoker
          QueueConnection qConnection = null;
          try
          {
-            qConnection = (QueueConnection) ConnectionFactoryHelper.createQueueConnection(qFactory, user, password);
+            qConnection = ConnectionFactoryHelper.createQueueConnection(qFactory, user, password);
             connection = qConnection;
          }
          catch (ClassCastException e)
@@ -910,16 +908,15 @@ public class JMSContainerInvoker
       Invocation invocation = new Invocation(id, m, args, tx, identity, credential);
       invocation.setType(InvocationType.LOCAL);
       
-      // Set the right context classloader
-      TCLStack.push(container.getClassLoader());
-      
+      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
+      SetTCLAction.setContextClassLoader(container.getClassLoader());
       try
       {
          return container.invoke(invocation);
       }
       finally
       {
-         TCLStack.pop();
+         SetTCLAction.setContextClassLoader(oldCL);
       }
    }
    
@@ -1311,4 +1308,38 @@ public class JMSContainerInvoker
          ", dlqHandler=" + dlqHandler +
          " }";
    }   
+
+   private static class GetTCLAction implements PrivilegedAction
+   {
+      static PrivilegedAction ACTION = new GetTCLAction();
+      public Object run()
+      {
+         ClassLoader loader = Thread.currentThread().getContextClassLoader();
+         return loader;
+      }
+      static ClassLoader getContextClassLoader()
+      {
+         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
+         return loader;
+      }
+   }
+   private static class SetTCLAction implements PrivilegedAction
+   {
+      ClassLoader loader;
+      SetTCLAction(ClassLoader loader)
+      {
+         this.loader = loader;
+      }
+      public Object run()
+      {
+         Thread.currentThread().setContextClassLoader(loader);
+         loader = null;
+         return null;
+      }
+      static void setContextClassLoader(ClassLoader loader)
+      {
+         PrivilegedAction action = new SetTCLAction(loader);
+         AccessController.doPrivileged(action);
+      }
+   }
 }
