@@ -5,25 +5,26 @@
  * See terms of license at gnu.org.
  */
 package org.jboss.deployment;
-import java.io.BufferedReader;
 
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
-
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -31,24 +32,19 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
-
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.management.RuntimeMBeanException;
 import javax.management.loading.MLet;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.jboss.system.MBeanClassLoader;
-
 import org.jboss.system.Service;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.URLClassLoader;
 import org.w3c.dom.Document;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -58,10 +54,10 @@ import org.xml.sax.SAXException;
  * This is the main Service Deployer API.
  *
  * @see       org.jboss.system.Service
- * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
- * @author    <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.10 $ <p>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version   $Revision: 1.11 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -90,7 +86,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class ServiceDeployer
-       extends ServiceMBeanSupport
+       extends DeployerMBeanSupport
        implements ServiceDeployerMBean
 {
    private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
@@ -98,31 +94,15 @@ public class ServiceDeployer
 
    private ObjectName serviceControllerName;
 
-   // each url can spawn a series of MLet classloaders that are specific to it and cycled
-   private Map urlToClassLoadersSetMap;
+   //Find all the deployment info for a url
+   private Map urlToSarDeploymentInfoMap;
 
-   // each url can describe many Services, we keep the ObjectNames in here
-   // order is important so we use a list
-   private Map urlToServicesListMap;
+   //Find what packages are waiting for mbeans in depends elements
+   private Map objectNameToWaitingPackagesMap;
 
-   // To determine when we can remove a classloader, keep track of which urls reference it.
-   private Map classLoaderToUrlsSetMap;
+   //Find what package an mbean came from.
+   private Map objectNameToSupplyingPackageMap;
 
-   // To keep track of when we must undeploy depending jsrs/ *-service.xml's
-   private Map urlToPrimaryClassLoaderMap;
-
-   //To keep track of services suspended when we undeploy a jsr
-   private Map suspendedUrlDependencyMap;
-
-
-   // each url is associated with an xml document
-   private Map urlToDocumentMap;
-
-   // each url specifies a number of services it is dependent on
-   private Map urlToDependsSetMap;
-
-   // maps mbeans to the urls that are dependent on them.
-   private Map mbeanToURLSetMap;
 
    // JMX
    private MBeanServer server;
@@ -162,28 +142,12 @@ public class ServiceDeployer
             public boolean accept(File dir, String filename)
             {
                filename = filename.toLowerCase();
-               return (filename.endsWith(".jsr")
-                      || filename.endsWith(".sar")
+               return (filename.endsWith(".sar")
                       || filename.endsWith("service.xml"));
             }
          };
    }
 
-   /**
-    * Determines if the urlString references a currently deployed package
-    *
-    * @param urlString                  url string for package
-    * @return                           Whether the package is currently
-    *      deployed.
-    * @exception MalformedURLException  Thrown if a malformed url string is
-    *      supplied.
-    */
-   public boolean isDeployed(String urlString)
-          throws MalformedURLException
-   {
-      URL url = new URL(urlString);
-      return urlToClassLoadersSetMap.containsKey(url);
-   }
 
    /**
     * Deploys a package identified by a url string. This undeploys a previous
@@ -199,226 +163,312 @@ public class ServiceDeployer
     * @exception DeploymentException    Thrown if the package could not be
     *      deployed.
     */
-   public void deploy(String url)
+   public Object deploy(URL url)
           throws MalformedURLException, IOException, DeploymentException
    {
-
-      log.debug("deploying document " + url);
-
-      if (isDeployed(url))
+      SarDeploymentInfo sdi = getSdi(url, true);
+      if (sdi.state == MBEANSLOADED)
       {
-         undeploy(url);
-         log.debug("undeployed previous version of document " + url);
+         log.debug("document " + url + " is already deployed, undeploy first if you wish to redeploy");
+         return sdi;
       }
 
-      // The Document describing the service
-      Document document = null;
-
-      /**
-       * First register the classloaders for this deployment If it is a jsr, the
-       * jsr points to itself If it is a something-service.xml then it looks for
-       * <classpath><codebase>http://bla.com (or file://bla.com)</codebase>
-       * default is system library dir <archives>bla.jar, bla2.jar, bla3.jar
-       * </archives>where bla is relative to codebase</classpath>
-       */
-
-      // Support for the new packaged format
-      try
+      if (sdi.state == EMPTY || sdi.state == GHOST) 
       {
-         if (url.endsWith(".jsr")
-                || url.endsWith(".sar"))
+         deployLocalClasses(url, null, true);              
+         //Let others waiting on our classes finish deploying.
+         resolveSuspensions(url, sdi);
+      } // end of if ()
+      
+
+      if(sdi.dd != null){
+         boolean suspended = deployNeededPackages(url, sdi);
+
+         //Copy local directory if local-directory element is present
+         try 
          {
-            //use java.net.URLClassLoader here
-            ClassLoader cl = new java.net.URLClassLoader(new URL[]{new URL(url)});
-            document = getDocument("META-INF/jboss-service.xml", cl);
-            log.debug("got document jboss-service.xml from cl");
-         }
+            NodeList lds = sdi.dd.getElementsByTagName("local-directory");
+            log.debug("about to copy " + lds.getLength() + " local directories");
+            for (int i = 0; i< lds.getLength(); i++) 
+            {
+                Element ld = (Element)lds.item(i);
+                String path = ld.getAttribute("path");
+                log.debug("about to copy local directory at " + path);
+                File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
+                File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
+                //Get the url of the local copy from the classloader.
+                URL localUrl = sdi.classloader.getURLs()[0];
+                log.debug("copying from " + localUrl.toString() + path);
+                log.debug("copying to " + localBaseDir);
 
-         //no mbeans to deploy for jars
-         else if(url.endsWith(".jar")
-                   || url.endsWith(".zip"))
+                inflateJar(localUrl, localBaseDir, path);
+            } // end of for ()
+            
+
+         } catch (Exception e) 
          {
-            document = null;
-         }
+             log.error("Problem copying local directory", e);
+         } // end of try-catch
 
-         // We can deploy bare xml files as well
-         else if (url.endsWith("service.xml"))
-         {
-            document = getDocument(url, null);
-         }
-         else
-         {
-            throw new Exception("not a deployable file type");
-         }
-
-      }
-      catch (Exception ignored)
-      {
-         log.error("Problem deploying url " + url + ", no valid service.xml file found.", ignored);
-         throw new DeploymentException("No valid service.xml file found" + ignored.getMessage());
-      }
-
-      Set dependsSet = new HashSet();
-
-      if(document != null){
-         
          // Support for depends tag
-         List dependsBeans = new ArrayList();
-   
+         Collection weNeedMBeans = sdi.weNeedMBeans;
+         //get rid of old contents, might have changed...
+         weNeedMBeans.clear();
          // Attempt to parse all depends tags first, catches all errors before we get too far.
          try {
-            NodeList nl = document.getElementsByTagName("depends");
+            NodeList nl = sdi.dd.getElementsByTagName("depends");
             for (int i = 0 ; i < nl.getLength() ; i++) 	
             {
                //get object name for dependent mbean
                Element dependsElement = (Element) nl.item(i);
-               dependsBeans.add(parseObjectName(dependsElement));
+               weNeedMBeans.add(parseObjectName(dependsElement));
             }
+   
          } 
          catch(Exception e) 
          { 
             throw new DeploymentException("Error parsing depends elements.",e);
          }
-   
-         for (int i = 0 ; i < dependsBeans.size() ; i++) 	
+         Iterator names = weNeedMBeans.iterator();
+         while (names.hasNext()) 
          {
-            ObjectName objectName = (ObjectName) dependsBeans.get(i);
+            ObjectName objectName = (ObjectName) names.next();
    
             //check if mbean is registered (deployed)
             if(!server.isRegistered(objectName))
             {
                log.debug("Deployment of '"+url+"' will have to wait for mbean "+objectName);
    
-               dependsSet.add(objectName);
+               sdi.waitingForMBeans.add(objectName);
                
-               Set urlsForMBean = (Set) mbeanToURLSetMap.get(objectName);
-               if(urlsForMBean == null)
+               Set waitingPackages = (Set) objectNameToWaitingPackagesMap.get(objectName);
+               if(waitingPackages == null)
                {
-                  urlsForMBean = new HashSet();
-                  mbeanToURLSetMap.put(objectName,urlsForMBean);
+                  waitingPackages = new HashSet();
+                  objectNameToWaitingPackagesMap.put(objectName, waitingPackages);
                }
    
-               urlsForMBean.add(url);
+               waitingPackages.add(url);
+               log.debug("recorded " + url + " waiting for mbean " + objectName);
             }
+            else 
+            {
+               //record ourselves where it came from for auto-undeploy
+               URL supplyingUrl = (URL)objectNameToSupplyingPackageMap.get(objectName);        
+               if (supplyingUrl != null) 
+               {
+                   SarDeploymentInfo supplyingSdi = getSdi(supplyingUrl, false);
+                   Collection suppliedToUrls = (Collection)supplyingSdi.weSupplyMBeansTo.get(objectName);
+                   if (suppliedToUrls == null) 
+                   {
+                      suppliedToUrls = new ArrayList();
+                      supplyingSdi.weSupplyMBeansTo.put(objectName, suppliedToUrls);
+                   } // end of if ()
+                   
+                   if (!suppliedToUrls.contains(url)) 
+                   {
+                      suppliedToUrls.add(url);
+                   } // end of if ()
+               } // end of if ()
+            } // end of else
          }
+
+         //if we are suspended, we must wait till all classes are available.
+         if (!suspended) 
+         {
+            deployMBeans(url, sdi);
+         } // end of if ()
+
       }
+      return sdi;
+   }
 
-      urlToDocumentMap.put(url,document);
+   private void resolveSuspensions(URL url, SarDeploymentInfo sdi) 
+       throws DeploymentException
+   {
+      Iterator suspensions = (sdi.weSupplyClassesTo).iterator();
+      while (suspensions.hasNext()) 
+      {
+         //check if all suspension dependencies resolved and if so call
+         //deployMBeans on it.
+         URL suspendedUrl = (URL) suspensions.next();
+         SarDeploymentInfo suspendedSdi = getSdi(suspendedUrl, false);
+         if (suspendedSdi.state != SUSPENDED) 
+         {
+            throw new DeploymentException("Depending module " + suspendedUrl + " is not marked as suspended when deploying url: " + url);
+         } // end of if ()
+         
+         boolean canDeploySuspended = true;
+         Iterator others = suspendedSdi.weNeedClassesFrom.iterator();
+         while (others.hasNext()) 
+         {
+            URL otherUrl = (URL)others.next();
+            SarDeploymentInfo otherSdi = getSdi(otherUrl, false);
+            if (otherUrl != url && otherSdi.state != LOCALCLASSESLOADED
+                && otherSdi.state != CLASSESLOADED
+                && otherSdi.state != MBEANSLOADED) 
+            {
+               canDeploySuspended = false;
+               break;
+            } // end of if ()
 
+         } // end of while ()
+         if (canDeploySuspended) 
+         {
+            deployMBeans(suspendedUrl, suspendedSdi);        
+         } // end of if ()
+      } // end of while ()
+   }
+     
+
+   private void deployMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
+   {
+      log.debug("in deployMBeans for url " + url);
       LinkedList toDeploy = new LinkedList();
-
       //if we have no dependents we can deploy
-      if(dependsSet.isEmpty())
+      if(sdi.waitingForMBeans.isEmpty())
       {
          toDeploy.addLast(url);
-      }
-      else
-      {
-         urlToDependsSetMap.put(url,dependsSet);   
       }
 
       //loop, continuing to deploy until all possible deployments are made
       while(!toDeploy.isEmpty())
       {
-         url = (String) toDeploy.removeFirst();
-         document = (Document) urlToDocumentMap.remove(url);
+         URL dependingUrl = (URL) toDeploy.removeFirst();
+         log.debug("actually deploying mbeans for url " + dependingUrl); 
+         SarDeploymentInfo dependingSdi = getSdi(dependingUrl, false);
 
-         List mbeanList = null;
          try
          {
-            log.debug("Deploying '"+url+"'");
-            mbeanList = doDeployment(url,document);
+            log.debug("Deploying mbeans for '"+dependingUrl+"'");
+            addMBeans(dependingUrl, dependingSdi);
          }
          catch(Exception e)
          {
-            log.error("Error during deployment of '"+url+"'.",e);
-            mbeanList = new ArrayList();
+            log.error("Error during deployment of '"+dependingUrl+"'.",e);
          }
-
-         Iterator deployedMBeans = mbeanList.iterator();
+         log.debug("deployed " + dependingSdi.mbeans.size() + " mbeans for url " + dependingUrl);
+         Iterator deployedMBeans = dependingSdi.mbeans.iterator();
 
          //for each deployed mbean check for pending deployments waiting for it.
          while(deployedMBeans.hasNext())
          {
             ObjectName mbean = (ObjectName) deployedMBeans.next();
-            Set urlsForMBean = (Set)mbeanToURLSetMap.remove(mbean);
+            Set waitingPackages = (Set)objectNameToWaitingPackagesMap.remove(mbean);
             
-            if(urlsForMBean != null)
+            if(waitingPackages != null)
             {
                //for each pending deployment remove mbean and see whether we can now deploy
-               Iterator urls = urlsForMBean.iterator();
+               Iterator urls = waitingPackages.iterator();
                while(urls.hasNext())
                {
-                  Object nextURL = urls.next();
-                  Set setToCheck = (Set) urlToDependsSetMap.get(nextURL);						
-                  setToCheck.remove(mbean);
-                  
-                  if(setToCheck.isEmpty())
+                  URL nextUrl = (URL)urls.next();
+                  SarDeploymentInfo waitingSdi = getSdi(nextUrl, false);
+		  waitingSdi.waitingForMBeans.remove(mbean);		
+                  if(waitingSdi.waitingForMBeans.isEmpty())
                   {
-                     log.debug("Found available deployment "+nextURL+" to do.");
-                     urlToDependsSetMap.remove(nextURL); //remove from map
-                     toDeploy.addLast(nextURL);
+                     log.debug("Found available deployment "+nextUrl+" to do.");
+                     toDeploy.addLast(nextUrl);
                   }
+                  else 
+                  {
+                     log.debug("can't redeploy "+nextUrl+" yet, still " + waitingSdi.waitingForMBeans.size() + " left to wait for. " + waitingSdi.waitingForMBeans);
+                  } // end of else
+                  
 
                }
             }
+            else 
+            {
+                log.debug("no packages are waiting for mbean " + mbean);
+
+
+            } // end of else
+            
          }// for each deployed mbean...
 
       }// while we still have deployments to do
+   }
+
+   private SarDeploymentInfo deployLocalClasses(URL url, URL needsme, boolean reloadSuspended) 
+        throws DeploymentException
+   {
+      SarDeploymentInfo sdi = getSdi(url, false);
+      
+      if (reloadSuspended || sdi.state == EMPTY || sdi.state == GHOST) 
+      {
+         try 
+         {
+            log.debug("deploying document " + url);
+            File localCopy = getLocalCopy(url, null);
+            URL localUrl = localCopy.toURL();
+            String localName = localCopy.getName();//just the filename, no path
+            ArrayList jars = new ArrayList();
+            ArrayList xmls = new ArrayList();
+            File unpackedDir = recursiveUnpack(localUrl, jars, xmls);
+
+
+            /**
+             * First register the classloaders for this deployment If it is a jsr, the
+             * jsr points to itself If it is a something-service.xml then it looks for
+             * <classpath><codebase>http://bla.com (or file://bla.com)</codebase>
+             * default is system library dir <archives>bla.jar, bla2.jar, bla3.jar
+             * </archives>where bla is relative to codebase</classpath>
+             */
+         // Support for the new packaged format
+            if (localName.endsWith("service.xml"))
+            {
+               sdi.dd = getDocument(localUrl.toString(), null);
+               sdi.state = LOCALCLASSESLOADED;
+            }
+            else if (localName.endsWith(".sar"))
+            {
+               URLClassLoader cl = new URLClassLoader(new URL[] {localUrl}, url);
+               sdi.dd = getDocument("META-INF/jboss-service.xml", cl);
+               sdi.classloader = cl;
+               sdi.state = LOCALCLASSESLOADED;
+               log.debug("got document jboss-service.xml from cl");
+            }
+
+            //no mbeans to deploy for jars
+            else if(localName.endsWith(".jar")
+                   || localName.endsWith(".zip"))
+            {
+               URLClassLoader cl = new URLClassLoader(new URL[] {localUrl}, url);
+               sdi.classloader = cl;
+               sdi.state = CLASSESLOADED;
+            }
+
+            else
+            {
+               throw new Exception("not a deployable file type");
+            }
+          
+         }
+         catch (Exception ignored)
+         {
+            log.error("Problem deploying url " + url + ", no valid service.xml file found.", ignored);
+            throw new DeploymentException("No valid service.xml file found" + ignored.getMessage());
+         }
+
+      } // end of if (EMPTY)
+
+      //in any case, we may need to add dependency info
+      if ((needsme != null) && !sdi.weSupplyClassesTo.contains(needsme))
+      {
+         sdi.weSupplyClassesTo.add(needsme);   
+      } // end of if ()
+      
+      return sdi;
 
    }
 
-
-   private List doDeployment(String urlString, Document document)
-          throws MalformedURLException, IOException, DeploymentException
+   private boolean deployNeededPackages(URL url, SarDeploymentInfo sdi) throws DeploymentException
    {
-      //convert to canonical form - an URL object.
-      URL url = new URL(urlString);
-
-      // The set of classloaders for this url
-      Set classLoaders = new HashSet();
-
-      // The list of mbeans deployed by this call
-      List deployedMBeans = new ArrayList();
-      
-      /**
-       * First register the classloaders for this deployment If it is a jsr, the
-       * jsr points to itself If it is a something-service.xml then it looks for
-       * <classpath><codebase>http://bla.com (or file://bla.com)</codebase>
-       * default is system library dir <archives>bla.jar, bla2.jar, bla3.jar
-       * </archives>where bla is relative to codebase</classpath>
-       */
-
-      // Support for the new packaged format
-      try
-      {
-         if (urlString.endsWith(".jsr")
-                || urlString.endsWith(".sar")
-                || urlString.endsWith(".jar")
-                || urlString.endsWith(".zip"))
-         {
-
-            URLClassLoader cl = new URLClassLoader(new URL[]{url});
-            log.debug("got classloader for archive " + url);
-            urlToPrimaryClassLoaderMap.put(url, cl);
-            log.debug("added classloader to urlToPrimaryClassLoaderMap");
-            classLoaders.add(cl);
-            log.debug("added classloader to set of cl to register on success");
-         }
-      }
-      catch (Exception ignored)
-      {
-         log.error("Problem deploying url " + url + ", no valid service.xml file found.", ignored);
-         throw new DeploymentException("No valid service.xml file found" + ignored.getMessage());
-      }
-
-      if (document != null)
-      {
-         log.debug("found *service.xml file for url " + url);
-         // The service.xml file can define jar the classes it contains depend on
-         // We should only have one codebase (or none at all)
-         //And why is that??
-         NodeList classpaths = document.getElementsByTagName("classpath");
+      Document dd = sdi.dd;
+      Collection weNeedClassesFrom = sdi.weNeedClassesFrom;
+      weNeedClassesFrom.clear();
+         NodeList classpaths = dd.getElementsByTagName("classpath");
          for (int i = 0; i < classpaths.getLength(); i++)
          {
             Element classpath = (Element)classpaths.item(i);
@@ -437,7 +487,7 @@ public class ServiceDeployer
                if (".".equals(codebase))
                {
                   //does this work with http???
-                  codebase = new File(urlString).getParent();
+                  codebase = new File(url.getProtocol() + "://" + url.getFile()).getParent();
                }
 
                // Let's make sure the formatting of the codebase ends with the /
@@ -482,14 +532,14 @@ public class ServiceDeployer
                   {
                      File jar = jars[j];
                      URL u = jar.getCanonicalFile().toURL();
-                     log.debug("addding URLClassLoader for url " + u);
-                     URLClassLoader cl0 = new URLClassLoader(new URL[]{u});
-                     classLoaders.add(cl0);
+                     if (!weNeedClassesFrom.contains(u)) {
+                        weNeedClassesFrom.add(u);
+                     } // end of if ()
                   }
                }
                catch (Exception e)
                {
-                  e.printStackTrace();
+                  log.error("problem listing files in directory", e);
                   throw new DeploymentException(e.getMessage());
                }
             }
@@ -509,42 +559,19 @@ public class ServiceDeployer
                while (st.hasMoreTokens())
                {
                   String jar = st.nextToken().trim();
-                  String dependencyString = codebase + jar;
-                  URL dependency = new URL(dependencyString);
-                  //look to see if this package was undeployed by hand--
-                  //if so we should not try to redeploy it automatically,
-                  //we should wait till it is redeployed by hand.
-                  log.debug("Looking for suspension dependencies for url : " + dependency);
-                  Set dependents = (Set)suspendedUrlDependencyMap.get(dependency);
-                  log.debug("Looking for suspension dependencies for url : " + dependency + ", returned " + dependents);
-                  if ((dependents != null) && (dependents.size() > 0))
+                  String urlString = codebase + jar;
+                  try 
                   {
-                     //We have to wait till it's redeployed
-                     //Put in a request to be deployed ourselves.
-                     if (!dependents.contains(urlString))
+                     URL u = new URL(urlString);
+                     if (!weNeedClassesFrom.contains(u)) 
                      {
-                        dependents.add(urlString);
-                     }
-                     //may need more cleanup...
-                     urlToPrimaryClassLoaderMap.remove(url);
-                     //we'll try again later...
-                     return deployedMBeans;
-                  }
-
-                  if (!isDeployed(dependencyString))
+                        weNeedClassesFrom.add(u);
+                     } // end of if ()
+                  } catch (MalformedURLException mfue) 
                   {
-                     log.debug("recursively deploying " + dependency);
-                     deploy(dependencyString);
-                  }
-                  //This won't work if we only put into primary if deployed by hand,
-                  //not recursively
-                  //It also doesn't work if we put service.xml files in the classpath
-                  Object cl1 = urlToPrimaryClassLoaderMap.get(dependency);
-                  if (cl1 != null)
-                  {
-                     classLoaders.add(cl1);
-                  }
-               }
+                     log.error("couldn't resolve package reference: ", mfue);
+                  } // end of try-catch
+              }
             }
 
             else if (codebase.startsWith("http:"))
@@ -552,75 +579,37 @@ public class ServiceDeployer
                throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
             }
          }
-         //end loop through classpaths
+         //Ok, now we've found the list of urls we need... deploy their classes.
+         Iterator jars = weNeedClassesFrom.iterator();
+         boolean suspended = false;
+         URL neededUrl = null;
+         while (jars.hasNext())
+         {
+             try 
+             {
+                neededUrl = (URL)jars.next();
+                SarDeploymentInfo jarSdi = getSdi(neededUrl, true);
+                //find out if any of these were undeployed... if so we can't deploy them nor our mbeans
+                if (jarSdi.state == GHOST) {
+                   suspended = true;                    
+                   log.debug("did not deploy classes for " + neededUrl + ", it's a ghost, we are suspended"); 
+                } // end of if ()
+                else 
+                {
+                   deployLocalClasses(neededUrl, url, false);          
+                   log.debug("deployed classes for " + neededUrl); 
 
-         // The libraries are loaded we can now load the mbeans
-         List services = (List)urlToServicesListMap.get(url);
-         if (services == null)
-         {
-            services = Collections.synchronizedList(new ArrayList());
-            urlToServicesListMap.put(url, services);
-         }
-         NodeList nl = document.getElementsByTagName("mbean");
-         for (int i = 0; i < nl.getLength(); i++)
-         {
-   
-            Element mbean = (Element)nl.item(i);
-            log.debug("deploying with ServiceController mbean " + mbean);
-            ObjectName service = (ObjectName)invoke(getServiceControllerName(),
-                     "deploy",
-                     new Object[]{mbean},
-                     new String[]{"org.w3c.dom.Element"});
-            // marcf: I don't think we should keep track and undeploy...
-            //david jencks what do you mean by this???
-            if (service != null)
-            {
-               services.add(service);
-               deployedMBeans.add(service);
-            }
-         }
-   
-         //init the mbeans in our package
-         for (Iterator it = services.iterator(); it.hasNext(); )
-         {
-            ObjectName service = (ObjectName)it.next();
-            invoke(getServiceControllerName(),
-                     "init",
-                     new Object[]{service},
-                     new String[]{"javax.management.ObjectName"});
-   
-         }
-   
-         //iterate through services and start.
-         for (Iterator it = services.iterator(); it.hasNext(); )
-         {
-            ObjectName service = (ObjectName)it.next();
-            invoke(getServiceControllerName(),
-                     "start",
-                     new Object[]{service},
-                     new String[]{"javax.management.ObjectName"});
-   
-         }
+                } // end of else
+                
+             } catch (DeploymentException e) {
+                log.error("problem deploying classes for " + neededUrl, e);
+                 //put in list of failures TODO
+             } // end of try-catch
+             
+             
+         } // end of while ()
+         return suspended;
 
-      }// if document != null
-         
-      //We loaded Ok, register all our classloaders
-      registerClassLoaders(url, classLoaders);
-
-      //Ok, now we've loaded this jsr.  Are other packages waiting for us?
-      Set dependSet = (Set)suspendedUrlDependencyMap.remove(url);
-      if (dependSet != null)
-      {
-         Iterator dependencies = dependSet.iterator();
-         while (dependencies.hasNext())
-         {
-            String dependent = (String)dependencies.next();
-            deployedMBeans.addAll( doDeployment(dependent, (Document)urlToDocumentMap.get(dependent)) );
-            //don't care about removing from dependSet, we're throwing it away
-         }
-      }
-      
-      return deployedMBeans;
    }
 
 
@@ -640,111 +629,126 @@ public class ServiceDeployer
     * @exception DeploymentException    Thrown if the package could not be
     *      undeployed
     */
-   public void undeploy(String urlString)
+   public void undeploy(URL url, Object localurlObject)
           throws MalformedURLException, IOException, DeploymentException
    {
-      log.debug("undeploying document " + urlString);
-      URL url = new URL(urlString);
+      log.debug("undeploying document " + url, new Exception("trace"));
 
-      List services = (List)urlToServicesListMap.remove(url);
+      SarDeploymentInfo sdi = getSdi(url, false);
+      
+      //first of all, undeploy the depending (via depends tag) packages' mbeans and our mbeans.
+      undeployMBeans(url, sdi);
 
-      if (services != null)
+      //Now undeploy mbeans from packages we supply classes to.
+      //Mark them suspended.. they are waiting for our classes to come back.
+      Iterator suppliedToPackages = sdi.weSupplyClassesTo.iterator();
+      while (suppliedToPackages.hasNext()) 
       {
-
-         //stop services
-         for (Iterator iterator = services.iterator(); iterator.hasNext(); )
+         URL suppliedToPackage = (URL)suppliedToPackages.next();
+         SarDeploymentInfo suppliedToSdi = getSdi(suppliedToPackage, false);
+         if (suppliedToSdi.state == MBEANSLOADED) 
          {
-            ObjectName name = (ObjectName)iterator.next();
-            invoke(getServiceControllerName(),
-                     "stop",
-                     new Object[]{name},
-                     new String[]{"javax.management.ObjectName"});
+            undeployMBeans(suppliedToPackage, suppliedToSdi);
+            suppliedToSdi.state = SUSPENDED;
+         } // end of if ()
+         
+      } // end of while ()
 
-         }
-
-         //destroy services
-         for (Iterator iterator = services.iterator(); iterator.hasNext(); )
-         {
-            ObjectName name = (ObjectName)iterator.next();
-            invoke(getServiceControllerName(),
-                     "destroy",
-                     new Object[]{name},
-                     new String[]{"javax.management.ObjectName"});
-
-         }
-
-         Iterator iterator = services.iterator();
-         while (iterator.hasNext())
-         {
-            ObjectName name = (ObjectName)iterator.next();
-            log.debug("undeploying mbean " + name);
-            invoke(getServiceControllerName(),
-                     "undeploy",
-                     new Object[]{name},
-                     new String[]{"javax.management.ObjectName"});
-         }
-      }
-
-      //now remove the classloaders we set up
-      Set classLoaderSet = (Set)urlToClassLoadersSetMap.remove(url);
-      if (classLoaderSet != null)
+      //Now tell packages we need classes from we are leaving: 
+      //if they are ghosts (undeployed but remembering we need them)
+      //and we are the last dependency, we can forget about them completely.
+      //if they are not explicitly deployed (use parents isDeployed), 
+      //and we are the last dependency, we can undeploy them also.
+      Iterator weNeedClassesFrom = sdi.weNeedClassesFrom.iterator();
+      while (weNeedClassesFrom.hasNext()) 
       {
-
-         Iterator iterator = classLoaderSet.iterator();
-         while (iterator.hasNext())
+         URL packageWeUse = (URL)weNeedClassesFrom.next();
+         SarDeploymentInfo packageWeUseInfo = getSdi(packageWeUse, false);
+         packageWeUseInfo.weSupplyClassesTo.remove(url);
+         //if we're the last dependency for that package...
+         if (packageWeUseInfo.weSupplyClassesTo.isEmpty()) 
          {
-            //Need to see if we are the only user of this classloader- if not, don't remove.
-            URLClassLoader cl = (URLClassLoader)iterator.next();
-            log.debug("considering undeploying classloader " + cl);
-            HashSet urls = (HashSet)classLoaderToUrlsSetMap.get(cl);
-            if (urls == null)
+            //and it was undeployed
+            if (packageWeUseInfo.state == GHOST) 
             {
-               throw new DeploymentException("No urls for a classloader from url!! url: " + url + ", classloader: " + cl);
-            }
-            log.debug("set of urls for classloader: " + urls);
-            urls.remove(url);
-            //if this is a primary cl, we force undeploy of depending urls
-            if (cl.equals(urlToPrimaryClassLoaderMap.get(url)))
+               //bye bye
+               urlToSarDeploymentInfoMap.remove(packageWeUse);
+            } // end of if ()
+            //or if it was implicitly deployed through a classpath
+            else if (!isDeployed(packageWeUse.toString())) //getFile???
             {
-               urlToPrimaryClassLoaderMap.remove(url);
-               Set suspended = (Set)suspendedUrlDependencyMap.get(url);
-               log.debug("making suspended set for url " + url);
-               if (suspended == null)
-               {
-                  suspended = new HashSet();
-                  suspendedUrlDependencyMap.put(url, suspended);
-               }
-               Iterator dependencies = ((Set)urls.clone()).iterator();
-               while (dependencies.hasNext())
-               {
-                  URL dependentUrl = (URL)dependencies.next();
-                  log.debug("undeploying dependent url: " + dependentUrl);
-                  suspended.add(dependentUrl);
-                  undeploy(dependentUrl.toString());
-               }
-            }
+               //bye bye
+               undeploy(packageWeUse, null);
+                //urlToSarDeploymentInfoMap.remove(packageWeUse);                
+            } // end of if ()
+         } // end of if ()
+         
+         
+      } // end of while ()
+      //Ok, we're done with upwards and downwards dependencies: 
+      //we can decide if we're a ghost, and remove our classloader, and maybe ourselves.
+      ServiceLibraries.getLibraries().removeClassLoader(sdi.classloader);
 
-            if (urls.size() == 0)
+      sdi.classloader = null;
+      if (sdi.weSupplyClassesTo.isEmpty()) 
+      {
+         //no one is using us, we can disappear without a trace
+         urlToSarDeploymentInfoMap.remove(url);
+      } // end of if ()
+      else 
+      {
+         //someone is still suspended on us, we turn into a ghost so they
+         //can be deployed if we are redeployed.
+         sdi.state = GHOST;         
+      } // end of else
+      //Hey, man, we're all cleaned up!
+   }
+      
+
+   private void undeployMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
+   {
+      log.debug("undeployMBeans: url " + url + " mbean count " + sdi.mbeans.size());
+      Iterator mbeans = sdi.mbeans.iterator();
+      while (mbeans.hasNext()) 
+      {
+         ObjectName suppliedMBean = (ObjectName)mbeans.next();
+         //Who is relying on this?
+         Collection dependingUrlList = (Collection)sdi.weSupplyMBeansTo.remove(suppliedMBean);
+         if (dependingUrlList != null) //could be no one is 
+         {
+            Iterator dependingUrls = dependingUrlList.iterator();
+            while (dependingUrls.hasNext()) 
             {
-               //last one, we can remove it if we auto-deployed it
-               log.debug("actually undeploying classloader " + cl);
-               classLoaderToUrlsSetMap.remove(cl);
-               try
+               URL dependingUrl = (URL)dependingUrls.next();
+               SarDeploymentInfo dependingSdi = getSdi(dependingUrl, false);
+               //tell it to wait for this mbean
+               if (!dependingSdi.waitingForMBeans.contains(suppliedMBean)) 
                {
-                  ServiceLibraries.getLibraries().removeClassLoader(cl);
-               }
-               catch (Exception e)
+                  dependingSdi.waitingForMBeans.add(suppliedMBean);
+               } // end of if ()
+               //if its mbeans are loaded, unload them
+               if (dependingSdi.state == MBEANSLOADED) 
                {
-                  log.error("problem removing classloader " + cl, e);
-               }
-            }
-            else 
-            {
-               log.debug("not undeploying classloader " + cl + ", remaining urls: " + urls);
-            }
+                  undeployMBeans(dependingUrl, dependingSdi);
+                  //Remember they are waiting for this mbean
+                  Set waitingPackages = (Set) objectNameToWaitingPackagesMap.get(suppliedMBean);
+                  if(waitingPackages == null)
+                  {
+                     waitingPackages = new HashSet();
+                     objectNameToWaitingPackagesMap.put(suppliedMBean, waitingPackages);
+                  }
+                  waitingPackages.add(dependingUrl);
+               } // end of if ()
+               
+               
+            } // end of while ()
             
-         }
-      }
+         } // end of if ()
+         
+         
+      } // end of while ()
+      //Now we've unloaded depending mbeans, we can remove our own for real.
+      removeMBeans(url, sdi);
    }
 
    /**
@@ -759,8 +763,9 @@ public class ServiceDeployer
           throws java.lang.Exception
    {
 
-      log.debug("About to load the CLassPath");
+      log.debug("ServiceDeployer preregistered with mbean server");
       this.server = server;
+      super.initService();//set up the deploy temp directory
 
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
@@ -780,16 +785,11 @@ public class ServiceDeployer
       {
 
          //Encapsulate with a ServiceClassLoader
-         urlToClassLoadersSetMap = Collections.synchronizedMap(new HashMap());
-         urlToServicesListMap = Collections.synchronizedMap(new HashMap());
-         classLoaderToUrlsSetMap = Collections.synchronizedMap(new HashMap());
-         urlToPrimaryClassLoaderMap = Collections.synchronizedMap(new HashMap());
-         suspendedUrlDependencyMap = Collections.synchronizedMap(new HashMap());
 
-         // depends maps
-         urlToDocumentMap = Collections.synchronizedMap(new HashMap());
-         urlToDependsSetMap = Collections.synchronizedMap(new HashMap());
-         mbeanToURLSetMap = Collections.synchronizedMap(new HashMap());
+         urlToSarDeploymentInfoMap = new HashMap();//does sync do any good? deploy and undeploy are synchronized in parent class.
+         objectNameToWaitingPackagesMap = new HashMap();
+         objectNameToSupplyingPackageMap = new HashMap();
+
 
 
          //Initialize the libraries for the server by default we add the libraries in lib/services
@@ -810,7 +810,7 @@ public class ServiceDeployer
 
          }
 
-         doDeployment(urlString,document);
+         deploy(new URL(urlString));
       }
       catch (Exception e)
       {
@@ -880,46 +880,97 @@ public class ServiceDeployer
    }
 
    // Private --------------------------------------------------------
+    private void addMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
+    {
+        log.debug("addMBeans: url " + url);
+       List mbeans = sdi.mbeans;
+       mbeans.clear();
+       NodeList nl = sdi.dd.getElementsByTagName("mbean");
+       for (int i = 0; i < nl.getLength(); i++)
+       {
 
-   private void registerClassLoaders(URL url, Set classLoaders)
+          Element mbean = (Element)nl.item(i);
+          log.debug("deploying with ServiceController mbean " + mbean);
+          ObjectName service = (ObjectName)invoke(getServiceControllerName(),
+                   "deploy",
+                   new Object[]{mbean},
+                   new String[]{"org.w3c.dom.Element"});
+          // marcf: I don't think we should keep track and undeploy...
+          //david jencks what do you mean by this???
+          if (service != null)
+          {
+             mbeans.add(service);
+             objectNameToSupplyingPackageMap.put(service, url);
+          }
+       }
+   
+       //init the mbeans in our package
+       for (Iterator it = mbeans.iterator(); it.hasNext(); )
+       {
+          ObjectName service = (ObjectName)it.next();
+          invoke(getServiceControllerName(),
+                   "init",
+                   new Object[]{service},
+                   new String[]{"javax.management.ObjectName"});
+   
+       }
+   
+       //iterate through services and start.
+       for (Iterator it = mbeans.iterator(); it.hasNext(); )
+       {
+          ObjectName service = (ObjectName)it.next();
+          invoke(getServiceControllerName(),
+                   "start",
+                   new Object[]{service},
+                   new String[]{"javax.management.ObjectName"});
+      }
+      sdi.state = MBEANSLOADED;
+   }
+
+
+   private void removeMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
    {
+      log.debug("removeMBeans: url " + url);
+      List services = sdi.mbeans;
+      int lastService = services.size();
 
-      try
+      //stop services
+      ListIterator iterator = services.listIterator(lastService);
+      while (iterator.hasPrevious())
       {
-         /*
-          * log.debug("=====================");
-          * log.debug("registering classloaders for url: " + url);
-          * Iterator cls0 = classLoaders.iterator();
-          * while (cls0.hasNext())
-          * {
-          * log.debug("classloader for url: " + ((URLClassLoader)cls0.next()).getURL());
-          * }
-          * log.debug("=====================");
-          */
-         urlToClassLoadersSetMap.put(url, classLoaders);
-         //need a classloader to url set map too, to keep track of
-         //when we can unload a classloader.
-         Iterator cls = classLoaders.iterator();
-         while (cls.hasNext())
-         {
-            URLClassLoader cl = (URLClassLoader)cls.next();
-            Set urls = (Set)classLoaderToUrlsSetMap.get(cl);
-            log.debug("urls for classloader " + cl + ", url: " + cl.getURL() + " are " + urls);
-            if (urls == null)
-            {
-               log.debug("creating new urls for classLoaderToUrlSetMap, cl: " + cl);
-               urls = new HashSet();
-               classLoaderToUrlsSetMap.put(cl, urls);
-            }
-            urls.add(url);
-            log.debug("added to classLoaderToUrlsSetMap cl: " + cl + ", url: " + url);
-         }
+         ObjectName name = (ObjectName)iterator.previous();
+         invoke(getServiceControllerName(),
+                "stop",
+                new Object[]{name},
+                new String[]{"javax.management.ObjectName"});
 
       }
-      catch (Exception e)
+
+      //destroy services
+      iterator = services.listIterator(lastService);
+      while (iterator.hasPrevious())
       {
-         log.error("Problem registering classloader for url " + url, e);
+          ObjectName name = (ObjectName)iterator.previous();
+          invoke(getServiceControllerName(),
+                 "destroy",
+                 new Object[]{name},
+                 new String[]{"javax.management.ObjectName"});
+
       }
+
+      iterator = services.listIterator(lastService);
+      while (iterator.hasPrevious())
+      {
+         ObjectName name = (ObjectName)iterator.previous();
+         log.debug("undeploying mbean " + name);
+         invoke(getServiceControllerName(),
+                 "undeploy",
+                 new Object[]{name},
+                 new String[]{"javax.management.ObjectName"});
+         //we don't supply it any more, maybe someone else will later.
+         objectNameToSupplyingPackageMap.remove(name);
+      }
+      sdi.state = CLASSESLOADED;
    }
 
    /**
@@ -944,8 +995,7 @@ public class ServiceDeployer
    }
 
 
-   /* Calls server.invoke, unwraps exceptions, and returns 1 if 
-    * invoke succeeded and 0 if invoke failed (for ease in counting)
+   /* Calls server.invoke, unwraps exceptions, and returns server output
     */
    private Object invoke(ObjectName name, String method, Object[] args, String[] sig) 
    {
@@ -991,6 +1041,46 @@ public class ServiceDeployer
       }
       return serviceControllerName;
    }
+
+   private SarDeploymentInfo getSdi(URL url, boolean createIfMissing) throws DeploymentException
+   {
+      SarDeploymentInfo sdi = (SarDeploymentInfo)urlToSarDeploymentInfoMap.get(url);
+      if (sdi == null)
+      {
+         if (createIfMissing)
+         {
+            sdi = new SarDeploymentInfo();
+            urlToSarDeploymentInfoMap.put(url, sdi);          
+         } // end of if ()
+         else 
+         {
+            throw new DeploymentException(url + " is not deployed as expected");
+         } // end of else
+      }
+      return sdi;
+   }
+
+   private static final int EMPTY = 0;
+   private static final int LOCALCLASSESLOADED = 1;
+   private static final int CLASSESLOADED = 2;
+   private static final int MBEANSLOADED = 3;
+   private static final int SUSPENDED = 4;
+   private static final int GHOST = 5; //undeployed but packages are suspended on us.
+
+
+   private static class SarDeploymentInfo
+   {
+      public URLClassLoader classloader;
+      public Collection weNeedClassesFrom = new ArrayList();
+      public Collection weSupplyClassesTo = new ArrayList();
+      public Collection weNeedMBeans = new ArrayList();
+      public Map weSupplyMBeansTo = new HashMap();
+      public Set waitingForMBeans = new HashSet();
+      public List mbeans = new ArrayList();
+      public Document dd;
+      public int state = EMPTY;
+   }
+
 
 }
 

@@ -29,7 +29,7 @@ import javax.management.loading.MLet;
  *    resources and classes.
  *
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -40,10 +40,15 @@ public class URLClassLoader
    extends java.net.URLClassLoader
    implements URLClassLoaderMBean
 {
-   /** One URL per classLoader in our case */
-   private URL url = null;
+   /** One URL per classLoader in our case 
+    * This is just a key used for identifying the classloader,
+    * nothing is actually loaded from it.  Classes and resources are 
+    * loaded from local copies or unpacked local copies.
+    */   
+   private URL keyUrl = null;
+
    /** An SCL can also be loading on behalf of an MBean */
-   private ObjectName mbean = null;
+    //private ObjectName mbean = null; not used
 	
    /** All SCL are just in orbit around a basic ServiceLibraries */
    private static ServiceLibraries libraries;
@@ -54,38 +59,33 @@ public class URLClassLoader
 	* @param String application
 	* @param ClassLoader parent
 	*/
-	public URLClassLoader( String pUrl )
-	{
+    /*public URLClassLoader( String pUrl )
+   {
       super( new URL[] {} );
       try {
          URL lUrl = new URL( pUrl );
          addURL( lUrl );
-         this.url = lUrl;
+         this.keyUrl = lUrl;
       }
       catch( Exception e ) {
-			System.out.println("[GPA] WARNING: URL "+url+" is not valid");
+         System.out.println("[GPA] WARNING: URL "+keyUrl+" is not valid");
       }
-      
-		try {
+      try {
 			
-			url.openStream();
+         //url.openStream();
 			
 			
-			if (libraries == null) libraries = ServiceLibraries.getLibraries();
+         if (libraries == null) libraries = ServiceLibraries.getLibraries();
 			
-/*
-			//Reload the library if necessary
-			if (reload) 
-					libraries.removeClassLoader(this) ;
-*/
 
-			// A URL enabled SCL must register itself with the libraries to be queried
-			libraries.addClassLoader(this);
-		}
-		catch(Exception e) { 
-			System.out.println("[GPA] WARNING: URL "+url+" could not be opened");
-		}
-	}
+         // A URL enabled SCL must register itself with the libraries to be queried
+         libraries.addClassLoader(this);
+      }
+      catch(Exception e) 
+      { 
+         System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
+      }
+      }*/
 	
    /**
     * One url per SCL
@@ -94,15 +94,15 @@ public class URLClassLoader
     * @param ClassLoader parent
     */
 	
-   public URLClassLoader(URL[] urls)
+   public URLClassLoader(URL[] urls, URL keyUrl)
    {
 		
       super(urls);
 		
-      this.url = urls[0];
+      this.keyUrl = keyUrl;
 		
       try {
-         url.openStream();
+          //url.openStream();
 			
          if (libraries == null) {
             libraries = ServiceLibraries.getLibraries();
@@ -119,12 +119,12 @@ public class URLClassLoader
          libraries.addClassLoader(this);
       }
       catch(Exception e) { 
-         System.out.println("[GPA] WARNING: URL "+url+" could not be opened");
+         System.out.println("[GPA] WARNING: URL "+keyUrl+" could not be opened");
       }
    }
 
-   public URL getURL() {
-      return url;
+   public URL getKeyURL() {
+      return keyUrl;
    }
 	
    /**
@@ -187,10 +187,10 @@ public class URLClassLoader
 	
    public InputStream getResourceAsStream(String name) {
       try {
-         URL url = getResource(name);
+         URL resourceUrl = getResource(name);
 			
-         if (url != null) {
-            return url.openStream();
+         if (resourceUrl != null) {
+            return resourceUrl.openStream();
          }
       } catch (Exception ignore) {}
       
@@ -199,15 +199,20 @@ public class URLClassLoader
 	
    public int hashCode() 
    {
-      return url.hashCode();
+      return keyUrl.hashCode();
    }
 	
    public boolean equals(Object other) 
    {
       if (other instanceof URLClassLoader) 
       {
-         return ((URLClassLoader) other).getURL().equals(url);
+         return ((URLClassLoader) other).getKeyURL().equals(keyUrl);
       }
       return false;
+   }
+
+   public String toString()
+   {
+      return "JBoss URLClassloader: keyURL : " + getKeyURL() + ", URLS: " + getURLs();
    }
 }

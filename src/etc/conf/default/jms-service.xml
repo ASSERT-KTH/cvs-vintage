@@ -5,8 +5,12 @@
   <depends>JBOSS-SYSTEM:service=Naming</depends>
   <depends>JBossMQ:service=Server</depends>
   <depends>JBOSS-SYSTEM:service=TransactionManager</depends>
+  <depends>JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory</depends>
+  <depends>JCA:service=RARDeployer</depends>
 
-  <classpath archives="jbosscx.sar"/>
+ 
+<!--rely on ConnectionFactoryLoader packages with ConnectionManagerFactoryLoader-->
+  <!--classpath codebase="." archives="jbosscx.sar"/-->
 
   <!-- ==================================================================== -->
   <!-- JMS Stuff                                                       -->

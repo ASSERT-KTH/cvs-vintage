@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.30 2001/09/16 05:27:44 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.31 2001/09/26 21:47:03 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -558,6 +558,8 @@ os.version:      ${os.version}
         <include name="org/jboss/deployment/ServiceDeployerMBean.class"/>
         <include name="org/jboss/deployment/ServiceDeployer**.class"/>
         <include name="org/jboss/deployment/DeployerMBean.class"/>
+        <include name="org/jboss/deployment/DeployerMBeanSupport.class"/>
+        <include name="org/jboss/deployment/DeployerMBeanSupport**.class"/>
         <include name="org/jboss/deployment/DeploymentException.class"/>
       </fileset>
     </jar>
@@ -605,8 +607,8 @@ os.version:      ${os.version}
       <fileset dir="${build.resources}/org/jboss/verifier"/>
     </jar>
 
-    <!-- Build jmx-rmi-connector-server.jsr (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-rmi-connector-server.jsr">
+    <!-- Build jmx-rmi-connector-server.sar (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-rmi-connector-server.sar">
          <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
@@ -644,8 +646,8 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build jmx-ejb-connector-server.jsr (should try to use jlink for this)--> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector-server.jsr">
+    <!-- Build jmx-ejb-connector-server.sar (should try to use jlink for this)--> 
+    <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar">
          <!-- manifest="${build.etc}/ejb-connector-server.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -656,9 +658,9 @@ os.version:      ${os.version}
       </fileset>
     </jar>
 
-    <!-- Build jmx-html-adaptor.jsr (should try to use jlink for this)--> 
+    <!-- Build jmx-html-adaptor.sar (should try to use jlink for this)--> 
     <unjar src="${sun.jmx.lib}/jmxtools.jar" dest="${build.classes}"/>
-    <jar jarfile="${build.lib}/jmx-html-adaptor.jsr">
+    <jar jarfile="${build.lib}/jmx-html-adaptor.sar">
          <!-- manifest="${build.etc}/rmiconnector.mf"> -->
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/interfaces/**"/>
@@ -741,9 +743,17 @@ os.version:      ${os.version}
     </jar>
 
     <!-- Build jms-ra.rar -->
-    <jar jarfile="${build.lib}/jms-ra.rar">
+    <!-- First build the inside jar -->
+    <jar jarfile="${build.lib}/jms-ra.jar">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jms/ra/**"/>
+      </fileset>
+    </jar>
+
+    <!-- Now build the rar containing the jar and the ra.xml -->
+    <jar jarfile="${build.lib}/jms-ra.rar">
+      <fileset dir="${build.lib}">
+        <include name="jms-ra.jar"/>
       </fileset>
       <fileset dir="${build.resources}/org/jboss/jms/ra/">
         <include name="**"/>

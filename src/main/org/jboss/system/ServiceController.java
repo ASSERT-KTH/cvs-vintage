@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.7 $ <p>
+ * @version $Revision: 1.8 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -229,15 +229,12 @@ public class ServiceController
     */
    public void undeploy(ObjectName objectName) throws Exception
    {
-      if (log.isDebugEnabled()) {
-         log.debug("undeploying " + objectName + "from server");
-      }
       
       // Do we have a deployed MBean?
       if (server.isRegistered(objectName))
       {
          if (log.isDebugEnabled()) {
-            log.debug("undeploying " + objectName + "from server");
+            log.debug("undeploying " + objectName + " from server");
          }
          
          //Remove from local maps
@@ -252,6 +249,14 @@ public class ServiceController
             new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
          server.unregisterMBean(loader);
       }
+      else 
+      {
+         if (log.isDebugEnabled()) {
+            log.debug("no need to undeploy " + objectName + " from server");
+         }
+
+      } // end of else
+      
    }
 
    // MBeanRegistration implementation ----------------------------------------

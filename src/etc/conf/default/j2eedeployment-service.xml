@@ -10,7 +10,7 @@
   <!-- ==================================================================== -->
 
   <mbean code="org.jboss.ejb.ContainerFactory"
-	 name=":service=ContainerFactory">
+	 name="JBOSS-SYSTEM:service=ContainerFactory">
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
@@ -37,5 +37,12 @@
     <attribute name="WarDeployerName">JBOSS-SYSTEM:service=Jetty</attribute>
   </mbean>
   -->
+  <!-- ==================================================================== -->
+  <!-- RAR deployment                                                      -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.resource.RARDeployer" 
+	 name="JCA:service=RARDeployer">
+  </mbean>
 
 </server>

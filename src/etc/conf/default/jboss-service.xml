@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.12 2001/09/12 23:06:40 dmaplesden Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.13 2001/09/26 21:47:04 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -33,21 +33,12 @@
   <classpath archives="
   	 castor.jar,
 	 castor-jdo-plugin.jar,
-	 org.mortbay.jetty.jar,
-	 org.mortbay.jetty.jmx.jar,
-	 org.mortbay.tools.jar,
 	 concurrent.jar,
-	 crimson.jar,
-	 cryptix-sasl-jetty.jar,
 	 gnu-regexp.jar,
-	 hsql.jar, 
-	 hsql-plugin.jar,
 	 jaas.jar,
-	 javac.jar,
 	 JavaGroups.jar,
 	 javax.servlet.jar,
 	 javax-sasl.jar,
-	 jaxp.jar,
 	 jbossha.jar,
 	 jboss-j2ee.jar,
 	 jboss.jar,
@@ -55,7 +46,6 @@
 	 jbosspool.jar,
 	 jbosssx.jar,
 	 jcert.jar,
-	 jetty-plugin.jar,
 	 jmxtools.jar,
 	 jndi.jar,
 	 jnet.jar,
@@ -66,19 +56,85 @@
 	 jsse.jar,
 	 jts.jar,
 	 mail.jar,
-	 org.apache.jasper.jar,
 	 RARDeployer.jar,
 	 tyrex.jar,
 	 tyrex-tm-plugin.jar,
 	 xalan.jar"/>
 
+
   <!-- ==================================================================== -->
-  <!-- Auto deployment                                                      -->
+  <!-- Class Loading                                                        -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.resource.RARDeployer" 
-	 name="JCA:service=RARDeployer">
+  <mbean code="org.jboss.web.WebService"
+	 name="JBOSS-SYSTEM:service=Webserver">
+    <attribute name="Port">8083</attribute>
+    <!-- Should resources and non-EJB classes be downloadable -->
+    <attribute name="DownloadServerClasses">true</attribute>
   </mbean>
+
+  <!-- ==================================================================== -->
+  <!-- JNDI                                                                 -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.naming.NamingService"
+	 name="JBOSS-SYSTEM:service=Naming">
+    <attribute name="Port">1099</attribute>
+  </mbean>
+  <mbean code="org.jboss.naming.JNDIView" 
+	 name="JBOSS-SYSTEM:service=JNDIView"/>
+
+  <!-- ==================================================================== -->
+  <!-- Security                                                             -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.security.plugins.SecurityConfig"
+	 name="Security:name=SecurityConfig">
+    <attribute name="AuthConf">auth.conf</attribute>
+  </mbean>
+
+  <!-- JAAS security manager and realm mapping -->
+  <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
+	 name="Security:name=JaasSecurityManager">
+    <attribute name="SecurityManagerClassName">
+      org.jboss.security.plugins.JaasSecurityManager
+    </attribute>
+  </mbean>
+
+  <!-- ==================================================================== -->
+  <!-- Transactions                                                         -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.tm.TransactionManagerService" 
+	 name="JBOSS-SYSTEM:service=TransactionManager">
+    <attribute name="TransactionTimeout">300</attribute>
+
+    <!-- Use this attribute if you need to use a specific Xid
+         implementation
+    <attribute name="XidClassName">oracle.jdbc.xa.OracleXid</attribute>
+    -->
+  </mbean>
+
+  <!-- 
+     | Uncomment to use Tyrex (tyrex.exolab.org) transaction manager plugin
+     | instead of the org.jboss.tm.TransactionManagerService and comment out
+     | the TransactionManagerService above.
+     |
+  <mbean code="org.jboss.tm.plugins.tyrex.TransactionManagerService"
+         name="JBOSS-SYSTEM:service=TransactionManager">
+        <attribute name="ConfigFileName">../conf/default/domain.xml</attribute>
+  </mbean>
+  -->
+
+  <mbean code="org.jboss.tm.usertx.server.ClientUserTransactionService"
+	 name="JBOSS-SYSTEM:service=ClientUserTransaction">
+  </mbean>
+
+
+  <!-- ==================================================================== -->
+  <!-- And now to get everything else going...                              -->
+  <!-- ==================================================================== -->
+
 
   <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
     <attribute name="Deployers">
@@ -88,11 +144,69 @@
     </attribute>
     <attribute name="URLs">
       ../deploy/lib,
-		../deploy
+      ../deploy
     </attribute>
     <attribute name="Timeout">
       3000
     </attribute>
   </mbean>
+
+  <!-- ==================================================================== -->
+  <!-- JBoss Server Management                                              -->
+  <!-- ==================================================================== -->
+
+  <!-- AS Temporary not available
+  <mbean code="org.jboss.management.ServerDataCollector"
+         name="Management:service=Collector">
+    <attribute name="RefreshSleep">5000</attribute>
+  </mbean>
+  -->
+
+  <!-- ==================================================================== -->
+  <!-- Monitoring and Management                                            -->
+  <!-- ==================================================================== -->
+
+  <!-- Uncomment to enable JMX monitoring of the bean cache
+  <mbean code="org.jboss.monitor.BeanCacheMonitor" 
+         name="Monitor:name=BeanCacheMonitor"/>
+  -->
+
+
+  <!-- ==================================================================== -->
+  <!-- Scheduler Service                                                    -->
+  <!-- ==================================================================== -->
+
+  <!-- Uncomment this to enable Scheduling
+  <mbean code="org.jboss.util.Scheduler" name=":service=Scheduler">
+    <constructor>
+      <arg type="java.lang.String" value=":server=Scheduler"/>
+      <arg type="java.lang.String" value="org.jboss.util.Scheduler$SchedulableExample"/>
+      <arg type="java.lang.String" value="Schedulabe Test,12345"/>
+      <arg type="java.lang.String" value="java.lang.String,int"/>
+      <arg type="long" value="0"/>
+      <arg type="long" value="10000"/>
+      <arg type="long" value="-1"/>
+    </constructor>
+  </mbean>
+  -->
+
+  <!-- Uncomment this and set up according to manual to add Castor JDO service
+  <mbean code="org.jboss.jdo.castor.CastorJDOImpl"
+         name="JBOSS-SYSTEM:service=CastorJDO,name=someName">
+    <attribute name="Configuration">
+      file:../conf/default/database.xml
+    </attribute>
+    <attribute name="JndiName">jdo/someName</attribute>
+    <attribute name="LockTimeout">0</attribute>
+    <attribute name="LoggingEnabled">false</attribute>
+    <attribute name="CommonClassPath">false</attribute>
+  </mbean>
+  -->
+
+
+  <!-- ==================================================================== -->
+  <!-- Don't you date add your custom MBeans here! put them in a sar!       -->
+  <!-- ==================================================================== -->
+
 
 </server>

@@ -29,7 +29,7 @@ import org.jboss.system.URLClassLoader;
  *
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $ <p>
+ * @version $Revision: 1.4 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -184,11 +184,11 @@ public class ServiceLibraries
          if (!classLoaders.contains(cl))
          {
             classLoaders.add(cl);
-            System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " URL " + ((URLClassLoader)cl).getURL().toString());
+            System.out.println("Libraries adding URLClassLoader " + cl.hashCode() + " key URL " + ((URLClassLoader)cl).getKeyURL().toString());
          }
          else
          {
-            System.out.println("Libraries skipping duplicate URLClassLoader for URL " + ((URLClassLoader)cl).getURL().toString());
+            System.out.println("Libraries skipping duplicate URLClassLoader for key URL " + ((URLClassLoader)cl).getKeyURL().toString());
          }
       }
    }

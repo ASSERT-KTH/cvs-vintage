@@ -43,7 +43,7 @@ import org.jboss.system.URLClassLoader;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  *
  * <b>Revisions:</b>
  * <p>
@@ -128,7 +128,11 @@ public class Main
          while (bootURLs.hasNext())
          {
             // The libraries will register themselves with the libraries
-            new URLClassLoader(new URL[]{(URL)bootURLs.next()});
+            URL thisUrl = (URL)bootURLs.next();
+            //Only the boot urls are keyed on themselves: 
+            //everything else is copied for loading but keyed on the
+            //original deployed url.
+            new URLClassLoader(new URL[]{thisUrl}, thisUrl);
          }
 
          // Create MBeanClassLoader for the base system

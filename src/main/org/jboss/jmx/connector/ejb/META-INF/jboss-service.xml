@@ -2,8 +2,5 @@
 
 <server>
 
-   <classpath archives="
-      jmx-ejb-connector-server.jar
-   "/>
-
+<!--why not create the mbean in this????-->
 </server>
