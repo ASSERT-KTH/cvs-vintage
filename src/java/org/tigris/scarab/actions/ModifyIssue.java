@@ -86,6 +86,7 @@ import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 import org.tigris.scarab.attribute.OptionAttribute;
 
@@ -95,7 +96,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.49 2001/11/13 22:57:42 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.50 2001/11/28 20:01:03 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -270,7 +271,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
-        Issue issue = Issue.getIssueById(id);
+        Issue issue = getScarabRequestTool(context).getIssue();
         IntakeTool intake = getIntakeTool(context);
         Attachment attachment = new Attachment();
         NumberKey typeId = null;
@@ -356,7 +357,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         String newComment = null;
         ScarabUser user = (ScarabUser)data.getUser();
         String id = data.getParameters().getString("id");
-        Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        Issue issue = Issue.getIssueById(id);
 
         for (int i =0; i<keys.length; i++)
         {
@@ -589,7 +590,8 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             try
             {
-                parentIssue =  getScarabRequestTool(context).getIssue(observedId.toString());
+                parentIssue =  getScarabRequestTool(context)
+                               .getIssue(observedId.toString());
                 if (parentIssue.getDependency(issue) != null)
                 {
                     observedId.setMessage("This issue already has a dependency" 
