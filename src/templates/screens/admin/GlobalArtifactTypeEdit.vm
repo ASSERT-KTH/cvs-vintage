@@ -103,8 +103,7 @@
    <td>&#160;</td>
    <td>$l10n.DuplicateCheck</td>
    <td>#booleanCheckbox ($itGroup.Dedupe)</td>
-   #set ($deDupeMaxNum = $maxNum - 1)
-   <td>#numericSelect("dupe_order" 2 $deDupeMaxNum $issueDedupeSequence 1)</td>
+   <td>#numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
  </tr>
  #end
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
@@ -113,6 +112,14 @@
   <td>$link.setPage("admin,GlobalAttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$group.Name")</td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>#numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td>
+ </tr>
+#end
+#if ($showDuplicateCheck && $issueDedupeSequence == $maxNum)
+ <tr>
+  <td>&#160;</td>
+  <td>$l10n.DuplicateCheck</td>
+  <td>#booleanCheckbox ($itGroup.Dedupe)</td>
+  <td>#numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
  </tr>
 #end
 #else

@@ -384,8 +384,8 @@ public  class AttributeGroup
                     AttributeGroup tempGroup = (AttributeGroup)attrGroups.get(i);
                     int tempOrder = tempGroup.getOrder();
                     if (tempGroup.getOrder() > order)
-                    { 
-                        if (tempOrder == dupeSequence + 1)
+                    {
+                        if (tempOrder == dupeSequence + 1 && tempOrder == 3)
                         {
                             tempGroup.setOrder(tempOrder - 2);
                         }
