@@ -87,13 +87,30 @@ import javax.servlet.http.*;
  */
 public final class ServletHandler extends Handler {
 
+    /** 
+     * If init() fails or preInit() detects the handler is still
+     * unavailable.
+     */
+    public static final int STATE_DELAYED_INIT=2;
+
+    /** The handler has been succesfully initialized and is ready to
+     * serve requests. If the handler is not in this state a 500 error
+     * should be reported. ( customize - may be 404 )
+     * To ADDED by calling destroy()
+     * FROM ADDED by calling init()
+     */
+    public static final int STATE_READY=3;
+
+    // -------------------- Properties --------------------
+    
     // extra informations - if the servlet is declared in web.xml
     private ServletInfo sw;
 
     private String servletClassName;
+    private String path;
     protected Class servletClass;
     protected Servlet servlet;
-
+    
     // If init() fails, Handler.errorException will hold the reason.
     // In the case of an UnavailableException, this field will hold
     // the expiration time if UnavailableException is not permanent.
@@ -135,6 +152,122 @@ public final class ServletHandler extends Handler {
         return servletClassName;
     }
 
+    // -------------------- Init/destroy --------------------
+    // from Handler
+
+    /** Destroy a handler, and notify all the interested interceptors
+     */
+    public final void destroy() {
+	if ( state!=STATE_READY ) {
+	    // reset exception
+	    errorException = null;
+	    return;// already destroyed or not init.
+	}
+	setState( STATE_ADDED );
+
+	// XXX post will not be called if any error happens in destroy.
+	// That's how tomcat worked before - I think it's a bug !
+	try {
+	    doDestroy();
+	} catch( Exception ex ) {
+	    log( "Error during destroy ", ex );
+	}
+	
+
+	errorException=null;
+    }
+
+
+    /** Call the init method, and notify all interested listeners.
+     *  This is a final method to insure consistent behavior on errors.
+     *  It also saves handlers from dealing with synchronization issues.
+     */
+    public final void init()
+    {
+	// we use getState() as a workaround for bugs in VMs
+	
+	if( getState() == STATE_READY || getState() == STATE_DISABLED )
+	    return;
+
+	synchronized( this ) {
+	    // check again - if 2 threads are in init(), the first one will
+	    // init and the second will enter the sync block after that
+	    if( getState() == STATE_READY ) 
+		return;
+
+	    // if exception present, then we were sync blocked when first
+	    // init() failed or an interceptor set an inital exeception
+	    // A different thread got an error in init() - throw
+	    // the same error.
+	    if (getState() == STATE_DISABLED )
+		return; //throw errorException;
+
+	    try {
+		// special preInit() hook
+		preInit();
+		// preInit may either throw exception or setState DELAYED_INIT
+	    } catch( Exception ex ) {
+		// save error, assume permanent
+		log("Exception in preInit  " + ex.getMessage(), ex );
+		setErrorException(ex);
+		setState(STATE_DISABLED);
+		return;
+	    }
+	    
+	    // we'll try again later 
+	    if( getState() == STATE_DELAYED_INIT ||
+		getState()==STATE_DISABLED ) { // or disabled 
+		return;
+	    }
+	    // preInit have no exceptions and doesn't delay us
+	    // We can run init hooks and init
+
+	    // Call pre, doInit and post
+	    BaseInterceptor cI[]=context.getContainer().getInterceptors();
+	    for( int i=0; i< cI.length; i++ ) {
+		try {
+		    cI[i].preServletInit( context, this );
+		} catch( TomcatException ex) {
+		    // log, but ignore.
+		    log("preServletInit" , ex);
+		}
+	    }
+		
+	    try {
+		doInit();
+		// if success, we are ready to serve
+	    } catch( Exception ex ) {
+		// save error, assume permanent
+		log("Exception in init  " + ex.getMessage(), ex );
+		setErrorException(ex);
+		state=STATE_DISABLED;
+	    }
+	    
+	    for( int i=0; i< cI.length; i++ ) {
+		try {
+		    cI[i].postServletInit( context, this );
+		} catch( TomcatException ex) {
+		    log("postServletInit" , ex);
+		}
+	    }
+
+	    // Now that both pre/post hooks have been called, the
+	    // servlet is ready to serve.
+
+	    // We are still in the sync block, that means other threads
+	    // are waiting for this to be over.
+
+	    // if no error happened and if doInit didn't put us in
+	    // a special state, we are ready
+	    if( state!=STATE_DISABLED &&
+		getErrorException() != null ) {
+		state=STATE_READY;
+	    }
+	}
+    }
+
+    
+    
     // -------------------- --------------------
 
     public void reload() {
@@ -255,6 +388,32 @@ public final class ServletHandler extends Handler {
 	// init() will deal with them.
     }
 
+    // Overrides the default handler
+    public void service ( Request req, Response res ) {
+	if( state!=STATE_READY ) {
+	    if( state!= STATE_DISABLED ) {
+		init();
+	    }
+	    if( state== STATE_DISABLED ) {
+		// the init failed because of an exception
+		Exception ex=getErrorException();
+		// save error state on request and response
+		saveError( req, res, ex );
+		// if in included, defer handling to higher level
+		if (res.isIncluded()) return;
+		// handle init error since at top level
+		if( ex instanceof ClassNotFoundException )
+		    contextM.handleStatus( req, res, 404 );
+		else
+		    contextM.handleError( req, res, ex );
+		return;
+	    } 
+	}
+
+	super.service( req, res );
+    }
+
+    
     protected void doService(Request req, Response res)
 	throws Exception
     {
@@ -366,4 +525,6 @@ public final class ServletHandler extends Handler {
 	// still unavailable
 	return false;
     }
+
+
 }

@@ -150,20 +150,6 @@ public class Handler {
      */
     public static final int STATE_ADDED=1;
 
-    /** 
-     * If init() fails or preInit() detects the handler is still
-     * unavailable.
-     */
-    public static final int STATE_DELAYED_INIT=2;
-
-    /** The handler has been succesfully initialized and is ready to
-     * serve requests. If the handler is not in this state a 500 error
-     * should be reported. ( customize - may be 404 )
-     * To ADDED by calling destroy()
-     * FROM ADDED by calling init()
-     */
-    public static final int STATE_READY=3;
-
     /** Handler is unable to perform - any attempt to use it should
      *  report an internal error. This is the result of an internal
      *  exception or an error in init()
@@ -172,20 +158,15 @@ public class Handler {
      */
     public static final int STATE_DISABLED=4;
 
-    
-
     // -------------------- Properties --------------------
     protected Context context;
     protected ContextManager contextM;
     
     protected String name;
+    protected int state=STATE_NEW;
 
-    private int state=STATE_NEW;
-    
     // who creates the servlet definition
     protected int origin;
-
-    protected String path;
 
     protected Exception errorException=null;
     
@@ -220,6 +201,8 @@ public class Handler {
 	return context;
     }
 
+    // -------------------- configuration --------------------
+
     public int getState() {
 	return state;
     }
@@ -228,8 +211,6 @@ public class Handler {
 	this.state=i;
     }
     
-    // -------------------- configuration --------------------
-
     public final String getName() {
 	return name;
     }
@@ -276,130 +257,7 @@ public class Handler {
 	return errorException;
     }
 
-//     // -------------------- Jsp specific code
-    
-//     public String getPath() {
-//         return this.path;
-//     }
-
-//     public void setPath(String path) {
-//         this.path = path;
-// 	if( name==null )
-// 	    name=path; // the path will serve as servlet name if not set
-//     }
-
     // -------------------- Methods --------------------
-
-    /** Destroy a handler, and notify all the interested interceptors
-     */
-    public final void destroy() {
-	if ( state!=STATE_READY ) {
-	    // reset exception
-	    errorException = null;
-	    return;// already destroyed or not init.
-	}
-	setState( STATE_ADDED );
-
-	// XXX post will not be called if any error happens in destroy.
-	// That's how tomcat worked before - I think it's a bug !
-	try {
-	    doDestroy();
-	} catch( Exception ex ) {
-	    log( "Error during destroy ", ex );
-	}
-	
-
-	errorException=null;
-    }
-
-
-    /** Call the init method, and notify all interested listeners.
-     *  This is a final method to insure consistent behavior on errors.
-     *  It also saves handlers from dealing with synchronization issues.
-     */
-    public final void init()
-    {
-	// we use getState() as a workaround for bugs in VMs
-	
-	if( getState() == STATE_READY || getState() == STATE_DISABLED )
-	    return;
-
-	synchronized( this ) {
-	    // check again - if 2 threads are in init(), the first one will
-	    // init and the second will enter the sync block after that
-	    if( getState() == STATE_READY ) 
-		return;
-
-	    // if exception present, then we were sync blocked when first
-	    // init() failed or an interceptor set an inital exeception
-	    // A different thread got an error in init() - throw
-	    // the same error.
-	    if (getState() == STATE_DISABLED )
-		return; //throw errorException;
-
-	    try {
-		// special preInit() hook
-		preInit();
-		// preInit may either throw exception or setState DELAYED_INIT
-	    } catch( Exception ex ) {
-		// save error, assume permanent
-		log("Exception in preInit  " + ex.getMessage(), ex );
-		setErrorException(ex);
-		setState(STATE_DISABLED);
-		return;
-	    }
-	    
-	    // we'll try again later 
-	    if( getState() == STATE_DELAYED_INIT ||
-		getState()==STATE_DISABLED ) { // or disabled 
-		return;
-	    }
-	    // preInit have no exceptions and doesn't delay us
-	    // We can run init hooks and init
-
-	    // Call pre, doInit and post
-	    BaseInterceptor cI[]=context.getContainer().getInterceptors();
-	    for( int i=0; i< cI.length; i++ ) {
-		try {
-		    cI[i].preServletInit( context, this );
-		} catch( TomcatException ex) {
-		    // log, but ignore.
-		    log("preServletInit" , ex);
-		}
-	    }
-		
-	    try {
-		doInit();
-		// if success, we are ready to serve
-	    } catch( Exception ex ) {
-		// save error, assume permanent
-		log("Exception in init  " + ex.getMessage(), ex );
-		setErrorException(ex);
-		state=STATE_DISABLED;
-	    }
-	    
-	    for( int i=0; i< cI.length; i++ ) {
-		try {
-		    cI[i].postServletInit( context, this );
-		} catch( TomcatException ex) {
-		    log("postServletInit" , ex);
-		}
-	    }
-
-	    // Now that both pre/post hooks have been called, the
-	    // servlet is ready to serve.
-
-	    // We are still in the sync block, that means other threads
-	    // are waiting for this to be over.
-
-	    // if no error happened and if doInit didn't put us in
-	    // a special state, we are ready
-	    if( state!=STATE_DISABLED &&
-		getErrorException() != null ) {
-		state=STATE_READY;
-	    }
-	}
-    }
 
     /** Call the service method, and notify all listeners
      *
@@ -415,28 +273,8 @@ public class Handler {
      *  Tomcat should be able to handle and log any other exception ( including
      *  runtime exceptions )
      */
-    public final void service(Request req, Response res)
+    public void service(Request req, Response res)
     {
-	if( state!=STATE_READY ) {
-	    if( state!= STATE_DISABLED ) {
-		init();
-	    }
-	    if( state== STATE_DISABLED ) {
-		// the init failed because of an exception
-		Exception ex=getErrorException();
-		// save error state on request and response
-		saveError( req, res, ex );
-		// if in included, defer handling to higher level
-		if (res.isIncluded()) return;
-		// handle init error since at top level
-		if( ex instanceof ClassNotFoundException )
-		    contextM.handleStatus( req, res, 404 );
-		else
-		    contextM.handleError( req, res, ex );
-		return;
-	    } 
-	}
-	
 	BaseInterceptor reqI[]=
 	    req.getContainer().getInterceptors(Container.H_preService);
 	for( int i=0; i< reqI.length; i++ ) {
@@ -469,14 +307,10 @@ public class Handler {
     }
 
     // -------------------- methods you can override --------------------
-
-    protected void handleInitError( Throwable t ) {
-
-    }
     
     protected void handleServiceError( Request req, Response res, Throwable t )
     {
-
+	// XXX TODO
     }
     
     /** Reload notification. This hook is called whenever the
@@ -484,38 +318,7 @@ public class Handler {
      */
     public void reload() {
     }
-        
-    /** This method will be called when the handler
-     *	is removed ( by admin or timeout ).
-     */
-    protected void doDestroy() throws Exception {
-
-    }
-
-    /** Special hook called before init and init hooks. 
-     *
-     *  This hook will set the state of the handler for the init() hooks
-     * ( for example load the servlet class, other critical preparations ).
-     *  If it fails, the servlet will be disabled and no other call will
-     *  succed.
-     *  The hook can also delay initialization ( put handler in  DELAY_INIT
-     *  state ). The application will be unavailable ( no service will be
-     *  called ), and preInit will be called to check if the state changed.
-     *  ( this can be used to implement UnavailableException )
-     *
-     */
-    protected void preInit() throws Exception {
-
-    }
     
-    /** Initialize the handler. Handler can override this
-     *	method to initialize themself.
-     */
-    protected void doInit() throws Exception
-    {
-	
-    }
-
     /** This is the actual content generator. Can't be called
      *  from outside.
      *

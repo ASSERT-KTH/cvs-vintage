@@ -116,9 +116,11 @@ public final class Servlet22Interceptor
 	while (enum.hasMoreElements()) {
 	    String key = (String)enum.nextElement();
 	    Handler wrapper = ctx.getServletByName( key );
+	    if( ! (wrapper instanceof ServletHandler) )
+		continue;
 	    ctx.removeServletByName( key );
 	    try {
-		wrapper.destroy();
+		((ServletHandler)wrapper).destroy();
 	    } catch(Exception ex ) {
 		ctx.log( "Error in destroy ", ex);
 	    }

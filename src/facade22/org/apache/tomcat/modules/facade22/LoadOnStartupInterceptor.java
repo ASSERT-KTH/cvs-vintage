@@ -135,7 +135,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 			    getPath() != null ) {
 			    loadJsp( ctx, result );
 			} else {
-			    result.init();
+			    ((ServletHandler)result).init();
 			}
 		    } catch (Exception ee) {
 			String msg = sm.getString("context.loadServlet.e",
