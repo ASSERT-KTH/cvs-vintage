@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.80 2001/12/17 17:06:46 kminshull Exp $
+ * @version $Id: ScarabModule.java,v 1.81 2001/12/27 22:37:48 dr Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -175,6 +175,10 @@ public class ScarabModule
         return super.getRModuleIssueTypes(crit);
     }
 
+    public boolean allowsIssues() {
+        return (true);
+    }
+    
     /**
      * Saves the module into the database
      */
@@ -341,10 +345,14 @@ public class ScarabModule
      */
     public int compareTo(Object obj)
     {
-        if (this.getClass() != obj.getClass())
-        {
-            throw new ClassCastException();
-        }
+        //---------------------------------------------------------------------
+        // dr@bitonic.com : commented out as per conversation with John McNally
+        //   over IRC on 20-Dec-2001
+        //---------------------------------------------------------------------
+        //if (this.getClass() != obj.getClass())
+        //{
+        //    throw new ClassCastException();
+        //}
         String name1 = ((Group)obj).getName();
         String name2 = this.getName();
 
