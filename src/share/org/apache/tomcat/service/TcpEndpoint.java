@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.2 1999/10/22 01:47:09 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 01:47:09 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import java.util.*;
  */
 public class TcpEndpoint  { // implements Endpoint {
 
-    private StringManager sm =StringManager.getManager(Constants.Package);
+    private StringManager sm =StringManager.getManager("org.apache.tomcat.service");
 
     private static final int BACKLOG = 50;
     private static final int TIMEOUT = 1000;
@@ -228,7 +228,7 @@ public class TcpEndpoint  { // implements Endpoint {
 	// XXX reuse, pools, etc
 
 	// XXX set socket options
-	s.setSoLinger( true, 100);
+	// 	s.setSoLinger( true, 100);
 	
 	TcpConnection con=new TcpConnection();
 	con.setEndpoint(this);
@@ -258,6 +258,7 @@ public class TcpEndpoint  { // implements Endpoint {
 	    running = false;
 	    String msg = sm.getString("endpoint.err.fatal",
 				      serverSocket, e);
+	    e.printStackTrace(); // something very wrong happened - better know what
 	    System.err.println(msg);
 	}
     }

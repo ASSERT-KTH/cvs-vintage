@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.2 1999/10/12 08:30:46 gonzo Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/12 08:30:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.3 1999/10/22 01:47:13 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/22 01:47:13 $
  *
  * ====================================================================
  *
@@ -114,12 +114,12 @@ public class URLUtil {
             } catch (IOException npe) {
             }
 
-	    resolve = new URL("file", null, fName);
+	    resolve = new URL("file", "", fName);
 	} else {
             String path = System.getProperty("user.dir") +
                 File.separator + s;
 
-	    resolve = new URL("file", null, path);
+	    resolve = new URL("file", "", path);
 	}
 
         if (! resolve.getProtocol().equalsIgnoreCase(

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.1 1999/10/09 00:20:54 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Startup.java,v 1.2 1999/10/22 01:47:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 01:47:10 $
  *
  * ====================================================================
  *
@@ -117,6 +117,7 @@ public class Startup {
 
 	ServerConfig serverConfig = config.getServerConfig();
 	Registry registry =  createRegistry(serverConfig.getAdminPort());
+
 	Enumeration contextManagers = serverConfig.getContextManagers();
 
 	while (contextManagers.hasMoreElements()) {
@@ -173,8 +174,9 @@ public class Startup {
 		// XXX
 		// instead of HTTPServer it should be EndpointManager,
 		//   ContextManager, Handler, etc
-	        registry.bind(Constants.Registry.Service + ":" +
-		    server.getPort(), new AdminImpl(server));
+	        if( registry != null )
+		    registry.bind(Constants.Registry.Service + ":" +
+				  server.getPort(), new AdminImpl(server));
 
 		// XXX
 		// start/stop individual components
@@ -222,6 +224,8 @@ public class Startup {
         Registry registry = null;
 	int numberAttempts = 0;
 
+	if (port==0) return null;
+			 
 	if (port < 0) {
 	    port = newPort();
 	}

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.2 1999/10/19 23:38:31 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/19 23:38:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.3 1999/10/22 01:47:07 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/22 01:47:07 $
  *
  * ====================================================================
  *
@@ -141,7 +141,7 @@ public class ResponseImpl extends Response {
     
     public void finish() throws IOException {
 	try {
-	    if (usingWriter) {
+	    if (usingWriter && (writer != null)) {
 	        writer.flush();
 	    }
 	    out.reallyFlush();
@@ -185,11 +185,22 @@ public class ResponseImpl extends Response {
 	if (writer == null) {
 	    String encoding = getCharacterEncoding();
 
-	    if (encoding == null)
+	    if ((encoding == null) || "Default".equals(encoding) )
 	        writer = new PrintWriter(new OutputStreamWriter(out));
 	    else
-	        writer =
-                    new PrintWriter(new OutputStreamWriter(out, encoding));
+		try {
+		    writer = new PrintWriter(new OutputStreamWriter(out, encoding));
+		} catch (java.io.UnsupportedEncodingException ex) {
+		    // if we don't do that, the runtime exception will propagate
+		    // and we'll try to send an error page - but surprise, we
+		    // still can't get the Writer to send the error page...
+		    writer = new PrintWriter( new OutputStreamWriter(out));
+
+		    // Deal with strange encodings - webmaster should see a message
+		    // and install encoding classes - n new, unknown language was discovered,
+		    // and they read our site!
+		    System.out.println("Unsuported encoding: " + encoding );
+		}
 	}
 
 	out.setUsingWriter (usingWriter);
