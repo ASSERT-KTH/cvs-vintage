@@ -14,6 +14,7 @@
 
 package org.columba.core.gui.util;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
@@ -21,28 +22,37 @@ import org.columba.mail.gui.action.BasicAction;
 
 public class CMenuItem extends JMenuItem {
 
+	public CMenuItem() {
+		super();
+
+	}
+
 	public CMenuItem(BasicAction a) {
 		super(a);
 		setAccelerator(a.getAcceleratorKey());
 
+		/*
 		if (a.getSmallIcon() == null)
 			setIcon(new EmptyIcon());
+		*/
 	}
 
 	public CMenuItem(String s) {
 		super(s);
-		setIcon(new EmptyIcon());
+		//setIcon(new EmptyIcon());
+
 	}
-	
+
 	public CMenuItem(String s, ImageIcon icon) {
-		super(s, icon );
-		
+		super(s, icon);
+
 	}
-	
+
 	public CMenuItem(String s, int mnemonic) {
 		super(s, mnemonic);
-		
-		setIcon(new EmptyIcon());
+
+		//setIcon(new EmptyIcon());
+
 	}
 
 }

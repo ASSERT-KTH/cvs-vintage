@@ -14,19 +14,13 @@
 
 package org.columba.core.gui.themes.thincolumba;
 
-import javax.swing.plaf.*;
-import javax.swing.plaf.basic.*;
-import javax.swing.plaf.metal.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.UIDefaults;
+import javax.swing.plaf.ColorUIResource;
 
-import org.columba.mail.message.*;
-import org.columba.core.config.*;
-import org.columba.core.gui.themes.*;
-import org.columba.core.gui.util.*;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.config.*;
+import org.columba.core.config.ThemeItem;
+import org.columba.core.gui.themes.DefaultCTheme;
 
 public class ThinColumbaTheme extends DefaultCTheme {
 
@@ -207,6 +201,17 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		
 		table.put("CheckBoxMenuItem.checkIcon", new ImageIcon(""));
 		table.put("RadioButtonMenuItem.checkIcon", new ImageIcon("") );
+		
+		table.put("MenuItem.acceleratorForeground", getAcceleratorSelectedForeground() );
+        table.put("MenuItem.acceleratorSelectionForeground", getAcceleratorSelectedForeground() );
+            
+		/*
+		table.put("CheckBoxMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1));
+		table.put("RadioButtonMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1) );
+		table.put("MenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1) );
+		table.put("Menu.border", BorderFactory.createEmptyBorder(2,2,2,2) );
+		*/
+		
 		
 		/*
 		table.put(
