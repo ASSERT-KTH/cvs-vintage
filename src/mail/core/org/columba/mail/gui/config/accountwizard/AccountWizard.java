@@ -50,7 +50,7 @@ public class AccountWizard extends DefaultWizardDialog {
 
 	public AccountWizard() {
 		super();
-		int count = MailConfig.getAccountList().count();
+		//int count = MailConfig.getAccountList().count();
 
 		add = false;
 
@@ -79,28 +79,38 @@ public class AccountWizard extends DefaultWizardDialog {
 		if (sequence == null) {
 			sequence = new WizardPanelSequence();
 
-				welcomePanel = new WelcomePanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "welcome"), //$NON-NLS-1$
+			if (add == false) {
+					welcomePanel = new WelcomePanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "welcome"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "initial_welcome_screen"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
-			sequence.addPanel(welcomePanel);
 
-				identityPanel = new IdentityPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+				sequence.addPanel(welcomePanel);
+			}
+				identityPanel = new IdentityPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "specify_your_identity_information"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 			sequence.addPanel(identityPanel);
 
-				incomingServerPanel = new IncomingServerPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+				incomingServerPanel = new IncomingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "incoming_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 			sequence.addPanel(incomingServerPanel);
-				outgoingServerPanel = new OutgoingServerPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+				outgoingServerPanel = new OutgoingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "outgoing_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"), true);
 			sequence.addPanel(outgoingServerPanel);
-				advancedPanel = new AdvancedPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+				advancedPanel = new AdvancedPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "advanced_options"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 			sequence.addPanel(advancedPanel);
+
+			if (add == false) {
+					finishPanel = new FinishPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "finished_information_gathering"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"));
+
+				sequence.addPanel(finishPanel);
+			}
 		}
 
 		return sequence;
@@ -199,9 +209,9 @@ public class AccountWizard extends DefaultWizardDialog {
 	*/
 
 	public void setPanel(DefaultWizardPanel panel) {
-		getContentPane().add(panel);
-		validate();
-		pack();
+		dialog.getContentPane().add(panel);
+		dialog.validate();
+		dialog.pack();
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -213,9 +223,9 @@ public class AccountWizard extends DefaultWizardDialog {
 			//identityPanel.showDialog();
 			//incomingServerPanel.showDialog();
 			//outgoingServerPanel.showDialog();
-			setVisible(false);
+			dialog.setVisible(false);
 		} else if (action.equals("ACCOUNT")) {
-			setVisible(false);
+			dialog.setVisible(false);
 
 			AccountItem item = finish();
 
@@ -223,10 +233,10 @@ public class AccountWizard extends DefaultWizardDialog {
 		} else if (action.equals("FINISH")) {
 			if (add == true)
 				//outgoingServerPanel.hideDialog();
-				setVisible(false);
+				dialog.setVisible(false);
 			else
 				//finishPanel.hideDialog();
-				setVisible(false);
+				dialog.setVisible(false);
 
 			//System.out.println("saving data");
 

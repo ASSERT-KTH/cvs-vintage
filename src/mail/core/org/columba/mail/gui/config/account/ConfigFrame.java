@@ -344,7 +344,7 @@ public class ConfigFrame
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
 			System.out.println(MailResourceLoader.getString("dialog", "account", "add")); //$NON-NLS-1$
-			AccountWizard wizard = new AccountWizard(true);
+			AccountWizard wizard = new AccountWizard(false);
 			listView.update();
 
 			//AccountItem item = accountList.a
