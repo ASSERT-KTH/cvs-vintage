@@ -21,21 +21,29 @@ import org.jboss.logging.Log;
 import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   <description> 
+ *   Integration with Hypersonic SQL (http://hsql.oron.ch/). Starts a Hypersonic database in-VM.
+ *
+ *   Note that once started it cannot be shutdown.
  *      
- *   @see <related>
+ *   @see HypersonicDatabaseMBean
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
-   implements HypersonicDatabaseMBean, MBeanRegistration
+   implements HypersonicDatabaseMBean, MBeanRegistration, NotificationListener
 {
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
    Thread runner;
    Process proc;
+   MBeanServer server;
+   
+   String name = "jboss"; // Database name will be appended to "<db.properties location>/hypersonic/"
+   int port = 1476; // Default port
+   boolean silent = false;
+   boolean trace = true;
    
    // Static --------------------------------------------------------
 
@@ -45,10 +53,52 @@ public class HypersonicDatabase
    }
    
    // Public --------------------------------------------------------
+   // Settings
+   public void setDatabase(String name)
+   {
+      this.name = name;
+   }
+   
+   public String getDatabase()
+   {
+      return name;
+   }
+
+   public void setPort(int port)
+   {
+      this.port = port;
+   }
+   
+   public int getPort()
+   {
+      return port;
+   }
+
+   public void setSilent(boolean silent)
+   {
+      this.silent = silent;
+   }
+   
+   public boolean getSilent()
+   {
+      return silent;
+   }
+   
+   public void setTrace(boolean trace)
+   {
+      this.trace = trace;
+   }
+   
+   public boolean getTrace()
+   {
+      return trace;
+   }
+   
    public ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      return new ObjectName(OBJECT_NAME);
+      this.server = server;
+      return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
    
    public String getName()
@@ -56,57 +106,73 @@ public class HypersonicDatabase
       return "Hypersonic";
    }
    
-   public void initService()
+   public void startService()
       throws Exception
    {
-      final Log log = this.log;
+      // Register as log listener
+      server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
+   
+      // Start DB in new thread, or else it will block us
       runner = new Thread(new Runnable()
       {
          public void run()
          {
-            try
+            // Get DB directory
+            URL dbLocator = getClass().getResource("/db.properties");
+            File dbDir = new File(dbLocator.getFile()).getParentFile();
+            File dbName = new File(dbDir, "hypersonic/"+name);
+            
+            // Create startup arguments
+            String[] args = new String[]
             {
-               proc = Runtime.getRuntime().exec("java -classpath ../lib/ext/hsql.jar org.hsql.Server");
-               
-               DataInputStream din = new DataInputStream(proc.getInputStream());
-               String line;
-               while((line = din.readLine()) != null)
-               {
-                  // Notify that something happened
-                  synchronized(runner)
-                  {
-                     runner.notifyAll();
-                  }
-                  
-                  if (!line.equals("Press [Ctrl]+[C] to abort"))
-                     log.debug(line);
-               }
-                  
-               runner = null;
-               proc = null;
-            } catch (IOException e)
-            {
-               log.error("Hypersonic database failed");
-            }
+               "-database", dbName.toString(),
+               "-port", port+"",
+               "-silent", silent+"",
+               "-trace", trace+""
+            };
+            
+            // Start server
+            org.hsql.Server.main(args);
+            
+            // Now wait for "Server x.x is running" message
          }
       });
       
-      synchronized (runner)
+      // Wait for startup message
+      try
       {
-         runner.start();
-         runner.wait(30000); // Wait for database to start; timeout = not started
+         synchronized (runner)
+         {
+            runner.start();
+            runner.wait(30000); // Wait for database to start; timeout = not started
+         }
+      } finally
+      {
+         try
+         {
+            server.removeNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"), this);
+         } catch (ListenerNotFoundException e)
+         {
+            // Ignore
+         }
       }
       log.log("Database started");
    }
    
-   public void stopService()
+   // NotificationListener implementation ---------------------------
+   public void handleNotification(Notification n,
+                                  java.lang.Object handback)
    {
-      if (runner != null)
+      if (n.getUserData().toString().equals(getName()))
       {
-         runner.stop();
-         proc.destroy();
-         runner = null;
-         proc = null;
+         if (n.getMessage().endsWith("is running"))
+         {
+            // Notify other thread that DB is now started
+            synchronized(runner)
+            {
+               runner.notify();
+            }
+         }
       }
    }
    // Protected -----------------------------------------------------
