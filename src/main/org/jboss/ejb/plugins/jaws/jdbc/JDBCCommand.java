@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -34,16 +35,14 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
 import org.jboss.logging.Log;
 import org.jboss.logging.Logger;
 
-
 /**
  * Abstract superclass for all JAWS Commands that use JDBC directly.
  * Provides a Template Method for jdbcExecute(), default implementations
  * for some of the methods called by this template, and a bunch of
  * utility methods that database commands may need to call.
  *
- * @see <related>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCCommand
 {
@@ -57,8 +56,21 @@ public abstract class JDBCCommand
    private String sql;
    private static Map jdbcTypeNames;
    
+   /**
+    * Gives compile-time control of tracing.
+    */
+   public static boolean debug = true;
+   
    // Constructors --------------------------------------------------
    
+   /**
+    * Construct a JDBCCommand with given factory and name.
+    *
+    * @param factory the factory which was used to create this JDBCCommand, 
+    *  which is also used as a common repository, shared by all an
+    *  entity's Commands. 
+    * @param name the name to be used when tracing execution.
+    */
    protected JDBCCommand(JDBCCommandFactory factory, String name)
    {
       this.factory = factory;
@@ -83,7 +95,7 @@ public abstract class JDBCCommand
       {
          con = getConnection();
          String theSQL = getSQL();
-         if (factory.debug)
+         if (debug)
          {
             log.debug(name + " command executing: " + theSQL);
          }
@@ -117,10 +129,12 @@ public abstract class JDBCCommand
    
    /**
     * Used to set static SQL in subclass constructors.
+    *
+    * @param sql the static SQL to be used by this Command.
     */
    protected void setSQL(String sql)
    {
-      if (factory.debug)
+      if (debug)
       {
          log.debug(name + " SQL: " + sql);
       }
@@ -128,11 +142,16 @@ public abstract class JDBCCommand
    }
    
    /**
-    * Default implementation returns <code>sql</code> field value.
+    * Gets the SQL to be used in the PreparedStatement.
+    * The default implementation returns the <code>sql</code> field value.
     * This is appropriate in all cases where static SQL can be
     * constructed in the Command constructor.
     * Override if dynamically-generated SQL, based on the arguments
     * given to execute(), is needed.
+    *
+    * @return the SQL to use in the PreparedStatement.
+    * @throws Exception if an attempt to generate dynamic SQL results in 
+    *  an Exception.
     */
    protected String getSQL() throws Exception
    {
@@ -142,27 +161,43 @@ public abstract class JDBCCommand
    /**
     * Default implementation does nothing.
     * Override if parameters need to be set.
+    *
+    * @param stmt the PreparedStatement which will be executed by this Command.
+    * @throws Exception if the parameter setting code throws an Exception.
     */
    protected void setParameters(PreparedStatement stmt) throws Exception
    {
    }
    
    /**
-    * Execute the PreparedStatement and handle result of successful execution.
+    * Executes the PreparedStatement and handle result of successful execution.
     * This is implemented in subclasses for queries and updates.
+    *
+    * @param stmt the PreparedStatement to execute.
+    * @throws Exception if execution or result handling fails.
     */
    protected abstract void executeStatementAndHandleResult(
       PreparedStatement stmt) throws Exception;
    
    // ---------- Utility methods for use in subclasses ----------
    
+   /**
+    * Sets a parameter in this Command's PreparedStatement.
+    * Handles null values, and provides tracing.
+    *
+    * @param stmt the PreparedStatement whose parameter needs to be set.
+    * @param idx the index (1-based) of the parameter to be set.
+    * @param jdbcType the JDBC type of the parameter.
+    * @param value the value which the parameter is to be set to.
+    * @throws SQLException if parameter setting fails.
+    */
    protected void setParameter(PreparedStatement stmt,
                                int idx,
                                int jdbcType,
                                Object value)
       throws SQLException
    {
-      if (factory.debug)
+      if (debug)
       {
          log.debug("Set parameter: idx=" + idx +
                    ", jdbcType=" + getJDBCTypeName(jdbcType) +
@@ -179,6 +214,59 @@ public abstract class JDBCCommand
       }
    }
    
+   /**
+    * Sets the PreparedStatement parameters for a primary key
+    * in a WHERE clause.
+    *
+    * @param stmt the PreparedStatement
+    * @param parameterIndex the index (1-based) of the first parameter to set
+    * in the PreparedStatement
+    * @param id the entity's ID
+    * @return the index of the next unset parameter
+    * @throws SQLException if parameter setting fails
+    * @throws IllegalAccessException if accessing a field in the PK class fails 
+    */
+   protected int setPrimaryKeyParameters(PreparedStatement stmt,
+                                         int parameterIndex,
+                                         Object id)
+      throws IllegalAccessException, SQLException
+   {
+      Iterator it = metaInfo.getPkFieldInfos();
+      
+      if (metaInfo.hasCompositeKey())
+      {
+         while (it.hasNext())
+         {
+            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
+            int jdbcType = pkFieldInfo.getJDBCType();
+            Object value = getPkFieldValue(id, pkFieldInfo);
+            setParameter(stmt, parameterIndex++, jdbcType, value);
+         }
+      } else
+      {
+         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
+         int jdbcType = pkFieldInfo.getJDBCType();
+         setParameter(stmt, parameterIndex++, jdbcType, id);
+      }
+      
+      return parameterIndex;
+   }
+   
+   /**
+    * Sets parameter(s) representing a foreign key in this 
+    * Command's PreparedStatement.
+    * TODO: (JF) tighten up the typing of the value parameter.
+    *
+    * @param stmt the PreparedStatement whose parameters need to be set.
+    * @param idx the index (1-based) of the first parameter to be set.
+    * @param fieldInfo the CMP meta-info for the field containing the 
+    *  entity reference.
+    * @param value the entity (EJBObject) referred to by the reference
+    *  (may be null).
+    * @return the index of the next unset parameter.
+    * @throws SQLException if the access to the referred-to entity's primary
+    *  key fails, or if parameter setting fails.
+    */
    protected int setForeignKey(PreparedStatement stmt,
                              int idx,
                              CMPFieldInfo fieldInfo,
@@ -226,6 +314,45 @@ public abstract class JDBCCommand
       }
    }
    
+   /**
+    * Used for all retrieval of results from <code>ResultSet</code>s.
+    * Implements tracing, and allows some tweaking of returned types.
+    *
+    * @param rs the <code>ResultSet</code> from which a result is being retrieved.
+    * @param idx index of the result column.
+    * @param jdbcType the JDBC type which this result is expected to be 
+    *        compatible with.
+    */
+   protected Object getResultObject(ResultSet rs, int idx, int jdbcType)
+      throws SQLException
+   {
+      Object result = rs.getObject(idx);
+      
+      if (debug) {
+         log.debug("Got result: idx=" + idx +
+                   ", value=" + result +
+                   ", class=" + result.getClass().getName() +
+                   ", JDBCtype=" + getJDBCTypeName(jdbcType));
+      }
+      
+      // Trial result transformation - BigDecimal to Integer
+      if ((result instanceof java.math.BigDecimal) && (jdbcType == Types.INTEGER))
+      {
+         log.debug("*** Transforming BigDecimal to Integer ***");
+         
+         result = new Integer(((java.math.BigDecimal)result).intValue());
+      }
+      
+      return result;
+   }
+   
+   /**
+    * Gets the integer JDBC type code corresponding to the given name.
+    *
+    * @param name the JDBC type name.
+    * @return the JDBC type code.
+    * @see Types
+    */
    protected final int getJDBCType(String name)
    {
       try
@@ -240,6 +367,13 @@ public abstract class JDBCCommand
       }
    }
    
+   /**
+    * Gets the JDBC type name corresponding to the given type code.
+    *
+    * @param jdbcType the integer JDBC type code.
+    * @return the JDBC type name.
+    * @see Types
+    */
    protected final String getJDBCTypeName(int jdbcType)
    {
       if (jdbcTypeNames == null)
@@ -250,6 +384,12 @@ public abstract class JDBCCommand
       return (String)jdbcTypeNames.get(new Integer(jdbcType));
    }
    
+   /**
+    * Returns the comma-delimited list of primary key column names
+    * for this entity.
+    *
+    * return comma-delimited list of primary key column names.
+    */
    protected final String getPkColumnList()
    {
       StringBuffer sb = new StringBuffer();
@@ -266,6 +406,13 @@ public abstract class JDBCCommand
       return sb.toString();
    }
    
+   /**
+    * Returns the string to go in a WHERE clause based on
+    * the entity's primary key.
+    *
+    * @return WHERE clause content, in the form
+    *  <code>pkCol1Name=? AND pkCol2Name=?</code>
+    */
    protected final String getPkColumnWhereList()
    {
       StringBuffer sb = new StringBuffer();

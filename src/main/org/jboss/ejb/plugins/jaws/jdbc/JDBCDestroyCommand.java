@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.jaws.MetaInfo;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCDestroyCommand
    extends JDBCUpdateCommand
@@ -50,7 +50,8 @@ public class JDBCDestroyCommand
             jdbcExecute();
          } catch (Exception e)
          {
-            log.debug("Table "+metaInfo.getTableName()+" could not be removed");
+            log.debug("Could not drop table " +
+                      metaInfo.getTableName() + ": " + e.getMessage());
          }
       }
    }

@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCFinderCommand 
    extends JDBCQueryCommand
@@ -93,7 +93,9 @@ public abstract class JDBCFinderCommand
                {
                   PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
                   Field pkField = pkFieldInfo.getPkField();
-                  pkField.set(pk, rs.getObject(i++));
+                  pkField.set(pk, getResultObject(rs, 
+                                                  i++, 
+                                                  pkFieldInfo.getJDBCType()));
                }
                result.add(pk);
             }
@@ -104,9 +106,14 @@ public abstract class JDBCFinderCommand
       } else
       {
          // Primitive key
+         
+         Iterator it = metaInfo.getPkFieldInfos();
+         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
+         int jdbcType = pkFieldInfo.getJDBCType();
+         
          while (rs.next())
          {
-            result.add(rs.getObject(i));
+            result.add(getResultObject(rs, i, jdbcType));
          }
       }
    }

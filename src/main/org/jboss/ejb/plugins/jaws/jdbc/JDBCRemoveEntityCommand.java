@@ -7,8 +7,6 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-import java.util.Iterator;
-
 import java.rmi.RemoteException;
 
 import java.sql.PreparedStatement;
@@ -17,7 +15,6 @@ import javax.ejb.RemoveException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
 
 /**
  * JAWSPersistenceManager JDBCRemoveEntityCommand
@@ -27,7 +24,7 @@ import org.jboss.ejb.plugins.jaws.PkFieldInfo;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
@@ -72,28 +69,7 @@ public class JDBCRemoveEntityCommand
    
    protected void setParameters(PreparedStatement stmt) throws Exception
    {
-      Iterator it = metaInfo.getPkFieldInfos();
-      int i = 1;   // parameter index
-      
-      // Primary key in WHERE-clause
-      if (metaInfo.hasCompositeKey())
-      {
-         // Compound key
-         while (it.hasNext())
-         {
-            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-            int jdbcType = pkFieldInfo.getJDBCType();
-            Object value = getPkFieldValue(ctxArgument.getId(), pkFieldInfo);
-            setParameter(stmt, i++, jdbcType, value);
-         }
-      } else
-      {
-         // Primitive key
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         int jdbcType = pkFieldInfo.getJDBCType();
-         Object value = ctxArgument.getId();
-         setParameter(stmt, i, jdbcType, value);
-      }
+      setPrimaryKeyParameters(stmt, 1, ctxArgument.getId());
    }
    
    protected void handleResult(int rowsAffected) throws Exception

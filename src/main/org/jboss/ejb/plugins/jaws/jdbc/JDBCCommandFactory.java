@@ -36,7 +36,7 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -50,11 +50,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
    // These support singletons (within the scope of this factory)
    private JDBCBeanExistsCommand beanExistsCommand;
    private JPMFindEntitiesCommand findEntitiesCommand;
-   
-   /**
-    * Gives compile-time control of tracing.
-    */
-   public static boolean debug = true;
    
    // Constructors --------------------------------------------------
    

@@ -7,16 +7,11 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-import java.util.Iterator;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.jaws.MetaInfo;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
-import org.jboss.logging.Log;
 
 /**
  * JDBCBeanExistsCommand
@@ -24,7 +19,7 @@ import org.jboss.logging.Log;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
@@ -72,30 +67,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
    protected void setParameters(PreparedStatement stmt) 
       throws Exception
    {
-      // Primary key in WHERE-clause
-      Iterator it = metaInfo.getPkFieldInfos();
-      int i = 1;   // parameter index
-      
-      if (metaInfo.hasCompositeKey())
-      {
-         // Compound key
-         while (it.hasNext())
-         {
-            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-            int jdbcType = pkFieldInfo.getJDBCType();
-            Object value = getPkFieldValue(idArgument, pkFieldInfo);
-            
-            // Set this field of the key
-            setParameter(stmt, i++, jdbcType, value);
-         }
-      } else
-      {
-         // We have a Field key
-         // So just set that field
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         int jdbcType = pkFieldInfo.getJDBCType();
-         setParameter(stmt, i, jdbcType, idArgument);
-      }
+      setPrimaryKeyParameters(stmt, 1, idArgument);
    }
    
    protected void handleResult(ResultSet rs) throws Exception

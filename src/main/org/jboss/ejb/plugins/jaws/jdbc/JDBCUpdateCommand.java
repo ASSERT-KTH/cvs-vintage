@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Provides a Template Method implementation for
  * <code>executeStatementAndHandleResult</code>.
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class JDBCUpdateCommand extends JDBCCommand
 {
@@ -41,7 +41,7 @@ public abstract class JDBCUpdateCommand extends JDBCCommand
    {
       int rowsAffected = stmt.executeUpdate();
       
-      if (factory.debug)
+      if (debug)
       {
          log.debug("Rows affected = " + rowsAffected);
       }

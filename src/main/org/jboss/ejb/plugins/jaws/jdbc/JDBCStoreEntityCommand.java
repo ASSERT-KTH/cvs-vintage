@@ -32,7 +32,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
@@ -142,21 +142,7 @@ public class JDBCStoreEntityCommand
          i++;
       }
       
-      // Primary key in WHERE-clause
-      Iterator it = metaInfo.getPkFieldInfos();
-      while (it.hasNext())
-      {
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         int jdbcType = pkFieldInfo.getJDBCType();
-         Field field = pkFieldInfo.getCMPField();
-         Object value = field.get(ctxArgument.getInstance());
-         
-         // SA had introduced the change below, but it fails
-         // for non-composite primary keys.
-         // Object value = getPkFieldValue(ctxArgument.getId(), pkFieldInfo);
-         
-         setParameter(stmt, idx++, jdbcType, value);
-      }
+      setPrimaryKeyParameters(stmt, idx, ctxArgument.getId());
    }
    
    protected void handleResult(int rowsAffected) throws Exception

@@ -23,7 +23,6 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
 import org.jboss.ejb.plugins.jaws.CMPFieldInfo;
-import org.jboss.ejb.plugins.jaws.PkFieldInfo;
 import org.jboss.ejb.plugins.jaws.deployment.JawsEntity;
 import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
 
@@ -35,7 +34,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -110,28 +109,7 @@ public class JDBCLoadEntityCommand
    
    protected void setParameters(PreparedStatement stmt) throws Exception
    {
-      // Primary key in WHERE-clause
-      Iterator it = metaInfo.getPkFieldInfos();
-      int i = 1;   // parameter index
-      
-      if (metaInfo.hasCompositeKey())
-      {
-         // Compound key
-         while (it.hasNext())
-         {
-            PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-            int jdbcType = pkFieldInfo.getJDBCType();
-            Object value = getPkFieldValue(ctxArgument.getId(), pkFieldInfo);
-            setParameter(stmt, i++, jdbcType, value);
-         }
-      } else
-      {
-         // Primitive key
-         PkFieldInfo pkFieldInfo = (PkFieldInfo)it.next();
-         int jdbcType = pkFieldInfo.getJDBCType();
-         Object value = ctxArgument.getId();
-         setParameter(stmt, i, jdbcType, value);
-      }
+      setPrimaryKeyParameters(stmt, 1, ctxArgument.getId());
    }
    
    protected void handleResult(ResultSet rs) throws Exception
@@ -146,6 +124,7 @@ public class JDBCLoadEntityCommand
       while (iter.hasNext())
       {
          CMPFieldInfo fieldInfo = (CMPFieldInfo)iter.next();
+         int jdbcType = fieldInfo.getJDBCType();
          
          if (fieldInfo.isEJBReference())
          {
@@ -160,10 +139,10 @@ public class JDBCLoadEntityCommand
                Field[] fields = pk.getClass().getFields();
                for(int j = 0; j < fields.length; j++)
                {
-                  Object val = rs.getObject(idx++);
+                  Object val = getResultObject(rs, idx++, jdbcType);
                   fields[j].set(pk, val);
                   
-                  if (factory.debug)
+                  if (debug)
                   {
                      log.debug("Referenced pk field:" + val);
                   }
@@ -171,9 +150,9 @@ public class JDBCLoadEntityCommand
             } else
             {
                // Primitive key
-               pk = rs.getObject(idx++);
+               pk = getResultObject(rs, idx++, jdbcType);
                
-               if (factory.debug)
+               if (debug)
                {
                   log.debug("Referenced pk:" + pk);
                }
@@ -217,7 +196,9 @@ public class JDBCLoadEntityCommand
             // Load primitive
             
             // TODO: this probably needs to be fixed for BLOB's etc.
-            setCMPFieldValue(ctxArgument.getInstance(), fieldInfo, rs.getObject(idx++));
+            setCMPFieldValue(ctxArgument.getInstance(), 
+                             fieldInfo, 
+                             getResultObject(rs, idx++, jdbcType));
          }
       }
       
