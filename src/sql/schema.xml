@@ -1,10 +1,10 @@
-<!-- $Id: schema.xml,v 1.1 2000/12/18 05:03:35 jon Exp $ -->
+<!-- $Id: schema.xml,v 1.2 2000/12/31 21:19:48 jon Exp $ -->
 
 <database>
 <!--
     History of changes made to the attributes of an issue.
 -->
-<table name="SCARAB_ACTIVITY" idMethod="none">
+<table name="SCARAB_ACTIVITY">
     <!--
         Issue attribute of which has been modified.
     -->
@@ -39,7 +39,7 @@
 <!--
     Attachment is a piece of information associated with an issue.
 -->
-<table name="SCARAB_ATTACHMENT" idMethod="idbroker">
+<table name="SCARAB_ATTACHMENT">
     <!--
         Unique identifier.
     -->
@@ -104,7 +104,7 @@
     Example: Comment
     Example: File
 -->
-<table name="SCARAB_ATTACHMENT_TYPE" idMethod="idbroker">
+<table name="SCARAB_ATTACHMENT_TYPE">
     <!--
         Unique identifier.
     -->
@@ -120,7 +120,7 @@
     Example: Operating System
     Example: Severity
 -->
-<table name="SCARAB_ATTRIBUTE" idMethod="idbroker">
+<table name="SCARAB_ATTRIBUTE">
     <!--
         Unique identifier.
     -->
@@ -146,7 +146,7 @@
     Example: Free form input
     Example: Select one from the list
 -->
-<table name="SCARAB_ATTRIBUTE_CLASS" idMethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_CLASS">
     <!--
         Unique identifier.
     -->
@@ -169,7 +169,7 @@
     Attribute option is possible value of an attribute of an issue.
     Example: DOS 3.1 (for attribute Operating System)
 -->
-<table name="SCARAB_ATTRIBUTE_OPTION" idMethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_OPTION">
     <!--
         Unique identifier.
     -->
@@ -199,7 +199,7 @@
     Example: Integer
     Example: String
 -->
-<table name="SCARAB_ATTRIBUTE_TYPE" idMethod="idbroker">
+<table name="SCARAB_ATTRIBUTE_TYPE">
     <!--
         Unique identifier.
     -->
@@ -262,7 +262,7 @@
     Example: Duplicate
     Example: Block
 -->
-<table name="SCARAB_DEPEND_TYPE" idMethod="idbroker">
+<table name="SCARAB_DEPEND_TYPE">
     <!--
         Unique identifier.
     -->
@@ -278,7 +278,7 @@
     Example: Particular defect
     Example: Particular inquiry
 -->
-<table name="SCARAB_ISSUE" idMethod="idbroker">
+<table name="SCARAB_ISSUE">
     <!--
         Unique identifier.
     -->
@@ -374,7 +374,7 @@
 <!--
     Modification information for table.
 -->
-<table name="SCARAB_MODIFICATION" idMethod="idbroker">
+<table name="SCARAB_MODIFICATION">
     <!--
         Table.
     -->
@@ -406,7 +406,7 @@
     Usually corresponds to the software project.
     Example: Scarab
 -->
-<table name="SCARAB_MODULE" idMethod="idbroker">
+<table name="SCARAB_MODULE">
     <!--
         Unique identifier.
     -->
@@ -517,7 +517,7 @@
     Transaction is a group of attribute modification that are performed 
     together.
 -->
-<table name="SCARAB_TRANSACTION" idMethod="idbroker">
+<table name="SCARAB_TRANSACTION">
     <!--
         Unique identifier.
     -->
