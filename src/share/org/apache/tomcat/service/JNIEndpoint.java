@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.2 2000/03/25 03:35:27 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/03/25 03:35:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpoint.java,v 1.3 2000/06/22 23:39:51 alex Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/22 23:39:51 $
  *
  * ====================================================================
  *
@@ -134,7 +134,7 @@ public class JNIEndpoint {
         }
 
         try {
-            JNIEndpointConnector.setEndpoinet(this);
+            JNIEndpointConnector.setEndpoint(this);
             StartupThread startup = new StartupThread(cmdLine,
                                                       this);
             startup.start();
