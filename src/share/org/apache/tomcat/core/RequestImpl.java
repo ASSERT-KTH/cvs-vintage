@@ -326,6 +326,7 @@ public class RequestImpl  implements Request {
     /** Return the principal - the adapter will set it
      */
     public Principal getUserPrincipal() {
+	if( getRemoteUser() == null ) return null;
 	if( principal == null ) {
 	    principal=new SimplePrincipal( getRemoteUser() );
 	}

@@ -166,8 +166,6 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// set the context - no need to fire context parsing again
 	realRequest.setContext( context );
 
-	// Note that Mapper interceptor uses lookup path. 
-	//realRequest.setLookupPath( path );
 	realRequest.setRequestURI( context.getPath() + path );
 
 	// merge query string as specified in specs - before, it may affect
@@ -179,8 +177,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// not that this is a very particular case of forwarding
 	context.getContextManager().processRequest(realRequest);
 
+	// unset "included" attribute if any - we may be in a servlet included from another servlet,
+	// in which case the attribute will create problems
+	realRequest.removeAttribute( "javax.servlet.include.request_uri");
+
+
 	// CM should have set the wrapper - call it
-	// LOG	System.out.println("Forward " + realRequest.getServletPath());
 	realRequest.getWrapper().handleRequest(realRequest,
 						realResponse);
     }

@@ -30,7 +30,8 @@ public class XmlMapper
      * The URLs of DTDs that have been registered, keyed by the public
      * identifier that corresponds.
      */
-    private Hashtable dtds = new Hashtable();
+    private Hashtable fileDTDs = new Hashtable();
+    private Hashtable resDTDs = new Hashtable();
 
     // Stack of elements
     Stack oStack=new Stack();
@@ -283,14 +284,25 @@ public class XmlMapper
 
 
     /**
-     * Register the specified DTD URL for the specified public identifier.
+     * Register the specified DTD with a local file.
      * This must be called prior to the first call to <code>readXml()</code>.
      *
      * @param publicId Public identifier of the DTD to be resolved
-     * @param dtdURL The URL to use for reading this DTD
+     * @param dtdFile The local file name to use for reading this DTD
      */
-    public void register(String publicId, String dtdURL) {
-	dtds.put(publicId, dtdURL);
+    public void registerDTDFile(String publicId, String dtdFile) {
+	fileDTDs.put(publicId, dtdFile);
+    }
+
+    /**
+     * Register the specified DTD to map to a resource in the classpath
+     * This must be called prior to the first call to <code>readXml()</code>.
+     *
+     * @param publicId Public identifier of the DTD to be resolved
+     * @param dtdRes local resource name, to be used with getResource()
+     */
+    public void registerDTDRes(String publicId, String dtdRes) {
+	resDTDs.put(publicId, dtdRes);
     }
 
 
@@ -406,18 +418,30 @@ public class XmlMapper
      * @exception SAXException if a parsing error occurs
      */
     public InputSource resolveEntity(String publicId, String systemId)
-	throws SAXException {
-	String dtdURL = (String) dtds.get(publicId);
-	//	System.out.println("Entity: " + publicId + " --> " + systemId + " \"" + dtdURL +"\"");
-
-	if (dtdURL == null) {
-	    //	    log("Entity: " + publicId + " --> " + systemId);
-	    return (null);
-	} else {
-	    //	    log("Entity: " + publicId + " --> " + dtdURL);
-	    return (new InputSource(dtdURL));
+	throws SAXException
+    {
+	String dtd = (String) fileDTDs.get(publicId);
+	if( dtd != null ) {
+	    File dtdF=new File( dtd );
+	    if( dtdF.exists() )
+		try {
+		    return new InputSource(new FileInputStream(dtdF));
+		} catch( FileNotFoundException ex ) {
+		}
+	    // else continue
 	}
 
+	dtd = (String) resDTDs.get( publicId );
+	if( dtd != null ) {
+	    InputStream is = this.getClass().getResourceAsStream( dtd );
+	    if( is!= null )
+		return new InputSource(is);
+	    System.out.println("XXX resource not found !!! " + dtd);
+	}
+	
+	log("Can't find resource for entity: " + publicId + " --> " + systemId + " \"" + dtd +"\"");
+
+	return null;
     }
 
     public void notationDecl (String name,

@@ -88,7 +88,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
     public void preServletInit( Context ctx, ServletWrapper sw )
 	throws TomcatException
     {
-	fixJDKContextClassLoader(ctx.getServletLoader().getClassLoader());
+	fixJDKContextClassLoader(ctx);
     }
 
     /** Servlet Destroy  notification
@@ -96,7 +96,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
     public void preServletDestroy( Context ctx, ServletWrapper sw )
 	throws TomcatException
     {
-	fixJDKContextClassLoader(ctx.getServletLoader().getClassLoader());
+	fixJDKContextClassLoader(ctx);
     }
     
     public void postServletInit( Context ctx, ServletWrapper sw )
@@ -110,7 +110,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
      */
     public int preService(Request request, Response response) {
 	if( request.getContext() == null ) return 0;
-	fixJDKContextClassLoader(request.getContext().getServletLoader().getClassLoader());
+	fixJDKContextClassLoader(request.getContext());
 	//	System.out.println("Setting class loader for service()");
 	return 0;
     }
@@ -125,17 +125,25 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
     // that will set a new (JDK)context class loader, and return the old one
     // if we are in JDK1.2
     // XXX move it to interceptor !!!
-    final private void fixJDKContextClassLoader( ClassLoader cl ) {
-	if( cl==null ) return;
-
+    final private void fixJDKContextClassLoader( Context ctx ) {
+	ClassLoader cl=ctx.getServletLoader().getClassLoader();
+	if( cl==null ) {
+	    System.out.println("ERROR: Jdk12Interceptor: classloader==null");
+	    return;
+	}
 // 	java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
 // 	    public Object run()  {
 // 		Thread.currentThread().setContextClassLoader(cl);
 // 		return null;
 // 	    }
 // 	});
-	Thread t=Thread.currentThread();
-	t.setContextClassLoader( cl );
+	try {
+	    Thread t=Thread.currentThread();
+	    t.setContextClassLoader( cl );
+	    //	    System.out.println("Jdk12Interceptor: Setting CL " + cl );
+	} catch( Throwable t ) {
+	    t.printStackTrace();
+	}
     }
 
     

@@ -32,48 +32,81 @@ public class WebXmlReader extends BaseInterceptor {
 	validate=b;
     }
 
+    private ServletWrapper addServlet( Context ctx, String name, String classN )
+	throws TomcatException
+    {
+	ServletWrapper sw=new ServletWrapper();
+	sw.setContext(ctx);
+	sw.setServletName( name );
+	sw.setServletClass( classN);
+	ctx.addServlet( sw );
+	return sw;
+    }
+    
+    private void setDefaults( Context ctx )
+	throws TomcatException
+    {
+	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
+	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
+	ServletWrapper sw=addServlet( ctx, "jsp", "org.apache.jasper.runtime.JspServlet");
+	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
+
+	ctx.addServletMapping( "/servlet/*", "invoker");
+	ctx.addServletMapping( "*.jsp", "jsp");
+	
+	ctx.setSessionTimeOut( 30 );
+
+	// mime-mapping - are build into MimeMap.
+	// Note that default mappings are based on existing registered types.
+
+	// index pages - still use the hack, but it'll go away soon
+	for( int i=0; i< defaultWelcomeList.length; i++ )
+	    ctx.addWelcomeFile( defaultWelcomeList[i]);
+	ctx.expectUserWelcomeFiles();
+    }
+
+
+    private void readDefaultWebXml( Context ctx ) throws TomcatException {
+	ContextManager cm=ctx.getContextManager();
+	String home = cm.getHome();
+	
+	File default_xml=new File( home + "/conf/web.xml" );
+	
+	// try the default ( installation )
+	if( ! default_xml.exists() ) {
+	    String tchome=ctx.getContextManager().getInstallDir();
+	    if( tchome != null )
+		default_xml=new File( tchome + "/conf/web.xml");
+	}
+	
+	if( ! default_xml.exists() )
+	    return;
+	
+	processWebXmlFile(ctx , default_xml.getPath());
+	ctx.expectUserWelcomeFiles();
+    }
+    
     public void contextInit(Context ctx) throws TomcatException {
 	if( ctx.getDebug() > 0 ) ctx.log("XmlReader - init  " + ctx.getPath() + " " + ctx.getDocBase() );
-
-	// read default web.xml
+	ContextManager cm=ctx.getContextManager();
+	
 	try {
-            String home = ctx.getContextManager().getHome();
+	    // Default init
+	    setDefaults( ctx );
 
-	    // Calculate pathname to the local web.dtd file
-	    File default_dtd = new File( home + "/conf/web.dtd" );
-	    if ( ! default_dtd.exists() ) {
-		String tchome=ctx.getContextManager().getInstallDir();
-		if ( tchome != null )
-		    default_dtd = new File( tchome + "/conf/web.dtd" );
-	    }
+	    // We may read a "default" web.xml from INSTALL/conf/web.xml -
+	    // the code is commented out right now because we want to
+	    // consolidate the config in server.xml ( or API calls ),
+	    // we may put it back for 3.2 if needed.
+	    // note that web.xml have to be cleaned up - only diff from
+	    // default should be inside
+	    // readDefaultWebXml( ctx );
+	    
+	    File inf_xml = cm.getAbsolute( new File(ctx.getDocBase() +
+						    "/WEB-INF/web.xml"));
+	    if( inf_xml.exists() )
+		processWebXmlFile(ctx, inf_xml.getPath() );
 
-	    // XXX make it configurable
-	    File default_xml=new File( home + "/conf/web.xml" );
-
-	    // try the default ( installation )
-	    if( ! default_xml.exists() ) {
-		String tchome=ctx.getContextManager().getInstallDir();
-		if( tchome != null )
-		    default_xml=new File( tchome + "/conf/web.xml");
-	    }
-
-	    if( ! default_xml.exists() )
-		throw new TomcatException("Can't find default web.xml configuration");
-
-	    if( validate && ! default_dtd.exists() )
-		throw new TomcatException("Can't find default web.dtd configuration");
-
-
-	    processFile(ctx, default_xml.toString(), default_dtd.toString() );
-	    ctx.expectUserWelcomeFiles();
-
-	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
-	    // if relative, base it to cm.home
-	    if (!inf_xml.isAbsolute())
-		inf_xml = new File(home, inf_xml.toString());
-
-	    processFile(ctx, inf_xml.toString(), default_dtd.toString() );
-	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
 	    System.out.println(msg);
@@ -81,10 +114,8 @@ public class WebXmlReader extends BaseInterceptor {
 
     }
 
-    void processFile( Context ctx, String file, String default_dtd) {
+    void processWebXmlFile( Context ctx, String file) {
 	try {
-	    String dtdURL = "file:" + default_dtd.toString();
-	    
 	    File f=new File(FileUtil.patch(file));
 	    if( ! f.exists() ) {
 		ctx.log( "File not found " + f + ", using only defaults" );
@@ -98,8 +129,9 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 
 	    // By using dtdURL you brake most parsers ( at least xerces )
-	    xh.register("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
-			dtdURL );
+	    xh.registerDTDRes("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+			      "/org/apache/tomcat/resources/web.dtd");
+
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
 	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) );
 	    xh.addRule("web-app/context-param/param-value", xh.methodParam(1) );

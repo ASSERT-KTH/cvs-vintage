@@ -11,8 +11,6 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 
-// Used to stop tomcat
-
 /**
  * Simple starter for Tomcat.
  *

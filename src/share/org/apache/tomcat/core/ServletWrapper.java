@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.47 2000/05/30 16:06:00 costin Exp $
- * $Revision: 1.47 $
- * $Date: 2000/05/30 16:06:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.48 2000/06/10 17:54:26 costin Exp $
+ * $Revision: 1.48 $
+ * $Date: 2000/06/10 17:54:26 $
  *
  * ====================================================================
  *
@@ -174,7 +174,9 @@ public class ServletWrapper {
     }
 
     public String getServletName() {
-	return (servletName != null) ? servletName : servletClassName;
+	if( servletName != null ) return servletName;
+	if( servletClassName != null ) return servletClassName;
+	return path;
     }
 
     public void setServletName(String servletName) {
@@ -311,27 +313,32 @@ public class ServletWrapper {
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	initServlet();
+	// Jsp case - maybe another Jsp engine is used
+	if( servlet==null && path != null ) {
+	    handleJspInit();
+	}
+	// XXX Move this to an interceptor, so it will be configurable.
+	// ( and easier to read )
+	if (servletClass == null) {
+	    if (servletClassName == null) {
+		context.log( "Invalid servlet - class and class name are null " + servletName);
+		throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
+	    }
+	    
+	    servletClass=context.getServletLoader().loadClass( servletClassName);
+	}
+	
+	if( servletClass==null ) throw new ServletException("Error loading servlet " + servletClassName );
+	servlet = (Servlet)servletClass.newInstance();
+	if( servlet==null ) throw new ServletException("Error insantiating servlet "  + servletClassName );
+	//	System.out.println("Loading " + servletClassName + " " + servlet );
     }
-
     
-    void initServlet()
+    public void initServlet()
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	    // XXX Move this to an interceptor, so it will be configurable.
-	    // ( and easier to read )
-	    if (servletClass == null) {
-		if (servletClassName == null) 
-		    throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
-		
-		servletClass=context.getServletLoader().loadClass( servletClassName);
-	    }
-
-	    if( servletClass==null ) throw new ServletException("Error loading servlet " + servletClassName );
-	    servlet = (Servlet)servletClass.newInstance();
-	    if( servlet==null ) throw new ServletException("Error insantiating servlet "  + servletClassName );
-	    //	System.out.println("Loading " + servletClassName + " " + servlet );
+	if( servlet==null ) loadServlet();
 
 	    checkInternal(servlet, servletClassName);
 
@@ -421,24 +428,20 @@ public class ServletWrapper {
 			}
 		}
     }
+    
+    // <servlet><jsp-file> case - we know it's a jsp
+    void handleJspInit() {
 
-    void handleJsp(Request req, Response res) {
-	// XXX call JspServlet directly, did anyone tested it ??
+	// XXX Jsp Servlet is initialized, the servlet is not generated - we can't hook in!
+	// It's jspServet that has to pass the config - but it can't so easily, plus
+	// it'll have to hook in.
+	// I don't think that ever worked anyway - and I don't think it can work without
+	// integrating Jsp handling into tomcat ( using interceptor )
 	
-	// This is the attribute needed by JspServlet, and everything different
-	// that a forward will provide
-	req.setAttribute( "javax.servlet.include.request_uri", path );
-	
-	if( servlet==null ) {
-	    // this will return JspServlet 99% of the time 
-	    // run the new request through the context manager
-	    // not that this is a very particular case of forwarding
-	    Request subRequest=context.getContextManager().createRequest( context, path );
-	    context.getContextManager().processRequest(subRequest);
-	    servlet = subRequest.getWrapper().getServlet();
-	}
+	ServletWrapper jspServletW = context.getServletByName("jsp");
+	servletClassName = jspServletW.getServletClass();
     }
-
+    
     /** Check if we can try again an init
      */
     private boolean stillUnavailable() {
@@ -481,16 +484,17 @@ public class ServletWrapper {
 	res.setStatus( 404 );
 	contextM.handleStatus( req, res,  404 );
     }
-    
+
     public void handleRequest(Request req, Response res)
     {
-	// Jsp case - maybe another Jsp engine is used
-	if( servlet==null && path != null ) {
-	    handleJsp( req, res );
-	}
-	
 	handleReload();
 
+	// <servlet><jsp-file> case
+	if( path!=null ) {
+	    req.setAttribute( "javax.servlet.include.request_uri", path );
+	}
+	
+	// Jsp case - if servlet == null init will take care 
 	// Special case - we're not ready to run
 	if( ! initialized || servlet == null || unavailable!=null  ) {
 	    // Don't load if Unavailable timer is in place
@@ -561,16 +565,18 @@ public class ServletWrapper {
     }
     
     public String toString() {
-	String toS="Wrapper(" + getServletName() + " ";
-	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();
-	else  toS= toS + servletClassName;
-	return toS + ")";
+	StringBuffer sb=new StringBuffer();
+	sb.append("<servlet n=").append( getServletName());
+	if( servlet!=null ) sb.append( " sc=").append(servlet.getClass().getName());
+	else  sb.append(" c=").append(servletClassName);
+	sb.append(">");
+	return sb.toString();
     }
 
     /** Who created this servlet definition - default is 0, i.e. the
 	web.xml mapping. It can also be the Invoker, the admin ( by using a
 	web interface), JSP engine or something else.
-
+	
 	Tomcat can do special actions - for example remove non-used
 	mappings if the source is the invoker or a similar component
     */
@@ -581,6 +587,8 @@ public class ServletWrapper {
     public int getOrigin() {
 	return origin;
     }
+
+    // -------------------- Accounting --------------------
 
     /** ServletWrapper counts. The accounting desing is not
 	final, but all this is needed to tune up tomcat

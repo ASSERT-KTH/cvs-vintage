@@ -244,7 +244,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    Container container =(Container)map.getLongestPrefixMatch(  host, path );
 	    
 	    if( container == null ) throw new RuntimeException( "Assertion failed - container==null");
-	    if( container.getHandler() == null ) throw new RuntimeException( "Assertion failed - container.handler==null");
+	    if( container.getHandler() == null ) throw new RuntimeException( "Assertion failed - container.handler==null " +
+									     req.toString());
 	    
 	    if(debug>0) cm.log("SM: Prefix match " + path + " -> " + container.getPath() + " " +
 			       container.getHandler()  + " " + container.getRoles());
@@ -364,8 +365,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 
 	}
 	req.setServletPath( s );
-	
-	if( ! "".equals(pathI) ) 
+
+	if( ! "".equals(pathI)) 
 	    req.setPathInfo(pathI);
 	Context ctx=container.getContext();
 	req.setContext(ctx);

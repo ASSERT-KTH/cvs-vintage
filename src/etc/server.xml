@@ -39,6 +39,8 @@
     <ContextManager debug="0" workDir="work" >
         <!-- ContextInterceptor className="org.apache.tomcat.context.LogEvents" / -->
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
+        <ContextInterceptor className="org.apache.tomcat.context.PolicyInterceptor" />
+        <ContextInterceptor className="org.apache.tomcat.context.LoaderInterceptor" />
         <ContextInterceptor className="org.apache.tomcat.context.DefaultCMSetter" />
         <ContextInterceptor className="org.apache.tomcat.context.WorkDirInterceptor" />
         <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />

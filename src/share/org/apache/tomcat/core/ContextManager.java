@@ -311,6 +311,8 @@ public class ContextManager {
 	    if(debug>5) log("Setting default context interceptors");
 	    addContextInterceptor(new LogEvents());
 	    addContextInterceptor(new AutoSetup());
+	    //	    addContextInterceptor(new PolicyInterceptor());
+	    addContextInterceptor(new LoaderInterceptor());
 	    addContextInterceptor(new DefaultCMSetter());
 	    addContextInterceptor(new WorkDirInterceptor());
 	    addContextInterceptor( new WebXmlReader());
@@ -871,7 +873,7 @@ public class ContextManager {
 	    req.setAttribute( "tomcat.servlet.error.defaultHandler", "true");
 	    errorServlet=ctx.getServletByName("tomcat.errorPage");
 	}
-
+		
 	// Try a normal "error page" ( path based )
 	if( errorServlet==null && errorPath != null ) {
 	    try {
@@ -1193,6 +1195,15 @@ public class ContextManager {
 	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	return getInstallDir();
     }
-    
+
+    /** Convert a relative name to absolute by using the "home" property
+     */
+    public File getAbsolute(File f) {
+        if (!f.isAbsolute()) {
+            // evaluate repository path relative to the context's home directory
+	    return new File(getHome(), f.getPath());
+        }
+        return f;
+    }
     
 }

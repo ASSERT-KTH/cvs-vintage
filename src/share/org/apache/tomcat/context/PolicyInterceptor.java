@@ -55,88 +55,104 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
-package org.apache.tomcat.core;
 
+package org.apache.tomcat.context;
+
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
+import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
+import javax.servlet.http.*;
 
-// This is not a class loader, any "normal" class loader can be used.
+import org.apache.tomcat.logging.*;
 
-// XXX Should be named DynamicLoader - has nothing specific to servlets
-
-/** Handle servlet and resource reloading
+/**
+ * Set policy-based access to tomcat.
+ * Must be hooked before class loader setter.
+ * The context will have a single protection domain, pointing to the doc root.
+ *  That will include all classes loaded that belong to the context ( jsps, WEB-INF/classes,
+ * WEB-INF/lib/
+ *
+ * @author  Glenn Nielsen 
+ * @author costin@dnt.ro
  */
-public interface ServletLoader {
+public class PolicyInterceptor extends BaseInterceptor {
 
-    /** Check if we need to reload one particular class.
-     *  No check is done for dependent classes.
-     *  The final decision about reloading is left to the caller.
-     */
-    public boolean shouldReload( String className );
+    public PolicyInterceptor() {
+    }
 
-    /** Check if we need to reload. All loaded classes are
-     *  checked.
-     *  The final decision about reloading is left to the caller.
+    /** Add a default set of permissions to the context
      */
-    public boolean shouldReload();
+    protected void addDefaultPermissions( Context context, Permissions p ) {
+        String base = context.getDocBase();
 
-    /** Reset the class loader. The caller should take all actions
-     *  required by this step ( free resources for GC, etc)
-     */
-    public void reload();
+	// Add default read "-" FilePermission for docBase, classes, lib
+	// Default per context permissions
+	FilePermission fp = new FilePermission(base + "-", "read");
+	if( fp != null )
+	    p.add((Permission)fp);
 
-    /** Return a real class loader
-     */
-    public ClassLoader getClassLoader();
+    }
     
-    /** Handle servlet loading. Same as getClassLoader().loadClass(name, true); 
-     */
-    public Class loadClass( String name)
-	throws ClassNotFoundException;
+    public void contextInit( Context context)
+	throws TomcatException
+    {
+	SecurityManager sm = System.getSecurityManager();
+	if( sm==null ) return;
 
+	ContextManager cm = context.getContextManager();
+	String base = context.getDocBase();
+	    
+	try {	
+	    File dir = cm.getAbsolute(new File(base));
+	    URL url = new URL("file:" + dir.getAbsolutePath());
+	    CodeSource cs = new CodeSource(url,null);
+	    
+	    /* Try the context permissions ( set in the config file of via API calls )
+	     */
+	    Permissions p = (Permissions)context.getPermissions();
+	    
+	    if( p == null ) {
+		p = new Permissions();
+	    }
+	    
+	    // Add global permissions ( from context manager )
+	    // XXX maybe use imply or something like that
+	    Permissions perms = (Permissions)cm.getPermissions();
+	    if( perms!= null ) {
+		Enumeration enum=perms.elements();
+		while(enum.hasMoreElements()) {
+		    p.add((Permission)enum.nextElement());
+		}
+	    }
+	    
+	    addDefaultPermissions( context, p);
+	
+	    /** Add whatever permissions are specified in the policy file
+	     */
+	    PermissionCollection pFileP=Policy.getPolicy().getPermissions(cs);
+	    if( pFileP!= null ) {
+		Enumeration enum=pFileP.elements();
+		while(enum.hasMoreElements()) {
+		    p.add((Permission)enum.nextElement());
+		}
+	    }
+	    
+	    ProtectionDomain pd = new ProtectionDomain(cs,p);
+	    context.setProtectionDomain(pd);
+	    // new permissions - added context manager and file to whatever was
+	    // specified by default
+	    context.setPermissions( p );
 
-    /** Return the class loader view of the class path
-     */
-    public String getClassPath();
+	} catch(Exception ex) {
+	    System.out.println("Security init for Context " + base + " failed");
+	}
 
-
-    /** Add a new directory or jar to the class loader.
-     *  Optionally, a SecurityManager ProtectionDomain can
-     *  be specified for use by the ClassLoader when defining
-     *  a class loaded from this entry in the repository.
-     *  Not all loaders can add resources dynamically -
-     *  that may require a reload.
-     */
-    public void addRepository( File f, Object protectionDomain );
-    // XXX notify if it can't add it
-    
-    
-    /** Add a new remote repository. Not all class loader will
-     *  support remote resources, use File if it's a local resource.
-     */
-    public void addRepository( URL url );
-    // XXX notify if it can't add it
-
-    /** The parent loader - used to load tomcat classes. The Loader must delegate
-     *  to it, instead of using the system loader
-     */
-    public void setParentLoader( ClassLoader parent );
-
-    public ClassLoader getParentLoader();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-

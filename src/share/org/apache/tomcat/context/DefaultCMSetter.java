@@ -84,7 +84,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 
     public void engineInit(ContextManager cm) throws TomcatException {
 	File homeF=new File( cm.getHome());
-
+	
 	// Setup loggers - they may have relative paths.
 	Enumeration enum=Logger.getLoggerNames();
 	while( enum.hasMoreElements() ) {
@@ -130,19 +130,6 @@ public class DefaultCMSetter extends BaseInterceptor {
 	}
 
     }
-    
-    /** Called when a new context is added to the server.
-     *
-     *  - Check it and set defaults for WorkDir, EngineHeader and SessionManager.
-     *  If you don't like the defaults, set them in Context before adding it to the
-     *  engine.
-     *
-     *  - Set up defaults for context interceptors and session if nothing is set
-     */
-    public void addContext(ContextManager cm, Context ctx)
-	throws TomcatException
-    {
-    }
 
     public void contextInit( Context ctx)
 	throws TomcatException
@@ -168,12 +155,13 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
 	    ctx.addServlet( authWrapper );
 	} else if( "FORM".equals( login_type )) {
-	    authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
+	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
+	    //authWrapper.setServletClass( "org.apache.tomcat.servlets.FormLoginServlet" );
 	    ctx.addServlet( authWrapper );
 	} else {
 	    authWrapper.setServletClass( "org.apache.tomcat.servlets.BasicLoginServlet" );
 	    ctx.addServlet( authWrapper );
-	    ctx.log("Unknown auth method " + login_type );
+	    //	    ctx.log("Unknown auth method " + login_type );
 	}
 	
 	ServletWrapper errorWrapper=new ServletWrapper();
@@ -182,161 +170,16 @@ public class DefaultCMSetter extends BaseInterceptor {
 	errorWrapper.setServletName( "tomcat.errorPage");
 	ctx.addServlet( errorWrapper );
 
-	// XXX Loader properties - need to be set on loader!!
-	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
-	ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
-	initURLs( ctx );
 	// Validation for error  servlet
-	try {
+ 	try {
 	    ServletWrapper errorWrapper1=ctx.getServletByName( "tomcat.errorPage");
-	    errorWrapper1.loadServlet();
+	    errorWrapper1.initServlet();
 	} catch( Exception ex ) {
 	    System.out.println("Error loading default servlet ");
             ex.printStackTrace();
 	    // XXX remove this context from CM
 	    throw new TomcatException( "Error loading default error servlet ", ex );
 	}
-    }
-
-    private void initURLs(Context context) {
-	ServletLoader loader=context.getServletLoader();
-        ContextManager cm = context.getContextManager();
-        if( loader==null || cm == null) return;
-        SecurityManager sm = System.getSecurityManager();
-        Permissions p = null;
-
-        String base = context.getDocBase();
-
-        /**
-         * Initialize default FilePermissions for Context if using SecurityManager
-         */
-        if( sm != null ) {
-            p = (Permissions)context.getPermissions();
-            if( p == null ) {
-                // Clone the Permissions to overcome readonly status
-                Permissions perms = (Permissions)cm.getPermissions();
-                p = new Permissions();
-		if( perms!= null ) {
-		    Enumeration enum=perms.elements();
-		    while(enum.hasMoreElements()) {
-			p.add((Permission)enum.nextElement());
-		    }
-		}
-                // Add default read "-" FilePermission for docBase, classes, lib
-                FilePermission fp;
-                fp = new FilePermission(base + "-", "read");
-                if( fp != null )
-                    p.add((Permission)fp);
-            }
-        }
-
-	// Add "WEB-INF/classes"
-
-	File dir = new File(base + "/WEB-INF/classes");
-
-        // GS, Fix for the jar@lib directory problem.
-        // Thanks for Kevin Jones for providing the fix.
-        dir = getAbsolute(dir, context);
-	if( dir.exists() ) {
-            ProtectionDomain pd = null;
-            try {
-                if( sm != null ) {
-                    // Set the Default Security Permissions
-                    URL url = new URL("file:" + dir.getAbsolutePath());
-                    CodeSource cs = new CodeSource(url,null);
-                    pd = new ProtectionDomain(cs,p);
-                }
-                loader.addRepository( dir, pd );
-            } catch(Exception ex) {
-                System.out.println("Security init for Context " + base + " failed");
-            }
-        }
-
-        // Create ProtectionDomain for JSP's for use by JSP Engine if using SecurityManager
-        if( sm != null ) {
-            File work = (File) context.getAttribute(Constants.ATTRIB_WORKDIR);
-            if( work.exists() ) {
-                ProtectionDomain pd = null;
-                try {
-                    // Set the Default Security Permissions
-                    URL url = new URL("file:" + work.getAbsolutePath());
-                    CodeSource cs = new CodeSource(url,null);
-                    pd = new ProtectionDomain(cs,p);
-//                    loader.addRepository( work, pd );
-                    context.setAttribute(Constants.ATTRIB_JSP_ProtectionDomain, pd);
-                } catch(Exception ex) {
-                    System.out.println("Security init for Context " + base + " failed");
-                }
-            }
-	}
-
-	File f =  new File(base + "/WEB-INF/lib");
-        f = getAbsolute(f, context);
-	Vector jars = new Vector();
-	getJars(jars, f);
-
-	for(int i=0; i < jars.size(); ++i) {
-	    String jarfile = (String) jars.elementAt(i);
-	    File jarF=new File(f, jarfile );
-            ProtectionDomain pd = null;
-            try {
-                // Setup ProtectionDomain for jar files if using SecurityManager
-                if( sm != null ) {
-                    // Set the Default Security Permissions
-                    URL url = new URL("file:" + jarF.getAbsolutePath());
-                    CodeSource cs = new CodeSource(url,null);
-                    pd = new ProtectionDomain(cs,p);
-                }
-                loader.addRepository( getAbsolute( jarF, context), pd );
-            } catch(Exception ex) {  
-                System.out.println("Security init for Context " + base + " failed");
-            }
-	}
-    }
-
-
-    private void getJars(Vector v, File f) {
-        FilenameFilter jarfilter = new FilenameFilter() {
-		public boolean accept(File dir, String fname) {
-		    if(fname.endsWith(".jar"))
-			return true;
-
-		    return false;
-		}
-	    };
-        FilenameFilter dirfilter = new FilenameFilter() {
-		public boolean accept(File dir, String fname) {
-		    File f1 = new File(dir, fname);
-		    if(f1.isDirectory())
-			return true;
-
-		    return false;
-		}
-	    };
-
-        if(f.exists() && f.isDirectory() && f.isAbsolute()) {
-            String[] jarlist = f.list(jarfilter);
-
-            for(int i=0; (jarlist != null) && (i < jarlist.length); ++i) {
-                v.addElement(jarlist[i]);
-            }
-
-            String[] dirlist = f.list(dirfilter);
-
-            for(int i=0; (dirlist != null) && (i < dirlist.length); ++i) {
-                File dir = new File(f, dirlist[i]);
-                getJars(v, dir);
-            }
-        }
-    }
-
-    private File getAbsolute(File f, Context c) {
-        if (!f.isAbsolute()) {
-            // evaluate repository path relative to the context's home directory
-            ContextManager cm = c.getContextManager();
-	    return new File(cm.getHome(), f.getPath());
-        }
-        return f;
     }
 
     // -------------------- implementation

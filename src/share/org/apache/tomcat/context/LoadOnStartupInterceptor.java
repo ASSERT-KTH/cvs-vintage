@@ -149,22 +149,12 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	
 	// Ugly code to trick JSPServlet into loading this.
 
-	// XXX XXX XXX
-	// core shouldn't depend on a particular connector!
-	// need to find out what this code does!
-	
-	// XXX XXX find a better way !!!
-	//	RequestAdapterImpl reqA=new RequestAdapterImpl();
-	//	ResponseAdapterImpl resA=new ResponseAdapterImpl();
 	String path=result.getPath();
 	RequestImpl request = new RequestImpl();
 	ResponseImpl response = new ResponseImpl();
 	request.setContextManager( context.getContextManager());
 	request.recycle();
 	response.recycle();
-	
-	//	request.setRequestAdapter( reqA );
-	// response.setResponseAdapter( resA );
 	
 	request.setResponse(response);
 	response.setRequest(request);

@@ -55,88 +55,103 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
-package org.apache.tomcat.core;
 
+package org.apache.tomcat.context;
+
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Constants;
+import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.security.*;
+import javax.servlet.http.*;
 
-// This is not a class loader, any "normal" class loader can be used.
-
-// XXX Should be named DynamicLoader - has nothing specific to servlets
-
-/** Handle servlet and resource reloading
+import org.apache.tomcat.logging.*;
+import org.apache.tomcat.loader.*;
+/**
+ * Set class loader based on WEB-INF/classes, lib.
+ * Uses the protection domain - if any, so PolicyInterceptor
+ * must be called before it.
+ * 
+ * This is just an adapter between tomcat and the loader interface.
+ * 
+ *
+ * @author costin@dnt.ro
  */
-public interface ServletLoader {
+public class LoaderInterceptor extends BaseInterceptor {
 
-    /** Check if we need to reload one particular class.
-     *  No check is done for dependent classes.
-     *  The final decision about reloading is left to the caller.
-     */
-    public boolean shouldReload( String className );
+    public LoaderInterceptor() {
+    }
 
-    /** Check if we need to reload. All loaded classes are
-     *  checked.
-     *  The final decision about reloading is left to the caller.
-     */
-    public boolean shouldReload();
+    public void contextInit( Context context)
+	throws TomcatException
+    {
+        ContextManager cm = context.getContextManager();
+	AdaptiveServletLoader loader=new AdaptiveServletLoader();
+	context.setServletLoader( loader );
 
-    /** Reset the class loader. The caller should take all actions
-     *  required by this step ( free resources for GC, etc)
-     */
-    public void reload();
+        String base = context.getDocBase();
+	Object p = context.getPermissions();
+	Object pd=context.getProtectionDomain();
 
-    /** Return a real class loader
-     */
-    public ClassLoader getClassLoader();
-    
-    /** Handle servlet loading. Same as getClassLoader().loadClass(name, true); 
-     */
-    public Class loadClass( String name)
-	throws ClassNotFoundException;
+	// Add "WEB-INF/classes"
+	File dir = new File(base + "/WEB-INF/classes");
 
+        // GS, Fix for the jar@lib directory problem.
+        // Thanks for Kevin Jones for providing the fix.
+        dir = cm.getAbsolute(dir);
+	if( dir.exists() ) {
+	    loader.addRepository( dir, pd );
+        }
 
-    /** Return the class loader view of the class path
-     */
-    public String getClassPath();
+        File f = cm.getAbsolute(new File(base + "/WEB-INF/lib"));
+	Vector jars = new Vector();
+	getJars(jars, f);
 
+	for(int i=0; i < jars.size(); ++i) {
+	    String jarfile = (String) jars.elementAt(i);
+	    File jarF=new File(f, jarfile );
+	    loader.addRepository( cm.getAbsolute( jarF ), pd );
+	}
+    }
 
-    /** Add a new directory or jar to the class loader.
-     *  Optionally, a SecurityManager ProtectionDomain can
-     *  be specified for use by the ClassLoader when defining
-     *  a class loaded from this entry in the repository.
-     *  Not all loaders can add resources dynamically -
-     *  that may require a reload.
-     */
-    public void addRepository( File f, Object protectionDomain );
-    // XXX notify if it can't add it
-    
-    
-    /** Add a new remote repository. Not all class loader will
-     *  support remote resources, use File if it's a local resource.
-     */
-    public void addRepository( URL url );
-    // XXX notify if it can't add it
+    private void getJars(Vector v, File f) {
+        FilenameFilter jarfilter = new FilenameFilter() {
+		public boolean accept(File dir, String fname) {
+		    if(fname.endsWith(".jar"))
+			return true;
 
-    /** The parent loader - used to load tomcat classes. The Loader must delegate
-     *  to it, instead of using the system loader
-     */
-    public void setParentLoader( ClassLoader parent );
+		    return false;
+		}
+	    };
+        FilenameFilter dirfilter = new FilenameFilter() {
+		public boolean accept(File dir, String fname) {
+		    File f1 = new File(dir, fname);
+		    if(f1.isDirectory())
+			return true;
 
-    public ClassLoader getParentLoader();
+		    return false;
+		}
+	    };
+
+        if(f.exists() && f.isDirectory() && f.isAbsolute()) {
+            String[] jarlist = f.list(jarfilter);
+
+            for(int i=0; (jarlist != null) && (i < jarlist.length); ++i) {
+                v.addElement(jarlist[i]);
+            }
+
+            String[] dirlist = f.list(dirfilter);
+
+            for(int i=0; (dirlist != null) && (i < dirlist.length); ++i) {
+                File dir = new File(f, dirlist[i]);
+                getJars(v, dir);
+            }
+        }
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-

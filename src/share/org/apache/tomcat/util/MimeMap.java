@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.4 2000/06/03 06:35:23 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/03 06:35:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeMap.java,v 1.5 2000/06/10 17:54:29 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/10 17:54:29 $
  *
  * ====================================================================
  *
@@ -79,91 +79,91 @@ public class MimeMap implements FileNameMap {
     // Defaults - all of them are "well-known" types,
     // you can add using normal web.xml.
     
-    public static Hashtable mimeMappings=new Hashtable();
+    public static Hashtable defaultMap=new Hashtable(101);
     static {
-        mimeMappings.put("txt", "text/plain");
-        mimeMappings.put("html","text/html");
-        mimeMappings.put("htm", "text/html");
-        mimeMappings.put("gif", "image/gif");
-        mimeMappings.put("jpg", "image/jpeg");
-        mimeMappings.put("jpe", "image/jpeg");
-        mimeMappings.put("jpeg", "image/jpeg");
-	mimeMappings.put("java", "text/plain");
-        mimeMappings.put("body", "text/html");
-        mimeMappings.put("rtx", "text/richtext");
-        mimeMappings.put("tsv", "text/tab-separated-values");
-        mimeMappings.put("etx", "text/x-setext");
-        mimeMappings.put("ps", "application/x-postscript");
-        mimeMappings.put("class", "application/java");
-        mimeMappings.put("csh", "application/x-csh");
-        mimeMappings.put("sh", "application/x-sh");
-        mimeMappings.put("tcl", "application/x-tcl");
-        mimeMappings.put("tex", "application/x-tex");
-        mimeMappings.put("texinfo", "application/x-texinfo");
-        mimeMappings.put("texi", "application/x-texinfo");
-        mimeMappings.put("t", "application/x-troff");
-        mimeMappings.put("tr", "application/x-troff");
-        mimeMappings.put("roff", "application/x-troff");
-        mimeMappings.put("man", "application/x-troff-man");
-        mimeMappings.put("me", "application/x-troff-me");
-        mimeMappings.put("ms", "application/x-wais-source");
-        mimeMappings.put("src", "application/x-wais-source");
-        mimeMappings.put("zip", "application/zip");
-        mimeMappings.put("bcpio", "application/x-bcpio");
-        mimeMappings.put("cpio", "application/x-cpio");
-        mimeMappings.put("gtar", "application/x-gtar");
-        mimeMappings.put("shar", "application/x-shar");
-        mimeMappings.put("sv4cpio", "application/x-sv4cpio");
-        mimeMappings.put("sv4crc", "application/x-sv4crc");
-        mimeMappings.put("tar", "application/x-tar");
-        mimeMappings.put("ustar", "application/x-ustar");
-        mimeMappings.put("dvi", "application/x-dvi");
-        mimeMappings.put("hdf", "application/x-hdf");
-        mimeMappings.put("latex", "application/x-latex");
-        mimeMappings.put("bin", "application/octet-stream");
-        mimeMappings.put("oda", "application/oda");
-        mimeMappings.put("pdf", "application/pdf");
-        mimeMappings.put("ps", "application/postscript");
-        mimeMappings.put("eps", "application/postscript");
-        mimeMappings.put("ai", "application/postscript");
-        mimeMappings.put("rtf", "application/rtf");
-        mimeMappings.put("nc", "application/x-netcdf");
-        mimeMappings.put("cdf", "application/x-netcdf");
-        mimeMappings.put("cer", "application/x-x509-ca-cert");
-        mimeMappings.put("exe", "application/octet-stream");
-        mimeMappings.put("gz", "application/x-gzip");
-        mimeMappings.put("Z", "application/x-compress");
-        mimeMappings.put("z", "application/x-compress");
-        mimeMappings.put("hqx", "application/mac-binhex40");
-        mimeMappings.put("mif", "application/x-mif");
-        mimeMappings.put("ief", "image/ief");
-        mimeMappings.put("tiff", "image/tiff");
-        mimeMappings.put("tif", "image/tiff");
-        mimeMappings.put("ras", "image/x-cmu-raster");
-        mimeMappings.put("pnm", "image/x-portable-anymap");
-        mimeMappings.put("pbm", "image/x-portable-bitmap");
-        mimeMappings.put("pgm", "image/x-portable-graymap");
-        mimeMappings.put("ppm", "image/x-portable-pixmap");
-        mimeMappings.put("rgb", "image/x-rgb");
-        mimeMappings.put("xbm", "image/x-xbitmap");
-        mimeMappings.put("xpm", "image/x-xpixmap");
-        mimeMappings.put("xwd", "image/x-xwindowdump");
-        mimeMappings.put("au", "audio/basic");
-        mimeMappings.put("snd", "audio/basic");
-        mimeMappings.put("aif", "audio/x-aiff");
-        mimeMappings.put("aiff", "audio/x-aiff");
-        mimeMappings.put("aifc", "audio/x-aiff");
-        mimeMappings.put("wav", "audio/x-wav");
-        mimeMappings.put("mpeg", "video/mpeg");
-        mimeMappings.put("mpg", "video/mpeg");
-        mimeMappings.put("mpe", "video/mpeg");
-        mimeMappings.put("qt", "video/quicktime");
-        mimeMappings.put("mov", "video/quicktime");
-        mimeMappings.put("avi", "video/x-msvideo");
-        mimeMappings.put("movie", "video/x-sgi-movie");
-        mimeMappings.put("avx", "video/x-rad-screenplay");
-        mimeMappings.put("wrl", "x-world/x-vrml");
-        mimeMappings.put("mpv2", "video/mpeg2");
+        defaultMap.put("txt", "text/plain");
+        defaultMap.put("html","text/html");
+        defaultMap.put("htm", "text/html");
+        defaultMap.put("gif", "image/gif");
+        defaultMap.put("jpg", "image/jpeg");
+        defaultMap.put("jpe", "image/jpeg");
+        defaultMap.put("jpeg", "image/jpeg");
+	defaultMap.put("java", "text/plain");
+        defaultMap.put("body", "text/html");
+        defaultMap.put("rtx", "text/richtext");
+        defaultMap.put("tsv", "text/tab-separated-values");
+        defaultMap.put("etx", "text/x-setext");
+        defaultMap.put("ps", "application/x-postscript");
+        defaultMap.put("class", "application/java");
+        defaultMap.put("csh", "application/x-csh");
+        defaultMap.put("sh", "application/x-sh");
+        defaultMap.put("tcl", "application/x-tcl");
+        defaultMap.put("tex", "application/x-tex");
+        defaultMap.put("texinfo", "application/x-texinfo");
+        defaultMap.put("texi", "application/x-texinfo");
+        defaultMap.put("t", "application/x-troff");
+        defaultMap.put("tr", "application/x-troff");
+        defaultMap.put("roff", "application/x-troff");
+        defaultMap.put("man", "application/x-troff-man");
+        defaultMap.put("me", "application/x-troff-me");
+        defaultMap.put("ms", "application/x-wais-source");
+        defaultMap.put("src", "application/x-wais-source");
+        defaultMap.put("zip", "application/zip");
+        defaultMap.put("bcpio", "application/x-bcpio");
+        defaultMap.put("cpio", "application/x-cpio");
+        defaultMap.put("gtar", "application/x-gtar");
+        defaultMap.put("shar", "application/x-shar");
+        defaultMap.put("sv4cpio", "application/x-sv4cpio");
+        defaultMap.put("sv4crc", "application/x-sv4crc");
+        defaultMap.put("tar", "application/x-tar");
+        defaultMap.put("ustar", "application/x-ustar");
+        defaultMap.put("dvi", "application/x-dvi");
+        defaultMap.put("hdf", "application/x-hdf");
+        defaultMap.put("latex", "application/x-latex");
+        defaultMap.put("bin", "application/octet-stream");
+        defaultMap.put("oda", "application/oda");
+        defaultMap.put("pdf", "application/pdf");
+        defaultMap.put("ps", "application/postscript");
+        defaultMap.put("eps", "application/postscript");
+        defaultMap.put("ai", "application/postscript");
+        defaultMap.put("rtf", "application/rtf");
+        defaultMap.put("nc", "application/x-netcdf");
+        defaultMap.put("cdf", "application/x-netcdf");
+        defaultMap.put("cer", "application/x-x509-ca-cert");
+        defaultMap.put("exe", "application/octet-stream");
+        defaultMap.put("gz", "application/x-gzip");
+        defaultMap.put("Z", "application/x-compress");
+        defaultMap.put("z", "application/x-compress");
+        defaultMap.put("hqx", "application/mac-binhex40");
+        defaultMap.put("mif", "application/x-mif");
+        defaultMap.put("ief", "image/ief");
+        defaultMap.put("tiff", "image/tiff");
+        defaultMap.put("tif", "image/tiff");
+        defaultMap.put("ras", "image/x-cmu-raster");
+        defaultMap.put("pnm", "image/x-portable-anymap");
+        defaultMap.put("pbm", "image/x-portable-bitmap");
+        defaultMap.put("pgm", "image/x-portable-graymap");
+        defaultMap.put("ppm", "image/x-portable-pixmap");
+        defaultMap.put("rgb", "image/x-rgb");
+        defaultMap.put("xbm", "image/x-xbitmap");
+        defaultMap.put("xpm", "image/x-xpixmap");
+        defaultMap.put("xwd", "image/x-xwindowdump");
+        defaultMap.put("au", "audio/basic");
+        defaultMap.put("snd", "audio/basic");
+        defaultMap.put("aif", "audio/x-aiff");
+        defaultMap.put("aiff", "audio/x-aiff");
+        defaultMap.put("aifc", "audio/x-aiff");
+        defaultMap.put("wav", "audio/x-wav");
+        defaultMap.put("mpeg", "video/mpeg");
+        defaultMap.put("mpg", "video/mpeg");
+        defaultMap.put("mpe", "video/mpeg");
+        defaultMap.put("qt", "video/quicktime");
+        defaultMap.put("mov", "video/quicktime");
+        defaultMap.put("avi", "video/x-msvideo");
+        defaultMap.put("movie", "video/x-sgi-movie");
+        defaultMap.put("avx", "video/x-rad-screenplay");
+        defaultMap.put("wrl", "x-world/x-vrml");
+        defaultMap.put("mpv2", "video/mpeg2");
     }
     
 
@@ -179,6 +179,7 @@ public class MimeMap implements FileNameMap {
 
     public String getContentType(String extn) {
         String type = (String)map.get(extn.toLowerCase());
+	if( type == null ) type=(String)defaultMap.get( extn );
 	return type;
     }
 

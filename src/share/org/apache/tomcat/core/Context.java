@@ -107,7 +107,6 @@ public class Context {
 
     // Absolute path to docBase if file-system based
     private String absPath; 
-
     // internal state / related objects
     private ContextManager contextM;
     private ServletContext contextFacade;
@@ -121,7 +120,8 @@ public class Context {
     private File workDir;
 
     // Security Permissions for webapps and jsp for this context
-    Permissions perms = null;
+    Object perms = null;
+    Object protectionDomain;
  
     //    private RequestSecurityProvider rsProvider;
 
@@ -377,9 +377,11 @@ public class Context {
 		String cp= getServletLoader().getClassPath();
 		return cp;
 	    }
-
+	    if( name.equals( Constants.ATTRIB_JSP_ProtectionDomain) ) {
+		return getProtectionDomain();
+	    }
 	    if(name.equals("org.apache.tomcat.classloader")) {
-		return this.getServletLoader();
+		return this.getServletLoader().getClassLoader();
 	    }
 	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
 		if( ! allowAttribute(name) ) return null;
@@ -806,6 +808,9 @@ public class Context {
 
 	// XXX Everything can/should be abstracted out as soon as we
 	// are ready to support non-file-based servers.
+
+	// Hack for Jsp ( and other servlets ) that use rel. paths 
+	if( ! path.startsWith("/") ) path="/"+ path;
 	String normP=FileUtil.normPath(path);
 
 	String absPath=getAbsolutePath();
@@ -827,7 +832,10 @@ public class Context {
 	    return null;
 	}
 
-	if( debug>5) log("Get real path " + path + " " + realPath + " " + normP );
+	if( debug>5) {
+	    log("Get real path " + path + " " + realPath + " " + normP );
+	    //   /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	}
 	return realPath;
     }
 
@@ -1025,7 +1033,7 @@ public class Context {
              args[0] = attr;
              args[1] = value;
              Permission p = (Permission)con.newInstance(args);
-             perms.add(p);
+             ((Permissions)perms).add(p);
          } catch( ClassNotFoundException ex ) {
              System.out.println("SecurityManager Class not found: " + className);
              System.exit(1);
@@ -1040,9 +1048,21 @@ public class Context {
      /**
       * Get the SecurityManager Permissions for this Context.
       */
-     public Object getPermissions() {
-         return perms;
-     }
+    public Object getPermissions() {
+	return perms;
+    }
+
+    public void setPermissions( Object o ) {
+	perms=o;
+    }
+    
+    public Object getProtectionDomain() {
+	return protectionDomain;
+    }
+
+    public void setProtectionDomain(Object o) {
+	protectionDomain=o;
+    }
 
 
     /** @deprecated - use getDocBase and URLUtil if you need it as URL
@@ -1128,5 +1148,4 @@ public class Context {
 	// XXX We may check Permissions, etc 
 	return false;
     }
-    
 }
