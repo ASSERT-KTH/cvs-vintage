@@ -66,7 +66,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.39 2003/03/31 02:58:17 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.40 2003/04/01 02:58:07 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -82,6 +82,11 @@ public class MiscUtilities
 	 */
 	public static String canonPath(String path)
 	{
+		if(path.startsWith("file://"))
+			path = path.substring("file://".length());
+		else if(path.startsWith("file:"))
+			path = path.substring("file:".length());
+
 		if(File.separatorChar == '\\')
 		{
 			// get rid of mixed paths on Windows

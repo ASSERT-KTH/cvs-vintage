@@ -75,7 +75,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.26 2003/03/22 20:00:47 spestov Exp $
+ * @author $Id: VFS.java,v 1.27 2003/04/01 02:58:08 spestov Exp $
  */
 public abstract class VFS
 {
@@ -757,6 +757,7 @@ public abstract class VFS
 				file2.name,sortIgnoreCase);
 		}
 	} //}}}
+
 	//{{{ Private members
 	private String name;
 	private int caps;
@@ -812,6 +813,8 @@ public abstract class VFS
 				{
 					// resolve symlinks to avoid loops
 					String canonPath = _canonPath(session,file.path,comp);
+					if(!MiscUtilities.isURL(canonPath))
+						canonPath = MiscUtilities.resolveSymlinks(canonPath);
 
 					_listDirectory(session,stack,files,
 						canonPath,glob,recursive,
