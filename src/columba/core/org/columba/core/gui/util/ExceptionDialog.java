@@ -52,7 +52,7 @@ public class ExceptionDialog implements ActionListener {
 	public ExceptionDialog() {
 	}
 
-	public void showDialog(final Exception ex) {
+	public void showDialog(final Throwable ex) {
 		JLabel topLabel =
 			new JLabel(
 				GlobalResourceLoader.getString(

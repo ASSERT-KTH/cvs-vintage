@@ -1,7 +1,7 @@
 /*
  * Created on 2003-nov-02
  */
-package org.columba.mail.filter.plugins.colormessage;
+package org.columba.core.gui.util;
 
 import java.awt.Color;
 import java.util.Hashtable;

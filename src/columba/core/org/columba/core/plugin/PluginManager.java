@@ -276,6 +276,7 @@ public class PluginManager {
 	public XmlElement getPluginElement(String id) {
 		String searchId;
 
+		/*
 		int index = id.indexOf("$");
 
 		if (index != -1)
@@ -284,6 +285,9 @@ public class PluginManager {
 			searchId = id;
 
 		return (XmlElement) elements.get(searchId);
+		*/
+		
+		return (XmlElement) elements.get(id);
 	}
 
 	public String getPluginType(String id) {

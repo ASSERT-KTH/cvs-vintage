@@ -17,12 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.Date;
+
+import org.columba.core.gui.util.ColorFactory;
 
 /**
  * @author fdietz
@@ -79,7 +80,9 @@ public class ObjectReader {
 				}
 			case COLOR :
 				{
-					return new Color(ois.readInt());
+					// ColorFactory makes sure that only one instance
+					// of the same color exists
+					return ColorFactory.getColor(ois.readInt());
 				}
 			default :
 				{

@@ -1,10 +1,10 @@
-package org.columba.mail.filter.plugins.colormessage;
+package org.columba.mail.filter.plugins;
 
 import java.awt.Color;
 
 import org.columba.core.command.Command;
+import org.columba.core.gui.util.*;
 import org.columba.mail.filter.FilterAction;
-import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
 
 /**

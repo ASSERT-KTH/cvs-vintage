@@ -1,7 +1,7 @@
 /*
  * Created on 2003-nov-01
  */
-package org.columba.mail.filter.plugins.colormessage;
+package org.columba.mail.gui.config.filter.plugins;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -11,9 +11,9 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 
+import org.columba.core.gui.util.*;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
-import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 
 /**
  * A configuration panel for the <code>ColorMessageFilterAction</code>

@@ -20,11 +20,14 @@ package org.columba.core.plugin;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Vector;
 
+import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
@@ -79,6 +82,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	//  example: org.columba.example.HelloWorld$HelloPlugin -> HelloWorld
 	protected Hashtable transformationTable;
 
+	/**
+	 * associate extension with plugin which owns the extension
+	 */
+	protected Map pluginMap;
+	
 	protected List externalPlugins;
 
 	/**
@@ -93,6 +101,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			pluginListConfig = new PluginListConfig(config);
 
 		externalPlugins = new Vector();
+		
+		pluginMap = new HashMap();
 
 		ColumbaLogger.log.debug("initialising plugin-handler: " + id);
 
@@ -140,7 +150,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		ColumbaLogger.log.debug("class=" + className);
 
 		if (className == null) {
-			XmlElement.printNode(parentNode, " ");
+			if ( MainInterface.DEBUG)
+				XmlElement.printNode(parentNode, " ");
 
 			// if className isn't specified show error dialog
 			NotifyDialog dialog = new NotifyDialog();
@@ -168,10 +179,17 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+			/*
 			int dollarLoc = name.indexOf('$');
 			String pluginId =
 				(dollarLoc > 0 ? name.substring(0, dollarLoc) : name);
-
+			*/
+			
+			// get plugin id 
+			String pluginId = (String) pluginMap.get(name);
+			
+			// get runtime properties
 			String type = pluginManager.getPluginType(pluginId);
 			File pluginDir = pluginManager.getJarFile(pluginId);
 
@@ -181,6 +199,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 				pluginDir,
 				args);
 		} catch (InvocationTargetException ex) {
+			ExceptionDialog d = new ExceptionDialog();
+			d.showDialog(ex.getTargetException());
 			ex.getTargetException().printStackTrace();
 			throw ex;
 		}
@@ -258,13 +278,15 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 			if (s == null)
 				return null;
 
+			/*
 			if (s.indexOf('$') != -1) {
 				// this is an external plugin
 				// -> extract the correct id
 				s = s.substring(0, s.indexOf('$'));
 
 			}
-
+			*/
+			
 			if (name.equals(s)) {
 
 				String value = action.getAttribute(attribute);
@@ -329,13 +351,16 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
 		for (int i = 0; i < list.length; i++) {
 			String plugin = list[i];
+			String searchId = plugin;
+			/*
 			int index = plugin.indexOf("$");
 			String searchId;
 			if (index != -1)
 				searchId = plugin.substring(0, plugin.indexOf("$"));
 			else
 				searchId = plugin;
-
+			*/
+			
 			ColumbaLogger.log.debug(" - plugin id=" + plugin);
 			ColumbaLogger.log.debug(" - search id=" + searchId);
 			if (searchId.equals(id))
@@ -411,11 +436,16 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 		// --> this is used to distinguish internal/external plugins
 		externalPlugins.add(id);
 
+		
 		ListIterator iterator = extension.getElements().listIterator();
 		XmlElement action;
 		while (iterator.hasNext()) {
 			action = (XmlElement) iterator.next();
 			action.addAttribute("uservisiblename", action.getAttribute("name"));
+			
+			// associate extension with plugin which owns the extension
+			pluginMap.put(action.getAttribute("name"), id);
+			
 			/*
 			String newName = id + '$' + action.getAttribute("name");
 			String userVisibleName = action.getAttribute("name");
