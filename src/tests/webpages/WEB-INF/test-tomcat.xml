@@ -16,9 +16,10 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.40 $" />  
+     <property name="revision" value="$Revision: 1.41 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
+     <property name="colonPort" value=":${port}" />
      <property name="outputType"     value="text" />
      <property name="debug"     value="0" />
      <!-- expected http protocol -->
@@ -458,13 +459,13 @@
 
     <gtest  description="SimpleRedirect"
            request="GET /test/servlet/dispatch.SimpleRedirectServlet?/index.html HTTP/1.0"
-	   expectHeaders="Location:http://${host}:${port}/index.html" 
+	   expectHeaders="Location:http://${host}${colonPort}/index.html" 
 	   returnCode="${http.protocol} 302" 
 	   />
 
       <gtest  description="SimpleRedirect2"
              request="GET /test/servlet/dispatch.SimpleRedirectServlet?index.html HTTP/1.0"
-             expectHeaders="Location:http://${host}:${port}/test/servlet/index.html" 
+             expectHeaders="Location:http://${host}${colonPort}/test/servlet/index.html" 
              returnCode="${http.protocol} 302" 
        />
 
@@ -1338,7 +1339,7 @@ mod_webapp into mod_jk )
           <comment>Test for required authorization redirection response</comment>
           <httpRequest path="/test/aaa/protected/index.jsp" />
           <httpStatusMatch match="302" />
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
 
       <!-- Insure unnormalized URL's are handled correctly -->
@@ -1346,31 +1347,31 @@ mod_webapp into mod_jk )
           <httpRequest path="/test/aaa/protected/a/../index.jsp" 
 		      method="GET" />
           <httpStatusMatch match="302"/>
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
       <httpClient >
           <httpRequest path="/test/aaa/a/../protected/index.jsp" 
 		      method="GET" />
           <httpStatusMatch match="302"/>
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
       <httpClient >
           <httpRequest path="/test/aaa//protected/index.jsp" 
 		      method="GET" />
           <httpStatusMatch match="302"/>
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
       <httpClient >
           <httpRequest path="/test/../test/aaa/protected/a/../index.jsp" 
 		      method="GET" />
           <httpStatusMatch match="302"/>
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
       <httpClient >
           <httpRequest path="/test/aaa/./protected/index.jsp" 
 		      method="GET" />
           <httpStatusMatch match="302"/>
-          <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
+          <headerMatch name="Location" value="http://${host}${colonPort}/test/aaa/login.jsp" />
       </httpClient>
       <httpClient >
           <httpRequest path="/test/aaa/protected/../../jsp/ShowPathInfo.jsp" 
