@@ -1,4 +1,4 @@
-// $Id: ActionAddExistingNode.java,v 1.17 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionAddExistingNode.java,v 1.18 2005/01/24 17:41:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,10 @@ public class ActionAddExistingNode extends UMLAction
 
     ////////////////////////////////////////////////////////////////
     // instance variables
+    
+    /**
+     * The UML object to be added to the diagram.
+     */
     private Object object;
 
     ////////////////////////////////////////////////////////////////
@@ -62,7 +66,7 @@ public class ActionAddExistingNode extends UMLAction
      * @param o the node object to be added
      */
     public ActionAddExistingNode(String name, Object o) {
-        super(name, true, NO_ICON);
+        super(name, false, NO_ICON);
         object = o;
     }
 
