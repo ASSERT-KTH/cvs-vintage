@@ -19,6 +19,8 @@ package org.columba.mail.message;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.columba.core.logging.ColumbaLogger;
+
 /**
  * represents a Rfc822-compliant header
  * every headeritem is saved in a hashtable-structure
@@ -103,23 +105,22 @@ public class Rfc822Header implements HeaderInterface {
 		//   -> email-headers should start with upper-case letters
 		//   -> it is wrong to use the lower-case string 
 
-		//s = s.toLowerCase();
-
+		String lowerCaseKey = s.toLowerCase();
+		
 		// does this item exist?
 		if (hashTable.containsKey(s) == true) {
 			result = hashTable.get(s);
 		}
-		else if ( hashTable.containsKey(s.toLowerCase()) == true )
+		else if ( hashTable.containsKey(lowerCaseKey) == true )
 		{
-			result = hashTable.get(s);
+			result = hashTable.get(lowerCaseKey);
+			//ColumbaLogger.log.debug("using lowerCase key:"+lowerCaseKey);
 		}
-		
 		
 		/*
 		else
 			ColumbaLogger.log.debug("key not found:"+s);
 		*/
-		
 		return result;
 	}
 
