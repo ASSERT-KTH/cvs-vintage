@@ -8,12 +8,12 @@
   <table cellpadding="3" cellspacing="0" border="0">
     <tr>
    #if ($link.setPage("home,ModuleQuery.vm").setAction("SetHomePage").isAllowed())
-    <td><a href="$link">Module query</a></td>
+    <td><a href="$link">$l10n.ModuleQuery</a></td>
    #end
    #if ($link.setPage("home,EnterNew.vm").setAction("SetHomePage").isAllowed())
-      <td><a href="$link">Enter new...</a></td>
+      <td><a href="$link">$l10n.EnterNew$l10n.Dots</a></td>
    #end
-	<th>Build cross module query</th>
+	<th>$l10n.BuildXModuleQuery</th>
 	</tr>
   </table>
 </div>
@@ -26,8 +26,8 @@
      value="$!data.Parameters.getString("queryId")" />
 
 #if (!$mitList || $mitList.isEmpty())
- <p>Please choose a predefined list or build a custom list</p>
- <h3>Predefined static cross module lists</h3>
+ <p>$l10n.ChoosePredefinedList</p>
+ <h3>$l10n.PredefinedLists</h3>
 
  #set($manager = $scarabG.MITListManager)
  #set($key = "pd_list_id")
@@ -41,17 +41,17 @@
      #if($checked2) checked="checked"#end />$list2.Name</div>
 
  <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="Go to define query" />
+  <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="$l10n.DefineQuery" />
  </div>
 #end
 
 
 		
-<h3>Build list of issue types for this query</h3>
+<h3>$l10n.BuildListOfIssueTypes</h3>
 
 #if (!$isEdit && $mitList && !$mitList.isEmpty())
 <div class="functnbar">
- <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
+ <input type="submit" name="eventSubmit_doGotoquery" value="$l10n.DefineQuery" />
 </div>
 #end
 
@@ -59,33 +59,30 @@
 #if (!$isEdit)
 <div class="colbar">
   <p>
-    A previously saved list can be used as a starting point to create a 
-    set of module / issue type pairs.  The list currently being created and
-    any saved list are independent and later changes to either do not affect
-    the other.
+    $l10n.UsePreviouslySavedList
   </p>
   <select name="list_id">
-    <option value="">Select a saved cross module query...</option>
+    <option value="">$l10n.SelectSaveXModuleQuery</option>
   #foreach ($list in $user.MITLists)
     <option value="$list.QueryKey"#if($list.QueryKey == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
   #end
   </select>&nbsp;
-  <input type="submit" name="eventSubmit_doChooselist" value="Select list" />
+  <input type="submit" name="eventSubmit_doChooselist" value="$l10n.Select" />
 </div>
 #end
 
 #if (!$mitList || $mitList.isEmpty())
 <p class="alert">
-No issue types have been selected.  Please select from the list below.
+$l10n.NoIssueTypeSelected
 </p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-    <th nowrap="nowrap">Select</th>
-    <th>Module</th>
-    <th>Issue type</th>
-    <th>Number of issues</th>
-    <th>Description</th>
+    <th nowrap="nowrap">$l10n.Select</th>
+    <th>$l10n.Module</th>
+    <th>$l10n.IssueType</th>
+    <th>$l10n.NumberOfIssues</th>
+    <th>$l10n.Description</th>
   </tr>
  #foreach ($item in $mitList.MITListItems)
   #indexedRows($velocityCount)
@@ -105,23 +102,23 @@ No issue types have been selected.  Please select from the list below.
  <div class="functnbar3">
  #if (!$isEdit)
   <input type="submit" name="eventSubmit_doStartover" 
-     value="Remove all items" />&nbsp;
+     value="$l10n.RemoveAll" />&nbsp;
  #end
   <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
-     value="Remove selected items" />&nbsp;
-  <input type="submit" name="eventSubmit_doGotosavelist" value="Save" />
+     value="$l10n.RemoveSelected" />&nbsp;
+  <input type="submit" name="eventSubmit_doGotosavelist" value="$l10n.Save" />
  </div>
 
  #if (!$isEdit)
  <div class="functnbar2">
-  <input type="submit" name="eventSubmit_doGotoquery" value="Go to define query" />
+  <input type="submit" name="eventSubmit_doGotoquery" value="$l10n.DefineQuery" />
  </div>
  #end
 #end
 
 <a name="add"></a>
 
-<h3>Modules / issues in this domain</h3>
+<h3>$l10n.ModuleIssuesInDomain</h3>
 
 #set ($searchField = $data.Parameters.getString("searchField", ""))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
@@ -135,8 +132,8 @@ No issue types have been selected.  Please select from the list below.
    <th>$l10n.FilterString</th>
    <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" size="">
-       <option value="module" #if($searchField.equals("module")) selected="selected"#end>Module</option>
-       <option value="issuetype" #if($searchField.equals("issuetype")) selected="selected"#end>Issue type</option>
+       <option value="module" #if($searchField.equals("module")) selected="selected"#end>$l10n.Module</option>
+       <option value="issuetype" #if($searchField.equals("issuetype")) selected="selected"#end>$l10n.IssueType</option>
      </select>&nbsp;
      <input type="submit" name="eventSubmit_doRefresh" 
        value="$l10n.Filter" />
@@ -151,13 +148,13 @@ No issue types have been selected.  Please select from the list below.
  ## try one more time with no search criteria
  #set ($searchableRMITs = $user.getSearchableRMITs("", "", $sortColumn, $sortPolarity))
  #if (!$searchResults.isEmpty())
-   <p class="alert">Filtering produced no results; showing all issue types.</p>
+   <p class="alert">$l10n.FilterNoResults</p>
  #end
 #end
 
 #if ($searchableRMITs.isEmpty())
 <p class="alert">
-There are no more issue types to select.
+$l10n.NoMoreIssueTypes
 </p>
 #else
 
@@ -177,7 +174,7 @@ There are no more issue types to select.
  #if($scarabR.PrevPage != 0)
   #prepRMITPageLink()
   #set ($prevLink = $link.setPathInfo("pageNum", "$scarabR.PrevPage"))
-  <a href="$prevLink">&laquo; previous</a> |
+  <a href="$prevLink">&laquo; $l10n.Previous</a> |
  #end
 
  $pageNum of $scarabR.NbrPages
@@ -185,7 +182,7 @@ There are no more issue types to select.
  #if ($scarabR.NextPage != 0)
   #prepRMITPageLink()
   #set ($nextLink = $link.setPathInfo("pageNum", "$scarabR.NextPage"))
-  | <a href="$nextLink">next &raquo;</a>
+  | <a href="$nextLink">$l10n.Next &raquo;</a>
  #end
  </p>
 </div> 
@@ -200,7 +197,7 @@ There are no more issue types to select.
 <div class="directory">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
-	  <th nowrap="nowrap">Select</th>
+	  <th nowrap="nowrap">$l10n.Select</th>
 
 #macro (prepRMITLink $sortKey)
  #set ($dummy = $link.setPage("home,XModuleList.vm").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField).setPathInfo("sortColumn", "$sortKey"))
@@ -224,8 +221,8 @@ There are no more issue types to select.
   #end
 #end
 
-	  <th>#rmitSort("module" "Module")</th>
-	  <th>#rmitSort("issuetype" "Issue type")</th>
+	  <th>#rmitSort("module" "$l10n.Module")</th>
+	  <th>#rmitSort("issuetype" "$l10n.IssueType")</th>
 	  <th>Description</th>
     </tr>
 
@@ -250,7 +247,7 @@ There are no more issue types to select.
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-       <th>Max items per page</th>
+       <th>$l10n.MaxPerPage</th>
        <td><input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage.toString().equals("25")) checked="checked" #end /> 25
          <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.toString().equals("50")) checked="checked" #end /> 50
          <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.toString().equals("75")) checked="checked" #end /> 75
@@ -264,7 +261,7 @@ There are no more issue types to select.
 #if (!$searchableRMITs.isEmpty())
 <div class="functnbar3">
  <input type="submit"  name="eventSubmit_doAddselectedrmits" 
-     value="Add selected to cross module query list" />
+     value="$l10n.AddSelected" />
 </div>
 #end
 
