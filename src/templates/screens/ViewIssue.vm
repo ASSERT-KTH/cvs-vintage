@@ -38,15 +38,15 @@ You are viewing an issue in a different Module than is currently selected.
 
 #else
 
-<h3>Artifact Search Results</h3>
+<h3>Issue Search Results</h3>
 
   #if ($currentIssueId)
     <p><strong class="alert">
-    The artifact id, $currentIssueId, is not valid. Please enter a new artifact id.
+    The issue id, $currentIssueId, is not valid. Please enter a new issue id.
     </strong></p>
   #else
     <p><strong class="alert">
-    You need to enter an artifact id.
+    You need to enter an issue id.
     </strong></p>
   #end
 
