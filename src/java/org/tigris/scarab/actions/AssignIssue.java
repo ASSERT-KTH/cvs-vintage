@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.27 2002/01/11 00:42:47 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.28 2002/01/15 21:18:34 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -118,7 +118,7 @@ public class AssignIssue extends RequireLoginFirstAction
         if (intake.isAllValid())
         {
             List userAttrs = issue.getModule()
-                             .getUserAttributes(issue.getIssueType());
+                             .getUserAttributes(issue.getIssueType(), true);
             for (int i=0; i < userAttrs.size(); i++)
             {
                 Attribute attribute = (Attribute)userAttrs.get(i);
