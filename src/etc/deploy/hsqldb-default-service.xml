@@ -6,7 +6,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.3 2002/03/08 20:22:48 d_jencks Exp $ -->
+<!-- $Id: hsqldb-default-service.xml,v 1.4 2002/03/09 02:43:25 user57 Exp $ -->
 
 <server>
 
@@ -14,8 +14,6 @@
   <!-- JDBC - Initialize the databases                                      -->
   <!-- to ConnectionFactoryLoader                                           -->
   <!-- ==================================================================== -->
-
-  <classpath codebase="." archives="jbosscx.sar"/>
 
   <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
 	 name="jboss:service=ConnectionFactoryLoader,name=DefaultDS">
