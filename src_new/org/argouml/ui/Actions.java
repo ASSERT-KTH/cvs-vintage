@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.78 2004/09/29 16:47:48 mvw Exp $
+// $Id: Actions.java,v 1.79 2004/10/02 20:49:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public class Actions implements TargetListener {
 
     /**
      * Updates all global actions: check if enabled or not.
-     *
+     * This function used to be deprecated for unclear reasons - see issue 2735.
      */
     public static void updateAllEnabled() {
 	Enumeration actions = allActions.elements();
