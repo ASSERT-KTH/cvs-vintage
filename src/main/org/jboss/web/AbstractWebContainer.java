@@ -146,7 +146,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.29 $
+@version $Revision: 1.30 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -213,7 +213,10 @@ public abstract class AbstractWebContainer
                mod = (J2eeModuleMetaData) it.next();
                if( mod.isWeb() )
                {
-                  di.webContext = mod.getWebContext();
+                   //only pick up the context for our war, the names should match
+                  // The wars come from packages and thus are unpackaged under /tmp/deploy/<intNumber>.myweb.war
+                  if (di.shortName.lastIndexOf(mod.getFileName()) != -1)
+                     di.webContext = mod.getWebContext();
                }
             }
          }
