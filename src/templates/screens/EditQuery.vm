@@ -53,6 +53,8 @@ $page.setTitle("Edit query")
 </div>
 </form>
 
+<h3>Attributes</h3>
+
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "IssueList.vm").toString())
 <form action="$action" method="get">
 <input type="hidden" name="queryId" value="$queryId" />

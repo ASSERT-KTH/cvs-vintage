@@ -11,7 +11,9 @@ $page.setTitle("Stored query list")
  #set ($noQueries = "true")
 #end
 
+
 #if ($noQueries.equals("true"))
+<h3>Saved Queries</h3>
  <p><strong class="alert">There are no stored queries.
  Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced query</a>
  to create a new stored query.</strong></p>
@@ -31,7 +33,7 @@ $page.setTitle("Stored query list")
   </td>
   <td>
   <div>Select list item(s) to</div>
-  <input type="submit" value="copy" name="eventSubmit_doCopyquery" />&#160;
+  <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
   #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
    <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
   #end
@@ -44,9 +46,10 @@ $page.setTitle("Stored query list")
 
 ##   <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-<p><b>Click on location to execute. Click query name to edit.</b></p>
+<p><b>Click query name to edit. Click on location to execute.</b></p>
 
 <h3>Saved Queries</h3>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">
@@ -139,7 +142,7 @@ $page.setTitle("Stored query list")
   </td>
   <td>
   <div>Select list item(s) to</div>
-  <input type="submit" value="copy" name="eventSubmit_doCopyquery" />&#160;
+  <input type="submit" value="Copy" name="eventSubmit_doCopyquery" />&#160;
   #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
    <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />&#160;
   #end
