@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.17 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: SelectionInterface.java,v 1.18 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.17 2003/09/04 20:18:11 thierrylach Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -51,17 +50,14 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
 
-import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MClassImpl;
-import ru.novosoft.uml.foundation.core.MInterface;
-
 public class SelectionInterface extends SelectionWButtons {
     protected static Logger cat = 
         Logger.getLogger(SelectionInterface.class);
     ////////////////////////////////////////////////////////////////
     // constants
     public static Icon realiz =
-	ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Realization");
+	ResourceLoaderWrapper.getResourceLoaderWrapper()
+            .lookupIconResource("Realization");
 
 
     ////////////////////////////////////////////////////////////////
@@ -130,7 +126,7 @@ public class SelectionInterface extends SelectionWButtons {
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
 	Class edgeClass = null;
-	Class nodeClass = MClassImpl.class;
+	Class nodeClass = (Class)ModelFacade.CLASS;
 	int bx = mX, by = mY;
 	boolean reverse = false;
 	switch (hand.index) {
@@ -157,9 +153,14 @@ public class SelectionInterface extends SelectionWButtons {
 
   
 	
-    public Object addRealization(MutableGraphModel mgm, MInterface cls,
-				 MClass newCls) {
-	return mgm.connect(newCls, cls, (Class) ModelFacade.ABSTRACTION);
+    public Object addRealization(MutableGraphModel mgm, Object interf4ce,
+				 Object cl4ss) {
+                                     
+        if(!ModelFacade.isAClass(cl4ss) ||
+           !ModelFacade.isAInterface(interf4ce))
+            throw new IllegalArgumentException();
+                                     
+	return mgm.connect(cl4ss, interf4ce, (Class) ModelFacade.ABSTRACTION);
     }
 	
     /**

@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.31 2003/09/13 22:06:05 alexb Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.32 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,9 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 
     /** set the homemodel. */
     public void setNamespace(Object namespace) {
+        
+        if(!ModelFacade.isANamespace(namespace))
+            throw new IllegalArgumentException();
 	_model = namespace;
     }
 

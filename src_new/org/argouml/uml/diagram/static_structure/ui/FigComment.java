@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.20 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigComment.java,v 1.21 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.20 2003/09/14 12:26:19 bobtarling Exp $
+// $Id: FigComment.java,v 1.21 2003/09/14 17:07:31 alexb Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -63,8 +63,6 @@ import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 import ru.novosoft.uml.MElementEvent;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /** 
  * Class to display a UML note in a diagram 
@@ -184,8 +182,13 @@ public class FigComment
      *
      * @param element The annotated model element.
      */
-    public FigComment(MModelElement element) {
+    public FigComment(Object element) {
         this(); // Construct the figure.
+        
+        if(!ModelFacade.isAModelElement(element)){
+            throw new IllegalArgumentException();
+        }
+        
 	// Create a new Comment node.
         Object comment =
 	    UmlFactory.getFactory().getCore().createComment();
@@ -211,7 +214,7 @@ public class FigComment
             }
         } else {
 	    // Add the comment to the same namespace as the annotated element.
-            ModelFacade.setNamespace(comment, element.getNamespace());
+            ModelFacade.setNamespace(comment, ModelFacade.getNamespace(element));
         }
 
         storeNote(placeString()); // Set the default text for this figure type.

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.50 2003/09/04 20:11:51 thierrylach Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.51 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.50 2003/09/04 20:11:51 thierrylach Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.51 2003/09/14 17:07:31 alexb Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -66,10 +66,13 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     // accessors
 
     public Object getNamespace() { return _model; }
+
     public void setNamespace(Object namespace) {
+        
+        if(!ModelFacade.isANamespace(namespace))
+            throw new IllegalArgumentException();
 	_model = namespace;
     }
-
     ////////////////////////////////////////////////////////////////
     // GraphModel implementation
 

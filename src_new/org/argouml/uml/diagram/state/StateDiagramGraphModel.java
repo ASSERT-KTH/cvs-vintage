@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.34 2003/09/14 14:08:06 alexb Exp $
+// $Id: StateDiagramGraphModel.java,v 1.35 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,11 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
     // accessors
 
     public Object getNamespace() { return _namespace; }
+
     public void setNamespace(Object namespace) {
+        
+        if(!ModelFacade.isANamespace(namespace))
+            throw new IllegalArgumentException();
 	_namespace = namespace;
     }
 

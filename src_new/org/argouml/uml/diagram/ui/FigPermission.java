@@ -1,4 +1,4 @@
-// $Id: FigPermission.java,v 1.3 2003/06/29 23:52:20 linus Exp $
+// $Id: FigPermission.java,v 1.4 2003/09/14 17:07:31 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,17 +25,11 @@
 // File: FigPermission.java
 // Classes: FigPermission
 // Original Author: Markus Klink
-// $Id: FigPermission.java,v 1.3 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.*;
-import java.beans.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
+import org.tigris.gef.base.Layer;
+import org.tigris.gef.presentation.ArrowHeadGreater;
 
 public class FigPermission extends FigDependency {
 
