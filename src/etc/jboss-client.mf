@@ -1,1 +1,1 @@
-Class-Path: jndi.jar
+Class-Path: jnp-client.jar
