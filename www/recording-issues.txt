@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.4 2002/11/13 01:19:45 jon Exp $
+$Id: recording-issues.txt,v 1.5 2002/11/13 20:40:54 elicia Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -353,7 +353,7 @@ User assignment:
 
     Create:
 
-        One ActivitySet (FIXME: currently one ActivitySet per user assigned, should be one ActivitySet and N Activites. each Activity represents one user)
+        One ActivitySet 
             TYPE_ID = 2
             AttachmentId = comment if provided otherwise null
                 ATTACHMENT_TYPE_ID = 4
@@ -362,7 +362,7 @@ User assignment:
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
                 MODIFIED_BY = NULL
-                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
+                CREATED_BY = user doing assignment 
                 MODIFIED_DATE = NULL
                 CREATED_DATE = SET to cre date
                 DELETED = 0
@@ -376,14 +376,14 @@ User assignment:
             VALUE = the user's login_name
             DELETED = 0
 
-        Activity N (FIXME: one activity for each user assigned and goes into one activityset for all...see ActivitySet FIXME)
+        Activity N 
             IssueId = SCB1 (100)
             AttributeId = Assigned to (102) *VARIES depending on popup menu*
             TransactionId = ActivitySetId
             OLD_USER_ID = NULL
             NEW_USER_ID = userid
             DESCRIPTION = 'Assigned to set to 'derekewla''
-            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
     Update (change of attribute for user...ie: Assigned to: -> Assigned cc:):
@@ -397,9 +397,9 @@ User assignment:
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
                 MODIFIED_BY = SET to mod by
-                CREATED_BY = DO NOT CHANGE (FIXME: currently being set to user being assigned)
+                CREATED_BY = set to user doing update
                 MODIFIED_DATE = SET to mod date
-                CREATED_DATE = DO NOT CHANGE
+                CREATED_DATE = set to now
                 DELETED = 0
 
         SCARAB_ISSUE_ATTRIBUTE_VALUE (uses existing data in db):
@@ -418,12 +418,12 @@ User assignment:
             OLD_USER_ID = NULL
             NEW_USER_ID = userid
             DESCRIPTION = 'Assigned cc set to 'derekewla''
-            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
     Delete:
 
-        One ActivitySet (FIXME: currently one ActivitySet per user assigned, should be one ActivitySet and N Activites. each Activity represents one user)
+        One ActivitySet 
             TYPE_ID = 2
             AttachmentId = comment if provided otherwise null
                 ATTACHMENT_TYPE_ID = 4
@@ -432,8 +432,8 @@ User assignment:
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
                 MODIFIED_BY = NULL
-                CREATED_BY = user doing assignment (FIXME: currently being set to user being assigned)
-                MODIFIED_DATE = NULL
+                CREATED_BY = user doing assignment 
+                MODIFIED_DATE = set to created date
                 CREATED_DATE = SET to cre date
                 DELETED = 0
 
@@ -446,14 +446,15 @@ User assignment:
             VALUE = the user's login_name
             DELETED = 1
 
-        Activity N (one activity for each user removed and goes into one activityset for all...see FIXME)
+        Activity N (one activity for each user removed and goes into one
+                activityset for all)
             IssueId = SCB1 (100)
             AttributeId = Assigned to (102) *VARIES depending on popup menu*
             TransactionId = ActivitySetId
             OLD_USER_ID = userid
             NEW_USER_ID = NULL
             DESCRIPTION = 'User turbine@tigris.org deleted user ddd from Assigned to'
-            AttachmentId = NULL (FIXME: one attachment per activity is being created. these are duplicates. it should be one attachment to the activityset, not the activity.)
+            AttachmentId = NULL 
             END_DATE = (LOGIC: if multiple user attributes, the last end date is null)
 
 File attachments:
