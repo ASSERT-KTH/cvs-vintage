@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.16 $
+@version $Revision: 1.17 $
  */
 public final class SecurityAssociation
 {
@@ -150,14 +150,16 @@ public final class SecurityAssociation
          return credential;
    }
 
-   /** Get the current Subject information.
-    If a security manager is present, then this method calls the security
-    manager's <code>checkPermission</code> method with a
-    <code>
-    RuntimePermission("org.jboss.security.SecurityAssociation.getSubject")
-    </code>
+   /** Get the current Subject information. If a security manager is present,
+    then this method calls the security manager's checkPermission
+    method with a  RuntimePermission("org.jboss.security.SecurityAssociation.getSubject")
     permission to ensure it's ok to access principal information.
-    If not, a <code>SecurityException</code> will be thrown.
+    If not, a SecurityException will be thrown. Note that this method does not
+    consider whether or not a run-as identity exists. For access to this
+    information see the JACC PolicyContextHandler registered under the key
+    "javax.security.auth.Subject.container"
+    @see javax.security.jacc.PolicyContext#getContext(String)
+
     @return Subject, the current Subject identity.
     */
    public static Subject getSubject()
@@ -165,8 +167,6 @@ public final class SecurityAssociation
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
          sm.checkPermission(getSubjectPermission);
-
-      // [todo] what subject do we return if there is a run-as identity 
 
       if (server)
          return (Subject) threadSubject.get();
@@ -290,11 +290,25 @@ public final class SecurityAssociation
       RunAsIdentity runAs = threadRunAsStacks.pop();
       return runAs;
    }
-   /** Look at the current thread of control's run-as identity.
+
+   /** Look at the current thread of control's run-as identity on the top
+    * of the stack.
     */
    public static RunAsIdentity peekRunAsIdentity()
    {
-      RunAsIdentity runAs = threadRunAsStacks.peek();
+      return peekRunAsIdentity(0);
+   }
+
+   /** Look at the current thread of control's run-as identity at the indicated
+    * depth. Typically depth is either 0 for the identity the current caller
+    * run-as that will be assumed, or 1 for the active run-as the previous
+    * caller has assumed.
+    * 
+    * @return RunAsIdentity depth frames up.
+    */
+   public static RunAsIdentity peekRunAsIdentity(int depth)
+   {
+      RunAsIdentity runAs = threadRunAsStacks.peek(depth);
       return runAs;
    }
 
@@ -345,11 +359,11 @@ public final class SecurityAssociation
             runAs = (RunAsIdentity) stack.remove(lastIndex);
          return runAs;
       }
-      RunAsIdentity peek()
+      RunAsIdentity peek(int depth)
       {
          ArrayList stack = (ArrayList) super.get();
          RunAsIdentity runAs = null;
-         int lastIndex = stack.size() - 1;
+         int lastIndex = stack.size() - 1 - depth;
          if( lastIndex >= 0 )
             runAs = (RunAsIdentity) stack.get(lastIndex);
          return runAs;
