@@ -37,10 +37,10 @@
 
 <div class="functnbar">
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
-    <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
+    <input type="submit" value="Move this issue" name="eventSubmit_doMove" />&#160;
 #end
 #if (!$copyToModules.isEmpty())
-    <input type="submit" value="Copy" name="eventSubmit_doCopy" />
+    <input type="submit" value="Copy this issue" name="eventSubmit_doCopy" />
 #end
 </div>
 
@@ -225,7 +225,7 @@ $l10n.NoComments
     #if ($isEditComments)
       <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
     #else
-        <p>$comment.DataAsString</p>
+      <p>$comment.DataAsString</p>
     #end
   #end
 
@@ -635,10 +635,10 @@ $l10n.NoDependencies
 
 <div class="functnbar2">
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
-    <input type="submit" value="Move" name="eventSubmit_doMove" />&#160;
+    <input type="submit" value="Move this issue" name="eventSubmit_doMove" />&#160;
 #end
 #if (!$copyToModules.isEmpty())
-    <input type="submit" value="Copy" name="eventSubmit_doCopy" />
+    <input type="submit" value="Copy this issue" name="eventSubmit_doCopy" />
 #end
 </div>
 
