@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.38 2004/01/06 21:47:17 jjones Exp $
+// $Id: PropPanelAttribute.java,v 1.39 2004/02/12 22:36:09 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.38 2004/01/06 21:47:17 jjones Exp $
+// $Id: PropPanelAttribute.java,v 1.39 2004/02/12 22:36:09 bobtarling Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -39,6 +39,7 @@ import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.util.ConfigLoader;
 
@@ -68,7 +69,14 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 		         Translator.localize("UMLMenu", "tooltip.nav-class"),
 					  getTypeComboBox()));
 
-	addField(Translator.localize("UMLMenu", "label.initial-value"), new JScrollPane(new UMLLinkedList(new UMLAttributeInitialValueListModel())));
+
+        // addField(Translator.localize("UMLMenu", "label.initial-value"), new JScrollPane(new UMLLinkedList(new UMLAttributeInitialValueListModel())));
+        // TODO The following line is my hack fix for the above line.
+        // this fixes issue 1378 but re-introduces a deprecated class
+        // IMO the initial value should not be a combo or a list
+        // but a simple text field. Bob Tarling 12 Feb 2004.
+	addField(Translator.localize("UMLMenu", "label.initial-value"), new UMLInitialValueComboBox(this));
+
         add(new UMLModelElementVisibilityRadioButtonPanel(Translator.localize("UMLMenu", "label.visibility"), true));
         add(getChangeabilityRadioButtonPanel());
         add(getOwnerScopeCheckbox());
