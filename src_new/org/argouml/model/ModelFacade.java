@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.231 2004/12/26 22:12:54 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.232 2004/12/29 14:55:05 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4237,18 +4237,29 @@ public class ModelFacade {
     }
 
     /**
-     * Returns the stereotypes belonging to some given model element.
+     * Returns the stereotypes belonging to some given model element.<p>
      *
-     * @param handle is the model element
-     * @return stereotype collection
+     * Note! For UML version 1.3 there can only be one stereotype
+     * per model element. This means that the returned Collection will
+     * only have zero or one elements. Don't write any code that rely
+     * on this! Consider it to be a Collection with zero or more
+     * elements as it will be in later UML versions.
+     *
+     * @param handle The model element.
+     * @return a Collection with all stereotypes or empty if none.
      */
     public static Collection getStereotypes(Object handle) {
         if (isAModelElement(handle)) {
             // This returns a collection as we have an eye on the future
             // and multiple stereotypes in UML1.5
-            ArrayList list = new ArrayList(1);
-            list.add(((MModelElement) handle).getStereotype());
-            return list;
+            MStereotype stereo = ((MModelElement) handle).getStereotype();
+            if (stereo != null) {
+                List list = new ArrayList(1);
+                list.add(stereo);
+                return list;
+            } else {
+                return Collections.EMPTY_LIST;
+            }
         }
 	return illegalArgumentCollection(handle);
     }
