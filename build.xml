@@ -397,7 +397,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
 	<target name="run" depends="jar" description="to run the application via ant, this is good for testing and coding in xemacs">
-		<java jar="${dest}/columba.jar" fork="yes">
+		<java jar="${src}/columba.jar" fork="yes">
 			<arg value="--debug"/>
 		</java>
 	</target>
