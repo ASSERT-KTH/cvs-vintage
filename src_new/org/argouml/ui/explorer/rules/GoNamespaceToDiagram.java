@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToDiagram.java,v 1.11 2004/09/04 06:59:49 mvw Exp $
+// $Id: GoNamespaceToDiagram.java,v 1.12 2004/12/12 14:26:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,11 +66,11 @@ public class GoNamespaceToDiagram extends AbstractPerspectiveRule {
             Iterator it = proj.getDiagrams().iterator();
             while (it.hasNext()) {
                 UMLDiagram diagram = (UMLDiagram) it.next();
-                // sequence diagrams are not shown as children of the
+                // Sequence diagrams are not shown as children of the
                 // collaboration that they show but as children of the
-                // classifier/operation the collaboration represents
-                // statediagrams and activitydiagrams are shown as children 
-                // of the statemachine of activitygraph they belong to.
+                // classifier/operation the collaboration represents.
+                // Statediagrams and activitydiagrams are shown as children 
+                // of the statemachine or activitygraph they belong to.
                 if (diagram instanceof UMLStateDiagram 
                         || diagram instanceof UMLActivityDiagram 
                         || diagram instanceof UMLSequenceDiagram) {

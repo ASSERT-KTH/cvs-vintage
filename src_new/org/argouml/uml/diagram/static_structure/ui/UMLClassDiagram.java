@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.62 2004/12/08 18:27:37 bobtarling Exp $
+// $Id: UMLClassDiagram.java,v 1.63 2004/12/12 14:26:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,20 +100,19 @@ public class UMLClassDiagram extends UMLDiagram {
     /**
      * @see org.argouml.uml.diagram.ui.UMLDiagram#setNamespace(java.lang.Object)
      */
-    public void setNamespace(Object handle) {
-        if (!ModelFacade.isANamespace(handle)) {
+    public void setNamespace(Object ns) {
+        if (!ModelFacade.isANamespace(ns)) {
             LOG.error("Illegal argument. "
-                  + "Object " + handle + " is not a namespace");
+                  + "Object " + ns + " is not a namespace");
             throw new IllegalArgumentException("Illegal argument. "
-            			       + "Object " + handle
+            			       + "Object " + ns
             			       + " is not a namespace");
         }
-        Object m = /*(MNamespace)*/ handle;
-        super.setNamespace(m);
+        super.setNamespace(ns);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
-        gm.setNamespace(m);
+        gm.setNamespace(ns);
         LayerPerspective lay =
-            new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
+            new LayerPerspectiveMutable(ModelFacade.getName(ns), gm);
         ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
         lay.setGraphNodeRenderer(rend);
         lay.setGraphEdgeRenderer(rend);
