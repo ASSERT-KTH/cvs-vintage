@@ -8,14 +8,23 @@
 
 <h3>$l10n.SavedReports</h3>
 
-#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+#set ($user = $data.User)
+#set ($reports = $scarabR.CurrentModule.getSavedReports($user))
 #if ($reports.size() > 0 )
 <div>
 $l10n.ClickToExecute
 </div>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">$l10n.Select</th>
+#set ($atLeastOneDelete = false)
+#foreach ($report in $reports)
+ #if ($report.isDeletable($user))
+  #set ($atLeastOneDelete = true)
+ #end
+#end
+#if ($atLeastOneDelete)
+  <th nowrap="nowrap">$l10n.Select</th>
+#end
 <th>$l10n.Name</th>
 <th>$l10n.Description</a></th>
 <th>$l10n.Availability</a></th>
@@ -25,19 +34,26 @@ $l10n.ClickToExecute
 #foreach ($report in $reports)
   #set ($group = $intake.Report.mapTo($report))
   #indexedRows($velocityCount)
-<td><input type="checkbox" name="report_id" value="$report.ReportId">
-
-<td>
-#if ($report.isEditable($data.User))
-$link.setPage("reports,Step1.vm").setLabel("$report.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doEditstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")
-#else
-$report.Name
-#end
+ #if ($atLeastOneDelete)
+  <td>
+  #if ($report.isDeletable($user))
+    <input type="checkbox" name="report_id" value="$report.ReportId">
+  #else
+    &nbsp;
+  #end
+  </td>
+ #end
+  <td>
+ #if ($report.isEditable($user))
+$link.setPage("reports,Info.vm").setLabel("$report.Name").addPathInfo("report_id", "$report.ReportId")
+ #else
+  $report.Name
+ #end
 </td>
 
 <td>$!report.Description</td>
 
-<td>$link.setPage("reports,Step1.vm").setLabel("$report.Scope.Name").addPathInfo("action", "GenerateReport").addPathInfo("eventSubmit_doRunstoredreport", "foo").addPathInfo("report_id", "$report.ReportId")</td>
+<td>$link.setPage("reports,Report_1.vm").setLabel("$report.Scope.Name").addPathInfo("report_id", "$report.ReportId")</td>
 
 <td>
  #set ($createdUser = $scarabR.getUser($report.UserId.toString()))
@@ -52,7 +68,7 @@ $report.Name
 
 <div class="functnbar3">
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenew" />&#160;
-#if ($reports.size() >0)
+#if ($atLeastOneDelete)
   <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletestoredreport" />
 #end
 </div> 

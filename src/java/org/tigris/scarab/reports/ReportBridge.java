@@ -205,6 +205,32 @@ public  class ReportBridge
         torqueReport.setScopeId(id);
     }
 
+    public NumberKey getUserId()
+    {
+        return torqueReport.getUserId();
+    }
+    public void setUserId(NumberKey id)
+        throws TorqueException
+    {
+        torqueReport.setUserId(id);
+    }
+
+    public NumberKey getReportId()
+    {
+        return torqueReport.getReportId();
+    }
+    public void setReportId(NumberKey id)
+        throws TorqueException
+    {
+        torqueReport.setReportId(id);
+    }
+
+    public Scope getScope()
+        throws TorqueException
+    {
+        return torqueReport.getScope();
+    }
+
     /**
      * Get the value of module.
      * @return value of module.
@@ -292,10 +318,30 @@ public  class ReportBridge
         }
         catch (TorqueException e)
         {
-            isEditable = true;
+            isEditable = false;
             Log.get().error(e);
         }
         return isEditable;
+    }
+
+    public boolean isDeletable(ScarabUser user)
+    {
+        boolean isDeletable = false;
+        try
+        {
+            isDeletable =
+                (Scope.PERSONAL__PK.equals(torqueReport.getScopeId()) 
+                  && user.getUserId().equals(torqueReport.getUserId()))
+                ||
+                (Scope.MODULE__PK.equals(torqueReport.getScopeId()) &&
+                 user.hasPermission(ScarabSecurity.ITEM__DELETE, getModule()));
+        }
+        catch (TorqueException e)
+        {
+            isDeletable = false;
+            Log.get().error(e);
+        }
+        return isDeletable;
     }
 
     /**
@@ -417,7 +463,7 @@ public  class ReportBridge
     }
 
     public void setMITList(MITList mitList)
-        throws TorqueException
+        throws Exception
     {
         reportDefn.setModuleIssueTypes(null);
         setModule(null);
@@ -431,6 +477,15 @@ public  class ReportBridge
                 mit.setModuleId(new Integer(item.getModuleId().toString()));
                 mit.setIssueTypeId(new Integer(item.getIssueTypeId().toString()));
                 reportDefn.addModuleIssueType(mit);
+            }
+
+            if (mitList.isSingleModule()) 
+            {
+                torqueReport.setModule(mitList.getModule());
+            }
+            if (mitList.isSingleIssueType()) 
+            {
+                torqueReport.setIssueType(mitList.getIssueType());
             }
         }        
     }

@@ -64,13 +64,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportPeer;
 import org.tigris.scarab.om.ReportManager;
+import org.tigris.scarab.om.Report;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.27 2003/02/04 11:25:59 jon Exp $
+    @version $Id: GenerateReport.java,v 1.28 2003/02/06 03:27:23 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -156,62 +157,33 @@ public class GenerateReport
     }
 
 
-    /**
-        Edits the stored story.
-    */
-    public void doEditstoredreport(RunData data, TemplateContext context)
-         throws Exception
-    {
-        Intake intake = getIntakeTool(context);
-        intake.removeAll();
-        populateReport(data, context);
-        setTarget(data, "reports,Step1.vm");
-    }
-
-    /**
-        Runs the stored story.
-    */
-    public void doRunstoredreport(RunData data, TemplateContext context)
-         throws Exception
-    {        
-        populateReport(data, context);
-        setTarget(data, "reports,Report_1.vm");
-    }
-
-    public void doDeletereport(RunData data, TemplateContext context)
-        throws Exception
-    {
-        ReportBridge report = populateReport(data, context);
-        report.setDeleted(true);
-        report.save();
-        ScarabRequestTool scarabR = getScarabRequestTool(context); 
-        scarabR.setReport(null);
-        Intake intake = getIntakeTool(context);
-        intake.removeAll();
-        setTarget(data, "reports,Step1.vm");
-    }
 
     public void doDeletestoredreport(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
-        if (user.hasPermission("Item | Delete", 
-            getScarabRequestTool(context).getCurrentModule()))
+        String[] reportIds = data.getParameters().getStrings("report_id");
+        for (int i=0;i<reportIds.length; i++)
         {
-            String[] reportIds = data.getParameters().getStrings("report_id");
-            for (int i=0;i<reportIds.length; i++)
+            String reportId = reportIds[i];
+            if (reportId != null && reportId.length() > 0)
             {
-               String reportId = reportIds[i];
-               if (reportId != null && reportId.length() > 0)
-               {
-                   org.tigris.scarab.om.Report report = ReportManager
+                Report torqueReport = ReportManager
                        .getInstance(new NumberKey(reportId), false);
-                    report.setDeleted(true);
-                    report.save();
-               }
-           }
-       }
-     }
+                if (new ReportBridge(torqueReport).isDeletable(user)) 
+                {
+                    torqueReport.setDeleted(true);
+                    torqueReport.save();
+                }                   
+                else 
+                {
+                    getScarabRequestTool(context).setAlertMessage(
+                        getLocalizationTool(context)
+                        .get(NO_PERMISSION_MESSAGE));
+                }
+            }
+        }
+    }
 
     public void doPrint(RunData data, TemplateContext context)
         throws Exception

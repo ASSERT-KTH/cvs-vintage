@@ -1,8 +1,9 @@
 #set ($report = $scarabR.Report)
 #set ($reportDefn = $report.ReportDefinition)
-
+#set ($reportIsEditable = $report.isEditable($data.User))
 <div class="app" id="div2-4-1-a-output">
 
+#if ($reportIsEditable)
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
     <tr>
@@ -13,6 +14,7 @@
     </tr>
   </table>
 </div>
+#end
 
 $data.User.setCurrentMITList($report.getMITList())
 #showMITList($l10n.MITListReportHeading $data.User false)
@@ -45,7 +47,7 @@ $l10n.Report
 #end
 </h3>
 
-#if ($reportDefn.ReportAxisList.size() > 0)
+#if ($reportIsEditable && $reportDefn.ReportAxisList.size() > 0)
 <div class="colbar"><a href="$link.setPage("reports,Report_1.vm").addPathInfo("action", "ConfigureReport").addPathInfo("eventSubmit_doSwapRowCol", "foo")">$l10n.SwapRowCol</a></div>
 #end
 
@@ -59,16 +61,16 @@ $l10n.Report
 #reportTable($reportModel $reportIssueType)
 </div>
 
+#if ($reportIsEditable)
 <form method="get" action="$link.setPage("reports,Report_1.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
-
 <div class="functnbar3">
   <input type="submit" value="$l10n.SaveReport" name="eventSubmit_doSavereport" />
 </div>
-
 </form>
-</div>
+#end
 
+</div>
 #if ($data.Parameters.getString($scarabG.Constant.DEBUG))
 <p><pre>$report.ReportDefinition.toXmlString()</pre></p>
 #end
