@@ -116,8 +116,8 @@ $page.setTitle("Enter issue")
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 #set ($reportingIssue = $scarabR.ReportingIssue)
 #set ($attachments = $reportingIssue.Attachments)
-#if ($attachments.size() > 0)
 <h3>Attachments</h3>
+#if ($attachments.size() > 0)
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>&#160;</th>
@@ -125,7 +125,7 @@ $page.setTitle("Enter issue")
      <th>Attachment description</th>
      <th>Attachment type</th>
    </tr>
-   #foreach ($file in $reportingIssue.Attachments)
+   #foreach ($file in $attachments)
      #indexedRows($velocityCount)
      #if ($file.TypeId.toString().equals("1"))
        <td>
