@@ -66,6 +66,7 @@ import org.apache.tomcat.core.*;
 import java.util.*;
 import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.log.*;
+import java.security.*;
 //import org.apache.tomcat.session.*;
 
 
@@ -427,8 +428,30 @@ class SimpleSessionManager
 	
 	// XXX can return MessageBytes !!!
 
-
-	String newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+        /**
+         * When using a SecurityManager and a JSP page or servlet triggers
+         * creation of a new session id it must be performed with the 
+         * Permissions of this class using doPriviledged because the parent
+         * JSP or servlet may not have sufficient Permissions.
+         */
+	String newId;
+        if( System.getSecurityManager() != null ) {
+            class doInit implements PrivilegedAction {
+		private Random randomSource;
+                private String jsIdent;
+                public doInit(Random rs, String ident) {
+		    randomSource = rs;
+                    jsIdent = ident;
+                }           
+                public Object run() {
+                    return SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+                }           
+            }    
+            doInit di = new doInit(randomSource,jsIdent);
+            newId= (String)AccessController.doPrivileged(di);
+	} else {
+	    newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+	}
 
 	// What if the newId belongs to an existing session ?
 	// This shouldn't happen ( maybe we can try again ? )

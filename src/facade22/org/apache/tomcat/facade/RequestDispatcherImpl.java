@@ -64,6 +64,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import java.util.*;
+import java.security.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -136,6 +137,33 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     // -------------------- Public methods --------------------
     
     public void forward(ServletRequest request, ServletResponse response)
+	throws ServletException, IOException
+    {
+	if( System.getSecurityManager() != null ) {
+	    final ServletRequest req = request;
+	    final ServletResponse res = response;
+	    try {
+		java.security.AccessController.doPrivileged(
+		    new java.security.PrivilegedExceptionAction()
+		    {
+			public Object run() throws ServletException, IOException {
+			    doForward(req,res);
+			    return null;
+			}
+		    }               
+		);
+	    } catch( PrivilegedActionException pe) {
+		Exception e = pe.getException();
+		if( e instanceof ServletException )
+		    throw (ServletException)e;
+		throw (IOException)e;
+	    }
+	} else {
+	    doForward(request,response);
+	}
+    }
+
+    private void doForward(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
 	/** We need to find the request/response. The servlet API
@@ -215,6 +243,33 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     public void include(ServletRequest request, ServletResponse response)
+	throws ServletException, IOException
+    {
+	if( System.getSecurityManager() != null ) {
+	    final ServletRequest req = request;
+	    final ServletResponse res = response;
+	    try {
+		java.security.AccessController.doPrivileged(
+		    new java.security.PrivilegedExceptionAction()
+		    {
+			public Object run() throws ServletException, IOException {
+			    doInclude(req,res);
+			    return null;     
+			}               
+		    }    
+		);   
+	    } catch( PrivilegedActionException pe) {
+		Exception e = pe.getException();       
+		if( e instanceof ServletException )
+		    throw (ServletException)e;
+		throw (IOException)e;
+	    }
+	} else {
+	    doInclude(request,response);
+	}
+    }
+
+    private void doInclude(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
         Request realRequest = ((HttpServletRequestFacade)request).
