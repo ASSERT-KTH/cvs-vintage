@@ -388,12 +388,24 @@ else echo "cannot find columba.jar in `pwd`"; fi
            <include name="lib/jargs.jar"/>
            <include name="lib/plastic-1.2.0.jar"/>
            <include name="lib/forms-1.0.3.jar"/>
-	   <include name="lib/jwizz-0.1.2.jar"/>
-	   <!-- never sign JavaHelp, its already signed by SUN -->
-	   <!--<include name="lib/jhall.jar"/>-->
-	   <include name="lib/ristretto-1.0_RC2.jar" />
-	   <include name="lib/usermanual.jar"/>
-	   <include name="lib/frappucino-1.0pre1.jar"/>
+	   	   <include name="lib/jwizz-0.1.2.jar"/>
+           <include name="lib/jscf-0.1.jar"/>
+           <include name="lib/jdom.jar"/>
+           <include name="lib/ristretto-1.0_RC2.jar" />
+           <include name="lib/usermanual.jar"/>
+           <include name="lib/frappucino-1.0pre1.jar"/>
+           <include name="lib/macchiato-1.0pre1.jar"/>
+          	
+	       <!-- never sign JavaHelp, its already signed by SUN -->
+	       <!--<include name="lib/jhall.jar"/>-->
+	   	   
+           <!-- never sign jniwrapper, its already signed by jniwrapper.com -->
+           <!-- <include name="lib/jniwrap-2.4.jar"/> -->
+           <!-- <include name="lib/winpack.jar"/> -->
+          	
+           <!-- jar encapsulates the win32 dll's -->
+           <include name="lib/jniwraplib.jar"/>
+          	
           </fileset>
          </signjar>
         </target>

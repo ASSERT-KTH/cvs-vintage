@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp  spec="1.0+" codebase="http://columba.sourceforge.net/webstart" href="jnw.jnlp">
+  <information>
+    <title>JNWrapper resources</title>
+    <vendor>MIIK Ltd.</vendor>
+    <description>JNIWrapper Application</description>
+    <description kind="short">JNIWrapper Application</description>
+    <offline-allowed/>
+  </information>
+  <security>
+      <all-permissions/>
+  </security>
+  <resources os="Windows">
+    <nativelib href="lib/jniwraplib.jar"/>
+  </resources>
+  <resources>
+    <jar href="lib/jniwrap-2.4.jar"/>
+    <jar href="lib/winpack.jar"/>
+  </resources>
+  <component-desc/>
+</jnlp>

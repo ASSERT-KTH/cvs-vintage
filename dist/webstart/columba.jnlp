@@ -19,21 +19,29 @@
    <j2se version="1.4"/>
    <j2se version="1.3"/>
    <jar href="columba.jar"/>
-   <jar href="lib/log4j.jar"/>
-   <jar href="lib/junit.jar"/>
-   <jar href="lib/lucene-1.3-rc1.jar"/>
+   <jar href="lib/lucene-1.3-final.jar"/>
    <jar href="lib/jargs.jar"/>
-   <jar href="lib/jwizz-0.1.1.jar"/>
-   <jar href="lib/plastic.jar"/>
+   <jar href="lib/jwizz-0.1.2.jar"/>
+   <jar href="lib/plastic-1.2.0.jar"/>
    <jar href="lib/usermanual.jar"/>
-   <jar href="lib/ristretto-1.0pre1.jar" />
-   <jar href="lib/forms.jar" />
+   <jar href="lib/ristretto-1.0_RC2.jar" />
+   <jar href="lib/forms-1.0.3.jar" />
+   <jar href="lib/jscf-0.1.jar" />
+   <jar href="lib/jdom.jar" />
+   <jar href="lib/frappucino-1.0pre1.jar" />
+   <jar href="lib/macchiato-1.0pre1.jar" />
    
    <!-- JavaHelp is signed by SUN already -->
    <!-- it therefor can't be in the same jnlp file -->
    <!-- because it is signed by someone else -->
      
    <extension href="javahelp.jnlp" />
+   
+   <!-- JNIWrapper is signed by jniwrapper.com already -->
+   <!-- it therefor can't be in the same jnlp file -->
+   <!-- because it is signed by someone else -->
+   
+   <extension name="jniwrapper" href="jniwrapper.jnlp"/>
    
  </resources>
  <application-desc main-class="org.columba.core.main.Main"/>
