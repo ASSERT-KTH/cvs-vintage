@@ -12,3 +12,4 @@ junit*.properties
 local-*
 build.properties
 velocity.log.1
+javadoc*
