@@ -71,7 +71,9 @@ import java.text.*;
 /**
  * A collection of cookies - reusable and tuned for server side performance.
  * Based on RFC2965 ( and 2109 )
- * 
+ *
+ * This class is not synchronized.
+ *
  * @author Costin Manolache
  */
 public final class Cookies { // extends MultiMap {
@@ -88,6 +90,8 @@ public final class Cookies { // extends MultiMap {
      *  Construct a new cookie collection, that will extract
      *  the information from headers.
      *
+     * @param headers Cookies are lazy-evaluated and will extract the
+     *     information from the provided headers.
      */
     public Cookies(MimeHeaders headers) {
 	this.headers=headers;
@@ -102,6 +106,8 @@ public final class Cookies { // extends MultiMap {
 	unprocessed=true;
     }
 
+    // -------------------- Indexed access --------------------
+    
     public ServerCookie getCookie( int idx ) {
 	if( unprocessed ) {
 	    getCookieCount(); // will also update the cookies
@@ -117,6 +123,12 @@ public final class Cookies { // extends MultiMap {
 	return cookieCount;
     }
 
+    // -------------------- Adding cookies --------------------
+
+    /** Register a new, unitialized cookie. Cookies are recycled, and
+     *  most of the time an existing ServerCookie object is returned.
+     *  The caller can set the name/value and attributes for the cookie
+     */
     public ServerCookie addCookie() {
 	if( cookieCount >= scookies.length  ) {
 	    ServerCookie scookiesTmp[]=new ServerCookie[2*cookieCount];
@@ -134,10 +146,9 @@ public final class Cookies { // extends MultiMap {
     }
 
 
-    // -------------------- Static methods ( used to be CookieTools )
+    // code from CookieTools 
 
-    /** Process all Cookie headers of a request, setting them
-     *  in a cookie vector
+    /** Add all Cookie found in the headers of a request.
      */
     public  void processCookies( MimeHeaders headers ) {
 	if( headers==null )
@@ -155,18 +166,21 @@ public final class Cookies { // extends MultiMap {
 
 	    // Uncomment to test the new parsing code
 	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
-		if( dbg>-1 ) log( "Parsing b[]: " + cookieValue.toString());
+		if( dbg>0 ) log( "Parsing b[]: " + cookieValue.toString());
 		processCookieHeader( cookieValue.getBytes(),
 				     cookieValue.getOffset(),
 				     cookieValue.getLength());
 	    } else {
-		if( dbg>-1 ) log( "Parsing S: " + cookieValue.toString());
+		if( dbg>0 ) log( "Parsing S: " + cookieValue.toString());
 		processCookieHeader( cookieValue.toString() );
 	    }
 	    pos++;// search from the next position
 	}
     }
 
+    /** Process a byte[] header - allowing fast processing of the
+     *  raw data
+     */
     void processCookieHeader(  byte bytes[], int off, int len )
     {
 	if( len<=0 || bytes==null ) return;
@@ -414,6 +428,8 @@ public final class Cookies { // extends MultiMap {
 	System.out.println("Cookies: " + s);
     }
 
+    /*
+
     public static void main( String args[] ) {
 	test("foo=bar; a=b");
 	test("foo=bar;a=b");
@@ -448,4 +464,6 @@ public final class Cookies { // extends MultiMap {
 	}
 	    
     }
+
+    */
 }

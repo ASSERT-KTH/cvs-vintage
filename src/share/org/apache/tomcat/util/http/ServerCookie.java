@@ -239,13 +239,16 @@ public class ServerCookie implements Serializable {
 	return buf.toString();
     }
 
+    private static final String ancientDate=DateTool.oldCookieFormat
+	.format(new Date(10000));
+    
     /** Return the header value used to set this cookie
      */
     public void getCookieHeaderValue(StringBuffer buf) {
 	ServerCookie cookie=this; 
 	
         // this part is the same for all cookies
-        buf.append(cookie.getName());
+	buf.append(cookie.getName());
         buf.append("=");
         maybeQuote(version, buf, cookie.getValue().toString());
 
@@ -261,7 +264,7 @@ public class ServerCookie implements Serializable {
 		maybeQuote (version, buf, cookie.getComment().toString());
 	    }
 	}
-
+	
 	// add domain information, if present
 
 	if (! cookie.getDomain().isNull()) {
@@ -276,10 +279,15 @@ public class ServerCookie implements Serializable {
 		// interoperatibility (long word )
 		buf.append ("; Expires=");
 		// Wdy, DD-Mon-YY HH:MM:SS GMT ( Expires netscape format )
-		DateTool.oldCookieFormat.
-		    format(new Date( System.currentTimeMillis() +
-				     cookie.getMaxAge() *1000L) ,buf,
-			   new FieldPosition(0));
+		// To expire we need to set the time back in future
+		// ( pfrieden@dChain.com )
+                if (cookie.getMaxAge() == 0)
+		    buf.append( ancientDate );
+		else
+                    DateTool.oldCookieFormat.format
+                        (new Date( System.currentTimeMillis() +
+                                   cookie.getMaxAge() *1000L), buf,
+                         new FieldPosition(0));
 
 	    } else {
 		buf.append ("; Max-Age=");
