@@ -26,7 +26,7 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.10 1999/02/19 22:22:55 jrobbins Exp $
+// $Id: CrMissingAttrName.java,v 1.11 1999/03/08 22:42:55 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -60,6 +60,25 @@ public class CrMissingAttrName extends CrUML {
     if (myName.getBody().length() == 0) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }
+
+    public void initWizard(Wizard w) {
+    if (w instanceof WizMEName) {
+      ToDoItem item = w.getToDoItem();
+      ModelElement me = (ModelElement) item.getOffenders().elementAt(0);
+      String ins = "Set the name of this attribute.";
+      String sug = "AttributeName";
+      if (me instanceof Attribute) {
+	Attribute a = (Attribute) me;
+	int count = 1;
+	if (a.getOwner() != null)
+	  count = a.getOwner().getStructuralFeature().size();
+	sug = "attr" + (count + 1);
+      }
+      ((WizMEName)w).setInstructions(ins);
+      ((WizMEName)w).setSuggestion(sug);
+    }
+  }
+  public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrMissingAttrName */
 

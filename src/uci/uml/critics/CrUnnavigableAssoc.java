@@ -24,7 +24,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.4 1999/02/19 22:23:36 jrobbins Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.5 1999/03/08 22:43:05 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -70,6 +70,8 @@ public class CrUnnavigableAssoc extends CrUML {
     }
     return PROBLEM_FOUND;
   }
+
+  public Class getWizardClass(ToDoItem item) { return WizNavigable.class; }
 
 } /* end class CrUnnavigableAssoc */
 

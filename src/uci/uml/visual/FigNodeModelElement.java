@@ -26,7 +26,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.11 1999/02/19 22:27:52 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.12 1999/03/08 22:43:36 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -50,7 +50,7 @@ import uci.uml.Foundation.Data_Types.*;
  *  resized. */
 
 public abstract class FigNodeModelElement extends FigNode
-implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener, KeyListener, PropertyChangeListener  {
+implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyListener, PropertyChangeListener  {
 
   ////////////////////////////////////////////////////////////////
   // constants

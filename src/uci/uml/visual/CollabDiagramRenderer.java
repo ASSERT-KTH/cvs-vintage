@@ -23,10 +23,10 @@
 
 
 
-// File: CollaborationDiagramRenderer.java
-// Classes: CollaborationDiagramRenderer
+// File: CollabDiagramRenderer.java
+// Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollaborationDiagramRenderer.java,v 1.2 1999/02/19 22:27:27 jrobbins Exp $
+// $Id: CollabDiagramRenderer.java,v 1.1 1999/03/08 22:43:32 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -38,14 +38,14 @@ import uci.uml.Foundation.Core.*;
 import uci.uml.Behavioral_Elements.Collaborations.*;
 
 
-public class CollaborationDiagramRenderer
+public class CollabDiagramRenderer
 implements GraphNodeRenderer, GraphEdgeRenderer {
 
   /** Return a Fig that can be used to represent the given node */
   public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
     if (node instanceof ClassifierRole) return new FigClassifierRole(gm, node);
     if (node instanceof Message) return new FigMessage(gm, node);
-    System.out.println("needs-more-work CollaborationDiagramRenderer getFigNodeFor");
+    System.out.println("needs-more-work CollabDiagramRenderer getFigNodeFor");
     return null;
   }
 
@@ -71,8 +71,8 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       return asrFig;
     }
 
-    System.out.println("needs-more-work CollaborationDiagramRenderer getFigEdgeFor");
+    System.out.println("needs-more-work CollabDiagramRenderer getFigEdgeFor");
     return null;
   }
 
-} /* end class CollaborationDiagramRenderer */
+} /* end class CollabDiagramRenderer */

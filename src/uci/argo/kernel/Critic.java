@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.14 1999/03/02 02:49:12 jrobbins Exp $
+// $Id: Critic.java,v 1.15 1999/03/08 22:42:48 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -396,6 +396,7 @@ public class Critic implements Poster, java.io.Serializable {
       try {
 	Wizard w = (Wizard) wizClass.newInstance();
 	w.setToDoItem(item);
+	initWizard(w);
 	return w;
       }
       catch (Exception ex) {
@@ -409,7 +410,15 @@ public class Critic implements Poster, java.io.Serializable {
    *  this critic.  Return null if no wizard is defined.  This method
    *  returns null, subclasses with wizards should override it. */
   public Class getWizardClass(ToDoItem item) { return null; }
-  
+
+
+  /** Initialize a newly created wizard with information found by the
+   *  critic.  This is called right after the wizard is made in
+   *  makeWizard() and after the wizard's ToDoItem is set.  Any critic
+   *  that supports wizards should probably override this method, and
+   *  call super initWizard() first. */
+  public void initWizard(Wizard w) { }
+
   ////////////////////////////////////////////////////////////////
   // accessors
 

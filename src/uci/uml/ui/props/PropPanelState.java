@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.3 1999/02/19 22:26:30 jrobbins Exp $
+// $Id: PropPanelState.java,v 1.4 1999/03/08 22:43:24 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -229,7 +229,7 @@ implements DocumentListener, ItemListener {
 
 
 class TableModelInternalTrans extends AbstractTableModel
-implements VetoableChangeListener, DelayedVetoableChangeListener {
+implements VetoableChangeListener, DelayedVChangeListener {
   ////////////////
   // instance varables
   State _target;

@@ -26,7 +26,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.13 1999/02/19 22:23:30 jrobbins Exp $
+// $Id: CrUML.java,v 1.14 1999/03/08 22:42:59 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -131,7 +131,7 @@ public class CrUML extends Critic {
   public boolean predicate(Object dm, Designer dsgr) {
     Project p = ProjectBrowser.TheInstance.getProject();
     if (p.isInTrash(dm)) {
-      //      System.out.println("in trash:" + dm);
+      //System.out.println("in trash:" + dm);
       return NO_PROBLEM;
     }
     else return predicate2(dm, dsgr);

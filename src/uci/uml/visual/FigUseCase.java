@@ -26,7 +26,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.14 1999/02/19 22:28:00 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.15 1999/03/08 22:43:37 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -45,7 +45,7 @@ import uci.uml.Behavioral_Elements.Use_Cases.*;
 /** Class to display graphics for a UML State in a diagram. */
 
 public class FigUseCase extends FigNodeModelElement {
-  //implements VetoableChangeListener, DelayedVetoableChangeListener {
+  //implements VetoableChangeListener, DelayedVChangeListener {
 
   ////////////////////////////////////////////////////////////////
   // constants

@@ -26,7 +26,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.12 1999/02/19 22:22:59 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.13 1999/03/08 22:42:58 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -72,6 +72,10 @@ public class CrMultipleAgg extends CrUML {
     }
     if (aggCount > 1) return PROBLEM_FOUND;
     else return NO_PROBLEM;
+  }
+
+  public Class getWizardClass(ToDoItem item) {
+    return WizAssocComposite.class;
   }
 
 } /* end class CrMultipleAgg.java */

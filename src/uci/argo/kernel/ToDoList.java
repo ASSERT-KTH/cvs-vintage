@@ -26,7 +26,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.14 1999/02/19 22:17:23 jrobbins Exp $
+// $Id: ToDoList.java,v 1.15 1999/03/08 22:42:49 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -104,6 +104,13 @@ implements Runnable, java.io.Serializable {
     forceValidityCheck(removes);
   }
 
+  /** Check each ToDoItem on the list to see if it is still valid.  If
+   *  not, then remove that item.  This is called automatically by the
+   *  ValidityCheckingThread, and it can be called by the user
+   *  pressing a button via forceValidityCheck(). <p>
+   * 
+   *  <b>Warning: Fragile code!<b> No method that this method calls can
+   *  synchronized the Designer, otherwise there will be deadlock. */
   protected synchronized void forceValidityCheck(Vector removes) {
     //Enumeration cur = _items.elements();
     int size = _items.size();

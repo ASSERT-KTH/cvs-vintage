@@ -26,7 +26,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.13 1999/02/19 22:23:34 jrobbins Exp $
+// $Id: CrUnconventionalOperName.java,v 1.14 1999/03/08 22:43:02 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -91,6 +91,20 @@ public class CrUnconventionalOperName extends CrUML {
 //  		       " res = " + res);
     return res;
   }
+
+  public void initWizard(Wizard w) {
+    if (w instanceof WizMEName) {
+      ToDoItem item = w.getToDoItem();
+      ModelElement me = (ModelElement) item.getOffenders().elementAt(0);
+      String sug = me.getName().getBody();
+      sug = sug.substring(0,1).toLowerCase() + sug.substring(1);
+      String ins = "Change the operation name to start with a "+
+	"lowercase letter.";
+      ((WizMEName)w).setInstructions(ins);
+      ((WizMEName)w).setSuggestion(sug);
+    }
+  }
+  public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrUnconventionalOperName */
 

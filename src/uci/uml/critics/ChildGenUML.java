@@ -27,7 +27,7 @@
 // File: ChildGenUML.java
 // Classes: ChildGenUML
 // Original Author: jrobbins
-// $Id: ChildGenUML.java,v 1.15 1999/02/19 22:22:24 jrobbins Exp $
+// $Id: ChildGenUML.java,v 1.16 1999/03/08 22:42:53 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -85,7 +85,7 @@ public class ChildGenUML implements ChildGenerator {
       EnumerationComposite res = new EnumerationComposite();
       res.addSub(cls.getBehavioralFeature());
       res.addSub(cls.getStructuralFeature());
-      
+
       Vector sms = cls.getBehavior();
       StateMachine sm = null;
       if (sms != null && sms.size() > 0) sm = (StateMachine) sms.elementAt(0);

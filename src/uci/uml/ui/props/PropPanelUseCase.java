@@ -26,7 +26,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.4 1999/02/19 22:26:35 jrobbins Exp $
+// $Id: PropPanelUseCase.java,v 1.5 1999/03/08 22:43:25 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -182,7 +182,7 @@ public class PropPanelUseCase extends PropPanel {
 
 
 class TableModelExtensions extends AbstractTableModel
-implements VetoableChangeListener, DelayedVetoableChangeListener {
+implements VetoableChangeListener, DelayedVChangeListener {
   ////////////////
   // instance varables
   UseCase _target;

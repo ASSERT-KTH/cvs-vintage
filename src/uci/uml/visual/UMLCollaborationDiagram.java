@@ -26,7 +26,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.3 1999/02/19 22:28:07 jrobbins Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.4 1999/03/08 22:43:38 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -125,12 +125,12 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
   public void setNamespace(Namespace m) {
     super.setNamespace(m);
-    CollaborationDiagramGraphModel gm = new CollaborationDiagramGraphModel();
+    CollabDiagramGraphModel gm = new CollabDiagramGraphModel();
     gm.setNamespace(m);
     setGraphModel(gm);
     LayerPerspective lay = new LayerPerspective(m.getName().getBody(), gm);
     setLayer(lay);
-    CollaborationDiagramRenderer rend = new CollaborationDiagramRenderer(); // singleton
+    CollabDiagramRenderer rend = new CollabDiagramRenderer(); // singleton
     lay.setGraphNodeRenderer(rend);
     lay.setGraphEdgeRenderer(rend);
   }
