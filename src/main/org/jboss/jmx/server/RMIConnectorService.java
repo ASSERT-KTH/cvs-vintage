@@ -8,6 +8,7 @@
 package org.jboss.jmx.server;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URL;
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -44,10 +45,13 @@ public class RMIConnectorService
 	//AS I am not quite sure if this works but somehow the protocol should become
 	//AS part of the JNDI name because there could be more than one protcol
 	public static String JNDI_NAME = "jmx:rmi";
+	public static String JMX_NAME = "jmx";
+	public static String PROTOCOL_NAME = "rmi";
 	
 	// Attributes ----------------------------------------------------
-	MBeanServer server;
-	RMIConnectorImpl adaptor;
+	private MBeanServer server;
+	private RMIConnectorImpl adaptor;
+	private String mHost;
 	
 	// Static --------------------------------------------------------
 	
@@ -68,16 +72,17 @@ public class RMIConnectorService
 	
 	// Protected -----------------------------------------------------
 	protected void initService() throws Exception {
+		mHost = InetAddress.getLocalHost().getHostName();
 		adaptor = new RMIConnectorImpl( server );
 	}
 	
 	protected void startService() throws Exception {
-		new InitialContext().bind( JNDI_NAME, adaptor );
+		new InitialContext().bind( JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME, adaptor );
 	}
 	
 	protected void stopService() {
 		try {
-			new InitialContext().unbind(JNDI_NAME);
+			new InitialContext().unbind( JMX_NAME + ":" + mHost + ":" + PROTOCOL_NAME );
 		}
 		catch( Exception e )	{
 			log.exception( e );
