@@ -12,9 +12,14 @@ $page.setTitle("Confirm Your Email Address")
 #else
  #set ($regGroup = $intake.Register.Default)
  #set ($emailValue = $data.Parameters.Email)
+ #if (!$emailValue || $emailValue.length() == 0)
+    ## coming from the Login page for a non-confirmed user
+    #set ($emailValue = $intake.Login.Default.Username)
+ #end
 #end
 #set ($confirmValue = $data.Parameters.Confirm)
 
+#if ($data.Message.length() == 0)
 <p>
 Thanks for registering!
 </p>
@@ -26,6 +31,11 @@ registration click on the link in the email or type in the confirmation
 code below. If you do not choose to confirm your account now, you will
 be asked to confirm it the next time you try to login.
 </p>
+#else
+<p>
+Please enter the confirmation code that was sent to you in an email.
+</p>
+#end
 
 <form method="post" action="$link.setPage("Confirm.vm")">
  <input type="hidden" name="action" value="Confirm" />
