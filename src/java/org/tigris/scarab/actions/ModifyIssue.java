@@ -76,10 +76,13 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.7 2001/07/11 07:33:46 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.8 2001/07/12 01:41:53 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
+    private static final String ERROR_MESSAGE = "More information was " +
+                                "required to submit your request. Please " +
+                                "scroll down to see error messages."; 
 
     public void doSubmitattributes( RunData data, TemplateContext context )
         throws Exception
@@ -89,17 +92,19 @@ public class ModifyIssue extends TemplateAction
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
        
-        // comment field is required to modify attributes
+        // Comment field is required to modify attributes
         Attachment attachment = new Attachment();
         Group commentGroup = intake.get("Attachment", "attCommentKey", false);
-        Field commentField = commentGroup.get("DataAsString");
+        Field commentField = null;
+        commentField = commentGroup.get("DataAsString");
         commentField.setRequired(true);
-        if (!commentField.isValid() )
+        if (commentGroup == null || !commentField.isValid() )
         {
-        commentField.setMessage("An explanatory comment is required to modify attributes.");
+            commentField.setMessage("An explanatory comment is required " + 
+                                    "to modify attributes.");
         }
 
-        // set any other required flags
+        // Set any other required flags
         Criteria crit = new Criteria()
             .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
@@ -116,33 +121,37 @@ public class ModifyIssue extends TemplateAction
 
             if ( group != null ) 
             {            
-            Field field = null;
-            if ( aval instanceof OptionAttribute ) 
-            {
-                field = group.get("OptionId");
-            }
-            else if ( aval instanceof User )
-            {
-                field = group.get("UserId");
-            }
-            else
-            {
-                field = group.get("Value");
-            }
-            
-            for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
-            {
-                if ( aval.getAttribute().getPrimaryKey().equals(
-                     requiredAttributes[j].getPrimaryKey() )) 
+                Field field = null;
+                if ( aval.getAttribute().getAttributeType()
+                     .getAttributeClass().getName().equals("user") )
                 {
-                    field.setRequired(true);
-                    break;
-                }                    
-            }
-        }
+                    field = group.get("UserId");
+                }
+                else if ( aval instanceof OptionAttribute ) 
+                {
+                    field = group.get("OptionId");
+                }
+                else
+                {
+                    field = group.get("Value");
+                }
+            
+                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+                {
+                    if ( aval.getAttribute().getPrimaryKey().equals(
+                         requiredAttributes[j].getPrimaryKey() )) 
+                    {
+                        field.setRequired(true);
+                        break;
+                    }                    
+                }
+            } 
+        } 
 
         if ( intake.isAllValid() ) 
         {
+System.out.println("all valid");
+
             // Save explanatory comment
             commentGroup.setProperties(attachment);
             attachment.setIssue(issue);
@@ -153,23 +162,29 @@ public class ModifyIssue extends TemplateAction
             // Save transaction record
             Transaction transaction = new Transaction();
             transaction.setCreatedDate(new Date());
-            //ObjectKey userId = ((ScarabUser)data.getUser()).getPrimaryKey();
+            // TODO: set CreatedUser field
             //transaction.setCreatedBy(Integer.parseInt(userId.toString()));
             transaction.save();
 
-            // set the attribute values entered 
+            // Set the attribute values entered 
             HashMap avMap = issue.getAllAttributeValuesMap();
             Iterator iter2 = avMap.keySet().iterator();
             while (iter2.hasNext())
             {
                 aval = (AttributeValue)avMap.get(iter2.next());
-            
                 group = intake.get("AttributeValue", aval.getQueryKey(), false);
+
                 if ( group != null ) 
                 {            
                     String newValue = null;
                     String oldValue = null;
-                    if ( aval instanceof OptionAttribute ) 
+                    if ( aval.getAttribute().getAttributeType()
+                         .getAttributeClass().getName().equals("user") )
+                    {
+                        newValue = group.get("UserId").toString();
+                        oldValue = aval.getUserId().toString();
+                    }
+                    else if ( aval instanceof OptionAttribute ) 
                     {
                         newValue = group.get("OptionId").toString();
                         oldValue = aval.getOptionIdAsString();
@@ -187,39 +202,53 @@ public class ModifyIssue extends TemplateAction
                         // Save activity record
                         Activity activity = new Activity();
                         activity.setIssueId(id);  
-                        activity.setAttributeId(aval.getAttribute().getAttributeId());  
+                        activity.setAttributeId(aval.getAttribute()
+                                                .getAttributeId());  
                         activity.setTransaction(transaction);
                         activity.setAttachment(attachment);
                         activity.setOldValue(oldValue);
                         activity.setNewValue(newValue);
                         activity.save();
                     }
-                }
+                } 
             }
             issue.save();
           
-
-            String template = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE, 
-                           "ViewIssue.vm");
-            setTemplate(data, template);            
+        } 
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
         }
+
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTemplate(data, template);            
     }
 
-   }
+    
+    /**
+    *  Adds an attachment of type "url".
+    */
    public void doSubmiturl (RunData data, TemplateContext context ) 
         throws Exception
    {
         submitAttachment (data, context, "url");
    } 
 
+    /**
+    *  Adds an attachment of type "comment".
+    */
    public void doSubmitcomment (RunData data, TemplateContext context ) 
         throws Exception
    {
         submitAttachment (data, context, "comment");
    } 
 
-   private void submitAttachment (RunData data, TemplateContext context, String type)
+    /**
+    *  Adds an attachment.
+    */
+   private void submitAttachment (RunData data, TemplateContext context, 
+                                  String type)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -249,11 +278,11 @@ public class ModifyIssue extends TemplateAction
             dataField.setRequired(true);
             if (!nameField.isValid() )
             {
-               nameField.setMessage("This field requires a value.");
+                nameField.setMessage("This field requires a value.");
             }
             if (!dataField.isValid() )
             {
-               dataField.setMessage("This field requires a value.");
+                dataField.setMessage("This field requires a value.");
             }
 
             if (intake.isAllValid() )
@@ -263,14 +292,23 @@ public class ModifyIssue extends TemplateAction
                 attachment.setTypeId(new NumberKey(typeID));
                 attachment.setMimeType("text/plain");
                 attachment.save();
+                String template = data.getParameters()
+                                 .getString(ScarabConstants.NEXT_TEMPLATE);
+                setTemplate(data, template);            
+            } 
+            else
+            {
+                data.setMessage(ERROR_MESSAGE);
             }
         }
         String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       "ViewIssue.vm");
+                          .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
         setTemplate(data, template);            
    } 
 
+    /**
+    *  Deletes an url.
+    */
    public void doDeleteurl (RunData data, TemplateContext context )
         throws Exception
     {                          
@@ -285,14 +323,13 @@ public class ModifyIssue extends TemplateAction
             if (key.startsWith("url_delete_"))
             {
                attachmentId = key.substring(11);
-               Attachment attachment = (Attachment) AttachmentPeer.
-                                     retrieveByPK(new NumberKey(attachmentId));
+               Attachment attachment = (Attachment) AttachmentPeer
+                                     .retrieveByPK(new NumberKey(attachmentId));
                attachment.delete();
             } 
         }
         String template = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       "ViewIssue.vm");
+            .getString(ScarabConstants.NEXT_TEMPLATE);
         setTemplate(data, template);            
     }
 
@@ -328,10 +365,11 @@ public class ModifyIssue extends TemplateAction
                if (dependTypeId.equals("none"))
                {
                    depend.delete();
-               } else {
-                   DependType dependType = (DependType) DependTypePeer.
-                                           retrieveByPK(new NumberKey
-                                           (dependTypeId));
+               } 
+               else
+               {
+                   DependType dependType = (DependType) DependTypePeer
+                              .retrieveByPK(new NumberKey(dependTypeId));
                    depend.setDependType(dependType);
                }
                depend.save();
@@ -361,81 +399,90 @@ public class ModifyIssue extends TemplateAction
             key = keys[i].toString();
             if (key.startsWith("parent_depend_type_id"))
             {
-               String dependTypeId = params.getString(key);
-               
-               parentId = key.substring(22);
-               Issue parent = (Issue) IssuePeer.retrieveByPK(
-                               new NumberKey(parentId));
-               depend = parent.getDependency(currentIssue);
+                String dependTypeId = params.getString(key);
+                parentId = key.substring(22);
+                Issue parent = (Issue) IssuePeer
+                      .retrieveByPK(new NumberKey(parentId));
+                depend = parent.getDependency(currentIssue);
 
-               // User selected to remove the dependency
-               if (dependTypeId.equals("none"))
-               {
-                   depend.delete();
-               } else {
-                   DependType dependType = (DependType) DependTypePeer.
-                                           retrieveByPK(new NumberKey
-                                           (dependTypeId));
-                   depend.setDependType(dependType);
-               }
-               depend.save();
-               break;
+                // User selected to remove the dependency
+                if (dependTypeId.equals("none"))
+                {
+                    depend.delete();
+                }
+                else
+                {
+                    depend.setTypeId(dependTypeId);
+                }
+                depend.save();
             }
-         }
+        }
     }
 
     /**
     *  Adds a dependency between this issue and another issue.
-    *  This issue will be the child. 
+    *  This issue will be the child issue. 
     */
     public void doAdddependency (RunData data, TemplateContext context )
         throws Exception
     {                          
-        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
         String id = data.getParameters().getString("id");
-        String parentId = data.getParameters().getString("parent_id");
-        String dependTypeId = data.getParameters().
-                              getString("add_depend_type_id");
-        Issue parentIssue = null;
-        if (parentId == null || parentId.equals(""))
+        Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
+                             new NumberKey(id));
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        Group group = intake.get("Depend", "dependKey", false);
+        boolean isValid = true;
+
+        // The depend type is required.
+        Field dependTypeId = group.get("TypeId");
+        dependTypeId.setRequired(true);
+        if (!dependTypeId.isValid())
         {
-            data.setMessage("Please select a parent id.");
-            setTemplate(data, template);
+            dependTypeId.setMessage("Please select a dependency type.");
         }
-        else if (dependTypeId.equals("0"))
+
+        // The parent issue id is required, and must be a valid issue.
+        Field observedId = group.get("ObservedId");
+        observedId.setRequired(true);
+        if (!observedId.isValid())
         {
-            data.setMessage("Please select a dependency type.");
-            setTemplate(data, template);
+            observedId.setMessage("Please enter a valid issue id.");
         }
         else
         {
-            DependType dependType = (DependType) DependTypePeer.
-                                    retrieveByPK(new NumberKey
-                                    (dependTypeId));
-            Issue currentIssue = (Issue) IssuePeer.retrieveByPK(
-                                 new NumberKey(id));
             try
             {
-               parentIssue = (Issue) IssuePeer.retrieveByPK(
-                                     new NumberKey(parentId));
+                Issue parentIssue = (Issue) IssuePeer.retrieveByPK(
+                                    new NumberKey(observedId.toString()));
             }
             catch (Exception e)
             {
-                 data.setMessage("There is no issue that corresponds to the issue id you entered as a parent id.");
-                 return;
-            } 
-            if (parentIssue != null)
-            {
-                Depend depend = new Depend();
-                depend.setObservedId(parentId);
-                depend.setObserverId(id);
-                depend.setDependType(dependType);
-                depend.save();
+                observedId.setMessage("The id you entered does " +
+                                      "not correspond to a valid issue.");
+                isValid = false;
             }
         }
+
+        if (intake.isAllValid() && isValid)
+        {
+            Depend depend = new Depend();
+            depend.setObserverId(currentIssue.getIssueId());
+            depend.setObservedId(new NumberKey(observedId.toString()));
+            depend.setTypeId(new NumberKey(dependTypeId.toString()));
+
+            // TODO: would like to set these properties using 
+            // group.setProperties, but getting errors. (John?)
+            //group.setProperties(depend);
+            depend.save();
+        }
+        else
+        {
+            data.setMessage(ERROR_MESSAGE);
+        }
+
         String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       "ViewIssue.vm");
+            .getString(ScarabConstants.NEXT_TEMPLATE);
         setTemplate(data, nextTemplate);            
     }
 
