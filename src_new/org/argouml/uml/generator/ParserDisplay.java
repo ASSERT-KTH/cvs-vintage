@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.57 2003/02/05 22:43:35 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.58 2003/02/15 13:03:00 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.57 2003/02/05 22:43:35 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.58 2003/02/15 13:03:00 kataka Exp $
 
 
 
@@ -1384,7 +1384,7 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
     MClassifier type = null;
     Project p = ProjectManager.getManager().getCurrentProject();
     // Should we be getting this from the GUI? BT 11 aug 2002
-    type = p.findType(name);
+    type = p.findType(name, false);
     if (type == null) { // no type defined yet
 	type = UmlFactory.getFactory().getCore().buildClass(name, defaultSpace);
     }
