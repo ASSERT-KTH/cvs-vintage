@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.32 2002/03/01 08:29:56 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.33 2002/03/02 08:22:20 user57 Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -22,14 +22,19 @@
   <!-- Deployment Scanning                                                  -->
   <!-- ==================================================================== -->
 
-  <mbean code="org.jboss.deployment.scanner.DirectoryDeploymentScanner"
-	 name="jboss.deployment:type=DeploymentScanner,flavor=Directory">
+  <mbean code="org.jboss.deployment.scanner.URLDeploymentScanner"
+	 name="jboss.deployment:type=DeploymentScanner,flavor=URL">
     <depends>jboss.system:service=MainDeployer</depends>
     <attribute name="ScanPeriod">5000</attribute>
 
-    <!-- Directories are comman seperated and relative to server home -->
-    <attribute name="Directories">
-       ./deploy
+    <!-- 
+       | URLs are comman seperated and unprefixed argumenst are considered
+       | file URLs and resolve relative to server home unless the given path
+       | is absolute.
+     -->
+    <attribute name="URLs">
+       ./deploy,
+       ../../deploy
     </attribute>
   </mbean>
 
