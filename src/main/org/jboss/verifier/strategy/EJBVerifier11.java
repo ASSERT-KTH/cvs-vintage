@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.9 2000/07/19 21:27:45 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.10 2000/07/22 21:23:42 juha Exp $
  */
 
 
@@ -56,7 +56,7 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -212,7 +212,7 @@ public class EJBVerifier11 extends AbstractVerifier {
                     status = false;
                  }
                  
-                 if (!hasRemoteReturnType(getDefaultCreateMethod(home))) {
+                 if (!hasRemoteReturnType(session, getDefaultCreateMethod(home))) {
                      fireSpecViolationEvent(new Section("6.8.b"));;
                      
                      status = false;
@@ -245,9 +245,83 @@ public class EJBVerifier11 extends AbstractVerifier {
     
     private boolean verifySessionRemote(Session session) {
 
-        // NO IMPLEMENTATION
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
 
-        return true;
+        String  name   = session.getRemote();
+
+
+        try {
+            Class remote = classloader.loadClass(name);
+
+            /*
+             * The remote interface MUST extend the javax.ejb.EJBObject
+             * interface.
+             *
+             * Spec 6.10.5
+             */
+            if (!hasEJBObjectInterface(remote)) {
+                
+                fireSpecViolationEvent(new Section("6.10.5.a"));
+    
+                status = false;
+            }
+    
+            /*                
+             * Method arguments defined in the remote interface MUST be
+             * of valid types for RMI/IIOP.
+             *
+             * Method return values defined in the remote interface MUST
+             * be of valid types for RMI/IIOP.
+             *
+             * Methods defined in the remote interface MUST include
+             * java.rmi.RemoteException in their throws clause.
+             *
+             * Spec 6.10.5
+             */
+            Iterator it = getMethods(remote);
+            
+            while (it.hasNext()) {
+                
+                Method method = (Method)it.next();    
+                
+                if (!hasLegalRMIIIOPArguments(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.b"));
+                    
+                    status = false;
+                }
+                
+                if (!hasLegalRMIIIOPReturnType(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.c"));
+                    
+                    status = false;
+                }
+                
+                if (!throwsRemoteException(method)) {
+                    
+                    fireSpecViolationEvent(new Section("6.10.5.d"));
+                    
+                    status = false;
+                }
+            }
+
+        }
+        catch (ClassNotFoundException e) {
+
+            VerificationEvent event =
+                    factory.createSpecViolationEvent(context, new Section("16.2.d"));
+
+            context.fireBeanChecked(event);
+
+            status = false;
+        }
+
+        return status;
     }
 
     
@@ -317,14 +391,6 @@ public class EJBVerifier11 extends AbstractVerifier {
                 fireSpecViolationEvent(new Section("6.5.5"));
 
                 status = false;
-
-                /*
-                 * [TODO] the ejbCreate signature in bean class must match the
-                 *        create methods signature in home interface.
-                 *
-                 *        this is stated implicitly in 6.10.2
-                 *        didnt find explicit requirement yet
-                 */
             }
 
 
@@ -402,6 +468,50 @@ public class EJBVerifier11 extends AbstractVerifier {
                 status = false;
             }
 
+            /*
+             * The ejbCreate(...) method signatures MUST follow these rules:
+             *
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as final or static
+             *      - The return type MUST be void
+             *      - The method arguments MUST be legal types for RMI/IIOP
+             *
+             * Spec 6.10.3
+             */
+            if (hasEJBCreateMethod(bean)) {
+                
+                Iterator it = getEJBCreateMethods(bean);
+                
+                while (it.hasNext()) {
+                    
+                    Method ejbCreate = (Method)it.next();
+                    
+                    if (!isPublicMember(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(new Section("6.10.3.a"));
+                        status = false;
+                    }
+                    
+                    if ( (isFinalMember(ejbCreate)) ||
+                         (isStaticMember(ejbCreate)) ) {
+                              
+                        fireSpecViolationEvent(new Section("6.10.3.b"));
+                        status = false;
+                    }
+                    
+                    if (!hasVoidReturnType(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(new Section("6.10.3.c"));
+                        status = false;
+                    }
+                    
+                    if (!hasLegalRMIIIOPArguments(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(new Section("6.10.3.d"));
+                        status = false;
+                    }
+                }
+            }
 
 
         }
