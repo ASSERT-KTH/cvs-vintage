@@ -60,11 +60,13 @@ public class CustomHeaderfieldCriteriaRow extends DefaultCriteriaRow {
 		matchComboBox = new JComboBox();
 		matchComboBox.addItem("contains");
 		matchComboBox.addItem("contains not");
+		/*
 		matchComboBox.addItem("is");
 		matchComboBox.addItem("is not");
 		matchComboBox.addItem("begins with");
 		matchComboBox.addItem("ends with");
-
+		*/
+		
 		addComponent(matchComboBox);
 
 		patternTextField = new JTextField("pattern", 12);
