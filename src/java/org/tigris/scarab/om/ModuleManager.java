@@ -63,9 +63,9 @@ public class ModuleManager
      *
      * FIXME: Use caching? John?
      */
-    public Module getInstanceImpl(String moduleDomain, 
-                                  String moduleRealName, 
-                                  String moduleCode)
+    protected Module getInstanceImpl(String moduleDomain, 
+                                     String moduleRealName, 
+                                     String moduleCode)
         throws TorqueException
     {
         Criteria crit = new Criteria();
