@@ -1,5 +1,7 @@
 package org.jboss.invocation;
 
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentReaderHashMap;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
@@ -9,7 +11,7 @@ import java.lang.reflect.Method;
 /** A method invocation statistics collection class.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class InvocationStatistics
 {
@@ -22,10 +24,10 @@ public class InvocationStatistics
 
    public class TimeStatistic
    {
-      public long count;
-      public long minTime = Long.MAX_VALUE;
-      public long maxTime;
-      public long totalTime;
+      public volatile long count;
+      public volatile long minTime = Long.MAX_VALUE;
+      public volatile long maxTime;
+      public volatile long totalTime;
 
       public void reset()
       {
@@ -38,7 +40,7 @@ public class InvocationStatistics
 
    public InvocationStatistics()
    {
-      methodStats = Collections.synchronizedMap(new HashMap());
+      methodStats = new ConcurrentReaderHashMap();
    }
 
    /** Update the TimeStatistic for the given method. This synchronizes on
@@ -49,31 +51,28 @@ public class InvocationStatistics
     */
    public void updateStats(Method m, long elapsed)
    {
-      synchronized( m )
+      TimeStatistic stat = (TimeStatistic) methodStats.get(m);
+      if (stat == null)
       {
-         TimeStatistic stat = (TimeStatistic) methodStats.get(m);
-         if( stat == null )
-         {
-            stat = new TimeStatistic();
-            methodStats.put(m, stat);
-         }
-         stat.count ++;
-         stat.totalTime += elapsed;
-         if( stat.minTime > elapsed )
-            stat.minTime = elapsed;
-         if( stat.maxTime < elapsed )
-            stat.maxTime = elapsed;
+         stat = new TimeStatistic();
+         methodStats.put(m, stat);
       }
+      stat.count++;
+      stat.totalTime += elapsed;
+      if (stat.minTime > elapsed)
+         stat.minTime = elapsed;
+      if (stat.maxTime < elapsed)
+         stat.maxTime = elapsed;
    }
 
-   public synchronized void callIn ()
+   public synchronized void callIn()
    {
       concurrentCalls++;
       if (concurrentCalls > maxConcurrentCalls)
          maxConcurrentCalls = concurrentCalls;
    }
 
-   public synchronized void callOut ()
+   public synchronized void callOut()
    {
       concurrentCalls--;
    }
@@ -83,10 +82,10 @@ public class InvocationStatistics
     */
    public void resetStats()
    {
-      synchronized( methodStats )
+      synchronized (methodStats)
       {
          Iterator iter = methodStats.values().iterator();
-         while( iter.hasNext() )
+         while (iter.hasNext())
          {
             TimeStatistic stat = (TimeStatistic) iter.next();
             stat.reset();
@@ -121,7 +120,7 @@ public class InvocationStatistics
 
       HashMap copy = new HashMap(methodStats);
       Iterator iter = copy.entrySet().iterator();
-      while( iter.hasNext() )
+      while (iter.hasNext())
       {
          Map.Entry entry = (Map.Entry) iter.next();
          TimeStatistic stat = (TimeStatistic) entry.getValue();
