@@ -52,29 +52,37 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			headerTableViewer.getView().setRowSelectionInterval(row, row);
 
 		}
-                SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                                headerTableViewer.getPopupMenu().show(
-                                        event.getComponent(), event.getX(), event.getY());
-                        }
-                });
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				headerTableViewer.getPopupMenu().show(
+					event.getComponent(),
+					event.getX(),
+					event.getY());
+			}
+		});
 	}
 
 	public void mousePressed(MouseEvent event) {
-                if (event.isPopupTrigger()) {
-                        processPopup(event);
-                }
-        }
-        
+		if (event.isPopupTrigger()) {
+			processPopup(event);
+		}
+	}
+
 	public void mouseClicked(MouseEvent event) {
 		if (event.getClickCount() == 2) {
-						processDoubleClick();
+			processDoubleClick();
 		} else {
 			if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
 				int row = headerTableViewer.getView().getSelectedRow();
-				MessageNode node = (MessageNode) headerTableViewer.getView().getValueAt(row,0);
-				FolderCommandReference[] ref = headerTableViewer.getMailFrameController().getTableSelection();
-				((Folder)ref[0].getFolder()).setLastSelection(node.getUid());
+				MessageNode node =
+					(MessageNode) headerTableViewer.getView().getValueAt(
+						row,
+						0);
+				FolderCommandReference[] ref =
+					headerTableViewer
+						.getMailFrameController()
+						.getTableSelection();
+				((Folder) ref[0].getFolder()).setLastSelection(node.getUid());
 				viewMessageAction.actionPerformed(null);
 			}
 		}
@@ -87,6 +95,10 @@ public class HeaderTableMouseListener extends MouseAdapter {
 			headerTableViewer.getMailFrameController()).actionPerformed(
 			null);
 	}
-        
-	public void mouseReleased(MouseEvent event) {}
+
+	public void mouseReleased(MouseEvent event) {
+		if (event.isPopupTrigger()) {
+			processPopup(event);
+		}
+	}
 }
