@@ -56,7 +56,8 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -402,9 +403,13 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
     if(is_inited &&
        (SF_NOTIFY_PREPROC_HEADERS == dwNotificationType)) { 
         PHTTP_FILTER_PREPROC_HEADERS p = (PHTTP_FILTER_PREPROC_HEADERS)pvNotification;
-        char uri[INTERNET_MAX_URL_LENGTH]; 
+        char uri[INTERNET_MAX_URL_LENGTH];
+		char snuri[INTERNET_MAX_URL_LENGTH]="/";
+		char Host[INTERNET_MAX_URL_LENGTH];
+
         char *query;
         DWORD sz = sizeof(uri);
+        DWORD szHost = sizeof(Host);
 
         jk_log(logger, JK_LOG_DEBUG, 
                "HttpFilterProc started\n");
@@ -422,15 +427,25 @@ DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
         }
 
         if(strlen(uri)) {
-            char *worker;
+            char *worker=0;
             query = strchr(uri, '?');
             if(query) {
                 *query = '\0';
             }
-            jk_log(logger, JK_LOG_DEBUG, 
-                   "In HttpFilterProc test redirection of %s\n", 
-                   uri);
-            worker = map_uri_to_worker(uw_map, uri, logger);                
+			if(p->GetHeader(pfc, "Host:", (LPVOID)Host, (LPDWORD)&szHost)) {
+				strcat(snuri,Host);
+				strcat(snuri,uri);
+				jk_log(logger, JK_LOG_DEBUG, 
+					   "In HttpFilterProc Virtual Host redirection of %s\n", 
+					   snuri);
+				worker = map_uri_to_worker(uw_map, snuri, logger);                
+			}
+			if (!worker) {
+				jk_log(logger, JK_LOG_DEBUG, 
+					   "In HttpFilterProc test Default redirection of %s\n", 
+					   uri);
+				worker = map_uri_to_worker(uw_map, uri, logger);
+			}
             if(query) {
                 *query = '?';
             }
