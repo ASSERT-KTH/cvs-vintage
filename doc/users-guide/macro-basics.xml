@@ -2,9 +2,10 @@
 <!--                                                             -->
 <!-- jEdit buffer-local properties:                              -->
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:           -->
+<!-- :xml.root=users-guide.xml:                                  -->
 <!--                                                             -->
 <!-- This file cover the introductory section of the macro guide -->
-<!-- $Id: macro-basics.xml,v 1.6 2003/02/17 20:06:31 spestov Exp $
+<!-- $Id: macro-basics.xml,v 1.7 2003/02/18 01:46:34 spestov Exp $
  -->
 
 <chapter id="macro-basics"><title>Macro Basics</title>

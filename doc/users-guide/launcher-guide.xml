@@ -1,10 +1,11 @@
 <!-- jEdit buffer-local properties:                           -->
 <!-- :tabSize=2:indentSize=1:noTabs=true:maxLineLen=72:       -->
+<!-- :xml.root=users-guide.xml:                               -->
 
 <!-- jEditLauncher 4.0 (R2) Quick Guide                       -->
-<!-- Copyright (C) 2001, 2002 John Gellene                          -->
+<!-- Copyright (C) 2001, 2002 John Gellene                    -->
 
-<!-- $Id: launcher-guide.xml,v 1.8 2003/02/14 23:09:50 spestov Exp $
+<!-- $Id: launcher-guide.xml,v 1.9 2003/02/18 01:46:34 spestov Exp $
 -->
 
 <appendix id="launcher-guide"><title>jEditLauncher for Windows</title>

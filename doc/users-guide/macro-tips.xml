@@ -3,9 +3,10 @@
 <!--                                                          -->
 <!-- jEdit buffer-local properties:                           -->
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:        -->
+<!-- :xml.root=users-guide.xml:                               -->
 <!--                                                          -->
 <!-- This file covers the chapter "Macro tips and techniques" -->
-<!-- $Id: macro-tips.xml,v 1.15 2003/02/14 23:09:50 spestov Exp $
+<!-- $Id: macro-tips.xml,v 1.16 2003/02/18 01:46:34 spestov Exp $
  -->
 
 <chapter id="macro-tips"><title>Macro Tips and Techniques</title>

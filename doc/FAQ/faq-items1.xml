@@ -1,10 +1,11 @@
 <!-- jEdit buffer-local properties:                     -->
 <!-- :indentSize=1:noTabs=true:maxLineLen=72:tab Size=2: -->
+<!-- :xml.root=faq.xml: -->
 
 <!-- jEdit FAQ									        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-items1.xml,v 1.6 2003/02/09 04:02:50 krisko Exp $
+<!-- $Id: faq-items1.xml,v 1.7 2003/02/18 01:46:33 spestov Exp $
 -->
 
 <sect1 id="faq-intro"><title>Introduction</title>
