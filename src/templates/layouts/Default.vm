@@ -58,8 +58,8 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 <a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a> > 
  $scarabR.CurrentModule.Name
 
- #set ($currentIssueId = $data.parameters.getString("id"))
- #if ($currentIssueId)
+ #set ($currentIssueId = $data.parameters.getString('id', ''))
+ #if ($currentIssueId != '')
   #set ($currentIssue = $scarabR.getIssue($currentIssueId))
   #if ($currentIssue)
    &gt; <strong>Issue $currentIssue.UniqueId:</strong>
