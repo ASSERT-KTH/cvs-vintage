@@ -1,5 +1,8 @@
 /*
  * SyntaxStyle.java - A simple text style class
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
+ *
  * Copyright (C) 1999, 2001 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
@@ -18,17 +21,22 @@
  */
 package org.gjt.sp.jedit.syntax;
 
+//{{{ Imports
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.font.TextAttribute;
+import java.util.HashMap;
+//}}}
 
 /**
  * A simple text style class. It can specify the color, italic flag,
  * and bold flag of a run of text.
  * @author Slava Pestov
- * @version $Id: SyntaxStyle.java,v 1.1 2001/09/02 05:38:02 spestov Exp $
+ * @version $Id: SyntaxStyle.java,v 1.2 2001/12/23 08:42:59 spestov Exp $
  */
-public class SyntaxStyle
+public class SyntaxStyle extends HashMap
 {
+	//{{{ SyntaxStyle constructor
 	/**
 	 * Creates a new SyntaxStyle.
 	 * @param fgColor The text color
@@ -37,37 +45,40 @@ public class SyntaxStyle
 	 */
 	public SyntaxStyle(Color fgColor, Color bgColor, Font font)
 	{
-		this.fgColor = fgColor;
-		this.bgColor = bgColor;
-		this.font = font;
-	}
+		if(fgColor != null)
+			put(TextAttribute.FOREGROUND,fgColor);
 
+		if(bgColor != null)
+			put(TextAttribute.BACKGROUND,bgColor);
+
+		if(font != null)
+			put(TextAttribute.FONT,font);
+	} //}}}
+
+	//{{{ getForegroundColor() method
 	/**
 	 * Returns the text color.
 	 */
 	public Color getForegroundColor()
 	{
-		return fgColor;
-	}
+		return (Color)get(TextAttribute.FOREGROUND);
+	} //}}}
 
+	//{{{ getBackgroundColor() method
 	/**
 	 * Returns the background color.
 	 */
 	public Color getBackgroundColor()
 	{
-		return bgColor;
-	}
+		return (Color)get(TextAttribute.BACKGROUND);
+	} //}}}
 
+	//{{{ getFont() method
 	/**
 	 * Returns the style font.
 	 */
 	public Font getFont()
 	{
-		return font;
-	}
-
-	// private members
-	private Color fgColor;
-	private Color bgColor;
-	private Font font;
+		return (Font)get(TextAttribute.FONT);
+	} //}}}
 }

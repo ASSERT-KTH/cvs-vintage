@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.45 2001/12/11 06:32:54 spestov Exp $
+ * @version $Id: Buffer.java,v 1.46 2001/12/23 08:42:59 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3654,7 +3654,7 @@ public class Buffer implements EBComponent
 			offset--;
 
 		TokenList tokens = markTokens(line);
-		Token token = TextUtilities.getTokenAtOffset(tokens,offset);
+		Token token = TextUtilities.getTokenAtOffset(tokens.getFirstToken(),offset);
 		return token.rules;
 	} //}}}
 
