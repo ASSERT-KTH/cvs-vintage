@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.25 2002/06/17 09:30:37 spestov Exp $
+ * @version $Id: Gutter.java,v 1.26 2002/08/27 22:31:39 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -330,6 +330,17 @@ public class Gutter extends JComponent implements SwingConstants
 	{
 		extensionMgr.removeExtension(extension);
 		repaint();
+	} //}}}
+
+	//{{{ getExtensions() method
+	/**
+	 * Returns an array of registered text area extensions. Useful for
+	 * debugging purposes.
+	 * @since jEdit 4.1pre5
+	 */
+	public TextAreaExtension[] getExtensions()
+	{
+		return extensionMgr.getExtensions();
 	} //}}}
 
 	//{{{ getToolTipText() method

@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.145 2002/08/16 18:02:18 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.146 2002/08/27 22:31:39 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4528,9 +4528,15 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		return false;
 	} //}}}
 
+	// debug code to measure key delay
+	long time;
+	boolean timing;
+
 	//{{{ processKeyEvent() method
 	public void processKeyEvent(KeyEvent evt)
 	{
+		time = System.currentTimeMillis();
+
 		evt = KeyEventWorkaround.processKeyEvent(evt);
 		if(evt == null)
 			return;
@@ -4544,6 +4550,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		switch(evt.getID())
 		{
 		case KeyEvent.KEY_TYPED:
+			timing = true;
 			if(keyEventInterceptor != null)
 				keyEventInterceptor.keyTyped(evt);
 			else
