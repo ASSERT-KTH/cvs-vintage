@@ -25,11 +25,13 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
+
 import javax.naming.InitialContext;
-
 import javax.naming.NamingException;
-
-
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
@@ -80,7 +82,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -129,6 +131,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
    private JDBCLoadRelationCommand loadRelationCommand;
    private JDBCDeleteRelationsCommand deleteRelationsCommand;
    private JDBCInsertRelationsCommand insertRelationsCommand;
+
+   // for the copy method
+   private ObjectName objectCopier;
+   private final String[] copyArgs = new String[] {"java.lang.Object"};
 
    /**
     * A Transaction manager so that we can link preloaded data to a transaction
@@ -200,6 +206,37 @@ public class JDBCStoreManager implements EntityPersistenceStore
       return prefetchCache;
    }
 
+   public Object copy(Object source)
+   {
+      // the copier is broken right now so just return the source
+      return source;
+      /*
+      try
+      {
+         return container.getServer().invoke(
+               objectCopier, 
+               "copy", 
+               new Object[] {source},
+               copyArgs);
+      }
+      catch(MBeanException e)
+      {
+         throw new EJBException(
+               "Exception occured in copy", 
+               e.getTargetException());
+      }
+      catch(ReflectionException e)
+      {
+         throw new EJBException(
+               "Exception occured in copy", 
+               e.getTargetException());
+      }
+      catch(Exception e)
+      {
+         throw new EJBException("Exception occured while copying value", e);
+      }
+      */
+   }
 
    /**
 
@@ -466,6 +503,16 @@ public class JDBCStoreManager implements EntityPersistenceStore
 
       // get the transaction manager
       tm = container.getTransactionManager();
+
+      // setup object copier
+      try
+      {
+         objectCopier = new ObjectName("jboss:service=ObjectCopier");
+      }
+      catch(Exception e)
+      {
+         throw new EJBException("Error creating object copier name", e);
+      }
 
       // initializes the generic data containers
       initApplicationDataMap();
