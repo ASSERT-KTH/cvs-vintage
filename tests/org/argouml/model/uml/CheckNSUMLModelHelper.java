@@ -1,4 +1,4 @@
-// $Id: CheckNSUMLModelHelper.java,v 1.3 2005/01/11 21:03:30 mvw Exp $
+// $Id: CheckNSUMLModelHelper.java,v 1.4 2005/01/30 10:08:09 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +145,10 @@ public final class CheckNSUMLModelHelper {
 	    }
 	    Method m;
 	    try {
-		m = f.getClass().getMethod("create" + names[i], classes);
+		m =
+		    f.getClass().getDeclaredMethod(
+		            "create" + names[i],
+		            classes);
 	    } catch (NoSuchMethodException e) {
 		TestCase.fail("Method create" + names[i]
 			      + " does not exist in " + f);
@@ -300,9 +303,13 @@ public final class CheckNSUMLModelHelper {
                         } else {
                             Object inter =
                                 Model.getCoreFactory().createInterface();
-                            MStereotype stereo3 = (MStereotype)
-                                Model.getExtensionMechanismsFactory()
-                                    .buildStereotype(inter, "test3", ns);
+                            MStereotype stereo3 =
+                                (MStereotype)
+                                	Model.getExtensionMechanismsFactory()
+                                		.buildStereotype(
+                                		        inter,
+                                		        "test3",
+                                		        ns);
                             TestCase.assertTrue(
                                 "Unexpected invalid stereotype",
                                 !Model.getExtensionMechanismsHelper()

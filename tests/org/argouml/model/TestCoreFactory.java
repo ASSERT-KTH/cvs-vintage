@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.2 2005/01/20 23:20:35 linus Exp $
+// $Id: TestCoreFactory.java,v 1.3 2005/01/30 10:08:09 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,9 +94,9 @@ public class TestCoreFactory extends TestCase {
 	//
 	// Never test for ModelElement.
 	String[] objs = {
-	    "Abstraction",
-	    "Association",
-	    "AssociationClass",
+	    // "Abstraction",
+	    // "Association",
+	    // "AssociationClass",
 	    "AssociationEnd",
 	    "Attribute",
 
@@ -108,13 +108,15 @@ public class TestCoreFactory extends TestCase {
 	    "Component",
 	    "Constraint",
 	    "DataType",
-	    "Dependency",
+	    // "Dependency",
 
 	    // "Element",
 	    "ElementResidence",
 
 	    // "Feature",
-	    "Flow", "Generalization", "Interface", "Method",
+	    "Flow",
+	    // "Generalization",
+	    "Interface", "Method",
 
 	    // "ModelElement",
 	    "Namespace", "Node", "Operation", "Parameter", "Permission",

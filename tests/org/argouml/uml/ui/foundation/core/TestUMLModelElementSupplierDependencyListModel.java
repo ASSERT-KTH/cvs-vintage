@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.15 2005/01/30 09:17:25 linus Exp $
+// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.16 2005/01/30 10:08:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ public class TestUMLModelElementSupplierDependencyListModel
 
     private Object from;
     private Object to;
+    private Object namespace;
 
     /**
      * Constructor for TestUMLModelElementSupplierDependencyListModel.
@@ -52,8 +53,20 @@ public class TestUMLModelElementSupplierDependencyListModel
     public void setUp() throws Exception {
         super.setUp();
 
-        from = Model.getCoreFactory().createClass();
-        to = Model.getCoreFactory().createClass();
+        namespace = Model.getCoreFactory().createNamespace();
+        from = Model.getCoreFactory().buildClass("from", namespace);
+        to = Model.getCoreFactory().buildClass("to", namespace);
+    }
+
+    /**
+     * @see junit.framework.TestCase#tearDown()
+     */
+    public void tearDown() throws Exception {
+        Model.getUmlFactory().delete(from);
+        Model.getUmlFactory().delete(to);
+        Model.getUmlFactory().delete(namespace);
+
+        super.tearDown();
     }
 
     /**
