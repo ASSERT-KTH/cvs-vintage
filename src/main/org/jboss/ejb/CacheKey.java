@@ -8,6 +8,8 @@
 */
 package org.jboss.ejb;
 
+import java.rmi.MarshalledObject;
+
 /**
 *   CacheKey
 * 
@@ -19,7 +21,7 @@ package org.jboss.ejb;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.7 $
+*   @version $Revision: 1.8 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -31,7 +33,11 @@ public class CacheKey
     // The database primaryKey
     public Object id;
      
-    private int hashCode;
+	// The Marshalled Object representing the key
+	public MarshalledObject mo;
+	
+	// The Marshalled Object's hashcode
+    public int hashCode;
     
     // Static --------------------------------------------------------  
     
@@ -47,7 +53,12 @@ public class CacheKey
        this.id = id;
         
 		try {
-        	hashCode = (new java.rmi.MarshalledObject(id)).hashCode();
+			
+			// Equals rely on the MarshalledObject itself
+			mo =  new MarshalledObject(id);
+			
+			// Precompute the hashCode (speed)
+        	hashCode = mo.hashCode();
     	}
 		catch (Exception e) {e.printStackTrace();}
 	}
@@ -64,6 +75,7 @@ public class CacheKey
       throws java.io.IOException
    {
         out.writeObject(id);
+		out.writeObject(mo);
        	out.writeInt(hashCode);
    
    }
@@ -72,7 +84,8 @@ public class CacheKey
       throws java.io.IOException, ClassNotFoundException
    {
         id = in.readObject();
-       hashCode = in.readInt();
+		mo = (MarshalledObject) in.readObject();
+        hashCode = in.readInt();
    }
 
     // HashCode and Equals over write --------------------------------
@@ -88,11 +101,22 @@ public class CacheKey
     }
     
     
+	/*
+	* equals()
+	*
+	* We base the equals on the equality of the underlying key
+	* in this fashion we make sure that we cannot have duplicate 
+	* hashes in the maps. 
+	* The fast way (and right way) to do this implementation 
+	* is with a incremented cachekey.  It is more complex but worth
+    * the effort this is a FIXME (MF)
+	* The following implementation is fool-proof
+	*/
     public boolean equals(Object object) {
         
         if (object instanceof CacheKey) {
             
-            return (hashCode ==(((CacheKey) object).hashCode));
+            return (mo.equals(((CacheKey) object).mo));
         }
         return false;
     }
