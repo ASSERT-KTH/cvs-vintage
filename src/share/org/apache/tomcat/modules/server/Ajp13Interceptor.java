@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.20 2002/02/08 20:23:48 larryi Exp $
- * $Revision: 1.20 $
- * $Date: 2002/02/08 20:23:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.21 2002/03/08 11:39:48 larryi Exp $
+ * $Revision: 1.21 $
+ * $Date: 2002/03/08 11:39:48 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
 {
     private boolean tomcatAuthentication=true;
-    private boolean shutDownEnable=false;
+    private boolean shutdownEnable=false;
     // true if the incloming uri is encoded.
     private boolean decoded=true;
 
@@ -109,8 +109,14 @@ public class Ajp13Interceptor extends PoolTcpConnector
      *	and ajp12 only for shutdown - that would allow some extra flexibility,
      *	especially if you use firewall rules.
     */
+    public void setShutdownEnable(boolean b ) {
+	shutdownEnable=b;
+    }
+
+    /** Legacy version
+     */
     public void setShutDownEnable(boolean b ) {
-	shutDownEnable=b;
+	shutdownEnable=b;
     }
 
     /** Enable the use of a secret. The secret will be
@@ -123,7 +129,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
      */
     public void setUseSecret(boolean b ) {
 	secret=Double.toString(Math.random());
-        shutDownEnable=true;
+        shutdownEnable=true;
     }
 
     /** Set the 'secret'. If this is set, all sensitive operations
@@ -134,7 +140,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
      */
     public void setSecret( String s ) {
         secret=s;
-        shutDownEnable=true;
+        shutdownEnable=true;
     }
 
     /** Specify ajpid file used when shutting down tomcat
@@ -163,6 +169,13 @@ public class Ajp13Interceptor extends PoolTcpConnector
 	super.engineInit( cm );
 	decodedNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				  "req.decoded" );
+        String ajpid13 = cm.getProperty("ajpid13");
+        if( ajpid13 != null ) {
+            if( ajpidFile != null ) {
+                log( "Overriding ajpidFile with " + ajpid13 );
+            }
+            ajpidFile = new File(ajpid13);
+        }
     }
 
     public void engineState(ContextManager cm, int state )
@@ -200,7 +213,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
                 } else {
                     // stopF.println();
                 }
-                if( shutDownEnable )
+                if( shutdownEnable )
                     props.put( "shutdown", "enabled" );
                 //            stopF.close();
                 props.save( stopF, "Automatically generated, don't edit" );
@@ -352,7 +365,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
             // with the right secret from a different address.
 	    // close the socket connection before handling any signal
 	    // but get the addresses first so they are not corrupted
-            if(shutDownEnable && Ajp12.isSameAddress(serverAddr, clientAddr)) {
+            if(shutdownEnable && Ajp12.isSameAddress(serverAddr, clientAddr)) {
 		cm.shutdown();
                 log( "Exiting" );
 		// same behavior as in past, because it seems that
