@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.34 2002/03/13 20:24:34 dlr Exp $
+$Id: README.txt,v 1.35 2002/03/15 01:19:11 jon Exp $
 
 Welcome to Scarab!
 
@@ -56,6 +56,10 @@ the scarab.tomcat.http.port and scarab.tomcat.shutdown.port properties
 in your build.properties (please see the "Settings" instructions below
 for how to create a build.properties file). Once you have done this, you
 will need to rebuild the sandbox.
+
+By default, the web applications WEB-INF directory needs to have
+permissions set so that the userid which the JVM is running under can
+write into that directory.
 
 
 -------------------------------------------------------------------------
@@ -145,6 +149,48 @@ NOTE: If you modify this value after you have build the sandbox
       (instructions below), then you will need to re-run the ant
       script and restart the servlet engine in order for the changes to
       take effect.
+
+
+-------------------------------------------------------------------------
+| S E T T I N G  T H E  U P L O A D  D I R E C T O R Y                  |
+-------------------------------------------------------------------------
+
+When users attach files to an issue, by default, the file is saved to
+disk in the WEB-INF/attachments directory. This may or may not be an
+optimal place to store attachments potentially because of disk size
+issues. Therefore, one has one of two options to solve this problem.
+
+#1. On Unix, one can move the WEB-INF/attachments directory to another
+location and then create a symlink from that location to the
+WEB-INF/attachments.
+
+#2. On Unix and other platforms (Win32), one can set the
+scarab.attachments.path property to point at another directory. By
+default, this path is relative to the webapp directory and is set to
+"WEB-INF/attachments". It is also possible to define an absolute path
+such as "/bigdisk/scarab/attachments".
+
+It is also recommended to set the scarab.file.upload.path property as
+well. This property is used as a temporary location for the uploaded
+data during the upload process. By default it is "WEB-INF".
+
+NOTE: Please see the documentation above for instructions on how to set
+      properties and rebuild Scarab.
+
+
+-------------------------------------------------------------------------
+| S E T T I N G  T H E  I N D E X E S  D I R E C T O R Y                |
+-------------------------------------------------------------------------
+
+Scarab uses Lucene to create searchable indexes for the issue data.
+Lucene needs to be able to store its indexes somewhere on disk. If the
+disk is low on space, it is recommended to put the indexes on another
+disk. This can be done by setting the scarab.lucene.index.path property.
+This path defaults to "WEB-INF/index" and can be defined as either a
+relative path or an absolute path.
+
+NOTE: Please see the documentation above for instructions on how to set
+      properties and rebuild Scarab.
 
 
 -------------------------------------------------------------------------
