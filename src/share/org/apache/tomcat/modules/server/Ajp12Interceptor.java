@@ -148,6 +148,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	Object thData[]=new Object[2];
 	AJP12Request reqA=new AJP12Request();
 	reqA.setSecret( secret );
+	reqA.setTomcatAuthentication(isTomcatAuthentication());
 	AJP12Response resA=new AJP12Response();
 	cm.initRequest( reqA, resA );
 	thData[0]=reqA;
