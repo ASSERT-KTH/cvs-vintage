@@ -33,6 +33,15 @@ This page will show the result of executing the sanity test suite.
       out.println("ERROR: Invalid port number!");
       return;
    }
+   String dirStatus="301";
+   String redirStatus="301";
+   if (!staticServer.equals("Tomcat")) {
+      dirStatus="200";
+      if (!staticServer.equals("Apache"))
+         redirStatus="302";
+      else
+         redirStatus="301";
+   }
 %>
 
 <ant:gtest />
@@ -53,6 +62,26 @@ This page will show the result of executing the sanity test suite.
   <ant:property name="http.protocol" param="server.proto" />
   <ant:property name="host" param="host" />
   <ant:property name="not.standalone" value="<%= notStandAlone %>" />
+  <ant:property name="dir.status" value="<%= dirStatus %>" />
+  <ant:property name="redir.status" value="<%= redirStatus %>" />
+<% if ("Tomcat".equals(webServer)) { %>
+  <ant:property name="tomcat.server" value="Tomcat" />
+<% } else if ("Apache".equals(webServer)) { %>
+  <ant:property name="apache.server" value="Apache" />
+<% } else if ("IIS".equals(webServer)) { %>
+  <ant:property name="iis.server" value="IIS" />
+<% } else if ("Netscape".equals(webServer)) { %>
+  <ant:property name="netscape.server" value="Netscape" />
+<% } %>
+<% if ("Tomcat".equals(staticServer)) { %>
+  <ant:property name="tomcat.static" value="Tomcat" />
+<% } else if ("Apache".equals(staticServer)) { %>
+  <ant:property name="apache.static" value="Apache" />
+<% } else if ("IIS".equals(staticServer)) { %>
+  <ant:property name="iis.static" value="IIS" />
+<% } else if ("Netscape".equals(staticServer)) { %>
+  <ant:property name="netscape.static" value="Netscape" />
+<% } %>
 </ant:ant>
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
