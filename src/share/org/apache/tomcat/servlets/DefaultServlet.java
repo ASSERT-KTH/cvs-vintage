@@ -87,9 +87,10 @@ public final class DefaultServlet extends TomcatInternalServlet {
 
 	contextF = getServletContext();
 	context = facadeM.getRealContext( contextF );
-	
+
 	// doesn't change - set it in init!
-	docBase = context.getDocBase();
+//	docBase = context.getDocBase();
+	docBase = context.getAbsolutePath();
         if (! docBase.endsWith("/")) {
             docBase += "/";
         }
@@ -274,8 +275,8 @@ public final class DefaultServlet extends TomcatInternalServlet {
 	if (File.separatorChar  == '\\') {
 		// On Windows check ignore case....
 		if(!absPath.equalsIgnoreCase(canPath)) {
-	    	response.sendError(response.SC_NOT_FOUND);
-	    	return;
+		    response.sendError(response.SC_NOT_FOUND);
+		    return;
 		}
 	} else {
 		// The following code on Non Windows disallows ../
@@ -292,8 +293,8 @@ public final class DefaultServlet extends TomcatInternalServlet {
 
 		if(absPath.indexOf("..") != -1) {
 			// We have .. in the path...
-	    	response.sendError(response.SC_NOT_FOUND);
-	    	return;
+		    response.sendError(response.SC_NOT_FOUND);
+		    return;
 		}
 	}
 
