@@ -134,7 +134,7 @@ public class ConnectionManager
       {
          public Thread newThread(Runnable r)
          {
-            Thread t = new Thread(oiThreadGroup, r, "OI Connection Cleaner");
+            Thread t = new Thread(oiThreadGroup, r, "Connection Cleaner");
             t.setDaemon(true);
             return t;
          }
