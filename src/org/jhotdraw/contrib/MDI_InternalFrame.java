@@ -125,29 +125,6 @@ public class MDI_InternalFrame extends JInternalFrame {
 	}
 
 	/**
-	 * Replace an existing drawing view with a new one. A JHotDraw application can
-	 * have only one DrawingView active at a time. Therefore, the currently active
-	 * internal frame gets the active DrawingView after its Drawing view has
-	 * been backed up for later restorage.
-	 *
-	 * @parame	newDrawingView	DrawingView which should replace the current one
-	 */
-	public DrawingView replaceDrawingView(DrawingView newDrawingView) {
-		DrawingView oldDrawingView = findDrawingView(newDrawingView, getContentPane());
-		if (oldDrawingView != null) {
-			Container parent = ((Container)oldDrawingView).getParent();
-			parent.remove((Component)oldDrawingView);
-			parent.add((Component)newDrawingView);
-			setDrawingView(newDrawingView);
-			return oldDrawingView;
-		}
-		else {
-			//DrawingView not found
-			return null;
-		}
-	}
-
-	/**
 	 * Searches the DrawingView in the children's component hierarchy.
 	 *
 	 * @param	newDrawingView	DrawingView to be searched

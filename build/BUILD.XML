@@ -11,10 +11,13 @@
   <property name="pert.images.dir" value="CH/ifa/draw/samples/pert/images"/>
  
   <property name="javadoc.dir" value="${dest.dir}/javadoc"/>
-
+  <property name="mk.dir" value="${dest.dir}/build"/>
+  
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
 
+  <property name="manifest.name" value="JHotdraw.mf"/>
+  
   <!-- Give user a chance to override without editing this file 
        (and without typing -D each time it compiles it -->
   <property file="${user.home}/.ant.properties" />
@@ -73,7 +76,7 @@
       version="true"
       packagenames="CH.*">
       <doclet name="org.jhotdraw.tools.versiondoclet.VersionDoclet">
-        <param name="-versionfile" value="JHotdraw.mf"/>
+        <param name="-versionfile" value="${mk.dir}/${manifest.name}"/>
         <param name="-version" value=""/>
       </doclet>
     </javadoc>
@@ -129,7 +132,7 @@
     <jar jarfile="${dest.dir}/${build.jar}"
          basedir="${build.classes}"
          includes="CH/**"
-         manifest="jhotdraw.mf"
+         manifest="${mk.dir}/${manifest.name}"
         >
 	</jar>
   </target>
