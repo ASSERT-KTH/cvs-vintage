@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.29 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelExtend.java,v 1.30 2004/01/06 21:47:16 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class PropPanelExtend extends PropPanelModelElement {
         new PropPanelButton(this, buttonPanel, _navUpIcon,
                 Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
         new PropPanelButton(this, buttonPanel, _extensionPointIcon,
-                            localize("Add extension point"),
+                            localize("New Extension Point"),
                             "newExtensionPoint",
                             null);
         new PropPanelButton(this, buttonPanel, _deleteIcon,
@@ -177,7 +177,7 @@ public class PropPanelExtend extends PropPanelModelElement {
 
 
     /**
-     * <p>Invoked by the "Add extension point" toolbar button to create a new
+     * <p>Invoked by the "New Extension Point" toolbar button to create a new
      *   extension point for this extend relationship in the same namespace as
      *   the current extend relationship.</p>
      *

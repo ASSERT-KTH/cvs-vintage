@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.35 2003/11/25 10:58:14 jhraigniac Exp $
+// $Id: PropPanelSignal.java,v 1.36 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,8 +81,8 @@ public class PropPanelSignal extends PropPanelModelElement {
         addField(Translator.localize("UMLMenu", "label.receptions"), receiverScroll);
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _signalIcon, Translator.localize("UMLMenu", "button.add-signal"), "newSignal", null);
-        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.add-reception"), "newReception", null);
+        new PropPanelButton(this, buttonPanel, _signalIcon, Translator.localize("UMLMenu", "button.new-signal"), "newSignal", null);
+        new PropPanelButton(this, buttonPanel, _receptionIcon, Translator.localize("UMLMenu", "button.new-reception"), "newReception", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-signal"), "removeElement", null);
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelActor.java,v 1.33 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelActor.java,v 1.34 2004/01/06 21:47:16 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.33 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelActor.java,v 1.34 2004/01/06 21:47:16 jjones Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -96,7 +96,7 @@ public class PropPanelActor extends PropPanelClassifier {
                 Translator.localize("UMLMenu", "button.go-up"), "navigateUp",
                             null);
         new PropPanelButton(this, buttonPanel, _actorIcon,
-                Translator.localize("UMLMenu", "button.add-actor"), "newActor",
+                Translator.localize("UMLMenu", "button.new-actor"), "newActor",
                             null);
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement",

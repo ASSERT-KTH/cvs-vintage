@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.39 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.40 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,7 +186,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         add(_visibilityRadioButtonPanel);
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        //does this make sense?? new PropPanelButton(this,buttonPanel,_interfaceIcon, Translator.localize("UMLMenu", "button.add-new-interface"),"newInterface",null);
+        //does this make sense?? new PropPanelButton(this,buttonPanel,_interfaceIcon, Translator.localize("UMLMenu", "button.new-interface"),"newInterface",null);
         new PropPanelButton(this, buttonPanel, _assocEndIcon, localize("Go to other end"), "gotoOther", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-association-end"), "removeElement", "isDeleteEnabled");
     }

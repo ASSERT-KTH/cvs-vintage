@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.30 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelStereotype.java,v 1.31 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         addField("Specializations:", new JScrollPane(derivedList));
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _stereotypeIcon, Translator.localize("UMLMenu", "button.add-new-stereotype"), "newStereotype", null);
+        new PropPanelButton(this, buttonPanel, _stereotypeIcon, Translator.localize("UMLMenu", "button.new-stereotype"), "newStereotype", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-package"), "removeElement", null);
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.37 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelAttribute.java,v 1.38 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.37 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelAttribute.java,v 1.38 2004/01/06 21:47:17 jjones Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -84,7 +84,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 			    this,
 			    buttonPanel,
 			    _addAttrIcon,
-				Translator.localize("UMLMenu", "button.add-attribute"),
+				Translator.localize("UMLMenu", "button.new-attribute"),
 			    "newAttribute",
 			    null);
 	new PropPanelButton(

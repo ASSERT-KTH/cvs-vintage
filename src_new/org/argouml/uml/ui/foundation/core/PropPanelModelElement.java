@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.71 2003/12/04 22:58:22 alexb Exp $
+// $Id: PropPanelModelElement.java,v 1.72 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,8 +75,8 @@ abstract public class PropPanelModelElement extends PropPanel {
     protected static ImageIcon _classIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Class");
     protected static ImageIcon _collaborationIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Collaboration");
     protected static ImageIcon _interfaceIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Interface");
-    protected static ImageIcon _addOpIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("AddOperation");
-    protected static ImageIcon _addAttrIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("AddAttribute");
+    protected static ImageIcon _addOpIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("NewOperation");
+    protected static ImageIcon _addAttrIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("NewAttribute");
     protected static ImageIcon _addAssocIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Association");
     protected static ImageIcon _packageIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Package");
     protected static ImageIcon _modelIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Model");

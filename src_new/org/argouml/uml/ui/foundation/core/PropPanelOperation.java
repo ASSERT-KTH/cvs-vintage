@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.49 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelOperation.java,v 1.50 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -257,7 +257,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 			    this,
 			    buttonPanel,
 			    _addOpIcon,
-				Translator.localize("UMLMenu", "button.add-new-operation"),
+				Translator.localize("UMLMenu", "button.new-operation"),
 			    "buttonAddOperation",
 			    null);
         // I uncommented this next line. I don't know why it was commented out, it seems to work just fine...--pjs--
@@ -265,14 +265,14 @@ public class PropPanelOperation extends PropPanelModelElement {
 			    this,
 			    buttonPanel,
 			    _parameterIcon,
-				Translator.localize("UMLMenu", "button.add-parameter"),
+				Translator.localize("UMLMenu", "button.new-parameter"),
 			    "buttonAddParameter",
 			    null);
         new PropPanelButton(
 			    this,
 			    buttonPanel,
 			    _signalIcon,
-			    localize("Add raised signal"),
+			    localize("New Raised Signal"),
 			    "buttonAddRaisedSignal",
 			    null);
         new PropPanelButton(

@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.46 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: PropPanelClass.java,v 1.47 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,10 +90,10 @@ public class PropPanelClass extends PropPanelClassifier {
 
 
 	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-	new PropPanelButton(this, buttonPanel, _addAttrIcon, Translator.localize("UMLMenu", "button.add-attribute"), "addAttribute", null);
-	new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize("UMLMenu", "button.add-operation"), "addOperation", null);
-	new PropPanelButton(this, buttonPanel, _innerClassIcon, Translator.localize("UMLMenu", "button.add-inner-class"), "addInnerClass", null);
-	new PropPanelButton(this, buttonPanel, _classIcon, Translator.localize("UMLMenu", "button.add-new-class"), "newClass", null);
+	new PropPanelButton(this, buttonPanel, _addAttrIcon, Translator.localize("UMLMenu", "button.new-attribute"), "addAttribute", null);
+	new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize("UMLMenu", "button.new-operation"), "addOperation", null);
+	new PropPanelButton(this, buttonPanel, _innerClassIcon, Translator.localize("UMLMenu", "button.new-inner-class"), "addInnerClass", null);
+	new PropPanelButton(this, buttonPanel, _classIcon, Translator.localize("UMLMenu", "button.new-class"), "newClass", null);
 	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-class"), "removeElement", null);
 
     }

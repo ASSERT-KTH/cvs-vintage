@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.11 2003/12/06 18:12:54 alexb Exp $
+// $Id: CmdCreateNode.java,v 1.12 2004/01/06 21:47:16 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,6 +63,9 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
             }
         }
     }
+    
+    private static final String ACTION_PREFIX_KEY = "action.new";
+    
     /**
      * Constructor for CmdCreateNode.
      * @param args
@@ -207,6 +210,8 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
      * Adds tooltip text to the Action.
      */
     private void putToolTip(String name) {
-        putValue(Action.SHORT_DESCRIPTION, Translator.localize(name));
+        putValue(Action.SHORT_DESCRIPTION, 
+		Translator.localize(ACTION_PREFIX_KEY) + " " 
+		+ Translator.localize(name));
     }
 }

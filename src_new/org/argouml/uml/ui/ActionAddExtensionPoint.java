@@ -1,4 +1,4 @@
-// $Id: ActionAddExtensionPoint.java,v 1.10 2003/10/27 22:41:32 alexb Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.11 2004/01/06 21:47:16 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionAddExtensionPoint.java
 // Classes: ActionAddExtensionPoint
 // Original Author: mail@jeremybennett.com
-// $Id: ActionAddExtensionPoint.java,v 1.10 2003/10/27 22:41:32 alexb Exp $
+// $Id: ActionAddExtensionPoint.java,v 1.11 2004/01/06 21:47:16 jjones Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // the display of extension points.
@@ -84,7 +84,7 @@ public final class ActionAddExtensionPoint extends UMLChangeAction {
      */
 
     public ActionAddExtensionPoint() {
-        super("Add Extension Point");
+        super("New Extension Point");
     }
 
 

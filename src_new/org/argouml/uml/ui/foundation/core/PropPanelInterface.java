@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.35 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelInterface.java,v 1.36 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,11 +73,11 @@ public class PropPanelInterface extends PropPanelClassifier {
 	addField(Translator.localize("UMLMenu", "label.operations"), getFeatureScroll());
 
 	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-	new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize("UMLMenu", "button.add-operation"), "addOperation", null);
-	//new PropPanelButton(this,buttonPanel,_generalizationIcon, Translator.localize("UMLMenu", "button.add-generalization"),"addGeneralization",null);
-	//new PropPanelButton(this,buttonPanel,_realizationIcon, Translator.localize("UMLMenu", "button.add-realization"),"addRealization",null);
+	new PropPanelButton(this, buttonPanel, _addOpIcon, Translator.localize("UMLMenu", "button.new-operation"), "addOperation", null);
+	//new PropPanelButton(this,buttonPanel,_generalizationIcon, Translator.localize("UMLMenu", "button.new-generalization"),"addGeneralization",null);
+	//new PropPanelButton(this,buttonPanel,_realizationIcon, Translator.localize("UMLMenu", "button.new-realization"),"addRealization",null);
 	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-interface"), "removeElement", null);
-	//does this make sense?? new PropPanelButton(this,buttonPanel,_interfaceIcon, Translator.localize("UMLMenu", "button.add-new-interface"),"newInterface",null);
+	//does this make sense?? new PropPanelButton(this,buttonPanel,_interfaceIcon, Translator.localize("UMLMenu", "button.new-interface"),"newInterface",null);
 
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.35 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelDataType.java,v 1.36 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,8 +79,8 @@ public class PropPanelDataType extends PropPanelClassifier {
         addField(Translator.localize("UMLMenu", "label.literals"), attrScroll);
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _dataTypeIcon, Translator.localize("UMLMenu", "button.add-datatype"), "newDataType", null);
-        new PropPanelButton(this, buttonPanel, _addAttrIcon, Translator.localize("UMLMenu", "button.add-enumeration-literal"), "addAttribute", null);
+        new PropPanelButton(this, buttonPanel, _dataTypeIcon, Translator.localize("UMLMenu", "button.new-datatype"), "newDataType", null);
+        new PropPanelButton(this, buttonPanel, _addAttrIcon, Translator.localize("UMLMenu", "button.new-enumeration-literal"), "addAttribute", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete datatype"), "removeElement", null);
     }
 

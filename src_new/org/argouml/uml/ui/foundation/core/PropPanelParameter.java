@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.38 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: PropPanelParameter.java,v 1.39 2004/01/06 21:47:17 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,8 +100,8 @@ public class PropPanelParameter extends PropPanelModelElement {
 	addField("Kind:", kindPanel);
 
 	new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-	new PropPanelButton(this, buttonPanel, _parameterIcon, Translator.localize("UMLMenu", "button.add-parameter"), "addParameter", null);
-	//	new PropPanelButton(this,buttonPanel,_dataTypeIcon, Translator.localize("UMLMenu", "button.add-datatype"),"addDataType",null);
+	new PropPanelButton(this, buttonPanel, _parameterIcon, Translator.localize("UMLMenu", "button.new-parameter"), "addParameter", null);
+	//	new PropPanelButton(this,buttonPanel,_dataTypeIcon, Translator.localize("UMLMenu", "button.new-datatype"),"addDataType",null);
 	new PropPanelButton(this, buttonPanel, _deleteIcon, Translator.localize("UMLMenu", "button.delete-parameter"), "removeElement", null);
 
     }
