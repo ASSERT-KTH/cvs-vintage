@@ -3,7 +3,7 @@ import javax.servlet.http.*;
 import java.io.*;
 
 public class Hello extends HttpServlet {
-    static final byte ba[]="<h1>Hello World</h1>".getBytes();
+    static final byte ba[]="<h1>Hello World</h1><h1>Hello World</h1><h1>Hello World</h1><h1>Hello World</h1><h1>Hello World</h1>".getBytes();
     
     public void init(ServletConfig conf)
         throws ServletException
