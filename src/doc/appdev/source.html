@@ -1,0 +1,160 @@
+<html>
+
+<head>
+<title>Developing Applications With Tomcat -- Source</title>
+</head>
+
+<body bgcolor="white">
+
+<!-- Navigation Links -->
+<table border=0 width="100%">
+<tr>
+<td align="left" width="25%">
+  <a href="deployment.html">Previous</a>
+</td>
+<td align="center" width="50%">
+  <a href="contents.html">Top</a>
+</td>
+<td align="right" width="25%">
+  <a href="build.html">Next</a>
+</td>
+</tr>
+<tr>
+<td align="center" colspan=3>
+  <a href="#Directory">Directory</a>
+  <a href="#CVS">CVS</a>
+  <a href="#Build">BUILD.XML</a>
+  <a href="#Scripts">Scripts</a>
+</td>
+</tr>
+</table>
+
+<h1>4. SOURCE ORGANIZATION</h1>
+
+
+<!-- 4.1 Directory -->
+<a name="Directory"></a>
+<h2>4.1 Directory Structure</h2>
+
+<p>A key recommendation of this manual is to separate the directory
+hierarchy containing your source code (described in this section) from
+the directory hierarchy containing your deployable application
+(described in the preceding section).  Maintaining this separation has
+the following advantages:
+<ul>
+<li>The contents of the source directories can be more easily administered,
+    moved, and backed up if the "executable" version of the application
+    is not intermixed.
+    <br><br>
+<li>Source code control is easier to manage on directories that contain
+    only source files.
+    <br><br>
+<li>The files that make up an installable distribution of your
+    application are much easier to select when the deployment
+    hierarchy is separate.
+</ul>
+
+<p>As we will see, the <code>ant</code> development tool makes the creation
+and processing of such directory hierarchies nearly painless.
+
+<p>The actual directory and file hierarchy used to contain the source code
+of an application can be pretty much anything you like.  However, the
+following organization has proven to be quite generally applicable, and is
+expected by the example <code>build.xml</code> configuration file that
+is discussed below.  All of these components exist under a top level
+"project directory" for your application:
+<ul>
+<li><b>etc/</b> - Directory containing special files related to your
+    application that will be copied to the <code>WEB-INF</code> directory.
+    In all cases, this will include the application deployment
+    descriptor file (<code>web.xml</code>), but may include others as well.
+    <br><br>
+<li><b>lib/</b> - Directory containing JAR files that will be copied to
+    the <code>WEB-INF/lib</code> deployment directory.
+    <br><br>
+<li><b>src/</b> - Java source files that generate the servlets, beans,
+    and other Java classes required by your application.  If your source
+    code is organized into packages (highly recommended for large projects),
+    the package hierarchy should be reflected as a directory structure
+    underneath this directory.
+    <br><br>
+<li><b>web/</b> - Directory containing the HTML files, JSP pages, and other
+    resource files (such as JavaScript and stylesheet files) that will be
+    accessible to browser clients.  The entire hierarchy underneath this
+    directory will be copied to the document root directory of your
+    deployment home.
+</ul>
+
+
+<!-- 4.2 CVS -->
+<a name="CVS"></a>
+<h2>4.2 Source Code Control</h2>
+
+<p>As mentioned earlier, it is highly recommended that you place all of the
+source files that comprise your application under the management of a
+source code control system like the Concurrent Version System (CVS).  If you
+elect to do this, every directory and file in the source hierarchy should be
+registered and saved -- but none of the generated files.  If you register
+binary format files (such as images or JAR libraries), be sure to indicate
+this to your source code control system.
+
+<p>Detailed instructions for your source code control environment are beyond
+the scope of this manual.  However, the following steps are followed when
+using a command-line CVS client:
+<ul>
+<li>To refresh the state of your source code to that stored in the
+    the source repository, go to the top level directory of your source
+    hierarchy and execute <code>cvs update -d</code>.
+    <br><br>
+<li>When you create a new subdirectory in the source code hierarchy, register
+    it in CVS with a command like <code>cvs add {subdirname}</code>.
+    <br><br>
+<li>When you first create a new source code file, navigate to the directory
+    that contains it, and register the new file with a command like
+    <code>cvs add {filename}</code>.
+    <br><br>
+<li>If you no longer need a particular source code file, navigate to the
+    containing directory and remove the file.  Then, deregister it in CVS
+    with a command like <code>cvs remove {filename}</code>.
+    <br><br>
+<li>While you are creating, modifying, and deleting source files, these changes
+    are not yet reflected in the server repository.  To save your changes in
+    their current state, go to the top level directory of your source hierarchy
+    and execute <code>cvs commit</code>.  You will be asked to write a brief
+    description of the changes you have just completed, which will be stored
+    with the new version of any updated source file.
+</ul>
+
+
+<!-- 4.3 Build -->
+<a name="Build"></a>
+<h2>4.3 BUILD.XML Configuration File</h2>
+
+<p>We will be using the <code>ant</code> tool to manage the compilation of
+our Java source code files, and creation of the deployment hierarchy.  Ant
+operates under the control of a build file, normally called
+<code>build.xml</code>, that defines the processing steps required.  Like a
+Makefile, the <code>build.xml</code> file provides several "targets" that
+support optional development activities (such as creating the associated
+Javadoc documentation, erasing the deployment home directory so you can build
+your project from scratch, or creating the web application archive file so
+you can distribute your application.
+
+<p>To give you a head start, a
+<a href="build.xml.txt" target="_new">basic build.xml file</a> is provided
+that you can customize and install in the top-level directory of your source
+code hierarchy.  This file includes comments that describe the various
+components.  In the following section, scripts will be described that use
+Ant to build your project based on the contents of the <code>build.xml</code>
+file found there.
+
+
+<!-- 4.4 Scripts -->
+<a name="Scripts"</a>
+<h2>4.4 Shell and Batch Scripts</h2>
+
+
+
+</body>
+
+</html>
