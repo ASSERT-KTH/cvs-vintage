@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -98,7 +98,7 @@ public class SingletonStatelessSessionInstancePool
       {
          try
          {
-            ctx = create(con.getBeanClass().newInstance(), con);
+            ctx = create(con.createBeanClassInstance(), con);
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);

@@ -32,6 +32,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
+import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.metadata.EntityMetaData;
 
 import org.jboss.util.FinderResults;
@@ -48,7 +49,7 @@ import org.jboss.util.Sync;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -116,6 +117,18 @@ public class CMPPersistenceManager
       store.init();
    }
     
+ 	/**
+	* Returns a new instance of the bean class or a subclass of the bean class.
+	* 
+	* @return the new instance
+	*/
+	public Object createBeanClassInstance() throws Exception {
+		if(store instanceof EntityPersistenceStore2) {
+			return ((EntityPersistenceStore2)store).createBeanClassInstance();
+		}
+		return con.getBeanClass().newInstance();
+	}
+
    private void createMethodCache( Method[] methods )
       throws NoSuchMethodException
    {
@@ -145,143 +158,88 @@ public class CMPPersistenceManager
       store.destroy();
    }
 
-   public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
-      throws Exception {
-      // Get methods
-      Method createMethod = (Method)createMethods.get(m);
-      Method postCreateMethod = (Method)postCreateMethods.get(m);
+	public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
+		throws Exception {
 
-      // Reset all attributes to default value
-      // The EJB 1.1 specification is not entirely clear about this,
-      // the EJB 2.0 spec is, see page 169.
-      // Robustness is more important than raw speed for most server
-      // applications, and not resetting atrribute values result in
-      // *very* weird errors (old states re-appear in different instances and the
-      // developer thinks he's on drugs).
-
-    		// first get cmp metadata of this entity
-      Object instance = ctx.getInstance();
-      Class ejbClass = instance.getClass();
-      Field cmpField;
-      Class cmpFieldType;
-      for (Iterator i= ((EntityMetaData)ctx.getContainer().getBeanMetaData()).getCMPFields();
-           i.hasNext();) {
-         try {
-            // get the field declaration
-            try{
-               cmpField = ejbClass.getField((String)i.next());
-               cmpFieldType = cmpField.getType();
-               // find the type of the field and reset it
-               // to the default value
-               if (cmpFieldType.equals(boolean.class))  {
-                  cmpField.setBoolean(instance,false);
-               } else if (cmpFieldType.equals(byte.class))  {
-                  cmpField.setByte(instance,(byte)0);
-               } else if (cmpFieldType.equals(int.class))  {
-                  cmpField.setInt(instance,0);
-               } else if (cmpFieldType.equals(long.class))  {
-                  cmpField.setLong(instance,0L);
-               } else if (cmpFieldType.equals(short.class))  {
-                  cmpField.setShort(instance,(short)0);
-               } else if (cmpFieldType.equals(char.class))  {
-                  cmpField.setChar(instance,'\u0000');
-               } else if (cmpFieldType.equals(double.class))  {
-                  cmpField.setDouble(instance,0d);
-               } else if (cmpFieldType.equals(float.class))  {
-                  cmpField.setFloat(instance,0f);
-
-                  //} else if (... cmr collection in ejb2.0...) {
-                  //	cmpField.set(instance,someNewCollection?);
-
-               } else  {
-                  cmpField.set(instance,null);
-               }
-            } catch (NoSuchFieldException e){
-               // will be here with dependant value object's private attributes
-               // should not be a problem
-            }
-         } catch (Exception e) {
-            throw new EJBException(e);
-         }
-      }
-
-      // Call ejbCreate on the target bean
-      try {
-         createMethod.invoke(ctx.getInstance(), args);
-      } catch (IllegalAccessException e)
-      {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      } catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
-         if (e instanceof EJBException)
-         {
+		// Get methods
+		Method createMethod = (Method)createMethods.get(m);
+		Method postCreateMethod = (Method)postCreateMethods.get(m);
+		
+		// Deligate initialization of bean to persistence store
+		// if the store can handle initialization.
+      if(store instanceof EntityPersistenceStore2) {
+			((EntityPersistenceStore2)store).initEntity(ctx);
+		} else {
+			// for backwards compatibility
+			initEntity(ctx);
+		}
+		
+		// Call ejbCreate on the target bean
+		try {
+			createMethod.invoke(ctx.getInstance(), args);
+		} catch (IllegalAccessException e){
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) {
+		 	Throwable e = ite.getTargetException();
+			if(e instanceof EJBException) {
 				// Rethrow exception
-            throw (EJBException)e;
-         } else if (e instanceof RuntimeException)
-         {
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException) {
 				// Wrap runtime exceptions
-            throw new EJBException((Exception)e);
-         } else if (e instanceof Exception)
-         {
+				throw new EJBException((Exception)e);
+			} else if(e instanceof Exception) {
             // Remote, Create, or custom app. exception
-            throw (Exception)e;
-         } else
-         {
-            throw (Error)e;
-         }
+			   throw (Exception)e;
+			} else {
+			   throw (Error)e;
+			}
       }
 
-      // Have the store persist the new instance, the return is the key
-      Object id = store.createEntity(m, args, ctx);
+		// Have the store persist the new instance, the return is the key
+		Object id = store.createEntity(m, args, ctx);
+		
+		// Set the key on the target context
+		ctx.setId(id);
+		
+		// Create a new CacheKey
+		Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
+		
+		// Give it to the context
+		ctx.setCacheKey(cacheKey);
+		
+		// insert instance in cache, it is safe
+		con.getInstanceCache().insert(ctx);
+		
+		// Create EJBObject
+		if (con.getContainerInvoker() != null) {
+			ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+		}
+		if (con.getLocalHomeClass() != null) {
+			ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
+		}
 
-      // Set the key on the target context
-      ctx.setId(id);
-
-      // Create a new CacheKey
-      Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
-
-      // Give it to the context
-      ctx.setCacheKey(cacheKey);
-
-      // insert instance in cache, it is safe
-      con.getInstanceCache().insert(ctx);
-
-      // Create EJBObject
-      if (con.getContainerInvoker() != null)
-         ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
-      if (con.getLocalHomeClass() != null)
-         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
-
-      try
-      {
-         postCreateMethod.invoke(ctx.getInstance(), args);
-      } catch (IllegalAccessException e)
-      {
-         // Throw this as a bean exception...(?)
-         throw new EJBException(e);
-      } catch (InvocationTargetException ite)
-      {
-         Throwable e = ite.getTargetException();
-         if (e instanceof EJBException)
-         {
+		try {
+			postCreateMethod.invoke(ctx.getInstance(), args);
+		} catch (IllegalAccessException e) {
+			// Throw this as a bean exception...(?)
+			throw new EJBException(e);
+		} catch (InvocationTargetException ite) {
+			Throwable e = ite.getTargetException();
+			if (e instanceof EJBException) {
 				// Rethrow exception
-            throw (EJBException)e;
-         } else if (e instanceof RuntimeException)
-         {
+				throw (EJBException)e;
+			} else if (e instanceof RuntimeException) {
 				// Wrap runtime exceptions
-            throw new EJBException((Exception)e);
-         } else if (e instanceof Exception)
-         {
-            // Remote, Create, or custom app. exception
-            throw (Exception)e;
-         } else
-         {
-            throw (Error)e;
-         }
-      }
-   }
+				throw new EJBException((Exception)e);
+			} else if (e instanceof Exception) {
+				// Remote, Create, or custom app. exception
+				throw (Exception)e;
+			} else {
+				throw (Error)e;
+			}
+		}
+	}
 
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
       throws Exception {
@@ -497,6 +455,63 @@ public class CMPPersistenceManager
          }
       }
    }
+
+	/**
+	 * Reset all attributes to default value
+	 * 
+	 * This method is supplied for backwards compatibility.
+	 * New versions of the PersistenceStore handle this for us.
+	 * 
+	 * The EJB 1.1 specification is not entirely clear about this,
+	 * the EJB 2.0 spec is, see page 169.
+	 * Robustness is more important than raw speed for most server
+	 * applications, and not resetting atrribute values result in
+	 * *very* weird errors (old states re-appear in different instances and the
+	 * developer thinks he's on drugs).
+	 */
+	protected void initEntity(EntityEnterpriseContext ctx) {
+		// first get cmp metadata of this entity
+		Object instance = ctx.getInstance();
+		Class ejbClass = instance.getClass();
+		Field cmpField;
+		Class cmpFieldType;
+		Iterator i= ((EntityMetaData)ctx.getContainer().getBeanMetaData()).getCMPFields();
+		while(i.hasNext()) {
+			try {
+				// get the field declaration
+				try{
+					cmpField = ejbClass.getField((String)i.next());
+					cmpFieldType = cmpField.getType();
+					// find the type of the field and reset it
+					// to the default value
+					if (cmpFieldType.equals(boolean.class))  {
+						cmpField.setBoolean(instance,false);
+					} else if (cmpFieldType.equals(byte.class))  {
+						cmpField.setByte(instance,(byte)0);
+					} else if (cmpFieldType.equals(int.class))  {
+						cmpField.setInt(instance,0);
+					} else if (cmpFieldType.equals(long.class))  {
+						cmpField.setLong(instance,0L);
+					} else if (cmpFieldType.equals(short.class))  {
+						cmpField.setShort(instance,(short)0);
+					} else if (cmpFieldType.equals(char.class))  {
+						cmpField.setChar(instance,'\u0000');
+					} else if (cmpFieldType.equals(double.class))  {
+						cmpField.setDouble(instance,0d);
+					} else if (cmpFieldType.equals(float.class))  {
+						cmpField.setFloat(instance,0f);
+					} else  {
+						cmpField.set(instance,null);
+					}
+				} catch (NoSuchFieldException e){
+					// will be here with dependant value object's private attributes
+					// should not be a problem
+				}
+			} catch (Exception e) {
+				throw new EJBException(e);
+			}
+		}
+	}			
 
    // Z implementation ----------------------------------------------
 

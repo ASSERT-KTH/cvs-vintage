@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
@@ -103,7 +103,7 @@ public abstract class AbstractInstancePool
       {
          try
          {
-            return create(container.getBeanClass().newInstance());
+            return create(container.createBeanClassInstance());
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);

@@ -40,7 +40,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 *   @author <a href="bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.42 $
+*   @version $Revision: 1.43 $
 */
 public class EntityContainer
 extends Container
@@ -184,6 +184,19 @@ implements ContainerInvokerContainer, InstancePoolContainer
       return remoteInterface;
    }
  
+ 	/**
+	* Returns a new instance of the bean class or a subclass of the bean class.
+	* If this is 1.x cmp, simply return a new instance of the bean class.
+	* If this is 2.x cmp, return a subclass that provides an implementation
+	* of the abstract accessors.
+	* 
+	* @see java.lang.Class#newInstance 
+	* @return the new instance
+	*/
+	public Object createBeanClassInstance() throws Exception {
+		return persistenceManager.createBeanClassInstance();
+	}
+
    // Container implementation --------------------------------------
    public void init()
    throws Exception

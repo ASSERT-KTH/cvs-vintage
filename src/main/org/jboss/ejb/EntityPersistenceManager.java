@@ -26,12 +26,19 @@ import org.jboss.util.FinderResults;
  *
  *	@see EntityContainer
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin
 {
    // Public --------------------------------------------------------
+
+ 	/**
+	* Returns a new instance of the bean class or a subclass of the bean class.
+	* 
+	* @return the new instance
+	*/
+	public Object createBeanClassInstance() throws Exception;
 
 	/**
 	 *	This method is called whenever an entity is to be created. The persistence manager

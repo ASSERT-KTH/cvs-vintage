@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.45 $
+ *   @version $Revision: 1.46 $
  */
 public abstract class Container
 {
@@ -302,6 +302,20 @@ public abstract class Container
    {
       return beanClass;
    }
+
+	/**
+	* Returns a new instance of the bean class or a subclass of the bean class.
+	* This factory style method is speciffically used by a container to supply
+   * an implementation of the abstract accessors in EJB2.0, but could be usefull
+	* in other situations. This method should ALWAYS be used instead of 
+	* getBeanClass().newInstance();
+	* 
+	* @see java.lang.Class#newInstance 
+	* @return the new instance
+	*/
+	public Object createBeanClassInstance() throws Exception {
+		return getBeanClass().newInstance();
+	}
 
    /**
    * The ContainerFactory calls this method.  The ContainerFactory has set all the

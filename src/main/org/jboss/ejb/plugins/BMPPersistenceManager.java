@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -88,7 +88,16 @@ implements EntityPersistenceManager
       }
 
    }
-   
+
+ 	/**
+	* Returns a new instance of the bean class or a subclass of the bean class.
+	* 
+	* @return the new instance
+	*/
+	public Object createBeanClassInstance() throws Exception {
+		return con.getBeanClass().newInstance();
+	}
+
    private void createMethodCache( Method[] methods )
       throws NoSuchMethodException
    {
