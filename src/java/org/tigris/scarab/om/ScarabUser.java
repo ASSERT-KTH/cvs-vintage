@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.75 2002/08/03 19:33:16 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.76 2002/08/08 01:36:53 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -392,27 +392,6 @@ public interface ScarabUser extends User
     public void setThreadKey(Integer key);
 
     /**
-     * Checks to see if this user has permission to 
-     * Transition from one attribute option to another.
-     */
-    public boolean canMakeTransition(AttributeOption fromOption, 
-                                     AttributeOption toOption,
-                                     Issue issue,
-                                     Module module,               
-                                     IssueType issueType)
-        throws Exception;
-
-    /**
-     * Checks to see if an attribute option transition is dependant 
-     * Upon other attribute(s) being set.
-     */
-    public String checkWorkflow(AttributeOption fromOption, 
-                                AttributeOption toOption,
-                                Issue issue, HashMap newAttVals,
-                                ScarabUser user)
-        throws Exception;
-
-    /**
      * The current module which represents the module
      * selected by the user within a request.
      */
@@ -452,5 +431,8 @@ public interface ScarabUser extends User
      */
     public void updateIssueListAttributes(List attributes)
         throws Exception;
+
+    public List getRoleNames(Module module)
+       throws Exception;
 }
 

@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.81 2002/08/03 19:33:16 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.82 2002/08/08 01:36:53 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -988,28 +988,9 @@ public class ScarabUserImpl
         internalUser.updateIssueListAttributes(attributes);
     }
 
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#canMakeTransition
-     */
-    public boolean canMakeTransition(AttributeOption fromOption, 
-                                     AttributeOption toOption,
-                                     Issue issue,
-                                     Module module,               
-                                     IssueType issueType)
-        throws Exception
+    public List getRoleNames(Module module)
+       throws Exception
     {
-        return true;
-    }
-
-    /**
-     * @see org.tigris.scarab.om.ScarabUser#checkWorkflow
-     */
-    public String checkWorkflow(AttributeOption fromOption, 
-                                AttributeOption toOption,
-                                Issue issue, HashMap newAttVals,
-                                ScarabUser user)
-        throws Exception
-    {
-        return null;
+       return null;
     }
 }
