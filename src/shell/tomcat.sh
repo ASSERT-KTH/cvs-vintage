@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.1 1999/11/25 20:42:21 harishp Exp $
+# $Id: tomcat.sh,v 1.2 1999/11/28 23:52:32 harishp Exp $
 
 # Shell script to start and stop the server
 
@@ -42,21 +42,21 @@ fi
 
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
-#   2) You should use `-stop` option instead of ^C to bring down the server
+#   2) You should use `stop` option instead of ^C to bring down the server
 
-if test "$1" = "-start" 
+if test "$1" = "start" 
 then 
 shift 
 echo Using classpath: ${CLASSPATH}
-java org.apache.tomcat.shell.Startup $* &
-elif test "$1" = "-stop"
+java org.apache.tomcat.shell.Startup "$@" &
+elif test "$1" = "stop"
 then 
 shift 
 echo Using classpath: ${CLASSPATH}
-java org.apache.tomcat.shell.Shutdown $*
+java org.apache.tomcat.shell.Shutdown "$@"
 else
 echo "Usage:"
-echo "tomcat [-start|-stop]"
+echo "tomcat [start|stop]"
 exit 0
 fi
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.1 1999/11/26 09:03:43 harishp Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/26 09:03:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.2 1999/11/28 23:52:30 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/28 23:52:30 $
  *
  * ====================================================================
  *
@@ -151,13 +151,12 @@ class ServletClassLoader extends NetworkClassLoader {
     }
 
     String getClassPath() {
-        URL[] urls = getURLs();
         String separator = System.getProperty("path.separator", ":");
-
         String cpath = "";
 
-        for(int i=0; i < urls.length; ++i) {
-            cpath = cpath + separator + urls[i].getFile();
+        for(Enumeration e = getURLs(); e.hasMoreElements(); ) {
+            URL url = (URL) e.nextElement();
+            cpath = cpath + separator + url.getFile();
         }
 
         return cpath;

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.3 1999/11/27 21:45:35 harishp Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/27 21:45:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/NetworkClassLoader.java,v 1.4 1999/11/28 23:52:31 harishp Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/28 23:52:31 $
  *
  * ====================================================================
  *
@@ -81,14 +81,18 @@ import java.io.*;
  * still open. IMHO, it does make sense to close the jar file
  * after you are done reading the class data. But this approach may not
  * get you the performance of the URLClassLoader, but it works in all
- * cases and also runs on JDK1.1
+ * cases and also runs on JDK1.1. I have enhanced this class loader
+ * to read all the zip/jar entries once & cache the data, so that
+ * there is no overhead of opening/closing jar file to pick up
+ * each entry.
+ *
  *
  * @author Harish Prabandham
  */
 public class NetworkClassLoader extends ClassLoader {
     private ClassLoader parent = null; // parent classloader
     private Hashtable classCache = new Hashtable();
-    private Vector urlset = new Vector();
+    private Hashtable urlset = new Hashtable();
 
     /**
      * Creates a new instance of the class loader.
@@ -109,65 +113,53 @@ public class NetworkClassLoader extends ClassLoader {
     /**
      * Adds the given URL to this class loader. If the URL
      * ends with "/", then it is assumed to be a directory
-     * otherwise, it is assumed to be a zip/jar file.
+     * otherwise, it is assumed to be a zip/jar file. If the
+     * same URL is added again, the URL is re-opened and this
+     * zip/jar file is used for serving any future class requests.
      * @param URL where to look for the classes.
      */
-    public void addURL(URL url) {
+    public synchronized void addURL(URL url) {
         // System.out.println("Adding url: " + url);
-        if(!urlset.contains(url)) {
-            urlset.addElement(url);
+        if(!urlset.containsKey(url)) {
+            try {
+                urlset.put(url, new URLResourceReader(url));
+            }catch(IOException ioe){
+                // Probably a bad url...
+            }
+        } else {
+            // remove the old one & add a new one...
+            try{
+                URLResourceReader newu = new URLResourceReader(url);
+                URLResourceReader oldu = (URLResourceReader) urlset.get(url);
+                oldu.close();
+                urlset.remove(url);
+                urlset.put(url, newu);
+            } catch (IOException ioe) {
+            }
         }
     }
 
     /**
-     * @return The URLs where this class loader looks for classes.
+     * @return An enumeration of  URLs where this class loader
+     * looks for classes.
      */
-    public URL[] getURLs() {
-        URL[] urls = new URL[urlset.size()];
-        urlset.copyInto(urls);
-        return urls;
+    public Enumeration getURLs() {
+        return urlset.keys();
     }
 
     private byte[] loadResource(URL url, String resourceName)
-        throws MalformedURLException, IOException {
-        byte[] bytes = null;
-
-        if(url.getFile().endsWith("/")) {
-            // It is a directory 
-            URL realURL = new URL(url.getProtocol(), url.getHost(),
-                                  url.getFile() + resourceName);
-
-            InputStream istream = realURL.openStream();
-            bytes = getBytes(istream);
-            try{istream.close();}catch(Exception e){}
-            
-        } else {
-            // It is a zip/jar file.
-            InputStream istream = url.openStream();
-            ZipInputStream zstream = new ZipInputStream(istream);
-            ZipEntry entry = null;
-
-            while( (entry = zstream.getNextEntry()) != null) {
-                System.out.println("Entry=" + entry.getName());
-                if(!entry.isDirectory() &&
-                   entry.getName().equals(resourceName)) {
-                    bytes = getBytes(zstream);
-                    zstream.close();
-                    break;
-                }
-
-                zstream.closeEntry();
-            }
-
-            try{istream.close();}catch(Exception e){}
+        throws IOException {
+        URLResourceReader urr = (URLResourceReader) urlset.get(url);
+        if(urr != null) {
+            return urr.getResource(resourceName);
         }
 
-        return bytes;
+        return null;
     }
 
     private byte[] loadResource(String resource) {
         byte[] barray = null;
-        for(Enumeration e = urlset.elements(); e.hasMoreElements();) {
+        for(Enumeration e = urlset.keys(); e.hasMoreElements();) {
             URL url = (URL) e.nextElement();
 
             try {
@@ -180,18 +172,6 @@ public class NetworkClassLoader extends ClassLoader {
         }
 
         return barray;
-    }
-
-    private byte[] getBytes(InputStream istream) throws IOException {
-        byte[] buf = new byte[1024];
-        int num = 0;
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-
-        while( (num = istream.read(buf)) != -1) {
-            bout.write(buf, 0, num);
-        }
-
-        return bout.toByteArray();
     }
 
     private byte[] loadClassData(String classname) {
@@ -307,7 +287,7 @@ public class NetworkClassLoader extends ClassLoader {
      * removes all the URLs and classes in this class loader cache. 
      */
     protected final void clear() {
-        urlset.removeAllElements();
+        urlset.clear();
         classCache.clear();
     }
 
