@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.53 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: NavigatorPane.java,v 1.54 2003/09/08 14:53:43 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ import ru.novosoft.uml.MElementListener;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.53 2003/09/04 20:11:45 thierrylach Exp $
+ * $Id: NavigatorPane.java,v 1.54 2003/09/08 14:53:43 thierrylach Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -150,11 +150,31 @@ public class NavigatorPane
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    private static NavigatorPane INSTANCE = new NavigatorPane();
+    private static NavigatorPane INSTANCE = null;
+
+	private static boolean instanceSet = false;
     
-    public static NavigatorPane getInstance() {
-        return INSTANCE;
-    }
+    /** Don't automatically instantiate the instance.
+     * 
+     * @return the singleton
+     */
+	public static NavigatorPane getInstance() {
+		if (! instanceSet) {
+			INSTANCE = new NavigatorPane();
+		}
+		return INSTANCE;
+	}
+    
+	/** Allow setting of the navigator pane instance.
+	 * Currently this is only applicable for unit tests.
+	 * 
+	 * @param pane
+	 * @deprecated without replacement - this is a temporary hack until the model is cleaned up
+	 */
+	public static void setInstance(NavigatorPane pane) {
+		INSTANCE = pane;
+		instanceSet = true;
+	}
     
     /**
      * Constructs a new navigator panel.
