@@ -75,10 +75,23 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.55 2002/06/11 21:02:54 jon Exp $
+ * @version $Id: Default.java,v 1.56 2002/06/14 01:37:37 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
+    /**
+     * Override the subclass and call doBuildTemplate. This is a hack. 
+     * For some reason the doBuildTemplate is not being called in a 
+     * few select cases, so lets just hack things to always get called
+     * properly.
+     */
+    public String doBuild(RunData data)
+        throws Exception
+    {
+        this.doBuildTemplate(data, getTemplateContext(data));
+        return "";
+    }
+
     /**
      * builds up the context for display of variables on the page.
      */
@@ -101,7 +114,12 @@ public class Default extends TemplateSecureScreen
         // add the title text to the context.
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
             context.get("l10n");
-        context.put("title", getTitle(scarabR, l10n, data, context));
+        String title = getTitle(scarabR, l10n, data, context);
+        if (title == null)
+        {
+            title = "Scarab";
+        }
+        context.put("title", title);
     }
 
     protected String getTitle(ScarabRequestTool scarabR, 
