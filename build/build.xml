@@ -358,6 +358,15 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Runs the test suite                                                -->
+    <!-- ================================================================== -->
+    <target name="tests" depends="compile-tests">
+        <exec executable="ant" dir="${basedir}">
+            <arg line="-buildfile run-tests.xml"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- jars the source directory                                          -->
     <!-- ================================================================== -->
     <target name="jarsrc" depends="prepare">
