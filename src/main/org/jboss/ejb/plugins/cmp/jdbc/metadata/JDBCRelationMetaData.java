@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -319,7 +319,8 @@ public final class JDBCRelationMetaData {
             left.getKeyFields().isEmpty() &&
             right.getKeyFields().isEmpty()) {
          throw new DeploymentException("Atleast one role of a foreign-key " +
-               "mapped relationship must have key fields: " +
+               "mapped relationship must have key fields " + 
+               "(or <primkey-field> is missing from ejb-jar.xml): " +
                "ejb-relation-name=" + relationName);
       }
 
