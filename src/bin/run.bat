@@ -15,7 +15,8 @@ goto noTomcatHome
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jasper.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\webserver.jar
-set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xml.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jaxp.jar
+set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\parser.jar
 set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\servlet.jar
 
 REM Add the tools.jar file so that Tomcat can find the 
