@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.21 2002/01/11 07:11:26 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.22 2002/01/13 02:41:04 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -93,6 +93,20 @@ Bug No.  Description
 	 loader even when running under Java2.  This should allow for better
 	 jar reloading at the cost of not enforcing sealing etc.  
 
+         The IISConf module was updated to support an isapiRedirector
+         attribute which specifies the name of the redirector plugin DLL.
+         It also now writes a "properties" file the can be used for
+         configuration of the redirector instead of registry settings.
+
+         The isapi_redirect.dll was enhanced to support a uri_select
+         configuration setting that controls which form of URL is forwarded
+         to Tomcat.  The normalized/decoded URL used by Tomcat 3.3 is
+         still the default.  The original URL or re-encoded normalized/decoded
+         URL may be forwarded instead.  This was done to provide better
+         support for isapi_redirect.dll's use with web servers other than
+         Tomcat 3.3, such as Tomcat 3.2.x.
+
+
 Server:
 
 Bug No.  Description
@@ -157,6 +171,7 @@ Bug No.  Description
 5724	 Supress the check for WEB-INF in the "Default Servlet" (aka 
 	 StaticInterceptor).  The check was redundant, and was causing
 	 Spec problems.
+
 
 Configuration:
 
