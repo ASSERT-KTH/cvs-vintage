@@ -156,11 +156,10 @@
         </ant:copy>
     </goal>
     
-    <goal name="scarab:inplace" 
-        description="Builds an inplace exploded WAR webapp">
+    <preGoal name="war:inplace">
         <ant:property name="maven.test.skip" value="true"/>
         <attainGoal name="eclipse"/>
-        <attainGoal name="war:inplace"/>
+ 
         <!-- Change the context file to point inplace at src/webapp -->
         <ant:available file="tomcat/webapps/scarab.regular.xml.off" type="file" 
             property="scarab.context.regular.renamed"/>
@@ -181,7 +180,7 @@
                     tofile="tomcat/webapps/scarab.xml" overwrite="true"/>
             </j:when>
         </j:choose>
-    </goal>
+    </preGoal>
     
     <goal name="scarab:inplace-clean" prereqs="war:load">
         <j:set var="warWebappBuildDir" value="${maven.war.src}"/>

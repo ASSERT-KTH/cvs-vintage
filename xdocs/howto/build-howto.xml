@@ -86,7 +86,7 @@
     Inplace development relies on the embedded Tomcat distribution at /tomcat.  The maven <code>scarab:inplace</code>
     goal will automatically setup the correct scarab Context file in /tomcat/webapps/:
     <source>
-    maven scarab:inplace
+    maven war:inplace
     </source>    
     This will customize the <code>/tomcat/webapps/scarab.xml</code> to point to <code>/src/webapp</code> as
     the root instead of <code>/target/scarab</code>.    

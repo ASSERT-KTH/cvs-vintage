@@ -11,9 +11,10 @@
       <table>
         <tr><th>Goal</th><th>Description</th></tr>
         <tr>
-          <td>scarab:inplace</td>
+          <td>war:inplace</td>
           <td>
             Compiles all the Scarab docs into /src/webapp/ so that you can do inplace development of Scarab.  You do need to compile the Torque OM objects first via running "ant" in the /build directory.
+            Unit tests are NOT run as part of this goal.
           </td>
         </tr>  
         <tr>
