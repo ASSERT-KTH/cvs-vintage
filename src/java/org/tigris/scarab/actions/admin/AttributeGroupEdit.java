@@ -85,7 +85,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.26 2002/08/08 23:56:16 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.27 2002/08/23 19:21:14 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -122,6 +122,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         List attributes = ag.getAttributes();
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
+        String msg = DEFAULT_MSG;
 
         if ( intake.isAllValid() )
         {
@@ -143,12 +144,16 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
                                                   attribute, module, issueType);
                 }
-                rmaGroup.setProperties(rma);
+               rmaGroup.setProperties(rma);
                 String defaultTextKey = data.getParameters()
                     .getString("default_text");
                 if ( defaultTextKey != null && 
                      defaultTextKey.equals(rma.getAttributeId().toString()) ) 
                 {
+                    if (!rma.getRequired())
+                    {
+                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to unrequire this attribute, please choose another text attribute to be the default.";
+                    }
                     rma.setIsDefaultText(true);
                     rma.setRequired(true);
                 }
@@ -162,7 +167,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
-            data.setMessage(DEFAULT_MSG);  
+            data.setMessage(msg);
             ScarabCache.clear();
         } 
 
@@ -272,7 +277,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 attGroup.addAttribute(attribute);
             }
             doCancel(data, context);
-            data.setMessage(DEFAULT_MSG);  
+            data.setMessage(DEFAULT_MSG);
         }
     }
 
