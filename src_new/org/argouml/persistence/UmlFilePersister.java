@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.20 2005/01/20 17:27:50 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.21 2005/01/20 17:33:31 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class UmlFilePersister extends AbstractFilePersister
      * This controls conversion of old persistence version files to be
      * converted to the current one, keeping ArgoUML backwards compatible.
      */
-    protected static final int PERSISTENCE_VERSION = 2;
+    protected static final int PERSISTENCE_VERSION = 3;
     
     /**
      * Logger.
