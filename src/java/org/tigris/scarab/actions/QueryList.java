@@ -70,11 +70,11 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
-    This class is responsible for managing the query lists (deleting queries).
-    ScarabIssueAttributeValue
-    @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.18 2002/10/23 21:30:32 jon Exp $
-*/
+ * This class is responsible for managing the query lists (deleting queries).
+ *    
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: QueryList.java,v 1.19 2002/12/30 17:54:37 jon Exp $
+ */
 public class QueryList extends RequireLoginFirstAction
 {
 
