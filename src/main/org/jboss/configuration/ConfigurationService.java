@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -327,7 +327,7 @@ public class ConfigurationService
                         // Create MBean
                         ObjectInstance instance = server.createMBean(code, objectName, new ObjectName(server.getDefaultDomain(), "service", "MLet"));
                         info = server.getMBeanInfo(instance.getObjectName());
-                     } catch (Exception ex)
+                     } catch (Throwable ex)
                      {
                         log.error("Could not create MBean "+name+"("+code+")");
                         if (ex instanceof RuntimeMBeanException)
