@@ -231,6 +231,7 @@
         <filter token="LUCENE_INDEX_PATH" value="${scarab.lucene.index.path}"/>
         <filter token="ATTACHMENTS_PATH" value="${scarab.attachments.path}"/>
         <filter token="INTAKE_SERIALIZE_FILE" value="${scarab.intake.serialize.file}"/>
+        <filter token="INTAKE_OPTIONAL_GROUPS" value="${intake.optional.groups}"/>
         <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
