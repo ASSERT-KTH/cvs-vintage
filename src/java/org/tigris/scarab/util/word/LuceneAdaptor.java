@@ -53,7 +53,6 @@ import java.io.File;
 // Turbine classes
 import org.apache.turbine.Turbine;
 import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.services.resources.TurbineResources;
 // import org.apache.turbine.services.servlet.TurbineServlet;
 import org.apache.turbine.util.StringStackBuffer;
 
@@ -76,7 +75,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.2 2001/06/29 01:57:27 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.3 2001/07/17 01:42:51 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -98,7 +97,8 @@ public class LuceneAdaptor
         throws java.io.IOException
     {
         path = 
-            Turbine.getRealPath(TurbineResources.getString(INDEX_PATH));
+            Turbine.getRealPath(Turbine.getConfiguration()
+                                .getString(INDEX_PATH));
 
         File indexDir = new File(path);
         boolean createIndex = false;

@@ -46,14 +46,14 @@ package org.tigris.scarab.util.word;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.services.resources.TurbineResources;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.util.Log;
 
 /**
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.3 2001/07/11 07:33:50 jon Exp $
+ * @version $Id: SearchFactory.java,v 1.4 2001/07/17 01:42:51 jmcnally Exp $
  */
 public class SearchFactory
 {
@@ -61,7 +61,8 @@ public class SearchFactory
 
     static
     {
-        String className = TurbineResources.getString(SearchIndex.CLASSNAME);
+        String className = Turbine.getConfiguration()
+            .getString(SearchIndex.CLASSNAME);
         SearchIndex si = null;
         try
         {
