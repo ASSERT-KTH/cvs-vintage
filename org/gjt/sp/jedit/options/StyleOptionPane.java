@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: StyleOptionPane.java,v 1.8 2002/05/29 08:35:58 spestov Exp $
+ * @version $Id: StyleOptionPane.java,v 1.9 2002/05/31 07:38:57 spestov Exp $
  */
 public class StyleOptionPane extends AbstractOptionPane
 {
@@ -306,7 +306,6 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		cons.gridheight = 1;
 		cons.fill = GridBagConstraints.BOTH;
 		cons.weightx = 0.0f;
-		cons.insets = new Insets(0,0,12,0);
 
 		italics = new JCheckBox(jEdit.getProperty("style-editor.italics"));
 		italics.setSelected(style.getFont().isItalic());
@@ -322,10 +321,11 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		cons.gridy++;
 		cons.gridwidth = 1;
 		Color fg = style.getForegroundColor();
-		
+
 		fgColorCheckBox = new JCheckBox(jEdit.getProperty("style-editor.fgColor"));
 		fgColorCheckBox.setSelected(fg != null);
 		fgColorCheckBox.addActionListener(this);
+		fgColorCheckBox.setBorder(new EmptyBorder(0,0,0,12));
 		layout.setConstraints(fgColorCheckBox,cons);
 		panel.add(fgColorCheckBox);
 
@@ -341,6 +341,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		bgColorCheckBox = new JCheckBox(jEdit.getProperty("style-editor.bgColor"));
 		bgColorCheckBox.setSelected(bg != null);
 		bgColorCheckBox.addActionListener(this);
+		bgColorCheckBox.setBorder(new EmptyBorder(0,0,0,12));
 		layout.setConstraints(bgColorCheckBox,cons);
 		panel.add(bgColorCheckBox);
 
@@ -367,6 +368,8 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		Dimension screen = getToolkit().getScreenSize();
 		pack();
 		setLocationRelativeTo(JOptionPane.getFrameForComponent(comp));
+
+		setResizable(false);
 		show();
 	} //}}}
 
