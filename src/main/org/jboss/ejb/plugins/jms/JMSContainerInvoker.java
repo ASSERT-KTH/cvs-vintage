@@ -61,7 +61,7 @@ import org.w3c.dom.Element;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.30 $
+ * @version   $Revision: 1.31 $
  */
 public class JMSContainerInvoker
        implements ContainerInvoker, XmlLoadable
@@ -936,8 +936,7 @@ public class JMSContainerInvoker
       // = null;
       Thread currentThread;
       // = null;
-      boolean notStoped;
-      // = true;
+      boolean notStoped = true;
 
       ExceptionListenerImpl(final JMSContainerInvoker invoker)
       {
