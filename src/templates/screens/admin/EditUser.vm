@@ -1,11 +1,10 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditUser.vm,v 1.5 2001/12/04 15:59:30 dr Exp $
+@version $Id: EditUser.vm,v 1.6 2002/01/14 20:50:03 jon Exp $
 *#
 
 $page.setTitle("User Administration")
 #set ($state = $data.Parameters.getString("state"))
-
 
 <div id="edituser" class="app">
 
@@ -17,9 +16,9 @@ $page.setTitle("User Administration")
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,EditUser.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
-  <input type="hidden" name="state" value="execedituser">
-  <input type="hidden" name="lastAction" value="">
-  <input type="hidden" name="username" value="$data.Parameters.getString("username")">
+  <input type="hidden" name="state" value="execedituser" />
+  <input type="hidden" name="lastAction" value="" />
+  <input type="hidden" name="username" value="$data.Parameters.getString("username")" />
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
 
@@ -98,4 +97,3 @@ $intake.declareGroups()
 
 </form>
 </div>
-
