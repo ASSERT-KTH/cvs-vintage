@@ -131,7 +131,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.12 2002/03/28 00:27:18 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.13 2002/03/28 20:21:29 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -977,12 +977,11 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         List issueTypes = getIssueTypes(false);
-        List allIssueTypes = IssueTypePeer.getAllIssueTypes(false);
         List availIssueTypes = new ArrayList();
 
-        for ( int i=0; i<allIssueTypes.size(); i++ )
+        for ( int i=0; i<issueTypes.size(); i++ )
         {
-            IssueType issueType = (IssueType)allIssueTypes.get(i);
+            IssueType issueType = (IssueType)issueTypes.get(i);
             if (!issueTypes.contains(issueType))
             {
                 availIssueTypes.add(issueType);

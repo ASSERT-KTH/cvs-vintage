@@ -68,6 +68,7 @@ public class IssueTypePeer
             if (!includeDeleted)
             {
                 c.add(IssueTypePeer.DELETED, 0);
+                c.add(IssueTypePeer.ISSUE_TYPE_ID, 0, Criteria.NOT_EQUAL);
             }
             if (sortColumn != null && sortColumn.equals("desc"))
             {
