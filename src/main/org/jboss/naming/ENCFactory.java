@@ -21,7 +21,7 @@ import org.jnp.interfaces.NamingContext;
  *     
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Oberg</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class ENCFactory
    implements ObjectFactory
@@ -52,10 +52,10 @@ public class ENCFactory
       Hashtable environment)
       throws Exception
    {
+      ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
       synchronized (encs)
       {
          // Get naming for this component
-         ClassLoader ctxClassLoader = Thread.currentThread().getContextClassLoader();
          Context compCtx = (Context) encs.get(ctxClassLoader);
 
          /* If this is the first time we see ctxClassLoader first check to see
