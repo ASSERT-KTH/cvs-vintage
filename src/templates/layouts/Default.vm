@@ -9,9 +9,13 @@
   @import url($staticLink.setPath("/style/tigris.css"));
   </style>
   <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
-<script src="$staticLink.setPath("/scripts/main.js")" type="text/javascript">
-if (document.layers) { document.writeln('<link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/ns4_only.css")" media="screen" />')
-}</script>
+<script type="text/javascript">
+if (document.layers) 
+{ 
+document.writeln('<link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/ns4_only.css")" media="screen" />')
+}
+</script>
+<script src="$staticLink.setPath("/scripts/main.js")" type="text/javascript"></script>
  </head>
 <body marginwidth="0" marginheight="0" class="composite">
  <div id="banner">
