@@ -6,6 +6,7 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.POP3CommandReference;
@@ -14,7 +15,6 @@ import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.main.MainInterface;
@@ -30,6 +30,8 @@ import org.columba.main.MainInterface;
 public class FetchNewMessagesCommand extends Command {
 
 	POP3Server server;
+	int totalMessageCount;
+	int newMessageCount;
 
 	/**
 	 * Constructor for FetchNewMessages.
@@ -40,13 +42,12 @@ public class FetchNewMessagesCommand extends Command {
 		FrameController frameController,
 		DefaultCommandReference[] references) {
 		super(frameController, references);
-		
+
 		POP3CommandReference[] r =
 			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);
 
 		server = r[0].getServer();
 	}
-
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
@@ -57,33 +58,129 @@ public class FetchNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		Vector newUIDList = fetchUIDList();
+		log("Authenticating...", worker);
 		
-		Vector messageSizeList = fetchMessageSizes();
+		totalMessageCount= server.getMessageCount();
 		
+		Vector newUIDList = fetchUIDList(totalMessageCount, worker);
 
-		Vector newMessagesUIDList = synchronize( newUIDList);
-		
+		Vector messageSizeList = fetchMessageSizes(worker);
 
-		downloadNewMessage( newUIDList, messageSizeList, newMessagesUIDList, worker );
-	
+		Vector newMessagesUIDList = synchronize(newUIDList);
 
-		logout();
+		downloadNewMessages(
+			newUIDList,
+			messageSizeList,
+			newMessagesUIDList,
+			worker);
+
+		logout(worker);
 		
-		
+		if ( newMessageCount==0 ) log("No new messages on server", worker);
 
 	}
 	
-	public void downloadNewMessage( Vector newUIDList, Vector messageSizeList, Vector newMessagesUIDList, Worker worker ) throws Exception
+	protected void log(String message, WorkerStatusController worker)
 	{
-		ColumbaLogger.log.info(
-			"need to fetch " + newMessagesUIDList.size() + " messages.");	
-			
+		worker.setDisplayText(server.getFolderName()+": "+message);
+	}
+	
+
+	public void downloadMessage(
+		int index,
+		int size,
+		Object serverUID,
+		Worker worker)
+		throws Exception {
+		// server message numbers start with 1
+		// whereas Vector numbers start with 0
+		//  -> always increase fetch number
+		Message message = server.getMessage(index + 1, serverUID, worker);
+		message.getHeader().set("columba.size", new Integer(Math.round(size / 1024)));
+		message.getHeader().set("columba.flags.seen", Boolean.FALSE);
+		//System.out.println("message:\n" + message.getSource());
+
+		// get inbox-folder from pop3-server preferences
+		Folder inboxFolder = server.getFolder();
+		Object uid = inboxFolder.addMessage(message, worker);
+		Object[] uids = new Object[1];
+		uids[0] = uid;
+
+		HeaderInterface[] headerList = new HeaderInterface[1];
+		headerList[0] = message.getHeader();
+		headerList[0].set("columba.uid", uid);
+
+		TableChangedEvent ev =
+			new TableChangedEvent(
+				TableChangedEvent.ADD,
+				inboxFolder,
+				headerList);
+
+		((MailFrameController) frameController).tableController.tableChanged(
+			ev);
+
+		FilterList list = inboxFolder.getFilterList();
+		for (int j = 0; j < list.count(); j++) {
+			Filter filter = list.get(j);
+
+			Object[] result = inboxFolder.searchMessages(filter, uids, worker);
+			if (result.length != 0) {
+				CompoundCommand command =
+					filter.getCommand(frameController, inboxFolder, result);
+
+				MainInterface.processor.addOp(command);
+			}
+
+		}
+	}
+
+	protected int calculateTotalSize(
+		Vector newUIDList,
+		Vector messageSizeList,
+		Vector newMessagesUIDList) {
+		int totalSize = 0;
+
 		for (int i = 0; i < newMessagesUIDList.size(); i++) {
+			Object serverUID = newMessagesUIDList.get(i);
+
+			//ColumbaLogger.log.info("fetch message with UID=" + serverUID);
+
+			//int index = ( (Integer) result.get(serverUID) ).intValue();
+			int index = newUIDList.indexOf(serverUID);
+			//ColumbaLogger.log.info("vector index=" + index + " server index=" + (index + 1));
+
+			int size = Integer.parseInt((String) messageSizeList.get(index));
+			//size = Math.round(size / 1024);
+
+			totalSize += size;
+		}
+
+		return totalSize;
+	}
+
+	public void downloadNewMessages(
+		Vector newUIDList,
+		Vector messageSizeList,
+		Vector newMessagesUIDList,
+		Worker worker)
+		throws Exception {
+		ColumbaLogger.log.info(
+			"need to fetch " + newMessagesUIDList.size() + " messages.");
+
+		int totalSize = calculateTotalSize(newUIDList, messageSizeList, newMessagesUIDList );
+		
+		
+		worker.setProgressBarMaximum(totalSize);
+		worker.setProgressBarValue(0);
+		
+		newMessageCount = newMessagesUIDList.size();
+		for (int i = 0; i < newMessageCount; i++) {
 			Object serverUID = newMessagesUIDList.get(i);
 
 			ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 
+			log("Fetching "+i+"/"+newMessageCount+" messages...", worker);
+			
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
 			int index = newUIDList.indexOf(serverUID);
 			ColumbaLogger.log.info(
@@ -92,98 +189,67 @@ public class FetchNewMessagesCommand extends Command {
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
 
-			if ( server.getAccountItem().getPopItem().isLimit() )
-			{
+			if (server.getAccountItem().getPopItem().isLimit()) {
 				// check if message isn't too big to download
-				int maxSize = Integer.parseInt(server.getAccountItem().getPopItem().getLimit());
-				
+				int maxSize =
+					Integer.parseInt(
+						server.getAccountItem().getPopItem().getLimit());
+
 				// if message-size is bigger skip download of this message
-				if ( size > maxSize ) 
-				{
+				if (size > maxSize) {
 					ColumbaLogger.log.info(
-					"skipping download of message, too big");
+						"skipping download of message, too big");
 					continue;
 				}
 			}
-			// server message numbers start with 1
-			// whereas Vector numbers start with 0
-			//  -> always increase fetch number
-			Message message = server.getMessage(index + 1, serverUID);
-			message.getHeader().set("columba.size", new Integer(size));
-			message.getHeader().set("columba.flags.seen", Boolean.FALSE );
-			//System.out.println("message:\n" + message.getSource());
 
-			// get inbox-folder from pop3-server preferences
-			Folder inboxFolder = server.getFolder();
-			Object uid = inboxFolder.addMessage(message, worker);
-			Object[] uids = new Object[1];
-			uids[0] = uid;
-			
-			HeaderInterface[] headerList = new HeaderInterface[1];
-			headerList[0] = message.getHeader();
-			headerList[0].set("columba.uid",uid);
-			
-			TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.ADD, inboxFolder, headerList);
-		 
-			((MailFrameController)frameController).tableController.tableChanged(ev);
-		
-			
-
-			FilterList list = inboxFolder.getFilterList();
-			for (int j = 0; j < list.count(); j++) {
-				Filter filter = list.get(j);
-
-				Object[] result =
-					inboxFolder.searchMessages(filter, uids, worker);
-				if (result.length != 0) {
-					CompoundCommand command =
-						filter.getCommand(frameController, inboxFolder, result);
-
-					MainInterface.processor.addOp(command);
-				}
-				
-			}
-			
-
+			downloadMessage(
+				index,
+				Integer.parseInt((String) messageSizeList.get(index)),
+				serverUID,
+				worker);
 		}
+
 	}
-	
-	public Vector synchronize( Vector newUIDList ) throws Exception
-	{
+
+	public Vector synchronize(Vector newUIDList) throws Exception {
 		ColumbaLogger.log.info(
 			"synchronize local UID-list with remote UID-list");
 		// synchronize local UID-list with server 		
 		Vector newMessagesUIDList = server.synchronize(newUIDList);
-		
-		
+
 		return newMessagesUIDList;
 	}
-	
-	public Vector fetchMessageSizes() throws Exception
-	{
+
+	public Vector fetchMessageSizes(WorkerStatusController worker) throws Exception {
+		
+		log("Fetching message size list...", worker);
 		// fetch message-size list 		
 		Vector messageSizeList = server.getMessageSizeList();
 		ColumbaLogger.log.info(
 			"fetched message-size-list capacity=" + messageSizeList.size());
 		return messageSizeList;
-		
+
 	}
-	
-	public Vector fetchUIDList() throws Exception
-	{
-		// fetch UID list 		
-		Vector newUIDList = server.getUIDList();
+
+	public Vector fetchUIDList(int totalMessageCount, WorkerStatusController worker)
+		throws Exception {
+		// fetch UID list 
+		
+		log("Fetch UID list...", worker);
+				
+		Vector newUIDList = server.getUIDList(totalMessageCount, worker);
 		ColumbaLogger.log.info(
 			"fetched UID-list capacity=" + newUIDList.size());
-			
+
 		return newUIDList;
 	}
-	
 
-	public void logout() throws Exception
-	{
+	public void logout(WorkerStatusController worker) throws Exception {
 		server.logout();
 
 		ColumbaLogger.log.info("logout");
+		
+		log("Logout...", worker);
 	}
 }

@@ -2,12 +2,14 @@ package org.columba.mail.pop3;
 
 import java.util.Vector;
 
+import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.parser.Rfc822Parser;
-import org.columba.mail.pop3.parser.*;
+import org.columba.mail.pop3.parser.SizeListParser;
+import org.columba.mail.pop3.parser.UIDListParser;
 import org.columba.mail.pop3.protocol.POP3Protocol;
 
 /**
@@ -55,17 +57,19 @@ public class POP3Store {
 		this.state = state;
 	}
 
-	public Vector fetchUIDList() throws Exception {
+	public Vector fetchUIDList( int totalMessageCount, WorkerStatusController worker ) throws Exception {
 
 		isLogin();
 
-		String str = protocol.fetchUIDList(null);
+		String str = protocol.fetchUIDList(totalMessageCount, worker);
 
 		// need to parse here
 		Vector v = UIDListParser.parse(str);
 
 		return v;
 	}
+	
+
 
 	public Vector fetchMessageSizeList() throws Exception {
 
@@ -97,13 +101,13 @@ public class POP3Store {
 
 	}
 
-	public Message fetchMessage( int index ) throws Exception {
+	public Message fetchMessage( int index, WorkerStatusController worker ) throws Exception {
 		ColumbaHeader header = new ColumbaHeader();
 		Rfc822Parser parser = new Rfc822Parser();
 		
 		isLogin();
 
-		String rawString = protocol.fetchMessage( new Integer(index).toString() , null);
+		String rawString = protocol.fetchMessage( new Integer(index).toString() ,  worker);
 
 		int i = rawString.indexOf("\n\n");
 		String headerString = rawString.substring(0, i);

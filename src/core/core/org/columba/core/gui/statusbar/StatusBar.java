@@ -320,6 +320,7 @@ public class StatusBar
 				imageSequenceTimer.start();
 			} else {
 				cancelAction.setEnabled(false);
+				setMaximumAndValue(100,100);
 				imageSequenceTimer.stop();
 			}
 		}

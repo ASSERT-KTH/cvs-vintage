@@ -44,9 +44,11 @@ public class CheckForNewMessagesCommand extends Command {
 
 		server = r[0].getServer();
 
-		Vector newUIDList = command.fetchUIDList();
+		int totalMessageCount= server.getMessageCount();
+		
+		Vector newUIDList = command.fetchUIDList(totalMessageCount, worker);
 
-		Vector messageSizeList = command.fetchMessageSizes();
+		Vector messageSizeList = command.fetchMessageSizes(worker);
 
 		Vector newMessagesUIDList = command.synchronize(newUIDList);
 
@@ -56,13 +58,13 @@ public class CheckForNewMessagesCommand extends Command {
 			playSound();
 
 		if (server.getAccountItem().getPopItem().isAutoDownload())
-			command.downloadNewMessage(
+			command.downloadNewMessages(
 				newUIDList,
 				messageSizeList,
 				newMessagesUIDList,
 				worker);
 
-		command.logout();
+		command.logout(worker);
 	}
 
 	protected void playSound() {

@@ -38,8 +38,8 @@ public class POP3Protocol {
 	private String security;
 	public String answer;
 	private int logMethod;
-	private int totalMessages;
-	private int totalSize;
+	//private int totalMessages;
+	//private int totalSize;
 
 	private String selectedMessageSizeString;
 	private int lineCount;
@@ -254,14 +254,17 @@ public class POP3Protocol {
 		if (getAnswer()) {
 			try {
 				dummy = answer.substring(answer.indexOf(' ') + 1);
-				totalMessages =
+				
+				int totalMessages =
 					Integer.parseInt(dummy.substring(0, dummy.indexOf(' ')));
-
+				
 				dummy = dummy.substring(dummy.indexOf(' ') + 1);
-				totalSize = Integer.parseInt(dummy);
+				
+				//totalSize = Integer.parseInt(dummy);
 
 				statuschecked = true;
 				return totalMessages;
+				
 			} catch (NumberFormatException e) {
 			}
 		}
@@ -329,7 +332,7 @@ public class POP3Protocol {
 	}
 	*/
 
-	public String fetchUIDList(WorkerStatusController worker)
+	public String fetchUIDList(int totalMessageCount, WorkerStatusController worker)
 		throws IOException {
 		StringBuffer buffer = new StringBuffer();
 		Integer parser = new Integer(0);
@@ -337,14 +340,15 @@ public class POP3Protocol {
 
 		sendString("UIDL");
 		if (getAnswer()) {
-			if (worker != null)
-				worker.setProgressBarMaximum(totalMessages);
+			
+			worker.setProgressBarMaximum(totalMessageCount);
+			worker.setProgressBarValue(0);
 			getNextLine();
 			while (!answer.equals(".")) {
 				//System.out.println("SERVER: "+ answer );
 				buffer.append(answer + "\n");
 				progress++;
-				if (worker != null)
+				
 					worker.setProgressBarValue(progress);
 				getNextLine();
 			}
@@ -353,7 +357,7 @@ public class POP3Protocol {
 		return buffer.toString();
 	}
 
-	public String fetchMessage(String messageNumber, Worker worker)
+	public String fetchMessage(String messageNumber, WorkerStatusController worker)
 		throws IOException {
 		StringBuffer messageBuffer = new StringBuffer();
 		Integer parser = new Integer(0);
@@ -362,6 +366,8 @@ public class POP3Protocol {
 		int test;
 		boolean progressBar = true;
 
+		
+		
 		sendString("RETR " + messageNumber);
 		if (getAnswer()) {
 			/*
@@ -379,11 +385,12 @@ public class POP3Protocol {
 			    //progressBar = false;
 			}
 			*/
-
+			
 			getNextLine();
 			while (!answer.equals(".")) {
+				
 				/*
-				if (worker.getCancel() == true)
+				if (worker.cancelled() == true)
 					break;
 				*/
 
@@ -391,9 +398,10 @@ public class POP3Protocol {
 
 				progress = answer.length() + 2;
 
-				/*
+				
 				worker.incProgressBarValue(progress);
-				*/
+				
+				
 
 				getNextLine();
 			}

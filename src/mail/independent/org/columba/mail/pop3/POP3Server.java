@@ -14,25 +14,21 @@
 
 package org.columba.mail.pop3;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.Timer;
-
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.pop3.protocol.POP3Protocol;
+import org.columba.main.MainInterface;
 
 public class POP3Server {
 
@@ -99,8 +95,8 @@ public class POP3Server {
 		getStore().close();
 	}
 
-	public Vector getUIDList() throws Exception {
-		return getStore().fetchUIDList();
+	public Vector getUIDList(int totalMessageCount, WorkerStatusController worker) throws Exception {
+		return getStore().fetchUIDList(totalMessageCount, worker);
 	}
 
 	public Vector getMessageSizeList() throws Exception {
@@ -179,9 +175,14 @@ public class POP3Server {
 			store.deleteMessage(indexes[i]);
 		}
 	}
+	
+	public int getMessageCount() throws Exception
+	{
+		return getStore().fetchMessageCount();
+	}
 
-	public Message getMessage(int index, Object uid) throws Exception {
-		Message message = getStore().fetchMessage(index);
+	public Message getMessage(int index, Object uid, WorkerStatusController worker) throws Exception {
+		Message message = getStore().fetchMessage(index, worker);
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 		header.set("columba.pop3uid", uid);

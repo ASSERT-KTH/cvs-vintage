@@ -43,6 +43,8 @@ public class ThinMenuItemUI extends BasicMenuItemUI {
 				arrowIcon,
 				defaultTextIconGap);
 
+		
+		
 		return d;
 	}
 
