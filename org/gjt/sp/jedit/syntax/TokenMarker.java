@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.61 2003/12/27 05:13:55 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.62 2003/12/27 05:14:46 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -404,10 +404,8 @@ unwind:		while(context.parent != null)
 				// match the start of the string
 				int matchStart = pos - line.offset;
 				charIndexed = new CharIndexedSegment(line,matchStart);
-				long start = System.currentTimeMillis();
 				match = checkRule.startRegexp.getMatch(
 					charIndexed,0,RE.REG_ANCHORINDEX);
-				System.err.println("Match at " + matchStart  + " took " + (System.currentTimeMillis() - start));
 				if(match == null)
 					return false;
 				else if(match.getStartIndex() != 0)
