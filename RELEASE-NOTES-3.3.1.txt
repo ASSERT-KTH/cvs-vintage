@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.18 2001/12/31 23:47:07 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.19 2002/01/08 00:49:24 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -36,7 +36,7 @@ Bug No.  Description
 	 if the input URL includes an anchor tag.
 
 	 Improved the handling of invalid web.xml files.  Now you get the same
-	 error messages everytime you parse the file.
+	 error messages every time you parse the file.
 
 	 Moved the setting of the default "*.jsp" mapping so that it is now 
 	 possible to entirely disable support for jsp files.
@@ -81,6 +81,13 @@ Bug No.  Description
          to the StaticInterceptor module to allow configuration of how
          the locale and character set encoding of the directory listings
          are derived.
+
+         Added a delaySocketClose attribute to Http10Interceptor.  The
+         default is false.  If set true, a Thread.sleep(0) is executed
+         before the socket is closed.  This was needed by Cactus when
+         run on a high powered Windows XP box.  The sleep(0) helps ensure
+         the test get a chance to receive its input before the socket
+         is closed.  Otherwise, "Socket reset by peer" errors occur.
 
 
 Server:
@@ -155,6 +162,13 @@ Bug No.  Description
 	 actually a JSP page.
 
 5365	 Fixed the JasperMangler to handle Java reserved words correctly.
+
+
+Connectors:
+
+         A bug was fixed in isapi_redirect.dll where it would mistake an
+         encoded '?' in the URI path as the query string delimitor.
+
 
 Documentation:
 
