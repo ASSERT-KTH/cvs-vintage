@@ -2,14 +2,14 @@
 # Fill out this file for use with the
 # upgrade-mysql-database.sh and create-mysql-database.sh scripts
 #
-# $Id: dbsettings.props,v 1.1 2002/02/01 00:53:10 jon Exp $
+# $Id: dbsettings.props,v 1.2 2002/02/25 20:08:13 dlr Exp $
 #
 # Username to connect to MySQL with
-USER=
+USER=''
 # Password to use to connect to MySQL with
-PASS=
+PASS=''
 # Database name to use to connect to MySQL with
-DB_NAME=
+DB_NAME='scarab'
 # The file which specifies the load order for 
 # creating the database
-LOAD_ORDER=
+LOAD_ORDER="${POPULATION_SCRIPT_DIR}/LoadOrder.lst"
