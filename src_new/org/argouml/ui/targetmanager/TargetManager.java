@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.39 2005/01/14 02:24:47 bobtarling Exp $
+// $Id: TargetManager.java,v 1.40 2005/01/26 01:22:00 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -588,18 +588,18 @@ public final class TargetManager {
         Object[] listeners = listenerList.getListenerList();
         for (int i = listeners.length - 2; i >= 0; i -= 2) {
 	    try {
-		if (listeners[i] == TargetListener.class) {
-		    // Lazily create the event:
-		    ((TargetListener) listeners[i + 1]).targetSet(targetEvent);
-		}
-	    } catch (RuntimeException e) {
-		LOG.warn("While calling targetSet for "
-			  + targetEvent
-			  + " in "
-			  + listeners[i + 1]
-			  + " an error is thrown.",
-			  e);
-	    }
+            if (listeners[i] == TargetListener.class) {
+                // Lazily create the event:
+                ((TargetListener) listeners[i + 1]).targetSet(targetEvent);
+            }
+        } catch (RuntimeException e) {
+            LOG.error("While calling targetSet for "
+            	  + targetEvent
+            	  + " in "
+            	  + listeners[i + 1]
+            	  + " an error is thrown.",
+            	  e);
+            }
         }
     }
 
