@@ -11,6 +11,7 @@
     <!-- Give user a chance to override without editing this file
          (and without using -D arguments each time they build) -->
     <property file="${user.home}/scarab.build.properties" /> 
+    <property file="${user.home}/build.properties" />
     <property file="${basedir}/${configuration.file}" />
     <property file="${basedir}/default.properties" />
 
