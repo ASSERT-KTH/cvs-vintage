@@ -6,7 +6,6 @@
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($currentTemplate ))
 
-$currentTemplate.IssueId
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
 <input type="submit" value="Save" name="eventSubmit_doSave" />
