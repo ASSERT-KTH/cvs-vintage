@@ -1,4 +1,4 @@
-$page.setTitle("Query Results")
+$page.setTitle("Query results")
 
 <div class="app" id="issuelist">
 
@@ -16,7 +16,7 @@ $page.setTitle("Query Results")
 
 
 #if ($issueList.size() == 0)
-<h3>Search results</h3>
+  <h3>$page.Title</h3>
   <p class="alert">There are no matching issues.</p>
 #else
 
@@ -48,7 +48,13 @@ $page.setTitle("Query Results")
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
-<h3>Search results</h3>
+<h3>$page.Title</h3>
+
+<div class="colbar">
+<small>
+$link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view")
+</small>
+</div>
 		
 ## PAGINATION
 #if( $paginated)
@@ -134,12 +140,11 @@ $page.setTitle("Query Results")
 <input type="submit" value="View verbose" name="eventSubmit_doViewselected" />&#160;
 <small>all</small>&#160;
 </div>
-		
+        
 #if ($paginated)
   #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
 #end
 
-<p><small>($link.setPage("ConfigureIssueList.vm").setLabel("add/remove attributes from view"))</small></p>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
