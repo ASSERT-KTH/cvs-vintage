@@ -1,4 +1,4 @@
-// $Id: ChildGenRelated.java,v 1.14 2003/09/11 00:07:17 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.15 2004/08/29 09:40:02 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.14 2003/09/11 00:07:17 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.15 2004/08/29 09:40:02 mvw Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -43,11 +43,19 @@ import org.tigris.gef.util.ChildGenerator;
 /** @stereotype singleton
  */
 public class ChildGenRelated implements ChildGenerator {
-    public static ChildGenRelated SINGLETON = new ChildGenRelated();
+    private static final ChildGenRelated SINGLETON = new ChildGenRelated();
 
-    /** Reply a java.util.Enumeration of the children of the given Object 
-     *
-     * @return an enumeration or null if not possible to get the children.
+    /**
+     * @return Returns the singleton.
+     */
+    public static ChildGenRelated getSingleton() {
+        return SINGLETON;
+    }
+    /** 
+     * Reply a java.util.Enumeration of the children of the given Object 
+     * Returns an enumeration or null if not possible to get the children.
+     * 
+     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
      */
     public Enumeration gen(Object o) {
 		
