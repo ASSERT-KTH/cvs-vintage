@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -32,6 +34,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTextField;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.ToolbarToggleButton;
@@ -100,15 +103,15 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(newButton);
 
 		/*
-		oldButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-read.png"));
-		oldButton.setToolTipText( GlobalResourceLoader.getString("menu","mainframe","filtertoolbar_read") );
-		oldButton.addActionListener(this);
-		oldButton.setActionCommand("OLD");
-		//newButton.setSelected(true);
-		oldButton.setMargin(new Insets(0, 0, 0, 0));
-		layout.setConstraints(oldButton, c);
-		add(oldButton);
-		*/
+		 * oldButton = new
+		 * ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-read.png"));
+		 * oldButton.setToolTipText(
+		 * GlobalResourceLoader.getString("menu","mainframe","filtertoolbar_read") );
+		 * oldButton.addActionListener(this);
+		 * oldButton.setActionCommand("OLD"); //newButton.setSelected(true);
+		 * oldButton.setMargin(new Insets(0, 0, 0, 0));
+		 * layout.setConstraints(oldButton, c); add(oldButton);
+		 */
 		//addSeparator();
 
 		answeredButton =
@@ -185,7 +188,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 		//addSeparator();
 
-		textField = new JTextField();
+		textField = new CTextField();
 		label.setLabelFor(textField);
 		textField.addActionListener(this);
 		textField.setActionCommand("TEXTFIELD");
@@ -260,18 +263,19 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		//addSeparator();
 
 		/*
-		addSeparator();
-		
-		threadButton = new ToolbarToggleButton(ImageLoader.getImageIcon("org/columba/core/images/Export16.gif") );
-		threadButton.setEnabled( false );
-		threadButton.setMargin( new Insets(0,0,0,0) );
-		add(threadButton);
-		*/
+		 * addSeparator();
+		 * 
+		 * threadButton = new
+		 * ToolbarToggleButton(ImageLoader.getImageIcon("org/columba/core/images/Export16.gif") );
+		 * threadButton.setEnabled( false ); threadButton.setMargin( new
+		 * Insets(0,0,0,0) ); add(threadButton);
+		 */
 
 		/*
-		  secureCButton = new JButton(ImageLoader.getImageIcon("org/columba/core/images/secure.jpg") );
-		  add(secureCButton);
-		*/
+		 * secureCButton = new
+		 * JButton(ImageLoader.getImageIcon("org/columba/core/images/secure.jpg") );
+		 * add(secureCButton);
+		 */
 
 		//addSeparator();
 	}
@@ -289,7 +293,8 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 		try {
 
-			//TableModelFilteredView model = MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
+			//TableModelFilteredView model =
+			// MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
 			TableModelFilter model =
 				tableController.getTableModelFilteredView();
 

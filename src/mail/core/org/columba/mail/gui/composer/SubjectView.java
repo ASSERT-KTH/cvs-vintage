@@ -18,8 +18,7 @@ package org.columba.mail.gui.composer;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-import javax.swing.JTextField;
-
+import org.columba.core.gui.util.CTextField;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -30,7 +29,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class SubjectView extends JTextField {
+public class SubjectView extends CTextField {
 	
 	SubjectController controller;
 		

@@ -17,6 +17,7 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
@@ -61,7 +62,7 @@ public class MarkAsReadAction
 		setLargeIcon(ImageLoader.getImageIcon("mail-read.png"));
 		
 		// shortcut key
-		setAcceleratorKey(KeyStroke.getKeyStroke("M"));
+		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
