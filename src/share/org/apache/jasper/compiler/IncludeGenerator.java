@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.4 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/IncludeGenerator.java,v 1.5 2000/09/14 03:11:05 larryi Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/09/14 03:11:05 $
  *
  * ====================================================================
  * 
@@ -119,7 +119,6 @@ public class IncludeGenerator
 	writer.println("{");
 	writer.pushIndent();
 	writer.println("String _jspx_qStr = \"\";");
-        writer.println("out.flush();");
 	
 	if (params.size() > 0) {
 	    Enumeration en = params.keys();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.14 2000/07/11 03:48:36 alex Exp $
- * $Revision: 1.14 $
- * $Date: 2000/07/11 03:48:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.15 2000/09/14 03:11:06 larryi Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/09/14 03:11:06 $
  *
  * ====================================================================
  *
@@ -407,6 +407,7 @@ public class PageContextImpl extends PageContext {
         throws ServletException, IOException
     {
         String path = getAbsolutePathRelativeToContext(relativeUrlPath);
+        out.flush();
         context.getRequestDispatcher(path).include(request, response);
     }
 
