@@ -1,4 +1,4 @@
-// $Id: SubInputStream.java,v 1.3 2004/08/25 19:01:45 mvw Exp $
+// $Id: SubInputStream.java,v 1.4 2004/10/20 11:47:35 mkl Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,9 @@
 
 package org.argouml.util;
 
-import java.io.*;
-import java.util.zip.*;
+import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class SubInputStream extends java.io.FilterInputStream
 {

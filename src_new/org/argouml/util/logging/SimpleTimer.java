@@ -1,4 +1,4 @@
-// $Id: SimpleTimer.java,v 1.7 2004/08/24 16:43:24 mvw Exp $
+// $Id: SimpleTimer.java,v 1.8 2004/10/20 11:47:35 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,8 @@
 
 package org.argouml.util.logging;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * This class makes it easy to get the time between two or several 

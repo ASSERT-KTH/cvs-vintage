@@ -1,4 +1,4 @@
-// $Id: MyTokenizer.java,v 1.11 2004/08/25 19:01:44 mvw Exp $
+// $Id: MyTokenizer.java,v 1.12 2004/10/20 11:47:35 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,10 @@
 
 package org.argouml.util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.NoSuchElementException;
+import java.util.Vector;
 
 /**
  * Internal class for managing the delimiters in MyTokenizer. It's rather

@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.4 2004/08/14 19:28:19 mvw Exp $
+// $Id: ActionNavigability.java,v 1.5 2004/10/20 11:46:50 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,8 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 

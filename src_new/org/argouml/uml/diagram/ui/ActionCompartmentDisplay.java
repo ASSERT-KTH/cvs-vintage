@@ -1,4 +1,4 @@
-// $Id: ActionCompartmentDisplay.java,v 1.5 2004/09/27 21:18:23 mvw Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionCompartmentDisplay.java
 // Classes: ActionCompartmentDisplay
 // Original Author: your email address here
-// $Id: ActionCompartmentDisplay.java,v 1.5 2004/09/27 21:18:23 mvw Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // compartments for extension points on use cases.
@@ -33,13 +33,16 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.uml.diagram.static_structure.ui.*;
-import org.argouml.uml.diagram.use_case.ui.*;
+import java.awt.event.ActionEvent;
+import java.util.Vector;
+
+import org.argouml.uml.diagram.static_structure.ui.FigClass;
+import org.argouml.uml.diagram.static_structure.ui.FigInterface;
+import org.argouml.uml.diagram.use_case.ui.FigUseCase;
 import org.argouml.uml.ui.UMLAction;
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import java.awt.event.*;
-import java.util.*;
+import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Selection;
+import org.tigris.gef.presentation.Fig;
 
 
 /**

@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.5 2004/10/13 05:52:21 linus Exp $
+// $Id: ActionModifier.java,v 1.6 2004/10/20 11:46:50 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,14 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.uml.ui.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyVetoException;
+
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.ui.UMLAction;
+import org.argouml.uml.ui.UMLBooleanProperty;
+import org.argouml.uml.ui.UMLEnumerationBooleanProperty;
+import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 
 /**
  * A class to perform the action of changing value of the modifiers on a

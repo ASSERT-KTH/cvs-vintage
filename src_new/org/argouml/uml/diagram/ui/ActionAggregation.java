@@ -1,4 +1,4 @@
-// $Id: ActionAggregation.java,v 1.3 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAggregation.java,v 1.4 2004/10/20 11:46:50 mkl Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,16 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
+import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.Selection;
+import org.tigris.gef.presentation.Fig;
 
 /**
  * Action to set the Aggregation kind.
