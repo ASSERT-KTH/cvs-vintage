@@ -829,37 +829,23 @@ public class IssueSearch
      * @return a <code>Date</code> value
      */
     public Date parseDate(String dateString, boolean addTwentyFourHours)
-        throws Exception
+        throws ParseException
     {
         Date date = null;
         if ( dateString != null ) 
         {
             if ( dateString.indexOf(':') == -1 )
             {
-                try
-                {
-                    date = DATE_FORMATTER.parse(dateString);
-                    // add 24 hours to max date so it is inclusive
-                    if ( addTwentyFourHours ) 
-                    {                
-                        date.setTime(date.getTime() + 86399999);
-                    }
-                }
-                catch (Exception ee)
-                {
-                     throw new Exception();
+                date = DATE_FORMATTER.parse(dateString);
+                // add 24 hours to max date so it is inclusive
+                if ( addTwentyFourHours ) 
+                {                
+                    date.setTime(date.getTime() + 86399999);
                 }
             }
             else
             {
-                try
-                {
-                    date = DATETIME_FORMATTER.parse(dateString);
-                }
-                catch (Exception ee)
-                {
-                     throw new Exception();
-                }
+                date = DATETIME_FORMATTER.parse(dateString);
             }
         }
         
