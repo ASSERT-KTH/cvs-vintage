@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.18 2004/02/29 12:35:40 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.19 2004/04/19 19:38:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import ru.novosoft.uml.foundation.core.MClassifier;
 /**
  * Helper class for UML BehavioralElements::StateMachines Package.
  *
- * Current implementation is a placeholder.
  * 
  * @since ARGO0.11.2
  * @author Thierry Lach
