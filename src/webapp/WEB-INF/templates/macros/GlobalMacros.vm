@@ -1,4 +1,26 @@
-#macro (AllowedTransitionsForOption $attrValue $optionFieldName $size)
+#macro (CanMakeTransitionForOption $fromValue $option $issue $multiple)
+    #set ($selected = false)
+    #set ($canMakeTransition = true)
+    #if ($fromValue && $fromValue.toString() != '')
+      #if (!$multiple.equals("true"))
+        #if ($issue.isTemplate())
+          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+        #else
+          #if ($issue.isNew())
+            #set ($values = '0')
+          #else
+            #set ($values = $fromValue)
+          #end
+          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
+        #end 
+      #end
+    #else
+      #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
+    #end
+$canMakeTransition
+#end
+
+#macro (AllowedTransitionsForOption $attrValue $optionFieldName $size $multiple)
   #set ($count=0)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
@@ -12,14 +34,8 @@
   #set ($newValues = '')
   #set ($newValues = $attrInput.get($optionFieldName).Value)
   #foreach ($option in $module.getOptionTree($attr, $issueType, false))
-    #set ($selected = false)
-    #set ($canMakeTransition = true)
-    #if ($newValues && $newValues.toString() != '')
-    #else
-       #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
-    #end
-
-    #if ($canMakeTransition)
+    #set ($canMakeTransition = "#CanMakeTransitionForOption ($newValues $option $issue $multiple)")
+    #if ($canMakeTransition.trim()=="true")
       #set ($count=$count+1)
     #end
   #end
@@ -38,56 +54,18 @@
   ## Initialize $newValues in case the second #set has a null RHS.
   #set ($newValues = '')
   #set ($newValues = $attrInput.get($optionFieldName).Value)
+  #set ( $count = "#AllowedTransitionsForOption ( $attrValue $optionFieldName $size $multiple )")
 
-  #set ( $count = "#AllowedTransitionsForOption ( $attrValue $optionFieldName $size )")
-  #if  ($count.trim() == "1")
-   <script type="text/javascript">
-    function toggleCheckbox(item,checked,val1,val2)
-    {
-      if (checked)
-      {
-       item.value=val1 
-      }
-      else
-      {
-       item.value=val2
-      }
-    }
-    </script>
-  
+  #if  ($count.trim() == "1")  
+
     #foreach ($option in $module.getOptionTree($attr, $issueType, false))
-     #set ($selected = false)
-     #set ($canMakeTransition = true)
-     #if ($newValues && $newValues.toString() != '')
-       #if ($multiple.equals("true"))
-         #foreach ($value in $newValues)
-            #if ($value.equals($option.OptionId))
-               #set ($selected=true)
-            #end
-         #end
-       #else
-         #if ($issue.isNew())
-           #set ($values = '0')
-         #else
-           #set ($values = $newValues)
-         #end
-         #if ($issue.isTemplate())
-           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
-         #else
-           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
-         #end 
-         #if ($newValues.equals($option.OptionId))
-           #set ($selected=true)
-          #end
-       #end
-     #else
-         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
-     #end
+     #set ($canMakeTransition = "#CanMakeTransitionForOption ($newValues $option $issue $multiple)")
 
-     #if ($canMakeTransition)
-      <input type=hidden name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>
-      #if (!$required)
-        #set ($oc = "javascript:toggleCheckbox(document.form.${attrInput.get($optionFieldName).Key},this.checked,$option.OptionId,'')")
+     #if ($canMakeTransition.trim()=="true")
+
+      <input type="hidden" name="$attrInput.get($optionFieldName).Key" value="$option.OptionId"/>
+      #if (!$required && $newValues=='')
+        #set ($oc = "javascript:document.form.${attrInput.get($optionFieldName).Key}.value=(this.checked)?$option.OptionId:''")
 	    <input type="checkbox" 
                name="${attrInput.get($optionFieldName).Key}_tmp" 
                onclick="$oc" />
@@ -99,7 +77,10 @@
       #end
      #end
    #end
+
+
   #else
+
 
  <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
@@ -107,48 +88,38 @@
    <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $module.getOptionTree($attr, $issueType, false))
-    #set ($selected = false)
-    #set ($canMakeTransition = true)
-    #if ($newValues && $newValues.toString() != '')
+    #set ($canMakeTransition = "#CanMakeTransitionForOption ($newValues $option $issue $multiple)")
+
+    #if ($canMakeTransition.trim()=="true")
+
+      #set ($selected = false)
+      #if ($newValues && $newValues.toString() != '')
        #if ($multiple.equals("true"))
          #foreach ($value in $newValues)
-            #if ($value.equals($option.OptionId))
-               #set ($selected=true)
-            #end
+           #if ($value.equals($option.OptionId))
+             #set ($selected=true)
+           #end
          #end
        #else
-         #if ($issue.isNew())
-           #set ($values = '0')
-         #else
-           #set ($values = $newValues)
-         #end
-         #if ($issue.isTemplate())
-           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
-         #else
-           #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption($values), $option.getAttributeOption(), $issue))
-         #end 
          #if ($newValues.equals($option.OptionId))
            #set ($selected=true)
-          #end
+         #end
        #end
-    #else
-         #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $issue))
-    #end
-    #if ($canMakeTransition)
-	#if($selected)
-	    	<option value="$option.OptionId"#selected($selected)>
-    		#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
-		#if ($option.Active) 
+      #end
+     
+	  #if($selected)
+	    <option value="$option.OptionId"#selected($selected)>
+    	  #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+		  #if ($option.Active) 
         		$option.DisplayValue</option>
-		#else
+		  #else
         		[I] $option.DisplayValue</option>
-
-		#end
-	#elseif($option.Active)
-	    	<option value="$option.OptionId"#selected($selected)>
-    		#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
-        	$option.DisplayValue</option>
-	#end
+		  #end
+	  #elseif($option.Active)
+	    <option value="$option.OptionId"#selected($selected)>
+    	  #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+          $option.DisplayValue</option>
+	  #end
     #end
   #end
  </select>
