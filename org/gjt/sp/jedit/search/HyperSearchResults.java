@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.28 2003/08/08 02:22:18 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.29 2003/08/22 18:49:54 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -315,29 +315,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 		}
 		else if (value instanceof HyperSearchResult)
 		{
-			final HyperSearchResult result = (HyperSearchResult)value;
-			final Buffer buffer = result.getBuffer();
-
-			if(buffer == null)
-				return;
-
-			VFSManager.runInAWTThread(new Runnable()
-			{
-				public void run()
-				{
-					int start = result.startPos.getOffset();
-					int end = result.endPos.getOffset();
-					Selection s = new Selection.Range(start,end);
-					EditPane pane = view.goToBuffer(buffer);
-					JEditTextArea textArea = pane.getTextArea();
-					if(textArea.isMultipleSelectionEnabled())
-						textArea.addToSelection(s);
-					else
-						textArea.setSelection(s);
-
-					textArea.moveCaretPosition(end);
-				}
-			});
+			((HyperSearchResult)value).goTo(view);
 		}
 	} //}}}
 

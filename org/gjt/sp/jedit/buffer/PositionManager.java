@@ -35,7 +35,7 @@ import java.util.*;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.31 2003/08/22 17:16:11 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.32 2003/08/22 18:49:54 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -67,7 +67,6 @@ public class PositionManager
 		while(iter.hasNext())
 		{
 			PosBottomHalf bh = (PosBottomHalf)iter.next();
-			System.err.println(bh.offset);
 			bh.offset += length;
 		}
 	} //}}}

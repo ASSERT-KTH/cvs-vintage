@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.21 2003/08/22 17:16:11 spestov Exp $
+ * @version $Id: Debug.java,v 1.22 2003/08/22 18:49:54 spestov Exp $
  */
 public class Debug
 {
@@ -122,16 +122,6 @@ public class Debug
 	 * Geometry workaround for X11.
 	 */
 	public static boolean GEOMETRY_WORKAROUND = false;
-
-	/**
-	 * Position tree debugging.
-	 */
-	public static boolean POSITION_DEBUG = false;
-
-	/**
-	 * Disable red-black tree.
-	 */
-	public static boolean DISABLE_POSITION_BALANCE = false;
 
 	/**
 	 * Dump key events received by text area?
