@@ -13,10 +13,12 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.proxy.Interceptor;
 
-/** Handle toString, equals, hashCode locally on the client.
+/**
+ * Handle toString, equals, hashCode locally on the client.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @author adrian@jboss.com
+ * @version $Revision: 1.3 $
  */
 public class ClientMethodInterceptor extends Interceptor
    implements Externalizable
@@ -26,33 +28,50 @@ public class ClientMethodInterceptor extends Interceptor
 
    /** Handle methods locally on the client
     *
-    * @param mi
-    * @return
-    * @throws Throwable
+    * @param mi the invocation
+    * @return the result of the invocation
+    * @throws Throwable for any error
     */
    public Object invoke(Invocation mi) throws Throwable
    {
       Method m = mi.getMethod();
       String methodName = m.getName();
-      Invoker proxy = mi.getInvocationContext().getInvoker();
       // Implement local methods
-      if( methodName.equals("toString") )
+      if (methodName.equals("toString"))
       {
-         return proxy.toString();
+         Object obj = getObject(mi);
+         return obj.toString();
       }
-      if( methodName.equals("equals") )
+      if (methodName.equals("equals"))
       {
+         Object obj = getObject(mi);
          Object[] args = mi.getArguments();
-         String thisString = proxy.toString();
+         String thisString = obj.toString();
          String argsString = args[0] == null ? "" : args[0].toString();
          return new Boolean(thisString.equals(argsString));
       }
       if( methodName.equals("hashCode") )
       {
-         return (Integer) mi.getObjectName();
+         Object obj = getObject(mi);
+         return new Integer(obj.hashCode());
       }
 
       return getNext().invoke(mi);
    }
 
+   /**
+    * Get the object used in Object methods
+    * 
+    * @param mi the invocation
+    * @return the object
+    */
+   protected Object getObject(Invocation mi)
+   {
+      Object cacheId = mi.getInvocationContext().getCacheId();
+      if (cacheId != null)
+         return cacheId;
+      else
+         return mi.getInvocationContext().getInvoker();
+   }
+   
 }
