@@ -1,4 +1,4 @@
-// $Id: UMLMetaClassComboBoxModel.java,v 1.2 2004/08/28 16:12:10 mvw Exp $
+// $Id: UMLMetaClassComboBoxModel.java,v 1.3 2004/09/08 15:08:58 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,6 @@ public class UMLMetaClassComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        System.out.println("Modelelements: " + metaClasses.size());
         setElements(metaClasses);
     }
 
