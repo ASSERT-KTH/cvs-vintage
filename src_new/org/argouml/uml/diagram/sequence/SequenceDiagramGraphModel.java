@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.35 2004/11/01 19:56:06 mvw Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.36 2004/11/14 08:14:38 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,7 @@ public class SequenceDiagramGraphModel
         }
        
         /**
-         * @return
+         * @return the {@link FigObject} of the destination.
          */
         public FigObject getDestFigObject() {
             return destFigObject;
@@ -129,7 +129,7 @@ public class SequenceDiagramGraphModel
        
 
         /**
-         * @return
+         * @return the {@link FigObject} of the source.
          */
         public FigObject getSrcFigObject() {
             return srcFigObject;

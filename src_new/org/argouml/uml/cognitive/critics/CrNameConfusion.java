@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.15 2004/11/01 10:55:23 mkl Exp $
+// $Id: CrNameConfusion.java,v 1.16 2004/11/14 08:14:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-// File: CrNameConfusion.java
-// Classes: CrNameConfusion
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.15 2004/11/01 10:55:23 mkl Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -41,14 +34,15 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
-/** Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. 
+
+/**
+ * Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1
+ * Semantics. OMG document ad/97-08-04. 
  */
 public class CrNameConfusion extends CrUML {
 
     /**
      * The constructor.
-     * 
      */
     public CrNameConfusion() {
 	setHeadline("Revise Name to Avoid Confusion");
@@ -177,7 +171,8 @@ public class CrNameConfusion extends CrUML {
 
 
     /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     * @see org.argouml.cognitive.critics.Critic#initWizard(
+     *         org.argouml.cognitive.ui.Wizard)
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizManyNames) {

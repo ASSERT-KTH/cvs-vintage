@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.27 2004/11/13 18:14:21 mvw Exp $
+// $Id: ProjectMemberDiagram.java,v 1.28 2004/11/14 08:14:38 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -111,7 +111,7 @@ public class ProjectMemberDiagram extends ProjectMember {
 
     /**
      * Write the diagram to the given writer.
-     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer)
+     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer, Integer)
      */
     public void save(Writer writer, Integer indent) throws SaveException {
         OCLExpander expander;

@@ -1,4 +1,4 @@
-// $Id: CrNoOperations.java,v 1.24 2004/11/01 10:55:23 mkl Exp $
+// $Id: CrNoOperations.java,v 1.25 2004/11/14 08:14:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrNoOperations.javoa
-// Classes: CrNoOperations
-// Original Author: jrobbins@ics.uci.edu
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
@@ -36,18 +32,14 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 
-
-// Uses Model through ModelFacade.
-
-
-/** A critic to detect when a class or interface or its base class doesn't 
+/**
+ * A critic to detect when a class or interface or its base class doesn't 
  * have any operations.
  */
 public class CrNoOperations extends CrUML {
 
     /**
      * The constructor.
-     * 
      */
     public CrNoOperations() {
 	setHeadline("Add Operations to <ocl>self</ocl>");
@@ -125,7 +117,8 @@ public class CrNoOperations extends CrUML {
     }
     
     /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     * @see org.argouml.cognitive.critics.Critic#initWizard(
+     *         org.argouml.cognitive.ui.Wizard)
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddOperation) {

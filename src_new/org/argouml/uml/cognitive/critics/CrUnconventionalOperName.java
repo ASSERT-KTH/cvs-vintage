@@ -1,5 +1,5 @@
-// $Id: CrUnconventionalOperName.java,v 1.18 2004/11/02 08:29:46 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrUnconventionalOperName.java,v 1.19 2004/11/14 08:14:37 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,13 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-// File: CrUnconventionalOperName.java
-// Classes: CrUnconventionalOperName
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.18 2004/11/02 08:29:46 mkl Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -39,13 +32,13 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.tigris.gef.util.VectorSet;
 
-/** Critic to detect whether an operation name obeys to certain rules.
+/**
+ * Critic to detect whether an operation name obeys to certain rules.
  */
 public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
 
     /**
      * The constructor.
-     * 
      */
     public CrUnconventionalOperName() {
 	setHeadline("Choose a Better MOperation Name");
@@ -136,7 +129,8 @@ public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
 
 
     /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     * @see org.argouml.cognitive.critics.Critic#initWizard(
+     *         org.argouml.cognitive.ui.Wizard)
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizOperName) {
@@ -157,8 +151,8 @@ public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
     }
     
     /**
-     * @param sug
-     * @return
+     * @param sug The not formatted suggestion String.
+     * @return the suggested string.
      */
     public String computeSuggestion(String sug) {
         if (sug == null) return "";

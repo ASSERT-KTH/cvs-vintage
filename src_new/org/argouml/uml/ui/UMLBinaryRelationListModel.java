@@ -1,4 +1,4 @@
-// $Id: UMLBinaryRelationListModel.java,v 1.19 2004/10/02 13:05:11 mvw Exp $
+// $Id: UMLBinaryRelationListModel.java,v 1.20 2004/11/14 08:14:38 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,7 @@ import org.tigris.gef.presentation.Fig;
  * association pane on PropPanelUsecase
  *
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), replaced by 
- * {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#
- * getAssociationEndScroll()},
+ * {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#getAssociationEndScroll()},
  *             this class is part of the 'old'(pre 0.13.*) implementation
  *             of proppanels that used reflection a lot.
  */

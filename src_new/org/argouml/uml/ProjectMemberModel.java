@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.26 2004/09/13 21:11:30 bobtarling Exp $
+// $Id: ProjectMemberModel.java,v 1.27 2004/11/14 08:14:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class ProjectMemberModel extends ProjectMember {
 
     /**
      * Save the project model to XMI.
-     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer)
+     * @see org.argouml.kernel.ProjectMember#save(java.io.Writer, Integer)
      */
     public void save(Writer w, Integer indent) throws SaveException {
         if (w == null) {

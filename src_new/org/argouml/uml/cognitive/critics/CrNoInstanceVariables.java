@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.22 2004/11/01 10:55:23 mkl Exp $
+// $Id: CrNoInstanceVariables.java,v 1.23 2004/11/14 08:14:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,10 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrNoInstanceVariables.java
-// Classes: CrNoInstanceVariables
-// Original Author: jrobbins@ics.uci.edu
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
@@ -36,21 +32,18 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 
-
-// Uses Model through ModelFacade.
-
-/** A critic to detect if a class has instance variables.
- *  The critic fires currently only if a class and its base classes have
- *  no attributes at all.
- *  This is not neccesarily correct and the critic will have to deal with
- *  static attributes or attributes which are defined in a base class but are 
- *  private.
+/**
+ * A critic to detect if a class has instance variables.
+ * The critic fires currently only if a class and its base classes have
+ * no attributes at all.
+ * This is not neccesarily correct and the critic will have to deal with
+ * static attributes or attributes which are defined in a base class but are 
+ * private.
  */
 public class CrNoInstanceVariables extends CrUML {
 
     /**
      * The constructor.
-     * 
      */
     public CrNoInstanceVariables() {
 	setHeadline("Add Instance Variables to <ocl>self</ocl>");
@@ -141,7 +134,8 @@ public class CrNoInstanceVariables extends CrUML {
     }
 
     /**
-     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     * @see org.argouml.cognitive.critics.Critic#initWizard(
+     *         org.argouml.kernel.Wizard)
      */
     public void initWizard(Wizard w) {
 	if (w instanceof WizAddInstanceVariable) {
