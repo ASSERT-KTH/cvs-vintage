@@ -2,55 +2,70 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.89 2002/03/25 19:35:48 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.90 2002/03/25 22:48:26 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
-
-<table name="SCARAB_ACTIVITY" idMethod="idbroker" javaName="Activity"
-    description="History of changes made to the attributes of an issue.">
-
+<!--
+    History of changes made to the attributes of an issue.
+-->
+<table name="SCARAB_ACTIVITY" idMethod="idbroker" javaName="Activity">
+    <!--
+        PK.
+    -->
     <column name="ACTIVITY_ID" primaryKey="true" required="true" 
-        description="PK."
         type="INTEGER"/>
-
-    <column name="ISSUE_ID" required="true" type="INTEGER"
-        description="Issue attribute of which has been modified."/>
-
-    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"
-        description="Attribute that has been modified."/>
-
-    <column name="TRANSACTION_ID" required="true" type="INTEGER"
-        description="Transaction to which the attribute modification belongs."/>
-
-    <column name="OLD_NUMERIC_VALUE" required="false" type="INTEGER" 
-        description="Value of integer attribute before modification."/>
-
-    <column name="NEW_NUMERIC_VALUE" required="false" type="INTEGER" 
-        description="Value of integer attribute after modification."/>
-
-    <column name="OLD_USER_ID" required="false" type="INTEGER" 
-        description="Value of user attribute before modification."/>
-
-    <column name="NEW_USER_ID" required="false" type="INTEGER" 
-        description="Value of user attribute after modification."/>
-
-    <column name="OLD_OPTION_ID" required="false" type="INTEGER" 
-        description="Value of option attribute before modification."/>
-
-    <column name="NEW_OPTION_ID" required="false" type="INTEGER" 
-        description="Value of option attribute after modification."/>
-
-    <column name="OLD_VALUE" required="false" type="LONGVARCHAR"
-        description="Value of attribute before modification."/>
-
-    <column name="NEW_VALUE" required="false" type="LONGVARCHAR"
-        description="Value of attribute after modification."/>
-
-    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"
-        description="System-generated description of modification."/>
-
-    <column name="END_DATE" required="false" type="DATE"
-        description="Date this Activity is no longer the current value of the Attribute."/>
+    <!--
+        Issue attribute of which has been modified.
+    -->
+    <column name="ISSUE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Attribute that has been modified.
+    -->
+    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"/>
+    <!--
+        Transaction to which the attribute modification belongs.
+    -->
+    <column name="TRANSACTION_ID" required="true" type="INTEGER"/>
+    <!--
+        Value of integer attribute before modification.
+    -->
+    <column name="OLD_NUMERIC_VALUE" required="false" type="INTEGER" />
+    <!--
+        Value of integer attribute after modification.
+    -->
+    <column name="NEW_NUMERIC_VALUE" required="false" type="INTEGER" />
+    <!--
+        Value of user attribute before modification.
+    -->
+    <column name="OLD_USER_ID" required="false" type="INTEGER" />
+    <!--
+        Value of user attribute after modification.
+    -->
+    <column name="NEW_USER_ID" required="false" type="INTEGER" />
+    <!--
+        Value of option attribute before modification.
+    -->
+    <column name="OLD_OPTION_ID" required="false" type="INTEGER" />
+    <!--
+        Value of option attribute after modification.
+    -->
+    <column name="NEW_OPTION_ID" required="false" type="INTEGER" />
+    <!--
+        Value of attribute before modification.
+    -->
+    <column name="OLD_VALUE" required="false" type="LONGVARCHAR"></column>
+    <!--
+        Value of attribute after modification.
+    -->
+    <column name="NEW_VALUE" required="false" type="LONGVARCHAR"></column>
+    <!--
+        System-generated description of modification.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        Date this Activity is no longer the current value of the Attribute.
+    -->
+    <column name="END_DATE" required="false" type="DATE"/>
 
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
@@ -73,7 +88,6 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="NEW_OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
-
     <index name="IX_ATTRIBUTE_ISSUE_ENDDATE">
         <index-column name="ATTRIBUTE_ID"/>
         <index-column name="ISSUE_ID"/>
@@ -89,48 +103,62 @@
 </table>
 
 
-<table name="SCARAB_ATTACHMENT" idMethod="idbroker" javaName="Attachment"
-    description="Attachment is a piece of information associated with an issue.">
-
-    <column name="ATTACHMENT_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="ISSUE_ID" required="false" type="INTEGER"
-        description="Issue that attachment is associated with."/>
-
-    <column name="ATTACHMENT_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"
-        description="Type."/>
-
-    <column name="ATTACHMENT_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name that is displayed in the UI."/>
-
-    <column name="ATTACHMENT_DATA" javaName="Data" required="false" type="VARBINARY"
-        description="Actual information constituting the attachment."/>
-
-    <column name="ATTACHMENT_FILE_PATH" javaName="FileName" required="false" type="VARCHAR" size="255"
-        description="Server side location of the file that contains attachment.
-                     Location is relative to the central file storage location
-                     specified in the application properties."/>
-
-    <column name="ATTACHMENT_MIME_TYPE" javaName="MimeType" required="true" type="VARCHAR" size="25"
-        description="MIME type of the attachment.
-                     Describes type of information constituting an attachment."/>
-
-    <column name="MODIFIED_BY" required="false" type="INTEGER"
-        description="Person that made last modification to the attachment."/>
-
-    <column name="CREATED_BY" required="false" type="INTEGER"
-        description="Person that associated the attachment with an issue initially."/>
-
-    <column name="MODIFIED_DATE" required="false" type="TIMESTAMP"
-        description="Date of the last modification of the attachment."/>
-
-    <column name="CREATED_DATE" required="false" type="TIMESTAMP"
-        description="Date of the initial association of attachment with an issue."/>
-
-    <column name="DELETED" required="false" type="BOOLEANINT" default="0" size="1"
-        description="Flag, which marks that attachment has been deleted."/>
-
+<!--
+    Attachment is a piece of information associated with an issue.
+-->
+<table name="SCARAB_ATTACHMENT" idMethod="idbroker" javaName="Attachment">
+    <!--
+        Unique identifier.
+    -->
+    <column name="ATTACHMENT_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Issue that attachment is associated with.
+    -->
+    <column name="ISSUE_ID" required="false" type="INTEGER"></column>
+    <!--
+        Type.
+    -->
+    <column name="ATTACHMENT_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        Name that is displayed in the UI.
+    -->
+    <column name="ATTACHMENT_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Actual information constituting the attachment.
+    -->
+    <column name="ATTACHMENT_DATA" javaName="Data" required="false" type="VARBINARY"></column>
+    <!--
+        Server side location of the file that contains attachment.
+        Location is relative to the central file storage location
+        specified in the application properties.
+    -->
+    <column name="ATTACHMENT_FILE_PATH" javaName="FileName" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        MIME type of the attachment.
+        Describes type of information constituting an attachment.
+    -->
+    <column name="ATTACHMENT_MIME_TYPE" javaName="MimeType" required="true" type="VARCHAR" size="25"></column>
+    <!--
+        Person that made last modification to the attachment.
+    -->
+    <column name="MODIFIED_BY" required="false" type="INTEGER"></column>
+    <!--
+        Person that associated the attachment with an issue initially.
+    -->
+    <column name="CREATED_BY" required="false" type="INTEGER"></column>
+    <!--
+        Date of the last modification of the attachment.
+    -->
+    <column name="MODIFIED_DATE" required="false" type="TIMESTAMP"></column>
+    <!--
+        Date of the initial association of attachment with an issue.
+    -->
+    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
+    <!--
+        Flag, which marks that attachment has been deleted.
+    -->
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+            default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -145,60 +173,78 @@
     </foreign-key>
 </table>
 
+<!--
+    Possible types of attachements.
+    Example: Comment
+    Example: File
+-->
 <table name="SCARAB_ATTACHMENT_TYPE" idMethod="idbroker" 
-        description="Possible types of attachements.
-            Example: Comment
-            Example: File"
-        javaName="AttachmentType">
-
+    javaName="AttachmentType">
+    <!--
+        Unique identifier.
+    -->
     <column name="ATTACHMENT_TYPE_ID" primaryKey="true" required="true" 
-        type="INTEGER" description="Unique identifier."/>
-
+        type="INTEGER" />
+    <!--
+        Name.
+    -->
     <column name="ATTACHMENT_TYPE_NAME" javaName="Name" required="true" 
-        type="VARCHAR" size="255" description="Name."/>
-
-    <column name="SEARCHABLE" default="0" type="BOOLEANINT" size="1"
-        description="Flag marking text/searchable attachments."/>
+        type="VARCHAR" size="255" />
+    <!--
+        Flag marking text/searchable attachments
+    -->
+    <column name="SEARCHABLE" default="0" type="BOOLEANINT" size="1" />
 </table>
 
 
 
-<table name="SCARAB_ATTRIBUTE" idMethod="idbroker" javaName="Attribute"
-        description="Possible attributes of an issue.
-                     Example: Operating System
-                     Example: Severity">
-
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="ATTRIBUTE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
-
-    <column name="ATTRIBUTE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"
-        description="Type."/>
-
-    <column name="PERMISSION" required="false" type="VARCHAR" size="255"
-        description="A permission related to this attribute."/>
-
-    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"
-        description="A required option for this attribute to be active."/>
-
-    <column name="DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"
-        description="Description."/>
-
-    <column name="ACTION" required="false" type="VARCHAR" size="255"
-        description="For user attributes, whether the user will be emailed, cc'd, or neither."/>
-
-    <column name="CREATED_BY" javaName="CreatedBy" required="false" type="INTEGER"
-        description="Person that set value to the column of the table initially."/>
-
-    <column name="CREATED_DATE" javaName="CreatedDate" required="false" type="TIMESTAMP"
-        description="Date of the initial set of the column of the table."/>
-
+<!--
+    Possible attributes of an issue.
+    Example: Operating System
+    Example: Severity
+-->
+<table name="SCARAB_ATTRIBUTE" idMethod="idbroker" javaName="Attribute">
+    <!--
+        Unique identifier.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="ATTRIBUTE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Type.
+    -->
+    <column name="ATTRIBUTE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        A permission related to this attribute.
+    -->
+    <column name="PERMISSION" required="false" type="VARCHAR" size="255"/>
+    <!--
+        A required option for this attribute to be active.
+    -->
+    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
+    <!--
+        Description.
+    -->
+    <column name="DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        For user attributes, whether the user will be emailed, cc'd, or neither.
+    -->
+    <column name="ACTION" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Person that set value to the column of the table initially.
+    -->
+    <column name="CREATED_BY" javaName="CreatedBy" required="false" type="INTEGER"></column>
+    <!--
+        Date of the initial set of the column of the table.
+    -->
+    <column name="CREATED_DATE" javaName="CreatedDate" required="false" type="TIMESTAMP"></column>
+    <!--
+        Flag, which marks that attribute has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that attribute has been deleted."/>
-
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_TYPE">
         <reference local="ATTRIBUTE_TYPE_ID" foreign="ATTRIBUTE_TYPE_ID"/>
     </foreign-key>
@@ -208,38 +254,36 @@
 </table>
 
 
-<table name="SCARAB_ATTRIBUTE_GROUP" idMethod="idbroker" javaName="AttributeGroup"
-        description="Groupings in which attributes appear on the page.">
-
-    <column name="ATTRIBUTE_GROUP_ID" primaryKey="true" required="true" type="INTEGER"
-        description=" Unique identifier."/>
-
+<!--
+    Groupings in which attributes appear on the page.
+-->
+<table name="SCARAB_ATTRIBUTE_GROUP" idMethod="idbroker" javaName="AttributeGroup">
+    <!--
+        Unique identifier.
+    -->
+    <column name="ATTRIBUTE_GROUP_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <column name="NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
-
     <column name="DESCRIPTION" javaName="Description" required="false" type="VARCHAR" size="255"></column>
-
-    <column name="MODULE_ID" required="true" type="INTEGER"
-        description="Module."/>
-
-    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"
-        description="Issue type."/>
-
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
     <column name="ACTIVE" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
-
     <column name="DEDUPE" required="false" type="BOOLEANINT" 
         default="1" size="1"/>
-
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
             default="-1" type="INTEGER"></column>
-
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
-
     <index name="IX_ISSUE_MODULE_PREFERRED_ORDER">
         <index-column name="ISSUE_TYPE_ID"/>
         <index-column name="MODULE_ID"/>
@@ -247,18 +291,20 @@
     </index>
 </table>
 
-<table name="SCARAB_R_ATTRIBUTE_ATTRGROUP" idMethod="none" javaName="RAttributeAttributeGroup"
-        description="Mapping from attributes to groups.">
-
-    <column name="GROUP_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Group."/>
-
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Attribute."/>
-
+<!--
+    Mapping from attributes to groups.
+-->
+<table name="SCARAB_R_ATTRIBUTE_ATTRGROUP" idMethod="none" javaName="RAttributeAttributeGroup">
+    <!--
+        Group.
+    -->
+    <column name="GROUP_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
             default="-1" type="INTEGER"/>
-
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
@@ -268,121 +314,146 @@
 </table>
 
 
+<!--
+    Attribute class is group of attributes types that have the same properties.
+    Example: Free form input
+    Example: Select one from the list
+-->
 <table name="SCARAB_ATTRIBUTE_CLASS" idMethod="idbroker" 
-         javaName="AttributeClass"
-         description="Attribute class is group of attributes types that have the same properties.
-                      Example: Free form input.
-                      Example: Select one from the list.">
-
-    <column name="ATTRIBUTE_CLASS_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="ATTRIBUTE_CLASS_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
-
-    <column name="ATTRIBUTE_CLASS_DESC" javaName="Desc" required="true" type="VARCHAR" size="255"
-        description="Description."/>
-
-    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"
-        description="Fully qualified name of the java class that represents attribute,
-                     belonging to the attribute class, in the application."/>
+         javaName="AttributeClass">
+    <!--
+        Unique identifier.
+    -->
+    <column name="ATTRIBUTE_CLASS_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="ATTRIBUTE_CLASS_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Description.
+    -->
+    <column name="ATTRIBUTE_CLASS_DESC" javaName="Desc" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Fully qualified name of the java class that represents attribute,
+        belonging to the attribute class, in the application.
+    -->
+    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"></column>
 </table>
 
 
+<!--
+    Attribute option is possible value of an attribute of an issue.
+    Example: DOS 3.1 (for attribute Operating System)
+-->
 <table name="SCARAB_ATTRIBUTE_OPTION" idMethod="idbroker" 
-        description="Attribute option is possible value of an attribute of an issue.
-                     Example: DOS 3.1 (for attribute Operating System)"
         javaName="AttributeOption">
-
-    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"
-        description="Attribute that can take the options as its value."/>
-
-    <column name="OPTION_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
-
+    <!--
+        Unique identifier.
+    -->
+    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Attribute that can take the options as its value.
+    -->
+    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="OPTION_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Flag, which marks that option has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that option has been deleted."/>
-
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
-
     <index name="IX_ATTRIBUTE">
         <index-column name="ATTRIBUTE_ID"/>
     </index>
 </table>
 
+<!--
+    Possible types of dependency between options.
+    Example: Parent-Child
+    Example: Requires
+-->
 <table name="SCARAB_OPTION_RELATIONSHIP" idMethod="idbroker" 
-       javaName="OptionRelationship"
-       description="Possible types of dependency between options.
-                    Example: Parent-Child
-                    Example: Requires">
-
+       javaName="OptionRelationship">
+    <!--
+        Unique identifier.
+    -->
     <column name="RELATIONSHIP_ID" primaryKey="true" required="true" 
-        type="INTEGER"
-        description="Unique identifier."/>
-
+            type="INTEGER"/>
+    <!--
+        Name.
+    -->
     <column name="RELATIONSHIP_NAME" javaName="Name" required="true" 
-        type="VARCHAR" size="100"
-        description="Name."/>
+            type="VARCHAR" size="100"/>
 </table>
 
+<!--
+    Attribute type is group of attributes that have the same representation
+    in the application data structure.
+    Attribute type fully defines attribute behavior.
+    Example: Integer
+    Example: String
+-->
 <table name="SCARAB_ATTRIBUTE_TYPE" idMethod="idbroker" 
-        javaName="AttributeType"
-        description="Attribute type is group of attributes that have the same representation
-                    in the application data structure.
-                    Attribute type fully defines attribute behavior.
-                    Example: Integer
-                    Example: String">
-
-    <column name="ATTRIBUTE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="ATTRIBUTE_CLASS_ID" javaName="ClassId" required="true" type="INTEGER"
-        description=" Attribute class."/>
-
-    <column name="ATTRIBUTE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
-
-    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"
-        description="Fully qualified name of the java class that represents attribute,
-                     belonging to the attribute type, in the application."/>
-
-    <column name="VALIDATION_KEY" required="false" type="VARCHAR" size="20"
-        description="A key which ties into a validation service (intake)."/>
-
+        javaName="AttributeType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="ATTRIBUTE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Attribute class.
+    -->
+    <column name="ATTRIBUTE_CLASS_ID" javaName="ClassId" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="ATTRIBUTE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Fully qualified name of the java class that represents attribute,
+        belonging to the attribute type, in the application.
+    -->
+    <column name="JAVA_CLASS_NAME" required="false" type="VARCHAR" size="255"/>
+    <!--
+        A key which ties into a validation service (intake).
+    -->
+    <column name="VALIDATION_KEY" required="false" type="VARCHAR" size="20"/>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_CLASS">
         <reference local="ATTRIBUTE_CLASS_ID" foreign="ATTRIBUTE_CLASS_ID"/>
     </foreign-key>
 </table>
 
 
-<table name="SCARAB_DEPEND" idMethod="none" javaName="Depend"
-         description="Dependency between issues.
-                      Example: Issue is a duplicate of another issue.
-                      Example: Issue is blocking another issue.">
-
-    <column name="OBSERVED_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Issue that other issue depends upon.
-                     Example: Issue that blocks.
-                     Example: Issue that has duplicates."/>
-
-    <column name="OBSERVER_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Issue that depends on other issue.
-                     Example: Issue that is being blocked.
-                     Example: Issue that is duplicate."/>
-
-    <column name="DEPEND_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"
-        description="Type."/>
-
+<!--
+    Dependency between issues.
+    Example: Issue is a duplicate of another issue.
+    Example: Issue is blocking another issue.
+-->
+<table name="SCARAB_DEPEND" idMethod="none" javaName="Depend">
+    <!--
+        Issue that other issue depends upon.
+        Example: Issue that blocks.
+        Example: Issue that has duplicates.
+    -->
+    <column name="OBSERVED_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Issue that depends on other issue.
+        Example: Issue that is being blocked.
+        Example: Issue that is duplicate.
+    -->
+    <column name="OBSERVER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Type.
+    -->
+    <column name="DEPEND_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
+    <!--
+        Flag, which marks that dependency has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT"
-        default="0" size="1"
-        description="Flag, which marks that dependency has been deleted."/>
-
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="OBSERVED_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -393,55 +464,65 @@
         <reference local="DEPEND_TYPE_ID" foreign="DEPEND_TYPE_ID"/>
     </foreign-key>
 </table>
-
-<table name="SCARAB_DEPEND_TYPE" idMethod="idbroker" javaName="DependType"
-        description="Possible types of dependency between issues.
-                     Example: Duplicate
-                     Example: Block">
-
-    <column name="DEPEND_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="DEPEND_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="100"
-        description="Name."/>
+<!--
+    Possible types of dependency between issues.
+    Example: Duplicate
+    Example: Block
+-->
+<table name="SCARAB_DEPEND_TYPE" idMethod="idbroker" javaName="DependType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="DEPEND_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="DEPEND_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="100"></column>
 </table>
 
-<table name="SCARAB_ISSUE" idMethod="idbroker" javaName="Issue"
-        description="Information about artifact under processing in tracking system.
-                     Example: Particular defect
-                     Example: Particular inquiry">
-
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier used for primary key."/>
-
-    <column name="ID_PREFIX" required="true" type="CHAR" size="4"
-        description="Part of Id related to module."/>
-
-    <column name="ID_COUNT" type="INTEGER" size="10" required="true"
-        description="Part of Id which is an integer."/>
-
-    <column name="ID_DOMAIN"  type="VARCHAR" size="127"
-        description="The instance of scarab the issue was originally reported to.
-                     This field could be null for the normal instance where the issue
-                     is local to this database."/>
-
-    <column name="TYPE_ID"  required="false" type="INTEGER"
-        description="Type : Issue, or Enter Issue Template."/>
-
-    <column name="MODULE_ID" required="true" type="INTEGER"
-        description="Module that issue relates to."/>
-
+<!--
+    Information about artifact under processing in tracking system.
+    Example: Particular defect
+    Example: Particular inquiry
+-->
+<table name="SCARAB_ISSUE" idMethod="idbroker" javaName="Issue">
+    <!--
+        Unique identifier used for primary key.
+    -->
+    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Part of Id related to module.
+    -->
+    <column name="ID_PREFIX" required="true" type="CHAR" size="4"/>
+    <!--
+        Part of Id which is an integer.
+    -->
+    <column name="ID_COUNT" type="INTEGER" size="10" required="true"/>
+    <!--
+        The instance of scarab the issue was originally reported to.
+        This field could be null for the normal instance where the issue
+        is local to this database.
+    -->
+    <column name="ID_DOMAIN"  type="VARCHAR" size="127"/>
+    <!--
+        Type : Issue, or Enter Issue Template
+    -->
+    <column name="TYPE_ID"  required="false" type="INTEGER"/>
+    <!--
+        Module that issue relates to.
+    -->
+    <column name="MODULE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Flag, which marks that issue has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that issue has been deleted."/>
-
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
-
     <index name="IX_TYPE_MODULE">
         <index-column name="TYPE_ID"/>
         <index-column name="MODULE_ID"/>
@@ -453,64 +534,78 @@
 </table>
 
 <table name="SCARAB_ISSUE_TYPE" idMethod="idbroker" javaName="IssueType">
-
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier used for primary key."/>
-
+    <!--
+        Unique identifier used for primary key.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
     <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
-        size="100" description="Name."/>
-
-    <column name="DESCRIPTION" javaName="Description" required="false" type="VARCHAR" size="255"
-        description="Description."/>
-
-    <column name="PARENT_ID" required="true" type="INTEGER"
-        description="If this issue type is a template, the id of the issue type it
-                     Corresponds to. If is not, parent id is 0."/>
-
+            size="100"/>
+    <!--
+        Description.
+    -->
+    <column name="DESCRIPTION" javaName="Description" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        If this issue type is a template, the id of the issue type it
+        Corresponds to. If is not, parent id is 0.
+    -->
+    <column name="PARENT_ID" required="true" type="INTEGER"></column>
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
-
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
 
-<table name="SCARAB_R_MODULE_ISSUE_TYPE" idMethod="none" javaName="RModuleIssueType"
-        description="Mapping between modules and issue types.">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Module."/>
-
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Artifact type."/>
-
+<!--
+    Mapping between modules and issue types.
+-->
+<table name="SCARAB_R_MODULE_ISSUE_TYPE" idMethod="none" javaName="RModuleIssueType">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Artifact type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Flag, which marks that the issue type is not used.
+    -->
     <column name="ACTIVE" required="true" type="BOOLEANINT" 
-        default="1" size="1"
-        description="Flag, which marks that the issue type is not used."/>
-
+        default="1" size="1"></column>
+    <!--
+        Whether or not the issue type shows up in left hand nav.
+    -->
     <column name="DISPLAY" required="true" type="BOOLEANINT" 
-        default="1" size="1"
-        description="Whether or not the issue type shows up in left hand nav."/>
-
-    <column name="PREFERRED_ORDER" javaName="Order" required="false" default="0" type="INTEGER"
-        description="Order the the issue types appear in the left nav."/>
-
+        default="1" size="1"></column>
+    <!--
+        Order the the issue types appear in the left nav.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="false" default="0" type="INTEGER"/>
+    <!--
+        Deduping on/off for this module/issuetype.
+    -->
     <column name="DEDUPE" required="false" type="BOOLEANINT" 
-        default="1" size="1"
-        description="Deduping on/off for this module/issuetype."/>
-
-    <column name="HISTORY" required="false" default="5" type="INTEGER"
-        description="Default number of history entries."/>
-
-    <column name="COMMENTS" required="false" default="5" type="INTEGER"
-        description="Default number of comments."/>
-
-    <column name="DISPLAY_NAME" required="false" type="VARCHAR" size="255"
-        description="Value that represents the name of the issue type in the UI."/>
-
-    <column name="DISPLAY_DESCRIPTION" required="false" type="VARCHAR" size="255"
-        description="Value that represents the description of the issue type in the UI."/>
-
+        default="1" size="1"/>
+    <!--
+        Default number of history entries.
+    -->
+    <column name="HISTORY" required="false" default="5" type="INTEGER"/>
+    <!--
+        Default number of comments.
+    -->
+    <column name="COMMENTS" required="false" default="5" type="INTEGER"/>
+    <!--
+        Value that represents the name of the issue type in the UI.
+    -->
+    <column name="DISPLAY_NAME" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Value that represents the description of the issue type in the UI.
+    -->
+    <column name="DISPLAY_DESCRIPTION" required="false" type="VARCHAR" size="255"/>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
@@ -519,58 +614,70 @@
     </foreign-key>
 </table>
 
+<!--
+    Actual attribute of the issue with its value.
+-->
 <table name="SCARAB_ISSUE_ATTRIBUTE_VALUE" idMethod="idbroker" 
-        javaName="AttributeValue"
-        description="Actual attribute of the issue with its value.">
-
-    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER" 
-        description="PK."/>
-
-    <column name="ISSUE_ID" required="true" type="INTEGER"
-        description="Issue that attribute belongs to."/>
-
+        javaName="AttributeValue">
+    <!--
+        PK.
+    -->
+    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Issue that attribute belongs to.
+    -->
+    <column name="ISSUE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Attribute.
+    -->
     <column name="ATTRIBUTE_ID" required="true" 
-        type="INTEGER" inheritance="single" 
-        description="Attribute."/>
+            type="INTEGER" inheritance="single" />
+    <!--
+        Option that is the value of the attribute if attribute is option based.
+    -->
+    <column name="OPTION_ID" required="false" type="INTEGER"></column>
+    <!--
+        Person that is the value of the attribute if attribute is person based.
+    -->
+    <column name="USER_ID" required="false" type="INTEGER"></column>
 
-    <column name="OPTION_ID" required="false" type="INTEGER"
-        description="Option that is the value of the attribute if attribute is option based."/>
+    <!-- 
+         some attributes are better saved in numeric format, so this column
+         can be used in place of VALUE 
+    -->
+    <column name="NUMERIC_VALUE" required="false" type="INTEGER" size="11" />
 
-    <column name="USER_ID" required="false" type="INTEGER"
-        description="Person that is the value of the attribute if attribute is person based."/>
-
-    <column name="NUMERIC_VALUE" required="false" type="INTEGER" size="11"
-        description="some attributes are better saved in numeric format, so this column
-                     can be used in place of VALUE."/>
-
-    <column name="VALUE" required="false" type="LONGVARCHAR"
-      description="
+    <!--
         Display value of the attribute.
-        This column should always contain a value which serves as a 'summary value'
+        This column should always contain a value which serves as a "summary value"
         of the attribute, you MAY need to look elsewhere to get real value.
-        Purpose of this 'duplication' is to be able to get overview of the attribute
+        Purpose of this "duplication" is to be able to get overview of the attribute
         independently of what kind of attribute this is. This also improves performance
         so you do not need to perform (sometimes complex) processing each time you view the issue.
         It lets you get list of issues with their attributes with a single SQL statement.
         Examples of what would go into this fields for different kinds of attributes:
-         - For 'free-form' attributes this would be the actual value (it's String
+         - For "free-form" attributes this would be the actual value (it's String
             representation to be exact)
-         - For 'select-one' this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUE.
+         - For "select-one" this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUE.
             There will also be an apropriate value in OPTION_ID column which you should use to
             join with SCARAB_ATTRIBUTE_OPTION
-         - For 'voted' attributes this would be the vote result. For bugzilla-style votes it is sum
+         - For "voted" attributes this would be the vote result. For bugzilla-style votes it is sum
             of all votes casted. For average vote this result is DISPLAY_VALUE of OPTION which has
-             computed as: round(sum(votes.numeric_value)/count(votes)). For 'Tracking'
+             computed as: round(sum(votes.numeric_value)/count(votes)). For "Tracking"
             attribute which is also considered a voted attribute this value is a list of login_IDs
             of users tracking the issue.
 
          It is responsibility of Attribute's subclass which implements this ATTRIBUTE_TYPE to
-         populate this field with an apropriate value."/>
+         populate this field with an apropriate value.
 
+    -->
+    <column name="VALUE" required="false" type="LONGVARCHAR"></column>
+
+    <!--
+        Flag, which marks that attribute has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that attribute has been deleted."/>
-
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -583,7 +690,6 @@
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
-
     <index name="IX_DELETED_ISSUE_ATTRIBUTE">
         <index-column name="DELETED"/>
         <index-column name="ISSUE_ID"/>
@@ -595,70 +701,89 @@
      </index>
 </table>
 
-<table name="SCARAB_MODIFICATION" idMethod="idbroker" javaName="Modification"
-        description="Modification information for table. Not currently used.">
-
-    <column name="TABLE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Table."/>
-
-    <column name="COLUMN_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Column of the table."/>
-
-    <column name="MODIFIED_BY" required="false" type="INTEGER"
-        description="Person that made last modification to the column of the table."/>
-
-    <column name="CREATED_BY" required="false" type="INTEGER"
-        description="Person that set value to the column of the table initially."/>
-
-    <column name="MODIFIED_DATE" required="false" type="TIMESTAMP"
-        description="Date of the last modification of the column of the table."/>
-
-    <column name="CREATED_DATE" required="false" type="TIMESTAMP"
-        description="Date of the initial set of the column of the table."/>
+<!--
+    Modification information for table. Not currently used.
+-->
+<table name="SCARAB_MODIFICATION" idMethod="idbroker" javaName="Modification">
+    <!--
+        Table.
+    -->
+    <column name="TABLE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Column of the table.
+    -->
+    <column name="COLUMN_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person that made last modification to the column of the table.
+    -->
+    <column name="MODIFIED_BY" required="false" type="INTEGER"></column>
+    <!--
+        Person that set value to the column of the table initially.
+    -->
+    <column name="CREATED_BY" required="false" type="INTEGER"></column>
+    <!--
+        Date of the last modification of the column of the table.
+    -->
+    <column name="MODIFIED_DATE" required="false" type="TIMESTAMP"></column>
+    <!--
+        Date of the initial set of the column of the table.
+    -->
+    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
 </table>
 
+<!--
+    Logical category of issues.
+    Usually corresponds to the software project.
+    Example: Scarab
+-->
 <table name="SCARAB_MODULE" idMethod="idbroker" javaName="ScarabModule" 
-        baseClass="org.tigris.scarab.om.AbstractScarabModule"
-        interface="Module"
-        description="Logical category of issues.
-                     Usually corresponds to the software project.
-                     Example: Scarab">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="MODULE_NAME" javaName="RealName" required="true" type="VARCHAR" size="255"
-        description="Name. It is RealName because Module implements the Turbine Group interface
-                     and having it as Name would clash with that interface. Please note that
-                     the result of group.getName() needs to be unique for each SCARAB_MODULE."/>
-
-    <column name="DOMAIN"  type="VARCHAR" size="127"
-        description="The instance name of scarab the module is located within."/>
-
+    baseClass="org.tigris.scarab.om.AbstractScarabModule"
+    interface="Module">
+    <!--
+        Unique identifier.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name. It is RealName because Module implements the Turbine Group interface
+        and having it as Name would clash with that interface. Please note that
+        the result of group.getName() needs to be unique for each SCARAB_MODULE.
+    -->
+    <column name="MODULE_NAME" javaName="RealName" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        The instance name of scarab the module is located within.
+    -->
+    <column name="DOMAIN"  type="VARCHAR" size="127"/>
+    <!--
+        Abbreviation whose primary use to identify related issues.
+    -->
     <column name="MODULE_CODE" javaName="Code" required="true" 
-        type="CHAR" size="4"
-        description="Abbreviation whose primary use to identify related issues."/>
-
-    <column name="MODULE_DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"
-        description="Description."/>
-
-    <column name="MODULE_URL" javaName="Url" required="false" type="VARCHAR" size="255"
-        description="URL pointing to the information on the module."/>
-
-    <column name="PARENT_ID" required="true" type="INTEGER"
-        description="Parent module containing the module.
-                    Allows for hierarchical structure of modules."/>
-
-    <column name="OWNER_ID" required="false" type="INTEGER"
-        description="Person that is responsible for the module. @deprecated."/>
-
-    <column name="QA_CONTACT_ID" required="false" type="INTEGER"
-        description="Key quality assurance person for the module. @deprecated."/>
-
+            type="CHAR" size="4"/>
+    <!--
+        Description.
+    -->
+    <column name="MODULE_DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        URL pointing to the information on the module.
+    -->
+    <column name="MODULE_URL" javaName="Url" required="false" type="VARCHAR" size="255"></column>
+    <!--
+        Parent module containing the module.
+        Allows for hierarchical structure of modules.
+    -->
+    <column name="PARENT_ID" required="true" type="INTEGER"></column>
+    <!--
+        Person that is responsible for the module. @deprecated
+    -->
+    <column name="OWNER_ID" required="false" type="INTEGER"></column>
+    <!--
+        Key quality assurance person for the module. @deprecated
+    -->
+    <column name="QA_CONTACT_ID" required="false" type="INTEGER"></column>
+    <!--
+        Flag, which marks that module has been deleted.
+    -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that module has been deleted."/>
-
+        default="0" size="1"/>
     <column name="CLASS_KEY" required="false" type="INTEGER" inheritance="single">
       <inheritance key="1" class="ScarabModuleContainer" extends="org.tigris.scarab.om.ScarabModule"/>
     </column>
@@ -674,42 +799,56 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_R_MODULE_ATTRIBUTE" idMethod="none" javaName="RModuleAttribute"
-        description="Attributes that are applicable to issues of the particular module.">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Module."/>
-
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Attribute."/>
-
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Issue type."/>
-
-    <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"
-        description="Value that represents the attribute in the UI."/>
-
+<!--
+    Attributes that are applicable to issues of the particular module.
+-->
+<table name="SCARAB_R_MODULE_ATTRIBUTE" idMethod="none" javaName="RModuleAttribute">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Value that represents the attribute in the UI.
+    -->
+    <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"/>
+    <!--
+        Flag, which marks that module attribute is not used.
+    -->
     <column name="ACTIVE" required="true" type="BOOLEANINT" 
-        default="1" size="1"
-        description="Flag, which marks that module attribute is not used."/>
-
+        default="1" size="1"></column>
+    <!--
+        Flag, which marks that issues entered for this module must have
+        this attribute set.
+    -->
     <column name="REQUIRED" required="true" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that issues entered for this module must have
-                     this attribute set."/>
-
-    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"
-        description="Column order."/> 
-
+        default="0" size="1"></column>
+    <!--
+        Column order.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
+    <!--
+        Flag, which marks this attribute as being useful for deduping.
+    -->
+    <!--
+        Flag, which marks this attribute as being eligible for quick search.
+    -->
     <column name="QUICK_SEARCH" required="true" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks this attribute as being eligible for quick search."/>
-
+        default="0" size="1"/>
+    <!--
+        Flag, which marks that this attribute should be used in the email
+        subject line, when an issue is created. May be used in other
+        contexts as well
+    -->
     <column name="DEFAULT_TEXT_FLAG" required="true" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Flag, which marks that this attribute should be used in the email
-                     subject line, when an issue is created. May be used in other
-                     contexts as well."/>
+        default="0" size="1" />
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
@@ -729,31 +868,39 @@
     </index>
 </table>
 
-<table name="SCARAB_R_MODULE_OPTION" idMethod="none" javaName="RModuleOption"
-        description="Options that are applicable to issues of the particular module.">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Module."/>
-
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Issue Type."/>
-
-    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Option."/>
-
-    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"
-        description="Value that represents the option in the UI."/>
-
+<!--
+    Options that are applicable to issues of the particular module.
+-->
+<table name="SCARAB_R_MODULE_OPTION" idMethod="none" javaName="RModuleOption">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Issue Type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Option.
+    -->
+    <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Value that represents the option in the UI.
+    -->
+    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Flag, which marks that option has been deleted within the module.
+    -->
     <column name="ACTIVE" required="true" type="BOOLEANINT" 
-        default="1" size="1"
-        description="Flag, which marks that option has been deleted within the module."/>
-
+        default="1" size="1"></column>
+    <!--
+        Allows the template engineer and module owner some means to 
+        order option listings.
+    -->
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
-        default="-1" type="INTEGER"
-        description="Allows the template engineer and module owner some means to order option listings."/>
-
+            default="-1" type="INTEGER"/>
     <column name="WEIGHT" javaName="Weight" required="false" 
-        default="-1" type="INTEGER"/>
+            default="-1" type="INTEGER"/>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
@@ -763,35 +910,41 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_R_OPTION_OPTION" idMethod="none" javaName="ROptionOption"
-        description="Sets up relations between options.">
-
+<!--
+    Sets up relations between options.
+-->
+<table name="SCARAB_R_OPTION_OPTION" idMethod="none" javaName="ROptionOption">
+    <!--
+        Parent Option.
+    -->
     <column name="OPTION1_ID" primaryKey="true" required="true" 
-        type="INTEGER"
-        description="Parent Option."/>
-
+            type="INTEGER"/>
+    <!--
+        Child Option.
+    -->
     <column name="OPTION2_ID" primaryKey="true" required="true" 
-        type="INTEGER"
-        description="Child Option."/>
-
-    <column name="RELATIONSHIP_ID" required="true" type="INTEGER"
-        description="The type of relationship. See the SCARAB_OPTION_RELATIONSHIP
-                     table for the different types."/>
-
-    <column name="WEIGHT" required="false" type="INTEGER"
-        description="
-            This gives 'weight' to an option. In other words, it can be used
-            to set the 'importance' of one option vs. another option. P1 can 
-            be made more 'important' than P2. This is currently not used
-            in any of the code. This may become more useful in 
-            the future when we have outside workflow logic. This is placed 
-            here because an Attribute Option may have different weights 
-            with different parents."/>
-
-    <column name="PREFERRED_ORDER" required="true" type="INTEGER"
-        description="The preferred order that these options should be shown in.
-                     Each option should have a 1-N ordering for all of its
-                     options (regardless of nesting)."/>
+            type="INTEGER"/>
+    <!--
+        The type of relationship. See the SCARAB_OPTION_RELATIONSHIP
+        table for the different types
+    -->
+    <column name="RELATIONSHIP_ID" required="true" type="INTEGER"/>
+    <!--
+        This gives "weight" to an option. In other words, it can be used
+        to set the "importance" of one option vs. another option. P1 can 
+        be made more "important" than P2. This is currently not used
+        in any of the code. This may become more useful in 
+        the future when we have outside workflow logic. This is placed 
+        here because an Attribute Option may have different weights 
+        with different parents.
+    -->
+    <column name="WEIGHT" required="false" type="INTEGER"></column>
+    <!--
+        The preferred order that these options should be shown in.
+        Each option should have a 1-N ordering for all of its
+        options (regardless of nesting).
+    -->
+    <column name="PREFERRED_ORDER" required="true" type="INTEGER"/>
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION1_ID" foreign="OPTION_ID"/>
@@ -804,24 +957,34 @@
     </foreign-key>
 </table>
 
+<!--
+    User's choice of attributes to appear on the Issue List screen.
+-->
 <table name="SCARAB_R_MODULE_USER_ATTRIBUTE" idMethod="none" 
-        javaName="RModuleUserAttribute"
-        description="User's choice of attributes to appear on the Issue List screen.">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Module."/>
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Person."/>
-
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Artifact type."/>
-
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Attribute."/>
-
-    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"
-        description="Column order."/>
+        javaName="RModuleUserAttribute">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Artifact type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Attribute.
+    -->
+    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Column order.
+    -->
+    <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
+    <!--
+        Flag, which marks that association has been deleted.
+    -->
 
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
@@ -837,23 +1000,31 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_TRANSACTION" idMethod="idbroker" javaName="Transaction"
-        description="Transaction is a group of attribute modification that are performed together.">
-
-    <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="TYPE_ID"  required="false" type="INTEGER"
-        description="Possible enumerated transaction type."/>
-
-    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"
-        description="Comment added to modification."/>
-
-    <column name="CREATED_BY" required="false" type="INTEGER"
-        description="Person that performed the transaction."/>
-
-    <column name="CREATED_DATE" required="false" type="TIMESTAMP"
-        description="Date of the transaction."/>
+<!--
+    Transaction is a group of attribute modification that are performed 
+    together.
+-->
+<table name="SCARAB_TRANSACTION" idMethod="idbroker" javaName="Transaction">
+    <!--
+        Unique identifier.
+    -->
+    <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Possible enumerated transaction type.
+    -->
+    <column name="TYPE_ID"  required="false" type="INTEGER"/>
+    <!--
+        Comment added to modification.
+    -->
+    <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
+    <!--
+        Person that performed the transaction.
+    -->
+    <column name="CREATED_BY" required="false" type="INTEGER"></column>
+    <!--
+        Date of the transaction.
+    -->
+    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="CREATED_BY" foreign="USER_ID"/>
@@ -866,73 +1037,90 @@
     </foreign-key>
 </table>
 
+<!--
+    Possible types of transactions.
+    Example: Issue Created
+    Example: Issue Moved
+-->
 <table name="SCARAB_TRANSACTION_TYPE" idMethod="idbroker" 
-        javaName="TransactionType"
-        description="Possible types of transactions.
-                     Example: Issue Created
-                     Example: Issue Moved">
-
-    <column name="TYPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
+        javaName="TransactionType">
+    <!--
+        Unique identifier.
+    -->
+    <column name="TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Name.
+    -->
     <column name="NAME" javaName="Name" required="true" type="VARCHAR" 
-        size="100" description="Name."/>
+            size="100"/>
 </table>
 
 
+<!--
+    Dummy table for where the USER_ID lives. In most cases, this will be a
+    foreign table outside of the scope of Scarab itself. For example, if you are
+    using Scarab with Turbine, then this will be defined as TURBINE_USER. For
+    use in other systems, you will want to define this to be the name of your 
+    own USER table and update the FK references in this file to point at the new 
+    name. Then, all you need to do is regenerate the OR code to use the new 
+    table name.
+-->
 <table name="TURBINE_USER" javaName="ScarabUserImpl" alias="TurbineUser" 
-        baseClass="org.apache.fulcrum.security.impl.db.entity.TurbineUser"
-        basePeer="org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer"
-        interface="ScarabUser"
-        description="
-            Dummy table for where the USER_ID lives. In most cases, this will be a
-            foreign table outside of the scope of Scarab itself. For example, if you are
-            using Scarab with Turbine, then this will be defined as TURBINE_USER. For
-            use in other systems, you will want to define this to be the name of your 
-            own USER table and update the FK references in this file to point at the new 
-            name. Then, all you need to do is regenerate the OR code to use the new 
-            table name.">
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
+    baseClass="org.apache.fulcrum.security.impl.db.entity.TurbineUser"
+    basePeer="org.apache.fulcrum.security.impl.db.entity.TurbineUserPeer"
+    interface="ScarabUser">
+    <!--
+        Unique identifier.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
 </table>
 
-<table name="SCARAB_USER_PREFERENCE" idMethod="none" javaName="UserPreference"
-        description="This table is used to store user preferences and other information
-                     relating to a specific user.">
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="PASSWORD_EXPIRE" primaryKey="false" required="true" type="TIMESTAMP"
-        description="This is a column that Scarab standalone needs. Torque doesn't do anything
-                     with it at this point because this is an aliased table. Leaving it in
-                     here just as an FYI and in the hope that one day, Torque will generate
-                     the right methods even for aliased tables."/>
+<!--
+    This table is used to store user preferences and other information
+    relating to a specific user.
+-->
+<table name="SCARAB_USER_PREFERENCE" idMethod="none" javaName="UserPreference">
+    <!--
+        Unique identifier.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        This is a column that Scarab standalone needs. Torque doesn't do anything
+        with it at this point because this is an aliased table. Leaving it in
+        here just as an FYI and in the hope that one day, Torque will generate
+        the right methods even for aliased tables.
+    -->
+    <column name="PASSWORD_EXPIRE" primaryKey="false" required="true" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
-<table name="SCARAB_USER_VOTE" idMethod="none" javaName="UserVote"
-        description="A user's record of votes.  It is assumed that a module that supports
-                     voting will give a new user some votes to use when the user is added, 
-                     otherwise the user has no votes.">
-
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER" 
-        description="Module."/>
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" 
-        description="Person."/>
-
+<!--
+    A user's record of votes.  It is assumed that a module that supports
+    voting will give a new user some votes to use when the user is added, 
+    otherwise the user has no votes. 
+-->
+<table name="SCARAB_USER_VOTE" idMethod="none" javaName="UserVote">
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        The total votes a user is allowed to cast in a project.
+    -->
     <column name="TOTAL_VOTES" required="false" type="INTEGER" 
-        default="0" size="3"
-        description="The total votes a user is allowed to cast in a project."/>
-
+        default="0" size="3" />
+    <!--
+        The number of votes a user has cast in a project.
+    -->
     <column name="USED_VOTES" required="false" type="INTEGER" 
-        default="0" size="3"
-        description="The number of votes a user has cast in a project."/>
+        default="0" size="3" />
 
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
@@ -942,18 +1130,23 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_ISSUE_VOTE" idMethod="none" javaName="IssueVote"
-        description="The number of votes a user has cast for an issue.">
-
-    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER" 
-        description="Module."/>
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" 
-        description="Person."/>
-
+<!--
+    The number of votes a user has cast for an issue.
+-->
+<table name="SCARAB_ISSUE_VOTE" idMethod="none" javaName="IssueVote">
+    <!--
+        Module.
+    -->
+    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER" />
+    <!--
+        The votes a user has cast for the issue.
+    -->
     <column name="VOTES" required="false" type="INTEGER" 
-        default="0" size="3" 
-        description="The votes a user has cast for the issue."/>
+        default="0" size="3" />
 
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
@@ -963,42 +1156,51 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_QUERY" idMethod="idbroker" javaName="Query"
-        description="A saved user query.">
+<!--
+    A saved user query.
+-->
+<table name="SCARAB_QUERY" idMethod="idbroker" javaName="Query">
 
     <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" required="true" type="INTEGER"></column>
+    <!--
+        The name the query will be saved under.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255" />
 
-    <column name="USER_ID" required="true" type="INTEGER"
-        description="Person."/>
+    <!--
+        The description of the saved query.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
+    <!--
+        The query string.
+    -->
+    <column name="VALUE" required="true" type="LONGVARCHAR"  />
 
-    <column name="NAME" required="true" type="VARCHAR" size="255" 
-        description="The name the query will be saved under."/>
-
-    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"
-        description="The description of the saved query."/>
-
-    <column name="VALUE" required="true" type="LONGVARCHAR" 
-        description="The query string."/>
-
-    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"
-        description="Type."/>
-
-    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"
-        description="Issue type."/>
-
-    <column name="MODULE_ID" required="false" type="INTEGER"
-        description="Module."/>
-
+    <!--
+        Type.
+    -->
+    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"></column>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"></column>
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1"></column>
-
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1"></column>
-
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
-
-    <column name="SUBSCRIPTION_FREQUENCY_ID" required="false" type="INTEGER"
-        description="Default subscription frequency."/>
+    <!--
+        Default subscription frequency.
+    -->
+    <column name="SUBSCRIPTION_FREQUENCY_ID" required="false" type="INTEGER" />
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
@@ -1017,26 +1219,33 @@
     </foreign-key>
 </table>
 
+<!--
+    Users subscribed to a query.
+-->
 <table name="SCARAB_R_QUERY_USER" idMethod="none" 
-        javaName="RQueryUser"
-        description="Users subscribed to a query.">
-
-    <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Query."/>
-
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Person."/>
-
+        javaName="RQueryUser">
+    <!--
+        Query.
+    -->
+    <column name="QUERY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Is user subscribed.
+    -->
     <column name="IS_SUBSCRIBED" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Is user subscribed."/>
-
-    <column name="SUBSCRIPTION_FREQUENCY_ID" javaName="SubscriptionFrequency" required="false" type="INTEGER"
-        description="User's subscription frequency."/>
-
+            default="0" size="1"></column>
+    <!--
+        User's subscription frequency.
+    -->
+    <column name="SUBSCRIPTION_FREQUENCY_ID" javaName="SubscriptionFrequency" required="false" type="INTEGER" ></column>
+    <!--
+        Whether this is the user's default query.
+    -->
     <column name="ISDEFAULT" required="false" type="BOOLEANINT" 
-        default="0" size="1"
-        description="Whether this is the user's default query."/>
+            default="0" size="1"></column>
 
     <foreign-key foreignTable="SCARAB_QUERY">
         <reference local="QUERY_ID" foreign="QUERY_ID"/>
@@ -1049,35 +1258,43 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_FREQUENCY" idMethod="none" javaName="Frequency"
-        description="Frequencies of an event.
-                     Examples: every half hour, weekly.">
-
-    <column name="FREQUENCY_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="FREQUENCY_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
+<!--
+    Frequencies of an event.
+    Examples: every half hour, weekly
+-->
+<table name="SCARAB_FREQUENCY" idMethod="none" javaName="Frequency">
+    <!--
+        Unique identifier.
+    -->
+    <column name="FREQUENCY_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="FREQUENCY_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
-<table name="SCARAB_ISSUE_TEMPLATE_INFO" idMethod="none" javaName="IssueTemplateInfo"
-        description="A saved user template for entering issues.">
+<!--
+    A saved user template for entering issues.
+-->
+<table name="SCARAB_ISSUE_TEMPLATE_INFO" idMethod="none" javaName="IssueTemplateInfo">
 
     <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Person.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255" />
 
-    <column name="NAME" required="true" type="VARCHAR" size="255" 
-        description="Person."/>
-
-    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" 
-        description="The description of the saved template."/>
-
+    <!--
+        The description of the saved template.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
     <column name="ATTACHMENT_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1"></column>
-
-    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"
-        description="Scope : personal or global."/>
-
+    <!--
+        Scope : personal or global.
+    -->
+    <column name="SCOPE_ID" javaName="ScopeId" required="true" type="INTEGER"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
@@ -1086,42 +1303,55 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_SCOPE" idMethod="none" javaName="Scope"
-        description="Scope: personal, global.">
-
-    <column name="SCOPE_ID" primaryKey="true" required="true" type="INTEGER"
-        description="Unique identifier."/>
-
-    <column name="SCOPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"
-        description="Name."/>
+<!--
+    Scope: personal, global.
+-->
+<table name="SCARAB_SCOPE" idMethod="none" javaName="Scope">
+    <!--
+        Unique identifier.
+    -->
+    <column name="SCOPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Name.
+    -->
+    <column name="SCOPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
-<table name="SCARAB_REPORT" idMethod="idbroker" javaName="Report"
-        description="A saved report.">
+<!--
+    A saved report.
+-->
+<table name="SCARAB_REPORT" idMethod="idbroker" javaName="Report">
 
     <column name="REPORT_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Person.
+    -->
+    <column name="USER_ID" required="true" type="INTEGER"/>
+    <!--
+        Module.
+    -->
+    <column name="MODULE_ID" required="false" type="INTEGER"/>
+    <!--
+        Issue type.
+    -->
+    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
+    <!--
+        The name the report will be saved under.
+    -->
+    <column name="NAME" required="true" type="VARCHAR" size="255"/>
 
-    <column name="USER_ID" required="true" type="INTEGER"
-        description="Person."/>
+    <!--
+        The description of the saved report.
+    -->
+    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"/>
 
-    <column name="MODULE_ID" required="false" type="INTEGER"
-        description="Module."/>
-
-    <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"
-        description="Issue type."/>
-
-    <column name="NAME" required="true" type="VARCHAR" size="255"
-        description="The name the report will be saved under."/>
-
-    <column name="DESCRIPTION" required="false" type="VARCHAR" size="255"
-        description="The description of the saved report."/>
-
-    <column name="QUERY_STRING" required="true" type="LONGVARCHAR"
-        description="The report string."/>
+    <!--
+        The report string.
+    -->
+    <column name="QUERY_STRING" required="true" type="LONGVARCHAR"/>
 
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1"/>
-
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"/>
 
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
