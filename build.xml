@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.165 2004/05/20 19:52:06 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.166 2004/07/21 16:34:28 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -269,6 +269,7 @@
         <include name="org/jboss/ejb/plugins/AbstractInstanceCache.java"/>
         <include name="org/jboss/ejb/plugins/AbstractInstancePool.java"/>
         <include name="org/jboss/ejb/plugins/EntityInstanceCache.java"/>
+        <include name="org/jboss/ejb/plugins/PerTxEntityInstanceCache.java"/>
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
         <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
