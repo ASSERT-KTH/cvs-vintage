@@ -91,7 +91,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.79 2002/06/28 01:35:43 jon Exp $
+ * @version $Id: Search.java,v 1.80 2002/07/01 23:01:22 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -106,6 +106,10 @@ public class Search extends RequireLoginFirstAction
     public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
+        String queryString = getQueryString(data);
+        data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
+        data.getParameters().add("queryString", queryString);
+
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List searchResults = null;
         try
@@ -118,9 +122,7 @@ public class Search extends RequireLoginFirstAction
             scarabR.setAlertMessage(e.getMessage());
             return;
         }
-        String queryString = getQueryString(data);
-        data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
-        data.getParameters().setString("queryString", queryString);
+
         if (searchResults != null && searchResults.size() > 0)
         {
             context.put("issueList", searchResults);
