@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.47 2004/10/12 16:02:40 mvw Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.48 2004/10/26 18:56:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.beans.PropertyVetoException;
 import javax.swing.Action;
 
 import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -249,6 +250,14 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         }
         return name;
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getLabelName()
+     */
+    public String getLabelName() {
+        return Translator.localize("label.usecase-diagram");
+    }
+    
     /**
      * @return Returns the actionActor.
      */

@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.62 2004/10/12 16:02:40 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.63 2004/10/26 18:56:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.Action;
 
 import org.apache.log4j.Logger;
 
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -249,7 +250,14 @@ public class UMLActivityDiagram extends UMLDiagram {
         }
         return name;
     }
-
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getLabelName()
+     */
+    public String getLabelName() {
+        return Translator.localize("label.activity-diagram");
+    }
+    
     /**
      * @return Returns the actionCallState.
      */

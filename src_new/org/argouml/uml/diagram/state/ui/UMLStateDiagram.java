@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.61 2004/10/12 16:02:59 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.62 2004/10/26 18:56:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.61 2004/10/12 16:02:59 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.62 2004/10/26 18:56:04 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -36,6 +36,7 @@ import javax.swing.Action;
 
 import org.apache.log4j.Logger;
 
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
@@ -263,7 +264,14 @@ public class UMLStateDiagram extends UMLDiagram {
         }
         return name;
     }
-
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getLabelName()
+     */
+    public String getLabelName() {
+        return Translator.localize("label.state-chart-diagram");
+    }
+    
     /**
      * This diagram listens to NSUML events from its Statemachine;
      * When the Statemachine is removed, we also want to delete this diagram.

@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.35 2004/10/12 16:02:59 mvw Exp $
+// $Id: UMLSequenceDiagram.java,v 1.36 2004/10/26 18:56:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.diagram.sequence.ui;
 import java.beans.PropertyVetoException;
 import java.util.Hashtable;
 
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
@@ -106,7 +107,14 @@ public class UMLSequenceDiagram extends UMLDiagram {
         }
         return name;
     }
-
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#getLabelName()
+     */
+    public String getLabelName() {
+        return Translator.localize("label.sequence-diagram");
+    }
+    
     /**
      * Must return an array of actions via which the model can be
      * manipulated. To use the 'nested actions' feature (like the

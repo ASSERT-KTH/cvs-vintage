@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.55 2004/10/12 16:03:00 mvw Exp $
+// $Id: UMLDiagram.java,v 1.56 2004/10/26 18:56:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -608,5 +608,11 @@ public abstract class UMLDiagram
     protected int getNextDiagramSerial() {
         return diagramSerial++;
     }
+    
+    /**
+     * @return a string that can be used as a label for this kind of diagram
+     */
+    public abstract String getLabelName();
+    
 } /* end class UMLDiagram */
 
