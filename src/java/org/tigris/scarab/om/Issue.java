@@ -1083,7 +1083,6 @@ public class Issue
         Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool); 
         if ( obj == null ) 
         {        
-            System.out.println("Issue " +getPrimaryKey()+ " adding getComments to cache for arg=" + full );
             Criteria crit = new Criteria()
                 .add(AttachmentPeer.ISSUE_ID, getIssueId())
                 .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,

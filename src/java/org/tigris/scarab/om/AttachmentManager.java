@@ -37,7 +37,6 @@ public class AttachmentManager
     {
         Persistent oldOm = super.putInstanceImpl(om);
         List listeners = (List)listenersMap.get(AttachmentPeer.ISSUE_ID);
-        System.out.println(this + " notifying "+listeners+" listeners ");
         notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
