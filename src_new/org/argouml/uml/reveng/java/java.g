@@ -25,7 +25,7 @@ import java.util.*;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: java.g,v 1.16 2003/06/17 10:59:40 lepekhine Exp $
+ * <p>$Id: java.g,v 1.17 2003/12/05 07:43:28 lepekhine Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>
@@ -1185,7 +1185,7 @@ options {
 	exportVocab=Java;      // call the vocabulary "Java"
 	testLiterals=false;    // don't automatically test for literals
 	k=4;                   // four characters of lookahead
-	charVocabulary='\u0003'..'\u0451';
+	charVocabulary='\u0003'..'\uFFFE';
 }
 
 {
@@ -1461,7 +1461,7 @@ VOCAB
 // if it's a literal or really an identifer
 IDENT
 	options {testLiterals=true;}
-	:	('a'..'z'|'A'..'Z'|'_'|'$') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$')*
+	:	('a'..'z'|'A'..'Z'|'_'|'$'|'\u0080'..'\uFFFE') ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$'|'\u0080'..'\uFFFE')*
 	;
 
 
