@@ -35,12 +35,22 @@ public class LookupMimetypeHandler implements LookupMimetype {
 	 * @see org.columba.core.nativ.mimetype.LookupMimetype#lookup(java.io.File)
 	 */
 	public String lookup(File file) {
+		String mimetype = null;
+		
 		if (OSInfo.isWin32Platform()) {
-			return new Win32LookupMimetype().lookup(file);
+			// win32 lookup using windows registry
+			mimetype = new Win32LookupMimetype().lookup(file);
 		} else {
-			return new GenericLookupMimetype().lookup(file);
+			// using JDK's built-in mimetype lookup facility
+			mimetype = new GenericLookupMimetype().lookup(file);
 		}
-
+		
+		// if windows failed, fall-back to generic
+		if ( mimetype == null) {
+			mimetype = new GenericLookupMimetype().lookup(file);
+		}
+		
+		return mimetype;
 	}
 
 }
