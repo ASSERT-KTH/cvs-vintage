@@ -98,6 +98,11 @@ all functionality is now in modules ( like Apache !)
 - refactoring of session - use Interceptors for full access to all request
 stages, keep tomcat-independent code separated and reusable.
 
+-------------------- MODULES --------------------
+
+- ApacheConfig now has optional attibutes to configure various paths
+used in auto-generated config files for jserv and mod_jk.
+
 -------------------- UTILS --------------------
 
 - consolidation/refactoring of all tomcat-independent and general-purpose/
@@ -108,6 +113,16 @@ reused :-)
 
 -------------------- BUILD/STARTUP --------------------
 
+- org.apache.tomcat.startup.Main now builds 3 distinct class loaders: (1)
+one to be used only by the servlet container.  (2) one to be shared by all
+web applications and (3) one that is common to both the above.
+
+- TOMCAT_HOME/lib now sports three subdirectories: apps/, container/ and
+common/ in which jar files can be placed that will be automatically loaded
+into the correct classloaders.  In addition, classes can be made available
+to the 'apps' and 'common' classloaders by including them in the classpath
+properties "-Dorg.apache.tomcat.apps.classpath" and 
+"-Dorg.apache.tomcat.common.classpath", respectively.
 - generate separate jar files for each component ( utils, core, facade, 
 modules ) That insures the layers are properly separated, utils can be reused.
 
