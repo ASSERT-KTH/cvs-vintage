@@ -61,7 +61,7 @@ $l10n.GlobalAttributes
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>$l10n.FilterString</th>
+   <th>$l10n.FilterThisList</th>
    <td><input type="text" name="searchString" value="$searchString" />&nbsp;
      <select name="searchField" >
       <option value="Any" #if($searchField.equals("Any")) selected="selected"#end>$l10n.Any</option>

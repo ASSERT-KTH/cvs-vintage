@@ -563,7 +563,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th>$l10n.FilterString</th>
+   <th>$l10n.FilterThisList</th>
    <td><input type="text" name="searchString" value="$!searchString" />&nbsp;
      <select name="searchField">
       <option value="First Name" #if($searchField.equals("First Name")) selected="selected"#end>$l10n.FirstName</option>
