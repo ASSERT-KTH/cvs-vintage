@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.22 2004/07/31 22:30:22 kataka Exp $
+// $Id: ExplorerTree.java,v 1.23 2004/08/01 14:19:24 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -340,7 +340,7 @@ public class ExplorerTree
                 TreePath[] addedOrRemovedPaths = e.getPaths();                
                 TreePath[] selectedPaths = getSelectionPaths();
                 List elementsAsList = new ArrayList();                
-                for (int i = 0; i < selectedPaths.length; i++) {
+                for (int i = 0; selectedPaths != null && i < selectedPaths.length; i++) {
                     Object element = ((DefaultMutableTreeNode)selectedPaths[i].getLastPathComponent()).getUserObject();
                     elementsAsList.add(element);
 //                  // scan the visible rows for duplicates of this elem and select them
