@@ -88,8 +88,10 @@ import org.tigris.scarab.attribute.OptionAttribute;
     This class is responsible for moving/copying an issue 
     from one module to another.
 
+    FIXME: rewrite this class using intake.
+    
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.8 2001/09/30 18:31:38 jon Exp $
+    @version $Id: MoveIssue.java,v 1.9 2001/10/08 06:35:23 jon Exp $
 */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -99,7 +101,22 @@ public class MoveIssue extends RequireLoginFirstAction
     {
         String issueId = data.getParameters().getString("id");
         String moduleId = data.getParameters().getString("module_id");
+        
+        if (moduleId == null || moduleId.length() == 0 
+            || moduleId.startsWith("Select Module"))
+        {
+            data.setMessage("Please select a Module.");
+            return;
+        }
+        
         String selectAction = data.getParameters().getString("select_action");
+
+        if (selectAction == null || selectAction.length() == 0)
+        {
+            data.setMessage("Please make a move/copy selection.");
+            return;
+        }
+
         Issue issue = (Issue)IssuePeer.retrieveByPK(new NumberKey(issueId));
         
         List matchingAttributes = getList(issue, moduleId, "matching");
@@ -112,7 +129,6 @@ public class MoveIssue extends RequireLoginFirstAction
         context.put("select_action", selectAction);
         setTarget(data, "MoveIssue2.vm");            
     }
-
 
     public void doSaveissue( RunData data, TemplateContext context )
         throws Exception
@@ -325,6 +341,16 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         return returnList;
     }
+
+    /**
+        This manages clicking the Back button on MoveIssue2.vm
+    */
+    public void doBacktoone( RunData data, TemplateContext context ) throws Exception
+    {
+        // FIXME: this should be determined from template based parameters    
+        setTarget(data, "MoveIssue.vm");
+    }
+    
 
     /**
         This manages clicking the Cancel button

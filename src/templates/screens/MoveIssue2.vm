@@ -1,3 +1,5 @@
+$page.setTitle("Copy / Move Issue")
+
 #set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
 
 #set ($issueId = $data.Parameters.getString("issue_id"))
@@ -5,16 +7,17 @@
 #set ($moduleId = $data.Parameters.getString("module_id"))
 #set ($module = $scarabR.CurrentModule)
 
-<form method="post" action="$action" >
-
-<h3>Issue to be copied / moved</h3>
+<form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId">
 <input type="hidden" name="module_id" value="$moduleId">
+
+<h3>Issue to be Copied / Moved</h3>
+
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>issue summary:</th>
-         <th>date committed:</th>
-         <th>committed by:</th>
+         <th>Summary:</th>
+         <th>Date Committed:</th>
+         <th>Committed By:</th>
         </tr>
         <tr class="a">
          <td>
@@ -28,14 +31,14 @@
 
          <td>
              #set ($createdUser = $issue.CreatedBy)
-             <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
+             <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
          </td>
         </tr>
         </table>
 
-          <h3>destination project</h3>
-          <P>
-          #set($newModule = $scarabR.getModule($moduleId) )
+          <h3>Destination Project</h3>
+          <p>
+           #set($newModule = $scarabR.getModule($moduleId))
            $newModule.Name
            
           </p>
@@ -44,36 +47,35 @@
           <p><input type="radio" name="select_action" value="copy" 
              #if ($select_action.equals("copy") )
                 checked
-             #end />&nbsp;copy
+             #end /> Copy
           </p>
           <p><input type="radio" name="select_action" value="move" 
              #if ($select_action.equals("move") )
                 checked
-             #end />&nbsp;move
+             #end /> Move
           </p>  
-          
 
-          <h3>issue attribute mapping results</h3>
+          <h3>Attribute Mapping Results</h3>
 
 <div class="sidebyside">
        <table border="1" cellspacing="2" cellpadding="3" width="100%">
         <tr>
-         <th>attributes from issue to be copied/moved</th>
-         <th>matching attributes in destination project</th>
-</tr>
-<tr>
-<td>
+         <th>Attributes from Issue to be Copied/Moved</th>
+         <th>Matching Attributes in Destination Module</th>
+        </tr>
+        <tr>
+        <td>
 
            <div class="datatablechild">
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>Attribute name (alias)</th>
+         <th>Attribute Name (alias)</th>
          
-         <th>value (list option/content)</th>
+         <th>Value (list option/content)</th>
          
         </tr>
 #foreach( $attr in $matchingAttributes )
-         $rows ()
+         #indexedRows($velocityCount)
          <td>$attr.Attribute.Name 
            #set( $displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue() )
            #if (!$attr.Attribute.Name.equals($displayValue))
@@ -91,13 +93,13 @@
 
            <div class="datatablechild">
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-         <th>Attribute name (alias)</th>
+         <th>Attribute Name (alias)</th>
          
-         <th>value (list option/content)</th>
+         <th>Value (list option/content)</th>
          
         </tr>
 #foreach( $attr in $matchingAttributes )
-        #rows ()
+         #indexedRows($velocityCount)
          <td>$attr.Attribute.Name
            #set( $displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue() )
            #if (!$attr.Attribute.Name.equals($displayValue))
@@ -119,17 +121,17 @@
 
 
 #if (!$orphanAttributes.isEmpty()) 
-          <h3>attributes that do not exist in destination project (saved as comment)</h3>
+          <h3>Attributes that do not exist in destination Module (saved as comment)</h3>
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>include=checked</th>
-         <th>attribute name</th>
-         <th>option name</th>
+         <th>Include</th>
+         <th>Attribute Name</th>
+         <th>Pption Name</th>
          
         </tr>
 #foreach( $attr in $orphanAttributes )
-          #rows ()
+         #indexedRows($velocityCount)
          <td><input type="checkbox" name="x" value="x" checked /></td>
          <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
          <td><input type="text" name="x" value="$attr.Value" /></td>
@@ -138,11 +140,18 @@
         </table>
 #end                        
 <p class="functnbar">
-<input type="submit" value="move / copy" name="eventSubmit_doSaveissue" />&nbsp;
-<input type="submit" value="cancel" class="button" name="eventSubmit_doCancel" />
+#if ($select_action.equals("move") )
+#set ($tmp = "Move")
+#else
+#set ($tmp = "Copy")
+#end
+
+<input type="submit" value="Back" class="button" name="eventSubmit_doBacktoone"/> 
+<input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue"/>
 </p>
         
-     </div></td>
+     </td>
     </tr>
    </table>
   </form>
+</div>

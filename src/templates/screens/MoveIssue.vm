@@ -1,3 +1,4 @@
+$page.setTitle("Copy / Move Issue")
 #set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
 #set ($user = $data.User)
 #set ($currentModule = $scarabR.CurrentModule)
@@ -7,42 +8,40 @@
 
 
 <div class="app" id="div2-6-1">
-<h2>copy / move issue </h2>
 
-                        
-<form method="post" action="$action" >
+<form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId">
 
-          <h3>issue to be copied / moved</h3>
+          <h3>Issue to be Copied / Moved</h3>
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th>issue summary:</th>
-         <th>date committed:</th>
-         <th>committed by:</th>
+         <th>Summary:</th>
+         <th>Date Committed:</th>
+         <th>Committed By:</th>
         </tr>
         <tr class="a">
          <td>
              #set ($AttrValues = $issue.AllAttributeValuesMap)
              #set( $attVal =  $AttrValues.get("SUMMARY"))
              #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-           $attVal.Value</a>
+           $attVal.Value
          </td>  
 
          <td>$format.getDate($scarabG.DateFormat, $issue.CreatedDate)</td>
 
          <td>
              #set ($createdUser = $issue.CreatedBy)
-             <a href="mailTo:$createdUser.Email">$createdUser.UserName</a>
+             <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
          </td>
         </tr>
         </table>
 
           
-          <h3>destination project</h3>
+          <h3>Destination Module</h3>
           <p> 
           <select name="module_id">
-             <option>select project</option>
+             <option>Select Module...</option>
           #foreach( $module in $security.getModules($user, "Issue | Enter") )
                   <option value="$module.ModuleId"
                   #if ($module.ModuleId.equals($moduleId) )
@@ -57,19 +56,21 @@
           <p><input type="radio" name="select_action" value="copy" 
              #if ($select_action.equals("copy") )
                 checked
-             #end />&nbsp;copy
+             #end /> Copy
           </p>
           <p><input type="radio" name="select_action" value="move" 
              #if ($select_action.equals("move") )
                 checked
-             #end />&nbsp;move
+             #end /> Move
           </p>  
-          
+
 <p class="functnbar">
-<input type="submit" value="map issue attributes" name="eventSubmit_doMapattributes"/>
+<input type="submit" value="Next" name="eventSubmit_doMapattributes"/>
 </p>
 
-     </div></td>
+     </td>
     </tr>
    </table>
 </form>
+
+</div>
