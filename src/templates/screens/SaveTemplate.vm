@@ -8,7 +8,7 @@
 
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Save" name="eventSubmit_doSubmit" />
 <input type="submit" value="Use template" name="eventSubmit_doUsetemplate" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
 <input type="submit" value="Reset" name="eventSubmit_doReset"  />
@@ -20,8 +20,6 @@
 <h2>$page.Title</h2>
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="entry,Wizard1.vm" />
 
 #if ($templateId)
@@ -65,10 +63,6 @@
 </tr>
 #end
 </table>
-</div>
-
-<div class="functnbar3">
-<input type="submit" value="Save changes" name="eventSubmit_doSavetemplatedata" />
 </div>
 
 <h3>Template Attributes</h3>
@@ -117,7 +111,6 @@
 
 
 <div class="functnbar3">
-<input type="submit" value="Save changes" name="eventSubmit_doSaveattributes" />
 </div>
 
 #SaveTemplateBar("2")
