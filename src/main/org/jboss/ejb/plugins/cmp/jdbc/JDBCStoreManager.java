@@ -59,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -70,7 +70,8 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private static final Object NULL_VALUE = new Object();
 
    private static final Object TX_DATA_KEY = new Object();
-   private Map applicationData = Collections.synchronizedMap(new HashMap());
+   private static final Map applicationData = 
+         Collections.synchronizedMap(new HashMap());
 
    private EntityContainer container;
    private Logger log;
