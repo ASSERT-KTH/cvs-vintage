@@ -21,7 +21,7 @@ import org.jboss.util.StringPropertyReplacer;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -61,11 +61,16 @@ public abstract class MetaData
 
       NodeList children = element.getChildNodes();
       ArrayList goodChildren = new ArrayList();
-      for (int i=0; i<children.getLength(); i++) {
+      for (int i=0; i<children.getLength(); i++)
+      {
          Node currentChild = children.item(i);
-         if (currentChild.getNodeType() == Node.ELEMENT_NODE && 
-             ((Element)currentChild).getTagName().equals(tagName)) {
-            goodChildren.add(currentChild);
+         if (currentChild.getNodeType() == Node.ELEMENT_NODE)
+         {
+            String name = ((Element)currentChild).getTagName();
+            if( name.equals(tagName))
+            {
+               goodChildren.add(currentChild);
+            }
          }
       }
       return goodChildren.iterator();
