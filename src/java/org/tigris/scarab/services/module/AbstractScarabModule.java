@@ -61,8 +61,6 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.util.BasePeer;
-import org.apache.torque.oid.IDBroker;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
@@ -108,6 +106,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.apache.turbine.Log;
 
 /**
+ * <p>
  * The ScarabModule class is the focal point for dealing with
  * Modules. It implements the concept of a ModuleEntity which is a
  * single module and is the base interface for all Modules. In code,
@@ -115,10 +114,16 @@ import org.apache.turbine.Log;
  * -- use its ModuleEntity interface instead.  This allows us to swap
  * out ModuleEntity implementations by modifying the Scarab.properties
  * file.
+ * </p>
+ * 
+ * <p>This class is the base class for 
+ * <code>org.tigris.scarab.om.ScarabModule</code>. BaseScarabModule extends
+ * this class and that definition is defined in the scarab-schema.xml
+ * which is used by Torque to generated BaseScarabModule.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.36 2002/02/19 21:28:34 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.37 2002/02/21 00:07:48 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
