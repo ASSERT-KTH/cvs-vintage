@@ -28,13 +28,13 @@ import javax.management.loading.*;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.37 $
+ *   @version $Revision: 1.38 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-   String versionIdentifier = "3.0 ALPHA";
+   String versionIdentifier = "2.5 ALPHA";
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
