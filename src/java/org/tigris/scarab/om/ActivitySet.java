@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.14 2003/09/12 23:47:13 elicia Exp $
+ * @version $Id: ActivitySet.java,v 1.15 2003/09/15 20:48:20 dlr Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -206,7 +206,7 @@ public class ActivitySet
         if (toUsers == null)
         {
             // Then add users who are assigned to "email-to" attributes
-            toUsers = issue.getAllUsersToEmail(AttributePeer.EMAIL_TO);
+            toUsers = issue.getAllUsersToEmail(AttributePeer.ASSIGNED_TO);
         }
         
         if (ccUsers == null)

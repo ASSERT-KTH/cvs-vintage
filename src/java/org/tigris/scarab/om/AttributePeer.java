@@ -59,7 +59,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class represents an AttributePeer.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributePeer.java,v 1.31 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: AttributePeer.java,v 1.32 2003/09/15 20:48:20 dlr Exp $
  */
 public class AttributePeer 
     extends org.tigris.scarab.om.BaseAttributePeer
@@ -68,7 +68,7 @@ public class AttributePeer
     public static final Integer STATUS__PK = new Integer(3);
     public static final Integer RESOLUTION__PK = new Integer(4);
     public static final Integer TOTAL_VOTES__PK = new Integer(13);
-    public static final String EMAIL_TO = "to";
+    public static final String ASSIGNED_TO = "to";
     public static final String CC_TO = "cc";
     public static final String USER = "user";
     public static final String NON_USER = "non-user";

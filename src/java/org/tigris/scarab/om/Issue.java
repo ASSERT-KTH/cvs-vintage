@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.326 2003/09/12 23:47:13 elicia Exp $
+ * @version $Id: Issue.java,v 1.327 2003/09/15 20:48:20 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1225,7 +1225,7 @@ public class Issue
 
         ScarabUser createdBy = issue.getCreatedBy();
         if (createdBy != null && !users.contains(createdBy) &&
-            AttributePeer.EMAIL_TO.equals(action) &&
+            AttributePeer.ASSIGNED_TO.equals(action) &&
                createdBy.hasPermission(ScarabSecurity.ISSUE__ENTER, module))
         {
             users.add(createdBy);
