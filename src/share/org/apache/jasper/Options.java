@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.5 1999/12/28 13:25:31 rubys Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/28 13:25:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.6 2000/01/08 17:57:16 rubys Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/08 17:57:16 $
  *
  * ====================================================================
  * 
@@ -242,7 +242,8 @@ public final class Options {
                 // Not running in a Servlet 2.2 container.
                 // Try to get the JDK 1.2 java.io.tmpdir property
                 dir = System.getProperty("java.io.tmpdir");
-                scratchDir = new File(dir);
+		if (dir != null)
+                    scratchDir = new File(dir);
             }
         }
                 
