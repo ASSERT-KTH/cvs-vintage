@@ -14,12 +14,15 @@ import javax.management.*;
 
 import org.jboss.logging.Log;
 
+
+
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
+ *   @version $Revision: 1.4 $
  */
 public class ServiceControl
    implements ServiceControlMBean, MBeanRegistration, NotificationListener
@@ -41,6 +44,9 @@ public class ServiceControl
    public void init()
       throws Exception
    {
+    	invokeOnMBeans ("init", "Initializing", "initialize", "Initialized");
+   	
+   	/*
       log.log("Initializing "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
@@ -73,11 +79,15 @@ public class ServiceControl
          }
       }
       log.log("Initialized "+mbeansCopy.size()+" services");
+      */
    }
    
    public void start()
       throws Exception
-   {
+   { 
+	   	invokeOnMBeans ("start", "Starting", "start", "Started");
+
+   	/* 
       log.log("Starting "+mbeans.size()+" MBeans");
       
       List mbeansCopy = new ArrayList(mbeans);
@@ -107,17 +117,60 @@ public class ServiceControl
          }
       }
       log.log("Started "+mbeansCopy.size()+" services");
+      */
    }
    
    public void stop()
    {
-      
+   	invokeOnMBeans ("stop", "Stopping", "stop", "Stopped");
    }
    
    public void destroy()
    {
+   	invokeOnMBeans ("destroy", "Destroying", "destroy", "Destroyed");
+   }
+   
+   public void invokeOnMBeans (String methodname, String aboutaction, String action, String pastaction)  
+   {
+      log.log(aboutaction + " "+mbeans.size()+" MBeans");
+      
+      List mbeansCopy = new ArrayList(mbeans);
+      Iterator enum = mbeansCopy.iterator();
+      int serviceCounter = 0;
+      while (enum.hasNext())
+      {
+         ObjectName name = (ObjectName)enum.next();
+         try
+         {
+            server.invoke(name, methodname, new Object[0], new String[0]);
+            serviceCounter++;
+            
+            // Register start/stop listener
+            try {
+            	server.addNotificationListener(name,
+              	                            this,
+                	                          null,
+                  	                        name);
+            } catch (Exception ex) {
+            	log.error ("Warning: " + ex.getMessage());
+            }	
+         } catch (ReflectionException e)
+         {
+           // Not a service - ok 
+         } catch (RuntimeMBeanException e)
+         {
+            log.error("Could not " + action+" "+name);
+            log.exception(e.getTargetException());
+         } catch (Exception e)
+         {
+            log.error("Could not "+action  +" "+name);
+            log.exception(e);
+         }
+      }
+      log.log(pastaction+" "+mbeansCopy.size()+" services");
       
    }
+   
    
    // MBeanRegistration implementation ------------------------------
    public ObjectName preRegister(MBeanServer server, ObjectName name)
@@ -175,6 +228,8 @@ public class ServiceControl
          }
       }
    }
+   
+   
 }
 
 
