@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.75 2004/04/13 15:33:52 tdiesler Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.76 2004/04/25 09:56:31 loubyansky Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -233,6 +233,7 @@
       <invoker-proxy-binding-name>entity-rmi-invoker</invoker-proxy-binding-name>
       <sync-on-commit-only>false</sync-on-commit-only>
       <insert-after-ejb-post-create>false</insert-after-ejb-post-create>
+      <call-ejb-store-on-clean>true</call-ejb-store-on-clean>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -425,7 +426,7 @@
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
         <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
@@ -469,7 +470,7 @@
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
       <container-cache-conf>
         <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
@@ -512,7 +513,7 @@
       </container-interceptors>
       <instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
       <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
-      <persistence-manager>org.jboss.ejb.plugins.jaws.JAWSPersistenceManager</persistence-manager>
+      <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
       <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
       <container-cache-conf>
         <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
