@@ -175,10 +175,14 @@ public final class JDBCRealm extends BaseInterceptor {
      */
     private boolean started = false;
 
-
     /**
-     * The property change support for this component.
+     *
+     * Encode used in passwords that sane values acceepted by MessageDigest
+     * plus "No" ( no encode ) that is the default
+     *
      */
+
+    private String encode="No";
 
 
     // ------------------------------------------------------------- Properties
@@ -264,6 +268,28 @@ public final class JDBCRealm extends BaseInterceptor {
     public void setRoleNameCol( String roleNameCol ) {
         this.roleNameCol = roleNameCol;
     }
+    /**
+     * Gets the encode used for credentials in the database
+     * could be the same that MessageDigest accepts
+     * and "No" that is the Default
+     *
+     */
+
+    public String getEncode() {
+        return encode;
+    }
+
+    /**
+     * Sets the ncode used for credentials in the database
+     * could be the same that MessageDigest accepts
+     * and "No" that is the Default
+     *
+     * @param newEncode the Encode type
+     */
+
+    public void setEncode(String newEncode) {
+        encode = newEncode;
+    }
 
     /**
      * If there are any errors with the JDBC connection, executing
@@ -282,27 +308,8 @@ public final class JDBCRealm extends BaseInterceptor {
     public synchronized boolean checkPassword(String username
             , String credentials) {
         try {
-
-            // Establish the database connection if necessary
-            if ((dbConnection == null) || dbConnection.isClosed()) {
-                log(sm.getString("jdbcRealm.authDBClosed"));
-
-                if ((connectionName == null || connectionName.equals("")) &&
-                    (connectionPassword == null || connectionPassword.equals(""))) {
-                      dbConnection = DriverManager.getConnection(connectionURL);
-                } else {
-                     dbConnection = DriverManager.getConnection(connectionURL,
-                                                                connectionName,
-                                                                connectionPassword);
-                }
-
-
-                if( (dbConnection == null) || dbConnection.isClosed() ) {
-                    log(sm.getString("jdbcRealm.authDBReOpenFail"));
-                    return false;
-                }
-            }
-
+            if (!checkConnection())
+                return false;
             // Create the authentication search prepared statement if necessary
             if (preparedAuthenticate == null) {
                 String sql = "SELECT " + userCredCol + " FROM " + userTable +
@@ -317,11 +324,16 @@ public final class JDBCRealm extends BaseInterceptor {
             ResultSet rs1 = preparedAuthenticate.executeQuery();
             boolean found = false;
             if (rs1.next()) {
-                if (credentials.equals(rs1.getString(1))) {
-                    if (debug >= 2)
-                        log(sm.getString("jdbcRealm.authenticateSuccess",
-                                 username));
-                    return true;
+                if (encode.equals("No")) {
+                    if (credentials.equals(rs1.getString(1))) {
+                        if (debug >= 2)
+                            log(sm.getString("jdbcRealm.authenticateSuccess",
+                                     username));
+                        return true;
+                    }
+                } else {
+                // FixMe:  Test if the password is expected encoded
+                // for now only the place marked
                 }
             }
             rs1.close();
@@ -333,7 +345,7 @@ public final class JDBCRealm extends BaseInterceptor {
         } catch( SQLException ex ) {
 
             // Log the problem for posterity
-            log(sm.getString("jdbcRealm.authenticateSQLException",
+            log(sm.getString("jdbcRealm.checkPasswordSQLException",
                      username));
 
             // Clean up the JDBC objects so that they get recreated next time
@@ -359,55 +371,71 @@ public final class JDBCRealm extends BaseInterceptor {
         }
     }
 
+    private boolean checkConnection(){
+        try {
+            if( (dbConnection == null) || dbConnection.isClosed() ) {
+                log(sm.getString("jdbcRealm.checkConnectionDBClosed"));
+                if ((connectionName == null || connectionName.equals("")) &&
+                        (connectionPassword == null || connectionPassword.equals(""))) {
+
+                        dbConnection = DriverManager.getConnection(connectionURL);
+
+                } else {
+                        dbConnection = DriverManager.getConnection(connectionURL,
+                                                                   connectionName,
+                                                                   connectionPassword);
+                }
+                if( dbConnection == null || dbConnection.isClosed() ) {
+                  log(sm.getString("jdbcRealm.checkConnectionDBReOpenFail"));
+                  return false;
+                }
+            }
+            return true;
+        }catch (SQLException ex){
+            log(sm.getString("jdbcRealm.checkConnectionSQLException"));
+            return false;
+        }
+    }
+
     public synchronized String[] getUserRoles(String username) {
         try {
-          if( (dbConnection == null) || dbConnection.isClosed() ) {
-            log(sm.getString("jdbcRealm.getUserRolesDBClosed"));
-
-            if ((connectionName == null || connectionName.equals("")) &&
-                (connectionPassword == null || connectionPassword.equals(""))) {
-                dbConnection = DriverManager.getConnection(connectionURL);
-            } else {
-                dbConnection = DriverManager.getConnection(connectionURL,
-                                                           connectionName,
-                                                           connectionPassword);
-            }
-
-            if( dbConnection == null || dbConnection.isClosed() ) {
-              log(sm.getString("jdbcRealm.getUserRolesDBReOpenFail"));
-              return null;
-            }
-          }
-          if (preparedRoles == null) {
+            if ( !checkConnection() )
+                return null;
+            if (preparedRoles == null) {
                 String sql = "SELECT " + roleNameCol + " FROM " +
                     userRoleTable + " WHERE " + userNameCol + " = ?";
                 if (debug >= 1)
                     log("JDBCRealm.roles: " + sql);
                 preparedRoles = dbConnection.prepareStatement(sql);
-          }
+            }
+            preparedRoles.clearParameters();
+            preparedRoles.setString(1, username);
 
-          preparedRoles.clearParameters();
-          preparedRoles.setString(1, username);
+            ResultSet rs = preparedRoles.executeQuery();
 
-          ResultSet rs = preparedRoles.executeQuery();
+            // Next we convert the resultset into a String[]
+            Vector vrol=new Vector();
 
-          // Next we convert the resultset into a String[]
-          Vector vrol=new Vector();
-
-          while (rs.next()) {
+            while (rs.next()) {
               vrol.addElement(rs.getString(1));
-          }
+            }
+            String[] res=new String[vrol.size() > 0 ? vrol.size() : 1 ];
 
-          String[] res=new String[vrol.size()];
+            // no roles case
+            if( vrol.size() == 0 ){
+                res[0]="";
+                return res;
+            }
 
-          for(int i=0 ; i<vrol.size() ; i++ )
+
+            for(int i=0 ; i<vrol.size() ; i++ )
               res[i]=(String)vrol.elementAt(i);
 
-          return res;
+            return res;
         }
         catch( SQLException ex ) {
-          // Set the connection to null.
-          // Next time we will try to get a new connection.
+            // Set the connection to null.
+            // Next time we will try to get a new connection.
             log(sm.getString("jdbcRealm.getUserRolesSQLException",
                      username));
             if (preparedRoles != null) {
@@ -424,10 +452,10 @@ public final class JDBCRealm extends BaseInterceptor {
                 } catch (Throwable t) {
                     ;
                 }
-            dbConnection = null;
+                dbConnection = null;
             }
         }
-	    return null;
+        return null;
     }
 
 
@@ -448,10 +476,10 @@ public final class JDBCRealm extends BaseInterceptor {
             }
           }
           catch( ClassNotFoundException ex ) {
-            throw new RuntimeException("JDBCRealm.start.readXml: " + ex);
+            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
           }
           catch( SQLException ex ) {
-            throw new RuntimeException("JDBCRealm.start.readXml: " + ex);
+            throw new RuntimeException("JDBCRealm.contextInit: " + ex);
           }
       }
     }
@@ -521,6 +549,8 @@ public final class JDBCRealm extends BaseInterceptor {
                  + req.getContainer() );
 
 	userRoles = getUserRoles( user );
+        if( userRoles == null )
+              return 0;
 	req.setUserRoles( userRoles );
 
         if( debug > 0 ) log( "Auth ok, first role=" + userRoles[0] );

@@ -155,6 +155,8 @@ public class SimpleRealm extends  BaseInterceptor {
 			     req + " " + req.getContainer() );
 
 	userRoles = memoryRealm.getUserRoles( user );
+        if ( userRoles == null )
+            return 0;
 	req.setUserRoles( userRoles );
 
 	if( SecurityTools.haveRole( userRoles, roles ))
