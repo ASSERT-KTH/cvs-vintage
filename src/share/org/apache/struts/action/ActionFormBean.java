@@ -1,6 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/action/Attic/ActionMappings.java,v 1.3 2000/09/20 04:20:21 craigmcc Exp $
- * $Revision: 1.3 $
+ * $Header: /tmp/cvs-vintage/struts/src/share/org/apache/struts/action/ActionFormBean.java,v 1.1 2000/09/20 04:20:21 craigmcc Exp $
+ * $Revision: 1.1 $
  * $Date: 2000/09/20 04:20:21 $
  *
  * ====================================================================
@@ -63,88 +63,77 @@
 package org.apache.struts.action;
 
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-
 /**
- * Encapsulate a collection of ActionMapping objects that can be
- * administered and searched, while hiding the internal implementation.
+ * An <strong>ActionFormBean</strong> is the definition of a form bean that
+ * is loaded from a <code>&lt;form-bean&gt;</code> element in the Struts
+ * configuration file.  It can be subclassed as necessary to add additional
+ * properties.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.3 $ $Date: 2000/09/20 04:20:21 $
+ * @version $Revision: 1.1 $ $Date: 2000/09/20 04:20:21 $
  */
 
-public class ActionMappings {
+public class ActionFormBean {
 
 
     // ----------------------------------------------------- Instance Variables
 
 
     /**
-     * The collection of ActionMapping instances, keyed by request path.
+     * The bean name of this action form bean.
      */
-    protected Hashtable mappings = new Hashtable();
+    private String name = null;
 
 
     /**
-     * The ActionServlet instance of our owning application.
+     * The Java class name of this action form bean.
      */
-    protected ActionServlet servlet = null;
-
-
-    /**
-     * The ActionMapping that should handle unknown request paths, if any.
-     */
-    protected ActionMapping unknown = null;
+    private String type = null;
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the Action that should handle unknown request paths, if any.
+     * Return the bean name of this action form bean.
      */
-    public ActionMapping getUnknown() {
+    public String getName() {
 
-        if (unknown != null)
-            return (unknown);
-
-        String paths[] = findMappings();
-        for (int i = 0; i < paths.length; i++) {
-            ActionMapping mapping = findMapping(paths[i]);
-            if (mapping.getUnknown()) {
-                unknown = mapping;
-                return (mapping);
-            }
-        }
-
-
-        return (null);
+	return (this.name);
 
     }
 
 
     /**
-     * Return the <code>ActionServlet</code> instance of our owning
-     * application.
-     */
-    public ActionServlet getServlet() {
-
-        return (this.servlet);
-
-    }
-
-
-    /**
-     * Set the <code>ActionServlet</code> instance of our owning application.
+     * Set the bean name of this action form bean.
      *
-     * @param servlet The new servlet instance
+     * @param name The new bean name
      */
-    public void setServlet(ActionServlet servlet) {
+    public void setName(String name) {
 
-        this.servlet = servlet;
+	this.name = name;
+
+    }
+
+
+    /**
+     * Return the Java class name of this action form bean.
+     */
+    public String getType() {
+
+	return (this.type);
+
+    }
+
+
+    /**
+     * Set the Java class name of this action form bean.
+     *
+     * @param type The new Java class name
+     */
+    public void setType(String type) {
+
+	this.type = type;
 
     }
 
@@ -153,57 +142,14 @@ public class ActionMappings {
 
 
     /**
-     * Register a logical mapping to the set configured for this servlet.
-     *
-     * @param mapping The mapping to be added
+     * Return a string representation of this object.
      */
-    public void addMapping(ActionMapping mapping) {
+    public String toString() {
 
-	mappings.put(mapping.getPath(), mapping);
-        mapping.setMappings(this);
-
-    }
-
-
-    /**
-     * Return the mapping associated with the specified logical name,
-     * if any; otherwise return <code>null</code>.
-     *
-     * @param path The request path for which to retrieve a mapping
-     */
-    public ActionMapping findMapping(String path) {
-
-	return ((ActionMapping) mappings.get(path));
-
-    }
-
-
-    /**
-     * Return the set of paths for mappings defined in this collection.
-     * If there are no such mappings, a zero-length array is returned.
-     */
-    public String[] findMappings() {
-
-	Vector paths = new Vector();
-	Enumeration keys = mappings.keys();
-	while (keys.hasMoreElements())
-	    paths.addElement(keys.nextElement());
-	String results[] = new String[paths.size()];
-	paths.copyInto(results);
-	return (results);
-
-    }
-
-
-    /**
-     * Deregister a mapping from the set configured for this servlet.
-     *
-     * @param mapping The mapping to be deregistered
-     */
-    public void removeMapping(ActionMapping mapping) {
-
-	mappings.remove(mapping.getPath());
-        mapping.setMappings(null);
+        StringBuffer sb = new StringBuffer("ActionFormBean[");
+        sb.append(this.name);
+        sb.append(']');
+        return (sb.toString());
 
     }
 
