@@ -7,41 +7,42 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-import java.lang.reflect.Method;
-import java.lang.ref.SoftReference;
-import java.lang.ref.ReferenceQueue;
-import java.util.Map;
-import java.util.HashMap;
 
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMCommandFactory;
+import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
+import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
+import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
+import org.jboss.ejb.plugins.jaws.JPMFindEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMInitCommand;
+import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
+import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
+import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
+import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMStartCommand;
 import org.jboss.ejb.plugins.jaws.JPMStopCommand;
-import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
-import org.jboss.ejb.plugins.jaws.JPMFindEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
-import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMRemoveEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMLoadEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.JPMStoreEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
-import org.jboss.ejb.plugins.jaws.JPMPassivateEntityCommand;
-import org.jboss.ejb.plugins.jaws.metadata.JawsXmlFileLoader;
-import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
-import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.JawsXmlFileLoader;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.util.TimerTask;
 import org.jboss.util.TimerQueue;
+import org.jboss.util.TimerTask;
 
 /**
  * Command factory for the JAWS JDBC layer. This class is primarily responsible
@@ -59,7 +60,7 @@ import org.jboss.util.TimerQueue;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -86,7 +87,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
    // Attributes ----------------------------------------------------
    
    private EntityContainer container;
-   private Context javaCtx;
    private JawsEntityMetaData metadata;
    private final Logger log = Logger.getLogger(this.getClass());
 
@@ -126,7 +126,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
       throws Exception
    {
       this.container = container;
-      this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
 
       String ejbName = container.getBeanMetaData().getEjbName();
       ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
@@ -156,11 +155,6 @@ public class JDBCCommandFactory implements JPMCommandFactory
       return container;
    }
 
-   public Context getJavaCtx()
-   {
-      return javaCtx;
-   }
-   
    public JawsEntityMetaData getMetaData()
    {
       return metadata;
