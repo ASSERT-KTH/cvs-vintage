@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.11 2003/05/03 07:14:57 kataka Exp $
+// $Id: TabStyle.java,v 1.12 2003/05/03 10:13:43 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -158,8 +158,11 @@ public class TabStyle
                     return;
                 } else {
                     t = col.iterator().next();
+                    if (!(t instanceof Fig)) return;
                 }
-            } 
+            } else {
+                return;
+            }
       
         }
 
