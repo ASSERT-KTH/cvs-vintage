@@ -199,7 +199,7 @@ public class IssueListExport extends DataExport
             String val = (String)itr.next();
             if (val.length() == 0)
             {
-                printer.print("-------");
+                printer.print(NO_CONTENT);
             }
             else
             {
