@@ -93,13 +93,13 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     public void postServletDestroy( Context ctx, Handler sw )
 	throws TomcatException
     {
-	jdk11Compat.setContextClassLoader(this.getClass().getLoader());
+	jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
     }
     
     public void postServletInit( Context ctx, Handler sw )
 	throws TomcatException
     {
-	jdk11Compat.setContextClassLoader(this.getClass().getLoader());
+	jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
     }
     
     /** Called before service method is invoked. 
@@ -125,7 +125,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
 	if( request != null )
 	    fixJDKContextClassLoader(request.getContext());
 	else
-	    jdk11Compat.setContextClassLoader(this.getClass().getLoader());
+	    jdk11Compat.setContextClassLoader(this.getClass().getClassLoader());
 	return 0;
     }
 
