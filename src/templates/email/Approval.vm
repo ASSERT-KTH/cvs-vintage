@@ -2,7 +2,7 @@ $body
 
 
 
-#if($comment)Comment: $comment #end
+#if($comment)$l10n.Comment $comment #end
 
 
-#if($globalComment)General Comment: $globalComment #end
+#if($globalComment)$l10n.GeneralComment $globalComment #end
