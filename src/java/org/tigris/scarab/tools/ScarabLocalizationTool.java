@@ -51,6 +51,7 @@ import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.fulcrum.localization.Localization;
+import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
@@ -365,6 +366,16 @@ public class ScarabLocalizationTool
         return name;
     }
 
+    /**
+     * Gets the Accept-Language: HTTP header from the request.
+     * If data is null, then it will return null.
+     */
+    public String getAcceptLanguage()
+    {
+        return (data != null) ?
+            data.getRequest().getHeader(LocalizationService.ACCEPT_LANGUAGE) :
+            null;
+    }
 
     // ---- ApplicationTool implementation  ----------------------------------
 
