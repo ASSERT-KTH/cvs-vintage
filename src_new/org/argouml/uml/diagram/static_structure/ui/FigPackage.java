@@ -1,5 +1,6 @@
 
-// $Id: FigPackage.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: FigPackage.java,v 1.30 2003/08/27 12:26:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: FigPackage.java,v 1.30 2003/08/27 12:26:57 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -323,8 +324,8 @@ public class FigPackage extends FigNodeModelElement {
         // Don't know if this should rather be done in one of the super
         // classes, since similar code is used in FigClass.java etc.
         // Andreas Rueckert <a_rueckert@gmx.net>
-        if (org.argouml.model.ModelFacade.isAPackage(node) && (((MPackage) node).getName() != null))
-            _name.setText(((MModelElement) node).getName());
+        if (org.argouml.model.ModelFacade.isAPackage(node) && (org.argouml.model.ModelFacade.getName(node) != null))
+            _name.setText(org.argouml.model.ModelFacade.getName(node));
     }
 
     public String placeString() {

@@ -1,5 +1,6 @@
 
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
+
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.6 2003/08/27 12:26:56 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +146,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
     protected Object getSelectedModelElement() {
         Object o = null;
         if (getTarget() != null) {
-            o = ((MStructuralFeature) getTarget()).getType();
+            o = org.argouml.model.ModelFacade.getType(getTarget());
         }
         if (o == null) {
             o = " ";

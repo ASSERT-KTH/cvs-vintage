@@ -6,7 +6,8 @@
 
 
 
-// $Id: ColumnDescriptor.java,v 1.23 2003/08/25 23:57:45 bobtarling Exp $
+
+// $Id: ColumnDescriptor.java,v 1.24 2003/08/27 12:26:57 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -197,7 +198,7 @@ class ColumnName extends ColumnDescriptor {
   
     public Object getValueFor(Object target) {
 	if (org.argouml.model.ModelFacade.isAModelElement(target)) {
-	    String res = ((MModelElement) target).getName();
+	    String res = org.argouml.model.ModelFacade.getName(target);
 	    String ocl = "";
 	    if (org.argouml.model.ModelFacade.isAElement(target))
 		ocl = ((MElement) target).getUMLClassName();

@@ -1,5 +1,6 @@
 
-// $Id: FigMNode.java,v 1.12 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: FigMNode.java,v 1.13 2003/08/27 12:26:58 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: FigMNode.java
 // Classes: FigMNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNode.java,v 1.12 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: FigMNode.java,v 1.13 2003/08/27 12:26:58 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -82,8 +83,8 @@ public class FigMNode extends FigNodeModelElement {
 	this();
 	setOwner(node);
 	if (org.argouml.model.ModelFacade.isAClassifier(node)
-	    && (((MClassifier) node).getName() != null))
-	    _name.setText(((MModelElement) node).getName());
+	    && (org.argouml.model.ModelFacade.getName(node) != null))
+	    _name.setText(org.argouml.model.ModelFacade.getName(node));
     }
 
     public String placeString() { return "new Node"; }

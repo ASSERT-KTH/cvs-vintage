@@ -1,4 +1,5 @@
-// $Id: Designer.java,v 1.15 2003/08/21 20:28:16 alexb Exp $
+
+// $Id: Designer.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.15 2003/08/21 20:28:16 alexb Exp $
+// $Id: Designer.java,v 1.16 2003/08/27 12:26:57 bobtarling Exp $
 
 package org.argouml.cognitive;
 
@@ -347,8 +348,7 @@ public class Designer
     /** TODO: remove this */
     public void propertySet(MElementEvent mee) {
         critiqueASAP(mee.getSource(),
-		     ((MModelElement) mee.getOldValue())
-		     .getName());
+		     org.argouml.model.ModelFacade.getName(mee.getOldValue()));
     }
     
     /** TODO: remove this */

@@ -1,4 +1,5 @@
-// $Id: FigObject.java,v 1.11 2003/06/30 18:00:30 linus Exp $
+
+// $Id: FigObject.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.11 2003/06/30 18:00:30 linus Exp $
+// $Id: FigObject.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -223,10 +224,10 @@ public class FigObject extends FigNodeModelElement {
 
 	if (obj.getClassifiers() != null && obj.getClassifiers().size() > 0) {
 
-	    baseString += ((MClassifier) bases.elementAt(0)).getName();
+	    baseString += org.argouml.model.ModelFacade.getName(bases.elementAt(0));
 	    for (int i = 1; i < bases.size(); i++)
 		baseString +=
-		    ", "  + ((MClassifier) bases.elementAt(i)).getName();
+		    ", "  + org.argouml.model.ModelFacade.getName(bases.elementAt(i));
 	}
 
 	if (_readyToEdit) {

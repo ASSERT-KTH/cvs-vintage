@@ -1,5 +1,6 @@
 
-// $Id: UMLListCellRenderer.java,v 1.8 2003/08/25 19:15:51 bobtarling Exp $
+
+// $Id: UMLListCellRenderer.java,v 1.9 2003/08/27 12:26:56 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,7 +80,7 @@ public class UMLListCellRenderer extends DefaultListCellRenderer {
         }
         if (!(org.argouml.model.ModelFacade.isAModelElement(value)))
             return lab;
-        String name = ((MModelElement) value).getName();
+        String name = org.argouml.model.ModelFacade.getName(value);
         if (name == null) {
             lab.setText("(null anon)");
             return lab;

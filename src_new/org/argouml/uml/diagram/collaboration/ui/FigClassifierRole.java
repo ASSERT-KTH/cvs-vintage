@@ -1,4 +1,5 @@
-// $Id: FigClassifierRole.java,v 1.19 2003/08/18 19:14:41 jjones Exp $
+
+// $Id: FigClassifierRole.java,v 1.20 2003/08/27 12:26:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +26,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.19 2003/08/18 19:14:41 jjones Exp $
+// $Id: FigClassifierRole.java,v 1.20 2003/08/27 12:26:59 bobtarling Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -475,11 +476,11 @@ public class FigClassifierRole extends FigNodeModelElement {
 
         if (cr.getBases() != null && cr.getBases().size() > 0) {
             Vector bases = new Vector(cr.getBases());
-            baseString += ((MClassifier) bases.elementAt(0)).getName();
+            baseString += org.argouml.model.ModelFacade.getName(bases.elementAt(0));
 
             for (int i = 1; i < bases.size(); i++)
                 baseString += ", "  +
-                              ((MClassifier) bases.elementAt(i)).getName();
+                              org.argouml.model.ModelFacade.getName(bases.elementAt(i));
         }
 
         // Build the final string and set it as the name text.

@@ -1,6 +1,7 @@
 
 
-// $Id: FigNodeModelElement.java,v 1.72 2003/08/25 19:15:55 bobtarling Exp $
+
+// $Id: FigNodeModelElement.java,v 1.73 2003/08/27 12:26:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -768,7 +769,7 @@ public abstract class FigNodeModelElement
                 return;
             MModelElement owner = (MModelElement) getOwner();
             String nameStr =
-                Notation.generate(this, ((MModelElement) getOwner()).getName());
+                Notation.generate(this, org.argouml.model.ModelFacade.getName(getOwner()));
             _name.setText(nameStr);
             updateBounds();
         }

@@ -2,7 +2,8 @@
 
 
 
-// $Id: Notation.java,v 1.29 2003/08/25 23:57:44 bobtarling Exp $
+
+// $Id: Notation.java,v 1.30 2003/08/27 12:26:56 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +30,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.29 2003/08/25 23:57:44 bobtarling Exp $
+// $Id: Notation.java,v 1.30 2003/08/27 12:26:56 bobtarling Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -560,7 +561,7 @@ public final class Notation implements PropertyChangeListener {
             return SINGLETON.generateMessage(nn, (MMessage) o);
 
         if (org.argouml.model.ModelFacade.isAModelElement(o))
-            return SINGLETON.generateName(nn, ((MModelElement) o).getName());
+            return SINGLETON.generateName(nn, org.argouml.model.ModelFacade.getName(o));
 
         return o.toString();
     }

@@ -1,5 +1,6 @@
 
-// $Id: FigMNodeInstance.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: FigMNodeInstance.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +27,7 @@
 // File: FigMNodeInstance.java
 // Classes: FigMNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigMNodeInstance.java,v 1.11 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: FigMNodeInstance.java,v 1.12 2003/08/27 12:26:58 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -89,8 +90,8 @@ public class FigMNodeInstance extends FigNodeModelElement {
         this();
         setOwner(node);
         if (org.argouml.model.ModelFacade.isAClassifier(node)
-            && (((MClassifier) node).getName() != null))
-            _name.setText(((MModelElement) node).getName());
+            && (org.argouml.model.ModelFacade.getName(node) != null))
+            _name.setText(org.argouml.model.ModelFacade.getName(node));
     }
 
     public String placeString() {
@@ -228,9 +229,9 @@ public class FigMNodeInstance extends FigNodeModelElement {
         Collection col = noi.getClassifiers();
         if (col != null && col.size() > 0) {
             Iterator it = col.iterator();
-            baseStr = ((MClassifier) it.next()).getName();
+            baseStr = org.argouml.model.ModelFacade.getName(it.next());
             while (it.hasNext()) {
-                baseStr += ", " + ((MClassifier) it.next()).getName();
+                baseStr += ", " + org.argouml.model.ModelFacade.getName(it.next());
             }
         }
 

@@ -1,6 +1,7 @@
 
 
-// $Id: FigSeqLink.java,v 1.22 2003/08/25 19:15:54 bobtarling Exp $
+
+// $Id: FigSeqLink.java,v 1.23 2003/08/27 12:26:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +121,7 @@ public class FigSeqLink
 
 
     public String ownerName() {
-	if (getOwner() != null) { return ( (MLink) getOwner()).getName(); }
+	if (getOwner() != null) { return org.argouml.model.ModelFacade.getName(getOwner()); }
 	else return "null";
     }
 

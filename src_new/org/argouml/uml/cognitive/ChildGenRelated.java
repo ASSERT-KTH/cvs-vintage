@@ -1,6 +1,7 @@
 
 
-// $Id: ChildGenRelated.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
+
+// $Id: ChildGenRelated.java,v 1.9 2003/08/27 12:26:59 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +28,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.8 2003/08/25 19:15:59 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.9 2003/08/27 12:26:59 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -79,7 +80,7 @@ public class ChildGenRelated implements ChildGenerator {
 	    List assocEnds = asc.getConnections();
 	    Iterator iter = assocEnds.iterator();
 	    while (iter.hasNext()) {
-		res.add(((MAssociationEnd) iter.next()).getType());
+		res.add(org.argouml.model.ModelFacade.getType(iter.next()));
 	    }
 	    return res.elements();
 	}

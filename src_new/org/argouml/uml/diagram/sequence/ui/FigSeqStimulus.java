@@ -1,4 +1,5 @@
-// $Id: FigSeqStimulus.java,v 1.11 2003/06/30 18:00:31 linus Exp $
+
+// $Id: FigSeqStimulus.java,v 1.12 2003/08/27 12:26:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +25,7 @@
 
 // File: FigSeqStimulus.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqStimulus.java,v 1.11 2003/06/30 18:00:31 linus Exp $
+// $Id: FigSeqStimulus.java,v 1.12 2003/08/27 12:26:57 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -155,7 +156,7 @@ public class FigSeqStimulus extends FigNodeModelElement {
     }
 
     public String ownerName() {
-	if (getOwner() != null) { return ( (MStimulus) getOwner()).getName(); }
+	if (getOwner() != null) { return org.argouml.model.ModelFacade.getName(getOwner()); }
 	else return "null";
     }
 

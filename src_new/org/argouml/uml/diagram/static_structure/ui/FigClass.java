@@ -1,6 +1,7 @@
 
 
-// $Id: FigClass.java,v 1.67 2003/08/25 19:15:56 bobtarling Exp $
+
+// $Id: FigClass.java,v 1.68 2003/08/27 12:26:57 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +29,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.67 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: FigClass.java,v 1.68 2003/08/27 12:26:57 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -289,8 +290,8 @@ public class FigClass extends FigNodeModelElement {
         enableSizeChecking(true);
         setOwner(node);
         if ((org.argouml.model.ModelFacade.isAClassifier(node))
-	    && (((MClassifier) node).getName() != null))
-            _name.setText(((MModelElement) node).getName());
+	    && (org.argouml.model.ModelFacade.getName(node) != null))
+            _name.setText(org.argouml.model.ModelFacade.getName(node));
     }
 
     public String placeString() {
