@@ -1,19 +1,5 @@
 $page.setTitle("Global Artifact Type Edit")
 
-#macro (GlobalArtifactTypeShowBar $var)
-<div class="functnbar$var">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
-<td class="firstchild">
-<input type="submit" value="Save" name="eventSubmit_doSubmit" />
-<input type="submit" value="Create New" name="eventSubmit_doGotocreatepage" />
-<input type="submit" value="Delete Selected" name="eventSubmit_doSubmit" />
-</td>
-</tr>
-</table>
-</div>
-#end
-
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
 <p>
@@ -22,9 +8,12 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
-#GlobalArtifactTypeShowBar("")
+<div class="functnbar">
+<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="Create New" name="eventSubmit_doGotoothertemplate" />
+</div>       
 
 <h3>Artifacts</h3>
 
@@ -45,7 +34,9 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 #end
 </table>
 
-#GlobalArtifactTypeShowBar("2")
+<div class="functnbar2">
+<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;<input type="submit" value="Create New" name="eventSubmit_doGotoothertemplate" />
+</div>       
 
 $intake.declareGroups()
 

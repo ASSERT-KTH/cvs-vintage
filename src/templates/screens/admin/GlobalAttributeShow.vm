@@ -8,28 +8,22 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AdminIndex.vm" />
+
 
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
-<td class="firstchild">
-<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
-<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" />
-</td>
-</tr>
-</table>
-</div>
+<input type="submit" value="Done" eventSubmit_doAlldone" />&#160;<input type="submit" value="Cancel" eventSubmit_doCancel" />&#160;
+</div>       
 
 <h3>Attributes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>Deleted</th>
-<th>Attribute Name</th>
-<th>Input Type</th>
-<th>Description</th>
-<th>Author</th>
+<th>deleted</th>
+<th>input type</th>
+<th>attribute name</th>
+<th>description</th>
+<th>author</th>
 <th>Creation Date</th>
 </tr>
 #set ($allAttributes = $scarabG.AllAttributes)
@@ -37,7 +31,6 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 #set ($attgroup = $intake.Attribute.mapTo($attribute))
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($attgroup.Deleted)</td>
-<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">edit</a>)</td>
 <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -46,6 +39,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
       #end
     #end
 </td>
+<td><a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">$attribute.Name</a></td>
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
 <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
@@ -56,15 +50,14 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 
 $intake.declareGroups()
 
+<div class="functnbar3">
+<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doDeleteaelecteda
+ttributes" />&#160;<small>attribute</small>&#160;
+</div>
+
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
-<td class="firstchild">
-<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
-<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" />
-</td>
-</tr>
-</table>
+<input type="submit" value="Done" eventSubmit_doAlldone" />&#160;<input type="submit" value="Cancel" eventSubmit_doCancel" />&#160;
+</div>       
 
 </form>
 </div>
