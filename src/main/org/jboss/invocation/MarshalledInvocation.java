@@ -34,7 +34,7 @@ import org.jboss.invocation.Invocation;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.7 $
+*   @version $Revision: 1.8 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -76,7 +76,7 @@ implements java.io.Externalizable
    * @param   intf  
    * @return     
    */
-   public static Map getInterfaceHashes(Class intf, boolean methodToLong)
+   public static Map getInterfaceHashes(Class intf)
    {
       // Create method hashes
       Method[] methods = intf.getDeclaredMethods();
@@ -103,11 +103,7 @@ implements java.io.Externalizable
             byte abyte0[] = messagedigest.digest();
             for(int j = 0; j < Math.min(8, abyte0.length); j++)
                hash += (long)(abyte0[j] & 0xff) << j * 8;
-            if (methodToLong)
-               map.put(method, new Long(hash));
-            else 
-               map.put(new Long(hash), method);
-         
+            map.put(method.toString(), new Long(hash));
          }
          catch (Exception e)
          {
@@ -169,7 +165,7 @@ implements java.io.Externalizable
       
       if (methodHashes == null)
       {
-         methodHashes = getInterfaceHashes(method.getDeclaringClass(), true);
+         methodHashes = getInterfaceHashes(method.getDeclaringClass());
          
          // Copy and add
          WeakHashMap newHashMap = new WeakHashMap();
@@ -178,7 +174,7 @@ implements java.io.Externalizable
          hashMap = newHashMap;
       }
       
-      return ((Long)methodHashes.get(method)).longValue();
+      return ((Long)methodHashes.get(method.toString())).longValue();
    }
    
    // Constructors --------------------------------------------------
