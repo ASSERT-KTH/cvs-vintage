@@ -52,7 +52,7 @@ import java.util.ArrayList;
 
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 import org.apache.torque.om.NumberKey;
 
 
@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.11 2002/03/13 00:20:11 elicia Exp $
+ * @version $Id: IssueTest.java,v 1.12 2002/03/14 02:16:37 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -96,7 +96,7 @@ public class IssueTest extends BaseTestCase
             for (int j = 1;j<nbrDfltIssueTypes+1;j++)
             {
                 Issue issue = new Issue();
-                ModuleEntity module = (ModuleEntity) ScarabModulePeer
+                Module module = (Module) ScarabModulePeer
                     .retrieveByPK(new NumberKey(Integer.toString(i)));
                 issue.setModule(module);
                 IssueType issueType = (IssueType)IssueTypePeer

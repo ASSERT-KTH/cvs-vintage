@@ -53,19 +53,19 @@ import org.apache.torque.om.NumberKey;
 
 import junit.framework.TestCase;
 
-import org.tigris.scarab.om.ScarabModuleManager;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplManager;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Query;
-import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.Module;
 
 /**
  * Base test case that provides a few utility methods for
@@ -73,14 +73,14 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.11 2002/03/14 01:13:15 jmcnally Exp $
+ * @version $Id: BaseTestCase.java,v 1.12 2002/03/14 02:16:37 jmcnally Exp $
  */
 public class BaseTestCase extends TestCase
 {
     /** name of the TR.props file */
     private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
-    private static ModuleEntity module = null;
+    private static Module module = null;
     protected static int nbrDfltModules = 7;
     protected static int nbrDfltIssueTypes = 5;
     private ScarabUser user0 = null;
@@ -138,16 +138,16 @@ public class BaseTestCase extends TestCase
     private void initScarab()
         throws Exception
     {
-        module = (ModuleEntity) ScarabModuleManager.getInstance(new NumberKey(5), false);
+        module = (Module) ModuleManager.getInstance(new NumberKey(5), false);
     }
 
     /**
-     * If something like an Issue needs a mapping to a ModuleEntity, then
+     * If something like an Issue needs a mapping to a Module, then
      * this is Module #5 that you can use. For example, you should call:
      * issue.setModule(getModule()) in your Test before you use any
      * of the rest of the methods on the Issue object.
      */
-    protected ModuleEntity getModule()
+    protected Module getModule()
     {
         return this.module;
     }
@@ -157,7 +157,7 @@ public class BaseTestCase extends TestCase
     {
         if (user0 == null)
         {
-            user0 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(0), false);
+            user0 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(0), false);
         }
         return user0;
     }
@@ -167,7 +167,7 @@ public class BaseTestCase extends TestCase
     {
         if (user1 == null)
         {
-            user1 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(2), false);
+            user1 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(2), false);
         }
         return user1;
     }
@@ -177,7 +177,7 @@ public class BaseTestCase extends TestCase
     {
         if (user2 == null)
         {
-            user2 = (ScarabUser) ScarabUserImplManager.getInstance(new NumberKey(3), false);
+            user2 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(3), false);
         }
         return user2;
     }
