@@ -29,7 +29,7 @@ import org.jboss.security.SimplePrincipal;
  *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -91,8 +91,12 @@ public abstract class BeanMetaData extends MetaData {
     private ArrayList excludedMethods = new ArrayList();
 
     // from jboss.xml
+	 
     /** The JNDI name under with the home interface should be bound */
     private String jndiName;
+
+    /** The JNDI name under with the local home interface should be bound */
+    private String localJndiName;
     protected String configurationName;
     private ConfigurationMetaData configuration;
     private String securityProxy;
@@ -158,6 +162,17 @@ public abstract class BeanMetaData extends MetaData {
         }
         return jndiName;
     }
+	
+   /** 
+	 * Gets the JNDI name under with the local home interface should be bound.
+	 * The default is local/<ejbName>
+	 */
+	public String getLocalJndiName() { 
+		if (localJndiName == null) {
+			localJndiName = "local/" + ejbName;
+		}
+		return localJndiName;
+	}
 	
     public String getConfigurationName()
     {
@@ -393,6 +408,9 @@ public abstract class BeanMetaData extends MetaData {
         // set the jndi name, (optional)		
         jndiName = getElementContent(getOptionalChild(element, "jndi-name"));
 		
+        // set the JNDI name under with the local home interface should be bound (optional)		
+        localJndiName = getElementContent(getOptionalChild(element, "local-jndi-name"));
+
         // set the configuration (optional)
         configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
         if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null) {
