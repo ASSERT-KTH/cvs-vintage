@@ -195,7 +195,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
  		// provide a wide enough interface
  		sslImplementation=SSLImplementation.getInstance
  		    (sslImplementationName);
-                ServerSocketFactory socketFactory = 
+                socketFactory = 
                         sslImplementation.getServerSocketFactory();
                 if( socketFactory!=null ) {
                     Enumeration attE=attributes.keys();
