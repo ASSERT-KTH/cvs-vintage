@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.48 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.49 2003/06/10 00:37:41 dlr Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -345,6 +345,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
+        boolean noAGSelected = true;
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -370,6 +371,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     AttributeGroup ag = AttributeGroupManager
                        .getInstance(new NumberKey(groupId), false); 
                     ag.delete(user, module);
+                    noAGSelected = false;
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                     ScarabCache.clear();
                     getIntakeTool(context).removeAll();
@@ -388,6 +390,10 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                     rmit.save();
                 }
             }
+        }
+        if (noAGSelected)
+        {
+           scarabR.setAlertMessage(l10n.get("NoAttributeGroupSelected"));
         }
     }
 
