@@ -14,7 +14,7 @@ import java.security.Principal;
  * with his run-as role.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class RunAsIdentity extends CallerIdentity
 {
@@ -53,7 +53,7 @@ public class RunAsIdentity extends CallerIdentity
          throw new IllegalArgumentException("runAsRole cannot be null");
 
       this.runAsRole = new SimplePrincipal(runAsRole);
-      this.anonymousPrincipal = ANONYMOUS_PRINCIPAL.equals(runAsPrincipal);
+      this.anonymousPrincipal = (runAsPrincipal == null);
    }
 
    public Principal getRunAsRole()

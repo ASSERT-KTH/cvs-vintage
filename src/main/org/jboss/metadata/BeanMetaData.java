@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  *
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -795,7 +795,6 @@ public abstract class BeanMetaData
          {
             securityIdentity.setRunAsPrincipalName(runAsPrincipal);
             securityIdentity.setRunAsCredential(runAsCredential);
-            securityIdentity.setRunAsAnonymous(false);
          }
          else if (runAsAnomymous == true)
          {
