@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBIIOPContext.java,v 1.1 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: JacORBIIOPContext.java,v 1.2 2004/12/15 15:18:18 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -82,11 +82,6 @@ public class JacORBIIOPContext implements Context {
      */
 
     private static HashMap hashMap = new HashMap();
-
-    /**
-     * the Exported Wrapper Hashtable
-     */
-    private static Hashtable wrapperHash = new Hashtable();
 
     /**
      * Root POA used by Carol
@@ -186,7 +181,9 @@ public class JacORBIIOPContext implements Context {
      * If this object is a reference wrapper return the reference If this object
      * is a resource wrapper return the resource
      * @param o the object to resolve
+     * @param name name of the object to unwrap
      * @return the unwrapped object
+     * @throws NamingException if the object cannot be unwraped
      */
     private Object unwrapObject(Object o, Name name) throws NamingException {
         try {
@@ -221,51 +218,22 @@ public class JacORBIIOPContext implements Context {
      * get the portable remote object
      * @param o the object to encode
      * @return a <code>Remote JNDIRemoteReference Object</code> if o is a
-     *         ressource o if else
+     *         resource o if else
+     * @throws NamingException if object cannot be wrapped
      */
-    private Remote wrapObject(Object o, Name name, boolean replace) throws NamingException {
+    private Remote wrapObject(Object o) throws NamingException {
         try {
             if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
                 JNDIReferenceWrapper irw = new JNDIReferenceWrapper(((Referenceable) o).getReference());
                 CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-                Remote oldObj = (Remote) wrapperHash.put(name, irw);
-                if (oldObj != null) {
-                    if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
-                    } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
-                        wrapperHash.put(name, oldObj);
-                        throw new NamingException("Object already bind");
-                    }
-                }
                 return irw;
             } else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
                 JNDIReferenceWrapper irw = new JNDIReferenceWrapper((Reference) o);
                 CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-                Remote oldObj = (Remote) wrapperHash.put(name, irw);
-                if (oldObj != null) {
-                    if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
-                    } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
-                        wrapperHash.put(name, oldObj);
-                        throw new NamingException("Object already bind");
-                    }
-                }
                 return irw;
             } else if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
                 JNDIResourceWrapper irw = new JNDIResourceWrapper((Serializable) o);
                 CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
-                Remote oldObj = (Remote) wrapperHash.put(name, irw);
-                if (oldObj != null) {
-                    if (replace) {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
-                    } else {
-                        CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
-                        wrapperHash.put(name, oldObj);
-                        throw new NamingException("Object already bind");
-                    }
-                }
                 return irw;
             } else {
                 return (Remote) o;
@@ -278,6 +246,12 @@ public class JacORBIIOPContext implements Context {
     // Context methods
     // The Javadoc is deferred to the Context interface.
 
+    /**
+     * Retrieves the named object.
+     * @param name the name of the object to look up
+     * @return the object bound to <tt>name</tt>
+     * @throws NamingException if a naming exception is encountered
+     */
     public Object lookup(Name name) throws NamingException {
         return unwrapObject(iiopContext.lookup(name), name);
     }
@@ -291,7 +265,7 @@ public class JacORBIIOPContext implements Context {
     }
 
     public void bind(Name name, Object obj) throws NamingException {
-        Remote r = wrapObject(obj, name, false);
+        Remote r = wrapObject(obj);
         try {
             if (sasComponent != null) {
                 bindWithSpecificPoa(name, r);
@@ -309,7 +283,7 @@ public class JacORBIIOPContext implements Context {
     }
 
     public void rebind(Name name, Object obj) throws NamingException {
-        Remote r = wrapObject(obj, name, false);
+        Remote r = wrapObject(obj);
         try {
             if (sasComponent != null) {
                 rebindWithSpecificPoa(name, r);
@@ -328,10 +302,6 @@ public class JacORBIIOPContext implements Context {
     public void unbind(Name name) throws NamingException {
         try {
             iiopContext.unbind(name);
-            if (wrapperHash.containsKey(name)) {
-                CarolCurrentConfiguration.getCurrent().getCurrentPortableRemoteObject().unexportObject(
-                        (Remote) wrapperHash.remove(name));
-            }
         } catch (Exception e) {
             throw new NamingException("" + e);
         }
@@ -342,9 +312,6 @@ public class JacORBIIOPContext implements Context {
     }
 
     public void rename(Name oldName, Name newName) throws NamingException {
-        if (wrapperHash.containsKey(oldName)) {
-            wrapperHash.put(newName, wrapperHash.remove(oldName));
-        }
         iiopContext.rename(oldName, newName);
     }
 
@@ -450,6 +417,12 @@ public class JacORBIIOPContext implements Context {
         iiopContext.bind(name, securedPOA.servant_to_reference(servant));
     }
 
+    /**
+     * Build a new POA (with csiv2 policy)
+     * @param nameId name for POA
+     * @return a POA
+     * @throws Exception if the POA cannot be created
+     */
    private POA createSecurePOA(String nameId) throws Exception {
 
        //TODO : Detect if a POA with this name already exists and avoid to create it.
