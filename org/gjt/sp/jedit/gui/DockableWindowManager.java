@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.89 2003/12/20 06:32:53 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.90 2004/01/06 20:47:22 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1698,7 +1698,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 					0,
 					rightWidth,
 					_height); //}}}
-			} //}}}
+			}
 
 			//{{{ Position tool bars if they are managed by us
 			if(topToolbars != null)
