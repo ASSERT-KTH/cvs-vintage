@@ -22,7 +22,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -86,16 +86,6 @@ public class JDBCQueryMetaDataFactory {
       String methodName =
             MetaData.getUniqueChildContent(queryMethod, "method-name");
       
-      // method interface
-      String methodIntf =
-            MetaData.getOptionalChildContent(queryMethod, "method-intf");
-      if(methodIntf!=null && !QueryMetaData.HOME.equals(methodIntf) &&
-            !QueryMetaData.LOCAL_HOME.equals(methodIntf)) {
-         throw new DeploymentException("result-type-mapping must be '" + 
-                     QueryMetaData.HOME + "', '" + 
-                     QueryMetaData.LOCAL_HOME + "', if specified");
-      }
-
       // method params
       ArrayList methodParams = new ArrayList();
       Element methodParamsElement =
@@ -107,22 +97,19 @@ public class JDBCQueryMetaDataFactory {
       }
       Class[] parameters = convertToJavaClasses(methodParams.iterator());
       
-      return getQueryMethods(methodName, parameters, methodIntf);
+      return getQueryMethods(methodName, parameters);
    }
 
    public Method[] getQueryMethods(QueryMetaData queryData)
          throws DeploymentException {
       String methodName = queryData.getMethodName();
       Class[] parameters = convertToJavaClasses(queryData.getMethodParams());
-      String methodIntf = queryData.getMethodIntf();
-      return getQueryMethods(methodName, parameters, methodIntf);
+      return getQueryMethods(methodName, parameters);
    }
 
    public Method[] getQueryMethods(
          String methodName,
-         Class parameters[],
-         String methodIntf) 
-         throws DeploymentException {
+         Class parameters[]) throws DeploymentException {
 
       // find the query and load the xml
       ArrayList methods = new ArrayList(2);
@@ -133,23 +120,15 @@ public class JDBCQueryMetaDataFactory {
                   parameters,
                   entity.getEntityClass()));
       } else {
-         // interface element
-         if(methodIntf == null || methodIntf.equals(QueryMetaData.HOME)) {
-            Class homeClass = entity.getHomeClass(); // optional, might be null
-            if(homeClass != null) {
-               methods.add(getQueryMethod(methodName, parameters, homeClass));
-            }
-         } else if(methodIntf == null ||
-               methodIntf.equals(QueryMetaData.LOCAL_HOME)) {
-
-            // optional, might be null
-            Class localHomeClass = entity.getLocalHomeClass();
-            if(localHomeClass != null) {
-               methods.add(getQueryMethod(
-                        methodName,
-                        parameters,
-                        localHomeClass));
-            }
+         // remote home
+         Class homeClass = entity.getHomeClass();
+         if(homeClass != null) {
+            methods.add(getQueryMethod(methodName, parameters, homeClass));
+         }
+         // local home
+         Class localHomeClass = entity.getLocalHomeClass();
+         if(localHomeClass != null) {
+            methods.add(getQueryMethod(methodName, parameters, localHomeClass));
          }
       }          
 

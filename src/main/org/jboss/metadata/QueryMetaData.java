@@ -17,94 +17,99 @@ import org.jboss.ejb.DeploymentException;
  * Contains information about ejb-ql queries.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class QueryMetaData extends MetaData {
-	// Constants -----------------------------------------------------
 	public final static String REMOTE = "Remote";
 	public final static String LOCAL = "Local";
 
-	public final static String HOME = "Home";
-	public final static String LOCAL_HOME = "LocalHome";
-	
-	// Attributes ----------------------------------------------------
 	private String description;
 	private String methodName;
-	private String methodIntf;
 	private ArrayList methodParams;
 	private String resultTypeMapping;
 	private String ejbQl;
 	
-	// Static --------------------------------------------------------
-	
-	// Constructors --------------------------------------------------
 	public QueryMetaData () {
 		methodParams = new ArrayList();
 	}
 	
-	// Public --------------------------------------------------------
-	
+   /**
+    * Gets the user description of the query.
+    * @return the users description of the query
+    */
 	public String getDescription() {
 		return description;
 	}
 	
+   /**
+    * Gets the name of the query for which this metadata applies.
+    * @return the name of the query method
+    */
 	public String getMethodName() {
 		return methodName;
 	}
 	
-	public String getMethodIntf() {
-		return methodIntf;
-	}
-	
+   /**
+    * Gets an iterator over the parameters of the query method.
+    * @return an iterator over the parameters of the query method.
+    */
 	public Iterator getMethodParams() {
 		return methodParams.iterator();
 	}
 	
+   /**
+    * Gets the interface type of returned ejb objects.  This will be
+    * Local or Remote, and the default is Local. 
+    * @return the type the the interface returned for ejb objects
+    */
   	public String getResultTypeMapping() {
 		return resultTypeMapping;
 	}
 
-  	public String getEjbQl() {
+  	/**
+    * Gets the ejb-ql for this query.
+    * @return the ejb-ql for this query
+    */
+   public String getEjbQl() {
 		return ejbQl;
 	}
 
-    
+   /**
+    * Loads the data from the query xml element.
+    * @param element the query xml element from the ejb-jar.xml file
+    * @throws DeploymentException if the query element is malformed
+    */
 	public void importEjbJarXml(Element element) throws DeploymentException {
 		// description
-		description = getElementContent(getOptionalChild(element, "description"));
+		description = getOptionalChildContent(element, "description");
 		
 		// query-method sub-element
 		Element queryMethod = getUniqueChild(element, "query-method");
 		
 		// method name
-		methodName = getElementContent(getUniqueChild(queryMethod, "method-name"));
+		methodName = getUniqueChildContent(queryMethod, "method-name");
 		
-		// method interface
-		methodIntf = getElementContent(getOptionalChild(queryMethod, "method-intf"));
-		if(methodIntf!=null && !HOME.equals(methodIntf) && !LOCAL_HOME.equals(methodIntf)) {
-			throw new DeploymentException("result-type-mapping must be '" + 
-							HOME + "', '" + 
-							LOCAL_HOME + "', if specified");
-		}
-
 		// method params
-		Element methodParamsElement = getUniqueChild(queryMethod, "method-params");
-		Iterator iterator = getChildrenByTagName(methodParamsElement, "method-param");			
+		Element methodParamsElement = 
+            getUniqueChild(queryMethod, "method-params");
+		Iterator iterator = 
+            getChildrenByTagName(methodParamsElement, "method-param");			
 		while (iterator.hasNext()) {
 			methodParams.add(getElementContent((Element)iterator.next()));
 		}
 
 		// result type mapping
-		resultTypeMapping = getElementContent(getOptionalChild(element, "result-type-mapping"));
+		resultTypeMapping = 
+            getOptionalChildContent(element, "result-type-mapping");
 		if(resultTypeMapping == null) {
 			resultTypeMapping = LOCAL;
 		}
 		if(!REMOTE.equals(resultTypeMapping) &&
 				!LOCAL.equals(resultTypeMapping)) {
-			throw new DeploymentException("result-type-mapping must be '" + REMOTE + "' or '" + LOCAL + "', if specified");
+			throw new DeploymentException("result-type-mapping must be '" +
+               REMOTE + "' or '" + LOCAL + "', if specified");
 		}
 
 		ejbQl = getElementContent(getUniqueChild(element, "ejb-ql"));
 	}		
-
 }
