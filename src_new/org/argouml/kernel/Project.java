@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.83 2003/09/22 18:41:51 alexb Exp $
+// $Id: Project.java,v 1.84 2003/09/29 18:51:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,7 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -1045,13 +1046,17 @@ public class Project implements java.io.Serializable, TargetListener {
             if (obj instanceof ArgoDiagram) {
                 removeProjectMemberDiagram((ArgoDiagram) obj);
                 needSave = true;
+                // only need to manually delete diagrams because they
+                // don't have a decent event system set up.
+                ExplorerEventAdaptor.getInstance().modelElementRemoved(obj);
             }
             if (obj instanceof Fig) {
                 ((Fig) obj).dispose();
                 needSave = true;
+                // for explorer deletion:
+                obj = ((Fig) obj).getOwner();
             }
         }        
-        NavigatorPane.getInstance().forceUpdate();
         setNeedsSave(needSave);
     }
 

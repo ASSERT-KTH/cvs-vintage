@@ -1,4 +1,4 @@
-// $Id: NavigatorConfigDialog.java,v 1.13 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: NavigatorConfigDialog.java,v 1.14 2003/09/29 18:51:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,7 +156,7 @@ public class NavigatorConfigDialog extends JDialog
      * Initialize the Perspectives tab panel.
      */
     public void initPersPanel() {
-	_persList.setListData(Converter.convert(_navPane.buildPerspectives()));
+	//_persList.setListData(Converter.convert(_navPane.buildPerspectives()));
 	_ruleLibList.setListData(new Vector());
 	_rulesList.setListData(new Vector());
 
@@ -331,12 +331,12 @@ public class NavigatorConfigDialog extends JDialog
      * are still possible; initPersPanel() mentions the need to allow editing.
      */
     public void doNewPers() {
-	NavPerspective newPers =
-	    new NavPerspective("New Perspective " +
-			       (_navPane.buildPerspectives().size() + 1));
-	_navPane.addPerspective(newPers);
-	_persList.setListData(Converter.convert(_navPane.buildPerspectives()));
-	_persList.setSelectedValue(newPers, true);
+//	NavPerspective newPers =
+//	    new NavPerspective("New Perspective " +
+//			       (_navPane.buildPerspectives().size() + 1));
+//	_navPane.addPerspective(newPers);
+//	_persList.setListData(Converter.convert(_navPane.buildPerspectives()));
+//	_persList.setSelectedValue(newPers, true);
     }
 
     /**
@@ -358,11 +358,11 @@ public class NavigatorConfigDialog extends JDialog
 					  "Are you sure?",
 					  JOptionPane.YES_NO_OPTION);
 	if (response == JOptionPane.YES_OPTION) {
-	    _navPane.removePerspective(np);
-
-	    // Remove it from the UI list
-	    _persList
-		.setListData(Converter.convert(_navPane.buildPerspectives()));
+//	    _navPane.removePerspective(np);
+//
+//	    // Remove it from the UI list
+//	    _persList
+//		.setListData(Converter.convert(_navPane.buildPerspectives()));
 	}
     }
 
@@ -447,7 +447,7 @@ public class NavigatorConfigDialog extends JDialog
     public void doOk() {
 	NavigatorPane np = NavigatorPane.getInstance();
 	//np.setPerspectives(NavPerspective.getRegisteredPerspectives());
-	np.updateTree();
+	//np.updateTree();
 	setVisible(false);
 	dispose();
     }
@@ -493,16 +493,5 @@ public class NavigatorConfigDialog extends JDialog
 	if (src == _ruleLibList && _addRuleButton.isEnabled()) doAddRule();
 	if (src == _rulesList && _removeRuleButton.isEnabled()) doRemoveRule();
     }
-
-    /**
-     * For testing the dialog.
-     * Displays the dialog without needing to load the application.
-     */
-    //public static void main(String[] args) {
-    //  NavigatorConfigDialog dialog =
-    //  new NavigatorConfigDialog( JOptionPane.getRootFrame(), _navPane );
-    //  dialog.setLocation(0,0);
-    //  dialog.setVisible(true);
-    //}
 
 }

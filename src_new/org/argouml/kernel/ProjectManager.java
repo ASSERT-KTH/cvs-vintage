@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.20 2003/09/19 11:46:37 thierrylach Exp $
+// $Id: ProjectManager.java,v 1.21 2003/09/29 18:51:52 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,8 +194,12 @@ public final class ProjectManager {
         _creatingCurrentProject = true;
         Argo.log.info("making empty project");
         Project p = new Project();
+        // the following line should not normally be here,
+        // but is necessary for argouml start up.
         setCurrentProject(p);
         p.makeUntitledProject();
+        // set the current project after making it!
+        setCurrentProject(p);
         _creatingCurrentProject = false;
         return p;
     }

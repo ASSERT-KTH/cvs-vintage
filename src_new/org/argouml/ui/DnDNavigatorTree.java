@@ -1,5 +1,5 @@
 
-// $Id: DnDNavigatorTree.java,v 1.7 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: DnDNavigatorTree.java,v 1.8 2003/09/29 18:51:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,16 +44,17 @@ import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
+import org.argouml.ui.explorer.ExplorerTree;
 
 /**
  * This class extends the default Argo JTree with Drag and drop capabilities.
  *
- * <p>$Id: DnDNavigatorTree.java,v 1.7 2003/09/04 20:11:45 thierrylach Exp $
+ * <p>$Id: DnDNavigatorTree.java,v 1.8 2003/09/29 18:51:52 alexb Exp $
  *
  * @author  alexb
  * @since Created on 16 April 2003
  */
-public class DnDNavigatorTree extends DisplayTextTree
+public class DnDNavigatorTree extends ExplorerTree
     implements DragGestureListener,
 	       DragSourceListener
 {

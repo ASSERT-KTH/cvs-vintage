@@ -1,4 +1,4 @@
-// $Id: AbstractGoRule.java,v 1.14 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: AbstractGoRule.java,v 1.15 2003/09/29 18:51:52 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,8 @@ public abstract class AbstractGoRule implements TreeModel {
      */
     public final boolean isLeaf(Object node) {
 
-        return (getChildCount(node) < 1);
+        //return (getChildCount(node) < 1);
+        return false;
     }
 
     /**
