@@ -34,7 +34,6 @@ public class TableModelFilter extends BasicTableModelFilter {
 
 	public TableModelFilter(TreeTableModelInterface tableModel) {
 		super(tableModel);
-
 	}
 
 	/* (non-Javadoc)
@@ -49,7 +48,6 @@ public class TableModelFilter extends BasicTableModelFilter {
 	 */
 	public void modify(Object[] uids) {
 		super.modify(uids);
-
 	}
 
 	/* (non-Javadoc)
@@ -57,13 +55,10 @@ public class TableModelFilter extends BasicTableModelFilter {
 	 */
 	public void remove(Object[] uids) {
 		super.remove(uids);
-
 	}
 
 	public void update() {
 		if (isEnabled()) {
-			//System.out.println("starting filtering");
-
 			HeaderList headerList = getHeaderList();
 			MessageNode rootNode = getRootNode();
 			Map map = getMap();
@@ -75,27 +70,19 @@ public class TableModelFilter extends BasicTableModelFilter {
 			map.clear();
 
 			ColumbaHeader header;
-
 			for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 				Object uid = e.nextElement();
 				header = (ColumbaHeader) headerList.get(uid);
-
-				boolean result = addItem(header);
-
-				if (result) {
-
+				if (addItem(header)) {
 					MessageNode childNode = new MessageNode(header, uid);
 					rootNode.add(childNode);
 					map.put(uid, childNode);
 				}
 			}
 
-
 		} else {
 			// do not filter anything
-
 			super.update();
-
 		}
 	}
 	
@@ -104,10 +91,7 @@ public class TableModelFilter extends BasicTableModelFilter {
 	 * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
 	 */
 	public void set(HeaderList headerList) {
-
 		super.set(headerList);
-		
 		update();
 	}
-
 }
