@@ -18,8 +18,8 @@
 <% } else { %>
 
   <a href="sessionState.jsp?ctx=<%= request.getParameter( "ctx" ) %>&host=<%=
-           request.getParmeter("host") == null ? "" : 
-	     request.getParameter("host")">Session info</a>
+           request.getParameter("host") == null ? "" : 
+	     request.getParameter("host") %>Session info</a>
   <table border="0" cellpad="2" >
   <tr bgcolor="#e1e1e1">
 
