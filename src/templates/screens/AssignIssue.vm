@@ -69,9 +69,9 @@
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap">&#160;</th>
+		<th nowrap="nowrap">Select</th>
 		<th>Name</th>
-		<th>email</th>
+		<th>Email</th>
 		<th>Association</th>
 		</tr>
 
@@ -157,9 +157,9 @@ $intake.declareGroups()
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
-	<th nowrap="nowrap">&#160;</th>
+	<th nowrap="nowrap">Select</th>
 	<th>Name</th>
-	<th><a href="#" title="sort">email</a></th>
+	<th><a href="#" title="sort">Email</a></th>
 	<th>Association</th>
 	</tr>
         ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
