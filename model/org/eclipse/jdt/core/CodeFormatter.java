@@ -10,11 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.core;
 
-/**
- * Specification for a generic source code formatter. This is still subject to change.
- * 
- * @since 3.0
- */
 public abstract class CodeFormatter {
 
 	/**
