@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.212 2004/09/21 15:47:50 mvw Exp $
+// $Id: ModelFacade.java,v 1.213 2004/10/12 17:44:26 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1604,6 +1604,8 @@ public class ModelFacade {
 
     /**
      * Recognizer for concurent composite state.
+     * @deprecated in 0.17.2 by Bob Tarling use isConcurrent(Object)
+     * which covers up the mis-spelling by NSUML
      *
      * @param handle composite state
      * @return true if concurent.
@@ -1613,6 +1615,19 @@ public class ModelFacade {
             return ((MCompositeState) handle).isConcurent();
         }
 	return illegalArgumentBoolean(handle);
+    }
+
+    /**
+     * Recognizer for concurrent composite state.
+     *
+     * @param handle composite state
+     * @return true if concurent.
+     */
+    public static boolean isConcurrent(Object handle) {
+        if (handle instanceof MCompositeState) {
+            return ((MCompositeState) handle).isConcurent();
+        }
+    return illegalArgumentBoolean(handle);
     }
 
     /**
@@ -6006,6 +6021,8 @@ public class ModelFacade {
 
     /**
      * Makes a Composite State concurrent
+     * @deprecated in 0.17.2 by Bob Tarling us setConcurrent(Object, boolean)
+     * which covers up the mis-spelling by NSUML
      * @param handle the CompositState
      * @param concurrent boolean
      */
@@ -6015,6 +6032,19 @@ public class ModelFacade {
             return;
         }
 	illegalArgument(handle);
+    }
+
+    /**
+     * Makes a Composite State concurrent
+     * @param handle the CompositState
+     * @param concurrent boolean
+     */
+    public static void setConcurrent(Object handle, boolean concurrent) {
+        if (handle instanceof MCompositeState) {
+            ((MCompositeState) handle).setConcurent(concurrent);
+            return;
+        }
+        illegalArgument(handle);
     }
 
     /**

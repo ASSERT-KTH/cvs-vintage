@@ -1,4 +1,4 @@
-// $Id: ActionSetCompositeStateConcurrent.java,v 1.7 2004/09/19 19:29:57 mvw Exp $
+// $Id: ActionSetCompositeStateConcurrent.java,v 1.8 2004/10/12 17:44:26 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,9 +55,11 @@ public class ActionSetCompositeStateConcurrent extends UMLChangeAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isACompositeState(target)) {
-                Object m = /*(MCompositeState)*/ target;
-                ModelFacade.setConcurent(m, !ModelFacade.isConcurent(m));
+            if (ModelFacade.isACompositeState(target)) {
+                Object compositeState = target;
+                ModelFacade.setConcurrent(
+                        compositeState,
+                        !ModelFacade.isConcurrent(compositeState));
             }
         }
     }
