@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.3 2001/11/19 03:25:29 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.4 2001/11/21 21:59:45 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -88,17 +88,30 @@ public class ScarabSecurity
     public static final String ISSUE__ENTER = 
         getService().getPermissionImpl("Issue__Enter");
 
-    /** 
+    /* * 
      * Specifies that a User is allowed to view an issue.
-     */
+     * /
     public static final String ISSUE__VIEW = 
         getService().getPermissionImpl("Issue__View");
+    */
 
     /** 
      * Specifies that a User is allowed to search for issues.
      */
     public static final String ISSUE__SEARCH = 
         getService().getPermissionImpl("Issue__Search");
+
+    /** 
+     * Specifies that a User is allowed to search for issues.
+     */
+    public static final String ISSUE__ATTACH = 
+        getService().getPermissionImpl("Issue__Attach");
+
+    /** 
+     * Specifies that a User is allowed to search for issues.
+     */
+    public static final String ISSUE__ASSIGN = 
+        getService().getPermissionImpl("Issue__Assign");
 
     /** 
      * Specifies that a User is allowed to approve a query.
@@ -136,6 +149,12 @@ public class ScarabSecurity
     public static final String MODULE__ADD = 
         getService().getPermissionImpl("Module__Add");
 
+    /** 
+     * Specifies that a User is allowed to set up voting policies.
+     */
+    public static final String VOTE__MANAGE = 
+        getService().getPermissionImpl("Vote__Manage");
+
 
     private ExtendedProperties props;
     private List allPermissions;
@@ -157,14 +176,17 @@ public class ScarabSecurity
             List tmpPerms = new ArrayList();
             tmpPerms.add(ISSUE__EDIT);
             tmpPerms.add(ISSUE__ENTER);
-            tmpPerms.add(ISSUE__VIEW);
+            //tmpPerms.add(ISSUE__VIEW);
             tmpPerms.add(ISSUE__SEARCH);
+            tmpPerms.add(ISSUE__ASSIGN);
+            tmpPerms.add(ISSUE__ATTACH);
             tmpPerms.add(ITEM__APPROVE);
             tmpPerms.add(ITEM__DELETE);
             tmpPerms.add(USER__EDIT_PREFERENCES);
             tmpPerms.add(DOMAIN__EDIT);
             tmpPerms.add(MODULE__EDIT);
             tmpPerms.add(MODULE__ADD);
+            tmpPerms.add(VOTE__MANAGE);
             allPermissions = tmpPerms;
         }
         
