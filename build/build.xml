@@ -274,7 +274,8 @@
         <filter token="LOG_APPEND_JCS" value="${scarab.log.append.jcs}"/>
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
-        <copy todir="${build.project.webinf}/conf" filtering="yes">
+        
+        <copy todir="${build.project.webinf}/conf" filtering="yes" overwrite="true">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
                 <include name="*.xml"/>
@@ -314,6 +315,7 @@
 
         <!-- the source code directory -->
         <filter token="OM" value="org.tigris.scarab.om"/>
+        <!-- touch this file because we replace the version tokens in it with a timestamp -->
         <touch file="${src.java.dir.scarab}/org/tigris/scarab/tools/ScarabRequestTool.java" />
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
@@ -1429,7 +1431,7 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <!-- Create a war file                                                  -->
     <!-- ================================================================== -->
-    <target name="war" depends="compile,war-requirements-failure">
+    <target name="war" depends="war-requirements-failure,compile">
 
         <war warfile="${scarab.war.file}"
               webxml="${build.project.webinf}/web.xml">
