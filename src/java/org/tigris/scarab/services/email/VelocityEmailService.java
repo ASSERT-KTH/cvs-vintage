@@ -78,6 +78,9 @@ import org.apache.fulcrum.template.BaseTemplateEngineService;
 import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.fulcrum.velocity.ContextAdapter;
 
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.ScarabConstants;
+
 /**
  * This is a Service that can process Velocity templates from within a
  * Turbine Screen.  Here's an example of how you might use it from a
@@ -93,6 +96,10 @@ import org.apache.fulcrum.velocity.ContextAdapter;
  * chars/bytes and codes.
  * <i>bytes -> [encoding] -> charset -> [rendering] -> glyphs</i>
  *
+ * <p>This copy of TurbineVelocityService has been slightly modified
+ * from its original form to support toggling of Scarab's cross-site
+ * scripting filter.</p>
+ *
  * @author <a href="mailto:mbryson@mont.mindspring.com">Dave Bryson</a>
  * @author <a href="mailto:krzewski@e-point.pl">Rafal Krzewski</a>
  * @author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
@@ -101,7 +108,7 @@ import org.apache.fulcrum.velocity.ContextAdapter;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:james@jamestaylor.org">James Taylor</a>
- * @version $Id: VelocityEmailService.java,v 1.1 2003/04/24 23:04:07 jon Exp $
+ * @version $Id: VelocityEmailService.java,v 1.2 2003/04/25 03:12:35 dlr Exp $
  */
 public class VelocityEmailService
     extends BaseTemplateEngineService
@@ -267,6 +274,7 @@ public class VelocityEmailService
                               Writer writer, String encoding)
         throws ServiceException
     {
+        ScarabLocalizationTool l10n = null;
         try
         {
             // If the context is not already an instance of
@@ -290,6 +298,14 @@ public class VelocityEmailService
             {
                 encoding = DEFAULT_CHAR_SET;
             }
+
+            // Assumption: Emails are always plain text.
+            l10n = (ScarabLocalizationTool)
+                context.get(ScarabConstants.LOCALIZATION_TOOL);
+            if (l10n != null)
+            {
+                l10n.setFilterEnabled(false);
+            }
             // Request scoped encoding first supported by Velocity 1.1.
             velocityEngine.mergeTemplate(filename, encoding,
                                          eventContext, writer);
@@ -297,6 +313,13 @@ public class VelocityEmailService
         catch (Exception e)
         {
             renderingError(filename, e);
+        }
+        finally
+        {
+            if (l10n != null)
+            {
+                l10n.setFilterEnabled(true);
+            }
         }
     }
 

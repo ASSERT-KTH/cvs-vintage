@@ -1,1 +1,1 @@
-$l10n.setDisableFilter(true).format("MinimalAssignIssueEmailSubject", $issue.UniqueId)
+$l10n.format("MinimalAssignIssueEmailSubject", $issue.UniqueId)

@@ -1,1 +1,1 @@
-#set ($args = [$issue.Module.RealName.toUpperCase(), $issue.UniqueId])$l10n.setDisableFilter(true).format("DefaultModifyIssueEmailSubject", $args)
+#set ($args = [$issue.Module.RealName.toUpperCase(), $issue.UniqueId])$l10n.format("DefaultModifyIssueEmailSubject", $args)

@@ -107,10 +107,16 @@ public class ScarabLocalizationTool
     private String bundlePrefix;
     private String oldBundlePrefix;
 
-    // store a locale which is useful for creating a tool outside of a request
+    /**
+     * Store a locale which is useful for using a tool outside of a
+     * request.
+     */
     private Locale locale;
 
-    private boolean disableFilter = false;
+    /**
+     * Whether cross-site scripting filtering is enabled.
+     */
+    private boolean filterEnabled = true;
 
     /**
      * Creates a new instance.  The object should have init(Object) called
@@ -221,24 +227,21 @@ public class ScarabLocalizationTool
     }
 
     /**
-     * Allow us to be able to disable a filter when rendering 
-     * something from the format() method. the default is to
-     * have it enabled.
+     * Allow us to be able to enable/disable our cross-site scripting
+     * filter when rendering something from the format() method.  The
+     * default is to have it enabled.
      */
-    public ScarabLocalizationTool setDisableFilter(boolean v)
+    public void setFilterEnabled(boolean v)
     {
-        disableFilter = v;
-        return this;
+        filterEnabled = v;
     }
     
     /**
-     * Allow us to be able to disable a filter when rendering 
-     * something from the format() method. the default is to
-     * have it enabled.
+     * Whether our cross-site scripting filter is enabled.
      */
-    public boolean getDisableFilter()
+    public boolean isFilterEnabled()
     {
-        return disableFilter;
+        return filterEnabled;
     }
 
     /**
@@ -265,15 +268,13 @@ public class ScarabLocalizationTool
             // we don't filter Number, because these are sometimes passed
             // to message formatter in order to make a choice.  Converting
             // the number to a String will cause error
-            if (!getDisableFilter() && obj != null && 
+            if (isFilterEnabled() && obj != null && 
                    !(obj instanceof SkipFiltering) && 
                    !(obj instanceof Number)) 
             {
                 args[i] = ReferenceInsertionFilter.filter(obj.toString());
             }
         }
-
-        setDisableFilter(false);
 
         try
         {
@@ -426,6 +427,6 @@ public class ScarabLocalizationTool
         bundlePrefix = null;
         oldBundlePrefix = null;
         locale = null;
-        setDisableFilter(false);
+        setFilterEnabled(true);
     }
 }
