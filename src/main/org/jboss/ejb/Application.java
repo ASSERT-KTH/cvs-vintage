@@ -28,7 +28,7 @@ import org.jboss.system.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class Application
    implements Service
@@ -185,11 +185,13 @@ public class Application
    // Service implementation ----------------------------------------
    public void init() throws Exception {throw new Exception("don't call init");}
    public void destroy(){}
-   
    /**
-    * Starts all the containers of this application.
+    * The mbean Service interface <code>start</code> method calls
+    * the start method on each contatiner, then the init method on each 
+    * container.  Conversion to a different registration system with one-phase 
+    * startup is conceivable.
     *
-    * @exception Exception
+    * @exception Exception if an error occurs
     */
    public void start() throws Exception
    {
@@ -214,6 +216,11 @@ public class Application
       {
          Container con = (Container)i.next();
          con.stop();        
+      }
+      for (Iterator i = containers.values().iterator(); i.hasNext();)
+      {
+         Container con = (Container)i.next();
+         con.destroy();        
       }
    }
 	
