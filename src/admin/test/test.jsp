@@ -26,7 +26,10 @@ Target:
 <br>
 
 Debug: <input type="checkbox" name="debug" value="10"><br>
-
+Port: <input type="input" name="port" value="8080"><br>
+Host: <input type="input" name="host" value="127.0.0.1"><br>
+Expected protocol: <input type="input" name="server.proto" value="HTTP/1.0">
+ ( use when testing Apache - tomcat3.x returns HTTP/1.0 ) <br>
 <input type="submit">
 </form>
 
@@ -77,6 +80,23 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 <pre>
   <%= failures.getMatcher().getMessage() %>
 </pre>
+
+<% // use a tag %>
+<% if( request.getParameter("debug" ) != null ) { %>
+  <b>Response status: </b> 
+  <%= failures.getHttpClient().getResponse().getResponseLine() %>
+  <br>
+  <b>Response headers: </b>
+   (I'm not sure how to do embeded iterations, need JSP expert )
+  <br>
+  
+  <b>Response body: </b>
+  <pre>
+  <%= failures.getHttpClient().getResponse().getResponseBody() %>
+  </pre>
+<% } %>  
+
+
 </adm:iterate>
 
 <% // -------------------- Success story -------------------- %>
