@@ -85,7 +85,7 @@ import org.apache.tomcat.util.IntrospectionUtils;
  * implementation
  */
 public class Hooks {
-    public static final int INITIAL_HOOKS=20;
+    public static final int INITIAL_HOOKS=24;
     int hookCount;
     String hookNames[];
     Vector hooksV[];
