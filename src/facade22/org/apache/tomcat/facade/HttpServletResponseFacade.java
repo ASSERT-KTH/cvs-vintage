@@ -152,7 +152,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     public String encodeURL(String url) {
 	if (isEncodeable(toAbsolute(url)))
 	    return (toEncoded(url,
-			      response.getRequest().getRequestedSessionId()));
+			      response.getRequest().getSessionId()));
 	else
 	    return (url);
     }

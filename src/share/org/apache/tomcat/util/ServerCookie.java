@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  *
  * ====================================================================
- */ 
+ */
 package org.apache.tomcat.util;
 
 import java.io.*;
@@ -63,7 +63,7 @@ import java.io.*;
  *   Allows recycling and uses MessageBytes as low-level
  *  representation ( and thus the byte-> char conversion can be delayed
  *  until we know the charset ).
- * 
+ *
  *  Tomcat.core uses this recyclable object to represent cookies,
  *  and the facade will convert it to the external representation.
  */
@@ -72,12 +72,11 @@ public class ServerCookie implements Serializable {
     private MessageBytes value=new MessageBytes();
 
     private MessageBytes comment=new MessageBytes();    // ;Comment=VALUE
-
-    private MessageBytes domain;    // ;Domain=VALUE ...
+    private MessageBytes domain=new MessageBytes();    // ;Domain=VALUE ...
 
     private int maxAge = -1;	// ;Max-Age=VALUE
 				// ;Discard ... implied by maxAge < 0
-    private MessageBytes path;	// ;Path=VALUE .
+    private MessageBytes path=new MessageBytes();	// ;Path=VALUE .
     private boolean secure;	// ;Secure
     private int version = 0;	// ;Version=1
 
@@ -87,13 +86,15 @@ public class ServerCookie implements Serializable {
     }
 
     public void recycle() {
-	name.recycle();
-	value.recycle();
-	comment.recycle();
-	maxAge=-1;
-//	path.recycle();
-	version=0;
-	secure=false;
+        path.recycle();
+    	name.recycle();
+    	value.recycle();
+    	comment.recycle();
+    	maxAge=-1;
+    	path.recycle();
+        domain.recycle();
+    	version=0;
+    	secure=false;
     }
 
     public void parse( MessageBytes input ) {

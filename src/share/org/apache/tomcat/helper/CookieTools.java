@@ -203,7 +203,7 @@ public class CookieTools {
 
 	// add domain information, if present
 
-	if (cookie.getDomain() != null) {
+	if (cookie.getDomain().isNull()) {
 	    buf.append(";Domain=");
 	    maybeQuote (version, buf, cookie.getDomain().toString());
 	}
@@ -223,7 +223,7 @@ public class CookieTools {
 	  buf.append (";Discard");
 
 	// Path=path
-	if (cookie.getPath() != null) {
+	if (cookie.getPath().isNull()) {
 	    buf.append (";Path=");
 	    maybeQuote (version, buf, cookie.getPath().toString());
 	}

@@ -83,7 +83,7 @@ final class CookieFacade extends Cookie {
     
     CookieFacade( ServerCookie sC ) {
 	// we can't reuse super anyway
-	super(null, null);
+	super("", "");
 	this.sC=sC;
     }
     public void setComment(String purpose) {
