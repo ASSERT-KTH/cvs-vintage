@@ -61,7 +61,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -279,21 +279,22 @@ public class JRMPInvoker
 
       ctx.close();
    }
-   
+  
    protected void stopService() throws Exception
    {
       InitialContext ctx = new InitialContext();
       
-      try {
-         ctx.unbind("invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp");
-         
+      try
+      {
          unexportCI();
+         ctx.unbind("invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp");
       }
-      finally {
+      finally
+      {
          ctx.close();
       }
    }
-   
+ 
    protected void destroyService() throws Exception
    {
       // Export references to the bean
