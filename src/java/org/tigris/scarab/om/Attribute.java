@@ -163,6 +163,15 @@ public class Attribute
         return attribute;
     }
 
+    /**
+     * Return an instance based on the passed in attribute id as an int
+     */
+    public static Attribute getInstance(int id) 
+        throws Exception
+    {
+        return getInstance((ObjectKey)new NumberKey(id));
+    }
+
     public static Attribute getAttributeForOption(NumberKey optionId)
     {
         return (Attribute)optionAttributeMap.get(optionId);
