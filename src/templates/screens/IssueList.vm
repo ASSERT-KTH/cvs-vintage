@@ -44,19 +44,11 @@ $page.setTitle("Artifact List")
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
 
+<P>
+
 ## PAGINATION
 #if( $paginated)
- <p class="paginate">
- #if($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("IssueList.vm").toString())
-  <a href="$prevLink">&laquo;</a> previous |
- #end
- $pageNum of $scarabR.NbrPages
- #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage("IssueList.vm").toString())
-  | <a href="$nextLink">&raquo;</a> next
- #end
- </p>
+  #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
 #end
 
 <h3>Search results</h3>
@@ -105,6 +97,10 @@ $page.setTitle("Artifact List")
 <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;<input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;<small>selected</small>&#160;&#160;<img src="../csi/images/seperator.gif" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;<input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;<input type="submit" value="View verbose" name="eventSubmit_doViewselected" />&#160;<small>all</small>&#160;
 </div>
 		
+#if ($paginated)
+  #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
+#end
+
 <p><small>(<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</small></p>
 
 <div class="axial">
@@ -121,20 +117,8 @@ $page.setTitle("Artifact List")
      </tr>
       </table>
 </div>
+#end
 
-#if ($paginated)
- <p class="paginate">
- #if ($scarabR.PrevPage != 0)
-  #set ($prevLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").toString())
-  <a href="$prevLink">&laquo;</a> previous |
- #end
- $pageNum of $scarabR.NbrPages
- #if ($scarabR.NextPage != 0)
-  #set ($nextLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").toString())
-  | <a href="$nextLink">&raquo;</a> next
- #end
-#end
-#end
 
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;

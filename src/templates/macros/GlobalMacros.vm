@@ -274,3 +274,17 @@
 <option #selected($optionModel.isSelected()) 
     value="$optionModel.Value">$optionModel.Name</option>
 #end
+
+#macro (paginate $pageNum $resultsPerPage $searchType $page)
+ <p class="paginate">
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage($template).toString())
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+ $pageNum of $scarabR.NbrPages
+ #if ($scarabR.NextPage != 0)
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage($template).toString())
+  | <a href="$nextLink">&raquo;</a> next
+ #end
+ </p>
+#end
