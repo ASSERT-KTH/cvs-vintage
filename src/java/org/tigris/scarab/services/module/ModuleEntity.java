@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.24 2001/10/16 00:47:32 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.25 2001/10/16 21:42:22 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -167,9 +167,6 @@ public interface ModuleEntity
     public Issue getNewIssue()
         throws Exception;
 
-    public Attribute[] getActiveAttributes()
-        throws Exception;
-
     public List getRModuleOptions(Attribute attribute)
         throws Exception;
 
@@ -217,5 +214,77 @@ public interface ModuleEntity
      * List of global Issue Template objects associated with this module.
      */
     public List getGlobalTemplates()
+        throws Exception;
+
+    /**
+     * Array of Attributes used for deduping.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getDedupeAttributes()
+        throws Exception;
+
+    /**
+     * Array of Attributes used for quick search.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getQuickSearchAttributes()
+        throws Exception;
+
+    /**
+     * Array of Attributes which are active and required by this module.
+     *
+     * @param inOrder flag determines whether the attribute order is important
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getRequiredAttributes()
+        throws Exception;
+
+    /**
+     * Array of active Attributes.
+     *
+     * @return an <code>Attribute[]</code> value
+     */
+    public Attribute[] getActiveAttributes()
+        throws Exception;
+
+    /**
+     * Determines whether this module allows users to vote many times for
+     * the same issue.  This feature needs schema change to allow a
+     * configuration screen.  Currently only one vote per issue is supported
+     *
+     * @return false
+     */
+    public boolean allowsMultipleVoting();
+
+    /**
+     * How many votes does the user have left to cast.  Currently always
+     * returns 1, so a user has unlimited voting rights.  Should look to
+     * UserVote for the answer when implemented properly.
+     */
+    public int getUnusedVoteCount(ScarabUser user);
+
+    /**
+     * Gets a list of active RModuleOptions which have had their level
+     * within the options for this module set.
+     *
+     * @param attribute an <code>Attribute</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getOptionTree(Attribute attribute)
+        throws Exception;
+
+    /**
+     * Gets a list of RModuleOptions which have had their level
+     * within the options for this module set.
+     *
+     * @param attribute an <code>Attribute</code> value
+     * @param activeOnly a <code>boolean</code> value
+     * @return a <code>List</code> value
+     * @exception Exception if an error occurs
+     */
+    public List getOptionTree(Attribute attribute, boolean activeOnly)
         throws Exception;
 }

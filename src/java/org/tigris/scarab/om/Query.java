@@ -81,6 +81,26 @@ public class Query
         return new Query();
     }
 
+    /**
+     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
+     */
+    public void setModule(ModuleEntity me)
+        throws Exception
+    {
+        super.setScarabModule((ScarabModule)me);
+    }
+
+    /**
+     * Module getter.  Use this method instead of getScarabModule().
+     *
+     * @return a <code>ModuleEntity</code> value
+     */
+    public ModuleEntity getModule()
+        throws Exception
+    {
+        return getScarabModule();
+    }
+
     public void saveAndSendEmail( ScarabUser user, ModuleEntity module, 
                                   TemplateContext context )
         throws Exception
@@ -201,7 +221,7 @@ public class Query
          throws Exception
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
-        ModuleEntity module = getScarabModule();
+        ModuleEntity module = getModule();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
                                    module))
@@ -228,7 +248,7 @@ public class Query
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getScarabModule();
+        ModuleEntity module = getModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 

@@ -75,7 +75,7 @@ $page.setTitle("Copy/move issue")
 
 <h3>Source module</h3>
 <p>
-$issue.ScarabModule.Name
+$issue.Module.Name
 </p>
 
 <h3>Destination module</h3>

@@ -86,6 +86,26 @@ public  class AttributeGroup
     }
 
     /**
+     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
+     */
+    public void setModule(ModuleEntity me)
+        throws Exception
+    {
+        super.setScarabModule((ScarabModule)me);
+    }
+
+    /**
+     * Module getter.  Use this method instead of getScarabModule().
+     *
+     * @return a <code>ModuleEntity</code> value
+     */
+    public ModuleEntity getModule()
+        throws Exception
+    {
+        return getScarabModule();
+    }
+
+    /**
      * Retrieves R_ATTRIBUTE_ATTRIBUTEGROUP mapping object for this group
      * And the given attribute.
      */
@@ -107,7 +127,7 @@ public  class AttributeGroup
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ModuleEntity module = getScarabModule();
+        ModuleEntity module = getModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.MODULE__EDIT,

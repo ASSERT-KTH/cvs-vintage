@@ -9,7 +9,7 @@ import org.tigris.scarab.security.ScarabSecurity;
 import org.tigris.scarab.security.SecurityFactory;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -20,6 +20,25 @@ public  class RModuleIssueType
     extends org.tigris.scarab.om.BaseRModuleIssueType
     implements UnsecurePersistent
 {
+    /**
+     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
+     */
+    public void setModule(ModuleEntity me)
+        throws Exception
+    {
+        super.setScarabModule((ScarabModule)me);
+    }
+
+    /**
+     * Module getter.  Use this method instead of getScarabModule().
+     *
+     * @return a <code>ModuleEntity</code> value
+     */
+    public ModuleEntity getModule()
+        throws Exception
+    {
+        return getScarabModule();
+    }
 
     /**
      * Checks if user has permission to delete module-issue type mapping.
@@ -27,7 +46,7 @@ public  class RModuleIssueType
     public void delete( ScarabUser user )
          throws Exception
     {                
-        ScarabModule module = getScarabModule();
+        ModuleEntity module = getModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
             Criteria c = new Criteria()

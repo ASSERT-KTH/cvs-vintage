@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.57 2001/10/13 12:12:41 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.58 2001/10/16 21:42:22 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -195,7 +195,7 @@ public class ReportIssue extends RequireLoginFirstAction
             throw new Exception ("The Issue is not valid any longer. " + 
                 "Please try again.");
         }
-        Attribute[] requiredAttributes = issue.getScarabModule()
+        Attribute[] requiredAttributes = issue.getModule()
             .getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
@@ -331,7 +331,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     ((AttributeValue)avMap.get("SUMMARY")).getValue();
                 summary = (summary == null) ? "" : " - " + summary;
                 StringBuffer subj = new StringBuffer("[");
-                subj.append(issue.getScarabModule().getRealName().toUpperCase());
+                subj.append(issue.getModule().getRealName().toUpperCase());
                 subj.append("] Issue #").append(issue.getUniqueId());
                 subj.append(summary);
                 transaction.sendEmail(new ContextAdapter(context), issue, 

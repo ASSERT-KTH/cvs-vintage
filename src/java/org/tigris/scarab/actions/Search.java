@@ -81,7 +81,7 @@ import org.tigris.scarab.security.ScarabSecurityPull;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.36 2001/10/15 18:47:55 elicia Exp $
+    @version $Id: Search.java,v 1.37 2001/10/16 21:42:22 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -109,7 +109,7 @@ public class Search extends RequireLoginFirstAction
                                      scarabR.getSearch().getQueryKey() );
             searchGroup.setProperties(search);
 
-            search.setModuleCast(scarabR.getCurrentModule());
+            search.setModule(scarabR.getCurrentModule());
             SequencedHashtable avMap = search.getModuleAttributeValuesMap();
             Iterator i = avMap.iterator();
             while (i.hasNext()) 

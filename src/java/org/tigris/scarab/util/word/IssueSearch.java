@@ -719,7 +719,7 @@ public class IssueSearch
                 // give reasonable defaults if module code was not specified
                 if ( minFid.getPrefix() == null ) 
                 {
-                    minFid.setPrefix(getScarabModule().getCode());
+                    minFid.setPrefix(getModule().getCode());
                 }
                 if ( maxFid.getPrefix() == null ) 
                 {

@@ -1,7 +1,7 @@
 #macro ( attrValueLeafSelect $attrValue $optionFieldName $size)
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
-  #set ($module = $attrValue.Issue.ScarabModule)
+  #set ($module = $attrValue.Issue.Module)
 <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end>
   #if ($size.length() == 0)
@@ -22,7 +22,7 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
   #set ($attr = $attrValue.Attribute)
-  #set ($module = $attrValue.Issue.ScarabModule)
+  #set ($module = $attrValue.Issue.Module)
 
   #if ($attrInput.get($optionFieldName).Value)
     #set( $currentValue = $attrInput.get($optionFieldName).Value)
@@ -67,7 +67,7 @@
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
-#set ($module = $attrValue.Issue.ScarabModule)
+#set ($module = $attrValue.Issue.Module)
 <select name="$attrInput.get($optionFieldName).Key"
       #if($size.length() != 1)size="$size"#end>
   #if ($size.length() == 0)
@@ -141,7 +141,7 @@
 #macro (userSelectBox $attrValue $size $multiple)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #set ($attr = $attrValue.Attribute)
-#set ($module = $attrValue.Issue.ScarabModule)
+#set ($module = $attrValue.Issue.Module)
 #if ($multiple == "true" || $multiple == "multiple")
 <select name="$attrInput.get("UserIds").Key"
      #if($size.length())size="$size"#end multiple="multiple">

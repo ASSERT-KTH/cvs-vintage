@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.11 2001/10/14 20:24:15 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.12 2001/10/16 21:42:22 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -143,7 +143,7 @@ public class MoveIssue extends RequireLoginFirstAction
         String selectAction = moveIssue.get("Action").toString();
 
         Issue issue = (Issue)IssuePeer.retrieveByPK(issueId);
-        ModuleEntity oldModule = issue.getScarabModule();
+        ModuleEntity oldModule = issue.getModule();
         ScarabUser user = (ScarabUser)data.getUser();
 
         NumberKey newIssueId;
@@ -167,7 +167,7 @@ public class MoveIssue extends RequireLoginFirstAction
             newIssue = issue;
             newIssue.setModuleId(new NumberKey(newModuleId)); 
             newIssue.save();
-            newModule = newIssue.getScarabModule();
+            newModule = newIssue.getModule();
             
             // change the Issue's id prefix to match the new modules code
             newIssue.setIdPrefix(newModule.getCode());
@@ -195,7 +195,7 @@ public class MoveIssue extends RequireLoginFirstAction
             newIssue = Issue.getInstance();
             newIssue.setModuleId(new NumberKey(newModuleId));
             newIssue.save();
-            newModule = newIssue.getScarabModule();
+            newModule = newIssue.getModule();
 
             // Copy over attributes
             for (int i=0;i<matchingAttributes.size();i++)

@@ -962,7 +962,7 @@ try{
         {
             throw new Exception ("SRT:getSearch() current module is null");
         }
-        search.setModuleCast(getCurrentModule());
+        search.setModule(getCurrentModule());
         return search;
     }
 
@@ -996,7 +996,7 @@ try{
                                        getSearch().getQueryKey() );
         searchGroup.setProperties(search);
         
-        search.setModuleCast(getCurrentModule());
+        search.setModule(getCurrentModule());
         SequencedHashtable avMap = search.getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 

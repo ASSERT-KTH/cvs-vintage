@@ -25,7 +25,7 @@ public  class RAttributeAttributeGroup
      */
     public void delete(ScarabUser user) throws Exception 
     { 
-        ModuleEntity module = getAttributeGroup().getScarabModule();
+        ModuleEntity module = getAttributeGroup().getModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 

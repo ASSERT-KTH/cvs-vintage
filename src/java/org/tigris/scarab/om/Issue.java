@@ -110,7 +110,7 @@ public class Issue
     {
         if (getIdPrefix() == null)
         {
-            setIdPrefix(getScarabModule().getCode());
+            setIdPrefix(getModule().getCode());
         }
         return getIdPrefix() + getIdCount();
     }
@@ -252,12 +252,23 @@ public class Issue
     }
 
     /**
-     * FIXME: Casting to ScarabModule here is probably bad.
+     * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.
      */
-    public void setModuleCast(ModuleEntity me)
+    public void setModule(ModuleEntity me)
         throws Exception
     {
         super.setScarabModule((ScarabModule)me);
+    }
+
+    /**
+     * Module getter.  Use this method instead of getScarabModule().
+     *
+     * @return a <code>ModuleEntity</code> value
+     */
+    public ModuleEntity getModule()
+        throws Exception
+    {
+        return getScarabModule();
     }
 
     public static Issue getIssueById(String id)
@@ -301,7 +312,7 @@ public class Issue
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
 
-        attributes = getScarabModule().getActiveAttributes();
+        attributes = getModule().getActiveAttributes();
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
@@ -364,7 +375,7 @@ public class Issue
     public AttributeValue[] getOrderedAttributeValues() throws Exception
     {        
         Map values = getAttributeValuesMap();
-        Attribute[] attributes = getScarabModule().getActiveAttributes();
+        Attribute[] attributes = getModule().getActiveAttributes();
 
         return orderAttributeValues(values, attributes);
     }
@@ -447,7 +458,7 @@ public class Issue
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Attribute[] attributes = getScarabModule().getRequiredAttributes();
+        Attribute[] attributes = getModule().getRequiredAttributes();
 
         boolean result = true;
         SequencedHashtable avMap = getModuleAttributeValuesMap(); 
@@ -489,7 +500,7 @@ public class Issue
         // get users who are candidates for the assigned_to attribute
         Attribute attribute = Attribute
             .getInstance(AttributePeer.ASSIGNED_TO__PK);
-        ScarabUser[] users = getScarabModule().getEligibleUsers(attribute);
+        ScarabUser[] users = getModule().getEligibleUsers(attribute);
         // remove those already assigned
         List assigneeAVs = getAssigneeAttributeValues();
         if ( users != null && assigneeAVs != null ) 
@@ -869,7 +880,7 @@ public class Issue
         // set the issue id
         if ( isNew() ) 
         {
-            String prefix = getScarabModule().getCode();
+            String prefix = getModule().getCode();
 
             /* thinking of keeping this in separate column
             String instanceCode = TurbineResources
@@ -994,7 +1005,7 @@ public class Issue
         }
 
         // check if the module accepts multiple votes
-        if ( !getScarabModule().allowsMultipleVoting() && previousVotes > 0 )
+        if ( !getModule().allowsMultipleVoting() && previousVotes > 0 )
         {
             throw new ScarabException("User " + user.getUserName() + 
                 " attempted to vote multiple times for issue " + getUniqueId()
@@ -1227,7 +1238,7 @@ public class Issue
 
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
-        ModuleEntity module = getScarabModule();
+        ModuleEntity module = getModule();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
                                    module))
@@ -1255,7 +1266,7 @@ public class Issue
     public void delete( ScarabUser user )
          throws Exception, ScarabException
     {                
-        ModuleEntity module = getScarabModule();
+        ModuleEntity module = getModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
