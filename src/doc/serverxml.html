@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.19 2002/02/05 02:19:22 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.20 2002/02/08 20:24:53 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -542,6 +542,17 @@ unblock the listening thread, it hangs if there isn't anyone listening.</p>
 <p>Handles incoming Ajp13 requests.  Ajp13 is a protocol used by the mod_jk
 based web server connectors.</p>
 
+<p>In Tomcat 3.3.1, some attributes were added for supporting password protected
+shutdown using Ajp13. This feature is actived by setting the
+<code>shutDownEnabled</code> to <code>true</code>, or setting a password using
+the <code>secret</code> or <code>useSecret</code> attributes. Also, if a
+password is set, authentication of Ajp13 connections can also be performed.
+This feature requires the <code>authenticateRequests</code> attribute be set
+<code>true</code> in addition to a password, and the mod_jk based
+connector support this feature. The connectors available with Tomcat 3.3.x do
+not support this feature. Connectors that do support this feature will be made
+available through the jakarta-tomcat-connectors project.</p>
+
 <h4>Attributes</h4>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -551,9 +562,38 @@ based web server connectors.</p>
     <th>Default</th>
   </tr>
   <tr valign="top">
+    <td>ajpidFile<br><b>[Tomcat 3.3.1]</td>
+    <td>File in which to record Ajp13 connector info and password.</td>
+    <td>conf/ajp13.id</td>
+  </tr>
+  <tr valign="top">
+    <td>authenticateConnection<br><b>[Tomcat 3.3.1]</td>
+    <td>If true and a password has been set, password checking is performed on
+        the first Ajp13 request of a newly opened connection. If the password
+        doesn't match, the request is ignored and the connection closed.  If
+        they match, the connection is &quot;authenticated&quot; and the current
+        and future requests on that connection are processed normally. If false
+        or a password isn't set, password checking of the Ajp13 connection is
+        disabled. The password is set using either the <code>secret</code> or
+        <code>useSecret</code> attributes. This feature also requires a mod_jk
+        based connector that supports sending the password.  The connectors
+        available with Tomcat 3.3.x do not support this feature.</td>
+    <td>false</td>
+  </tr>
+  <tr valign="top">
+    <td>secret<br><b>[Tomcat 3.3.1]</td>
+    <td>The desired shutdown password. If set, the <code>shutDownEnable</code>
+        attribute is automatically set <code>true</code>.  The password can
+        also be used for authentication of Ajp13 connections if supported by the
+        mod_jk based connector. The connectors supplied with Tomcat 3.3.x do
+        not support this feature.</td>
+    <td><i>not specified</i></td>
+  </tr>
+  <tr valign="top">
     <td>shutDownEnable</td>
-    <td>Enable shutdown signal via this connector. Normally shutdown is done
-      through <a href="#Ajp12Connector">Ajp12Connector</a>.</td>
+    <td>Enable shutdown signal via this connector.  This attribute is
+        automatically set <code>true</code> if a password is set using the
+        <code>secret</code> or <code>useSecret</code> attributes.</td>
     <td>false</td>
   </tr>
   <tr valign="top">
@@ -565,6 +605,15 @@ based web server connectors.</p>
       and you want to use the user authenticated by the web server, set this
       attribute <code>false</code>.</td>
     <td>true</td>
+  </tr>
+  <tr valign="top">
+    <td>useSecret<br><b>[Tomcat 3.3.1]</td>
+    <td>Enables use of a random number as the shutdown password.  If set, the
+        <code>shutDownEnable</code> attribute is automatically set
+        <code>true</code>.  The password can also be used for authentication of
+        Ajp13 requests if supported by the mod_jk based connector. The
+        connectors supplied with Tomcat 3.3.x do not support this feature.</td>
+    <td>false</td>
   </tr>
   <tr valign="top">
     <td><b>Socket Properties</b></td>
@@ -1074,13 +1123,14 @@ error response if not specified.</p>
     <td>null, <i>use default Tomcat server string</i></td>
   </tr>
   <tr valign="top">
-    <td>delaySocketClose<br><b>[Tomcat 3.3.1]</b></td>
-    <td>When set true, a Thread.sleep(0) is executed just prior to closing
-      the socket for a request. This can help when running a test against
-      Tomcat on a very fast system. Otherwise, thread execution may complete
-      the socket close before the test thread gets a chance to read the data
-      resulting in a &quot;Connection aborted by peer&quot; error.</td>
-    <td>false</td>
+    <td>socketCloseDelay<br><b>[Tomcat 3.3.1]</b></td>
+    <td>Specifies the number of milliseconds to delay before closing the socket
+      after processing a request.  If negative, the delay is disabled. Setting
+      a value greater or equal to zero is intended to help with diagnosing
+      client errors resulting from unread data in the body of the HTTP request.
+      If this unread data arrives just before or during the closing of the
+      socket, the client may see a &quot;Connection aborted by peer&quot; error.</td>
+    <td>-1</td>
   </tr>
   <tr valign="top">
     <td><b>Connection Properties</b></td>
