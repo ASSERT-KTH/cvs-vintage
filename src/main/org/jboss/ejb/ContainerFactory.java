@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.103 $
+* @version $Revision: 1.104 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -289,7 +289,8 @@ public class ContainerFactory
    public void deploy( String pParentId, String appUrl, String[] jarUrls, String appId )
       throws MalformedURLException, DeploymentException
    {
-      getLog().info("got to deploy in ContainerFactory");
+      log.debug("got to deploy in ContainerFactory");
+      
       // Delegate to "real" deployment
       URL[] tmp = new URL[ jarUrls.length ];
 
