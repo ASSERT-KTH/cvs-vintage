@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.45 2002/05/16 23:47:33 elicia Exp $
+ * @version $Id: Module.java,v 1.46 2002/05/18 15:24:09 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -438,6 +438,13 @@ public interface Module
      * Determines whether this module accepts issues.
      */
     public boolean allowsIssues();
+
+    /**
+     * Returns true if no issue types are associated with this module, or if the module
+     * is currently getting its initial values set.
+     */
+    public boolean isInitializing()
+        throws Exception;
 
     public String toString();
 }

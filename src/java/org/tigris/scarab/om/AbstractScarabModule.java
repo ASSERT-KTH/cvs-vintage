@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.35 2002/05/15 22:38:21 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.36 2002/05/18 15:24:09 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -177,6 +177,8 @@ public abstract class AbstractScarabModule
     
     private String domain;
 
+    /** set to true while the setInitialAttributesAndIssueTypes() method is in process */
+    private boolean isInitializing = false;
 
     /**
      * Should be called when the parentage is modified.
@@ -1781,6 +1783,7 @@ try{
     protected void setInitialAttributesAndIssueTypes()
         throws Exception
     {
+        isInitializing = true;
         // Add defaults for issue types and attributes 
         // from parent module
         NumberKey newModuleId = getModuleId();
@@ -1893,6 +1896,7 @@ try{
                 }
             }
         }
+        isInitializing = false;
     }
 
     /**
@@ -1911,6 +1915,16 @@ try{
     public boolean allowsIssues()
     {
         return true;
+    }
+
+    /**
+     * Returns true if no issue types are associated with this module, or if the module
+     * is currently getting its initial values set.
+     */
+    public boolean isInitializing()
+        throws Exception
+    {
+        return isInitializing || getIssueTypes(false).size() == 0;
     }
 
     /**
