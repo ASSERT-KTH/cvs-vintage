@@ -124,8 +124,9 @@ public class AttributePeer
                 addSortOrder(crit, AttributeTypePeer .ATTRIBUTE_TYPE_NAME, 
                              sortPolarity);
             }
-            else
+            else if (!sortColumn.equals("user"))
             {
+                // sort by name
                 addSortOrder(crit, AttributePeer.ATTRIBUTE_NAME, 
                              sortPolarity);
             }

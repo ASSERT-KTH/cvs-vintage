@@ -1234,6 +1234,27 @@ try{
     /**
      * Performs search on current query (which is stored in user session).
     */
+    public List getIssueTemplates()
+        throws Exception
+    {
+        String sortColumn = data.getParameters().getString("sortColumn");
+        String sortPolarity = data.getParameters().getString("sortPolarity");
+        if (sortColumn == null)
+        {
+            sortColumn = "name";
+        }
+        if (sortPolarity == null)
+        {
+            sortPolarity = "asc";
+        }
+        return IssueTemplateInfoPeer.getAllTemplates(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               sortColumn, sortPolarity);
+    }
+
+    /**
+     * Performs search on current query (which is stored in user session).
+    */
     public List getCurrentSearchResults()
         throws Exception
     {
