@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -22,8 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
-import org.jboss.util.LRUCachePolicy;
+//import org.jboss.util.LRUCachePolicy;
 
 /**
  * ReadAheadCache stores all of the data readahead for an entity.
@@ -31,7 +31,7 @@ import org.jboss.util.LRUCachePolicy;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ReadAheadCache {
    /**
@@ -62,38 +62,41 @@ public class ReadAheadCache {
       // Create the list cache
       int listCacheMax = manager.getEntityBridge().getListCacheMax();
       listCache = new ListCache(listCacheMax);
-
-      listCache.create();
    }
 
    public void start() {
-      listCache.start();
    }
    
    public void stop() {
       listMap.clear();
-      listCache.stop();
+      listCache.clear();
    }
 
    public void destroy() {
-      listCache.destroy();
       listCache = null;
       listMap = null;
    }
 
-   public synchronized void addFinderResult(FinderResults finderResults) {
-      if(finderResults.size() <= 1) {
-         // only cache results with more then one entry
-         return;
-      }
-      if(!(finderResults.getAllKeys() instanceof List)) {
-         log.warn("FinderResults does not contain a List. Read ahead will be " +
-               "disabled for this query");
+   public synchronized void addFinderResults(
+         List results,
+         JDBCReadAheadMetaData readahead) {
+
+      if(results.isEmpty()) {
+         // nothing to see here... move along
          return;
       }
 
+      if(log.isTraceEnabled()) {
+         log.trace("Add finder results:" +
+               " entity="+manager.getEntityBridge().getEntityName()+
+               " results="+results +
+               " readahead="+readahead);
+      }
+
       // add the finder to the LRU list
-      listCache.add(finderResults);
+      if(!readahead.isNone()) {
+         listCache.add(results);
+      }
 
       // 
       // Create a map between the entity prumary keys and the list.
@@ -101,16 +104,24 @@ public class ReadAheadCache {
       // primary key.
       //
       HashSet dereferencedResults = new HashSet();
-      Iterator iter = finderResults.iterator();
+      Iterator iter = results.iterator();
       for(int i=0; iter.hasNext(); i++) {
-         Object primaryKey = iter.next();
+         Object pk = iter.next();
 
-         // Keep track of the resutls that have been dereferenced. Later we 
+         // create the new entry object
+         EntityMapEntry entry;
+         if(readahead.isNone()) {
+            entry = new EntityMapEntry(
+                  0, Collections.singletonList(pk), readahead);
+         } else {
+            entry = new EntityMapEntry(i, results, readahead);
+         }
+
+         // Keep track of the results that have been dereferenced. Later we 
          // all results from the list cache that are no longer referenced.
-         EntityMapEntry oldInfo = (EntityMapEntry)listMap.put(
-               primaryKey, new EntityMapEntry(i, finderResults));
+         EntityMapEntry oldInfo = (EntityMapEntry)listMap.put(pk, entry);
          if(oldInfo != null) {
-            dereferencedResults.add(oldInfo.finderResults);
+            dereferencedResults.add(oldInfo.results);
          }
       }
       
@@ -129,7 +140,7 @@ public class ReadAheadCache {
       iter =  listMap.values().iterator();
       while(iter.hasNext()) {
          EntityMapEntry entry = (EntityMapEntry)iter.next();
-         dereferencedResults.remove(entry.finderResults);
+         dereferencedResults.remove(entry.results);
       }
 
       // if we don't have any dereferenced results at this point we are done
@@ -140,24 +151,26 @@ public class ReadAheadCache {
       // remove all results from the cache that are no longer referenced
       iter = dereferencedResults.iterator();
       while(iter.hasNext()) {
-         Object obj = iter.next();
+         List list = (List)iter.next();
          if(log.isTraceEnabled()) {
-            log.trace("Removing dereferenced finder results: " + obj);
+            log.trace("Removing dereferenced results: " + list);
          }
-         listCache.remove(obj);
+         listCache.remove(list);
       }
    }
 
-   public synchronized void removeFinderResult(FinderResults finderResults) {
+   private synchronized void removeFinderResult(List results) {
       // remove the list from the list cache
-      listCache.remove(finderResults);
+      listCache.remove(results);
 
       // remove all primary keys from the listMap that reference this list
       if(listMap != null && !listMap.isEmpty()) {
          Iterator iter =  listMap.values().iterator();
          while(iter.hasNext()) {
             EntityMapEntry entry = (EntityMapEntry)iter.next();
-            if(entry.finderResults.equals(finderResults)) {
+
+            // use == because only identity matters here
+            if(entry.results == results) {
                iter.remove();
             }
          }
@@ -165,25 +178,28 @@ public class ReadAheadCache {
    }
 
    public synchronized EntityReadAheadInfo getEntityReadAheadInfo(Object pk) { 
+
       EntityMapEntry entry = (EntityMapEntry)listMap.get(pk);
-      // we're using this finder results so promote it to the head of the
-      // LRU list
+      
       if(entry != null) {
-         listCache.promote(entry.finderResults);
-
-         int pageSize;
-         Object queryData = entry.finderResults.getQueryData();
-         if(queryData instanceof JDBCReadAheadMetaData) {
-            pageSize = ((JDBCReadAheadMetaData)queryData).getPageSize();
-         } else {
-            pageSize = manager.getMetaData().getReadAhead().getPageSize();
+         // we're using these results so promote it to the head of the
+         // LRU list
+         if(!entry.readahead.isNone()) {
+            listCache.promote(entry.results);
          }
-         int from = entry.index;
-         int to = Math.min(entry.finderResults.size(), entry.index + pageSize);
-         List loadKeys = 
-               ((List)entry.finderResults.getAllKeys()).subList(from, to);
 
-         return new EntityReadAheadInfo(loadKeys);
+         // get the readahead metadata
+         JDBCReadAheadMetaData readahead = entry.readahead;
+         if(readahead == null) {
+            readahead = manager.getMetaData().getReadAhead();
+         }
+
+         int from = entry.index;
+         int to = Math.min(entry.results.size(), 
+               entry.index + readahead.getPageSize());
+         List loadKeys = entry.results.subList(from, to);
+
+         return new EntityReadAheadInfo(loadKeys, readahead);
       } else {
          return new EntityReadAheadInfo(Collections.singletonList(pk));
       }
@@ -237,11 +253,25 @@ public class ReadAheadCache {
             JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge)field;
 
             if(!cmpField.isLoaded(ctx)) {
+               if(log.isTraceEnabled()) {
+                  log.trace("Preloading data:" +
+                        " entity="+manager.getEntityBridge().getEntityName()+
+                        " pk="+ctx.getId()+
+                        " cmpField="+cmpField.getFieldName());
+               }
+
                // set the value
                cmpField.setInstanceValue(ctx, value);
    
                // mark this field clean as it's value was just loaded
                cmpField.setClean(ctx);
+            } else {
+               if(log.isTraceEnabled()) {
+                  log.trace("CMRField already loaded:" +
+                        " entity="+manager.getEntityBridge().getEntityName()+
+                        " pk="+ctx.getId()+
+                        " cmpField="+cmpField.getFieldName());
+               }
             }
          } else if(field instanceof JDBCCMRFieldBridge) {
             JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
@@ -262,8 +292,8 @@ public class ReadAheadCache {
                      cmrField.getRelatedCMRField().getJDBCStoreManager();
                ReadAheadCache relatedReadAheadCache = 
                      relatedManager.getReadAheadCache();
-               relatedReadAheadCache.addFinderResult(new FinderResults(
-                     (List)value, cmrField.getReadAhead(), null, null));
+               relatedReadAheadCache.addFinderResults(
+                     (List)value, cmrField.getReadAhead());
 
                // mark this field clean as it's value was just loaded
                cmrField.setClean(ctx);
@@ -322,11 +352,10 @@ public class ReadAheadCache {
       // remove the preloaded data
       manager.removeEntityTxData(new PreloadKey(primaryKey));
 
-      EntityMapEntry oldInfo = 
-            (EntityMapEntry)listMap.remove(primaryKey);
-      
-      // if the entity didn't have readahead entry; return
-      if(oldInfo == null) {
+      // if the entity didn't have readahead entry, or it was read-ahead
+      // none; return
+      EntityMapEntry oldInfo = (EntityMapEntry)listMap.remove(primaryKey);
+      if(oldInfo == null || oldInfo.readahead.isNone()) {
          return;
       }
 
@@ -334,7 +363,9 @@ public class ReadAheadCache {
       Iterator iter = listMap.values().iterator();
       while(iter.hasNext()) {
          EntityMapEntry entry = (EntityMapEntry)iter.next();
-         if(entry.finderResults.equals(oldInfo.finderResults)) {
+         
+         // use == because only identity matters here
+         if(entry.results == oldInfo.results) {
             // ok it is still referenced
             return;
          }
@@ -343,9 +374,9 @@ public class ReadAheadCache {
       // a reference to the old finder set was not found so remove it
       if(log.isTraceEnabled()) {
          log.trace("Removing dereferenced finder results: " + 
-               oldInfo.finderResults);
+               oldInfo.results);
       }
-      listCache.remove(oldInfo.finderResults);
+      listCache.remove(oldInfo.results);
    }
 
    /**
@@ -405,18 +436,51 @@ public class ReadAheadCache {
       return preloadDataMap;
    }
 
-   private class ListCache extends LRUCachePolicy {
+   private class ListCache {
+      private LinkedList cache = new LinkedList();
+      private int max;
+
       public ListCache(int max) {
-         super(2, max);
+         if(max < 0) {
+            throw new IllegalArgumentException("list-cache-max is negative: " +
+                  max);
+         }
+         this.max = max;
       }
-      public void add(FinderResults r) {
-         insert(r, r);
+
+      public void add(List list) {
+         if(max == 0) {
+            // we're not caching lists, so we're done
+            return;
+         }
+            
+         cache.addFirst(new IdentityObject(list));
+
+         // shrink size to max
+         while(cache.size() > max) {
+            IdentityObject object = (IdentityObject) cache.removeLast();
+            ageOut((List)object.getObject());
+         }
       }
-      public void promote(FinderResults r) {
-         get(r);
+      
+      public void promote(List list) {
+         IdentityObject object = new IdentityObject(list);
+         if(cache.remove(object)) {
+            // it was in the cache so add it to the front
+            cache.addFirst(object);
+         }
       }
-      protected void ageOut(LRUCacheEntry entry) {
-         removeFinderResult((FinderResults)entry.m_key);
+      
+      public void remove(List list) {
+         cache.remove(new IdentityObject(list));
+      }
+
+      public void clear() {
+         cache.clear();
+      }
+
+      private void ageOut(List list) {
+         removeFinderResult(list);
       }
    }
    
@@ -453,20 +517,66 @@ public class ReadAheadCache {
 
    private class EntityMapEntry {
       public final int index;
-      public final FinderResults finderResults;
+      public final List results;
+      public final JDBCReadAheadMetaData readahead;
 
-      private EntityMapEntry(int index, FinderResults finderResults) {
+      private EntityMapEntry(
+            int index, 
+            List results,
+            JDBCReadAheadMetaData readahead) {
+
          this.index = index;
-         this.finderResults = finderResults;
+         this.results = results;
+         this.readahead = readahead;
       }
    }
+
    public class EntityReadAheadInfo {
       private final List loadKeys;
+      private final JDBCReadAheadMetaData readahead;
+
       private EntityReadAheadInfo(List loadKeys) {
+         this(loadKeys, null);
+      }
+      private EntityReadAheadInfo(List loadKeys, JDBCReadAheadMetaData r) {
          this.loadKeys = loadKeys;
+         this.readahead = r;
       }
       public List getLoadKeys() {
          return loadKeys;
+      }
+      public JDBCReadAheadMetaData getReadAhead() {
+         return readahead;
+      }
+   }
+
+   /**
+    * Wraps an Object and does equals/hashCode based on object identity.
+    */
+   private class IdentityObject {
+      private final Object object;
+
+      public IdentityObject(Object object) {
+         if(object == null) {
+            throw new IllegalArgumentException("Object is null");
+         }
+         this.object = object;
+      }
+
+      public Object getObject() {
+         return object;
+      }
+
+      public boolean equals(Object object) {
+         return this.object == object;
+      }
+
+      public int hashCode() {
+         return object.hashCode();
+      }
+
+      public String toString() {
+         return object.toString();
       }
    }
 }
