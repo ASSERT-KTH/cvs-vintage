@@ -11,7 +11,8 @@
 $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 </p>
 #else
-#set ($groups = $issueType.getAttributeGroups($module))
+#set ($groups = $module.getAttributeGroups($issueType, false))
+
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
 #set ($modGroup = $intake.Module.mapTo($module))
@@ -46,6 +47,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
     </table>
 </div>
 
+#* Commenting out for now, later will implement as part of User Prefs
 <h3>Issue view display options</h3>
 
 <div class="axial">
@@ -75,6 +77,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 </tr>
 </table>
 </div>
+*#
 
 ## LIST GROUPS
 
@@ -88,10 +91,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <th>Sequence #</th>
 </tr>
 
-#set ($issueDedupeSequence = $issueType.getDedupeSequence($module))
+#set ($issueDedupeSequence = $module.getDedupeSequence($issueType))
 #foreach ($group in $groups)
 ## DEDUPE
- #if ($velocityCount == $issueDedupeSequence)
+## Only display dedupe if there are more than one active attribute group
+ #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, true).size() > 1)
  <tr>
    <td>&#160;</td>
    <td>Duplicate check</td>
