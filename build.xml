@@ -224,23 +224,9 @@ else echo "cannot find columba.jar in `pwd`"; fi
 
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
-
-	<!-- to build an javadoc documentation -->
-	<target name="doc" depends="init">
-		<echo message="the documentation will go to ${dest}/javadoc"/>
-		<echo message="sopurcepath: ${src}/org/columba"/>
-		<javadoc sourcepath="${src}" 
-						 destdir="${dest}/javadoc" 
-						 packagenames="org.columba.*"
-						 author="true"
-						 version="true"
-						 use="true"
-						 package="true"
-						 windowtitle="columba API documentation">
-    			<doctitle><![CDATA[<h1>columba API documentation</h1>]]></doctitle>
-		</javadoc>
-	</target>
 	
+	<target name="doc" depends="document"/>
+
 	<!-- to run the application via ant, this is good for testing and coding in xemacs -->
 	<target name="run" depends="jar">
 		<java jar="${dest}/columba.jar" fork="yes">
