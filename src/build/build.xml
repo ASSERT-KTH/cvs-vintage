@@ -214,6 +214,7 @@
 
      <copydir src="${etc.dir}/conf" dest="${dist.dir}/conf"/>
      <copydir src="${src.bin.dir}" dest="${dist.dir}/bin"/>
+     <chmod src="${dist.dir}/bin/run.sh" perm="+x" />
      <copydir src="${src.lib.dir}" dest="${dist.dir}/lib" includes="xml.jar,jaas.jar,jdbc2_0-stdext.jar"/>
      <copydir src="${src.lib.dir}" dest="${dist.dir}/lib/ext" excludes="xml.jar,jaas.jar,jdbc2_0-stdext.jar"/>
      <copydir src="${build.bin.dir}" dest="${dist.dir}/bin"/>
