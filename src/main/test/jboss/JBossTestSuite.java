@@ -6,14 +6,16 @@
  */
 package test.jboss;
 
+import java.lang.reflect.*;
 import junit.framework.*;
 import test.jboss.minerva.pools.*;
+import test.jboss.minerva.factories.*;
 
 /**
  * Master test Suite for jBoss.  Create new addXXXTests methods for different
  * modules, and then use them to add all the tests you want to run for that
  * module.  Pass this class to the JUnit UI to run all the tests.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JBossTestSuite extends TestSuite {
     public JBossTestSuite() {
@@ -26,30 +28,32 @@ public class JBossTestSuite extends TestSuite {
     }
 
     private void addMinervaTests() {
-        addTest(new ObjectPoolTest("testNeedsName"));
-        addTest(new ObjectPoolTest("testNeedsFactory"));
-        addTest(new ObjectPoolTest("testNeedsInitialize"));
-        addTest(new ObjectPoolTest("testMinimumParameters"));
-        addTest(new ObjectPoolTest("testParamName"));
-        addTest(new ObjectPoolTest("testParamBlocking"));
-        addTest(new ObjectPoolTest("testParamShrinking"));
-        addTest(new ObjectPoolTest("testParamTimestamp"));
-        addTest(new ObjectPoolTest("testParamGC"));
-        addTest(new ObjectPoolTest("testParamGCInterval"));
-        addTest(new ObjectPoolTest("testParamGCMinIdle"));
-        addTest(new ObjectPoolTest("testParamLogWriter"));
-        addTest(new ObjectPoolTest("testParamMinSize"));
-        addTest(new ObjectPoolTest("testParamMaxSize"));
-        addTest(new ObjectPoolTest("testParamShrinkMinIdle"));
-        addTest(new ObjectPoolTest("testParamShrinkPercent"));
-        addTest(new ObjectPoolTest("testSetsAfterInit"));
-        addTest(new ObjectPoolTest("testPoolMax"));
-        addTest(new ObjectPoolTest("testShutdown"));
-        addTest(new ObjectPoolTest("testLastUpdatesEnabled"));
-        addTest(new ObjectPoolTest("testLastUpdatesDisabled"));
-        addTest(new ObjectPoolTest("testEvents"));
-        addTest(new ObjectPoolTest("testManyGets"));
-        addTest(new ObjectPoolTest("testPoolBlocking"));
+        addTestsFromMethods(ObjectPoolTest.class);
+        addTestsFromMethods(JDBCFactoryTest.class);
+    }
+
+    /**
+     * Loads as test all the methods of the specified class that have a name
+     * like "testSomething" and no arguments.  The class must be a descendent
+     * of Test (or more commonly, TestCase).
+     */
+    private void addTestsFromMethods(Class cls) {
+        if(!Test.class.isAssignableFrom(cls))
+            throw new IllegalArgumentException("Not a test case!");
+        try {
+            Constructor con = cls.getConstructor(new Class[]{String.class});
+            Method list[] = cls.getMethods();
+            for(int i=0; i<list.length; i++) {
+                String name = list[i].getName();
+                if(!name.startsWith("test") || name.length() < 5 || !Character.isUpperCase(name.charAt(4)))
+                    continue;
+                if(list[i].getParameterTypes().length != 0)
+                    continue;
+                addTest((Test)con.newInstance(new Object[]{name}));
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Test suite() {
