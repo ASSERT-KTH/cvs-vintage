@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.42 2002/07/31 21:12:27 jon Exp $
+$Id: README.txt,v 1.43 2002/08/07 23:32:07 jon Exp $
 
 Welcome to Scarab!
 
@@ -20,7 +20,9 @@ system running.
 | R E Q U I R E M E N T S                                               |
 -------------------------------------------------------------------------
 
-JDK 1.2 or higher        --> <http://java.sun.com/>
+SDK 1.2 or higher        --> <http://java.sun.com/>
+Make sure that you download the SDK and not the JRE!
+
 Ant 1.5 or higher        --> <http://jakarta.apache.org/ant/>
 Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
                              (Note: Tomcat is included with Scarab.)
@@ -28,7 +30,6 @@ Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
 MySQL 3.23 or higher     --> <http://www.mysql.org/>
                          or
 Postgresql 7.2 or higher --> <http://www.postgresql.org/>
-
 
 You must have the JAVA_HOME environment variable properly set to be the 
 location of your JDK installation directory.
