@@ -15,7 +15,8 @@ $activity.Attachment.Data
 $activity.Description
 
 #if ($attachment.Data)
-$l10n.Comment  $attachment.Data
+$l10n.Comment
+$attachment.Data
 #end  
 #end
 #end
