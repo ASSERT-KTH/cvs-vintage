@@ -568,7 +568,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #end
 
 
-#macro (userList $modules $userAttrs)
+#macro (userList $module $issueType $userAttrs)
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn","username"))
@@ -595,10 +595,10 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
    #set ($searchResults = $scarabR.UserSearchResults) 
    #if ( $searchResults.isEmpty())
       <p class="alert">$l10n.NoUsersMatch</p>
-      #set ($searchResults = $scarabR.Users)
+      #set ($searchResults = $scarabR.getUsers($module, $issueType))
    #end
 #else
-      #set ($searchResults = $scarabR.Users)
+      #set ($searchResults = $scarabR.getUsers($module, $issueType))
 #end
 
 ## PAGINATION
@@ -626,7 +626,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     <td>$user.Name</td>
     <td><select name="user_attr_$user.UserId">
      #foreach ($userAttr in $userAttrs)
-      #if ($user.hasPermission($userAttr.Permission, $modules))
+      #if ($user.hasPermission($userAttr.Permission, $module))
        <option value="$userAttr.AttributeId">$userAttr.Name</option>
       #end
      #end
