@@ -85,7 +85,9 @@ deployed
 3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
+<!ELEMENT jboss (secure? , enforce-ejb-restrictions? , security-domain? , unauthenticated-principal?, enterprise-beans? , resource-managers? , container-configurations?)>
+
+<!ELEMENT secure (#PCDATA)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions
@@ -161,7 +163,7 @@ any other beans.
     
     Used in: enterprise-beans
     -->
-<!ELEMENT message-driven (ejb-name , configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
+<!ELEMENT message-driven (ejb-name, destination-jndi-name, configuration-name? , security-proxy? , ejb-ref* , resource-ref* , resource-env-ref*)>
 
 <!-- 
       The ejb-name element gives the name of the bean, it must correspond to 
@@ -190,6 +192,7 @@ any other beans.
       Used in: entity, session, and message-driven
       -->
 <!ELEMENT configuration-name (#PCDATA)>
+<!ELEMENT destination-jndi-name (#PCDATA)>
 
 <!-- The security-proxy gives the class name of the security proxy implementation.
 	This may be an instance of org.jboss.security.SecurityProxy, or an
@@ -521,7 +524,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (Optimized , RMIObjectPort , RMIClientSocketFactory? , RMIServerSocketFactory?)>
+<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory?)>
 
 <!-- 
         This element is only valid if the container invoker is 
@@ -586,6 +589,9 @@ default if metricsEnabled is not explicitly given.
         Used in: container-invoker-conf for JRMPContainerInvoker
 	-->
 <!ELEMENT RMIServerSocketFactory (#PCDATA)>
+<!ELEMENT JMSProviderAdapterJNDI (#PCDATA)>
+<!ELEMENT ServerSessionPoolFactoryJNDI (#PCDATA)>
+<!ELEMENT MaxMessages (#PCDATA)>
 
 <!-- 
       The container-cache-conf element holds dynamic configuration data 

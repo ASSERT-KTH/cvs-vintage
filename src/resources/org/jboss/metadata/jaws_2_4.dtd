@@ -23,6 +23,17 @@ This is the XML DTD for the JAWS deployment descriptor.
  element that carries a separate meaning: This DTD wil not parse! -->
 <!ELEMENT type-mapping (#PCDATA)>
 
+<!ELEMENT debug (#PCDATA)>
+
+<!ELEMENT default-entity (create-table, remove-table, tuned-updates, read-only, pk-constraint?, select-for-update?, time-out)>
+<!ELEMENT create-table (#PCDATA)>
+<!ELEMENT remove-table (#PCDATA)>
+<!ELEMENT tuned-updates (#PCDATA)>
+<!ELEMENT read-only (#PCDATA)>
+<!ELEMENT pk-constraint (#PCDATA)>
+<!ELEMENT select-for-update (#PCDATA)>
+<!ELEMENT time-out (#PCDATA)>
+
 <!-- the enterpris-beans tag contains overridden attribute mappings for any
  CMP bean in this ejb-jar that requires non-default column mapping behavior -->
 <!ELEMENT enterprise-beans (entity*)>
@@ -51,6 +62,10 @@ This is the XML DTD for the JAWS deployment descriptor.
  in ejb-jar.xml. -->
 <!ELEMENT ejb-name (#PCDATA)>
 
+<!ELEMENT cmp-field (field-name, column-name)>
+<!ELEMENT field-name (#PCDATA)>
+<!ELEMENT column-name (#PCDATA)>
+
 <!-- the finder element overrides JAWS default behavior for a finder, or
  specifies JAWS behavior for finders requiring multi-column where clauses or
  a specific ordering. it must contain name and query elements and my contain
@@ -74,3 +89,13 @@ This is the XML DTD for the JAWS deployment descriptor.
  initial 'order by' verb!) that should be used to order the results of the 
  query for the finder -->
 <!ELEMENT order (#PCDATA)>
+<!ELEMENT read-ahead (#PCDATA)>
+
+<!ELEMENT table-name (#PCDATA)>
+
+<!ELEMENT type-mappings (type-mapping-definition*)>
+<!ELEMENT type-mapping-definition (name, mapping*)>
+<!ELEMENT mapping (java-type, jdbc-type, sql-type)>
+<!ELEMENT java-type (#PCDATA)>
+<!ELEMENT jdbc-type (#PCDATA)>
+<!ELEMENT sql-type (#PCDATA)>
