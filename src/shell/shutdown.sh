@@ -1,9 +1,9 @@
 #! /bin/sh
 #
-# $Id: shutdown.sh,v 1.3 2001/08/22 04:55:33 costin Exp $
+# $Id: shutdown.sh,v 1.4 2001/09/17 04:59:32 costin Exp $
 
 # Shell script to shutdown the server
 
 BASEDIR=`dirname $0`
 
-$BASEDIR/tomcat.sh stop "$@"
+$BASEDIR/tomcat.sh stop $@
