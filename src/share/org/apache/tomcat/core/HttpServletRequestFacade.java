@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.2 1999/10/22 21:52:06 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/22 21:52:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.3 1999/11/08 03:58:41 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/08 03:58:41 $
  *
  * ====================================================================
  *
@@ -214,7 +214,7 @@ implements HttpServletRequest {
 
                 if (url != null &&
                     url.getProtocol().equals("file")) {
-                    pathTranslated = FilePathUtil.patch(url.getFile());
+                    pathTranslated = FileUtil.patch(url.getFile());
                 }
             } catch (MalformedURLException e) {
             }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.3 1999/11/03 20:38:53 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/11/03 20:38:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.4 1999/11/08 03:58:42 akv Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/08 03:58:42 $
  *
  * ====================================================================
  *
@@ -186,7 +186,7 @@ implements ServletContext {
 			    // take care of File.getAbsolutePath()
 			    // troubles on jdk1.1.x/win
 
-			    realPath = FilePathUtil.patch(absPath);
+			    realPath = FileUtil.patch(absPath);
 			} else if (url.getProtocol().equalsIgnoreCase(
 			    Constants.Request.HTTP)) {
 			    // XXX
@@ -204,7 +204,7 @@ implements ServletContext {
 		    // take care of File.getAbsolutePath() troubles on
 		    // jdk1.1.x/win
 
-	            realPath = FilePathUtil.patch(url.getFile());
+	            realPath = FileUtil.patch(url.getFile());
                 }
 
 	    }
@@ -273,7 +273,7 @@ implements ServletContext {
 		// take care of File.getAbsolutePath() troubles
 		// on jdk1.1.x/win
 
-		absPath = FilePathUtil.patch(absPath);
+		absPath = FileUtil.patch(absPath);
 
                 if (! absPath.startsWith("/")) {
                     absPath = "/" + absPath;

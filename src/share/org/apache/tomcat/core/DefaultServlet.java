@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.5 1999/11/03 20:38:52 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/11/03 20:38:52 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/DefaultServlet.java,v 1.6 1999/11/08 03:58:38 akv Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/11/08 03:58:38 $
  *
  * ====================================================================
  *
@@ -192,7 +192,7 @@ public class DefaultServlet extends HttpServlet {
 	    context.isWARExpanded()) {
 	    String s = context.getWARDir().getAbsolutePath();
 
-	    docBase = FilePathUtil.patch(s);
+	    docBase = FileUtil.patch(s);
 	} else {
 	    docBase = context.getDocumentBase().getFile();
 	}
@@ -200,7 +200,7 @@ public class DefaultServlet extends HttpServlet {
         // take care of File.getAbsolutePath() troubles on
         // jdk1.1.x/win
 
-        absPath = FilePathUtil.patch(absPath);
+        absPath = FileUtil.patch(absPath);
 
         if (! docBase.endsWith("/")) {
             docBase += "/";
@@ -349,7 +349,7 @@ public class DefaultServlet extends HttpServlet {
         // take care of File.getAbsolutePath() troubles on
         // jdk1.1.x/win
 
-        absPath = FilePathUtil.patch(absPath);
+        absPath = FileUtil.patch(absPath);
 
         // This absPath/canPath comparison plugs security holes...
 	// On Windows, makes "x.jsp.", "x.Jsp", and "x.jsp%20" 
@@ -467,7 +467,7 @@ public class DefaultServlet extends HttpServlet {
 
             // case insensitive check
             if (requestedFile.toLowerCase().startsWith(
-                    FilePathUtil.patch(docBase + maskFile).toLowerCase())) {
+                    FileUtil.patch(docBase + maskFile).toLowerCase())) {
 	        return true;
 	    }
         }
@@ -509,7 +509,7 @@ public class DefaultServlet extends HttpServlet {
         // take care of File.getAbsolutePath() troubles on
         // jdk1.1.x/win
 
-        absPath = FilePathUtil.patch(absPath);
+        absPath = FileUtil.patch(absPath);
 
 	if (File.separatorChar  == '\\') { 
 		// On Windows check ignore case....
@@ -547,7 +547,7 @@ public class DefaultServlet extends HttpServlet {
 	    context.isWARExpanded()) {
 	    String s = context.getWARDir().getAbsolutePath();
 
-	    docBase = FilePathUtil.patch(s);
+	    docBase = FileUtil.patch(s);
 	} else {
 	    docBase = context.getDocumentBase().getFile();
 	}

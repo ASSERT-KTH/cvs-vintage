@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.4 1999/11/03 23:43:56 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/11/03 23:43:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.5 1999/11/08 03:58:45 akv Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/11/08 03:58:45 $
  *
  * ====================================================================
  *
@@ -527,7 +527,7 @@ class JarFinder {
     }
 
     private String[] getJars(File dir, String path) {
-        File[] files = dir.listFiles();
+        File[] files = FileUtil.listFiles(dir);
 
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
