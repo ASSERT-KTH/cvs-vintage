@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.22 2001/03/21 06:41:36 costin Exp $
+# $Id: tomcat.sh,v 1.23 2001/04/22 15:52:11 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -123,7 +123,15 @@ export CLASSPATH
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
 #   2) You should use `stop` option instead of ^C to bring down the server
-if [ "$1" = "start" ] ; then 
+if [ "$1" = "start_msg" ]; then
+  shift
+  echo "Starting Tomcat Servlet Engine"
+
+elif [ "$1" = "stop_msg" ]; then
+  shift
+  echo "Stopping Tomcat Servlet Engine"
+
+elif [ "$1" = "start" ] ; then 
   shift 
 
   #Old code for -security: -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy 
