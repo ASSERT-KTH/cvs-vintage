@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.205 2004/08/18 21:12:39 mvw Exp $
+// $Id: ModelFacade.java,v 1.206 2004/08/24 17:31:59 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5491,11 +5491,11 @@ public class ModelFacade {
      * @param name to set
      */
     public static void setName(Object handle, String name) {
-        if (handle instanceof MModelElement) {
+        if ((handle instanceof MModelElement) && (name != null)) {
             ((MModelElement) handle).setName(name);
             return;
         }
-	illegalArgument(handle);
+	illegalArgument(handle, name);
     }
 
     /**
