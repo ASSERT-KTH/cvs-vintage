@@ -7,17 +7,17 @@
       Scarab Help 
 
       <ul>
-       <li><a href="$link.setPage(">Introduction to Scarab</a></li>
+       <li><a href="$link.setPage("Introduction to Scarab")"></a></li>
 
-       <li><a href="$link.setPage(">Managing Issues</a></li>
+       <li><a href="$link.setPage("Managing Issues")"></a></li>
 
-       <li><a href="$link.setPage(">Searching the database</a></li>
+       <li><a href="$link.setPage("Searching the database")"></a></li>
 
-       <li><a href="$link.setPage(">Reports</a></li>
+       <li><a href="$link.setPage("Reports")"></a></li>
 
-       <li><a href="$link.setPage(">Scarab guidelines</a></li>
+       <li><a href="$link.setPage("Scarab guidelines")"></a></li>
 
-       <li><a href="$link.setPage(">FAQ</a></li>
+       <li><a href="$link.setPage("FAQ")"></a></li>
 
        <li>Glossary</li>
       </ul>
