@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compcrit.xml,v 1.9 2005/01/07 13:03:16 linus Exp $ -->
+<!-- $Id: compcrit.xml,v 1.10 2005/03/11 10:55:17 mkl Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -179,7 +179,7 @@ The String parameter is ignored.
 		</listitem>
 		<listitem>
 		  <para>
-<command>addSupportedDecision(CrUML.dec<replaceable>AAAA</replaceable>);</command>
+<command>addSupportedDecision(UMLDecision.dec<replaceable>AAAA</replaceable>);</command>
 where <replaceable>AAAA</replaceable> is the design issue category
 this critic falls into
 (examples include STORAGE, PATTERN METHODS).
