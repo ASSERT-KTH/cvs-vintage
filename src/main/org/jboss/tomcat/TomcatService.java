@@ -24,7 +24,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class TomcatService
    extends ServiceMBeanSupport
@@ -68,14 +68,14 @@ public class TomcatService
             {
                Class tomcatClass;
                
-               System.out.println("Testing if Tomcat is present....");
+               log.log("Testing if Tomcat is present....");
                try{
                    tomcatClass = Class.forName("org.apache.tomcat.startup.Tomcat");
-                   System.out.println("OK");
+                   log.log("OK");
                }catch(Exception e)
                {
-                    System.out.println("failed");
-                    System.out.println("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
+                    log.log("failed");
+                    log.log("Tomcat wasn't found. Be sure to have your CLASSPATH correctly set");
                     //e.printStackTrace();
                     return;
                } 
