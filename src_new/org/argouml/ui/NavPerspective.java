@@ -64,7 +64,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  * the display of extends/includes and extension points in the package centric
  * view.
  *
- * <p>$Id: NavPerspective.java,v 1.26 2003/04/16 19:39:40 alexb Exp $
+ * <p>$Id: NavPerspective.java,v 1.27 2003/05/04 19:45:15 kataka Exp $
  */
 public class NavPerspective
     extends TreeModelComposite
@@ -124,6 +124,7 @@ public class NavPerspective
 
         if (parent == child)
             throw new IllegalStateException("Parent cannot equal child");
+        rule.setCacheable(parent, true);
         if (rule.getChildCount(parent) == 0)
             return -1;
         else {
@@ -135,12 +136,15 @@ public class NavPerspective
                     Iterator it = rule.getChildren(parent).iterator();
                     while (it.hasNext()) {
                         index = getHelperIndex(rule, it.next(), child);
-                        if (index > -1)
+                        if (index > -1) {
+                            rule.setCacheable(parent, false);                        
                             return counter + index;
+                        }
                         counter++;
                     }
             }
         }
+        rule.setCacheable(parent, false);
         return -1;
     }
 

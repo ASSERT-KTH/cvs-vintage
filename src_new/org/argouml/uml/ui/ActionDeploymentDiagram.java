@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.10 2003/04/06 11:49:54 kataka Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.11 2003/05/04 19:45:15 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,8 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace,Object)
      */
     public UMLDiagram createDiagram(Object handle) {
+        // a deployment diagram shows something about the whole model according to the uml spec
+          handle = ProjectManager.getManager().getCurrentProject().getRoot();   
         if (!ModelFacade.isANamespace(handle)) {
             cat.error("No namespace as argument");
             cat.error(handle);
@@ -70,6 +72,8 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
      */
     public boolean isValidNamespace(Object handle) {
+        // a deployment diagram shows something about the whole model according to the uml spec
+        handle = ProjectManager.getManager().getCurrentProject().getRoot();        
         if (!ModelFacade.isANamespace(handle)) {
             cat.error("No namespace as argument");
             cat.error(handle);
