@@ -1,13 +1,12 @@
-#set ($createNew = $data.Parameters.New)
+#set ($createNew = $data.Parameters.getString("New", ""))
 #set ($canEdit = "false")
-
 
 #set ($moduleId = $data.Parameters.getString("moduleid"))
 #if (!$moduleId || $moduleId.length() == 0)
    #set ($createNew = "true")
 #end
 
-#if ($createNew && $createNew.equals("true"))
+#if ($createNew.equals("true"))
   #set ($title = "New module")
 #else
   #set ($title = "Modify module")
@@ -23,7 +22,7 @@
 
 #macro (ModifyModuleBar $var)
 <div class="functnbar$var">
-#if ($createNew && $createNew.equals("true"))
+#if ($createNew.equals("true"))
    <input type="submit" name="eventSubmit_doCreate" value="Create" /> 
 #else
    <input type="submit" name="eventSubmit_doUpdate" value="Save" /> 
@@ -53,7 +52,7 @@ module that you can edit.
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ManageModules.vm" /> 
 
 #set ($moduleGroup = $intake.Module.Default)
-#if ($createNew && $createNew.equals("true"))
+#if ($createNew.equals("true"))
 <input type="hidden" name="new" value="true" /> 
 #else
 <input type="hidden" name="new" value="false" /> 
@@ -62,7 +61,7 @@ module that you can edit.
 #end
 
 #set ($moduleGroup = $intake.Module.mapTo($editModule))
-#if ( !$moduleGroup.get("Id").isValid())
+#if (!$moduleGroup.get("Id").isValid())
 <p class="alert">$moduleGroup.get("Id").Message</p>
 #end
 
@@ -103,7 +102,7 @@ module that you can edit.
     #fieldErrorMsg($moduleGroup.ArchiveEmail "")
    </td>
   </tr>
-#if (($createNew == "true") || ($moduleId != "0"))
+#if ($createNew.equals("true") || $moduleId != "0")
   <tr>
    <th>* Parent module</th>
    <td> 
