@@ -15,7 +15,7 @@ import org.apache.log4j.spi.CategoryFactory;
  * @see #trace(Object, Throwable)
 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Logger extends Category
 {
@@ -55,6 +55,24 @@ public class Logger extends Category
     @param clazz, the Class whose name will be used as the category name
     */
    public static Logger create(Class clazz)
+   {
+      Logger logger = (Logger) Category.getInstance(clazz.getName(), factory);
+      return logger;
+   }
+
+   /** Create a Logger instance given the category name.
+    @param name, the category name
+    */
+   public static Logger getLogger(String name)
+   {
+      Logger logger = (Logger) Category.getInstance(name, factory);
+      return logger;
+   }
+   /** Create a Logger instance given the category class. This simply
+    calls create(clazz.getName()).
+    @param clazz, the Class whose name will be used as the category name
+    */
+   public static Logger getLogger(Class clazz)
    {
       Logger logger = (Logger) Category.getInstance(clazz.getName(), factory);
       return logger;
