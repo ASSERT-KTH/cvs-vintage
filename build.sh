@@ -1,39 +1,25 @@
 #!/bin/sh
 ### ====================================================================== ###
 ##                                                                          ##
-##  Copyright (c) 1998-2000 by Jason Dillon <jason@planet57.com>            ##
-##                                                                          ##
-##  This file is part of Buildmagic.                                        ##
-##                                                                          ##
-##  This library is free software; you can redistribute it and/or modify    ##
-##  it under the terms of the GNU Lesser General Public License as          ##
-##  published by the Free Software Foundation; either version 2 of the      ##
-##  License, or (at your option) any later version.                         ##
-##                                                                          ##
-##  This library is distributed in the hope that it will be useful, but     ##
-##  WITHOUT ANY WARRANTY; without even the implied warranty of              ##
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU       ##
-##  Lesser General Public License for more details.                         ##
-##                                                                          ##
-### ====================================================================== ###
-##                                                                          ##
 ##  This is the main entry point for the build system.                      ##
+##                                                                          ##
 ##  Users should be sure to execute this file rather than 'ant' to ensure   ##
 ##  the correct version is being used with the correct configuration.       ##
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.2 2001/08/11 05:20:20 user57 Exp $
+# $Id: build.sh,v 1.3 2001/08/26 07:00:31 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
 GREP="grep"
 ROOT="/"
 
-# the default search path for buildmagic/ant
+# the default search path for ant
 ANT_SEARCH_PATH="\
-    tools/apache/ant \
+    tools
     tools/ant \
+    tools/apache/ant \
     ant"
 
 # the default build file name
@@ -42,8 +28,8 @@ ANT_BUILD_FILE="build.xml"
 # the default arguments
 ANT_OPTIONS="-find $ANT_BUILD_FILE"
 
-# the required version of Ant
-ANT_VERSION="1.3"
+# don't check versions (too slow)
+ANT_VERSION=""
 
 #
 # Helper to complain.
@@ -113,7 +99,7 @@ main() {
     fi
 
     # perhaps check the version
-    if [ "x$ANT_VERSION_CHECK" != "x" ]; then
+    if [ "x$ANT_VERSION" != "x" ] && [ "x$ANT_VERSION_CHECK" != "x" ]; then
 	result="`$ANT -version 2>&1 | $GREP $ANT_VERSION`x"
 	if [ "$result" = "x" ]; then
 	    die "Ant version $ANT_VERSION is required to build."

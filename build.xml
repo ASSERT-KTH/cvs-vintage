@@ -1,159 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project-module [ <!ENTITY config SYSTEM "file:./config.xml"> ]>
+<!DOCTYPE project>
 
 <!-- ====================================================================== -->
 <!--                                                                        -->
-<!--  JBoss, the OpenSource EJB server                                      -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
 <!--                                                                        -->
 <!--  Distributable under LGPL license.                                     -->
 <!--  See terms of license at http://www.gnu.org.                           -->
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.8 2001/08/19 18:51:29 slaboure Exp $ -->
+<!-- $Id: build.xml,v 1.9 2001/08/26 07:00:31 user57 Exp $ -->
 
 <project default="main">
 
   <!-- ================================================================== -->
-  <!-- Basic module configuration                                         -->
+  <!-- Initialization                                                     -->
   <!-- ================================================================== -->
 
-  <!--
-     |  Give users a chance to use a different Buildmagic.
-    -->
-  <property file="${user.home}/.buildmagic.properties"/>
+  <!-- Load Buildmagic extention tasks. -->
+  <taskdef name="taskdef" classname="planet57.tools.buildmagic.task.Taskdef"/>
+  <taskdef resource="planet57/tools/buildmagic/task/autoload.properties"/>
 
-  <!-- 
-     |  Load Buildmagic Ant extentions. 
-    -->
-  <property name="planet57.buildmagic.root" value="${basedir}/../tools/planet57/buildmagic"/>
-  <property name="planet57.buildmagic.lib" value="${planet57.buildmagic.root}/lib"/>
-  <path id="planet57.buildmagic.classpath">
-    <fileset dir="${planet57.buildmagic.lib}">
-      <include name="**/*.jar"/>
-    </fileset>
-  </path>
-  <taskdef name="taskdef" classname="planet57.tools.buildmagic.task.Taskdef"
-	   classpathref="planet57.buildmagic.classpath"/>
-  <taskdef classpathref="planet57.buildmagic.classpath"
-	   resource="planet57/tools/buildmagic/task/autoload.properties"/>
-
-  <!--
-     |  Setup the basic module roots.
-     |
-     |  module.root     - Should be the directory this file is in
-     |  project.root    - Where the project root directory is
-     |  project.config  - Where the project configuration files live
-   -->
-  <property name="module.root" value="${basedir}"/>
-  <property name="project.root">
-    <findroot basedir="." suffix="build/build.xml"/>
-  </property>
-  <property name="project.config" value="${project.root}/build"/>
-
-  <!-- 
-     |  Include user, project and module property overrides.
-     |
-     |  override.properties     - Used rarely (ignore)
-     |  .buildmagic.properties  - Provide Buildmagic specific properties
-     |  .ant.properties         - Ant properties
-     |  local.properties        - User local module properties
-     |  config.properties       - Used rarely (ignore)
-    -->
-  <property file="${project.config}/override.properties"/>
-  <property file="${module.root}/override.properties"/>
+  <!-- Setup the basic project roots. -->
+  <path id="project.root"><pathelement location=".."/></path>
+  <property name="project.root" refid="project.root"/>
+  <property name="control.root" value="${project.root}/build"/>
+  
+  <!-- Include user and project property overrides. -->
   <property file="${user.home}/.buildmagic.properties"/>
   <property file="${user.home}/.ant.properties"/>
-  <property file="${module.root}/local.properties"/>
-  <property file="${project.config}/local.properties"/>
-  <property file="${module.root}/config.properties"/>
-  <property file="${moudle.parent.config}/config.properties"/>
+  <property file="${control.root}/local.properties"/>
 
-  <!-- 
-     |  Setup the basic environment for a source module.
-     |
-     |  module.source    - The module source root
-     |  module.output    - The root where generated files will be placed
-     |  module.build     - Where build files will be placed
-     |  module.release   - Where released files will be placed
-     |  tools.root       - Where to build support tools live
-     |  thirdparty.root  - Where to thirdparty libraries live
-    -->
+  <!-- Setup the basic environment for a project build module. -->
+  <property name="project.output" value="${control.root}/output"/>
+  <property name="project.release" value="${project.output}"/>
+  <property name="tools.root" value="${project.root}/tools"/>
+  <property name="thirdparty.root" value="${project.root}/thirdparty"/>
+
+  <!-- Setup the basic environment for a source module. -->
+  <property name="module.root" value="${basedir}"/>
   <property name="module.source" value="${module.root}/src"/>
   <property name="module.output" value="${module.root}/output"/>
   <property name="module.build" value="${module.output}"/>
   <property name="module.release" value="${module.output}"/>
-  <property name="tools.root" value="${project.root}/tools"/>
-  <property name="thirdparty.root" value="${project.root}/thirdparty"/>
-
-  <!-- 
-     |  Load project configuration.
-     |
-     |  config.xml  - Define most configuration elements here (required).
-    -->
-  &config;
-
-  
-  <!-- ================================================================== -->
-  <!-- Initialize, Configure and Bootstrap the build system               -->
-  <!-- ================================================================== -->
-
-  <!-- 
-     |  Bootstrap all required extensions.
-     |
-     |  Build local Ant extensions here if they are required.
-     |
-     |  This target will not run once the bootstraped-already is set.
-    -->
-  <target name="bootstrap" 
-	  depends="bootstrap-init" 
-	  unless="bootstraped-already">
-    <property name="bootstraped-already" value="true"/>
-  </target>
-
-  <!-- Fail if the required bootstrapping dependencies are missing -->
-  <target name="bootstrap-init" 
-	  depends="bootstrap-check" 
-	  unless="have-bootstrap-dependencies-already">
-    <echo>Missing some or all of the required dependencies.</echo>
-    <fail message="Can not continue."/>
-  </target>
-
-  <!-- Check for required libraries -->
-  <target name="bootstrap-check" unless="bootstraped-already">
-    <!-- Check for required extensions here -->
-    <property name="have-bootstrap-dependencies-already" value="true"/>
-  </target>
-
-  <!-- 
-     |  Configure the module build system.
-     |
-     |  o Updates/installs example files if they exist
-     |  o Invokes the 'configure-hook' target, which should be defined in 
-     |    config.xml.
-     |
-     |  This target will not run once the configured-already property is set.
-    -->
-  <target name="configure" 
-	  unless="configured-already"
-	  description="Configure the module build system.">
-    <property name="module.examples" value="${module.root}/etc"/>
-    <property name="module.examples.extension" value="-example"/>
-    <copy todir="${module.root}" filtering="yes">
-      <fileset dir="${module.examples}/">
-         <include name="**/*${module.examples.extension}"/>
-      </fileset>
-      <mapper type="glob" from="*${module.examples.extension}" to="*"/>
-    </copy>
-
-    <antcall target="configure-hook"/>
-    <property name="configured-already" value="true"/>
-  </target>
-
-  <!-- Disable execution of the configure target -->
-  <target name="disable-configure">
-    <property name="configured-already" value="true"/>
-  </target>
+  <property file="${module.root}/local.properties"/>
 
   <!-- 
      |  Initialize the build system.
@@ -161,37 +52,265 @@
      |  o Sets the timestamp and build.number properties
      |  o Installs property defaults
      |  o Displays some module information
-     |  o Invokes to 'init-hook' target which should be defined in config.xml
      |  o Resolves properties for psuedo late-binding
      |  o Installs filters for each property
      |
      |  This target will not run once the initialized-already property is set.
     -->
-  <target name="init" 
-	  depends="configure, bootstrap" 
-	  unless="initialized-already">
+  <target name="init" unless="initialized-already">
     <tstamp>
       <format property="build.number" pattern="yyyyMMddHHmm"/>
     </tstamp>
-    <property name="build.id" value="${build.number}"/>
+    <property name="build.id" value="DEV"/>
+
     <property resource="planet57/tools/buildmagic/common.properties"/>
     <property resource="planet57/tools/buildmagic/task.properties"/>
+
     <moduleinfo/>
-    <call target="init-hook" unless="bypass-init-hook"/>
     <resolver force="${buildmagic.resolveproperties.force}"/>
     <propertyfilter all="${buildmagic.propertyfilter.all}"/>
     <property name="initialized-already" value="true"/>
   </target>
 
-  <!-- Disable execution of the init target -->
-  <target name="disable-init">
-    <property name="initialized-already" value="true"/>
-  </target>
 
-  <!-- Disable execution of the init-hook target -->
-  <target name="disable-init-hook">
-    <property name="bypass-init-hook" value="true"/>
-  </target>
+  <!-- ================================================================== -->
+  <!-- Module Configuration                                               -->
+  <!-- ================================================================== -->
+
+  <!-- Module name(s) & version -->
+  <property name="module.name" value="server"/>
+  <property name="module.Name" value="JBoss Server"/>
+  <property name="module.version" value="2.5alpha"/>
+
+
+  <!-- ================================================================== -->
+  <!-- Tool Configuration                                                 -->
+  <!-- ================================================================== -->
+
+  <!-- No non-standard tools are required for this module. -->
+
+
+  <!-- ================================================================== -->
+  <!-- Library Configuration                                              -->
+  <!-- ================================================================== -->
+
+  <!-- Java Naming and Directory Interface (JNDI) -->
+  <property name="sun.jndi.root" value="${thirdparty.root}/sun/jndi"/>
+  <property name="sun.jndi.lib" value="${sun.jndi.root}/lib"/>
+  <path id="sun.jndi.classpath">
+    <pathelement path="${sun.jndi.lib}/jndi.jar"/>
+  </path>
+
+  <!-- Java Management Extensions (JMX) -->
+  <property name="sun.jmx.root" value="${thirdparty.root}/sun/jmx"/>
+  <property name="sun.jmx.lib" value="${sun.jmx.root}/lib"/>
+  <path id="sun.jmx.classpath">
+    <pathelement path="${sun.jmx.lib}/jmxri.jar"/>
+  </path>
+
+  <!-- Java API for XML Processing (JAXP) -->
+  <property name="sun.jaxp.root" value="${thirdparty.root}/sun/jaxp"/>
+  <property name="sun.jaxp.lib" value="${sun.jaxp.root}/lib"/>
+  <path id="sun.jaxp.classpath">
+    <fileset dir="${sun.jaxp.lib}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- Java Authentication and Authorization Service (JAAS) -->
+  <property name="sun.jaas.root" value="${thirdparty.root}/sun/jaas"/>
+  <property name="sun.jaas.lib" value="${sun.jaas.root}/lib"/>
+  <path id="sun.jaas.classpath">
+    <pathelement path="${sun.jaas.lib}/jaas.jar"/>
+  </path>
+
+  <!-- JavaBeans Activation Framework (JAF) -->
+  <property name="sun.jaf.root" value="${thirdparty.root}/sun/jaf"/>
+  <property name="sun.jaf.lib" value="${sun.jaf.root}/lib"/>
+  <path id="sun.jaf.classpath">
+    <pathelement path="${sun.jaf.lib}/activation.jar"/>
+  </path>
+
+  <!-- JavaMail -->
+  <property name="sun.javamail.root" value="${thirdparty.root}/sun/javamail"/>
+  <property name="sun.javamail.lib" value="${sun.javamail.root}/lib"/>
+  <path id="sun.javamail.classpath">
+    <pathelement path="${sun.javamail.lib}/mail.jar"/>
+  </path>
+
+  <!-- Java Transaction Service (JTS) -->
+  <property name="sun.jts.root" value="${thirdparty.root}/sun/jts"/>
+  <property name="sun.jts.lib" value="${sun.jts.root}/lib"/>
+  <path id="sun.jts.classpath">
+    <pathelement path="${sun.jts.lib}/jts.jar"/>
+  </path>
+
+  <!-- Log4j -->
+  <property name="apache.log4j.root" value="${thirdparty.root}/apache/log4j"/>
+  <property name="apache.log4j.lib" value="${apache.log4j.root}/lib"/>
+  <path id="apache.log4j.classpath">
+    <pathelement path="${apache.log4j.lib}/log4j.jar"/>
+  </path>
+
+  <!-- EDU.oswego.cs.dl.util.concurrent -->
+  <property name="oswego.concurrent.root" value="${thirdparty.root}/oswego/concurrent"/>
+  <property name="oswego.concurrent.lib" value="${oswego.concurrent.root}/lib"/>
+  <path id="oswego.concurrent.classpath">
+    <pathelement path="${oswego.concurrent.lib}/concurrent.jar"/>
+  </path>
+
+  <!-- JPL-Util -->
+  <property name="gjt.jpl-util.root" value="${thirdparty.root}/gjt/jpl-util"/>
+  <property name="gjt.jpl-util.lib" value="${gjt.jpl-util.root}/lib"/>
+  <path id="gjt.jpl-util.classpath">
+    <fileset dir="${gjt.jpl-util.lib}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- JUnit -->
+  <property name="junit.junit.root" value="${thirdparty.root}/junit/junit"/>
+  <property name="junit.junit.lib" value="${junit.junit.root}/lib"/>
+  <path id="junit.junit.classpath">
+    <pathelement path="${junit.junit.lib}/junit.jar"/>
+  </path>
+
+  <!-- JavaGroups -->
+  <property name="javagroups.javagroups.root" value="${thirdparty.root}/javagroups/javagroups"/>
+  <property name="javagroups.javagroups.lib" value="${javagroups.javagroups.root}/lib"/>
+  <path id="javagroups.javagroups.classpath">
+    <pathelement path="${javagroups.javagroups.lib}/JavaGroups.jar"/>
+  </path>
+
+  <!-- *HACK* jsr77.jar -->
+  <property name="hack.jsr77.root" value="${module.source}"/>
+  <property name="hack.jsr77.lib" value="${hack.jsr77.root}/lib"/>
+  <path id="hack.jsr77.classpath">
+    <pathelement path="${hack.jsr77.lib}/jsr77.jar"/>
+  </path>
+
+  <!-- The combined library classpath -->
+  <path id="library.classpath">
+    <path refid="sun.jndi.classpath"/>
+    <path refid="sun.jmx.classpath"/>
+    <path refid="sun.jaxp.classpath"/>
+    <path refid="sun.jaas.classpath"/>
+    <path refid="sun.jaf.classpath"/>
+    <path refid="sun.javamail.classpath"/>
+    <path refid="sun.jts.classpath"/>
+    <path refid="apache.log4j.classpath"/>
+    <path refid="gjt.jpl-util.classpath"/>
+    <path refid="oswego.concurrent.classpath"/>
+    <path refid="junit.junit.classpath"/>
+    <path refid="hack.jsr77.classpath"/>
+  </path>
+
+
+  <!-- ================================================================== -->
+  <!-- Dependent Module Configuration                                     -->
+  <!-- ================================================================== -->
+ 
+  <!-- J2EE -->
+  <property name="jboss.j2ee.root" value="${project.root}/j2ee/output"/>
+  <property name="jboss.j2ee.lib" value="${jboss.j2ee.root}/lib"/>
+  <path id="jboss.j2ee.classpath">
+    <pathelement path="${jboss.j2ee.lib}/jboss-j2ee.jar"/>
+  </path>
+
+  <!-- Naming -->
+  <property name="jboss.naming.root" value="${project.root}/naming/output"/>
+  <property name="jboss.naming.lib" value="${jboss.naming.root}/lib"/>
+  <path id="jboss.naming.classpath">
+    <pathelement path="${jboss.naming.lib}/jnpserver.jar"/>
+  </path>
+
+  <!-- The combined depedant module classpath -->
+  <path id="dependentmodule.classpath">
+    <path refid="jboss.j2ee.classpath"/>
+    <path refid="jboss.naming.classpath"/>
+  </path>
+
+
+  <!-- ================================================================== -->
+  <!-- Task Configuration                                                 -->
+  <!-- ================================================================== -->
+
+  <!-- The combined thirdparty classpath -->
+  <path id="thirdparty.classpath">
+    <path refid="library.classpath"/>
+    <path refid="dependentmodule.classpath"/>
+  </path>
+
+  <!-- This module is based on Java 1.2 -->
+  <property name="javac.target" value="1.2"/>
+
+  <!-- classpath and local.classpath must have a value using with a path -->
+  <property name="classpath" value=""/>
+  <property name="local.classpath" value=""/>
+
+  <!-- The classpath required to build classes. -->
+  <path id="javac.classpath">
+    <pathelement path="${classpath}"/>
+    <pathelement path="${local.classpath}"/>
+    <path refid="thirdparty.classpath"/>
+  </path>
+
+  <!-- Packages to include when generating api documentation -->
+  <property name="javadoc.packages" value="org.jboss.*"/>
+
+  <!-- The classpath required to build javadocs. -->
+  <path id="javadoc.classpath">
+    <path refid="javac.classpath"/>
+  </path>
+
+  <!-- Override JUnit defaults -->
+  <property name="junit.timeout" value="240000"/> <!-- 4 minutes -->
+  <property name="junit.batchtest.todir" value="${build.reports}"/>
+  <property name="junit.jvm.options" value="-client"/>
+
+  <!-- RMIC should generate stubs compatible with Java 1.2+ -->
+  <property name="rmic.stubVersion" value="1.2"/>
+
+  <!-- Where source files live -->
+  <property name="source.java" value="${module.source}/main"/>
+  <property name="source.etc" value="${module.source}/etc"/>
+  <property name="source.bin" value="${module.source}/bin"/>
+  <property name="source.docs" value="${module.source}/docs"/>
+  <property name="source.resources" value="${module.source}/resources"/>
+
+  <!-- Where build generated files will go -->
+  <property name="build.classes" value="${module.build}/classes"/>
+  <property name="build.jars" value="${module.build}/lib"/>
+  <property name="build.api" value="${module.build}/api"/>
+  <property name="build.etc" value="${module.build}/etc"/>
+  <property name="build.bin" value="${module.build}/bin"/>
+  <property name="build.docs" value="${module.build}/docs"/>
+  <property name="build.resources" value="${module.build}/resources"/>
+  <property name="build.reports" value="${module.build}/reports"/>
+
+  <!-- Where release generated files will go -->
+  <property name="release.id" value="${module.name}-${module.version}-${build.id}"/>
+  <property name="release.root" value="${module.release}/${release.id}"/>
+
+  <property name="release.bin" value="${release.root}/bin"/>
+  <property name="release.client" value="${release.root}/client"/>
+  <property name="release.conf" value="${release.root}/conf"/>
+  <property name="release.conf.default" value="${release.conf}/default"/>
+  <property name="release.db" value="${release.root}/db"/>
+  <property name="release.deploy" value="${release.root}/deploy"/>
+  <property name="release.deploy.lib" value="${release.deploy}/lib"/>
+  <property name="release.lib" value="${release.root}/lib"/>
+  <property name="release.lib.ext" value="${release.lib}/ext"/>
+  <property name="release.log" value="${release.root}/log"/>
+  <property name="release.tmp" value="${release.root}/tmp"/>
+
+  <!-- Documentation and examples -->
+  <property name="release.docs" value="${release.root}/docs"/>
+  <property name="release.examples" value="${release.docs}/examples"/>
+  <property name="release.api" value="${release.docs}/api"/>
+  <property name="release.module.docs" value="${release.docs}/${module.name}"/>
+  <property name="release.module.api" value="${release.api}/${module.name}"/>
+
 
   <!-- ================================================================== -->
   <!-- Pretty                                                             -->
@@ -206,7 +325,8 @@
     -->
 
   <target name="pretty" depends="init">
-    <pretty settingsDir="${project.config}/etc" cvs="true">
+    <taskdef name="pretty" classname="pretty.Pretty"/>
+    <pretty settingsDir="${control.root}/etc" cvs="true">
       <fileset dir="${source.java}">
         <include name="**/*.java"/>
       </fileset>
@@ -304,10 +424,12 @@
       </fileset>
     </copy>
 
-    <fixcrlf srcdir="${build.bin}" cr="remove" eof="remove"
+    <fixcrlf srcdir="${build.bin}"
+	     eol="lf" eof="remove"
 	     includes="**/*.sh"/>
 
-    <fixcrlf srcdir="${build.bin}" cr="add" eof="remove"
+    <fixcrlf srcdir="${build.bin}" 
+	     eol="crlf" eof="remove"
 	     includes="**/*.bat, **/*.cmd"/>
 
     <chmod perm="+x">
@@ -806,8 +928,6 @@
       <classpath>
         <pathelement location="${build.classes}"/>
         <path refid="javac.classpath"/>
-        <path refid="apache.ant.classpath"/>
-        <path refid="apache.ant.ext.classpath"/>
       </classpath>
 
       <formatter type="${junit.formatter.type}"
@@ -833,7 +953,7 @@
   <!-- ================================================================== -->
 
   <!-- Clean up all build output -->
-  <target name="clean" depends="disable-configure, disable-init-hook, init"
+  <target name="clean" depends="init"
 	  description="Cleans up most generated files.">
     <delete dir="${module.build}"/>
     <delete dir="${module.release}"/>
@@ -843,8 +963,7 @@
   <!-- Clean up all generated files -->
   <target name="clobber" depends="clean"
 	  description="Cleans up all generated files.">
-    <!-- Clean up configure generated files -->
-    <delete file="${module.root}/local.properties" quiet="true"/>
+    <!-- nothing to clobber -->
   </target>
 
 
