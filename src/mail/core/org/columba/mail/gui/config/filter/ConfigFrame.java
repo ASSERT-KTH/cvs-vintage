@@ -34,12 +34,12 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -68,20 +68,16 @@ public class ConfigFrame
 	private JButton editButton;
 	private JButton upButton;
 	private JButton downButton;
-	*/
 
 	private JFrame frame;
-
+	*/
 	public FilterListTable listView;
 
 	private Config config;
 
 	//private AdapterNode actNode;
-
-	private int index = -1;
-
 	private FilterList filterList;
-	private Filter filter;
+	//private Filter filter;
 	//private JDialog dialog;
 
 	JTextField nameTextField = new JTextField();
@@ -115,12 +111,30 @@ public class ConfigFrame
 		setVisible(true);
 	}
 
+	/**
+	 * Returns the <code>Filter</code> that is selected in the list.
+	 * 
+	 * @return null if there is no filter selected; otherwise returns the selected <code>Filter</code>.
+	 */
 	public Filter getSelected() {
+		Filter filter = null;
+		ListSelectionModel model = listView.getSelectionModel();
+		if (!model.isSelectionEmpty()) {
+			int index = model.getAnchorSelectionIndex();
+			filter = filterList.get(index);
+		}
 		return filter;
 	}
 
+	/**
+	 * Selects the filter in the list.
+	 * @param f filter to select in list.
+	 */
 	public void setSelected(Filter f) {
-		filter = f;
+		int index = filterList.indexOf(f);
+		if (index != -1) {
+			listView.getSelectionModel().setSelectionInterval(index, index);
+		}
 	}
 
 	public void initComponents() {
@@ -337,14 +351,23 @@ public class ConfigFrame
 		if (theList.isSelectionEmpty()) {
 			removeButton.setEnabled(false);
 			editButton.setEnabled(false);
+			movedownButton.setEnabled(false);
+			moveupButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
 			editButton.setEnabled(true);
 
-			//String value = (String) theList.getSelectedValue();
-			index = theList.getAnchorSelectionIndex();
-
-			setSelected(filterList.get(index));
+			if (theList.getAnchorSelectionIndex() == 0) {
+				moveupButton.setEnabled(false);
+			} else {
+				moveupButton.setEnabled(true);
+			}
+			
+			if (theList.getLeadSelectionIndex() == (filterList.count()-1)) {
+				movedownButton.setEnabled(false);
+			} else {
+				movedownButton.setEnabled(true);
+			}
 		}
 	}
 
@@ -372,30 +395,33 @@ public class ConfigFrame
 		if (action.equals("CLOSE")) {
 			// FIXME
 			//Config.save();
-
-			setVisible(false);
-		} else if (action.equals("ADD")) {
-			Filter filter = FilterList.createEmptyFilter();
 			
+			setVisible(false);			
+		} else if (action.equals("ADD")) {
+			Filter filter = FilterList.createEmptyFilter();			
 			if (showFilterDialog(filter)) {
 				filterList.add(filter);
+				listView.update();
 				setSelected(filter);
 			}
-			
-			listView.update();
 
 		} else if (action.equals("REMOVE")) {
-			filterList.remove(index);
-
-			removeButton.setEnabled(false);
-			editButton.setEnabled(false);
-
+			filterList.remove( getSelected() );
 			listView.update();
 
 		} else if (action.equals("EDIT")) {
-			showFilterDialog(getSelected());
-
-			listView.update();
+			Filter filter = getSelected();
+			showFilterDialog(filter);
+			
+		} else if (action.equals("MOVEUP")) {
+			Filter filter = getSelected();
+			filterList.moveUp(filter);
+			setSelected(filter);
+			
+		} else if (action.equals("MOVEDOWN")) {
+			Filter filter = getSelected();
+			filterList.moveDown(filter);
+			setSelected(filter);
 		}
 	}
 }
