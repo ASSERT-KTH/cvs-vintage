@@ -55,7 +55,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.parser.ParameterParser;
@@ -95,7 +96,7 @@ import org.tigris.scarab.util.word.QueryResult;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.189 2004/11/27 19:29:56 jorgeuriarte Exp $
+ * @version $Id: ReportIssue.java,v 1.190 2004/12/03 15:55:41 dep4b Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -152,7 +153,7 @@ public class ReportIssue extends RequireLoginFirstAction
         try
         {
             Issue issue = scarabR.getReportingIssue();
-            SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
+            LinkedMap avMap = issue.getModuleAttributeValuesMap();
 
             // set the values entered so far and if that is successful look
             // for duplicates
@@ -305,7 +306,7 @@ public class ReportIssue extends RequireLoginFirstAction
      * @exception Exception if an error occurs
      */
     private void setRequiredFlags(Issue issue, IntakeTool intake,
-                                  SequencedHashMap avMap, TemplateContext context)
+    		LinkedMap avMap, TemplateContext context)
         throws Exception
     {
         if (issue == null)
@@ -318,7 +319,7 @@ public class ReportIssue extends RequireLoginFirstAction
         IssueType issueType = issue.getIssueType();
         List requiredAttributes = issueType
             .getRequiredAttributes(issue.getModule());
-        for (Iterator iter = avMap.iterator(); iter.hasNext();)
+        for (MapIterator iter = avMap.mapIterator(); iter.hasNext();)
         {
             AttributeValue aval = (AttributeValue)avMap.get(iter.next());
             
@@ -412,7 +413,7 @@ public class ReportIssue extends RequireLoginFirstAction
      */
     private boolean setAttributeValues(Issue issue, IntakeTool intake, 
                                        TemplateContext context,
-                                       SequencedHashMap avMap)
+                                       LinkedMap avMap)
         throws Exception
     {
         boolean success = false;
@@ -420,7 +421,7 @@ public class ReportIssue extends RequireLoginFirstAction
         setRequiredFlags(issue, intake, avMap, context);
         if (intake.isAllValid()) 
         {
-            for (Iterator i = avMap.iterator();i.hasNext();) 
+            for (MapIterator i = avMap.mapIterator();i.hasNext();) 
             {
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = 
@@ -469,7 +470,7 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = scarabR.getReportingIssue();
         ScarabUser user = (ScarabUser)data.getUser();
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
+        LinkedMap avMap = issue.getModuleAttributeValuesMap(); 
 
         // set the attribute values and if that was successful save the issue.
         if (setAttributeValues(issue, intake, context, avMap))
@@ -617,7 +618,7 @@ public class ReportIssue extends RequireLoginFirstAction
             scarabR.setConfirmMessage(L10NKeySet.FileAdded);
         }
 
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
+        LinkedMap avMap = issue.getModuleAttributeValuesMap(); 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, intake, context, avMap);
         doGotowizard3(data, context);
@@ -655,7 +656,7 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             scarabR.setConfirmMessage(L10NKeySet.NoFilesChanged);
         }
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
+        LinkedMap avMap = issue.getModuleAttributeValuesMap(); 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, getIntakeTool(context), context, avMap);
         doGotowizard3(data, context);

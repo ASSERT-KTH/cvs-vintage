@@ -64,6 +64,7 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
@@ -82,7 +83,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.46 2004/11/04 16:05:47 dep4b Exp $
+ * @version $Id: Register.java,v 1.47 2004/12/03 15:55:41 dep4b Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -159,7 +160,7 @@ public class Register extends ScarabTemplateAction
             if (register == null)
             {
                 setTarget(data,"Register.vm");
-                scarabR.setAlertMessage(l10n.get("RegisterSessionError"));
+                scarabR.setAlertMessage(L10NKeySet.RegisterSessionError);
                 return;
             }
 
@@ -170,7 +171,7 @@ public class Register extends ScarabTemplateAction
             if (!password.equals(passwordConfirm))
             {
                 setTarget(data, template);
-                scarabR.setAlertMessage(l10n.get("PasswordsDoNotMatch"));
+                scarabR.setAlertMessage(L10NKeySet.PasswordsDoNotMatch);
                 return;
             }
 
@@ -191,7 +192,7 @@ public class Register extends ScarabTemplateAction
             if (email == null)
             {
                 setTarget(data,"Register.vm");
-                scarabR.setAlertMessage(l10n.get("EnterValidEmailAddress"));
+                scarabR.setAlertMessage(L10NKeySet.EnterValidEmailAddress);
                 return;
             }
 
@@ -226,7 +227,7 @@ public class Register extends ScarabTemplateAction
             if (ScarabUserImplPeer.checkExists(su))
             {
                 setTarget(data, template);
-                scarabR.setAlertMessage(l10n.get("UsernameExistsAlready"));
+                scarabR.setAlertMessage(L10NKeySet.UsernameExistsAlready);
                 return;
             }
 
@@ -347,7 +348,7 @@ public class Register extends ScarabTemplateAction
             if (register == null)
             {
                 // This is often triggered by self-host issue SCB825.
-                scarabR.setAlertMessage(l10n.get("RegisterGroupIsNullError"));
+                scarabR.setAlertMessage(L10NKeySet.RegisterGroupIsNullError);
                 String msg = "Register group is null: user="
                     + (user != null && user instanceof ScarabUser ?
                        ((ScarabUser) user).getQueryKey() : "[none]")
@@ -361,12 +362,12 @@ public class Register extends ScarabTemplateAction
             Field confirmField = register.get("Confirm");
             if (usernameField == null)
             {
-                scarabR.setAlertMessage(l10n.get("UsernameGroupIsNullError"));
+                scarabR.setAlertMessage(L10NKeySet.UsernameGroupIsNullError);
                 return;
             }
             else if (confirmField == null)
             {
-                scarabR.setAlertMessage(l10n.get("ConfirmFieldIsNullError"));
+                scarabR.setAlertMessage(L10NKeySet.ConfirmFieldIsNullError);
                 return;
             }
             username = usernameField.toString();
@@ -393,18 +394,18 @@ public class Register extends ScarabTemplateAction
                     data.setUser(confirmedUser);
                     data.save();
     
-                    scarabR.setConfirmMessage(l10n.get("AccountConfirmedSuccess"));
+                    scarabR.setConfirmMessage(L10NKeySet.AccountConfirmedSuccess);
                     setTarget(data, nextTemplate);
                 }
                 else
                 {
-                    scarabR.setAlertMessage(l10n.get("AccountConfirmedFailure"));
+                    scarabR.setAlertMessage(L10NKeySet.AccountConfirmedFailure);
                     setTarget(data, template);
                 }
             }
             else // we don't have confirmation! :-(
             {
-                scarabR.setAlertMessage(l10n.get("InvalidConfirmationCode"));
+                scarabR.setAlertMessage(L10NKeySet.InvalidConfirmationCode);
                 setTarget(data, template);
             }
         }
@@ -442,7 +443,7 @@ public class Register extends ScarabTemplateAction
         
             if (register == null)
             {
-                scarabR.setAlertMessage(l10n.get("RegisterGroupIsNullError"));
+                scarabR.setAlertMessage(L10NKeySet.RegisterGroupIsNullError);
                 return;
             }
             String username = register.get("UserName").toString();
@@ -461,14 +462,14 @@ public class Register extends ScarabTemplateAction
             }
             catch (TurbineSecurityException e)
             {
-                scarabR.setAlertMessage(l10n.get("InvalidUsername"));
+                scarabR.setAlertMessage(L10NKeySet.InvalidUsername);
                 Log.get().error ("RegisterConfirm: ", e);
                 return;
             }
         
             // send an email that is for confirming the registration
             sendConfirmationEmail((ScarabUser) user, context);
-            scarabR.setConfirmMessage(l10n.get("ConfirmationCodeSent"));
+            scarabR.setConfirmMessage(L10NKeySet.ConfirmationCodeSent);
 
             // set the next template on success
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, user);

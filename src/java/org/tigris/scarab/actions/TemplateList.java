@@ -46,43 +46,39 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
+
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.collections.SequencedHashMap;
-
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-
-import org.apache.torque.om.NumberKey;
-
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
-
-// Scarab Stuff
+import org.apache.torque.om.NumberKey;
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.Scope;
-import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.IssueTemplateInfo;
-import org.tigris.scarab.om.IssueTemplateInfoPeer;
-import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetManager;
 import org.tigris.scarab.om.ActivitySetTypePeer;
-import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.tools.ScarabRequestTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
-import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.IssueTemplateInfo;
+import org.tigris.scarab.om.IssueTemplateInfoPeer;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Scope;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 
 
 /**
@@ -90,7 +86,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.65 2004/11/02 10:22:37 dabbous Exp $
+ * @version $Id: TemplateList.java,v 1.66 2004/12/03 15:55:41 dep4b Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -107,11 +103,11 @@ public class TemplateList extends RequireLoginFirstAction
         Issue issue = scarabR.getIssueTemplate();
         if (issue == null)
         {
-            scarabR.setAlertMessage(l10n.get("IssueTypeNotAvailable"));
+            scarabR.setAlertMessage(L10NKeySet.IssueTypeNotAvailable);
             return;
         }
 
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
+        LinkedMap avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;
         Group group = null;
         
@@ -127,12 +123,12 @@ public class TemplateList extends RequireLoginFirstAction
             if (checkForDupes(info, infoGroup.get("Name").toString(), 
                               user, issue))
             {
-                scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
+                scarabR.setAlertMessage(L10NKeySet.DuplicateTemplateName);
             }
             else
             {
                 boolean atLeastOne = false;
-                Iterator iter = avMap.iterator();
+                MapIterator iter = avMap.mapIterator();
                 if (iter.hasNext()) 
                 {
                     // Save activitySet record
@@ -181,7 +177,7 @@ public class TemplateList extends RequireLoginFirstAction
                     {
                         data.getParameters().add
                             ("templateId", issue.getIssueId().toString());
-                        scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
+                        scarabR.setConfirmMessage(L10NKeySet.NewTemplateCreated);
                     }
                     else
                     {
@@ -218,7 +214,7 @@ public class TemplateList extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
 
-        SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
+        LinkedMap avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;
         Group group = null;
         Group issueGroup = intake.get("Issue", issue.getQueryKey());
@@ -230,7 +226,7 @@ public class TemplateList extends RequireLoginFirstAction
             HashMap newAttVals = new HashMap();
             boolean modifiedAttribute = false;
 
-            Iterator iter = avMap.iterator();
+            Iterator iter = avMap.mapIterator();
             while (iter.hasNext()) 
             {
                 aval = (AttributeValue)avMap.get(iter.next());
@@ -295,11 +291,11 @@ public class TemplateList extends RequireLoginFirstAction
                 issue.setAttributeValues(null, newAttVals, null, user);
                 intake.removeAll();
             }
-            scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+            scarabR.setConfirmMessage(L10NKeySet.TemplateModified);
         } 
         else
         {
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
     }
 
@@ -327,7 +323,7 @@ public class TemplateList extends RequireLoginFirstAction
                               user, issue))
             {
                 success = false;
-                scarabR.setAlertMessage(l10n.get("DuplicateTemplateName"));
+                scarabR.setAlertMessage(L10NKeySet.DuplicateTemplateName);
             }
             else
             {
@@ -336,7 +332,7 @@ public class TemplateList extends RequireLoginFirstAction
                 data.getParameters().add("templateId", issue.getIssueId().toString());
                 if (info.canEdit(user))
                 {
-                    scarabR.setConfirmMessage(l10n.get("TemplateModified"));
+                    scarabR.setConfirmMessage(L10NKeySet.TemplateModified);
                 }
                 else
                 {
@@ -351,7 +347,7 @@ public class TemplateList extends RequireLoginFirstAction
         else
         {
             success = false;
-            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            scarabR.setAlertMessage(ERROR_MESSAGE);
         }
         return success;
     }
@@ -389,7 +385,7 @@ public class TemplateList extends RequireLoginFirstAction
                 catch (ScarabException e)
                 {
                     success = false;
-                    scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                    scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
                 }
                 catch (Exception e)
                 {
@@ -400,11 +396,11 @@ public class TemplateList extends RequireLoginFirstAction
         } 
         if (!atLeastOne)
         {
-            scarabR.setAlertMessage(l10n.get("NoTemplateSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoTemplateSelected);
         }
         else if (success)
         {
-            scarabR.setConfirmMessage(l10n.get("TemplateDeleted"));
+            scarabR.setConfirmMessage(L10NKeySet.TemplateDeleted);
         } 
     } 
 

@@ -74,12 +74,13 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 
 /**
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.32 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: DefineXModuleList.java,v 1.33 2004/12/03 15:55:41 dep4b Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -92,8 +93,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         String listId = data.getParameters().getString("pd_list_id");
         if (listId == null || listId.length()==0)
         {
-            scarabR.setAlertMessage(
-                l10n.get("NoPredefinedXModuleListSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoPredefinedXModuleListSelected);
         }
         else 
         {
@@ -110,8 +110,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
                 if (issueType.getDeleted()) 
                 {
 
-                    scarabR.setAlertMessage(
-                        l10n.get("GlobalIssueTypesDeleted"));
+                    scarabR.setAlertMessage(L10NKeySet.GlobalIssueTypesDeleted);
                 }
                 else 
                 {
@@ -145,7 +144,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         {
             ScarabRequestTool scarabR = getScarabRequestTool(context);
             ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setAlertMessage(l10n.get("ListWithAtLeastOneMITRequired"));
+            scarabR.setAlertMessage(L10NKeySet.ListWithAtLeastOneMITRequired);
         }
     }
 
@@ -159,8 +158,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         ReportBridge report = scarabR.getReport();
         if (!report.isEditable(user)) 
         {
-            scarabR.setAlertMessage(
-                l10n.get(NO_PERMISSION_MESSAGE));
+            scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
             setTarget(data, "reports,ReportList.vm");
             return;
         }
@@ -169,19 +167,19 @@ public class DefineXModuleList extends RequireLoginFirstAction
         try 
         {
             report.setMITList(mitList);
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
 
             if (!mitList.isSingleModule() && 
                 Scope.MODULE__PK.equals(report.getScopeId())) 
             {
                 report.setScopeId(Scope.PERSONAL__PK);
-                scarabR.setInfoMessage(l10n.get("ScopeChangedToPersonal"));
+                scarabR.setInfoMessage(L10NKeySet.ScopeChangedToPersonal);
             }
             setTarget(data, "reports,Info.vm");
         }
         catch (IncompatibleMITListException e)
         {
-            scarabR.setAlertMessage(l10n.get("IncompatibleMITListReport"));
+            scarabR.setAlertMessage(L10NKeySet.IncompatibleMITListReport);
             setTarget(data, "reports,XModuleList.vm");
         }
     }
@@ -195,7 +193,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         if (listId == null || listId.length()==0)
         {
             ScarabLocalizationTool l10n = getLocalizationTool(context);
-            scarabR.setAlertMessage(l10n.get("NoSavedXModuleQuerySelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoSavedXModuleQuerySelected);
         }
         else 
         {
@@ -212,7 +210,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         String[] mitids = data.getParameters().getStrings("mitlistitem");
         if (mitids == null || mitids.length == 0) 
         {
-            scarabR.setAlertMessage(l10n.get("NoItemsSelectedForRemoval"));
+            scarabR.setAlertMessage(L10NKeySet.NoItemsSelectedForRemoval);
         }
         else 
         {
@@ -231,13 +229,13 @@ public class DefineXModuleList extends RequireLoginFirstAction
         MITList list = user.getCurrentMITList();
         if (list == null) 
         {
-            scarabR.setAlertMessage(l10n.get("ApplicationErrorListWasNull"));
+            scarabR.setAlertMessage(L10NKeySet.ApplicationErrorListWasNull);
             Log.get().error("Current list was null in DefineXModuleList.doGotosavelist.");
         }
         else if (list.isAnonymous())
         {
             list.save();
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             String queryId = data.getParameters().getString("queryId");
             if (queryId != null && queryId.length() > 0) 
             {
@@ -291,7 +289,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
             // So that on IssueTypeList screen can select a saved list
             user.setCurrentMITList(null);
  
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+            scarabR.setConfirmMessage(DEFAULT_MSG);
             setTarget(data, data.getParameters()
                       .getString(ScarabConstants.LAST_TEMPLATE));
         }
@@ -308,7 +306,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
              && (rmitIds == null || rmitIds.length == 0)
              && !data.getParameters().getBoolean("allit"))
         {
-            scarabR.setAlertMessage(l10n.get("MustSelectAtLeastOneIssueType"));
+            scarabR.setAlertMessage(L10NKeySet.MustSelectAtLeastOneIssueType);
             return;
         }
         else 
@@ -350,7 +348,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
             List issueTypes = module.getIssueTypes(false);
             if (issueTypes == null || issueTypes.isEmpty())
             {
-                scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+                scarabR.setAlertMessage(L10NKeySet.IssueTypeUnavailable);
                 return;
             }
             MITList list = MITListManager.getSingleModuleAllIssueTypesList(
@@ -381,7 +379,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
                 catch (Exception e)
                 {
                     // would probably be a hack of the form
-                    scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+                    scarabR.setAlertMessage(L10NKeySet.IssueTypeUnavailable);
                     Log.get().debug("", e);
                     return;
                 }
@@ -392,7 +390,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
             }
             else
             {
-                scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+                scarabR.setAlertMessage(L10NKeySet.IssueTypeUnavailable);
             }
         }
         
@@ -416,7 +414,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
             MITList list = MITListManager.getInstance(new Long(listId));
             if (list == null) 
             {
-                scarabR.setAlertMessage(l10n.get("InvalidId"));
+                scarabR.setAlertMessage(L10NKeySet.InvalidId);
                 Log.get().warn("An invalid id was entered: "+listId);
             }
             else 
@@ -426,7 +424,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
         }
         catch (Exception e)
         {
-            scarabR.setAlertMessage(l10n.get("InvalidId"));
+            scarabR.setAlertMessage(L10NKeySet.InvalidId);
             Log.get().warn("An invalid id was entered: "+listId);
         }
     }

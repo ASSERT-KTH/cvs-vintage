@@ -61,6 +61,7 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 
 /**
  * This class is responsible for dealing with the Change Password
@@ -105,7 +106,7 @@ public class ChangePassword extends ScarabTemplateAction
             
             if (oldPassword.equals(password))
             {
-                scarabR.setInfoMessage(l10n.get("PasswordSame"));
+                scarabR.setInfoMessage(L10NKeySet.PasswordSame);
                 setTarget(data, template);
             } 
             else if (password.equals(passwordConfirm))
@@ -125,7 +126,7 @@ public class ChangePassword extends ScarabTemplateAction
                     TurbineSecurity.changePassword(confirmedUser, 
                         oldPassword, password);
 
-                    scarabR.setConfirmMessage(l10n.get("PasswordChanged"));
+                    scarabR.setConfirmMessage(L10NKeySet.PasswordChanged);
                     setTarget(data, "Login.vm");
                 }
                 catch (PasswordMismatchException pme)
@@ -136,7 +137,7 @@ public class ChangePassword extends ScarabTemplateAction
             }
             else /* !password.equals(passwordConfirm) */
             {
-                scarabR.setAlertMessage(l10n.get("PasswordsDoNotMatch"));
+                scarabR.setAlertMessage(L10NKeySet.PasswordsDoNotMatch);
                 setTarget(data, template);
             }
         }

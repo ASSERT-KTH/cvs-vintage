@@ -59,6 +59,7 @@ import org.apache.turbine.Turbine;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.Module;
@@ -73,7 +74,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.80 2004/02/17 21:48:31 pledbrook Exp $
+ * @version $Id: Default.java,v 1.81 2004/12/03 15:57:52 dep4b Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -123,7 +124,7 @@ public class Default extends TemplateSecureScreen
         if (changeTarget)
         {
             // Pass control to the alternate target.
-            scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+            scarabR.setAlertMessage(L10NKeySet.IssueTypeUnavailable);
             setTarget(data, altTarget);
         }
         else
@@ -132,7 +133,7 @@ public class Default extends TemplateSecureScreen
             String title = null;
             try
             {
-                title = getTitle(scarabR, l10n, data, context);
+                title = getTitle(scarabR, l10n);
             }
             catch (Exception e)
             {
@@ -147,11 +148,7 @@ public class Default extends TemplateSecureScreen
         }
     }
 
-    protected String getTitle(
-        ScarabRequestTool scarabR,
-        ScarabLocalizationTool l10n,
-        RunData data,
-        TemplateContext context)
+    protected String getTitle(ScarabRequestTool scarabR, ScarabLocalizationTool l10n)
         throws Exception
     {
         return l10n.getTitle();
@@ -201,8 +198,7 @@ public class Default extends TemplateSecureScreen
                 if (!user.hasLoggedIn()
                     || !user.hasPermission(perm, currentModule))
                 {
-                    scarabR.setInfoMessage(
-                        l10n.get("LoginToAccountWithPermissions"));
+                    scarabR.setInfoMessage(L10NKeySet.LoginToAccountWithPermissions);
                     // it is very common to come from email to view a
                     // particular issue.  Until a more general formula for
                     // deciding which requests might be ok to continue after
@@ -221,7 +217,7 @@ public class Default extends TemplateSecureScreen
                 else if (currentModule == null)
                 {
                     Log.get().debug("Current module is null");
-                    scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
+                    scarabR.setInfoMessage(L10NKeySet.SelectModuleToWorkIn);
                     setTargetSelectModule(data);
                     return false;
                 }
@@ -244,7 +240,7 @@ public class Default extends TemplateSecureScreen
                 }
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
-                scarabR.setAlertMessage(l10n.get("NoPermissionInModule"));
+                scarabR.setAlertMessage(L10NKeySet.NoPermissionInModule);
                 setTargetSelectModule(data);
                 return false;
             }

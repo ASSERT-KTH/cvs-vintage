@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
@@ -97,7 +98,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.194 2004/12/03 12:10:27 dep4b Exp $
+ * @version $Id: ModifyIssue.java,v 1.195 2004/12/03 15:55:41 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -154,8 +155,8 @@ public class ModifyIssue extends BaseModifyIssue
             .getRequiredAttributes(issue.getModule());
         AttributeValue aval = null;
         Group group = null;
-        SequencedHashMap modMap = issue.getModuleAttributeValuesMap();
-        for (Iterator iter = modMap.iterator(); iter.hasNext(); ) 
+        LinkedMap modMap = issue.getModuleAttributeValuesMap();
+        for (Iterator iter = modMap.mapIterator(); iter.hasNext(); ) 
         {
             aval = (AttributeValue)modMap.get(iter.next());
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
@@ -236,7 +237,7 @@ public class ModifyIssue extends BaseModifyIssue
             HashMap newAttVals = new HashMap();
 
             // Set the attribute values entered 
-            Iterator iter2 = modMap.iterator();
+            Iterator iter2 = modMap.mapIterator();
             boolean modifiedAttribute = false;
             while (iter2.hasNext())
             {

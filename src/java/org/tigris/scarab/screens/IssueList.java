@@ -66,9 +66,7 @@ public class IssueList extends Default {
      * which includes the source query name if there is one.
      */
     protected String getTitle(ScarabRequestTool scarabR,
-                              ScarabLocalizationTool l10n,
-                              RunData data,
-                              TemplateContext context)
+                              ScarabLocalizationTool l10n)
         throws Exception
     {
         if (scarabR.getQuery() != null
@@ -79,7 +77,7 @@ public class IssueList extends Default {
         }
         else
         {
-            return super.getTitle(scarabR, l10n, data, context);
+            return super.getTitle(scarabR,l10n);
         }
     }
 }

@@ -53,7 +53,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
@@ -88,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.34 2004/11/14 21:06:55 dep4b Exp $
+ * @version $Id: ConfigureReport.java,v 1.35 2004/12/03 15:55:41 dep4b Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -154,14 +155,14 @@ public class ConfigureReport
                 // FIXME! i don't know that the intakeReport should ever be 
                 // null, but since the conditional was here, don't fail silently
                 scarabR.setAlertMessage(
-                    l10n.get("ThisShouldNotHappenPleaseContactAdmin"));
+                		L10NKeySet.ThisShouldNotHappenPleaseContactAdmin);
                 setTarget(data, "reports,Info.vm");
             }            
         }
         else 
         {
             scarabR.setAlertMessage(
-                l10n.get("InvalidData"));
+            		L10NKeySet.InvalidData);
             setTarget(data, "reports,Info.vm");            
         }
     }
@@ -208,21 +209,20 @@ public class ConfigureReport
                 if (currentType == 2 && 
                     !reportDefn.allowMoreHeadings(reportAxis)) 
                 {
-                    String msg = l10n.get("ThisAxisMustBeDatesUnlessHeadingsAreRemoved");
-                    scarabR.setAlertMessage(msg);
+                    scarabR.setAlertMessage(L10NKeySet.ThisAxisMustBeDatesUnlessHeadingsAreRemoved);
                     params.setString("headingtype", "2");
                 }
                 else 
                 {
-                    String msg;
+                    LocalizationKey msg;
                     if (heading.size() > 0) 
                     {
                         heading.reset();
-                        msg = l10n.get("HeadingTypeChangedOldDataDiscarded");
+                        msg = L10NKeySet.HeadingTypeChangedOldDataDiscarded;
                     }
                     else
                     {
-                        msg = l10n.get("HeadingTypeChanged");
+                        msg = L10NKeySet.HeadingTypeChanged;
                     }
                     scarabR.setConfirmMessage(msg);
                 }
@@ -256,10 +256,11 @@ public class ConfigureReport
             //searchGroup.setProperties(search);
 
             // Set attribute values to search on
-            SequencedHashMap avMap = search.getCommonAttributeValuesMap();
-            for (Iterator i = avMap.iterator(); i.hasNext();) 
+            LinkedMap avMap = search.getCommonAttributeValuesMap();
+            for (MapIterator i = avMap.mapIterator(); i.hasNext();) 
             {
-                AttributeValue aval = (AttributeValue)avMap.get(i.next());
+            	i.next();
+                AttributeValue aval = (AttributeValue)i.getValue();
                 Group group = intake.get("AttributeValue", aval.getQueryKey());
                 if (group != null) 
                 {
@@ -274,7 +275,7 @@ public class ConfigureReport
                 .getAxis(axis).getHeading(level);
             if (type != heading.calculateType()) 
             {
-                scarabR.setAlertMessage(l10n.get("ChangeOfTypeMessage")); 
+                scarabR.setAlertMessage(L10NKeySet.ChangeOfTypeMessage); 
             }
 
             // we are going to delete the old heading data and reconstruct it
@@ -423,7 +424,7 @@ public class ConfigureReport
         {
             if (heading.getReportGroups() != null) 
             {
-               scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
+               scarabR.setAlertMessage(L10NKeySet.CouldNotMakeRequestedChange);                
             }
             heading.reset();
         }
@@ -450,7 +451,7 @@ public class ConfigureReport
         }
         else 
         {
-            scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
         }
     }
         
@@ -481,7 +482,7 @@ public class ConfigureReport
             || heading.getReportGroups() != null) 
         {
             heading.reset();
-            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
+            scarabR.setAlertMessage(L10NKeySet.CouldNotMakeRequestedChange);                
         }
         else 
         {
@@ -502,11 +503,11 @@ public class ConfigureReport
                         ruas.remove(rua);
                     }
                 }
-                scarabR.setConfirmMessage(l10n.get("SelectedUsersWereRemoved"));
+                scarabR.setConfirmMessage(L10NKeySet.SelectedUsersWereRemoved);
             }
             else 
             {
-                scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+                scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
             }
         }
     }
@@ -539,7 +540,7 @@ public class ConfigureReport
             || heading.getReportGroups() != null) 
         {
             heading.reset();
-            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));
+            scarabR.setAlertMessage(L10NKeySet.CouldNotMakeRequestedChange);
         }
         else 
         {
@@ -576,11 +577,11 @@ public class ConfigureReport
                         params.getString("asso_user_{" + userId + "}")));
                     heading.addReportUserAttribute(rua);
                 }
-                scarabR.setConfirmMessage(l10n.get("SelectedUsersWereModified"));
+                scarabR.setConfirmMessage(L10NKeySet.SelectedUsersWereModified);
             }
             else 
             {
-                scarabR.setAlertMessage(l10n.get("NoUsersSelected"));
+                scarabR.setAlertMessage(L10NKeySet.NoUsersSelected);
             }
         }
     }
@@ -608,11 +609,11 @@ public class ConfigureReport
             List headings = report.getReportDefinition()
                 .getAxis(axis).getReportHeadings();
             headings.remove(level);
-            scarabR.setConfirmMessage(l10n.get("HeadingRemoved")); 
+            scarabR.setConfirmMessage(L10NKeySet.HeadingRemoved); 
         }
         else 
         {
-            scarabR.setAlertMessage(l10n.get("NoHeadingSelected"));     
+            scarabR.setAlertMessage(L10NKeySet.NoHeadingSelected);     
         }
     }
 
@@ -645,8 +646,7 @@ public class ConfigureReport
         }
         else
         {
-            scarabR.setAlertMessage(
-                getLocalizationTool(context).get("NoHeadingSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoHeadingSelected);
         }
     }
 
@@ -672,7 +672,7 @@ public class ConfigureReport
         // remove old intake data
         Intake intake = getIntakeTool(context);
         intake.removeAll();
-        scarabR.setConfirmMessage(l10n.get("HeadingAddedNowAddContent"));
+        scarabR.setConfirmMessage(L10NKeySet.HeadingAddedNowAddContent);
     }        
 
     public void doAddgroup(RunData data, TemplateContext context)
@@ -697,7 +697,7 @@ public class ConfigureReport
 
         if (name == null || name.length() == 0)
         {
-            scarabR.setAlertMessage(l10n.get("InvalidGroupName"));
+            scarabR.setAlertMessage(L10NKeySet.InvalidGroupName);
         }
         else
         {
@@ -709,7 +709,7 @@ public class ConfigureReport
             List groups = heading.getReportGroups();
             if (groups != null && groups.contains(group)) 
             {
-                scarabR.setAlertMessage(l10n.get("DuplicateGroupName"));
+                scarabR.setAlertMessage(L10NKeySet.DuplicateGroupName);
             }
             else
             {
@@ -717,7 +717,7 @@ public class ConfigureReport
                 
                 params.remove("groupname_new");
                 //params.setString("groupname_" + index, group.getName());
-                scarabR.setConfirmMessage(l10n.get("GroupAdded"));
+                scarabR.setConfirmMessage(L10NKeySet.GroupAdded);
             }
 
             /* intake way
@@ -755,7 +755,7 @@ public class ConfigureReport
                 String[] groupIndices = params.getStrings("selectgroup");
         if (groupIndices == null || groupIndices.length == 0) 
         {
-            scarabR.setAlertMessage(l10n.get("NoGroupSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoGroupSelected);
         }
         else
         {
@@ -768,7 +768,7 @@ public class ConfigureReport
             {
                 reportGroups.remove(Integer.parseInt(groupIndices[j]));
             }
-            scarabR.setConfirmMessage(l10n.get("SelectedGroupDeleted"));
+            scarabR.setConfirmMessage(L10NKeySet.SelectedGroupDeleted);
                         
             /* intake way
             for (int i=groups.size()-1; i>=0; i--) 
@@ -819,7 +819,7 @@ public class ConfigureReport
                 String name = params.getString(key, "").trim();
                 if (name.length() == 0)
                 {
-                    scarabR.setAlertMessage(l10n.get("InvalidGroupName"));
+                    scarabR.setAlertMessage(L10NKeySet.InvalidGroupName);
                 }
                 else
                 {
@@ -827,7 +827,7 @@ public class ConfigureReport
                 }
             }
         }
-        scarabR.setConfirmMessage(l10n.get("GroupsChanged"));
+        scarabR.setConfirmMessage(L10NKeySet.GroupsChanged);
     }
 
 
@@ -869,7 +869,7 @@ public class ConfigureReport
                                                reportOption.getOptionId());
                 if (name == null || name.trim().length() == 0) 
                 {
-                    scarabR.setAlertMessage(l10n.get("InvalidGroupName"));
+                    scarabR.setAlertMessage(L10NKeySet.InvalidGroupName);
                     success = false;
                     break;
                 }
@@ -897,7 +897,7 @@ public class ConfigureReport
                     .append("user_").append(reportUser.getUserId()).toString());
                 if (name == null || name.trim().length() == 0) 
                 {
-                    scarabR.setAlertMessage(l10n.get("InvalidGroupName"));
+                    scarabR.setAlertMessage(L10NKeySet.InvalidGroupName);
                     success = false;
                     break;
                 }
@@ -964,7 +964,7 @@ public class ConfigureReport
         ReportDate rdate = new ReportDate();
         rdate.setTime(cal.getTime().getTime());
         heading.addReportDate(rdate);
-        scarabR.setConfirmMessage(l10n.get("DateAdded"));
+        scarabR.setConfirmMessage(L10NKeySet.DateAdded);
     }
 
     public void doDeletedate(RunData data, TemplateContext context)
@@ -982,7 +982,7 @@ public class ConfigureReport
         String[] dateIndices = params.getStrings("selectdate");
         if (dateIndices == null || dateIndices.length == 0) 
         {
-            scarabR.setAlertMessage(l10n.get("NoDateSelected"));
+            scarabR.setAlertMessage(L10NKeySet.NoDateSelected);
         }
         else
         {
@@ -995,7 +995,7 @@ public class ConfigureReport
             {
                 reportDates.remove(Integer.parseInt(dateIndices[j])-1);
             }
-            scarabR.setConfirmMessage(l10n.get("SelectedDateDeleted"));
+            scarabR.setConfirmMessage(L10NKeySet.SelectedDateDeleted);
         }
     }
 
@@ -1040,7 +1040,7 @@ public class ConfigureReport
             report.setDefaultDate(null);
         }
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
+        scarabR.setConfirmMessage(L10NKeySet.ChangesSaved);
         setTarget(data, "reports,ConfineDataset.vm");
     }
 
@@ -1186,7 +1186,7 @@ public class ConfigureReport
 
             if (report.getName() == null || report.getName().trim().length() == 0) 
             {
-                scarabR.setAlertMessage(l10n.get("SavedReportsMustHaveName"));
+                scarabR.setAlertMessage(L10NKeySet.SavedReportsMustHaveName);
                 setTarget(data, "reports,Info.vm");
             }
             else 
@@ -1203,20 +1203,18 @@ public class ConfigureReport
                     || savedReport.getQueryKey().equals(report.getQueryKey()))
                 {
                     report.save();
-                    scarabR.setConfirmMessage(l10n.get("ReportSaved"));
+                    scarabR.setConfirmMessage(L10NKeySet.ReportSaved);
                 }
                 else 
                 {
-                    scarabR.setAlertMessage(
-                        l10n.get("ReportNameNotUnique"));
+                    scarabR.setAlertMessage(L10NKeySet.ReportNameNotUnique);
                     setTarget(data, "reports,Info.vm");
                 }
             }
         }
         else 
         {
-            scarabR.setAlertMessage(
-                l10n.get("ErrorPreventedSavingReport"));
+            scarabR.setAlertMessage(L10NKeySet.ErrorPreventedSavingReport);
         }
     }
 
