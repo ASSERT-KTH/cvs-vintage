@@ -29,7 +29,7 @@ import org.jboss.util.FinderResults;
 /**
 * An EJB entity bean proxy class.
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -140,7 +140,7 @@ extends GenericProxy
       Invocation invocation = new Invocation(new HashMap());
 
       invocation.setContainer(new Integer(objectName));
-      invocation.setType("remote");
+      invocation.setType(Invocation.REMOTE);
       invocation.setId(id);
       invocation.setMethod(m);
       invocation.setArguments(args);

@@ -18,7 +18,7 @@ import org.jboss.proxy.ejb.handle.StatelessHandleImpl;
 * An EJB stateless session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
@@ -118,7 +118,7 @@ extends GenericProxy
       Invocation invocation = new Invocation(new HashMap());
       
       invocation.setContainer(new Integer(objectName));
-      invocation.setType("remote");
+      invocation.setType(Invocation.REMOTE);
       invocation.setMethod(m);
       invocation.setArguments(args);
       invocation.setTransaction(getTransaction());

@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.3 $
+*   @version $Revision: 1.4 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -76,6 +76,16 @@ public class Invocation
    ARGUMENTS = new Integer(new String("ARGUMENTS").hashCode()),
    // Enterprise context
    ENTERPRISE_CONTEXT = new Integer(new String("ENTERPRISE_CONTEXT").hashCode());
+  
+   public static final int
+   REMOTE = 0,
+   LOCAL = 1,
+   HOME = 2, 
+   LOCALHOME = 3,
+   GETHOME = 4,
+   GETREMOTE = 5,
+   GETLOCALHOME = 6,
+   GETLOCAL = 7;
    
    // Constructors --------------------------------------------------
    
@@ -142,8 +152,8 @@ public class Invocation
    public Object getContainer() { return getValue(CONTAINER);}
    
    // An arbitrary type
-   public void setType(String type) {payload.put(TYPE, type);}
-   public String getType() {return (String) getValue(TYPE);} 
+   public void setType(int type) {payload.put(TYPE, new Integer(type));}
+   public int getType() {return ((Integer) getValue(TYPE)).intValue();} 
    
    //Return the invocation target ID.  Can be used to identify a cached object
    public void setId(Object id) { payload.put(CACHE_ID, id);}
