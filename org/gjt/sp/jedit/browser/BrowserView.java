@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.69 2003/05/16 21:16:27 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.70 2003/05/23 20:26:39 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -428,7 +428,16 @@ class BrowserView extends JPanel
 			if(row == -1)
 				return;
 			if(column == 0)
-				return;
+			{
+				VFSDirectoryEntryTableModel.Entry entry
+					= (VFSDirectoryEntryTableModel.Entry)
+					table.getModel().getValueAt(row,0);
+				if(FileCellRenderer.ExpansionToggleBorder
+					.isExpansionToggle(entry.level,p.x))
+				{
+					return;
+				}
+			}
 
 			if((evt.getModifiers() & MouseEvent.BUTTON1_MASK) != 0
 				&& evt.getClickCount() % 2 == 0)
@@ -463,8 +472,15 @@ class BrowserView extends JPanel
 			int column = table.columnAtPoint(p);
 			if(column == 0)
 			{
-				table.toggleExpanded(row);
-				return;
+				VFSDirectoryEntryTableModel.Entry entry
+					= (VFSDirectoryEntryTableModel.Entry)
+					table.getModel().getValueAt(row,0);
+				if(FileCellRenderer.ExpansionToggleBorder
+					.isExpansionToggle(entry.level,p.x))
+				{
+					table.toggleExpanded(row);
+					return;
+				}
 			}
 
 			if(GUIUtilities.isMiddleButton(evt.getModifiers()))

@@ -30,7 +30,7 @@ import org.gjt.sp.jedit.*;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTableModel.java,v 1.5 2003/04/25 06:09:47 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTableModel.java,v 1.6 2003/05/23 20:26:39 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTableModel extends AbstractTableModel
@@ -109,7 +109,7 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 		entry.expanded = false;
 
 		int lastIndex = index + 1;
-		for(;;)
+		while(lastIndex < files.length)
 		{
 			Entry e = files[lastIndex];
 			if(e.level <= entry.level)
@@ -132,7 +132,7 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	//{{{ getColumnCount() method
 	public int getColumnCount()
 	{
-		return 2 + extAttrs.length;
+		return 1 + extAttrs.length;
 	} //}}}
 
 	//{{{ getRowCount() method
@@ -148,8 +148,6 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	public String getColumnName(int col)
 	{
 		if(col == 0)
-			return null;
-		else if(col == 1)
 			return jEdit.getProperty("vfs.browser.name");
 		else
 			return jEdit.getProperty("vfs.browser." + getExtendedAttribute(col));
@@ -173,7 +171,7 @@ public class VFSDirectoryEntryTableModel extends AbstractTableModel
 	//{{{ getExtendedAttribute() method
 	public String getExtendedAttribute(int index)
 	{
-		return extAttrs[index - 2];
+		return extAttrs[index - 1];
 	} //}}}
 
 	//{{{ Package-private members
