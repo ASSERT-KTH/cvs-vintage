@@ -18,6 +18,8 @@
 
       <property name="jakarta-tomcat-connectors" reference="srcdir"
         project="jakarta-tomcat-connectors"/>
+      <depend property="commons-logging.jar" project="commons-logging"
+        runtime="true" id="api"/>
     </ant>
     <depend project="xml-xerces"/>
     <depend project="jakarta-ant"/>
