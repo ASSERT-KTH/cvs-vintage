@@ -31,7 +31,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -516,7 +516,7 @@ public abstract class BeanMetaData
       // Determine if the bean is to be deployed in the cluster (more advanced config will be added in the future)
       //
       String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered? "True" : "False"));
-      clustered = clusteredElt.equals ("True");
+      clustered = clusteredElt.equalsIgnoreCase ("True");
 
 
       Element clusterConfigElement = getOptionalChild(element, "cluster-config");
