@@ -1,4 +1,4 @@
-// $Id: SuperclassGen.java,v 1.8 2004/07/20 01:49:55 d00mst Exp $
+// $Id: SuperclassGen.java,v 1.9 2004/08/29 09:29:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,13 @@ import java.util.Vector;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.ChildGenerator;
 /** Utility class to generate the children of a class.  In this case
- *  the "children" of a class are it's base classes. */
-
-
+ *  the "children" of a class are it's base classes. 
+ */
 public class SuperclassGen implements ChildGenerator {
+    
+    /**
+     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
+     */
     public Enumeration gen(Object o) {
 	Vector res = new Vector();
 

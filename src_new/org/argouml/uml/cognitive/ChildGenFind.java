@@ -1,4 +1,4 @@
-// $Id: ChildGenFind.java,v 1.10 2003/09/11 00:07:17 bobtarling Exp $
+// $Id: ChildGenFind.java,v 1.11 2004/08/29 09:34:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.10 2003/09/11 00:07:17 bobtarling Exp $
+// $Id: ChildGenFind.java,v 1.11 2004/08/29 09:34:08 mvw Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -50,9 +50,13 @@ import org.tigris.gef.util.ChildGenerator;
  */
 
 public class ChildGenFind implements ChildGenerator {
-    public static ChildGenFind SINGLETON = new ChildGenFind();
+    private static final ChildGenFind SINGLETON = new ChildGenFind();
 
-    /** Reply a Collection of the children of the given Object */
+    /** 
+     * Reply a Collection of the children of the given Object
+     * 
+     * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
+     */
     public Enumeration gen(Object o) {
 	if (o instanceof Project) {
 	    Project p = (Project) o;
@@ -153,5 +157,12 @@ public class ChildGenFind implements ChildGenerator {
 	}
 
 	return new Vector().elements();
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ChildGenFind getSingleton() {
+        return SINGLETON;
     }
 } /* end class ChildGenFind */

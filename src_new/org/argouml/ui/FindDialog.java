@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.22 2004/08/20 21:06:59 mvw Exp $
+// $Id: FindDialog.java,v 1.23 2004/08/29 09:34:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -425,7 +425,7 @@ public class FindDialog extends ArgoDialog
         PredicateFind pred =
             new PredicateFind(eNamePred, pNamePred, dNamePred, typePred);
 
-        ChildGenFind gen = ChildGenFind.SINGLETON;
+        ChildGenFind gen = ChildGenFind.getSingleton();
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Object root = ProjectManager.getManager().getCurrentProject();
 
