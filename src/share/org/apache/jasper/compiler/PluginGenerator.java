@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.3 2000/01/24 05:54:51 shemnon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/24 05:54:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.4 2000/04/03 10:40:21 mode Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/04/03 10:40:21 $
  *
  * ====================================================================
  * 
@@ -174,15 +174,34 @@ public class PluginGenerator
 	writer.print (">\");");
 	writer.println ();
 
+	// Evaluate params and if expression get the appropriate code for
+	// the expression
+
 	Enumeration e = null;
 	String value [] = null;
 	String key = null;
+
+	writer.indent ();
+	writer.print ("String _jspxString = null;");
+	writer.println ();
 
 	if (param != null) {
 	    e = param.keys ();
 	    while (e.hasMoreElements ()) {
 	        key = (String) e.nextElement ();
 	        value = (String[]) param.get (key);
+		writer.indent ();
+	 	//Check to see if the param is an expression, if so
+		//evaluate that and put the value.
+		String temp = null;
+		if (JspUtil.isExpression (value[0])) {
+		    temp = JspUtil.getExpr (value[0]);
+		    //value[0] = JspUtil.getExpr(value[0]);
+		    writer.print ("_jspxString =" + temp + ";");
+		} else {
+		    writer.print ("_jspxString = \"" + value[0] + "\";");
+		}
+		writer.println ();
 	        writer.indent ();
 	        writer.print ("out.println (\"<PARAM name=\\\"");
 		if (key.equalsIgnoreCase ("object"))
@@ -192,13 +211,60 @@ public class PluginGenerator
 		else 
 	            writer.print (key);
 	        writer.print ("\\\"");
-	        writer.print (" value=\\\"");
-	        writer.print (value[0]);
-	        writer.print ("\\\"");
+	        writer.print (" value=\\\"\"");
+	        writer.print ("+ _jspxString + ");
+	        writer.print ("\"\\\"");
 	        writer.print (">\");");
 	        writer.println ();
 	    }
 	}
+
+	writer.indent ();
+	writer.print ("String [][] _jspxNSString = null;"); 
+	writer.println ();
+	if (param != null) {
+	    e = param.keys ();
+	    writer.indent ();
+	    writer.print ("int i = 0;");
+	    writer.println ();
+	    writer.indent ();
+	    writer.print ("_jspxNSString = new String [");
+	    Integer temp = new Integer (param.size ());
+	    writer.print (temp.toString ());
+	    writer.print ("][2];");
+	    writer.println ();
+	    writer.indent ();
+	    key = null;
+	    value = null;
+	    while (e.hasMoreElements ()) {
+	        key = (String) e.nextElement ();
+	        value = (String[]) param.get (key);
+		System.out.println ("Value is " + value[0]);
+	        writer.print ("_jspxNSString [i][0] = \"");
+		if (key.equalsIgnoreCase ("object"))
+		    key = "java_object";
+		else if (key.equalsIgnoreCase ("type"))
+		    key = "java_type";
+		writer.print (key);
+		writer.print ("\";");
+		writer.println ();
+		writer.indent ();
+
+	        //value = (String[]) param.get (key);
+		if (JspUtil.isExpression (value[0])) {
+		    value[0] = JspUtil.getExpr(value[0]);
+		    writer.print ("_jspxNSString[i][1] =" + value[0] + ";");
+		} else {
+		    writer.print ("_jspxNSString[i][1] = \"" + value[0] + 
+		    			"\";");
+		}
+		writer.println ();
+		writer.indent ();
+		writer.print ("i++;");
+		writer.println ();
+	    }
+	}
+	
 	writer.println ("out.println (\"<COMMENT>\");");
 	writer.indent ();
 	writer.print ("out.print (\"<EMBED type=\\\"");
@@ -235,28 +301,30 @@ public class PluginGenerator
 	    writer.print ("\\\" ");
 	}
 
-	if (param !=null) {
-	    e = param.keys ();
-	    key = null;
-	    value = null;
-	    while (e.hasMoreElements ()) {
-	        key = (String) e.nextElement ();
-	        value = (String[]) param.get (key);
-		if (key.equalsIgnoreCase ("object"))
-		    writer.print ("java_object");
-		else if (key.equalsIgnoreCase ("type"))
-		    writer.print ("java_type");
-		else 
-	            writer.print (key);
-	        writer.print ("=\\\"");
-	        writer.print (value[0]);
-	        writer.print ("\\\"");
-	        writer.print (" ");
-	    }
-	}
-
-	writer.print (">\");");
+	writer.print ("\");");
 	writer.println ();
+
+
+	writer.indent ();
+	writer.print ("if (_jspxNSString != null) {");
+	writer.println ();
+	writer.pushIndent ();
+	writer.indent ();
+	writer.print ("for (i = 0; i < _jspxNSString.length; i++) {");
+	writer.println ();
+	writer.pushIndent ();
+	writer.indent ();
+	writer.print ("out.println (");
+	writer.print (" _jspxNSString [i][0] + ");
+	writer.print ("\"=\"");
+	writer.print (" + _jspxNSString[i][1]");
+	writer.print (");");
+	writer.println ();
+	writer.popIndent ();
+	writer.println ("}");
+	writer.popIndent ();
+	writer.println ("}");
+	writer.println ("out.println (\">\");");
 	writer.println ("out.println (\"<NOEMBED>\");");
 	writer.println ("out.println (\"</COMMENT>\");");
 
