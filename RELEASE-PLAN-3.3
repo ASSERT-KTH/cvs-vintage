@@ -75,7 +75,7 @@ Tomcat 3.3 Milestone 3 Release:
 
      Known issues in order of priority
 
-     1. getRequestURI() should return an encoded string (if feasible)
+     1. Verify that JSP source is not served when escaping tricks are used
      2. Update build process to create archives and internal directory
         structure consistent with other Jakarta projects, i.e. use
         jakarta-tomcat-3.3-xxx.
@@ -105,13 +105,16 @@ Tomcat 3.3 Beta 1:
            object in the session.  The spec calls for the reverse.
         B. setAttribute() doesn't call valueUnbound() for the
            object it replaces, if present.
-     3. Session recyling includes keeping the HttpSessionFacade.  I believe
+     3. Fix getResource() to not allow access to files outside of the web
+        application.
+     4. Session recyling includes keeping the HttpSessionFacade.  I believe
         this represents a security risk.   May need to discard session
         facades, or at least discard them for untrusted web applications.
-     4. Update getRemoteHost() to be consistent with Tomcat 3.2.2, which
+     5. getRequestURI() should return an encoded string
+     6. Update getRemoteHost() to be consistent with Tomcat 3.2.2, which
         does a reverse DNS lookup.
-     5. Verify no reqressions.
-     6. TBD...
+     7. Verify no reqressions.
+     8. TBD...
 
 
 Tomcat 3.3 Beta 2:
