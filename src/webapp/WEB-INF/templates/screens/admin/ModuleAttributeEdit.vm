@@ -72,18 +72,19 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
   <td>
 #set ($attGroup = $intake.RModuleAttribute.mapTo($rma))
 <select name="$attGroup.RequiredOptionId.Key">
-  	<option value="0">$l10n.RequiredNone</option>
+        <optgroup>
+        <option value="0">$l10n.RequiredNone</option>
     #set ($attributeIdPrev = -1)
 	#foreach ($opt in $scarabR.sortedAttributeOptions)
 	  #set ($attributeId = $opt.attributeId)
 	  #if ($attributeId != $attributeIdPrev)
+	    #if ($!attributeId != -1)
+	      </optgroup>
+	    #end
 		<optgroup label="$opt.attribute.name">
 	  #end
 	  <option value="$opt.optionId" #if ($rma.requiredOptionId == $opt.optionId) selected #end>$opt.name</option>
 	  #set ($attributeIdPrev = $attributeId)
-	  #if ($!attributeId != $attributeIdPrev)
-	    </optgroup>
-	  #end
 	#end
 </select>
 <p><em>$l10n.RequiredIfExplanation</em></p>
