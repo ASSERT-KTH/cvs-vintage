@@ -54,6 +54,7 @@
 </form>
   </td>
 
+#if ($currentIssueType)
   <td>
     ## Add Template list to the top bar so that using a template will be easier
     #set ($allTemplates = $scarabR.IssueTemplates)
@@ -85,6 +86,7 @@
     </form>
     #end
     </td>
+#end
   </tr>
  </table>
 </div>
