@@ -60,7 +60,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Field;
@@ -896,33 +896,11 @@ public class ScarabRequestTool
      */
     public String getActivityReason(ActivitySet activitySet, Activity activity)
      throws Exception
-    {
+    {    	
         ScarabLocalizationTool l10n = getLocalizationTool();
-        String reason = null;
-        Attachment attachment = activitySet.getAttachment();
-        if (attachment != null)
-        {
-             String data = attachment.getData();
-             // Reason is the attachment entered for this transaction
-             if (data != null && data.length() > 0)
-             {
-                reason = data;
-             }
-             else
-             {
-                reason = l10n.get(L10NKeySet.NotProvided);
-             }
-         } 
-         // No reasons given for initial issue entry
-         else if (activitySet.getTypeId().equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
-         {
-             reason = l10n.get(L10NKeySet.InitialEntry);
-         }
-         else
-         {
-             reason = l10n.get(L10NKeySet.NotProvided);
-         }
-         return reason;
+        ScarabToolManager toolManager = new ScarabToolManager(l10n);
+        return toolManager.getActivityReason(activitySet,activity);
+        
     }
             
         
@@ -932,35 +910,35 @@ public class ScarabRequestTool
     public Attachment getAttachment()
         throws Exception
     {
-try
-{
-        if (attachment == null)
-        {
-            Group att = getIntakeTool()
-                .get("Attachment", IntakeTool.DEFAULT_KEY, false);
-            if (att != null) 
-            {            
-                String attId =  att.get("Id").toString();
-                if (attId == null || attId.length() == 0)
-                {
-                    attachment = new Attachment();
-                }
-                else 
-                {
-                    attachment = AttachmentManager
-                        .getInstance(new NumberKey(attId), false);
-                }
-            }
-            else 
-            {
-                attachment = new Attachment();
-            }
-        }        
-}
-catch(Exception e)
-{
-e.printStackTrace(); throw e; //EXCEPTION
-}
+		try
+		{
+	        if (attachment == null)
+	        {
+	            Group att = getIntakeTool()
+	                .get("Attachment", IntakeTool.DEFAULT_KEY, false);
+	            if (att != null) 
+	            {            
+	                String attId =  att.get("Id").toString();
+	                if (attId == null || attId.length() == 0)
+	                {
+	                    attachment = new Attachment();
+	                }
+	                else 
+	                {
+	                    attachment = AttachmentManager
+	                        .getInstance(new NumberKey(attId), false);
+	                }
+	            }
+	            else 
+	            {
+	                attachment = new Attachment();
+	            }
+	        }        
+		}
+		catch(Exception e)
+		{
+		e.printStackTrace(); throw e; //EXCEPTION
+		}
         return attachment;
     }
 
@@ -1762,8 +1740,8 @@ e.printStackTrace();
         }
         
         // Set attribute values to search on
-        SequencedHashMap avMap = search.getCommonAttributeValuesMap();
-        Iterator i = avMap.iterator();
+        LinkedMap avMap = search.getCommonAttributeValuesMap();
+        Iterator i = avMap.mapIterator();
         while (i.hasNext()) 
         {
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
