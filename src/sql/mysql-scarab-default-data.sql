@@ -393,26 +393,26 @@ insert into SCARAB_DEPEND_TYPE(DEPEND_TYPE_ID, DEPEND_TYPE_NAME)
 /*
  * Types of issues (artifact types).
  */
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(1, 'Defect', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(2, 'Defect Template', 1);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(3, 'Patch', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(4, 'Patch Template', 3);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(5, 'Task', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(6, 'Task Template', 5);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(7, 'Feature', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(8, 'Feature Template', 7);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(9, 'Enhancement', 0);
-insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, PARENT_ID)
-        values(10, 'Enhancement Template', 9);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(1, 'Defect', 'An issue in existing feature/functionality.', 0);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(2, 'Defect Template', '', 1);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(3, 'Patch', 'A patch submitted to fix a defect.', 0);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(4, 'Patch Template', '', 3);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(5, 'Task', 'A task associated with instantiation, or in support of a Feature/Enhancement/Issue.', 0);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(6, 'Task Template', '', 5);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(7, 'Feature', 'A new feature.', 0);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(8, 'Feature Template', '', 7);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(9, 'Enhancement', 'Improvement to an existing feature.', 0);
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
+        values(10, 'Enhancement Template', '', 9);
 
 /*
  * populate the root module with all issue types.
