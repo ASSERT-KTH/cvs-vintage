@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.35 2002/09/02 23:07:42 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.36 2002/10/09 23:03:55 spestov Exp $
  */
 public class TextUtilities
 {
@@ -254,7 +254,7 @@ public class TextUtilities
 	{
 		return findWordStart(line, pos, noWordSep, true);
 	} //}}}
-		
+
 	//{{{ findWordStart() method
 	/**
 	 * Locates the start of the word at the specified position.
