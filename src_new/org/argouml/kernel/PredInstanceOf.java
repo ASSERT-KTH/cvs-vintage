@@ -1,4 +1,4 @@
-// $Id: PredInstanceOf.java,v 1.4 2003/08/21 20:42:38 alexb Exp $
+// $Id: PredInstanceOf.java,v 1.5 2003/10/15 20:04:13 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,8 @@ import org.tigris.gef.util.*;
 /**
  * Predicate to test if an Object is and instance of a class.
  * This class belongs in org.argouml.util
+ *
+ * @deprecated as of 0.15.2, replace with nothing, remove in 0.15.3, alexb
  */
 public class PredInstanceOf implements Predicate {
     protected Class _class;

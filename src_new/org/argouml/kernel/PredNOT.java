@@ -1,4 +1,4 @@
-// $Id: PredNOT.java,v 1.3 2003/08/21 20:42:38 alexb Exp $
+// $Id: PredNOT.java,v 1.4 2003/10/15 20:04:13 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.tigris.gef.util.*;
  * This class belongs in org.argouml.util
  * @author Eugenio Alvarez
  *
+ * @deprecated as of 0.15.2, replace with nothing, remove in 0.15.3, alexb
  */
 public class PredNOT implements Predicate {
 
