@@ -57,7 +57,7 @@ import org.apache.turbine.util.security.DataBackendException;
 import org.apache.turbine.util.security.EntityExistsException;
 import org.apache.turbine.util.security.UnknownEntityException;
 import org.apache.turbine.util.security.TurbineSecurityException;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.Log;
 
 import org.apache.turbine.om.security.*;
@@ -73,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.2 2001/06/29 01:57:26 jmcnally Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.3 2001/07/05 23:25:23 jmcnally Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -110,6 +110,7 @@ public class ScarabDBSecurityService extends DBSecurityService
         {
             throw new DataBackendException("getGroups(Criteria) failed", e);
         }
+
         return new GroupSet(groups);
     }
 
