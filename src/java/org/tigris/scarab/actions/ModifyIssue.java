@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.175 2003/08/01 00:21:54 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.176 2003/08/01 18:40:25 venkatesh Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -828,7 +828,7 @@ public class ModifyIssue extends BaseModifyIssue
      *  Modifies the dependency type between the current issue
      *  And its parent or child issue.
      */
-    private boolean doAdddependency(Issue issue, IntakeTool intake, 
+    private boolean doAdddependency(Issue issue, IntakeTool intake,
                                  Group group, ScarabRequestTool scarabR,
                                  TemplateContext context,
                                  ScarabLocalizationTool l10n,
@@ -903,7 +903,7 @@ public class ModifyIssue extends BaseModifyIssue
             }
             catch (ScarabException se)
             {
-                scarabR.setAlertMessage(l10n.get(se.getMessage()));
+                childId.setMessage(l10n.get(se.getMessage()));
                 return false;
             }
             catch (Exception e)
