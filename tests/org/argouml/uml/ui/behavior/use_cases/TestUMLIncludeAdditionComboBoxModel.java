@@ -1,4 +1,4 @@
-// $Id: TestUMLIncludeAdditionComboBoxModel.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLIncludeAdditionComboBoxModel.java,v 1.9 2004/07/18 19:06:17 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,8 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
     }
     
     public void testSetBase() {
-        elem.setAddition(additions[0]);
+        // NSUML has base and addition for includes mixed up. We mix it back.
+        elem.setBase(additions[0]);
         assertTrue(model.getSelectedItem() == additions[0]);
     }
     
