@@ -10,8 +10,10 @@ if test -z "${JAVA_HOME}" ; then
     exit
 fi
 
+CLASSPATH=""
+
 if test -f ${JAVA_HOME}/lib/tools.jar ; then
-    CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+    CLASSPATH=${JAVA_HOME}/lib/tools.jar
 fi
 
 # convert the existing path to unix
@@ -19,12 +21,21 @@ if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
-CLASSPATH=${CLASSPATH}:./ant-1.2.jar
+for i in `find . -name "*.jar" -print` ; do
+   CLASSPATH="$i:$CLASSPATH"
+done
+for i in `find ../src -name "crimson*.jar" -print` ; do
+   CLASSPATH="$i:$CLASSPATH"
+done
 
 # convert the unix path to windows
 if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
    CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
+
+echo "Classpath:"
+echo "$CLASSPATH"
+echo ""
 
 BUILDFILE=build.xml
 
