@@ -186,7 +186,7 @@ public final class Servlet22Interceptor
 		if( value instanceof  HttpSessionBindingListener) {
 		    ((HttpSessionBindingListener) value).valueUnbound
 			(new HttpSessionBindingEvent(httpSess , key));
-		    if( removed=null) removed=new Vector();
+		    if( removed==null) removed=new Vector();
 		    removed.addElement( key );
 		}
 	    }
