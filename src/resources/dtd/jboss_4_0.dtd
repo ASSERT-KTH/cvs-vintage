@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.22 2004/10/14 06:48:29 ejort Exp $
+$Id: jboss_4_0.dtd,v 1.23 2004/11/05 16:15:18 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -631,25 +631,6 @@ properties supported by the jaxrpc Call implementation.
   Used in: security-identity
 -->
 <!ELEMENT run-as-principal (#PCDATA)>
-
-<!--
-  The run-as-credential element is the credential of the principal that is used
-  when the enterprise bean calls out with a run-as role.
-
-  Used in: security-identity
--->
-<!ELEMENT run-as-credential (#PCDATA)>
-
-<!--
-  The run-as-anonymous element specifies that the caller's security
-  identity is anonymous when calling out with a run-as role
-
-  The anonymous run-as principal does not get authenticated and only has
-  a single role, his run-as role
-
-  Used in: security-identity
--->
-<!ELEMENT run-as-anonymous EMPTY>
 
 <!--
   The resource-env-ref element gives a mapping between the "code name"
@@ -1343,7 +1324,7 @@ elements corresponds to the order of the interceptor chain.
 <!--
   Arbitrary XML configuration
 -->
-<!ELEMENT cache-policy-conf-other (ANY)>
+<!ELEMENT cache-policy-conf-other ANY>
 
 <!--
   The container-pool-conf element holds configuration data for the
