@@ -48,7 +48,6 @@ package org.tigris.scarab.actions;
 
 // Turbine Stuff 
 import org.apache.turbine.RunData;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.Turbine;
@@ -61,6 +60,7 @@ import org.apache.fulcrum.template.TemplateEmail;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
         This class  will create a 
@@ -69,18 +69,20 @@ import org.tigris.scarab.util.ScarabConstants;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.21 2001/09/13 22:37:03 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.22 2001/09/30 18:31:38 jon Exp $
 */
-public class RegisterConfirm extends TemplateAction
+public class RegisterConfirm extends ScarabTemplateAction
 {
     /**
         This manages clicking the Register confirm button
     */
-    public void doConfirmregistration( RunData data, TemplateContext context ) throws Exception
+    public void doConfirmregistration( RunData data, TemplateContext context )
+        throws Exception
     {
-        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
+        String template = data.getParameters()
+                        .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters()
+                        .getString(ScarabConstants.NEXT_TEMPLATE, template );
 
         try
         {
@@ -90,18 +92,18 @@ public class RegisterConfirm extends TemplateAction
             if (su == null)
             {
                 // assign the template to the cancel template, not the current template
-                template = data.getParameters().getString(ScarabConstants.CANCEL_TEMPLATE, "Register.vm");
+                template = data.getParameters()
+                        .getString(ScarabConstants.CANCEL_TEMPLATE, "Register.vm");
                 throw new Exception ("Unable to retrive user object from session.");
             }
             // attempt to create a new user!
             su.createNewUser();
-            // grab the ScarabSystem object so that we can populate the internal User object
-            // for redisplay of the form data on the screen
-            ApplicationTool srt = 
-                getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
-            if (srt != null)
+            // grab the ScarabSystem object so that we can populate the 
+            // internal User object for redisplay of the form data on the screen
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            if (scarabR != null)
             {
-                ((ScarabRequestTool)srt).setUser(su);
+                scarabR.setUser(su);
             }
             
             // send an email that is for confirming the registration
@@ -109,16 +111,20 @@ public class RegisterConfirm extends TemplateAction
             te.setContext(new ContextAdapter(context));
             te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
             te.setFrom(
-                Turbine.getConfiguration().getString("scarab.email.register.fromName",
-                    "Scarab System"), 
-                Turbine.getConfiguration().getString("scarab.email.register.fromAddress",
-                    "register@scarab.tigris.org"));
+                Turbine.getConfiguration()
+                    .getString("scarab.email.register.fromName",
+                                "Scarab System"), 
+                Turbine.getConfiguration()
+                    .getString("scarab.email.register.fromAddress",
+                                "register@scarab.tigris.org"));
             te.setSubject(
-                Turbine.getConfiguration().getString("scarab.email.register.subject",
-                    "Account Confirmation"));
+                Turbine.getConfiguration()
+                    .getString("scarab.email.register.subject",
+                               "Account Confirmation"));
             te.setTemplate(
-                Turbine.getConfiguration().getString("scarab.email.register.template",
-                    "email/Confirmation.vm"));
+                Turbine.getConfiguration()
+                    .getString("scarab.email.register.template",
+                               "email/Confirmation.vm"));
             te.send();
 
             // set the next template on success
@@ -140,11 +146,10 @@ public class RegisterConfirm extends TemplateAction
     {
         // grab the ScarabRequestTool object so that we can populate the 
         // internal User object for redisplay of the form data on the screen
-        ApplicationTool srt = 
-            getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
-        if (srt != null)
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (scarabR != null)
         {
-            ((ScarabRequestTool)srt).setUser((ScarabUser)data.getUser()
+            scarabR.setUser((ScarabUser)data.getUser()
                 .getTemp(ScarabConstants.SESSION_REGISTER));
         }
         // set the template to the template that we should be going back to

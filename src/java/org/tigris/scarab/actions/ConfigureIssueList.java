@@ -75,7 +75,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.9 2001/09/19 22:54:08 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.10 2001/09/30 18:31:38 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -83,14 +83,16 @@ public class ConfigureIssueList extends RequireLoginFirstAction
     public void doSelectattributes( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
         String userId = data.getParameters().getString("user_id");
 
-        ScarabRequestTool scarab = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarab = getScarabRequestTool(context);
         ModuleEntity module = scarab.getCurrentModule();
         NumberKey moduleId = module.getModuleId();
+
+        // FIXME: this should be retrieved via cache or something
+        //        Not directly from the database. 
+        //        TurbineSecurity.getUser(username)
         ScarabUser user = (ScarabUser) ScarabUserImplPeer
                           .retrieveByPK(new NumberKey(userId));
 

@@ -30,6 +30,8 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
     VALUES (9, 'Issue | Attach');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (10, 'User | Edit Preferences');
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (11, 'Issue | Search');
 
 
 # Create an account 'turbine@collab.net' for system administartor
@@ -67,10 +69,9 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
          where TURBINE_ROLE.ROLE_NAME = "Partner"
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                   "User | Edit Preferences",
-                  "Issue | Attach")
+                  "Issue | Attach",
+                  "Issue | Search")
 ;
-
-
 
 #
 #  OBSERVER ROLE
@@ -118,7 +119,8 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
          where TURBINE_ROLE.ROLE_NAME = "Developer"
            and TURBINE_PERMISSION.PERMISSION_NAME in (
                 "Issue | Edit",
-                "Issue | Assign")
+                "Issue | Assign",
+                "Issue | Search")
 ;
 
 #

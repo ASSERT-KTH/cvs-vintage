@@ -47,7 +47,7 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
-import org.apache.turbine.TemplateAction;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
@@ -60,18 +60,17 @@ import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
-import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
-
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.2 2001/09/19 22:54:46 elicia Exp $
+    @version $Id: QueryList.java,v 1.3 2001/09/30 18:31:38 jon Exp $
 */
-public class QueryList extends TemplateAction
+public class QueryList extends RequireLoginFirstAction
 {
     public void doDeletequeries( RunData data, TemplateContext context )
         throws Exception
@@ -101,7 +100,7 @@ public class QueryList extends TemplateAction
 
             }
         } 
-     } 
+    } 
 
     public void doSubscribe( RunData data, TemplateContext context )
         throws Exception
@@ -139,7 +138,7 @@ public class QueryList extends TemplateAction
 
             }
         } 
-     } 
+    } 
 
     public void doUnsubscribe( RunData data, TemplateContext context )
         throws Exception
@@ -149,8 +148,7 @@ public class QueryList extends TemplateAction
         String queryId;
         Query query;
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         for (int i =0; i<keys.length; i++)
         {
@@ -171,7 +169,7 @@ public class QueryList extends TemplateAction
                    {
                        RQueryUser rqu = query
                                  .getSubscription(user.getUserId());
-                       rqu.delete(user, (ScarabModule)scarabR.getCurrentModule());
+                       rqu.doDelete(user, scarabR.getCurrentModule());
                    }
                    catch (Exception e)
                    {
@@ -181,7 +179,7 @@ public class QueryList extends TemplateAction
 
             }
         } 
-     } 
+    } 
 
     public void doSavefrequencies( RunData data, TemplateContext context )
         throws Exception
@@ -246,4 +244,22 @@ public class QueryList extends TemplateAction
              }
          }
      }
+
+    /**
+        This manages clicking the Cancel button
+    */
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    {
+        String template = Turbine.getConfiguration()
+            .getString("template.homepage", "Start.vm");
+        setTarget(data, template);
+    }
+    
+    /**
+        calls doCancel()
+    */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    {
+        doCancel(data, context);
+    }
 }

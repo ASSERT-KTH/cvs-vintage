@@ -48,20 +48,20 @@ package org.tigris.scarab.actions;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
-    This class will allow you to set the selected Module for a user.
-        
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: SelectModule.java,v 1.2 2001/09/30 00:14:26 jon Exp $
-*/
-public class SelectModule extends TemplateAction
+ *  This class will allow you to set the selected Module for a user.
+ *       
+ *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ *  @version $Id: SelectModule.java,v 1.3 2001/09/30 18:31:38 jon Exp $
+ */
+public class SelectModule extends ScarabTemplateAction
 {
     /**
         This manages clicking the Refresh button

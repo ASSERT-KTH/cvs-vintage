@@ -49,9 +49,10 @@ package org.tigris.scarab.actions;
 import java.util.List;
 import java.util.Iterator;
 
-// Turbine Stuff 
 import org.apache.commons.util.SequencedHashtable;
-import org.apache.turbine.TemplateAction;
+
+// Turbine Stuff 
+import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.ContextAdapter;
@@ -62,6 +63,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
@@ -79,9 +81,9 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.5 2001/09/28 01:27:36 elicia Exp $
+    @version $Id: TemplateList.java,v 1.6 2001/09/30 18:31:38 jon Exp $
 */
-public class TemplateList extends TemplateAction
+public class TemplateList extends RequireLoginFirstAction
 {
 
     private static final String ERROR_MESSAGE = "More information was " +
@@ -94,12 +96,9 @@ public class TemplateList extends TemplateAction
     public void doSubmit( RunData data, TemplateContext context )
          throws Exception
     {        
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        
+        IntakeTool intake = getIntakeTool(context);        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
         Issue issue = null;
 
         String id = data.getParameters().getString("issue_id");
@@ -193,4 +192,22 @@ public class TemplateList extends TemplateAction
     {
         setTarget(data, "SaveTemplate.vm");            
     }
+
+    /**
+        This manages clicking the Cancel button
+    */
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    {
+        String template = Turbine.getConfiguration()
+            .getString("template.homepage", "Start.vm");
+        setTarget(data, template);
+    }
+    /**
+        calls doCancel()
+    */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    {
+        doCancel(data, context);
+    }
+
 }

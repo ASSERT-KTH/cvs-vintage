@@ -57,13 +57,15 @@ import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.security.ScarabSecurityPull;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.ScarabUser;
 
 /**
     This class is responsible for building the Context up
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.18 2001/09/30 00:37:39 jon Exp $
+    @version $Id: Default.java,v 1.19 2001/09/30 18:31:39 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -88,26 +90,29 @@ public class Default extends TemplateSecureScreen
 
             String perm = Turbine.getConfiguration()
                 .getString("scarab.security." + template);
+
+            ScarabSecurityPull security = 
+                (ScarabSecurityPull)getTemplateContext(data)
+                .get(ScarabConstants.SECURITY_TOOL);
+            ScarabRequestTool scarabR = 
+                (ScarabRequestTool)getTemplateContext(data)
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+            ModuleEntity currentModule = scarabR.getCurrentModule();
+            
             if (perm != null)
             {
-                ScarabSecurityPull security = 
-                    (ScarabSecurityPull)getTemplateContext(data)
-                    .get(ScarabConstants.SECURITY_TOOL);
-                ScarabRequestTool scarabR = 
-                    (ScarabRequestTool)getTemplateContext(data)
-                    .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-
-                if (scarabR.getCurrentModule() == null)
+                if (currentModule == null)
                 {
                     data.setMessage("Please select the Module " +
                                     "that you would like to work " +
-                                    "under.");
+                                    "in.");
                     setTargetSelectModule(data);
                     return false;
                 }
                 else if (! data.getUser().hasLoggedIn() &&
-                    ! security
-                    .hasPermission(perm, scarabR.getCurrentModule()))
+                         ! security
+                           .hasPermission(perm, currentModule))
                 {
                     data.setMessage("Please log in with an account " +
                                     "that has permissions to " +
@@ -115,6 +120,21 @@ public class Default extends TemplateSecureScreen
                     setTargetLogin(data);
                     return false;
                 }
+            }
+            // does the user at least have a role in the module?
+            // we don't check user.hasLoggedIn() here because guest
+            // users could have a role in a module.
+            else if (currentModule != null && 
+                    security.getRoles((ScarabUser)data.getUser(),
+                        currentModule).size() == 0)
+            {
+                
+                scarabR.setCurrentModule(null);
+                data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
+                data.setMessage("Sorry, you do not have permission to " + 
+                                "work in the selected module.");
+                setTargetSelectModule(data);
+                return false;
             }
         }
         return true;

@@ -44,12 +44,12 @@ package org.tigris.scarab.actions.base;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
-
-// Turbine Stuff
+ */
+ 
+ // Turbine Stuff
 import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
 
@@ -58,40 +58,15 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
-/**
-    All you have to do is extend this screen to require someone
-    to log in first. Eventually it will be made smart enough to
-    also redirect you to the page you requested after having 
-    logged in. That part isn't a priority yet though.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.8 2001/09/30 18:31:38 jon Exp $    
-*/
-public abstract class RequireLoginFirstAction extends TemplateSecureAction
+public abstract class ScarabTemplateAction extends TemplateAction
 {
-    /**
-     * sets the template to template.login if the user hasn't logged in yet
-     */
-    protected boolean isAuthorized( RunData data ) throws Exception
-    {
-        if (!data.getUser().hasLoggedIn())
-        {
-            data.getParameters().add (ScarabConstants.NEXT_TEMPLATE,
-                ScarabPage.getScreenTemplate(data));
-            setTarget(data, Turbine
-                            .getConfiguration()
-                            .getString("template.login", "Login.vm"));
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Helper method to retrieve the IntakeTool from the Context
      */
     public IntakeTool getIntakeTool(TemplateContext context)
     {
-        return (IntakeTool)context.get(ScarabConstants.INTAKE_TOOL);
+        return (IntakeTool) getTool(context, 
+                ScarabConstants.INTAKE_TOOL);
     }
 
     /**
@@ -99,12 +74,10 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public ScarabRequestTool getScarabRequestTool(TemplateContext context)
     {
-        return (ScarabRequestTool)context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        return (ScarabRequestTool) getTool(context, 
+                ScarabConstants.SCARAB_REQUEST_TOOL);
     }
 
-    /**
-     * Require people to implement this method
-     */
     public abstract void doPerform( RunData data, TemplateContext context )
         throws Exception;
 }

@@ -52,7 +52,6 @@ import java.util.ArrayList;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
@@ -65,12 +64,12 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
-import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -80,11 +79,11 @@ import org.tigris.scarab.security.ScarabSecurityPull;
 
 /**
     This class is responsible for report issue forms.
-    ScarabIssueAttributeValue
+
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.34 2001/09/30 00:14:26 jon Exp $
+    @version $Id: Search.java,v 1.35 2001/09/30 18:31:38 jon Exp $
 */
-public class Search extends TemplateAction
+public class Search extends RequireLoginFirstAction
 {
     private static int DEFAULT_ISSUE_LIMIT = 25;
 
@@ -95,8 +94,7 @@ public class Search extends TemplateAction
     public void doSearch( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
 
         ScarabUser user = null;
 
@@ -104,8 +102,7 @@ public class Search extends TemplateAction
 
         if ( intake.isAllValid() ) 
         {
-            ScarabRequestTool scarabR = (ScarabRequestTool)context
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
          
             IssueSearch search = new IssueSearch();
             Group searchGroup = intake.get("SearchIssue", 
@@ -173,15 +170,12 @@ public class Search extends TemplateAction
     public void doSavequery( RunData data, TemplateContext context )
          throws Exception
     {        
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarab = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        Query query = scarab.getQuery();
+        Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
-                                      scarab.getQuery().getQueryKey() );
+                                      scarabR.getQuery().getQueryKey() );
 
         Field name = queryGroup.get("Name");
         name.setRequired(true);
@@ -192,7 +186,7 @@ public class Search extends TemplateAction
         {
             queryGroup.setProperties(query);
             query.setUserId(user.getUserId());
-            query.saveAndSendEmail(user, scarab.getCurrentModule(),
+            query.saveAndSendEmail(user, scarabR.getCurrentModule(),
                 new ContextAdapter(context));
 
             String template = data.getParameters()
@@ -212,10 +206,8 @@ public class Search extends TemplateAction
     public void doEditstoredquery( RunData data, TemplateContext context )
          throws Exception
     {        
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
                                       query.getQueryKey() );
@@ -329,8 +321,7 @@ public class Search extends TemplateAction
         String key;
         String userId;
         ScarabUser adminUser = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         Query query = scarabR.getQuery();
 
         for (int i =0; i<keys.length; i++)
@@ -345,7 +336,7 @@ public class Search extends TemplateAction
                          .getSubscription(subscribedUser.getUserId());
               try
               {
-                  rqu.delete(subscribedUser, (ScarabModule)scarabR.getCurrentModule());
+                  rqu.doDelete(subscribedUser, scarabR.getCurrentModule());
                }
                catch (Exception e)
                {

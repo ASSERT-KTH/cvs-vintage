@@ -52,7 +52,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 // Turbine Stuff 
-import org.apache.turbine.TemplateAction;
+import org.apache.turbine.Turbine;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
@@ -62,7 +62,9 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
 
 // Scarab Stuff
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Attachment;
@@ -79,18 +81,17 @@ import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
-import org.tigris.scarab.om.ScarabModule;
-import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 
 
 /**
-    This class is responsible for moving/copying an issue from one module to another.
-    ScarabIssueAttributeValue
+    This class is responsible for moving/copying an issue 
+    from one module to another.
+
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.7 2001/09/17 20:27:18 elicia Exp $
+    @version $Id: MoveIssue.java,v 1.8 2001/09/30 18:31:38 jon Exp $
 */
-public class MoveIssue extends TemplateAction
+public class MoveIssue extends RequireLoginFirstAction
 {
 
     public void doMapattributes( RunData data, TemplateContext context )
@@ -156,8 +157,7 @@ public class MoveIssue extends TemplateAction
             descBuf = new StringBuffer(" moved from ");
             descBuf.append(oldModule.getName()).append(" to ");
             descBuf.append(newModule.getName());
-        } 
-
+        }
         // Copy issue to other module
         else
         {
@@ -195,7 +195,6 @@ public class MoveIssue extends TemplateAction
             descBuf.append(" in module ").append(oldModule.getName());
         }
 
-
         if (!orphanAttributes.isEmpty())
         {
             // Save comment
@@ -214,6 +213,7 @@ public class MoveIssue extends TemplateAction
                else if (attVal.getAttribute().getAttributeType()
                                              .getName().equals("user"))
                {
+                    // FIXME: Don't get a user object this way.
                    ScarabUser assignedUser = (ScarabUser) ScarabUserImplPeer
                                   .retrieveScarabUserImplByPK((ObjectKey)attVal
                                   .getUserId());
@@ -271,8 +271,8 @@ public class MoveIssue extends TemplateAction
         List matchingAttributes = new ArrayList();
         List orphanAttributes = new ArrayList();
         List returnList = null;
-        ScarabModule module = (ScarabModule)ScarabModulePeer
-                              .retrieveByPK(new NumberKey(moduleId));
+        ModuleEntity module = ModuleManager
+                                    .getInstance(new NumberKey(moduleId));
 
         HashMap setMap = issue.getAttributeValuesMap();
         Iterator iter = setMap.keySet().iterator();
@@ -325,5 +325,22 @@ public class MoveIssue extends TemplateAction
         }
         return returnList;
     }
-        
+
+    /**
+        This manages clicking the Cancel button
+    */
+    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    {
+        String template = Turbine.getConfiguration()
+            .getString("template.homepage", "Start.vm");
+        setTarget(data, template);
+    }
+    
+    /**
+        calls doCancel()
+    */
+    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    {
+        doCancel(data, context);
+    }
 } 

@@ -47,7 +47,6 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Log;
@@ -57,15 +56,16 @@ import org.apache.fulcrum.security.TurbineSecurity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
     This class is responsible for dealing with the Register
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Register.java,v 1.12 2001/09/13 22:37:03 jon Exp $
+    @version $Id: Register.java,v 1.13 2001/09/30 18:31:38 jon Exp $
 */
-public class Register extends TemplateAction
+public class Register extends ScarabTemplateAction
 {
     /**
         This manages clicking the Register button which will end up sending
@@ -74,9 +74,10 @@ public class Register extends TemplateAction
     public void doRegister( RunData data, TemplateContext context ) 
         throws Exception
     {
-        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
+        String template = data.getParameters()
+                            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters()
+                            .getString(ScarabConstants.NEXT_TEMPLATE, template);
 
         // create an empty user object
         ScarabUser su = (ScarabUser) TurbineSecurity.getAnonymousUser();

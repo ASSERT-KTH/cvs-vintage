@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Iterator;
 
 // Turbine Stuff 
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.services.pull.ApplicationTool;
@@ -67,15 +66,16 @@ import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
     This class is responsible for dealing with the Confirm
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.18 2001/09/26 02:12:50 jon Exp $
+    @version $Id: Confirm.java,v 1.19 2001/09/30 18:31:38 jon Exp $
 */
-public class Confirm extends TemplateAction
+public class Confirm extends ScarabTemplateAction
 {
     /**
         This manages clicking the Register button which will end up sending
@@ -83,9 +83,11 @@ public class Confirm extends TemplateAction
     */
     public void doConfirm( RunData data, TemplateContext context ) throws Exception
     {
-        String template = data.getParameters().getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
+        String template = data.getParameters()
+                            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters()
+                            .getString(
+                            ScarabConstants.NEXT_TEMPLATE, template );
 
         String username = data.getParameters().getString ( "Email", "" );
         String confirm = data.getParameters().getString ( "Confirm", "" );
@@ -100,7 +102,8 @@ public class Confirm extends TemplateAction
                 data.setMessage("Your account has been confirmed. Welcome to Scarab!");
                 setTarget(data, nextTemplate);
 
-                ScarabUser confirmedUser = (ScarabUserImpl) TurbineSecurity.getUser(username);
+                ScarabUser confirmedUser = (ScarabUserImpl) 
+                                           TurbineSecurity.getUser(username);
                 confirmedUser.setHasLoggedIn(Boolean.TRUE);
                 data.setUser(confirmedUser);
                 data.save();
@@ -126,23 +129,27 @@ public class Confirm extends TemplateAction
             }
             else
             {
-                data.setMessage("Your account has not been confirmed. There has been an error.");
+                data.setMessage("Your account has not been confirmed. " + 
+                                "There has been an error.");
                 setTarget(data, template);
             }
         }
         else // we don't have confirmation! :-(
         {
-            // grab the ScarabRequestTool object so that we can populate the internal User object
-            // for redisplay of the form data on the screen
+            // grab the ScarabRequestTool object so that we can populate 
+            // the internal User object for redisplay of the form data 
+            // on the screen
             ApplicationTool srt = 
                 getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
             if (srt != null)
             {
-                ((ScarabRequestTool)srt).setUser((ScarabUser)data.getUser().getTemp( 
-                    ScarabConstants.SESSION_REGISTER));
+                ((ScarabRequestTool)srt)
+                    .setUser((ScarabUser)data.getUser()
+                    .getTemp(ScarabConstants.SESSION_REGISTER));
             }
         
-            data.setMessage("Sorry, that email address and/or confirmation code is invalid.");
+            data.setMessage("Sorry, that email address and/or confirmation " + 
+                            "code is invalid.");
             setTarget(data, template);
         }
     }

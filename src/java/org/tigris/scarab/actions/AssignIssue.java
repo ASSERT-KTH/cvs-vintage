@@ -54,19 +54,19 @@ import java.math.BigDecimal;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
+import org.apache.turbine.tool.IntakeTool;
 
 import org.apache.commons.util.SequencedHashtable;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.om.Issue;
@@ -91,9 +91,9 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.12 2001/08/28 00:51:54 jon Exp $
+    @version $Id: AssignIssue.java,v 1.13 2001/09/30 18:31:38 jon Exp $
 */
-public class AssignIssue extends TemplateAction
+public class AssignIssue extends RequireLoginFirstAction
 {
     public static final String NEW_ASSIGNEES = "newaddusers";
     public static final String ASSIGNEES = "addedusers";
@@ -238,10 +238,8 @@ public class AssignIssue extends TemplateAction
     public void doSubmit( RunData data, TemplateContext context ) 
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         Attachment attachment = new Attachment();
         Group group = intake.get("Attachment", 
@@ -296,7 +294,6 @@ public class AssignIssue extends TemplateAction
         }
 
     }
-
 
     /**
         This manages clicking the Cancel button

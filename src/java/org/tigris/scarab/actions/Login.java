@@ -48,7 +48,6 @@ package org.tigris.scarab.actions;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Log;
@@ -65,15 +64,16 @@ import org.apache.fulcrum.security.util.TurbineSecurityException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
     This class is responsible for dealing with the Login
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.23 2001/09/13 22:37:03 jon Exp $
+    @version $Id: Login.java,v 1.24 2001/09/30 18:31:38 jon Exp $
 */
-public class Login extends TemplateAction
+public class Login extends ScarabTemplateAction
 {
     /**
         This manages clicking the Login button
@@ -82,8 +82,7 @@ public class Login extends TemplateAction
     {
         data.setACL(null);
 
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
 
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
         
@@ -107,8 +106,7 @@ public class Login extends TemplateAction
     public boolean checkUser(RunData data, TemplateContext context)
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
 
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
         String username = login.get("Username").toString();
@@ -133,13 +131,12 @@ public class Login extends TemplateAction
             // check the CONFIRM_VALUE
             if (!user.isConfirmed())
             {
-                ApplicationTool srt = 
-                    getTool(context, ScarabConstants.SCARAB_REQUEST_TOOL);
-                if (srt != null)
+                ScarabRequestTool scarabR = getScarabRequestTool(context);
+                if (scarabR != null)
                 {
                     user = TurbineSecurity.getUserInstance();
                     user.setEmail (username);
-                    ((ScarabRequestTool)srt).setUser((ScarabUser)user);
+                    scarabR.setUser((ScarabUser)user);
                 }
 
                 setTarget(data, "Confirm.vm");

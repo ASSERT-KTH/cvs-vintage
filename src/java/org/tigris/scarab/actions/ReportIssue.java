@@ -51,7 +51,6 @@ import java.util.List;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
@@ -65,6 +64,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
@@ -87,9 +87,9 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.47 2001/09/29 01:44:13 elicia Exp $
+    @version $Id: ReportIssue.java,v 1.48 2001/09/30 18:31:38 jon Exp $
 */
-public class ReportIssue extends TemplateAction
+public class ReportIssue extends RequireLoginFirstAction
 {
 
     private Field getSummaryField(IntakeTool intake, Issue issue)
@@ -104,13 +104,11 @@ public class ReportIssue extends TemplateAction
     public void doSubmitattributes( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         
         // Summary is always required (because we are going to search on it.)
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
         Field summary = getSummaryField(intake, issue);
@@ -180,12 +178,9 @@ public class ReportIssue extends TemplateAction
                                       String nextTemplate)
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         String query = getSummaryField(intake, 
                             user.getReportingIssue(scarabR.getCurrentModule()))
@@ -245,11 +240,9 @@ public class ReportIssue extends TemplateAction
     public void doEnterissue( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = (ScarabRequestTool)context
-            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
         Issue issue = user.getReportingIssue(scarabR.getCurrentModule());
         AttributeValue aval = null;
@@ -382,8 +375,7 @@ public class ReportIssue extends TemplateAction
     public void doAddnote( RunData data, TemplateContext context ) 
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        IntakeTool intake = getIntakeTool(context);
         
         if ( intake.isAllValid() ) 
         {
@@ -396,8 +388,7 @@ public class ReportIssue extends TemplateAction
                 group.setProperties(attachment);
                 if ( attachment.getData().length > 0 ) 
                 {
-                    ScarabRequestTool scarabR = (ScarabRequestTool)context
-                        .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+                    ScarabRequestTool scarabR = getScarabRequestTool(context);
                     Issue issue = scarabR.getIssue();
                     attachment.setIssue(issue);
                     attachment.setTypeId(Attachment.COMMENT__PK);
@@ -428,9 +419,7 @@ public class ReportIssue extends TemplateAction
     public void doAddvote( RunData data, TemplateContext context ) 
         throws Exception
     {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-
+        IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);
         
         if ( intake.isAllValid() ) 
