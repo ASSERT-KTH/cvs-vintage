@@ -33,7 +33,7 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.11 2002/05/21 07:50:03 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.12 2002/05/21 09:52:27 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -205,7 +205,7 @@ public class ParserRuleSet
 		}
 	}
 
-	private static final int RULE_BUCKET_COUNT = 32;
+	private static final int RULE_BUCKET_COUNT = 128;
 
 	private String name;
 	private Mode mode;
