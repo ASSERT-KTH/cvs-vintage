@@ -39,7 +39,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    private final Map knownFinderCommands = new HashMap();
@@ -52,25 +52,59 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
    public void start() throws DeploymentException {
       JDBCCommandFactory factory = manager.getCommandFactory();      
       
+      Class homeClass = manager.getContainer().getHomeClass();
+      Class localHomeClass = manager.getContainer().getLocalHomeClass();
+
       //
       // Custom finders - Overrides defined and automatic finders.
       //
-      try {
-         Class ejbClass = manager.getMetaData().getEntityClass();
+      Class ejbClass = manager.getMetaData().getEntityClass();
 
-         Method[] customMethods = ejbClass.getMethods();         
-         for (int i = 0; i < customMethods.length; i++) {
-            Method m = customMethods[i];
-            String name = m.getName();
-            if(name.startsWith("ejbFindBy")) {
-               knownFinderCommands.put(m, new CustomFindByEntitiesCommand(m));
-               manager.getLog().debug("Added custom finder " + name +".");
+      Method[] customMethods = ejbClass.getMethods();         
+      for (int i = 0; i < customMethods.length; i++) {
+         Method m = customMethods[i];
+         String  methodName = m.getName();
+         if(methodName.startsWith("ejbFindBy")) {
+            String interfaceName = "f" +  methodName.substring(4);
+
+            if(homeClass != null) {
+               try {
+                  // try to get the finder method on the home interface
+                  Method interfaceMethod = homeClass.getMethod(
+                        interfaceName, 
+                        m.getParameterTypes());
+                  
+                  // got it add it to known finders
+                  knownFinderCommands.put(
+                        interfaceMethod, 
+                        new CustomFindByEntitiesCommand(m));
+
+                  manager.getLog().debug("Added custom finder " + methodName +
+                        " on home interface");
+               } catch(NoSuchMethodException e) {
+                  // this is ok method may not be defined on this interface
+               }
+            }
+               
+            if(localHomeClass != null) {
+               try {
+                  // try to get the finder method on the local home interface
+                  Method interfaceMethod = localHomeClass.getMethod(
+                        interfaceName, 
+                        m.getParameterTypes());
+                  
+                  // got it add it to known finders
+                  knownFinderCommands.put(
+                        interfaceMethod, 
+                        new CustomFindByEntitiesCommand(m));
+
+                  manager.getLog().debug("Added custom finder " + methodName +
+                        " on local home interface");
+               } catch(NoSuchMethodException e) {
+                  // this is ok method may not be defined on this interface
+               }
             }
          }
-      } catch (Exception e) {
-         // for some reason, this failed; try to use defined 
-         // or automatic instead
-         manager.getLog().debug(e);
       }
 
       //
@@ -95,12 +129,10 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
       //
       // Automatic finders - The last resort
       //
-      Class homeClass = manager.getContainer().getHomeClass();
       if(homeClass != null) {
          addAutomaticFinders(manager, homeClass.getMethods());
       }
       
-      Class localHomeClass = manager.getContainer().getLocalHomeClass();
       if(localHomeClass != null) {
          addAutomaticFinders(manager, localHomeClass.getMethods());
       }
