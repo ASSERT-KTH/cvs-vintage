@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.21 $
+*   @version $Revision: 1.22 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -76,7 +76,22 @@ implements EntityPersistenceManager
       ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
 
       // Create cache of create methods
-      Method[] methods = con.getHomeClass().getMethods();
+      if (con.getHomeClass() != null)
+      {
+         Method[] methods = con.getHomeClass().getMethods();
+         createMethodCache( methods );
+      }
+      if (con.getLocalHomeClass() != null)
+      {
+         Method[] methods = con.getLocalHomeClass().getMethods();
+         createMethodCache( methods );
+      }
+
+   }
+   
+   private void createMethodCache( Method[] methods )
+      throws NoSuchMethodException
+   {
       for (int i = 0; i < methods.length; i++)
       {
          if (methods[i].getName().equals("create"))
@@ -165,7 +180,11 @@ implements EntityPersistenceManager
       con.getInstanceCache().insert(ctx);
 
       // Create EJBObject
+        // Create EJBObject
+     if (con.getContainerInvoker() != null)
       ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+     if (con.getLocalHomeClass() != null)
+      ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
 
       try
       {

@@ -46,7 +46,7 @@ import org.jboss.util.Sync;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.19 $
+*   @version $Revision: 1.20 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -95,18 +95,33 @@ implements EntityPersistenceManager {
         ejbPassivate = EntityBean.class.getMethod("ejbPassivate", new Class[0]);
         ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
 
-		// Create cache of create methods
-	    Method[] methods = con.getHomeClass().getMethods();
-	    for (int i = 0; i < methods.length; i++)
-	    {
-	   		if (methods[i].getName().equals("create"))
-			{
-				createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
-				postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
-			}
-	    }
+         if (con.getHomeClass() != null)
+         {
+            Method[] methods = con.getHomeClass().getMethods();
+            createMethodCache( methods );
+         }
+         if (con.getLocalHomeClass() != null)
+         {
+            Method[] methods = con.getLocalHomeClass().getMethods();
+            createMethodCache( methods );
+         }     
 
        store.init();
+    }
+    
+    private void createMethodCache( Method[] methods )
+      throws NoSuchMethodException
+    {
+     // Create cache of create methods
+      for (int i = 0; i < methods.length; i++)
+      {
+                  if (methods[i].getName().equals("create"))
+                  {
+                          createMethods.put(methods[i], con.getBeanClass().getMethod("ejbCreate", methods[i].getParameterTypes()));
+                          postCreateMethods.put(methods[i], con.getBeanClass().getMethod("ejbPostCreate", methods[i].getParameterTypes()));
+                  }
+      }
+       
     }
 
     public void start()
@@ -227,7 +242,10 @@ implements EntityPersistenceManager {
      	con.getInstanceCache().insert(ctx);
 
         // Create EJBObject
-        ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+        if (con.getContainerInvoker() != null)
+         ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+        if (con.getLocalHomeClass() != null)
+         ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
 
 		try
 		{
