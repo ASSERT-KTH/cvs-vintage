@@ -1,7 +1,9 @@
 <!--
+  Copyright (c) 1999 The Apache Software Foundation.  All rights 
+  reserved.
+
   Number Guess Game
   Written by Jason Hunter <jasonh@kasoftware.com>, CTO, K&A Software
-  Copyright 1999, K&A Software, distributed by Sun with permission
   http://www.servlets.com
 -->
 
