@@ -42,17 +42,10 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 
 	private Action action;
 
-	/**
-	 * @param action
-	 * @param references
-	 */
-	public CheckForNewMessagesCommand(Action action,
-			DefaultCommandReference reference) {
+	public CheckForNewMessagesCommand(Action action, DefaultCommandReference reference) {
 		super(reference);
 		this.action = action;
-
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 

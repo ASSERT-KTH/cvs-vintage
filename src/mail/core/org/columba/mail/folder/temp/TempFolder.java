@@ -28,6 +28,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -139,7 +140,7 @@ public class TempFolder extends MessageFolder {
 
     /**
      * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
-     *      WorkerStatusController)
+     *      IMAPFolder)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {
         return ((ColumbaMessage) messageList.get(uid)).getMimePartTree();

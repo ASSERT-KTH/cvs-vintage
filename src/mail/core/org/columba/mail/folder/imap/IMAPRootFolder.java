@@ -242,6 +242,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 		}
 	}
 
+	
 	public void findSpecialFolders() {
 		SpecialFoldersItem folders = accountItem.getSpecialFoldersItem();
 
@@ -343,7 +344,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder,
 	 */
 	public void addSubfolder(AbstractFolder child) throws Exception {
 		if (child instanceof IMAPFolder) {
-			getServer().createMailbox("", child.getName());
+			getServer().createMailbox(child.getName(), null);
 		}
 
 		super.addSubfolder(child);

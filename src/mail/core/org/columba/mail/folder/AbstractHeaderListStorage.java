@@ -269,4 +269,8 @@ public abstract class AbstractHeaderListStorage implements HeaderListStorage {
 
 	}
 
+	public void reset() throws Exception {
+		getHeaderCacheInstance().reset();
+	}
+	
 }

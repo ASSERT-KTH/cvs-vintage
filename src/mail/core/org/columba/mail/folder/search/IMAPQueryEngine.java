@@ -64,13 +64,13 @@ public class IMAPQueryEngine implements QueryEngine {
 
     public List queryEngine(FilterRule filter) throws Exception {
         // pass the work to IMAPStore
-        return folder.getServer().search(filter, folder.getImapPath());
+        return folder.getServer().search(filter, folder);
     }
 
     public List queryEngine(FilterRule filter, Object[] uids)
         throws Exception {
         // pass the work to IMAPStore
-        return folder.getServer().search(uids, filter, folder.getImapPath());
+        return folder.getServer().search(uids, filter, folder);
     }
 
     public void messageAdded(Object uid) throws Exception {

@@ -272,4 +272,12 @@ public abstract class AbstractHeaderCache {
 	public void setHeaderCacheLoaded(boolean b) {
 		headerCacheLoaded = b;
 	}
+
+	/**
+	 * Resets the headercache by removing all entries.
+	 * 
+	 */
+	public void reset() {
+		headerList = new HeaderList();
+	}
 }

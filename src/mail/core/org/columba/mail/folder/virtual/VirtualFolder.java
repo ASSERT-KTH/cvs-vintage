@@ -36,6 +36,7 @@ import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
+import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -382,7 +383,7 @@ public class VirtualFolder extends MessageFolder {
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int,
-	 *      WorkerStatusController)
+	 *      IMAPFolder)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
 		for (int i = 0; i < uids.length; i++) {
@@ -437,7 +438,7 @@ public class VirtualFolder extends MessageFolder {
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
-	 *      WorkerStatusController)
+	 *      IMAPFolder)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 

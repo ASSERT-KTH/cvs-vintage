@@ -223,4 +223,5 @@ public class RemoteHeaderCache extends AbstractFolderHeaderCache {
 
         super.saveHeader(h);
     }
+
 }

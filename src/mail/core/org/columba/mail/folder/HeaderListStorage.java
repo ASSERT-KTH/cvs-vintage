@@ -119,4 +119,6 @@ public interface HeaderListStorage extends HeaderStorage{
      * @see org.columba.mail.folder.HeaderStorage#load()
      */
     public void load() throws Exception;
+    
+    public void reset() throws Exception;
 }

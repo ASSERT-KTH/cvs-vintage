@@ -74,22 +74,5 @@ public class ViewHeaderListCommand extends Command {
 		headerList = (folder).getHeaderList();
 		//TODO: Handle CommandCancelledException
 
-		// this is a little hack !!
-		// check if this is an imap folder
-		FolderItem folderItem = folder.getConfiguration();
-
-		if (folderItem.get("type").equals("IMAPFolder")) {
-			IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
-			AccountItem accountItem = rootFolder.getAccountItem();
-			ImapItem item = accountItem.getImapItem();
-
-			boolean applyFilter = item.getBoolean("automatically_apply_filter",
-					false);
-
-			// if "automatically apply filter" is selected & there are new messages
-			if (applyFilter == true && folder.getMessageFolderInfo().getRecent() > 0) {
-				MainInterface.processor.addOp(new ApplyFilterCommand(r));
-			}
-		}
 	}
 }
