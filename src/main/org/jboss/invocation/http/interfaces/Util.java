@@ -33,7 +33,7 @@ import org.jboss.net.ssl.SSLSocketFactoryBuilder;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
 */
 public class Util
 {
@@ -59,6 +59,14 @@ public class Util
       }
       
    }
+   static class ReadSSLBuilder implements PrivilegedAction
+   {
+      public Object run()
+      {
+         String value = System.getProperty(SSL_FACTORY_BUILDER);
+         return value;
+      }
+   }
 
    static
    {
@@ -73,7 +81,18 @@ public class Util
          log.warn("Failed to install SecurityAssociationAuthenticator", e);
       }
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
-      String factoryFactoryFQCN = System.getProperty(SSL_FACTORY_BUILDER);
+
+      String factoryFactoryFQCN = null;
+      try
+      {
+         ReadSSLBuilder action = new ReadSSLBuilder();
+         factoryFactoryFQCN = (String) AccessController.doPrivileged(action);
+      }
+      catch(Exception e)
+      {
+         log.warn("Failed to read "+SSL_FACTORY_BUILDER, e);         
+      }
+
       if (factoryFactoryFQCN != null)
       {
          try
