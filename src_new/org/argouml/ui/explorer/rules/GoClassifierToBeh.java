@@ -1,4 +1,4 @@
-// $Id: GoClassifierToBeh.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoClassifierToBeh.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.AbstractGoRule;
 
 
 public class GoClassifierToBeh implements PerspectiveRule {

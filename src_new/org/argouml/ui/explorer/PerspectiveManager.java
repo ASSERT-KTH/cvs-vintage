@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.4 2003/10/05 18:29:28 alexb Exp $
+// $Id: PerspectiveManager.java,v 1.5 2003/10/27 22:08:55 kataka Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -142,6 +142,8 @@ public class PerspectiveManager {
         packagePerspective.addRule(new GoStateToDoActivity());
         packagePerspective.addRule(new GoStateToEntry());
         packagePerspective.addRule(new GoStateToExit());
+		packagePerspective.addRule(new GoClassifierToSequenceDiagram());
+		packagePerspective.addRule(new GoOperationToSequenceDiagram());
         
         ExplorerPerspective diagramPerspective = 
             new ExplorerPerspective("combobox.item.diagram-centric");

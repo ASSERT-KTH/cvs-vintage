@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.39 2003/09/14 17:07:31 alexb Exp $
+// $Id: UMLClassDiagram.java,v 1.40 2003/10/27 22:08:57 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.39 2003/09/14 17:07:31 alexb Exp $
+// $Id: UMLClassDiagram.java,v 1.40 2003/10/27 22:08:57 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -138,12 +138,15 @@ public class UMLClassDiagram extends UMLDiagram {
         super.setNamespace(m);
         ClassDiagramGraphModel gm = new ClassDiagramGraphModel();
         gm.setNamespace(m);
-        setGraphModel(gm);
-        LayerPerspective lay = new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
-        setLayer(lay);
-        ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
-        lay.setGraphNodeRenderer(rend);
-        lay.setGraphEdgeRenderer(rend);
+		LayerPerspective lay = new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
+		ClassDiagramRenderer rend = new ClassDiagramRenderer(); // singleton
+			   lay.setGraphNodeRenderer(rend);
+			   lay.setGraphEdgeRenderer(rend);
+		setLayer(lay);
+        
+       
+       
+       
     }
 
     /**

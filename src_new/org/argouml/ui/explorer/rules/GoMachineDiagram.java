@@ -1,6 +1,6 @@
 
 
-// $Id: GoMachineDiagram.java,v 1.1 2003/10/04 07:32:05 alexb Exp $
+// $Id: GoMachineDiagram.java,v 1.2 2003/10/27 22:08:56 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,7 @@ import java.util.Vector;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.ui.AbstractGoRule;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
-
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 
 public class GoMachineDiagram implements PerspectiveRule {
