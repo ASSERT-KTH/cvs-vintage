@@ -93,12 +93,8 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
           
             // save position
             int position = view.getColumnModel().getColumnIndex(name);
-            System.out.println("column name="+name);
-            System.out.println("model index="+tc.getModelIndex());
-            System.out.println("convertToView="+view.convertColumnIndexToView(tc.getModelIndex()));
-            
-            column.addAttribute("position", Integer.toString(view.convertColumnIndexToView(tc.getModelIndex())));
-			
+            column.addAttribute("position", Integer.toString(
+                    view.convertColumnIndexToView(tc.getModelIndex())));
         }
     }
 

@@ -78,7 +78,6 @@ public class TableModelSorter extends TableModelPlugin {
 
             Vector v = rootNode.getVector();
             */
-            System.out.println("in order received");
 
             setDataSorting(false);
         } else {

@@ -23,12 +23,13 @@ import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
+import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-
+import org.columba.core.shutdown.ShutdownManager;
 
 /**
  * @author frd
@@ -87,7 +88,8 @@ public class AddressbookMain extends DefaultMain {
         } catch (PluginHandlerNotFoundException ex) {
         }
 
-        MainInterface.shutdownManager.register(new SaveAllAddressbooksPlugin());
-        MainInterface.backgroundTaskManager.register(new SaveAllAddressbooksPlugin());
+        TaskInterface plugin = new SaveAllAddressbooksPlugin();
+        MainInterface.backgroundTaskManager.register(plugin);
+        ShutdownManager.getShutdownManager().register(plugin);
     }
 }

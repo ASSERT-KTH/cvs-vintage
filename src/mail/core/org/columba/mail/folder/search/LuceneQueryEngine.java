@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import org.apache.lucene.analysis.Analyzer;
@@ -33,7 +34,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
-import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
@@ -78,7 +78,7 @@ import javax.swing.JOptionPane;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LuceneQueryEngine implements QueryEngine, TaskInterface {
+public class LuceneQueryEngine implements QueryEngine {
     private final static int OPTIMIZE_AFTER_N_OPERATIONS = 30;
     private final static String[] caps = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield"
@@ -102,8 +102,6 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
     public LuceneQueryEngine(LocalFolder folder) {
         this.folder = folder;
 
-        MainInterface.shutdownManager.register(this);
-
         analyzer = new StandardAnalyzer();
 
         try {
@@ -111,6 +109,17 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                try {
+                    //to be executed on shutdown
+                    mergeRAMtoIndex();
+                } catch (IOException ioe) {
+                    ColumbaLogger.log.severe(ioe.getMessage());
+                }
+            }
+        }, "LuceneIndexMerger"));
 
         luceneLastModified = -1;
         ramLastModified = -1;
@@ -459,17 +468,6 @@ public class LuceneQueryEngine implements QueryEngine, TaskInterface {
         if (operationCounter > OPTIMIZE_AFTER_N_OPERATIONS) {
             mergeRAMtoIndex();
             operationCounter = 0;
-        }
-    }
-
-    /**
-     * @see org.columba.core.backgroundtask.TaskInterface#run()
-     */
-    public void run() {
-        try {
-            mergeRAMtoIndex();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

@@ -13,9 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-//
-//$Log: IMAPRootFolder.java,v $
-//
+
 package org.columba.mail.folder.imap;
 
 import org.columba.core.command.StatusObservable;
@@ -23,7 +21,6 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.shutdown.ShutdownManager;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -48,7 +45,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
-
 
 public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
     RootFolder {
@@ -809,9 +805,7 @@ public class IMAPRootFolder extends FolderTreeNode implements ActionListener,
     public void save() throws Exception {
         ColumbaLogger.log.info("Logout from IMAPServer " + getName());
 
-        if (ShutdownManager.getMode() == ShutdownManager.SHUTDOWN) {
-            getStore().logout();
-        }
+        getStore().logout();
     }
 
     /* (non-Javadoc)

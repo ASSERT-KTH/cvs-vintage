@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
@@ -23,13 +24,10 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.plugin.PluginManager;
-import org.columba.core.shutdown.ShutdownManager;
-
 
 /**
  * Main Interface keeping static instances of all objects
  * which need to be accessed by other subsystems.
- * <p>
  *
  * @author fdietz
  */
@@ -51,9 +49,6 @@ public class MainInterface {
     public static DefaultProcessor processor;
     public static PluginManager pluginManager;
 
-    // tasks which are executed on exiting Columba
-    public static ShutdownManager shutdownManager;
-
     // tasks which are executed by a timer in the background
     // if the program is currently in idle mode
     public static BackgroundTaskManager backgroundTaskManager;
@@ -64,6 +59,5 @@ public class MainInterface {
     // focus manager needed for cut/copy/paste/etc.
     public static FocusManager focusManager;
 
-    public MainInterface() {
-    }
+    private MainInterface() {}
 }

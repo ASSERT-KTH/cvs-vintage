@@ -16,11 +16,14 @@
 
 package org.columba.mail.main;
 
+import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.shutdown.ShutdownManager;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.tree.TreeModel;
@@ -38,7 +41,6 @@ import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.composer.MimeTreeRenderer;
-
 
 /**
  * @author frd
@@ -112,12 +114,13 @@ public class MailMain extends DefaultMain {
             ex.printStackTrace();
         }
 
-        MainInterface.shutdownManager.register(new SaveAllFoldersPlugin());
-        MainInterface.shutdownManager.register(new SavePOP3CachePlugin());
-
-        MainInterface.backgroundTaskManager.register(new SaveAllFoldersPlugin());
-        MainInterface.backgroundTaskManager.register(new SavePOP3CachePlugin());
-
+        TaskInterface plugin = new SaveAllFoldersPlugin();
+        MainInterface.backgroundTaskManager.register(plugin);
+        ShutdownManager.getShutdownManager().register(plugin);
+        
+        plugin = new SavePOP3CachePlugin();
+        MainInterface.backgroundTaskManager.register(plugin);
+        ShutdownManager.getShutdownManager().register(plugin);
         new CachedHeaderfields();
     }
 }

@@ -273,9 +273,6 @@ public class FrameModel {
                     // store view settings
                     viewList.addElement(v.getRoot());
                     saveDefaultView(v);
-
-                    // shut down Columba 
-                    ShutdownManager.getShutdownManager().shutdown();
                 } else {
                     // just remove reference - and save view settings
                     saveDefaultView(c.getViewItem());

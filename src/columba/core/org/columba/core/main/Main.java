@@ -35,7 +35,6 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
-import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
@@ -89,8 +88,6 @@ public class Main {
         MainInterface.pluginManager.registerHandler(new FramePluginHandler());
 
         MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
-
-        MainInterface.shutdownManager = new ShutdownManager();
 
         MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 

@@ -13,20 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
-
 
 public class ExitAction extends AbstractColumbaAction {
     public ExitAction(FrameMediator controller) {
@@ -56,6 +55,6 @@ public class ExitAction extends AbstractColumbaAction {
         //MainInterface.frameModel.saveAll();
         //MainInterface.addressbookModel.saveAll();
         FrameModel.saveAndCloseAll();
-        MainInterface.shutdownManager.shutdown();
+        System.exit(0);
     }
 }
