@@ -127,8 +127,10 @@ public class AttachmentView extends JList implements ListDataListener {
 				return this;
 
 			MimeHeader header = mp.getHeader();
-			String type = header.getContentType();
-			String subtype = header.getContentSubtype();
+			//String type = header.getContentType();
+			String type = header.getMimeType().getType();
+			//String subtype = header.getContentSubtype();
+			String subtype = header.getMimeType().getSubtype();
 
 			StringBuffer buf = new StringBuffer();
 

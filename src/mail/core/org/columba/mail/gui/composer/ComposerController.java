@@ -412,15 +412,6 @@ public class ComposerController
 			// new editor controller needed
 			switchEditor(composerModel.isHtml());
 
-			/*
-			 * *20030917, karlpeder* We need to change the html option, 
-			 * since menues etc. are observing that option. This is how
-			 * the current setup is - but one could argue that it is not
-			 * good, since it changes the format used as default next time
-			 * the composer is started.
-			 * 
-			 * TODO: Find a solution - maybe an additional option: default_enable !?
-			 */
 			XmlElement optionsElement =
 				MailConfig.get("composer_options").getElement("/options");
 			XmlElement htmlElement = optionsElement.getElement("html");

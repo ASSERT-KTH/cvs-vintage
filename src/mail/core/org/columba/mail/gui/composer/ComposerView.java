@@ -28,6 +28,7 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.html.*;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
@@ -80,18 +81,30 @@ public class ComposerView extends AbstractFrameView {
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
+		LabelWithMnemonic subjectLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "composer", "subject"));
+		/*
 		JLabel subjectLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "subject")); //$NON-NLS-1$
 		subjectLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "composer", "subject"));
-
+		*/
+		
+		LabelWithMnemonic smtpLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "composer", "identity"));
+		/*
 		JLabel smtpLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "identity")); //$NON-NLS-1$
 		smtpLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "composer", "identity"));
-
+		*/
+		
+		LabelWithMnemonic priorityLabel = new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "composer", "priority"));
+		/*
 		JLabel priorityLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "priority")); //$NON-NLS-1$
 		priorityLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "composer", "priority"));
-
+		*/
+		
 		// Create a FormLayout instance. 
 		FormLayout layout =
 			new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",

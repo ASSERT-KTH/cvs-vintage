@@ -60,9 +60,6 @@ public class HtmlEditorView extends JTextPane
 	/** Editor kit */
 	private ExtendedHTMLEditorKit htmlKit;
 	
-	///** Helper object for html manipulations */
-	//private HTMLUtilities htmlUtil;
-
 	// Actions for text formatting:
 	
 	/** Action used to toggle bold font on/off */
@@ -84,9 +81,6 @@ public class HtmlEditorView extends JTextPane
 						  ExtendedHTMLDocument doc) {
 		super();
 		controller = ctrl;
-		
-		//// initialize helper object
-		//htmlUtil = new HTMLUtilities(this);
 		
 		// set up editor kit and document
 		htmlKit = new ExtendedHTMLEditorKit();

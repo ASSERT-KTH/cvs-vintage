@@ -37,9 +37,7 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * Left justify selected paragraph "align="left" in <p>-tag
  * 
- * TODO: Add actionPerformed etc. etc.
- *
- * @author fdietz
+ * @author fdietz, Karl Peder Olesen (karlpeder)
  */
 public class LeftJustifyAction extends CheckBoxAction
 		implements Observer, ContainerListener {

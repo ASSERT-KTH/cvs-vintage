@@ -423,21 +423,15 @@ public class HtmlEditorController
 	/* (non-Javadoc)
 	 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
 	 */
-	public void changedUpdate(DocumentEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void changedUpdate(DocumentEvent e) {}
 	/* (non-Javadoc)
 	 * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
 	 */
-	public void insertUpdate(DocumentEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void insertUpdate(DocumentEvent e) {}
 	/* (non-Javadoc)
 	 * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
 	 */
-	public void removeUpdate(DocumentEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void removeUpdate(DocumentEvent e) {}
 
 	/******************* CaretListener Implementation *************************/
 

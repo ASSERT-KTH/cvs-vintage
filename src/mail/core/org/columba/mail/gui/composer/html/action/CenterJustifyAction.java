@@ -35,11 +35,9 @@ import org.columba.mail.gui.composer.html.util.FormatInfo;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * Left justify selected paragraph "align="center" in <p>-tag
+ * Center justify selected paragraph "align="center" in <p>-tag
  *
- * TODO: Add actionPerformed etc. etc.
- * 
- * @author fdietz
+ * @author fdietz, Karl Peder Olesen (karlpeder)
  */
 public class CenterJustifyAction extends CheckBoxAction
 		implements Observer, ContainerListener {
