@@ -68,7 +68,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.225 2005/02/13 22:41:52 spestov Exp $
+ * @version $Id: Buffer.java,v 1.226 2005/02/13 23:20:47 spestov Exp $
  */
 public class Buffer
 {
@@ -2455,73 +2455,6 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 		return newIndent;
 	} //}}}
-
-	//{{{ getLineParenWeight() method
-	/**
-	 * Returns the number of open parenthesis minus the number of close parenthesis.
-	 * @param line The line number
-	 * @since jEdit 4.2pre9
-	 */
-	private int getLineParenWeight(int line)
-	{
-		String lineText = getLineText(line);
-		int parenWeight = 0;
-		for(int i = 0; i < lineText.length(); i++)
-		{
-			char c = lineText.charAt(i);
-			switch(c)
-			{
-				case '(':
-					parenWeight++;
-					break;
-				case ')':
-					parenWeight--;
-					break;
-				default:
-			}
-		}
-		return parenWeight;
-	} //}}}
-
-	//{{{ getOpenParenIndent() method
-	/**
-	 * Returns the appropriate indent based on open parenthesis on previous lines.
-	 *
-	 * @param startLine The line where parens were last balanced
-	 * @param targetLine The line we're finding the indent for
-	 */
-	private int getOpenParenIndent(int startLine, int targetLine)
-	{
-		Stack openParens = new Stack();
-		String lineText;
-
-		for(int lineIndex = startLine; lineIndex < targetLine; lineIndex++)
-		{
-			lineText = getLineText(lineIndex);
-			for(int i = 0; i < lineText.length(); i++)
-			{
-				char c = lineText.charAt(i);
-				switch(c)
-				{
-					case '(':
-						openParens.push(new Integer(i));
-						break;
-					case ')':
-						if(openParens.size() > 0)
-							openParens.pop();
-						break;
-					default:
-				}
-			}
-		}
-		int indent = getCurrentIndentForLine(startLine,null);
-
-		if(openParens.size() > 0)
-			indent += ((Integer) openParens.pop()).intValue();
-
-		return indent;
-	}
-	//}}}
 
 	//{{{ getVirtualWidth() method
 	/**

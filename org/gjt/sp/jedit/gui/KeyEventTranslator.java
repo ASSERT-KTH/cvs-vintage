@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2003 Slava Pestov
+ * Copyright (C) 2003, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.25 2005/02/06 20:43:43 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.26 2005/02/13 23:20:47 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -119,7 +119,7 @@ public class KeyEventTranslator
 			char ch = evt.getKeyChar();
 
 			if(KeyEventWorkaround.isMacControl(evt))
-				ch |= 0x40;
+				ch |= 0x60;
 
 			switch(ch)
 			{
