@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.16 2002/10/26 21:06:55 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.17 2002/12/03 17:50:42 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -122,11 +122,11 @@ heavy development.
 </p>
 
 <p>
-There is two types of documentation for Scarab. There is <a
+There is three types of documentation for Scarab. 1) This page. 2) There is <a
 href="http://scarab.tigris.org/project_docs.html">what is available on
-the website</a> (which tends towards administration and other questions) and
-there is user level documentation that is built into the application itself
-and is available in the left side navigation.
+the website</a> (which tends towards administration and other
+questions). 3) There is user level documentation that is built into the
+application itself and is available in the left side navigation.
 </p>
 
 <hr noshade="noshade" size="1" />
@@ -445,11 +445,32 @@ I can't seem to access Scarab's self hosting issue tracker on port 8081.
 </strong></p>
 
 <p>
-This is either because the server is down or, more likely, your firewall
-prevents you from making connections to port 8081. We might consider setting
-up a proxy system to allow connections to port 80, but don't hold your breath.
-The better solution is to get your sysadmin's to realize that security is not
-obtained by locking out access to random ports.
+This has been fixed. We created a proxy system. Please try to connect on port
+80 now. This is the <a href="http://issues.whichever.com/">http://issues.whichever.com/</a> 
+of the live issue tracker. Please do not use it for testing. If you want to use
+a Scarab instance for testing, please use this address of the instance which is 
+rebuilt nightly from CVS: 
+<a href="http://scarab.whichever.com/">http://scarab.whichever.com/</a>.
+</p>
+
+<hr noshade="noshade" size="1" />
+
+<p><strong>
+I get a funny error when trying to run Scarab on Tomcat 4.1.x:
+
+<pre>
+java.lang.VerifyError: (class:
+org/apache/fulcrum/intake/transform/XmlToAppData, method: parseFile
+signature:
+(Ljava/lang/String;Z)Lorg/apache/fulcrum/intake/xmlmodel/AppData;)
+Incompatible object argument for function call
+</pre>
+</strong></p>
+
+<p>
+Please read this link:
+<a href="http://scarab.tigris.org/servlets/ReadMsg?list=users&msgId=203962">
+http://scarab.tigris.org/servlets/ReadMsg?list=users&msgId=203962</a>
 </p>
 
 <hr noshade="noshade" size="1" />
