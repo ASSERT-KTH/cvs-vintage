@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * class loader.
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class MarshalledValueInputStream
    extends ObjectInputStream
@@ -88,11 +88,11 @@ public class MarshalledValueInputStream
          }
          catch(ClassNotFoundException e)
          {
-            /* Use the Class.forName call which will resolve array classes. We
-            do not use this by default as this can result in caching of stale
-            values across redeployments.
-            */
-            resolvedClass = Class.forName(className, false, loader);
+            /* Use the super.resolveClass() call which will resolve array
+            classes and primitives. We do not use this by default as this can
+            result in caching of stale values across redeployments.
+            */            
+            resolvedClass = super.resolveClass(v);
          }
          if( classCache != null )
          {
