@@ -11,6 +11,16 @@ INSERT INTO SCARAB_MODULE (MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTI
 INSERT INTO SCARAB_MODULE (MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, OWNER_ID) VALUES (7,'Java','TBNJ','Java','/Turbine/source/java',6,1);
 
 /*
+ * Sample data for setting up the module domain information for 
+ * module 5 which is used for testing purposes. if you change
+ * these values, then also update the test file EmailLinkTest.java
+ */
+INSERT INTO scarab_global_parameter VALUES (50,'module-script-name','/s',5);
+INSERT INTO scarab_global_parameter VALUES (51,'module-scheme','http',5);
+INSERT INTO scarab_global_parameter VALUES (52,'module-port','8080',5);
+INSERT INTO scarab_global_parameter VALUES (53,'module-domain','10.0.0.1',5);
+
+/*
  * Id table
  */
 INSERT INTO ID_TABLE (id_table_id, table_name, next_id, quantity) VALUES (50, 'PAC',1,1);
