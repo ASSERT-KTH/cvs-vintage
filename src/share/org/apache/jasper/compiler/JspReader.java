@@ -86,7 +86,7 @@ import org.apache.jasper.Constants;
 public class JspReader {
     protected char stream[] = null;
     protected Mark current  = null;
-    File master = null;
+    String master = null;
 
     Vector sourceFiles = new Vector();
     Stack includeStack;
@@ -141,19 +141,17 @@ public class JspReader {
     public void pushFile(String name, String encoding) 
 	throws ParseException, FileNotFoundException
     {
-	// File is relative to the master page being compiled:
-	String parent = master == null ? null : master.getParent();
-        File tmp = new File(name);
+        String parent = master == null ?
+            null : master.substring(0, master.lastIndexOf("/") + 1);
+        boolean isAbsolute = name.startsWith("/");
 
-	boolean isAbsolute = name.startsWith("/") || name.startsWith("\\");
+        if (parent == null || isAbsolute)
+            pushFile(new File(name), encoding);
+        else
+            pushFile(new File(parent + name), encoding);
 
-	if (parent == null || isAbsolute)
-	    pushFile(new File(name), encoding);
-	else
-	    pushFile(new File(parent, name), encoding);
-
-	if (master == null)
-	    master = new File(name);
+        if (master == null)
+            master = name;
     }
 
     /**
