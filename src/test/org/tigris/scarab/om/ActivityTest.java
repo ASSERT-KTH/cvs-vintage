@@ -47,40 +47,16 @@ package org.tigris.scarab.om;
  */
 
 import org.apache.torque.om.NumberKey;
-import org.tigris.scarab.test.BaseTestCase;
-
-import junit.framework.*;
+import org.tigris.scarab.test.BaseTestCase2;
 
 /**
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.9 2003/03/25 20:31:54 jmcnally Exp $
+ * @version $Id: ActivityTest.java,v 1.10 2004/01/30 22:03:21 dep4b Exp $
  */
-public class ActivityTest extends BaseTestCase
+public class ActivityTest extends BaseTestCase2
 {
-    public ActivityTest(String name)
-    {
-        super(name);
-    }
-
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ActivityTest()
-    {
-        super("ActivityTest");
-    }
-
-    public static junit.framework.Test suite()
-    {
-        TestSuite suite = new TestSuite();
-        suite.addTest(new ActivityTest("testCreateLong"));
-        suite.addTest(new ActivityTest("testCreateShort"));
-        suite.addTest(new ActivityTest("testGetAttribute"));
-        return suite;
-    }
 
     public void testCreateLong() throws Exception
     {
