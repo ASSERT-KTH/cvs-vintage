@@ -38,7 +38,7 @@ import java.util.Set;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.82 $
+ @version $Revision: 1.83 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -316,6 +316,13 @@ public abstract class AbstractWebContainer
       deploymentMap.put(warURL, webApp);
       // Generate an event for the startup
       super.start(di);
+   }
+
+   /** WARs do not have nested deployments
+    * @param di
+    */
+   protected void processNestedDeployments(DeploymentInfo di) throws DeploymentException
+   {
    }
 
    /** A template pattern implementation of the undeploy() method. This method
