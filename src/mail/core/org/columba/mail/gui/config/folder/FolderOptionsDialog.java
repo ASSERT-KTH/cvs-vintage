@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.folder;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
@@ -60,19 +61,7 @@ import java.awt.event.MouseEvent;
 
 import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -133,11 +122,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
         oldFolderName = folder.getName();
 
         initComponents();
-
         updateComponents(true);
-
         pack();
-
         setLocationRelativeTo(null);
 
         // focus name textfield
@@ -161,11 +147,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
         this.mediator = mediator;
 
         initComponents();
-
         updateComponents(true);
-
         pack();
-
         setLocationRelativeTo(null);
 
         nameTextField.selectAll();
@@ -326,8 +309,7 @@ builder.add(enableTextIndexingCheckBox, cc.xywh(2, 9, 4, 1));
         enableLabel.setFont(boldFont);
 
         overwriteLabel = new MultiLineLabel(MailResourceLoader.getString(
-                    "dialog", "folderoptions", "select_individual_options"), //$NON-NLS-1$
-                250);
+                    "dialog", "folderoptions", "select_individual_options"));
 
         resetButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "dialog", "folderoptions", "reset")); //$NON-NLS-1$

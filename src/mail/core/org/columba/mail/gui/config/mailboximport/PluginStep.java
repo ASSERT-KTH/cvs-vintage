@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.mailboximport;
 
 import net.javaprog.ui.wizard.AbstractStep;
@@ -71,8 +72,6 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 
     protected JComponent createComponent() {
         descriptionLabel = new MultiLineLabel("description");
-        descriptionLabel.setWrapStyleWord(true);
-        descriptionLabel.setLineWrap(true);
 
         JList list = new JList(((ImportPluginHandler) data.getData(
                     "Plugin.handler")).getPluginIdList());
@@ -102,8 +101,9 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         list.setSelectedIndex(0);
 
         JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        //scrollPane.setPreferredSize( new Dimension(200,200) );
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
         c.gridx = 0;
@@ -122,8 +122,9 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         c.insets = new Insets(0, 10, 0, 0);
 
         JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
+        scrollPane2.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        //scrollPane2.setPreferredSize( new Dimension(200,100) );
         layout.setConstraints(scrollPane2, c);
         middlePanel.add(scrollPane2);
         component.add(middlePanel);
@@ -147,6 +148,5 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         }
     }
 
-    public void prepareRendering() {
-    }
+    public void prepareRendering() {}
 }

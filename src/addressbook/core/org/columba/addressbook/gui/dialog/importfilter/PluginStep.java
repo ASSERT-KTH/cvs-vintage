@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.gui.dialog.importfilter;
 
 import net.javaprog.ui.wizard.AbstractStep;
@@ -76,8 +77,6 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         list.setCellRenderer(new PluginListCellRenderer());
 
         descriptionLabel = new MultiLineLabel("description");
-        descriptionLabel.setWrapStyleWord(true);
-        descriptionLabel.setLineWrap(true);
 
         JComponent component = new JPanel(new BorderLayout());
         component.setLayout(new BorderLayout(0, 30));
@@ -104,6 +103,8 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         list.setSelectedIndex(0);
 
         JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         //scrollPane.setPreferredSize( new Dimension(200,200) );
         GridBagConstraints c = new GridBagConstraints();
@@ -125,7 +126,8 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
 
         JScrollPane scrollPane2 = new JScrollPane(descriptionLabel);
 
-        //scrollPane2.setPreferredSize( new Dimension(200,100) );
+        scrollPane2.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         layout.setConstraints(scrollPane2, c);
         middlePanel.add(scrollPane2);
         component.add(middlePanel);
@@ -134,17 +136,13 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
     }
 
     public void valueChanged(ListSelectionEvent event) {
-        //adjust description field
         try {
             //adjust description field
             DefaultAddressbookImporter importer = (DefaultAddressbookImporter) pluginHandler.getPlugin((String) data.getData(
                         "Plugin.ID"), null);
 
             String description = importer.getDescription();
-
-            if (description.length() != 0) {
-                descriptionLabel.setText(description);
-            }
+            descriptionLabel.setText(description);
         } catch (Exception e) {
             NotifyDialog d = new NotifyDialog();
 
@@ -153,6 +151,5 @@ class PluginStep extends AbstractStep implements ListSelectionListener {
         }
     }
 
-    public void prepareRendering() {
-    }
+    public void prepareRendering() {}
 }

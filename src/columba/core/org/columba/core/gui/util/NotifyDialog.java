@@ -13,13 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,17 +26,13 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-
 
 public class NotifyDialog {
     private JDialog dialog;
-    private boolean bool = false;
     private MultiLineLabel textField;
 
-    public NotifyDialog() {
-    }
+    public NotifyDialog() {}
 
     public void showDialog(Exception ex) {
         showDialog(ex.getMessage());
@@ -51,12 +46,6 @@ public class NotifyDialog {
         JButton[] buttons = new JButton[1];
 
         MultiLineLabel textArea = new MultiLineLabel(message);
-        textArea.setColumns(40);
-        textArea.setRows(4);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-
-        JScrollPane scrollPane = new JScrollPane(textArea);
 
         buttons[0] = new JButton("Close");
         buttons[0].setActionCommand("CLOSE");
@@ -83,7 +72,7 @@ public class NotifyDialog {
         c.weightx = 1;
         c.insets = new Insets(10, 20, 10, 15);
         c.anchor = GridBagConstraints.WEST;
-        layout.setConstraints(scrollPane, c);
+        layout.setConstraints(textArea, c);
 
         JPanel panel = new JPanel();
 
@@ -100,36 +89,24 @@ public class NotifyDialog {
         c.anchor = GridBagConstraints.SOUTHEAST;
         layout.setConstraints(panel, c);
 
-        dialog.getContentPane().add(scrollPane);
+        dialog.getContentPane().add(textArea);
         dialog.getContentPane().add(topLabel);
         dialog.getContentPane().add(panel);
 
         //dialog.getContentPane().add( buttons[1] );
         dialog.pack();
-
-        java.awt.Dimension dim = dialog.getPreferredSize();
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        dialog.setLocation((screenSize.width / 2) - (dim.width / 2),
-            (screenSize.height / 2) - (dim.height / 2));
+        dialog.setLocationRelativeTo(null);
 
         buttons[0].addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     String action = e.getActionCommand();
 
                     if (action.equals("CLOSE")) {
-                        bool = true;
-
                         dialog.dispose();
                     }
                 }
             });
 
         dialog.show();
-    }
-
-    public boolean success() {
-        return bool;
     }
 }
