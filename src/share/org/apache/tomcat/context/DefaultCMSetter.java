@@ -96,7 +96,14 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	if( ctx.getWorkDir() == null)
 	    setWorkDir(ctx);
-	
+
+	if (! ctx.getWorkDir().exists()) {
+	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
+	    ctx.getWorkDir().mkdirs();
+	}
+	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
+	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
+
 	// Set default session manager if none set
 	if( ctx.getSessionManager() == null ) 
 	    ctx.setSessionManager(new org.apache.tomcat.session.StandardSessionManager());

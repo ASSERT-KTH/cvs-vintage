@@ -80,27 +80,15 @@ public class WorkDirInterceptor extends BaseInterceptor {
     }
 	
     public void contextInit(Context ctx) {
-	// never null !! ( it is set by default to ./work ! )
-	//log	System.out.println("Preparing work dir " + ctx.getWorkDir() );
-
-	if (! ctx.isWorkDirPersistent()) {
-	    clearDir(ctx.getWorkDir() );
-        }
-
-	if (! ctx.getWorkDir().exists()) {
-	    //log  System.out.println("Creating work dir " + ctx.getWorkDir() );
-	    ctx.getWorkDir().mkdirs();
-	}
-
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR1, ctx.getWorkDir());
-	ctx.setAttribute(Constants.ATTRIB_WORKDIR , ctx.getWorkDir());
+	// 	if (! ctx.isWorkDirPersistent()) {
+	// 	    clearDir(ctx.getWorkDir() );
+	//         }
     }
 
     public void contextShutdown( Context ctx ) {
-	
-	if (! ctx.isWorkDirPersistent()) {
-            clearDir(ctx.getWorkDir());
-	}
+	// 	if (! ctx.isWorkDirPersistent()) {
+	//             clearDir(ctx.getWorkDir());
+	// 	}
     }
 
     private void clearDir(File dir) {

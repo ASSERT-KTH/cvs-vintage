@@ -161,11 +161,6 @@ public class SecurityCheck extends  BaseInterceptor {
 	}
 
 	if( ctx.getDebug() > 0 ) ctx.log( "Unauthorized " );
-	// redirect to the right servlet 
-	// XXX hardcoded
-	ServletWrapper authWrapper=ctx.getServletByName( "authServlet" );
-	req.setWrapper( authWrapper );
-	
  	return HttpServletResponse.SC_UNAUTHORIZED;
 	// XXX check transport
     }
