@@ -31,9 +31,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.util.MessageNode;
 
-public class TableSelectionHandler extends SelectionHandler
-//implements TreeSelectionListener
-implements ListSelectionListener {
+public class TableSelectionHandler
+	extends SelectionHandler
+	implements ListSelectionListener {
 
 	private TableView view;
 	private LinkedList messages;
@@ -47,8 +47,6 @@ implements ListSelectionListener {
 	public TableSelectionHandler(TableView view) {
 		super("mail.table");
 		this.view = view;
-
-		//view.getTree().addTreeSelectionListener(this);
 
 		view.getSelectionModel().addListSelectionListener(this);
 
@@ -76,36 +74,6 @@ implements ListSelectionListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
-
-	/*
-	public void valueChanged(TreeSelectionEvent e) {
-	
-		for (int i = 0; i < e.getPaths().length; i++) {
-			if (e.getPaths()[i].getLastPathComponent()
-				instanceof MessageNode) {
-				MessageNode message =
-					(MessageNode) e.getPaths()[i].getLastPathComponent();
-				if (e.isAddedPath(i)) {
-					ColumbaLogger.log.debug(
-						"Message added to Selection= " + message.getUid());
-					messages.add(message);
-	
-				} else {
-					ColumbaLogger.log.debug(
-						"Message removed from Selection= " + message.getUid());
-					messages.remove(message);
-				}
-			}
-		}
-	
-		fireSelectionChanged(
-			new TableSelectionChangedEvent(folder, getUidArray()));
-	
-	}
-	*/
 	/**
 	 * Sets the folder.
 	 * @param folder The folder to set
@@ -129,6 +97,9 @@ implements ListSelectionListener {
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
 	public void valueChanged(ListSelectionEvent e) {
+		// user is still manipulating the selection
+		if (e.getValueIsAdjusting() == true)
+			return;
 
 		messages = new LinkedList();
 
