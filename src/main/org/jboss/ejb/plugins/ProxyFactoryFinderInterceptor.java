@@ -7,33 +7,11 @@
 
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.rmi.ServerError;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Enumeration;
-
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
 
-import org.apache.log4j.NDC;
-
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.Interceptor;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationKey;
-import org.jboss.metadata.BeanMetaData;
-import org.jboss.system.Registry;
 import org.jboss.naming.ENCThreadLocalKey;
 
 /** 
@@ -42,7 +20,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ProxyFactoryFinderInterceptor extends AbstractInterceptor
 {
