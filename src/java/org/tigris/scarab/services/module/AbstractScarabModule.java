@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.24 2002/02/01 20:14:59 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.25 2002/02/04 22:24:16 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -617,7 +617,8 @@ public abstract class AbstractScarabModule
     }
 
     /**
-     * gets a list of the Issue Types for this module.
+     * gets a list of the Issue Types for this module. only shows
+     * active issue types
      */
     public List getIssueTypes()
         throws Exception
@@ -625,7 +626,8 @@ public abstract class AbstractScarabModule
         Criteria crit = new Criteria();
         crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                      IssueTypePeer. ISSUE_TYPE_ID);
-        crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
+        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId());
+        crit.add(RModuleIssueTypePeer.ACTIVE, 1);
         crit.add(IssueTypePeer.PARENT_ID, 0);
         crit.add(IssueTypePeer.DELETED, 0);
         return IssueTypePeer.doSelect(crit);
