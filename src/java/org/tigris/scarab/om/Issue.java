@@ -1137,7 +1137,7 @@ public class Issue
                          AttachmentPeer.ATTACHMENT_TYPE_ID)
                 .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 
                      Attachment.COMMENT__PK)
-                .addAscendingOrderByColumn(AttachmentPeer.CREATED_DATE);
+                .addDescendingOrderByColumn(AttachmentPeer.CREATED_DATE);
             if (!full)
             {
                 crit.setLimit(getCommentsLimit());
