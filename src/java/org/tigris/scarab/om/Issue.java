@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.308 2003/06/26 17:58:13 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.309 2003/07/09 23:10:56 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -298,8 +298,7 @@ public class Issue
             for (int i=0; i<max; i++) 
             {
                 char c = id.charAt(i);
-                if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4'
-                     && c != '5' && c != '6' && c != '7' && c!='8' && c!='9')
+                if (c < '0' || c > '9')
                 {
                     code.append(c);
                 }
@@ -1977,48 +1976,66 @@ public class Issue
      * Checks to see if this issue has a dependency on the passed in issue.
      * or if the passed in issue has a dependency on this issue.
      */
-    public Depend getDependency(Issue childIssue) throws Exception
+    public Depend getDependency(Issue potentialDependency) throws Exception
     {
-        return getDependency(childIssue, true);
+        return getDependency(potentialDependency, true);
     }
-    
+
     /**
      * Checks to see if this issue has a dependency on the passed in issue.
      * or if the passed in issue has a dependency on this issue.
+     *
+     * @param potentialDependency the issue for which we are determining if there is a
+     * parent or child dependency to this issue
+     * @param hideDeleted true if deleted issues are omitted from the search
+     * @returns the dependency object or null
      */
-    public Depend getDependency(Issue childIssue, boolean hideDeleted) throws Exception
+    public Depend getDependency(Issue potentialDependency, boolean hideDeleted) throws Exception
     {
         Depend result = null;
-        Object obj = ScarabCache.get(this, GET_DEPENDENCY, childIssue); 
-        if (obj == null) 
+        Object obj = ScarabCache.get(this, GET_DEPENDENCY, potentialDependency);
+        if (obj == null)
         {
+
+            // Determine if this issue is a parent to the potentialDependency
             Criteria crit = new Criteria(2)
-                .add(DependPeer.OBSERVED_ID, getIssueId())        
-                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId());
+                .add(DependPeer.OBSERVED_ID, getIssueId())
+                .add(DependPeer.OBSERVER_ID, potentialDependency.getIssueId());
             if (hideDeleted)
             {
                 crit.add(DependPeer.DELETED, false);
             }
-            List depends = DependPeer.doSelect(crit);
-            Criteria crit2 = new Criteria(2)
-                .add(DependPeer.OBSERVER_ID, getIssueId())
-                .add(DependPeer.OBSERVED_ID, childIssue.getIssueId());
-            if (hideDeleted)
+
+            List childIssues = DependPeer.doSelect(crit);
+            // A system invariant is that we will get one and only one
+            // record back.
+            if (childIssues.size() > 0)
             {
-                crit2.add(DependPeer.DELETED, false);
+                result = (Depend)childIssues.get(0);
             }
-            List depends2 = DependPeer.doSelect(crit2);
-            if (depends.size() > 0)
+            else
             {
-                result = (Depend)depends.get(0);
+            	// Determine if this issue is a child to the potentialDependency
+	            Criteria crit2 = new Criteria(2)
+	                .add(DependPeer.OBSERVER_ID, getIssueId())
+	                .add(DependPeer.OBSERVED_ID, potentialDependency.getIssueId());
+	            if (hideDeleted)
+	            {
+	                crit2.add(DependPeer.DELETED, false);
+	            }
+	            List parentIssues = DependPeer.doSelect(crit2);
+            	if (parentIssues.size() > 0)
+            	{
+            	    result = (Depend)parentIssues.get(0);
+            	}
             }
-            else if (depends2.size() > 0)
+
+            if (result != null)
             {
-                result = (Depend)depends2.get(0);
-            }
-            ScarabCache.put(result, this, GET_DEPENDENCY, childIssue);
+				ScarabCache.put(result, this, GET_DEPENDENCY, potentialDependency);
+			}
         }
-        else 
+        else
         {
             result = (Depend)obj;
         }
@@ -2223,19 +2240,15 @@ public class Issue
         Attachment attachment = new Attachment();
 
         Module oldModule = getModule();
-     
+
         // If moving to a new issue type, just change the issue type id
         // otherwise, create fresh issue
-        if (getModule().getModuleId().equals(newModule.getModuleId()) 
+        if (getModule().getModuleId().equals(newModule.getModuleId())
             && !getIssueType().getIssueTypeId().equals(newIssueType.getIssueTypeId())
             && action.equals("move"))
         {
             newIssue = this;
             newIssue.setIssueType(newIssueType);
-            if (!newModule.getModuleId().equals(getModule().getModuleId()))
-            {
-                delete(user);
-            }
         }
         else
         {
@@ -2248,6 +2261,7 @@ public class Issue
             // If moving issue to new module, delete original
             if (action.equals("move"))
             {
+				// FIXME: Why are we not using delete(user) here instead?
                 setDeleted(true);
                 save();
             }
@@ -2308,7 +2322,7 @@ public class Issue
 
             // copy attachments: comments/files etc.
             Iterator attachments = getAttachments().iterator();
-            while (attachments.hasNext()) 
+            while (attachments.hasNext())
             {
                 Attachment oldA = (Attachment)attachments.next();
                 Attachment newA = oldA.copy();
@@ -2319,11 +2333,11 @@ public class Issue
                 {
                     ActivitySet activitySet = getActivitySet(
                         user, ActivitySetTypePeer.EDIT_ISSUE__PK);
-                    activitySet.save();            
-                    ActivityManager.createTextActivity(newIssue, activitySet, 
+                    activitySet.save();
+                    ActivityManager.createTextActivity(newIssue, activitySet,
                         oldA.getActivity().getDescription(), newA);
                 }
-                if (Attachment.FILE__PK.equals(newA.getTypeId())) 
+                if (Attachment.FILE__PK.equals(newA.getTypeId()))
                 {
                     oldA.copyFileTo(newA.getFullPath());
                 }
@@ -2345,22 +2359,19 @@ public class Issue
                         Activity a = (Activity)j.next();
                         if (a.getAttachmentId() == null && a.getDependId() == null)
                         {
-                            if (newAS == null) 
-                            {
-                                newAS = new ActivitySet();
-                                newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
-                                newAS.setAttachmentId(as.getAttachmentId());
-                                newAS.setCreatedBy(user.getUserId());
-                                newAS.setCreatedDate(new Date());
-                                newAS.save();
-                            }
-                            
+                        	newAS = new ActivitySet();
+                            newAS.setTypeId(ActivitySetTypePeer.EDIT_ISSUE__PK);
+                            newAS.setAttachmentId(as.getAttachmentId());
+                            newAS.setCreatedBy(user.getUserId());
+                            newAS.setCreatedDate(new Date());
+                            newAS.save();
+
                             Activity newA = a.copy(newIssue, newAS);
                             newIssue.getActivity(true).add(newA);
                         }
                     }
                 }
-            }        
+            }
         }
 
         // Generate comment to deal with attributes that do not
@@ -2416,8 +2427,8 @@ public class Issue
                getLocale(),
                "AllCopied"));
         }
-        attachment.setData(attachmentBuf.toString()); 
-            
+        attachment.setData(attachmentBuf.toString());
+
         if (action.equals("move"))
         {
             attachment.setName(Localization.getString(
@@ -2441,35 +2452,30 @@ public class Issue
             .getInstance(ActivitySetTypePeer.MOVE_ISSUE__PK, user, attachment);
         activitySet2.save();
 
-        // Generate comment
+        // Generate comments related to this move or copy operation.
         String comment = null;
         String comment2 = null;
+
+		// Set the arguments for the comment strings.
+        String typeOfOperation = null;
         if (action.equals("copy"))
         {
-            Object[] args3= {"copied", "from"};
-            comment = Localization.format(
-               ScarabConstants.DEFAULT_BUNDLE_NAME,
-               getLocale(),
-               "MoveCopyString", args3);
-            Object[] args4= {"copied", "to"};
-            comment2 = Localization.format(
-               ScarabConstants.DEFAULT_BUNDLE_NAME,
-               getLocale(),
-               "MoveCopyString", args4);
+            typeOfOperation = "copied";
         }
         else
         {
-            Object[] args5= {"moved", "from"};
-            comment = Localization.format(
-               ScarabConstants.DEFAULT_BUNDLE_NAME,
-               getLocale(),
-               "MoveCopyString", args5);
-            Object[] args6 = {"moved", "to"};
-            comment2 = Localization.format(
-               ScarabConstants.DEFAULT_BUNDLE_NAME,
-               getLocale(),
-               "MoveCopyString", args6);
+		    typeOfOperation = "moved";
         }
+        Object[] argsFrom = {typeOfOperation, "from"};
+        Object[] argsTo = {typeOfOperation, "to"};
+
+        comment = Localization.format(
+           ScarabConstants.DEFAULT_BUNDLE_NAME,
+           getLocale(), "MoveCopyString", argsFrom);
+        comment2 = Localization.format(
+           ScarabConstants.DEFAULT_BUNDLE_NAME,
+           getLocale(), "MoveCopyString", argsTo);
+
 
         // Save activity record
         Object[] args = {
@@ -2510,7 +2516,7 @@ public class Issue
                                     getUniqueId(), newIssue.getUniqueId());
         }
 
-          
+
         return newIssue;
     }
 
@@ -2643,13 +2649,13 @@ public class Issue
      * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
      */
-    public List getMatchingAttributeValuesList(Module newModule, 
+    public List getMatchingAttributeValuesList(Module newModule,
                                                IssueType newIssueType)
           throws Exception
     {
         List matchingAttributes = new ArrayList();
         Map setMap = this.getAttributeValuesMap();
-        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();) 
+        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();)
         {
             AttributeValue aval = (AttributeValue)setMap.get(iter.next());
             List values = getAttributeValues(aval.getAttribute());
@@ -2659,7 +2665,7 @@ public class Issue
                 AttributeValue attVal = (AttributeValue)values.get(i);
                 RModuleAttribute modAttr = newModule.
                     getRModuleAttribute(aval.getAttribute(), newIssueType);
-                
+
                 // If this attribute is active for the destination module,
                 // Add to matching attributes list
                 if (modAttr != null && modAttr.getActive())
@@ -2668,14 +2674,18 @@ public class Issue
                     // Check if attribute option is active for destination module.
                     if (aval instanceof OptionAttribute)
                     {
-                        Criteria crit2 = new Criteria(1)
-                            .add(RModuleOptionPeer.ACTIVE, true);
-                        RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
-                                                .doSelect(crit2).get(0);
-                        if (modOpt.getActive())
+                        // FIXME: Use select count
+                        Criteria crit2 = new Criteria(4)
+                            .add(RModuleOptionPeer.ACTIVE, true)
+                            .add(RModuleOptionPeer.OPTION_ID, attVal.getOptionId())
+                            .add(RModuleOptionPeer.MODULE_ID, newModule.getModuleId())
+                            .add(RModuleOptionPeer.ISSUE_TYPE_ID, newIssueType.getIssueTypeId());
+                        List modOpt = RModuleOptionPeer.doSelect(crit2);
+
+                        if (modOpt.size() > 0)
                         {
                             matchingAttributes.add(attVal);
-                        } 
+                        }
                     }
                     else if (attVal instanceof UserAttribute)
                     {
@@ -2702,8 +2712,8 @@ public class Issue
                     {
                         matchingAttributes.add(attVal);
                     }
-                } 
-            } 
+                }
+            }
         }
         return matchingAttributes;
     }
@@ -2711,8 +2721,8 @@ public class Issue
     public List getMatchingAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
-         Module module = ModuleManager.getInstance(new Integer(moduleId)); 
-         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId)); 
+         Module module = ModuleManager.getInstance(new Integer(moduleId));
+         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId));
          return getMatchingAttributeValuesList(module, issueType);
     }
 
@@ -2721,15 +2731,15 @@ public class Issue
      * But the destination module does not have, when doing a copy.
      * It is used in the MoveIssue2.vm template
      */
-    public List getOrphanAttributeValuesList(Module newModule, 
+    public List getOrphanAttributeValuesList(Module newModule,
                                              IssueType newIssueType)
           throws Exception
     {
         List orphanAttributes = new ArrayList();
         AttributeValue aval = null;
-            
+
         Map setMap = this.getAttributeValuesMap();
-        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();) 
+        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();)
         {
             aval = (AttributeValue)setMap.get(iter.next());
             List values = getAttributeValues(aval.getAttribute());
@@ -2739,27 +2749,30 @@ public class Issue
                 AttributeValue attVal = (AttributeValue)values.get(i);
                 RModuleAttribute modAttr = newModule.
                     getRModuleAttribute(aval.getAttribute(), newIssueType);
-                
+
                 // If this attribute is not active for the destination module,
                 // Add to orphanAttributes list
                 if (modAttr == null || !modAttr.getActive())
                 {
                     orphanAttributes.add(attVal);
-                } 
+                }
                 else
                 {
-                    // If attribute is an option attribute, Check if 
+                    // If attribute is an option attribute, Check if
                     // attribute option is active for destination module.
-                    if (attVal instanceof OptionAttribute) 
+                    if (attVal instanceof OptionAttribute)
                     {
                         Criteria crit2 = new Criteria(1)
-                            .add(RModuleOptionPeer.ACTIVE, true);
-                        RModuleOption modOpt = (RModuleOption)RModuleOptionPeer
-                            .doSelect(crit2).get(0);
-                        if (!modOpt.getActive())
+                            .add(RModuleOptionPeer.ACTIVE, true)
+                            .add(RModuleOptionPeer.OPTION_ID, attVal.getOptionId())
+                            .add(RModuleOptionPeer.MODULE_ID, newModule.getModuleId())
+                            .add(RModuleOptionPeer.ISSUE_TYPE_ID, newIssueType.getIssueTypeId());
+                        List modOpt = RModuleOptionPeer.doSelect(crit2);
+
+                        if ( modOpt.size() == 0)
                         {
                                 orphanAttributes.add(attVal);
-                        } 
+                        }
                     }
                     else if (attVal instanceof UserAttribute)
                     {
@@ -2787,14 +2800,14 @@ public class Issue
         return orphanAttributes;
     }
 
+
     public List getOrphanAttributeValuesList(String moduleId, String issueTypeId)
           throws Exception
     {
-         Module module = ModuleManager.getInstance(new Integer(moduleId)); 
-         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId)); 
+         Module module = ModuleManager.getInstance(new Integer(moduleId));
+         IssueType issueType = IssueTypeManager.getInstance(new Integer(issueTypeId));
          return getOrphanAttributeValuesList(module, issueType);
     }
-
 
     /**
      * Checks if user has permission to delete issue template.
