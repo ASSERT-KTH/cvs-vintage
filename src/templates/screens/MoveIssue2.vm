@@ -13,18 +13,18 @@
 
 #else
 
-#if ($selectAction.equals("move"))
- #set ($actionText = "Move")
-#else
- #set ($actionText = "Copy")
-#end
-
 #set ($selectAction = $moveIssueGroup.Action)
 #set ($moduleId = $moveIssueGroup.ModuleId)
 #set ($module = $scarabR.CurrentModule)
 
 #set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId"))
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
+
+#if ($selectAction.toString().equals("move"))
+ #set ($actionText = "Move")
+#else
+ #set ($actionText = "Copy")
+#end
 
 <form method="post" action="$link.setPage("MoveIssue2.vm").setAction("MoveIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
