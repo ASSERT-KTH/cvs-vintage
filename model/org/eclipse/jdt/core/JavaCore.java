@@ -1388,13 +1388,6 @@ public final class JavaCore extends Plugin {
 	 *     - possible values:   { "1.1", "1.2", "1.3", "1.4", "1.5" }
 	 *     - default:           "1.1"
 	 *
-	 * COMPILER / Reporting Unreachable Code
-	 *    Unreachable code can optionally be reported as an error, warning or simply 
-	 *    ignored. The bytecode generation will always optimized it out.
-	 *     - option id:         "org.eclipse.jdt.core.compiler.problem.unreachableCode"
-	 *     - possible values:   { "error", "warning", "ignore" }
-	 *     - default:           "error"
-	 *
 	 * COMPILER / Reporting Attempt to Override Package-Default Method
 	 *    A package default method is not visible in a different package, and thus 
 	 *    cannot be overridden. When enabling this option, the compiler will signal 
@@ -2482,11 +2475,14 @@ public final class JavaCore extends Plugin {
 	 */
 	public static IClasspathEntry newContainerEntry(IPath containerPath, boolean isExported) {
 			
-		if (containerPath == null || containerPath.segmentCount() < 1) {
+		if (containerPath == null) {
+			Assert.isTrue(false, "Container path cannot be null"); //$NON-NLS-1$
+		}
+		if (containerPath.segmentCount() < 1) {
 			Assert.isTrue(
 				false,
 				"Illegal classpath container path: \'" + containerPath.makeRelative().toString() + "\', must have at least one segment (containerID+hints)"); //$NON-NLS-1$//$NON-NLS-2$
-		}
+		}		
 		return new ClasspathEntry(
 			IPackageFragmentRoot.K_SOURCE,
 			IClasspathEntry.CPE_CONTAINER,
@@ -2919,8 +2915,11 @@ public final class JavaCore extends Plugin {
 		IPath variableSourceAttachmentPath,
 		IPath variableSourceAttachmentRootPath,
 		boolean isExported) {
-			
-		if (variablePath == null || variablePath.segmentCount() < 1) {
+
+		if (variablePath == null) {
+			Assert.isTrue(false, "Variable path cannot be null"); //$NON-NLS-1$
+		}		
+		if (variablePath.segmentCount() < 1) {
 			Assert.isTrue(
 				false,
 				"Illegal classpath variable path: \'" + variablePath.makeRelative().toString() + "\', must have at least one segment"); //$NON-NLS-1$//$NON-NLS-2$
