@@ -32,7 +32,6 @@
 
   <ul>
     <li><strong>$l10n.Relationships</strong> $l10n.RelationshipsDef</li>
-    <li><strong>$l10n.Voting</strong> $l10n.VotingDef</li>
     <li><strong>$l10n.ChangeTracking</strong> $l10n.ChangeTrackingDef</li>
     <li><strong>$l10n.CommentViewing</strong> $l10n.CommentViewingDef</li>
     <li><strong>$l10n.SaveFrequentInfo</strong> $l10n.SaveFrequentInfoDef</li>
