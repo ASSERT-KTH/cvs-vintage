@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.95 2002/05/23 02:30:57 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.96 2002/05/26 03:58:40 reverbel Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -399,7 +399,13 @@
 	     classpath="${xdoclet.task.classpath}"
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
-        <include name="**/*.java"/>
+        <include name="org/jboss/invocation/**/*.java"/>
+        <include name="org/jboss/naming/**/*.java"/>
+        <include name="org/jboss/jmx/**/*.java"/>
+        <include name="org/jboss/ejb/EjbModule.java"/>
+        <include name="org/jboss/deployment/EARDeployer.java"/>
+        <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
+        <include name="org/jboss/logging/Log4jService.java"/>
       </fileset>
       <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
     </xdoclet>
