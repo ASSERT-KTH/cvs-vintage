@@ -148,11 +148,11 @@
 #end
 
 #macro (alert $text)
-   <p class="warningmark"><strong>$text</strong><p>
+   <p class="warningmark"><strong>$text</strong></p>
 #end
 
 #macro (confirm $text)
-   <p class="donemark"><em>$text</em><p>
+   <p class="donemark"><em>$text</em></p>
 #end
 
 #macro (info $text)
@@ -484,9 +484,9 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <tr>
 <th>$l10n.Format</th>
 <td>
- <input type="radio" name="format" value="" checked="checked">$l10n.Web</input>
- <input type="radio" name="format" value="excel">$l10n.Excel</input>
- <input type="radio" name="format" value="tsv">$l10n.TabSeparatedValues</input>
+ <input type="radio" name="format" value="" checked="checked" />$l10n.Web
+ <input type="radio" name="format" value="excel" />$l10n.Excel
+ <input type="radio" name="format" value="tsv" />$l10n.TabSeparatedValues
 </td>
 </tr>
 #end

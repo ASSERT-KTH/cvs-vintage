@@ -4,7 +4,7 @@
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if (!$user.FirstName)
 
-<p class="alert">
+<p class="warningmark"><strong>
 $l10n.ErrorLocatingInfo $link.setPage("Register.vm").setLabel("Registration") $l10n.ErrorLocatingInfo2</strong>
 </p>
 

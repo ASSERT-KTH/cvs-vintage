@@ -4,7 +4,7 @@
 
 #set ($user = $data.User)
 #if (!$user.hasLoggedIn())
-<p class="alert">$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</p>
+<p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
 #else
 
 #set ($acl = $securityAdmin.getACL($user))

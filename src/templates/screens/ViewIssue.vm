@@ -6,9 +6,9 @@
 #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
 
  #if ($currentIssue.Module != $scarabR.CurrentModule)
-  <p class="alert">
+  <p class="infomark"><em>
    $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
-  </p>
+  </em></p>
  #end
 
  #printCollisionInfo()
@@ -102,20 +102,20 @@ $renderer.render("viewIssue", "ViewIssueBody.vm")
 ## block to handle invalid issue id or user did not have proper permissions
 #elseif ($currentIssue)
 <h3>$l10n.IssueSearchResults</h3>
-    <p class="alert">
+    <p><em>
     $l10n.NoPermissionToViewIssue
-    </p>
+    </em></p>
 #else
 <h3>$l10n.IssueSearchResults</h3>
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
-    <p class="alert">
+    <p><em>
     $l10n.format("IssueIdNotValid", $currentIssueId) $l10n.PleaseEnterNewIssueId 
-    </p>
+    </em></p>
   #else
-    <p class="alert">
+    <p><em>
     $l10n.PleaseEnterIssueID
-    </p>
+    </em></p>
   #end
 
 #end

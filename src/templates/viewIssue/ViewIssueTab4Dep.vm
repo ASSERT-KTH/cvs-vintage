@@ -116,7 +116,7 @@ $l10n.depend_nonblockingReverse this issue
     <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
  #set ($idMessage = $newDependGroup.ObserverUniqueId.Message.toString())
  #if ($idMessage.length() > 0)
-  <p class="alert">$idMessage</p>
+  <p><em>$idMessage</em></p>
  #end
 </td>
 ##<td>$l10n.Child</td>
@@ -133,7 +133,7 @@ $l10n.depend_nonblockingReverse this issue
  </select>
  #set ($typeMessage = $newDependGroup.TypeId.Message.toString())
  #if ($typeMessage.length() > 0)
-  <p class="alert">$typeMessage</p>
+  <p><em>$typeMessage</em></p>
  #end
 </td>
 </tr>

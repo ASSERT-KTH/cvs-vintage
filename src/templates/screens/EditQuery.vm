@@ -13,11 +13,11 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />
 
 #if (!$currentQuery.canEdit($data.User))
-<p class="alert">$l10n.CannotEditQuery</p>
+<p class="infomark"><em>$l10n.CannotEditQuery</em></p>
 <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 #else
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-    <p class="alert">$l10n.QueryWarning</p>
+    <p class="warningmark"><strong>$l10n.QueryWarning</strong></p>
   #end
 
 <div class="functnbar">

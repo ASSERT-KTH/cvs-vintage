@@ -22,7 +22,7 @@
      #end
   #end
 #else
-   <p class="alert">$l10n.NoIssuesSelected</p>
+   <p class="infomark"><em>$l10n.NoIssuesSelected</em></p>
 #end
 
 </div>

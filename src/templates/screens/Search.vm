@@ -9,7 +9,7 @@
 #set ($attrValues = $search.ModuleAttributeValuesMap)
 
 #if ($searchTextAttributes.isEmpty() && $searchValues.isEmpty())
-    <p class="alert">$l10n.NoCustomSearch</p> 
+    <p class="infomark"><em>$l10n.NoCustomSearch</em></p> 
     $renderer.render("screens", "AdvancedQuery.vm")
 #else
 

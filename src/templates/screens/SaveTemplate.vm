@@ -14,11 +14,11 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
 
 #if ($templateId && $templateInfo && !$templateInfo.canEdit($data.User))
-<p class="alert">$l10n.CannotEditTemplate</p>
+<p class="infomark"><em>$l10n.CannotEditTemplate</em></p>
 <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 #else
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-     <p class="alert">$l10n.TemplateWarning</p>
+     <p class="warningmark"><strong>$l10n.TemplateWarning</strong></p>
   #end
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">

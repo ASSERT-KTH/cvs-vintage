@@ -62,7 +62,7 @@
           <option value="0">Attribute(s)/option(s)</option>
           <option value="1" selected="selected">Users (by user attribute)</option>
           </select>
-        &nbsp;<input type="submit" name="#" value="Refresh">
+        &nbsp;<input type="submit" name="#" value="Refresh" />
 
     </td>
     </tr>
@@ -70,8 +70,8 @@
 </div>
 
 
-<div class="colbar"><div class="infomark"><strong>Note:</strong> Grouping items appear as a single heading bearing the selected group name</div></div>
-    <table width="100%" cellpadding="3" cellspacing="2" border="1">		
+<div class="colbar"><p class="infomark"><em><strong>Note:</strong> Grouping items appear as a single heading bearing the selected group name</p></div>    
+<table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
         <th>Select</th>
 
@@ -148,9 +148,9 @@
     </table>
 
   <div class="functnbar3"> 
-    <input type="submit" name="#" value="Add new heading">
-  	<input type="submit" name="#" value="Delete selected heading">
-  	<input type="submit" name="#" value="Add/Remove X-axis group">
+    <input type="submit" name="#" value="Add new heading" />
+  	<input type="submit" name="#" value="Delete selected heading" />
+  	<input type="submit" name="#" value="Add/Remove X-axis group" />
   </div>
 					
 <h3>Y-axis content: Column headings</h3>
@@ -167,7 +167,7 @@
         <option value="1" >Date(s)</option>
         </select>
 
-        &nbsp;<input type="submit" name="#" value="Refresh">
+        &nbsp;<input type="submit" name="#" value="Refresh" />
       </td>
     </tr>
 
@@ -175,8 +175,8 @@
 </div>
 
 
-<div class="colbar"><div class="infomark"><strong>Note:</strong> Each heading in this list appears as a column or row heading in this report's output. Each item in each heading appears as a new row or column (depending on whether the Y-axis has been set to be either row or column).
-<p>Grouping items appear as a single heading bearing the selected group name</p></div></div>
+<div class="colbar"><p class="infomark"><em><strong>Note:</strong> Each heading in this list appears as a column or row heading in this report's output. Each item in each heading appears as a new row or column (depending on whether the Y-axis has been set to be either row or column).
+<div>Grouping items appear as a single heading bearing the selected group name</div></em></p></div>
 
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>

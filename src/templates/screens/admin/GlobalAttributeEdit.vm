@@ -54,7 +54,8 @@
     </select>
     #end
   </td>
- <tr>
+</tr> 
+<tr>
   <th>* $l10n.Name</th>
   <td>
     #fieldErrorMsg($attgroup.Name "")

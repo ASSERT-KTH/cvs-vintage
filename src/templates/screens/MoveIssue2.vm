@@ -5,8 +5,7 @@
 
 #if (!$issueList || $issueList.length() == 0)
 
-<h3>$l10n.Error</h3>
-<p class="alert">$l10n.CouldNotFindIssue</p>
+<p class="warningmark"><strong>$l10n.CouldNotFindIssue</strong></p>
 
 #else
 
@@ -127,7 +126,7 @@
      #set ($attr = $attVal.Attribute)
   #end
 #indexedRows($velocityCount)
-<td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked /></td>
+<td><input type="checkbox" name="comment_attr_ids_$attr.AttributeId" checked="checked" /></td>
     <td>$attr.Name 
      #set ($displayValue = $module.getRModuleAttribute($attr, $issueType).getDisplayValue())
      #if (!$attr.Name.equals($displayValue))

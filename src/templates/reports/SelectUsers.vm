@@ -9,7 +9,7 @@
 <h3>$l10n.SelectedUsers</h3>
 
 #if (!$selectedHeading)
-    <p class="alert">$l10n.NoneAssigned.</p>
+    <p><em>$l10n.NoneAssigned.</em></p>
 #else
 		
     <table width="100%" border="1" cellspacing="2" cellpadding="3">

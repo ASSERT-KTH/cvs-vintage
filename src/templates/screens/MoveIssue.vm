@@ -11,10 +11,10 @@
 
 #if (!$issueList || $issueId.length() == 0)
 
-  <p><strong class="alert">$l10n.CouldNotFindIssue</strong></p>
+  <p class="infomark"><em>$l10n.CouldNotFindIssue</em></p>
 
 #elseif ($copyToModules.isEmpty())
-  <p><strong class="alert">$l10n.NoDestinationModuleAvailable</strong></p>
+  <p class="infomark"><em>$l10n.NoDestinationModuleAvailable</em></p>
 
 #else
 
@@ -78,3 +78,5 @@ $intake.declareGroups()
 </form>
 
 #end
+</div>
+

@@ -56,9 +56,9 @@
 </table>
 
 #else
-<p class="alert">
+<p class="infomark"><em>
 $l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
-</p>
+</em></p>
 #end
 
 </div>

@@ -64,7 +64,6 @@
  #end
 #set ($checked = !$isMoreThanOne)
 #foreach ($rmit in $rmits)
- <tr>
   #if ($isMoreThanOne)
     #indexedRows2($velocityCount)
   #else

@@ -95,11 +95,11 @@
 #if ($multiHeading)
   <div class="functnbar3">
     <input type="submit" name="eventSubmit_doSelectHeading" 
-        value="$l10n.EditSelectedHeading">
+        value="$l10n.EditSelectedHeading" />
     <input type="submit" name="eventSubmit_doRemoveHeading" 
-        value="$l10n.RemoveSelectedHeading">
+        value="$l10n.RemoveSelectedHeading" />
     <input type="submit" name="eventSubmit_doAddHeading" 
-        value="$l10n.AddNewHeading">
+        value="$l10n.AddNewHeading" />
   </div>
 #elseif ($singleHeading)
     #set ($headingIndex = 0)
@@ -108,7 +108,7 @@
   #if ($isNotDateAxis && $selectedHeading.size() > 0)
   <div class="functnbar3">
     <input type="submit" name="eventSubmit_doAddHeading" 
-        value="$l10n.AddNewHeading">
+        value="$l10n.AddNewHeading" />
   </div>
   #end
 #end
@@ -137,7 +137,7 @@
           <option value="2" #if ($selectedType == 2)selected="selected"#end>$l10n.DatesOrDatesRanges</option>
   #end
         </select>
-        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go">
+        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go"/>
       </td>
     </tr>
   </table>

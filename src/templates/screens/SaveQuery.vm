@@ -19,7 +19,7 @@
 
 <div class="axial">
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
-    <p class="alert">$l10n.QueryWarning</p>
+    <p class="warningmark"><strong>$l10n.QueryWarning</strong></p>
   #end
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
@@ -44,8 +44,8 @@
   </tr>
   <tr>
    <th width="120">$l10n.Location</th>
-   <td>$module.Name</td>
-   <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
+   <td>$module.Name
+   <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" /> </td>
   </tr>
  </table>
 </div>
@@ -58,7 +58,7 @@ $intake.declareGroups()
 </form>
 
 #else
-  <p class="alert">$l10n.NoQueryToSave
+  <p class="infomark"><em>$l10n.NoQueryToSave</em></p>
 <div class="functnbar3">
   <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoadvancedquery" />
 </div>

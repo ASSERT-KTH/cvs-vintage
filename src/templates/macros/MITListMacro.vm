@@ -52,9 +52,9 @@
 
 #set ($mitList = $user.CurrentMITList)
 #if (!$mitList || $mitList.isEmpty())
-<p class="alert">
+<p><em>
 $l10n.NoIssueTypeSelected
-</p>
+</em></p>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
@@ -127,14 +127,14 @@ $l10n.NoIssueTypeSelected
  ## try one more time with no search criteria
  #set ($searchableRMITs = $user.getSearchableRMITs("", "", $sortColumn, $sortPolarity))
  #if (!$searchResults.isEmpty())
-   <p class="alert">$l10n.FilterNoResults</p>
+   <p class="infomark"><em>$l10n.FilterNoResults</em></p>
  #end
 #end
 
 #if ($searchableRMITs.isEmpty())
-<p class="alert">
+<p><em>
 $l10n.NoMoreIssueTypes
-</p>
+</em></p>
 #else
 
 ## PAGINATION

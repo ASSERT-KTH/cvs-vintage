@@ -9,9 +9,9 @@
 #set ($mitList = $scarabR.CurrentMITList)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
 #if ($userAttrs.isEmpty())
- <p class="alert">$l10n.NoAssignableUserAttributes</p>
+ <p class="infomark"><em>$l10n.NoAssignableUserAttributes</em></p>
 #elseif ($issueListSize == 0)
- <p class="alert">$l10n.AssociateUsersAndIssues</p>
+ <p class="warningmark"><strong>$l10n.AssociateUsersAndIssues</strong></p>
 #else
 
 #printCollisionInfo()
@@ -48,7 +48,7 @@
 </div>
 
     #if (!$selectedUsers || $selectedUsers.size() == 0)
-     <p class="alert">$l10n.NoneAssigned.</p>
+     <p><em>$l10n.NoneAssigned.</em></p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
