@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.55 2004/08/06 20:04:53 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.56 2004/09/02 20:53:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.55 2004/08/06 20:04:53 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.56 2004/09/02 20:53:57 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -67,49 +67,49 @@ public class UMLStateDiagram extends UMLDiagram {
     ////////////////
     // actions for toolbar
 
-    protected static Action _actionState = new RadioAction(
+    private static Action actionState = new RadioAction(
         new CmdCreateNode(ModelFacade.STATE, "State"));
 
-    protected static Action _actionCompositeState = new RadioAction(
+    private static Action actionCompositeState = new RadioAction(
         new CmdCreateNode(ModelFacade.COMPOSITESTATE, "CompositeState"));
 
     // start state, end state, forks, joins, etc.
-    protected static Action _actionStartPseudoState = new RadioAction(
+    private static Action actionStartPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.INITIAL_PSEUDOSTATEKIND,
             "Initial"));
 
-    protected static Action _actionFinalPseudoState = new RadioAction(
+    private static Action actionFinalPseudoState = new RadioAction(
         new CmdCreateNode(ModelFacade.FINALSTATE, "FinalState"));
 
-    protected static Action _actionBranchPseudoState = new RadioAction(
+    private static Action actionBranchPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.BRANCH_PSEUDOSTATEKIND, "Choice"));
 
-    protected static Action _actionForkPseudoState = new RadioAction(
+    private static Action actionForkPseudoState = new RadioAction(
         new ActionCreatePseudostate(ModelFacade.FORK_PSEUDOSTATEKIND, "Fork"));
 
-    protected static Action _actionJoinPseudoState = new RadioAction(
+    private static Action actionJoinPseudoState = new RadioAction(
         new ActionCreatePseudostate(ModelFacade.JOIN_PSEUDOSTATEKIND, "Join"));
 
-    protected static Action _actionShallowHistoryPseudoState = new RadioAction(
+    private static Action actionShallowHistoryPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.SHALLOWHISTORY_PSEUDOSTATEKIND,
             "ShallowHistory"));
 
-    protected static Action _actionDeepHistoryPseudoState = new RadioAction(
+    private static Action actionDeepHistoryPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.DEEPHISTORY_PSEUDOSTATEKIND,
             "DeepHistory"));
 
-    protected static Action _actionTransition = new RadioAction(
+    private static Action actionTransition = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.TRANSITION,
             "Transition"));
 
-    protected static Action _actionJunctionPseudoState = new RadioAction(
+    private static Action actionJunctionPseudoState = new RadioAction(
         new ActionCreatePseudostate(
             ModelFacade.JUNCTION_PSEUDOSTATEKIND,
             "Junction")); 
@@ -272,18 +272,18 @@ public class UMLStateDiagram extends UMLDiagram {
     protected Object[] getUmlActions() {
         Object actions[] =
         {
-	    _actionState,
-	    _actionCompositeState,
-	    _actionTransition,
+	    actionState,
+	    actionCompositeState,
+	    actionTransition,
 	    null,
-	    _actionStartPseudoState,
-	    _actionFinalPseudoState,
-	    _actionJunctionPseudoState,
-	    _actionBranchPseudoState,
-	    _actionForkPseudoState,
-	    _actionJoinPseudoState,
-	    _actionShallowHistoryPseudoState,
-	    _actionDeepHistoryPseudoState,
+	    actionStartPseudoState,
+	    actionFinalPseudoState,
+	    actionJunctionPseudoState,
+	    actionBranchPseudoState,
+	    actionForkPseudoState,
+	    actionJoinPseudoState,
+	    actionShallowHistoryPseudoState,
+	    actionDeepHistoryPseudoState,
 	    null,
 	    _actionComment,
             _actionCommentLink,
