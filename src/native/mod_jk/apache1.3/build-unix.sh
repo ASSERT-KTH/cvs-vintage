@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $Id: build-unix.sh,v 1.1 2000/08/26 01:21:39 alex Exp $
+# $Id: build-unix.sh,v 1.2 2002/03/22 02:57:48 larryi Exp $
 
 # build.sh for mod_jk.so
 # Usage: build-unix.sh 
@@ -37,7 +37,7 @@ fi
 # Figure out INCLUDE directories
 
 # use "find" to pick the right include directories for current machine
-JAVA_INCLUDE="`find ${JAVA_HOME}/include -type d -printf \"-I %p \"`" ||  echo "find failed, edit build-unix.sh source to fix"
+JAVA_INCLUDE="`find ${JAVA_HOME}/include -type d | sed 's/^/-I /g'`" ||  echo "find failed, edit build-unix.sh source to fix"
 
 # if "find" fails, use (uncomment) the following instead, substituting your
 # platform for "linux"
