@@ -1,4 +1,4 @@
-// $Id: AbstractUmlModelFactory.java,v 1.18 2004/02/04 21:26:07 linus Exp $
+// $Id: AbstractUmlModelFactory.java,v 1.19 2004/02/24 08:02:50 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,13 +43,11 @@ public abstract class AbstractUmlModelFactory {
      * Flag to indicate if the gui is enabled. If the gui is
      * enabled modelelements that are added should also be added to the
      * navigatorpane.
+     *
+     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
+     * with the tree, this is no longer needed.
      */
     private static boolean guiEnabled = true;
-
-    /** Log4j logging category.
-     */
-    private static Logger logger =
-        Logger.getLogger("org.argouml.model.uml");
 
     /** Default constructor.
      */
@@ -85,6 +83,8 @@ public abstract class AbstractUmlModelFactory {
      * Turns the flag for the gui on/off. Default the gui is on. Needed for test
      * modus.
      * @param gui flag to turn gui on off
+     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
+     * with the tree, this is no longer needed.
      */
     public void setGuiEnabled(boolean gui) {
         guiEnabled = gui;
@@ -92,7 +92,10 @@ public abstract class AbstractUmlModelFactory {
 
     /**
      * Checks if the gui is enabled.
+     *
      * @return the gui flag
+     * @deprecated by Linus Tolke as of 0.15.4. Thanks to Alex Bagehots work
+     * with the tree, this is no longer needed.
      */
     public boolean isGuiEnabled() {
         return guiEnabled;
