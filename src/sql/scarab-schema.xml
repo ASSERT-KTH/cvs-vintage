@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.130 2003/04/10 22:14:58 dlr Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.131 2003/04/11 23:05:39 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@" defaultJavaType="object">
 <!--
@@ -1622,7 +1622,6 @@
         The description of the saved template.
     -->
     <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
-    <column name="ATTACHMENT_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1" javaType="primitive"/>
     <!--
