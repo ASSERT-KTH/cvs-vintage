@@ -1,16 +1,16 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditUser.vm,v 1.6 2002/01/14 20:50:03 jon Exp $
+@version $Id: EditUser.vm,v 1.7 2002/03/03 17:53:32 maartenc Exp $
 *#
 
-$page.setTitle("User Administration")
+$page.setTitle("User administration")
 #set ($state = $data.Parameters.getString("state"))
 
 <div id="edituser" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>Edit User</h3>
+<h3>Edit user</h3>
 
 <form name="EditUserForm" action="$link.setPage("admin,EditUser.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
@@ -87,7 +87,7 @@ $page.setTitle("User Administration")
  <tr>
   <td class="firstchild">
    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-   <input type="submit" name="eventSubmit_doEdituser" value="Save Changes" />
+   <input type="submit" name="eventSubmit_doEdituser" value="Save changes" />
   </td>
  </tr>
 </table>
