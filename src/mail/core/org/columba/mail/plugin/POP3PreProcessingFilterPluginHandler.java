@@ -6,6 +6,8 @@
  */
 package org.columba.mail.plugin;
 
+import java.util.ListIterator;
+
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -15,19 +17,23 @@ import org.columba.core.xml.XmlElement;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class POP3PreProcessingFilterPluginHandler extends AbstractPluginHandler {
+public class POP3PreProcessingFilterPluginHandler
+	extends AbstractPluginHandler {
 
 	protected XmlElement parentNode;
-	
+
 	/**
 	 * @param id
 	 * @param config
 	 */
 	public POP3PreProcessingFilterPluginHandler() {
-		super("org.columba.mail.pop3preprocessingfilter", "org/columba/mail/filter/pop3preprocessingfilter.xml");
-		
-		parentNode = getConfig().getRoot().getElement("pop3preprocessingfilterlist");
-		
+		super(
+			"org.columba.mail.pop3preprocessingfilter",
+			"org/columba/mail/filter/pop3preprocessingfilter.xml");
+
+		parentNode =
+			getConfig().getRoot().getElement("pop3preprocessingfilterlist");
+
 	}
 
 	/**
@@ -76,7 +82,7 @@ public class POP3PreProcessingFilterPluginHandler extends AbstractPluginHandler 
 
 	public Class getPluginClass(String name) {
 		String className = getPluginClassName(name, "class");
-		
+
 		try {
 
 			Class clazz = Class.forName(className);
@@ -90,8 +96,13 @@ public class POP3PreProcessingFilterPluginHandler extends AbstractPluginHandler 
 	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
 	 */
 	public void addExtension(String id, XmlElement extension) {
-
+		ListIterator iterator = extension.getElements().listIterator();
+		XmlElement action;
+		while (iterator.hasNext()) {
+			action = (XmlElement) iterator.next();
+			action.addAttribute("name", id + '$' + action.getAttribute("name"));
+			parentNode.addElement(action);
+		}
 	}
-
 
 }
