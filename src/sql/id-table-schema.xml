@@ -11,10 +11,10 @@
 <!-- ID_TABLE table used by the id broker mechanism in Turbine.           -->
 <!-- ==================================================================== -->
 <!-- @author: <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>      -->
-<!-- @version $Id: id-table-schema.xml,v 1.5 2003/11/25 16:32:00 mpoeschl Exp $ -->
+<!-- @version $Id: id-table-schema.xml,v 1.6 2004/01/31 01:13:42 dep4b Exp $ -->
 <!-- ==================================================================== -->
 
-<database name="@DATABASE_NAME@">
+<database name="scarab">
   <table name="ID_TABLE" idMethod="idbroker">
     <column name="ID_TABLE_ID" required="true" primaryKey="true" type="INTEGER"/>
     <column name="TABLE_NAME" required="true" size="255" type="VARCHAR"/>
