@@ -6,45 +6,17 @@
 */
 package org.jboss.deployment;
 
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.StringTokenizer;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
-import javax.management.RuntimeErrorException;
-import javax.management.RuntimeMBeanException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import org.jboss.system.Service;
-import org.jboss.system.ServiceLibraries;
-import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.URLClassLoader;
 
-import org.jboss.logging.Logger;
 
+import java.util.Iterator;
+import org.jboss.logging.Logger;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
 * Service Deployment Info .
@@ -56,7 +28,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.1 $ <p>
+* @version   $Revision: 1.2 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
