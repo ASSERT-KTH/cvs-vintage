@@ -85,6 +85,9 @@ import org.apache.tomcat.util.IntrospectionUtils;
  * implementation
  */
 public class Hooks {
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(Hooks.class);
+
     public static final int INITIAL_HOOKS=24;
     int hookCount;
     String hookNames[];
@@ -160,7 +163,8 @@ public class Hooks {
 	for( int i=0; i< hookNames.length ; i++ ) {
 	    if( hookNames[i]==null ) continue;
 	    if( hasHook( bi, hookNames[i] )) {
-		if( dL > 0 ) debug( "Adding " + hookNames[i] + " " +bi );
+		if( logger.isDebugEnabled() ) 
+		    logger.debug( "Adding " + hookNames[i] + " " +bi );
 		hooksV[i].addElement( bi );
 		hooks[i]=null;
 	    }
@@ -207,10 +211,6 @@ public class Hooks {
 	allModules=new Object[allModulesV.size()];
 	allModulesV.copyInto( allModules );
 	return allModules;
-    }
-
-    private void debug(String s ) {
-	System.out.println("Hooks: " + s );
     }
 
     /** Test if the interceptor implements a particular
