@@ -30,11 +30,10 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.4 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.5 2001/09/25 07:04:05 spestov Exp $
  */
 public class FileVFS extends VFS
 {
-	public static final String BACKED_UP_PROPERTY = "FileVFS__backedUp";
 	public static final String PERMISSIONS_PROPERTY = "FileVFS__perms";
 
 	public FileVFS()
