@@ -225,7 +225,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	attributes.put( "keystore", k);
     }
 
-    public void setKeyspass( String k ) {
+    public void setKeypass( String k ) {
 	attributes.put( "keypass", k);
     }
 
@@ -261,6 +261,10 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	}
     	secure=b;
 	enabled=true;
+    }
+
+    public boolean isSecure() {
+        return secure;
     }
     
     public void setAttribute( String prop, Object value) {
