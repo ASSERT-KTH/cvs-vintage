@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.10 1998/10/08 00:04:18 jrobbins Exp $
+// $Id: CrCircularInheritance.java,v 1.11 1998/11/03 21:30:00 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -48,11 +48,13 @@ public class CrCircularInheritance extends CrUML {
     sd("Inheritances relationships cannot have cycles. \n\n"+
        "A legal class inheritance hierarchy is needed for code generation "+
        "and the correctness of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select one of the  "+
+       "To fix this, use the \"Next>\" button, or manually select one of the  "+
        "generalization arrows in the cycle and remove it.");
     setPriority(ToDoItem.HIGH_PRIORITY);
     addSupportedDecision(CrUML.decINHERITANCE);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("generalization");
+    // no need for trigger on "specialization"
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.6 1998/10/20 00:31:16 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.7 1998/11/03 21:32:28 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -95,6 +95,12 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
 
 
   public FigText getNameFig() { return _name; }
+
+  public Stack getPopUpActions() {
+    Stack popUpActions = super.getPopUpActions();
+    popUpActions.push(new CmdUMLProperties());
+    return popUpActions;
+  }
 
   public void vetoableChange(PropertyChangeEvent pce) {
     //System.out.println("in vetoableChange");

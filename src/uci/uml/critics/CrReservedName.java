@@ -27,7 +27,7 @@
 // File: CrReservedName.java
 // Classes: CrReservedName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.8 1998/10/08 00:04:47 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.9 1998/11/03 21:31:11 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -193,6 +193,8 @@ public class CrReservedName extends CrUML {
     setPriority(ToDoItem.HIGH_PRIORITY);
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("name");
+    addTrigger("feature_name");
   }
 
   ////////////////////////////////////////////////////////////////

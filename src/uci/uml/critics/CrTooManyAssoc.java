@@ -25,7 +25,7 @@
 // File: CrTooManyAssoc.java
 // Classes: CrTooManyAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAssoc.java,v 1.1 1998/10/08 00:11:32 jrobbins Exp $
+// $Id: CrTooManyAssoc.java,v 1.2 1998/11/03 21:31:12 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,12 +56,13 @@ public class CrTooManyAssoc extends CrUML {
        "bottleneck that must be updated frequently. \n\n"+
        "Defining the associations between objects is an important "+
        "part of your design. \n\n"+
-       "To fix this, press the FixIt button, or remove associations manually "+
+       "To fix this, press the \"Next>\" button, or remove associations manually "+
        "by clicking on an association in the navigator pane or "+
        "diagram and presing the \"Del\" key. ");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setArg(THRESHOLD, new Integer(7));
+    addTrigger("associationEnd");
   }
 
   ////////////////////////////////////////////////////////////////

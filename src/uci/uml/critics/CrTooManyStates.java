@@ -25,7 +25,7 @@
 // File: CrTooManyStates.java
 // Classes: CrTooManyStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyStates.java,v 1.1 1998/10/08 00:11:36 jrobbins Exp $
+// $Id: CrTooManyStates.java,v 1.2 1998/11/03 21:31:15 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,12 +56,13 @@ public class CrTooManyStates extends CrUML {
        "to understand. \n\n"+
        "Defining an understandable set of states is an important "+
        "part of your design. \n\n"+
-       "To fix this, press the FixIt button, or remove states manually "+
+       "To fix this, press the \"Next>\" button, or remove states manually "+
        "by clicking on a states in the navigator pane or "+
        "diagram and presing the \"Del\" key.  Or you can nest states...");
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
     setArg(THRESHOLD, new Integer(20));
+    addTrigger("substate");
   }
 
   ////////////////////////////////////////////////////////////////

@@ -27,7 +27,7 @@
 // File: CrNoTriggerOrGuard.java
 // Classes: CrNoTriggerOrGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoTriggerOrGuard.java,v 1.2 1998/10/09 01:05:25 jrobbins Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.3 1998/11/03 21:30:52 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -57,6 +57,8 @@ public class CrNoTriggerOrGuard extends CrUML {
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
+    addTrigger("trigger");
+    addTrigger("guard");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
@@ -64,14 +66,17 @@ public class CrNoTriggerOrGuard extends CrUML {
     Transition tr = (Transition) dm;
     Event t = tr.getTrigger();
     Guard g = tr.getGuard();
+    StateVertex sv = tr.getSource();
+    if (!(sv instanceof State)) return NO_PROBLEM;
+    if (sv instanceof ActionState) return NO_PROBLEM;
     boolean hasTrigger = (t != null && t.getName().getBody().length() > 0);
     if (hasTrigger) return NO_PROBLEM;
-    boolean hasGuard = (g != null && g.getExpression() != null &&
-			g.getExpression().getBody() != null &&
-			g.getExpression().getBody().getBody() != null &&
-			g.getExpression().getBody().getBody().length() > 0);
-    if (hasGuard) return NO_PROBLEM;
-    return PROBLEM_FOUND;
+    boolean noGuard = (g == null || g.getExpression() == null ||
+			g.getExpression().getBody() == null ||
+			g.getExpression().getBody().getBody() == null ||
+			g.getExpression().getBody().getBody().length() == 0);
+    if (noGuard) return PROBLEM_FOUND;
+    return NO_PROBLEM;
   }
 
 } /* end class CrNoTriggerOrGuard */

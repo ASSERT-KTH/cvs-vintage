@@ -27,7 +27,7 @@
 // File: CrIllegalGeneralization.java
 // Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.6 1998/10/08 00:04:27 jrobbins Exp $
+// $Id: CrIllegalGeneralization.java,v 1.7 1998/11/03 21:30:07 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -46,10 +46,12 @@ public class CrIllegalGeneralization extends CrUML {
     sd("Model elements can only be inherit from others of the same type. \n\n"+
        "A legal inheritance hierarchy is needed for code generation "+
        "and the correctness of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select the  "+
+       "To fix this, use the \"Next>\" button, or manually select the  "+
        "generalization arrow and remove it.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
+    addTrigger("supertype");
+    addTrigger("subtype");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

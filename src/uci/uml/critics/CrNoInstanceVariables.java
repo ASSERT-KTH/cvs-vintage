@@ -29,7 +29,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.11 1998/10/08 00:04:40 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.12 1998/11/03 21:30:49 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -55,12 +55,13 @@ public class CrNoInstanceVariables extends CrUML {
        "static attributes and methods should be stereotyped <<utility>>.\n\n"+
        "Defining instance variables needed to complete the information "+
        "representation part of your design. \n\n"+
-       "To fix this, press the FixIt icon (to left), or add instance "+
+       "To fix this, press the \"Next>\" button, or add instance "+
        "variables by dobule clicking on {name} in the navigator pane and "+
        "using the Create menu to make a new attribute. ");
 
     addSupportedDecision(CrUML.decSTORAGE);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
+    addTrigger("structuralFeature");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

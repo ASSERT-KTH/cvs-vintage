@@ -19,7 +19,7 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.14 1998/10/20 00:22:12 jrobbins Exp $
+# $Id: Makefile,v 1.15 1998/11/03 21:28:39 jrobbins Exp $
 
 include Makefile.config
 
@@ -89,6 +89,7 @@ criticsClasses:
 	cd critics; make classes; cd .. ; \
 	cd critics/patterns; make classes; cd ../.. ; \
 	cd critics/java; make classes; cd ../.. ; \
+	cd critics/presentation; make classes; cd ../.. ; \
 	cd checklist; make classes; cd ../.. ; \
 	cd .. ; \
 	fi
@@ -164,6 +165,7 @@ criticsClean:
 	cd critics; make clean; cd .. ; \
 	cd critics/patterns; make clean; cd ../.. ; \
 	cd critics/java; make clean; cd ../.. ; \
+	cd critics/presentation; make clean; cd ../.. ; \
 	cd checklist; make clean; cd ../.. ; \
 	cd .. ; \
 	fi

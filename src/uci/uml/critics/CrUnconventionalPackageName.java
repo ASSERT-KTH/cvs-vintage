@@ -27,7 +27,7 @@
 // File: CrUnconventionalPackageName.java
 // Classes: CrUnconventionalPackageName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalPackageName.java,v 1.1 1998/10/09 01:05:26 jrobbins Exp $
+// $Id: CrUnconventionalPackageName.java,v 1.2 1998/11/03 21:31:34 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -55,6 +55,7 @@ public class CrUnconventionalPackageName extends CrUML {
        "and use the Properties tab to give it a different name.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("name");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

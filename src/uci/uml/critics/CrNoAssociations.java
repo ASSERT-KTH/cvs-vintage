@@ -25,7 +25,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.3 1998/10/08 00:04:39 jrobbins Exp $
+// $Id: CrNoAssociations.java,v 1.4 1998/11/03 21:30:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,12 +49,13 @@ public class CrNoAssociations extends CrUML {
        "Normally classes, actors and use cases are associated with others. \n\n"+
        "Defining the associations between objects an important "+
        "part of your design. \n\n"+
-       "To fix this, press the FixIt button, or add associations manually "+
+       "To fix this, press the \"Next>\" button, or add associations manually "+
        "by clicking on the association tool in the tool bar and dragging "+
        "from {name} to another node. ");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
+    addTrigger("associationEnd");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

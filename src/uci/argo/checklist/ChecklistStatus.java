@@ -27,7 +27,7 @@
 // File: ChecklistStatus.java
 // Class: ChecklistStatus
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ChecklistStatus.java,v 1.2 1998/07/02 02:57:31 jrobbins Exp $
+// $Id: ChecklistStatus.java,v 1.3 1998/11/03 21:29:01 jrobbins Exp $
 
 package uci.argo.checklist;
 
@@ -43,7 +43,7 @@ import uci.util.*;
  */
 
 public class ChecklistStatus implements java.io.Serializable {
-
+  public static int _numChecks = 0;
   ////////////////////////////////////////////////////////////////
   // instance variables
 
@@ -60,7 +60,10 @@ public class ChecklistStatus implements java.io.Serializable {
 
   public Vector getCheckItems() { return _items; }
 
-  public void addItem(CheckItem item) { _items.addElement(item); }
+  public void addItem(CheckItem item) {
+    _items.addElement(item);
+    _numChecks++;
+  }
 
   public synchronized void addAll(ChecklistStatus list) {
     Enumeration cur = list.elements();

@@ -25,7 +25,7 @@
 // File: CrMultipleInitialStates.java
 // Classes: CrMultipleInitialStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInitialStates.java,v 1.2 1998/08/06 21:21:28 jrobbins Exp $
+// $Id: CrMultipleInitialStates.java,v 1.3 1998/11/03 21:30:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,8 @@ public class CrMultipleInitialStates extends CrUML {
        "one of the extra initial states and remove it. ");
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
+    addTrigger("parent");
+    addTrigger("kind");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.8 1998/10/08 00:04:24 jrobbins Exp $
+// $Id: CrDupParamName.java,v 1.9 1998/11/03 21:30:04 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,7 +47,7 @@ public class CrDupParamName extends CrUML {
     sd("Each parameter of an operation must have a unique name. \n\n"+
        "Clean and unambigous naming is needed for code generation and to "+
        "achieve clear and maintainable designs.\n\n"+
-       "To fix this, use the FixIt button, or manually rename one of the "+
+       "To fix this, use the \"Next>\" button, or manually rename one of the "+
        "parameters to this operation.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);

@@ -27,7 +27,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.1 1998/10/20 00:30:44 jrobbins Exp $
+// $Id: PropPanelPseudostate.java,v 1.2 1998/11/03 21:32:23 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -76,7 +76,8 @@ implements DocumentListener, ItemListener {
     c.weightx = 0.0;
     c.ipadx = 0; c.ipady = 0;
 
-
+    remove(_nameLabel);
+    remove(_nameField);
     c.gridx = 0;
     c.gridwidth = 1;
     c.gridy = 1;

@@ -27,7 +27,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.12 1998/10/01 20:22:29 jrobbins Exp $
+// $Id: ToDoList.java,v 1.13 1998/11/03 21:29:19 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -69,6 +69,9 @@ implements Runnable, java.io.Serializable {
   protected Designer _designer;
 
   protected EventListenerList _listenerList = new EventListenerList();
+
+  public static int _longestToDoList = 0;
+  public static int _numNotValid = 0;
 
   ////////////////////////////////////////////////////////////////
   // constructor
@@ -116,7 +119,10 @@ implements Runnable, java.io.Serializable {
 	ex.printStackTrace();
 	System.out.println("----------");
       }
-      if (!valid) removes.addElement(item);
+      if (!valid) {
+	_numNotValid++;
+	removes.addElement(item);
+      }
     }
     //cur = removes.elements();
     size = removes.size();
@@ -174,6 +180,7 @@ implements Runnable, java.io.Serializable {
       return;
     }
     _items.addElement(item);
+    _longestToDoList = Math.max(_longestToDoList, _items.size());
     _allOffenders.addAllElements(item.getOffenders());
     _allKnowledgeTypes.addAllElements(item.getPoster().getKnowledgeTypes());
     _allPosters.addElement(item.getPoster());
@@ -269,6 +276,8 @@ implements Runnable, java.io.Serializable {
     return _RecentOffenderItems;
   }
 
+  public int size() { return _items.size(); }
+  
   public Enumeration elements() {
     return _items.elements();
   }

@@ -27,7 +27,7 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.1 1998/10/08 00:04:14 jrobbins Exp $
+// $Id: CrAlreadyRealizes.java,v 1.2 1998/11/03 21:29:57 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -50,6 +50,8 @@ public class CrAlreadyRealizes extends CrUML {
        "triangular arrowhead) and press the \"Delete\" key.");
     addSupportedDecision(CrUML.decINHERITANCE);
     setKnowledgeTypes(Critic.KT_SEMANTICS, Critic.KT_PRESENTATION);
+    addTrigger("genealization");
+    addTrigger("realization");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

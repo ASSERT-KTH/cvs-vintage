@@ -25,7 +25,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.1 1998/10/08 00:11:34 jrobbins Exp $
+// $Id: CrTooManyClasses.java,v 1.2 1998/11/03 21:31:14 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,7 +58,7 @@ public class CrTooManyClasses extends CrUML {
        "to understand. \n\n"+
        "Defining an understandable set of class diagrams is an important "+
        "part of your design. \n\n"+
-       "To fix this, press the FixIt button, or remove classes manually "+
+       "To fix this, press the \"Next>\" button, or remove classes manually "+
        "by clicking on a class in the navigator pane or diagram and "+
        "presing the \"Del\" key.  Or you can make a new diagram...");
 

@@ -27,7 +27,7 @@
 // File: CrIllegalName.java
 // Classes: CrIllegalName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.7 1998/10/08 00:04:27 jrobbins Exp $
+// $Id: CrIllegalName.java,v 1.8 1998/11/03 21:30:09 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,11 +47,13 @@ public class CrIllegalName extends CrUML {
     setHeadline("Choose a Legal Name");
     sd("The names of model elements must be sequences of letters, "+
        "numbers, and underscores.  They cannot contain punctuation.\n\n"+
-       "useing legal names is needed for code generation. \n\n"+
-       "To fix this, use the FixIt button, or manually select the "+
+       "Code generation requires legal names for the resulting code "+
+       "to compile correctly. \n\n"+
+       "To fix this, use the \"Next>\" button, or manually select the "+
        "highlighted element and use the Properties tab to give it "+
        "a different name.");
     addSupportedDecision(CrUML.decNAMING);
+    addTrigger("name");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.6 1998/10/08 00:04:17 jrobbins Exp $
+// $Id: CrCircularComposition.java,v 1.7 1998/11/03 21:30:00 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,12 +47,13 @@ public class CrCircularComposition extends CrUML {
     sd("Composition relationships (black diamonds) cannot have cycles. \n\n"+
        "A legal aggregation inheritance hierarchy is needed for code "+
        "generation and the correctness of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select one of the  "+
+       "To fix this, use the \"Next>\" button, or manually select one of the  "+
        "associations in the cycle and remove it or change its aggregation "+
        "to something other than composite.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    // no good trigger
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
@@ -71,7 +72,7 @@ public class CrCircularComposition extends CrUML {
 
   protected Set computeOffenders(Classifier dm) {
     Set offs = new Set(dm);
-    Set above = offs.reachable(new GenCompositeClasses());
+    Set above = offs.reachable(GenCompositeClasses.SINGLETON);
     Enumeration enum = above.elements();
     while (enum.hasMoreElements()) {
       Classifier cls2 = (Classifier) enum.nextElement();

@@ -28,7 +28,7 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.7 1998/10/20 00:22:31 jrobbins Exp $
+// $Id: Cmd.java,v 1.8 1998/11/03 21:29:20 jrobbins Exp $
 
 package uci.gef;
 
@@ -70,7 +70,9 @@ implements java.io.Serializable {
 
   /** Construct a new Cmd with the given arguments */
   public Cmd(Hashtable args, String name) {
-    super(name, loadIconResource(imageName(name), name));
+    super(name);
+    Icon icon = loadIconResource(imageName(name), name);
+    if (icon != null) putValue(Action.SMALL_ICON, icon);
     _args = args;
   }
 
@@ -89,7 +91,9 @@ implements java.io.Serializable {
       java.net.URL imgURL = Cmd.class.getResource(imgName);
       return new ImageIcon(imgURL, desc);
     }
-    catch (Exception ex) { return new ImageIcon(desc); }
+    catch (Exception ex) {
+      return null;
+    }
   }
 
   protected static String imageName(String name) {

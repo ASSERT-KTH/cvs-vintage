@@ -25,7 +25,7 @@
 // File: CrNoInitialState.java
 // Classes: CrNoInitialState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInitialState.java,v 1.1 1998/08/06 21:41:38 jrobbins Exp $
+// $Id: CrNoInitialState.java,v 1.2 1998/11/03 21:30:49 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -51,6 +51,7 @@ public class CrNoInitialState extends CrUML {
        "initial state from the tool bar and place it in the diagram. ");
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
+    addTrigger("substate");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

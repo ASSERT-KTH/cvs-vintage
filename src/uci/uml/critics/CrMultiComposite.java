@@ -27,7 +27,7 @@
 // File: CrMultiComposite.java
 // Classes: CrMultiComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.8 1998/10/08 00:04:33 jrobbins Exp $
+// $Id: CrMultiComposite.java,v 1.9 1998/11/03 21:30:28 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,12 +49,14 @@ public class CrMultiComposite extends CrUML {
        "Since each instance can only be contained in one other object, the \n"+
        "multiplicity of a composite role must be 0..1 or 1..1.\n\n"+
        "Good OO design depends on building good is-part-of relationships.\n\n"+
-       "To fix this, use the FixIt button, or manually set the multiplicity \n"+
+       "To fix this, use the \"Next>\" button, or manually set the multiplicity \n"+
        "to 0..1 or 1..1, or change the composite aggregation into another kind \n"+
        "of aggregation (e.g., a white diamond is less strict).");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SEMANTICS);
+    addTrigger("aggregation");
+    addTrigger("multiplicity");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -25,7 +25,7 @@
 // File: CrTooManyAttr.java
 // Classes: CrTooManyAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAttr.java,v 1.1 1998/10/08 00:11:34 jrobbins Exp $
+// $Id: CrTooManyAttr.java,v 1.2 1998/11/03 21:31:13 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,13 +56,14 @@ public class CrTooManyAttr extends CrUML {
        "bottleneck that must be updated frequently. \n\n"+
        "Defining the attributes of objects is an important "+
        "part of your design. \n\n"+
-       "To fix this, press the FixIt button, or remove attributes manually "+
+       "To fix this, press the \"Next>\" button, or remove attributes manually "+
        "by double-clicking on the attribute compartment of the  "+
        "highlighted class in the diagram and removing the line of text "+
        "for an attribute. ");
 
     addSupportedDecision(CrUML.decSTORAGE);
     setArg(THRESHOLD, new Integer(7));
+    addTrigger("structuralFeature");
   }
 
   ////////////////////////////////////////////////////////////////

@@ -27,7 +27,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.11 1998/07/15 18:17:20 jrobbins Exp $
+// $Id: CrUselessAbstract.java,v 1.12 1998/11/03 21:31:35 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,6 +56,8 @@ public class CrUselessAbstract extends CrUML {
     setDescription(s);
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedGoal(Goal.UNSPEC);
+    addTrigger("specialization");
+    addTrigger("isAbstract");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

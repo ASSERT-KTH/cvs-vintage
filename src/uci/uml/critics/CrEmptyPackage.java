@@ -29,7 +29,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.7 1998/10/08 00:04:25 jrobbins Exp $
+// $Id: CrEmptyPackage.java,v 1.8 1998/11/03 21:30:05 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,6 +56,7 @@ public class CrEmptyPackage extends CrUML {
        "diagrams or model elements such as classes or use cases. ");
        
     addSupportedDecision(CrUML.decMODULARITY);
+    addTrigger("ownedElement");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: CrOperNameConflict.java
 // Classes: CrOperNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOperNameConflict.java,v 1.1 1998/08/06 21:41:39 jrobbins Exp $
+// $Id: CrOperNameConflict.java,v 1.2 1998/11/03 21:30:54 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,6 +53,8 @@ public class CrOperNameConflict extends CrUML {
 
     addSupportedDecision(CrUML.decMETHODS);
     addSupportedDecision(CrUML.decNAMING);
+    addTrigger("behavioralFeature");
+    addTrigger("feature_name");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

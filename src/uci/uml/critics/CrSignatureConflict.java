@@ -27,7 +27,7 @@
 // File: CrSignatureConflict.java
 // Classes: CrSignatureConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSignatureConflict.java,v 1.10 1998/10/08 00:04:48 jrobbins Exp $
+// $Id: CrSignatureConflict.java,v 1.11 1998/11/03 21:31:12 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -48,12 +48,13 @@ public class CrSignatureConflict extends CrUML {
        "its parameters.\n\n"+
        "Operations must have distinct signatures for code generation to "+
        "produce code that will compile.\n\n" +
-       "To fix this, use the FixIt button, or manually double click on one "+
+       "To fix this, use the \"Next>\" button, or manually double click on one "+
        "of the conflicting operations in the navigator pane and use the "+
        "Properties tab to change this name or parameters.");
 
     addSupportedDecision(CrUML.decMETHODS);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("behavioralFeature");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

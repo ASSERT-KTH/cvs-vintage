@@ -31,7 +31,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.7 1998/10/08 00:04:41 jrobbins Exp $
+// $Id: CrNoOperations.java,v 1.8 1998/11/03 21:30:50 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -55,12 +55,13 @@ public class CrNoOperations extends CrUML {
        "Normally classes provide operations that define their behavior. \n\n"+
        "Defining operations is needed to complete the behavioral "+
        "specification part of your design. \n\n"+
-       "To fix this, press the FixIt button, or add operations manually "+
+       "To fix this, press the \"Next>\" button, or add operations manually "+
        "by clicking on {name} in the navigator pane and "+
        "using the Create menu to make a new operations. ");
 
     addSupportedDecision(CrUML.decBEHAVIOR);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
+    addTrigger("behavioralFeature");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

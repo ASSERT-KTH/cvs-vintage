@@ -27,7 +27,7 @@
 // File: CrParamTypeNotImported.java
 // Classes: CrParamTypeNotImported
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.11 1998/10/08 00:04:46 jrobbins Exp $
+// $Id: CrParamTypeNotImported.java,v 1.12 1998/11/03 21:31:10 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -47,7 +47,7 @@ public class CrParamTypeNotImported extends CrUML {
        "into the class that owns the operation.\n\n"+
        "Importing classes is needed for code generation. Good modularization "+
        "of classes into packages is key to an understandable design.\n\n"+
-       "To fix this, use the FixIt button, or manually add in import to the "+
+       "To fix this, use the \"Next>\" button, or manually add in import to the "+
        "class that owns this operation.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);

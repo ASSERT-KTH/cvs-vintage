@@ -27,7 +27,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.8 1998/10/20 00:31:11 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.9 1998/11/03 21:32:26 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -99,6 +99,14 @@ implements VetoableChangeListener, DelayedVetoableChangeListener, MouseListener,
     ((FigPoly)_fig).setRectilinear(false);
   }
 
+  public Stack getPopUpActions() {
+    Stack popUpActions = super.getPopUpActions();
+    popUpActions.push(new CmdUMLProperties());
+    return popUpActions;
+  }
+
+  public FigText getNameFig() { return _name; }
+  public FigText getStereotypeFig() { return _stereo; }
 
   public void vetoableChange(PropertyChangeEvent pce) {
     Object src = pce.getSource();

@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.8 1998/10/08 00:04:34 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.9 1998/11/03 21:30:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,6 +52,7 @@ public class CrMultipleAgg extends CrUML {
 
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SEMANTICS);
+    addTrigger("end_aggregation");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

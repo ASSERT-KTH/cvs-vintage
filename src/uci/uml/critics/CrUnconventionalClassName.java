@@ -27,7 +27,7 @@
 // File: CrUnconventionalClassName.java
 // Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.13 1998/10/09 01:05:26 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.14 1998/11/03 21:31:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,10 +49,11 @@ public class CrUnconventionalClassName extends CrUML {
        "is unconventional because it does not begin with a capital.\n\n"+
        "Following good naming conventions help to improve "+
        "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select {name} "+
+       "To fix this, use the \"Next>\" button, or manually select {name} "+
        "and use the Properties tab to give it a different name.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("name");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

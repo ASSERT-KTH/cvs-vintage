@@ -27,7 +27,7 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.8 1998/10/08 00:04:30 jrobbins Exp $
+// $Id: CrMissingAttrName.java,v 1.9 1998/11/03 21:30:26 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -46,10 +46,11 @@ public class CrMissingAttrName extends CrUML {
     sd("Every attribute must have a name. \n\n"+
        "Clear and unambiguous naming is key to code generation and \n"+
        "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the FixIt button, or manually select the \n"+
+       "To fix this, use the \"Next>\" button, or manually select the \n"+
        "attribute and use the Properties tab to give it a name.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("name");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -27,7 +27,7 @@
 // File: CrNavFromInterface.java
 // Classes: CrNavFromInterface.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNavFromInterface.java,v 1.2 1998/10/09 01:05:24 jrobbins Exp $
+// $Id: CrNavFromInterface.java,v 1.3 1998/11/03 21:30:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,6 +54,7 @@ public class CrNavFromInterface extends CrUML {
        "away from the Interface.");
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("end_navigable");
   }
 
   /** Applies to Associations only, not AssociationClasses. */

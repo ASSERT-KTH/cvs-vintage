@@ -27,7 +27,7 @@
 // File: CrUselessInterface.java
 // Classes: CrUselessInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessInterface.java,v 1.1 1998/10/08 00:11:39 jrobbins Exp $
+// $Id: CrUselessInterface.java,v 1.2 1998/11/03 21:31:36 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -57,6 +57,7 @@ public class CrUselessInterface extends CrUML {
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedGoal(Goal.UNSPEC);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
+    addTrigger("realization");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

@@ -25,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.1 1998/10/08 00:11:38 jrobbins Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.2 1998/11/03 21:31:34 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -54,6 +54,7 @@ public class CrUnnavigableAssoc extends CrUML {
        "navigablility. ");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
+    addTrigger("end_navigable");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

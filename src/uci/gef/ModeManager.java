@@ -28,7 +28,7 @@
 // File: ModeManager.java
 // Classes: ModeManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeManager.java,v 1.7 1998/10/20 00:23:17 jrobbins Exp $
+// $Id: ModeManager.java,v 1.8 1998/11/03 21:29:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -117,7 +117,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   /** Pass events to all modes in order, until one consumes it. */
   public void keyTyped(KeyEvent ke) {
-    checkModeTransitions(ke);    
+    checkModeTransitions(ke);
     for (int i = _modes.size() - 1; i >= 0 && !ke.isConsumed(); --i) {
       Mode m = ((Mode)_modes.elementAt(i));
       m.keyTyped(ke);
@@ -134,7 +134,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
       m.keyPressed(ke);
     }
   }
-  
+
   /** Pass events to all modes in order, until one consumes it. */
   public void mouseMoved(MouseEvent me) {
     for (int i = _modes.size() - 1; i >= 0 && !me.isConsumed(); --i) {
@@ -153,7 +153,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   /** Pass events to all modes in order, until one consumes it. */
   public void mouseClicked(MouseEvent me) {
-    checkModeTransitions(me);    
+    checkModeTransitions(me);
     for (int i = _modes.size() - 1; i >= 0 && !me.isConsumed(); --i) {
       Mode m = ((Mode)_modes.elementAt(i));
       m.mouseClicked(me);
@@ -171,7 +171,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
 
   /** Pass events to all modes in order, until one consumes it. */
   public void mouseReleased(MouseEvent me) {
-    checkModeTransitions(me);    
+    checkModeTransitions(me);
     for (int i = _modes.size() - 1; i >= 0 && !me.isConsumed(); --i) {
       Mode m = ((Mode)_modes.elementAt(i));
       m.mouseReleased(me);

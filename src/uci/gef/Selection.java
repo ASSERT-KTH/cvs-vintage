@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.12 1998/10/20 00:23:27 jrobbins Exp $
+// $Id: Selection.java,v 1.13 1998/11/03 21:29:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -97,6 +97,8 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   public void paint(Graphics g) {
     if (_content instanceof FigNode)
       ((FigNode)_content).paintClarifiers(g);
+    if (_content instanceof FigEdge)
+      ((FigEdge)_content).paintClarifiers(g);
   }
 
   /** Tell the content to start a transaction that causes damage */

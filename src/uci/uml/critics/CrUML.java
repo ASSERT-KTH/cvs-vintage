@@ -27,7 +27,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.11 1998/07/17 22:54:28 jrobbins Exp $
+// $Id: CrUML.java,v 1.12 1998/11/03 21:31:31 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -78,6 +78,9 @@ public class CrUML extends Critic {
   public static final Decision decCLASS_SELECTION = new
   Decision("Class Selection", 5);
 
+  public static final Decision decEXPECTED_USAGE = new
+  Decision("Expected Usage", 5);
+
   public static final Decision decMETHODS = new
   Decision("Methods", 5); //??
 
@@ -110,6 +113,7 @@ public class CrUML extends Critic {
     d.startConsidering(decRELATIONSHIPS);
     d.startConsidering(decINSTANCIATION);
     d.startConsidering(decMODULARITY);
+    d.startConsidering(decEXPECTED_USAGE);
     d.startConsidering(decMETHODS);
     d.startConsidering(decCODE_GEN);
     d.startConsidering(decSTEREOTYPES);
@@ -127,7 +131,10 @@ public class CrUML extends Critic {
 
   public boolean predicate(Object dm, Designer dsgr) {
     Project p = ProjectBrowser.TheInstance.getProject();
-    if (p.isInTrash(dm)) return NO_PROBLEM;
+    if (p.isInTrash(dm)) {
+      //      System.out.println("in trash:" + dm);
+      return NO_PROBLEM;
+    }
     else return predicate2(dm, dsgr);
   }
 

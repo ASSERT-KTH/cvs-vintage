@@ -28,7 +28,7 @@
 // File: PaletteFig.java
 // Classes: PaletteFig
 // Original Author: ics125 spring 1996
-// $Id: PaletteFig.java,v 1.8 1998/10/20 00:23:23 jrobbins Exp $
+// $Id: PaletteFig.java,v 1.9 1998/11/03 21:29:44 jrobbins Exp $
 
 package uci.gef;
 
@@ -63,6 +63,7 @@ public class PaletteFig extends uci.ui.ToolBar {
    *  'select' button is automatically pressed. */
   public void defineButtons() {
     add(new CmdSetMode(ModeSelect.class, "Select"));
+    add(new CmdSetMode(ModeBroom.class, "Broom"));
     addSeparator();
     add(new CmdSetMode(ModeCreateFigCircle.class, "Circle"));
     add(new CmdSetMode(ModeCreateFigRect.class, "Rectangle"));
@@ -70,6 +71,7 @@ public class PaletteFig extends uci.ui.ToolBar {
     add(new CmdSetMode(ModeCreateFigLine.class, "Line"));
     add(new CmdSetMode(ModeCreateFigText.class, "Text"));
     add(new CmdSetMode(ModeCreateFigPoly.class, "Polygon"));
+    add(new CmdSetMode(ModeCreateFigSpline.class, "Spline"));
     add(new CmdSetMode(ModeCreateFigInk.class, "Ink"));
 
 //     circleButton.canStick(true);

@@ -27,7 +27,7 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.12 1998/10/08 00:04:26 jrobbins Exp $
+// $Id: CrFinalSubclassed.java,v 1.13 1998/11/03 21:30:06 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,12 +49,14 @@ public class CrFinalSubclassed extends CrUML {
        "A well thought-out class inheritance hierarchy that conveys and "+
        "supports intended extensions is an important part of achieving "+
        "an understandable and maintainable design.\n\n"+
-       "To fix this, use the FixIt button, or manually select the class and "+
+       "To fix this, use the \"Next>\" button, or manually select the class and "+
        "change its base class, or select the base class and use the properties "+
        "tab to remove the 'final' keyword.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
     setKnowledgeTypes(Critic.KT_SEMANTICS);
+    addTrigger("specialization");
+    addTrigger("isLeaf");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

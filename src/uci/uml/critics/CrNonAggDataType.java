@@ -27,7 +27,7 @@
 // File: CrNonAggDataType.java
 // Classes: CrNonAggDataType
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNonAggDataType.java,v 1.10 1998/10/08 00:04:44 jrobbins Exp $
+// $Id: CrNonAggDataType.java,v 1.11 1998/11/03 21:30:53 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -49,7 +49,7 @@ public class CrNonAggDataType extends CrUML {
        "Good OO design depends on careful choices about which entities to "+
        "represent as full objects and which to represent as attributes of "+
        "objects.\n\n"+
-       "To fix this, use the FixIt button, or manually replace the DataType "+
+       "To fix this, use the \"Next>\" button, or manually replace the DataType "+
        "with a full class or change the association aggregation to containment"+
        "by a full class.\n\n");
 

@@ -27,7 +27,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.11 1998/10/08 00:04:45 jrobbins Exp $
+// $Id: CrOppEndConflict.java,v 1.12 1998/11/03 21:30:54 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,7 +52,7 @@ public class CrOppEndConflict extends CrUML {
        "attribute. \n\n"+
        "Clear and unambiguous names are key to code generation and producing "+
        "an understandable and maintainable design.\n\n"+
-       "To fix this, use the FixIt button, or manually select the one of the "+
+       "To fix this, use the \"Next>\" button, or manually select the one of the "+
        "conflicting roles at the far end of an association from this class "+
        "and change its name.");
 
@@ -60,6 +60,7 @@ public class CrOppEndConflict extends CrUML {
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
+    addTrigger("associationEnd");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

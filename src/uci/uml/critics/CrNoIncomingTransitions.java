@@ -25,7 +25,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.2 1998/09/29 21:50:43 jrobbins Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.3 1998/11/03 21:30:48 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,6 +52,7 @@ public class CrNoIncomingTransitions extends CrUML {
        "another state to {name}. ");
 
     addSupportedDecision(CrUML.decSTATE_MACHINES);
+    addTrigger("incoming");
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {

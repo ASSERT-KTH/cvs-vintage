@@ -28,7 +28,7 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.9 1998/07/02 02:53:04 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.10 1998/11/03 21:29:46 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -60,7 +60,7 @@ public class BasicApplication {
     _jgf.getGraph().bindKey(new CmdDispose(), KeyEvent.VK_DELETE, 0);
 
     _jgf.setBounds(10, 10, 300, 200);
-    _jgf.show();
+    _jgf.setVisible(true);
   }
 
   ////////////////////////////////////////////////////////////////
