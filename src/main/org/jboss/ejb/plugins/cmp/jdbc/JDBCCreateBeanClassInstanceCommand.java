@@ -29,7 +29,7 @@ import org.jboss.deployment.DeploymentException;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 
 public final class JDBCCreateBeanClassInstanceCommand
@@ -116,11 +116,13 @@ public final class JDBCCreateBeanClassInstanceCommand
          // getters and setters must come in pairs
          if(getterMethod != null && setterMethod == null)
          {
-            throw new DeploymentException("Getter was found but no setter was found for field: " + fieldName);
+            throw new DeploymentException("Getter was found but no setter was found for field " + fieldName
+               + " in entity " + entityBridge.getEntityName());
          }
          else if(getterMethod == null && setterMethod != null)
          {
-            throw new DeploymentException("Setter was found but no getter was found for field: " + fieldName);
+            throw new DeploymentException("Setter was found but no getter was found for field " + fieldName
+               + " in entity " + entityBridge.getEntityName());
          }
          else if(getterMethod != null && setterMethod != null)
          {
