@@ -83,8 +83,15 @@ class IdentityStep extends AbstractStep {
                         }
                     
                         protected void checkFields() {
+                                String s = addressTextField.getText();
                                 setCanGoNext(nameTextField.getDocument().getLength() > 0
-                                       && addressTextField.getDocument().getLength() > 0);
+                                            && s.length() > 0 && isEmailAddress(s));
+                        }
+                        
+                        protected boolean isEmailAddress(String s) {
+                                int at = s.indexOf('@');
+                                int lastDot = s.lastIndexOf('.');
+                                return at > 0 && lastDot > at + 1 && lastDot < s.length() - 1;
                         }
                     
                         public void changedUpdate(DocumentEvent e) {}
