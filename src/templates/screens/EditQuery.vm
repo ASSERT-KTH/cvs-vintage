@@ -48,7 +48,7 @@
 #if (!$data.User.CurrentMITList || $data.User.CurrentMITList.isSingleModule())
     #queryTypeSelectBox ($currentQuery)
 #else
-    Cross module queries always have personal scope 
+    $l10n.CrossModuleQueriesHavePersonalScope
 #end
    </td>
   </tr>
