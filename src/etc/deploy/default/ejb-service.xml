@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: ejb-service.xml,v 1.1 2003/05/09 20:49:13 d_jencks Exp $ -->
+<!-- $Id: ejb-service.xml,v 1.2 2003/05/23 09:04:38 cgjung Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -51,6 +51,10 @@
 
     <depends>jboss.tm:service=TransactionManagerService</depends>
     <depends>jboss:service=WebService</depends>
+
+    <!-- setting this dependency will allow for EJB2.1 Web Service Deployments -->
+    <depends optional-attribute-name="WS4EEDeployer">jboss.net:service=WS4EEDeployer</depends>
+
   </mbean>
 
   <!-- ==================================================================== -->

@@ -29,8 +29,9 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph Jung</a>
  *
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -198,37 +199,42 @@ public class ApplicationMetaData
 
       if( docType == null )
       {
-         // No good, EJB 1.1/2.0 requires a DOCTYPE declaration
-         throw new DeploymentException( "ejb-jar.xml must define a " +
-            "valid DOCTYPE!" );
-      }
+         // test if this is a 2.1 schema-based descriptor
+         if("http://java.sun.com/xml/ns/j2ee".equals(element.getNamespaceURI())) {
+            ejbVersion=2;
+         } else {
+            // No good, EJB 1.1/2.1 requires a DOCTYPE declaration
+            throw new DeploymentException( "ejb-jar.xml must either obey "+
+               "the right xml schema or define a valid DOCTYPE!" );
+         } 
+      } else {
+         String publicId = docType.getPublicId();
+         if( publicId == null )
+         {
+            // We need a public Id
+            throw new DeploymentException( "The DOCTYPE declaration in " +
+               "ejb-jar.xml must define a PUBLIC id" );
+         }
 
-      String publicId = docType.getPublicId();
-      if( publicId == null )
-      {
-         // We need a public Id
-         throw new DeploymentException( "The DOCTYPE declaration in " +
-            "ejb-jar.xml must define a PUBLIC id" );
+         // Check for a known public Id
+         if( publicId.startsWith(
+            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
+         {
+            ejbVersion = 2;
+         }
+         else if( publicId.startsWith(
+            "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1") )
+         {
+            ejbVersion = 1;
+         }
+         else
+         {
+            // Unknown
+            throw new DeploymentException( "Unknown PUBLIC id in " +
+               "ejb-jar.xml: " + publicId );
+         }
       }
-
-      // Check for a known public Id
-      if( publicId.startsWith(
-         "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0") )
-      {
-         ejbVersion = 2;
-      }
-      else if( publicId.startsWith(
-         "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1") )
-      {
-         ejbVersion = 1;
-      }
-      else
-      {
-         // Unknown
-         throw new DeploymentException( "Unknown PUBLIC id in " +
-            "ejb-jar.xml: " + publicId );
-      }
-
+      
       // find the beans
       Element enterpriseBeans = getUniqueChild(element, "enterprise-beans");
 

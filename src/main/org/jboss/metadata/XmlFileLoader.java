@@ -37,8 +37,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @author <a href="mailto:christoph.jung@infor.de">Christoph Jung</a>
  *
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  * Revisions:
  *
@@ -279,11 +280,22 @@ public class XmlFileLoader
 
          // Enable DTD validation based on our validateDTDs flag
          docBuilderFactory.setValidating(validateDTDs);
+         // make the parser namespace-aware in case we deal 
+         // with ejb2.1 descriptors, will not break dtd parsing in any way
+         // in which case there would be just a default namespace
+         docBuilderFactory.setNamespaceAware(true);
+         // this will (along JAXP in conjunction with 
+         // validation+namespace-awareness) enable xml schema checking. 
+         // Will currently fail because some J2EE1.4/W3C schemas 
+         // are still lacking.
+         //docBuilderFactory.setAttribute
+         //   ("http://java.sun.com/xml/jaxp/properties/schemaLanguage","http://www.w3.org/2001/XMLSchema");
          DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
          LocalResolver lr = new LocalResolver();
          LocalErrorHandler eh = new LocalErrorHandler( inPath, lr );
          docBuilder.setEntityResolver(lr);
          docBuilder.setErrorHandler(eh );
+
 
          Document doc = docBuilder.parse(is);
          if(validateDTDs && eh.hadError())
@@ -352,8 +364,10 @@ public class XmlFileLoader
       {
          registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
+         registerDTD("http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd","ejb-jar_2_1.xsd");
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN", "application_1_3.dtd");
+         registerDTD("http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd","j2ee_1_4.xsd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN", "web-app_2_2.dtd");
          registerDTD("-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN", "web-app_2_3.dtd");
@@ -370,6 +384,9 @@ public class XmlFileLoader
          registerDTD("-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN", "jbosscmp-jdbc_4_0.dtd");
          registerDTD("-//JBoss//DTD Web Application 2.2//EN", "jboss-web.dtd");
          registerDTD("-//JBoss//DTD Web Application 2.3//EN", "jboss-web_3_0.dtd");
+         registerDTD("http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd","j2ee_web_services_client_1_1.xsd");
+         registerDTD("-//IBM Corporation, Inc.//DTD J2EE Web services 1.0//EN", "j2ee_web_services_1_0.dtd");
+         registerDTD("-//IBM Corporation, Inc.//DTD J2EE JAX-RPC mapping 1.0//EN", "j2ee_jaxrpc_mapping_1_0.dtd");
       }
 
       /**
@@ -395,8 +412,9 @@ public class XmlFileLoader
       public InputSource resolveEntity(String publicId, String systemId)
       {
          hasDTD = false;
-         String dtd = (String)dtds.get(publicId);
-
+         // in case of schemaLocations, we will only get systemId
+         String dtd = publicId!=null ? (String)dtds.get(publicId) : (String) dtds.get(systemId);
+         
          if (dtd != null)
          {
             hasDTD = true;

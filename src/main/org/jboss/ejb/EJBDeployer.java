@@ -32,7 +32,9 @@ import org.jboss.metadata.XmlFileLoader;
 /**
  * A EJBDeployer is used to deploy EJB applications. It can be given a
  * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
- * containers and make them available for invocation.
+ * containers and make them available for invocation. In case of
+ * EJB2.1 deployments containing webservices.xml meta-data, EJBDeployer 
+ * can delegate to a web-service for j2ee deployer.
  *
  * @jmx:mbean
  *      name="jboss.ejb:service=EJBDeployer"
@@ -40,7 +42,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.32 $</tt>
+ * @version <tt>$Revision: 1.33 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -50,6 +52,7 @@ import org.jboss.metadata.XmlFileLoader;
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -73,6 +76,9 @@ public class EJBDeployer
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
 
+   /** objectname of a ws4ee deployer */
+   private ObjectName ws4eeDeployer;
+   
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws MalformedObjectNameException
    {
@@ -216,6 +222,24 @@ public class EJBDeployer
       this.validateDTDs = validate;
    }
 
+   /** 
+    * returns the currently registered web service deployer
+    * @jmx:managed-attribute
+    */
+   public ObjectName getWS4EEDeployer() {
+      return ws4eeDeployer;
+   }
+   
+   /**
+    * Set the web service deployer to delegate to
+    *
+    * @jmx:managed-attribute
+    */
+   public void setWS4EEDeployer(ObjectName deployer)
+   {
+      this.ws4eeDeployer = deployer;
+   }
+
    public boolean accepts(DeploymentInfo di)
    {
       // To be accepted the deployment's root name must end in jar
@@ -290,7 +314,26 @@ public class EJBDeployer
       }
 
       // invoke super-class initialization
-      return super.init(di);
+      if(super.init(di)) {
+         // if ok, and we have got a ws4ee deployer attached
+         if(ws4eeDeployer!=null) {
+            // try to find webservices info
+            URL webservicesUrl = di.localCl.getResource("META-INF/webservices.xml");
+            if(webservicesUrl!=null) {
+               // if found, we delegate that part
+               try{
+                  return ((Boolean) server.invoke(ws4eeDeployer,"init",new Object[] {di},new String[] {di.getClass().getName()})).booleanValue();
+               } catch(Exception e) {
+                  // need to convert better
+                  throw new DeploymentException("failed to delegate ws4ee initialization.",e);
+               }
+            }
+         }
+         // no ws4ee found
+         return true;
+      } else {
+         return false;
+      }
       
    }
 
@@ -396,6 +439,17 @@ public class EJBDeployer
          throw new DeploymentException( "error in create of EjbModule: "
             + di.url, e );
       }
+      
+      // since ejb deployer does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"create",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            // need to convert better
+            throw new DeploymentException("could not delegate ws4ee creation.",e);
+         }
+      }
    }
 
    public synchronized void start(DeploymentInfo di)
@@ -411,18 +465,40 @@ public class EJBDeployer
 
          serviceController.start(di.deployedObject);
          super.start(di);
-
-         log.debug( "Deployed: " + di.url );
+         
       }
       catch (Exception e)
       {
          throw new DeploymentException( "Could not deploy " + di.url, e );
       }
+      
+      // since ejb deployer does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"start",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            // need to convert better
+            throw new DeploymentException("could not delegate ws42ee startup.",e);
+         }
+      }
+
+      log.debug( "Deployed: " + di.url );
    }
 
    public void stop(DeploymentInfo di)
       throws DeploymentException
    {
+      // since ejb deployer does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"stop",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            log.error("could not delegate ws4ee stopping.",e);
+         }
+      }
+
       try
       {
          serviceController.stop(di.deployedObject);
@@ -433,11 +509,23 @@ public class EJBDeployer
          throw new DeploymentException( "problem stopping ejb module: " +
             di.url, e );
       }
+      
+
    }
 
    public void destroy(DeploymentInfo di) 
       throws DeploymentException
    {
+      // since ejb deployer does not use the dom4j bit, we
+      // can use this as a flag
+      if(ws4eeDeployer!=null && di.getDocument()!=null) {
+         try{
+            server.invoke(ws4eeDeployer,"destroy",new Object[] {di},new String[] {di.getClass().getName()});
+         } catch(Exception e) {
+            log.error("could not delegate ws4ee destruction.",e);
+         }
+      }
+
       try
       {
          serviceController.destroy( di.deployedObject );
