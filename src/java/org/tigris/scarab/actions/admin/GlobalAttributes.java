@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.7 2001/12/10 01:01:09 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.8 2001/12/19 19:19:18 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -328,7 +328,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
         String template = data.getParameters()
             .getString(ScarabConstants.TEMPLATE, null);
         String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
+            ScarabConstants.OTHER_TEMPLATE, template );
         setTarget(data, nextTemplate);
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
