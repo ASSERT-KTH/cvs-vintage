@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.10 2001/08/26 21:54:26 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.11 2001/08/26 22:27:56 user57 Exp $ -->
 
 <project default="main">
 
@@ -182,11 +182,11 @@
     <pathelement path="${javagroups.javagroups.lib}/JavaGroups.jar"/>
   </path>
 
-  <!-- *HACK* jsr77.jar -->
-  <property name="hack.jsr77.root" value="${module.source}"/>
-  <property name="hack.jsr77.lib" value="${hack.jsr77.root}/lib"/>
-  <path id="hack.jsr77.classpath">
-    <pathelement path="${hack.jsr77.lib}/jsr77.jar"/>
+  <!-- JSR 77 -->
+  <property name="sun.jsr77.root" value="${thirdparty.root}/sun/jsr77"/>
+  <property name="sun.jsr77.lib" value="${sun.jsr77.root}/lib"/>
+  <path id="sun.jsr77.classpath">
+    <pathelement path="${sun.jsr77.lib}/jsr77.jar"/>
   </path>
 
   <!-- The combined library classpath -->
@@ -202,7 +202,7 @@
     <path refid="gjt.jpl-util.classpath"/>
     <path refid="oswego.concurrent.classpath"/>
     <path refid="junit.junit.classpath"/>
-    <path refid="hack.jsr77.classpath"/>
+    <path refid="sun.jsr77.classpath"/>
   </path>
 
 
@@ -841,8 +841,7 @@
       <fileset dir="${javagroups.javagroups.lib}">
         <include name="JavaGroups.jar"/>
       </fileset>
-      <!-- *HACK* -->
-      <fileset dir="${hack.jsr77.lib}">
+      <fileset dir="${sun.jsr77.lib}">
         <include name="jsr77.jar"/>
       </fileset>
     </copy>
