@@ -59,12 +59,10 @@ public class PrintAction
 			// *20030614, karlpeder* In main view only enabled when 
 			// message(s) selected
 			if (frameController instanceof AbstractMailFrameController) {
-				setEnabled(false);
 				((AbstractMailFrameController) frameController)
 						.registerTableSelectionListener(this);
-			} else {
-				setEnabled(false); // disables it in other views
 			}
+			setEnabled(false);
 	}
 
 	/* (non-Javadoc)
@@ -93,11 +91,6 @@ public class PrintAction
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-
-		if (((TableSelectionChangedEvent) e).getUids().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}
 }
