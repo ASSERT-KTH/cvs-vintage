@@ -115,7 +115,6 @@
 </group>
 
 <group name="RModuleUserAttribute" key="rmua" mapToObject="om.RModuleUserAttribute">
-        <field name="Selected" key="sel" type="boolean"/> 
         <field name="Order" key="order" type="int" >
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
