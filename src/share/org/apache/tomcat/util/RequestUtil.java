@@ -389,43 +389,46 @@ public class RequestUtil {
     }
 
     public static Locale getLocale(Request req) {
-	String acceptLanguage = req.getHeader("Accept-Language");
-	if( acceptLanguage == null ) return Locale.getDefault();
+    	String acceptLanguage = req.getHeader("Accept-Language");
+	    if( acceptLanguage == null ) return Locale.getDefault();
 
         Hashtable languages = new Hashtable();
-	processAcceptLanguage(acceptLanguage, languages);
-	if (languages.size() == 0)
-	    return Locale.getDefault();
-	Vector l = new Vector();
-	extractLocales( languages, l);
-	return (Locale)l.elementAt(0);
+        Vector quality=new Vector();
+        processAcceptLanguage(acceptLanguage, languages,quality);
+
+        if (languages.size() == 0) return Locale.getDefault();
+
+        Vector l = new Vector();
+        extractLocales( languages,quality, l);
+
+        return (Locale)l.elementAt(0);
     }
-    
+
     public static Enumeration getLocales(HttpServletRequest req) {
-	String acceptLanguage = req.getHeader("Accept-Language");
-	// Short circuit with an empty enumeration if null header
+	    String acceptLanguage = req.getHeader("Accept-Language");
+    	// Short circuit with an empty enumeration if null header
         if (acceptLanguage == null) {
-            Vector def = new Vector();
-            def.addElement(Locale.getDefault());
-            return def.elements();
+            Vector v = new Vector();
+            v.addElement(Locale.getDefault());
+            return v.elements();
         }
 
         Hashtable languages = new Hashtable();
-	processAcceptLanguage(acceptLanguage, languages );
+        Vector quality=new Vector();
+    	processAcceptLanguage(acceptLanguage, languages , quality);
 
         if (languages.size() == 0) {
             Vector v = new Vector();
-
-            v.addElement(org.apache.tomcat.core.Constants.LOCALE_DEFAULT);
-            languages.put("1.0", v);
+            v.addElement(Locale.getDefault());
+            return v.elements();
         }
-	Vector l = new Vector();
-	extractLocales( languages, l);
-	return l.elements();
+    	Vector l = new Vector();
+    	extractLocales( languages, quality , l);
+    	return l.elements();
     }
 
     public static void processAcceptLanguage( String acceptLanguage,
-					      Hashtable languages )
+					      Hashtable languages, Vector q)
     {
         StringTokenizer languageTokenizer =
             new StringTokenizer(acceptLanguage, ",");
@@ -438,59 +441,57 @@ public class RequestUtil {
             Double qValue = new Double(1);
 
             if (qValueIndex > -1 &&
-                qValueIndex < qIndex &&
-                qIndex < equalIndex) {
-	        String qValueStr = language.substring(qValueIndex + 1);
-
+                    qValueIndex < qIndex &&
+                    qIndex < equalIndex) {
+    	        String qValueStr = language.substring(qValueIndex + 1);
                 language = language.substring(0, qValueIndex);
                 qValueStr = qValueStr.trim().toLowerCase();
                 qValueIndex = qValueStr.indexOf('=');
                 qValue = new Double(0);
-
                 if (qValueStr.startsWith("q") &&
                     qValueIndex > -1) {
                     qValueStr = qValueStr.substring(qValueIndex + 1);
-
                     try {
                         qValue = new Double(qValueStr.trim());
                     } catch (NumberFormatException nfe) {
                     }
                 }
             }
-	    
-	    // XXX
-	    // may need to handle "*" at some point in time
 
-	    if (! language.equals("*")) {
-	        String key = qValue.toString();
-		Vector v = (Vector)((languages.containsKey(key)) ?
-		    languages.get(key) : new Vector());
+            // XXX
+            // may need to handle "*" at some point in time
 
-		v.addElement(language);
-		languages.put(key, v);
-	    }
+            if (! language.equals("*")) {
+                String key = qValue.toString();
+                Vector v;
+                if (languages.containsKey(key)) {
+                    v = (Vector)languages.get(key) ;
+                } else {
+                    v= new Vector();
+                    q.addElement(qValue);
+                }
+                v.addElement(language);
+                languages.put(key, v);
+            }
         }
     }
 
-    public static void extractLocales(Hashtable languages, Vector l)
+    public static void extractLocales(Hashtable languages, Vector q,Vector l)
     {
-        Enumeration e = languages.keys();
-
+        // XXX We will need to order by q value Vector in the Future ?
+        Enumeration e = q.elements();
         while (e.hasMoreElements()) {
-            String key = (String)e.nextElement();
-            Vector v = (Vector)languages.get(key);
+            Vector v =
+                (Vector)languages.get(((Double)e.nextElement()).toString());
             Enumeration le = v.elements();
-
             while (le.hasMoreElements()) {
-	        String language = (String)le.nextElement();
-		String country = "";
-		int countryIndex = language.indexOf("-");
-
-		if (countryIndex > -1) {
-		    country = language.substring(countryIndex + 1).trim();
-		    language = language.substring(0, countryIndex).trim();
-		}
-
+    	        String language = (String)le.nextElement();
+	        	String country = "";
+        		int countryIndex = language.indexOf("-");
+                if (countryIndex > -1) {
+                    country = language.substring(countryIndex + 1).trim();
+                    language = language.substring(0, countryIndex).trim();
+                }
                 l.addElement(new Locale(language, country));
             }
         }
@@ -505,7 +506,7 @@ public class RequestUtil {
     // which was created for each HeaderField ).
     // This also avoid passing HttpHeaders - which was required to access
     // HttpHeaderFiled to access HttpDate to access the parsing code.
-    
+
     // we force our locale here as all http dates are in english
     private final static Locale loc = Locale.US;
 
@@ -520,13 +521,13 @@ public class RequestUtil {
 
     // format for C asctime() date string -- "Sun Nov  6 08:49:37 1994"
     private final static String asctimePattern ="EEE MMM d HH:mm:ss yyyyy";
-    
+
     private final static SimpleDateFormat rfc1123Format =
 	new SimpleDateFormat(rfc1123Pattern, loc);
-    
+
     private final static SimpleDateFormat rfc1036Format =
 	new SimpleDateFormat(rfc1036Pattern, loc);
-    
+
     private final static SimpleDateFormat asctimeFormat =
 	new SimpleDateFormat(asctimePattern, loc);
 
