@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.56 2003/02/05 22:28:58 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.57 2003/02/05 22:43:35 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.56 2003/02/05 22:28:58 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.57 2003/02/05 22:43:35 d00mst Exp $
 
 
 
@@ -421,13 +421,14 @@ public class ParserDisplay extends Parser {
 			stereotype += token;
 		    }
 		} else if ("::".equals(token) || ".".equals(token)) {
-		    if (name == null)
+		    if (name == null && path != null)
 			throw new ParseException("Element cannot have " +
 			    "anonymous qualifiers", st.getTokenIndex());
 
 		    if (path == null)
 			path = new Vector();
-		    path.add(name);
+		    if (name != null)
+			path.add(name);
 		    name = null;
 		} else {
 		    if (name != null)
