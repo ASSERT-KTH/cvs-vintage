@@ -24,6 +24,7 @@ import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.themes.ThemeSwitcher;
@@ -108,7 +109,8 @@ public class Main {
 
 
     MainInterface.clipboardManager = new ClipboardManager();
-
+	MainInterface.focusManager = new FocusManager();
+	
     MainInterface.processor = new DefaultProcessor();
     MainInterface.processor.start();
 

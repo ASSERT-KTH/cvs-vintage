@@ -33,13 +33,16 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.ssl.SSLProvider;
 
 /**
- * @author fdietz
- *
+ * 
  * This is an implementation of the POP3 protocol as defined
  * in RFC 1939: http://www.ietf.org/rfc/rfc1939.txt
  * 
  * Generally every command has its corresponding method in this
  * class.
+ * 
+ * @see org.columba.mail.pop3.parser
+ * 
+ * @author fdietz
  * 
  */
 public class POP3Protocol {
@@ -134,6 +137,8 @@ public class POP3Protocol {
 
 	/**
 	 * 
+	 * Receive response from server
+	 * <p>
 	 * Responses in the POP3 consist of a status indicator and a keyword
 	 * possibly followed by additional information.  All responses are
 	 * terminated by a CRLF pair.  Responses may be up to 512 characters
@@ -174,7 +179,8 @@ public class POP3Protocol {
 	 * 
 	 * Establish SSL encrypted connection
 	 * 
-	 * see RFC 2595: http://www.faqs.org/rfcs/rfc2595.html
+	 * see RFC 2595: <a href="http://www.faqs.org/rfcs/rfc2595.html">
+	 * http://www.faqs.org/rfcs/rfc2595.html</a>
 	 * 
 	 * @throws Exception
 	 */

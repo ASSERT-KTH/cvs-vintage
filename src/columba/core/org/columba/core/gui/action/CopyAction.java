@@ -24,6 +24,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class CopyAction extends FrameAction {
@@ -49,12 +50,22 @@ public class CopyAction extends FrameAction {
 			'C',
 			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK),
 			false);
+			
+		setEnabled(false);
+		MainInterface.focusManager.setCopyAction(this);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
+		MainInterface.focusManager.copy();
 	}
+	
+	/* (non-Javadoc)
+		 * @see org.columba.core.action.FrameAction#isSingleton()
+		 */
+		public boolean isSingleton() {
+			return true;
+		}
 }

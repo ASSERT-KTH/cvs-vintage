@@ -17,105 +17,236 @@ package org.columba.core.gui.focus;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.columba.core.action.BasicAction;
 
 /**
- * @author frd
+ * 
+ * Every {@link FocusOwner} should register at the <code>FocusManager</code>.
+ * <p>
+ * FocusManager enables and disables the following Actions:
+ * <ul>
+ *  <li>CutAction</li>
+ *  <li>CopyAction</li>
+ *  <li>PasteAction</li>
+ *  <li>DeleteAction</li>
+ *  <li>SelectAllAction</li>
+ * </ul>
+ * 
+ * 
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class FocusManager implements FocusListener {
 
+	/**
+	 * list of focus owners
+	 */
 	List list;
+	
+	/**
+	 * map associating focus listener ui with focus owner
+	 */
+	Map map;
+
+	/**
+	 * all actions
+	 */
 	BasicAction cutAction;
 	BasicAction copyAction;
 	BasicAction pasteAction;
 	BasicAction deleteAction;
-	
-	FocusOwner lastFocusGained = null;
-	FocusOwner lastFocusLost = null;
+
+	/**
+	 * current focus owner
+	 */
+	FocusOwner current = null;
+
+	/**
+	 * last available focus owner
+	 */
+	FocusOwner last = null;
 
 	public FocusManager() {
 		list = new Vector();
-
+		map = new HashMap();
 	}
 
-	public void setActions(
-		BasicAction cutAction,
-		BasicAction copyAction,
-		BasicAction pasteAction,
-		BasicAction deleteAction) {
-
-		this.cutAction = cutAction;
-		this.copyAction = copyAction;
-		this.pasteAction = pasteAction;
-		this.deleteAction = deleteAction;
-	}
-
+	/**
+	 * register FocusOwner and add FocusListener
+	 * 
+	 * @param c		focus owner
+	 */
 	public void registerComponent(FocusOwner c) {
 		list.add(c);
+		
+		// associate ui component with FocusOwner
+		map.put(c.getComponent(), c);
+		
 		c.getComponent().addFocusListener(this);
 	}
 
-	protected FocusOwner searchOwner(Object component) {
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			FocusOwner owner = (FocusOwner) it.next();
-		// for (int i = 0; i < list.size(); i++) {
-			// FocusOwner owner = (FocusOwner) list.get(i);
-			Object  c = owner.getComponent();
+	/**
+	 * Get current focus owner
+	 * 
+	 * Try first current owner. If this fails, try
+	 * the last available one.
+	 * 
+	 * @return	current focus owner
+	 */
+	protected FocusOwner getCurrentOwner() {
+		if (current != null)
+			return current;
 
-			if (c.equals(component))
-				return owner;
-		}
+		if (last != null)
+			return last;
 
 		return null;
 	}
+	
+	/**
+	 * 
+	 * FocusOwner objects should call this method on
+	 * selection changes in their view component to
+	 * enable/disable the actions
+	 *
+	 */
+	public void updateActions()
+	{
+		enableActions(getCurrentOwner());
+	}
 
-	protected void enableActions(boolean b) {
-		/*
-		if (b) {
-			cutAction.setEnabled(true);
-			copyAction.setEnabled(true);
-			pasteAction.setEnabled(true);
-			deleteAction.setEnabled(true);
-		} else {
+	/**
+	 * enable/disable actions
+	 * 
+	 * @param o		current focus owner
+	 */
+	protected void enableActions(FocusOwner o) {
+		if ( o == null ) 
+		{
+			//  no component has the focus
+			// -> disable all actions
+			
 			cutAction.setEnabled(false);
 			copyAction.setEnabled(false);
 			pasteAction.setEnabled(false);
 			deleteAction.setEnabled(false);
-		}
-		*/
-
+					
+			return;
+		} 
+		
+		cutAction.setEnabled(o.isCutActionEnabled());
+		copyAction.setEnabled(o.isCopyActionEnabled());
+		pasteAction.setEnabled(o.isPasteActionEnabled());
+		deleteAction.setEnabled(o.isDeleteActionEnabled());
 	}
 
+	/**
+	 * Component gained focus
+	 * 
+	 */
 	public void focusGained(FocusEvent event) {
-		//System.out.println("focus gained:" + event.getSource().toString());
+		System.out.println("focus gained:" + event.getSource().toString());
 
-		lastFocusGained = searchOwner(event.getSource());
+		current = (FocusOwner) map.get(event.getSource());
 
-		
-		if (lastFocusGained.enableAction() == true)
-			enableActions(true);
-		
+		updateActions();
+
 	}
 
+	/**
+	 * Component lost focus
+	 */
 	public void focusLost(FocusEvent event) {
-		//System.out.println("focus lost:" + event.getSource().toString());
-		
-		lastFocusLost = searchOwner(event.getSource());
-		
-		if ( !lastFocusLost.equals(lastFocusGained) )
-		{
-			enableActions(false);
-		}
+		System.out.println("focus lost:" + event.getSource().toString());
 
+		FocusOwner lost = (FocusOwner) map.get(event.getSource());
+
+		last = current;
+
+		current = null;
+		//current = lost;
+		
+		updateActions();
+
+	}
+
+	/**
+	 * execute cut action of currently available focus owner 
+	 *
+	 */
+	public void cut() {
+		getCurrentOwner().cut();
+		
+		enableActions(getCurrentOwner());
+	}
+
+	/**
+		 * execute copy action of currently available focus owner 
+		 *
+		 */
+	public void copy() {
+		getCurrentOwner().copy();
+		
+		enableActions(getCurrentOwner());
+	}
+
+	/**
+		 * execute paste action of currently available focus owner 
+		 *
+		 */
+	public void paste() {
+		getCurrentOwner().paste();
+		
+		enableActions(getCurrentOwner());
+	}
+
+	/**
+		 * execute delete action of currently available focus owner 
+		 *
+		 */
+	public void delete() {
+		getCurrentOwner().delete();
+		
+		enableActions(getCurrentOwner());
+	}
+
+
+
+
+	/************************* setter of actions **********************/
+	
+	
+	/**
+	 * @param action
+	 */
+	public void setCopyAction(BasicAction action) {
+		copyAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setCutAction(BasicAction action) {
+		cutAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setDeleteAction(BasicAction action) {
+		deleteAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setPasteAction(BasicAction action) {
+		pasteAction = action;
 	}
 
 }

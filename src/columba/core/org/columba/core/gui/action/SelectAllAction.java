@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class SelectAllAction extends FrameAction {
@@ -44,4 +45,11 @@ public class SelectAllAction extends FrameAction {
 			'A',
 			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
 	}
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		//MainInterface.focusManager.selectall();
+	}
+
 }

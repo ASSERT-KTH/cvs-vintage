@@ -130,4 +130,6 @@ public class FrameAction extends BasicAction implements PluginInterface {
 	public void setFrameController(AbstractFrameController frameController) {
 		this.frameController = frameController;
 	}
+	
+	
 }

@@ -16,6 +16,7 @@
 
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
@@ -23,6 +24,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class DeleteAction extends FrameAction {
@@ -48,5 +50,22 @@ public class DeleteAction extends FrameAction {
 			'D',
 			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
 			false);
+			
+		setEnabled(false);
+		MainInterface.focusManager.setDeleteAction(this);
 	}
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		MainInterface.focusManager.delete();
+	}
+	
+	/* (non-Javadoc)
+		 * @see org.columba.core.action.FrameAction#isSingleton()
+		 */
+		public boolean isSingleton() {
+			return true;
+		}
+
 }

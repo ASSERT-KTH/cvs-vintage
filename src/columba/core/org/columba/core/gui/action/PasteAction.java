@@ -24,6 +24,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class PasteAction extends FrameAction {
@@ -49,12 +50,22 @@ public class PasteAction extends FrameAction {
 			'V',
 			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
 			false);
+			
+		setEnabled(false);
+		MainInterface.focusManager.setPasteAction(this);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
+		MainInterface.focusManager.paste();
 	}
+	
+	/* (non-Javadoc)
+		 * @see org.columba.core.action.FrameAction#isSingleton()
+		 */
+		public boolean isSingleton() {
+			return true;
+		}
 }

@@ -24,7 +24,6 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
@@ -45,7 +44,7 @@ public abstract class AbstractMailFrameController
 
 	private FrameActionListener actionListener;
 	private ToolBar toolBar;
-	public GlobalActionCollection globalActionCollection;
+	
 
 	public MessageController messageController;
 	public AttachmentController attachmentController;

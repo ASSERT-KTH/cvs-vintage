@@ -23,7 +23,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -40,14 +39,11 @@ import org.columba.mail.message.MimePart;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AttachmentView extends JScrollPane implements ListDataListener {
+public class AttachmentView extends JList implements ListDataListener {
 
 	private AttachmentController controller;
 
-	//private IconPanel attachment;
 	private DefaultListModel listModel;
-
-	private JList list;
 
 	public AttachmentView(AttachmentController controller) {
 		super();
@@ -56,19 +52,19 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 
 		listModel = new DefaultListModel();
 
-		list = new JList(listModel);
-		list.setCellRenderer(new ListRenderer());
-		setViewportView(list);
+		setModel(listModel);
+
+		setCellRenderer(new ListRenderer());
 
 	}
 
 	public void installListener(AttachmentController c) {
 		listModel.addListDataListener(this);
-		list.addKeyListener(c);
+		addKeyListener(c);
 	}
 
 	public void addPopupListener(MouseAdapter a) {
-		list.addMouseListener(a);
+		addMouseListener(a);
 	}
 
 	public void add(MimePart mp) {
@@ -95,18 +91,10 @@ public class AttachmentView extends JScrollPane implements ListDataListener {
 		return listModel.indexOf(mp);
 	}
 
-	public MimePart getSelectedValue() {
-		return (MimePart) list.getSelectedValue();
-	}
-
-	public Object[] getSelectedValues() {
-		return (Object[]) list.getSelectedValues();
-	}
-
 	public void fixSelection(int x, int y) {
-		int index = list.locationToIndex(new Point(x, y));
+		int index = locationToIndex(new Point(x, y));
 
-		list.setSelectedIndex(index);
+		setSelectedIndex(index);
 	}
 
 	/********************* ListRenderer *******************************/

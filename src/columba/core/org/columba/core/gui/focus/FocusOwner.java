@@ -17,17 +17,30 @@ package org.columba.core.gui.focus;
 
 import javax.swing.JComponent;
 
+
 /**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * FocusOwner registers at the FocusManager
+ * 
+ * 
+ * @author fdietz
  */
 public interface FocusOwner {
 	
-	boolean enableAction();
+	// true if action is enabled, false otherwiese
 	
-	JComponent getComponent();
+	public boolean isCutActionEnabled();
+	public boolean isCopyActionEnabled();
+	public boolean isPasteActionEnabled();
+	public boolean isDeleteActionEnabled();
+	public boolean isSelectAllActionEnabled();
+	
+	
+	// concrete implementation of actions
+	public void cut();
+	public void copy();
+	public void paste();
+	public void delete();
+	
+	// 
+	public JComponent getComponent();
 }

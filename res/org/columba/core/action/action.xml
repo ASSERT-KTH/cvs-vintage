@@ -8,17 +8,17 @@
  <action name="OpenNewMessageFrameWindow" class="org.columba.core.gui.action.OpenNewMessageFrameWindowAction"/>
  <action name="PluginManagerDialog" class="org.columba.core.gui.action.PluginManagerAction" />
  
- <action name="Cut" class="org.columba.core.gui.action.CutAction"/>
- <action name="Copy" class="org.columba.core.gui.action.CopyAction"/>
- <action name="Paste" class="org.columba.core.gui.action.PasteAction"/>
- <action name="Delete" class="org.columba.core.gui.action.DeleteAction"/>
- <action name="SelectAll" class="org.columba.core.gui.action.SelectAllAction"/>
+ <action name="Cut" singleton="true" class="org.columba.core.gui.action.CutAction"/>
+ <action name="Copy" singleton="true" class="org.columba.core.gui.action.CopyAction"/>
+ <action name="Paste" singleton="true" class="org.columba.core.gui.action.PasteAction"/>
+ <action name="Delete" singleton="true" class="org.columba.core.gui.action.DeleteAction"/>
+ <action name="SelectAll" singleton="true" class="org.columba.core.gui.action.SelectAllAction"/>
  <action name="PrintSetup" class="org.columba.core.gui.action.PrintSetupAction"/> 
  <action name="Print" class="org.columba.core.gui.action.PrintAction"/> 
  <action name="Close" class="org.columba.core.gui.action.CloseAction"/> 
  <action name="Exit" class="org.columba.core.gui.action.ExitAction"/> 
- <action name="Undo" class="org.columba.core.gui.action.UndoAction"/> 
- <action name="Redo" class="org.columba.core.gui.action.RedoAction"/> 
+ <action name="Undo" singleton="true" class="org.columba.core.gui.action.UndoAction"/> 
+ <action name="Redo" singleton="true" class="org.columba.core.gui.action.RedoAction"/> 
  <action name="Find" class="org.columba.core.gui.action.FindAction"/> 
  <action name="FindAgain" class="org.columba.core.gui.action.FindAgainAction"/> 
  <action name="ViewToolbar" class="org.columba.core.gui.action.ViewToolbarAction"/> 

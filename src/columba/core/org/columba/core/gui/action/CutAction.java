@@ -24,6 +24,7 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 public class CutAction extends FrameAction {
@@ -49,12 +50,24 @@ public class CutAction extends FrameAction {
 			'T',
 			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
 			false);
+		
+		setEnabled(false);	
+		MainInterface.focusManager.setCutAction(this);
+		
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
+		MainInterface.focusManager.cut();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.core.action.FrameAction#isSingleton()
+	 */
+	public boolean isSingleton() {
+		return true;
+	}
+
 }
