@@ -14,6 +14,9 @@ import javax.sql.*;
 import javax.transaction.xa.XAResource;
 import org.jboss.minerva.jdbc.PreparedStatementInPool;
 import org.jboss.minerva.jdbc.PSCacheKey;
+import org.jboss.minerva.pools.PooledObject;
+import org.jboss.minerva.pools.PoolEvent;
+import org.jboss.minerva.pools.PoolEventListener;
 
 /**
  * A transaction wrapper around a java.sql.Connection.  This provides access to
@@ -40,14 +43,14 @@ import org.jboss.minerva.jdbc.PSCacheKey;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
-public class XAConnectionImpl implements XAConnection {
+public class XAConnectionImpl implements XAConnection, PooledObject {
     private final static String CLOSED = "Connection has been closed!";
     private Connection con;
     private XAResourceImpl resource;
-    private Vector listeners;
+    private Vector listeners, poolListeners;
     private TransactionListener transListener;
     private int clientConnectionCount = 0;
 
@@ -61,6 +64,7 @@ public class XAConnectionImpl implements XAConnection {
         this.con = con;
         this.resource = resource;
         listeners = new Vector();
+        poolListeners = new Vector();
     }
 
     /**
@@ -175,4 +179,29 @@ public class XAConnectionImpl implements XAConnection {
         ++clientConnectionCount;
         return new XAClientConnection(this, con);
     }
+
+    // ---- Implementation of javax.sql.XAConnection ----
+
+    public void addPoolEventListener(PoolEventListener listener) {
+        poolListeners.addElement(listener);
+    }
+
+    public void removePoolEventListener(PoolEventListener listener) {
+        poolListeners.removeElement(listener);
+    }
+
+    /**
+     * Dispatches an event to the pool event listeners.
+     */
+    void firePoolEvent(PoolEvent evt) {
+        Vector local = (Vector)poolListeners.clone();
+        for(int i=local.size()-1; i >= 0; i--)
+            if(evt.getType() == PoolEvent.OBJECT_CLOSED)
+                ((PoolEventListener)local.elementAt(i)).objectClosed(evt);
+            else if(evt.getType() == PoolEvent.OBJECT_ERROR)
+                ((PoolEventListener)local.elementAt(i)).objectError(evt);
+            else
+                ((PoolEventListener)local.elementAt(i)).objectUsed(evt);
+    }
 }
+

@@ -22,6 +22,7 @@ import org.jboss.minerva.jdbc.ConnectionWrapper;
 import org.jboss.minerva.jdbc.PreparedStatementInPool;
 import org.jboss.minerva.jdbc.PSCacheKey;
 import org.jboss.minerva.jdbc.StatementInPool;
+import org.jboss.minerva.pools.PoolEvent;
 
 /**
  * Wrapper for database connections used by an XAConnection.  When close is
@@ -30,7 +31,7 @@ import org.jboss.minerva.jdbc.StatementInPool;
  * returned to the pool) until the transactional details are taken care of.
  * This instance only lives as long as one client is using it - though we
  * probably want to consider reusing it to save object allocations.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {
@@ -79,6 +80,7 @@ public class XAClientConnection implements ConnectionWrapper {
      * This is not used by the current implementation.
      */
     public void setLastUsed() {
+        xaCon.firePoolEvent(new PoolEvent(xaCon, PoolEvent.OBJECT_USED));
     }
 
     /**
