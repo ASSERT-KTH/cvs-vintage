@@ -7,17 +7,22 @@ rem
 rem   TOMCAT_HOME  (Optional) May point at your Tomcat distribution
 rem                directory.  If not present, the current working
 rem                directory is assumed.
+rem                Note: This batch file does not function properly
+rem                if TOMCAT_HOME contains spaces.
 rem
 rem   TOMCAT_OPTS  (Optional) Java runtime options used when the "start",
 rem                "stop", or "run" command is executed
 rem
-rem   CLASSPATH    Must contain a JAXP-compatible XML parser, such as the
-rem                "jaxp.jar" and "parser.jar" files from the JAXP Reference
-rem                implementation.
+rem   CLASSPATH    (Optional) This batch file will automatically add
+rem                what Tomcat needs to the CLASSPATH.  This consists
+rem                of TOMCAT_HOME\classes and all the jar files in
+rem                TOMCAT_HOME\lib. This will include the "jaxp.jar"
+rem                and "parser.jar" files from the JAXP Reference
+rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.26 2000/07/25 03:21:19 craigmcc Exp $
+rem $Id: tomcat.bat,v 1.27 2000/08/29 05:00:06 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -25,6 +30,8 @@ rem ----- Save Environment Variables That May Change ------------------------
 
 set _CP=%CP%
 set _TOMCAT_HOME=%TOMCAT_HOME%
+set _PATH=%PATH%
+set _CLASSPATH=%CLASSPATH%
 
 
 rem ----- Verify and Set Required Environment Variables ---------------------
@@ -38,6 +45,8 @@ if not "%TOMCAT_HOME%" == "" goto gotTomcatHome
 set TOMCAT_HOME=.
 :gotTomcatHome
 
+set PATH=%JAVA_HOME%\bin;%PATH%
+
 
 rem ----- Set Up The Runtime Classpath --------------------------------------
 
@@ -48,8 +57,7 @@ set CP=%CP%;%CLASSPATH%
 :noClasspath
 set CP=%CP%;%JAVA_HOME%\lib\tools.jar
 echo Using CLASSPATH: %CP%
-echo Using JAVA_HOME: %JAVA_HOME%
-echo Using TOMCAT_HOME: %TOMCAT_HOME%
+set CLASSPATH=%CP%
 
 
 rem ----- Execute The Requested Command -------------------------------------
@@ -78,45 +86,49 @@ goto finish
 :startServer
 echo Starting Tomcat in new window
 if "%2" == "-security" goto startSecure
-start java %TOMCAT_OPTS% -classpath "%CP%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+start java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-start java %TOMCAT_OPTS% -classpath "%CP%" -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+start java %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
 rem Running Tomcat in this window
 if "%2" == "-security" goto runSecure
-java %TOMCAT_OPTS% -classpath "%CP%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runSecure
 rem Running Tomcat with a SecurityManager
-java %TOMCAT_OPTS% -classpath "%CP%" -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+java %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stopping the Tomcat Server
-java %TOMCAT_OPTS% -classpath "%CP%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
+java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runAnt
 rem Run ANT in Tomcat's Environment
 set CP=%CP%;%TOMCAT_HOME%\lib\ant.jar
-java %ANT_OPTS% -classpath "%CP%" -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
+java %ANT_OPTS% -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
 rem Run JSPC in Tomcat's Environment
-java %JSPC_OPTS% -classpath "%CP%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
+java %JSPC_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 
 rem ----- Restore Environment Variables ---------------------------------------
 
 :cleanup
+set CLASSPATH=%_CLASSPATH%
+set _CLASSPATH=
+set PATH=%_PATH%
+set _PATH=
 set TOMCAT_HOME=%_TOMCAT_HOME%
 set _TOMCAT_HOME=
 set CP=%_CP%
