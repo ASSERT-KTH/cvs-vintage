@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.27 2004/07/17 22:29:06 linus Exp $
+// $Id: PGMLParser.java,v 1.28 2004/07/19 09:45:59 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.FigNode;
-// the following three ugly package dependency are for restoring 
-// compartment visibility
 import org.argouml.cognitive.ItemUID;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
