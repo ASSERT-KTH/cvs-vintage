@@ -22,7 +22,7 @@ import org.jboss.util.id.GUID;
  * of the JMX nodes for the client proxies. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
  * <p><b>Revisions:</b>
  *
@@ -41,10 +41,14 @@ public interface Invoker
    GUID ID = new GUID();
    
    /**
-    * A free form String identifier for this delegate invoker, can be clustered or target node
-    * This should evolve in a more advanced meta-inf object
+    * The <code>getServerID</code> method returns a ServerID
+    * object describing the server location, and enabling construction
+    * of ObjectNames specific to clients of that server.
+    *
+    * @return a <code>ServerID</code> value
+    * @exception Exception if an error occurs
     */
-   String getServerHostName() throws Exception;
+   ServerID getServerID() throws Exception;
    
    /**
     * The invoke with an Invocation Object.

@@ -45,6 +45,7 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.security.SecurityDomain;
@@ -61,7 +62,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -144,18 +145,31 @@ public class JRMPInvoker
    }
 
    /**
-    * @return The localhost name or null.
+    * The <code>getServerID</code> method returns a ServerID instance
+    * to identify this server to clients.  It is used also to make
+    * server-specific mbean object names unique on the client.
+    *
+    * @todo find out if the tcpnodelay or connect timeout parameters
+    * can have any meaning.
+    *
+    * @return a <code>ServerID</code> value
     */
-   public String getServerHostName() 
+   public ServerID getServerID() 
    { 
-      try
+      String address = serverAddress;
+      if (address == null)
       {
-         return InetAddress.getLocalHost().getHostName();
-      }
-      catch (Exception ignored)
-      {
-         return null;
-      }
+	 try
+	 {
+	    address = InetAddress.getLocalHost().getHostName();
+	 }
+	 catch (Exception ignored)
+	 {
+	    address = "unknownLocalhost";
+	 }
+	 
+      } // end of if ()
+      return new ServerID(address, rmiPort, false, 0);
    }
 
    /**
@@ -272,8 +286,6 @@ public class JRMPInvoker
       // Set the transaction manager and transaction propagation
       // context factory of the GenericProxy class
 
-      // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       Invoker delegateInvoker = createDelegateInvoker();
@@ -401,8 +413,8 @@ public class JRMPInvoker
    }
    
    /** Load and instantiate the clientSocketFactory, serverSocketFactory using
-    the TCL and set the bind address and SSL domain if the serverSocketFactory
-    supports it.
+       the TCL and set the bind address and SSL domain if the serverSocketFactory
+       supports it.
    */
    protected void loadCustomSocketFactories()
    {
@@ -450,7 +462,7 @@ public class JRMPInvoker
                }
             }
             /* See if the server socket supports setSecurityDomain(SecurityDomain)
-            if an sslDomain was specified
+	       if an sslDomain was specified
             */
             if( sslDomain != null )
             {

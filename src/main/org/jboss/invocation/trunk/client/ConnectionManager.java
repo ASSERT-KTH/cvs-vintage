@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import javax.resource.spi.work.WorkManager;
 import org.jboss.invocation.trunk.client.bio.BlockingClient;
+import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
-import java.lang.reflect.Method;
 
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
@@ -133,6 +133,7 @@ public class ConnectionManager
             log.debug("Using the Blocking version of the client");
          }
       }
+      
       log.debug("Setting the clockDaemon's thread factory");
       clockDaemon.setThreadFactory(new ThreadFactory()
       {
@@ -198,19 +199,13 @@ public class ConnectionManager
       clockDaemon.shutDown();
    }
 
-   /*
-   public static ConnectionManager getInstance()
-   {
-      return instance;
-   }
-   */
 
-   AbstractClient connect(ServerAddress serverAddress) throws IOException
+   AbstractClient connect(ServerID serverID) throws IOException
    {
 
       boolean tracing = log.isTraceEnabled();
       /* most of the time this will find a connection */
-      AbstractClient connection = (AbstractClient) requestConnections.get(serverAddress);
+      AbstractClient connection = (AbstractClient) requestConnections.get(serverID);
       if (connection != null)
       {
          if (tracing)
@@ -221,7 +216,7 @@ public class ConnectionManager
       synchronized (requestConnections)
       {
 
-         connection = (AbstractClient) requestConnections.get(serverAddress);
+         connection = (AbstractClient) requestConnections.get(serverID);
          if (connection != null)
          {
             if (tracing)
@@ -230,7 +225,7 @@ public class ConnectionManager
          }
 
          if (tracing)
-            log.trace("Establishing a new connection to: " + serverAddress);
+            log.trace("Establishing a new connection to: " + serverID);
 
          AbstractClient c = null;
          try
@@ -244,7 +239,7 @@ public class ConnectionManager
 
          c.setConnectionManager(this);
          c.setWorkManager(workManager);
-         c.connect(serverAddress, threadGroup);
+         c.connect(serverID, threadGroup);
          c.start();
 
          if (tracing)
@@ -254,7 +249,7 @@ public class ConnectionManager
             startCheckThread();
 
          HashMap t = (HashMap) requestConnections.clone();
-         t.put(serverAddress, c);
+         t.put(serverID, c);
          requestConnections = t;
          return c;
 
@@ -271,7 +266,7 @@ public class ConnectionManager
       synchronized (requestConnections)
       {
          HashMap t = (HashMap) requestConnections.clone();
-         t.remove(connection.getServerAddress());
+         t.remove(connection.getServerID());
          requestConnections = t;
 
          if (t.size() == 0)

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.resource.spi.work.WorkManager;
+import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
 
 /**
@@ -88,8 +89,21 @@ public abstract class AbstractClient implements ITrunkListener
       }
    }
 
+   /**
+    * The <code>requestEvent</code> method looks up the correct trunk
+    * listener from the table and forwards the request to it.  Where
+    * does the id come from?
+    *
+    * @param trunk an <code>ICommTrunk</code> value
+    * @param request a <code>TrunkRequest</code> value
+    */
    public void requestEvent(ICommTrunk trunk, TrunkRequest request)
    {
+      if (log.isTraceEnabled()) {
+	 log.trace("requestEvent, trunk: " + trunk + ", request " + request);
+      } // end of if ()
+      
+      //currently this does nothing
       connectionManager.handleRequest(this, request);
       lastUsed = System.currentTimeMillis();
 
@@ -159,11 +173,13 @@ public abstract class AbstractClient implements ITrunkListener
          t.put(requestListenerID, rl);
          requestListeners = t;
       }
+      log.debug("added request listener: "  + rl + " at id " + requestListenerID);
       return requestListenerID;
    }
 
    public void removeRequestListener(Integer requestListenerID)
    {
+      log.debug("removing request listener: at id " + requestListenerID);
       synchronized (requestListeners)
       {
          HashMap t = (HashMap) requestListeners.clone();
@@ -214,7 +230,7 @@ public abstract class AbstractClient implements ITrunkListener
    /**
     * Established a connection to the server.
     */
-   abstract public void connect(ServerAddress serverAddress, ThreadGroup threadGroup) throws IOException;
+   abstract public void connect(ServerID serverID, ThreadGroup threadGroup) throws IOException;
 
    /**
     * Used to start the current connection with the server
@@ -234,6 +250,6 @@ public abstract class AbstractClient implements ITrunkListener
    /**
     * Used to get the comm trunk that is used by this connection.
     */
-   abstract public ServerAddress getServerAddress();
+   abstract public ServerID getServerID();
 
 }

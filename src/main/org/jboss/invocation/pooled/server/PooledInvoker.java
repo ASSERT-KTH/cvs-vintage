@@ -31,7 +31,7 @@ import javax.naming.NamingException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
-import org.jboss.invocation.pooled.interfaces.ServerAddress;
+import org.jboss.invocation.ServerID;
 import java.util.LinkedList;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.proxy.TransactionInterceptor;
@@ -150,10 +150,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       // and the transaction propagation context importer
       tpcImporter = (TransactionPropagationContextImporter) ctx.lookup("java:/TransactionPropagationContextImporter");
 
-      // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
-
-      //TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
+      //WTF shouldn't this be PooledInvokerProxy?
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       ///////////////////////////////////////////////////////////      
@@ -177,7 +174,7 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
-      ServerAddress sa = new ServerAddress(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
+      ServerID sa = new ServerID(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
       optimizedInvokerProxy = new PooledInvokerProxy(sa, clientMaxPoolSize);
 
       ///////////////////////////////////////////////////////////      

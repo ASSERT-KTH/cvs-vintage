@@ -85,6 +85,7 @@ public final class BlockingServer implements java.lang.Runnable, IServer
       this.workManager = workManager;
 
       serverSocket = new ServerSocket(port, connectBackLog, address);
+      log.debug("bound blocking to address " + address + ", port: " + port);
       serverSocket.setSoTimeout(SO_TIMEOUT);
       return serverSocket;
    }

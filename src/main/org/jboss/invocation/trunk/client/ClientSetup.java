@@ -12,6 +12,7 @@ package org.jboss.invocation.trunk.client;
 import javax.management.Attribute;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import org.jboss.proxy.ProxyXAResource;
 import org.jboss.system.client.Client;
 import org.jboss.tm.JBossXidFactory;
 import org.jboss.tm.client.ClientTransactionManager;
@@ -50,9 +51,9 @@ public class ClientSetup {
       //Get our mbean server.
       MBeanServer server = Client.getMBeanServer();
       //Where are we coming from?
-      ServerAddress serverAddress = tip.getServerAddress();
+      String serverIdObjectNameClause = tip.getServerID().toObjectNameClause();
 
-      ObjectName trunkInvokerProxyName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + serverAddress.toObjectNameClause());
+      ObjectName trunkInvokerProxyName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerProxy," + serverIdObjectNameClause);
 
       //Have we already been set up? If so, return the previous instance.
       if (server.isRegistered(trunkInvokerProxyName))
@@ -60,7 +61,49 @@ public class ClientSetup {
          return (TrunkInvokerProxy)server.getAttribute(trunkInvokerProxyName, "TrunkInvokerProxy");
       }
 
-      ObjectName workManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerWorkManager," + serverAddress.toObjectNameClause());
+
+      //This part is independent of which invoker we are using...
+      //Set up the client transaction manager for this vm and remote server, if there is no "real" jboss tm.
+      ObjectName tmName = TRANSACTION_MANAGER_SERVICE;
+      if (!server.isRegistered(tmName))
+      {
+         ObjectName xidFactoryName = ObjectNameFactory.create("jboss.client:service=XidFactory," + serverIdObjectNameClause);
+         //Yikes it's an xmbean!
+         Client.createXMBean(JBossXidFactory.class.getName(), xidFactoryName, "org/jboss/tm/JBossXidFactory.xml");
+         //needs work
+         server.setAttribute(xidFactoryName, new Attribute("BaseGlobalId", serverIdObjectNameClause + "_client"));
+         //server.setAttribute(xidFactoryName, new Attribute("TxLoggerName", ??));
+
+         tmName = ObjectNameFactory.create("jboss.client:service=TransactionManager," + serverIdObjectNameClause);
+         server.createMBean(ClientTransactionManager.class.getName(), tmName);
+         server.setAttribute(tmName, new Attribute("XidFactoryName", xidFactoryName));
+
+         ObjectName clientUTName = ObjectNameFactory.create("jboss.client:service=UserTransaction," + serverIdObjectNameClause);
+         server.createMBean(ClientUserTransaction.class.getName(), clientUTName);
+         server.setAttribute(clientUTName, new Attribute("TransactionManagerName", tmName));
+
+         //create everything
+         server.invoke(xidFactoryName, "create", noArgs, noTypes);
+         server.invoke(tmName, "create", noArgs, noTypes);
+         server.invoke(clientUTName, "create", noArgs, noTypes);
+
+         //start everything
+         server.invoke(xidFactoryName, "start", noArgs, noTypes);
+         server.invoke(tmName, "start", noArgs, noTypes);
+         server.invoke(clientUTName, "start", noArgs, noTypes);
+      }
+
+
+      ObjectName proxyXAResourceName = ObjectNameFactory.create("jboss.client:service=ProxyXAResource," + serverIdObjectNameClause);
+      if (!server.isRegistered(proxyXAResourceName))
+      {
+	 server.createMBean(ProxyXAResource.class.getName(), proxyXAResourceName);
+      }
+      server.setAttribute(proxyXAResourceName, new Attribute("Invoker", tip));
+      server.setAttribute(proxyXAResourceName, new Attribute("TransactionManagerService", tmName));
+
+
+      ObjectName workManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerWorkManager," + serverIdObjectNameClause);
       if (!server.isRegistered(workManagerName))
       {
          server.createMBean("org.jboss.resource.work.BaseWorkManager", 
@@ -68,7 +111,7 @@ public class ClientSetup {
       }
       server.setAttribute(workManagerName, new Attribute("MaxThreads", new Integer(50)));
 
-      ObjectName trunkInvokerConnectionManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerConnectionManager," + serverAddress.toObjectNameClause());
+      ObjectName trunkInvokerConnectionManagerName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerConnectionManager," + serverIdObjectNameClause);
       if (!server.isRegistered(trunkInvokerConnectionManagerName))
       {
          server.createMBean(ConnectionManager.class.getName(), trunkInvokerConnectionManagerName);
@@ -80,56 +123,21 @@ public class ClientSetup {
       server.registerMBean(tip, trunkInvokerProxyName);
 
       server.setAttribute(trunkInvokerProxyName, new Attribute("ConnectionManagerName", trunkInvokerConnectionManagerName));
+      server.setAttribute(trunkInvokerProxyName, new Attribute("XAResourceFactoryName", proxyXAResourceName));
 
-      ObjectName trunkInvokerXAResourceName = ObjectNameFactory.create("jboss.client:service=TrunkInvokerXAResource," + serverAddress.toObjectNameClause());
-      if (!server.isRegistered(trunkInvokerXAResourceName))
-      {
-         server.createMBean(TrunkInvokerXAResource.class.getName(), trunkInvokerXAResourceName);
-      }
-      server.setAttribute(trunkInvokerXAResourceName, new Attribute("TrunkInvokerProxy", tip));
-      server.setAttribute(trunkInvokerXAResourceName, new Attribute("TransactionManagerService", TRANSACTION_MANAGER_SERVICE));
 
       //create everything
       server.invoke(workManagerName, "create", noArgs, noTypes);
       server.invoke(trunkInvokerConnectionManagerName, "create", noArgs, noTypes);
+      server.invoke(proxyXAResourceName, "create", noArgs, noTypes);
       server.invoke(trunkInvokerProxyName, "create", noArgs, noTypes);
-      server.invoke(trunkInvokerXAResourceName, "create", noArgs, noTypes);
 
       //start everything
       server.invoke(workManagerName, "start", noArgs, noTypes);
       server.invoke(trunkInvokerConnectionManagerName, "start", noArgs, noTypes);
+      server.invoke(proxyXAResourceName, "start", noArgs, noTypes);
       server.invoke(trunkInvokerProxyName, "start", noArgs, noTypes);
-      server.invoke(trunkInvokerXAResourceName, "start", noArgs, noTypes);
 
-      //Set up the client transaction manager for this vm and remote server, if there is no "real" jboss tm.
-      ObjectName realTMName = ObjectNameFactory.create("jboss.tm:service=TransactionManager");
-      if (!server.isRegistered(realTMName))
-      {
-         ObjectName xidFactoryName = ObjectNameFactory.create("jboss.client:service=XidFactory," + serverAddress.toObjectNameClause());
-         //Yikes it's an xmbean!
-         Client.createXMBean(JBossXidFactory.class.getName(), xidFactoryName, "org/jboss/tm/JBossXidFactory.xml");
-         //needs work
-         server.setAttribute(xidFactoryName, new Attribute("BaseGlobalId", serverAddress.toObjectNameClause() + "_client"));
-         //server.setAttribute(xidFactoryName, new Attribute("TxLoggerName", ??));
-
-         ObjectName clientTMName = ObjectNameFactory.create("jboss.client:service=TransactionManager," + serverAddress.toObjectNameClause());
-         server.createMBean(ClientTransactionManager.class.getName(), clientTMName);
-         server.setAttribute(clientTMName, new Attribute("XidFactoryName", xidFactoryName));
-
-         ObjectName clientUTName = ObjectNameFactory.create("jboss.client:service=UserTransaction," + serverAddress.toObjectNameClause());
-         server.createMBean(ClientUserTransaction.class.getName(), clientUTName);
-         server.setAttribute(clientUTName, new Attribute("TransactionManagerName", clientTMName));
-
-         //create everything
-         server.invoke(xidFactoryName, "create", noArgs, noTypes);
-         server.invoke(clientTMName, "create", noArgs, noTypes);
-         server.invoke(clientUTName, "create", noArgs, noTypes);
-
-         //start everything
-         server.invoke(xidFactoryName, "start", noArgs, noTypes);
-         server.invoke(clientTMName, "start", noArgs, noTypes);
-         server.invoke(clientUTName, "start", noArgs, noTypes);
-      }
       return tip;
    }
    

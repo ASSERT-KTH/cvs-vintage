@@ -25,7 +25,7 @@ import org.jboss.invocation.trunk.client.AbstractClient;
 import org.jboss.invocation.trunk.client.CommTrunkRamp;
 import org.jboss.invocation.trunk.client.ConnectionManager;
 import org.jboss.invocation.trunk.client.ICommTrunk;
-import org.jboss.invocation.trunk.client.ServerAddress;
+import org.jboss.invocation.ServerID;
 import org.jboss.logging.Logger;
 
 /**
@@ -42,26 +42,26 @@ public class NonBlockingClient extends AbstractClient
 
    private NonBlockingSocketTrunk trunk;
    private SocketChannel socket;
-   private ServerAddress serverAddress;
+   private ServerID serverID;
    private SelectorManager selectorManager;
    
-   public void connect(ServerAddress serverAddress, 
+   public void connect(ServerID serverID, 
                        ThreadGroup threadGroup) throws IOException
    {
-      this.serverAddress = serverAddress;
+      this.serverID = serverID;
       boolean tracing = log.isTraceEnabled();
       if (tracing)
-         log.trace("Connecting to : " + serverAddress);
+         log.trace("Connecting to : " + serverID);
 
       selectorManager = SelectorManager.getInstance(ConnectionManager.oiThreadGroup);
 
       socket = SocketChannel.open();
       socket.configureBlocking(true); // Make the connect be blocking.
-      socket.connect(new InetSocketAddress(serverAddress.address, serverAddress.port));
+      socket.connect(new InetSocketAddress(serverID.address, serverID.port));
       socket.configureBlocking(false); // Make the connect be non-blocking.
             
-     // serverAddress.address, serverAddress.port);
-      socket.socket().setTcpNoDelay(serverAddress.enableTcpNoDelay);
+     // serverID.address, serverID.port);
+      socket.socket().setTcpNoDelay(serverID.enableTcpNoDelay);
 
       trunk = new NonBlockingSocketTrunk(socket, selectorManager.getSelector());
       CommTrunkRamp ramp = new CommTrunkRamp(trunk, workManager);
@@ -73,9 +73,9 @@ public class NonBlockingClient extends AbstractClient
       
    }
 
-   public ServerAddress getServerAddress()
+   public ServerID getServerID()
    {
-      return serverAddress;
+      return serverID;
    }
 
    public ICommTrunk getCommTrunk()

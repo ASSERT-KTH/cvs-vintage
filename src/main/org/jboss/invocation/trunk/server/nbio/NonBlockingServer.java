@@ -81,7 +81,8 @@ public final class NonBlockingServer implements IServer
       // register it with the Selector
       serverSocket = ServerSocketChannel.open(); // Open channel
       serverSocket.configureBlocking(false); // Non-blocking
-      serverSocket.socket().bind(new InetSocketAddress(address, port), connectBackLog); // Bind to port      
+      serverSocket.socket().bind(new InetSocketAddress(address, port), connectBackLog); // Bind to port   
+      log.debug("bound non blocking to address " + address + ", port: " + port);
       //serverSocket.socket().setSoTimeout(SO_TIMEOUT);
       serverSocket.register(selectorManager.getSelector(), SelectionKey.OP_ACCEPT, new AcceptConnectionAction());
 

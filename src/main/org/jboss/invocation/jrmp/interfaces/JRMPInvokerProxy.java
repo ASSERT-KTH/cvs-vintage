@@ -26,6 +26,7 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.local.LocalInvoker;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.tm.TransactionPropagationContextFactory;
+import org.jboss.invocation.ServerID;
 
 /**
  * JRMPInvokerProxy, local to the proxy and is capable of delegating to
@@ -33,7 +34,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -45,6 +46,8 @@ public class JRMPInvokerProxy
    
    // Invoker to the remote JMX node
    protected Invoker remoteInvoker;
+
+   private ServerID serverID;
    
    /**
     * Factory for transaction propagation contexts.
@@ -92,10 +95,17 @@ public class JRMPInvokerProxy
    
    /**
     * The name of of the server.
+    *
+    * @todo make this more reasonable.
     */
-   public String getServerHostName() throws Exception
+   public ServerID getServerID() throws Exception
    {
-      return remoteInvoker.getServerHostName();
+      if (serverID == null) {
+	 serverID =  remoteInvoker.getServerID();
+	 //	 serverID =  new ServerID(remoteInvoker.getServerHostName(), 0, false);
+      } // end of if ()
+      
+      return serverID;
    }
    
    /**

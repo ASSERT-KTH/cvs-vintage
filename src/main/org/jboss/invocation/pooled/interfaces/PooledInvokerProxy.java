@@ -40,6 +40,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import org.jboss.invocation.ServerID;
 
 /**
  * Client socket connections are pooled to avoid the overhead of
@@ -93,7 +94,7 @@ public class PooledInvokerProxy
    /**
     * connection information
     */
-   protected ServerAddress address;
+   protected ServerID serverID;
    
    /**
     * Pool for this invoker.  This is shared between all
@@ -140,20 +141,20 @@ public class PooledInvokerProxy
     * Create a new Proxy.
     *
     */
-   public PooledInvokerProxy(ServerAddress sa, int maxPoolSize)
+   public PooledInvokerProxy(ServerID serverID, int maxPoolSize)
    {
-      this.address = sa;
+      this.serverID = serverID;
       this.maxPoolSize = maxPoolSize;
    }
 
    /**
     * Close all sockets in a specific pool.
     */
-   public static void clearPool(ServerAddress sa)
+   public static void clearPool(ServerID serverID)
    {
       try
       {
-         LinkedList thepool = (LinkedList)connectionPools.get(sa);
+         LinkedList thepool = (LinkedList)connectionPools.get(serverID);
          if (thepool == null) return;
          synchronized (thepool)
          {
@@ -187,8 +188,8 @@ public class PooledInvokerProxy
          Iterator it = connectionPools.keySet().iterator();
          while (it.hasNext())
          {
-            ServerAddress sa = (ServerAddress)it.next();
-            clearPool(sa);
+            ServerID serverID = (ServerID)it.next();
+            clearPool(serverID);
          }
       }
    }
@@ -197,11 +198,11 @@ public class PooledInvokerProxy
    {
       synchronized (connectionPools)
       {
-         pool = (LinkedList)connectionPools.get(address);
+         pool = (LinkedList)connectionPools.get(serverID);
          if (pool == null)
          {
             pool = new LinkedList();
-            connectionPools.put(address, pool);
+            connectionPools.put(serverID, pool);
          }
       }
    }
@@ -241,7 +242,7 @@ public class PooledInvokerProxy
          
          try
          {
-            socket = new Socket(address.address, address.port);
+            socket = new Socket(serverID.address, serverID.port);
             break;
          }
          catch (Exception ex)
@@ -254,8 +255,8 @@ public class PooledInvokerProxy
             throw ex;
          }
       }
-      socket.setTcpNoDelay(address.enableTcpNoDelay);
-      return new ClientSocket(socket, address.timeout); 
+      socket.setTcpNoDelay(serverID.enableTcpNoDelay);
+      return new ClientSocket(socket, serverID.timeoutMillis); 
    }
  
    protected ClientSocket getPooledConnection()
@@ -288,9 +289,9 @@ public class PooledInvokerProxy
    /**
     * The name of of the server.
     */
-   public String getServerHostName() throws Exception
+   public ServerID getServerID() throws Exception
    {
-      return address.address;
+      return serverID;
    }
    
    /**
@@ -409,7 +410,7 @@ public class PooledInvokerProxy
    public void writeExternal(final ObjectOutput out)
       throws IOException
    { 
-      out.writeObject(address);
+      out.writeObject(serverID);
       out.writeInt(maxPoolSize);
    }
  
@@ -420,7 +421,7 @@ public class PooledInvokerProxy
    public void readExternal(final ObjectInput in)
       throws IOException, ClassNotFoundException
    {
-      address = (ServerAddress)in.readObject();
+      serverID = (ServerID)in.readObject();
       maxPoolSize = in.readInt();
       initPool();
    }

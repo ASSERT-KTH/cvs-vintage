@@ -30,7 +30,7 @@ import org.jboss.invocation.PayloadKey;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.trunk.client.ICommTrunk;
 import org.jboss.invocation.trunk.client.ITrunkListener;
-import org.jboss.invocation.trunk.client.ServerAddress;
+import org.jboss.invocation.ServerID;
 import org.jboss.invocation.trunk.client.TrunkInvokerProxy;
 import org.jboss.invocation.trunk.client.TrunkResponse;
 import org.jboss.invocation.trunk.client.TrunkRequest;
@@ -74,6 +74,13 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
     * The server port to bind to.
     */
    private int serverBindPort = 0;
+
+   /**
+    * The variable <code>timeoutMillis</code> is the client connect
+    * timeout in milliseconds.
+    *
+    */
+   private int timeoutMillis = 0;
 
    /**
     * The internet address client will use to connect to the sever.
@@ -135,21 +142,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    public void startService() throws Exception
    {
 
-      ///////////////////////////////////////////////////////////      
-      // Setup the transaction stuff
-      ///////////////////////////////////////////////////////////      
-      InitialContext ctx = new InitialContext();
 
-      // Get the transaction propagation context factory
-      tpcFactory = (TransactionPropagationContextFactory) ctx.lookup("java:/TransactionPropagationContextExporter");
-
-      // and the transaction propagation context importer
-      tpcImporter = (TransactionPropagationContextImporter) ctx.lookup("java:/TransactionPropagationContextImporter");
-
-      // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager)getServer().getAttribute(transactionManagerService, "TransactionManager"));
-      //TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
-      JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       ///////////////////////////////////////////////////////////      
       // Setup the socket level stuff
@@ -167,7 +160,8 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
 
       Class serverClass = BlockingServer.class;
-      // Try to use the NonBlockingClient if possible
+      
+      // Try to use the NonBlockingServer if possible
       if( "true".equals( System.getProperty("org.jboss.invocation.trunk.enable_nbio", "true") ) ) {
          try {
             serverClass = Class.forName("org.jboss.invocation.trunk.server.nbio.NonBlockingServer");
@@ -178,7 +172,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
             log.debug("Using the Blocking version of the server");
          }
       }
-            
+      
       serverProtocol = (IServer)serverClass.newInstance();
       WorkManager workManager = (WorkManager)getServer().getAttribute(workManagerName, "WorkManager");
 
@@ -187,7 +181,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
-      ServerAddress sa = new ServerAddress(clientConnectAddress, clientConnectPort, enableTcpNoDelay);
+      ServerID sa = new ServerID(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeoutMillis);
       optimizedInvokerProxy = new TrunkInvokerProxy(sa);
 
       log.info("Invoker service available at: " + serverSocket.getInetAddress() + ":" + serverSocket.getLocalPort());
@@ -200,6 +194,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       Registry.bind(getServiceName(), optimizedInvokerProxy);
       // Bind the invoker in the JNDI invoker naming space
       // It should look like so "invokers/<hostname>/trunk" 
+      InitialContext ctx = new InitialContext();
       Util.rebind(ctx, "invokers/" + clientConnectAddress + "/trunk", optimizedInvokerProxy);
 
       log.debug("Bound invoker for JMX node");
@@ -225,30 +220,7 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
          ctx.close();
       }
    }
-   /*
-   protected void rebind(Context ctx, String name, Object val) throws NamingException
-   {
-      // Bind val to name in ctx, and make sure that all 
-      // intermediate contexts exist
 
-      Name n = ctx.getNameParser("").parse(name);
-      while (n.size() > 1)
-      {
-         String ctxName = n.get(0);
-         try
-         {
-            ctx = (Context) ctx.lookup(ctxName);
-         }
-         catch (NameNotFoundException e)
-         {
-            ctx = ctx.createSubcontext(ctxName);
-         }
-         n = n.getSuffix(1);
-      }
-
-      ctx.rebind(n.get(0), val);
-   }
-   */
    protected void destroyService() throws Exception
    {
       // Unexport references to the bean
@@ -270,7 +242,6 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    {
       if (log.isTraceEnabled())
          log.trace("Request: " + request);
-
       MarshalledObject result = null;
       MarshalledObject resultException = null;
 
@@ -295,10 +266,13 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
 
       try
       {
+	 //log.info("returned from invoke, setting up response");
          TrunkResponse response = new TrunkResponse(request);
          response.result = result;
          response.exception = resultException;
+	 //log.info("sending response: " + response);
          trunk.sendResponse(response);
+	 //log.info("sent response");
       }
       catch (IOException e)
       {
@@ -312,23 +286,20 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
     */
    public MarshalledObject invoke(Invocation invocation) throws Exception
    {
+      //log.info("in invoke, finally! invocation: " + invocation);
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       try
       {
 
-         // Deserialize the transaction if it is there  
-         invocation.setTransaction(importTPC(((MarshalledInvocation) invocation).getTransactionPropagationContext()));
-
-         // Extract the ObjectName, the rest is still marshalled
-         // ObjectName mbean = new ObjectName((String) invocation.getContainer());
-
          // This is bad it should at least be using a sub set of the Registry 
          // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
          // that subset FIXME it will speed up lookup times
+	 //Prove it before you do it -- david.  Should be constant time lookup in a hashmap.
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
          Object obj = getServer().invoke(mbean, "", new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
+	 //log.info("got return object: " + obj);
 
          return new MarshalledObject(obj);
       }
@@ -345,12 +316,6 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
       }
    }
 
-   protected Transaction importTPC(Object tpc)
-   {
-      if (tpc != null)
-         return tpcImporter.importTransactionPropagationContext(tpc);
-      return null;
-   }
 
    //The following are the mbean attributes for TrunkInvoker
 
@@ -438,6 +403,27 @@ public final class TrunkInvoker extends ServiceMBeanSupport implements ITrunkLis
    public void setServerBindAddress(String serverBindAddress)
    {
       this.serverBindAddress = serverBindAddress;
+   }
+
+
+   /**
+    * Get the ClientConnectTimeoutMilliseconds value.
+    * @return the ClientConnectTimeoutMilliseconds value.
+    *
+    * @jmx:managed-attribute
+    */
+   public int getClientConnectTimeoutMilliseconds() {
+      return timeoutMillis;
+   }
+
+   /**
+    * Set the ClientConnectTimeoutMilliseconds value.
+    * @param newClientConnectTimeoutMilliseconds The new ClientConnectTimeoutMilliseconds value.
+    *
+    * @jmx:managed-attribute
+    */
+   public void setClientConnectTimeoutMilliseconds(int timeoutMillis) {
+      this.timeoutMillis = timeoutMillis;
    }
 
    

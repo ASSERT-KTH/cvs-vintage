@@ -24,6 +24,9 @@ import javax.resource.spi.work.ExecutionContext;
 import javax.resource.spi.work.Work;
 import javax.resource.spi.work.WorkException;
 import javax.resource.spi.work.WorkManager;
+import javax.transaction.xa.Xid;
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.logging.Logger;
 
 /**
@@ -44,6 +47,8 @@ import org.jboss.logging.Logger;
 public final class CommTrunkRamp implements java.lang.Cloneable
 {
    final static private Logger log = Logger.getLogger(CommTrunkRamp.class);
+
+   final static int DEFAULT_TIMEOUT = 6;//seconds. Wrong class for this.
 
    /**
     * If the socket handler is currently pumping messages.
@@ -81,16 +86,6 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    private final WorkManager workManager;
 
    /**
-    * The thread pool used to service incoming requests..
-    */
-   //static PooledExecutor pool;
-
-   /**
-    * The number of pool threads created so far
-    */
-   //private static int poolCounter = 0;
-
-   /**
     * Constructor for the OILServerIL object
     *
     * @param a     Description of Parameter
@@ -100,27 +95,6 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    {
       this.trunk = trunk;
       this.workManager = workManager;
-      /*
-      synchronized (CommTrunkRamp.class)
-      {
-         if (pool == null)
-         {
-
-            pool = new PooledExecutor(Integer.MAX_VALUE);
-            pool.setMinimumPoolSize(0);
-            pool.setKeepAliveTime(1000 * 60);
-            pool.setThreadFactory(new ThreadFactory()
-            {
-               public Thread newThread(Runnable r)
-               {
-                  return new Thread(
-                     ConnectionManager.oiThreadGroup,
-                     r,
-                     "Optimized Invoker Pool Thread-" + (poolCounter++));
-               }
-            });
-         }
-         }*/
    }
 
    /**
@@ -206,14 +180,34 @@ public final class CommTrunkRamp implements java.lang.Cloneable
    /*
     * The Trunk should deliver requests to the Ramp via this 
     * method.
+    *
+    * @todo Need a listener for timeouts to mark rollback only and send exception back!
     */
    public void deliverTrunkRequest(TrunkRequest request) throws InterruptedException, WorkException, NotSupportedException
    {
+      boolean trace = log.isTraceEnabled();
+      if (trace) {
+	 log.info("Got request to deliver: " + request);
+      } // end of if ()
+
       ExecutionContext ec = new ExecutionContext();
-      ec.setXid(request.xid);
-      ec.setTransactionTimeout(request.transactionTimeout);
+      Invocation invocation = request.invocation;
+      ec.setXid((Xid)invocation.getValue(InvocationKey.XID));
+      Integer transactionTimeout = (Integer)invocation.getValue(InvocationKey.TX_TIMEOUT);
+      if (transactionTimeout != null)
+      {
+	 ec.setTransactionTimeout(transactionTimeout.intValue());
+      }
+      else
+      {
+	 ec.setTransactionTimeout(DEFAULT_TIMEOUT);
+      }
+      if (trace) {
+	 log.info("About to schedule work with execution context: " + ec);
+      }
+      //Need a listener for timeouts to mark rollback only and send exception back!
       workManager.scheduleWork(new RequestRunner(request), 
-                               request.transactionTimeout, 
+                               ec.getTransactionTimeout() * 1000, //convert to milliseconds
                                ec,
                                null);
    }
@@ -229,7 +223,9 @@ public final class CommTrunkRamp implements java.lang.Cloneable
 
       public void run()
       {
+	 log.trace("in requestRunner, about to requestEvent from listener");
          trunkListener.requestEvent(trunk, request);
+	 log.trace("in requestRunner, done with requestEvent from listener");
       }
 
       public void release()

@@ -24,6 +24,7 @@ import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.invocation.ServerID;
 
 /**
  * The Invoker is a local gate in the JMX system.
@@ -31,14 +32,18 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
    implements Invoker, LocalInvokerMBean
 {
+   //This should not be used for anything as of writing this.
+   private ServerID serverID = new ServerID("localInvoker", -1, false, 0);
+
    protected void createService() throws Exception
    {
+
       // note on design: We need to call it ourselves as opposed to 
       // letting the client InvokerInterceptor look it 
       // up through the use of Registry, the reason being including
@@ -52,19 +57,6 @@ public class LocalInvoker
    
    protected void startService() throws Exception
    {
-      InitialContext ctx = new InitialContext();
-      try {
-         
-         /**
-          * FIXME marcf: what is this doing here?
-          */
-         TransactionManager tm = (TransactionManager)ctx.lookup("java:/TransactionManager");
-         TransactionInterceptor.setTransactionManager(tm);
-      }
-      finally {
-         ctx.close();
-      }
-         
       log.debug("Local invoker for JMX node started");
    }
    
@@ -75,14 +67,9 @@ public class LocalInvoker
    
    // Invoker implementation --------------------------------
    
-   public String getServerHostName() 
+   public ServerID getServerID() 
    { 
-      try {
-         return InetAddress.getLocalHost().getHostName();
-      }
-      catch (Exception ignored) {
-         return null;
-      }
+      return serverID;
    }
    
    /**

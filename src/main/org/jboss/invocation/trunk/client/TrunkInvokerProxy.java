@@ -20,8 +20,10 @@ import javax.transaction.xa.XAResource;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.logging.Logger;
+import org.jboss.proxy.ProxyXAResource;
 import org.jboss.system.ServiceMBean;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.invocation.ServerID;
 
 /**
  * This is the proxy object of the TrunkInvoker that lives on the server.
@@ -40,18 +42,20 @@ public final class TrunkInvokerProxy
 
    static final int DEFAULT_TX_TIMEOUT = 6;//seconds?
 
-   private ServerAddress serverAddress;
+   private ServerID serverID;
    private transient AbstractClient connection;
 
    private ObjectName connectionManagerName;
 
-   private transient TrunkInvokerXAResource trunkInvokerXAResource;
+   private ObjectName xaResourceFactoryName;
+
+   private transient ProxyXAResource proxyXAResource;
 
    private transient ConnectionManager connectionManager;
 
-   public TrunkInvokerProxy(ServerAddress serverAddress)
+   public TrunkInvokerProxy(ServerID serverID)
    {
-      this.serverAddress = serverAddress;
+      this.serverID = serverID;
    }
 
    //this is how it sets itself up in a new vm:
@@ -79,9 +83,9 @@ public final class TrunkInvokerProxy
       }
    }
 
-   public ServerAddress getServerAddress()
+   public ServerID getServerID()
    {
-      return serverAddress;
+      return serverID;
    }
 
    /**
@@ -95,23 +99,23 @@ public final class TrunkInvokerProxy
    }
    
    /**
-    * Get the TrunkInvokerXAResource value.
-    * @return the TrunkInvokerXAResource value.
+    * Get the XaResourceFactoryName value.
+    * @return the XaResourceFactoryName value.
     *
     * @jmx.managed-attribute
     */
-   public TrunkInvokerXAResource getTrunkInvokerXAResource() {
-      return trunkInvokerXAResource;
+   public ObjectName getXAResourceFactoryName() {
+      return xaResourceFactoryName;
    }
 
    /**
-    * Set the TrunkInvokerXAResource value.
-    * @param newTrunkInvokerXAResource The new TrunkInvokerXAResource value.
+    * Set the xaResourceFactoryName value.
+    * @param newXaResourceFactoryName The new XaResourceFactoryName value.
     *
     * @jmx.managed-attribute
     */
-   public void setTrunkInvokerXAResource(TrunkInvokerXAResource trunkInvokerXAResource) {
-      this.trunkInvokerXAResource = trunkInvokerXAResource;
+   public void setXAResourceFactoryName(ObjectName xaResourceFactoryName) {
+      this.xaResourceFactoryName = xaResourceFactoryName;
    }
 
    
@@ -139,42 +143,66 @@ public final class TrunkInvokerProxy
    protected void startService() throws Exception
    {
       connectionManager = (ConnectionManager)getServer().getAttribute(connectionManagerName, "ConnectionManager");
+      proxyXAResource = (ProxyXAResource)getServer().getAttribute(xaResourceFactoryName, "XAResource");
    }
 
    protected void stopService() throws Exception
    {
       connectionManager = null;
+      proxyXAResource = null;
    }
 
-   public String getServerHostName() throws Exception
-   {
-      TrunkRequest request = new TrunkRequest();
-      request.setOpServerHostName();
-      return (String) issue(request);
-   }
 
+   /**
+    * The <code>invoke</code> method sends the invocation over the
+    * wire. The tx conversion should be in an invoker
+    * interceptor/aspect.
+    *
+    * @param invocation an <code>Invocation</code> value
+    * @return an <code>Object</code> value
+    * @exception Exception if an error occurs
+    */
    public Object invoke(Invocation invocation) throws Exception
    {
+      boolean trace = log.isTraceEnabled();
+      if (trace) {
+	 log.trace("Invoking, invocation: " + invocation);
+      } // end of if ()
+      
+
       Transaction tx = invocation.getTransaction();
       if (tx == null) 
       {
          TrunkRequest request = new TrunkRequest();
-         request.setOpInvoke(invocation, null, DEFAULT_TX_TIMEOUT);
+         request.setOpInvoke(invocation);
+	 if (trace) {
+	    log.trace("No tx, request: " + request);
+	 }
          return issue(request);
       }
       else
       {
+	 proxyXAResource.setInvocation(invocation);
+         tx.enlistResource(proxyXAResource);
+	 //dont' try to send the tx
+	 invocation.setTransaction(null);
          TrunkRequest request = new TrunkRequest();
-         //TrunkInvokerXAResource xares = new TrunkInvokerXAResource(this);
-         tx.enlistResource(trunkInvokerXAResource);
-         request.setOpInvoke(invocation, trunkInvokerXAResource.getXid(), trunkInvokerXAResource.getTransactionTimeout());
+	 if (trace) {
+	    log.trace("Tx found. request: " + request);
+	 }
+         request.setOpInvoke(invocation);
          try 
          {
             return issue(request);            
          }
          finally
          {
-            tx.delistResource(trunkInvokerXAResource, XAResource.TMSUSPEND);
+	    if (trace) {
+	       log.trace("Returned from invocation");
+	    }
+	    //restore the tx.
+	    invocation.setTransaction(tx);
+            tx.delistResource(proxyXAResource, XAResource.TMSUSPEND);
          } // end of try-catch
       } // end of else
       
@@ -206,7 +234,7 @@ public final class TrunkInvokerProxy
       {
          try
          {
-            connection = connectionManager.connect(serverAddress);
+            connection = connectionManager.connect(serverID);
             if (log.isTraceEnabled())
                log.trace("I will use this connection for requests: " + connection);
          }
