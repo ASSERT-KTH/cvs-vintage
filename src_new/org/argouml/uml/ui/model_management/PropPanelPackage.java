@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.29 2003/01/18 10:05:27 mkl Exp $
+// $Id: PropPanelPackage.java,v 1.30 2003/01/26 16:22:47 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class PropPanelPackage extends PropPanelNamespace implements PluggablePro
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelPackage() {
-        this("Package", _packageIcon, ConfigLoader.getTabPropsOrientation());
+        this("Package", ConfigLoader.getTabPropsOrientation());
     }
 
     /**
@@ -58,8 +58,8 @@ public class PropPanelPackage extends PropPanelNamespace implements PluggablePro
      * @param icon
      * @param orientation
      */
-    public PropPanelPackage(String title, ImageIcon icon, Orientation orientation) {
-        super(title, icon, orientation);
+    public PropPanelPackage(String title, Orientation orientation) {
+        super(title, orientation);
         placeElements();
     }
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.8 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelInclude.java,v 1.9 2003/01/26 16:22:47 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // Invoke the ModelElement constructor, but passing in our name and
         // representation and requesting 2 columns
 
-        super("Include", _includeIcon, ConfigLoader.getTabPropsOrientation());
+        super("Include", ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
         addField(Argo.localize("UMLMenu", "label.stereotype"), 

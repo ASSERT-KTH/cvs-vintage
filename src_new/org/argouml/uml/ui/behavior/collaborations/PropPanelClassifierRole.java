@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.24 2003/01/25 19:52:14 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.25 2003/01/26 16:22:46 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.24 2003/01/25 19:52:14 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.25 2003/01/26 16:22:46 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -54,7 +54,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
   ////////////////////////////////////////////////////////////////
   // contructors
   public PropPanelClassifierRole() {
-    super("ClassifierRole",_classifierRoleIcon, ConfigLoader.getTabPropsOrientation());
+    super("ClassifierRole", ConfigLoader.getTabPropsOrientation());
 
     Class mclass = MClassifierRole.class;
    

@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.5 2002/12/28 21:09:59 kataka Exp $
+// $Id: PropPanelComment.java,v 1.6 2003/01/26 16:22:47 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class PropPanelComment extends PropPanelModelElement {
      * @param orientation
      */
     public PropPanelComment() {
-        super("Comment", _commentIcon, ConfigLoader.getTabPropsOrientation());
+        super("Comment", ConfigLoader.getTabPropsOrientation());
         UMLTextArea2 text = new UMLTextArea2(new UMLModelElementNameDocument());
         text.setLineWrap(true);
         text.setRows(5);

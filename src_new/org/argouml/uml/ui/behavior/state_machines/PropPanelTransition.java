@@ -24,7 +24,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.16 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelTransition.java,v 1.17 2003/01/26 16:22:47 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -49,7 +49,7 @@ public class PropPanelTransition extends PropPanelModelElement {
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelTransition() {
-        super("Transition", _transitionIcon, ConfigLoader.getTabPropsOrientation());
+        super("Transition", ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));

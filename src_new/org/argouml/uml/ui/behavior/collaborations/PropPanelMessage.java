@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.23 2003/01/25 08:01:14 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.24 2003/01/26 16:22:46 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.23 2003/01/25 08:01:14 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.24 2003/01/26 16:22:46 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -60,7 +60,7 @@ public class PropPanelMessage extends PropPanelModelElement {
   ////////////////////////////////////////////////////////////////
   // contructors
   public PropPanelMessage() {
-    super("Message",_messageIcon, ConfigLoader.getTabPropsOrientation());
+    super("Message", ConfigLoader.getTabPropsOrientation());
 
     Class mclass = MMessage.class;
     

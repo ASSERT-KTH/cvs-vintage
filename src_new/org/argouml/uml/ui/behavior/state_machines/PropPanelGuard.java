@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.10 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.11 2003/01/26 16:22:47 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -60,7 +60,7 @@ public class PropPanelGuard extends PropPanelModelElement {
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelGuard() {
-        super("Guard",_guardIcon, ConfigLoader.getTabPropsOrientation());
+        super("Guard", ConfigLoader.getTabPropsOrientation());
 
         addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));

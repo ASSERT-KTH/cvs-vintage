@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.8 2003/01/01 22:22:16 kataka Exp $
+// $Id: PropPanelNamespace.java,v 1.9 2003/01/26 16:22:47 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,8 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
         initialize();
     }
     
-    public PropPanelNamespace(String title, ImageIcon icon, Orientation orientation) {
-    	super(title, icon, orientation);
+    public PropPanelNamespace(String title, Orientation orientation) {
+    	super(title, orientation);
     	initialize();
     }
 

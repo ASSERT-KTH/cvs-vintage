@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.25 2003/01/07 20:49:12 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.26 2003/01/26 16:22:47 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -80,7 +80,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
         // Invoke the Classifier constructor, but passing in our name and
         // representation and requesting 3 columns
 
-        super("UseCase", _useCaseIcon, ConfigLoader.getTabPropsOrientation());
+        super("UseCase", ConfigLoader.getTabPropsOrientation());
         
         addField(Argo.localize("UMLMenu", "label.name"), new UMLTextField2(new UMLModelElementNameDocument()));
     	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
