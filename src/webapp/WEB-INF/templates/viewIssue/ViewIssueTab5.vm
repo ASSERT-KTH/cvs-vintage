@@ -34,6 +34,7 @@
  </table>
 
 #if ($currentIssue.isHistoryLong())
+   <div class="functnbar3">
   #if ($fullHistory.equals("true"))
     #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false").addPathInfo("tab", "5"))
     #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
@@ -53,5 +54,6 @@
     #end
     <p><a href="$historyLink">$l10n.ShowCompleteHistory</a></p>
   #end
+  </div>
 #end
 #end
