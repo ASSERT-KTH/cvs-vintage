@@ -38,21 +38,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
-import ru.novosoft.uml.behavior.common_behavior.MLink;
-import ru.novosoft.uml.behavior.common_behavior.MNodeInstance;
-import ru.novosoft.uml.behavior.common_behavior.MObject;
-import ru.novosoft.uml.behavior.use_cases.MExtend;
-import ru.novosoft.uml.behavior.use_cases.MInclude;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationClass;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MGeneralization;
-import ru.novosoft.uml.model_management.MPackage;
-import ru.novosoft.uml.model_management.MSubsystem;
-
 /**
  * This class represents 3 concepts, although it should only represent
  * a navigation perspective, TODO: separate.
@@ -64,7 +49,7 @@ import ru.novosoft.uml.model_management.MSubsystem;
  * the display of extends/includes and extension points in the package centric
  * view.
  *
- * <p>$Id: NavPerspective.java,v 1.28 2003/05/05 06:47:44 kataka Exp $
+ * <p>$Id: NavPerspective.java,v 1.29 2003/06/24 12:15:07 mkl Exp $
  */
 public class NavPerspective
     extends TreeModelComposite
