@@ -637,9 +637,6 @@
           name="org/apache/tomcat/modules/config/LoaderInterceptor12.java"
           unless="jdk12.present"/>
       <exclude
-          name="org/apache/tomcat/modules/config/MxInterceptor.java"
-          unless="jmx-present"/>
-      <exclude
           name="org/apache/tomcat/modules/aaa/PooledJDBCRealm.java"
           unless="commons-dbcp.complete"/>
       <exclude
@@ -861,16 +858,19 @@
   <!-- ==================== Build the sample add-on modules =================== -->
 
   <target name="sample.add-ons">
+    <ant antfile="proposals/JmxSupport/build.xml" />
     <ant antfile="proposals/PasswordPrompter/build.xml"/>
     <ant antfile="proposals/StreamHandler/build.xml" />
   </target>
 
   <target name="sample.add-ons.dist">
+    <ant antfile="proposals/JmxSupport/build.xml" target="jmx.support.war"/>
     <ant antfile="proposals/PasswordPrompter/build.xml" target="password.prompter.war"/>
     <ant antfile="proposals/StreamHandler/build.xml" target="stream.handler.war" />
   </target>
 
   <target name="sample.add-ons.clean">
+    <ant antfile="proposals/JmxSupport/build.xml" target="clean"/>
     <ant antfile="proposals/PasswordPrompter/build.xml" target="clean"/>
     <ant antfile="proposals/StreamHandler/build.xml" target="clean" />
   </target>
