@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.23 2003/02/12 12:41:02 mkl Exp $
+// $Id: Critic.java,v 1.24 2003/02/18 18:28:03 linus Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -303,7 +303,7 @@ public class Critic implements Poster, Serializable {
       // For now I (Linus) just comment it out.
       // cat.debug("applying critic: " + _headline);
     if (predicate(dm, dsgr)) {
-      cat.debug("predicate() detected error");
+      cat.debug("predicate() returned true, creating ToDoItem");
       _numCriticsFired++;
       ToDoItem item = toDoItem(dm, dsgr);
       postItem(item, dm, dsgr);
