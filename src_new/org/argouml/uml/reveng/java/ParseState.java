@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.1 2001/03/07 14:42:46 toby Exp $
+// $Id: ParseState.java,v 1.2 2001/06/25 19:50:36 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -223,6 +223,42 @@ class ParseState
 	    MFeature mFeature = (MFeature)i.next();
 	    if(name.equals(mFeature.getName())) {
 		return mFeature;
+	    }
+	}
+	return null;
+    }
+
+    /**
+       Get a method from the current classifier not yet modeled.
+
+       @param name The name of the method.
+       @returns The found method, null if not found.
+     */
+    public MMethod getMethod(String name)
+    {
+	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
+	    MFeature mFeature = (MFeature)i.next();
+	    if(mFeature instanceof MMethod &&
+	       name.equals(mFeature.getName())) {
+		return (MMethod)mFeature;
+	    }
+	}
+	return null;
+    }
+
+    /**
+       Get a operation from the current classifier not yet modeled.
+
+       @param name The name of the operation.
+       @returns The found operation, null if not found.
+     */
+    public MOperation getOperation(String name)
+    {
+	for(Iterator i = obsoleteFeatures.iterator(); i.hasNext(); ) {
+	    MFeature mFeature = (MFeature)i.next();
+	    if(mFeature instanceof MOperation &&
+	       name.equals(mFeature.getName())) {
+		return (MOperation)mFeature;
 	    }
 	}
 	return null;
