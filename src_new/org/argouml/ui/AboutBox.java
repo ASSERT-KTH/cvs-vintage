@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.36 2004/02/08 08:05:36 mvw Exp $
+// $Id: AboutBox.java,v 1.37 2004/02/08 12:58:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class AboutBox extends JDialog {
 
     JTabbedPane _tabs = new JTabbedPane();
     /** Insets in pixels  */
-    private int i = 3;
+    private int insetPx = 3;
 
     /** Shared splash panel */
     SplashPanel _splashPanel = null;
@@ -88,7 +88,7 @@ public class AboutBox extends JDialog {
 	a.setEditable(false);
 	a.setLineWrap(true);
 	a.setWrapStyleWord(true);
-	a.setMargin(new Insets(i, i, i, i));
+	a.setMargin(new Insets(insetPx, insetPx, insetPx, insetPx));
 	a.setText(text);
 	a.setCaretPosition(0);
 	return new JScrollPane(a);
