@@ -127,12 +127,45 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Prepare style.tigris.org for action                                -->
+    <!-- ================================================================== -->
+    <target name="style-expanded-check">
+        <!-- we can check that style.zip is upToDate in order to know if
+             the archive has already been expanded because it is expanded
+             in the same target as it is copied to the directory -->
+        <mkdir dir="${build.project}/style"/>
+        <uptodate property="style.is.not.expanded"
+            targetfile="${src.html.dir}/${tigris-style}.zip">
+            <srcfiles dir="${build.project}/style" includes="**/*.css"/>
+        </uptodate>    
+    </target>
+
+    <target name="style-init" depends="style-expanded-check"
+            if="style.is.not.expanded">
+        <unzip src="${src.html.dir}/${tigris-style}.zip" dest="${build.dir}"/>
+
+        <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+
+        <copy todir="${build.project}/style" filtering="yes">
+            <fileset dir="${build.dir}/${tigris-style}/css"
+                     includes="**/*.css" defaultexcludes="no"/>
+        </copy>
+
+        <copy todir="${build.project}/images" filtering="no">
+            <fileset dir="${src.images.dir}" defaultexcludes="no"/>
+            <fileset dir="${build.dir}/${tigris-style}/images"
+                     includes="*.gif,*.png" defaultexcludes="no"/>
+        </copy>
+        <delete dir="${build.dir}/${tigris-style}" quiet="true"/>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
-    <target name="prepare" depends="prepare-tomcat">
+    <target name="prepare" depends="prepare-tomcat, style-init">
 
         <!-- things to go into the project directory -->
-        <unzip src="${src.html.dir}/${tigris-style}.zip" dest="${build.dir}"/>
+        
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <copy todir="${build.project}" filtering="yes">
             <fileset dir="${src.html.dir}" defaultexcludes="no">
@@ -140,16 +173,6 @@
                 <include name="**/*.js"/>
             </fileset>
         </copy>
-        <copy todir="${build.project}/style" filtering="yes">
-            <fileset dir="${build.dir}/${tigris-style}/css"
-                     includes="**/*.css" defaultexcludes="no"/>
-        </copy>
-        <copy todir="${build.project}/images" filtering="no">
-            <fileset dir="${src.images.dir}" defaultexcludes="no"/>
-            <fileset dir="${build.dir}/${tigris-style}/images"
-                     includes="*.gif,*.png" defaultexcludes="no"/>
-        </copy>
-        <delete dir="${build.dir}/${tigris-style}"/>
 
         <!-- Conditionally copy templates -->
         <antcall target="copy-templates" />
