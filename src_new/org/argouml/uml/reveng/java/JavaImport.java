@@ -1,4 +1,4 @@
-// $Id: JavaImport.java,v 1.26 2004/04/05 09:08:57 lepekhine Exp $
+// $Id: JavaImport.java,v 1.27 2004/04/05 10:09:09 lepekhine Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -88,6 +88,7 @@ public class JavaImport extends FileImportSupport {
 			  + f.getName());
                 throw e;
             }
+		in.close();
 	}
     }
 
