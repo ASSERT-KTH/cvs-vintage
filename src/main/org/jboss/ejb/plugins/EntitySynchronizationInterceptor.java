@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -170,7 +170,7 @@ extends AbstractInterceptor
        }
        
        // So we can go on with the invocation
-       Logger.log("Tx is "+tx.toString());
+       Logger.log("Tx is "+ ((tx == null)? "null" : tx.toString()));
        if (tx != null &&
            tx.getStatus() == Status.STATUS_ACTIVE) {
          
