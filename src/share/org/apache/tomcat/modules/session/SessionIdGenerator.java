@@ -95,6 +95,7 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     String randomClassName=null;
     Random randomSource=null;
+    DataInputStream randomIS=null;
     
     static Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
@@ -108,6 +109,20 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	randomSource=createRandomClass( randomClassName );
     }
 
+    /** Use /dev/random special device. This is new code, but may reduce the
+     *  big delay in generating the random
+     */
+    public void setUseDevRandom( boolean u ) {
+	if( ! u ) return;
+	try {
+	    randomIS= new DataInputStream( new FileInputStream("/dev/random"));
+	    randomIS.readLong();
+	    log( "Opening /dev/random");
+	} catch( IOException ex ) {
+	    randomIS=null;
+	}
+    }
+    
     
     // -------------------- Tomcat request events --------------------
 
@@ -126,7 +141,7 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     /** Init session management stuff for this context. 
      */
     public void engineInit(ContextManager cm) throws TomcatException {
-	if( randomSource==null ) {
+	if( randomSource==null && randomIS==null ) {
 	    String randomClass=(String)cm.getProperty("randomClass" );
 	    if( randomClass==null ) {
 		randomClass="java.security.SecureRandom";
@@ -147,12 +162,12 @@ public final class SessionIdGenerator  extends BaseInterceptor {
          */
 	String newId;
         if( System.getSecurityManager() == null ) {
-	    newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+	    newId= SessionIdGenerator.getIdentifier(randomSource, randomIS, jsIdent);
 	    return newId;
 	}
 	// We're in a sandbox...
 	PriviledgedIdGenerator di = new
-	    PriviledgedIdGenerator(randomSource,jsIdent);
+	    PriviledgedIdGenerator(randomSource,randomIS, jsIdent);
 	try {
 	    newId= (String)jdk11Compat.doPrivileged(di);
 	} catch( Exception ex ) {
@@ -165,12 +180,15 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     static class PriviledgedIdGenerator extends Action {
 	private Random randomSource;
 	private String jsIdent;
-	public PriviledgedIdGenerator(Random rs, String ident) {
+	DataInputStream randomIS;
+	public PriviledgedIdGenerator(Random rs, DataInputStream randomIS,String ident) {
 	    randomSource = rs;
 	    jsIdent = ident;
+	    this.randomIS=randomIS;
 	}           
 	public Object run() {
 	    return SessionIdGenerator.getIdentifier(randomSource,
+						    randomIS,
 						    jsIdent);
 	}           
     }    
@@ -231,18 +249,30 @@ public final class SessionIdGenerator  extends BaseInterceptor {
     // ** NOTE that this must work together with get_jserv_session_balance()
     // ** in jserv_balance.c
     static synchronized public String getIdentifier (Random randomSource,
+						     DataInputStream devRandomIS,
 						     String jsIdent)
     {
         StringBuffer sessionId = new StringBuffer();
-	if( randomSource==null)
+	if( randomSource==null && devRandomIS==null)
 	    throw new RuntimeException( "No random source " );
 	
         // random value ..
-        long n = randomSource.nextLong();
+        long n = 0;
+	if( devRandomIS!=null ) {
+	    try {
+		n=devRandomIS.readLong();
+		System.out.println("Getting /dev/random " + n );
+	    } catch( IOException ex ) {
+		ex.printStackTrace();
+	    }
+	} else {
+	    n=randomSource.nextLong();
+	} 
+
         if (n < 0) n = -n;
         n %= maxRandomLen;
         // add maxLen to pad the leading characters with '0'; remove
-        // first digit with substring.
+	// first digit with substring.
         n += maxRandomLen;
         sessionId.append (Long.toString(n, Character.MAX_RADIX)
                   .substring(1));
