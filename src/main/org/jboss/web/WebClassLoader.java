@@ -3,11 +3,24 @@ package org.jboss.web;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-/** A simple subclass of URLClassLoader that overrides the getURLs()
-method to return a different set of URLs for remote loading than what is used
-for local loading. This class is used in conjunction with the WebService
-mbean to allow dynamic loading of resources and classes from deployed ears,
-ejb jars and wars.
+import org.jboss.ejb.Container;
+import org.jboss.system.UnifiedClassLoader;
+
+
+/** A simple subclass of URLClassLoader that is used in conjunction with the 
+the WebService mbean to allow dynamic loading of resources and classes from 
+deployed ears, ejb jars and wars. A WebClassLoader is associated with a 
+Container and must have an UnifiedClassLoader as its parent. It overrides the 
+getURLs() method to return a different set of URLs for remote loading than 
+what is used for local loading. 
+<p>
+WebClassLoader has two methods meant to be overriden by subclasses: getKey()
+and getBytes(). The latter is a no-op in this implementation and should be 
+overriden by subclasses with bytecode generation ability, such as the 
+classloader used by the iiop module.
+<p>
+WebClassLoader subclasses must have a constructor with the same signature
+as the WebClassLoader constructor.
 
 @see #getUrls()
 @see #setWebURLs(URL[])
@@ -15,25 +28,46 @@ ejb jars and wars.
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.2 $
+@author  <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
+@version $Revision: 1.3 $
 */
 public class WebClassLoader extends URLClassLoader
 {
+    /** This WebClassLoader is associated with this container. */
+    private Container container;
+
     /** The URLs returned by the getURLs() method override */
     private URL[] webURLs;
 
-    /** Creates new WebClassLoader */
-    public WebClassLoader(URL[] urls)
+    /** Creates new WebClassLoader. 
+        Subclasses must have a constructor with the same signature. */
+    public WebClassLoader(Container container, UnifiedClassLoader parent)
     {
-        super(urls);
+        super(new URL[0], parent);
+        this.container = container;
     }
-    public WebClassLoader(URL[] urls, ClassLoader parent)
+
+    /** Gets a string key used as the key into the WebServer's loaderMap. */
+    public String getKey()
     {
-        super(urls, parent);
+        String className = getClass().getName();
+        int dot = className.lastIndexOf('.');
+        if( dot >= 0 )
+            className = className.substring(dot+1);
+        String key =  className + '@' + hashCode() + '/';
+        return key;
     }
-    public WebClassLoader(URL[] urls, ClassLoader parent, java.net.URLStreamHandlerFactory factory)
+
+    /** Gets this WebClassLoader's container. */
+    public Container getContainer()
     {
-        super(urls, parent, factory);
+        return container;
+    }
+
+    /** Returns the single URL for my parent, an UnifiedClassLoader. */
+    public URL getURL() 
+    {
+        return ((UnifiedClassLoader)getParent()).getURL();
     }
 
     /** Get the list of URLs that should be used as the RMI annotated codebase.
@@ -64,4 +98,19 @@ public class WebClassLoader extends URLClassLoader
     {
         this.webURLs = webURLs;
     }
+
+    /** Gets the bytecodes for a given class. 
+     *  This implementation always returns null, indicating that it is unable
+     *  to get bytecodes for any class. Should be overridden by subclasses 
+     *  with bytecode generation capability (such as the classloader used by 
+     *  the iiop module, which generates IIOP stubs on the fly).
+     * 
+     @param cls a <code>Class</code>
+     @return a byte array with the bytecodes for class <code>cls</code>, or
+     *       null if this classloader is unable to return such byte array.
+     */
+    public byte[] getBytes(Class clz) {
+        return null; // this classloader is unable to return bytecodes
+    }
+   
 }
