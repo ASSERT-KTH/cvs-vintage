@@ -14,7 +14,7 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  *
  * command:
  * 
- *  spamassassin -a --remove-addr-to-whitelist="address"
+ *  spamassassin -a --remove-addr-from-whitelist="address"
  * 
  * command description:
  * 
@@ -26,7 +26,7 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * score for messages, depending on the long-term behavior of the 
  * particular correspondent. See the README file for more details.
  * 
- * --remove-addr-to-whitelist
+ * --remove-addr-from-whitelist
  * 
  * Remove the named email address from the automatic whitelist. Note 
  * that you must be running spamassassin or spamd with the -a switch.

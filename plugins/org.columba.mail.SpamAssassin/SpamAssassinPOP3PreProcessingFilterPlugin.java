@@ -47,7 +47,9 @@ public class SpamAssassinPOP3PreProcessingFilterPlugin
 
 			ColumbaLogger.log.debug("sending to stdin..");
 
-			exitVal = ipcHelper.send(rawString);
+			ipcHelper.send(rawString);
+			
+			exitVal = ipcHelper.waitFor(); 
 
 			ColumbaLogger.log.debug("exitcode=" + exitVal);
 

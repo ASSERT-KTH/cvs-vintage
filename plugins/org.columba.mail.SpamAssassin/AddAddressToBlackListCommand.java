@@ -17,6 +17,7 @@
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -74,7 +75,29 @@ public class AddAddressToBlackListCommand extends FolderCommand {
 
 		if (sender.length() > 0) {
 
-			// to the work
+			IPCHelper ipcHelper = new IPCHelper();
+
+			if (sender.length() > 0) {
+				int exitVal = -1;
+				try {
+					ColumbaLogger.log.debug("creating process..");
+
+					String cmd =
+						"spamassassin -a --add-addr-to-blacklist=\""
+							+ sender
+							+ "\"";
+					ipcHelper.executeCommand(cmd);
+
+					exitVal = ipcHelper.waitFor();
+
+					ColumbaLogger.log.debug("exitcode=" + exitVal);
+
+					ipcHelper.waitForThreads();
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
 		}
 	}
 

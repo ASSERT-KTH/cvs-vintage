@@ -52,12 +52,15 @@ public class IPCHelper {
 	 * send input to process
 	 * 
 	 */
-	public int send(String str) throws Exception {
+	public void send(String str) throws Exception {
 
 		inputStream.println(str);
 		inputStream.flush();
 		//out.close();
 
+	}
+
+	public int waitFor() throws Exception {
 		int exitVal = p.waitFor();
 
 		return exitVal;
