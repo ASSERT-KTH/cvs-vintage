@@ -61,6 +61,7 @@ import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
@@ -74,7 +75,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.8 2001/10/27 00:12:47 elicia Exp $
+ * @version $Id: ModifyModule.java,v 1.9 2001/11/08 02:16:08 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -144,13 +145,6 @@ public class ModifyModule extends RequireLoginFirstAction
                 me.setOwnerId(((ScarabUser)data.getUser()).getUserId());
                 me.save();
                 
-                // reset the ACL
-                // FIXME: this doesn't seem to do what we need, which
-                // is make sure that the user now has permission (in memory)
-                // for the newly created module. in other words, once someone
-                // creates a new module, they can't edit it until the servlet
-                // engine is restarted! even if they log in and out, it doesn't
-                // fix the problem. :-( i have no clue what to do here. HELP! -jon
                 data.setACL(TurbineSecurity.getACL(data.getUser()));
                 data.save();
 
@@ -239,6 +233,27 @@ public class ModifyModule extends RequireLoginFirstAction
                         rma2.setAttributeId(rma1.getAttributeId());
                         rma2.setIssueTypeId(rma1.getIssueTypeId());
                         rma2.save();
+
+                       // set module-option mappings
+                       if (attribute.isOptionAttribute())
+                       {
+                           List rmos = parentModule.getRModuleOptions(attribute,
+                                                                      issueType);
+                           for (int m=0; m<rmos.size(); m++)
+                           {
+                               RModuleOption rmo1 = (RModuleOption)rmos.get(m);
+                               RModuleOption rmo2 = rmo1.copy();
+                               rmo2.setModuleId(newModuleId);
+                               rmo2.setIssueTypeId(issueType.getIssueTypeId());
+                               rmo2.save();
+ 
+                               // Save module-option mappings for template types
+                               RModuleOption rmo3 = rmo1.copy();
+                               rmo3.setModuleId(newModuleId);
+                               rmo3.setIssueTypeId(issueType.getTemplateId());
+                               rmo3.save();
+                           }
+                       }
                     }
                 }
             }
