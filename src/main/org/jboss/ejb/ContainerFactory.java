@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -158,9 +158,24 @@ public class ContainerFactory
                   
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                   
-                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-//                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+                  // MF FIXME: We need to move this in the "conf" eventually that it comes with defaults
+                  try {
+                    
+                       con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+                       con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+                  }
+                  catch (Exception e) {
+                    
+                       // Something went wrong probably a configuration problem
+                       log.log("Warning, Configuration Exception encountered, going to default configuration!"); 
+                       
+                       // Set the defaults for the stateless beans
+                       con.setContainerInvoker(
+                           (ContainerInvoker) cl.loadClass("JRMPContainerInvoker").newInstance());
+                       con.setInstancePool(
+                           (InstancePool) cl.loadClass("StatelessSessionInstancePool").newInstance());    
+                  }
+//                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
                   con.setTransactionManager(new org.jboss.tm.TxManager());
                   
                   containers.add(con);
@@ -182,15 +197,40 @@ public class ContainerFactory
                   con.setClassLoader(new BeanClassLoader(cl));
                   con.setMetaData(bean);
                   
-                  con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
-                  ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
-                  con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
-                  ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
-
-//                  con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+                  // MF FIXME: We need to move this in the "conf" eventually that it comes with defaults
+                  try {
+                  
+                      con.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+                      ((EntityContainer)con).setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+                      con.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+                      ((EntityContainer)con).setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
+                  }
+                  catch (Exception e) {
+                       
+                       // Something went wrong probably a configuration problem
+                       log.log("Warning, Configuration Exception encountered, going to default configuration!"); 
+                       
+                       // Set the defaults for the entity beans
+                       con.setContainerInvoker(
+                           (ContainerInvoker) cl.loadClass("JRMPContainerInvoker").newInstance());
+                       ((EntityContainer)con).setInstanceCache(
+                           (InstanceCache) cl.loadClass("RandomEntityInstanceCache").newInstance());
+                       con.setInstancePool(
+                           (InstancePool) cl.loadClass("EntityInstancePool").newInstance());
+                       if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
+                           ((EntityContainer)con).setPersistenceManager(
+                               (EntityPersistenceManager) cl.loadClass("BMPPersistenceManager").newInstance());
+                       }
+                       else { // The bean is CMP
+                           ((EntityContainer)con).setPersistenceManager(
+                               (EntityPersistenceManager) cl.loadClass("CMPFilePersistenceManager").newInstance());
+                       }
+                  }
+//                con.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
 				  con.setTransactionManager(new org.jboss.tm.TxManager());
                   
                   containers.add(con);
+                  
             }
             
             if (con != null)
