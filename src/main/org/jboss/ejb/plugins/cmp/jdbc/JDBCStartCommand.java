@@ -12,8 +12,11 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.sql.DataSource;
@@ -36,7 +39,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCStartCommand {
 
@@ -70,8 +73,6 @@ public class JDBCStartCommand {
 
    public void execute() throws Exception {
 
-      boolean debug = log.isDebugEnabled();
-
       // Create table if necessary
       if(!entity.getTableExists()) {
          if(entityMetaData.getCreateTable()) {
@@ -79,36 +80,33 @@ public class JDBCStartCommand {
                   entity.getDataSource(),
                   entity.getTableName(),
                   getEntityCreateTableSQL());
-         }
-         else if (debug)
-         {
+         } else {
             log.debug("Table not create as requested: " +
                   entity.getTableName());
          }
          entity.setTableExists(true);
       }
-
+     
       // create relation tables
-      JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
-      for(int i=0; i<cmrFields.length; i++) {
-         JDBCRelationMetaData relationMetaData =
-               cmrFields[i].getRelationMetaData();
+      List cmrFields = entity.getCMRFields();
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+
+         JDBCRelationMetaData relationMetaData = cmrField.getRelationMetaData();
 
          // if the table for the related entity has been created
-         if(cmrFields[i].getRelatedEntity().getTableExists()) {
+         if(cmrField.getRelatedEntity().getTableExists()) {
 
             // create the relation table
             if(relationMetaData.isTableMappingStyle() &&
                !relationMetaData.getTableExists()) {
-
+               
                if(relationMetaData.getCreateTable()) {
                   createTable(
                         relationMetaData.getDataSource(),
                         relationMetaData.getTableName(),
-                        getRelationCreateTableSQL(cmrFields[i]));
-               }
-               else if (debug)
-               {
+                        getRelationCreateTableSQL(cmrField));
+               } else {
                   log.debug("Relation table not create as requested: " +
                         relationMetaData.getTableName());
                }
@@ -116,10 +114,10 @@ public class JDBCStartCommand {
             relationMetaData.setTableExists(true);
 
             // Create my fk constraint
-            addForeignKeyConstraint(cmrFields[i]);
+            addForeignKeyConstraint(cmrField);
 
             // Create related fk constraint
-            addForeignKeyConstraint(cmrFields[i].getRelatedCMRField());
+            addForeignKeyConstraint(cmrField.getRelatedCMRField());
          }
       }
    }
@@ -137,27 +135,24 @@ public class JDBCStartCommand {
 
       Connection con = null;
       Statement statement = null;
-      boolean debug = log.isDebugEnabled();
       try {
          // since we use the pools, we have to do this within a transaction
          manager.getContainer().getTransactionManager().begin ();
 
          // get the connection
          con = dataSource.getConnection();
-
+         
          // create the statement
          statement = con.createStatement();
-
+         
          // execute sql
-         if (debug)
-            log.debug("Executing SQL: " + sql);
+         log.debug("Executing SQL: " + sql);
          statement.executeUpdate(sql);
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit ();
       } catch (Exception e) {
-         if (debug)
-            log.debug("Could not create table " + tableName, e);
+         log.debug("Could not create table " + tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
@@ -205,19 +200,9 @@ public class JDBCStartCommand {
       sql.append("CREATE TABLE ").append(entityMetaData.getTableName());
       
       sql.append(" (");
-         // add cmp fields
-         sql.append(SQLUtil.getCreateTableColumnsClause(
-                  entity.getJDBCCMPFields()));
+         // add fields
+         sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
          
-         // add foriegn key fields
-         JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
-         for(int i=0; i<cmrFields.length; i++) {
-            if(cmrFields[i].hasForeignKey()) {
-               sql.append(", ").append(SQLUtil.getCreateTableColumnsClause(
-                     cmrFields[i].getForeignKeyFields()));
-            }
-         }
-
          // add a pk constraint
          if(entityMetaData.hasPrimaryKeyConstraint())  {
             JDBCFunctionMappingMetaData pkConstraint = 
@@ -228,7 +213,7 @@ public class JDBCStartCommand {
             }
             String[] args = new String[] {
                "pk_"+entityMetaData.getTableName(),
-               SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields())};
+               SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }
 
@@ -238,20 +223,17 @@ public class JDBCStartCommand {
    }
 
    private String getRelationCreateTableSQL(JDBCCMRFieldBridge cmrField) {
+      List fields = new ArrayList();
+      fields.addAll(cmrField.getTableKeyFields());
+      fields.addAll(cmrField.getRelatedCMRField().getTableKeyFields());
 
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE TABLE ").append(
             cmrField.getRelationMetaData().getTableName());
       
       sql.append(" (");
-         // add cmr table key fields
-         sql.append(SQLUtil.getCreateTableColumnsClause(
-                  cmrField.getTableKeyFields()));
-
-         // add related cmr table key fields
-         sql.append(", ");      
-         sql.append(SQLUtil.getCreateTableColumnsClause(
-                  cmrField.getRelatedCMRField().getTableKeyFields()));
+         // add field declaration
+         sql.append(SQLUtil.getCreateTableColumnsClause(fields));
 
          // add a pk constraint
          if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())  {
@@ -263,11 +245,7 @@ public class JDBCStartCommand {
             }
             String[] args = new String[] {
                "pk_"+cmrField.getRelationMetaData().getTableName(),
-               SQLUtil.getColumnNamesClause(cmrField.getTableKeyFields()) +
-                     ", " +
-                     SQLUtil.getColumnNamesClause(
-                           cmrField.getRelatedCMRField().getTableKeyFields())};
-
+               SQLUtil.getColumnNamesClause(fields)};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }   
       sql.append(")");
@@ -285,7 +263,7 @@ public class JDBCStartCommand {
                   cmrField.getFieldName(),
                   cmrField.getTableKeyFields(),
                   cmrField.getEntity().getTableName(),
-                  cmrField.getEntity().getJDBCPrimaryKeyFields());
+                  cmrField.getEntity().getPrimaryKeyFields());
 
          } else if(cmrField.hasForeignKey()) {
             addForeignKeyConstraint(
@@ -294,12 +272,10 @@ public class JDBCStartCommand {
                   cmrField.getFieldName(),
                   cmrField.getForeignKeyFields(),
                   cmrField.getRelatedEntity().getTableName(),
-                  cmrField.getRelatedEntity().getJDBCPrimaryKeyFields());
+                  cmrField.getRelatedEntity().getPrimaryKeyFields());
          }
-      }
-      else if (log.isDebugEnabled())
-      {
-         log.debug("Foreign key constaint not added as requested: " +
+      } else {
+         log.debug("Foreign key constaint not added as requested: " + 
                "relationshipRolename=" +
                cmrField.getMetaData().getRelationshipRoleName());
       }
@@ -310,9 +286,9 @@ public class JDBCStartCommand {
          DataSource dataSource,
          String tableName,
          String cmrFieldName,
-         JDBCCMPFieldBridge[] fields,
+         List fields,
          String referencesTableName,
-         JDBCCMPFieldBridge[] referencesFields) {
+         List referencesFields) {
 
       // can only alter tables we created
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
@@ -326,30 +302,30 @@ public class JDBCStartCommand {
          throw new IllegalStateException("Foreign key constriant is not " +
                "allowed for this type of datastore");
       }
+      String a = SQLUtil.getColumnNamesClause(fields);
+      String b = SQLUtil.getColumnNamesClause(referencesFields);
       String[] args = new String[] {
          tableName, 
          "fk_"+tableName+"_"+cmrFieldName,
-         SQLUtil.getColumnNamesClause(fields),
+         a,
          referencesTableName,
-         SQLUtil.getColumnNamesClause(referencesFields)};
+         b};
       String sql = fkConstraint.getFunctionSql(args);
 
       Connection con = null;
       Statement statement = null;
-      boolean debug = log.isDebugEnabled();
       try {
          // since we use the pools, we have to do this within a transaction
          manager.getContainer().getTransactionManager().begin();
 
          // get the connection
          con = dataSource.getConnection();
-
+         
          // create the statement
          statement = con.createStatement();
-
+         
          // execute sql
-         if (debug)
-            log.debug("Executing SQL: " + sql);
+         log.debug("Executing SQL: " + sql);
          statement.executeUpdate(sql);
 
          // commit the transaction
@@ -358,8 +334,7 @@ public class JDBCStartCommand {
          // success
          log.info("Added foreign key constriant to table '" + tableName);
       } catch (Exception e) {
-         if (debug)
-            log.debug("Could not add foreign key constriant to table " +
+         log.debug("Could not add foreign key constriant to table " + 
                tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();
