@@ -37,10 +37,10 @@
 
 <h3>$l10n.format("PersonnelAssociatedWithIssue", "$issue.UniqueId")</h3>
 
-<p>$l10n.format("ClickHereToSelectUsers", $issueListSize)</p>
 
 <div class="colbar">
 <ul>
+<li>$l10n.format("ClickHereToSelectUsers", $issueListSize)</li>
 <li>$l10n.ChangesSavedOnDone</li>
 </ul>
 </div>
