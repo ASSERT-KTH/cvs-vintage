@@ -79,44 +79,28 @@ public class Activity implements java.io.Serializable
 
     public boolean isRemoveUserActivity()
     {
-        if (getNewUser() == null && getOldUser() != null)
-        {
-            return true;
-        }
-        return false;
+        return (getNewUser() == null && getOldUser() != null);
     }
 
     public boolean isAddDependency()
     {
-        if (getDependency() != null &&
-            getOldValue() == null &&
-            getNewValue() != null)
-        {
-            return true;
-        }
-        return false;
+        return (getDependency() != null &&
+                getOldValue() == null &&
+                getNewValue() != null);
     }
 
     public boolean isDeleteDependency()
     {
-        if (getDependency() != null &&
-            getOldValue() != null &&
-            getNewValue() == null)
-        {
-            return true;
-        }
-        return false;
+        return (getDependency() != null &&
+                getOldValue() != null &&
+                getNewValue() == null);
     }
 
     public boolean isUpdateDependency()
     {
-        if (getDependency() != null &&
-            getOldValue() != null &&
-            getNewValue() != null)
-        {
-            return true;
-        }
-        return false;
+        return (getDependency() != null &&
+                getOldValue() != null &&
+                getNewValue() != null);
     }
 
     public String getId()

@@ -110,14 +110,10 @@ public class Dependency implements java.io.Serializable
 
     public boolean equals(Dependency dependency)
     {
-        if (child.equals(dependency.getChild()) &&
-            parent.equals(dependency.getParent()) &&
-            type.equals(dependency.getType()) && 
-            deleted == dependency.getDeleted())
-        {
-            return true;
-        }
-        return false;
+        return (child.equals(dependency.getChild()) &&
+                parent.equals(dependency.getParent()) &&
+                type.equals(dependency.getType()) && 
+                deleted == dependency.getDeleted());
     }
 
     public String toString()
