@@ -36,6 +36,9 @@
         <SessionIdGenerator randomClass="java.security.SecureRandom" 
                             randomFile="/dev/urandom" />
 
+<!--        <RequestInterceptor className="org.apache.tomcat.modules.monitor.Monitor"/>
+-->
+
 
         <!-- ========== context processing modules ========== -->
 
@@ -53,7 +56,7 @@
 		   path="logs/jasper-${yyyyMMdd}.log" 
 		   verbosityLevel = "INFORMATION"  />
 
-        <LoaderInterceptor11  useApplicationLoader="true" />
+        <LoaderInterceptor11  useApplicationLoader="true" debug="99" />
 
         <WebXmlReader validate="true" />
 
@@ -197,19 +200,20 @@
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
              Parameter "address" defines network interface this Interceptor
              "binds" to. Delete it if you want to "bind" to all interfaces.
+        address="127.0.0.1"
           -->
         <RequestInterceptor 
          className="org.apache.tomcat.modules.server.Ajp12Interceptor"
-         address="127.0.0.1"
+         tomcatAuthentication="false" 
          port="8007" />
 
         <!-- Apache AJP13 support (mod_jk)
              Parameter "address" defines network interface this Interceptor
              "binds" to. Delete it if you want to "bind" to all interfaces.
+         address="127.0.0.1"
           -->
         <RequestInterceptor 
          className="org.apache.ajp.tomcat33.Ajp13Interceptor"
-         address="127.0.0.1"
          port="8009" />
 
       <!-- 
