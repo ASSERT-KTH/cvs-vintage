@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.117 2003/09/21 14:19:24 alexb Exp $
+// $Id: ProjectBrowser.java,v 1.118 2003/10/05 16:24:53 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class ProjectBrowser
      * @deprecated As of ArgoUml version 0.13.5, replaced by
      *             {@link org.argouml.ui.ProjectBrowser#getInstance()}
      */
-    public static ProjectBrowser TheInstance;
+    private static ProjectBrowser TheInstance;
 
     private static String _Title = "ArgoUML";
     private static boolean _Splash = false;
