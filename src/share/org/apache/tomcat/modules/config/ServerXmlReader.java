@@ -70,6 +70,7 @@ import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.hooks.*;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.xml.sax.*;
 
@@ -113,6 +114,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	throws TomcatException
     {
 	if( this != module ) return;
+	setupHookFinder();
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
 	xh.addRule( "ContextManager", xh.setProperties() );
@@ -158,7 +160,8 @@ public class ServerXmlReader extends BaseInterceptor {
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
-	    cm.log( sm.getString("tomcat.fatalconfigerror"), ex );
+	    ex.printStackTrace();
+	    //	    cm.log( sm.getString("tomcat.fatalconfigerror"), ex );
 	    throw new TomcatException(ex);
 	}
     }
@@ -215,7 +218,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	    String tag=(String)keys.nextElement();
 	    String classN=(String)modules.get( tag );
 
-	    xh.addRule(  tag ,
+	    xh.addRule( tag ,
 			 xh.objectCreate( classN, null ));
 	    xh.addRule( tag ,
 			xh.setProperties());
@@ -262,6 +265,15 @@ public class ServerXmlReader extends BaseInterceptor {
 	}
     }
 
+    void setupHookFinder() {
+	Hooks.setHookFinder( new IntrospectionHookFinder() );
+    }
+
+    static class IntrospectionHookFinder implements Hooks.HookFinder {
+	public boolean hasHook( Object o, String hook ) {
+	    return IntrospectionUtils.hasHook( o, hook );
+	}
+    }
     // -------------------- File utils --------------------
 
     // get additional files
