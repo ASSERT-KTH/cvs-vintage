@@ -114,7 +114,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
      #else
         #prepIssueListPageLink()
         #set ($sortLink = $link.setPage("IssueList.vm").setPathInfo("sortColumn","").setPathInfo("sortPolarity", $sortPolarity))
-        <a href="$sortLink">Issue ID</a>
+        <a href="$sortLink">$l10n.IssueId</a>
      #end
   </th>
 
