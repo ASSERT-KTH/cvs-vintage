@@ -213,6 +213,7 @@ public class Handler {
      *  runtime exceptions )
      */
     public void service(Request req, Response res)
+	throws Exception
     {
 	BaseInterceptor reqI[]=
 	    req.getContainer().getInterceptors(Container.H_preService);
@@ -228,6 +229,7 @@ public class Handler {
 	    serviceException=ex;
 	    // if new exception, update info
 	    if ( ex != res.getErrorException() ) {
+		//log("setErrorException " + ex ); 
 		res.setErrorException(ex);
 		res.setErrorURI(null);
 	    }
@@ -240,8 +242,12 @@ public class Handler {
 	}
 
 	// if error, handle
-	if( serviceException != null )
+	if( serviceException != null ) {
+	    //log("handle " + serviceException );
+	    //serviceException.printStackTrace();
 	    handleServiceError( req, res, serviceException );
+	    //log("XXX After handleServiceError");
+	}
     }
 
     /** A handler may either directly generate the response or it can
@@ -273,7 +279,9 @@ public class Handler {
     // -------------------- methods you can override --------------------
     
     protected void handleServiceError( Request req, Response res, Throwable t )
+	throws Exception
     {
+	//log("handleServiceError " + t);
 	contextM.handleError( req, res, t );
     }
     
