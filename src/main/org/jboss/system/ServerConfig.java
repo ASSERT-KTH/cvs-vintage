@@ -22,9 +22,10 @@ import java.net.MalformedURLException;
  *    Should use nested version when JDK 1.4 is standardized.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ServerConfig
+   implements ServerConfigMBean
 {
    /** The local home directory for the server. */
    private File homeDir;
@@ -50,6 +51,9 @@ public class ServerConfig
    /** The base URL where patch files will be loaded from. */
    private URL patchURL;
    
+   /** Exit on shutdown flag. */
+   private boolean exitOnShutdown = false;
+
    /** 
     * Construct a new <tt>ServerConfig</tt> instance.
     *
@@ -188,5 +192,27 @@ public class ServerConfig
          }
       }
       return spineURL;
+   }
+
+   /**
+    * Enable or disable exiting the JVM when {@link #shutdown} is called.
+    * If enabled, then shutdown calls {@link #exit}.  If disabled, then
+    * only the shutdown hook will be run.
+    *
+    * @param flag    True to enable calling exit on shutdown.
+    */
+   public void setExitOnShutdown(final boolean flag) {
+      exitOnShutdown = flag;
+   }
+
+    /**
+     * Get the current value of the exit on shutdown flag.  Default value is
+     * false, though it will be set to true when bootstrapped with 
+     * {@link org.jboss.Main}.
+     *
+     * @return    The current value of the exit on shutdown flag.
+     */
+   public boolean getExitOnShutdown() {
+      return exitOnShutdown;
    }
 }

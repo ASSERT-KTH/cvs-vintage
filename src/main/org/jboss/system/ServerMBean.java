@@ -14,7 +14,7 @@ import java.util.Date;
  * The JMX MBean interface for the <tt>Server</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface ServerMBean
 {
@@ -22,24 +22,6 @@ public interface ServerMBean
    // Should eventually expose init, start & stop to allow admin clients
    // to manage the state of the server dynamically.
    //
-
-   /**
-    * Enable or disable exiting the JVM when {@link #shutdown} is called.
-    * If enabled, then shutdown calls {@link #exit}.  If disabled, then
-    * only the shutdown hook will be run.
-    *
-    * @param flag    True to enable calling exit on shutdown.
-    */
-   void setExitOnShutdown(boolean flag);
-
-    /**
-     * Get the current value of the exit on shutdown flag.  Default value is
-     * false, though it will be set to true when bootstrapped with 
-     * {@link org.jboss.Main}.
-     *
-     * @return    The current value of the exit on shutdown flag.
-     */
-   boolean getExitOnShutdown();
 
    /**
     * Shutdown the server and run shutdown hooks.  If the exit on shutdown
@@ -115,16 +97,4 @@ public interface ServerMBean
    String getBuildID();
 
    String getBuildDate();
-   
-   String getHomeDir();
-   
-   String getInstallURL();
-   
-   String getSpineURL();
-   
-   String getConfigURL();
-   
-   String getLibraryURL();
-   
-   String getPatchURL();
 }

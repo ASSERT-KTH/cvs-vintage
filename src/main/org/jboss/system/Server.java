@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Server
     implements ServerMBean
@@ -55,9 +55,6 @@ public class Server
 
    /** The JVM shutdown hook */
    private final ShutdownHook shutdownHook;
-
-   /** Exit on shutdown flag. */
-   private boolean exitOnShutdown = false;
 
    /** 
     * Creates a new instance of Server.
@@ -95,13 +92,15 @@ public class Server
 	  log.debug("Using system domain: " + systemDomain);
       }
       
-      // Register ourselves first
+      // Register server components
       server.registerMBean(this,
          new ObjectName(systemDomain,"service", "Server"));
+      server.registerMBean(config,
+         new ObjectName(systemDomain,"service", "ServerConfig"));
       
       // Initialize the MBean libraries repository
       server.registerMBean(ServiceLibraries.getLibraries(),
-         new ObjectName(systemDomain, "service","ServiceLibraries"));
+         new ObjectName(systemDomain, "service", "ServiceLibraries"));
       
       // Initialize spine boot libraries
       initBootLibraries();
@@ -162,15 +161,15 @@ public class Server
       
       // Deployer
       ObjectName mainDeployer = 
-      server.createMBean("org.jboss.deployment.MainDeployer",
-         new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
-         loaderName).getObjectName();
+	 server.createMBean("org.jboss.deployment.MainDeployer",
+			    new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+			    loaderName).getObjectName();
       
       // SAR Deployer
-      ObjectName sarDeployer = server.createMBean(
-         "org.jboss.deployment.SARDeployer",
-         null, 
-         loaderName).getObjectName();
+      ObjectName sarDeployer = 
+         server.createMBean("org.jboss.deployment.SARDeployer",
+			    null, 
+			    loaderName).getObjectName();
       
       // Ok, now do a first deploy of JBoss' jboss-service.xml
       server.invoke(mainDeployer, 
@@ -185,7 +184,7 @@ public class Server
       long lapsedTime = System.currentTimeMillis() - started.getTime();
       long minutes = lapsedTime / 60000;
       long seconds = (lapsedTime - 60000 * minutes) / 1000;
-      long milliseconds = (lapsedTime -60000 * minutes - 1000 * seconds);
+      long milliseconds = (lapsedTime - 60000 * minutes - 1000 * seconds);
       
       // Tell the world how fast it was =)
       log.info("JBoss (MX MicroKernel) " + 
@@ -253,28 +252,6 @@ public class Server
    }
 
    /**
-    * Enable or disable exiting the JVM when {@link #shutdown} is called.
-    * If enabled, then shutdown calls {@link #exit}.  If disabled, then
-    * only the shutdown hook will be run.
-    *
-    * @param flag    True to enable calling exit on shutdown.
-    */
-   public void setExitOnShutdown(final boolean flag) {
-      exitOnShutdown = flag;
-   }
-
-    /**
-     * Get the current value of the exit on shutdown flag.  Default value is
-     * false, though it will be set to true when bootstrapped with 
-     * {@link org.jboss.Main}.
-     *
-     * @return    The current value of the exit on shutdown flag.
-     */
-   public boolean getExitOnShutdown() {
-      return exitOnShutdown;
-   }
-
-   /**
     * Shutdown the server and run shutdown hooks.  If the exit on shutdown
     * flag is true, then {@link exit} is called, else only the shutdown hook 
     * is run.
@@ -283,6 +260,8 @@ public class Server
       final Server server = this;
 
       log.info("Shutting down");
+
+      boolean exitOnShutdown = config.getExitOnShutdown();
       if (log.isDebugEnabled()) {
 	  log.debug("exitOnShutdown: " + exitOnShutdown);
       }
@@ -429,33 +408,6 @@ public class Server
    
    public String getBuildDate() {
       return version.getBuildDate();
-   }
-   
-   public String getHomeDir() {
-      return config.getHomeDir().toString();
-   }
-   
-   public String getInstallURL() {
-      return config.getInstallURL().toString();
-   }
-   
-   public String getSpineURL() {
-      return config.getSpineURL().toString();
-   }
-   
-   public String getConfigURL() {
-      return config.getConfigURL().toString();
-   }
-   
-   public String getLibraryURL() {
-      return config.getLibraryURL().toString();
-   }
-   
-   public String getPatchURL() {
-      URL patchURL = config.getPatchURL();
-      if (patchURL == null)
-         return null;
-      return patchURL.toString();
    }
    
    
