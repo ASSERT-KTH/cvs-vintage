@@ -1292,11 +1292,11 @@ try{
             // If user is sorting on an attribute, set sort criteria
             // Do not use intake, since intake parsed from query is not the same
             // As intake passed from the form
-            String sortAttrId = data.getParameters().getString("sortAttrId");
-            if (sortAttrId != null && sortAttrId.length() > 0 
-                && StringUtils.isNumeric(sortAttrId))
+            String sortColumn = data.getParameters().getString("sortColumn");
+            if (sortColumn != null && sortColumn.length() > 0 
+                && StringUtils.isNumeric(sortColumn))
             {
-                search.setSortAttributeId(new NumberKey(sortAttrId));
+                search.setSortAttributeId(new NumberKey(sortColumn));
             }
             String sortPolarity = data.getParameters().getString("sortPolarity");
             if (sortPolarity != null && sortPolarity.length() > 0)
