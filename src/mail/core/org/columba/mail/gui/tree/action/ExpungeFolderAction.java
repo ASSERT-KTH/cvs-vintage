@@ -86,9 +86,7 @@ public class ExpungeFolderAction extends AbstractColumbaAction implements
 			if (folder != null) {
 				IFolderItem item = folder.getConfiguration();
 
-				if (folder instanceof VirtualFolder) {
-					setEnabled(false);
-				} else if (folder instanceof RootFolder) {
+				if (folder instanceof RootFolder) {
 					setEnabled(false);
 				} else {
 
