@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCCommandFactory {
    private JDBCStoreManager manager;
@@ -25,11 +25,6 @@ public class JDBCCommandFactory {
    public JDBCCommandFactory(JDBCStoreManager manager) throws Exception {
       this.manager = manager;      
    }
-   
-   // Additional Command creation
-   public JDBCLoadFieldCommand createLoadFieldCommand() {
-      return new JDBCLoadFieldCommand(manager);
-   }   
    
    public JDBCQueryCommand createFindByPrimaryKeyQuery(JDBCQueryMetaData q) {
       return new JDBCFindByPrimaryKeyQuery(manager, q);
@@ -54,10 +49,6 @@ public class JDBCCommandFactory {
       return new JDBCFindByQuery(manager, q);
    }
 
-   public JDBCFindByForeignKeyCommand createFindByForeignKeyCommand() {
-      return new JDBCFindByForeignKeyCommand(manager);
-   }
-
    public JDBCLoadRelationCommand createLoadRelationCommand() {
       return new JDBCLoadRelationCommand(manager);
    }
@@ -68,10 +59,6 @@ public class JDBCCommandFactory {
 
    public JDBCInsertRelationsCommand createInsertRelationsCommand() {
       return new JDBCInsertRelationsCommand(manager);
-   }
-
-   public JDBCReadAheadCommand createReadAheadCommand() {
-      return new JDBCReadAheadCommand(manager);
    }
 
    // lifecycle commands
@@ -112,7 +99,7 @@ public class JDBCCommandFactory {
       return new JDBCFindEntitiesCommand(manager);
    }
    
-   public JDBCCreateEntityCommand createCreateEntityCommand() {                   
+   public JDBCCreateEntityCommand createCreateEntityCommand() {
       return new JDBCCreateEntityCommand(manager);
    }
    
