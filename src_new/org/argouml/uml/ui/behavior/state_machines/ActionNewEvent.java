@@ -1,4 +1,4 @@
-// $Id: ActionNewEvent.java,v 1.6 2004/11/01 19:55:04 mvw Exp $
+// $Id: ActionNewEvent.java,v 1.7 2004/12/03 20:53:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,9 +27,10 @@ package org.argouml.uml.ui.behavior.state_machines;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.StateMachinesHelper;
-import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
  * Abstract action to create new events.
@@ -84,5 +85,17 @@ public abstract class ActionNewEvent extends AbstractActionNewModelElement {
                         .setEventAsTrigger(getTarget(), event);
         }
         TargetManager.getInstance().setTarget(event);
+    }
+
+    /**
+     * @param role the role the event plays
+     * @param t the transition or state to get the event for
+     * @return the event
+     */
+    public static Object getAction(String role, Object t) {
+        if (role.equals(Roles.TRIGGER)) {
+            return ModelFacade.getTrigger(t);
+        }  
+        return null;
     }
 }

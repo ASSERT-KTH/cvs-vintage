@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.7 2004/09/19 14:24:15 mvw Exp $
+// $Id: ActionNewAction.java,v 1.8 2004/12/03 20:53:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,4 +113,27 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
         
     }
 
+    /**
+     * @param role the role the action plays
+     * @param t the transition or state to get the action for
+     * @return the action
+     */
+    public static Object getAction(String role, Object t) {
+        if (role.equals(Roles.EXIT)) {
+            return ModelFacade.getExit(t);
+        } else
+            if (role.equals(Roles.ENTRY)) {
+                return ModelFacade.getEntry(t);          
+            } else
+                if (role.equals(Roles.DO)) {
+                    return ModelFacade.getDoActivity(t);
+                } else
+                    if (role.equals(Roles.ACTION)) {
+                        return ModelFacade.getAction(t);
+                    } else
+                        if (role.equals(Roles.EFFECT)) {
+                            return ModelFacade.getEffect(t);
+                        } 
+        return null;
+    }
 }

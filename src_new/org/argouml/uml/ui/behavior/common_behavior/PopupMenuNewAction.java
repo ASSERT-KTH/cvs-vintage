@@ -1,4 +1,4 @@
-// $Id: PopupMenuNewAction.java,v 1.7 2004/09/19 19:29:57 mvw Exp $
+// $Id: PopupMenuNewAction.java,v 1.8 2004/12/03 20:53:46 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,8 +83,8 @@ public class PopupMenuNewAction extends JPopupMenu {
 
         addSeparator();
 
-        ActionRemoveModelElement.SINGLETON.setTarget(
-						     list.getSelectedValue());
+        ActionRemoveModelElement.SINGLETON.setObjectToRemove(ActionNewAction
+             .getAction(role, list.getTarget()));
         add(ActionRemoveModelElement.SINGLETON);
     }
 }
