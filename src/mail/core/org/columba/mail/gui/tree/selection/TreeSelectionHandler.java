@@ -66,6 +66,8 @@ public class TreeSelectionHandler extends SelectionHandler implements
 	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
 	 */
 	public DefaultCommandReference getSelection() {
+		if ( selectedFolders.size() == 0) return null;
+		
 		FolderCommandReference reference = new FolderCommandReference(
 				(AbstractFolder) selectedFolders.get(0));
 
