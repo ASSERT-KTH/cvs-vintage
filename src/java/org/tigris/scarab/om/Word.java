@@ -33,15 +33,17 @@ public class Word
     extends org.tigris.scarab.om.BaseWord
     implements Persistent
 {
+    private static String query =
+        "SELECT sum(" + RIssueWordPeer.OCCURENCES + ") as OCCUR"+
+        " FROM " + RIssueWordPeer.TABLE_NAME +
+        " WHERE " + RIssueWordPeer.WORD_ID + " = ";
     /**
      *  recalcualtes and saves word's rating
      *
      */
     public void updateRating() throws Exception
     {
-        Vector v = BasePeer.executeQuery("SELECT sum(occurences) as OCCUR"+
-            " FROM SCARAB_R_ISSUE_WORD"+
-            " WHERE WORD_ID="+ getWordId());
+        Vector v = BasePeer.executeQuery(query + getWordId());
         Record rec = (Record)v.get(0);
         setRating(
             ScarabConstants.MAX_WORD_RATING /

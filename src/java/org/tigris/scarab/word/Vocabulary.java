@@ -65,21 +65,23 @@ import org.tigris.scarab.om.*;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.6 2001/04/17 00:07:38 fedor Exp $
+ * @version $Id: Vocabulary.java,v 1.7 2001/04/18 18:00:53 fedor Exp $
  */
 public class Vocabulary
 {
     private static HashSet ignoredWords;
     // pardon our dust
     private static String issueQuery1 =
-        "SELECT i.ISSUE_ID,"+
-            " sum(iw.occurences * w.rating - iw.position) as issue_rating"+
-            " FROM SCARAB_ISSUE i, SCARAB_WORD w, SCARAB_R_ISSUE_WORD iw"+
-            " WHERE iw.word_id = w.word_id"+
-                " AND iw.issue_id = i.issue_id"+
-                " AND w.word_id in (";
-    private static String issueQuery2 =     ")"+
-            " GROUP BY i.ISSUE_ID"+
+        "SELECT "+IssuePeer.ISSUE_ID+","+
+            " sum("+RIssueWordPeer.OCCURENCES + " * " + WordPeer.RATING +
+                " - " + RIssueWordPeer.POSITION + ") as issue_rating"+
+            " FROM " + IssuePeer.TABLE_NAME +", " + WordPeer.TABLE_NAME+ ", "
+                + RIssueWordPeer.TABLE_NAME +
+            " WHERE " + RIssueWordPeer.WORD_ID + " = " + WordPeer.WORD_ID +
+            " AND " + RIssueWordPeer.ISSUE_ID + " = " + IssuePeer.ISSUE_ID +
+            " AND " + WordPeer.WORD_ID + " in (";
+    private static String issueQuery2 =")"+
+            " GROUP BY " + IssuePeer.ISSUE_ID +
             " ORDER BY issue_rating desc";
     private Hashtable words;
     private int pos = 1;
