@@ -94,6 +94,7 @@ public class SimpleRealm extends  BaseInterceptor {
 	throws TomcatException
     {
         super.contextInit(ctx);
+        setContextManager(ctx.getContextManager());
         init(cm,ctx);
         try {
             // XXX make the name a "global" static -
@@ -153,8 +154,8 @@ public class SimpleRealm extends  BaseInterceptor {
                      req + " " + req.getContainer() );
 
         userRoles = memoryRealm.getUserRoles( user );
-            if ( userRoles == null )
-                return 0;
+        if ( userRoles == null )
+            return 0;
         req.setUserRoles( userRoles );
 
         if( SecurityTools.haveRole( userRoles, roles ))
@@ -181,6 +182,7 @@ public class SimpleRealm extends  BaseInterceptor {
 
     void init(ContextManager cm,Context ctx) {
 	if( memoryRealm==null) {
+            System.out.println(cm);
 	    memoryRealm = new MemoryRealm(filename,cm.getHome());
 	    try {
 		memoryRealm.readMemoryRealm();
@@ -273,7 +275,7 @@ public class SimpleRealm extends  BaseInterceptor {
                 return;
             }
             XmlMapper xh=new XmlMapper();
-            if( debug > 5 ) xh.setDebug( 2 );
+            if( getDebug() > 5 ) xh.setDebug( 2 );
 
             // call addUser using attributes as parameters
             xh.addRule("tomcat-users/user",
