@@ -13,10 +13,10 @@
         <li><small>a unique set of permissions per role</small></li>
         </ul>
         
-        <p>Once a user selects an artifact type, Scarab's navigation
-        will indicate their selection state by dropping down a list of
-        functions within that artifact type, giving authorized user's
-        access to functionality such as:</p>
+        <p><small>Once a user selects an artifact type, Scarab's
+        navigation will indicate their selection state by dropping down
+        a list of functions within that artifact type, giving authorized
+        user's access to functionality such as:</small></p>
         
         <ul>
         <li><small>enter a new issue</small></li>
