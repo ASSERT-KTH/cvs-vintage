@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.207 2004/08/25 22:22:39 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.208 2004/08/26 20:06:48 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4217,6 +4217,9 @@ public class ModelFacade {
         }
         if (handle instanceof MAggregationKind) {
             return ((MAggregationKind) handle).getName();
+        }
+        if (handle instanceof MVisibilityKind) {
+            return ((MVisibilityKind) handle).getName();
         }
         if (handle instanceof MCallConcurrencyKind) {
             return ((MCallConcurrencyKind) handle).getName();
