@@ -258,53 +258,53 @@ public class IMAPFolder extends RemoteFolder {
     public HeaderList getHeaderList() throws Exception {
         //if (headerList == null) {
 
-            headerList = cache.getHeaderList();
+        headerList = cache.getHeaderList();
 
-            // if this is the first time we download
-            // a headerlist -> we need to save headercache
-            if (headerList.count() == 0) {
-                changed = true;
-            }
+        // if this is the first time we download
+        // a headerlist -> we need to save headercache
+        if (headerList.count() == 0) {
+            changed = true;
+        }
 
-            getObservable().setMessage(
-                MailResourceLoader.getString(
-                    "statusbar",
-                    "message",
-                    "fetch_uid_list"));
+        getObservable().setMessage(
+            MailResourceLoader.getString(
+                "statusbar",
+                "message",
+                "fetch_uid_list"));
 
-            List newList = getStore().fetchUIDList(getImapPath());
+        List newList = getStore().fetchUIDList(getImapPath());
 
-            if (newList == null) {
-                return new HeaderList();
-            }
+        if (newList == null) {
+            return new HeaderList();
+        }
 
-            List result = synchronize(headerList, newList);
+        List result = synchronize(headerList, newList);
 
-            getObservable().setMessage(
-                MailResourceLoader.getString(
-                    "statusbar",
-                    "message",
-                    "fetch_flags_list"));
+        getObservable().setMessage(
+            MailResourceLoader.getString(
+                "statusbar",
+                "message",
+                "fetch_flags_list"));
 
-            Flags[] flags = getStore().fetchFlagsList(getImapPath());
+        Flags[] flags = getStore().fetchFlagsList(getImapPath());
 
-            getObservable().setMessage(
-                MailResourceLoader.getString(
-                    "statusbar",
-                    "message",
-                    "fetch_header_list"));
+        getObservable().setMessage(
+            MailResourceLoader.getString(
+                "statusbar",
+                "message",
+                "fetch_header_list"));
 
-            // if available -> fetch new headers
-            if (result.size() > 0) {
-                getStore().fetchHeaderList(headerList, result, getImapPath());
-            }
+        // if available -> fetch new headers
+        if (result.size() > 0) {
+            getStore().fetchHeaderList(headerList, result, getImapPath());
+        }
 
-            messageFolderInfo = getStore().getSelectedFolderMessageFolderInfo();
+        messageFolderInfo = getStore().getSelectedFolderMessageFolderInfo();
 
-            updateFlags(flags);
+        updateFlags(flags);
 
-            // clear statusbar message
-            getObservable().clearMessage();
+        // clear statusbar message
+        getObservable().clearMessage();
         //}
 
         return headerList;
@@ -727,19 +727,16 @@ public class IMAPFolder extends RemoteFolder {
                     ColumbaLogger.log.info(
                         "moving message with UID " + uid + " to trash");
 
-					/*
-                    if (flags.getRecent()) {
-                        getMessageFolderInfo().decRecent();
-                    }
-
-                    if (!flags.getSeen()) {
-                        getMessageFolderInfo().decUnseen();
-                    }
-                    */
+                    /*
+                     * if (flags.getRecent()) {
+                     * getMessageFolderInfo().decRecent(); }
+                     * 
+                     * if (!flags.getSeen()) {
+                     * getMessageFolderInfo().decUnseen(); }
+                     */
 
                     getMessageFolderInfo().decExists();
-					
-					
+
                     // remove message
                     headerList.remove(uid);
                 }
@@ -844,12 +841,14 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
      */
     public void addSubfolder(FolderTreeNode child) throws Exception {
+        if (child instanceof IMAPFolder) {
+            String path =
+                getImapPath() + getStore().getDelimiter() + child.getName();
+
+            getStore().createFolder(path);
+        }  
+
         super.addSubfolder(child);
-
-        String path =
-            getImapPath() + getStore().getDelimiter() + child.getName();
-
-        boolean result = getStore().createFolder(path);
     }
 
     /*
