@@ -97,13 +97,10 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.123 2002/05/07 04:46:13 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.124 2002/05/07 19:15:14 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
-    /** list of invalid characters when doing searches */
-    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>\\";
-    
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
     {
@@ -177,7 +174,8 @@ public class ReportIssue extends RequireLoginFirstAction
             String s = av.getValue();
             if (s != null && s.length() > 0) 
             {
-                StringTokenizer tokens = new StringTokenizer(s, invalidChars);
+                StringTokenizer tokens = new StringTokenizer(s, 
+                    ScarabConstants.INVALID_SEARCH_CHARACTERS);
                 StringBuffer query = new StringBuffer(s.length() + 10);
                 while (tokens.hasMoreTokens())
                 {

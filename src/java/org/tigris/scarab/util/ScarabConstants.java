@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.38 2002/05/07 17:30:10 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.39 2002/05/07 19:15:28 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -205,4 +205,9 @@ public interface ScarabConstants
      * Value of the session parameter to view the issue in long form.
      */
     String ISSUE_VIEW_ALL = "all";
+
+    /** 
+     * list of invalid characters when doing searches
+     */
+    String INVALID_SEARCH_CHARACTERS = " \t(){}[]!,;:?./*-+=+&|<>\\";
 }    
