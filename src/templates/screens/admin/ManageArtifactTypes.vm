@@ -48,7 +48,7 @@
 #if (!$rmits || $rmits.isEmpty())
    <p><strong class="alert">There are no issue types in this module.</strong></p>
 <div class="functnbar3">
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>
+<input type="submit" value="Create new"  name="eventSubmit_doGotoothertemplate"/>
 </div>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
