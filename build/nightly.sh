@@ -188,7 +188,7 @@ echo "Building Scarab Finish..."
 
 echo "Building Scarab Javadoc Start..."
 cd ${DIR}; cd ${SCARAB}/build
-ant javadocs
+ant javadocs141
 echo "Building Scarab Javadoc Finish..."
 
 echo "Recreating the database..."
