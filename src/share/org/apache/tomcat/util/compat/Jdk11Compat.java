@@ -111,6 +111,10 @@ public class Jdk11Compat {
 	// nothing
     }
 
+    public void refreshPolicy() {
+	// nothing
+    }
+    
     /** Get the context class loader, if java2.
      */
     public ClassLoader getContextClassLoader() {

@@ -101,6 +101,10 @@ public class Jdk12Support extends Jdk11Compat {
 	}
     }
 
+    public void refreshPolicy() {
+	Policy.getPolicy().refresh();
+    }
+    
     public void setContextClassLoader( ClassLoader cl ) {
 	// we can't doPrivileged here - it'll be a major security
 	// problem

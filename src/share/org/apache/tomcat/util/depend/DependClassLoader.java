@@ -91,9 +91,32 @@ public class DependClassLoader extends ClassLoader {
     DependManager dependM;
     protected Object pd;
     static Jdk11Compat jdkCompat=Jdk11Compat.getJdkCompat();
+
+    public static DependClassLoader getDependClassLoader( DependManager depM,
+							  ClassLoader parent,
+							  Object pd ) {
+	if( jdkCompat.isJava2() ) {
+	    try {
+		Class c=Class.forName( "org.apache.tomcat.util.depend.DependClassLoader12");
+		DependClassLoader dcl=(DependClassLoader)c.newInstance();
+		dcl.init( depM, parent, pd );
+		return dcl;
+	    } catch(Exception ex ) {
+		ex.printStackTrace();
+	    }
+	} 
+	return new DependClassLoader( depM, parent, pd );
+    }
+
+    DependClassLoader() {
+    }
     
     public DependClassLoader( DependManager depM, ClassLoader parent, Object pd ) {
 	super(); // will check permissions
+	init( depM, parent, pd );
+    }
+
+    void init(  DependManager depM, ClassLoader parent, Object pd ) {
 	this.parent=parent;
 	this.parent2=jdkCompat.getParentLoader( parent );
 	dependM=depM;

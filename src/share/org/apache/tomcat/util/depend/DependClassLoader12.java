@@ -70,7 +70,9 @@ import org.apache.tomcat.util.compat.*;
  * 
  */
 public class DependClassLoader12 extends DependClassLoader {
-
+    DependClassLoader12() {
+    }
+    
     public DependClassLoader12( DependManager depM, ClassLoader parent, Object pd ) {
 	super(depM, parent, pd);
     }
