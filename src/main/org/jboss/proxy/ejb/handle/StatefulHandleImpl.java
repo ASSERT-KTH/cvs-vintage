@@ -7,21 +7,30 @@
 
 package org.jboss.proxy.ejb.handle;
 
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import javax.ejb.EJBObject;
-import javax.ejb.Handle;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.Principal;
+import java.util.Hashtable;
+
+import javax.ejb.EJBHome;
+import javax.ejb.Handle;
+import javax.ejb.EJBObject;
+import javax.naming.InitialContext;
+
+import org.jboss.invocation.Invoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
-import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.invocation.PayloadKey;
+import org.jboss.naming.NamingContextFactory;
 import org.jboss.security.SecurityAssociation;
 
 /**
@@ -30,7 +39,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class StatefulHandleImpl
    implements Handle
@@ -67,6 +76,9 @@ public class StatefulHandleImpl
    public Invoker invoker;
    public Object id;
 
+   /** The JNDI env in effect when the home handle was created */
+   private Hashtable jndiEnv;
+
    /** Create an ejb handle for a stateful session bean.
     * @param objectName - the session container jmx name
     * @param jndiName - the session home ejb name
@@ -82,12 +94,24 @@ public class StatefulHandleImpl
       Object id,
       Object invokerID)
    {
-      this.objectName = objectName;
       this.jndiName = jndiName;
-      this.invoker = invoker;
       this.id = id;
-      this.invokerProxyBinding = invokerProxyBinding;
-      this.invokerID = invokerID;
+      this.jndiEnv = (Hashtable) NamingContextFactory.lastInitialContextEnv.get();
+      try
+      {
+         String property = System.getProperty("org.jboss.ejb.sfsb.handle.V327");
+         if (property != null)
+         {
+            this.invokerProxyBinding = invokerProxyBinding;
+            this.invokerID = invokerID;
+            this.objectName = objectName;
+            this.invoker = invoker;
+         }
+      }
+      catch (AccessControlException ignored)
+      {
+      }
+
    }
 
    /**
@@ -126,103 +150,27 @@ public class StatefulHandleImpl
     */
    public EJBObject getEJBObject() throws RemoteException
    {
-      SecurityActions sa = SecurityActions.UTIL.getSecurityActions();
       try
       {
-         Invocation invocation = new Invocation(
-               null,
-               GET_EJB_OBJECT,
-               new Object[]{id},
-               //No transaction set up in here? it will get picked up in the proxy
-               null,
-               // fix for bug 474134 from Luke Taylor
-               sa.getPrincipal(),
-               sa.getCredential());
-
-         invocation.setObjectName(new Integer(objectName));
-         invocation.setValue(InvocationKey.INVOKER_PROXY_BINDING,
-            invokerProxyBinding, PayloadKey.AS_IS);
-
-         // It is a home invocation
-         invocation.setType(InvocationType.HOME);
-
-         // Get the invoker to the target server (cluster or node)
-
-         // Ship it
-         if (isLocal())
-            return (EJBObject) InvokerInterceptor.getLocal().invoke(invocation);
+         InitialContext ic = null;
+         if( jndiEnv != null )
+            ic = new InitialContext(jndiEnv);
          else
-            return (EJBObject) invoker.invoke(invocation);
+            ic = new InitialContext();
+         Proxy proxy = (Proxy) ic.lookup(jndiName);
+
+         // call findByPrimary on the target
+         InvocationHandler ih = Proxy.getInvocationHandler(proxy);
+         return (EJBObject) ih.invoke(proxy, GET_EJB_OBJECT, new Object[] {id});
       }
-      catch(Exception e)
+      catch (RemoteException e)
       {
-         throw new ServerException("Could not get EJBObject", e);
+         throw e;
       }
-   }
-
-   /**
-    * Returns wether we are local to the originating container or not. 
-    */
-   protected boolean isLocal()
-   {
-      return invokerID != null && invokerID.equals(Invoker.ID);
-   }
-
-   interface SecurityActions
-   {
-      class UTIL
+      catch (Throwable t)
       {
-         static SecurityActions getSecurityActions()
-         {
-            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
-         }
+         throw new RemoteException("Error during getEJBObject", t);
       }
-
-      SecurityActions NON_PRIVILEGED = new SecurityActions()
-      {
-         public Principal getPrincipal()
-         {
-            return SecurityAssociation.getPrincipal();
-         }
-
-         public Object getCredential()
-         {
-            return SecurityAssociation.getCredential();
-         }
-      };
-
-      SecurityActions PRIVILEGED = new SecurityActions()
-      {
-         private final PrivilegedAction getPrincipalAction = new PrivilegedAction()
-         {
-            public Object run()
-            {
-               return SecurityAssociation.getPrincipal();
-            }
-         };
-
-         private final PrivilegedAction getCredentialAction = new PrivilegedAction()
-         {
-            public Object run()
-            {
-               return SecurityAssociation.getCredential();
-            }
-         };
-
-         public Principal getPrincipal()
-         {
-            return (Principal)AccessController.doPrivileged(getPrincipalAction);
-         }
-
-         public Object getCredential()
-         {
-            return AccessController.doPrivileged(getCredentialAction);
-         }
-      };
-
-      Principal getPrincipal();
-
-      Object getCredential();
    }
 }
 
