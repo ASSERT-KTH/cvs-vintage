@@ -114,9 +114,14 @@ public class Hooks {
 	return hooksV[type];
     }
 
+    public Vector getHooksVector() {
+	return allModulesV;
+    }
+
     public void resetCache() {
 	for( int i=0; i<hookCount; i++ )
 	    hooks[i]=null;
+	allModules=null;
     }
     
     public int registerHook( String name ) {
