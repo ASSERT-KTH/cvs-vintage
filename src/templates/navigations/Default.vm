@@ -7,7 +7,9 @@
 </strong></div>
 
 ## ARTIFACT TYPES
-#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
+#if ($scarabR.CurrentModule.NavIssueTypes)
+  #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
+#end
 #if ($issueTypes && $issueTypes.size() > 0)
 <div><strong>
 $link.setPage("SelectArtifactType.vm").setLabel("Issue types")
