@@ -152,7 +152,6 @@ public class ViewMessageCommand extends FolderCommand {
 			// TODO should be removed if we only use Streams!
 			String decryptedBodyPart =
 				StreamUtils.readInString(decryptedStream).toString();
-			ColumbaLogger.log.info(decryptedBodyPart);
 
 			// construct new Message from decrypted string
 			ColumbaMessage message;

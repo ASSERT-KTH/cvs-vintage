@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.externaltools.ExternalToolsWizardLauncher;
 import org.columba.core.xml.XmlElement;
@@ -83,7 +83,7 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
 
         if (root == null) {
             // create xml node
-            XmlElement parent = Config.get("external_tools").getElement("tools");
+            XmlElement parent = MainInterface.config.get("external_tools").getElement("tools");
             XmlElement child = new XmlElement("tool");
             child.addAttribute("first_time", "true");
             child.addAttribute("name", toolID);
@@ -128,7 +128,7 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
      * @return                        xml treenode
      */
     public XmlElement getConfiguration(String id) {
-        XmlElement root = Config.get("external_tools").getElement("tools");
+        XmlElement root = MainInterface.config.get("external_tools").getElement("tools");
         boolean firsttime = false;
 
         for (int i = 0; i < root.count(); i++) {

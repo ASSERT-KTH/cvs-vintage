@@ -18,7 +18,7 @@
 package org.columba.mail.pop3;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 
 import org.columba.mail.config.AccountItem;
@@ -53,7 +53,7 @@ public class POP3Server {
 
         int uid = accountItem.getUid();
 
-        file = new File(Config.pop3Directory, (new Integer(uid)).toString());
+        file = new File(MainInterface.config.getPOP3Directory(), (new Integer(uid)).toString());
 
         PopItem item = accountItem.getPopItem();
 

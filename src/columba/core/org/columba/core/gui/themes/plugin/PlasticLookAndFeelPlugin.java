@@ -15,7 +15,7 @@ import com.jgoodies.plaf.Options;
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticTheme;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import java.awt.Dimension;
@@ -61,7 +61,7 @@ public class PlasticLookAndFeelPlugin extends AbstractThemePlugin {
                         : Options.getSystemLookAndFeelClassName();
         ;
         */
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement themeElement = gui.getElement("theme");
 

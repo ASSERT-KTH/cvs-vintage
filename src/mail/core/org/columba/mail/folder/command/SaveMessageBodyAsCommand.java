@@ -21,7 +21,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
@@ -310,7 +310,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private boolean getInclAllHeadersOption() {
         boolean defaultValue = false; // default value
 
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
 
         if (options == null) {
             return defaultValue;
@@ -338,7 +338,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 *            Value of the option (true to incl. all headers)
 	 */
     private void storeInclAllHeadersOption(boolean val) {
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
 
         if (options == null) {
             return;
@@ -549,7 +549,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private String getDefaultStyleSheet() {
         // read configuration from options.xml file
         XmlElement textFont =
-            Config.get("options").getElement("/options/gui/textfont");
+            MainInterface.config.get("options").getElement("/options/gui/textfont");
         String name = textFont.getAttribute("name");
         String size = textFont.getAttribute("size");
 

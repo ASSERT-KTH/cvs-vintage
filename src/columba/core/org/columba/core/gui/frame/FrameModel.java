@@ -16,7 +16,7 @@
 
 package org.columba.core.gui.frame;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
@@ -47,10 +47,10 @@ public class FrameModel {
     protected static List activeFrameCtrls;
 
     /** viewlist xml treenode */
-    protected static XmlElement viewList = Config.get("options").getElement("/options/gui/viewlist");
+    protected static XmlElement viewList = MainInterface.config.get("options").getElement("/options/gui/viewlist");
 
     /** Default view specifications to be used when opening a new view */
-    protected static XmlElement defaultViews = Config.get("options").getElement("/options/gui/defaultviews");
+    protected static XmlElement defaultViews = MainInterface.config.get("options").getElement("/options/gui/defaultviews");
 
     /** Used for bookkeeping related to saveAll and close methods */
     private static boolean isSavingAll = false;
@@ -163,7 +163,7 @@ public class FrameModel {
     protected static ViewItem loadDefaultView(String id) {
         // If defaultViews doesn't exist, create it (backward compatibility)
         if (defaultViews == null) {
-            XmlElement gui = Config.get("options").getElement("/options/gui");
+            XmlElement gui = MainInterface.config.get("options").getElement("/options/gui");
             defaultViews = new XmlElement("defaultviews");
             gui.addElement(defaultViews);
         }

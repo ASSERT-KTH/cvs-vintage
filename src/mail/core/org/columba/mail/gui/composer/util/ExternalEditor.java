@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.TempFileStore;
 
 import org.columba.mail.gui.composer.AbstractEditorController;
@@ -93,7 +93,7 @@ public class ExternalEditor {
         EditView.setFont(
                 new Font(Config.getOptionsConfig().getThemeItem().getTextFontName(), Font.BOLD, 30));
         */
-        Font font = Config.getOptionsConfig().getGuiItem().getTextFont();
+        Font font = MainInterface.config.getOptionsConfig().getGuiItem().getTextFont();
         font = font.deriveFont(30);
 
         //EditView.setFont(font);

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
@@ -124,7 +124,7 @@ public class BodyTextViewer extends JTextPane implements Observer {
         name = font.getName();
         size = new Integer(font.getSize()).toString();
 
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui1 = options.getElement("gui");
         XmlElement fonts = gui1.getElement("fonts");
 

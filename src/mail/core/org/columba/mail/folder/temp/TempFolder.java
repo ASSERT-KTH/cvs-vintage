@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.temp;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
@@ -72,7 +72,7 @@ public class TempFolder extends Folder {
     public TempFolder() {
         super();
 
-        String dir = ConfigPath.getConfigDirectory() + "/mail/" + "temp";
+        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + "temp";
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);

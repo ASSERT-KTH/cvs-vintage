@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import java.io.BufferedReader;
@@ -23,8 +24,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 /**
  * Client connecting to the {@link ColumbaServer} to check if
@@ -96,7 +97,7 @@ public class ColumbaClient {
      * @return      port number
      */
     public static int readPortFromFile() throws FileNotFoundException{
-        keyFile = new File(ConfigPath.getConfigDirectory(), ".auth");
+        keyFile = new File(MainInterface.config.getConfigDirectory(), ".auth");
         if ( !keyFile.exists() ) return -1;
         
         String s;
@@ -124,5 +125,4 @@ public class ColumbaClient {
     public static ColumbaServer getColumbaServer() {
         return columbaServer;
     }
-
 }

@@ -13,9 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
-import org.columba.core.config.Config;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -48,9 +48,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-
 public class CriteriaList extends JPanel implements ActionListener {
-    private Config config;
     private Filter filter;
     private List list;
     private JPanel panel;
@@ -67,7 +65,6 @@ public class CriteriaList extends JPanel implements ActionListener {
             d.showDialog(ex);
         }
 
-        this.config = MainInterface.config;
         this.filter = filter;
 
         list = new Vector();

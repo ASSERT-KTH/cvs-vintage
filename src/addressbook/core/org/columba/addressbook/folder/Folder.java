@@ -20,7 +20,7 @@ import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public abstract class Folder extends AddressbookTreeNode {
         this.addressbookInterface = addressbookInterface;
 
         String dir =
-                ConfigPath.getConfigDirectory() + "/addressbook" + "/" + new Integer(uid).toString();
+                MainInterface.config.getConfigDirectory() + "/addressbook" + "/" + new Integer(uid).toString();
 
         directoryFile = new File(dir);
         if (directoryFile.exists() == false)
@@ -79,7 +79,7 @@ public abstract class Folder extends AddressbookTreeNode {
         */
         init();
 
-        String dir = ConfigPath.getConfigDirectory() + "/addressbook/" +
+        String dir = MainInterface.config.getConfigDirectory() + "/addressbook/" +
             getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
@@ -95,7 +95,7 @@ public abstract class Folder extends AddressbookTreeNode {
 
             init();
 
-            String dir = ConfigPath.getConfigDirectory() + "/addressbook/" + name;
+            String dir = MainInterface.config.getConfigDirectory() + "/addressbook/" + name;
             if (DiskIO.ensureDirectory(dir))
                     directoryFile = new File(dir);
 

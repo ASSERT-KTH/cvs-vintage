@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.accountlist;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.config.Config;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.help.HelpManager;
@@ -78,7 +78,6 @@ public class ConfigFrame implements ActionListener,
     private AccountTree tree;
     */
     private JDialog dialog;
-    private Config config;
 
     //private AccountTreeNode selected;
 
@@ -113,7 +112,6 @@ public class ConfigFrame implements ActionListener,
         dialog = DialogStore.getDialog();
         dialog.setTitle(MailResourceLoader.getString("dialog", "account",
                 "dialog_title"));
-        config = MainInterface.config;
         accountList = MailConfig.getAccountList();
 
         initComponents();
@@ -303,7 +301,7 @@ public class ConfigFrame implements ActionListener,
         if (action.equals("CLOSE")) //$NON-NLS-1$
          {
             try {
-                Config.save();
+                MainInterface.config.save();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

@@ -17,6 +17,8 @@
 package org.columba.core.config;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
@@ -29,7 +31,7 @@ import java.util.*;
  * <p>
  * Example on how to get a {@link XmlElement} xml treenode:
  * <pre>
- * XmlElement gui = Config.get("options").getElement("/options/gui");
+ * XmlElement gui = MainInterface.config.get("options").getElement("/options/gui");
  * </pre>
  * <p>
  * This would address the file <b>options.xml</b>. Following a little
@@ -51,62 +53,66 @@ import java.util.*;
  * @author fdietz
  */
 public class Config {
-    public static File inboxDirectory;
-    public static File sentDirectory;
-    public static File headerDirectory;
-    public static File pop3Directory;
-    public static String userDir;
+    protected OptionsXmlConfig optionsConfig;
+    protected Map pluginList = new Hashtable();
+    protected Map templatePluginList = new Hashtable();
     
-    private static OptionsXmlConfig optionsConfig;
-    private static Map pluginList = new Hashtable();
-    private static Map templatePluginList = new Hashtable();
-    private static File optionsFile;
-    private static File toolsFile;
+    protected File path;
+    protected File pop3Directory;
+    protected File optionsFile;
+    protected File toolsFile;
 
     /**
-     * @see java.lang.Object#Object()
+     * Creates a new configuration from the default directory.
      */
     public Config() {
-        optionsFile = new File(ConfigPath.getConfigDirectory(), "options.xml");
-
-        DefaultConfig.registerPlugin("core", optionsFile.getName(),
-            new OptionsXmlConfig(optionsFile));
-
-        toolsFile = new File(ConfigPath.getConfigDirectory(),
-                "external_tools.xml");
-
-        DefaultConfig.registerPlugin("core", toolsFile.getName(),
-            new DefaultXmlConfig(toolsFile));
-
-        /*
-        File file = new File(ConfigPath.getConfigDirectory(), "mail");
-
-
-        if (file.exists() == false) {
-                // convert to new config-schema
-
-                Python.runResource(
-                        "org/columba/mail/config/convert.py",
-                        ConfigPath.getConfigDirectory().getPath());
-
-
+        this(null);
+    }
+    
+    /**
+     * Creates a new configuration from the given directory.
+     */
+    public Config(File path) {
+        if (path == null) {
+            path = getDefaultConfigPath();
         }
-        */
+        this.path = path;
+        path.mkdir();
+        optionsFile = new File(path, "options.xml");
+        toolsFile = new File(path, "external_tools.xml");
+        pop3Directory = new File(path, "mail/pop3server");
+        if (!pop3Directory.exists()) {
+            pop3Directory.mkdir();
+        }
+    }
+    
+    /**
+     * Returns the directory the configuration is located in.
+     */
+    public File getConfigDirectory() {
+        return path;
     }
 
     /**
      * Method init.
      */
-    public static void init() {
-        File configDirectory = ConfigPath.getConfigDirectory();
+    public void init() {
+        ColumbaLogger.log.info("Loading configuration from " + path.toString());
+        
+        DefaultConfig.registerPlugin("core", optionsFile.getName(),
+            new OptionsXmlConfig(optionsFile));
+
+        DefaultConfig.registerPlugin("core", toolsFile.getName(),
+            new DefaultXmlConfig(toolsFile));
 
         load();
-
-        pop3Directory = new File(configDirectory, "mail/pop3server");
-
-        if (!pop3Directory.exists()) {
-            pop3Directory.mkdir();
-        }
+    }
+    
+    /**
+     * Returns the POP3 directory.
+     */
+    public File getPOP3Directory() {
+        return pop3Directory;
     }
 
     /**
@@ -115,7 +121,7 @@ public class Config {
      * @param id
      * @param configPlugin
      */
-    public static void registerPlugin(String moduleName, String id,
+    public void registerPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         if (!pluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
@@ -125,7 +131,7 @@ public class Config {
         addPlugin(moduleName, id, configPlugin);
     }
 
-    public static void registerTemplatePlugin(String moduleName, String id,
+    public void registerTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         if (!templatePluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
@@ -141,7 +147,7 @@ public class Config {
      * @param id
      * @return DefaultXmlConfig
      */
-    public static DefaultXmlConfig getPlugin(String moduleName, String id) {
+    public DefaultXmlConfig getPlugin(String moduleName, String id) {
         if (pluginList.containsKey(moduleName)) {
             Map map = (Map) pluginList.get(moduleName);
 
@@ -155,7 +161,7 @@ public class Config {
         return null;
     }
 
-    public static DefaultXmlConfig getTemplatePlugin(String moduleName,
+    public DefaultXmlConfig getTemplatePlugin(String moduleName,
         String id) {
         if (templatePluginList.containsKey(moduleName)) {
             Map map = (Map) templatePluginList.get(moduleName);
@@ -176,7 +182,7 @@ public class Config {
      * @param id
      * @param configPlugin
      */
-    public static void addPlugin(String moduleName, String id,
+    public void addPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         Map map = (Map) pluginList.get(moduleName);
 
@@ -185,7 +191,7 @@ public class Config {
         }
     }
 
-    public static void addTemplatePlugin(String moduleName, String id,
+    public void addTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         Map map = (Map) templatePluginList.get(moduleName);
 
@@ -198,7 +204,7 @@ public class Config {
      * Method getPluginList.
      * @return List
      */
-    public static List getPluginList() {
+    public List getPluginList() {
         List list = new LinkedList();
 
         for (Iterator keys = pluginList.keySet().iterator(); keys.hasNext();) {
@@ -218,7 +224,7 @@ public class Config {
         return list;
     }
 
-    public static List getTemplatePluginList() {
+    public List getTemplatePluginList() {
         List list = new LinkedList();
 
         for (Iterator keys = templatePluginList.keySet().iterator(); keys.hasNext();) {
@@ -241,7 +247,7 @@ public class Config {
     /**
      * Method save.
      */
-    public static void save() throws Exception {
+    public void save() throws Exception {
         List list = getPluginList();
 
         for (Iterator it = list.iterator(); it.hasNext();) {
@@ -258,7 +264,7 @@ public class Config {
     /**
      * Loads all plugins and template plugins.
      */
-    public static void load() {
+    public void load() {
         List list = getPluginList();
         list.addAll(getTemplatePluginList());
 
@@ -273,18 +279,30 @@ public class Config {
         }
     }
 
-    public static XmlElement get(String name) {
+    public XmlElement get(String name) {
         DefaultXmlConfig xml = DefaultConfig.getPlugin("core", name + ".xml");
 
         return xml.getRoot();
     }
 
     /**
-     * Method getOptionsConfig.
+     * Method getOptionsMainInterface.config.
      * @return OptionsXmlConfig
      */
-    public static OptionsXmlConfig getOptionsConfig() {
+    public OptionsXmlConfig getOptionsConfig() {
         return (OptionsXmlConfig) DefaultConfig.getPlugin("core",
             optionsFile.getName());
+    }
+    
+    /**
+     * Returns the default configuration path. This value depends on the
+     * underlying operating system. This method must never return null.
+     */
+    public static File getDefaultConfigPath() {
+        if (OSInfo.isWindowsPlatform()) {
+            return new File("config");
+        } else {
+            return new File(System.getProperty("user.home"), ".columba");
+        }
     }
 }

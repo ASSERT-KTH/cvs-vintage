@@ -16,7 +16,7 @@
 
 package org.columba.core.io;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 
 import java.io.BufferedReader;
@@ -59,7 +59,7 @@ public class DiskIO {
         }
 
         if (!dir.isAbsolute()) {
-            dir = new File(ConfigPath.getConfigDirectory(), dir.getPath());
+            dir = new File(MainInterface.config.getConfigDirectory(), dir.getPath());
         }
 
         if (!dir.isDirectory()) {

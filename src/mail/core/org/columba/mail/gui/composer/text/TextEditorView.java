@@ -15,7 +15,7 @@
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer.text;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
 
@@ -55,7 +55,7 @@ public class TextEditorView extends JTextPane implements Observer {
         Font font = FontProperties.getTextFont();
         setFont(font);
 
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement fonts = gui.getElement("fonts");
 

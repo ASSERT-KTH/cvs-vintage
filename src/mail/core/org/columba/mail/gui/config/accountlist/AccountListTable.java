@@ -13,9 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.accountlist;
 
-import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.config.AccountList;
@@ -27,12 +27,8 @@ import javax.swing.table.TableColumn;
 
 
 class AccountListTable extends JTable {
-    private Config config;
-
     public AccountListTable(AccountList accountList, ConfigFrame frame) {
         super(new AccountListDataModel(accountList));
-
-        config = MainInterface.config;
 
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setShowGrid(false);

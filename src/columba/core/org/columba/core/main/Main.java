@@ -16,6 +16,8 @@
 
 package org.columba.core.main;
 
+import java.io.File;
+
 import org.columba.addressbook.main.AddressbookMain;
 
 import org.columba.core.backgroundtask.BackgroundTaskManager;
@@ -54,14 +56,15 @@ public class Main {
             System.exit(2);
         }
 
+        // initialize configuration backend
+        String path = cmdLineParser.getPathOption();
+        MainInterface.config = new Config(path == null ? null : new File(path));
+
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         ColumbaClient.loadInVMInstance(args);
 
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
-
-        // initialize configuration backend
-        new Config();
 
         AddressbookMain addressbook = new AddressbookMain();
         addressbook.initConfiguration();
@@ -69,7 +72,7 @@ public class Main {
         MailMain mail = new MailMain();
         mail.initConfiguration();
 
-        Config.init();
+        MainInterface.config.init();
 
         MainInterface.clipboardManager = new ClipboardManager();
         MainInterface.focusManager = new FocusManager();

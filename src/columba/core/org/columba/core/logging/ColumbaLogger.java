@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.logging.*;
 
 import org.columba.core.main.MainInterface;
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.ristretto.log.RistrettoLogger;
 
 /**
@@ -50,7 +50,7 @@ public class ColumbaLogger {
         log.setUseParentHandlers(false);
 
         // create logging file in users config-folder
-        File loggingFile = new File(ConfigPath.getConfigDirectory(), "columba.log");
+        File loggingFile = new File(MainInterface.config.getConfigDirectory(), "columba.log");
         Handler handler;
         try {
             handler = new FileHandler(loggingFile.getPath(), false);

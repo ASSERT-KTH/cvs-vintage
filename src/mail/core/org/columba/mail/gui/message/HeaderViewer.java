@@ -135,7 +135,7 @@ public class HeaderViewer extends JTextPane {
 		/*
 		//        read configuration from options.xml file
 		XmlElement mainFont =
-		        Config.get("options").getElement("/options/gui/mainfont");
+		        MainInterface.config.get("options").getElement("/options/gui/mainfont");
 		String name = mainFont.getAttribute("name");
 		String size = mainFont.getAttribute("size");
 		Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.io;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 
 import java.io.File;
 
@@ -24,7 +24,7 @@ public class TempFileStore {
     private static File tempDir;
 
     static {
-        File configDir = ConfigPath.getConfigDirectory();
+        File configDir = MainInterface.config.getConfigDirectory();
 
         tempDir = new File(configDir, "tmp");
         DiskIO.emptyDirectory(tempDir);

@@ -16,7 +16,7 @@
 
 package org.columba.core.main;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 
 import java.io.BufferedReader;
@@ -132,7 +132,7 @@ public class ColumbaServer implements Runnable {
      * @param portNumber    port number of server
      */
     private void createPortNumberFile(int portNumber) {
-        keyFile = new File(ConfigPath.getConfigDirectory(), ".auth");
+        keyFile = new File(MainInterface.config.getConfigDirectory(), ".auth");
 
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(keyFile));
@@ -153,6 +153,7 @@ public class ColumbaServer implements Runnable {
      *
      */
     public synchronized void stop() {
+        ColumbaLogger.log.info("Stopping Columba server...");
         // stop thread
         thread.interrupt();
         thread = null;

@@ -21,7 +21,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
@@ -381,7 +381,7 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @return true, if scaling is allowed false, otherwise
 	 */
     protected boolean isScalingAllowed() {
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement printer = null;
 
         if (options != null) {

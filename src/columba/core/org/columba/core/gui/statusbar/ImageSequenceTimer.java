@@ -15,8 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.config.Config;
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
+import org.columba.core.main.MainInterface;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
@@ -122,7 +122,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
     }
 
     protected void init() {
-        ThemeItem item = Config.getOptionsConfig().getThemeItem();
+        ThemeItem item = MainInterface.config.getOptionsConfig().getThemeItem();
 
         //String pulsator = item.getPulsator();
         String pulsator = "default";
@@ -135,7 +135,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
             initDefault();
         } else {
             try {
-                File zipFile = new File(ConfigPath.getConfigDirectory() +
+                File zipFile = new File(MainInterface.config.getConfigDirectory() +
                         "/pulsators/" + pulsator + ".jar");
 
                 String zipFileEntry = new String(pulsator +
@@ -165,7 +165,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
                     String istr = (new Integer(i)).toString();
                     String image = (String) properties.getProperty(istr);
 
-                    zipFile = new File(ConfigPath.getConfigDirectory() +
+                    zipFile = new File(MainInterface.config.getConfigDirectory() +
                             "/pulsators/" + pulsator + ".jar");
 
                     zipFileEntry = new String(pulsator + "/" + image);

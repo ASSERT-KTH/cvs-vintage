@@ -19,7 +19,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
@@ -132,7 +132,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
     }
 
     public void updateComponents(boolean b) {
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement themeElement = gui.getElement("theme");
 
@@ -156,7 +156,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             textFontElement = fonts.addSubElement("text");
         }
 
-        GuiItem item = Config.getOptionsConfig().getGuiItem();
+        GuiItem item = MainInterface.config.getOptionsConfig().getGuiItem();
 
         //mainFont = item.getMainFont();
         //textFont = item.getTextFont();
@@ -259,7 +259,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             themeElement.addAttribute("name", selection);
 
             // get language configuration
-            XmlElement locale = Config.get("options").getElement("/options/locale");
+            XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
 
             // set language config based on selected item
             Locale l = (Locale) languageComboBox.getSelectedItem();

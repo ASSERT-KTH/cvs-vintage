@@ -13,9 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.pop3preprocessor;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -24,13 +25,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-
 class FilterListTable extends JTable {
-    private Config config;
-
     public FilterListTable(XmlElement filterList, ConfigFrame frame) {
         super(new FilterListTableModel(filterList));
-        config = MainInterface.config;
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setShowGrid(false);
         setIntercellSpacing(new java.awt.Dimension(0, 0));

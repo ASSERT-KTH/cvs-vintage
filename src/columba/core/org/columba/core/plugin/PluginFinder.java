@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 
 import java.io.File;
@@ -56,7 +56,7 @@ public class PluginFinder {
             ColumbaLogger.log.fine("Folder \"plugins\" doesn't exist.");
         }
 
-        File configFolder = new File(ConfigPath.configDirectory, "plugins");
+        File configFolder = new File(MainInterface.config.getConfigDirectory(), "plugins");
 
         if (configFolder.exists() == false) {
             configFolder.mkdir();

@@ -19,7 +19,7 @@
 
 package org.columba.mail.gui.composer.html;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -112,7 +112,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer {
         Font font = FontProperties.getTextFont();
         setFont(font);
 
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         XmlElement fonts = gui.getElement("fonts");
 

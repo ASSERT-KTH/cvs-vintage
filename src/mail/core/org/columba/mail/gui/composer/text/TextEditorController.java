@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.text;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -86,7 +86,7 @@ public class TextEditorController extends AbstractEditorController
 
         view.addCaretListener(this);
 
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement guiElement = options.getElement("gui");
         fonts = guiElement.getElement("fonts");
 

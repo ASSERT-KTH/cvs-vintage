@@ -17,7 +17,7 @@ package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.gui.util.NotifyDialog;
@@ -362,7 +362,7 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
 
     protected void installPlugin(File file) {
         // use user's config folder in his/her home-folder
-        File destination = new File(ConfigPath.configDirectory, "plugins");
+        File destination = new File(MainInterface.config.getConfigDirectory(), "plugins");
 
         // extract plugin
         ZipFileIO.extract(file, destination);

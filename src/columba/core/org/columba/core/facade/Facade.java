@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.facade;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginResourceLoader;
@@ -40,7 +40,7 @@ public class Facade {
      * @return XmlElement        represents an xml-treenode
      */
     public static XmlElement getConfigElement(String configName) {
-        XmlElement root = Config.get(configName);
+        XmlElement root = MainInterface.config.get(configName);
 
         return root;
     }

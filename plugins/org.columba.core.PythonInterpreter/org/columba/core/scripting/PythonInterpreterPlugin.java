@@ -54,7 +54,7 @@ public final class PythonInterpreterPlugin extends AbstractInterpreter{
 			System.setProperty("python.path", "./plugins/PythonInterpreter/lib/Lib");
 			/*
 			Properties props = new Properties();
-			props.setProperty("python.path", ConfigPath.getConfigDirectory()+ "/ext/Lib");
+			props.setProperty("python.path", MainInterface.config.getConfigDirectory()+ "/ext/Lib");
 			PythonInterpreter.initialize(
 				System.getProperties(),
 				props,
@@ -63,7 +63,7 @@ public final class PythonInterpreterPlugin extends AbstractInterpreter{
 
 			/*
 			Properties pyProps = new Properties();
-			pyProps.put("python.cachedir", ConfigPath.getConfigDirectory() + "pythoncache" + File.separator);
+			pyProps.put("python.cachedir", MainInterface.config.getConfigDirectory() + "pythoncache" + File.separator);
 			PythonInterpreter.initialize(System.getProperties(), pyProps, new String[0]);
 			*/
 

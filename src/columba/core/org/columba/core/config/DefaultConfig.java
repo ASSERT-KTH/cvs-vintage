@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.config;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
 
 import java.io.File;
 import java.io.IOException;
 
 import java.net.URL;
 
-
 /**
- * You can register xml configuration files at DefaultConfig.
+ * You can register xml configuration files at DefaultMailConfig.
  * <p>
  * DefaultConfig is responsible for copying the template configuration
  * file to the users configuration directory, when starting Columba
@@ -53,16 +54,16 @@ public class DefaultConfig {
         File file = null;
 
         if (moduleName.equals("core")) {
-            file = ConfigPath.getConfigDirectory();
+            file = MainInterface.config.getConfigDirectory();
             copy(moduleName, id, file);
         } else {
-            file = new File(ConfigPath.getConfigDirectory(), moduleName);
+            file = new File(MainInterface.config.getConfigDirectory(), moduleName);
 
             //copy("modules/" + moduleName, id, file);
             copy(moduleName, id, file);
         }
 
-        Config.registerPlugin(moduleName, id, plugin);
+        MainInterface.config.registerPlugin(moduleName, id, plugin);
     }
 
     protected static void registerTemplatePlugin(String moduleName, String id,
@@ -71,10 +72,10 @@ public class DefaultConfig {
                 File file = null;
 
                 if (moduleName.equals("core")) {
-                        file = ConfigPath.getConfigDirectory();
+                        file = MainInterface.config.getConfigDirectory();
                         //copy(moduleName, id, file);
                 } else {
-                        file = new File(ConfigPath.getConfigDirectory(), moduleName);
+                        file = new File(MainInterface.config.getConfigDirectory(), moduleName);
 
                         //copy("modules/" + moduleName, id, file);
                         //copy(moduleName, id, file);
@@ -83,7 +84,7 @@ public class DefaultConfig {
         String hstr = "org/columba/" + moduleName + "/config/" + id;
         URL url = DiskIO.getResourceURL(hstr);
         plugin.setURL(url);
-        Config.registerTemplatePlugin(moduleName, id, plugin);
+        MainInterface.config.registerTemplatePlugin(moduleName, id, plugin);
     }
 
     /**
@@ -93,12 +94,12 @@ public class DefaultConfig {
      * @return DefaultXmlConfig
      */
     protected static DefaultXmlConfig getPlugin(String moduleName, String id) {
-        return Config.getPlugin(moduleName, id);
+        return MainInterface.config.getPlugin(moduleName, id);
     }
 
     protected static DefaultXmlConfig getTemplatePlugin(String moduleName,
         String id) {
-        return Config.getTemplatePlugin(moduleName, id);
+        return MainInterface.config.getTemplatePlugin(moduleName, id);
     }
 
     /**
@@ -107,7 +108,7 @@ public class DefaultConfig {
      * @return File
      */
     protected File createConfigDir(String moduleName) {
-        File configDirectory = new File(ConfigPath.getConfigDirectory(),
+        File configDirectory = new File(MainInterface.config.getConfigDirectory(),
                 moduleName);
 
         DiskIO.ensureDirectory(configDirectory);

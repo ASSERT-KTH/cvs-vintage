@@ -22,7 +22,7 @@ import javax.swing.tree.TreeNode;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -118,7 +118,7 @@ public abstract class Folder
 
         changed = false;
 
-        String dir = ConfigPath.getConfigDirectory() + "/mail/" + getUid();
+        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);
@@ -149,7 +149,7 @@ public abstract class Folder
 
         changed = false;
 
-        String dir = ConfigPath.getConfigDirectory() + "/mail/" + getUid();
+        String dir = MainInterface.config.getConfigDirectory() + "/mail/" + getUid();
 
         if (DiskIO.ensureDirectory(dir)) {
             directoryFile = new File(dir);

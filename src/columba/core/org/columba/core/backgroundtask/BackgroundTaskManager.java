@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.backgroundtask;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -29,10 +30,7 @@ import java.util.Vector;
 
 import javax.swing.Timer;
 
-
 /**
- *
- *
  * This manager runs in background.
  * <p>
  * If the user doesn't do anything with Columba, it starts some
@@ -66,8 +64,6 @@ public class BackgroundTaskManager implements ActionListener {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent event) {
-        ColumbaLogger.log.info("is their any task running?");
-
         // test if a task is already running 
         EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 
@@ -84,11 +80,6 @@ public class BackgroundTaskManager implements ActionListener {
             TaskInterface task = (TaskInterface) it.next();
             task.run();
         }
-
-        //		for (Enumeration e = list.elements(); e.hasMoreElements();) {
-        //			TaskInterface task = (TaskInterface) e.nextElement();
-        //			task.run();
-        //		}
     }
 
     public void stop() {

@@ -94,7 +94,7 @@ public class ShutdownManager {
         register(new Runnable() {
             public void run() {
                 try {
-                    org.columba.core.config.Config.save();
+                    MainInterface.config.save();
                 } catch (Exception e) {
                     ColumbaLogger.log.severe(e.getMessage());
                 }
@@ -140,6 +140,8 @@ public class ShutdownManager {
      * Registers a runnable plugin that should be executed on shutdown.
      */
     public void register(Runnable plugin) {
+        ColumbaLogger.log.fine("Registering new shutdown plugin " + 
+                plugin.getClass().getName());
         list.add(0, plugin);
     }
 

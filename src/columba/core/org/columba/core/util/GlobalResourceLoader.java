@@ -25,8 +25,8 @@
 */
 package org.columba.core.util;
 
-import org.columba.core.config.Config;
-import org.columba.core.config.ConfigPath;
+import org.columba.core.main.MainInterface;
+import org.columba.core.main.MainInterface;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
@@ -73,14 +73,14 @@ public class GlobalResourceLoader {
     private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
 
     static {
-        XmlElement locale = Config.get("options").getElement("/options/locale");
+        XmlElement locale = MainInterface.config.get("options").getElement("/options/locale");
 
         // no configuration available, create default config
         if (locale == null) {
             // create new locale xml treenode
             locale = new XmlElement("locale");
             locale.addAttribute("language", "en");
-            Config.get("options").getElement("/options").addElement(locale);
+            MainInterface.config.get("options").getElement("/options").addElement(locale);
         }
 
         String language = locale.getAttribute("language");
@@ -109,7 +109,7 @@ public class GlobalResourceLoader {
         locales.add(new Locale("en", ""));
 
         FileFilter langpackFileFilter = new LangPackFileFilter();
-        File[] langpacks = ConfigPath.getConfigDirectory().listFiles(langpackFileFilter);
+        File[] langpacks = MainInterface.config.getConfigDirectory().listFiles(langpackFileFilter);
 
         for (int i = 0; i < langpacks.length; i++) {
             locales.add(extractLocaleFromFilename(langpacks[i].getName()));
@@ -149,7 +149,7 @@ public class GlobalResourceLoader {
 
     protected static void initClassLoader() {
         String name = "langpack_" + Locale.getDefault().toString() + ".jar";
-        File langpack = new File(ConfigPath.getConfigDirectory(), name);
+        File langpack = new File(MainInterface.config.getConfigDirectory(), name);
 
         if (!langpack.exists() || !langpack.isFile()) {
             langpack = new File(".", name);

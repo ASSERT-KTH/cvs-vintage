@@ -13,9 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
-import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.filter.FilterList;
@@ -27,11 +27,8 @@ import javax.swing.table.TableColumn;
 
 
 class FilterListTable extends JTable {
-    private Config config;
-
     public FilterListTable(FilterList filterList, ConfigFrame frame) {
         super(new FilterListDataModel(filterList));
-        config = MainInterface.config;
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setShowGrid(false);
         setIntercellSpacing(new java.awt.Dimension(0, 0));

@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import java.awt.Font;
@@ -54,7 +54,7 @@ public class FontProperties extends Observable implements Observer {
      *
      */
     public FontProperties() {
-        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement options = MainInterface.config.get("options").getElement("/options");
         XmlElement gui = options.getElement("gui");
         fonts = gui.getElement("fonts");
 

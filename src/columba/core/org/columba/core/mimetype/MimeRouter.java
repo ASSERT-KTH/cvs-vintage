@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.mimetype;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.config.OptionsXmlConfig;
 import org.columba.core.xml.XmlElement;
 
@@ -38,7 +38,7 @@ public class MimeRouter {
     private OptionsXmlConfig config;
 
     private MimeRouter() {
-        this.config = Config.getOptionsConfig();
+        this.config = MainInterface.config.getOptionsConfig();
     }
 
     /**

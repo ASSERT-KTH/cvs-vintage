@@ -18,8 +18,6 @@ package org.columba.core.main;
 
 import jargs.gnu.CmdLineParser;
 
-import org.columba.core.config.ConfigPath;
-
 /**
  * Parsing the commandline arguments and setting states, that can be used
  * from other components.
@@ -59,13 +57,14 @@ public class ColumbaCmdLineParser {
         bcc = parser.addStringOption('+', "bcc");
     }
     
-    protected String rcptOption = null;
-    protected String bodyOption = null;
+    protected String pathOption;
+    protected String rcptOption;
+    protected String bodyOption;
     protected boolean composerOption = false;
-    protected String mailurlOption = null;
-    protected String subjectOption = null;
-    protected String ccOption = null;
-    protected String bccOption = null;
+    protected String mailurlOption;
+    protected String subjectOption;
+    protected String ccOption;
+    protected String bccOption;
 
     public ColumbaCmdLineParser() {}
     
@@ -148,12 +147,7 @@ public class ColumbaCmdLineParser {
      */
     private void checkPath() {
         String pathValue = (String) parser.getOptionValue(path);
-
-        if (pathValue != null) {
-            new ConfigPath(pathValue);
-        } else {
-            new ConfigPath();
-        }
+        setPathOption(pathValue);
     }
 
     /** Checks if the commandline argument -r,--rcpt (recipient) is given. If this is true the intern
@@ -261,6 +255,13 @@ public class ColumbaCmdLineParser {
     public static void printVersionInfo() {
         System.out.println("columba " + MainInterface.version);
     }
+    
+    /**
+     * Returns the path to the configuration Columba should use.
+     */
+    public String getPathOption() {
+        return pathOption;
+    }
 
     /**
      * Gives the value of the Body Option.
@@ -284,6 +285,13 @@ public class ColumbaCmdLineParser {
      */
     public String getRcptOption() {
         return rcptOption;
+    }
+    
+    /**
+     * Sets the path to the configuration Columba should use.
+     */
+    public void setPathOption(String string) {
+        pathOption = string;
     }
 
     /**

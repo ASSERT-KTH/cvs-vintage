@@ -13,11 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
@@ -90,7 +91,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
     private JFrame frame;
     */
     private FilterListTable listView;
-    private Config config;
 
     //private AdapterNode actNode;
     private FilterList filterList;
@@ -120,8 +120,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
         setTitle(MailResourceLoader.getString("dialog", "filter", "dialog_title"));
         filterList = folder.getFilterList();
-
-        config = MainInterface.config;
 
         initComponents();
         pack();
@@ -423,7 +421,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener,
 
         if (action.equals("CLOSE")) {
             // FIXME
-            //Config.save();
+            //MainInterface.config.save();
             setVisible(false);
         } else if (action.equals("ADD")) {
             Filter filter = FilterList.createEmptyFilter();
