@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build2" default="main" basedir=".">
+
+  <!-- Directories -->
+  <!-- assume proposals/built2/WEB-INF -->
+  <property name="tmp.tomcat.src" location="../../.."/>
+
+  <property name="tomcat.home" 
+	    location="${tmp.tomcat.src}/build/tomcat"/>
+  
+  <!-- predefined -->
+  <property name="ant.home" value="XXX predefined XXX"/>
+  
+  <property name="webapp.name" value="build2" />
+
+  <property name="webapp.src" location=".." />
+  
+  <property name="webapp.dest" 
+	    value="${tomcat.home}/webapps/${webapp.name}" />
+
+   <property name="servlet.jar" 
+	    value="${tomcat.home}/lib/common/servlet.jar" />
+
+  <!-- ==================== Initialization - guessing config ========== -->
+  <target name="help" > 
+    <echo message="Build for the build application "/>
+    <echo message="Use ant -f proposals/build2/WEB-INF/build.xml "/>
+    <echo message="Properties:"/>
+    <echo message="-Dtomcat.home  location of tomcat install"/>
+    <echo message="-Dwebapp.name  the name of the build app [build2]"/>
+  </target>
+
+  <target name="init">
+  </target>
+  
+  <!-- ==================== Copy static files ==================== -->
+  
+  <target name="prepare" depends="init">
+    <mkdir dir="${webapp.dest}" />
+    <mkdir dir="${webapp.dest}/WEB-INF" />
+    <mkdir dir="${webapp.dest}/WEB-INF/lib" />
+    
+    <copy todir="${webapp.dest}">
+      <fileset dir="${webapp.src}" includes="**"/>
+    </copy>
+ 
+    <!-- Extra dependencies -->
+    <copy todir="${webapp.dest}/WEB-INF/lib"
+	  file="${tomcat.home}/lib/container/tomcat_util.jar" />
+    <copy todir="${webapp.dest}/WEB-INF/lib"
+	  file="${tomcat.home}/lib/common/core_util.jar" />
+    <copy todir="${webapp.dest}/WEB-INF/lib"
+	  file="${ant.home}/lib/ant.jar" />
+    <copy todir="${webapp.dest}/WEB-INF/lib"
+	  file="${ant.home}/lib/jaxp.jar" />
+    <copy todir="${webapp.dest}/WEB-INF/lib"
+	  file="${ant.home}/lib/parser.jar" />
+    
+  </target>
+    
+  <target name="build" depends="prepare"
+	  description="Build and install into tomcat.home" >
+    <mkdir dir="${webapp.dest}/WEB-INF/classes" />
+    <javac srcdir="${webapp.src}/WEB-INF/src" 
+	   destdir="${webapp.dest}/WEB-INF/classes" >
+      <classpath>
+	<pathelement location="${servlet.jar}" />
+	<fileset dir="${webapp.dest}/WEB-INF/lib" 
+		 includes="*.jar" />
+      </classpath>
+    </javac>
+  </target>
+    
+  <target name="rebuild" depends="init" 
+	  description="Build without copy and prepare">
+    <mkdir dir="${webapp.dest}/WEB-INF/classes" />
+    <mkdir dir="${webapp.dest}/WEB-INF/lib" />
+    <javac srcdir="${webapp.dest}/WEB-INF/src" 
+	   destdir="${webapp.dest}/WEB-INF/classes" >
+      <classpath>
+	<pathelement location="${servlet.jar}" />
+	<fileset dir="${webapp.dest}/WEB-INF/lib" 
+		 includes="*.jar" />
+      </classpath>
+    </javac>
+  </target>
+    
+  <target name="dist" depends="build" 
+	  description="Create distribution war file ">
+    <jar jarfile="${tomcat.home}/webapps/${webapp.name}.war" 
+	 basedir="${tomcat.home}/webapps/${webapp.name}" 
+	 includes="**"/> 
+	
+    <copy file="${tomcat.home}/webapps/${webapp.name}.war" 
+	  todir="${tomcat.home}/webapps/" />
+	
+  </target>
+
+  <target name="main" depends="build"/>
+    
+</project>

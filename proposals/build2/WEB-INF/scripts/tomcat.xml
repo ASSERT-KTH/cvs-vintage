@@ -1,0 +1,457 @@
+<project name="tomcat" default="main" basedir=".">
+
+   <!-- ******************** Initialization ******************** -->
+  <target name="init">
+    <property name="base.dir" location="../.." />
+
+    <property file="${base.dir}/WEB-INF/scripts/ant.properties" />
+   
+    <property name="libs" value="${base.dir}/WEB-INF/lib" />
+
+    <property name="ws.dir"
+	      value="${base.dir}/ws" />
+    <property name="pkg.dir"
+	      value="${base.dir}/zip" />
+
+    <property name="log.dir"
+	      value="${base.dir}/log" />
+    <property name="script.dir"
+	      value="${base.dir}/WEB-INF/scripts" />
+
+    <property name="pacakage.name" value="jakarta-tomcat" />
+
+    <property name="install.dir" location="${base.dir}/opt" />
+
+    <property name="ant.home" value="${install.dir}/jakarta-ant-1.3" /> 
+    <mkdir dir="${log.dir}" />
+    <mkdir dir="${install.dir}" />
+   </target>
+
+   <!-- ******************** Building  ******************** -->
+  <target name="tomcat-clean" depends="init">
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-tomcat/build.xml" />
+      <property name="exec.ant.target" value="clean" />
+    </ant>
+  </target>
+
+
+  <target name="tomcat-noext" depends="init">
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-tomcat/build.xml" />
+      <property name="exec.ant.target" value="dist" />
+      <property name="extraArgs" 
+		value="-Djsse.home=DUMMY -Dinstall.dir=${install.dir}" />
+    </ant>
+  </target>
+
+  <target name="tomcat-jsse" depends="init">
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-tomcat/build.xml" />
+      <property name="exec.ant.target" value="dist" />
+      <property name="extraArgs" 
+		value="-Dinstall.dir=${install.dir}" />
+    </ant>
+  </target>
+
+  <target name="tomcat-jdk11" depends="init">
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-tomcat/build.xml" />
+      <property name="exec.ant.target" value="dist" />
+      <property name="jdk.home" value="${jdk11.home}" />
+      <property name="extraArgs" 
+		value="-Djsse.home=DUMMY -Dinstall.dir=${install.dir}" />
+    </ant>
+  </target>
+
+  <target name="test.build" depends="init">
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-tomcat/build.xml" />
+      <property name="exec.ant.target" value="tests.dist" />
+      <property name="extraArgs" 
+		value="-Dinstall.dir=${install.dir}" />
+    </ant>
+    <copy file="${ws.dir}/jakarta-tomcat/dist/tomcat/webapps/test.war"
+	  todir="${pkg.dir}" />
+    <copy file="${ws.dir}/jakarta-tomcat/dist/tomcat/webapps/servlet-tests.war"
+	  todir="${pkg.dir}" />
+    <copy file="${ws.dir}/jakarta-tomcat/dist/tomcat/webapps/jsp-tests.war"
+	  todir="${pkg.dir}" />
+  </target>
+
+  <target name="watchdog.build" depends="init">
+    <mkdir dir="${ws.dir}/jakarta-ant" />
+    <copy todir="${ws.dir}/jakarta-ant" >
+      <fileset dir="${ant.home}" includes="lib/**,bin/**" />
+    </copy>
+    <copy file="${ws.dir}/jakarta-watchdog/README"
+          tofile="${ws.dir}/jakarta-watchdog/Readme"/>
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-watchdog/build.xml" />
+      <property name="exec.ant.target" value="dist" />
+      <property name="extraArgs" 
+		value="-Dant.home=${ant.home} -Dtomcat.home=${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    </ant>
+  </target>
+
+  <target name="servletapi.build" depends="init">
+    <mkdir dir="${ws.dir}/jakarta-ant" />
+    <copy todir="${ws.dir}/jakarta-ant" >
+      <fileset dir="${ant.home}" includes="lib/**,bin/**" />
+    </copy>
+    <ant antfile="${script.dir}/runant.xml" 
+	 target="exec-ant-other-vm" >
+      <property name="exec.ant.file" 
+		value="${ws.dir}/jakarta-servletapi/build.xml" />
+      <property name="exec.ant.target" value="dist" />
+      <property name="extraArgs" 
+		value="-Dant.home=${ant.home} -Dtomcat.home=${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    </ant>
+  </target>
+
+  <target name="rebuild.webapp" depends="init"
+	  description="Rebuild the build webapp" >
+    <ant antfile="../build.xml" target="rebuild" >
+    </ant>
+  </target>
+
+
+  <!-- Parameters: dist.name, dist.dir 
+    -->
+  <target name="bin.package" depends="init"
+	  description="Create packages for the binary" >
+    <!-- defaults - if not set -->
+    <property name="dist.name" value="tomcat" />
+    <property name="arch.name" value="tomcat-3.3M2" />
+    <property name="dist.dir" value="jakarta-tomcat/dist" />
+
+    <ant antfile="runant.xml" target="zip" >
+       <property name="zip.zipfile" value="${pkg.dir}/${arch.name}.zip" />
+       <property name="zip.basedir" value="${ws.dir}/${dist.dir}" />
+       <property name="zip.includes" value="${dist.name}" />
+    </ant>
+
+    <ant antfile="runant.xml" target="tar" >
+      <property name="tar.tarfile" value="${pkg.dir}/${arch.name}.tar" />
+      <property name="tar.basedir" value="${ws.dir}/${dist.dir}" />
+      <property name="tar.includes" value="${dist.name}" />
+   </ant>
+
+    <gzip zipfile="${pkg.dir}/${arch.name}.tar.gz" 
+	  src="${pkg.dir}/${arch.name}.tar" />
+
+    <delete file="${pkg.dir}/${arch.name}.tar" />
+
+  </target>
+
+
+  <target name="start-tomcat" depends="init">
+    <exec executable="${ws.dir}/jakarta-tomcat/dist/tomcat/bin/tomcat.sh" 
+	  timeout="300000" >
+      <arg value="start"/>
+      <arg value="-wait"/>
+      <arg value="-noout"/>
+      <env key="TOMCAT_HOME"
+	 path="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    </exec>
+  </target>
+
+  <target name="run-watchdog" depends="init">
+    <property name="watchdog.home" location="${ws.dir}/dist/watchdog" />
+    <property name="jaxpCP" 
+	      value="${ant.home}/lib/jaxp.jar:${ant.home}/lib/parser.jar" />
+
+    <exec executable="${watchdog.home}/bin/watchdog.sh" 
+	  timeout="300000" >
+      <arg value="all"/>
+      <arg value="localhost"/>
+      <arg value="9080"/>
+      <env key="WATCHDOG_HOME"
+	 path="${watchdog.home}" />
+      <env key="CLASSPATH"
+	   value="${jaxpCP}" />
+      <env key="TOMCAT_HOME"
+	 path="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    </exec>
+  </target>
+
+  <target name="run-sanity" depends="init">
+    <property name="test.tomcat.home" location="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+
+    <chmod perm="+x" file="${test.tomcat.home}/webapps/admin/WEB-INF/scripts/run-test.sh" />
+    <exec executable="${test.tomcat.home}/webapps/admin/WEB-INF/scripts/run-test.sh" 
+	  timeout="300000" >
+      <arg value="-Dport=9080"/>
+      <env key="TOMCAT_HOME"
+	 path="${test.tomcat.home}" />
+    </exec>
+  </target>
+
+  <target name="start-tomcat-security" depends="init">
+    <exec executable="${ws.dir}/jakarta-tomcat/dist/tomcat/bin/tomcat.sh" 
+	  timeout="300000" >
+      <arg value="start"/>
+      <arg value="-wait"/>
+      <arg value="-noout"/>
+      <arg value="-sandbox"/>
+      <env key="TOMCAT_HOME"
+	 path="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    </exec>
+  </target>
+
+  <target name="stop-tomcat" depends="init">
+    <exec executable="${ws.dir}/jakarta-tomcat/dist/tomcat/bin/tomcat.sh" 
+	  timeout="300000" >
+    <env key="TOMCAT_HOME"
+	 path="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+    <arg value="stop"/>
+    <arg value="-port"/>
+    <arg value="9007"/>
+    </exec>
+  </target>
+
+ 
+   <target name="change.port" depends="init" 
+           description="Change tomcat port for testing " >
+      <property name="test.tomcat.home"
+		value="${ws.dir}/jakarta-tomcat/dist/tomcat" />
+
+      <replace file="${test.tomcat.home}/conf/server.xml" 
+ 	     token="8080" 
+	     value="9080" />
+      <replace file="${test.tomcat.home}/conf/server.xml" 
+	     token="8007" 
+	     value="9007" />
+      <replace file="${test.tomcat.home}/conf/server.xml" 
+	     token="8009" 
+	     value="9009" />
+   </target>
+
+  
+   <!-- ******************** Agregate targets  ******************** -->
+  <target name="main" depends="init">
+  </target>
+
+
+  <target name="weekly" depends="init">
+    <mkdir dir="${base.dir}/log" />
+
+    <ant antfile="tomcat.xml" target="ws.clean" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="cvs.get.tag" >
+      <property name="package.name" value="jakarta-watchdog" />
+      <property name="arch.name" value="watchdog" />
+      <property name="tag" value="tomcat_32" />
+    </ant>
+
+    <ant antfile="tomcat.xml" target="cvs.get" >
+      <property name="package.name" value="jakarta-tools" />
+      <property name="arch.name" value="jakarta-tools" />
+    </ant>
+
+  </target>
+
+  <target name="from.cvs" depends="init">
+    <mkdir dir="${base.dir}/log" />
+    <delete dir="${ws}/jakarta-tomcat" />
+
+    <ant antfile="tomcat.xml" target="cvs.get" >
+      <property name="package.name" value="jakarta-tomcat" />
+      <property name="arch.name" value="tomcat-3.3" />
+    </ant>
+
+    <ant antfile="tomcat.xml" target="src.package" >
+      <property name="package.name" value="jakarta-tomcat" />
+      <property name="arch.name" value="tomcat-3.3" />
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-clean" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-noext" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-clean" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-jdk11" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-clean" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="tomcat-jsse" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="bin.package" >
+    </ant>
+
+    <ant antfile="tomcat.xml" target="test.build" >
+    </ant>
+    
+  </target>
+
+  <!-- ******************** Creating source snapshots  ******** -->
+
+  <target name="ws.clean.all" depends="init" 
+	  description="Remove workspace and dist dir" >
+    <deltree dir="${webapp.dest}/ws" />
+    <deltree dir="${webapp.dest}/zip" />
+  </target>
+
+  <target name="ws.clean" depends="init,tomcat.clean.src" 
+	  description="Remove the source and clean workspace" >
+  </target>
+
+  <target name="tomcat.clean.src" depends="init" 
+	  description="Remove the source and clean workspace" >
+    <delete dir="${ws.dir}/jakarta-tomcat" />
+    <delete dir="${pkg.dir}/jakarta-tomcat**" />
+    <delete dir="${pkg.dir}/tomcat**" />
+  </target>
+
+  <target name="tomcat.clean.bin" depends="init" >
+    <delete dir="${ws.dir}/jakarta-tomcat/dist/**" />
+    <delete dir="${ws.dir}/jakarta-tomcat/build/**" />
+  </target>
+
+  <!-- ******************** CVS ******************** -->
+
+  <!-- called with package.name param -->  
+  <target name="cvs.get" depends="init"
+	  description="Get a package from CVS " >
+    <echo message="Getting ${package.name} from ${cvs.root} to ${ws.dir}/${package.name}" />
+    <cvs command="checkout"
+	 cvsRoot="${cvs.root}" 
+         package="${package.name}"
+	 dest="${ws.dir}"  />
+
+  </target>
+
+  <!-- called with package.name param -->  
+  <target name="cvs.get.tag" depends="init"
+	  description="Get a package from CVS " >
+    <echo message="Getting ${package.name} from ${cvs.root} to ${ws.dir}/${package.name} with ${tag}" />
+    <cvs command="checkout"
+	 cvsRoot="${cvs.root}" 
+         tag="${tag}"
+         package="${package.name}"
+	 dest="${ws.dir}"  />
+
+  </target>
+
+  <!-- called with package.name param -->  
+  <target name="cvs.update" depends="init"
+	  description="Update a package from CVS " >
+    <echo message="Getting ${package.name} from ${cvs.root} to ${ws.dir}/${package.name}"  />
+
+    <cvs command="update"
+	 cvsRoot="${cvs.root}" 
+         package="${package.name}"
+	 dest="${ws.dir}/${package.name}"  />
+  </target>
+
+
+  <target name="cvsrm" depends="init"
+	  description="Create source zip and tar.gz" >
+    <delete dir="${ws.dir}/${package.name}" includes="/CVS" 
+            verbose="true" />
+  </target>
+
+  <target name="src.package" depends="init"
+	  description="Create source zip and tar.gz" >
+    <delete file="${pkg.dir}/${arch.name}-src.zip" />
+    <delete file="${pkg.dir}/${arch.name}-src.tar.gz" />
+
+    <ant antfile="runant.xml" target="zip" >
+       <property name="zip.zipfile" value="${pkg.dir}/${arch.name}-src.zip" />
+       <property name="zip.basedir" value="${ws.dir}" />
+       <property name="zip.includes" value="${package.name}" />
+    </ant>
+
+    <ant antfile="runant.xml" target="tar" >
+      <property name="tar.tarfile" value="${pkg.dir}/${arch.name}-src.tar" />
+      <property name="tar.basedir" value="${ws.dir}" />
+      <property name="tar.includes" value="${package.name}" />
+   </ant>
+
+    <gzip zipfile="${pkg.dir}/${arch.name}-src.tar.gz" 
+	  src="${pkg.dir}/${arch.name}-src.tar" />
+    <delete file="${pkg.dir}/${arch.name}-src.tar" />
+  </target>
+ 
+ 
+  <!-- Parameters:  package.name -->
+  <target name="package.get" 
+	  depends="init" 
+	  description="Get the sources using HTTP, faster" >
+    
+    <delete dir="${ws.dir}/${arch.name}-src.zip" />
+      
+    <get src="${package-src.url}/${arch.name}-src.zip" 
+	 dest="${ws.dir}/${arch.name}-src.zip" />
+    
+    <unzip src="${ws.dir}/${arch.name}-src.zip" 
+	    dest="${ws.dir}" />
+    <echo message="Done package" />
+  </target>
+  
+  <target name="ant.get" 
+	  depends="init" >
+    <get src="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin/jakarta-ant-1.3-bin.zip" 
+	 dest="${install.dir}/jakarta-ant-1.3-bin.zip" />
+    <unzip src="${install.dir}/jakarta-ant-1.3-bin.zip" 
+	    dest="${install.dir}" />
+
+  </target>
+  
+  <target name="crimson.get" 
+	  depends="init" >
+    <get src="http://xml.apache.org/dist/crimson/crimson-1.1.zip" 
+	 dest="${install.dir}/crimson-1.1.zip" />
+    <unzip src="${install.dir}/crimson-1.1.zip" 
+	    dest="${install.dir}" />
+
+  </target>
+  
+
+  <!-- Parameters:  package.name -->
+  <target name="wars.get" 
+	  depends="init" 
+	  description="Get test WARs" >
+    
+    <get src="${package-src.url}/test.war" 
+	 dest="${pkg.dir}/test.war" />
+    <get src="${package-src.url}/jsp-tests.war" 
+	 dest="${pkg.dir}/jsp-tests.war" />
+    <get src="${package-src.url}/servlet-tests.war" 
+	 dest="${pkg.dir}/servlet-tests.war" />
+
+    <mkdir dir="${tomcat.home}/webapps/test" />
+    <mkdir dir="${tomcat.home}/webapps/servlet-tests" />
+    <mkdir dir="${tomcat.home}/webapps/jsp-tests" />
+    <unzip src="${pkg.dir}/test.war" 
+	    dest="${tomcat.home}/webapps/test" />
+    <unzip src="${pkg.dir}/jsp-tests.war" 
+	    dest="${tomcat.home}/webapps/jsp-tests" />
+    <unzip src="${pkg.dir}/servlet-tests.war" 
+	    dest="${tomcat.home}/webapps/servlet-tests" />
+  </target>
+
+
+
+</project>
+

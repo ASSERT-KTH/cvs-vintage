@@ -1,0 +1,173 @@
+<project name="tomcat" default="main" basedir=".">
+   <!-- Helper to run ant and various programms - hacky code -->
+
+   <!-- ******************** Initialization ******************** -->
+  <target name="init">
+    <property name="base.dir" value="../.." />
+
+    <property file="${base.dir}/WEB-INF/scripts/ant.properties" />
+   
+    <property name="libs" value="${base.dir}/WEB-INF/lib" />
+
+    <property name="ws.dir"
+	      value="${base.dir}/ws" />
+    <property name="pkg.dir"
+	      value="${base.dir}/zip" />
+
+    <property name="cvs.root" 
+	      value=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic" />
+
+    <property name="package-src.url" 
+	      value="http://nagoya.apache.org:8080/build/zip" />
+
+    <property name="script.dir"
+	      value="${base.dir}/WEB-INF/scripts" />
+
+    <property name="pacakage.name" value="jakarta-tomcat" />
+
+    <property name="ant.home" value="${install.dir}/jakarta-ant-1.3" />
+
+
+   </target>
+
+  <!-- External Tar -->
+  <target name="tar" depends="init">
+    <!-- Params: tar.basedir, tar.tarfile, tar.includes. tar.excludes
+      -->
+    <exec dir="${tar.basedir}" 
+	  executable="tar" 
+	  timeout="300000">
+      <arg value="-cf"/>
+      <arg value="tmp.tar"/>
+      <arg value="${tar.includes}"/>
+    </exec>
+    <move file="${tar.basedir}/tmp.tar" tofile="${tar.tarfile}" />
+  </target>
+
+  <!-- External zip -->
+  <target name="zip" depends="init">
+    <!-- Params: zip.basedir, zip.zipfile, zip.includes. zip.excludes
+      -->
+    <exec dir="${zip.basedir}" 
+	  executable="zip" 
+	  timeout="300000" >
+      <arg value="-r"/>
+      <arg value="tmp.zip"/>
+      <arg value="${zip.includes}"/>
+    </exec>
+    <move file="${zip.basedir}/tmp.zip" tofile="${zip.zipfile}" />
+  </target>
+
+
+
+  <!-- Run ant in a separate VM ( other JDK ) -->
+  <target name="exec-ant-other-vm" depends="init">
+    <property name="jdk.home" value="${java.home}" />
+    <property name="extraCP" value="" />
+    <property name="extraArgs" value="" />
+    <property name="exec.ant.file" 
+	      value="${ws.dir}/jakarta-tomcat/build.xml" />
+    <property name="exec.ant.target" value="clean" />
+
+
+    <!-- set class path -->
+    <property name="antCP" 
+      value="${ant.home}/lib/ant.jar" />
+    <property name="jaxpCP" 
+      value="${ant.home}/lib/jaxp.jar:${ant.home}/lib/parser.jar" />
+    <property name="toolCP" 
+      value="${jdk.home}/../lib/tools.jar:${jdk.home}/lib/classes.zip" />
+
+    <echo message="Running ant" />
+    <echo message="CP=${antCP}:${toolCP}:${jaxpCP}:${extraCP}" />
+    <echo message="extraParam=${extraArgs}" />
+    <exec dir="." 
+	  executable="${jdk.home}/bin/java" 
+	  timeout="300000">
+      <env key="JAVA_HOME"
+	   path="${jdk.home}" />
+      <env key="CLASSPATH"
+	   path="${antCP}:${toolCP}:${jaxpCP}:${extraCP}" />
+      <arg value="org.apache.tools.ant.Main"/>
+      <arg value="-Dant.home"/>
+      <arg value="${ant.home}"/>
+      <arg value="-Dtomcat.home"/>
+      <arg value="${tomcat.home}"/>
+      <arg value="-Dbuild.compiler"/>
+      <arg value="${build.compiler}"/>
+      <arg line="${extraArgs}" />
+      <arg value="-f"/>
+      <arg value="${exec.ant.file}"/>
+      <arg value="${exec.ant.target}"/>
+    </exec>
+  </target>
+
+  <!-- Run ant in a separate VM ( other JDK ) -->
+  <target name="run-ant-other-vm-1" depends="init">
+    <property name="jdk.home" value="${jdk12.home}/jre" />
+    <property name="antCP" 
+	      value="${ant.home}/lib/ant.jar" />
+    <property name="jaxpCP" 
+	      value="${ant.home}/lib/jaxp.jar:${ant.home}/lib/parser.jar" />
+    <property name="toolCP" 
+	      value="${jdk.home}/../lib/tools.jar:${jdk.home}/lib/classes.zip" />
+    <property name="extraCP" value="" />
+
+    <echo message="Running ant with ${antCP}:${toolCP}:${jaxpCP}:${extraCP}" />
+    <java dir="${ws.dir}/jakarta-tomcat" 
+	  fork="true"
+	  classname="org.apache.tools.ant.Main"
+	  jvm="${jdk.home}/bin/java" 
+          failonerror="false"	  >
+      <arg value="-Dant.home"/>
+      <arg value="${ant.home}"/>
+      <arg value="-Dbuild.compiler"/>
+      <arg value="${build.compiler}"/>
+      <arg value="-f"/>
+      <arg value="${ws.dir}/jakarta-tomcat/build.xml"/>
+      <arg value="dist"/>
+      <classpath>
+	<pathelement path="${antCP}" />
+	<pathelement path="${toolCP}" />
+	<pathelement path="${jaxpCP}" />
+	<pathelement path="${extraCP}" />
+      </classpath>
+    </java>
+  </target>
+
+
+  <target name="run-ant-same-vm" depends="init">
+    <java classname="org.apache.tools.ant.Main" >
+      <arg value="-Dant.home"/>
+      <arg value="${ant.home}"/>
+      <arg value="-Dbuild.compiler"/>
+      <arg value="${build.compiler}"/>
+      <arg value="-f"/>
+      <arg value="${ws.dir}/jakarta-tomcat/build.xml"/>
+      <arg value="dist"/>
+      <classpath>
+	<pathelement location="${libs}/parser.jar" />
+	<pathelement location="${libs}/jaxp.jar" />
+	<pathelement location="${libs}/ant.jar" />
+	<pathelement location="${java.home}/lib/classes.zip" />
+	<pathelement location="${java.home}/../lib/tools.jar" />
+      </classpath>
+    </java>
+  </target>
+
+  <target name="run-ant" depends="run-ant-same-vm"/>
+
+  <target name="run-ant-call" depends="init">
+    <ant dir="${ws.dir}/jakarta-tomcat" 
+	 antfile="${ws.dir}/jakarta-tomcat/build.xml"
+	 target="dist" >
+      <property name="tomcat.home" value="${ws.dir}/dist/tomcat" />
+      <property name="ant.home" value="${ant.home}" />
+    </ant>
+  </target>
+
+
+  <target name="main" depends="init"/>
+
+</project>
+

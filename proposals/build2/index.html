@@ -1,0 +1,257 @@
+<h1>Tomcat web-based build </h1>
+
+<h2>Intro</h2>
+
+Build is difficult - there are many small steps involved, READMEs that
+are out of date, dependencies and settings. Scripts that automate it
+are hard to setup and provide very little customization.
+
+<p>
+
+About a year ago we started nightly builds for tomcat. We than started
+to run tests, build other projects. The whole thing was rewritten 3
+times. Gump is a great tool that does the same thing ( in a different 
+way ) - but it has the same problem as most scripts I know: hard to
+setup, hard to customize.
+
+<p>
+
+This project tries to improve the situation in few ways:
+
+<ul>
+<li>Use a self-contained web application. The whole thing will be packaged
+as a WAR, with ant, jaxp and other dependencies in WEB-INF/lib, and with
+a single configuration point ( and a web-based form will be added to
+set it up ).
+
+<li>Open up the build process and split it in individual steps. You should be
+able to run any step manually, at any time. In time we can add "wizard"
+like interfaces, and logic to verify the dependencies are realized.
+ 
+</ul>
+
+<h2>Goals</h2>
+
+<ul>
+<li>Easy to use tool - get the WAR, deploy it, use the wizard
+to set up the environment, run the steps you need.
+
+<li>Integration with the "normal" development environment. This should
+work similar with the "antidote" - except that it'll be web based. 
+
+<li>Integration with gump. Xml descriptions of the projects will be
+used to generate the UI ( probably we'll use ant-based scripts instead
+of bat/bash ).
+
+<ul>
+
+<h2>Status</h2>
+
+The current scripts are usable ( and used for nightly tomcat build and
+test ). The user interface is not done, we just have a set of links to
+various scripts. Gump integration isn't started, but few experiments were
+made ( I would do it after some work on interface is done ). 
+
+<h2>Architecture</h2>
+
+We use few jsp taglibs to allow calls to ant and create the UI. <p>
+Few custom ant tasks and scripts allow execution of ant out-of-process,
+using different java VMs, starting and stoping tomcat ( or executing 
+different programs ).
+
+<p>
+  
+
+<hr>
+
+Links:
+
+<ul>
+<li><a href="ws">Workspace</a>.
+<li><a href="log">Logs</a>.
+<li><a href="zip">Distribution files</a>.
+</ul>
+
+Nightly:
+
+<ol>
+ <li><a href="ant/tomcat.jsp?target=tomcat.clean.src">Clean tomcat workspace</a>.
+ <li>Get the source from CVS or snapshots
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=cvs.get&package.name=jakarta-tomcat&arch.name=tomcat-3.3">Get jakarta-tomcat sources from CVS</a> or
+       <a href="ant/tomcat.jsp?target=package.get&arch.name=tomcat-3.3">Get 
+	 from snapshot</a>
+     </li>
+   </ul>
+ </li>
+ <li>Create source packages
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=src.package&arch.name=tomcat-3.3&package.name=jakarta-tomcat">Create source package for tomcat</a>.
+     </li>
+   </ul>
+ </li>
+
+ <li>Test special builds
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=tomcat.clean.bin">Clean tomcat
+	   build/dist</a></li>
+     <li><a href="ant/tomcat.jsp?target=tomcat-jdk11">JDK1.1</a>.
+     </li>
+     <li><a href="ant/tomcat.jsp?target=bin.package&arch.name=tomcat-jdk11">
+Create binary snapshots</a>. ( before testing or building test apps )
+     </li>
+     <li><a href="ant/tomcat.jsp?target=tomcat.clean.bin">Clean tomcat
+	   build/dist</a></li>
+     <li><a href="ant/tomcat.jsp?target=tomcat-noext">Build tomcat, 
+	   no JSSE</a>.
+     </li>
+     <li><a href="ant/tomcat.jsp?target=bin.package&arch.name=tomcat-nojsse">Create binary snapshots</a>. ( before testing or building test apps )
+     </li>
+   </ul>
+ </li>
+
+ <li>Build and create binary packages
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=tomcat.clean.bin">Clean tomcat
+	   build/dist</a></li>
+     <li><a href="ant/tomcat.jsp?target=tomcat-jsse">Full build, all packages( JSSE )</a>.
+     </li>
+     <li><a href="ant/tomcat.jsp?target=bin.package&arch.name=tomcat">Create binary snapshots</a>. ( before testing or building test apps )
+     </li>
+     <li><a href="ant/tomcat.jsp?target=test.build">Build test applications</a>
+     </li>
+   </ul>
+ </li>
+
+</ol>
+
+<h3>Prepare</h3>
+
+Download binaries tomcat build and testing depends on.  This should be updated
+for every new stable release of a binary package. In "gump" mode, this should 
+be done nightly using the latest builds.
+
+<ol>
+ <li>Configure and download the binary packages
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=ant.get">Get jakarta-ant binaries</a>
+     </li>
+     <li><a href="ant/tomcat.jsp?target=crimson.get">Get crimson binaries</a>
+     </li>
+   </ul>
+ <li><a href="ant/tomcat.jsp?target=ws.clean">Clean ws and dist dirs (?)</a>.
+ <li>Get the source from CVS or snapshots
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=cvs.get&package.name=jakarta-tomcat&arch.name=tomcat-3.3">Get jakarta-tomcat sources from CVS</a> or
+       <a href="ant/tomcat.jsp?target=package.get&arch.name=tomcat-3.3">Get 
+	 from snapshot</a>
+     </li>
+     <li><a href="ant/tomcat.jsp?target=cvs.get.tag&package.name=jakarta-watchdog&arch.name=watchdog&tag=tomcat_32">Get jakarta-watchdog source from CVS</a> 
+     </li>
+     <li><a href="ant/tomcat.jsp?target=cvs.get&package.name=jakarta-tools&arch.name=jakarta-tools">Get jakarta-tools source from CVS</a> 
+     </li>
+     <li><a href="ant/tomcat.jsp?target=cvs.get&package.name=jakarta-servletapi&arch.name=jakarta-servletapi">Get jakarta-servletapi source from CVS</a> 
+     </li>
+   </ul>
+ </li>
+ <li>Create source packages
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=src.package&arch.name=watchdog&package.name=jakarta-watchdog">Create source package for watchdog</a>.
+     </li>
+   </ul>
+ </li>
+
+ <li>Build and create binary packages
+   <ul>
+     <li><a href="ant/tomcat.jsp?target=servletapi.build">Build servletapi</a>
+  ( needed for watchdog build )
+     </li>
+     <li><a href="ant/tomcat.jsp?target=tomcat-jsse">Full build, all packages( JSSE )</a>.
+     </li>
+     <li><a href="ant/tomcat.jsp?target=test.build">Build test applications</a>
+     </li>
+     <li><a href="ant/tomcat.jsp?target=watchdog.build">Build watchdog</a>
+     </li>
+   </ul>
+ </li>
+
+
+</ol>
+
+
+<h2>Agregate targets</h2>
+
+<ul>
+
+<li><a href="ant/tomcat.jsp?target=from.web">Full build, get sources from snapshot</a>
+
+<li><a href="ant/tomcat.jsp?target=from.cvs">Full build, get sources from cvs</a>
+
+
+</ul>
+
+
+<h2>Testing</h2>
+
+<ul>
+
+<li>Get and install tomcat binary
+( watchdog wars, sanity-test) from the binary distribution
+
+
+<li><a href="ant/tomcat.jsp?target=wars.get">Get test applications</a> 
+( watchdog wars, sanity-test)
+
+<li><a href="ant/tomcat.jsp?target=change.port">Get the port</a> 
+( watchdog wars, sanity-test)
+
+<li><a href="ant/tomcat.jsp?target=start.tomcat">Start tomcat</a> 
+
+<li><a href="ant/tomcat.jsp?target=start.tomcat">Run watchdog</a> 
+
+<li><a href="ant/tomcat.jsp?target=start.tomcat">Stop tomcat</a> 
+
+</ul>
+
+
+<h2>Other</h2>
+
+<ul>
+
+<li><a href="ant/tomcat.jsp?target=rebuild">Rebuild myself</a>. Will rebuild
+the build webapp.
+
+<li><a href="ant/tomcat.jsp?target=ws.clean">Clean all temp files</a>.
+
+<li>Install 
+<a href="/admin/contextAdmin/contextAdd.jsp?submit=Add+Context&addContextPath=/test&addContextDocBase=test">test</a> 
+<a href="/admin/contextAdmin/contextAdd.jsp?submit=Add+Context&addContextPath=/servlet-tests&addContextDocBase=servlet-tests">servlet-tests</a> 
+<a href="/admin/contextAdmin/contextAdd.jsp?submit=Add+Context&addContextPath=/jsp-tests&addContextDocBase=jsp-tests">jsp-tests</a> 
+
+<li>Remove 
+<a href="/admin/contextAdmin/contextRemove.jsp?removeContextName=/test">test</a>
+<a href="/admin/contextAdmin/contextRemove.jsp?removeContextName=/servlet-tests">servlet-tests</a>
+<a href="/admin/contextAdmin/contextRemove.jsp?removeContextName=/jsp-tests">jsp-tests</a>
+</ul>
+
+<h2>Prepare</h2>
+
+<br>If you are behind a socks firewall, remember to do 
+"runsocks tomcat.sh run" ( or socksify ).
+If you are behind a firewall, and you have a HTTP proxy, rememver to
+set TOMCAT_OPTS="-Dhttp.proxyHost=MYPROXY -Dhttp.proxyPort=PROXYPORT"
+
+<ol>
+<li>Download and install 
+ <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.3/bin">Ant</a>,
+ <a href="http://java.sun.com/products/jsse">JSSE</a>, 
+ <a href="http://java.sun.com/xml/archive.html"JAXP1.0.1</a>
+
+<li>Make sure you have JDK1.1 and JDK1.2(or later) installed
+
+<li>Edit the file 
+ TOMCAT_HOME/webapps/build/WEB-INF/scripts/ant.properties and set all the 
+properties to match your system.
+<br>XXX a web based page can be created - contributions welcomed.
+
+<ol>
