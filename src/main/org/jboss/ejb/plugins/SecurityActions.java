@@ -14,7 +14,7 @@ import org.jboss.security.RunAsIdentity;
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
  * @version $Revison: $
  */
-public class SecurityActions
+class SecurityActions
 {
    interface SubjectActions
    {
@@ -168,6 +168,35 @@ public class SecurityActions
       RunAsIdentity pop();
    }
 
+   interface ContextInfoActions
+   {
+      static final String EX_KEY = "org.jboss.security.exception";
+      ContextInfoActions PRIVILEGED = new ContextInfoActions()
+      {
+         private final PrivilegedAction exAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return SecurityAssociation.getContextInfo(EX_KEY);
+            }
+         };
+         public Exception getContextException()
+         {
+            return (Exception)AccessController.doPrivileged(exAction);
+         }
+      };
+
+      ContextInfoActions NON_PRIVILEGED = new ContextInfoActions()
+      {
+         public Exception getContextException()
+         {
+            return (Exception)SecurityAssociation.getContextInfo(EX_KEY);
+         }
+      };
+
+      Exception getContextException();
+   }
+
    static ClassLoader getContextClassLoader()
    {
       return TCLAction.UTIL.getContextClassLoader();
@@ -241,6 +270,18 @@ public class SecurityActions
       else
       {
          return RunAsIdentityActions.PRIVILEGED.pop();
+      }
+   }
+
+   static Exception getContextException()
+   {
+      if(System.getSecurityManager() == null)
+      {
+         return ContextInfoActions.NON_PRIVILEGED.getContextException();
+      }
+      else
+      {
+         return ContextInfoActions.PRIVILEGED.getContextException();
       }
    }
 
