@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: org.apache.tomcat.startup.Tomcat
+Class-Path: tomcat_util.jar tomcat_core.jar tomcat_modules.jar servlet.jar facade22.jar jaxp.jar parser.jar xerces.jar crimson.jar jasper.jar
+
+

@@ -115,13 +115,19 @@
   <!-- ==================== Tomcat.jar ( starter )  ==================== -->
 
   <target name="tomcat.jar" depends="init">
-    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/share">
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>    
       <include name="org/apache/tomcat/util/SimpleClassLoader.java"/>    
       <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat.jar" basedir="${tomcat.build}/classes" manifest="src/build/manifest"> 
+    <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
+	 basedir="${tomcat.build}/classes" 
+	 manifest="src/build/manifest"> 
       <include name="org/apache/tomcat/startup/Main.class"/> 
       <include name="org/apache/tomcat/startup/Main$*.class"/> 
       <include name="org/apache/tomcat/util/SimpleClassLoader**"/> 
@@ -150,14 +156,15 @@
   <!-- ==================== Tomcat core ==================== -->
 
   <target name="tomcat_core" depends="init">
-    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/share">
       <classpath>
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
       </classpath>
       <include name="org/apache/tomcat/core/**"/>    
-      <include name="org/apache/tomcat/helper/**"/>    
-      <include name="org/apache/tomcat/loader/**"/>    
-      <exclude name="org/apache/tomcat/loader/AdaptiveClassLoader12.java" unless="jdk12.present"/>
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/tomcat">
             <fileset dir="src/share/org/apache/tomcat">
@@ -165,81 +172,95 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/tomcat_core.jar" basedir="${tomcat.build}/classes"> 
+    <jar jarfile="${tomcat.build}/lib/tomcat_core.jar" 
+	 basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/core/**"/>    
-      <include name="org/apache/tomcat/helper/**"/>    
-      <include name="org/apache/tomcat/loader/**"/>    
       <include name="org/apache/tomcat/resources/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Tomcat config ==================== -->
 
-  <target name="tomcat_config" depends="init">
-    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/share">
+  <target name="tomcat-startup" depends="init">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/share">
       <classpath>
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/task/**"/>    
       <include name="org/apache/tomcat/startup/**"/>    
       <exclude name="**/EmbededTomcat.java" unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_config.jar" basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/task/**"/>    
+    <jar jarfile="${tomcat.build}/lib/tomcat-startup.jar" 
+	 basedir="${tomcat.build}/classes"
+	 manifest="src/build/manifest.startup"> 
       <include name="org/apache/tomcat/startup/**"/>    
     </jar>
   </target>
 
   <!-- ==================== Servlet 22 (default) implementation ========== -->
   <target name="facade22" depends="init">
-    <javac destdir="${tomcat.build}/classes" debug="${debug}" optimize="${optimize}" deprecation="off" srcdir="src/facade22">
+    <javac 
+	   destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/facade22">
       <classpath>
 	<pathelement location="${servlet22.jar}"/>
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
-	<pathelement location="${tomcat.build}/lib/tomcat_modules.jar"/>
       </classpath>
       <include name="org/apache/tomcat/facade/**"/>    
-      <include name="org/apache/tomcat/modules/facade22/**"/>    
     </javac>
     <jar jarfile="${tomcat.build}/lib/facade22.jar" 
 	 basedir="${tomcat.build}/classes"
 	 manifest="src/build/manifest.facade22"> 
       <include name="org/apache/tomcat/facade/**"/> 
-      <include name="org/apache/tomcat/modules/facade22/**"/>    
     </jar>
   </target>
 
   <!-- ====================  "Standard" interceptors  ========== -->
   <target name="tomcat_modules" depends="init">
-    <javac destdir="${tomcat.build}/classes" srcdir="src/share" debug="${debug}" optimize="${optimize}" deprecation="off">
+    <javac destdir="${tomcat.build}/classes" 
+	   srcdir="src/share" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off">
       <classpath>
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar"/>
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar"/>
       </classpath>
-      <include name="org/apache/tomcat/context/**"/>    
-      <include name="org/apache/tomcat/request/**"/>    
-      <include name="org/apache/tomcat/service/**"/>    
-      <include name="org/apache/tomcat/session/**"/>    
       <include name="org/apache/tomcat/modules/**"/>    
-      <exclude name="org/apache/tomcat/request/Jdk12Interceptor.java" unless="jdk12.present"/>
-      <exclude name="org/apache/tomcat/context/LoaderInterceptor1.java" unless="jdk12.present"/>
-      <exclude name="org/apache/tomcat/context/LoaderInterceptor12.java" unless="jdk12.present"/>
-      <exclude name="org/apache/tomcat/context/PolicyInterceptor.java" unless="jdk12.present"/>
+      <exclude 
+          name="org/apache/tomcat/modules/generators/Jdk12Interceptor.java" 
+	  unless="jdk12.present"/>
+      <exclude 
+	  name="org/apache/tomcat/modules/config/LoaderInterceptor12.java" 
+          unless="jdk12.present"/>
+      <exclude 
+	  name="org/apache/tomcat/modules/config/PolicyInterceptor.java" 
+	  unless="jdk12.present"/>
     </javac>
-    <jar jarfile="${tomcat.build}/lib/tomcat_modules.jar" basedir="${tomcat.build}/classes"> 
-      <include name="org/apache/tomcat/context/**"/> 
-      <include name="org/apache/tomcat/request/**"/> 
-      <include name="org/apache/tomcat/service/**"/> 
-      <include name="org/apache/tomcat/session/**"/> 
+
+    <jar 
+        jarfile="${tomcat.build}/lib/tomcat_modules.jar" 
+        basedir="${tomcat.build}/classes"> 
       <include name="org/apache/tomcat/modules/**"/> 
     </jar>
   </target>
 
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="init">
-    <javac destdir="${tomcat.build}/classes" srcdir="src/share" debug="${debug}" optimize="${optimize}" deprecation="off">
+    <javac 
+	   destdir="${tomcat.build}/classes" 
+	   srcdir="src/share" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off">
       <classpath>
 	<pathelement location="${servlet22.jar}"/>
       </classpath>
@@ -253,10 +274,12 @@
                 <include name="**/*.dtd"/>
             </fileset>
         </copy>
-    <jar jarfile="${tomcat.build}/lib/jasper.jar" basedir="${tomcat.build}/classes" includes="org/apache/jasper/**"/>
+    <jar jarfile="${tomcat.build}/lib/jasper.jar" 
+	 basedir="${tomcat.build}/classes" 
+	 includes="org/apache/jasper/**"/>
   </target>
 
-  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat_config">
+  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat-startup">
   </target>
 
   <!-- ==================== J2EE integration ========== -->
