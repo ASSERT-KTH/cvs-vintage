@@ -80,9 +80,13 @@ public class HeaderViewer extends JPanel implements Viewer {
 	private StatusPanel statusPanel;
 
 	private boolean hasAttachment;
+	
+	private MailFrameMediator mediator;
 
-	public HeaderViewer() {
+	public HeaderViewer(MailFrameMediator mediator) {
 
+		this.mediator = mediator;
+		
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
 

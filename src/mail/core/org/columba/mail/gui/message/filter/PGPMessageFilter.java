@@ -32,8 +32,8 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.viewer.EncryptionStatusViewer;
+import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
 import org.columba.mail.pgp.PGPPassChecker;
@@ -86,7 +86,7 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private List listeners;
 
-	public PGPMessageFilter(MailFrameMediator mediator, MessageController messageController) {
+	public PGPMessageFilter(MailFrameMediator mediator, Rfc822MessageViewer messageController) {
 		super(mediator, messageController);
 
 		listeners = new ArrayList();

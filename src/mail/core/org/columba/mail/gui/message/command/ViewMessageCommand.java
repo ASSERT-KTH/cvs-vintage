@@ -75,6 +75,8 @@ public class ViewMessageCommand extends Command {
 		// display changes
 		messageController.updateGUI();
 
+		// FIXME
+		/*
 		if (flags == null)
 			return;
 
@@ -86,7 +88,8 @@ public class ViewMessageCommand extends Command {
 					.restartMarkAsReadTimer(
 							(MailFolderCommandReference) getReference());
 		}
-
+		*/
+		
 	}
 
 	/**
@@ -132,16 +135,7 @@ public class ViewMessageCommand extends Command {
 		IMessageController messageController = ((MessageViewOwner) frameMediator)
 				.getMessageController();
 
-		// if necessary decrypt/verify message
-		IMailFolderCommandReference newRefs = messageController.filterMessage(
-				srcFolder, uid);
-
-		// pass work along to MessageController
-		if (newRefs != null) {
-			srcFolder = (AbstractMessageFolder) newRefs.getSourceFolder();
-			uid = newRefs.getUids()[0];
-			mimePartTree = srcFolder.getMimePartTree(uid);
-		}
+		
 		messageController.showMessage(srcFolder, uid);
 
 	}

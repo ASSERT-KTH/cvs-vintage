@@ -51,7 +51,7 @@ public interface IMessageController {
 	
 	void clear();
 	
-	IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
+	//IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
 	
 	void addURLObserver(Observer observer);
 }

@@ -36,6 +36,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -43,6 +45,8 @@ import javax.swing.text.html.StyleSheet;
 
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.Config;
+import org.columba.core.gui.focus.FocusManager;
+import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
@@ -65,8 +69,8 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  *  
  */
-public class BodyTextViewer extends JTextPane implements Viewer,
-		Observer {
+public class BodyTextViewer extends JTextPane implements Viewer, Observer,
+		CaretListener, FocusOwner {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -104,9 +108,13 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 	 */
 	private boolean htmlMessage;
 
-	public BodyTextViewer() {
+	private MailFrameMediator mediator;
+	
+	public BodyTextViewer(MailFrameMediator mediator) {
 		super();
 
+		this.mediator = mediator;
+		
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
 
@@ -172,6 +180,8 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 		fonts.addObserver(this);
 
 		initStyleSheet();
+
+		FocusManager.getInstance().registerComponent(this);
 	}
 
 	private boolean hasHtmlPart(MimePart mimeTypes) {
@@ -378,7 +388,7 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 				body = transformToHTML(new StringBuffer(body));
 
 				//setText(body);
-				
+
 				LOG.finest("validated bodytext:\n" + body);
 
 			} catch (Exception ex) {
@@ -420,34 +430,6 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 	}
 
 	/**
-	 * @see javax.swing.text.JTextComponent#copy()
-	 */
-	public void copy() {
-		int start = this.getSelectionStart();
-		int stop = this.getSelectionEnd();
-
-		StringWriter htmlSelection = new StringWriter();
-
-		try {
-			htmlEditorKit.write(htmlSelection, getDocument(), start, stop
-					- start);
-
-			Clipboard clipboard = getToolkit().getSystemClipboard();
-
-			// Conversion of html text to plain
-			//TODO (@author karlpeder): make a DataFlavor that can handle HTML
-			// text
-			StringSelection selection = new StringSelection(HtmlParser
-					.htmlToText(htmlSelection.toString()));
-			clipboard.setContents(selection, selection);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * @see org.columba.mail.gui.message.viewer.Viewer#getView()
 	 */
 	public JComponent getView() {
@@ -459,7 +441,6 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 	 */
 	public void updateGUI() throws Exception {
 
-		
 		if (!htmlMessage) {
 
 			// display bodytext
@@ -468,8 +449,7 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 			// this call has to happen in the awt-event dispatcher thread
 			setPage(url);
 		}
-		
-		
+
 		//		 setup base url in order to be able to display images
 		// in html-component
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
@@ -520,5 +500,183 @@ public class BodyTextViewer extends JTextPane implements Viewer,
 		public int getAsynchronousLoadPriority() {
 			return 0;
 		}
+	}
+
+	/**
+	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+	 */
+	public void caretUpdate(CaretEvent arg0) {
+		FocusManager.getInstance().updateActions();
+	}
+
+	/** ***************** FocusOwner interface ********************** */
+
+	/**
+	 * @see javax.swing.text.JTextComponent#copy()
+	 */
+	public void copy() {
+		int start = this.getSelectionStart();
+		int stop = this.getSelectionEnd();
+
+		StringWriter htmlSelection = new StringWriter();
+
+		try {
+			htmlEditorKit.write(htmlSelection, getDocument(), start, stop
+					- start);
+
+			Clipboard clipboard = getToolkit().getSystemClipboard();
+
+			// Conversion of html text to plain
+			//TODO (@author karlpeder): make a DataFlavor that can handle HTML
+			// text
+			StringSelection selection = new StringSelection(HtmlParser
+					.htmlToText(htmlSelection.toString()));
+			clipboard.setContents(selection, selection);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 */
+	public void cut() {
+		// not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 */
+	public void delete() {
+		// not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 */
+	public JComponent getComponent() {
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 */
+	public boolean isCopyActionEnabled() {
+
+		if (getSelectedText() == null) {
+			return false;
+		}
+
+		if (getSelectedText().length() > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 */
+	public boolean isCutActionEnabled() {
+		// action not support
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 */
+	public boolean isDeleteActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 */
+	public boolean isPasteActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 */
+	public boolean isSelectAllActionEnabled() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+		// action not supported
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 */
+	public void paste() {
+		// action not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+		// action not supported
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+
+		selectAll();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+
 	}
 }

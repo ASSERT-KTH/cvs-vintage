@@ -59,10 +59,14 @@ public class EncryptionStatusViewer extends JPanel implements Viewer,
     protected JPanel left;
 
     private boolean visible;
+    
+    private MailFrameMediator mediator;
 
-    public EncryptionStatusViewer() {
+    public EncryptionStatusViewer(MailFrameMediator mediator) {
         super();
 
+        this.mediator = mediator;
+        
         setLayout(new BorderLayout());
 
         left = new JPanel();
