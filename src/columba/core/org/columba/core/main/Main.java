@@ -29,6 +29,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
 import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.gui.frame.AddressbookFrameModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
@@ -241,7 +242,7 @@ public class Main {
 				frame.advance();
 
 				AddressbookMain.main(null);
-				
+
 				doGuiInits();
 
 				MainInterface.treeModel =
@@ -249,7 +250,12 @@ public class Main {
 
 				MainInterface.frameModel =
 					new MailFrameModel(
-						MailConfig.get("mainframeoptions").getElement(
+						MailConfig.get("options").getElement(
+							"/options/gui/viewlist"));
+
+				MainInterface.addressbookModel =
+					new AddressbookFrameModel(
+						AddressbookConfig.get("options").getElement(
 							"/options/gui/viewlist"));
 
 				frame.advance();
@@ -268,9 +274,6 @@ public class Main {
 
 			public void finished() {
 				frame.setVisible(false);
-
-				MainInterface.addressbookInterface.frame.setVisible(true);
-				//mainFrame.setVisible(true);
 
 				if (MailConfig.getAccountList().count() == 0)
 					new AccountWizard(false);

@@ -44,7 +44,7 @@ public abstract class FrameView extends JFrame implements WindowListener {
 
 	protected ToolBar toolbar;
 
-	protected JPanel ToolbarPane;
+	protected JPanel toolbarPane;
 
 
 	public FrameView(FrameController frameController) {
@@ -63,9 +63,9 @@ public abstract class FrameView extends JFrame implements WindowListener {
 
 		addWindowListener(this);
 		
-		ToolbarPane = new JPanel();
-		ToolbarPane.setLayout(new BoxLayout(ToolbarPane, BoxLayout.Y_AXIS));
-		panel.add(ToolbarPane, BorderLayout.NORTH);		
+		toolbarPane = new JPanel();
+		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
+		panel.add(toolbarPane, BorderLayout.NORTH);		
 	}
 
 	public void init() {
@@ -74,7 +74,7 @@ public abstract class FrameView extends JFrame implements WindowListener {
 		
 		toolbar = createToolbar(frameController);
 		if( ( toolbar != null ) && (isToolbarVisible()) ) {
-			ToolbarPane.add(toolbar);
+			toolbarPane.add(toolbar);
 		}
 	}
 	
@@ -131,10 +131,10 @@ public abstract class FrameView extends JFrame implements WindowListener {
 	public void showToolbar(boolean b) {
 		if( toolbar == null) return;
 		if (b) {
-			ToolbarPane.add(toolbar);
+			toolbarPane.add(toolbar);
 			frameController.getItem().set("toolbar", "visible", "true");
 		} else {
-			ToolbarPane.removeAll();
+			toolbarPane.removeAll();
 			frameController.getItem().set("toolbar", "visible", "false");
 		}
 		

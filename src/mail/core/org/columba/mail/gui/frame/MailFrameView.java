@@ -134,7 +134,7 @@ public class MailFrameView extends FrameView {
 
 
 		if (item.getBoolean("toolbars", "show_folderinfo") == true)
-			ToolbarPane.add(folderInfoPanel);
+			toolbarPane.add(folderInfoPanel);
 
 		int count = MailConfig.getAccountList().count();
 
@@ -156,7 +156,7 @@ public class MailFrameView extends FrameView {
 	}
 
 	public void hideToolbar(boolean b) {
-		ToolbarPane.remove(toolbar);
+		toolbarPane.remove(toolbar);
 
 		validate();
 		repaint();
@@ -165,7 +165,7 @@ public class MailFrameView extends FrameView {
 
 	public void hideFolderInfo(boolean b) {
 
-		ToolbarPane.remove(folderInfoPanel);
+		toolbarPane.remove(folderInfoPanel);
 		validate();
 		repaint();
 
@@ -174,15 +174,15 @@ public class MailFrameView extends FrameView {
 	public void showFolderInfo(boolean b) {
 
 		if (b) {
-			ToolbarPane.removeAll();
-			ToolbarPane.add(toolbar);
-			ToolbarPane.add(folderInfoPanel);
+			toolbarPane.removeAll();
+			toolbarPane.add(toolbar);
+			toolbarPane.add(folderInfoPanel);
 
 			validate();
 			repaint();
 		} else {
 
-			ToolbarPane.add(folderInfoPanel);
+			toolbarPane.add(folderInfoPanel);
 
 			validate();
 			repaint();

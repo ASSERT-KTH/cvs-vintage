@@ -38,8 +38,10 @@ public class AddressbookMain {
 		
 		MainInterface.addressbookInterface.taskManager = new TaskManager();
 		MainInterface.addressbookInterface.treeModel = new AddressbookTreeModel( AddressbookConfig.get("tree").getElement("/tree") );
+		/*
 		MainInterface.addressbookInterface.frame =
 					new AddressbookView();
+		*/
 		//new AddressbookFrame();
 	}
 }

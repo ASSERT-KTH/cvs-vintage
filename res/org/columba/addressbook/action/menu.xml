@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menubar>
+	<menu name="menu_file" extensionpoint="main">
+		<menuitem action="AddContactCard"/>	
+		<menuitem action="AddGroupCard"/>			
+		<separator/>
+		<menuitem action="RemoveCard" />
+        <menuitem action="EditProperties" />
+		<separator/>
+	</menu>
+	
+	<menu name="menu_utilities">
+        <menuitem action="AddVCard"/>
+	 	<menuitem action="AddressbookImport"/>
+	</menu>
+	
+</menubar>

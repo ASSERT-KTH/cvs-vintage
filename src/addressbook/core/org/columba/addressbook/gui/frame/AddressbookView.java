@@ -21,49 +21,75 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
-import org.columba.addressbook.gui.action.AddressbookActionListener;
-import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
-import org.columba.addressbook.gui.toolbar.AddressbookToolBar;
 import org.columba.addressbook.gui.tree.AddressbookTree;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameView;
+import org.columba.core.gui.ToolBar;
+import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
-public class AddressbookView extends JFrame {
+public class AddressbookView extends FrameView {
 	private AddressbookInterface addressbookInterface;
 	private AddressbookTree tree;
 	private AddressbookTable table;
 
-	public AddressbookView() {
-		super("Columba v" + MainInterface.version + " - Addressbook");
+	public AddressbookView(FrameController frameController) {
+		super(frameController);
+
+		//super("Columba v" + MainInterface.version + " - Addressbook");
+		/*
 		this.setIconImage(
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-
+		*/
 		addressbookInterface = MainInterface.addressbookInterface;
 		addressbookInterface.frame = this;
 		// FIXME
 
+		/*
 		addressbookInterface.actionListener =
 			new AddressbookActionListener(addressbookInterface);
 		addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
-
+		*/
 		init();
 	}
 
+	/* (non-Javadoc)
+		 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+		 */
+	protected Menu createMenu(FrameController controller) {
+		Menu menu = new Menu("org/columba/core/action/menu.xml", controller);
+		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
+
+		return menu;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+	 */
+	protected ToolBar createToolbar(FrameController controller) {
+		return new ToolBar(
+			"org/columba/addressbook/action/main_toolbar.xml",
+			controller);
+	}
+
 	public void init() {
+		super.init();
+		
 		Container c = getContentPane();
 
-		setJMenuBar(addressbookInterface.menu.getMenuBar());
+		//setJMenuBar(addressbookInterface.menu.getMenuBar());
 
+		/*
 		AddressbookToolBar toolbar =
 			new AddressbookToolBar(addressbookInterface);
-
+		
 		c.add(toolbar, BorderLayout.NORTH);
+		*/
 
 		tree = createTree(addressbookInterface);
 
@@ -78,19 +104,22 @@ public class AddressbookView extends JFrame {
 
 		c.add(splitPane, BorderLayout.CENTER);
 
+		/*
 		StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
 		addressbookInterface.statusbar = statusbar;
 
 		c.add(statusbar, BorderLayout.SOUTH);
+		*/
+		
+		//pack();
 
-		pack();
-
+		/*
 		Dimension size = getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation(
 			(screenSize.width - size.width) / 2,
 			(screenSize.height - size.height) / 2);
-
+		*/
 		//setVisible(true);
 	}
 

@@ -66,7 +66,7 @@ public class MailConfig extends DefaultConfig {
 		registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
 
 		mainFrameOptionsFile =
-			new File(configDirectory, "mainframeoptions.xml");
+			new File(configDirectory, "options.xml");
 		registerPlugin(
 			mainFrameOptionsFile.getName(),
 			new MainFrameOptionsXmlConfig(mainFrameOptionsFile));

@@ -17,6 +17,7 @@ package org.columba.core.main;
 
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+import org.columba.addressbook.gui.frame.AddressbookFrameModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -40,6 +41,8 @@ public class MainInterface {
 	
 	public static TreeModel treeModel;
 	public static MailFrameModel frameModel;
+	
+	public static AddressbookFrameModel addressbookModel;
 	
 	public static MetalLookAndFeel lookAndFeel;
 

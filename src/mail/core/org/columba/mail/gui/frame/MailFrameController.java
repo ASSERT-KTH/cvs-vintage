@@ -85,7 +85,9 @@ public class MailFrameController extends FrameController {
 
 	public FrameView createView() {
 
+		
 		MailFrameView view = new MailFrameView(this);
+		
 		
 		view.setFolderInfoPanel(folderInfoPanel);
 

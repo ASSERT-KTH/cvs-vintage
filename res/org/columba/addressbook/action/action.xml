@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
+
+<actionlist>
+ <action name="AddContactCard" class="org.columba.addressbook.gui.action.AddContactCardAction"/>
+ <action name="AddGroupCard" class="org.columba.addressbook.gui.action.AddGroupCardAction"/>
+ <action name="AddressbookImport" class="org.columba.addressbook.gui.action.AddressbookImportAction"/>
+ <action name="AddVCard" class="org.columba.addressbook.gui.action.AddVCardAction"/>
+ <action name="EditProperties" class="org.columba.addressbook.gui.action.EditPropertiesAction"/>
+ <action name="RemoveCard" class="org.columba.addressbook.gui.action.RemoveCardAction"/>
+<actionlist>
