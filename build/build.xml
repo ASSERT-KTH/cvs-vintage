@@ -449,7 +449,26 @@
             </fileset>
         </copy>
     </target>
- 
+
+    <!-- ================================================================== -->
+    <!-- Copy all of the xml schema files into the torque directory         -->
+    <!-- ================================================================== -->
+    <target name="torque-copy-all-schema" depends="torque-init">
+        <!-- copy the schema's to the torque directory -->
+        <copy file="${src.sql.dir}/${project}-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <copy file="${src.sql.dir}/id-table-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <copy file="${src.sql.dir}/turbine-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <copy file="${src.sql.dir}/scheduler-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
@@ -467,7 +486,7 @@
         </uptodate>
     </target>
 
-    <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
+    <target name="sql" depends="prepare-build-dir,schema-check,torque-init,torque-copy-all-schema" 
             unless="schema.uptodate">
 
         <!-- removing sample schema that comes packaged with torque -->
@@ -480,19 +499,6 @@
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_USER" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
-        <!-- copy the schema's to the torque directory -->
-        <copy file="${src.sql.dir}/${project}-schema.xml" 
-              todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
-        <copy file="${src.sql.dir}/id-table-schema.xml" 
-              todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
-        <copy file="${src.sql.dir}/turbine-schema.xml" 
-              todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
-        <copy file="${src.sql.dir}/scheduler-schema.xml" 
-              todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
         <!-- copy the scarab specific build.properties over -->
         <copy file="${src.conf.dir}/torque.props" 
               tofile="${torque.dir.scarab}/build.properties"
@@ -1628,7 +1634,7 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <!-- Creates the Torque documentation                                   -->
     <!-- ================================================================== -->
-    <target name="datadoc" depends="torque-init,sql">
+    <target name="datadoc" depends="torque-init,torque-copy-all-schema,sql">
         <mkdir dir="${torquedoc.destdir}"/>
         <ant antfile="build-torque.xml" dir="${torque.dir.scarab}"
 	     target="doc">
