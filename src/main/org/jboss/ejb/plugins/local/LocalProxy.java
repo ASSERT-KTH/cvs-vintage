@@ -17,7 +17,7 @@ import javax.ejb.EJBLocalObject;
 
  @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.7 $
+ @version $Revision: 1.8 $
  */
 public abstract class LocalProxy implements Serializable
 {
@@ -117,10 +117,15 @@ public abstract class LocalProxy implements Serializable
    Boolean isIdentical(final Object a, final Object b)
    {
       final EJBLocalObject ejb = (EJBLocalObject)a;
-      final Object pk = ejb.getPrimaryKey();
-      return new Boolean(pk.equals(b));
+      Boolean isIdentical = Boolean.FALSE;
+      if( ejb != null )
+      {
+         final Object pk = ejb.getPrimaryKey();
+         isIdentical = new Boolean(pk.equals(b));
+      }
+      return isIdentical;
    }
-   
+ 
    public Object invoke(final Object proxy, final Method m, Object[] args)
       throws Throwable
    {
