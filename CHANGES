@@ -14,6 +14,7 @@ New features:
 - added acknowledge panel to About Dialog listing all third-party libraries, use 
   Contributurs and License file instead of hardcoded Strings
 - support of secure connections via IMAPs/POP3s and TLS for IMAP, POP3 and SMTP
+- message-viewer is now running asynchronous
 
 Fixed bugs:
 - #980605, can't install plugin
@@ -31,6 +32,7 @@ Fixed bugs:
 - #972818, Problem when changing pop hostname in account
 - #972776, menu-mnemonics & was visible in popup menu
 - #972475, doesn't start if ".columba" directory missing
+- added missing ForwardInline action to message-frame
 
 
 Columba v1.0 RC1-test3
