@@ -80,7 +80,7 @@ public class ToTest extends TestCase {
 	
 	/**
 	 * 
-	 * Check if method is falling back to X-Beenthere:, to Reply-To or From: headerfield,
+	 * Check if method is falling back to X-BeenThere:, to Reply-To or From: headerfield,
 	 * if not available
 	 *
 	 */

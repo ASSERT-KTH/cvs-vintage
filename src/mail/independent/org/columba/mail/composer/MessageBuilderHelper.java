@@ -55,7 +55,6 @@ import org.columba.ristretto.message.StreamableMimePart;
  */
 public class MessageBuilderHelper {
 
-
 	/**
 	 * 
 	 * Check if the subject headerfield already starts with a pattern like
@@ -209,6 +208,8 @@ public class MessageBuilderHelper {
 
 		// example: X-BeenThere: columba-devel@lists.sourceforge.net
 		String sender = (String) header.get("X-BeenThere");
+		if (sender == null)
+			sender = (String) header.get("X-Beenthere");
 
 		if (sender == null)
 			sender = (String) header.get("Reply-To");

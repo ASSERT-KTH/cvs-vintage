@@ -815,7 +815,7 @@ public class IMAPFolder extends RemoteFolder {
 	public Object getAttribute(Object uid, String key) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
 
-		return header.getAttributes();
+		return header.getAttributes().get(key);
 	}
 
 	/*
@@ -838,7 +838,28 @@ public class IMAPFolder extends RemoteFolder {
 	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
-		return getStore().getHeaders(uid, keys, getImapPath());
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
+
+		Header result = new Header();
+
+		// if only one headerfield wasn't found in cache
+		// -> call IMAPStore.getHeader() to fetch the
+		// -> missing headerfields
+		boolean parsingNeeded = false;
+		for (int i = 0; i < keys.length; i++) {
+			if (header.get(keys[i]) != null) {
+				// headerfield found
+				result.set(keys[i], header.get(keys[i]));
+			} else
+				parsingNeeded = true;
+		}
+
+		if (parsingNeeded)
+			return getStore().getHeaders(uid, keys, getImapPath());
+		else
+			return result;
+
 	}
 
 	/*

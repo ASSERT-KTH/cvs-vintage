@@ -312,7 +312,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
 		// Add components to the panel:
 
-		// TODO: LOCALIZE
 		builder.appendSeparator(GlobalResourceLoader.getString(
                         RESOURCE_PATH,
                         "general",

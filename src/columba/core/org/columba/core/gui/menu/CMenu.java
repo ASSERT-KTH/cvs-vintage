@@ -43,10 +43,7 @@ public class CMenu extends JMenu{
 	
 		// set menu text incl. mnemonic if specified
 		MnemonicSetter.setTextWithMnemonic(this, str);
-		
-		// TODO CMenu - EmptyIcon hack
-		// don't use this hack here, we need to change this in the theme
-		//setIcon( new EmptyIcon() );		
+			
 	}
 	
 	

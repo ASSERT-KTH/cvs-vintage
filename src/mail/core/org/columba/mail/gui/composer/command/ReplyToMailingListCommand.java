@@ -40,7 +40,7 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 /**
  * Reply to mailinglist.
  * <p>
- * Uses the X-Beenthere: headerfield to determine the To: address
+ * Uses the X-BeenThere: headerfield to determine the To: address
  * 
  * @author fdizet
  */
@@ -89,7 +89,8 @@ public class ReplyToMailingListCommand extends FolderCommand {
 					"Reply-To",
 					"Message-ID",
 					"In-Reply-To",
-					"References" });
+					"References",
+					"X-BeenThere" });
 		message.setHeader(header);
 
 		// get mimeparts
