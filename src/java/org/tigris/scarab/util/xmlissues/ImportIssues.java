@@ -74,6 +74,7 @@ import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
 import org.apache.commons.betwixt.strategy.HyphenatedNameMapper;
+import org.apache.commons.betwixt.strategy.NameMapper;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -104,7 +105,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.25 2003/08/13 15:44:57 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.26 2003/08/13 18:35:38 dlr Exp $
  * @since Scarab beta 14
  */
 public class ImportIssues
@@ -638,9 +639,25 @@ public class ImportIssues
                           true);
         reader.setXMLIntrospector(createXMLIntrospector());
         reader.registerBeanClass(ScarabIssues.class);
-        reader.addRule("scarab-issues", new ScarabIssuesSetupRule());
+        NameMapper nm = reader.getXMLIntrospector().getNameMapper();
+        reader.addRule(mapTypeToElementName(ScarabIssues.class, nm),
+                       new ScarabIssuesSetupRule());
         reader.setErrorHandler(this);
         return reader;
+    }
+
+    /**
+     * A Betwixt <code>NameMapper</code> wrapper.
+     */
+    private String mapTypeToElementName(Class c, NameMapper nm)
+    {
+        String typeName = c.getName();
+        int i = typeName.lastIndexOf('.');
+        if (i != -1)
+        {
+            typeName = typeName.substring(i + 1);
+        }
+        return nm.mapTypeToElementName(typeName);
     }
 
     protected XMLIntrospector createXMLIntrospector()
