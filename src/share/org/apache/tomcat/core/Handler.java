@@ -312,7 +312,7 @@ public class Handler {
 	}
 
 	BaseInterceptor reqI[]=
-	    contextM.getInterceptors(req, Container.H_postService);
+	    req.getContainer().getInterceptors(Container.H_postService);
 
 	if( ! internal ) {
 	    for( int i=0; i< reqI.length; i++ ) {

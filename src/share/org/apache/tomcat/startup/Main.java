@@ -378,8 +378,9 @@ public class Main {
     public String[] getJarFiles(String ld) {
 	File dir = new File(ld);
 	String[] names = dir.list( new FilenameFilter(){
-            public boolean accept(File dir, String name) {
-                if (name.endsWith(".jar")){
+            public boolean accept(File d, String name) {
+                if (name.endsWith(".jar"))
+                {
                     return true;
                 }
                 return false;

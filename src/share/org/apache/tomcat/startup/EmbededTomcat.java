@@ -283,8 +283,8 @@ public class EmbededTomcat { // extends WebService
     public void start() {
 	try {
 	    contextM.start();
-	} catch( IOException ex ) {
-	    log("Error starting EmbededTomcat", ex);
+// 	} catch( IOException ex ) {
+// 	    log("Error starting EmbededTomcat", ex);
 	} catch( Exception ex ) {
 	    log("Error starting EmbededTomcat", ex);
 	}

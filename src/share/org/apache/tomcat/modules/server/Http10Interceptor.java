@@ -136,7 +136,7 @@ public class Http10Interceptor extends PoolTcpConnector
 
 	    reqA.readNextRequest(resA);
 	    if( secure ) {
-		reqA.setScheme( "https" );
+		reqA.scheme().setString( "https" );
 	    }
 	    
 	    cm.service( reqA, resA );

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/helper/Attic/SessionUtil.java,v 1.2 2000/09/25 07:20:31 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/25 07:20:31 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -72,7 +68,7 @@ import org.apache.tomcat.util.*;
  * <code>Session</code> implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/09/25 07:20:31 $
+ * @version $Revision: 1.3 $ $Date: 2000/11/02 21:44:41 $
  */
 
 public final class SessionUtil {
@@ -144,13 +140,6 @@ public final class SessionUtil {
 	else
 	    return (url);
 
-    }
-
-    /**
-     * Generate and return a new session identifier.
-     */
-    public static String generateSessionId() {
-        return SessionIdGenerator.generateId();
     }
 
     /**

@@ -245,7 +245,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     /** First step of request porcessing is finding the Context.
      */
     public int contextMap( Request req ) {
-	String path = req.getRequestURI();
+	String path = req.requestURI().toString();
 	if( path==null)
 	    throw new RuntimeException("ASSERT: null path in request URI");
 	if( path.indexOf("?") >=0 )
@@ -320,19 +320,19 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    }
 
 	    if(debug>0) log("SM: After mapping " + req + " " +
-			    req.getWrapper());
+			    req.getHandler());
 
 	} catch(Exception ex ) {
 	    log("Mapping " + req, ex);
 	    return 500;
 	}
-	return OK;
+	return 0;
     }
     
     /** No need to do that - we finished everything in the first step.
      *  
      */
-    public int requestMap(Request req) {
+    //    public int requestMap(Request req) {
 	// No op. All mapping is done in the first step - it's better because
 	// the alghoritm is more efficient. The only case where those 2 are
 	// not called togheter is in getContext( "path" ). 
@@ -342,8 +342,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	// is _allways_ called after contextMap ( it was asserted in  all
 	// implementations).
 	
-	return OK;
-    }
+    // 	return 0;
+    //     }
 
     // -------------------- Implementation methods --------------------
     
@@ -388,7 +388,9 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 
     /** Adjust the paths in request after matching a container
      */
-    void fixRequestPaths( String path, Request req, Container container ) throws Exception{
+    void fixRequestPaths( String path, Request req, Container container )
+	throws Exception
+    {
 	// Set servlet path and path info
 	// Found a match !
 	// Adjust paths based on the match
@@ -431,7 +433,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    req.setPathInfo(pathI);
 	Context ctx=container.getContext();
 	req.setContext(ctx);
-	req.setWrapper( container.getHandler() );
+	req.setHandler( container.getHandler() );
 	req.setContainer( container );
     }
     

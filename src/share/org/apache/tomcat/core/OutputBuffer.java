@@ -127,8 +127,8 @@ public final class OutputBuffer extends Writer {
 	// If we really have something to write
 	if( cnt>0 ) {
 	    // call the beforeCommit callback
-	    BaseInterceptor reqI[]= cm.getInterceptors(req,
-						       Container.H_beforeCommit);
+	    BaseInterceptor reqI[]= req.getContainer().
+		getInterceptors(Container.H_beforeCommit);
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].beforeCommit( req, res );
 	    }

@@ -83,7 +83,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// 	log( "Ct: " + ct.getHandler() + " " +
 	// 	     ct.getPath() + " " + ct.getMapType());
 	
-	if(  req.getWrapper()!=null &&
+	if(  req.getHandler()!=null &&
 	     ct!=null &&
 	     ct.getMapType() != Container.DEFAULT_MAP )
 	    return 0;
@@ -131,7 +131,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	
 	Handler wrapper = ctx.getServletByName(servletName);
 	if (wrapper != null) {
-	    req.setWrapper( wrapper );
+	    req.setHandler( wrapper );
 	    return 0;
 	}
 	    
@@ -162,7 +162,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	    return 404;
 	}
 
-	req.setWrapper( wrapper );
+	req.setHandler( wrapper );
 	return 0;
     }
     

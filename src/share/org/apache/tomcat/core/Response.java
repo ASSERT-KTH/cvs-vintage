@@ -227,8 +227,8 @@ public class Response {
     public void finish() throws IOException {
         oBuffer.close();
 	ContextManager cm=request.getContextManager();
-	BaseInterceptor reqI[]= cm.
-	    getInterceptors(request, Container.H_afterBody);
+	BaseInterceptor reqI[]= request.getContainer().
+	    getInterceptors(Container.H_afterBody);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].afterBody( request, this );
@@ -312,8 +312,8 @@ public class Response {
 	    // call before body hooks
 	    ContextManager cm=request.getContext().getContextManager();
 
-	    BaseInterceptor reqI[]= cm.
-		getInterceptors(request, Container.H_beforeBody);
+	    BaseInterceptor reqI[]= request.getContainer().
+		getInterceptors(Container.H_beforeBody);
 
 	    for( int i=0; i< reqI.length; i++ ) {
 		reqI[i].beforeBody( request, this );

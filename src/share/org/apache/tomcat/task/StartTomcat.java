@@ -120,7 +120,7 @@ public class StartTomcat {
 	try {
 	    cm.start(); // start serving
 	}
-	catch (java.net.BindException be) {
+	catch (TomcatException be) { //java.net.BindException be) {
 	    loghelper.log("Starting Tomcat: " + be.getMessage(), Logger.ERROR);
 	    System.out.println(sm.getString("tomcat.bindexception"));
 	    try {
@@ -137,7 +137,7 @@ public class StartTomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	cm.setParentLoader( parentLoader );
-	cm.setServerClassPath( serverClassPath );
+	//	cm.setServerClassPath( serverClassPath );
 	
 	ServerXmlHelper sxml=new ServerXmlHelper();
 	sxml.setHelper( xh );
@@ -255,6 +255,7 @@ public class StartTomcat {
 	    setParentClassLoader( (ClassLoader)v);
 	} else if( "serverClassPath".equals( n ) ) {
 	    setServerClassPath( (URL[])v);
+	    throw new RuntimeException("serverClassPath deprecated");
 	} else if( "config".equals( n ) ||
 		   "f".equals(n) ) {
 	    setConfig( (String)v);

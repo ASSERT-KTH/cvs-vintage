@@ -114,14 +114,17 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 
 	for (int i = 0; i < orderedKeys.size(); i ++) {
 	    Integer key = (Integer)orderedKeys.elementAt(i);
-	    Enumeration sOnLevel =  ((Vector)loadableServlets.get( key )).elements();
+	    Enumeration sOnLevel =  ((Vector)loadableServlets.get( key )).
+		elements();
 	    while (sOnLevel.hasMoreElements()) {
 		String servletName = (String)sOnLevel.nextElement();
 		Handler result = ctx.getServletByName(servletName);
 
-		if( ctx.getDebug() > 0 ) ctx.log("Loading " + key + " "  + servletName );
+		if( ctx.getDebug() > 0 )
+		    ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
-		    log("Warning: we try to load an undefined servlet " + servletName, Logger.WARNING);
+		    log("Warning: we try to load an undefined servlet " +
+			servletName, Logger.WARNING);
 		else {
 		    try {
 			if( result.getPath() != null )
@@ -157,8 +160,8 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	
 	String requestURI = path + "?jsp_precompile=true";
 	
-	request.setRequestURI(context.getPath() + path);
-	request.setQueryString( "jsp_precompile=true" );
+	request.requestURI().setString(context.getPath() + path);
+	request.queryString().setString( "jsp_precompile=true" );
 	
 	request.setContext(context);
 

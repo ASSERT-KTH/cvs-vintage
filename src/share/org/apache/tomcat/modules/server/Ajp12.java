@@ -116,7 +116,7 @@ class Ajp12 {
 		    break;
 		    
 		case 1: //beginning of request
-		    req.setMethod(  readString(ajpin, null));
+		    req.method().setString(  readString(ajpin, null));
 		     
 		    //Zone
 		    String contextPath = readString(ajpin, null);
@@ -142,15 +142,15 @@ class Ajp12 {
 		    req.setPathInfo( readString(ajpin, null));               
 		    //Apache parsed path-translated XXX Bug in mod_jserv !!!!!
 		    dummy = readString(ajpin, null);
-		    req.setQueryString( readString(ajpin, null));         
+		    req.queryString().setString( readString(ajpin, null));  
 		    req.setRemoteAddr(readString(ajpin, ""));
 		    req.setRemoteHost( readString(ajpin, ""));
 		    req.setRemoteUser( readString(ajpin, null)); 
 		    req.setAuthType(readString(ajpin, null)); 
 		    //remote port
 		    dummy = readString(ajpin, null);                 
-		    req.setMethod( readString(ajpin, null));
-		    req.setRequestURI( readString(ajpin, ""));
+		    req.method().setString( readString(ajpin, null));
+		    req.requestURI().setString( readString(ajpin, ""));
 
 		    // XXX don't set lookup path - problems with URL rewriting.
 		    // need to be fixed.
@@ -209,7 +209,7 @@ class Ajp12 {
 		     */
                     req.setAttribute(token1, token2);
                     if(token1.equals("HTTPS") && token2.equals("on")) {
-                        req.setScheme("https");
+                        req.scheme().setString("https");
                     }
                     break;
 
@@ -282,13 +282,14 @@ class Ajp12 {
         }
 	
 	// REQUEST_URI may includes query string
-	String requestURI=req.getRequestURI();
+	String requestURI=req.requestURI().toString();
 	int indexQ=requestURI.indexOf("?");
 	int rLen=requestURI.length();
 	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
-	    req.setQueryString( requestURI.substring(indexQ + 1,
-						     requestURI.length()));
-	    req.setRequestURI( requestURI.substring(0, indexQ));
+	    req.queryString().
+		setString( requestURI.substring(indexQ + 1,
+						requestURI.length()));
+	    req.requestURI().setString( requestURI.substring(0, indexQ));
 	} 
     }
 

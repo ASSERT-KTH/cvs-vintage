@@ -239,10 +239,10 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    getNote( secMapNote );
 	if( ctxSec.patterns==0 ) return 0; // fast exit
 	
-	String reqURI = RequestUtil.URLDecode(req.getRequestURI());
+	String reqURI = RequestUtil.URLDecode(req.requestURI().toString());
 	String ctxPath= ctx.getPath();
 	String path=reqURI.substring( ctxPath.length());
-	String method=req.getMethod();
+	String method=req.method().toString();
 	
 	if( debug > 1 ) log( "checking " + path );
 	
@@ -412,13 +412,14 @@ class FormAuthHandler extends Handler {
 	    return;
 	}
 
-	String originalLocation = req.getRequestURI();
-	if (req.getQueryString() != null)
-	    originalLocation += "?" + req.getQueryString();
+	String originalLocation = req.requestURI().toString();
+	if (req.queryString().toString() != null)
+	    originalLocation += "?" + req.queryString().toString();
 	session.setAttribute( "tomcat.auth.originalLocation",
 			      originalLocation);
 	if( debug > 0 )
-	    log("Redirect1: " + page  + " originalUri=" + req.getRequestURI());
+	    log("Redirect1: " + page  + " originalUri=" +
+		req.requestURI().toString());
 
 	req.setAttribute("javax.servlet.error.message",
 			 page );

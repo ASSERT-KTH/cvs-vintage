@@ -87,6 +87,12 @@ public class ServerXmlHelper {
     public void setHelper( XmlMapper xh ) {
 	xh.addRule( "ContextManager", xh.setProperties() );
 
+	setInterceptorRules( xh );
+	setContextRules( xh );
+	setVHostRules( xh );
+    }
+
+    public static void setInterceptorRules( XmlMapper xh ) {
 	xh.addRule( "ContextManager/ContextInterceptor",
 		    xh.objectCreate(null, "className"));
 	xh.addRule( "ContextManager/ContextInterceptor",
@@ -106,68 +112,57 @@ public class ServerXmlHelper {
 	xh.addRule( "ContextManager/RequestInterceptor",
 		    xh.addChild( "addInterceptor",
 				 "org.apache.tomcat.core.BaseInterceptor"));
-
+    }
+    
+    public static void setContextRules( XmlMapper xh ) {
 	// Default host
- 	xh.addRule( "ContextManager/Context",
+ 	xh.addRule( "Context",
 		    xh.objectCreate("org.apache.tomcat.core.Context"));
-	xh.addRule( "ContextManager/Context",
-		    xh.setParent( "setContextManager") );
-	xh.addRule( "ContextManager/Context",
+	xh.addRule( "Context",
 		    xh.setProperties() );
-	xh.addRule( "ContextManager/Context",
-		    xh.addChild( "addContext", null ) );
-	xh.addRule( "ContextManager/Context/RequestInterceptor",
+	xh.addRule( "Context",
+		    xh.setParent("setContextManager") );
+
+	xh.addRule( "Context", new XmlAction() {
+		public void end( SaxContext ctx) throws Exception {
+		    Context tcCtx=(Context)ctx.currentObject();
+		    String host=(String)ctx.getVariable("current_host");
+
+		    if( host!=null && ! "DEFAULT".equals( host )) 
+			tcCtx.setHost( host );
+		}
+	    });
+
+	xh.addRule( "Context",
+		    xh.addChild("addContext",
+				"org.apache.tomcat.core.Context") );
+	
+	// Configure context interceptors
+	xh.addRule( "Context/Interceptor",
 		    xh.objectCreate(null, "className"));
-	xh.addRule( "ContextManager/Context/RequestInterceptor",
+	xh.addRule( "Context/Interceptor",
 		    xh.setProperties() );
-	xh.addRule( "ContextManager/Context/RequestInterceptor",
+	xh.addRule( "Context/Interceptor",
 		    xh.setParent("setContext") );
-	xh.addRule( "ContextManager/Context/RequestInterceptor",
+	xh.addRule( "Context/Interceptor",
 		    xh.addChild( "addInterceptor",
 				 "org.apache.tomcat.core.BaseInterceptor"));
-	
-	// Virtual host support.
-	// Push a host object on the stack
- 	xh.addRule( "ContextManager/Host", new XmlAction() {
-		public void start( SaxContext ctx) throws Exception {
-		    Stack st=ctx.getObjectStack();
-		    // get attributes 
-		    int top=ctx.getTagCount()-1;
-		    AttributeList attributes = ctx.getAttributeList( top );
-
-		    // get CM
-		    ContextManager cm=(ContextManager)st.peek();
-
-		    // construct virtual host config helper
-		    HostConfig hc=new HostConfig(cm);
-
-		    // set the host name
-		    hc.setName( attributes.getValue("name")); 
-		    st.push( hc );
-		}
-		public void cleanup( SaxContext ctx) {
-		    Stack st=ctx.getObjectStack();
-		    Object o=st.pop();
-		}
-	    });
-	xh.addRule( "ContextManager/Host", xh.setProperties());
-	
- 	xh.addRule( "ContextManager/Host/Context",
-		    xh.objectCreate("org.apache.tomcat.core.Context"));
-	xh.addRule( "ContextManager/Host/Context",
+	// Old style 
+	xh.addRule( "Context/RequestInterceptor",
+		    xh.objectCreate(null, "className"));
+	xh.addRule( "Context/RequestInterceptor",
 		    xh.setProperties() );
-	xh.addRule( "ContextManager/Host/Context", new XmlAction() {
-		public void end( SaxContext ctx) throws Exception {
-		    Stack st=ctx.getObjectStack();
-		    
-		    Context tcCtx=(Context)st.pop(); // get the Context
-		    HostConfig hc=(HostConfig)st.peek();
-		    st.push( tcCtx );
-		    // put back the context, to be cleaned up corectly
-		    
-		    hc.addContext( tcCtx );
-		}
-	    });
+	xh.addRule( "Context/RequestInterceptor",
+		    xh.setParent("setContext") );
+	xh.addRule( "Context/RequestInterceptor",
+		    xh.addChild( "addInterceptor",
+				 "org.apache.tomcat.core.BaseInterceptor"));
+    }
+
+    // Virtual host support.
+    public static void setVHostRules( XmlMapper xh ) {
+ 	xh.addRule( "Host", xh.setVariable( "current_host", "name"));
+	xh.addRule( "Host", xh.setProperties());
     }
 
     public void setConnectorHelper( XmlMapper xh ) {
@@ -195,6 +190,10 @@ public class ServerXmlHelper {
      * *** [I don't think that's true any more -Alex]
      */
     public void setLogHelper( XmlMapper xh ) {
+	setLogRules( xh );
+    }
+
+    public static void setLogRules( XmlMapper xh ) {
 	xh.addRule("Server/Logger",
 		   xh.objectCreate("org.apache.tomcat.util.log.QueueLogger"));
 	xh.addRule("Server/Logger", xh.setProperties());
@@ -272,4 +271,7 @@ public class ServerXmlHelper {
 	    return false;
 	}
     }
+
+    // -------------------- Deprecated --------------------
+    
 }

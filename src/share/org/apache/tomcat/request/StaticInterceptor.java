@@ -116,7 +116,7 @@ public class StaticInterceptor extends BaseInterceptor {
     }
 
     public int requestMap(Request req) {
-	if( req.getWrapper() != null )
+	if( req.getHandler() != null )
 	    return 0;
 
 	Context ctx=req.getContext();
@@ -131,7 +131,7 @@ public class StaticInterceptor extends BaseInterceptor {
 
 	if( debug > 0 ) log( "RequestMap " + req + " " + absPath + " " + ctx.getAbsolutePath() );
 	if( absPath == null ) return 0;
-	String requestURI=req.getRequestURI();
+	String requestURI=req.requestURI().toString();
 
 	if( debug > 0 )
 	    log( "Requested: "  + absPath );
@@ -141,7 +141,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	if( file.isFile() ) {
 	    if( debug > 0 ) log( "Setting handler to file " + absPath);
 	    req.setNote( realFileNote, absPath );
-	    req.setWrapper(  ctx.getServletByName( "tomcat.fileHandler"));
+	    req.setHandler(  ctx.getServletByName( "tomcat.fileHandler"));
 	    return 0;
 	}
 
@@ -159,7 +159,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	// Doesn't matter if we are or not in include
 	if( welcomeFile == null  ) {
 	    // normal dir, no welcome.
-	    req.setWrapper( ctx.getServletByName( "tomcat.dirHandler"));
+	    req.setHandler( ctx.getServletByName( "tomcat.dirHandler"));
 	    if( debug > 0) log( "Dir handler");
 	    return 0;
 	}
@@ -358,7 +358,7 @@ class DirHandler extends Handler  {
 	String absPath=FileUtil.safePath( context.getAbsolutePath(),
 					  pathInfo);
 	File file = new File( absPath );
-	String requestURI=subReq.getRequestURI();
+	String requestURI=subReq.requestURI().toString();
 	String base = ctx.getAbsolutePath();
 	if (absPath.length() > base.length())
 	{

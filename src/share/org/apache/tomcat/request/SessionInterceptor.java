@@ -112,7 +112,7 @@ public class SessionInterceptor extends  BaseInterceptor
 	// fix URL rewriting
 	String sig=";jsessionid=";
 	int foundAt=-1;
-	String uri=request.getRequestURI();
+	String uri=request.requestURI().toString();
 	String sessionId;
 	
 	if ((foundAt=uri.indexOf(sig))!=-1){
@@ -121,7 +121,7 @@ public class SessionInterceptor extends  BaseInterceptor
 	    sessionId = fixSessionId( request, sessionId );
 	    
 	    // rewrite URL, do I need to do anything more?
-	    request.setRequestURI(uri.substring(0, foundAt));
+	    request.requestURI().setString(uri.substring(0, foundAt));
 
 	    // No validate now - we just note that this is what the user
 	    // requested. 

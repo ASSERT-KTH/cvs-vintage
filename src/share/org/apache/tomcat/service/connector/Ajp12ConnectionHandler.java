@@ -357,7 +357,7 @@ class AJP12RequestAdapter extends Request {
 					 */
                     attributes.put(token1, token2);
                     if(token1.equals("HTTPS") && token2.equals("on")) {
-                        setScheme("https");
+                        this.scheme().setString("https");
                     }
                     break;
 

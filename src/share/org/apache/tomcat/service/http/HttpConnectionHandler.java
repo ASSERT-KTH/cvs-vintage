@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.32 2000/09/29 07:01:30 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/09/29 07:01:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.33 2000/11/02 21:44:59 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/11/02 21:44:59 $
  *
  * ====================================================================
  *
@@ -185,7 +185,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 
 	    reqA.readNextRequest(resA);
 	    if( secure ) {
-		reqA.setScheme( "https" );
+		reqA.scheme().setString( "https" );
 	    }
 	    
 	    contextM.service( reqA, resA );

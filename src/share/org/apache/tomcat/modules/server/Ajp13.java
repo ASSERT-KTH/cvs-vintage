@@ -187,9 +187,9 @@ public class Ajp13
          * Read the method and translate it to a String
          */
         bsc        = msg.getByte();
-        req.setMethod( methodTransArray[(int)bsc - 1] );
+        req.method().setString( methodTransArray[(int)bsc - 1] );
         req.setProtocol( msg.getString());
-        req.setRequestURI(  msg.getString());
+        req.requestURI().setString(  msg.getString());
 
         req.setRemoteAddr( msg.getString());
         req.setRemoteHost( msg.getString());
@@ -243,7 +243,7 @@ public class Ajp13
                 break;
 		
 	    case SC_A_QUERY_STRING :
-		req.setQueryString( msg.getString());
+		req.queryString().setString( msg.getString());
                 break;
 		
 	    case SC_A_JVM_ROUTE    :
@@ -279,7 +279,7 @@ public class Ajp13
         }
 
         if(isSSL) {
-            req.setScheme("https");
+            req.scheme().setString("https");
         }
 
 	MessageBytes clB=headers.getValue("content-length");

@@ -61,9 +61,7 @@
 package org.apache.tomcat.session;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
@@ -103,6 +101,8 @@ public final class ServerSessionManager
     
     protected Reaper reaper;
 
+    Random randomSource=null;
+    
     public ServerSessionManager() {
     }
 
@@ -115,6 +115,7 @@ public final class ServerSessionManager
     }
     
     // ------------------------------------------------------------- Properties
+
     public int getMaxActiveSessions() {
 	return maxActiveSessions;
     }
@@ -181,7 +182,9 @@ public final class ServerSessionManager
 	}
 	
 	// XXX can return MessageBytes !!!
-	String newId=SessionUtil.generateSessionId();
+
+
+	String newId= SessionIdGenerator.generateId(randomSource);
 
 	// What if the newId belongs to an existing session ?
 	// This shouldn't happen ( maybe we can try again ? )

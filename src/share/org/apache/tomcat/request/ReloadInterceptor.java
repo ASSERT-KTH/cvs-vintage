@@ -182,7 +182,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		if( debug>0 ) log( "Reloading hooks for context " + ctx.toString());
 
 		// Call reload hook in context manager
-		BaseInterceptor cI[]=cm.getInterceptors(ctx.getContainer());
+		BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
 		for( int i=0; i< cI.length; i++ ) {
 		    cI[i].reload(  request, ctx );
 		}
