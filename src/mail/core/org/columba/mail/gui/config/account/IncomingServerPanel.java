@@ -404,8 +404,7 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 		secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
 				"dialog", "account", "use_SSL_for_secure_connection"));
-		secureCheckBox.setActionCommand("SSL");
-		secureCheckBox.addActionListener(this);
+		secureCheckBox.addItemListener(this);
 
 		authenticationLabel = new LabelWithMnemonic(MailResourceLoader
 				.getString("dialog", "account", "authentication_type"));
@@ -430,7 +429,6 @@ public class IncomingServerPanel extends DefaultPanel implements
 		}
 		sslComboBox.addItem(MailResourceLoader.getString("dialog", "account",
 				"tls_in_checkbox"));
-		//sslComboBox.setActionCommand("SSL");
 		sslComboBox.addItemListener(this);
 	}
 
@@ -477,7 +475,8 @@ public class IncomingServerPanel extends DefaultPanel implements
 			receiveOptionsPanel.revalidate();
 		} else if (action.equals("CHECK_AUTHMETHODS")) {
 			getAuthMechanisms();
-		} /*
+		} 
+		/*
 		   * else if (action.equals("SSL")) {
 		   *  }
 		   */
