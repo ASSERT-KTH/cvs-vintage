@@ -12,6 +12,7 @@ import java.io.ObjectStreamException;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -19,25 +20,35 @@ import java.net.URL;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationException;
 import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociationAuthenticator;
+import org.jboss.net.ssl.SSLSocketFactoryBuilder;
 
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
 */
 public class Util
 {
-   /** A serialized MarshalledInvocation */
+   /** A property to override the default https url host verification */
+   public static final String IGNORE_HTTPS_HOST = "org.jboss.security.ignoreHttpsHost";
+   /** A property to install the https connection ssl socket factory */
+   public static final String SSL_FACTORY_BUILDER = "org.jboss.security.httpInvoker.sslSocketFactoryBuilder";
+   /**
+    * A serialized MarshalledInvocation
+    */
    private static String REQUEST_CONTENT_TYPE =
       "application/x-java-serialized-object; class=org.jboss.invocation.MarshalledInvocation";
    private static Logger log = Logger.getLogger(Util.class);
-   /** The type of the HTTPS connection class */
-   private static Class httpsConnClass;
+   /** A custom SSLSocketFactory builder to use for https connections */
+   private static SSLSocketFactoryBuilder sslSocketFactoryBuilder;
 
    static class SetAuthenticator implements PrivilegedAction
    {
@@ -61,25 +72,18 @@ public class Util
       {
          log.warn("Failed to install SecurityAssociationAuthenticator", e);
       }
-      // Determine the type of the HttpsURLConnection in this runtime
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
-      try
+      String factoryFactoryFQCN = System.getProperty(SSL_FACTORY_BUILDER);
+      if (factoryFactoryFQCN != null)
       {
-         // First look for the JDK 1.4 JSSE Https connection
-         httpsConnClass = loader.loadClass("javax.net.ssl.HttpsURLConnection");
-         log.debug("httpsConnClass: "+httpsConnClass);
-      }
-      catch(Exception e)
-      {
-         // Next try the JSSE external dist Https connection
          try
          {
-            httpsConnClass = loader.loadClass("com.sun.net.ssl.HttpsURLConnection");
-            log.debug("httpsConnClass: "+httpsConnClass);
-         }
-         catch(Exception e2)
+            Class clazz = loader.loadClass(factoryFactoryFQCN);
+            sslSocketFactoryBuilder = (SSLSocketFactoryBuilder) clazz.newInstance();
+   }
+         catch (Exception e)
          {
-            log.warn("No HttpsURLConnection seen");
+            log.warn("Could not instantiate SSLSocketFactoryFactory", e);
          }
       }
    }
@@ -159,30 +163,57 @@ public class Util
     * HttpsURLConnection then nothing is done.
     *  
     * @param conn a HttpsURLConnection
-    * @throws InvocationTargetException on failure to set the 
-    * @throws IllegalAccessException
     */ 
    public static void configureHttpsHostVerifier(HttpURLConnection conn)
-      throws InvocationTargetException, IllegalAccessException
    {
-      boolean isAssignable = httpsConnClass.isAssignableFrom(conn.getClass());
-      if( isAssignable )
+      if ( conn instanceof HttpsURLConnection )
       {
          // See if the org.jboss.security.ignoreHttpsHost property is set
-         if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
+         if (Boolean.getBoolean(IGNORE_HTTPS_HOST) == true)
          {
             AnyhostVerifier.setHostnameVerifier(conn);
          }
       }
    }
 
-   /** First try to use the externalURLValue as a URL string and if this
-       fails to produce a valid URL treat the externalURLValue as a system
-       property name from which to obtain the URL string. This allows the
-       proxy url to not be set until the proxy is unmarshalled in the client
-       vm, and is necessary when the server is sitting behind a firewall or
-       proxy and does not know what its public http interface is named.
+   /** Override the SSLSocketFactory used by the HttpsURLConnection. This method
+    * will invoke setSSLSocketFactory on any HttpsURLConnection if there was
+    * a SSLSocketFactoryBuilder implementation specified via the
+    * org.jboss.security.httpInvoker.sslSocketFactoryBuilder system property.
+    * 
+    * @param conn possibly a HttpsURLConnection
+    * @throws InvocationTargetException thrown on failure to invoke setSSLSocketFactory
    */
+   public static void configureSSLSocketFactory(HttpURLConnection conn)
+      throws InvocationTargetException
+   {
+      Class connClass = conn.getClass();
+      if ( conn instanceof HttpsURLConnection && sslSocketFactoryBuilder != null)
+      {
+         try
+         {
+            SSLSocketFactory socketFactory = sslSocketFactoryBuilder.getSocketFactory();
+            Class[] sig = {SSLSocketFactory.class};
+            Method method = connClass.getMethod("setSSLSocketFactory", sig);
+            Object[] args = {socketFactory};
+            method.invoke(conn, args);
+            log.trace("Socket factory set on connection");
+         }
+         catch(Exception e)
+         {
+            throw new InvocationTargetException(e);
+         }
+      }
+   }
+
+   /**
+    * First try to use the externalURLValue as a URL string and if this
+    * fails to produce a valid URL treat the externalURLValue as a system
+    * property name from which to obtain the URL string. This allows the
+    * proxy url to not be set until the proxy is unmarshalled in the client
+    * vm, and is necessary when the server is sitting behind a firewall or
+    * proxy and does not know what its public http interface is named.
+    */
    public static URL resolveURL(String urlValue) throws MalformedURLException
    {
       if( urlValue == null )
