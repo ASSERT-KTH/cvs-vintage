@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.7 2004/12/30 17:13:23 mvw Exp $
+// $Id: StylePanelFigUseCase.java,v 1.8 2005/01/01 20:48:50 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StylePanelFigUseCase.java
 // Classes: StylePanelFigUseCase
 // Original Author: mail@jeremybennett.com
-// $Id: StylePanelFigUseCase.java,v 1.7 2004/12/30 17:13:23 mvw Exp $
+// $Id: StylePanelFigUseCase.java,v 1.8 2005/01/01 20:48:50 mvw Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // optional display of extension points.
@@ -41,7 +41,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 
@@ -167,10 +166,7 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
 
                 target.setExtensionPointVisible(epCheckBox.isSelected());
 
-                Project p = ProjectManager.getManager().getCurrentProject();
-                if (p != null) {
-                    p.setNeedsSave(true);
-                }
+                ProjectManager.getManager().setNeedsSave(true);
             } else {
                 super.itemStateChanged(e);
             }

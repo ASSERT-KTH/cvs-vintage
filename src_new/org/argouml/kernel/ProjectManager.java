@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.44 2004/12/31 10:39:20 mvw Exp $
+// $Id: ProjectManager.java,v 1.45 2005/01/01 20:48:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,16 +232,30 @@ public final class ProjectManager implements PropertyChangeListener {
     }
     
     /**
-     * Notify the gui from the project manager that the
-     * current project's save state has changed.
+     * Test if the model needs to be saved.
+     * 
+     * @return <tt>true</tt> if the model needs to be saved.
+     */
+    public boolean needsSave() {
+        return ActionSaveProject.getInstance().isEnabled();
+    }
+    
+    /**
+     * Notify the gui that the
+     * current project's save state has changed. There are 2 receivers:
+     * the SaveProject tool icon and the title bar (for showing a *). 
      * 
      * @param newValue The new state.
      */
-    public void notifySavePropertyChanged(boolean newValue) {
+    public void setNeedsSave(boolean newValue) {
+        boolean oldValue = ActionSaveProject.getInstance().isEnabled();
         
-        firePropertyChanged(SAVE_STATE_PROPERTY_NAME,
+        if (oldValue != newValue) {
+            ActionSaveProject.getInstance().setEnabled(newValue);
+            firePropertyChanged(SAVE_STATE_PROPERTY_NAME,
                             new Boolean(!newValue),
                             new Boolean(newValue));
+        }
     }
     
     /**
@@ -264,15 +278,15 @@ public final class ProjectManager implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent pce) {
         if (pce.getPropertyName().equals(
                 Designer.MODEL_TODOITEM_ADDED)) {
-            getCurrentProject().setNeedsSave(true);
+            setNeedsSave(true);
         }
         else if (pce.getPropertyName().equals(
                 Designer.MODEL_TODOITEM_DISMISSED)) {
-            getCurrentProject().setNeedsSave(true);
+            setNeedsSave(true);
         }
         else if (pce.getPropertyName().equals(
                 UmlModelListener.SAVE_STATE_PROPERTY_NAME)) {
-            getCurrentProject().setNeedsSave(true);
+            setNeedsSave(true);
         }
         
     }

@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.141 2004/12/30 23:44:37 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.142 2005/01/01 20:48:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -410,8 +410,7 @@ public class ProjectBrowser
             setTitle(getAppName());
         } else {
             // ask the Project if we are "dirty" - i.e. need to save
-            String changeIndicator = ProjectManager.getManager()
-                .getCurrentProject().needsSave()
+            String changeIndicator = ProjectManager.getManager().needsSave()
                 ? " *" : "";
             ArgoDiagram activeDiagram = ProjectManager.getManager()
                 .getCurrentProject().getActiveDiagram();

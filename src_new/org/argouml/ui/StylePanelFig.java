@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.26 2004/12/30 17:13:22 mvw Exp $
+// $Id: StylePanelFig.java,v 1.27 2005/01/01 20:48:49 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import javax.swing.text.Document;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.swingext.SpacerPanel;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
@@ -299,26 +298,19 @@ public class StylePanelFig extends StylePanel implements ItemListener,
     }
 
     /**
-     * <p>
      * Change the bounds of the target fig. Called whenever the bounds box is
-     * edited.
-     * </p>
+     * edited. <p>
      * 
-     * <p>
      * Format of the bounds is four integers representing x, y, width and height
      * separated by spaces or commas. An empty field is treated as no change and
-     * leading and trailing spaces are ignored.
-     * </p>
+     * leading and trailing spaces are ignored. <p>
      * 
-     * <p>
      * <em>Note</em>. There is a note in the old code that more work might be
      * needed, because this could change the graph model. I don't see how that
      * could ever be.
-     * </p>
      */
-    protected void setTargetBBox() { // Can't do anything if we don't have
-        // a
-        // fig.
+    protected void setTargetBBox() { 
+        // Can't do anything if we don't have a fig.
         if (getPanelTarget() == null) { return; } 
         // Parse the boundary box text. Null is
         // returned if it is empty or
@@ -333,10 +325,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
             getPanelTarget().setBounds(bounds.x, bounds.y, bounds.width, 
                     bounds.height);
             getPanelTarget().endTrans();
-            Project p = ProjectManager.getManager().getCurrentProject();
-            if (p != null) {
-                p.setNeedsSave(true);
-            }
+            ProjectManager.getManager().setNeedsSave(true);
         }
     }
 
@@ -451,10 +440,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         getPanelTarget().setFilled(c instanceof Color);
         getPanelTarget().endTrans();
         if (!c.equals(oldColor)) {
-            Project p = ProjectManager.getManager().getCurrentProject();
-            if (p != null) {
-                p.setNeedsSave(true);
-            }
+            ProjectManager.getManager().setNeedsSave(true);
         }
     }
 
@@ -469,10 +455,7 @@ public class StylePanelFig extends StylePanel implements ItemListener,
         getPanelTarget().setLineWidth((c instanceof Color) ? 1 : 0);
         getPanelTarget().endTrans();
         if (!c.equals(oldColor)) {
-            Project p = ProjectManager.getManager().getCurrentProject();
-            if (p != null) {
-                p.setNeedsSave(true);
-            }
+            ProjectManager.getManager().setNeedsSave(true);
         }
     }
 

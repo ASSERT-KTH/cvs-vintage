@@ -1,4 +1,4 @@
-// $Id: StylePanelFigInterface.java,v 1.10 2004/12/30 17:13:22 mvw Exp $
+// $Id: StylePanelFigInterface.java,v 1.11 2005/01/01 20:48:50 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 
-import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.StylePanelFigNodeModelElement;
 
@@ -129,10 +128,7 @@ public class StylePanelFigInterface extends StylePanelFigNodeModelElement {
             if (src == operCheckBox) {
                 ((FigInterface) getPanelTarget())
                     .setOperationsVisible(operCheckBox.isSelected());
-                Project p = ProjectManager.getManager().getCurrentProject();
-                if (p != null) {
-                    p.setNeedsSave(true);
-                }
+                ProjectManager.getManager().setNeedsSave(true);
             } else
                 super.itemStateChanged(e);
         }

@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.5 2004/12/31 19:07:47 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.6 2005/01/01 20:48:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.cognitive.ProjectMemberTodoList;
@@ -173,7 +174,7 @@ public class XmiFilePersister extends AbstractFilePersister {
             p.setUUIDRefs(XMIParser.getSingleton().getUUIDRefs());
             p.addMember(new ProjectMemberTodoList("", p));
             p.addMember(model);
-            p.setNeedsSave(false);
+            ProjectManager.getManager().setNeedsSave(false);
             return p;
         } catch (IOException e) {
             throw new OpenException(e);

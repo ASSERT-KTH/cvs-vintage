@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.9 2004/12/29 09:23:32 mvw Exp $
+// $Id: ActionRevertToSaved.java,v 1.10 2005/01/01 20:48:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class ActionRevertToSaved extends ActionFileOperations {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
         
-        if (p == null || !p.needsSave()) {
+        if (p == null || !ProjectManager.getManager().needsSave()) {
             return;
         }
         

@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.10 2004/12/29 02:31:50 bobtarling Exp $
+// $Id: ActionFileOperations.java,v 1.11 2005/01/01 20:48:50 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public abstract class ActionFileOperations extends AbstractAction {
         Project p = ProjectManager.getManager().getCurrentProject();
 
 
-        if (p != null && p.needsSave()) {
+        if (p != null && ProjectManager.getManager().needsSave()) {
             String t = MessageFormat.format(Translator.localize(
                         "optionpane.open-project-save-changes-to"),
                         new Object[] {p.getName()});

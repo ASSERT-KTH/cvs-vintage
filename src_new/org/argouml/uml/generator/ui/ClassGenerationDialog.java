@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.35 2004/10/28 06:14:47 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.36 2005/01/01 20:48:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,7 +352,7 @@ public class ClassGenerationDialog
                                     node,
                                     "src_lang",
                                     language.getConfigurationValue());
-                                ProjectManager.getManager().getCurrentProject()
+                                ProjectManager.getManager()
                                     .setNeedsSave(true);
                             }
                         }
