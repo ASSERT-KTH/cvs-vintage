@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.32 2002/05/19 03:34:01 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.33 2002/05/21 23:09:30 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -85,7 +85,6 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		mode.addMouseListener(mouseHandler);
 		box.add(mode);
 		box.add(Box.createHorizontalStrut(4));
-
 
 		wrap = new ToolTipLabel();
 		wrap.setHorizontalAlignment(SwingConstants.CENTER);
@@ -131,6 +130,22 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		TextAreaPainter painter = view.getTextArea().getPainter();
 		panel.setBackground(painter.getBackground());
 		panel.setForeground(painter.getForeground());
+		caretStatus.setBackground(painter.getBackground());
+		caretStatus.setForeground(painter.getForeground());
+		message.setBackground(painter.getBackground());
+		message.setForeground(painter.getForeground());
+		mode.setBackground(painter.getBackground());
+		mode.setForeground(painter.getForeground());
+		wrap.setBackground(painter.getBackground());
+		wrap.setForeground(painter.getForeground());
+		multiSelect.setBackground(painter.getBackground());
+		multiSelect.setForeground(painter.getForeground());
+		overwrite.setBackground(painter.getBackground());
+		overwrite.setForeground(painter.getForeground());
+		lineSep.setBackground(painter.getBackground());
+		lineSep.setForeground(painter.getForeground());
+		memory.setBackground(painter.getBackground());
+		memory.setForeground(painter.getForeground());
 
 		Font font = UIManager.getFont("Label.font");
 		caretStatus.setFont(font);
