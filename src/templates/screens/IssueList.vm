@@ -14,7 +14,15 @@ $page.setTitle("Artifact List")
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 #set ($issueList = $scarabR.IssueList)
 
-
+<div class="functnbar">
+<input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
+#if ($searchType.equals("advanced"))
+<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+		
 #if ($issueList.size() == 0)
   <p class="alert">There are no matching issues.</p>
 #else
@@ -27,6 +35,7 @@ $page.setTitle("Artifact List")
  #set ($paginated = "true")
  #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
+
 <form action="$action" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
@@ -45,37 +54,6 @@ $page.setTitle("Artifact List")
  #end
  </p>
 #end
-
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-#if ($searchType.equals("advanced"))
- <div>Save</div>
- <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" />
- </td>
- 
- <td>
-#end
-  <div>Verbose view</div>
-  <input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
-  <input type="submit" value="All" name="eventSubmit_doViewall" />
- </td>
- <td>
- <div>Reassign</div>
-  <input type="submit" value="Selected" name="eventSubmit_doReassignselected" />&#160;
-  <input type="submit" value="All" name="eventSubmit_doReassignall" />
- </td>
-
-#if ($searchType.equals("advanced"))
-  <td>
-  <div>Refine query</div>
-  <input type="submit" value="go" name="eventSubmit_doRefinequery" />
-  </td>
-#end
- </tr>
- </table>
-</div>
 
 <h3>Search results</h3>
 
@@ -119,40 +97,26 @@ $page.setTitle("Artifact List")
 #end
   </table>
 
-<p>(<a href="$link.setPage("ConfigureIssueList.vm")">Add/remove attribute columns
- from view</a>)</p>
+<div class="functnbar3">
+<input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;<input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;<small>selected</small>&#160;&#160;<img src="../csi/images/seperator.gif" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;<input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;<input type="submit" value="View verbose" name="eventSubmit_doViewselected" />&#160;<small>all</small>&#160;
+</div>
+		
+<p><small>(<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</small></p>
 
-<p class="paginate">
- issues per page:&#160;
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+             <tr>
+       <th>Max items per page</td>
+       <td>
  <input type="radio" value="25" name="resultsPerPage" #if( $resultsPerPage == 25 ) checked="checked" #end /> 25
  <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50
  <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75
  <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
  <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
-</p>
-
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-#if ($searchType.equals("advanced"))
- <div>Save</div>
- <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" />
-  </td>
-  <td>
-#end
-  <div>Verbose view</div>
-  <input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&#160;
-  <input type="submit" value="All" name="eventSubmit_doViewall" />
-  </td>
-  <td>
-  <div>Reassign</div> 
-  <input type="submit" value="Selected" name="eventSubmit_doReassignselected" />&#160;
-  <input type="submit" value="All" name="eventSubmit_doReassignall" />
-  </td>
-#if ($searchType.equals("advanced"))
-  <td>
-  <div>Refine query</div>
+</td>
+     </tr>
+      </table>
+</div>
 
 #if ($paginated)
  <p class="paginate">
@@ -166,14 +130,16 @@ $page.setTitle("Artifact List")
   | <a href="$nextLink">&raquo;</a> next
  #end
 #end
- </p>
-  </td>
 #end
-  </tr>
-</table>
-</div>
 
-$intake.declareGroups()
+<div class="functnbar2">
+<input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
+#if ($searchType.equals("advanced"))
+<input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
 </form>
 </div>
-#end
+$intake.declareGroups()

@@ -23,37 +23,31 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">Query Name</th>
+   <th width="120">query Name</th>
    <td>
        <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /> 
        #fieldErrorMsg($queryGroup.Name "")
    </td>
   </tr>
   <tr>
-   <th width="120">Query Description</th>
+   <th width="120">query description</th>
    <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
   </tr>
   <tr>
-   <th width="120">Availability</th>
+   <th width="120">availability</th>
    <td>#queryTypeSelectBox ($currentQuery)</td>
   </tr>
   <tr>
-   <th width="120">Current Module</th>
+   <th width="120">location</th>
    <td>$module.Name</td>
    <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
  </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
+<div class="functnbar">
   <input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160; 
   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-  </td>
- </tr>
-</table>
 </div>
 </form>
 
@@ -114,13 +108,8 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 #end
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
   <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
- </tr>
-</table>
 </div>
 
 $intake.declareGroups()

@@ -18,20 +18,15 @@ $page.setTitle("Add/remove attributes from view")
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Save" name="eventSubmit_doSelectattributes" />&#160; 
+  <input type="submit" value="Done" name="eventSubmit_doSelectattributes" />&#160; 
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
-  <input type="submit" value="Reset to default"  name="eventSubmit_doCancel" />&#160;
-  </td>
- </tr>
-</table>
+  <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160;
 </div>
+
 <h3>Attributes</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>Select</th>
+  <th>Show/hide</th>
   <th>Attribute name</th>
   <th>Columnar sequence</th>
  </tr>
@@ -68,17 +63,14 @@ $page.setTitle("Add/remove attributes from view")
  #end
 </table>
 
+<div class="functnbar3">
+  <input type="submit" value="Re-sort" name="eventSubmit_doResort" />&#160; 
+</div>
+
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" value="Save" name="eventSubmit_doSelectattributes" />&#160; 
+  <input type="submit" value="Done" name="eventSubmit_doSelectattributes" />&#160; 
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
-  <input type="submit" value="Reset to default"  name="eventSubmit_doCancel" />&#160; 
-  <input type="submit" value="Go to issue list"  name="eventSubmit_doGoissuelist" />
-  </td>
- </tr>
-</table>
+  <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160; 
 </div>
 
 $intake.declareGroups()

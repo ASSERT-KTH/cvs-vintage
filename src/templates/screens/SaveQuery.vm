@@ -14,14 +14,8 @@ $page.setTitle("Save Query")
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   <input type="submit" value="Save" name="eventSubmit_doSavequery" />&#160;
   <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-  </td>
-  </tr>
- </table>
 </div>
 
 <p>
@@ -32,20 +26,20 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">Query name</th>
+   <th width="120">query name</th>
    <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
   </tr>
   <tr>
-   <th width="120">Query description</th>
+   <th width="120">query description</th>
    <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
   </tr>
   <tr>
-   <th width="120">Availability</th>
+   <th width="120">availability</th>
    <td>#queryTypeSelectBox ($query)
    </td>
   </tr>
   <tr>
-   <th width="120">Module</th>
+   <th width="120">module</th>
    <td>$module.Name</td>
    <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
@@ -53,23 +47,17 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   <input type="submit" value="Save" name="eventSubmit_doSavequery" />&#160;
   <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-  </td>
- </tr>
-</table>
 </div>
 
 $intake.declareGroups()
 </form>
-#else
 
+#else
   <p><strong class="alert">No query to save. Please <a
   href="$link.setPage("AdvancedQuery.vm")">enter a
   query.</a></strong></p>
-
 #end
+
 </div>
