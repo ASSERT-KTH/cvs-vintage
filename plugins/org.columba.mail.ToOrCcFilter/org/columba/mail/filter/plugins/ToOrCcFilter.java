@@ -16,9 +16,8 @@
 
 package org.columba.mail.filter.plugins;
 
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MessageFolder;
-
+import org.columba.core.filter.FilterCriteria;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.ristretto.message.Header;
 
 /**
@@ -31,16 +30,17 @@ import org.columba.ristretto.message.Header;
 public class ToOrCcFilter extends HeaderfieldFilter {
     private String criteria;
     private String pattern;
+    private int condition;
 
     /** {@inheritDoc} */
-    public boolean process(MessageFolder folder, Object uid) throws Exception {
+    public boolean process(AbstractMessageFolder folder, Object uid) throws Exception {
         // get the header of the message
         Header header = folder.getHeaderFields(uid, new String[] {"To", "Cc"});
 
         boolean result = false;
         if (header != null) {
             // convert the condition string to an int which is easier to handle
-            int condition = FilterCriteria.getCriteria(criteria);
+           
 
             // get the "To" headerfield from the header
             String to = (String) header.get("To");
@@ -68,5 +68,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 
         // string to search
         pattern = filterCriteria.get("pattern");
+        
+        condition = filterCriteria.getCriteria();
     }
 }

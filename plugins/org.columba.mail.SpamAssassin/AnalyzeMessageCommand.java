@@ -17,12 +17,12 @@
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * @author fdietz
@@ -34,17 +34,17 @@ import org.columba.mail.folder.MessageFolder;
  * (create a filter on this headerfield)
  *  
  */
-public class AnalyzeMessageCommand extends FolderCommand {
+public class AnalyzeMessageCommand extends Command {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger.getAnonymousLogger();
 
-	MessageFolder srcFolder;
+	IMailbox srcFolder;
 
 	/**
 	 * @param references
 	 */
-	public AnalyzeMessageCommand(DefaultCommandReference references) {
+	public AnalyzeMessageCommand(ICommandReference references) {
 		super(references);
 	}
 
@@ -53,7 +53,7 @@ public class AnalyzeMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public AnalyzeMessageCommand(FrameMediator frame,
-			DefaultCommandReference references) {
+			ICommandReference references) {
 		super(frame, references);
 	}
 
@@ -63,9 +63,9 @@ public class AnalyzeMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		IFolderCommandReference r = (IFolderCommandReference) getReference();
 
-		srcFolder = (MessageFolder) r.getFolder();
+		srcFolder = (IMailbox) r.getSourceFolder();
 
 		Object[] uids = r.getUids();
 		worker.setDisplayText("Applying analyzer to " + srcFolder.getName()
@@ -84,7 +84,7 @@ public class AnalyzeMessageCommand extends FolderCommand {
 
 	}
 
-	public static void addHeader(MessageFolder srcFolder, Object uid,
+	public static void addHeader(IMailbox srcFolder, Object uid,
 			WorkerStatusController worker) throws Exception {
 		//Header header = srcFolder.getHeaderFields(uid, new String[]
 		// {"X-Spam-Level"} );

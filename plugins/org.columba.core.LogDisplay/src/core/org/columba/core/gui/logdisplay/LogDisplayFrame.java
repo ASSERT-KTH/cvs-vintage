@@ -20,7 +20,7 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
-import org.frappucino.awt.WindowsUtil;
+import org.frapuccino.awt.WindowsUtil;
 
 
 /**

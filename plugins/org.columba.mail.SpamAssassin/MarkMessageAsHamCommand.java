@@ -2,12 +2,12 @@
 import java.io.InputStream;
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.IMailbox;
 
 /**
  * @author fdietz
@@ -15,17 +15,17 @@ import org.columba.mail.folder.MessageFolder;
  * 
  *  
  */
-public class MarkMessageAsHamCommand extends FolderCommand {
+public class MarkMessageAsHamCommand extends Command {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger.getAnonymousLogger();
 
-	MessageFolder srcFolder;
+	IMailbox srcFolder;
 
 	/**
 	 * @param references
 	 */
-	public MarkMessageAsHamCommand(DefaultCommandReference references) {
+	public MarkMessageAsHamCommand(ICommandReference references) {
 		super(references);
 	}
 
@@ -34,7 +34,7 @@ public class MarkMessageAsHamCommand extends FolderCommand {
 	 * @param references
 	 */
 	public MarkMessageAsHamCommand(FrameMediator frame,
-			DefaultCommandReference references) {
+			ICommandReference references) {
 		super(frame, references);
 	}
 
@@ -44,9 +44,9 @@ public class MarkMessageAsHamCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
-		FolderCommandReference r = (FolderCommandReference) getReference();
+		IFolderCommandReference r = (IFolderCommandReference) getReference();
 
-		srcFolder = (MessageFolder) r.getFolder();
+		srcFolder = (IMailbox) r.getSourceFolder();
 
 		Object[] uids = r.getUids();
 		worker.setDisplayText("Applying analyzer to " + srcFolder.getName()
@@ -61,7 +61,7 @@ public class MarkMessageAsHamCommand extends FolderCommand {
 
 	}
 
-	public static void markMessage(MessageFolder srcFolder, Object uid,
+	public static void markMessage(IMailbox srcFolder, Object uid,
 			WorkerStatusController worker) throws Exception {
 		InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
 

@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.ristretto.coder.EncodedWord;
 
@@ -70,7 +70,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	 *            Mailboxes to import
 	 */
 	public EudoraMailImportFilter(
-		MessageFolder destinationFolder,
+			AbstractMessageFolder destinationFolder,
 		File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
@@ -103,7 +103,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 	public void importMailboxFile(
 		File file,
 		WorkerStatusController worker,
-		MessageFolder destFolder)
+		AbstractMessageFolder destFolder)
 		throws Exception {
 		LOG.fine(
 			"Starting to import Eudora mbox file: " + file.getAbsolutePath());
@@ -233,7 +233,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		String msg,
 		String replacementDate,
 		WorkerStatusController worker,
-		MessageFolder destFolder) {
+		AbstractMessageFolder destFolder) {
 		// divide message into headers and body
 		String[] divided = divideMessage(msg);
 		if (divided == null) {
@@ -425,7 +425,7 @@ public class EudoraMailImportFilter extends AbstractMailboxImporter {
 		String headers,
 		String body,
 		WorkerStatusController worker,
-		MessageFolder destFolder) {
+		AbstractMessageFolder destFolder) {
 		StringBuffer buf = new StringBuffer();
 		// create full msg from headers and body
 		buf.append(headers);

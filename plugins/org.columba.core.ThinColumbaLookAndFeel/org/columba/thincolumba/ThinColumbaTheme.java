@@ -25,7 +25,7 @@ import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.util.ImageLoader;
@@ -56,7 +56,7 @@ public class ThinColumbaTheme extends DefaultMetalTheme {
 		"org.columba.thincolumba.";
 
 	public ThinColumbaTheme() {
-		GuiItem item = MainInterface.config.getOptionsConfig().getGuiItem();
+		GuiItem item = Config.getInstance().getOptionsConfig().getGuiItem();
 		mainFontResource = new FontUIResource("Default", Font.PLAIN, 12);
 		messageFontResource = new FontUIResource("Default", Font.PLAIN, 12);
 		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));

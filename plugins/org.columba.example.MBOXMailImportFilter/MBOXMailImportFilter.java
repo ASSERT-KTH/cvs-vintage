@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
 public class MBOXMailImportFilter extends AbstractMailboxImporter {
@@ -30,7 +30,7 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 		super();
 	}
 
-	public MBOXMailImportFilter(MessageFolder destinationFolder, File[] sourceFiles) {
+	public MBOXMailImportFilter(AbstractMessageFolder destinationFolder, File[] sourceFiles) {
 		super(destinationFolder, sourceFiles);
 	}
 
@@ -41,7 +41,7 @@ public class MBOXMailImportFilter extends AbstractMailboxImporter {
 	public void importMailboxFile(
 		File file,
 		WorkerStatusController worker,
-		MessageFolder destFolder)
+		AbstractMessageFolder destFolder)
 		throws Exception {
 
 		boolean success = false;

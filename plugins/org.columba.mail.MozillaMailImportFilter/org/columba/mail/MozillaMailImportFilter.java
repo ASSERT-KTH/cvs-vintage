@@ -18,17 +18,16 @@ package org.columba.mail;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.FolderFactory;
-import org.columba.mail.folder.AbstractFolder;
-import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 import org.columba.core.facade.DialogFacade;
+import org.columba.core.folder.IFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.mailboximport.AbstractMailboxImporter;
 
 /**
  * @author frd
@@ -46,7 +45,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
      * @param destination
      * @param sourceFiles
      */
-    public MozillaMailImportFilter(MessageFolder destination, File[] sourceFiles) {
+    public MozillaMailImportFilter(AbstractMessageFolder destination, File[] sourceFiles) {
         super(destination, sourceFiles);
     }
     
@@ -56,7 +55,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
     }
     
     public void importMailboxFile(File file, WorkerStatusController worker,
-        MessageFolder destFolder) throws Exception {
+    		AbstractMessageFolder destFolder) throws Exception {
         
         boolean sucess = false;
         
@@ -102,7 +101,7 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
     }
     
     protected void generateDirectoryListing(File parent, Vector v,
-        MessageFolder destination, WorkerStatusController worker) {
+    		AbstractMessageFolder destination, WorkerStatusController worker) {
         // list all files
         File[] list = parent.listFiles();
         
@@ -144,10 +143,10 @@ public class MozillaMailImportFilter extends AbstractMailboxImporter {
             try {
                 if (destination.findChildWithName(file.getName(), false) == null) {
                     // folder doesn't exist -> create it
-                    AbstractFolder child = 
+                	IFolder child = 
                         FolderFactory.getInstance().createDefaultChild(
                             destination, file.getName());
-                    importMailboxFile(file, worker, (MessageFolder)child);
+                    importMailboxFile(file, worker, (AbstractMessageFolder)child);
                 } else {
                     importMailboxFile(file, worker, destination);
                 }

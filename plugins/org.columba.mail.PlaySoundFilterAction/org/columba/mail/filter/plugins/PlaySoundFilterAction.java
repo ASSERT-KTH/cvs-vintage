@@ -20,13 +20,13 @@ import java.io.File;
 import java.net.URL;
 
 import org.columba.core.command.Command;
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.filter.AbstractFilterAction;
+import org.columba.core.filter.FilterAction;
+import org.columba.core.folder.DefaultFolderCommandReference;
 import org.columba.core.util.PlaySound;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.filter.FilterAction;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 
 /**
  * @author freddy
@@ -43,7 +43,7 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	 */
 	public Command getCommand(
 		FilterAction filterAction,
-		MessageFolder srcFolder,
+		AbstractMessageFolder srcFolder,
 		Object[] uids)
 		throws Exception {
 
@@ -55,8 +55,8 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 		// for time consuming tasks you need to create
 		// your own Command
 
-		FolderCommandReference r =
-			 new FolderCommandReference(srcFolder, uids);
+		DefaultFolderCommandReference r =
+			 new DefaultFolderCommandReference(srcFolder, uids);
 
 		PlaySoundCommand c = new PlaySoundCommand(r);
 
@@ -73,8 +73,8 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	 * To enable and disable the creation of type comments go to
 	 * Window>Preferences>Java>Code Generation.
 	 */
-	class PlaySoundCommand extends FolderCommand {
-		public PlaySoundCommand(DefaultCommandReference reference) {
+	class PlaySoundCommand extends Command {
+		public PlaySoundCommand(ICommandReference reference) {
 			super(reference);
 		}
 

@@ -15,12 +15,12 @@
 //All Rights Reserved.
 import java.util.logging.Logger;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Command;
+import org.columba.core.command.ICommandReference;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.folder.IFolderCommandReference;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.IMailbox;
 import org.columba.ristretto.message.Header;
 
 
@@ -29,7 +29,7 @@ import org.columba.ristretto.message.Header;
  *
  *
  */
-public class AddAddressToWhiteListCommand extends FolderCommand {
+public class AddAddressToWhiteListCommand extends Command {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getAnonymousLogger();
@@ -37,7 +37,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
     /**
      * @param references
      */
-    public AddAddressToWhiteListCommand(DefaultCommandReference references) {
+    public AddAddressToWhiteListCommand(ICommandReference references) {
         super(references);
     }
 
@@ -46,7 +46,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
      * @param references
      */
     public AddAddressToWhiteListCommand(FrameMediator frame,
-        DefaultCommandReference references) {
+        ICommandReference references) {
         super(frame, references);
     }
 
@@ -54,10 +54,10 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
     public void execute(WorkerStatusController worker) throws Exception {
-        FolderCommandReference r = (FolderCommandReference) getReference();
+    	IFolderCommandReference r = (IFolderCommandReference) getReference();
 
         Object[] uids = r.getUids();
-        MessageFolder folder = (MessageFolder) r.getFolder();
+        IMailbox folder = (IMailbox) r.getSourceFolder();
 
         for (int i = 0; i < uids.length; i++) {
             Header header = folder.getHeaderFields(uids[i],

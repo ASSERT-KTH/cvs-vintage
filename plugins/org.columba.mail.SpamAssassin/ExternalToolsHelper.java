@@ -1,4 +1,4 @@
-import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
 
@@ -22,7 +22,7 @@ public class ExternalToolsHelper {
         ExternalToolsPluginHandler handler = null;
 
         try {
-            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.externaltools");
 
             return handler.getLocationOfExternalTool(name).getPath();

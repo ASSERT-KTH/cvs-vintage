@@ -1,15 +1,14 @@
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
+import java.awt.event.ActionEvent;
 
-import org.columba.mail.command.FolderCommandReference;
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.folder.IFolderCommandReference;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.ISelectionListener;
+import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-
-import java.awt.event.ActionEvent;
 
 
 /**
@@ -37,7 +36,7 @@ import java.awt.event.ActionEvent;
  *
  */
 public class AddAddressToBlackListAction extends AbstractColumbaAction
-    implements SelectionListener {
+    implements ISelectionListener {
     /**
      * @param frameMediator
      * @param name
@@ -78,8 +77,8 @@ public class AddAddressToBlackListAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        IFolderCommandReference r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
-        MainInterface.processor.addOp(new AddAddressToBlackListCommand(r));
+        CommandProcessor.getInstance().addOp(new AddAddressToBlackListCommand(r));
     }
 }
