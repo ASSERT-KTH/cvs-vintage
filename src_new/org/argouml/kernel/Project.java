@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.48 2003/01/09 20:35:22 kataka Exp $
+// $Id: Project.java,v 1.49 2003/01/14 10:15:17 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -967,7 +967,9 @@ public class Project implements java.io.Serializable {
 
     protected void trashInternal(Object obj) {
     	boolean needSave = false;
-    	
+    	if (obj != null) {
+            Trash.SINGLETON.addItemFrom(obj, null);
+        }
     	if (obj instanceof MBase) { // an object that can be represented
     		ProjectBrowser.TheInstance.getEditorPane().removePresentationFor(obj, getDiagrams());
                 UmlFactory.getFactory().delete((MBase)obj);
@@ -988,6 +990,7 @@ public class Project implements java.io.Serializable {
     			needSave = true;
     		}
     	}
+    	
     	
     	setNeedsSave(needSave);	
     }
