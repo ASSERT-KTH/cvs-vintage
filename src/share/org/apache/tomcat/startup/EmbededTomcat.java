@@ -386,16 +386,20 @@ public class EmbededTomcat {
 	throws TomcatException 
     {
 	if( initialized ) return;
-	if( home==null )
-	    home = System.getProperty("tomcat.home");
 	if( installDir==null ) {
 	    installDir=IntrospectionUtils.guessInstall("tomcat.install",
 						       "tomcat.home","tomcat.jar");
 	    if( dL > 0 ) debug( "Guessed installDir " + installDir );
 	}
+	if( home==null ) {
+	    home = System.getProperty("tomcat.home");
+            if( home == null )
+                home = installDir;
+	    if( dL > 0 ) debug( "Using homeDir " + installDir );
+        }
 
-	if( installDir==null ) installDir=home;
 	contextM.setInstallDir( installDir );
+        contextM.setHome( home );
 
 	try {
 	    setTomcatProperties();
