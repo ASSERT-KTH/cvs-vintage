@@ -66,12 +66,22 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractModuleService.java,v 1.1 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: AbstractModuleService.java,v 1.2 2002/02/26 03:58:26 jmcnally Exp $
  */
 public abstract class AbstractModuleService 
     extends AbstractOMService 
     implements ModuleService
 {
+    /**
+     * This method should be called in the constructor of concrete
+     * implementations
+     */
+    protected void doInit()
+        throws InitializationException
+    {
+        setRegion("org_tigris_scarab_services_module_ModuleEntity");
+    }
+
     /**
      * @see org.tigris.scarab.services.module.ModuleService#getInstance()
      */

@@ -62,12 +62,23 @@ import org.tigris.scarab.services.AbstractOMService;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractUserService.java,v 1.1 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: AbstractUserService.java,v 1.2 2002/02/26 03:58:26 jmcnally Exp $
  */
 public abstract class AbstractUserService 
     extends AbstractOMService 
     implements UserService
 {
+    /**
+     * This method should be called in the constructor of concrete
+     * implementations
+     */
+    protected void doInit()
+        throws InitializationException
+    {
+        setRegion("org_tigris_scarab_om_ScarabUser");
+    }
+
+
     /**
      * Get a fresh instance of a User
      */

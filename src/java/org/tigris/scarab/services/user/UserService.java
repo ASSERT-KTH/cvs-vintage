@@ -56,18 +56,12 @@ import java.util.List;
  * This is the interface that describes a UserService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserService.java,v 1.3 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: UserService.java,v 1.4 2002/02/26 03:58:26 jmcnally Exp $
  */
 public interface UserService extends Service
 {
     /** The name of the service */
     String SERVICE_NAME = "UserService";
-
-    /**
-     * The class this service will instantiate.
-     */
-    Class getOMClass()
-        throws Exception;
 
     /**
      * Gets a new instance of a ScarabUser.

@@ -63,17 +63,16 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineUserService.java,v 1.3 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: TurbineUserService.java,v 1.4 2002/02/26 03:58:26 jmcnally Exp $
  */
 public class TurbineUserService 
     extends AbstractUserService 
 {
-    /**
-     * Get the user classname that this implementation will instantiate
-     */
-    protected String getClassName()
+    public TurbineUserService()
+        throws InitializationException
     {
-        return "org.tigris.scarab.om.ScarabUserImpl";
+        doInit();
+        setClassName("org.tigris.scarab.om.ScarabUserImpl");
     }
 
     protected Object retrieveStoredOM(ObjectKey userId)

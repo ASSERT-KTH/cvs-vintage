@@ -197,6 +197,9 @@
         <filter token="LOG_LEVEL_TORQUE" value="${scarab.log.level.torque}"/>
         <filter token="LOG_FILE_TORQUE" value="${scarab.log.file.torque}"/>
         <filter token="LOG_APPEND_TORQUE" value="${scarab.log.append.torque}"/>
+        <filter token="LOG_LEVEL_STRATUM" value="${scarab.log.level.stratum}"/>
+        <filter token="LOG_FILE_STRATUM" value="${scarab.log.file.stratum}"/>
+        <filter token="LOG_APPEND_STRATUM" value="${scarab.log.append.stratum}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
@@ -241,6 +244,13 @@
         <copy todir="${build.dest.scarab}" filtering="no">
             <fileset dir="${src.i18n.dir}">
                 <include name="**/*.properties"/>
+            </fileset>
+        </copy>
+
+        <!-- copy JCS configuration into classpath -->
+        <copy todir="${build.dest.scarab}" filtering="no">
+            <fileset dir="${src.conf.dir}/">
+                <include name="cache.ccf"/>
             </fileset>
         </copy>
 

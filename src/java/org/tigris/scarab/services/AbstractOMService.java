@@ -59,6 +59,9 @@ import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.cache.ObjectExpiredException;
 import org.apache.fulcrum.cache.CachedObject;
 
+import org.apache.stratum.jcs.JCS;
+import org.apache.stratum.jcs.access.behavior.ICacheAccess;
+
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.Persistent;
 import org.apache.log4j.Category;
@@ -69,7 +72,7 @@ import org.tigris.scarab.util.ScarabException;
  * instantiating OM's.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractOMService.java,v 1.4 2002/01/25 02:58:14 jmcnally Exp $
+ * @version $Id: AbstractOMService.java,v 1.5 2002/02/26 03:58:25 jmcnally Exp $
  */
 public abstract class AbstractOMService 
     extends BaseService 
@@ -77,11 +80,15 @@ public abstract class AbstractOMService
     protected static final Category category = 
         Category.getInstance(AbstractOMService.class.getName());
 
-    /** used to cache the objects to save multiple lookups */
-    TurbineGlobalCacheService cache;
+    /** used to cache the om objects */
+    private ICacheAccess cache;
 
     /** the class that the service will instantiate */
     private Class omClass;
+
+    private String className;
+
+    private String region;
 
     /**
      * Initializes the OMService, locating the apropriate class and caching it
@@ -89,46 +96,23 @@ public abstract class AbstractOMService
     public void init()
         throws InitializationException
     {
-        String className = getClassName();
-        try
-        {
-            omClass = Class.forName(className);
-        }
-        catch (ClassNotFoundException cnfe)
-        {
-            throw new InitializationException("Could not load " + className);
-        }
-
-        cache = (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        doInit();
         setInit(true);
-    }
-    
-    /**
-     * Called by init() to allow concrete implementations to add 
-     * initialization.
-     */
-    protected void doInit()
-        throws InitializationException
-    {
     }
 
     /**
      * Get the Class instance
      */
-    public Class getOMClass()
+    protected Class getOMClass()
     {
         return omClass;
     }
 
-    protected String getCacheKey(ObjectKey key)
+    /**
+     * Set the Class that will be instantiated by this manager
+     */
+    protected void setOMClass(Class omClass)
     {
-        String keyPrefix = getClassName();
-        String keyString = key.getValue().toString();
-        return new StringBuffer(keyPrefix.length() + keyString.length())
-            .append(keyPrefix).append(keyString).toString();
+        this.omClass = omClass;
     }
 
     /**
@@ -141,9 +125,33 @@ public abstract class AbstractOMService
     }
 
     /**
-     * Get the classname to instantiate
+     * Get the classname to instantiate for getInstance()
+     * @return value of className.
      */
-    protected abstract String getClassName();
+    public String getClassName()
+    {
+        return className;
+    }
+    
+    /**
+     * Set the classname to instantiate for getInstance()
+     * @param v  Value to assign to className.
+     */
+    public void setClassName(String  v) 
+        throws InitializationException
+    {
+        this.className = v;
+
+        try
+        {
+            setOMClass( Class.forName(getClassName()) );
+        }
+        catch (ClassNotFoundException cnfe)
+        {
+            throw new InitializationException("Could not load "+getClassName());
+        }
+    }
+    
 
     /**
      * Return an instance of an om based on the id
@@ -151,16 +159,26 @@ public abstract class AbstractOMService
     protected Object getOMInstance(ObjectKey id) 
         throws Exception
     {
-        String key = getCacheKey(id);
+        return getOMInstance(id, true);
+    }
+
+    /**
+     * Return an instance of an om based on the id
+     */
+    protected Object getOMInstance(ObjectKey id, boolean fromCache) 
+        throws Exception
+    {
+        String key = id.toString();
         Object om = null;
-        try
+        if (fromCache)
         {
-            om = cache.getObject(key).getContents();
+            om = cache.get(key);
         }
-        catch (ObjectExpiredException oee)
+
+        if (om == null)
         {
             om = retrieveStoredOM(id);
-            cache.addObject(key, new CachedObject(om));
+            cache.put(key, om);
         }
         
         return om;
@@ -195,21 +213,21 @@ public abstract class AbstractOMService
         List oms = null;
         if ( ids != null && ids.size() > 0 ) 
         {
-            // start a new list where we well replace the id's with om's
+            // start a new list where we will replace the id's with om's
             oms = new ArrayList(ids);
             List newIds = new ArrayList(ids.size());
             for ( int i=0; i<ids.size(); i++ ) 
             {
                 ObjectKey id = (ObjectKey)ids.get(i);
-                String key = getCacheKey(id);
-                Object om = null;
-                try
-                {
-                    oms.set(i, cache.getObject(key).getContents()); 
-                }
-                catch (ObjectExpiredException oee)
+                String key = id.toString();
+                Object om = cache.get(key);
+                if (om == null)
                 {
                     newIds.add(id);
+                }
+                else
+                {
+                    oms.set(i, om); 
                 }
             }
             
@@ -227,9 +245,7 @@ public abstract class AbstractOMService
                             {
                                 // replace the id with the om and add the om
                                 // to the cache
-                                cache.addObject(
-                                    getCacheKey((ObjectKey)oms.set(i, om)), 
-                                    new CachedObject(om) );
+                                cache.put(oms.set(i, om).toString(), om);
                                 newOms.remove(j);
                                 break;
                             }
@@ -243,4 +259,33 @@ public abstract class AbstractOMService
 
     protected abstract List retrieveStoredOMs(List ids)
         throws Exception;
+
+    /**
+     * Get the value of region.
+     * @return value of region.
+     */
+    public String getRegion() 
+    {
+        return region;
+    }
+    
+    /**
+     * Set the value of region.
+     * @param v  Value to assign to region.
+     */
+    public void setRegion(String  v) 
+        throws InitializationException
+    {
+        this.region = v;
+        try 
+        {
+            cache = JCS.getInstance(getRegion());
+        } 
+        catch (Exception e) 
+        {
+            throw new InitializationException(
+                "Cache could not be initialized", e);
+        }
+    }
+    
 }

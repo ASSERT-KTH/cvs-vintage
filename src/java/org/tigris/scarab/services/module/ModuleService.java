@@ -54,18 +54,12 @@ import org.apache.torque.om.ObjectKey;
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.8 2001/11/01 00:20:11 jmcnally Exp $
+ * @version $Id: ModuleService.java,v 1.9 2002/02/26 03:58:26 jmcnally Exp $
  */
 public interface ModuleService extends Service
 {
     /** The name of the service */
     String SERVICE_NAME = "ScarabModuleService";
-
-    /**
-     * The class this service will instantiate.
-     */
-    Class getOMClass()
-        throws Exception;
 
     /**
      * Return an new instance of ModuleEntity
