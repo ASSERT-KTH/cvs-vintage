@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.54 2002/02/23 19:30:27 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.55 2002/03/01 16:47:25 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -244,9 +244,8 @@ public interface ScarabUser extends User
 
     /**
      * Get a list of <code>ModuleEntity</code>'s that where a user has
-     * the permissions given.
-     *
-     * @param user a <code>ScarabUser</code> value
+     * the permissions given. Does not show deleted modules.
+     * (showDeleted = false)
      * @param permissions a <code>String</code> value
      * @return a <code>ModuleEntity[]</code> value
      */
@@ -255,13 +254,23 @@ public interface ScarabUser extends User
 
     /**
      * Get a list of <code>ModuleEntity</code>'s that where a user has
-     * at least one of the permissions given.
-     *
-     * @param user a <code>ScarabUser</code> value
+     * at least one of the permissions given. Does not show deleted modules.
+     * (showDeleted = false)
      * @param permissions a <code>String[]</code> value
      * @return a <code>ModuleEntity[]</code> value
      */
     public ModuleEntity[] getModules(String[] permissions) 
+        throws Exception;
+
+    /**
+     * Get a list of <code>ModuleEntity</code>'s that where a user has
+     * at least one of the permissions given. Does not show deleted modules.
+     *
+     * @param permissions a <code>String[]</code> value
+     * @param showDeleted a <code>boolean</code> value
+     * @return a <code>ModuleEntity[]</code> value
+     */
+    public ModuleEntity[] getModules(String[] permissions, boolean showDeleted) 
         throws Exception;
 
     /**
