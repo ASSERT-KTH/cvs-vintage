@@ -168,6 +168,7 @@ public abstract class LocalFolder extends MessageFolder {
 
     /**
      * @see org.columba.mail.folder.MailboxInterface#getMimePart(java.lang.Object, java.lang.Integer[])
+     * @TODO dont use deprecated method
      */
     public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
         // get message with UID
@@ -395,6 +396,7 @@ public abstract class LocalFolder extends MessageFolder {
 
     /**
      * @see org.columba.mail.folder.MailboxInterface#getMessageHeader(java.lang.Object)
+     * @TODO dont use deprecated method
      */
     public ColumbaHeader getMessageHeader(Object uid) throws Exception {
         if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {

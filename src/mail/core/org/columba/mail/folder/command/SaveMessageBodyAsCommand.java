@@ -131,6 +131,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
             LOG.info("Saving UID=" + uid);
 
             // get headers, body part and attachment for message
+			//@TODO dont use deprecated method
             ColumbaHeader header = srcFolder.getMessageHeader(uid);
             StreamableMimePart bodyPart = getMessageBodyPart(uid, srcFolder,
                     worker);
@@ -353,6 +354,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
             ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
                     "<No Message-Text>"));
         } else {
+//			@TODO dont use deprecated method
             bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
         }
 

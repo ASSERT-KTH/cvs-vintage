@@ -121,6 +121,7 @@ public class TempFolder extends MessageFolder {
     /**
      * @see org.columba.modules.mail.folder.Folder#getMimePart(Object,
      *      Integer[], WorkerStatusController)
+     * @TODO dont use deprecated method
      */
     public MimePart getMimePart(Object uid, Integer[] address)
         throws Exception {
@@ -142,6 +143,7 @@ public class TempFolder extends MessageFolder {
     /**
      * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
      *      WorkerStatusController)
+     * @TODO dont use deprecated method
      */
     public ColumbaHeader getMessageHeader(Object uid) throws Exception {
         ColumbaHeader header = (ColumbaHeader) headerList.get(uid);

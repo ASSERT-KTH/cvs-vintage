@@ -86,6 +86,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
             LOG.info("Saving UID=" + uid);
 
             //setup save dialog
+//			@TODO dont use deprecated method
             String subject = (String) srcFolder.getMessageHeader(uid).get("Subject");
             String defaultName = getValidFilename(subject, false);
 

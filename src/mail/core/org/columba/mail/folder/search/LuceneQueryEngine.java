@@ -171,8 +171,10 @@ public class LuceneQueryEngine implements QueryEngine {
 
     protected IndexReader getFileReader() {
         try {
+            //@TODO dont use deprecated method
             if (IndexReader.lastModified(luceneIndexDir) != luceneLastModified) {
                 fileIndexReader = IndexReader.open(luceneIndexDir);
+               //@TODO dont use deprecated method
                 luceneLastModified = IndexReader.lastModified(luceneIndexDir);
             }
         } catch (IOException e) {
@@ -184,8 +186,10 @@ public class LuceneQueryEngine implements QueryEngine {
 
     protected IndexReader getRAMReader() {
         try {
+            //@TODO dont use deprecated method
             if (IndexReader.lastModified(ramIndexDir) != ramLastModified) {
                 ramIndexReader = IndexReader.open(ramIndexDir);
+                //@TODO dont use deprecated method
                 ramLastModified = IndexReader.lastModified(ramIndexDir);
             }
         } catch (IOException e) {

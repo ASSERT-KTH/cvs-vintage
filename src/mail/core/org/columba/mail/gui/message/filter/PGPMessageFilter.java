@@ -104,7 +104,8 @@ public class PGPMessageFilter extends AbstractFilter {
     public void filter(MessageFolder folder, Object uid) throws Exception {
 
         mimePartTree = folder.getMimePartTree(uid);
-
+        
+//		@TODO dont use deprecated method
         header = folder.getMessageHeader(uid);
 
         // TODO encrypt AND sign dosN#t work. The message is always only

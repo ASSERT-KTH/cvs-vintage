@@ -434,6 +434,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object,
 	 *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
+	 * @TODO dont use deprecated method
 	 */
 	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
 		return null;
@@ -505,6 +506,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
+	 * @TODO dont use deprecated method
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if (headerList == null) {

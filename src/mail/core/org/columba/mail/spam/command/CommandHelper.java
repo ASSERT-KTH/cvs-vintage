@@ -76,6 +76,7 @@ public final class CommandHelper {
             ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
                     "<No Message-Text>"));
         } else {
+            //@TODO dont use deprecated method
             bodyPart = (StreamableMimePart) folder.getMimePart(uid, bodyPart
                     .getAddress());
         }

@@ -227,6 +227,7 @@ public class PrintMessageCommand extends FolderCommand {
                 ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
                         "<No Message-Text>"));
             } else {
+//				@TODO dont use deprecated method
                 bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
             }
 
