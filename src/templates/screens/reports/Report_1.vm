@@ -47,13 +47,11 @@
         #if ($secondCriteria)
             #foreach ( $optionGroup in $secondCriteria )
     		<td>
-                #foreach ($option in $optionGroup.Options)
-                $option.OptionId,
-                #end
+                $report.getIssueCount($option1.AttributeOption, $option2.AttributeOption, $optionGroup, $report.NewDate )
             </td>
             #end
         #else
-    		<td>XX</td>
+    		<td>FIXME</td>
         #end
     #end
     </tr>

@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.commons.util.ObjectUtils;
+import com.workingdogs.village.Record;
+
 // Turbine classes
 import org.apache.torque.om.Retrievable;
 import org.apache.torque.om.Persistent;
@@ -75,6 +77,8 @@ import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ActivityPeer;
+import org.tigris.scarab.om.TransactionPeer;
 
 /** 
  * generates reports
@@ -522,7 +526,7 @@ System.out.println("done searching options: " );
     }
 
     /**
-     * Returns the last setNewDate or now, if no dates have been set.
+     * Returns the last setNewDate or null, if no dates have been set.
      * @return value of newDate.
      */
     public Date getNewDate() 
@@ -532,6 +536,11 @@ System.out.println("done searching options: " );
         {
             date = (Date)dates.get(dates.size()-1);
         }
+        else 
+        {
+            System.out.println("NO DATES");
+        }
+        
 
         return date;
     }
@@ -704,27 +713,109 @@ System.out.println("done searching options: " );
     }
 
     public int getIssueCount(AttributeOption o1, AttributeOption o2,
-                             List groups, Date date)
+                             OptionGroup group, Date date)
+        throws Exception
+    {
+        return runQuery(o1, o2, group, date);
+    }
+
+    public int getIssueCount(AttributeOption o1, AttributeOption o2,
+                             RModuleOption rmo, Date date)
+        throws Exception
+    {
+        return runQuery(o1, o2, rmo, date);
+    }
+
+
+    private int runQuery(AttributeOption o1, AttributeOption o2,
+                         Object ogOrRmo, Date date)
+        throws Exception
     {
         Criteria crit = new Criteria();
-        crit.addSelectColumn("count(*)");
         // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
+        crit.addSelectColumn("count(a1.ISSUE_ID)");
+        crit.addAlias("a1", ActivityPeer.TABLE_NAME);
+        crit.addAlias("a2", ActivityPeer.TABLE_NAME);
+        crit.addAlias("a3", ActivityPeer.TABLE_NAME);
+        crit.addAlias("t1", TransactionPeer.TABLE_NAME);
+        crit.addAlias("t2", TransactionPeer.TABLE_NAME);
+        crit.addAlias("t3", TransactionPeer.TABLE_NAME);
+        System.out.println("1:  " + crit);
         // where a1.new_option_id=axis1option 
         // and a2.new_option_id=axis2option 
         // and a3.new_option_id in (grouped_options)
+        String A1_NEW_OPTION_ID = "a1.NEW_OPTION_ID";
+        String A2_NEW_OPTION_ID = "a2.NEW_OPTION_ID";
+        String A3_NEW_OPTION_ID = "a3.NEW_OPTION_ID";
+        crit.add(A1_NEW_OPTION_ID, o1.getOptionId());
+        crit.add(A2_NEW_OPTION_ID, o2.getOptionId());
+        addOptionOrOptionGroup(ogOrRmo, crit);
+        System.out.println("2:  " + crit);
         // and a1.issue_id=a2.issue_id
         // and a1.issue_id=a3.issue_id
         // and t1.transaction_id=a1.transaction_id
         // and t2.transaction_id=a2.transaction_id
         // and t3.transaction_id=a3.transaction_id
+        String A1_ISSUE_ID = "a1.ISSUE_ID";
+        String A2_ISSUE_ID = "a2.ISSUE_ID";
+        String A3_ISSUE_ID = "a3.ISSUE_ID";
+        String A1_TRANSACTION_ID = "a1.TRANSACTION_ID";
+        String A2_TRANSACTION_ID = "a2.TRANSACTION_ID";
+        String A3_TRANSACTION_ID = "a3.TRANSACTION_ID";
+        String T1_TRANSACTION_ID = "t1.TRANSACTION_ID";
+        String T2_TRANSACTION_ID = "t2.TRANSACTION_ID";
+        String T3_TRANSACTION_ID = "t3.TRANSACTION_ID";
+        crit.addJoin(A1_ISSUE_ID, A2_ISSUE_ID);
+        crit.addJoin(A1_ISSUE_ID, A3_ISSUE_ID);
+        crit.addJoin(T1_TRANSACTION_ID, A1_TRANSACTION_ID);
+        crit.addJoin(T2_TRANSACTION_ID, A2_TRANSACTION_ID);
+        crit.addJoin(T3_TRANSACTION_ID, A3_TRANSACTION_ID);
+        System.out.println("3:  " + crit);
         // and t1.created_date<date
         // and t2.created_date<date
         // and t3.created_date<date
+        String T1_CREATED_DATE = "t1.CREATED_DATE";
+        String T2_CREATED_DATE = "t2.CREATED_DATE";
+        String T3_CREATED_DATE = "t3.CREATED_DATE";
+        crit.add(T1_CREATED_DATE, date, Criteria.LESS_THAN);
+        crit.add(T2_CREATED_DATE, date, Criteria.LESS_THAN);
+        crit.add(T3_CREATED_DATE, date, Criteria.LESS_THAN);
+        System.out.println("4:  " + date);
+        System.out.println("4:  " + crit);
         // and a1.end_date>date
         // and a2.end_date>date
         // and a3.end_date>date
-        return 1;
+        String A1_END_DATE = "a1.END_DATE";
+        String A2_END_DATE = "a2.END_DATE";
+        String A3_END_DATE = "a3.END_DATE";
+        crit.add(A1_END_DATE, date, Criteria.GREATER_THAN);
+        crit.add(A2_END_DATE, date, Criteria.GREATER_THAN);
+        crit.add(A3_END_DATE, date, Criteria.GREATER_THAN);
+        // need to add in module criteria
+        System.out.println("5:  " + crit);
+        List records = ActivityPeer.doSelectVillageRecords(crit);
+        return ((Record)records.get(0)).getValue(1).asInt();
     }
+
+    private void addOptionOrOptionGroup(Object obj, Criteria crit)
+    {
+        if ( obj instanceof OptionGroup ) 
+        {
+            List options = ((OptionGroup)obj).getOptions();
+            NumberKey[] nks = new NumberKey[options.size()];
+            for ( int i=0; i<nks.length; i++) 
+            {
+                nks[i] = ((RModuleOption)options.get(i)).getOptionId();
+            }
+            
+            crit.addIn("a3.OPTION_ID", nks);
+        }
+        else 
+        {
+            crit.add("a3.OPTION_ID", ((RModuleOption)obj).getOptionId());
+        }
+    }
+
 
     // *********************************************************
     // Retrievable implementation
@@ -872,65 +963,6 @@ System.out.println("done searching options: " );
         }
     }
 
-
-    // *********************************************************
-
-    public class OptionForGrouping
-        implements Retrievable
-    {
-        private RModuleOption rmo;
-        private int groupNumber;
-
-        public OptionForGrouping(RModuleOption rmo)
-        {
-            this.rmo = rmo;
-        }
-        
-        /**
-         * Get the value of groupNumber.
-         * @return value of groupNumber.
-         */
-        public int getGroupNumber() 
-        {
-            return groupNumber;
-        }
-        
-        /**
-         * Set the value of groupNumber.
-         * @param v  Value to assign to groupNumber.
-         */
-        public void setGroupNumber(int  v) 
-        {
-            this.groupNumber = v;
-        }
-        
-        public String getDisplayValue()
-        {
-            return rmo.getDisplayValue();
-        }
-
-        // *********************************************************
-        // Retrievable implementation
-        // *********************************************************
-        
-        /**
-         * Get the value of queryKey.
-         * @return value of queryKey.
-         */    
-        public String getQueryKey() 
-        {
-            return "ofg" + rmo.getQueryKey();
-        }
-        
-        /**
-         * Set the value of queryKey.
-         * @param v  Value to assign to queryKey.
-         */
-        public void setQueryKey(String  v) 
-        {
-            // does nothing
-        }
-    }
     
     // *********************************************************
 
