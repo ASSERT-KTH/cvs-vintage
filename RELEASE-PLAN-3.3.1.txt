@@ -26,26 +26,48 @@ Tomcat 3.3.1 Beta 1 Release:
 
  
         Bugs to investigate & fix or resolve/leave as LATER:
-        1657  hyphen character '-' in tag name results in "Invalid expression"
-              (port fix from Tomcat 4.x Jasper)
-        3644  Errors reloading resources from jars: possible JDK bug
-              (see if recent changes address this)
-        4382  Starting up twice prevents stopping
-              (implement suggested fix)
         4600  Tomcat 3.3 redirect behavior differs from Tomcat 3.2
               (try to make 301 or 302 configurable)
+
         4416  URI En/Decoding not working
               (investigate and fix if feasible)
+
+        5958  Wrong mod_jk.conf for path pattern
+
+
+        Addressed
+        1657  hyphen character '-' in tag name results in "Invalid expression"
+              (port fix from Tomcat 4.x Jasper)
+              Resolved as FIXED
+
+        3644  Errors reloading resources from jars: possible JDK bug
+              (see if recent changes address this)
+              Resolved as FIXED
+
+        4382  Starting up twice prevents stopping
+              (implement suggested fix)
+              Resolved as FIXED
+
         4923  getRealPath().exists() yields security exception
               (investigate and fix if feasible)
+              Resolved as FIXED
+
         5250  Load balancing workers do not correctly handle Cookies
               conformant with RFC 2965
               (investigate and fix if feasible)
+              "Latering" for 3.3.1 but left bug open so it can be addressed
+              in jakarta-tomcat-connectors.
+
         5684  WEB-INF/lib jar file loading and operations problems.
               (see if recent changes address this)
+              Resolved as FIXED
+
         5722  Forward to a page that have no extension displays a blank page
               (try to fix to do something better than display a blank page)
+              Resolved as WORKSFORME
+
         6004  Cannot configure keystoreType
+              Resolved as FIXED
 
 
 Tomcat 3.3.1 Release Candidate 1 Release:
@@ -65,10 +87,13 @@ Tomcat 3.3.1 Release Candidate 1 Release:
 
         Bugs to fix:
         5532  underscore is wrong (fixed by item 2 above)
+
         4206  missing config files do not cause an error
               (add error or warning messages)
+
         5769  NT Service display name should not be used as service name
               (determine solution and patch)
+
         4364  build-solaris for Apache connector does not compile with -DE
               (do what we can to review and update the connector make files)
     
@@ -96,7 +121,7 @@ Bug   Resolution  From   Description
 5411  INVALID     NEW    JSP session does not work with IE/IIS5/Tomcat 3.3
 5449  WORKSFORME  NEW    ajp13 and security constraints don't work
 5560  WONTFIX     NEW    Removal of unnecessary white space in output
-5647  INVALID     REOPND Settting an error page for the status code 500 doesn't
+5746  INVALID     REOPND Settting an error page for the status code 500 doesn't
                          display the page.
 
 
