@@ -10,13 +10,13 @@ $page.setTitle("Login to Scarab")
 
 <h3>Login</h3>
 
-#set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
+#set ($paramNext = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE, ""))
 
 <form action="$link.setPage("Login.vm")" method="post" name="login">
   <input type="hidden" name="action" value="Login" />
-#if ($nextTemplate && $nextTemplate.length() > 0)
+#if ($nextTemplate && $nextTemplate.trim().length() > 0)
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
-#elseif ($paramNext && $paramNext.length() > 0)
+#elseif ($paramNext && $paramNext.trim().length() > 0)
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" />
 #else
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
