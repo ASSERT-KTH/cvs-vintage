@@ -9,14 +9,12 @@ package org.jboss.management.j2ee;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.Node;
-
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.JVM JVM}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -24,19 +22,20 @@ import javax.management.j2ee.Node;
  * <ul>
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class JVM
    extends J2EEManagedObject
-   implements javax.management.j2ee.JVM
+   implements JVMMBean
 {
    // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------  
 
-   private String mClasspath;
    private String mJavaVendor;
    private String mJavaVersion;
-   private Node mNode;
+   private String mNode;
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -47,40 +46,44 @@ public class JVM
    *
    * @throws InvalidParameterException If list of nodes or ports was null or empty
    **/
-   public JVM( String pName, ObjectName pNode, String pClasspath, String pJavaVendor, String pJavaVersion )
+   public JVM( String pName, ObjectName pServer, String pJavaVersion, String pJavaVendor, String pNode )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JVM", pName, pNode );
-      mClasspath = pClasspath;
+      super( "JVM", pName, pServer );
       mJavaVendor = pJavaVendor;
       mJavaVersion = pJavaVersion;
+      mNode = pNode;
    }
 
    // -------------------------------------------------------------------------
    // Properties (Getters/Setters)
    // -------------------------------------------------------------------------  
-
-   public String getClasspath() {
-      return mClasspath;
-   }
-
+   
+   /**
+    * @jmx:managed-attribute
+    **/
    public String getJavaVendor() {
       return mJavaVendor;
    }
-
+   
+   /**
+    * @jmx:managed-attribute
+    **/
    public String getJavaVersion() {
       return mJavaVersion;
    }
-
-   public Node getNode() {
+   
+   /**
+    * @jmx:managed-attribute
+    **/
+   public String getNode() {
       return mNode;
    }
 
    public String toString() {
       return "JBossJVM [ " +
-         ", classpath: " + getClasspath() +
          ", java vendor: " + getJavaVendor() +
          ", java version: " + getJavaVersion() +
          ", node: " + getNode() +

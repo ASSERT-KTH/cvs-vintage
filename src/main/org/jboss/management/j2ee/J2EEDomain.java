@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.J2EEDomain J2EEDomain}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -27,6 +27,8 @@ import javax.management.ObjectName;
  * <ul>
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class J2EEDomain
    extends J2EEManagedObject
@@ -56,23 +58,16 @@ public class J2EEDomain
    // Properties (Getters/Setters)
    // -------------------------------------------------------------------------
    
-   public ObjectName[] getDeployedObjects()
-   {
-      return (ObjectName[]) mDeployedObjects.toArray( new ObjectName[ 0 ] );
-   }
-   
-   public ObjectName getDeployedObject( int pIndex )
-   {
-      if( pIndex >= 0 && pIndex < mDeployedObjects.size() ) {
-         return (ObjectName) mDeployedObjects.get( pIndex );
-      }
-      return null;
-   }
-   
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getServers() {
       return (ObjectName[]) mServers.toArray( new ObjectName[ 0 ] );
    }
 
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getServer( int pIndex ) {
       if( pIndex >= 0 && pIndex < mServers.size() ) {
          return (ObjectName) mServers.get( pIndex );
@@ -89,7 +84,7 @@ public class J2EEDomain
    
    public void addChild( ObjectName pChild ) {
       Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "type" ) + "";
+      String lType = lProperties.get( "j2eeType" ) + "";
       if(
          "J2EEApplication".equals( lType ) ||
          "J2EEModule".equals( lType )

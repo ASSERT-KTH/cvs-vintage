@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 * Represents the single JBoss server management domain
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -65,31 +65,33 @@ public class SingleJBossServerManagement
             new Object[] {
                "Single",
                getObjectName(),
-               "jboss.org"
+               "jboss.org",
+               "3.0.0Beta2"
             },
             new String[] {
                String.class.getName(),
                ObjectName.class.getName(),
+               String.class.getName(),
                String.class.getName()
             }
          ).getObjectName();
          // Create its node
          ObjectName lNode = getServer().createMBean(
-            "org.jboss.management.j2ee.Node",
+            "org.jboss.management.j2ee.JVM",
             null,
             new Object[] {
-               "Localhost",
+               "localhost",
                lServer,
-               "PC Pentium 4",
-               "Windows 2000",
-               new String[] { "127.0.0.1" }
+               "1.3.1_02",
+               "Sun",
+               "localhost"
             },
             new String[] {
                String.class.getName(),
                ObjectName.class.getName(),
                String.class.getName(),
                String.class.getName(),
-               String[].class.getName()
+               String.class.getName()
             }
          ).getObjectName();
       }

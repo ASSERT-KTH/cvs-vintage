@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.77 2002/03/07 18:29:54 mnf999 Exp $ -->
+<!-- $Id: build.xml,v 1.78 2002/03/08 05:30:46 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -422,6 +422,23 @@
       <jboss xmlencoding="UTF-8" destdir="${build.beans}/mejb/META-INF"/>
     </xdoclet>
     
+    <!-- AS: Create Standard MBean interfaces until XMBean is ready -->
+    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask"/>
+    
+    <mkdir dir="${build.gen-src}"/>
+    <xdoclet sourcepath="${source.java}"
+	     destdir="${build.gen-src}"
+	     classpath="${xdoclet.task.classpath}"
+	     excludedtags="@version,@author"
+    >
+      <fileset dir="${source.java}">
+        <include name="org/jboss/management/j2ee/*.java"/>
+        <exclude name="org/jboss/management/j2ee/J2EEDomainTarget.java"/>
+      </fileset>
+      <mbeaninterface/>
+    </xdoclet>
+    
+    <!-- AS XMBean/XDoclet is not ready right now therefore keep out for now
     <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask"/>
     
     <xdoclet sourcepath="${source.java}"
@@ -434,6 +451,7 @@
       </fileset>
       <jbossxmbean/>
     </xdoclet>
+    -->
   </target>
 
   <!-- Compile all class files -->

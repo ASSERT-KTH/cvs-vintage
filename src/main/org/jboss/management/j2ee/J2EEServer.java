@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -28,6 +28,8 @@ import javax.management.ObjectName;
  * <li> Adjustments to the JBoss Guidelines and adding of the
  *      {@link #removeChild removeChild()} implementation.
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class J2EEServer
   extends J2EEManagedObject
@@ -47,26 +49,35 @@ public class J2EEServer
    
    private String mServerVendor = null;
    
+   private String mServerVersion = null;
+   
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
    
-   public J2EEServer( String pName, ObjectName pDomain, String pServerVendor )
+   public J2EEServer( String pName, ObjectName pDomain, String pServerVendor, String pServerVersion )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
       super( "J2EEServer", pName, pDomain );
       mServerVendor = pServerVendor;
+      mServerVersion = pServerVersion;
    }
    
    // Public --------------------------------------------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getDeployedObjects()
    {
       return (ObjectName[]) mDeployedObjects.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getDeployedObject( int pIndex )
    {
       if( pIndex >= 0 && pIndex < mDeployedObjects.size() ) {
@@ -75,10 +86,16 @@ public class J2EEServer
       return null;
    }
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getResources() {
       return (ObjectName[]) mResources.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getResource( int pIndex ) {
       if( pIndex >= 0 && pIndex < mResources.size() ) {
          return (ObjectName) mResources.get( pIndex );
@@ -86,21 +103,16 @@ public class J2EEServer
       return null;
    }
    
-   public ObjectName[] getNodes() {
-      return (ObjectName[]) mNodes.toArray( new ObjectName[ 0 ] );
-   }
-   
-   public ObjectName getNode( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mNodes.size() ) {
-         return (ObjectName) mNodes.get( pIndex );
-      }
-      return null;
-   }
-   
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getJavaVMs() {
       return (ObjectName[]) mJVMs.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getJavaVM( int pIndex ) {
       if( pIndex >= 0 && pIndex < mJVMs.size() ) {
          return (ObjectName) mJVMs.get( pIndex );
@@ -108,8 +120,18 @@ public class J2EEServer
       return null;
    }
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public String getServerVendor() {
       return mServerVendor;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    **/
+   public String getServerVersion() {
+      return mServerVersion;
    }
    
    public void addChild( ObjectName pChild ) {
@@ -132,7 +154,7 @@ public class J2EEServer
          "URL".equals( lType ) ||
          "JTA".equals( lType ) ||
          "JavaMail".equals( lType ) ||
-         "JDBC".equals( lType ) ||
+         "JDBCResource".equals( lType ) ||
          "RMI IIOP".equals( lType ) ||
          "JCAResource".equals( lType )
       ) {
@@ -160,7 +182,7 @@ public class J2EEServer
          "URL".equals( lType ) ||
          "JTA".equals( lType ) ||
          "JavaMail".equals( lType ) ||
-         "JDBC".equals( lType ) ||
+         "JDBCResource".equals( lType ) ||
          "RMI IIOP".equals( lType ) ||
          "JCAResource".equals( lType )
       ) {

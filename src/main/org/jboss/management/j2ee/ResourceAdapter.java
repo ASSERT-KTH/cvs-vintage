@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.ResourceAdapter ResourceAdapter}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -25,6 +25,8 @@ import org.jboss.logging.Logger;
  * <ul>
  * <li> Creation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class ResourceAdapter
    extends J2EEManagedObject
@@ -35,8 +37,6 @@ public class ResourceAdapter
    // Attributes ----------------------------------------------------
    
    // Static --------------------------------------------------------
-   
-   
    
    public static ObjectName create( MBeanServer pServer, String pResourceAdapterModule, String pResourceAdapterName ) {
       Logger lLog = Logger.getLogger( ResourceAdapter.class );
@@ -67,7 +67,7 @@ public class ResourceAdapter
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=ResourceAdapter,name=" + pResourceAdapterName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=ResourceAdapter,name=" + pResourceAdapterName + ",*"
          );
          ObjectName lResourceAdapter = (ObjectName) pServer.queryNames(
             lSearch,
@@ -93,7 +93,7 @@ public class ResourceAdapter
          MalformedObjectNameException,
          InvalidParentException
    {
-      super("ResourceAdapter", pName, pResourceAdapterModule );
+      super( "ResourceAdapter", pName, pResourceAdapterModule );
    }
 
    // java.lang.Object overrides --------------------------------------

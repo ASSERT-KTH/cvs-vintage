@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -36,6 +36,8 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Finishing first real implementation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class JDBCDataSource
    extends J2EEManagedObject
@@ -68,7 +70,7 @@ public class JDBCDataSource
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -82,12 +84,12 @@ public class JDBCDataSource
       try {
          // Check if the JDBC Manager exists and if not create one
          Set lNames = pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=JDBC,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JDBC,*" ),
              null
          );
          if( lNames.isEmpty() ) {
             // Now create the JDBC Manager
-            lJDBC = JDBC.create( pServer, "JDBC" );
+            lJDBC = JDBCResource.create( pServer, "JDBC" );
          } else {
             lJDBC = (ObjectName) lNames.iterator().next();
          }
@@ -129,7 +131,7 @@ public class JDBCDataSource
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JDBCDataSource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCDataSource,name=" + pName + ",*"
          );
          ObjectName lJNDI = (ObjectName) pServer.queryNames(
             lSearch,
@@ -138,7 +140,7 @@ public class JDBCDataSource
          // Now remove the J2EEApplication
          pServer.unregisterMBean( lJNDI );
          // Now let us try to destroy the JDBC Manager
-         JDBC.destroy( pServer, "JDBC" );
+         JDBCResource.destroy( pServer, "JDBC" );
       }
       catch( Exception e ) {
          lLog.error( "Could not destroy JSR-77 JDBC DataSource: " + pName, e );
@@ -165,11 +167,11 @@ public class JDBCDataSource
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -187,29 +189,22 @@ public class JDBCDataSource
       return mState;
    }
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
+   public void mejbStart()
    {
-      try {
-         super.start();
-      }
-      catch( Exception e ) {
-         getLog().error( "start failed", e );
-      }
-   }
-   
-   public void startRecursive() {
-      // No recursive start here
       try {
          start();
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
+   }
+   
+   public void mejbStartRecursive() {
+      mejbStart();
+   }
+   
+   public void mejbStop() {
+      stop();
    }
    
    public void postCreation() {

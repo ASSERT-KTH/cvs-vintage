@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JavaMail JavaMail}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -30,6 +30,8 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
  **/
 public class JavaMail
    extends J2EEResource
@@ -61,7 +63,7 @@ public class JavaMail
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -123,11 +125,11 @@ public class JavaMail
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -145,22 +147,17 @@ public class JavaMail
       return mState;
    }
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
+   public void mejbStart()
    {
       try {
-         super.start();
+         start();
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
    }
    
-   public void startRecursive() {
+   public void mejbStartRecursive() {
       // No recursive start here
       try {
          start();
@@ -168,6 +165,10 @@ public class JavaMail
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
+   }
+   
+   public void mejbStop() {
+      stop();
    }
    
    public void postCreation() {

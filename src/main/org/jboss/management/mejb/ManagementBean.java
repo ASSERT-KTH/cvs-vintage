@@ -52,7 +52,7 @@ import org.jboss.management.j2ee.J2EEManagedObject;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
@@ -193,6 +193,17 @@ public class ManagementBean
          ReflectionException,
          RemoteException
    {
+      // Convert start(), startRecursive() and stop() to the
+      // internal methods: mejbStart(), mejbStartRecursive() and mejbStop
+      if( pOperationName.equals( "start" ) ) {
+         pOperationName = "mejbStart";
+      } else
+      if( pOperationName.equals( "startRecursive" ) ) {
+         pOperationName = "mejbStartRecursive";
+      } else
+      if( pOperationName.equals( "stop" ) ) {
+         pOperationName = "mejbStop";
+      }
       return mConnector.invoke(
          pName,
          pOperationName,

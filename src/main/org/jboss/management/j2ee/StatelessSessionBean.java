@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.StatelessSessionBean StatelessSessionBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -22,9 +22,11 @@ import javax.management.ObjectName;
  * <ul>
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.SessionBeanMBean"
  **/
 public class StatelessSessionBean
-   extends EJB
+   extends SessionBean
    implements StatelessSessionBeanMBean
 {
    // -------------------------------------------------------------------------
@@ -53,6 +55,6 @@ public class StatelessSessionBean
    // -------------------------------------------------------------------------  
 
    public String toString() {
-      return "StatelessSessionBean[ " + getName() + " ]";
+      return "StatelessSessionBean { " + super.toString() + " } []";
    }
 }

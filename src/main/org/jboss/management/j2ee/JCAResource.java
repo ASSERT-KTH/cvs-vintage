@@ -27,7 +27,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JCAResource JCAResource}.
  *
  * @author  <a href="mailto:mclaugs@comcast.com">Scott McLaughlin</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -35,8 +35,12 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Creation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
  **/
-public class JCAResource extends J2EEResource implements JCAResourceMBean
+public class JCAResource
+   extends J2EEResource
+   implements JCAResourceMBean
 {
    // Constants -----------------------------------------------------
    
@@ -65,7 +69,7 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -99,7 +103,7 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JCAResource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JCAResource,name=" + pName + ",*"
          );
          Set lNames = pServer.queryNames(
             lSearch,
@@ -139,11 +143,11 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -160,7 +164,39 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
    public int getState() {
       return mState;
    }
-
+   
+   public void mejbStart() {
+      try {
+         start();
+      }
+      catch( Exception e ) {}
+   }
+   
+   public void mejbStartRecursive() {
+      mejbStart();
+      // Now recursive start here
+      Iterator i = mConnectionFactories.iterator();
+      ObjectName lJCAResource = null;
+      while( i.hasNext() ) {
+         lJCAResource = (ObjectName) i.next();
+         try {
+            getServer().invoke(
+               lJCAResource,
+               "start",
+               new Object[] {},
+               new String[] {}
+            );
+         }
+         catch( JMException jme ) {
+            getLog().error( "Could not stop JSR-77 JCAResource: " + lJCAResource, jme );
+         }
+      }
+   }
+   
+   public void mejbStop() {
+      stop();
+   }
+   
    public void startService() {
       mState = ServiceMBean.STARTING;
       sendNotification(
@@ -182,27 +218,6 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
             "JCAResource started"
          )
       );
-   }
-
-   public void startRecursive() {
-      // No recursive start here
-      start();
-      Iterator i = mConnectionFactories.iterator();
-      ObjectName lJCAResource = null;
-      while( i.hasNext() ) {
-         lJCAResource = (ObjectName) i.next();
-         try {
-            getServer().invoke(
-               lJCAResource,
-               "start",
-               new Object[] {},
-               new String[] {}
-            );
-         }
-         catch( JMException jme ) {
-            getLog().error( "Could not stop JSR-77 JCAResource: " + lJCAResource, jme );
-         }
-      }
    }
 
    public void stopService() {
@@ -270,12 +285,18 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
       );
    }
    
-   // javax.management.j2ee.JDBC implementation ---------------------
+   // javax.management.j2ee.JCAResource implementation ---------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getConnectionFactories() {
       return (ObjectName[]) mConnectionFactories.toArray( new ObjectName[ mConnectionFactories.size() ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getConnectionFactory( int pIndex ) {
       if( pIndex >= 0 && pIndex < mConnectionFactories.size() ) {
          return (ObjectName) mConnectionFactories.get( pIndex );
@@ -305,7 +326,7 @@ public class JCAResource extends J2EEResource implements JCAResourceMBean
    
    public String toString() {
       return "JCAResource { " + super.toString() + " } [ " +
-         "Datasources: " + mConnectionFactories +
+         "Connection Factories: " + mConnectionFactories +
          " ]";
    }
 

@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JCAConnectionFactory JCAConnectionFactory}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -32,8 +32,12 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Finishing first real implementation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
-public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnectionFactoryMBean
+public class JCAConnectionFactory
+   extends J2EEManagedObject
+   implements JCAConnectionFactoryMBean
 {
    // Constants -----------------------------------------------------
    
@@ -61,7 +65,7 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -74,7 +78,7 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
       try {
          // Check if the JCA Resource exists and if not create one
          Set lNames = pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=JCAResource,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=JCAResource,*" ),
              null
          );
          if( lNames.isEmpty() ) {
@@ -117,7 +121,7 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JCAConnectionFactory,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JCAConnectionFactory,name=" + pName + ",*"
          );
          ObjectName lJCAConnectionFactory = (ObjectName) pServer.queryNames(
             lSearch,
@@ -150,11 +154,11 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -172,23 +176,8 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
       return mState;
    }
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
+   public void mejbStart()
    {
-      try {
-         super.start();
-      }
-      catch( Exception e ) {
-         getLog().error( "start failed", e );
-      }
-   }
-   
-   public void startRecursive() {
-      // No recursive start here
       try {
          start();
       }
@@ -196,9 +185,21 @@ public class JCAConnectionFactory extends J2EEManagedObject implements JCAConnec
          getLog().error( "start failed", e );
       }
    }
-
+   
+   public void mejbStartRecursive() {
+      // No recursive start here
+      mejbStart();
+   }
+   
+   public void mejbStop() {
+      stop();
+   }
+   
    // javax.management.j2ee.JCAConnectionFactory implementation -----------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName getManagedConnectionFactory()
    {
       return mManagedConnectionFactory;

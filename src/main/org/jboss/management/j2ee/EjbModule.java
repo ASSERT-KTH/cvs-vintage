@@ -6,40 +6,32 @@
  */
 package org.jboss.management.j2ee;
 
-
-
-
-
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.management.AttributeChangeNotification;
 import javax.management.JMException;
-import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
+import javax.management.MBeanServer;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
-import javax.management.j2ee.EJB;
-import javax.management.j2ee.J2EEApplication;
-import javax.management.j2ee.J2EEServer;
-import javax.management.j2ee.JVM;
+
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBean;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -48,6 +40,8 @@ import java.util.Set;
  * <li> Adjustments to the JBoss Guidelines and implementing of the
  *      the create() and destroy() helper method
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEModuleMBean"
  **/
 public class EjbModule
   extends J2EEModule
@@ -78,13 +72,16 @@ public class EjbModule
                                              "state.failed"
                                           };
    
+   /**
+    * @todo AS: Now JVMs managed added now
+    **/
    public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL, ObjectName pService ) {
       Logger lLog = Logger.getLogger( EjbModule.class );
       String lDD = null;
       ObjectName lApplication = null;
       boolean fakeParent = false;
       try {
-         ObjectName serverQuery = new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" );
+         ObjectName serverQuery = new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" );
          Set servers = pServer.queryNames(serverQuery, null);
          if (servers.size() != 1) 
          {
@@ -94,13 +91,13 @@ public class EjbModule
          
          ObjectName lServer = (ObjectName)servers.iterator().next();
 
-         String lServerName = lServer.getKeyPropertyList().get( "type" ) + "=" +
+         String lServerName = lServer.getKeyPropertyList().get( "j2eeType" ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
 
          lLog.debug( "EjbModule.create(), server name: " + lServerName );
 
          ObjectName parentAppQuery =  new ObjectName( J2EEManagedObject.getDomainName() + 
-                                                      ":type=J2EEApplication" +
+                                                      ":j2eeType=J2EEApplication" +
                                                       ",name=" + pApplicationName + 
                                                       "," + lServerName + ",*");
 
@@ -108,9 +105,11 @@ public class EjbModule
 
          if (parentApps.size() == 0) 
          {
-            lApplication = org.jboss.management.j2ee.J2EEApplication.create(pServer,
-                                                  pApplicationName,
-                                                  null);
+            lApplication = org.jboss.management.j2ee.J2EEApplication.create(
+               pServer,
+               pApplicationName,
+               null
+            );
             fakeParent = true;
             
          } // end of if ()
@@ -144,12 +143,14 @@ public class EjbModule
             new Object[] {
                pName,
                lApplication,
+               null, // No JVMs management now
                lDD,
                pService
             },
             new String[] {
                String.class.getName(),
                ObjectName.class.getName(),
+               ObjectName[].class.getName(),
                String.class.getName(),
                ObjectName.class.getName()
             }
@@ -198,12 +199,12 @@ public class EjbModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public EjbModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, ObjectName pService )
+   public EjbModule( String pName, ObjectName pApplication, ObjectName[] pJVMs, String pDeploymentDescriptor, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "EjbModule", pName, pApplication, pDeploymentDescriptor );
+      super( "EjbModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
       mService = pService;
    }
 
@@ -211,10 +212,16 @@ public class EjbModule
    
    // EjbModule implementation --------------------------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getEjbs() {
       return (ObjectName[]) mEJBs.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getEjb( int pIndex ) {
       if( pIndex >= 0 && pIndex < mEJBs.size() )
       {
@@ -292,6 +299,20 @@ public class EjbModule
       }
    }
    
+   // javax.managment.j2ee.EventProvider implementation -------------
+   
+   public String[] getEventTypes() {
+      return sTypes;
+   }
+   
+   public String getEventType( int pIndex ) {
+      if( pIndex >= 0 && pIndex < sTypes.length ) {
+         return sTypes[ pIndex ];
+      } else {
+         return null;
+      }
+   }
+   
    // javax.management.j2ee.StateManageable implementation ----------
    
    public long getStartTime() {
@@ -302,25 +323,20 @@ public class EjbModule
       return mState;
    }
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
+   public void mejbStart()
    {
       try {
-         super.start();
+         start();
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
    }
    
-   public void startRecursive() {
+   public void mejbStartRecursive() {
       // No recursive start here
       try {
-         start();
+         mejbStart();
          Iterator i = mEJBs.iterator();
          while( i.hasNext() ) {
             ObjectName lName = (ObjectName) i.next();
@@ -338,11 +354,11 @@ public class EjbModule
          }
       }
       catch( Exception e ) {
-         getLog().error( "start failed", e );
+         getLog().error( "startRecursive failed", e );
       }
    }
    
-   public void stop() {
+   public void mejbStop() {
       try {
          Iterator i = mEJBs.iterator();
          while( i.hasNext() ) {
@@ -359,7 +375,7 @@ public class EjbModule
                getLog().error( "stop of EJB failed", jme );
             }
          }
-         super.stop();
+         stop();
       }
       catch( Exception e ) {
          getLog().error( "stop failed", e );

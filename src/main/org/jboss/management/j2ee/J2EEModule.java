@@ -14,17 +14,12 @@ import java.util.List;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.J2EEApplication;
-import javax.management.j2ee.J2EEServer;
-import javax.management.j2ee.JVM;
-
-
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.J2EEModule J2EEModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -32,19 +27,19 @@ import javax.management.j2ee.JVM;
  * <ul>
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEDeployedObjectMBean"
  **/
 public abstract class J2EEModule
    extends J2EEDeployedObject
-   implements javax.management.j2ee.J2EEModule
+   implements J2EEModuleMBean
 {
    // Attributes ----------------------------------------------------
-
-   private List mApplications = new ArrayList();
-   private List mServers = new ArrayList();
-   private JVM mJVM;
-
+   
+   private List mJVMs = new ArrayList();
+   
    // Constructors --------------------------------------------------
-
+   
    /**
    * Constructor taking the Name of this Object
    *
@@ -57,6 +52,7 @@ public abstract class J2EEModule
       String pType,
       String pName,
       ObjectName pApplication,
+      ObjectName[] pJVMs,
       String pDeploymentDescriptor
    )
       throws
@@ -77,39 +73,25 @@ public abstract class J2EEModule
    }
 
    // Public --------------------------------------------------------
-
-   public J2EEApplication[] getApplications() {
-      return (J2EEApplication[]) mApplications.toArray( new J2EEApplication[ 0 ] );
+   
+   /**
+    * @jmx:managed-attribute
+    **/
+   public ObjectName[] getJVMs() {
+      return (ObjectName[]) mJVMs.toArray( new ObjectName[ 0 ] );
    }
-  
-   public J2EEApplication getApplication( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mApplications.size() )
+   
+   /**
+    * @jmx:managed-operation
+    **/
+   public ObjectName getJVM( int pIndex ) {
+      if( pIndex >= 0 && pIndex < mJVMs.size() )
       {
-         return (J2EEApplication) mApplications.get( pIndex );
+         return (ObjectName) mJVMs.get( pIndex );
       }
       else
       {
          return null;
       }
    }
-  
-   public J2EEServer[] getServers() {
-      return (J2EEServer[]) mServers.toArray( new J2EEServer[ 0 ] );
-   }
-
-   public J2EEServer getServer( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mServers.size() )
-      {
-         return (J2EEServer) mServers.get( pIndex );
-      }
-      else
-      {
-         return null;
-      }
-   }
-
-   public JVM getJVM() {
-      return mJVM;
-   }
-
 }

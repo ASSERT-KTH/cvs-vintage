@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -29,6 +29,8 @@ import org.jboss.logging.Logger;
  * <ul>
  * <li> Finishing first real implementation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public class JDBCDriver
    extends J2EEManagedObject
@@ -41,11 +43,11 @@ public class JDBCDriver
    // Static --------------------------------------------------------
    
    public static ObjectName create( MBeanServer pServer, String pName, ObjectName pService ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBCDriver.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -69,17 +71,17 @@ public class JDBCDriver
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBCDriver.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JDBCDriver,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCDriver,name=" + pName + ",*"
          );
          ObjectName lJNDI = (ObjectName) pServer.queryNames(
             lSearch,
@@ -89,7 +91,7 @@ public class JDBCDriver
          pServer.unregisterMBean( lJNDI );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destroy JSR-77 JNDI: " + pName, e );
+         lLog.error( "Could not destroy JSR-77 JNDI: " + pName, e );
       }
    }
    

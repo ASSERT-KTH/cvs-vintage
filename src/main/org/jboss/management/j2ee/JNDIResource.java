@@ -19,10 +19,10 @@ import org.jboss.system.ServiceMBean;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.JNDI JNDI}.
+ * {@link javax.management.j2ee.JNDIResource JNDIResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -34,10 +34,12 @@ import org.jboss.system.ServiceMBean;
  * <ul>
  * <li> Added state handling (except event notification)
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
-public class JNDI
+public class JNDIResource
    extends J2EEResource
-   implements JNDIMBean
+   implements JNDIResourceMBean
 {
    // Constants -----------------------------------------------------
    
@@ -61,22 +63,22 @@ public class JNDI
                                           };
    
    public static ObjectName create( MBeanServer pServer, String pName, ObjectName pService ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JNDIResource.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 JNDIResource: " + pName, e );
          return null;
       }
       try {
-         // Now create the JNDI Representant
+         // Now create the JNDIResource Representant
          return pServer.createMBean(
-            "org.jboss.management.j2ee.JNDI",
+            "org.jboss.management.j2ee.JNDIResource",
             null,
             new Object[] {
                pName,
@@ -91,43 +93,43 @@ public class JNDI
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 JNDIResource: " + pName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JNDIResource.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JNDI,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JNDIResource,name=" + pName + ",*"
          );
-         ObjectName lJNDI = (ObjectName) pServer.queryNames(
+         ObjectName lJNDIResource = (ObjectName) pServer.queryNames(
             lSearch,
             null
          ).iterator().next();
          // Now remove the J2EEApplication
-         pServer.unregisterMBean( lJNDI );
+         pServer.unregisterMBean( lJNDIResource );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destroy JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not destroy JSR-77 JNDIResource: " + pName, e );
       }
    }
    
    // Constructors --------------------------------------------------
    
    /**
-    * @param pName Name of the JNDI
+    * @param pName Name of the JNDIResource
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JNDI( String pName, ObjectName pServer, ObjectName pService )
+   public JNDIResource( String pName, ObjectName pServer, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JNDI", pName, pServer );
+      super( "JNDIResource", pName, pServer );
       Logger log = getLog();
       if (log.isDebugEnabled())
          log.debug( "Service name: " + pService );
@@ -136,11 +138,11 @@ public class JNDI
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -158,7 +160,7 @@ public class JNDI
       return mState;
    }
 
-   public void startService() {
+   public void mejbStart() {
       try {
          getServer().invoke(
             mService,
@@ -173,12 +175,12 @@ public class JNDI
       }
    }
 
-   public void startRecursive() {
+   public void mejbStartRecursive() {
       // No recursive start here
-      start();
+      mejbStart();
    }
 
-   public void stopService() {
+   public void mejbStop() {
       try {
          getServer().invoke(
             mService,
@@ -238,7 +240,7 @@ public class JNDI
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {
-      return "JNDI { " + super.toString() + " } [ " +
+      return "JNDIResource { " + super.toString() + " } [ " +
          " ]";
    }
    

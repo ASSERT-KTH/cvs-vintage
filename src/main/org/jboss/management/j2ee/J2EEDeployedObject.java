@@ -6,13 +6,10 @@
  */
 package org.jboss.management.j2ee;
 
-// import java.io.File;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
-// import java.util.jar.JarEntry;
-// import java.util.jar.JarFile;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -24,7 +21,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEDeployedObject J2EEDeployedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -33,10 +30,12 @@ import org.jboss.logging.Logger;
  * <li> Adjustments to the JBoss Guidelines and adding the static method
  *      to load a Deployment Descriptor
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public abstract class J2EEDeployedObject
    extends J2EEManagedObject
-   implements javax.management.j2ee.J2EEDeployedObject
+   implements J2EEDeployedObjectMBean
 {
    // Constants -----------------------------------------------------
    
@@ -133,10 +132,16 @@ public abstract class J2EEDeployedObject
    
    // javax.management.j2ee.J2EEDeployedObject implementation -------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public String getDeploymentDescriptor() {
       return mDeploymentDescriptor;
    }
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName getServer1() {
       //AS ToDo: Need to be implemented
       return null;

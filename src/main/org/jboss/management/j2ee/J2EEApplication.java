@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -33,6 +33,11 @@ import org.jboss.logging.Logger;
  * <li> Adjustments to the JBoss Guidelines and implementing of the
  *      the destroy() helper method
  * </ul>
+ *
+ * @todo When all components of a J2EEApplication is state manageable
+ *       this have to be too !!
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEDeployedObjectMBean"
  **/
 public class J2EEApplication
    extends J2EEDeployedObject
@@ -52,14 +57,14 @@ public class J2EEApplication
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
          // First get the deployement descriptor
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.APPLICATION );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
+         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
       try {
@@ -92,12 +97,12 @@ public class J2EEApplication
       Logger lLog = Logger.getLogger( J2EEApplication.class );
       try {
          ObjectName lApplication;
-         if( pName.indexOf( "type=J2EEApplication" ) >= 0 ) {
+         if( pName.indexOf( "j2eeType=J2EEApplication" ) >= 0 ) {
             lApplication = new ObjectName( pName );
          } else {
             // Find the Object to be destroyed
             ObjectName lSearch = new ObjectName(
-               J2EEManagedObject.getDomainName() + ":type=J2EEApplication,name=" + pName + ",*"
+               J2EEManagedObject.getDomainName() + ":j2eeType=J2EEApplication,name=" + pName + ",*"
             );
             lApplication = (ObjectName) pServer.queryNames(
                lSearch,
@@ -134,10 +139,16 @@ public class J2EEApplication
    
    // J2EEApplication implementation --------------------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getModules() {
       return (ObjectName[]) mModules.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getModule( int pIndex ) {
       if( pIndex >= 0 && pIndex < mModules.size() )
       {

@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.J2EEDomain J2EEDomain}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * @jmx:mbean description="sample for jboss xmbean.dtd"
  *            persistPolicy="Never"
@@ -130,7 +130,7 @@ public class J2EEDomainTarget
     **/
    public void addChild( ObjectName pChild ) {
       Hashtable lProperties = pChild.getKeyPropertyList();
-      String lType = lProperties.get( "type" ) + "";
+      String lType = lProperties.get( "j2eeType" ) + "";
       if(
          "J2EEApplication".equals( lType ) ||
          "J2EEModule".equals( lType )

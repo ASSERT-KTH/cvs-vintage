@@ -11,10 +11,10 @@ import javax.management.ObjectName;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.StatefulSessionBean StatefulSessionBean}.
+ * {@link javax.management.j2ee.SessionBean SessionBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -23,11 +23,11 @@ import javax.management.ObjectName;
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
  *
- * @jmx:mbean extends="org.jboss.management.j2ee.SessionBeanMBean"
+ * @jmx:mbean extends="org.jboss.management.j2ee.EJBMBean"
  **/
-public class StatefulSessionBean
-   extends SessionBean
-   implements StatefulSessionBeanMBean
+public class SessionBean
+   extends EJB
+   implements SessionBeanMBean
 {
    // -------------------------------------------------------------------------
    // Members
@@ -38,16 +38,16 @@ public class StatefulSessionBean
    // -------------------------------------------------------------------------
 
    /**
-    * @param pName Name of the StatefulSessionBean
+    * @param pName Name of the SessionBean
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public StatefulSessionBean( String pName, ObjectName pEjbModule )
+   public SessionBean( String pType, String pName, ObjectName pEjbModule )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "StatefulSessionBean", pName, pEjbModule );
+      super( pType, pName, pEjbModule );
    }
 
    // -------------------------------------------------------------------------
@@ -55,6 +55,7 @@ public class StatefulSessionBean
    // -------------------------------------------------------------------------  
 
    public String toString() {
-      return "StatefulSessionBean { " + super.toString() + " } []";
+      return "SessionBean { " + super.toString() + " } [ " +
+         getName() + " ]";
    }
 }

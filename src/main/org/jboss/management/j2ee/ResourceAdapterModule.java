@@ -18,11 +18,6 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.ResourceAdapter;
-import javax.management.j2ee.J2EEApplication;
-import javax.management.j2ee.J2EEServer;
-//import javax.management.j2ee.JVM;
-
 import java.security.InvalidParameterException;
 
 import org.jboss.logging.Logger;
@@ -33,7 +28,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.ResourceAdapterModule ResourceAdapterModule}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -42,6 +37,13 @@ import org.jboss.system.ServiceMBean;
  * <li>
  *      Creation
  * </ul>
+ * <p><b>20020301 Andreas Schaefer:</b>
+ * <ul>
+ * <li>
+ *      Convertion to mejb...() methods and using XDoclet to generate MBean interface
+ * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEModuleMBean"
  **/
 public class ResourceAdapterModule
   extends J2EEModule
@@ -68,23 +70,25 @@ public class ResourceAdapterModule
                                              "state.running",
                                              "state.failed"
                                           };
-   
+   /**
+    * @todo Now support for JMVs right now !
+    **/
    public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL, ObjectName pService) {
       Logger lLog = Logger.getLogger( ResourceAdapterModule.class );
       String lDD = null;
       ObjectName lParent = null;
       try {
          ObjectName lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
-         String lServerName = lServer.getKeyPropertyList().get( "type" ) + "=" +
+         String lServerName = lServer.getKeyPropertyList().get( "j2eeType" ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
          lLog.debug( "ResourceAdapterModule.create(), server name: " + lServerName );
          if(pApplicationName != null)
          {
             lParent = (ObjectName) pServer.queryNames(
-                new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEApplication" +
+                new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEApplication" +
                    ",name=" + pApplicationName + "," + lServerName + ",*"
                 ),
                 null
@@ -115,12 +119,14 @@ public class ResourceAdapterModule
             new Object[] {
                pName,
                lParent,
+               null,
                lDD,
                pService
             },
             new String[] {
                String.class.getName(),
                ObjectName.class.getName(),
+               ObjectName[].class.getName(),
                String.class.getName(),
                ObjectName.class.getName()
             }
@@ -137,7 +143,7 @@ public class ResourceAdapterModule
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=ResourceAdapterModule,name=" + pModuleName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=ResourceAdapterModule,name=" + pModuleName + ",*"
          );
          ObjectName lResourceAdapterModule = (ObjectName) pServer.queryNames(
             lSearch,
@@ -161,12 +167,12 @@ public class ResourceAdapterModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public ResourceAdapterModule( String pName, ObjectName pApplication, String pDeploymentDescriptor, ObjectName pService )
+   public ResourceAdapterModule( String pName, ObjectName pApplication, ObjectName[] pJVMs, String pDeploymentDescriptor, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "ResourceAdapterModule", pName, pApplication, pDeploymentDescriptor );
+      super( "ResourceAdapterModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
       mService = pService;
    }
 
@@ -174,10 +180,16 @@ public class ResourceAdapterModule
    
    // EjbModule implementation --------------------------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getResourceAdapters() {
       return (ObjectName[]) mResourceAdapters.toArray( new ObjectName[ 0 ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getResourceAdapter( int pIndex ) {
       if( pIndex >= 0 && pIndex < mResourceAdapters.size() )
       {
@@ -233,13 +245,13 @@ public class ResourceAdapterModule
       );
    }
    
-   // javax.managment.j2ee.EventProvider implementation -------------
+   // org.jboss.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -257,22 +269,17 @@ public class ResourceAdapterModule
       return mState;
    }
    
-   /**
-    * This method is only overwriten because to catch the exception
-    * which is not specified in {@link javax.management.j2ee.StateManageable
-    * StateManageable} interface.
-    **/
-   public void start()
+   public void mejbStart()
    {
       try {
-         super.start();
+         start();
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
    }
    
-   public void startRecursive() {
+   public void mejbStartRecursive() {
       // No recursive start here
       try {
          start();
@@ -280,6 +287,10 @@ public class ResourceAdapterModule
       catch( Exception e ) {
          getLog().error( "start failed", e );
       }
+   }
+   
+   public void mejbStop() {
+      stop();
    }
    
    // Object overrides ---------------------------------------------------

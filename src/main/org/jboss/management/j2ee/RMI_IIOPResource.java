@@ -19,33 +19,39 @@ import org.jboss.system.ServiceMBean;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.JMS JMS}.  *
- * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.2 $
+ * {@link javax.management.j2ee.RMI_IIOPResource RMI_IIOPResource}.
  *
+ * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
+ * @version $Revision: 1.1 $
+ *   
  * <p><b>Revisions:</b>
  *
- * <p><b>20020301 Scott McLaughlin</b>
+ * <p><b>20011126 Andreas Schaefer:</b>
  * <ul>
- * <li> Creation 
+ * <li> Adjustments to the JBoss Guidelines
+ * </ul>
+ * <p><b>20011202 Andreas Schaefer:</b>
+ * <ul>
+ * <li> Added state handling (except event notification)
  * </ul>
  *
- * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
-public class JMSResource
+public class RMI_IIOPResource
    extends J2EEResource
-   implements JMSResourceMBean
+   implements RMI_IIOPResourceMBean
 {
-
+   // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------
    
    private long mStartTime = -1;
    private int mState = ServiceMBean.STOPPED;
    private ObjectName mService;
+   private Listener mListener;
    
    // Static --------------------------------------------------------
-
+   
    private static final String[] sTypes = new String[] {
                                              "j2ee.object.created",
                                              "j2ee.object.deleted",
@@ -55,9 +61,9 @@ public class JMSResource
                                              "state.running",
                                              "state.failed"
                                           };
-
+   
    public static ObjectName create( MBeanServer pServer, String pName, ObjectName pService ) {
-      Logger lLog = Logger.getLogger( JMSResource.class );
+      Logger lLog = Logger.getLogger( RMI_IIOPResource.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
@@ -66,13 +72,13 @@ public class JMSResource
          ).iterator().next();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 Server", e );
+//AS         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
          return null;
       }
       try {
-         // Now create the JMS Representant
+         // Now create the RMI_IIOPResource Representant
          return pServer.createMBean(
-            "org.jboss.management.j2ee.JMSResource",
+            "org.jboss.management.j2ee.RMI_IIOPResource",
             null,
             new Object[] {
                pName,
@@ -87,81 +93,47 @@ public class JMSResource
          ).getObjectName();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 JMS Resouce", e );
+//AS         lLog.error( "Could not create JSR-77 RMI_IIOPResource: " + pName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JMSResource.class );
+      Logger lLog = Logger.getLogger( RMI_IIOPResource.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":j2eeType=JMSResource,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=RMI_IIOPResource,name=" + pName + ",*"
          );
-         ObjectName lJMSResource = (ObjectName) pServer.queryNames(
+         ObjectName lRMI_IIOPResource = (ObjectName) pServer.queryNames(
             lSearch,
             null
          ).iterator().next();
          // Now remove the J2EEApplication
-         pServer.unregisterMBean( lJMSResource );
+         pServer.unregisterMBean( lRMI_IIOPResource );
       }
       catch( Exception e ) {
-       lLog.error( "Could not destroy JSR-77 JMSResource Resource", e );
+//AS         lLog.error( "Could not destroy JSR-77 RMI_IIOPResource: " + pName, e );
       }
    }
    
-   // -------------------------------------------------------------------------
-   // Constructors
-   // -------------------------------------------------------------------------
-
+   // Constructors --------------------------------------------------
+   
    /**
-    * @param pName Name of the JMSResource
+    * @param pName Name of the RMI_IIOPResource
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JMSResource( String pName, ObjectName pServer, ObjectName pService )
+   public RMI_IIOPResource( String pName, ObjectName pServer, ObjectName pService )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JMSResource", pName, pServer );
+      super( "RMI_IIOPResource", pName, pServer );
+      Logger log = getLog();
+      if (log.isDebugEnabled())
+         log.debug( "Service name: " + pService );
       mService = pService;
-   }
-
-   // org.jboss.ServiceMBean overrides ------------------------------------
-
-   public void postCreation() {
-      // If set then register for its events
-      try {
-         getServer().addNotificationListener( mService, new Listener(), null, null );
-      }
-      catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service is null or
-         //AS ToDo: not found.
-         jme.printStackTrace();
-      }
-      sendNotification(
-         new Notification(
-            sTypes[ 0 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JMSResource Resource created"
-         )
-      );
-   }
-   
-   public void preDestruction() {
-      sendNotification(
-         new Notification(
-            sTypes[ 1 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JMSResource Resource deleted"
-         )
-      );
    }
    
    // javax.managment.j2ee.EventProvider implementation -------------
@@ -183,32 +155,12 @@ public class JMSResource
    public long getStartTime() {
       return mStartTime;
    }
-   
+
    public int getState() {
       return mState;
    }
-   
-   public void mejbStart()
-   {
-      try {
-         start();
-      }
-      catch( Exception e ) {
-         getLog().error( "start failed", e );
-      }
-   }
-   
-   public void mejbStartRecursive() {
-      mejbStart();
-   }
-   
-   public void mejbStop() {
-      stop();
-   }
-   
-   // ServiceMBeanSupport overrides ---------------------------------
-   
-   public void startService() {
+
+   public void mejbStart() {
       try {
          getServer().invoke(
             mService,
@@ -222,8 +174,13 @@ public class JMSResource
          jme.printStackTrace();
       }
    }
-   
-   public void stopService() {
+
+   public void mejbStartRecursive() {
+      // No recursive start here
+      mejbStart();
+   }
+
+   public void mejbStop() {
       try {
          getServer().invoke(
             mService,
@@ -233,7 +190,49 @@ public class JMSResource
          );
       }
       catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service could not be stopped
+         //AS ToDo: later on we have to define what happens when service could not be started
+         jme.printStackTrace();
+      }
+   }
+   
+   public void postCreation() {
+      try {
+         mListener = new Listener();
+         getServer().addNotificationListener( mService, mListener, null, null );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+      sendNotification(
+         new Notification(
+            sTypes[ 0 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "RMI_IIOP Resource created"
+         )
+      );
+   }
+   
+   public void preDestruction() {
+      sendNotification(
+         new Notification(
+            sTypes[ 1 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "RMI_IIOP Resource deleted"
+         )
+      );
+      // Remove the listener of the target MBean
+      try {
+         getServer().removeNotificationListener( mService, mListener );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
          jme.printStackTrace();
       }
    }
@@ -241,7 +240,7 @@ public class JMSResource
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {
-      return "JMSResource { " + super.toString() + " } [ " +
+      return "RMI_IIOPResource { " + super.toString() + " } [ " +
          " ]";
    }
    
@@ -280,7 +279,7 @@ public class JMSResource
             }
          }
       }
+      
    }
    
 }
-

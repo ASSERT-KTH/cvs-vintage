@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -27,10 +27,12 @@ import org.jboss.metadata.SessionMetaData;
  * <ul>
  * <li> Creation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
 public abstract class EJB
    extends J2EEManagedObject
-   implements javax.management.j2ee.EJB
+   implements EJBMBean
 {
    // Constants -----------------------------------------------------
    

@@ -24,10 +24,10 @@ import org.jboss.system.ServiceMBean;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.JDBC JDBC}.
+ * {@link javax.management.j2ee.JDBCResource JDBCResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -38,10 +38,12 @@ import org.jboss.system.ServiceMBean;
  *
  * @todo This resource should not implement state manageable because it
  *       has no MBean/Service associated but codes stays.
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.StateManageable,org.jboss.management.j2ee.J2EEResourceMBean"
  **/
-public class JDBC
+public class JDBCResource
    extends J2EEResource
-   implements JDBCMBean
+   implements JDBCResourceMBean
 {
    // Constants -----------------------------------------------------
    
@@ -67,11 +69,11 @@ public class JDBC
                                           };
    
    public static ObjectName create( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JDBC.class );
+      Logger lLog = Logger.getLogger( JDBCResource.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
-             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             new ObjectName( J2EEManagedObject.getDomainName() + ":j2eeType=J2EEServer,*" ),
              null
          ).iterator().next();
       }
@@ -82,7 +84,7 @@ public class JDBC
       try {
          // Now create the JDBC Representant
          return pServer.createMBean(
-            "org.jboss.management.j2ee.JDBC",
+            "org.jboss.management.j2ee.JDBCResource",
             null,
             new Object[] {
                pName,
@@ -101,26 +103,26 @@ public class JDBC
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBCResource.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JDBC,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JDBCResource,name=" + pName + ",*"
          );
          Set lNames = pServer.queryNames(
             lSearch,
             null
          );
          if( !lNames.isEmpty() ) {
-            ObjectName lJDBC = (ObjectName) lNames.iterator().next();
-            // Now check if the JDBC Manager does not contains another DataSources
+            ObjectName lJDBCResource = (ObjectName) lNames.iterator().next();
+            // Now check if the JDBCResource Manager does not contains another DataSources
             ObjectName[] lDataSources = (ObjectName[]) pServer.getAttribute(
-               lJDBC,
+               lJDBCResource,
                "JdbcDataSources"
             );
             if( lDataSources.length == 0 ) {
                // Remove it because it does not reference any JDBC DataSources
-               pServer.unregisterMBean( lJDBC );
+               pServer.unregisterMBean( lJDBCResource );
             }
          }
       }
@@ -132,16 +134,16 @@ public class JDBC
    // Constructors --------------------------------------------------
    
    /**
-    * @param pName Name of the JDBC
+    * @param pName Name of the JDBCResource
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public JDBC( String pName, ObjectName pServer )
+   public JDBCResource( String pName, ObjectName pServer )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "JDBC", pName, pServer );
+      super( "JDBCResource", pName, pServer );
 //AS      mService = pService;
    }
    
@@ -149,11 +151,11 @@ public class JDBC
    
    // javax.managment.j2ee.EventProvider implementation -------------
    
-   public String[] getTypes() {
+   public String[] getEventTypes() {
       return sTypes;
    }
    
-   public String getType( int pIndex ) {
+   public String getEventType( int pIndex ) {
       if( pIndex >= 0 && pIndex < sTypes.length ) {
          return sTypes[ pIndex ];
       } else {
@@ -170,32 +172,16 @@ public class JDBC
    public int getState() {
       return mState;
    }
-
-   public void startService() {
-      mState = ServiceMBean.STARTING;
-      sendNotification(
-         new Notification(
-            sTypes[ 4 ],
-            getName(),
-            1,
-            System.currentTimeMillis(),
-            "JDBC Manager starting"
-         )
-      );
-      mState = ServiceMBean.STARTED;
-      sendNotification(
-         new Notification(
-            sTypes[ 5 ],
-            getName(),
-            2,
-            System.currentTimeMillis(),
-            "JDBC Manager started"
-         )
-      );
+   
+   public void mejbStart() {
+      try {
+         start();
+      }
+      catch( Exception e ) {}
    }
-
-   public void startRecursive() {
-      start();
+   
+   public void mejbStartRecursive() {
+      mejbStart();
       Iterator i = mDatasources.iterator();
       ObjectName lDataSource = null;
       while( i.hasNext() ) {
@@ -213,6 +199,33 @@ public class JDBC
          }
       }
    }
+   
+   public void mejbStop() {
+      stop();
+   }
+   
+   public void startService() {
+      mState = ServiceMBean.STARTING;
+      sendNotification(
+         new Notification(
+            sTypes[ 4 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "JDBCResource Manager starting"
+         )
+      );
+      mState = ServiceMBean.STARTED;
+      sendNotification(
+         new Notification(
+            sTypes[ 5 ],
+            getName(),
+            2,
+            System.currentTimeMillis(),
+            "JDBCResource Manager started"
+         )
+      );
+   }
 
    public void stopService() {
       Iterator i = mDatasources.iterator();
@@ -223,7 +236,7 @@ public class JDBC
             getName(),
             1,
             System.currentTimeMillis(),
-            "JDBC Manager stopping"
+            "JDBCResource Manager stopping"
          )
       );
       while( i.hasNext() ) {
@@ -247,7 +260,7 @@ public class JDBC
             getName(),
             2,
             System.currentTimeMillis(),
-            "JDBC Manager stopped"
+            "JDBCResource Manager stopped"
          )
       );
    }
@@ -308,12 +321,18 @@ public class JDBC
 */
    }
    
-   // javax.management.j2ee.JDBC implementation ---------------------
+   // javax.management.j2ee.JDBCResource implementation ---------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName[] getJdbcDataSources() {
       return (ObjectName[]) mDatasources.toArray( new ObjectName[ mDatasources.size() ] );
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public ObjectName getJdbcDataSource( int pIndex ) {
       if( pIndex >= 0 && pIndex < mDatasources.size() ) {
          return (ObjectName) mDatasources.get( pIndex );
@@ -342,7 +361,7 @@ public class JDBC
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {
-      return "JDBC { " + super.toString() + " } [ " +
+      return "JDBCResource { " + super.toString() + " } [ " +
          "Datasources: " + mDatasources +
          " ]";
    }

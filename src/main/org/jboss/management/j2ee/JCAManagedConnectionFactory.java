@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.JCAManagedConnectionFactory JCAManagedConnectionFactory}.
  *
  * @author  <a href="mailto:mclaugs@comcast.net">Scott McLaughlin</a>.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -26,8 +26,12 @@ import org.jboss.logging.Logger;
  * <ul>
  * <li> Finishing first real implementation
  * </ul>
+ *
+ * @jmx:mbean extends="org.jboss.management.j2ee.J2EEManagedObjectMBean"
  **/
-public class JCAManagedConnectionFactory extends J2EEManagedObject implements JCAManagedConnectionFactoryMBean
+public class JCAManagedConnectionFactory
+   extends J2EEManagedObject
+   implements JCAManagedConnectionFactoryMBean
 {
    // Constants -----------------------------------------------------
    
@@ -74,7 +78,7 @@ public class JCAManagedConnectionFactory extends J2EEManagedObject implements JC
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JCAManagedConnectionFactory,name=" + pName + ",*"
+            J2EEManagedObject.getDomainName() + ":j2eeType=JCAManagedConnectionFactory,name=" + pName + ",*"
          );
          ObjectName lJCAManagedConnectionFactory = (ObjectName) pServer.queryNames(
             lSearch,

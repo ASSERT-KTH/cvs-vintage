@@ -17,23 +17,23 @@ import java.security.InvalidParameterException;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
- * {@link javax.management.j2ee.WebModule WebModule}.
+ * {@link javax.management.j2ee.AppClientModule AppClientModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.1 $
  *   
  * <p><b>Revisions:</b>
  *
- * <p><b>20011126 Andreas Schaefer:</b>
+ * <p><b>20020307 Andreas Schaefer:</b>
  * <ul>
- * <li> Adjustments to the JBoss Guidelines
+ * <li> Creation
  * </ul>
  *
  * @jmx:mbean extends="org.jboss.management.j2ee.J2EEModuleMBean"
  **/
-public class WebModule
+public class AppClientModule
   extends J2EEModule
-  implements WebModuleMBean
+  implements AppClientModuleMBean
 {
    // -------------------------------------------------------------------------
    // Members
@@ -53,46 +53,20 @@ public class WebModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public WebModule( String pName, ObjectName pApplication, ObjectName[] pJVMs, String pDeploymentDescriptor, ObjectName[] pServlets )
+   public AppClientModule( String pName, ObjectName pApplication, ObjectName[] pJVMs, String pDeploymentDescriptor )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "WebModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
-      if( pServlets == null || pServlets.length == 0 ) {
-         throw new InvalidParameterException( "Servlet list may not be null or empty" );
-      }
-      mServlets = new ArrayList( Arrays.asList( pServlets ) );
+      super( "AppClientModule", pName, pApplication, pJVMs, pDeploymentDescriptor );
    }
 
    // -------------------------------------------------------------------------
-   // WebModule Implementation
+   // AppClientModule Implementation
    // -------------------------------------------------------------------------  
    
-   /**
-    * @jmx:managed-attribute
-    **/
-   public ObjectName[] getServlets() {
-      return (ObjectName[]) mServlets.toArray( new Servlet[ 0 ] );
-   }
-   
-   /**
-    * @jmx:managed-operation
-    **/
-   public ObjectName getServlet( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mServlets.size() )
-      {
-         return (ObjectName) mServlets.get( pIndex );
-      }
-      else
-      {
-         return null;
-      }
-   }
-   
    public String toString() {
-      return "WebModule[ " + super.toString() +
-         ", Servlets: " + mServlets +
+      return "AppClientModule[ " + super.toString() +
          " ]";
    }
 

@@ -22,7 +22,7 @@ import javax.naming.StringRefAddr;
 
 import org.jnp.server.Main;
 
-import org.jboss.management.j2ee.JNDI;
+import org.jboss.management.j2ee.JNDIResource;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -202,7 +202,7 @@ public class NamingService
       super.postRegister( pRegistrationDone );
       if( pRegistrationDone.booleanValue() ) {
          // Create the JSR-77 management representation
-         mJNDI = JNDI.create( getServer(), "LocalJNDI", getServiceName() );
+         mJNDI = JNDIResource.create( getServer(), "LocalJNDI", getServiceName() );
       }
    }
    
@@ -211,7 +211,7 @@ public class NamingService
       super.postDeregister();
       if( mJNDI != null ) {
          // Destroy the JSR-77 management representation
-         JNDI.destroy( getServer(), "LocalJNDI" );
+         JNDIResource.destroy( getServer(), "LocalJNDI" );
       }
    }
    

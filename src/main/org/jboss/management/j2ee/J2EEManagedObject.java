@@ -15,10 +15,6 @@ import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.EventProvider;
-import javax.management.j2ee.StateManageable;
-import javax.management.j2ee.StatisticsProvider;
-
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -27,7 +23,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * {@link javax.management.j2ee.J2EEManagedObject J2EEManagedObject}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -36,15 +32,17 @@ import org.jboss.system.ServiceMBeanSupport;
  * <li> Adjustments to the JBoss Guidelines as well as adding some
  *      static helper methods
  * </ul>
+ *
+ * @jmx:mbean
  **/
 public abstract class J2EEManagedObject
    extends ServiceMBeanSupport
-   implements javax.management.j2ee.J2EEManagedObject, Serializable
+   implements J2EEManagedObjectMBean, Serializable
 {
 
    // Constants -----------------------------------------------------
    
-   public static final String TYPE = "type";
+   public static final String TYPE = "j2eeType";
    public static final String NAME = "name";
    
    // Attributes ----------------------------------------------------
@@ -125,7 +123,7 @@ public abstract class J2EEManagedObject
          InvalidParentException
    {
       Hashtable lProperties = (Hashtable) pParent.getKeyPropertyList().clone();
-      lProperties.put( lProperties.get( "type" ), lProperties.get( "name" ) );
+      lProperties.put( lProperties.get( TYPE ), lProperties.get( "name" ) );
       lProperties.put( TYPE, pType );
       lProperties.put( NAME, pName );
       mName = new ObjectName( getDomainName(), lProperties );
@@ -136,15 +134,24 @@ public abstract class J2EEManagedObject
    
    // J2EEManagedObjectMBean implementation ----------------------------------------------
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName getObjectName() {
       log.debug("getObjectName(), name: " + mName );
       return mName;
    }
 
+   /**
+    * @jmx:managed-attribute
+    **/
    public ObjectName getParent() {
       return mParent;
    }
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public void setParent( ObjectName pParent )
       throws
          InvalidParentException
@@ -155,27 +162,45 @@ public abstract class J2EEManagedObject
       mParent = pParent;
    }
    
+   /**
+    * @jmx:managed-operation
+    **/
    public void addChild( ObjectName pChild ) {
       //AS ToDo: Remove later is just here to compile
    }
+   
+   /**
+    * @jmx:managed-operation
+    **/
    public void removeChild( ObjectName pChild ) {
       //AS ToDo: Remove later is just here to compile
    }
 
    // J2EEManagedObject implementation ----------------------------------------------
    
+/*
    public String getName() {
       return mName.toString();
    }
+*/
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public boolean isStateManageable() {
       return this instanceof StateManageable;
    }
 
+   /**
+    * @jmx:managed-attribute
+    **/
    public boolean isStatisticsProvider() {
       return this instanceof StatisticsProvider;
    }
    
+   /**
+    * @jmx:managed-attribute
+    **/
    public boolean isEventProvider() {
       return this instanceof EventProvider;
    }
