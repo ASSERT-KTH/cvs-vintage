@@ -1048,7 +1048,7 @@ public class IMAPServer implements IMAPListener {
 			StatusObservable observable = getObservable();
 			
 			ensureSelectedState(folder);
-			if (messageFolderInfo.getExists() - startIdx > 0) {
+			if (selectedStatus.getMessages() - startIdx >= 0) {
 				SequenceSet set = new SequenceSet();
 				set.addRightOpen(startIdx);
 
@@ -1057,7 +1057,7 @@ public class IMAPServer implements IMAPListener {
 				// update the progress
 				if( observable != null ) {
 					observable.setCurrent(0);
-					observable.setMax(set.getLength(messageFolderInfo.getExists()));					
+					observable.setMax(set.getLength(selectedStatus.getMessages()));					
 				}
 				
 				List allResults = new ArrayList(packs.length);
