@@ -294,10 +294,10 @@ public class Rfc822Parser extends AbstractParser
 			if (shortFrom.indexOf("<") != -1) {
 				shortFrom = shortFrom.substring(0, shortFrom.indexOf("<"));
 				if (shortFrom.length() > 0) {
-					if (shortFrom.startsWith("\""))
+					if (shortFrom.startsWith("\"") && shortFrom.length() > 1)
 						shortFrom =
 							shortFrom.substring(1, shortFrom.length() - 1);
-					if (shortFrom.endsWith("\""))
+					if (shortFrom.endsWith("\"") && shortFrom.length() > 1)
 						shortFrom =
 							shortFrom.substring(0, shortFrom.length() - 1);
 				} else {
