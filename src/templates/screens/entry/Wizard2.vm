@@ -39,7 +39,7 @@ $page.setTitle("Identified as duplicate")
         #if ($attVal.Attribute.AttributeType.ValidationKey)
              ## TODO not sure what this is
         #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
- xx  ##          $att.getAttributeOption($attrInput.OptionId.toString()).Name
+           $att.getAttributeOption($attrInput.OptionId.toString()).Name
         #else
              $!attrInput.Value
         #end
