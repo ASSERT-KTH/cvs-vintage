@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.7 $                                           *
+ * Version:     $Revision: 1.8 $                                           *
  ***************************************************************************/
 
 
