@@ -21,15 +21,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -56,8 +50,6 @@ public class EditContactDialog implements ActionListener, DocumentListener
 	private JButton displayButton;
 
 	private JButton okButton;
-	private JButton cancelButton;
-	private JButton helpButton;
 
 	private AddressbookInterface addressbookInterface;
 	private AdapterNode contactNode;
@@ -93,8 +85,7 @@ public class EditContactDialog implements ActionListener, DocumentListener
 	*/
 	protected void init()
 	{
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new BorderLayout());
 		//panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
 
 		//panel.add( Box.createRigidArea( new Dimension(0,10) ) );
@@ -201,15 +192,20 @@ public class EditContactDialog implements ActionListener, DocumentListener
 		okButton.setActionCommand("OK");
 		okButton.setEnabled(false);
 		buttonPanel.add(okButton);
-		cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL");
 		buttonPanel.add(cancelButton);
-		helpButton = new JButton("Help");
+		JButton helpButton = new JButton("Help");
 		helpButton.setEnabled(false);
 		buttonPanel.add(helpButton);
 		bottom.add(buttonPanel,BorderLayout.EAST);
 		c.add(bottom, BorderLayout.SOUTH);
+                dialog.getRootPane().registerKeyboardAction(
+                        this,
+                        "CANCEL",
+                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                        JComponent.WHEN_IN_FOCUSED_WINDOW);
 
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
