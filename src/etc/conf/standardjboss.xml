@@ -14,7 +14,7 @@
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
 				<Optimized>True</Optimized>
-                <RMIObjectPort>4444</RMIObjectPort>
+				<RMIObjectPort>4444</RMIObjectPort>
 			</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -36,6 +36,7 @@
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
                                 <Optimized>True</Optimized>
+				<RMIObjectPort>4444</RMIObjectPort>
                         </container-invoker-conf>
                         <container-cache-conf>
                                 <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -56,6 +57,7 @@
 			<persistence-manager></persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
 			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-pool-conf>
@@ -73,6 +75,7 @@
 			<persistence-manager></persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
 			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-pool-conf>
@@ -89,6 +92,7 @@
 			<persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
 			<Optimized>True</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
@@ -104,6 +108,7 @@
                         <persistence-manager>org.jboss.ejb.plugins.StatefulSessionFilePersistenceManager</persistence-manager>
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
                         <Optimized>True</Optimized>
                         </container-invoker-conf>
                         <container-cache-conf>
@@ -120,6 +125,7 @@
 		 	<persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
 		 	<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 		 	<container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
 		   		<Optimized>True</Optimized>
 		 	</container-invoker-conf>
 			<container-cache-conf>
@@ -141,6 +147,7 @@
                         <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
                         <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
                         <container-invoker-conf>
+				<RMIObjectPort>4444</RMIObjectPort>
                                 <Optimized>True</Optimized>
                         </container-invoker-conf>
                         <container-cache-conf>
