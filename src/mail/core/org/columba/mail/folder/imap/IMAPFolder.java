@@ -533,7 +533,7 @@ public class IMAPFolder extends RemoteFolder {
 					if (flags.getRecent())
 						getMessageFolderInfo().decRecent();
 
-					if (flags.getSeen())
+					if (!flags.getSeen())
 						getMessageFolderInfo().decUnseen();
 
 					flags.setSeen(true);

@@ -323,7 +323,7 @@ public abstract class CachedFolder extends LocalFolder {
 					if (flags.getRecent())
 						getMessageFolderInfo().decRecent();
 
-					if (flags.getSeen())
+					if (!flags.getSeen())
 						getMessageFolderInfo().decUnseen();
 
 					flags.setSeen(true);
@@ -333,9 +333,11 @@ public abstract class CachedFolder extends LocalFolder {
 				}
 			case MarkMessageCommand.MARK_AS_UNREAD :
 				{
+					if (flags.getSeen())					
+						getMessageFolderInfo().incUnseen();
+					
 					flags.setSeen(false);
-
-					getMessageFolderInfo().incUnseen();
+					
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
