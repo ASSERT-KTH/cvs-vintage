@@ -257,6 +257,12 @@ public class JspReader {
 	int len = current.stream.length;
  	char ch;
 
+	if (peekChar() == '\n') {
+	    current.line++;
+	    current.col = 0;
+	}
+	else current.col++;
+	
 	// pure obsfuscated genius!
         while ((++current.cursor < len) && 
 	    ((ch = current.stream[current.cursor]) != '<')) {
