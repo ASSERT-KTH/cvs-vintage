@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCLoadFieldCommand {
    private JDBCStoreManager manager;
@@ -79,6 +79,10 @@ public class JDBCLoadFieldCommand {
       sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(
             SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+
+      if(entity.getMetaData().hasSelectForUpdate()) {
+         sql.append(" FOR UPDATE");
+      }
 
       Connection con = null;
       PreparedStatement ps = null;

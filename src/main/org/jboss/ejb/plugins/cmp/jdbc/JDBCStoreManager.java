@@ -33,8 +33,6 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
-import org.jboss.ejb.plugins.cmp.CMPStoreManager;
-import org.jboss.ejb.plugins.cmp.CommandFactory;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -66,7 +64,7 @@ import org.jboss.proxy.InvocationHandler;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore2 {
 
@@ -569,9 +567,8 @@ public class JDBCStoreManager implements EntityPersistenceStore2 {
          return;
       }
 
-      // this is a double check lock and must be removed
-      if (trans != null && !transactions.contains(trans)) {
-         synchronized (transactions) { // synchronize only if absolutely necessary
+      synchronized (transactions) { 
+         if (trans != null && !transactions.contains(trans)) {
             if (!transactions.contains(trans)) {
                try {
                   trans.registerSynchronization(new PreloadClearSynch(trans));

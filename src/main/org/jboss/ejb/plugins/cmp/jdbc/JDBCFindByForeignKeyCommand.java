@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCFindByForeignKeyCommand {
    private JDBCStoreManager manager;
@@ -50,6 +50,10 @@ public class JDBCFindByForeignKeyCommand {
                entity.getJDBCPrimaryKeyFields()));
       sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(foreignKeyFields));
+
+      if(entity.getMetaData().hasSelectForUpdate()) {
+         sql.append(" FOR UPDATE");
+      }
       
       Connection con = null;
       PreparedStatement ps = null;

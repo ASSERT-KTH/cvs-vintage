@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCLoadRelationCommand {
    private JDBCStoreManager manager;
@@ -52,6 +52,10 @@ public class JDBCLoadRelationCommand {
       sql.append(cmrField.getRelationMetaData().getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(
                cmrField.getTableKeyFields()));
+
+      if(cmrField.getRelationMetaData().hasSelectForUpdate()) {
+         sql.append(" FOR UPDATE");
+      }
 
       Connection con = null;
       PreparedStatement ps = null;

@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCLoadEntityCommand implements LoadEntityCommand {
    private JDBCStoreManager manager;
@@ -69,6 +69,10 @@ public class JDBCLoadEntityCommand implements LoadEntityCommand {
       sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(
             SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+
+      if(entity.getMetaData().hasSelectForUpdate()) {
+         sql.append(" FOR UPDATE");
+      }
       
       Connection con = null;
       PreparedStatement ps = null;

@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCReadAheadCommand {
 
@@ -158,6 +158,10 @@ public class JDBCReadAheadCommand {
             }
             sql.append(SQLUtil.getWhereClause(
                      entity.getJDBCPrimaryKeyFields()));
+         }
+
+         if(entity.getMetaData().hasSelectForUpdate()) {
+            sql.append(" FOR UPDATE");
          }
          
          lastKeysCount = keysCount;
