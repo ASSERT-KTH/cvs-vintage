@@ -7,10 +7,12 @@
 
 package org.jboss.deployment.scope;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.Iterator;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.jboss.logging.Logger;
 
@@ -18,36 +20,46 @@ import org.jboss.logging.Logger;
  * Scope is a manager/mediator that connects several ScopedURLClassLoaders
  * with each other and computes their dependencies. The locks used in the scope
  * implementation are quite coarse-grained, maybe thread-unfriendly, but the
- * rationale is that classloading a) happens not too often (hopefully) in the
- * lifecycle of an application b) will dispatch only in special cases (where applications depliberately
- * share classes) to this scope class and c) is optimized by caching the locations.
+ * rationale is that classloading:
+ *  a) happens not too often (hopefully) in the lifecycle of an application 
+ *  b) will dispatch only in special cases (where applications depliberately 
+ *     share classes) to this scope class 
+ *  c) is optimized by caching the locations.
  * @author  cgjung
- * @version 0.8
+ * @version $Revision: 1.6 $
  */
 
 public class Scope {
     
     /** keeps a map of class loaders that participate in this scope */
-    final protected Map classLoaders=new java.util.HashMap();
+    final protected Map classLoaders=new HashMap();
     
     /** keeps a hashtable of dependencies between the classLoaders */
-    final protected Map dependencies=new java.util.HashMap();
+    final protected Map dependencies=new HashMap();
     
     /** keeps a hashtable of class appearances */
-    final protected Map classLocations=new java.util.HashMap();
+    final protected Map classLocations=new HashMap();
     
     /** keeps a hashtable of resource appearances */
-    final protected Map resourceLocations=new java.util.HashMap();
+    final protected Map resourceLocations=new HashMap();
     
     /** keeps a reference to a logger which which to interact */
     final protected Logger log;
     
-    /** Creates new Scope */
+    /**  
+     * Creates new Scope
+     * @param log - The logger this new scope will interact with. 
+     */ 
     public Scope(Logger log) {
         this.log=log;
     }
     
-    /** registers a classloader in this scope */
+    /** 
+     * Registers a classloader in this scope. 
+     * 
+     * @param loader - The classloader to register. 
+     * @return The newly registered classloader. 
+     */ 
     public ScopedURLClassLoader registerClassLoader(ScopedURLClassLoader loader) {
         // must synchronize not to collide with deregistrations and
         // dependency logging
@@ -56,10 +68,13 @@ public class Scope {
         }
     }
     
-    
-    /** deRegisters a classloader in this scope
-     *  removes all cached data related to this classloader
-     */
+    /** 
+     * Deregisters a classloader in this scope. 
+     * Removes all cached data related to this classloader. 
+     * 
+     * @param loader - The classloader to deregister. 
+     * @return The newly deregistered classloader. 
+     */ 
     public ScopedURLClassLoader deRegisterClassLoader(ScopedURLClassLoader loader) {
         // synchronized not to collide with registrations
         // and dependency logging
@@ -75,9 +90,13 @@ public class Scope {
         }
     }
     
-    /** helper method that will clear all entries from a map
-     *  with a dedicated target value.
-     */
+    /** 
+     * Helper method that will clear all entries from a map 
+     * with a dedicated target value. 
+     * 
+     * @param map - The map we want to clear entries from. 
+     * @param value - The object we want to remove from that map. 
+     */ 
     protected void clearByValue(Map map, Object value) {
         Iterator values=map.values().iterator();
         while(values.hasNext()) {
@@ -87,20 +106,29 @@ public class Scope {
         }
     }
     
-    /** returns the classLoaders that a particular classLoader is
-     *  dependent on. Should be called after locking classLoaders
-     */
+    /** 
+     * Returns the classLoaders that a particular classLoader is 
+     * dependent on. Should be called after locking classLoaders. 
+     * 
+     * @param loader - The classloader we want to find dependencies of. 
+     * @return The set of classloaders this classloader is dependent on. 
+     */ 
     public Set getDependentClassLoaders(ScopedURLClassLoader loader) {
         Set result=(Set) dependencies.get(loader);
         if(result==null)
-            result=new java.util.HashSet();
+            result=new HashSet();
         return result;
     }
-    
-    /** adds a dependency between two classloaders. this can be called
-     *  from within application threads that require resource loading.
-     *  Should be called after locking classLoaders
-     */
+
+    /** 
+     * Adds a dependency between two classloaders. This can be called 
+     * from within application threads that require resource loading. 
+     * Should be called after locking classLoaders. 
+     * 
+     * @param source - The classloader we are adding dependency from. 
+     * @param target - The classloader we are adding dependency to. 
+     * @return true if the operation was successful, false otherwise. 
+     */ 
     protected boolean addDependency(ScopedURLClassLoader source, ScopedURLClassLoader target) {
         // no rescursions necessary (but not volatile for the code)
         if(source !=null && target!=null && !source.equals(target)) {
@@ -108,7 +136,7 @@ public class Scope {
             Set deps=(Set) dependencies.get(target);
             
             if(deps==null) {
-                deps=new java.util.HashSet();
+                deps=new HashSet();
                 dependencies.put(target,deps);
             }
             
@@ -120,7 +148,17 @@ public class Scope {
             return false;
     }
     
-    /** loads a class on behalf of a given classloader */
+    /** 
+     * Loads a class on behalf of a given classloader. 
+     *   
+     * @param className - The name of the class we are trying to load. 
+     * @param resolve - Whether or not the class should be resolved. 
+     * @param source - The classloader we want to load the class with. 
+     * 
+     * @throws ClassNotFoundException - If the class cannot be loaded 
+     * properly.  
+     * @return The new class that has been loaded.  
+     */ 
     public Class loadClass(String className, boolean resolve, ScopedURLClassLoader source)
     throws ClassNotFoundException {
         
@@ -165,8 +203,16 @@ public class Scope {
         } // sync
     }
     
-    /** gets a URL on behalf of a given classloader which may be null
-     *  in case that we do not check dependencies */
+    /** 
+     * Gets a URL on behalf of a given classloader which may be null 
+     * in case that we do not check dependencies. 
+     * 
+     * @param name - The name of the target ScopedURLClassLoader. 
+     * @param source - The source ScopedURLClassLoader. 
+     * @return The name of the target URL where the resource was loaded 
+     * or null if no loader in the scope was able to load the 
+     * resource. 
+     */ 
     public URL getResource(String name, ScopedURLClassLoader source) {
         
         // short look into the resource location cache, is synchronized in
