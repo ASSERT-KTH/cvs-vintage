@@ -55,6 +55,7 @@ import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 
@@ -78,7 +79,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.75 $
+* @version $Revision: 1.76 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -819,7 +820,7 @@ public abstract class Container implements DynamicMBean
                   Container refContainer = getApplication().getContainer(ref.getLink());
                   if (refContainer == null)
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
+                  Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
                   
                   //                   bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
                   //                bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
@@ -833,7 +834,7 @@ public abstract class Container implements DynamicMBean
                   }
                   if (debug)
                      log.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-                  bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
+                  Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
                }
             }
          }
@@ -842,30 +843,23 @@ public abstract class Container implements DynamicMBean
          {
             Iterator enum = beanMetaData.getEjbLocalReferences();
             // unique key name
-            String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
+            String localJndiName = beanMetaData.getLocalJndiName();
             while(enum.hasNext())
             {
-               
                EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
-               if (debug)
-                  log.debug("Binding an EJBLocalReference "+ref.getName());
+               String refName = ref.getName();
+               log.debug("Binding an EJBLocalReference "+ref.getName());
                
                if (ref.getLink() != null)
                {
                   // Internal link
-                  if (debug)
-                     log.debug("Binding "+ref.getName()+" to bean source: "+ref.getLink());
+                  log.debug("Binding "+refName+" to bean source: "+ref.getLink());
                   if (getApplication().getContainer(ref.getLink()) == null)
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  // get local home
-                  // bind it into the local namespace
-                  LocalHomeObjectFactory.rebind( uniqueKey + ref.getName(),
-                     getApplication(), getApplication().getContainer(ref.getLink()) );
-                  StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey+ref.getName() );
-                  Reference jndiRef = new Reference(ref.getLocalHome(),
-                     refAddr, LocalHomeObjectFactory.class.getName(), null );
-                  bind(envCtx, ref.getName(), jndiRef );
-               
+                  /* Create a link from the ENC to the localJndiName where the
+                     which is the location of the local home
+                  */
+                  Util.bind(envCtx, refName, new LinkRef(localJndiName));
                }
                else
                {
@@ -873,7 +867,7 @@ public abstract class Container implements DynamicMBean
                }
             }
          }
-         
+
          // Bind resource references
          {
             Iterator enum = beanMetaData.getResourceReferences();
@@ -929,7 +923,7 @@ public abstract class Container implements DynamicMBean
                   {
                      if (debug)
                         log.debug("Binding URL: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
-                     bind(envCtx, ref.getRefName(), new URL(finalName));
+                     Util.bind(envCtx, ref.getRefName(), new URL(finalName));
                   } catch (MalformedURLException e)
                   {
                      throw new NamingException("Malformed URL:"+e.getMessage());
@@ -940,7 +934,7 @@ public abstract class Container implements DynamicMBean
                   // Resource Manager bindings, should validate the type...
                   if (debug)
                      log.debug("Binding resource manager: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
-                  bind(envCtx, ref.getRefName(), new LinkRef(finalName));
+                  Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
                }
             }
          }
@@ -956,7 +950,7 @@ public abstract class Container implements DynamicMBean
                // Should validate the type...
                if (debug)
                   log.debug("Binding env resource: "+jndiName+ " to JDNI ENC as: " +encName);
-               bind(envCtx, encName, new LinkRef(jndiName));
+               Util.bind(envCtx, encName, new LinkRef(jndiName));
             }
          }
          
@@ -971,8 +965,8 @@ public abstract class Container implements DynamicMBean
          {
             if (debug)
                log.debug("Binding securityDomain: "+securityDomain+ " to JDNI ENC as: security/security-domain");
-            bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
-            bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
+            Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
+            Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
          }
          
          if (debug)
@@ -984,37 +978,5 @@ public abstract class Container implements DynamicMBean
          throw new DeploymentException("Could not set up environment", e);
       }
    }
-   
-   
-   /**
-   * Bind a value to a name in a JNDI-context, and create any missing
-   * subcontexts.
-   *
-   * @param ctx
-   * @param name
-   * @param val
-   *
-   * @throws NamingException
-   */
-   private void bind(Context ctx, String name, Object val)
-   throws NamingException
-   {
-      // Bind val to name in ctx, and make sure that all
-      // intermediate contexts exist
-      Name n = ctx.getNameParser("").parse(name);
-      while (n.size() > 1)
-      {
-         String ctxName = n.get(0);
-         try
-         {
-            ctx = (Context)ctx.lookup(ctxName);
-         } catch (NameNotFoundException e)
-         {
-            ctx = ctx.createSubcontext(ctxName);
-         }
-         n = n.getSuffix(1);
-      }
-      
-      ctx.bind(n.get(0), val);
-   }
+
 }
