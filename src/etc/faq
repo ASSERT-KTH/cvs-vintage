@@ -4,7 +4,7 @@ Some Frequently Asked Questions (FAQ) on Tomcat
 Q: I am getting a 404 Error, what does it mean?
 
 A: In simple terms, it means the server was not able to locate 
-   the resource you requested. This can occur because of four 
+   the resource you requested. This can occur because of five
    reasons:
 
    * One, the URL you typed was wrong or has a typo.
@@ -15,7 +15,7 @@ A: In simple terms, it means the server was not able to locate
    * Three, you're using JDK 1.1.x on a Windows platform. It's
      a known bug (see Readme) that the server doesn't serve files
      in this configuration. Use JDK 1.2.x instead.
-   * And four, on a Windows platform you have installed Tomcat in
+   * Four, on a Windows platform you have installed Tomcat in
      a directory with a path part longer than 8 characters, e.g.
      C:\Program Files\jakarta, and run the "startup" script from
      a command tool after you have cd'd to the directory using
@@ -28,6 +28,19 @@ A: In simple terms, it means the server was not able to locate
 
       > cd "C:\Program Files\jakarta"
       > startup
+
+   * Five, on a Unix platform, you are attempting to access a file
+     that is a symbolic link. 
+
+   The last three cases are caused by a test in 
+   org.apache.tomcat.core.DefaultServlet to see whether the absolute 
+   name of a file equals the canonical name. This test is intended
+   to solve a serious security problem, where mixed case or additional
+   characters in a file name can get Tomcat to serve the source
+   file instead of the processed file for JSP files on a Windows
+   platform. This test should be replaced with a solution that doesn't
+   have the above side effects.
+
 
 Q: I am getting a 500 Error, what does it mean?
 
