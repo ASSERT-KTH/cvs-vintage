@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.88 2002/01/14 20:44:15 kminshull Exp $
+ * @version $Id: ReportIssue.java,v 1.89 2002/01/15 03:04:26 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -402,13 +402,16 @@ public class ReportIssue extends RequireLoginFirstAction
                 }
                 setTarget(data, template);
                 
-                // need to not hardcode summary here. !FIXME!
-                String summary = 
-                    ((AttributeValue)avMap.get("SUMMARY")).getValue();
-                summary = (summary == null) ? "" : " - " + summary;
+                // send email
+                String summary = issue.getDefaultText();
+                if ( summary.length() > 60 ) 
+                {
+                    summary = summary.substring(0,60) + "...";
+                }                
+                summary = (summary.length() == 0) ? summary : " - " + summary;
                 StringBuffer subj = new StringBuffer("[");
                 subj.append(issue.getModule().getRealName().toUpperCase());
-                subj.append("] Artifact #").append(issue.getUniqueId());
+                subj.append("] Issue #").append(issue.getUniqueId());
                 subj.append(summary);
                 transaction.sendEmail(new ContextAdapter(context), issue, 
                                       subj.toString(),

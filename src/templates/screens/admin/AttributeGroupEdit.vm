@@ -43,8 +43,8 @@
  </table>
 </div>
 
-#if (!$group.Attributes.isEmpty())
 <h3>Attributes in this group</h3>
+#if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th></th>
@@ -53,6 +53,7 @@
 <th>Active</th>
 <th>Required</th>
 <th>Quick search</th>
+<th>Default text</th>
 <th>Sequence #</th>
 </tr>
 #foreach ($attribute in $group.Attributes)
@@ -78,15 +79,25 @@
  <td>#booleanCheckbox ($rmaGroup.Active)</td>
  <td>#booleanCheckbox ($rmaGroup.Required)</td>
  <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
+ <td>
+#if ($rma.Attribute.isTextAttribute())
+    #booleanRadio ($rmaGroup.IsDefaultText)
+#else
+    N/A
+#end
+</td>
  <td>#numericSelect( "$raagGroup.Order.Key" 1 $maxNum $raagGroup.Order.Value 1 )</td>
  </tr>
  </td>
  </tr>
 #end
 </table>
-
+<p><small>
+ * Default text attribute is used when more distinguishing information than
+   the issue id is needed.  It is used in emails after an issue is entered,
+   for example.
+</small></p>
 #else
-  <h3>Attributes in this group</h3>
   <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
 #end
 

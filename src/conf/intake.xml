@@ -152,6 +152,7 @@
         <field name="Required" key="req" type="boolean"/>
         <field name="Dedupe" key="dedupe" type="boolean"/>
         <field name="QuickSearch" key="qs" type="boolean"/>
+        <field name="IsDefaultText" key="dt" type="boolean"/>
 <!--
         <field name="Order" key="order" type="int" 
                 mapToProperty="PreferredOrder">

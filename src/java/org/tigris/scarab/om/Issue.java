@@ -1481,6 +1481,89 @@ public class Issue
         }            
     }
 
+    /**
+     * if this RMA is the chosen attribute for email subjects then return
+     * true.  if not explicitly chosen, check the other RMA's for this module
+     * and if none is chosen as the email attribute, choose the highest
+     * ordered text attribute.
+     *
+     * @return the AttributeValue to use as the email subject, or null
+     * or null if no suitable AttributeValue could be found. 
+     */
+    public AttributeValue getDefaultTextAttributeValue()
+        throws Exception
+    {
+        ObjectKey attributeId = null;
+        // get related RMAs
+        Criteria crit = new Criteria()
+            .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+            .add(RModuleAttributePeer.ISSUE_TYPE_ID, getTypeId());
+        crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
+        List rmas = RModuleAttributePeer.doSelect(crit);
+            
+        // the code to find the correct attribute could be quite simple by
+        // looping and calling RMA.isDefaultText().  The code from
+        // that method can be restructured here to more efficiently
+        // answer this question.
+
+        for ( int i=0; i<rmas.size(); i++ ) 
+        {
+            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+            if ( rma.getDefaultTextFlag() ) 
+            {
+                    attributeId = rma.getAttributeId();
+                    break;
+            }
+        }
+            
+        if ( attributeId == null ) 
+        {
+            // locate the default text attribute
+            for ( int i=0; i<rmas.size(); i++ ) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+                if ( rma.getAttribute().isTextAttribute() ) 
+                {
+                    attributeId = rma.getAttributeId();
+                    break;
+                }
+            }
+        }
+
+        AttributeValue av = null;
+        if ( attributeId != null ) 
+        {
+            List avs = getAttributeValues();
+            for ( int i=0; i<avs.size(); i++ ) 
+            {
+                AttributeValue testAV = (AttributeValue)avs.get(i);
+                if ( attributeId.equals(testAV.getAttributeId()) ) 
+                {
+                    av = testAV;
+                    break;
+                }
+            }
+        }
+            
+        return av;
+    }
+
+    public String getDefaultText()
+        throws Exception
+    {
+        String s = null;
+        AttributeValue emailAV = getDefaultTextAttributeValue();
+        if ( emailAV != null ) 
+        {
+            s = emailAV.getValue();
+        }
+        else 
+        {
+            
+        }
+        
+        return (s == null ? "" : s);
+    }
 
     // *******************************************************************
     // Permissions methods

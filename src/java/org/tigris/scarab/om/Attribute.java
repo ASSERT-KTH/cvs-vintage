@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.36 2001/11/14 00:44:10 elicia Exp $
+  * @version $Id: Attribute.java,v 1.37 2002/01/15 03:04:26 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -250,6 +250,21 @@ public class Attribute
                 .equals("user");
         }
         return false;
+    }
+
+    public boolean isTextAttribute()
+        throws Exception
+    {
+        String[] textTypes = {"string", "email", "long-string"};
+        boolean isText = false;
+        if ( getTypeId() != null ) 
+        {
+            for ( int i=0; i<textTypes.length && !isText; i++ ) 
+            {
+                isText = textTypes[i].equals(getAttributeType().getName());
+            }
+        }
+        return isText;
     }
 
     /**

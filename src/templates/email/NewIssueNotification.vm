@@ -2,9 +2,9 @@
 Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
 #set ($attrValues = $issue.AttributeValuesMap)
-#set ($attVal = $attrValues.get("SUMMARY"))
+#set ($attVal = $issue.DefaultTextAttributeValue)
 
-$issue.UniqueId Summary:  $attVal.Value 
+$issue.UniqueId $attVal.RModuleAttribute.DisplayValue:  $attVal.Value 
 
 You can view the report at the following URL:
 <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>

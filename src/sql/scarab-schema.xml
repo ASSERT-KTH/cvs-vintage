@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.76 2002/01/10 06:35:16 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.77 2002/01/15 03:04:27 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -839,6 +839,13 @@
     -->
     <column name="QUICK_SEARCH" required="true" type="BOOLEANINT" 
         default="0" size="1"/>
+    <!--
+        Flag, which marks that this attribute should be used in the email
+        subject line, when an issue is created. May be used in other
+        contexts as well
+    -->
+    <column name="DEFAULT_TEXT_FLAG" required="true" type="BOOLEANINT" 
+        default="0" size="1" />
 
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>

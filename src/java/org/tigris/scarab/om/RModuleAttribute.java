@@ -46,6 +46,8 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine classes
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
@@ -131,5 +133,98 @@ public class RModuleAttribute
         {
             throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
         }            
+    }
+
+
+    /**
+     * if this RMA is the chosen attribute for email subjects then return
+     * true.  if not explicitly chosen, check the other RMA's for this module
+     * and if none is chosen as the email attribute, choose the highest
+     * ordered text attribute.
+     *
+     * @return a <code>boolean</code> value
+     */
+    public boolean getIsDefaultText()
+        throws Exception
+    {
+        boolean isDefault = getDefaultTextFlag();
+        if ( !isDefault && getAttribute().isTextAttribute() ) 
+        {
+            // get related RMAs
+            Criteria crit = new Criteria()
+                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId());
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            List rmas = RModuleAttributePeer.doSelect(crit);
+            
+            // check if another is chosen
+            boolean anotherIsDefault = false;
+            for ( int i=0; i<rmas.size(); i++ ) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+                if ( rma.getDefaultTextFlag() ) 
+                {
+                    anotherIsDefault = true;
+                    break;
+                }
+            }
+            
+            if ( !anotherIsDefault ) 
+            {
+                // locate the default text attribute
+                for ( int i=0; i<rmas.size(); i++ ) 
+                {
+                    RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+                    if ( rma.getAttribute().isTextAttribute() ) 
+                    {
+                        if ( rma.getAttributeId().equals(getAttributeId()) ) 
+                        {
+                            isDefault = true;
+                        }
+                        else 
+                        {
+                            anotherIsDefault = true;
+                        }
+                        
+                        break;
+                    }
+                }
+            }            
+        }
+        return isDefault;
+    }
+
+    /**
+     * This method sets the defaultTextFlag property and also makes sure 
+     * that no other related RMA is defined as the default.  It should be
+     * used instead of setDefaultTextFlag in application code.
+     *
+     * @param b a <code>boolean</code> value
+     */
+    public void setIsDefaultText(boolean b)
+        throws Exception
+    {
+        if (b && !getDefaultTextFlag()) 
+        {
+            // get related RMAs
+            Criteria crit = new Criteria()
+                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId());
+            List rmas = RModuleAttributePeer.doSelect(crit);
+            
+            // make sure no other rma is selected
+            for ( int i=0; i<rmas.size(); i++ ) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+                if ( rma.getDefaultTextFlag() ) 
+                {
+                    rma.setDefaultTextFlag(false);
+                    rma.save();
+                    break;
+                }
+            }
+        }
+        setDefaultTextFlag(b);
     }
 }
