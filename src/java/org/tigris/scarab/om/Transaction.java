@@ -186,12 +186,6 @@ public class Transaction
         
         // Get users for "to" field of email
         List toUsers = new LinkedList();
-        // First add created User
-        ScarabUser createdByUser = issue.getCreatedBy();
-        if (createdByUser != null)
-        {
-            toUsers.add(createdByUser);
-        }
         
         // Then add users who are assigned to "email-to" attributes
         List users = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
