@@ -1,9 +1,9 @@
-$Id: readme,v 1.21 2001/10/09 17:49:14 larryi Exp $
+$Id: readme,v 1.22 2001/10/21 17:40:17 larryi Exp $
         
                            Release Notes for:
-                           =====================
-                           TOMCAT Version 3.3rc2
-                           =====================
+                           ==================
+                           TOMCAT Version 3.3
+                           ==================
 
 
 0.  TABLE OF CONTENTS:
@@ -89,14 +89,6 @@ include the following:
      "conf/auto/tomcat-apache.conf" file will be written each time Tomcat
      is started.
 
-  6. The default auto-generated configuration files configure the external
-     web server to send all requests for a context to Tomcat.  That is the
-     best way to insure that behavior specified in the web application's
-     web.xml functions properly.  Also, by default, the configuration file
-     doesn't try to send any requests for the root context to Tomcat.  The
-     external web server continues to serve its root context as they would
-     normally.
-
 - Enhanced mod_jk Connector
 
   The mod_jk connector for Apache 1.3 now supports chunked input.
@@ -112,10 +104,10 @@ include the following:
   The "test" web application along with the test-tomcat.xml and associated
   support files are not part of the binary Tomcat 3.3 distribution.  The
   "test" web application is supplied separately as "test.war".  This file
-  may be downloaded from the "v3.3-rc2/apps" directory of the Tomcat 3.3rc2
+  may be downloaded from the "v3.3/apps" directory of the Tomcat 3.3
   release and placed in the "webapps" directory of your installation.  Running
   the test has been integrated into the Admin web application that is part of
-  the Tomcat 3.3rc2 distribution.  A preliminary step to running the test is to
+  the Tomcat 3.3 distribution.  A preliminary step to running the test is to
   "trust" the Admin web application.  It is set to "untrusted" by default. This
   change can be accomplished by executing the command from the TOMCAT_HOME
   directory with JAVA_HOME set:
@@ -123,7 +115,7 @@ include the following:
 	./bin/tomcat.sh enableAdmin    <-- Unix
 	bin\tomcat enableAdmin         <-- Windows
 
-  Start or restart Tomcat 3.3rc2 and invoke the following URL in your browser:
+  Start or restart Tomcat 3.3 and invoke the following URL in your browser:
 
 	http://localhost:8080/admin/test/test.jsp
 
@@ -197,8 +189,8 @@ for the Servlet 2.3 and JSP 1.2 specifications.
 Many new features have been added to Tomcat since the 3.2.x release.  Among the
 most important are:
 
-- The code has undergone a refactoring effort resulting in (we hope) improved
-  readability, ease of use, and performance.
+- The code has undergone a major refactoring effort resulting in improved
+  performance, expanded configurability, and easier to maintain code.
 
 - Auto-generated connector configuration files for mod_jk based connectors
   defaults to being generated on demand only.  This avoids the possibility
@@ -220,7 +212,7 @@ most important are:
 - The Tomcat documentation directory (i.e. TOMCAT_HOME/doc) is now included
   in the ROOT webapp and is available from a link in the root's index.html.
 
-- A modules directory has been added where add-on modules may be placed.
+- A "modules" directory has been added where add-on modules may be placed.
   An add-on module is a special War file that "deploys" a module that
   participates in Tomcat's behavior, like the modules found in the server.xml
   file.
@@ -232,11 +224,49 @@ most important are:
 - Many other improvements, too numerous to list.
 
 
-In addition, numerous changes have occured since the 3.2.x release.  Among the
-primary changes are:
+In addition to new features, numerous changes have occured from the
+Tomcat 3.2.x releases.  Among the more important behavior or usage
+differences are:
 
 - Your CLASSPATH environment variable is ignored by the Tomcat shell scripts
-  and batch files found int TOMCAT_HOME/bin.
+  and batch files found in TOMCAT_HOME/bin.  The classloader scheme in
+  Tomcat 3.3 is more flexible and you now have choices concerning how
+  classes are added.  See the Configuring Classes section of the
+  Tomcat User's Guide (tomcat-ug.html) for details.
+
+- Context declarations are normally not put in the server.xml file in
+  Tomcat 3.3.  Instead, these declarations are placed XML files separate
+  from server.xml.  See apps-admin.xml and apps-examples.xml files for a
+  couple of examples of the new approach.  For backwards compatibility,
+  you may still place context declarations in the server.xml file.
+
+- The default content of the auto-generated configuration files for external
+  web servers has changed. They now generate a configuration that forwards
+  all requests for Tomcat contexts to Tomcat, including requests for static
+  files.  This a allows the configuration specified in the context's web.xml
+  file to work correctly.  Also, the default configuration generated does not
+  add servlet or JSP functionality to the web server's "root" web site.
+
+- When Tomcat is used with an external web server, such as Apache, the
+  default behavior with respect to authentication has changed.  Previously,
+  authentication was always done by the web server, with the web server
+  providing the authenticated user.  This is now configurable, with the
+  default set to Tomcat doing its own authentication.  Add
+  tomcatAuthentication="false" to the Ajp13Interceptor to use the web
+  server's authentication.
+
+- Tomcat 3.3 now validates web.xml files during start up.  You may see errors
+  previously unreported by Tomcat 3.2.x.
+
+- The tomcat-users.xml file has moved from the "conf" to the "conf/users"
+  directory.  Also, it is no longer used by the default configuration of
+  Tomcat 3.3.  It continues to be the default file used by the SimpleRealm
+  module.  Instead, of tomcat-users.xml, the SimpleRealm module in the default
+  server.xml reads global-users.xml since those users apply to all contexts.
+  The apps-examples.xml context configuration includes an additional
+  SimpleRealm for the "/examples" context that reads the example-users.xml
+  file.  Similarly, the "/admin" context includes a SimpleRealm that reads
+  the admin-users.xml file.
 
 - The Tomcat Users Guide (i.e. tomcat-ug.html) is now in the TOMCAT_HOME/doc
   directory instead of the TOMCAT_HOME/doc/uguide directory as it Tomcat 3.2.x.
@@ -390,12 +420,12 @@ where it cause the resource not to be found.
 
 6.7 Generated Configuration Files for Web Connectors
 
-At startup time, Tomcat normally generates configuration files like
-"tomcat-apache.conf" to reflect the contexts that are defined.  However, the
-generated files may not reflect all configuration settings found inside the
-web application deployment descriptor file (web.xml) for your application.
-The simplest solution to this is to forward all requests for a particular
-context to Tomcat.  If you do not forward all requests, you will need to
+Tomcat normally generates configuration files like "mod-jk.conf" to reflect
+the contexts that are defined.  However, the generated files may not reflect
+all configuration settings found inside the web application deployment
+descriptor file (web.xml) for your web application.  The simplest solution
+to this is to forward all requests for a particular context to Tomcat, which
+is the default behavior.  If you do not forward all requests, you will need to
 configure any such settings that are relevant directly into your web
 server's configuration files.
 
