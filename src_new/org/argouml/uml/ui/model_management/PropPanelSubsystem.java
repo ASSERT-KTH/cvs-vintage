@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.17 2004/10/13 05:52:21 linus Exp $
+// $Id: PropPanelSubsystem.java,v 1.18 2004/11/22 19:34:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
         addField(Translator.localize("label.available-features"),
                 getFeatureScroll());
 
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("NewOperation"), 
+        new PropPanelButton(this, lookupIcon("NewOperation"), 
                 Translator.localize("button.new-operation"), 
                 "addOperation", null);
     }

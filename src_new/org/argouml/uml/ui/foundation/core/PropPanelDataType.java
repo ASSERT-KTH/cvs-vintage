@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.50 2004/11/01 19:55:15 mvw Exp $
+// $Id: PropPanelDataType.java,v 1.51 2004/11/22 19:34:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,14 +96,14 @@ public class PropPanelDataType extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("DataType"), 
+        new PropPanelButton(this, lookupIcon("DataType"), 
                 Translator.localize("button.new-datatype"), 
                 "newDataType", null);
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("NewAttribute"), 
+        new PropPanelButton(this, lookupIcon("NewAttribute"), 
             Translator.localize("button.new-enumeration-literal"),
             "addAttribute", null);
 
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("NewOperation"), 
+        new PropPanelButton(this, lookupIcon("NewOperation"), 
                 Translator.localize(
                 "button.new-operation"), "addOperation", null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

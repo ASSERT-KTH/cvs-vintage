@@ -1,4 +1,4 @@
-// $Id: PropPanelComponent.java,v 1.39 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelComponent.java,v 1.40 2004/11/22 19:34:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class PropPanelComponent extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-	new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
+	new PropPanelButton(this, lookupIcon("Reception"), 
             Translator.localize("button.new-reception"), 
             getActionNewReception());
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

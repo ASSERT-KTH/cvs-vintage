@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.27 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelGuard.java,v 1.28 2004/11/22 19:34:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class PropPanelGuard extends PropPanelModelElement {
         //addField(Translator.localize("UMLMenu", "label.language"), 
         // new UMLExpressionLanguageField(expressionModel, true));
 
-	new PropPanelButton(this, getButtonPanel(), 
+	new PropPanelButton(this,
             ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
             Translator.localize("button.go-up"), "navigateUp", null);
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

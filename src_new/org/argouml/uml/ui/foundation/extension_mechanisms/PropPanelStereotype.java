@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.41 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelStereotype.java,v 1.42 2004/11/22 19:34:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("Stereotype"), 
+        new PropPanelButton(this, lookupIcon("Stereotype"), 
                 Translator.localize("button.new-stereotype"), 
                 "newStereotype", null);
         addButton(new PropPanelButton2(this, 

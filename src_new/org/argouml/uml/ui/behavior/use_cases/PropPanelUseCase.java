@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.53 2004/11/11 14:27:17 mkl Exp $
+// $Id: PropPanelUseCase.java,v 1.54 2004/11/22 19:34:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,15 +96,15 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("UseCase"),
+        new PropPanelButton(this, lookupIcon("UseCase"),
                 Translator.localize("button.new-usecase"), 
                 "newUseCase", null);
-        new PropPanelButton(this, getButtonPanel(), 
+        new PropPanelButton(this, 
                 lookupIcon("ExtensionPoint"),
                 localize("New Extension Point"),
                 "newExtensionPoint",
                 null);
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
+        new PropPanelButton(this, lookupIcon("Reception"), 
                 Translator.localize("button.new-reception"), 
                 getActionNewReception());
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.50 2004/11/01 19:55:10 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.51 2004/11/22 19:34:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,7 +108,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateContainerElement()));
-        new PropPanelButton(this, getButtonPanel(), lookupIcon("Message"),
+        new PropPanelButton(this, lookupIcon("Message"),
 	    Translator.localize("button.new-action"),
 	    "addAction",
 	    "isAddActionEnabled");

@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.44 2004/11/01 19:55:17 mvw Exp $
+// $Id: PropPanelSignal.java,v 1.45 2004/11/22 19:34:14 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public class PropPanelSignal extends PropPanelModelElement {
 
         addButton(new PropPanelButton2(this, 
                 new ActionNavigateNamespace()));
-        new PropPanelButton(this, getButtonPanel(), 
+        new PropPanelButton(this, 
                 lookupIcon("SignalSending"), 
                 Translator.localize("button.new-signal"), 
                 "newSignal", null);

@@ -1,4 +1,4 @@
-// $Id: PropPanelAbstraction.java,v 1.23 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelAbstraction.java,v 1.24 2004/11/22 19:34:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class PropPanelAbstraction extends PropPanelDependency {
                 getClientScroll());
 
         // TODO: add Mapping
-        new PropPanelButton(this, getButtonPanel(), 
+        new PropPanelButton(this, 
                 ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
                 Translator.localize("button.go-up"), 
                 "navigateUp", null);

@@ -1,4 +1,4 @@
-// $Id: PropPanelButton.java,v 1.17 2004/09/16 20:56:07 mvw Exp $
+// $Id: PropPanelButton.java,v 1.18 2004/11/22 19:34:14 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,6 @@ public class PropPanelButton extends JButton
 
     /** Constructor for a new button in the propertypanel.
      * @param thePropPanel the property panel to use (usually this)
-     * @param buttonPanel the button panel to use (usually buttonPanel)
      * @param icon the icon of this button (choose one 
      *             from PropPanelModelElement)
      * @param toolTipText
@@ -76,7 +75,6 @@ public class PropPanelButton extends JButton
      */
     public PropPanelButton(
             PropPanel thePropPanel,
-            JComponent buttonPanel,
             Icon icon,
             String toolTipText,
             String theActionMethod,
@@ -121,7 +119,7 @@ public class PropPanelButton extends JButton
 
         setEnabled(false);
 
-        buttonPanel.add(this);
+        thePropPanel.addButton(this);
         addActionListener(this);
     }
     
@@ -130,19 +128,17 @@ public class PropPanelButton extends JButton
      *             a proppanel button using the old reflection method. 
      *
      * @param pp the properties panel
-     * @param buttonPanel the buttons panel
      * @param icon the icon
      * @param toolTipText the tooltip text
      * @param am the method for the action
      * @param em the method to see if it should be enabled
      */
     public PropPanelButton( PropPanel pp,
-            JComponent buttonPanel,
             Icon icon,
             String toolTipText,
             String am,
             String em) { 
-        this (pp, buttonPanel, icon, toolTipText, am, em, null);
+        this (pp, icon, toolTipText, am, em, null);
         
     }
     
@@ -150,17 +146,15 @@ public class PropPanelButton extends JButton
      * The constructor.
      * 
      * @param pp the properties panel
-     * @param buttonPanel the buttons panel
      * @param icon the icon
      * @param toolTipText the tooltip text
      * @param theAction the action
      */
     public PropPanelButton( PropPanel pp,
-            JComponent buttonPanel,
             Icon icon,
             String toolTipText,                        
             Action theAction) { 
-        this (pp, buttonPanel, icon, toolTipText, null, null, theAction);
+        this (pp, icon, toolTipText, null, null, theAction);
         
     }
 

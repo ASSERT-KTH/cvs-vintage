@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.47 2004/11/01 19:55:14 mvw Exp $
+// $Id: PropPanelInterface.java,v 1.48 2004/11/22 19:34:15 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class PropPanelInterface extends PropPanelClassifier {
 
 	addButton(new PropPanelButton2(this, 
             new ActionNavigateNamespace()));
-	new PropPanelButton(this, getButtonPanel(), lookupIcon("NewOperation"), 
+	new PropPanelButton(this, lookupIcon("NewOperation"), 
             Translator.localize(
             "button.new-operation"), "addOperation", null);
 	//new PropPanelButton(this,buttonPanel,generalizationIcon, 
@@ -98,7 +98,7 @@ public class PropPanelInterface extends PropPanelClassifier {
 	//new PropPanelButton(this,buttonPanel,realizationIcon, 
         //    Translator.localize("button.new-realization"),
         //    "addRealization",null);
-	new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
+	new PropPanelButton(this, lookupIcon("Reception"), 
             Translator.localize("button.new-reception"), 
             getActionNewReception());
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

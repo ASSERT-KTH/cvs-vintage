@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.44 2004/10/13 05:52:22 linus Exp $
+// $Id: PropPanelClassifierRole.java,v 1.45 2004/11/22 19:34:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,7 +114,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	addButton(new PropPanelButton2(this,
                 new ActionNavigateContainerElement()));
-	new PropPanelButton(this, getButtonPanel(), lookupIcon("Reception"), 
+	new PropPanelButton(this, lookupIcon("Reception"), 
             Translator.localize("button.new-reception"), 
             getActionNewReception());
 	addButton(new PropPanelButton2(this, 
