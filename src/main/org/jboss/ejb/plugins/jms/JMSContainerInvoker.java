@@ -47,7 +47,7 @@ import org.jboss.ejb.plugins.TxSupport;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans.
  * 
- * @version <tt>$Revision: 1.55 $</tt>
+ * @version <tt>$Revision: 1.56 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -443,10 +443,18 @@ public class JMSContainerInvoker
       log.debug("Using destination: " + destination);
       
       boolean isTopic;
-      if (destinationType.equals("javax.jms.Topic")) {
+      if (destinationType.equals("javax.jms.Topic"))
+      {
+         if ((destination instanceof Topic) == false)
+            throw new DeploymentException("Expected a topic destination-jndi-name=" 
+               + config.getDestinationJndiName());
          isTopic = true;
       }
-      else if (destinationType.equals("javax.jms.Queue")) {
+      else if (destinationType.equals("javax.jms.Queue"))
+      {
+         if ((destination instanceof Queue) == false)
+            throw new DeploymentException("Expected a queue destination-jndi-name=" 
+               + config.getDestinationJndiName());
          isTopic = false;
       }
       else {
@@ -464,56 +472,62 @@ public class JMSContainerInvoker
       }
       
       // Create a connection for the topic or queue
-      if (isTopic) {
-         Object factory = context.lookup(adapter.getTopicFactoryRef());
+      try
+      {
+         if (isTopic)
+         {
+            Object factory = context.lookup(adapter.getTopicFactoryRef());
 
-         if (username == null) {
-            if (useXAConnection) {
-               connection =
-                  ((XATopicConnectionFactory)factory).createXATopicConnection();
+            if (username == null)
+            {
+               if (useXAConnection)
+                  connection = ((XATopicConnectionFactory)factory).createXATopicConnection();
+               else
+                  connection = ((TopicConnectionFactory)factory).createTopicConnection();
             }
-            else {
-               connection =
-                  ((TopicConnectionFactory)factory).createTopicConnection();
+            else
+            {
+               if (useXAConnection)
+                  connection = ((XATopicConnectionFactory)factory).createXATopicConnection(username, password);
+               else
+                  connection = ((TopicConnectionFactory)factory).createTopicConnection(username, password);
             }
          }
-         else {
-            if (useXAConnection) {
-               connection =
-                  ((XATopicConnectionFactory)factory).
-                  createXATopicConnection(username, password);
+         else
+         { 
+            Object factory = context.lookup(adapter.getQueueFactoryRef());
+
+            if (username == null)
+            {
+               if (useXAConnection)
+                  connection = ((XAQueueConnectionFactory)factory).createXAQueueConnection();
+               else
+                  connection = ((QueueConnectionFactory)factory).createQueueConnection();
             }
-            else {
-               connection =
-                  ((TopicConnectionFactory)factory).
-                  createTopicConnection(username, password);
+            else
+            {
+               if (useXAConnection)
+                  connection = ((XAQueueConnectionFactory)factory).createXAQueueConnection(username, password);
+               else
+                  connection = ((QueueConnectionFactory)factory).createQueueConnection(username, password);
             }
          }
       }
-      else { // Queue
-         Object factory = context.lookup(adapter.getQueueFactoryRef());
-
-         if (username == null) {
-            if (useXAConnection) {
-               connection =
-                  ((XAQueueConnectionFactory)factory).createXAQueueConnection();
-            }
-            else {
-               connection =
-                  ((QueueConnectionFactory)factory).createQueueConnection();
-            }
+      catch (ClassCastException e)
+      {
+         if (isTopic)
+         {
+            if (useXAConnection)
+               throw new DeploymentException("Expected an XATopicConnectionFactory: " + adapter.getTopicFactoryRef());
+            else
+               throw new DeploymentException("Expected a TopicConnectionFactory: " + adapter.getTopicFactoryRef());
          }
-         else {
-            if (useXAConnection) {
-               connection =
-                  ((XAQueueConnectionFactory)factory).
-                  createXAQueueConnection(username, password);
-            }
-            else {
-               connection =
-                  ((QueueConnectionFactory)factory).
-                  createQueueConnection(username, password);
-            }
+         else
+         {
+            if (useXAConnection)
+               throw new DeploymentException("Expected an XAQueueConnectionFactory: " + adapter.getQueueFactoryRef());
+            else
+               throw new DeploymentException("Expected a QueueConnectionFactory: " + adapter.getQueueFactoryRef());
          }
       }
       log.debug("Using connection: " + connection);
