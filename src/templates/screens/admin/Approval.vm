@@ -5,7 +5,7 @@
 
 #if (!$scarabR.hasItemsToApprove())
 
- <h3>Open submissions</h3>
+ <h3>$l10n.OpenSubmissions</h3>
 
   <p class="alert">$l10n.NoItemsToApprove</p>
 
@@ -18,20 +18,20 @@
    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
  </div>
 
- <h3>Open submissions</h3>
+ <h3>$l10n.OpenSubmissions</h3>
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th nowrap="nowrap">Select</th>
-   <th>Date</th>
-   <th>Type</th>
-   <th>Submitted by</th>
-   ##<th>Project</th>
-   ##<th>User role</th>
-   <th>Name</th>
-   <th>Description</th>
-   <th>Comments</th>
-   <th>Action</th>
+   <th nowrap="nowrap">$l10n.Select</th>
+   <th>$l10n.Date</th>
+   <th>$l10n.Type</th>
+   <th>$l10n.SubmittedBy</th>
+   ##<th>$l10n.Project</th>
+   ##<th>$l10n.UserRole</th>
+   <th>$l10n.Name</th>
+   <th>$l10n.Description</th>
+   <th>$l10n.Comments</th>
+   <th>$l10n.Action</th>
   </tr>
 
 #foreach($query in $module.UnapprovedQueries)
@@ -40,7 +40,7 @@
 
   <td><input type="checkbox" name="query_id_$query.QueryId" /></td>
   <td>$format.getDate($scarabR.DateFormat, $query.CreatedDate)</td>
-  <td>Query</td>
+  <td>$l10n.Query</td>
 
   #set ($createdUser = $scarabR.getUser($query.UserId))
   <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId" />
@@ -49,10 +49,10 @@
   <td>#if ($query.Description) $query.Description #else &#160; #end</td>
   <td>#textAreaSmall("query_comment_$query.QueryId" "")</td>
   <td><select name="query_action_$query.QueryId">
-   <option value="none">No action</option>
-   <option value="comment">Comment only</option>
-   <option value="approve">Approve</option>
-   <option value="reject" >Reject</option>
+   <option value="none">$l10n.NoAction</option>
+   <option value="comment">$l10n.CommentOnly</option>
+   <option value="approve">$l10n.Approve</option>
+   <option value="reject" >$l10n.Reject</option>
    </select>
   </td>
  </tr>
@@ -64,22 +64,22 @@
 
   <td><input type="checkbox" name="template_id_$template.IssueId" /></td>
   <td>$format.getDate($scarabR.DateFormat, $template.CreatedDate)</td>
-  <td>enter issue template</td>
+  <td>$l10n.EnterIssueTemplate</td>
   #set ($createdUser = $template.CreatedBy)
   <input type = "hidden" name="template_user_$template.IssueId" value="$createdUser.UserId" />
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
    ##<td>$template.Module.Name</td>
-   ##<td>role X</td>
+   ##<td>$l10n.RoleX</td>
    #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
    <td>#textAreaSmall("template_comment_$template.IssueId" "")</textarea></td>
    <td>
     <select name="template_action_$template.IssueId">
-   <option value="none">No action</option>
-   <option value="comment">Comment only</option>
-   <option value="approve">Approve</option>
-   <option value="reject" >Reject</option>
+   <option value="none">$l10n.NoAction</option>
+   <option value="comment">$l10n.CommentOnly</option>
+   <option value="approve">$l10n.Approve</option>
+   <option value="reject" >$l10n.Reject</option>
     </select>
    </td>
   </tr>
@@ -89,7 +89,7 @@
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">Comments (sent to selected submittees)</th>
+   <th width="120">$l10n.Comments (sent to selected submittees)</th>
    <td>#textAreaMedium("global_comment" "")</td>
   </tr>
  </table>
@@ -97,7 +97,7 @@
 
 <div class="functnbar2">
   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
-  <input type="submit" value="Clear form" />
+  <input type="submit" value="$l10n.ClearForm" />
 </div>
 
 #end ## end of if (!list.empty || !list2.empty)
@@ -105,20 +105,20 @@
 #if (!$securityAdmin.getPendingGroupUserRoles($module).isEmpty() && $scarabR.hasPermission($scarabG.Permission.USER__APPROVE_ROLES, $module))
 
  <div class="functnbar">
-   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+   <input type="submit" value="$l10n.Submit" name="eventSubmit_doSubmit" />&#160; 
  </div>
 
-<h3>Approve role requests</h3>
+<h3>$l10n.ApproveRoleRequests</h3>
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-    <th>User</th>
+    <th>$l10n.User</th>
       
     #foreach ($role in $securityAdmin.NonRootRoles)
     <th>$role.Name</th>
     #end
-    <th>Defer</th>
-    <th>Deny</th>
+    <th>$l10n.Defer</th>
+    <th>$l10n.Deny</th>
 
   </tr>
 
@@ -142,10 +142,10 @@
     </td>
     #end    
     <td>
-      <input type="radio" name="$user.UserName" value="defer" />
+      <input type="radio" name="$user.UserName" value="$l10n.Defer" />
     </td>
     <td>
-      <input type="radio" name="$user.UserName" value="deny" />
+      <input type="radio" name="$user.UserName" value="$l10n.Deny" />
     </td>
   </tr>
   #end
@@ -154,7 +154,7 @@
 
 <div class="functnbar2">
  <input type="submit" name="eventSubmit_doApproveroles" 
-     value="Submit" />
+     value="$l10n.Submit" />
 </div>
 
 #end ## end of if (!list.empty)
