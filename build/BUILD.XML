@@ -30,7 +30,7 @@
   <property name="javadoc.dir" value="${dest.dir}/javadoc"/>
   <property name="mk.dir" value="${dest.dir}/build"/>
   <property name="testsuite.package.name" value="CH.ifa.draw.test"/>
-  <property name="testsuite" value="${testsuite.package.name}.JHDTestCase"/>
+  <property name="testsuite" value="${testsuite.package.name}.AllTests"/>
   
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
@@ -178,6 +178,7 @@
     <pathelement path = "${junitdoclet.class.path}"/>
     <pathelement path = "${namingstrategy.class.path}"/>
     <pathelement path = "${jdo.class.path}"/>
+    <pathelement path = "${batik.class.path}"/>
     <pathelement path = "${java.class.path}"/>
   </path>
   
