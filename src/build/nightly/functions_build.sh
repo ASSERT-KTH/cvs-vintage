@@ -179,13 +179,12 @@ fix_tomcat() {
   cp $ANT_HOME/lib/jaxp.jar $WS/dist/tomcat/lib
 }
 
-## Will build tomcat, copy the jaxp files, and zip the result
+## Will build tomcat and zip the result
 build_tomcat() {
   SUFIX=$1
   TARGET=$2
   
   ant_build jakarta-tomcat tomcat tomcat-build-$SUFIX.log $TARGET
-  fix_tomcat
   zip_dist tomcat tomcat-$SUFIX 
 }
 
