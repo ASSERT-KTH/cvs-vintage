@@ -71,11 +71,13 @@ public  class RModuleUserAttribute
      */
     public void delete(ScarabUser user) throws Exception 
     { 
-        if (user.hasPermission(ScarabSecurity.MODULE__EDIT, getModule()))
+        if (user.hasPermission(ScarabSecurity.USER__EDIT_PREFERENCES, 
+                               getModule()))
         {
             Criteria c = new Criteria()
                 .add(RModuleUserAttributePeer.MODULE_ID, getModuleId())
                 .add(RModuleUserAttributePeer.USER_ID, getUserId())
+                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleUserAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleUserAttributePeer.doDelete(c);
         }
