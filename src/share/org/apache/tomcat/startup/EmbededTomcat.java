@@ -156,6 +156,7 @@ public class EmbededTomcat {
     boolean help;
     boolean blocking=false;
 
+    String modulesFile = null;
     // prevent tomcat from starting.
     boolean nostart=false;
     
@@ -218,6 +219,14 @@ public class EmbededTomcat {
      */
     public void setConfig( String s ) {
 	attributes.put("config", s);
+    }
+
+    /**
+     * Set the location of the <code>modules.xml</code> file, to be used by
+     * ServXml reader.  <code>-modulesFile foo</code> on the command line.
+     */
+    public void setModulesFile(String mf) {
+	modulesFile = mf;
     }
 
     /** Tomcat will run in a sandboxed environment, under SecurityManager.
@@ -412,6 +421,10 @@ public class EmbededTomcat {
 	if( null!=conf ) {
 	    if( dL>0) debug( "Using config file " + conf);
 	    setModuleProperty( mid, "config",conf );
+	}
+	if( null != modulesFile ) {
+            if( dL > 0 ) debug("Using modules file " + modulesFile);
+	    setModuleProperty(mid,"moduleConfig", modulesFile);
 	}
     }
 
