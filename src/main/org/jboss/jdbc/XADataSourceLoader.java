@@ -7,18 +7,20 @@
 package org.jboss.jdbc;
 
 import java.io.PrintWriter;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.Properties;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.sql.XADataSource;
 import org.jboss.logging.LogWriter;
 import org.jboss.minerva.datasource.XAPoolDataSource;
-
-// MF FIXME NO WILDCARD IMPORTS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-import org.jboss.util.*;
+import org.jboss.util.ServiceMBeanSupport;
 import org.jboss.logging.Logger;
 
 /**
@@ -26,7 +28,7 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -42,9 +44,6 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         try {
             Class cls = Class.forName(xaDataSourceClass);
             vendorSource = (XADataSource)cls.newInstance();
-//            PrintWriter writer = new LogWriter(log);
-//            vendorSource.setLogWriter(writer);
-//            source.setLogWriter(writer);
         } catch(Exception e) {
             Logger.exception(e);
             throw new RuntimeException("Unable to initialize XA database pool '"+poolName+"': "+e);
@@ -111,6 +110,24 @@ public class XADataSourceLoader extends ServiceMBeanSupport
 
     public String getPassword() {
         return source.getJDBCPassword();
+    }
+
+    public void setLoggingEnabled(boolean enabled) {
+        PrintWriter writer = enabled ? new LogWriter(log) : null;
+        try {
+            source.setLogWriter(writer);
+            source.getDataSource().setLogWriter(writer);
+        } catch(Exception e) {
+            System.out.println("Unable to set logger for Minerva XA Pool!");
+        }
+    }
+
+    public boolean isLoggingEnabled() {
+        try {
+            return source.getLogWriter() != null;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
     public void setMinSize(int minSize) {
@@ -185,6 +202,14 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         return source.getShrinkPercent();
     }
 
+    public void setInvalidateOnError(boolean invalidate) {
+        source.setInvalidateOnError(invalidate);
+    }
+
+    public boolean isInvalidateOnError() {
+        return source.isInvalidateOnError();
+    }
+
     public void setTimestampUsed(boolean timestamp) {
         source.setTimestampUsed(timestamp);
     }
@@ -202,6 +227,25 @@ public class XADataSourceLoader extends ServiceMBeanSupport
     }
 
     public void startService() throws Exception {
+        initializePool();
+    }
+
+    public void stopService() {
+        // Unbind from JNDI
+        try {
+            String name = source.getPoolName();
+            new InitialContext().unbind("xa."+name);
+            log.log("XA Connection pool "+name+" removed from JNDI");
+            source.close();
+            log.log("XA Connection pool "+name+" shut down");
+        } catch (NamingException e) {
+            // Ignore
+        }
+    }
+
+	// Private -------------------------------------------------------
+
+    private void initializePool() throws NamingException, SQLException {
         Context ctx = null;
         Object mgr = null;
         source.setTransactionManagerJNDIName("TransactionManager");
@@ -221,21 +265,6 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         // Test database
         source.getConnection().close();
     }
-
-    public void stopService() {
-        // Unbind from JNDI
-        try {
-            String name = source.getPoolName();
-            new InitialContext().unbind("xa."+name);
-            log.log("XA Connection pool "+name+" removed from JNDI");
-            source.close();
-            log.log("XA Connection pool "+name+" shut down");
-        } catch (NamingException e) {
-            // Ignore
-        }
-    }
-
-	// Private -------------------------------------------------------
 
     private void bind(Context ctx, String name, Object val) throws NamingException {
         // Bind val to name in ctx, and make sure that all intermediate contexts exist
@@ -275,45 +304,4 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         }
         props.setProperty(property.substring(0, pos), property.substring(pos+1));
     }
-/*
-    private void setAdditionalProperties(Properties props) {
-        Iterator it = props.keySet().iterator();
-        while(it.hasNext()) {
-            String property = (String)it.next();
-            String value = props.getProperty(property);
-            try {
-                Class cls = source.getClass();
-                Method list[] = cls.getMethods();
-                Method setter = null;
-                for(int i=0; i<list.length; i++)
-                    if(list[i].getName().equals("set"+property) && list[i].getParameterTypes().length == 1) {
-                        setter = list[i];
-                        break;
-                    }
-                if(setter == null) throw new NoSuchMethodException("Unable to find 1-arg setter for property '"+property+"'");
-                Class argClass = setter.getParameterTypes()[0];
-                if(argClass.isPrimitive())
-                    argClass = getPrimitiveClass(argClass);
-                Constructor con = argClass.getDeclaredConstructor(new Class[]{String.class});
-                Object arg = con.newInstance(new Object[]{value});
-                setter.invoke(source, new Object[]{arg});
-            } catch(Exception e) {
-                log.error("Unable to set pool property '"+property+"' to '"+value+"': "+e);
-                Logger.exception(e);
-            }
-        }
-    }
-
-    private static Class getPrimitiveClass(Class source) {
-        if(source.equals(Boolean.TYPE)) return Boolean.class;
-        if(source.equals(Integer.TYPE)) return Integer.class;
-        if(source.equals(Float.TYPE)) return Float.class;
-        if(source.equals(Long.TYPE)) return Long.class;
-        if(source.equals(Double.TYPE)) return Double.class;
-        if(source.equals(Character.TYPE)) return Character.class;
-        if(source.equals(Short.TYPE)) return Short.class;
-        if(source.equals(Byte.TYPE)) return Byte.class;
-        return null;
-    }
-*/
 }

@@ -21,6 +21,8 @@ public interface XADataSourceLoaderMBean extends ServiceMBean {
     public String getPassword();
     public void setProperties(String properties);
     public String getProperties();
+    public void setLoggingEnabled(boolean enabled);
+    public boolean isLoggingEnabled();
     public void setMinSize(int minSize);
     public int getMinSize();
     public void setMaxSize(int maxSize);
@@ -39,6 +41,8 @@ public interface XADataSourceLoaderMBean extends ServiceMBean {
     public long getShrinkMinIdleTime();
     public void setShrinkPercent(float percent);
     public float getShrinkPercent();
+    public void setInvalidateOnError(boolean invalidate);
+    public boolean isInvalidateOnError();
     public void setTimestampUsed(boolean timestamp);
     public boolean isTimestampUsed();
 }

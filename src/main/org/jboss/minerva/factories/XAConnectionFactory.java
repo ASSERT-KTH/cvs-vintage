@@ -7,13 +7,22 @@
 package org.jboss.minerva.factories;
 
 import java.io.PrintWriter;
-import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
-import javax.transaction.*;
-import javax.transaction.xa.*;
-import org.jboss.minerva.pools.*;
-import org.jboss.minerva.xa.*;
+import java.sql.SQLException;
+import java.util.HashMap;
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
+import javax.sql.XAConnection;
+import javax.sql.XADataSource;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.xa.XAResource;
+import org.jboss.minerva.pools.ObjectPool;
+import org.jboss.minerva.pools.PoolObjectFactory;
+import org.jboss.minerva.xa.TransactionListener;
+import org.jboss.minerva.xa.XAConnectionImpl;
 import org.jboss.logging.Logger;
 
 /**
@@ -23,7 +32,13 @@ import org.jboss.logging.Logger;
  * and any work done isn't associated with the java.sql.Connection anyway.
  * <P><B>Note:</B> This implementation requires that the TransactionManager
  * be bound to a JNDI name.</P>
- * @version $Revision: 1.5 $
+ * <P><B>Note:</B> This implementation has special handling for Minerva JDBC
+ * 1/2 XA Wrappers.  Namely, when a request comes in, if it is for a wrapper
+ * connection and it has the same current transaction as a previous active
+ * connection, the same previous connection will be returned.  Otherwise,
+ * you won't be able to share changes across connections like you can with
+ * the native JDBC 2 Standard Extension implementations.</P>
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -36,6 +51,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     private TransactionListener transListener;
     private ObjectPool pool;
     private PrintWriter log;
+    private HashMap wrapperTx;
 
     /**
      * Creates a new factory.  You must set the XADataSource and
@@ -43,6 +59,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public XAConnectionFactory() throws NamingException {
         ctx = new InitialContext();
+        wrapperTx = new HashMap();
         listener = new ConnectionEventListener() {
             public void connectionErrorOccurred(ConnectionEvent evt) {
                 closeConnection(evt, XAResource.TMFAIL);
@@ -54,12 +71,12 @@ public class XAConnectionFactory extends PoolObjectFactory {
 
             private void closeConnection(ConnectionEvent evt, int status) {
                 XAConnection con = (XAConnection)evt.getSource();
-                boolean transaction = false;
+                Transaction trans = null;
                 try {
                     TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
                     if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-                        transaction = true;
-                        tm.getTransaction().delistResource(con.getXAResource(), status);
+                        trans = tm.getTransaction();
+                        trans.delistResource(con.getXAResource(), status);
                     }
                 } catch(Exception e) {
                     Logger.exception(e);
@@ -71,7 +88,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                     // Real XAConnection -> not associated w/ transaction
                     pool.releaseObject(con);
                 } else {
-                    if(!transaction) {
+                    if(trans == null) {
                         // Wrapper - we can only release it if there's no current transaction
                         ((XAConnectionImpl)con).rollback();
                         pool.releaseObject(con);
@@ -82,6 +99,9 @@ public class XAConnectionFactory extends PoolObjectFactory {
         transListener = new TransactionListener() {
             public void transactionFinished(XAConnectionImpl con) {
                 con.clearTransactionListener();
+                Object tx = wrapperTx.remove(con);
+                if(tx != null)
+                    wrapperTx.remove(tx);
                 pool.releaseObject(con);
             }
         };
@@ -174,10 +194,12 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public Object prepareObject(Object pooledObject) {
         XAConnection con = (XAConnection)pooledObject;
+        TransactionManager tm = null;
+        Transaction trans = null;
         try {
-            TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
+            tm = (TransactionManager)ctx.lookup(tmJndiName);
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-                Transaction trans = tm.getTransaction();
+                trans = tm.getTransaction();
                 trans.enlistResource(con.getXAResource());
                 con.addConnectionEventListener(listener);
                 if(log != null) log.println("Enlisted with transaction.");
@@ -188,8 +210,13 @@ public class XAConnectionFactory extends PoolObjectFactory {
             Logger.exception(e);
             throw new RuntimeException("Unable to register with TransactionManager: "+e);
         }
-        if(con instanceof XAConnectionImpl)
+        if(con instanceof XAConnectionImpl) {
             ((XAConnectionImpl)con).setTransactionListener(transListener);
+            if(trans != null) {
+                wrapperTx.put(con, trans); // For JDBC 1/2 wrappers, remember which
+                wrapperTx.put(trans, con); // connection goes with a given transaction
+            }
+        }
         return con;
     }
 
@@ -201,5 +228,21 @@ public class XAConnectionFactory extends PoolObjectFactory {
         try {
             con.close();
         } catch(SQLException e) {}
+    }
+
+    /**
+     * If a new object is requested and it is a JDBC 1/2 wrapper connection
+     * in the same Transaction as an existing connection, return that same
+     * connection.
+     */
+    public Object isUniqueRequest() {
+        try {
+            TransactionManager tm = (TransactionManager)ctx.lookup(tmJndiName);
+            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                Transaction trans = tm.getTransaction();
+                return wrapperTx.get(trans);
+            }
+        } catch(Exception e) {}
+        return null;
     }
 }

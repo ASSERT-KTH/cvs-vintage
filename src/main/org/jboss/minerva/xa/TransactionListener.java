@@ -6,9 +6,11 @@
  */
 package org.jboss.minerva.xa;
 
+import javax.transaction.Transaction;
+
 /**
  * Callback for notification when a transaction is finished.
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public interface TransactionListener {

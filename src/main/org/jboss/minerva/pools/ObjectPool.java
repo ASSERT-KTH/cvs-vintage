@@ -6,8 +6,11 @@
  */
 package org.jboss.minerva.pools;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import org.jboss.logging.Logger;
 /**
  * A generic object pool.  You must provide a PoolObjectFactory (or the class
@@ -25,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -39,6 +42,7 @@ public class ObjectPool implements PoolEventListener {
     private String poolName;
 
     private HashMap objects = null;
+    private HashSet deadObjects = null;
     private int minSize = 0;
     private int maxSize = 0;
     private boolean shrinks = false;
@@ -50,6 +54,7 @@ public class ObjectPool implements PoolEventListener {
     private long lastGC = System.currentTimeMillis();
     private boolean blocking = false;
     private boolean trackLastUsed = false;
+    private boolean invalidateOnError = false;
     private PrintWriter logWriter = null;
 
     /**
@@ -434,6 +439,28 @@ public class ObjectPool implements PoolEventListener {
     public boolean isTimestampUsed() {return trackLastUsed;}
 
     /**
+     * Sets the response for object errors.  If this flag is set and an error
+     * event occurs, the object is removed from the pool entirely.  Otherwise,
+     * the object is returned to the pool of available objects.  For example, a
+     * SQL error may not indicate a bad database connection (flag not set),
+     * while a TCP/IP error probably indicates a bad network connection (flag
+     * set).  If this flag is not set, you can still manually invalidate
+     * objects using markObjectAsInvalid.
+     * @see #markObjectAsInvalid
+     * @see #objectError
+     */
+    public void setInvalidateOnError(boolean invalidate) {
+        if(objects != null)
+            throw new IllegalStateException(INITIALIZED);
+        invalidateOnError = invalidate;
+    }
+
+    /**
+     * Gets whether objects are removed from the pool in case of errors.
+     */
+    public boolean isInvalidateOnError() {return invalidateOnError;}
+
+    /**
      * Prepares the pool for use.  This must be called exactly once before
      * getObject is even called.  The pool name and object factory must be set
      * before this call will succeed.
@@ -446,6 +473,7 @@ public class ObjectPool implements PoolEventListener {
             throw new IllegalStateException("Factory and Name must be set before pool initialization!");
         if(objects != null)
             throw new IllegalStateException("Cannot initialize more than once!");
+        deadObjects = new HashSet();
         objects = new HashMap();
         factory.poolStarted(this, logWriter);
         lastGC = System.currentTimeMillis();
@@ -489,6 +517,10 @@ public class ObjectPool implements PoolEventListener {
         if(objects == null)
             throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
 
+        Object result = factory.isUniqueRequest();
+        if(result != null) // If this is identical to a previous request,
+            return result; // return the same result.  This is unusual.
+
         while(true) {
             Iterator it = new HashSet(objects.values()).iterator();
             while(it.hasNext()) {
@@ -497,7 +529,7 @@ public class ObjectPool implements PoolEventListener {
                     try {
                         rec.setInUse(true);
                         Object ob = rec.getObject();
-                        Object result = factory.prepareObject(ob);
+                        result = factory.prepareObject(ob);
                         if(result != ob) rec.setClientObject(result);
                         if(result instanceof PooledObject)
                             ((PooledObject)result).addPoolEventListener(this);
@@ -513,7 +545,7 @@ public class ObjectPool implements PoolEventListener {
                     Object ob = factory.createObject();
                     ObjectRecord rec = new ObjectRecord(ob);
                     objects.put(ob, rec);
-                    Object result = factory.prepareObject(ob);
+                    result = factory.prepareObject(ob);
                     if(result != ob) rec.setClientObject(result);
                     if(result instanceof PooledObject)
                         ((PooledObject)result).addPoolEventListener(this);
@@ -535,7 +567,7 @@ public class ObjectPool implements PoolEventListener {
         }
 
         log("Pool "+this+" couldn't find an object to return!");
-        return null;
+        return result;
     }
 
     /**
@@ -567,6 +599,22 @@ public class ObjectPool implements PoolEventListener {
     }
 
     /**
+     * Indicates that an object is no longer valid, and should be removed from
+     * the pool entirely.  This should be called before the object is returned
+     * to the pool (specifically, before factory.returnObject returns), or else
+     * the object may be given out again by the time this is called!  Also, you
+     * still need to actually return the object to the pool by calling
+     * releaseObject, if you aren't calling this during that process already.
+     * @param Object The object to invalidate, which must be the exact object
+     *               returned by getObject
+     */
+    public void markObjectAsInvalid(Object object) {
+        if(deadObjects == null)
+            throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
+        deadObjects.add(object);
+    }
+
+    /**
      * Returns an object to the pool.  This must be the exact object that was
      * given out by getObject, and it must be returned to the same pool that
      * generated it.  If other clients are blocked waiting on an object, the
@@ -577,6 +625,8 @@ public class ObjectPool implements PoolEventListener {
     public void releaseObject(Object object) {
         if(objects == null)
             throw new IllegalStateException("Tried to use pool before it was Initialized or after it was ShutDown!");
+        boolean removed = false;  // Whether we returned to the pool, or threw out entirely
+
         synchronized(object) {
             Object pooled = null;
             try {
@@ -593,9 +643,25 @@ public class ObjectPool implements PoolEventListener {
             if(object instanceof PooledObject)
                 ((PooledObject)object).removePoolEventListener(this);
             factory.returnObject(object);
-            rec.setInUse(false);
+            if(deadObjects.contains(object)) {
+                objects.remove(pooled);
+                try {
+                    factory.deleteObject(pooled);
+                } catch(Exception e) {
+                    log("Pool "+this+" factory ("+factory.getClass().getName()+" delete error: "+e);
+                }
+                rec.close();
+                deadObjects.remove(object);
+                removed = true;
+            } else {
+                rec.setInUse(false);
+                removed = false;
+            }
         }
-        log("Pool "+this+" returned object "+object+" to the pool.");
+        if(removed)
+            log("Pool "+this+" destroyed object "+object+".");
+        else
+            log("Pool "+this+" returned object "+object+" to the pool.");
         if(blocking) {
             synchronized(this) {
                 notify();
@@ -633,9 +699,12 @@ public class ObjectPool implements PoolEventListener {
 
     /**
      * If the object had an error, we assume this will propogate and preclude it
-     * from being closed, so we will close it.
+     * from being closed, so we will close it.  If the invalidateOnError flag
+     * is set, the object will be removed from the pool entirely.
      */
     public void objectError(PoolEvent evt) {
+        if(invalidateOnError)
+            markObjectAsInvalid(evt.getSource());
         releaseObject(evt.getSource());
     }
 

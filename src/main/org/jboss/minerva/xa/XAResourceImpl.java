@@ -6,7 +6,9 @@
  */
 package org.jboss.minerva.xa;
 
-import javax.transaction.xa.*;
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 import java.sql.*;
 
 /**
@@ -20,7 +22,7 @@ import java.sql.*;
  * <P><FONT COLOR="RED"><B>Warning:</B></FONT></P> This implementation assumes
  * that forget will be called after a failed commit or rollback.  Otherwise,
  * the database connection will never be closed.</P>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAResourceImpl implements XAResource {

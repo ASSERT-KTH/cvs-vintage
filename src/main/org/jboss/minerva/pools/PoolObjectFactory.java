@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 /**
  * Creates objects to be used in an object pool.  This is a class instead of
  * an interface so you can ignore any of the methods you don't need.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public abstract class PoolObjectFactory {
@@ -107,5 +107,18 @@ public abstract class PoolObjectFactory {
      * is called when the pool shrinks, and when the pool is shut down.
      */
     public void deleteObject(Object pooledObject) {
+    }
+
+    /**
+     * Decides whether a request for an object should be fulfilled by an
+     * object checked out of the pool previously, or a new object.  In general,
+     * every request should generate a new object, so this should return null.
+     * @return An existing object, if this request is effectively the same as
+     *         a previous request and the result should be shared.  <B>null</B>
+     *         if this is a unique request and should be fulfilled by a unique
+     *         object.
+     */
+    public Object isUniqueRequest() {
+        return null;
     }
 }

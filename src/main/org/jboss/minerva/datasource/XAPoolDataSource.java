@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  * and XAConnectionFactory.
  * @see org.jboss.minerva.pools.ObjectPool
  * @see org.jboss.minerva.factories.XAConnectionFactory
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactory {
@@ -120,6 +120,8 @@ public class XAPoolDataSource implements DataSource, Referenceable, ObjectFactor
     public long getGCMinIdleTime() {return pool.getGCMinIdleTime();}
     public void setGCInterval(long millis) {pool.setGCInterval(millis);}
     public long getGCInterval() {return pool.getGCInterval();}
+    public void setInvalidateOnError(boolean invalidate) {pool.setInvalidateOnError(invalidate);}
+    public boolean isInvalidateOnError() {return pool.isInvalidateOnError();}
     public void setTimestampUsed(boolean timestamp) {pool.setTimestampUsed(timestamp);}
     public boolean isTimestampUsed() {return pool.isTimestampUsed();}
 
