@@ -1,4 +1,4 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.17 2005/01/23 20:36:42 mvw Exp $
+// $Id: ActionDeleteFromDiagram.java,v 1.18 2005/01/31 21:03:00 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.ui.UMLAction;
@@ -93,9 +94,10 @@ public class ActionDeleteFromDiagram extends UMLAction {
         // return false if current diagram is a statechart diagram
         Object targetP = ProjectManager.getManager()
             .getCurrentProject().getActiveDiagram();
-        if (targetP instanceof UMLStateDiagram)
+        if ((targetP instanceof UMLStateDiagram) 
+                || (targetP instanceof UMLActivityDiagram)) {
                 return false;
-
+        }
         try {
             Editor ce = Globals.curEditor();
 	    if (ce == null) {
