@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.37 2002/03/14 01:13:14 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.38 2002/04/16 15:51:18 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -357,7 +357,8 @@ public class ScarabLink extends TemplateLink
             if (perm != null)
             {
                 ScarabRequestTool scarabR = 
-                    (ScarabRequestTool)org.apache.turbine.modules.Module.getTemplateContext(data)
+                    (ScarabRequestTool)
+                    org.apache.turbine.modules.Module.getTemplateContext(data)
                     .get(ScarabConstants.SCARAB_REQUEST_TOOL);
                 Module currentModule = scarabR.getCurrentModule();
                 if ( currentModuleId != null )
