@@ -1,4 +1,4 @@
-// $Id: ActionResolve.java,v 1.2 2004/11/01 10:55:21 mkl Exp $
+// $Id: ActionResolve.java,v 1.3 2004/11/21 10:22:19 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,8 @@ public class ActionResolve extends ToDoItemAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	DismissToDoItemDialog dialog = new DismissToDoItemDialog(ProjectBrowser.getInstance());
+	DismissToDoItemDialog dialog = new DismissToDoItemDialog(
+            ProjectBrowser.getInstance());
 	dialog.setTarget(getRememberedTarget());
 	dialog.setVisible(true);
     }

@@ -1,4 +1,4 @@
-// $Id: GoListToPriorityToItem.java,v 1.11 2004/11/01 10:55:20 mkl Exp $
+// $Id: GoListToPriorityToItem.java,v 1.12 2004/11/21 10:22:18 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.cognitive.ui;
 
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
