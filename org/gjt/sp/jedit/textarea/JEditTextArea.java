@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.333 2004/12/23 19:33:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.334 2004/12/24 23:47:03 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1584,6 +1584,7 @@ forward_scan:		do
 	 */
 	public void selectNone()
 	{
+		invalidateSelectedLines();
 		setSelection((Selection)null);
 	} //}}}
 
@@ -1597,6 +1598,7 @@ forward_scan:		do
 	public void setSelection(Selection[] selection)
 	{
 		// invalidate the old selection
+		invalidateSelectedLines();
 		selectionManager.setSelection(selection);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
@@ -1610,6 +1612,7 @@ forward_scan:		do
 	 */
 	public void setSelection(Selection selection)
 	{
+		invalidateSelectedLines();
 		selectionManager.setSelection(selection);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
@@ -1623,6 +1626,7 @@ forward_scan:		do
 	 */
 	public void addToSelection(Selection[] selection)
 	{
+		invalidateSelectedLines();
 		selectionManager.addToSelection(selection);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
@@ -1636,6 +1640,7 @@ forward_scan:		do
 	 */
 	public void addToSelection(Selection selection)
 	{
+		invalidateSelectedLines();
 		selectionManager.addToSelection(selection);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
@@ -1660,6 +1665,7 @@ forward_scan:		do
 	 */
 	public void removeFromSelection(Selection sel)
 	{
+		invalidateSelectedLines();
 		selectionManager.removeFromSelection(sel);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
@@ -1677,6 +1683,7 @@ forward_scan:		do
 		if(sel == null)
 			return;
 
+		invalidateSelectedLines();
 		selectionManager.removeFromSelection(sel);
 		finishCaretUpdate(caretLine,NO_SCROLL,true);
 	} //}}}
