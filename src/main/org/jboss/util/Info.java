@@ -19,7 +19,7 @@ import org.apache.log4j.Category;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class Info implements InfoMBean, MBeanRegistration {
 	// Constants -----------------------------------------------------
@@ -63,7 +63,7 @@ public class Info implements InfoMBean, MBeanRegistration {
 
 		StringBuffer rc= new StringBuffer();
 
-		rc.append("<B>");
+		rc.append("<BR><B>");
 		rc.append("Thread Group: " + group.getName());
 		rc.append("</B> : ");
 		rc.append("max priority:" + group.getMaxPriority() + ", demon:" + group.isDaemon());
@@ -121,7 +121,17 @@ public class Info implements InfoMBean, MBeanRegistration {
 			root= root.getParent();
 		}
 
-		String rc= getThreadGroupInfo(root);
+		// I'm not sure why what gets reported is off by +1, 
+		// but I'm adjusting so that it is consistent with the display
+		int activeThreads = root.activeCount()-1;
+		// I'm not sure why what gets reported is off by -1
+		// but I'm adjusting so that it is consistent with the display
+		int activeGroups = root.activeGroupCount()+1;
+		
+		String rc=
+		    "<b>Total Threads:</b> "+activeThreads+"<br>"+
+		    "<b>Total Thread Groups:</b> "+activeGroups+"<br>"+
+			getThreadGroupInfo(root) ;
 		return rc;
 	}
 }

@@ -79,8 +79,6 @@ public class StdServerSessionPool implements ServerSessionPool {
 	    this.transacted= transacted;
 	    this.poolSize= maxSession;
 
-
-		threadGroup = new ThreadGroup("ASF Session Pool Threads");
 		executor = new PooledExecutor(poolSize);
 		executor.setMinimumPoolSize(0);
 		executor.setKeepAliveTime(1000*30);
@@ -202,7 +200,7 @@ public class StdServerSessionPool implements ServerSessionPool {
 	}
     
 	private PooledExecutor executor;
-	private ThreadGroup threadGroup;
+	static private ThreadGroup threadGroup = new ThreadGroup("ASF Session Pool Threads");
 
 	Executor getExecutor() {
 		return executor;
