@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/WARUtil.java,v 1.2 1999/11/01 21:52:52 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/01 21:52:52 $
  *
  * ====================================================================
  *
@@ -71,6 +71,7 @@ import java.io.FileOutputStream;
 import java.net.URL;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.io.FileNotFoundException;
 
 /**
  *
@@ -78,6 +79,12 @@ import java.net.MalformedURLException;
  */
 
 public class WARUtil {
+    /** Expand a WAR/Jar file in a directory.
+     *  @param dir destination directory
+     *  @param war URL for the source WAR/JAR/ZIP file. Starting
+     *         and ending "/" will be removed
+     *
+     */ 
     public static void expand(File dir, URL war)
     throws MalformedURLException, IOException {
         String s = trim(war.getFile(), "/");
@@ -86,20 +93,25 @@ public class WARUtil {
 	ZipEntry ze = null;
 
 	while ((ze = zis.getNextEntry()) != null) {
-            File f = new File(dir, ze.getName());
+            try {
+		File f = new File(dir, ze.getName());
 
-            if (ze.isDirectory()) {
-                f.mkdirs(); 
-	    } else {
-	        byte[] buffer = new byte[1024];
-		int length = 0;
-	        FileOutputStream fos = new FileOutputStream(f);
-
-		while ((length = zis.read(buffer)) >= 0) {
-		    fos.write(buffer, 0, length);
+		if (ze.isDirectory()) {
+		    f.mkdirs(); 
+		} else {
+		    byte[] buffer = new byte[1024];
+		    int length = 0;
+		    FileOutputStream fos = new FileOutputStream(f);
+		    
+		    while ((length = zis.read(buffer)) >= 0) {
+			fos.write(buffer, 0, length);
+		    }
+		    
+		    fos.close();
 		}
-
-		fos.close();
+	    } catch( FileNotFoundException ex ) {
+		// XXX replace with a call to log() when available
+		System.out.println("WARUtil: FileNotFoundException: " +  ze.getName() + " / " + s );
 	    }
 	}
 
