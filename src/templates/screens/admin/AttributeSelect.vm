@@ -48,7 +48,6 @@ $page.setTitle("Select global attribute")
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm" />
 
 
 #AttributeSelectBar("")
@@ -63,10 +62,7 @@ $page.setTitle("Select global attribute")
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">
-<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-<img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-</th>
+<th nowrap="nowrap"></th>
 <th>Input type</th>
 <th>Attribute name</th>
 <th>Description</th>
