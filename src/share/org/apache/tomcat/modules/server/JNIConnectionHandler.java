@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.9 2001/02/27 02:55:41 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2001/02/27 02:55:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIConnectionHandler.java,v 1.10 2001/08/15 02:30:29 mmanders Exp $
+ * $Revision: 1.10 $
+ * $Date: 2001/08/15 02:30:29 $
  *
  * ====================================================================
  *
@@ -127,6 +127,8 @@ public class JNIConnectionHandler extends BaseInterceptor {
 	String os=System.getProperty( "os.name" ).toLowerCase();
         if( os.indexOf("windows")>= 0) {
             f = new File(f, "jni_connect.dll");
+        } else if ( os.indexOf("netware")>= 0) {
+            f = new File(f, "jni_conn.nlm");
         } else {
             f = new File(f, "jni_connect.so");
         }
