@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.178 2004/03/08 06:56:27 linus Exp $
+// $Id: ModelFacade.java,v 1.179 2004/03/08 08:33:02 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4808,9 +4808,9 @@ public class ModelFacade {
             handle instanceof MModelElement
                 && container instanceof MNamespace) {
             ((MModelElement) handle).setNamespace((MNamespace) container);
-        }
-
-	illegalArgument(handle, container);
+        } else {
+	    illegalArgument(handle, container);
+	}
     }
 
     /**
