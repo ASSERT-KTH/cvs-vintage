@@ -85,12 +85,6 @@
             <fileset dir="${tomcat.dist.dir}/common"/>
         </copy>
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
-        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
-        <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
-        <filter token="USER_SERVICE" value="${scarab.user.service}"/>
-        <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
-        <filter token="EXTRA_TR_PROPERTIES" 
-            value="${scarab.extra.tr.properties}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
@@ -141,12 +135,10 @@
         <copy todir="${build.project}/images" filtering="no">
             <fileset dir="${src.images.dir}" defaultexcludes="no"/>
         </copy>
-<!-- No longer needed, but will be needed in the WAR creation step
-     in the future, so I am leaving it here for now. -JSS
-        <copy todir="${build.project}/templates" filtering="no">
-            <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
-        </copy>
--->
+
+        <!-- Conditionally copy templates -->
+        <antcall target="copy-templates"/>
+
         <copy todir="${build.project}/resources" filtering="no">
             <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
         </copy>
@@ -156,8 +148,23 @@
             </fileset>
         </copy>
 
+        <condition property="template.path" value="/WEB-INF">
+            <equals arg1="${copy.templates}" arg2="true"/>
+        </condition>
+        <condition property="template.path" value="file://${src.dir}">
+            <not>
+                <equals arg1="${copy.templates}" arg2="true"/>
+            </not>
+        </condition>
+
         <!-- things to go into the web-inf directory -->
-        <filter token="ABSOLUTE_PATH" value="file://${src.dir}"/>
+        <filter token="TEMPLATE_PATH" value="${template.path}"/>
+        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
+        <filter token="USER_SERVICE" value="${scarab.user.service}"/>
+        <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
+        <filter token="EXTRA_TR_PROPERTIES" 
+            value="${scarab.extra.tr.properties}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
@@ -196,6 +203,23 @@
         <antcall target="copy-lucene"/>
         
         <mkdir dir="${build.project}/logs"/>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Copies templates to WEB-INF directory, if specified                -->
+    <!-- ================================================================== -->
+    <target name="copy-templates" if="copy.templates">
+
+        <copy todir="${build.project.webinf}/templates" filtering="no">
+            <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
+        </copy>
+    </target>
+    <target name="check-requested-template-dir">
+        <condition property="copy.templates">
+            <not>
+                <equals arg1="${templates.dir}" arg2="cvs"/>
+            </not>
+        </condition>
     </target>
 
     <!-- ================================================================== -->
