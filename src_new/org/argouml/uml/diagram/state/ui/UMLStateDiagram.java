@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.34 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.35 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.34 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: UMLStateDiagram.java,v 1.35 2003/08/31 19:56:06 alexb Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -224,7 +224,7 @@ public class UMLStateDiagram extends UMLDiagram {
     }
 
     public MStateMachine getStateMachine() {
-        return ((StateDiagramGraphModel) getGraphModel()).getMachine();
+        return (MStateMachine)((StateDiagramGraphModel) getGraphModel()).getMachine();
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.6 2003/06/29 23:52:18 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.7 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,20 +25,19 @@
 // File: ActionCreatePseudostate.java
 // Classes: ActionCreatePseudostate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ActionCreatePseudostate.java,v 1.6 2003/06/29 23:52:18 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.7 2003/08/31 19:56:06 alexb Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
 import java.util.Hashtable;
 
 import org.argouml.ui.CmdCreateNode;
+import org.argouml.model.ModelFacade;
+
 import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
-
-
 /**  */
-
 public class ActionCreatePseudostate extends CmdCreateNode {
 
     ////////////////////////////////////////////////////////////////
@@ -46,10 +45,13 @@ public class ActionCreatePseudostate extends CmdCreateNode {
 
     /** Construct a new Cmd with the given classes for the NetNode
      *  and its FigNode. */
-    public ActionCreatePseudostate(MPseudostateKind kind, String name) {
+    public ActionCreatePseudostate(Object kind, String name) {
 	super(new Hashtable(), name);
-	setArg("className", MPseudostate.class);
-	//??? don't know, Toby, nsuml
+        
+        if(!ModelFacade.isAPseudostateKind(kind))
+            throw new IllegalArgumentException();
+        
+	setArg("className", (Class)ModelFacade.PSEUDOSTATE);
 	setArg("kind", kind);
     }
 

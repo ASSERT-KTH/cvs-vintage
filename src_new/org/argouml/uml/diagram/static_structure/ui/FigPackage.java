@@ -1,6 +1,6 @@
 
 
-// $Id: FigPackage.java,v 1.30 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigPackage.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.30 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigPackage.java,v 1.31 2003/08/31 19:56:06 alexb Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -189,7 +189,7 @@ public class FigPackage extends FigNodeModelElement {
 			    while (diagEnum.hasMoreElements()) {
 				UMLDiagram lDiagram =
 				    (UMLDiagram) diagEnum.nextElement();
-				MNamespace lDiagramNS = lDiagram.getNamespace();
+				MNamespace lDiagramNS = (MNamespace)lDiagram.getNamespace();
 				if ((lNS == null && lDiagramNS == null)
 				    || (lNS.equals(lDiagramNS))) {
 				    /* save first */

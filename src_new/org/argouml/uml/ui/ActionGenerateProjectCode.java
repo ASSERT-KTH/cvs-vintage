@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.9 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.10 2003/08/31 19:56:07 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class ActionGenerateProjectCode extends UMLAction {
 	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	if (!(activeDiagram instanceof org.argouml.uml.diagram.ui.UMLDiagram))
 	    return;
-	ru.novosoft.uml.foundation.core.MNamespace ns =
+	ru.novosoft.uml.foundation.core.MNamespace ns =(MNamespace)
 	    ((org.argouml.uml.diagram.ui.UMLDiagram) activeDiagram).getNamespace();
 	if (ns == null) return;
 	while (ns.getNamespace() != null) ns = ns.getNamespace();

@@ -1,6 +1,6 @@
 
 
-// $Id: UMLSequenceDiagram.java,v 1.21 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.22 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.21 2003/08/25 19:15:53 bobtarling Exp $
+// $Id: UMLSequenceDiagram.java,v 1.22 2003/08/31 19:56:06 alexb Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -170,7 +170,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
         Iterator oeIterator = null;
         Collection ownedElements = null;
         if (getNamespace() != null)
-            ownedElements = getNamespace().getOwnedElements();
+            ownedElements = ModelFacade.getOwnedElements(getNamespace());
         if (ownedElements != null)
             oeIterator = ownedElements.iterator();
         Layer lay = getLayer();

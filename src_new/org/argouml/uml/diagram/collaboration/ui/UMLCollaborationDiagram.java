@@ -1,6 +1,6 @@
 
 
-// $Id: UMLCollaborationDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.30 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.29 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.30 2003/08/31 19:56:06 alexb Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -234,7 +234,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
             cat.error("Collaboration Diagram does not belong to a namespace");
             return;
         }
-        Collection ownedElements = getNamespace().getOwnedElements();
+        Collection ownedElements = ModelFacade.getOwnedElements(getNamespace());
         Iterator oeIterator = ownedElements.iterator();
         Layer lay = getLayer();
         while (oeIterator.hasNext()) {

@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.26 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.27 2003/08/31 19:56:06 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.26 2003/08/31 00:52:51 bobtarling Exp $
+// $Id: StateDiagramGraphModel.java,v 1.27 2003/08/31 19:56:06 alexb Exp $
 package org.argouml.uml.diagram.state;
 
 import java.beans.PropertyChangeEvent;
@@ -68,7 +68,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
     protected Object _namespace;
 
     /** The statemachine we are diagramming */
-    protected MStateMachine _machine;
+    protected Object _machine;
 
     ////////////////////////////////////////////////////////////////
     // accessors
@@ -78,8 +78,12 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 	_namespace = namespace;
     }
 
-    public MStateMachine getMachine() { return _machine; }
-    public void setMachine(MStateMachine sm) {
+    public Object getMachine() { return _machine; }
+    public void setMachine(Object sm) {
+        
+        if(!ModelFacade.isAStateMachine(sm))
+            throw new IllegalArgumentException();
+        
 	if (sm != null) {
 	    _machine = sm;
 	}
@@ -187,7 +191,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport
 	//if (sv.getNamespace() == null)
 	//_namespace.addOwnedElement(sv);
 	// TODO: assumes not nested in another composite state
-	MCompositeState top = (MCompositeState) _machine.getTop();
+	MCompositeState top = (MCompositeState) StateMachinesHelper.getHelper().getTop(getMachine());
 
 	top.addSubvertex(sv);
 	//       sv.setParent(top); this is done in setEnclosingFig!!
