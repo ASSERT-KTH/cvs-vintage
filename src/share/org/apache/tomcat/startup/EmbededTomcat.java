@@ -143,7 +143,6 @@ public class EmbededTomcat {
     /** Tomcat will run in a sandboxed environment, under SecurityManager
      */
     public void setSandbox(boolean b) {
-	debug("Sandbox enabled");
 	attributes.put("sandbox", "true");
     }
 
@@ -254,13 +253,15 @@ public class EmbededTomcat {
     /** Init tomcat using server.xml-style configuration
      */
     public void addServerXmlModules() throws TomcatException {
-	debug( "Using server.xml " + attributes.get( "config" ));
+	String conf=(String)attributes.get( "config" );
+
 	addModule( "org.apache.tomcat.modules.config.PathSetter");
 	int mid=addModule( "org.apache.tomcat.modules.config.ServerXmlReader");
 
-	if( null!=attributes.get( "config" ) )
-	    setModuleProperty( mid, "config",
-			       (String)attributes.get("config") );
+	if( null!=conf ) {
+	    if( dL>0) debug( "Using config file " + conf);
+	    setModuleProperty( mid, "config",conf );
+	}
     }
 
     public void addDefaultModules()
@@ -408,6 +409,9 @@ public class EmbededTomcat {
 					 modules.elementAt( i ) );
 	    }
 	    contextM.init();
+	} catch( InvocationTargetException rex ) {
+	    debug("exception initializing ContextManager", rex.getTargetException());
+	    throw new TomcatException( "EmbededTomcat.initContextManager", ex.getTargetExeption() );
 	} catch( Exception ex ) {
 	    debug("exception initializing ContextManager", ex);
 	    throw new TomcatException( "EmbededTomcat.initContextManager", ex );
@@ -501,6 +505,16 @@ public class EmbededTomcat {
 	directly the methods you need.
      */
     public void execute() throws Exception {
+	final EmbededTomcat et=this;
+	jdk11Compat.doPrivileged( new Action() {
+		public Object run() throws Exception {
+		    et.execute1();
+		    return null;
+		}
+	    }, jdk11Compat.getAccessControlContext());
+    }
+    
+    public void execute1() throws Exception {
 	if( args!=null )
 	    processArgs( args );
 	// Init 

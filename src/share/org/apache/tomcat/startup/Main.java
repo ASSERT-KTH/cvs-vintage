@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.37 2001/08/21 05:35:05 costin Exp $
+/* $Id: Main.java,v 1.38 2001/08/22 04:43:23 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -178,6 +178,10 @@ public class Main{
 	    IntrospectionUtils.displayClassPath("Main classpath: ", commonCP );
     }
 
+    // initSecurityFile is intended to simplify sandbox config, the shell
+    // script can't normalize the path. We also want java -jar to behave the same,
+    // without requiring anything difficult.
+    
     /** If "-sandbox" parameter is found ( the first after the action ), we'll
      *  load a sandbox with the policy in install/conf/tomcat.policy. This
      *  has to happen before loading any class or constructing the loader, or
@@ -190,20 +194,19 @@ public class Main{
      *  so that all "system" classes have permissions.
      */
     public void initSecurityFile() {
-// 	if( args.length > 1 &&
-// 	    "-sandbox".equals( args[1] ) ) {
-// 	    if( null == System.getProperty("java.security.policy")) {
-// 		File f=null;
-// 		String policyFile=installDir + File.separator + "conf" +
-// 		    File.separator + "tomcat.policy";
+	if( args.length > 1 &&
+	    "-sandbox".equals( args[1] ) ) {
+	    if( null == System.getProperty("java.security.policy")) {
+		File f=null;
+		String policyFile=installDir + File.separator + "conf" +
+		    File.separator + "tomcat.policy";
 		
-// 		debug("Setting policy file to " + policyFile + " tomcat.home= " +
-// 		    System.getProperty( "tomcat.home") );
-// 		System.setProperty( "tomcat.home", installDir );
-// 		System.setProperty("java.security.policy",  policyFile);
-// 		java.security.Policy.getPolicy().refresh();
-// 	    }
-// 	}
+		debug("Setting policy " + policyFile );
+		System.setProperty( "tomcat.home", installDir );
+		System.setProperty("java.security.policy",  policyFile);
+		jdk11Compat.refreshPolicy();
+	    }
+	}
     }
     
     // -------------------- Tasks --------------------
