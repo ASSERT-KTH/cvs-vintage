@@ -1,11 +1,11 @@
 <div id="approval" class="app">
 
-<h3>Open submissions</h3>
-
 <form action="$link.setPage("admin,Approval.vm")" method="post">
 <input type="hidden" name="action" value="admin.Approval" />
 
 #if (!$scarabR.hasItemsToApprove())
+
+ <h3>Open submissions</h3>
 
   <p class="alert">$l10n.NoItemsToApprove</p>
 
@@ -18,9 +18,11 @@
    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
  </div>
 
+ <h3>Open submissions</h3>
+
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th nowrap="nowrap">&#160;</th>
+   <th nowrap="nowrap">Select</th>
    <th>Date</th>
    <th>Type</th>
    <th>Submitted by</th>
@@ -102,19 +104,13 @@
 
 #if (!$securityAdmin.getPendingGroupUserRoles($module).isEmpty() && $scarabR.hasPermission($scarabG.Permission.USER__APPROVE_ROLES, $module))
 
-<div id="approveroles" class="app">
+ <div class="functnbar">
+   <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+ </div>
 
 <h3>Approve role requests</h3>
 
-<div class="functnbar">
- <input type="submit" name="eventSubmit_doApproveroles" 
-     value="Submit" />
-</div>
-
-<table>
-<tr>
-<td>
-<table cellspacing="1" cellpadding="2">
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th>User</th>
       
@@ -142,29 +138,18 @@
       #end
     
     <td>
-      <center>
       <input type="radio" name="$user.UserName" value="$role.Name" $checked />
-      </center>
     </td>
     #end    
     <td>
-      <center>
       <input type="radio" name="$user.UserName" value="defer" />
-      </center>
     </td>
     <td>
-      <center>
       <input type="radio" name="$user.UserName" value="deny" />
-      </center>
     </td>
-
   </tr>
   #end
     
-</table>
-
-</td>
-</tr>
 </table>
 
 <div class="functnbar2">
@@ -172,7 +157,6 @@
      value="Submit" />
 </div>
 
-</div> 
 #end ## end of if (!list.empty)
 ## end of role approval
 
