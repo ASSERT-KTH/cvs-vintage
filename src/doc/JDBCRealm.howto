@@ -101,6 +101,9 @@ mysql>
       roleNameCol --> The column in the user's table that contains a role given
                       to a user
 
+   Optional:
+     connectionName -> The name to use when connecting to the database.
+     connectionPassword -> The password to use when connecting to the database.
 
 4. You should now be able to authenticate against the database now using the
    normal web.xml entries.
@@ -111,3 +114,13 @@ Hints:
    
    - Make sure that the JDBC driver is in the lib directory.
 
+   - If you have problem connecting you can specify connectionName and connectionPassword:
+
+    <RequestInterceptor className="org.apache.tomcat.realm.JDBCRealm"
+     debug="99"
+     driverName="oracle.jdbc.driver.OracleDriver"
+     connectionURL="jdbc:oracle:thin:@ntserver:1521:ORCL"
+     connectionName="scott"
+     connectionPassword="tiger"
+     userTable="users" userNameCol="user_name" userCredCol="user_pass"
+     userRoleTable="user_roles" roleNameCol="role_name" />
