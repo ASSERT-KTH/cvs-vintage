@@ -44,7 +44,7 @@
  <th>$l10n.Description</th>
  <td>
     #if ($issueType.Locked)
-        $group.Description
+        $!group.Description
     #else
      #textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
     #end
