@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.43 2004/08/03 17:58:20 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.44 2004/08/04 18:17:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -306,13 +306,11 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
             LOG.error("internal error not to sv");
             return false;
         }
-        Object fromSV = /* (MStateVertex) */fromPort;
-        Object toSV = /* (MStateVertex) */toPort;
 
-        if (ModelFacade.isAFinalState(fromSV)) { return false; }
-        if (ModelFacade.isAPseudostate(toSV)) {
+        if (ModelFacade.isAFinalState(fromPort)) { return false; }
+        if (ModelFacade.isAPseudostate(toPort)) {
             if ((ModelFacade.INITIAL_PSEUDOSTATEKIND).equals(ModelFacade
-                    .getKind(toSV))) { return false; }
+                    .getKind(toPort))) { return false; }
         }        
         return true;
     }
@@ -323,26 +321,22 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
      */
     public Object connect(Object fromPort, Object toPort,
 			  Class edgeClass) {
-       
-      
-        Object fromSV = /* (MStateVertex) */fromPort;
-        Object toSV = /* (MStateVertex) */toPort;
 
-        if (ModelFacade.isAFinalState(fromSV)) {
+        if (ModelFacade.isAFinalState(fromPort)) {
 	    return null;
 	}
-        if (ModelFacade.isAPseudostate(toSV)) {
+        if (ModelFacade.isAPseudostate(toPort)) {
 	    if ((ModelFacade.INITIAL_PSEUDOSTATEKIND).equals(
-			ModelFacade.getKind(toSV))) {
+			ModelFacade.getKind(toPort))) {
 		return null;
 	    }
 	}
 
         if (edgeClass == (Class) ModelFacade.TRANSITION) {
             Object tr = null;
-            Object comp = ModelFacade.getContainer(fromSV);
+            Object comp = ModelFacade.getContainer(fromPort);
             tr = StateMachinesFactory.getFactory()
-                    .buildTransition(fromSV, toSV);
+                    .buildTransition(fromPort, toPort);
             if (canAddEdge(tr)) {
                 addEdge(tr);
             } else {
