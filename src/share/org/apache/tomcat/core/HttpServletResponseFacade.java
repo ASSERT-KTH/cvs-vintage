@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.7 2000/04/05 19:40:20 craigmcc Exp $
- * $Revision: 1.7 $
- * $Date: 2000/04/05 19:40:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.8 2000/04/06 00:00:14 craigmcc Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/04/06 00:00:14 $
  *
  * ====================================================================
  *
@@ -104,9 +104,6 @@ implements HttpServletResponse {
 
     public String encodeRedirectURL(String location) {
 
-	System.out.println("CRM: encodeRedirectURL(" + location + ") --> " +
-			   toAbsolute(location) + " --> " +
-			   isEncodeable(toAbsolute(location)));
 	if (isEncodeable(toAbsolute(location)))
 	    return (toEncoded(location,
 			      response.getRequest().getRequestedSessionId()));
@@ -170,8 +167,7 @@ implements HttpServletResponse {
             String msg = sm.getString("hsrf.redirect.iae");
             throw new IllegalArgumentException(msg);
 	}
-	System.out.println("CRM: sendRedirect(" + location + ") --> " +
-			   toAbsolute(location));
+
 	// Even though DefaultErrorServlet will convert this
 	// location to absolute (if required) we should do so
 	// here in case the app has a non-default handler
@@ -274,31 +270,21 @@ implements HttpServletResponse {
 	    return (false);
 
 	// Is this a valid absolute URL?
-	System.out.println("CRM: isEncodeable(" + location + ")");
 	URL url = null;
 	try {
 	    url = new URL(location);
 	} catch (MalformedURLException e) {
 	    return (false);
 	}
-	System.out.println("CRM:    Valid URL --> " + url.toString());
 
 	// Does this URL match down to (and including) the context path?
-	System.out.println("CRM:    Compare " + request.getScheme() +
-			   " to " + url.getProtocol());
 	if (!request.getScheme().equalsIgnoreCase(url.getProtocol()))
 	    return (false);
-	System.out.println("CRM:    Compare " + request.getServerName() +
-			   " to " + url.getHost());
 	if (!request.getServerName().equalsIgnoreCase(url.getHost()))
 	    return (false);
-	System.out.println("CRM:    Compare " + request.getServerPort() +
-			   " to " + url.getPort());
 	if (request.getServerPort() != url.getPort())
 	    return (false);
 	String contextPath = request.getContext().getPath();
-	System.out.println("CRM:    Check context path " + contextPath +
-			   " against " + url.getFile());
 	if ((contextPath != null) && (contextPath.length() > 0)) {
 	    String file = url.getFile();
 	    if ((file == null) || !file.startsWith(contextPath))
@@ -306,59 +292,7 @@ implements HttpServletResponse {
 	}
 
 	// This URL belongs to our web application, so it is encodeable
-	System.out.println("CRM:    This URL is encodeable");
 	return (true);
-
-/*
-	// Is this an absolute URL?
-	if (url == null)
-	    return (false);
-	int colon = url.indexOf("://");
-	if (colon < 0)
-	    return (false);
-
-	// Only HTTP: and HTTPS: URLs are encoded
-	String scheme = url.substring(0, colon).toLowerCase();
-	if (!"http".equals(scheme) && !"https".equals(scheme))
-	    return (false);
-
-	// Match on the host name and port number
-	String rest = url.substring(colon + 3);
-	colon = rest.indexOf(":");
-	int slash = rest.indexOf("/");
-	if (slash < 0) {
-	    slash = rest.length();
-	    rest += "/";
-	}
-	if (colon > slash)
-	    colon = -1;
-	String host = null;
-	int port = 80;
-	if (colon >= 0) {
-	    host = rest.substring(0, colon);
-	    String temp = rest.substring(colon + 1, slash - (colon + 1));
-	    try {
-		port = Integer.parseInt(temp);
-	    } catch (Throwable t) {
-		return (false);		// Invalid port number in absolute URL
-	    }
-	} else
-	    host = rest.substring(0, slash);
-	if (!host.equalsIgnoreCase(request.getServerName()))
-	    return (false);
-	if (port != request.getServerPort())
-	    return (false);
-
-	// Match on the context path of this web application
-	rest = rest.substring(slash);
-	String contextPath = request.getContext().getPath();
-	if ((contextPath == null) || (contextPath.length() == 0))
-	    return (true);
-	if (rest.startsWith(contextPath))
-	    return (true);
-	else
-	    return (false);
-*/
 
     }
 
