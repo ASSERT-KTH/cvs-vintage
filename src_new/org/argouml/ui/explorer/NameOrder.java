@@ -1,4 +1,4 @@
-// $Id: NameOrder.java,v 1.6 2004/06/23 07:02:45 linus Exp $
+// $Id: NameOrder.java,v 1.7 2004/09/01 15:43:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,9 @@ public class NameOrder
     public NameOrder() {
     }
     
+    /**
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
     public int compare(Object obj1, Object obj2) {
 	if (obj1 instanceof DefaultMutableTreeNode) {
 	    DefaultMutableTreeNode node = (DefaultMutableTreeNode) obj1;
@@ -58,6 +61,11 @@ public class NameOrder
     
     /**
      * alphabetic ordering of user object names instead of type names
+     *
+     * @param obj Diagram or Base
+     * @param obj1 Diagram or Base
+     * @return 0 if invalid params. 0 if the objects are equally named. 
+     *         A positive or negative int if the names differ.
      */
     protected int compareUserObjects(Object obj, Object obj1) {
         if ((ModelFacade.isADiagram(obj)
@@ -78,7 +86,11 @@ public class NameOrder
 	return 0;
     }
     
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return "Order By Name";
+        // TODO: i18n
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ExplorerPerspective.java,v 1.6 2004/06/23 07:02:44 linus Exp $
+// $Id: ExplorerPerspective.java,v 1.7 2004/09/01 15:43:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,28 +44,44 @@ import org.argouml.i18n.Translator;
  */
 public class ExplorerPerspective {
     
-    List rules;
-    String name;
+    private List rules;
+    private String name;
     
-    /** Creates a new instance of ExplorerPerspective */
+    /** 
+     * Creates a new instance of ExplorerPerspective.
+     * 
+     * @param newName the name for the perspective
+     */
     public ExplorerPerspective(String newName) {
         
         name = Translator.localize("Tree", newName);
         rules = new ArrayList();
     }
     
+    /**
+     * @param rule the rule to add
+     */
     public void addRule(PerspectiveRule rule) {
         rules.add(rule);
     }
     
+    /**
+     * @param rule the rule to remove
+     */
     public void removeRule(PerspectiveRule rule) {
         rules.remove(rule);
     }
     
+    /**
+     * @return the array with all the rules
+     */
     public Object[] getRulesArray() {
         return rules.toArray();
     }
     
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString() {
         return name;
     }

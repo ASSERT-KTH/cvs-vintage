@@ -1,4 +1,4 @@
-// $Id: ExportExplorer.java,v 1.3 2004/06/23 07:02:45 linus Exp $
+// $Id: ExportExplorer.java,v 1.4 2004/09/01 15:43:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,8 @@ import org.argouml.uml.diagram.ui.ActionSaveDiagramToClipboard;
 public class ExportExplorer
     extends DnDExplorerTree {
     
-    public final String DIAGRAM_TO_CLIPBOARD_ACTION = "export Diagram as GIF";
+    private static final String DIAGRAM_TO_CLIPBOARD_ACTION = 
+        "export Diagram as GIF";
     
     /** Creates a new instance of ExportExplorer */
     public ExportExplorer() {

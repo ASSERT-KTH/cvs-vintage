@@ -1,4 +1,4 @@
-// $Id: PerspectiveComboBox.java,v 1.4 2004/06/23 07:02:45 linus Exp $
+// $Id: PerspectiveComboBox.java,v 1.5 2004/09/01 15:43:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,10 +43,16 @@ public class PerspectiveComboBox
         PerspectiveManager.getInstance().addListener(this);
     }
     
+    /**
+     * @see org.argouml.ui.explorer.PerspectiveManagerListener#addPerspective(java.lang.Object)
+     */
     public void addPerspective(Object perspective) {
         addItem(perspective);
     }
     
+    /**
+     * @see org.argouml.ui.explorer.PerspectiveManagerListener#removePerspective(java.lang.Object)
+     */
     public void removePerspective(Object perspective) {
         removeItem(perspective);
     }

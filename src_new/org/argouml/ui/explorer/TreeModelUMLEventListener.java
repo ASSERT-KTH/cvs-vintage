@@ -1,4 +1,4 @@
-// $Id: TreeModelUMLEventListener.java,v 1.2 2003/09/29 18:51:52 alexb Exp $
+// $Id: TreeModelUMLEventListener.java,v 1.3 2004/09/01 15:43:20 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,23 @@ package org.argouml.ui.explorer;
  */
 public interface TreeModelUMLEventListener {
     
+    /**
+     * @param node the modelelement that is changed
+     */
     public void modelElementChanged(Object node);
     
+    /**
+     * @param node the modelelement that is added
+     */
     public void modelElementAdded(Object node);
     
+    /**
+     * @param node the modelelement that is removed
+     */
     public void modelElementRemoved(Object node);
     
+    /**
+     * the structure of the model is changed
+     */
     public void structureChanged();
 }
