@@ -70,7 +70,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.5 2001/01/19 00:24:08 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.6 2001/01/19 00:26:22 jon Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {
@@ -95,7 +95,7 @@ public class RegisterConfirm extends VelocityAction
             // for redisplay of the form data on the screen
             ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
             if (ss != null)
-	        {
+            {
                 ss.setUser(su);
             }
             setTemplate (data, nextTemplate);
