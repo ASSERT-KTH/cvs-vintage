@@ -22,6 +22,7 @@ import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.frame.FrameModel;
+import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginManager;
 
 /**
@@ -62,6 +63,9 @@ public class MainInterface {
     /** Encapsulates the system's connection state */
     public static ConnectionState connectionState;
 
+    /** Wrapper for native code */
+    public static NativeWrapperHandler nativeWrapper;
+    
     /** No need to create instances of this class. */
     private MainInterface() {}
 }

@@ -33,6 +33,7 @@ import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.nativ.NativeWrapperHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
@@ -43,135 +44,141 @@ import org.columba.mail.main.MailMain;
  * Columba's main class used to start the application.
  */
 public class Main {
-    private static boolean showStartUpFrame = true;
-    private Main() {}
-    
-    public static void main(String[] args) {
-        ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-        try {
-            cmdLineParser.parseCmdLine(args);
-        } catch (IllegalArgumentException e) {
-            ColumbaCmdLineParser.printUsage();
-            System.exit(2);
-        }
-        
-        // initialize configuration backend
-        String path = cmdLineParser.getPathOption();
-        MainInterface.config = new Config(path == null ? null : new File(path));
+	private static boolean showStartUpFrame = true;
+	private Main() {
+	}
 
-        // if user doesn't overwrite logger settings with commandline arguments
-        // just initialize default logging
-        ColumbaLogger.createDefaultHandler();
-        ColumbaLogger.createDefaultFileHandler();
-        
-        SessionController.passToRunningSessionAndExit(args);
+	public static void main(String[] args) {
+		ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+		try {
+			cmdLineParser.parseCmdLine(args);
+		} catch (IllegalArgumentException e) {
+			ColumbaCmdLineParser.printUsage();
+			System.exit(2);
+		}
 
-        StartUpFrame frame = null;
-        if(showStartUpFrame) {
-            frame = new StartUpFrame();
-            frame.setVisible(true);
-        }
-        
-        MainInterface.connectionState = new ConnectionStateImpl();
-        
-        System.setProperty("java.protocol.handler.pkgs",
-            System.getProperty("java.protocol.handler.pkgs", "") +
-            "|org.columba.core.url");
-        
-        AddressbookMain addressbook = new AddressbookMain();
-        addressbook.initConfiguration();
+		// initialize configuration backend
+		String path = cmdLineParser.getPathOption();
+		MainInterface.config = new Config(path == null ? null : new File(path));
 
-        MailMain mail = new MailMain();
-        mail.initConfiguration();
+		// if user doesn't overwrite logger settings with commandline arguments
+		// just initialize default logging
+		ColumbaLogger.createDefaultHandler();
+		ColumbaLogger.createDefaultFileHandler();
 
-        MainInterface.config.init();
+		SessionController.passToRunningSessionAndExit(args);
 
-        // load user-customized language pack
-        GlobalResourceLoader.loadLanguage();
-        
-        MainInterface.clipboardManager = new ClipboardManager();
-        MainInterface.focusManager = new FocusManager();
+		StartUpFrame frame = null;
+		if (showStartUpFrame) {
+			frame = new StartUpFrame();
+			frame.setVisible(true);
+		}
 
-        MainInterface.processor = new DefaultCommandProcessor();
+		MainInterface.connectionState = new ConnectionStateImpl();
 
-        MainInterface.pluginManager = new PluginManager();
+		System.setProperty("java.protocol.handler.pkgs", System.getProperty(
+				"java.protocol.handler.pkgs", "")
+				+ "|org.columba.core.url");
 
-        // load core plugin handlers 
-        MainInterface.pluginManager.addHandlers("org/columba/core/plugin/pluginhandler.xml");
-        
-        MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+		AddressbookMain addressbook = new AddressbookMain();
+		addressbook.initConfiguration();
 
-        addressbook.initPlugins();
-        mail.initPlugins();
+		MailMain mail = new MailMain();
+		mail.initConfiguration();
 
-        MainInterface.pluginManager.initPlugins();
+		MainInterface.config.init();
 
-        ThemeSwitcher.setTheme();
+		// load user-customized language pack
+		GlobalResourceLoader.loadLanguage();
 
-        // init font configuration
-        new FontProperties();
+		MainInterface.clipboardManager = new ClipboardManager();
+		MainInterface.focusManager = new FocusManager();
 
-        // set application wide font
-        FontProperties.setFont();
+		MainInterface.processor = new DefaultCommandProcessor();
 
-        //MainInterface.frameModelManager = new FrameModelManager();
-        addressbook.initGui();
+		MainInterface.pluginManager = new PluginManager();
 
-        mail.initGui();
-        
-        MainInterface.frameModel = new FrameModel();
-        
-        ColumbaServer.getColumbaServer().handleCommandLineParameters(args);
+		// load core plugin handlers
+		MainInterface.pluginManager
+				.addHandlers("org/columba/core/plugin/pluginhandler.xml");
 
-        if (frame != null) {
-            frame.setVisible(false);
-        }
+		MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 
-        if (MainInterface.frameModel.getOpenFrames().length == 0) {
-            MainInterface.frameModel.openStoredViews();
-        }
-    }
-    
-    public static void setShowStartUpFrame(boolean show) {
-        showStartUpFrame = show;
-    }
-    
-    /**
-     * Default implementation for ConnectionState.
-     */
-    protected static class ConnectionStateImpl implements ConnectionState {
-        protected boolean online = false;
-        protected EventListenerList listenerList = new EventListenerList();
-        protected ChangeEvent e;
-        
-        protected ConnectionStateImpl() {
-             e = new ChangeEvent(this);
-        }
-        
-        public void addChangeListener(ChangeListener l) {
-            listenerList.add(ChangeListener.class, l);
-        }
-        
-        public synchronized boolean isOnline() {
-            return online;
-        }
-        
-        public void removeChangeListener(ChangeListener l) {
-            listenerList.remove(ChangeListener.class, l);
-        }
-        
-        public synchronized void setOnline(boolean b) {
-            if (online != b) {
-                online = b;
-                Object[] listeners = listenerList.getListenerList();
-                // Process the listeners last to first, notifying
-                // those that are interested in this event
-                for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                    if (listeners[i] == ChangeListener.class) {
-                        ((ChangeListener) listeners[i + 1]).stateChanged(e);
-                    }
-                }
-            }
-        }
-    }
+		addressbook.initPlugins();
+		mail.initPlugins();
+
+		MainInterface.pluginManager.initPlugins();
+
+		ThemeSwitcher.setTheme();
+
+		// init font configuration
+		new FontProperties();
+
+		// set application wide font
+		FontProperties.setFont();
+
+		//MainInterface.frameModelManager = new FrameModelManager();
+		addressbook.initGui();
+
+		mail.initGui();
+
+		MainInterface.frameModel = new FrameModel();
+
+		ColumbaServer.getColumbaServer().handleCommandLineParameters(args);
+
+		if (frame != null) {
+			frame.setVisible(false);
+		}
+
+		if (MainInterface.frameModel.getOpenFrames().length == 0) {
+			MainInterface.frameModel.openStoredViews();
+		}
+
+		// initialize native code wrapper
+		MainInterface.nativeWrapper = new NativeWrapperHandler(
+				MainInterface.frameModel.getOpenFrames()[0]);
+	}
+
+	public static void setShowStartUpFrame(boolean show) {
+		showStartUpFrame = show;
+	}
+
+	/**
+	 * Default implementation for ConnectionState.
+	 */
+	protected static class ConnectionStateImpl implements ConnectionState {
+		protected boolean online = false;
+		protected EventListenerList listenerList = new EventListenerList();
+		protected ChangeEvent e;
+
+		protected ConnectionStateImpl() {
+			e = new ChangeEvent(this);
+		}
+
+		public void addChangeListener(ChangeListener l) {
+			listenerList.add(ChangeListener.class, l);
+		}
+
+		public synchronized boolean isOnline() {
+			return online;
+		}
+
+		public void removeChangeListener(ChangeListener l) {
+			listenerList.remove(ChangeListener.class, l);
+		}
+
+		public synchronized void setOnline(boolean b) {
+			if (online != b) {
+				online = b;
+				Object[] listeners = listenerList.getListenerList();
+				// Process the listeners last to first, notifying
+				// those that are interested in this event
+				for (int i = listeners.length - 2; i >= 0; i -= 2) {
+					if (listeners[i] == ChangeListener.class) {
+						((ChangeListener) listeners[i + 1]).stateChanged(e);
+					}
+				}
+			}
+		}
+	}
 }
