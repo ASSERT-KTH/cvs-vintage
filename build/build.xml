@@ -195,6 +195,9 @@
                 <include name="**/*"/>
             </fileset>
         </copy>
+        <chmod perm="+x">
+            <fileset dir="${src.sql.dir}" includes="**/*.sh"/>
+        </chmod>
 
         <!-- the source code directory -->
         <copy todir="${build.src.scarab}/org" filtering="yes">
