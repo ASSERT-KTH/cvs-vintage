@@ -36,7 +36,7 @@ import javax.transaction.xa.XAResource;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection {
@@ -119,6 +119,18 @@ public class XAConnectionImpl implements XAConnection {
         Vector local = (Vector)listeners.clone();
         for(int i=local.size()-1; i>=0; i--)
             ((ConnectionEventListener)local.elementAt(i)).connectionErrorOccurred(new ConnectionEvent(this, e));
+    }
+
+    /**
+     * Rolls back the underlying connection.  This is used when there is no
+     * current transaction and the connection is returned to the pool - since
+     * no transaction will be committed or rolled back but this connection
+     * will be reused, we must roll it back.
+     */
+    public void rollback() {
+        try {
+            con.rollback();
+        } catch(SQLException e) {}
     }
 
     // ---- Implementation of javax.sql.XAConnection ----

@@ -22,7 +22,7 @@ import org.jboss.minerva.xa.*;
  * and any work done isn't associated with the java.sql.Connection anyway.
  * <P><B>Note:</B> This implementation requires that the TransactionManager
  * be bound to a JNDI name.</P>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -65,8 +65,17 @@ public class XAConnectionFactory extends PoolObjectFactory {
                     throw new RuntimeException("Unable to deregister with TransactionManager: "+e);
                 }
                 con.removeConnectionEventListener(listener);
-                if(!transaction || !(con instanceof XAConnectionImpl))
+
+                if(!(con instanceof XAConnectionImpl)) {
+                    // Real XAConnection -> not associated w/ transaction
                     pool.releaseObject(con);
+                } else {
+                    if(!transaction) {
+                        // Wrapper - we can only release it if there's no current transaction
+                        ((XAConnectionImpl)con).rollback();
+                        pool.releaseObject(con);
+                    }
+                }
             }
         };
         transListener = new TransactionListener() {
