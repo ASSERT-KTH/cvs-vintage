@@ -7,16 +7,23 @@
 <body bgcolor="#ffffff">
 
 <h3>FAQ: Importing issue data</h3>
-<h5>$Id: faq.html,v 1.2 2003/03/19 18:46:54 stack Exp $</h5>
+<h5>$Id: faq.html,v 1.3 2003/03/20 01:07:51 stack Exp $</h5>
 
 <ul>
     <li><a href="#begin">I need to add issues to scarab.  How do I begin?</a>
     </li>
     <li><a href="#break">Can running an import break my scarab instance?</a>
     </li>
+
     <li><a href="#capabilities">What can I do via xml import?</a></li>
+
+    <li><a href="#denpendencies">Does import support the import of
+        inter-issue dependencies?</a></li>
+
     <li><a href="#attributes">I want to import users and attributes. Can I?</a>
     </li>
+    <li><a href="#activityset">When would I start a new activity set?</a></li>
+    <li><a href="#workflow">How does workflow affect xml import?</a></li>
     <li><a href="#sample">Are there sample xml issues that I can study?</a>
     </li>
 
@@ -24,13 +31,89 @@
 
 <h4><a name="begin">I need to add issues to scarab.  How do I begin?</a></h4>
 
+<p>The best place to start is by studying an issue exported by scarab.  First study
+how the issue sits in scarab, and then browse to 
+<strong>Admin->Modules->XML export issues</strong> and export that issue.
+issue.  Correlate UI w/ its representation in xml.  Also study the comments
+in the <a 
+href="http://scarab.tigris.org/source/browse/scarab/src/dtd/scarab.dtd?rev=1">scarab
+dtd</a> for clarification on scarab's interpretation of xml elements.  Note 
+that many elements have subtly different representations in the UI than they
+do in the dtd.
+</p>
+
+
 <h4><a name="break">Can running an import break my scarab instance?</a></h4>
+<p>It shouldn't.  The way the scarab import works is that it first parses the 
+passed xml to import to ensure all dependencies resolve, and that all modules, 
+users, attributes and attribute options mentioned in the xml exist.  If any 
+are missing, then the entire import fails and a report is produced listing the 
+problems found ("No such user 'jon'", etc.).  If importing via the UI, the
+error report shows in the result screen.  If importing via ant, check the
+scarab-xmlimport.log file.  If the validation parse runs to the end w/o error,
+then begins the insertion parse. 
+</p>
+<p>Note, the scarab validation parse mentioned above is
+distinct from an xml validation parse: The latter checks the validity of the 
+xml submitted, the former examines the data contained in the xml making sure
+its coherent with respect to scarab.
+</p>
 
 <h4><a name="capabilities">What can I do via xml import?</a></h4>
+<p>The import of 'new' issues has been well tested.  Updating extant issues
+w/ comments, etc., works at least for the simple cases but is in need of
+testing.  The import of dependencies amongst issues works but it too is 
+in need of testing, and has some limitations and requirements if included
+as part of an initial issue import.
+</p>
+
+<h4><a name="dependencies">Does import support the import of inter-issue
+dependencies?</a></h4>
+<p>
+You cannot declare dependencies between separate scarab xml files being 
+imported; dependencies can only be reliably established (that is, reconciled)
+within a single xml import file. The way dependencies are done is that on 
+import, after the validation parse and insert of issues, a dependency resolving
+step runs: It 'decorates' the just inserted issues w/ the interdependencies 
+mentioned in the xml (providing certain information, like activity-set id,
+is correctly set between issues).  This step must happen after insert because 
+in order to make the interdependencies, the actual scarab issue ids must
+exist. At this time, it does not seem as though you can add dependencies 
+via the xml import update mechanism.
+</p>
 
 <h4><a name="attributes">I want to import users and attributes. Can I?</a></h4>
 
+<p>
+You cannot currently import nor export modules, users, attributes nor 
+attribute options. This facility is to be added soon.
+</p>
+
+
+<h4><a name="activityset">When would I start a new activity set?</a></h4>
+<p>You'd start a new activity-set when: 
+    <ol>
+    <li>Importing an issue and its initial state.</li>
+    <li>Adding physical attachments to an issue.</li>
+    <li>Adding comments to an issue (Scarab treats attachments and comments as
+        roughly equivalent).</li>
+    <li>Adding an <i>activity</i> entry: e.g., one or more state changes such
+        as 'Changed from NEW to STARTED', or issue dependencies.</li>
+    </ol>
+</p>
+
+<h4><a name="workflow">How does workflow affect xml import?</a></h4>
+<p>Workflow is disabled in the importing thread so there should be no 
+ possibility for conflict.</p>
+
 <h4><a name="sample">Are there sample xml issues that I can study?</a></h4>
+
+<ul>
+    <li><a href="update-example.xml">Example</a> that updates an existing 
+    issue adding a comment.</li>
+    <li><a href="dependencies.xml">Example</a> that imports 3 issues 
+    preserving the dependency issue 3 has on issue 1.</li>
+</ul>
 
 </body>
 </html>

@@ -1,0 +1,531 @@
+<?xml version="1.0" standalone="no"?>
+<scarab-issues>
+  <import-type>create-different-db</import-type>
+  <module>
+    <id>1</id>
+    <parent-id>0</parent-id>
+    <name>Pacman JVM</name>
+        
+    <owner>turbine@tigris.org</owner>
+    
+    <description>Sample project</description>
+    <url>/PacmanJVM/</url>
+    <domain></domain>
+    <code>PAC</code>
+  </module>
+<issues>
+  
+    <issue>
+      <id>1</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>100</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-10 14:57:51 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>100</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Summary set to 'one'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>101</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>All</new-option>
+                                          
+              <new-value>All</new-value>
+              
+                            
+              <description>Platform set to 'All'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>102</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows3.1</new-option>
+                                          
+              <new-value>windows3.1</new-value>
+              
+                            
+              <description>Operating system set to 'windows3.1'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>103</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Description set to 'one'</description>
+                            
+                              
+            </activity>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>133</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-09 11:04:27 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>484</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>inimical intramuscular burglarpr</description>
+                            
+                              
+          <attachment>
+            <id>100</id>
+            <name>comment</name>
+            <type>COMMENT</type>
+                                    
+            <data>inimical intramuscular burglarproofed scissors sputtered resurrectors impresses irrigate cinematic seeds Johannes slope dynamite calcium hexagonal Edwin analogously labor beauties megalomania impale Blackstone flagged Raul tennis Wauwatosa shareable copiously mink inordinately oceanic ruined smallish involves Thrace Agway Bradshaw listings excreting Latvia glandular hoots pigment sensitively arrant Wittgenstein Teledyne outperforming colts Madames breakpoints sensitives enervate mock redisplay Merrill turrets intersperses tutorial evolutionary recombines incompetents foiling Borealis pygmy brews Hewett legally Koch pharmaceutic instead betwixt frighteningly buggers shortage maddest polymers Gaul barbaric reddishness psychoanalytic ploys Wayne brake acreage Mickie chateaus positioned Hibbard gowns benighted hoping seclusion tenseness irreproducible steeple Susquehanna resourcefully demountable student hyphens stockholder bureaucrats defying related abbe agitating prong ruthlessly</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-09 11:04:28 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:10:32 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>134</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-09 11:04:27 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>485</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>inimical intramuscular burglarpr</description>
+                            
+                              
+          <attachment>
+            <id>101</id>
+            <name>comment</name>
+            <type>COMMENT</type>
+                                    
+            <data>inimical intramuscular burglarproofed scissors sputtered resurrectors impresses irrigate cinematic seeds Johannes slope dynamite calcium hexagonal Edwin analogously labor beauties megalomania impale Blackstone flagged Raul tennis Wauwatosa shareable copiously mink inordinately oceanic ruined smallish involves Thrace Agway Bradshaw listings excreting Latvia glandular hoots pigment sensitively arrant Wittgenstein Teledyne outperforming colts Madames breakpoints sensitives enervate mock redisplay Merrill turrets intersperses tutorial evolutionary recombines incompetents foiling Borealis pygmy brews Hewett legally Koch pharmaceutic instead betwixt frighteningly buggers shortage maddest polymers Gaul barbaric reddishness psychoanalytic ploys Wayne brake acreage Mickie chateaus positioned Hibbard gowns benighted hoping seclusion tenseness irreproducible steeple Susquehanna resourcefully demountable student hyphens stockholder bureaucrats defying related abbe agitating prong ruthlessly</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-09 11:04:28 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:11:25 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>135</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-09 11:04:27 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>486</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>inimical intramuscular burglarpr</description>
+                            
+                              
+          <attachment>
+            <id>102</id>
+            <name>comment</name>
+            <type>COMMENT</type>
+                                    
+            <data>inimical intramuscular burglarproofed scissors sputtered resurrectors impresses irrigate cinematic seeds Johannes slope dynamite calcium hexagonal Edwin analogously labor beauties megalomania impale Blackstone flagged Raul tennis Wauwatosa shareable copiously mink inordinately oceanic ruined smallish involves Thrace Agway Bradshaw listings excreting Latvia glandular hoots pigment sensitively arrant Wittgenstein Teledyne outperforming colts Madames breakpoints sensitives enervate mock redisplay Merrill turrets intersperses tutorial evolutionary recombines incompetents foiling Borealis pygmy brews Hewett legally Koch pharmaceutic instead betwixt frighteningly buggers shortage maddest polymers Gaul barbaric reddishness psychoanalytic ploys Wayne brake acreage Mickie chateaus positioned Hibbard gowns benighted hoping seclusion tenseness irreproducible steeple Susquehanna resourcefully demountable student hyphens stockholder bureaucrats defying related abbe agitating prong ruthlessly</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-09 11:04:28 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:11:57 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>136</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-09 11:04:27 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>487</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+                            
+              <description>inimical intramuscular burglarpr</description>
+                            
+                              
+          <attachment>
+            <id>103</id>
+            <name>comment</name>
+            <type>COMMENT</type>
+                                    
+            <data>inimical intramuscular burglarproofed scissors sputtered resurrectors impresses irrigate cinematic seeds Johannes slope dynamite calcium hexagonal Edwin analogously labor beauties megalomania impale Blackstone flagged Raul tennis Wauwatosa shareable copiously mink inordinately oceanic ruined smallish involves Thrace Agway Bradshaw listings excreting Latvia glandular hoots pigment sensitively arrant Wittgenstein Teledyne outperforming colts Madames breakpoints sensitives enervate mock redisplay Merrill turrets intersperses tutorial evolutionary recombines incompetents foiling Borealis pygmy brews Hewett legally Koch pharmaceutic instead betwixt frighteningly buggers shortage maddest polymers Gaul barbaric reddishness psychoanalytic ploys Wayne brake acreage Mickie chateaus positioned Hibbard gowns benighted hoping seclusion tenseness irreproducible steeple Susquehanna resourcefully demountable student hyphens stockholder bureaucrats defying related abbe agitating prong ruthlessly</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-09 11:05:28 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:12:21 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+            </activity>
+                    
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>137</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-18 17:16:17 PST</timestamp>
+          </created-date>
+          <activities>
+                                            
+            <activity>
+              <id>489</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+              <new-value>blocking</new-value>
+              
+                            
+              <dependency>
+                <id>100</id>
+                <parent>PAC3</parent>
+                <child>PAC1</child>
+                <type>blocking</type>
+                <deleted>false</deleted>
+              </dependency>
+              
+              <description>Issue PAC3 blocks issue PAC1</description>
+                            
+                              
+            </activity>
+                    
+          </activities>
+                      
+          <attachment>
+            <id>104</id>
+            <name>modification</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>PAC1 must finish before PAC3</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:16:17 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:16:17 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>2</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>100</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-10 14:57:51 PST</timestamp>
+          </created-date>
+          <activities>
+                                                                                                              
+            <activity>
+              <id>104</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Summary set to 'one'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>105</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>All</new-option>
+                                          
+              <new-value>All</new-value>
+              
+                            
+              <description>Platform set to 'All'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>106</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows3.1</new-option>
+                                          
+              <new-value>windows3.1</new-value>
+              
+                            
+              <description>Operating system set to 'windows3.1'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>107</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Description set to 'one'</description>
+                            
+                              
+            </activity>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+          </activities>
+                      
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    
+    <issue>
+      <id>3</id>
+      <artifact-type>Defect</artifact-type>
+      <activity-sets>
+      
+        <activity-set>
+          <id>100</id>
+          <type>Create Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-10 14:57:51 PST</timestamp>
+          </created-date>
+          <activities>
+                                                                                                                                                                                                      
+            <activity>
+              <id>108</id>
+              <attribute>Summary</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Summary set to 'one'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>109</id>
+              <attribute>Platform</attribute>
+                                                                      
+              <new-option>All</new-option>
+                                          
+              <new-value>All</new-value>
+              
+                            
+              <description>Platform set to 'All'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>110</id>
+              <attribute>Operating system</attribute>
+                                                                      
+              <new-option>windows3.1</new-option>
+                                          
+              <new-value>windows3.1</new-value>
+              
+                            
+              <description>Operating system set to 'windows3.1'</description>
+                            
+                              
+            </activity>
+                                
+            <activity>
+              <id>111</id>
+              <attribute>Description</attribute>
+                                                                                                  
+              <new-value>one</new-value>
+              
+                            
+              <description>Description set to 'one'</description>
+                            
+                              
+            </activity>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+          </activities>
+                      
+        </activity-set>
+      
+        <activity-set>
+          <id>137</id>
+          <type>Edit Issue</type>
+          <created-by>turbine@tigris.org</created-by>
+          <created-date>
+            <format>yyyy-MM-dd HH:mm:ss z</format>
+            <timestamp>2003-03-18 17:16:17 PST</timestamp>
+          </created-date>
+          <activities>
+                      
+            <activity>
+              <id>488</id>
+              <attribute>Null Attribute</attribute>
+                                                                                                  
+              <new-value>blocking</new-value>
+              
+                            
+              <dependency>
+                <id>100</id>
+                <parent>PAC3</parent>
+                <child>PAC1</child>
+                <type>blocking</type>
+                <deleted>false</deleted>
+              </dependency>
+              
+              <description>Issue PAC3 blocks issue PAC1</description>
+                            
+                              
+            </activity>
+                                          
+          </activities>
+                      
+          <attachment>
+            <id>104</id>
+            <name>modification</name>
+            <type>MODIFICATION</type>
+                                    
+            <data>PAC1 must finish before PAC3</data>
+                                          
+            <mimetype>text/plain</mimetype>
+            <created-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:16:17 PST</timestamp>
+            </created-date>
+            <modified-date>
+              <format>yyyy-MM-dd HH:mm:ss z</format>
+              <timestamp>2003-03-18 17:16:17 PST</timestamp>
+            </modified-date>
+            <created-by>turbine@tigris.org</created-by>
+            
+            <deleted>false</deleted>
+          </attachment>
+  
+        </activity-set>
+      
+      </activity-sets>
+    </issue>
+    </issues>
+
+</scarab-issues>
