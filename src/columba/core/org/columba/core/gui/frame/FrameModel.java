@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -27,7 +27,6 @@ import org.columba.core.xml.XmlElement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 
 /**
  * FrameModel manages all frames. It keeps a list of every
@@ -44,7 +43,7 @@ import java.util.List;
  */
 public class FrameModel {
     /** list of frame controllers */
-    protected List activeFrameCtrls;
+    protected List activeFrameCtrls = new LinkedList();
 
     /** viewlist xml treenode */
     protected XmlElement viewList = MainInterface.config.get("options")
@@ -61,32 +60,6 @@ public class FrameModel {
      * views/windows as when last time Columba was closed).
      */
     public FrameModel() {
-        activeFrameCtrls = new LinkedList();
-
-        // load all frames from configuration file
-        for (int i = 0; i < viewList.count(); i++) {
-            // get element from view list
-            XmlElement view = viewList.getElement(i);
-            String id = view.getAttribute("id");
-
-            // create frame controller for this view...
-            FrameMediator c = createFrameController(id, new ViewItem(view));
-
-            // ...and display it
-            c.openView();
-        }
-
-        /*
-         * Just for extra security: If no views where stored in view list
-         * (corrupt config file or something?), a mail view is
-         * opened as default.
-         */
-        if (activeFrameCtrls.size() == 0) {
-            ColumbaLogger.log.info(
-                "No views specified, opening mail view as default");
-            openView("ThreePaneMail");
-        }
-
         //this is executed on shutdown: store all open frames so that they
         //can be restored on the next start
         ShutdownManager.getShutdownManager().register(new Runnable() {
@@ -124,6 +97,28 @@ public class FrameModel {
                     }
                 }
             });
+    }
+    
+    /**
+     * Opens all views stored in the configuration.
+     */
+    public void openStoredViews() {
+        // load all frames from configuration file
+        for (int i = 0; i < viewList.count(); i++) {
+            // get element from view list
+            XmlElement view = viewList.getElement(i);
+            String id = view.getAttribute("id");
+
+            // create frame controller for this view...
+            FrameMediator c = createFrameController(id, new ViewItem(view));
+
+            // ...and display it
+            c.openView();
+        }
+        
+        if (activeFrameCtrls.size() == 0) {
+            openView("ThreePaneMail");
+        }
     }
 
     /**

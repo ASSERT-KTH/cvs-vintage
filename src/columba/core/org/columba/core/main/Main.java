@@ -123,8 +123,12 @@ public class Main {
         
         MainInterface.frameModel = new FrameModel();
 
+        new CmdLineArgumentHandler(cmdLineParser);
+        
         frame.setVisible(false);
 
-        new CmdLineArgumentHandler(cmdLineParser);
+        if (MainInterface.frameModel.getOpenFrames().length == 0) {
+            MainInterface.frameModel.openStoredViews();
+        }
     }
 }
