@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Collections;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
+import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 import org.apache.torque.TorqueRuntimeException;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -550,6 +551,36 @@ public  class MITList
         return ids;
     }
 
+    public void addToCriteria(Criteria crit)
+    {
+        if (size() > 0) 
+        {
+            List items = getExpandedMITListItems();
+            ArrayList ids = new ArrayList(items.size());
+            Iterator i = items.iterator();
+            Criteria.Criterion c = null;
+            while (i.hasNext()) 
+            {
+                MITListItem item = (MITListItem)i.next();
+                Criteria.Criterion c1 = 
+                    crit.getNewCriterion(IssuePeer.MODULE_ID, 
+                        item.getModuleId(), Criteria.EQUAL);
+                Criteria.Criterion c2 = 
+                    crit.getNewCriterion(IssuePeer.TYPE_ID, 
+                        item.getIssueTypeId(), Criteria.EQUAL);
+                c1.and(c2);
+                if (c == null) 
+                {
+                    c = c1;
+                }
+                else 
+                {
+                    c.or(c1);
+                }
+            }
+            crit.add(c);
+        }
+    }
 
     public void addMITListItem(MITListItem item)
         throws TorqueException

@@ -1319,8 +1319,7 @@ public class IssueSearch
     {
         if (isXMITSearch()) 
         {
-            crit.addIn(IssuePeer.MODULE_ID, mitList.getModuleIds());
-            crit.addIn(IssuePeer.TYPE_ID, mitList.getIssueTypeIds());
+            mitList.addToCriteria(crit);
         }
         else 
         {

@@ -1406,7 +1406,8 @@ try{
             if ( userList != null && userList.length > 0)
             {
 
-                List issueIdsFromUserSearch = getIssueIdsFromUserSearch(parser);
+                List issueIdsFromUserSearch = 
+                    getIssueIdsFromUserSearch(user, parser);
                 if (issueIdsFromUserSearch.size() > 0)
                 {
                     search.setIssueIdsFromUserSearch(issueIdsFromUserSearch);
@@ -1579,7 +1580,8 @@ try{
     /**
      * Searches on user attributes.
     */
-    private List getIssueIdsFromUserSearch(ValueParser vp)
+    private List getIssueIdsFromUserSearch(ScarabUser loggedInUser, 
+                                           ValueParser vp)
         throws Exception
     {
         Criteria userCrit = new Criteria();
@@ -1590,9 +1592,21 @@ try{
             String key = keys[i].toString();
             if (key.startsWith("user_attr_"))
             {
-               Criteria tempCrit = new Criteria()
-                  .add(IssuePeer.MODULE_ID, getCurrentModule().getModuleId())
-                  .add(IssuePeer.TYPE_ID, getCurrentIssueType().getIssueTypeId());
+                Criteria tempCrit = new Criteria();
+                if (loggedInUser.getCurrentMITList() == null) 
+                {
+                    tempCrit
+                        .add(IssuePeer.MODULE_ID, 
+                             getCurrentModule().getModuleId())
+                        .add(IssuePeer.TYPE_ID, 
+                             getCurrentIssueType().getIssueTypeId());
+                }
+                else 
+                {
+                    loggedInUser.getCurrentMITList().addToCriteria(tempCrit);
+                    System.out.println("Adding MITList to criteria: " + tempCrit);
+                }
+                
 
                String userId = key.substring(10);
                String attrId = vp.getString(key);
