@@ -27,13 +27,22 @@ import java.lang.reflect.Constructor;
  */
 public class DefaultClassLoader {
 
+	// we can't use SystemClassLoader here, because that doesn't work
+	// with java webstart
+	// -> instead we use this.getClass().getClassLoader()
+	// -> which seems to work perfectly
+	/*
 	protected static ClassLoader loader = ClassLoader.getSystemClassLoader();
-
+	*/
+	
+	ClassLoader loader;
 	/**
 	 * Constructor for CClassLoader.
 	 */
 	public DefaultClassLoader() {
 		super();
+		
+		loader = this.getClass().getClassLoader();
 	}
 
 	public Object instanciate(String className) throws Exception {

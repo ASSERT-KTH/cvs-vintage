@@ -73,31 +73,39 @@ public class GlobalResourceLoader {
 		"org.columba.core.i18n.global.global";
 
 	static {
-		XmlElement locale =
-			Config.get("options").getElement("/options/locale");
+		XmlElement locale = Config.get("options").getElement("/options/locale");
 
 		// no configuration available, create default config
 		if (locale == null) {
 			// create new locale xml treenode
 			locale = new XmlElement("locale");
 			locale.addAttribute("language", "en");
-			Config.get("options").getElement("/options").addElement(
-				locale);
+			Config.get("options").getElement("/options").addElement(locale);
 
 		}
-			
+
 		String language = locale.getAttribute("language");
-                String country = locale.getAttribute("country", "");
-                String variant = locale.getAttribute("variant", "");
+		String country = locale.getAttribute("country", "");
+		String variant = locale.getAttribute("variant", "");
 		Locale.setDefault(new Locale(language, country, variant));
 		initClassLoader();
 		try {
-			globalBundle = ResourceBundle.getBundle(
-					GLOBAL_BUNDLE_PATH,
-					Locale.getDefault(),
-					classLoader);
+			// use ResourceBundle's internal classloader
+			if (classLoader == null)
+				globalBundle =
+					ResourceBundle.getBundle(
+						GLOBAL_BUNDLE_PATH,
+						Locale.getDefault());
+			else
+				globalBundle =
+					ResourceBundle.getBundle(
+						GLOBAL_BUNDLE_PATH,
+						Locale.getDefault(),
+						classLoader);
 		} catch (MissingResourceException mre) {
+
 			throw new RuntimeException("Global resource bundle not found, Columba cannot start.");
+
 		}
 	}
 
@@ -156,7 +164,19 @@ public class GlobalResourceLoader {
 					"No language pack found for "
 						+ Locale.getDefault().toString());
 			}
+
+			// we can't use SystemClassLoader here, because that
+			// wouldn't work with java webstart,
+			// ResourceBundle uses its own internal classloader
+			// if no classloader is given
+			//  -> set classloader = null
+
+			/*
 			classLoader = ClassLoader.getSystemClassLoader();
+			*/
+
+			classLoader = null;
+
 		}
 	}
 
@@ -188,11 +208,18 @@ public class GlobalResourceLoader {
 		ResourceBundle bundle = (ResourceBundle) htBundles.get(sBundlePath);
 		if (bundle == null) {
 			try {
-				bundle =
-					ResourceBundle.getBundle(
-						sBundlePath,
-						Locale.getDefault(),
-						classLoader);
+				// use ResourceBundle's internal classloader
+				if (classLoader == null)
+					bundle =
+						ResourceBundle.getBundle(
+							sBundlePath,
+							Locale.getDefault());
+				else
+					bundle =
+						ResourceBundle.getBundle(
+							sBundlePath,
+							Locale.getDefault(),
+							classLoader);
 				htBundles.put(sBundlePath, bundle);
 			} catch (MissingResourceException mre) {
 			}
@@ -239,11 +266,18 @@ public class GlobalResourceLoader {
 					+ Locale.getDefault().toString());
 		}
 		try {
-			globalBundle =
-				ResourceBundle.getBundle(
-					GLOBAL_BUNDLE_PATH,
-					Locale.getDefault(),
-					classLoader);
+			// use ResourceBundle's internal classloader
+			if (classLoader == null)
+				globalBundle =
+					ResourceBundle.getBundle(
+						GLOBAL_BUNDLE_PATH,
+						Locale.getDefault());
+			else
+				globalBundle =
+					ResourceBundle.getBundle(
+						GLOBAL_BUNDLE_PATH,
+						Locale.getDefault(),
+						classLoader);
 		} catch (MissingResourceException mre) {
 		} //should not occur, otherwise the static initializer should have thrown a RuntimeException
 
@@ -256,11 +290,19 @@ public class GlobalResourceLoader {
 				bundlePath = (String) entries.nextElement();
 
 				//retrieve new bundle
-				bundle =
-					ResourceBundle.getBundle(
-						bundlePath,
-						Locale.getDefault(),
-						classLoader);
+
+				// use ResourceBundle's internal classloader
+				if (classLoader == null)
+					bundle =
+						ResourceBundle.getBundle(
+							bundlePath,
+							Locale.getDefault());
+				else
+					bundle =
+						ResourceBundle.getBundle(
+							bundlePath,
+							Locale.getDefault(),
+							classLoader);
 
 				//overwrite old bundle
 				htBundles.put(bundlePath, bundle);
