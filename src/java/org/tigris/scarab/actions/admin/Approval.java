@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.17 2002/04/18 00:27:34 jmcnally Exp $
+    @version $Id: Approval.java,v 1.18 2002/07/11 23:24:47 jon Exp $
 */
 public class Approval extends RequireLoginFirstAction
 {
@@ -265,6 +265,7 @@ public class Approval extends RequireLoginFirstAction
                     }
                 }
             }
+            scarabR.setConfirmMessage("All roles have been processed.");
         }        
         setTarget(data, nextTemplate);
     }
