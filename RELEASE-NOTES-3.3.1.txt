@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.9 2001/12/04 02:27:17 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.10 2001/12/05 11:29:50 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -40,6 +40,16 @@ Bug No.  Description
 
 	 Moved the setting of the default "*.jsp" mapping so that it is now 
 	 possible to entirely disable support for jsp files.
+
+         Context properties and ContextManager properties can now be set with
+         <Property ... /> elements, i.e: 
+             <Property name="propname" value="thevalue" />
+         For backwards compatibility, the ContextManager "lower-case-p"
+         <property ... /> version supported by Tomcat 3.3. is still supported.
+
+         Added variable substitution handling to ContextXmlReader, allowing
+         variable substitution to be used in <Context ...></Context>
+         declarations.
 
 
 Server:
@@ -105,12 +115,14 @@ Bug No.  Description
          Tomcat-on-NetWare-HowTo.html updated to fix errors related to new
          functionality in Tomcat 3.3.
 
-         tomcat-ug.html updated with additional classloader information.
+         tomcat-ug.html updated with additional classloader information and
+         details on the variable substitution available in Context
+         declarations.
      
          serverxml.html updated to document new checkSSLSessionId attribute on
          SessionId module.  A note was added to Ajp12Connector to document the
          requirement for maxThreads to be 2 or more if it is to be used to
-         shutdown Tomcat.
+         shutdown Tomcat.  Section on variable substitution was updated.
 
          tomcat-iis-howto.html updated to make it clearer that the "Filter Dlls"
          key is used only on Win98.
