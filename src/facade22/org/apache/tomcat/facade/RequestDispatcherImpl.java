@@ -491,10 +491,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    getRealRequest();
 	Response realResponse = realRequest.getResponse();
 
-	// Set the "included" flag so that things like header setting in the
-	// included servlet will be correctly ignored
-	boolean old_included=realResponse.isIncluded();
-	if( ! old_included ) realResponse.setIncluded( true );
+	// Don't set included #3726
+	// 	boolean old_included=realResponse.isIncluded();
+	// 	if( ! old_included ) realResponse.setIncluded( true );
 
 	if( wr!=null) {
 	    try {
