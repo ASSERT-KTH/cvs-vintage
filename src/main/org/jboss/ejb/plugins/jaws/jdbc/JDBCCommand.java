@@ -45,6 +45,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.ByteArrayBlob;
 import org.jboss.logging.Logger;
 
 /**
@@ -56,7 +57,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.42 $ 
+ * @version $Revision: 1.43 $ 
  * 
  *   <p><b>Revisions:</b>
  *
@@ -330,8 +331,11 @@ public abstract class JDBCCommand
               // it's more efficient to use setBinaryStream for large
               // streams, and causes problems if not done on some DBMS
               // implementations
-              if (bytes.length < 2000) {
-                  stmt.setBytes(idx, bytes);
+              // if this is an Oracle Blob only setBlob will work.
+              if (jdbcType == Types.BLOB) {
+                 stmt.setBlob(idx, new ByteArrayBlob(bytes));
+              } else if (bytes.length < 2000) {
+                 stmt.setBytes(idx, bytes);
               } else {
                   try {
                       ByteArrayInputStream bais =
