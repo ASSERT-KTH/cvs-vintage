@@ -181,7 +181,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		JPanel panel = null;
 		if (prefersHTMLMimePart()) {
 			// search for HTML mimepart
-			for (int j = 0; j < mp.count(); j++) {
+			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equalsIgnoreCase(
 						"text/html")) {
@@ -194,7 +194,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			}
 		} else {
 			// search for text mimepart
-			for (int j = 0; j < mp.count(); j++) {
+			for (int j = 0; j < mp.countChilds(); j++) {
 				MimePart alternativePart = mp.getChild(j);
 				if (alternativePart.getHeader().getMimeType().equalsIgnoreCase(
 						"text/plain")) {
