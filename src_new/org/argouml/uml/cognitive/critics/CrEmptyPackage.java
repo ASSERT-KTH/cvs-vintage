@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.13 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrEmptyPackage.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,8 +42,12 @@ import org.argouml.model.ModelFacade;
 //of references to elements of other packages?
 
 public class CrEmptyPackage extends CrUML {
-    protected static Logger cat = Logger.getLogger(CrEmptyPackage.class);
+    private static final Logger LOG = Logger.getLogger(CrEmptyPackage.class);
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrEmptyPackage() {
 	setHeadline("Add Elements to Package <ocl>self</ocl>");
        
@@ -51,12 +55,16 @@ public class CrEmptyPackage extends CrUML {
 	addTrigger("ownedElement");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
-//	cat.debug("predicate2 on " + dm);
+//	LOG.debug("predicate2 on " + dm);
 	if (!(ModelFacade.isAPackage(dm))) return NO_PROBLEM;
 	Collection elems = ModelFacade.getOwnedElements(dm);
-	if (elems.size() == 0){
-            cat.debug("PROBLEM_FOUND on " + dm);
+	if (elems.size() == 0) {
+            LOG.debug("PROBLEM_FOUND on " + dm);
             return PROBLEM_FOUND;
         }
 	return NO_PROBLEM;

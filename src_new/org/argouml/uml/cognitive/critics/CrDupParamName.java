@@ -1,4 +1,4 @@
-// $Id: CrDupParamName.java,v 1.12 2004/07/20 00:56:33 d00mst Exp $
+// $Id: CrDupParamName.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.12 2004/07/20 00:56:33 d00mst Exp $
+// $Id: CrDupParamName.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,13 +34,16 @@ import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
 
 /** Well-formedness rule [1] for MBehavioralFeature. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04.
  */
 public class CrDupParamName extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrDupParamName() {
 	setHeadline("Duplicate Parameter Name");
 
@@ -48,6 +51,10 @@ public class CrDupParamName extends CrUML {
 	setKnowledgeTypes(Critic.KT_SYNTAX);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!ModelFacade.isABehavioralFeature(dm)) {
 	    return NO_PROBLEM;

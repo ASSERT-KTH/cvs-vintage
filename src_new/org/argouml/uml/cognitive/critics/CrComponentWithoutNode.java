@@ -1,4 +1,4 @@
-// $Id: CrComponentWithoutNode.java,v 1.11 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrComponentWithoutNode.java,v 1.12 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrComponentWithoutNode.java
 // Classes: CrComponentWithoutNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrComponentWithoutNode.java,v 1.11 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrComponentWithoutNode.java,v 1.12 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,11 +48,19 @@ import org.tigris.gef.util.VectorSet;
 
 public class CrComponentWithoutNode extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrComponentWithoutNode() {
 	setHeadline("Components normally are inside nodes");
 	addSupportedDecision(CrUML.decPATTERNS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
@@ -61,12 +69,20 @@ public class CrComponentWithoutNode extends CrUML {
 	return PROBLEM_FOUND; 
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) { 
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd); 
 	return new UMLToDoItem(this, offs, dsgr); 
     } 
  
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) { 
 	if (!isActive()) return false; 
 	VectorSet offs = i.getOffenders(); 
@@ -83,7 +99,10 @@ public class CrComponentWithoutNode extends CrUML {
      * the returned vector-set is not null. Then in the vector-set
      * are the UMLDeploymentDiagram and all FigComponents with no
      * enclosing FigMNode
-     **/
+     *
+     * @param dd the diagram to check
+     * @return the set of offenders
+     */
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 
 	Collection figs = dd.getLayer().getContents(null);
@@ -99,7 +118,7 @@ public class CrComponentWithoutNode extends CrUML {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigComponent)) continue;
 	    FigComponent fc = (FigComponent) obj;
-	    if (fc.getEnclosingFig() == null && isNode == true) {
+	    if ((fc.getEnclosingFig() == null) && isNode) {
 		if (offs == null) {
 		    offs = new VectorSet();
 		    offs.addElement(dd);

@@ -1,4 +1,4 @@
-// $Id: CrAlreadyRealizes.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrAlreadyRealizes.java,v 1.7 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAlreadyRealizes.java
 // Classes: CrAlreadyRealizes.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAlreadyRealizes.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrAlreadyRealizes.java,v 1.7 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,6 +55,10 @@ public class CrAlreadyRealizes extends CrUML {
 	addTrigger("realization");
     }
 						  
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
 	if (ModelFacade.isAClass(dm)) {

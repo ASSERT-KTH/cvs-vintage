@@ -1,4 +1,4 @@
-// $Id: CrInterfaceOperOnly.java,v 1.8 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrInterfaceOperOnly.java
 // Classes: CrInterfaceOperOnly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.8 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,6 +41,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrInterfaceOperOnly extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrInterfaceOperOnly() {
 	setHeadline("Interfaces may only have operations");
 	addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
@@ -48,6 +52,10 @@ public class CrInterfaceOperOnly extends CrUML {
 	addTrigger("structuralFeature");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 	Object inf = /*(MInterface)*/ dm;

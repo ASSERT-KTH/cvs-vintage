@@ -1,4 +1,4 @@
-// $Id: CrCircularAssocClass.java,v 1.7 2003/08/30 23:23:49 alexb Exp $
+// $Id: CrCircularAssocClass.java,v 1.8 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrCircularAssocClass.java
 // Classes: CrCircularAssocClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.7 2003/08/30 23:23:49 alexb Exp $
+// $Id: CrCircularAssocClass.java,v 1.8 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,6 +37,10 @@ import org.argouml.cognitive.critics.Critic;
 
 public class CrCircularAssocClass extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrCircularAssocClass() {
 	setHeadline("Circular MAssociation");
 
@@ -44,6 +48,10 @@ public class CrCircularAssocClass extends CrUML {
 	setKnowledgeTypes(Critic.KT_SEMANTICS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	// TODO: not implemented
 	return NO_PROBLEM;

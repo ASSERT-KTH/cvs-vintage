@@ -1,4 +1,4 @@
-// $Id: CrConflictingComposites.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrConflictingComposites.java,v 1.11 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrConflictingComposites.java,v 1.11 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,6 +41,10 @@ import org.argouml.model.uml.UmlHelper;
 
 public class CrConflictingComposites extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrConflictingComposites() {
 	setHeadline("Remove Conflicting Composite Associations");
 
@@ -49,6 +53,10 @@ public class CrConflictingComposites extends CrUML {
 	// no good trigger
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object classifier, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(classifier))) return NO_PROBLEM;
 	Collection conns = ModelFacade.getAssociationEnds(classifier);

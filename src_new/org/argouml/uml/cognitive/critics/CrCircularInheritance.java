@@ -1,4 +1,4 @@
-// $Id: CrCircularInheritance.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrCircularInheritance.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrCircularInheritance.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,9 +47,13 @@ import org.tigris.gef.util.VectorSet;
  *  Semantics. OMG document ad/97-08-04. */
 
 public class CrCircularInheritance extends CrUML {
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(CrCircularInheritance.class);
 						      
+    /**
+     * The constructor.
+     * 
+     */
     public CrCircularInheritance() {
 	setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
 	setPriority(ToDoItem.HIGH_PRIORITY);
@@ -59,6 +63,10 @@ public class CrCircularInheritance extends CrUML {
 	// no need for trigger on "specialization"
     }
 							  
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	boolean problem = NO_PROBLEM;
 	if (ModelFacade.isAGeneralizableElement(dm)) {
@@ -67,17 +75,25 @@ public class CrCircularInheritance extends CrUML {
 	    }
 	    catch (IllegalStateException ex) {
 		problem = PROBLEM_FOUND;
-                cat.info("problem found for: "+this);
+                LOG.info("problem found for: " + this);
 	    }
 	}
 	return problem;
     }
 							      
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	VectorSet offs = computeOffenders(dm);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 								  
+    /**
+     * @param dm the object
+     * @return the set of offenders
+     */
     protected VectorSet computeOffenders(Object dm) {
 	VectorSet offs = new VectorSet(dm);
 	VectorSet above = offs.reachable(new SuperclassGen());
@@ -91,6 +107,10 @@ public class CrCircularInheritance extends CrUML {
 	return offs;
     }
 								      
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -98,9 +118,9 @@ public class CrCircularInheritance extends CrUML {
 	if (!predicate(dm, dsgr)) return false;
 	VectorSet newOffs = computeOffenders(dm);
 	boolean res = offs.equals(newOffs);
-	cat.debug("offs=" + offs.toString() +
-		  " newOffs=" + newOffs.toString() +
-		  " res = " + res);
+	LOG.debug("offs=" + offs.toString() 
+		  + " newOffs=" + newOffs.toString() 
+		  + " res = " + res);
 	return res;
     }
 									  

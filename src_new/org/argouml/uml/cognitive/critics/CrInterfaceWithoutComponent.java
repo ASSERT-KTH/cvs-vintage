@@ -1,4 +1,4 @@
-// $Id: CrInterfaceWithoutComponent.java,v 1.13 2004/05/20 11:12:21 linus Exp $
+// $Id: CrInterfaceWithoutComponent.java,v 1.14 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,11 +43,19 @@ import org.tigris.gef.util.VectorSet;
  */
 public class CrInterfaceWithoutComponent extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrInterfaceWithoutComponent() {
 	setHeadline("Interfaces normally are inside components");
 	addSupportedDecision(CrUML.decPATTERNS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
@@ -56,12 +64,20 @@ public class CrInterfaceWithoutComponent extends CrUML {
 	return PROBLEM_FOUND;
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) {
 	if (!isActive()) return false;
 	VectorSet offs = i.getOffenders();
@@ -77,7 +93,10 @@ public class CrInterfaceWithoutComponent extends CrUML {
      * the returned vector-set is not null. Then in the vector-set
      * are the UMLDeploymentDiagram and all FigInterfaces with no
      * enclosing FigComponent
-     **/
+     *
+     * @param dd the diagram to check
+     * @return the set of offenders
+     */
     public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
 	Collection figs = dd.getLayer().getContents(null);
 	VectorSet offs = null;

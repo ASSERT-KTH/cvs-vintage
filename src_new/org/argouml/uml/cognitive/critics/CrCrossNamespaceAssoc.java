@@ -1,4 +1,4 @@
-// $Id: CrCrossNamespaceAssoc.java,v 1.11 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.12 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,8 +55,8 @@ import org.argouml.model.ModelFacade;
  *   supported.</p>
  *
  * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_cross_namespace_assoc">ArgoUML
- * User Manual: Classifier not in Namespace of its Association</a>
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_cross_namespace_assoc">
+ * ArgoUML User Manual: Classifier not in Namespace of its Association</a>
  */
 public class CrCrossNamespaceAssoc extends CrUML {
     /**

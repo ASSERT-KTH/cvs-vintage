@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.9 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrAssocNameConflict.java,v 1.10 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrAssocNameConflict.java
 // Classes: CrAssocNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAssocNameConflict.java,v 1.9 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrAssocNameConflict.java,v 1.10 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -41,6 +41,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrAssocNameConflict extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrAssocNameConflict() {
 	setHeadline("Resolve Association Name Conflict");
 	addSupportedDecision(CrUML.decNAMING);
@@ -48,6 +52,10 @@ public class CrAssocNameConflict extends CrUML {
 	// no good trigger
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isANamespace(dm))) return NO_PROBLEM;
 	Collection oes = ModelFacade.getOwnedElements(dm);

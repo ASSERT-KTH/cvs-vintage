@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrDupRoleNames.java,v 1.11 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,8 @@ import org.argouml.model.ModelFacade;
  *   standard (see section 2.5.3 of the standard).</p>
  *
  * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_dup_role_names">ArgoUML
- * User Manual: Duplicate end (role) names for &lt;association&gt;</a>
+ * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_dup_role_names">
+ * ArgoUML User Manual: Duplicate end (role) names for &lt;association&gt;</a>
  */
 
 public class CrDupRoleNames extends CrUML {

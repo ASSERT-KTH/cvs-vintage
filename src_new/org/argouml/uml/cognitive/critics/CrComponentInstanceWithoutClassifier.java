@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.12 2004/03/25 22:30:00 mvw Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.13 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,11 +45,19 @@ import org.tigris.gef.util.VectorSet;
 
 public class CrComponentInstanceWithoutClassifier extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrComponentInstanceWithoutClassifier() {
 	setHeadline("Set ComponentInstance-classifier");
 	addSupportedDecision(CrUML.decPATTERNS);
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(dm instanceof UMLDeploymentDiagram)) return NO_PROBLEM;
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
@@ -58,12 +66,20 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 	return PROBLEM_FOUND; 
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#toDoItem(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public ToDoItem toDoItem(Object dm, Designer dsgr) { 
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
 	VectorSet offs = computeOffenders(dd); 
 	return new UMLToDoItem(this, offs, dsgr); 
     } 
  
+    /**
+     * @see org.argouml.cognitive.Poster#stillValid(
+     * org.argouml.cognitive.ToDoItem, org.argouml.cognitive.Designer)
+     */
     public boolean stillValid(ToDoItem i, Designer dsgr) { 
 	if (!isActive()) return false; 
 	VectorSet offs = i.getOffenders(); 
@@ -79,7 +95,10 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
      * the returned vector-set is not null. Then in the vector-set
      * are the UMLDeploymentDiagram and all FigComponentInstances with no
      * enclosing FigMNodeInstance
-     **/
+     *
+     * @param deploymentDiagram the diagram to check
+     * @return the set of offenders
+     */
     public VectorSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) { 
 
 	Collection figs = deploymentDiagram.getLayer().getContents(null);
@@ -95,9 +114,11 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 	while (figIter.hasNext()) {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigComponentInstance)) continue;
-	    FigComponentInstance figComponentInstance = (FigComponentInstance) obj;
+	    FigComponentInstance figComponentInstance = 
+	                                    (FigComponentInstance) obj;
 	    if (figComponentInstance != null) {
-		Object coi = /*(MComponentInstance)*/ figComponentInstance.getOwner();
+		Object coi = /*(MComponentInstance)*/ 
+		                            figComponentInstance.getOwner();
 		if (coi != null) {
 		    Collection col = ModelFacade.getClassifiers(coi);
 		    if (col.size() > 0) continue;     
@@ -108,7 +129,8 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 		}
 		offs.addElement(figComponentInstance);
 	    } else if (figComponentInstance.getEnclosingFig() != null 
-		     && ((ModelFacade.getNodeInstance(figComponentInstance.getOwner()))
+		     && ((ModelFacade.getNodeInstance(
+		                         figComponentInstance.getOwner()))
 			 == null)) {
 		if (offs == null) {
 		    offs = new VectorSet();

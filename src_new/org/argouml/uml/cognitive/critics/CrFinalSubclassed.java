@@ -1,4 +1,4 @@
-// $Id: CrFinalSubclassed.java,v 1.8 2004/07/20 00:38:33 d00mst Exp $
+// $Id: CrFinalSubclassed.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.8 2004/07/20 00:38:33 d00mst Exp $
+// $Id: CrFinalSubclassed.java,v 1.9 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,6 +42,10 @@ import org.argouml.model.ModelFacade;
  */
 public class CrFinalSubclassed extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrFinalSubclassed() {
 	setHeadline("Remove final keyword or remove subclasses");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -50,6 +54,10 @@ public class CrFinalSubclassed extends CrUML {
 	addTrigger("isLeaf");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!ModelFacade.isAGeneralizableElement(dm)) {
 	    return NO_PROBLEM;

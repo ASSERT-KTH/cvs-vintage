@@ -1,4 +1,4 @@
-// $Id: CrInvalidFork.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrInvalidFork.java,v 1.7 2004/08/29 14:51:54 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrInvalidFork.java
 // Classes: CrInvalidFork
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidFork.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrInvalidFork.java,v 1.7 2004/08/29 14:51:54 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,6 +39,10 @@ import org.argouml.model.ModelFacade;
 
 public class CrInvalidFork extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrInvalidFork() {
 	setHeadline("Change Fork Transitions");
 
@@ -46,6 +50,10 @@ public class CrInvalidFork extends CrUML {
 	addTrigger("incoming");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAPseudostate(dm))) return NO_PROBLEM;
 	Object k = ModelFacade.getPseudostateKind(dm);
