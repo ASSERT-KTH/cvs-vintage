@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.7 2003/10/05 21:15:58 d00mst Exp $
+// $Id: ExplorerTree.java,v 1.8 2003/10/05 21:28:45 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -377,7 +377,6 @@ extends DisplayTextTree
                     
                     setSelection(targets);
                 }
-                repaint();
                 updatingSelection = false;
             }
         }
