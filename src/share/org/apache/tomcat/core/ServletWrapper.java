@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.36 2000/03/30 21:56:49 costin Exp $
- * $Revision: 1.36 $
- * $Date: 2000/03/30 21:56:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.37 2000/03/31 20:58:35 costin Exp $
+ * $Revision: 1.37 $
+ * $Date: 2000/03/31 20:58:35 $
  *
  * ====================================================================
  *
@@ -97,8 +97,12 @@ public class ServletWrapper {
     protected String description = null;
 
     boolean initialized=false;
-    boolean available=true;
-
+    // If init() fails, this will keep the reason.
+    // init may be called when the servlet starts, but we need to
+    // report the error later, to the client
+    Exception unavailable=null;
+    long unavailableTime=-1;
+    
     // Usefull info for class reloading
     protected boolean isReloadable = false;
     // information + make sure destroy is called when no other servlet
@@ -191,6 +195,8 @@ public class ServletWrapper {
 	return (String)securityRoleRefs.get( name );
     }
 
+    // XXX Doesn't seem to be used, shouldn't be part of interface -
+    // use init and service !!! 
     public Servlet getServlet() {
 	if(servlet==null) {
 	    try {
@@ -221,6 +227,8 @@ public class ServletWrapper {
 		// or until 30 seconds have passed (to avoid a hang)
 		
 		//XXX I don't think it works ( costin )
+
+		// XXX Move it to an interceptor!!!!
 		while (serviceCount > 0) {
 		    try {
 			wait(30000);
@@ -235,52 +243,37 @@ public class ServletWrapper {
 			try {
 			    cI[i].preServletDestroy( context, this ); // ignore the error - like in the original code
 			} catch( TomcatException ex) {
-			    ex.printStackTrace();
+			    context.log( "Error in preServletDestroy " + cI, ex );
 			}
-			
 		    }
+		    // XXX post will not be called if any error happens in destroy. That's
+		    // how tomcat worked before - I think it's a bug !
 		    servlet.destroy();
 		    for( int i=cI.length-1; i>=0; i-- ) {
 			try {
 			    cI[i].postServletDestroy( context, this ); // ignore the error - like in the original code
 			} catch( TomcatException ex) {
-			    ex.printStackTrace();
+			    context.log( "Error in postServletDestroy " + cI, ex );
 			}
 			
 		    }
 		} catch(Exception ex) {
-		    ex.printStackTrace();
 		    // Should never come here...
+		    context.log( "Error in destroy ", ex );
 		}
 	    }
 	}
     }
 
     /** Load and init a the servlet pointed by this wrapper
+     *  @deprecated loadServlet is used with the meaning of initServlet.
+     *    Use the real thing.
      */
     public void loadServlet()
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	if (servletClass == null) {
-	    if (servletClassName == null) 
-		throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
-
-	    servletClass=context.getServletLoader().loadClass( servletClassName);
-	}
-	
-	servlet = (Servlet)servletClass.newInstance();
-	//	System.out.println("Loading " + servletClassName + " " + servlet );
-	
-	config.setServletClassName(servlet.getClass().getName());
-	try {
-	    initServlet();
-	} catch( UnavailableException ex ) {
-	    available=false;
-	} catch( ServletException ex ) {
-	    available=false;
-	}
-	//	System.out.println("Init ok " + available);
+	initServlet();
     }
 
     
@@ -288,37 +281,69 @@ public class ServletWrapper {
 	throws ClassNotFoundException, InstantiationException,
 	IllegalAccessException, ServletException
     {
-	//	try {
-	    final Servlet sinstance = servlet;
-	    final ServletConfigImpl servletConfig = config;
-	    
-	    ContextInterceptor cI[]=context.getContextInterceptors();
-	    for( int i=0; i<cI.length; i++ ) {
-		try {
-		    cI[i].preServletInit( context, this ); // ignore the error - like in the original code
-		} catch( TomcatException ex) {
-		    ex.printStackTrace();
-		}
-	    }
-	    servlet.init(servletConfig);
-	    // if an exception is thrown in init, no end interceptors will be called.
-	    // that was in the origianl code
-	    
-	    for( int i=cI.length-1; i>=0; i-- ) {
-		try {
-		    cI[i].postServletInit( context, this ); // ignore the error - like in the original code
-		} catch( TomcatException ex) {
-		    ex.printStackTrace();
-		}
+	ClassLoader originalCL=null;
+	originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
+
+	try {
+	    // XXX Move this to an interceptor, so it will be configurable.
+	    // ( and easier to read )
+	    if (servletClass == null) {
+		if (servletClassName == null) 
+		    throw new IllegalStateException(sm.getString("wrapper.load.noclassname"));
 		
+		servletClass=context.getServletLoader().loadClass( servletClassName);
 	    }
-	    initialized=true;
-	    //	} catch(IOException ioe) {
-	    //	    ioe.printStackTrace();
-	    // Should never come here...
-	    //	}
+	    
+	    servlet = (Servlet)servletClass.newInstance();
+	    //	System.out.println("Loading " + servletClassName + " " + servlet );
+	    
+	    config.setServletClassName(servlet.getClass().getName());
+	    try {
+		final Servlet sinstance = servlet;
+		final ServletConfigImpl servletConfig = config;
+		
+		ContextInterceptor cI[]=context.getContextInterceptors();
+		for( int i=0; i<cI.length; i++ ) {
+		    try {
+			cI[i].preServletInit( context, this ); // ignore the error - like in the original code
+		    } catch( TomcatException ex) {
+			ex.printStackTrace();
+		    }
+		}
+		servlet.init(servletConfig);
+		// if an exception is thrown in init, no end interceptors will be called.
+		// that was in the origianl code
+		// XXX I think it's a bug ( costin )
+		
+		for( int i=cI.length-1; i>=0; i-- ) {
+		    try {
+			cI[i].postServletInit( context, this ); // ignore the error - like in the original code
+		    } catch( TomcatException ex) {
+			ex.printStackTrace();
+		    }
+		    
+		}
+		initialized=true;
+		// successfull initialization
+		unavailable=null;
+		//	} catch(IOException ioe) {
+		//	    ioe.printStackTrace();
+		// Should never come here...
+		//	}
+	    } catch( UnavailableException ex ) {
+		unavailable=ex;
+		unavailableTime=System.currentTimeMillis();
+		unavailableTime += ex.getUnavailableSeconds() * 1000;
+	    } catch( Exception ex ) {
+		unavailable=ex;
+	    }
+	} finally {
+	    fixJDKContextClassLoader(originalCL );
+	}
+
     }
 
+    // XXX Move it to interceptor - so it can be customized
     // Reloading
     // XXX ugly - should find a better way to deal with invoker
     // The problem is that we are just clearing up invoker, not
@@ -335,17 +360,20 @@ public class ServletWrapper {
 		    loader.reload();
 		    servlet=null;
 		    servletClass=null;
-// 		    String path=context.getPath();
-// 		    String docBase=context.getDocBase();
-// 		    // XXX all other properties need to be saved or something else
-// 		    ContextManager cm=context.getContextManager();
-// 		    cm.removeContext(path);
-// 		    Context ctx=new Context();
-// 		    ctx.setPath( path );
-// 		    ctx.setDocBase( docBase );
-// 		    cm.addContext( ctx );
-// 		    context=ctx;
-//		    // XXX shut down context, remove sessions, etc
+		    /* Initial attempt to shut down the context and sessions.
+		       
+		       String path=context.getPath();
+		       String docBase=context.getDocBase();
+		       // XXX all other properties need to be saved or something else
+		       ContextManager cm=context.getContextManager();
+		       cm.removeContext(path);
+		       Context ctx=new Context();
+		       ctx.setPath( path );
+		       ctx.setDocBase( docBase );
+		       cm.addContext( ctx );
+		       context=ctx;
+		       // XXX shut down context, remove sessions, etc
+		    */
 		}
 	    }
 	}
@@ -354,19 +382,10 @@ public class ServletWrapper {
     public void handleRequest(Request req, Response res)
     {
 	ClassLoader originalCL=null;
+
+	// Jsp case - JspServlet will be called.
+	// XXXX Very, very bad code !!!
 	try {
-	    // Before we do init() or service(), we need to do some tricks
-	    // with the class loader - see bug #116.
-	    // some JDK1.2 code will not work without this fix
-
-	    // we save the originalCL because we might be in include
-	    // and we need to revert to it when we finish
-
-	    // that will set a new (JDK)context class loader, and return the old one
-	    // if we are in JDK1.2
-	    originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
-
-
 	    if( path != null ) {
 		// XXX call JspServlet directly, did anyone tested it ??
 		String requestURI = path + req.getPathInfo();
@@ -376,32 +395,82 @@ public class ServletWrapper {
 		    rd.forward(req.getFacade(), res.getFacade());
 		else
 		    rd.include(req.getFacade(), res.getFacade());
-
-		fixJDKContextClassLoader( originalCL );
+		
 		return;
 	    }
-	    
-	    handleReload();
-	    //	    System.out.println(" SW " + initialized );
-	    if( ! initialized ) {
-		try {
-		    loadServlet();
-		} catch(Exception ex ) {
-		    // return not found
-		    context.log( "Class Not Found", ex );
-		    res.setStatus( 404 );
-		    contextM.handleError( req, res, null,  404 );
-		    fixJDKContextClassLoader( originalCL );
+	} catch( Throwable ex ) {
+	    if( null!=req.getAttribute("tomcat.servlet.error.defaultHandler") ) {
+		// we are in handleRequest for the "default
+		context.log("ERROR: can't find default error handler or error in default error page", ex);
+		ex.printStackTrace();
+	    } else {
+		contextM.handleError( req, res, ex, 0 );
+	    }
+	    return;
+	}
+
+	// normal servlet
+	handleReload();
+	
+	if( ! initialized ) {
+	    // Don't load if Unavailable timer is in place
+	    if(  unavailable != null ) {
+		// we have a timer - maybe we can try again - how much
+		// do we have to wait - (in mSec)
+		long moreWaitTime=unavailableTime - System.currentTimeMillis();
+		if( unavailableTime > 0 && ( moreWaitTime < 0 )) {
+		    // we can try again
+		    unavailable=null;
+		    unavailableTime=-1;
+		    context.log(getServletName() + " unavailable time expired, try again ");
+		} else {
+		    // bad news... More wait for us - but let the client know
+		    //
+		    if( unavailableTime > 0 )
+			res.setHeader("Retry-After", Long.toString( moreWaitTime/1000 ));
+		    String msg=unavailable.getMessage();
+		    context.log( "Error in " + getServletName() + "init(), error happened at " +
+				 unavailableTime + " wait " + moreWaitTime + " : " + msg, unavailable);
+		    req.setAttribute("javax.servlet.error.message", msg );	
+		    res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
+		    contextM.handleError( req, res, null , HttpServletResponse.SC_SERVICE_UNAVAILABLE );
 		    return;
 		}
 	    }
-
-	    // If servlet was not initialized
-	    if( ! available ) {
-		// XXX ADD code to handle this case XXX BUG 67
-		// 		res.setStatus(404);
-		// 		contextM.handleError( req, res, ex, 404 );
+	    // init - only if unavailable was null or unavailable period expired
+	    try {
+		initServlet();
+	    } catch(ClassNotFoundException ex ) {
+		// return not found
+		context.log( "Class Not Found in init", ex );
+		res.setStatus( 404 );
+		contextM.handleError( req, res, null,  404 );
+		return;
+	    } catch( Exception ex ) {
+		// any other exception will be set in unavailable - no need to do anything
 	    }
+	}
+
+	// If servlet was not initialized
+	if( unavailable!=null ) {
+	    res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
+	    if( unavailable instanceof UnavailableException ) {
+		int secs= ((UnavailableException)unavailable).getUnavailableSeconds();
+		if( secs > 0 ) {
+		    res.setHeader("Retry-After", Integer.toString(secs));
+		}
+	    }
+	    String msg=unavailable.getMessage();
+	    context.log( "Error in " + getServletName() + " init(): " + msg, unavailable);
+	    req.setAttribute("javax.servlet.error.message", msg );
+	    contextM.handleError( req, res, null, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+	    return;
+	}
+	
+	try {
+	    originalCL = fixJDKContextClassLoader(context.getServletLoader().getClassLoader());
+
+
 	    // XXX to expensive  per/request, un-load is not so frequent and
 	    // the API doesn't require a special state for destroy
 	    // synchronized(this) {
@@ -439,6 +508,11 @@ public class ServletWrapper {
 		System.out.println("ERROR: can't find default error handler or error in default error page");
 		t.printStackTrace();
 	    } else {
+		String msg=t.getMessage();
+		context.log( "Error in " + getServletName() + " service() : " + msg, t);
+		// XXX XXX Security - we should log the message, but nothing should show up
+		// to the user - it gives up information about the internal system !
+		// Developers can/should use the logs !!!
 		contextM.handleError( req, res, t, 0 );
 	    }
 	} finally {
@@ -452,6 +526,15 @@ public class ServletWrapper {
     static Object noObjs[]=new Object[0];
     static { clParam[0]=ClassLoader.class; }
 
+
+    // Before we do init() or service(), we need to do some tricks
+    // with the class loader - see bug #116.
+    // some JDK1.2 code will not work without this fix
+    // we save the originalCL because we might be in include
+    // and we need to revert to it when we finish
+    // that will set a new (JDK)context class loader, and return the old one
+    // if we are in JDK1.2
+    // XXX move it to interceptor !!!
     /** Reflection trick to set the context class loader for JDK1.2, without
 	braking JDK1.1.
 
