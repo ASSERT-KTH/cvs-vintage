@@ -22,7 +22,6 @@ import org.columba.core.config.Config;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.CharsetManager;
-import org.columba.mail.composer.MimeTypeLookup;
 import org.columba.mail.gui.frame.MailFrameModel;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
@@ -75,8 +74,6 @@ public class MainInterface {
 	//public static ImageSequenceTimer imageSequenceTimer;
 
 	public static AddressbookInterface addressbookInterface;
-
-	public static MimeTypeLookup ext2mime;
 
 	public static CharsetManager charsetManager;
 	

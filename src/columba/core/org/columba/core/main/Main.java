@@ -50,7 +50,6 @@ import org.columba.mail.coder.Base64Encoder;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.QuotedPrintableDecoder;
 import org.columba.mail.coder.QuotedPrintableEncoder;
-import org.columba.mail.composer.MimeTypeLookup;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.gui.frame.MailFrameModel;
@@ -191,8 +190,6 @@ public class Main {
 				new MailResourceLoader();
 
 				MainInterface.popServerCollection = new POP3ServerCollection();
-
-				MainInterface.ext2mime = new MimeTypeLookup();
 
 				new CoderRouter();
 				new QuotedPrintableDecoder();

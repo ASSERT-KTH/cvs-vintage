@@ -20,6 +20,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -125,13 +127,9 @@ public class AttachmentController implements KeyListener {
 			for (int i = 0; i < files.length; i++) {
 				File file = files[i];
 
-				String fileext = null;
-				String filename = file.getName();
-				if (filename.indexOf('.') != -1) {
-					fileext = filename.substring(filename.lastIndexOf('.') + 1);
-				}
-
-				String mimetype = MainInterface.ext2mime.getMimeType(fileext);
+				FileNameMap fileNameMap = URLConnection.getFileNameMap();
+				String mimetype = fileNameMap.getContentTypeFor(file.getName());
+				if (mimetype == null) mimetype = "application/octet-stream"; //REALLY NEEDED?
 
 				MimeHeader header =
 					new MimeHeader(
