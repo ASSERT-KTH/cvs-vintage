@@ -116,7 +116,7 @@ public class CredentialsInterceptor extends BaseInterceptor
 	if( "FORM".equals( login_type )) {
 	    formCredentials( req );
 	}
-	return 0;
+	return DECLINED;
     }
 	
     
