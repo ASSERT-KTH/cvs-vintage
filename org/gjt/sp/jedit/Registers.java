@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.19 2003/07/23 06:08:54 spestov Exp $
+ * @version $Id: Registers.java,v 1.20 2004/02/27 23:59:09 spestov Exp $
  */
 public class Registers
 {
@@ -611,6 +611,13 @@ public class Registers
 				String line;
 				while((line = in.readLine()) != null)
 				{
+					// broken Eclipse workaround!
+					// 24 Febuary 2004
+					if(line.endsWith("\0"))
+					{
+						line = line.substring(0,
+							line.length() - 1);
+					}
 					buf.append(line);
 					buf.append('\n');
 				}

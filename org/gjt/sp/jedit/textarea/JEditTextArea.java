@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.305 2004/02/14 19:02:49 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.306 2004/02/27 23:59:09 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2622,11 +2622,24 @@ loop:		for(int i = 0; i < text.length(); i++)
 				caretLine);
 		}
 
-		int caretScreenLine = getScreenLineOfOffset(caret);
+		int newCaret;
 
-		scrollDownPage();
+		if(getFirstLine() + getVisibleLines() >= displayManager
+			.getScrollLineCount())
+		{
+			int lastVisibleLine = displayManager
+				.getLastVisibleLine();
+			newCaret = getLineEndOffset(lastVisibleLine) - 1;
+		}
+		else
+		{
+			int caretScreenLine = getScreenLineOfOffset(caret);
 
-		int newCaret = xToScreenLineOffset(caretScreenLine,magic,true);
+			scrollDownPage();
+
+			newCaret = xToScreenLineOffset(caretScreenLine,
+				magic,true);
+		}
 
 		if(select)
 			extendSelection(caret,newCaret);
@@ -2946,11 +2959,23 @@ loop:		for(int i = getCaretPosition() - 1; i >= 0; i--)
 				caretLine);
 		}
 
-		int caretScreenLine = getScreenLineOfOffset(caret);
+		int newCaret;
 
-		scrollUpPage();
+		if(getFirstLine() == 0)
+		{
+			int firstVisibleLine = displayManager
+				.getFirstVisibleLine();
+			newCaret = getLineStartOffset(firstVisibleLine);
+		}
+		else
+		{
+			int caretScreenLine = getScreenLineOfOffset(caret);
 
-		int newCaret = xToScreenLineOffset(caretScreenLine,magic,true);
+			scrollUpPage();
+
+			newCaret = xToScreenLineOffset(caretScreenLine,
+				magic,true);
+		}
 
 		if(select)
 			extendSelection(caret,newCaret);
