@@ -24,7 +24,7 @@ public class TomcatAdmin extends TagSupport {
     String action;
     String host;
     String value;
-    PageContext pageContext;
+    //    PageContext pageContext;
     
     public TomcatAdmin() {}
 
@@ -70,9 +70,9 @@ public class TomcatAdmin extends TagSupport {
 	return EVAL_PAGE;
     }
     
-    public void setPageContext(PageContext pctx ) {
-	this.pageContext=pctx;
-    }
+//     public void setPageContext(PageContext pctx ) {
+// 	this.pageContext=pctx;
+//     }
 
     public void setParent( Tag parent ) {
 	super.setParent( parent);
@@ -84,7 +84,10 @@ public class TomcatAdmin extends TagSupport {
     private void init(HttpServletRequest request) {
 	Request realRequest = (Request)
 	    request.getAttribute( Request.ATTRIB_REAL_REQUEST);
-	cm = realRequest.getContext().getContextManager();
+	if( cm==null )
+	    pageContext.getServletContext().log("Untrusted Application");
+	else
+	    cm = realRequest.getContext().getContextManager();
     }
 
     public ContextManager getContextManager(HttpServletRequest request ) {

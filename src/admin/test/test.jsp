@@ -63,7 +63,7 @@ You can see the context log <a href="/test/context_log.txt">here</a>
 <font color='red'> FAIL </font></a> ( <%= failures.getDescription() %> )
     <%= failures.getHttpClient().getRequestLine() %>
 <br>
-TEST: <%= failures.getMatcher().getTestDescription() %>
+TEST: <%= failures.getMatchDescription() %>
 <br>
 <b>Request: </b>
 <pre>
@@ -74,7 +74,7 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 <br>
 <b>Message: </b>
 <pre>
-  <%= failures.getMatcher().getMessage() %>
+  <%= failures.getFailureMessage() %>
 </pre>
 
 <% // use a tag %>
@@ -106,7 +106,7 @@ TEST: <%= failures.getMatcher().getTestDescription() %>
 OK</a> ( <%= success.getDescription() %> ) 
     <%= success.getHttpClient().getRequestLine() %>
 <br>
-TEST: <%= success.getMatcher().getTestDescription() %>
+TEST: <%= success.getMatchDescription() %>
 <br>
 </adm:iterate>
 </body>

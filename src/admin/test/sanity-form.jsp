@@ -2,6 +2,7 @@
 Target:
 <select name="target" > 
   <option>file</option>
+  <option>params</option>
   <option>dispatch</option>
   <option>get</option>
   <option>requestMap</option>
