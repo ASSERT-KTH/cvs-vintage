@@ -1,9 +1,9 @@
 /*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.system;
 
 import java.util.Date;
@@ -19,57 +19,57 @@ import org.jboss.logging.Logger;
 import org.apache.log4j.NDC;
 
 /**
- * An abstract base class JBoss services can subclass to implement a
- * service that conforms to the ServiceMBean interface. Subclasses must
- * override {@link #getName} method and should override 
- * {@link #startService}, and {@link #stopService} as approriate.
- *
- * @see ServiceMBean
- * 
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
- * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.8 $
- *   
- * <p><b>Revisions:</b>
- *
- * <p><b>20010619 scott.stark:</b>
- * <ul>
- * <li> use the full service class name as the log4j log name
- * </ul>
- * <p><b>20011202 Andreas Schaefer:</b>
- * <ul>
- * <li> Add the own MBean Service Name to be remembered in an attribute
- * </ul>
- */
+* An abstract base class JBoss services can subclass to implement a
+* service that conforms to the ServiceMBean interface. Subclasses must
+* override {@link #getName} method and should override 
+* {@link #startService}, and {@link #stopService} as approriate.
+*
+* @see ServiceMBean
+* 
+* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+* @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
+* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+* @version $Revision: 1.9 $
+*   
+* <p><b>Revisions:</b>
+*
+* <p><b>20010619 scott.stark:</b>
+* <ul>
+* <li> use the full service class name as the log4j log name
+* </ul>
+* <p><b>20011202 Andreas Schaefer:</b>
+* <ul>
+* <li> Add the own MBean Service Name to be remembered in an attribute
+* </ul>
+*/
 public abstract class ServiceMBeanSupport
-   extends NotificationBroadcasterSupport
-   implements ServiceMBean, MBeanRegistration
+extends NotificationBroadcasterSupport
+implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
-
+   
    private int state;
    private MBeanServer server;
    /** Own Object Name this MBean is registered with, see {@link #preRegister preRegister()}. **/
    private ObjectName mServiceName;
    private int id = 0;
-
+   
    protected Logger log;
-
+   
    // Static --------------------------------------------------------
-
+   
    // Constructors --------------------------------------------------
-
+   
    public ServiceMBeanSupport()
    {
       log = Logger.getLogger(getClass());
    }
-
+   
    // Public --------------------------------------------------------
-
+   
    public abstract String getName();
-
-	public ObjectName getServiceName() {
+   
+   public ObjectName getServiceName() {
       return mServiceName;
    }
    
@@ -77,7 +77,7 @@ public abstract class ServiceMBeanSupport
    {
       return server;
    }
-
+   
    public int getState()
    {
       return state;
@@ -87,20 +87,20 @@ public abstract class ServiceMBeanSupport
    {
       return states[state];
    }
- 
+   
    public Logger getLog()
    {
       return log;
    }
-
-   /*   public void init()
-      throws Exception
+   
+   public void create()
+   throws Exception
    {
       NDC.push(getName());
       log.info("Initializing");
       try
       {
-         initService();
+         createService();
       }
       catch (Exception e)
       {
@@ -113,13 +113,13 @@ public abstract class ServiceMBeanSupport
       }
       log.info("Initialized");
    }
-   */
+   
    public void start()
-      throws Exception
+   throws Exception
    {
       if (getState() != STOPPED && getState() != FAILED)
          return;
-			
+      
       state = STARTING;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
@@ -151,7 +151,7 @@ public abstract class ServiceMBeanSupport
    {
       if (getState() != STARTED)
          return;
-	
+      
       state = STOPPING;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopping", "State", "java.lang.Integer", new Integer(STARTED), new Integer(STOPPING)));
@@ -179,19 +179,12 @@ public abstract class ServiceMBeanSupport
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
       log.info("Stopped");
    }
-
-   public void init() throws Exception
-   {
-      throw new Exception("Don't call init");
-   }
-
-   public void destroy() {};
-   /*
+   
    public void destroy()
    {
       if (getState() != STOPPED)
          stop();
-	
+      
       log.info("Destroying");
       NDC.push(getName());
       try
@@ -201,11 +194,10 @@ public abstract class ServiceMBeanSupport
       {
          log.error(e);
       }
-   	
+      
       log.info("Destroyed");
       NDC.pop();
    }
-   */
    
    /**
    * Callback method of {@link javax.management.MBeanRegistration MBeanRegistration}
@@ -220,7 +212,7 @@ public abstract class ServiceMBeanSupport
    *             change is discarded (maybe a bug in JMX-RI).
    **/
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws Exception
+   throws Exception
    {
       ObjectName lName = getObjectName(server, name);
       if( name == null ) {
@@ -231,7 +223,7 @@ public abstract class ServiceMBeanSupport
       this.server = server;
       return lName;
    }
-
+   
    public void postRegister(Boolean registrationDone)
    {
       if (!registrationDone.booleanValue())
@@ -242,7 +234,7 @@ public abstract class ServiceMBeanSupport
    }
    
    public void preDeregister()
-      throws Exception
+   throws Exception
    {
    }
    
@@ -255,18 +247,17 @@ public abstract class ServiceMBeanSupport
    // Protected -----------------------------------------------------
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
+   throws MalformedObjectNameException
    {
       return name;
    }
    
-   protected void startService()
-      throws Exception
-   {
-   }
+   protected void createService() throws Exception {}
    
-   protected void stopService()
-   {
-   }
-	
+   protected void startService()throws Exception {}
+   
+   protected void stopService(){}
+   
+   protected void destroyService() {}
+
 }
