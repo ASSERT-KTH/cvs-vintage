@@ -25,7 +25,7 @@ import javax.naming.NamingException;
  * provide connection names via instance initialzation and provide an 
  * implementaion of {@link #getInitialContext}.
  *
- * @version <pre>$id$</pre>
+ * @version <pre>$Revision: 1.2 $</pre>
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
  */
 public abstract class AbstractJMSProviderAdapter

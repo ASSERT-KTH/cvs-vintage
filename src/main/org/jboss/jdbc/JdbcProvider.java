@@ -16,11 +16,11 @@ import javax.management.*;
 import org.jboss.logging.Log;
 
 /**
- *   <description> 
+ * Provides a JDBC driver loading mechanism.
  *      
- *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ * @see <related>
+ * @author Rickard Öberg (rickard.oberg@telkel.com)
+ * @version $Revision: 1.5 $
  */
 public class JdbcProvider
    extends org.jboss.util.ServiceMBeanSupport
@@ -66,7 +66,8 @@ public class JdbcProvider
       StringTokenizer drivers = new StringTokenizer(driverList, ",");
       while (drivers.hasMoreTokens())
       {
-         String driver = drivers.nextToken();
+         // trim the value, so we don't get erroneous class loading errros
+         String driver = drivers.nextToken().trim();
          try
          {
             Class.forName(driver);
