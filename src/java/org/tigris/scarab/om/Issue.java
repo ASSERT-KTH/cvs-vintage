@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.244 2002/12/20 03:27:52 jon Exp $
+ * @version $Id: Issue.java,v 1.245 2002/12/20 04:50:33 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1169,6 +1169,7 @@ public class Issue
             }
             catch (Exception e)
             {
+                log().error("Issue.getUsersToEmail(String): ", e);
                 throw new Exception("Error in retrieving users.");
             }
             result = users;
@@ -1242,7 +1243,10 @@ public class Issue
             crit.add(ActivityPeer.ISSUE_ID, getIssueId());
             crit.addIn(ActivitySetPeer.TYPE_ID, types);
             List activitySets = ActivitySetPeer.doSelect(crit);
-            activitySet = (ActivitySet)activitySets.get(0);
+            if (activitySets != null && activitySets.size() > 0)
+            {
+                activitySet = (ActivitySet)activitySets.get(0);
+            }
         }
         return activitySet;
     }
@@ -1289,8 +1293,17 @@ public class Issue
             if ( obj == null ) 
             {        
                 ActivitySet activitySet = getInitialActivitySet();
-                result = ScarabUserManager.getInstance(activitySet.getCreatedBy());
-                ScarabCache.put(result, this, GET_CREATED_BY);
+                if (activitySet != null)
+                {
+                    result = ScarabUserManager.getInstance(activitySet.getCreatedBy());
+                    ScarabCache.put(result, this, GET_CREATED_BY);
+                }
+                else
+                {
+                    String msg = "Could not find initial activity set for this issue!";
+                    log().error(msg);
+                    throw new Exception(msg);
+                }
             }
             else 
             {
@@ -1529,7 +1542,7 @@ public class Issue
         }
         catch (Exception e)
         {
-            log().error("Issue.getHistoryLimit(): " + e);
+            log().error("Issue.getHistoryLimit(): ", e);
         }
         
         return limit;
