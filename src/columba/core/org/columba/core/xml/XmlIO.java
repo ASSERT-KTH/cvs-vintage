@@ -240,22 +240,7 @@ public class XmlIO extends DefaultHandler {
 		PW.flush();
 	}
 
-	private String _escapeText(String txt){
-		StringBuffer buffer = new StringBuffer(txt);
-		_stringReplaceAll(buffer, '<', "&lt;");
-		_stringReplaceAll(buffer, '>', "&tg;");
-		_stringReplaceAll(buffer, '&', "&amp;");
-		_stringReplaceAll(buffer, '"', "&quot;");	// *20030621, karlpeder*
-		return buffer.toString();
-	}
 	
-	private StringBuffer _stringReplaceAll(StringBuffer orig, char token, String replacement){
-		for(int i=0;i<orig.length();i++){
-			if(orig.charAt(i) == token)
-				orig = orig.replace(i, ++i, replacement);
-		}
-		return orig;
-	}
 
 	private void _writeSubNode(Writer out, XmlElement element, int indent)
 		throws IOException {
@@ -266,7 +251,7 @@ public class XmlIO extends DefaultHandler {
 			e.hasMoreElements();
 			) {
 			String K = (String) e.nextElement();
-			out.write(" " + K + "=\"" + _escapeText(element.getAttribute(K))
+			out.write(" " + K + "=\"" + TextUtils.escapeText(element.getAttribute(K))
                       + "\"");
 		}
 
@@ -279,7 +264,7 @@ public class XmlIO extends DefaultHandler {
 				out.write("\n");
 				_writeSpace(out, indent + writeIndent);
 			}
-			out.write(_escapeText(data));
+			out.write(TextUtils.escapeText(data));
 		}
 		List subElements = element.getElements();
 
@@ -302,7 +287,7 @@ public class XmlIO extends DefaultHandler {
 			out.write("\n");
 			_writeSpace(out, indent);
 		}
-		out.write("</" + _escapeText(element.getName()) + ">\n");
+		out.write("</" + TextUtils.escapeText(element.getName()) + ">\n");
 	}
 
 	private void _writeSpace(Writer out, int numSpaces)
