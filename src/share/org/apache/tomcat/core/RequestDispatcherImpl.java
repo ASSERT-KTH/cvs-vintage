@@ -125,8 +125,8 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
         Response realResponse = ((HttpServletResponseFacade)response).getRealResponse();
 
-	// according to specs
-	if (realResponse.isStarted()) 
+	// according to specs (as of 2.2: started is OK, just not committed)
+	if (realResponse.isBufferCommitted()) 
 	    throw new IllegalStateException(sm.getString("rdi.forward.ise"));
 
 	// the strange case in a separate method.

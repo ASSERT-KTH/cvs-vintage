@@ -676,10 +676,12 @@ public class ContextManager {
 		
 		// try a forward
 		res.reset();
-		if (res.isStarted()) 
+		if (res.isBufferCommitted()) {
 		    rd.include(req.getFacade(), res.getFacade());
-		else
+                }
+		else {
 		    rd.forward(req.getFacade(), res.getFacade());
+                }
 		return ;
 	    } catch( Throwable t1 ) {
 		ctx.log(" Error in custom error handler " + t1 );
