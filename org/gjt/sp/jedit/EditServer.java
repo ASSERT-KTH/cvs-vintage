@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.11 2003/02/28 17:49:52 spestov Exp $
+ * @version $Id: EditServer.java,v 1.12 2003/02/28 17:53:41 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -138,7 +138,8 @@ public class EditServer extends Thread
 			}
 			catch(Exception e)
 			{
-				Log.log(Log.ERROR,this,e);
+				if(!abort)
+					Log.log(Log.ERROR,this,e);
 				abort = true;
 			}
 			finally
