@@ -100,7 +100,7 @@
       <select name="sortColumn">
         #foreach ($attKey in $attrValues.sequence())
            #set ($attVal = $attrValues.get($attKey))
-           <option value="$attVal.AttributeId">$attVal</option>
+           <option value="$attVal.AttributeId">$attVal.Attribute.Name</option>
         #end
       </select>
         &#160;
