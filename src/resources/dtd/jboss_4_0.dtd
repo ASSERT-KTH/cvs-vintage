@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.17 2004/08/22 08:08:27 pilhuhn Exp $
+$Id: jboss_4_0.dtd,v 1.18 2004/09/10 08:13:30 starksm Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -972,7 +972,7 @@ Example:
 -->
 <!ELEMENT container-configuration (container-name , call-logging?,
  invoker-proxy-binding-name?, sync-on-commit-only?,
- insert-after-ejb-post-create?, container-interceptors? ,
+ insert-after-ejb-post-create?, call-ejb-store-on-clean?, container-interceptors? ,
  instance-pool? , instance-cache? ,  persistence-manager? , web-class-loader? ,
  locking-policy? ,  container-cache-conf? , container-pool-conf? ,
  commit-option? , optiond-refresh-rate? , security-domain?, cluster-config?,
@@ -1037,6 +1037,12 @@ called on transaction commit.
  true - INSERT will be executed after ejbPostCreate.
 -->
 <!ELEMENT insert-after-ejb-post-create (#PCDATA)>
+
+<!-- The call-ejb-store-for-clean says whether ejbStore should be called on clean instances
+ at synchronization time. By the spec it should be true. But users wanted it to be false.
+ False is the default, meaning ejbStore is called only on dirty instances.
+-->
+<!ELEMENT call-ejb-store-on-clean (#PCDATA)>
 
 <!--
   The container-interceptors element gives the chain of Interceptors
