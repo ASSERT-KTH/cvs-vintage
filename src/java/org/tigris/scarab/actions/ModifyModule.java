@@ -64,12 +64,13 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.32 2003/04/17 22:52:13 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.33 2003/04/21 20:06:03 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -88,12 +89,14 @@ public class ModifyModule extends RequireLoginFirstAction
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        
         if (intake.isAllValid())
         {
             Module me = null;
             try
             {
-                me = getScarabRequestTool(context).getModule();
+                me = scarabR.getModule();
             }
             catch (Exception e)
             {
@@ -105,7 +108,7 @@ public class ModifyModule extends RequireLoginFirstAction
             if (moduleGroup == null)
             {
                 setTarget(data, template);
-                getScarabRequestTool(context).setAlertMessage(
+                scarabR.setAlertMessage(
                     l10n.get("CouldNotLocateModuleGroup"));
                 return;
             }
@@ -117,7 +120,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 // in the module.
                 if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, me))
                 {
-                    getScarabRequestTool(context).setAlertMessage(
+                    scarabR.setAlertMessage(
                         l10n.get(NO_PERMISSION_MESSAGE));
                     intake.remove(moduleGroup);
                     setTarget(data, nextTemplate);
@@ -130,7 +133,7 @@ public class ModifyModule extends RequireLoginFirstAction
 
                 if (newParent.getParent() == me)
                 {
-                    getScarabRequestTool(context).setAlertMessage(
+                    scarabR.setAlertMessage(
                         l10n.get("CircularParentChildRelationship"));
                     intake.remove(moduleGroup);
                     setTarget(data, template);
@@ -139,7 +142,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 else if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, origParent) && 
                     origParent.getModuleId() != newParent.getModuleId())
                 {
-                    getScarabRequestTool(context).setAlertMessage(
+                    scarabR.setAlertMessage(
                         l10n.get("NoPermissionInParentModule"));
                     setTarget(data, template);
                     return;
@@ -162,8 +165,7 @@ public class ModifyModule extends RequireLoginFirstAction
 
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
-                getScarabRequestTool(context)
-                    .setConfirmMessage(l10n.get("ModuleUpdated"));
+                scarabR.setConfirmMessage(l10n.get("ModuleUpdated"));
             }
         }
     }
@@ -179,6 +181,8 @@ public class ModifyModule extends RequireLoginFirstAction
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        
         if (intake.isAllValid())
         {
             Group moduleGroup = intake.get
@@ -208,14 +212,14 @@ public class ModifyModule extends RequireLoginFirstAction
                 data.setACL(TurbineSecurity.getACL(data.getUser()));
                 data.save();
 
-                getScarabRequestTool(context).setConfirmMessage(
+                scarabR.setConfirmMessage(
                     l10n.get("NewModuleCreated"));
             }
             catch (Exception e)
             {
                 setTarget(data, template);
                 Log.get().error(e);
-                getScarabRequestTool(context).setAlertMessage(e.getMessage());
+                scarabR.setAlertMessage(e.getMessage());
                 return;
             }
             intake.remove(moduleGroup);
