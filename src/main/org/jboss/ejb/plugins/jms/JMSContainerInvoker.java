@@ -55,7 +55,7 @@ import org.w3c.dom.Node;
 *      </a>
 * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version   $Revision: 1.37 $
+* @version   $Revision: 1.38 $
 */
 
 public class JMSContainerInvoker
@@ -753,7 +753,7 @@ implements ContainerInvoker, XmlLoadable
          }
          
          // invoke the server to create the destination
-         server.invoke(new ObjectName("JBossMQ", "service", "Server"),
+         server.invoke(new ObjectName("jboss.mq", "service", "Server"),
             methodName,
             new Object[]{jndiSuffix},
             new String[]{"java.lang.String"});
