@@ -73,7 +73,7 @@ public class FlagsFilter extends AbstractFilter {
 		} else if (headerField.equalsIgnoreCase("Seen")) {
 			searchHeaderField = new String("columba.flags.seen");
 		} else if (headerField.equalsIgnoreCase("Spam")) {
-			searchHeaderField = new String("columba.flags.spam");
+			searchHeaderField = new String("columba.spam");
 		}
 
 		Boolean flags = (Boolean) folder.getAttribute(uid, searchHeaderField);
