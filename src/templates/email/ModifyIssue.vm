@@ -7,7 +7,6 @@ $l10n.YouCanViewIssue
 #if (!$activityList.isEmpty())
 
 $l10n.ModificationsMade
-
 #set ($actAttData = $activity.Attachment.Data)
 #set ($firstTime = true)
 #foreach ($activity in $activityList)
@@ -19,6 +18,7 @@ $actAttData
 ## is a duplicate of the first. The weird spacing is thanks to Velocity.
     #if ($firstTime)
         #set ($prevMessage = $activity.Description)
+        #set ($actSetAttach = $activity.ActivitySet.Attachment.Data)
 
 $prevMessage
         #set ($firstTime = false)
@@ -34,8 +34,12 @@ $activity.Description
 #if ($attachment.Data && ! $attachment.Data.toString().equals($activity.Description.toString()))
 $l10n.Comment
 $attachment.Data
-#end  
 #end
 #end
+#end
+#if ($actSetAttach)
 
+$l10n.Comment
+$actSetAttach
+#end
 #end
