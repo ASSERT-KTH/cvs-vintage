@@ -24,6 +24,7 @@ import java.util.Observer;
 import javax.swing.JTextPane;
 
 import org.columba.core.config.Config;
+import org.columba.core.gui.util.FontProperties;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.util.UndoDocument;
 
@@ -40,23 +41,6 @@ public class TextEditorView extends JTextPane implements Observer {
 	private TextEditorController controller;
 	private UndoDocument message;
 
-	//	name of font
-	private String name;
-
-	// size of font
-	private String size;
-
-	//	currently used font
-	private Font font;
-
-	// font configuration
-	private XmlElement textFontElement;
-
-	private XmlElement fonts;
-
-	// overwrite look and feel font settings
-	private boolean overwrite;
-
 	public TextEditorView(TextEditorController controller, UndoDocument m) {
 		super();
 
@@ -67,42 +51,17 @@ public class TextEditorView extends JTextPane implements Observer {
 		setStyledDocument(message);
 		setEditable(true);
 
-		/*
-		Font font = Config.getOptionsConfig().getGuiItem().getTextFont();
-		
+		Font font = FontProperties.getTextFont();
 		setFont(font);
-		*/
 
 		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement guiElement = options.getElement("gui");
-		fonts = guiElement.getElement("fonts");
+		XmlElement gui = options.getElement("gui");
+		XmlElement fonts = gui.getElement("fonts");
 		if (fonts == null)
-			fonts = guiElement.addSubElement("fonts");
-
-		overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
-
-		// register for configuration changes
+			fonts = gui.addSubElement("fonts");
+			
+		// register interest on configuratin changes
 		fonts.addObserver(this);
-
-		textFontElement = fonts.getElement("text");
-		if (textFontElement == null)
-			textFontElement = fonts.addSubElement("text");
-
-		if (!overwrite) {
-			name = "Default";
-			size = "12";
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-
-		} else {
-			name = textFontElement.getAttribute("name", "Default");
-			size = textFontElement.getAttribute("size", "12");
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-		}
-		
-		setFont(font);
 
 		setPreferredSize(new Dimension(300, 200));
 	}
@@ -122,31 +81,8 @@ public class TextEditorView extends JTextPane implements Observer {
 		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 		 */
 	public void update(Observable arg0, Object arg1) {
-		XmlElement e = (XmlElement) arg0;
-
-		// fonts
-
-		overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
-
-		if (overwrite == false) {
-
-			// use default font settings
-			name = "Default";
-			size = "12";
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-
-		} else {
-			// overwrite look and feel font settings
-			name = textFontElement.getAttribute("name", "Default");
-			size = textFontElement.getAttribute("size", "12");
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-		}
-
+		Font font = FontProperties.getTextFont();
 		setFont(font);
-
 	}
 
 }

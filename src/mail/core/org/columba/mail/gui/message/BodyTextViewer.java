@@ -27,6 +27,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.config.Config;
+import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
@@ -65,20 +66,12 @@ public class BodyTextViewer extends JTextPane implements Observer {
 	// size of font
 	private String size;
 
-	// currently used font
-	private Font font;
-
-	// font configuration
-	private XmlElement textFontElement;
-
-	private XmlElement fonts;
-
 	// overwrite look and feel font settings
 	private boolean overwrite;
 
 	public BodyTextViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
-		setEditable(false);
+		setEditable(true);
 
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
@@ -114,39 +107,24 @@ public class BodyTextViewer extends JTextPane implements Observer {
 		// register as configuration change listener
 		quote.addObserver(this);
 
+		// TODO use value in initStyleSheet()
 		String enabled = quote.getAttribute("enabled", "true");
 		String color = quote.getAttribute("color", "0");
 
-		// TODO use value in initStyleSheet()
-
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement guiElement = options.getElement("gui");
-		fonts = guiElement.getElement("fonts");
-		if (fonts == null)
-			fonts = guiElement.addSubElement("fonts");
-
-		overwrite =
-			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
-
 		// register for configuration changes
+
+		Font font = FontProperties.getTextFont();
+		name = font.getName();
+		size = new Integer(font.getSize()).toString();
+		XmlElement options = Config.get("options").getElement("/options");
+		XmlElement gui1 = options.getElement("gui");
+		XmlElement fonts = gui1.getElement("fonts");
+		if (fonts == null)
+			fonts = gui1.addSubElement("fonts");
+
+		// register interest on configuratin changes
 		fonts.addObserver(this);
 
-		textFontElement = fonts.getElement("text");
-		if (textFontElement == null)
-			textFontElement = fonts.addSubElement("text");
-
-		if (!overwrite) {
-			name = "Default";
-			size = "12";
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-
-		} else {
-			name = textFontElement.getAttribute("name", "Default");
-			size = textFontElement.getAttribute("size", "12");
-
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-		}
 		initStyleSheet();
 
 	}
@@ -275,39 +253,12 @@ public class BodyTextViewer extends JTextPane implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		XmlElement e = (XmlElement) arg0;
+		Font font = FontProperties.getTextFont();
+		name = font.getName();
+		size = new Integer(font.getSize()).toString();
 
-		if (e.getName().equals("smilies")) {
-			String enable = smilies.getAttribute("enabled", "true");
-			if (enable.equals("true"))
-				enableSmilies = true;
-			else
-				enableSmilies = false;
-		} else {
-			// fonts
+		initStyleSheet();
 
-			overwrite =
-				new Boolean(fonts.getAttribute("overwrite", "true"))
-					.booleanValue();
-
-			if (overwrite == false) {
-				
-				// use default font settings
-				name = "Default";
-				size = "12";
-
-				font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-
-			} else {
-				// overwrite look and feel font settings
-				name = textFontElement.getAttribute("name", "Default");
-				size = textFontElement.getAttribute("size", "12");
-
-				font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-			}
-
-			initStyleSheet();
-		}
 	}
 
 }

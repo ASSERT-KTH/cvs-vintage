@@ -23,44 +23,41 @@ import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.GuiItem;
 import org.columba.core.xml.XmlElement;
 
 /**
- * @author fdietz
- *
- * Class contains font configuration and helper methods to 
- * set the fonts application-wide
  * 
+ *
+ * Provides font configuration and helper methods to 
+ * set the fonts application-wide.
+ * <p>
  * text-font:
  * this is the font used in the message-viewer
  * and the composer
- * 
+ * <p>
  * main-font:
  * this is the application-wide font used for every
  * gui element.
- * generall Look and Feels set this. If the user wants
+ * <p>
+ * Generally Look and Feels set this. If the user wants
  * to overwrite the Look and Feel font settings he/she 
  * has to change options.xml:/options/gui/fonts
  * attribute: overwrite (true/false)
- * 
+ * <p>
  * default is of course "false", to respect Look and Feel
  * settings
  * 
+ * @author fdietz
  */
-public class FontProperties implements Observer {
+public class FontProperties extends Observable implements Observer {
 
-	protected static GuiItem item;
+	private static XmlElement fonts;
 
-	private static boolean overwrite;
-	private XmlElement fonts;
 
 	/**
 	 * 
 	 */
 	public FontProperties() {
-
-		item = Config.getOptionsConfig().getGuiItem();
 
 		XmlElement options = Config.get("options").getElement("/options");
 		XmlElement gui = options.getElement("gui");
@@ -68,16 +65,73 @@ public class FontProperties implements Observer {
 		if (fonts == null)
 			fonts = gui.addSubElement("fonts");
 
+		XmlElement mainFontElement = fonts.getElement("main");
+		if (mainFontElement == null)
+			mainFontElement = fonts.addSubElement("main");
+
+		XmlElement textFontElement = fonts.getElement("text");
+		if (textFontElement == null)
+			textFontElement = fonts.addSubElement("text");
+
 		// register as configuration change listener	
 		fonts.addObserver(this);
 
-		String str = fonts.getAttribute("overwrite", "false");
-		if (str.equals("true"))
-			overwrite = true;
-		else
-			overwrite = false;
+	}
+	
+	
+	/**
+	 * Gets the currently selected text font used in the
+	 * message-viewer and composer editor.
+	 * 
+	 * @return		text font
+	 */
+	public static Font getTextFont()
+	{
+		return getFont("text");
+	}
+	
+	/**
+	 * Gets the currenlty selected widget font.
+	 * 
+	 * @return	widget font
+	 */
+	public static Font getMainFont()
+	{
+		return getFont("main");
 	}
 
+	/**
+	 * Gets the currently configured font
+	 * 
+	 * @param id		can be of value "text" or "main"
+	 * @return			currently selected font
+	 */
+	protected static Font getFont(String id) {
+		XmlElement textFontElement = fonts.getElement(id);
+		if (textFontElement == null)
+			textFontElement = fonts.addSubElement(id);
+
+		boolean overwrite =
+			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+
+		Font font = null;
+		String name = null;
+		String size = null;
+		if (!overwrite) {
+			name = "Default";
+			size = "12";
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+
+		} else {
+			name = textFontElement.getAttribute("name", "Default");
+			size = textFontElement.getAttribute("size", "12");
+
+			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+		}
+
+		return font;
+	}
 	/**
 	 * 
 	 * overwrite Look and Feel font settings
@@ -86,10 +140,12 @@ public class FontProperties implements Observer {
 	 */
 	public static void setFont() {
 		// should we really overwrite the Look and Feel font settings
-		if (!isOverwriteThemeSettings())
+		boolean overwrite =
+			new Boolean(fonts.getAttribute("overwrite", "true")).booleanValue();
+		if (!overwrite)
 			return;
 
-		FontUIResource mainFont = new FontUIResource(getMainFont());
+		FontUIResource mainFont = new FontUIResource(getFont("main"));
 
 		UIManager.put("Label.font", mainFont);
 		UIManager.put("Textfield.font", mainFont);
@@ -113,36 +169,6 @@ public class FontProperties implements Observer {
 
 	}
 
-	public static Font getTextFont() {
-		return item.getTextFont();
-	}
-
-	public static Font getMainFont() {
-		return item.getMainFont();
-	}
-
-	/**
-	 * 
-	 * 
-	 * @return	true if user wants to overwrite Look and Feel font settings,
-	 * 		    else otherwise
-	 */
-	public static boolean isOverwriteThemeSettings() {
-		XmlElement mainfont = item.getElement("mainfont");
-		String overwrite = mainfont.getAttribute("overwrite");
-
-		// create attribute if not available
-		if (overwrite == null) {
-			mainfont.addAttribute("overwrite", "false");
-			overwrite = "false";
-		}
-
-		if (overwrite.equals("true"))
-			return true;
-
-		return false;
-	}
-
 	/**
 	 * Gets fired if configuration changes.
 	 * 
@@ -151,12 +177,7 @@ public class FontProperties implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		String str = fonts.getAttribute("overwrite", "false");
-		if (str.equals("true"))
-			overwrite = true;
-		else
-			overwrite = false;
-
+		
 	}
 
 }

@@ -41,7 +41,6 @@ import javax.swing.text.html.HTMLDocument;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
-import org.columba.core.config.Config;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
@@ -102,8 +101,6 @@ public class MessageController
 		((CharsetOwnerInterface) getFrameController())
 			.getCharsetManager()
 			.addCharsetListener(this);
-
-		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
 		MainInterface.focusManager.registerComponent(this);
 
@@ -178,8 +175,7 @@ public class MessageController
 		// Shall we use the HTML-Viewer?
 
 		boolean htmlViewer =
-			bodyPart.getHeader().
-				getMimeType().getSubtype().equals("html");
+			bodyPart.getHeader().getMimeType().getSubtype().equals("html");
 
 		InputStream bodyStream =
 			((StreamableMimePart) bodyPart).getInputStream();
@@ -207,8 +203,12 @@ public class MessageController
 		boolean hasAttachments = false;
 
 		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().
-						getMimeType().getType().equals("text")))
+			|| (!mimePartTree
+				.get(0)
+				.getHeader()
+				.getMimeType()
+				.getType()
+				.equals("text")))
 			hasAttachments = true;
 
 		attachmentController.setMimePartTree(mimePartTree);
