@@ -20,6 +20,7 @@ import javax.transaction.SystemException;
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -44,7 +45,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.68 $
+ * @version $Revision: 1.69 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -75,11 +76,6 @@ public class EntitySynchronizationInterceptor
     */
    protected EntityContainer container;
  
-   /**
-    *  For commit option D this is the cache of valid entities
-    */
-   protected HashSet validContexts;
- 
    // Static --------------------------------------------------------
  
    // Constructors --------------------------------------------------
@@ -97,7 +93,6 @@ public class EntitySynchronizationInterceptor
   
       try
       {         
-         validContexts = new HashSet();
          ConfigurationMetaData configuration = container.getBeanMetaData().getContainerConfiguration();
          commitOption = configuration.getCommitOption();
          optionDRefreshRate = configuration.getOptionDRefreshRate();
@@ -115,7 +110,7 @@ public class EntitySynchronizationInterceptor
          //start up the validContexts thread if commit option D
          if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION)
          {
-            ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts, optionDRefreshRate);
+            ValidContextsRefresher vcr = new ValidContextsRefresher(optionDRefreshRate);
             vcrThread = new Thread(vcr);
             vcrThread.start();
          }
@@ -251,14 +246,6 @@ public class EntitySynchronizationInterceptor
       if( log.isTraceEnabled() )
          log.trace("invoke called for ctx "+ctx+", tx="+tx);
 
-      //Commit Option D.... 
-      if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION && !validContexts.contains(ctx.getId()))
-      {
-         //bean isn't in cache
-         //so set valid to false so that we load...
-         ctx.setValid(false);
-      }
-  
       // Is my state valid?
       if (!ctx.isValid())
       {
@@ -430,6 +417,7 @@ public class EntitySynchronizationInterceptor
                      {
                         // Keep instance cached after tx commit
                      case ConfigurationMetaData.A_COMMIT_OPTION:
+                     case ConfigurationMetaData.D_COMMIT_OPTION:
                         // The state is still valid (only point of access is us)
                         ctx.setValid(true);
                         break;
@@ -454,10 +442,6 @@ public class EntitySynchronizationInterceptor
                            if( log.isDebugEnabled() )
                               log.debug("Exception releasing context", e);
                         }
-                        break;
-                     case ConfigurationMetaData.D_COMMIT_OPTION:
-                        //if the local cache is emptied then valid is set to false(see invoke() )
-                        validContexts.add(ctx.getId());
                         break;
                      }
                   }
@@ -517,12 +501,10 @@ public class EntitySynchronizationInterceptor
  
    class ValidContextsRefresher implements Runnable
    {
-      private HashSet validContexts;
       private long refreshRate;
   
-      public ValidContextsRefresher(HashSet validContexts,long refreshRate)
+      public ValidContextsRefresher(long refreshRate)
       {
-         this.validContexts = validContexts;
          this.refreshRate = refreshRate;
       }
   
@@ -530,7 +512,6 @@ public class EntitySynchronizationInterceptor
       {
          while(true)
          {
-            validContexts.clear();
             if( log.isTraceEnabled() )
               log.trace("Flushing the valid contexts");
             try
@@ -539,10 +520,9 @@ public class EntitySynchronizationInterceptor
             }
             catch (InterruptedException  e)
             {
-               validContexts.clear();
-               log.trace("ValidContextRefresher thread interrupted and shutting down");
-               return;
             } // end of catch
+            EntityCache cache = (EntityCache)container.getInstanceCache();
+            cache.flush();
          }
       }
    }
