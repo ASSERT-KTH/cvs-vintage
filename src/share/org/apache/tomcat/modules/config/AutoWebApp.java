@@ -256,7 +256,7 @@ public class AutoWebApp extends BaseInterceptor {
 	    ( "".equals(path) ? "/" : path ) );
 
 	if (dir.isDirectory()) {
-	    Context ctx=new Context();
+	    Context ctx=cm.createContext();
 	    ctx.setContextManager( cm );
 	    ctx.setPath(prefix + path);
 	    if( ! "DEFAULT".equals( host ) )
