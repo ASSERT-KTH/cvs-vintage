@@ -249,9 +249,14 @@
       </classpath>
       <include name="org/apache/tomcat/webdav/**" />    
     </javac>
+    <copydir src="src/webdav/org/apache/tomcat" 
+             dest="${tomcat.build}/classes/org/apache/tomcat">
+      <include name="**/*.properties" />
+    </copydir>
     <jar jarfile="${tomcat.build}/lib/webdav.jar"
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/webdav/**" /> 
+      <include name="org/apache/tomcat/webdav/**/*.properties" /> 
     </jar>
   </target>
 
@@ -354,6 +359,11 @@
     <javac srcdir="src/examples/jsp/plugin/applet"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+
+    <!-- webdav -->
+    <mkdir dir="${tomcat.build}/webapps/webdav"/>
+    <copydir src="src/webdav/webdav" dest="${tomcat.build}/webapps/webdav"/>
+
 
     <!-- Tomcat profiling webapp - not ready for check in yet
     <mkdir dir="${tomcat.build}/webapps/prof"/>

@@ -110,7 +110,7 @@ import org.apache.tomcat.webdav.resources.*;
  *
  * @author Craig R. McClanahan
  * @author Remy Maucherat
- * @version $Revision: 1.1 $ $Date: 2000/11/03 21:27:37 $
+ * @version $Revision: 1.2 $ $Date: 2000/11/03 23:18:53 $
  */
 
 public class DefaultServlet
@@ -282,6 +282,27 @@ public class DefaultServlet
 
     // ------------------------------------------------------ Protected Methods
 
+    protected Resources getResources(HttpServletRequest req) {
+	ServletContext sc=getServletContext();
+	String docBase=sc.getRealPath("");
+	// XXX call getAttribute() to get a container-specific
+	// docBase that may work for jar resources
+	FileResources res=(FileResources)sc.
+	    getAttribute( "webdav.Resources" );
+	if(res==null ) {
+	    res=new FileResources();
+	    res.setDocBase( docBase );
+	    res.setContextPath(req.getContextPath() ); 
+	    System.out.println("Setting docBase to " + docBase );
+	    sc.setAttribute( "webdav.Resources", res );
+	}
+	// XXX the expire must be integrated in a different way,
+	// we'll not start the expire thread right now.
+	
+	return res;
+    }
+
+
 
     /**
      * Return the relative path associated with this servlet.
@@ -371,12 +392,6 @@ public class DefaultServlet
     }
 
 
-    protected Resources getResources() {
-	// XXX get context resources
-	return null;//new Container( getServletContext() );
-    }
-
-
     /**
      * Process a POST request for the specified resource.
      *
@@ -402,7 +417,7 @@ public class DefaultServlet
             resp.sendError(HttpServletResponse.SC_NOT_IMPLEMENTED);
         }
         
-        Resources resources = getResources();
+        Resources resources = getResources(req);
         
         boolean exists = resources.exists(path);
         
@@ -440,7 +455,7 @@ public class DefaultServlet
         
         String path = getRelativePath(req);
         
-        Resources resources = getResources();
+        Resources resources = getResources(req);
         
         boolean exists = resources.exists(path);
         
@@ -1147,7 +1162,7 @@ public class DefaultServlet
 	    return;
 	}
 
-        Resources resources = getResources();
+        Resources resources = getResources(request);
         ResourceInfo resourceInfo = new ResourceInfo(path, resources);
 
         if (!resourceInfo.exists) {

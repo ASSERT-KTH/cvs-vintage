@@ -1,0 +1,67 @@
+<project name="webdav" default="build-main" basedir=".">
+
+
+  <!-- ===================== Initialize Property Values =================== -->
+  <property name="build.compiler"  value="classic"/>
+  <property name="build.dir"       value="../../../build/webapps"/>
+  <property name="dist.dir"        value="../../../dist/webapps"/>
+  <property name="servletapi.home" value="../../../jakarta-servletapi"/>
+  <property name="webapp.name"     value="webdav"/>
+
+
+  <!-- ================== Derived Property Values ========================= -->
+  <property name="servlet.jar"     value="${servletapi.home}/lib/servlet.jar"/>
+
+
+  <!-- =================== BUILD: Create Directories ====================== -->
+  <target name="build-prepare">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dir}/${webapp.name}"/>
+  </target>
+
+
+  <!-- ================ BUILD: Copy Static Files ========================== -->
+  <target name="build-static" depends="build-prepare">
+    <copydir src="." dest="${build.dir}/${webapp.name}"
+             excludes="build.*"/>
+  </target>
+
+
+  <!-- ================= BUILD: Compile Server Components ================= -->
+  <target name="build-main" depends="build-static"/>
+
+
+  <!-- ==================== BUILD: Rebuild Everything ===================== -->
+  <target name="all" depends="build-clean,build-main"/>
+
+
+  <!-- ======================= BUILD: Clean Directory ===================== -->
+  <target name="build-clean">
+    <deltree dir="${build.dir}/${webapp.name}"/>
+  </target>
+
+
+  <!-- ======================= DIST: Create Directories =================== -->
+  <target name="dist-prepare">
+    <mkdir dir="${dist.dir}"/>
+  </target>
+
+
+  <!-- ======================= DIST: Create Distribution Files ============ -->
+  <target name="dist" depends="build-main,dist-prepare">
+      <jar   jarfile="${dist.dir}/${webapp.name}.war"
+             basedir="${build.dir}/${webapp.name}" includes="**"/>
+  </target>
+
+
+  <!-- ======================= DIST: Clean Directory ====================== -->
+  <target name="dist-clean">
+    <deltree dir="${dist.dir}/${webapp.name}"/>
+  </target>
+
+
+  <!-- ====================== Convenient Synonyms ========================= -->
+  <target name="clean" depends="build-clean,dist-clean"/>
+
+
+</project>
