@@ -47,14 +47,7 @@ package org.tigris.scarab.util.xmlissues;
  */ 
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Collection;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.DefaultFileItem;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 import org.apache.torque.util.Criteria;
 
@@ -69,7 +62,7 @@ import org.tigris.scarab.om.ActivityPeer;
  * A Testing Suite for the ImportIssues class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ImportIssuesTest.java,v 1.6 2004/11/04 20:34:27 dep4b Exp $
+ * @version $Id: ImportIssuesTest.java,v 1.7 2005/01/04 17:24:36 jorgeuriarte Exp $
  */
 public class ImportIssuesTest extends BaseScarabOMTestCase
 {

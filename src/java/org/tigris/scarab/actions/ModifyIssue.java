@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.fulcrum.intake.model.Field;
@@ -98,7 +97,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.196 2004/12/27 22:43:34 jorgeuriarte Exp $
+ * @version $Id: ModifyIssue.java,v 1.197 2005/01/04 17:24:35 jorgeuriarte Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {

@@ -48,7 +48,6 @@ package org.tigris.scarab.actions.admin;
 
 import java.util.List;
 
-import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.turbine.RunData;
@@ -70,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.37 2004/12/27 22:43:34 jorgeuriarte Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.38 2005/01/04 17:24:35 jorgeuriarte Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {

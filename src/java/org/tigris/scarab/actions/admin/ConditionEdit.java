@@ -57,15 +57,12 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ConditionManager;
 import org.tigris.scarab.om.ConditionPeer;
-import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleAttributeManager;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.Transition;
 import org.tigris.scarab.om.TransitionManager;
-import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -159,3 +156,4 @@ public class ConditionEdit extends RequireLoginFirstAction
         }
     }
 }
+

@@ -50,8 +50,6 @@ package org.tigris.scarab.actions;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 
-import org.apache.fulcrum.security.TurbineSecurity;
-
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.screens.ModuleSwitchingLink;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -65,7 +63,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  *    
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: Logout.java,v 1.16 2005/01/04 01:31:01 dabbous Exp $
+ * @version $Id: Logout.java,v 1.17 2005/01/04 17:24:34 jorgeuriarte Exp $
  */
 public class Logout extends ScarabTemplateAction
 {
