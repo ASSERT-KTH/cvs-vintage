@@ -147,4 +147,4 @@ insert into SCARAB_MIT_LISTITEM (ITEM_ID, LIST_ID, MODULE_ID, ISSUE_TYPE_ID)
  * global application parameters, we start off needing to be localized
  */
 insert into SCARAB_GLOBAL_PARAMETER (PARAMETER_ID, NAME, VALUE)
-    values (1, "db-l10n-state", "pre-l10n");
+    values (1, 'db-l10n-state', 'pre-l10n');
