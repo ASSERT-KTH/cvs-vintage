@@ -27,7 +27,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.9 1998/06/04 20:03:37 jrobbins Exp $
+// $Id: FigText.java,v 1.10 1998/06/11 21:08:02 jrobbins Exp $
 
 package uci.gef;
 
@@ -418,7 +418,11 @@ public class FigText extends Fig implements KeyListener, MouseListener {
   // event handlers: KeyListener implemtation
 
   public void mouseClicked(MouseEvent me) {
-    if (me.getClickCount() >= 2) startTextEditor();
+    if (me.isConsumed()) return;
+    if (me.getClickCount() >= 2) {
+        startTextEditor();
+        me.consume();
+    }
   }
   
   public void mousePressed(MouseEvent me) { }

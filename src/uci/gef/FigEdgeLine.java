@@ -27,7 +27,7 @@
 // File: FigEdgeLine.java
 // Classes: FigEdgeLine
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdgeLine.java,v 1.5 1998/06/04 20:03:35 jrobbins Exp $
+// $Id: FigEdgeLine.java,v 1.6 1998/06/11 21:07:57 jrobbins Exp $
 
 package uci.gef;
 

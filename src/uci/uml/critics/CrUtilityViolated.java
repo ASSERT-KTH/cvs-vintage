@@ -29,7 +29,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.2 1998/06/04 20:04:09 jrobbins Exp $
+// $Id: CrUtilityViolated.java,v 1.3 1998/06/11 21:09:07 jrobbins Exp $
 
 package uci.uml.critics;
 

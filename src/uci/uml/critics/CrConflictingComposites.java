@@ -19,7 +19,7 @@
 // File: CrConflictingComposites.java.java
 // Classes: CrConflictingComposites.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.2 1998/06/04 20:03:52 jrobbins Exp $
+// $Id: CrConflictingComposites.java,v 1.3 1998/06/11 21:08:38 jrobbins Exp $
 
 package uci.uml.critics;
 

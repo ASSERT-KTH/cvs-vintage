@@ -27,7 +27,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.1 1998/04/23 23:52:27 jrobbins Exp $
+// $Id: PropPanelPseudostate.java,v 1.2 1998/06/11 21:09:38 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -104,7 +104,7 @@ implements DocumentListener, ItemListener {
 
   /** The user typed some text */
   public void insertUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " insert");
+    //System.out.println(getClass().getName() + " insert");
     // check if it was one of my text fields
     super.insertUpdate(e);
   }

@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.10 1998/06/04 20:03:41 jrobbins Exp $
+// $Id: ModeModify.java,v 1.11 1998/06/11 21:08:10 jrobbins Exp $
 
 package uci.gef;
 

@@ -29,7 +29,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.2 1998/06/04 20:03:55 jrobbins Exp $
+// $Id: CrEmptyPackage.java,v 1.3 1998/06/11 21:08:41 jrobbins Exp $
 
 package uci.uml.critics;
 

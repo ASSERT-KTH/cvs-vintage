@@ -19,7 +19,7 @@
 // File: PathConv.java
 // Classes: PathConv
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConv.java,v 1.8 1998/06/04 20:03:45 jrobbins Exp $
+// $Id: PathConv.java,v 1.9 1998/06/11 21:08:18 jrobbins Exp $
 
 package uci.gef;
 

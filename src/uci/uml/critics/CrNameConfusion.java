@@ -19,7 +19,7 @@
 // File: CrNameConfusion.java.java
 // Classes: CrNameConfusion.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.2 1998/06/04 20:03:59 jrobbins Exp $
+// $Id: CrNameConfusion.java,v 1.3 1998/06/11 21:08:49 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -19,7 +19,7 @@
 // File: CrIllegalName.java.java
 // Classes: CrIllegalName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.2 1998/06/04 20:03:57 jrobbins Exp $
+// $Id: CrIllegalName.java,v 1.3 1998/06/11 21:08:44 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -28,7 +28,7 @@
 // File: Globals.java
 // Classes: Globals
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Globals.java,v 1.7 1998/06/04 20:03:38 jrobbins Exp $
+// $Id: Globals.java,v 1.8 1998/06/11 21:08:03 jrobbins Exp $
 
 package uci.gef;
 

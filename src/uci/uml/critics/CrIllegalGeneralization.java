@@ -19,7 +19,7 @@
 // File: CrIllegalGeneralization.java.java
 // Classes: CrIllegalGeneralization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.2 1998/06/04 20:03:56 jrobbins Exp $
+// $Id: CrIllegalGeneralization.java,v 1.3 1998/06/11 21:08:43 jrobbins Exp $
 
 package uci.uml.critics;
 

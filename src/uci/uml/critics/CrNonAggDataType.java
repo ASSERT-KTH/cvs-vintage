@@ -19,7 +19,7 @@
 // File: CrNonAggDataType.java.java
 // Classes: CrNonAggDataType.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNonAggDataType.java,v 1.6 1998/06/04 20:04:01 jrobbins Exp $
+// $Id: CrNonAggDataType.java,v 1.7 1998/06/11 21:08:53 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -27,7 +27,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.1 1998/04/23 23:52:28 jrobbins Exp $
+// $Id: PropPanelUseCase.java,v 1.2 1998/06/11 21:09:40 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -104,7 +104,7 @@ implements DocumentListener, ItemListener {
 
   /** The user typed some text */
   public void insertUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " insert");
+    //System.out.println(getClass().getName() + " insert");
     // check if it was one of my text fields
     super.insertUpdate(e);
   }

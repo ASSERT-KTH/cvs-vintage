@@ -27,7 +27,7 @@
 // File: ArrowHeadNone.java
 // Classes: ArrowHeadNone
 // Original Author: abonner@ics.uci.ed
-// $Id: ArrowHeadNone.java,v 1.5 1998/06/04 20:03:32 jrobbins Exp $
+// $Id: ArrowHeadNone.java,v 1.6 1998/06/11 21:07:52 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: CrUnconventionalClassName.java.java
 // Classes: CrUnconventionalClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.6 1998/06/04 20:04:07 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.7 1998/06/11 21:09:04 jrobbins Exp $
 
 package uci.uml.critics;
 

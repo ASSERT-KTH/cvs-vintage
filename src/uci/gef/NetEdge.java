@@ -28,7 +28,7 @@
 // File: NetEdge.java
 // Classes: NetEdge
 // Original Author: ics125 spring 1996
-// $Id: NetEdge.java,v 1.8 1998/06/04 20:03:42 jrobbins Exp $
+// $Id: NetEdge.java,v 1.9 1998/06/11 21:08:13 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: CrOppEndVsAttr.java.java
 // Classes: CrOppEndVsAttr.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.6 1998/06/04 20:04:02 jrobbins Exp $
+// $Id: CrOppEndVsAttr.java,v 1.7 1998/06/11 21:08:56 jrobbins Exp $
 
 package uci.uml.critics;
 

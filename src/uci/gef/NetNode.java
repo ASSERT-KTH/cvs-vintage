@@ -28,7 +28,7 @@
 // File: NetNode.java
 // Classes: NetNode
 // Original Author: ics125 spring 1996
-// $Id: NetNode.java,v 1.8 1998/06/04 20:03:43 jrobbins Exp $
+// $Id: NetNode.java,v 1.9 1998/06/11 21:08:14 jrobbins Exp $
 
 package uci.gef;
 

@@ -27,7 +27,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.9 1998/06/04 20:03:36 jrobbins Exp $
+// $Id: FigNode.java,v 1.10 1998/06/11 21:08:00 jrobbins Exp $
 
 package uci.gef;
 
@@ -211,8 +211,20 @@ implements MouseListener, PropertyChangeListener, Serializable {
       // assumes ports are always filled
       if (f.contains(x, y) && own != null) return own;
     }
+
+    Rectangle r = new Rectangle(x - 16, y - 16, 32, 32);
+    figs = elements();
+    while (figs.hasMoreElements()) {
+      Fig f = (Fig) figs.nextElement();
+      Object own = f.getOwner();
+      // assumes ports are always filled
+      if (f.hit(r) && own != null) return own;
+    }
+
     return null;
   }
+
+
   
   /** Reply the Fig that displays the given NetPort. */
   public Fig getPortFig(Object np) {

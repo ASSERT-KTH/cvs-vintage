@@ -19,7 +19,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.8 1998/06/04 20:04:08 jrobbins Exp $
+// $Id: CrUselessAbstract.java,v 1.9 1998/06/11 21:09:06 jrobbins Exp $
 
 package uci.uml.critics;
 

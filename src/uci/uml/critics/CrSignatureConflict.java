@@ -19,7 +19,7 @@
 // File: CrSignatureConflict.java.java
 // Classes: CrSignatureConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSignatureConflict.java,v 1.6 1998/06/04 20:04:05 jrobbins Exp $
+// $Id: CrSignatureConflict.java,v 1.7 1998/06/11 21:09:00 jrobbins Exp $
 
 package uci.uml.critics;
 

@@ -29,7 +29,7 @@
 // File: CrNoOperations.java
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.2 1998/06/04 20:04:00 jrobbins Exp $
+// $Id: CrNoOperations.java,v 1.3 1998/06/11 21:08:52 jrobbins Exp $
 
 package uci.uml.critics;
 

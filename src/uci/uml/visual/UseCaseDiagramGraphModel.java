@@ -27,7 +27,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.1 1998/04/23 23:52:59 jrobbins Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.2 1998/06/11 21:09:49 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -145,7 +145,7 @@ implements MutableGraphModel, VetoableChangeListener {
 
   /** Add the given node to the graph, if valid. */
   public void addNode(Object node) {
-    System.out.println("adding class node!!");
+    System.out.println("adding use case node!!");
     if (_nodes.contains(node)) return;
     _nodes.addElement(node);
     // needs-more-work: assumes public, user pref for default visibility?
@@ -165,7 +165,7 @@ implements MutableGraphModel, VetoableChangeListener {
 
   /** Add the given edge to the graph, if valid. */
   public void addEdge(Object edge) {
-    System.out.println("adding class edge!!!!!!");
+    System.out.println("adding use case edge!!!!!!");
     if (_edges.contains(edge)) return;
     _edges.addElement(edge);
     // needs-more-work

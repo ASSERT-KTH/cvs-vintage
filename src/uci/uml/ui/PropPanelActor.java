@@ -27,7 +27,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: your email address here
-// $Id: PropPanelActor.java,v 1.1 1998/04/23 23:52:23 jrobbins Exp $
+// $Id: PropPanelActor.java,v 1.2 1998/06/11 21:09:29 jrobbins Exp $
 
 package uci.uml.ui;
 
@@ -104,7 +104,7 @@ implements DocumentListener, ItemListener {
 
   /** The user typed some text */
   public void insertUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " insert");
+    //System.out.println(getClass().getName() + " insert");
     // check if it was one of my text fields
     super.insertUpdate(e);
   }
@@ -112,7 +112,7 @@ implements DocumentListener, ItemListener {
   public void removeUpdate(DocumentEvent e) { insertUpdate(e); }
 
   public void changedUpdate(DocumentEvent e) {
-    System.out.println(getClass().getName() + " changed");
+    //System.out.println(getClass().getName() + " changed");
     // Apparently, this method is never called.
   }
 

@@ -28,7 +28,7 @@
 // File: NetPort.java
 // Classes: NetPort
 // Original Author: ics125 spring 1996
-// $Id: NetPort.java,v 1.8 1998/06/04 20:03:44 jrobbins Exp $
+// $Id: NetPort.java,v 1.9 1998/06/11 21:08:15 jrobbins Exp $
 
 package uci.gef;
 

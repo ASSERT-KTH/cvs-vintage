@@ -27,7 +27,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.3 1998/04/23 23:52:44 jrobbins Exp $
+// $Id: ClassDiagramRenderer.java,v 1.4 1998/06/11 21:09:45 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -67,7 +67,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
 
   /** Return a Fig that can be used to represent the given edge */
   public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
-    System.out.println("making figedge for " + edge);
+    //System.out.println("making figedge for " + edge);
     if (edge instanceof Association) {
       Association asc = (Association) edge;
       FigAssociation ascFig = new FigAssociation(asc);

@@ -29,7 +29,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.6 1998/06/04 20:04:00 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.7 1998/06/11 21:08:51 jrobbins Exp $
 
 package uci.uml.critics;
 
