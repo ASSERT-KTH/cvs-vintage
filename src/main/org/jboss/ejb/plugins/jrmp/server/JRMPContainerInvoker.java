@@ -62,7 +62,7 @@ import org.jboss.logging.Logger;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.8 $
+ *      @version $Revision: 1.9 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -123,6 +123,8 @@ public abstract class JRMPContainerInvoker
 	      rmi.setMethodMap(homeMethodInvokerMap);
 		
 			Transaction tx = rmi.getTransaction();
+//DEBUG	        System.out.println("The home transaction is "+tx);
+    
 			System.out.println(container.getTransactionManager());
 			if (tx == null)
 				tx = container.getTransactionManager().getTransaction();
@@ -150,6 +152,7 @@ public abstract class JRMPContainerInvoker
          rmi.setMethodMap(beanMethodInvokerMap);
 			
          Transaction tx = rmi.getTransaction();
+		 // MF FIXME: there should be no implicit thread passing of the transaction
          if (tx == null)
          	tx = container.getTransactionManager().getTransaction();
 				
