@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
@@ -202,13 +203,18 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
             String charsetName = bodyPart.getHeader().getContentParameter(
                     "charset");
 
+            try {
+                charset = Charset.forName(charsetName);
+            } catch (UnsupportedCharsetException e) {
+                charsetName = null;
+            }
+
             if (charsetName == null) {
                 // There is no charset info -> the default system charset is
                 // used
                 charsetName = System.getProperty("file.encoding");
+                charset = Charset.forName(charsetName);
             }
-
-            charset = Charset.forName(charsetName);
 
             //((CharsetOwnerInterface) mediator).setCharset(charset);
 
