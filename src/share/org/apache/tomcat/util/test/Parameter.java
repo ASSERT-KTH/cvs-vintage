@@ -107,5 +107,8 @@ public class Parameter {
 	return type;
     }
     
+    public void execute()
+    {
+    }
 
 }

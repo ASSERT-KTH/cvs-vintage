@@ -95,5 +95,8 @@ public class Body {
 	return body;
     }
 	
+    public void execute()
+    {
+    }
 
 }

@@ -265,7 +265,11 @@ public class HttpRequest {
     /** Alternate method for sending a verbose request
      */
     public void addText(String s ) {
-	fullRequest=s;
+        // set if text isn't just whitespace
+        if (null != s && s.trim().length() > 0)
+        {
+            fullRequest=s;
+        }
     }
 
     // -------------------- Execute the request --------------------

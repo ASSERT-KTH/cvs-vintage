@@ -91,4 +91,8 @@ public class Cookie {
 	return value;
     }
     
+    public void execute()
+    {
+    }
+
 }
