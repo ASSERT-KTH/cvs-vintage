@@ -1,4 +1,4 @@
-// $Id: UMLClassOperationListModel.java,v 1.5 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLClassOperationListModel.java,v 1.6 2004/12/16 19:29:39 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,19 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import org.argouml.uml.ui.UMLModelElementListModel2;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.CoreHelper;
+import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
 /**
  *
  * @author jaap.branderhorst@xs4all.nl, alexb
  * @since Mar 22, 2003
  */
-public class UMLClassOperationListModel extends UMLModelElementListModel2 {
+public class UMLClassOperationListModel extends UMLModelElementOrderedListModel2 {
    
     /**
      * Constructor for UMLClassifierFeatureListModel.
@@ -46,7 +50,6 @@ public class UMLClassOperationListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            
             setAllElements(ModelFacade.getOperations(getTarget()));
         }
     }
@@ -58,4 +61,21 @@ public class UMLClassOperationListModel extends UMLModelElementListModel2 {
         return (ModelFacade.getOperations(getTarget()).contains(element));
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#swap(int, int)
+     */
+    public void swap(int index1, int index2) {
+        Object clss = getTarget();
+        List c = new ArrayList(ModelFacade.getOperations(clss));
+        Object mem1 = c.get(index1);
+        Object mem2 = c.get(index2);
+        List cc = new ArrayList(c);
+        cc.remove(mem1);
+        cc.remove(mem2);
+        CoreHelper.getHelper().setOperations(clss, cc);
+        c.set(index1, mem2);
+        c.set(index2, mem1);
+        CoreHelper.getHelper().setOperations(clss, c);
+        buildModelList();
+    }
 }
