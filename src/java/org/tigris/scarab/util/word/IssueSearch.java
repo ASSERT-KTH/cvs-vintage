@@ -113,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.106 2003/07/25 17:34:38 thierrylach Exp $
+ * @version $Id: IssueSearch.java,v 1.107 2003/08/15 23:59:17 dlr Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1171,8 +1171,7 @@ public class IssueSearch
                 // parts are equal otherwise skip the query, there are no 
                 // matches
                 if (minFid.getCount() <= maxFid.getCount() 
-                  && StringUtils.equals(minFid.getPrefix().toUpperCase(), 
-                                         maxFid.getPrefix().toUpperCase()) 
+                  && StringUtils.equals(minFid.getPrefix(), maxFid.getPrefix())
                   && StringUtils.equals(minFid.getDomain(), maxFid.getDomain()))
                 {
                     addAnd(sb);
