@@ -154,6 +154,7 @@ public class TreeModel extends DefaultTreeModel {
 		try {
 
 			folder = (FolderTreeNode) handler.getPlugin(type, args);
+			
 			parentFolder.add(folder);
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -15,13 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
 
 /**
  * @author freddy
@@ -71,7 +65,9 @@ public class ShutdownManager {
 		System.exit(1);
 		*/
 
-		for (int i = 0; i < list.size(); i++) {
+		// we start from the end, to be sure that
+		// the core-plugins are saved as last
+		for (int i = list.size()-1; i >= 0; i--) {
 			ShutdownPluginInterface plugin =
 				(ShutdownPluginInterface) list.get(i);
 

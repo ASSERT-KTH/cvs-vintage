@@ -18,7 +18,8 @@ package org.columba.mail.shutdown;
 import java.util.Enumeration;
 
 import org.columba.core.main.MainInterface;
-import org.columba.core.shutdown.*;
+import org.columba.core.shutdown.ShutdownPluginInterface;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.mh.CachedMHFolder;
@@ -55,9 +56,13 @@ public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
 
 			child = (FolderTreeNode) e.nextElement();
 
+			if (child instanceof Folder)
+				 ((Folder) child).saveMessageFolderInfo();
+
 			if (child instanceof CachedMHFolder) {
 				CachedMHFolder mhFolder = (CachedMHFolder) child;
 				try {
+
 					mhFolder.save();
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -65,6 +70,7 @@ public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
 			} else if (child instanceof OutboxFolder) {
 				OutboxFolder outboxFolder = (OutboxFolder) child;
 				try {
+
 					outboxFolder.save();
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -73,6 +79,7 @@ public class SaveAllFoldersPlugin implements ShutdownPluginInterface {
 				IMAPFolder imapFolder = (IMAPFolder) child;
 
 				try {
+
 					imapFolder.save();
 				} catch (Exception ex) {
 					ex.printStackTrace();

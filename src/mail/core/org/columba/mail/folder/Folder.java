@@ -27,6 +27,7 @@ import javax.swing.tree.TreeNode;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -107,8 +108,13 @@ public abstract class Folder extends FolderTreeNode {
 		String dir = ConfigPath.getConfigDirectory() + "/mail/" + getUid();
 		if (DiskIO.ensureDirectory(dir))
 			directoryFile = new File(dir);
+			
+		
+		loadMessageFolderInfo();
 	}
 
+	
+	
 	/**
 	 * Method showFilterDialog.
 	 * @param frameController
@@ -727,5 +733,44 @@ public abstract class Folder extends FolderTreeNode {
 	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
 		return r;
 	}
+	
+	/*
+	 * save messagefolderinfo to xml-configuration
+	 * 
+	 */
+	public void saveMessageFolderInfo()
+	{
+		MessageFolderInfo info = getMessageFolderInfo();
+		
+		FolderItem item = getFolderItem();
+		
+		XmlElement property = item.getElement("property");
+		
+		property.addAttribute("exists", new Integer(info.getExists()).toString());
+		property.addAttribute("unseen", new Integer(info.getUnseen()).toString());
+		property.addAttribute("recent", new Integer(info.getRecent()).toString());
+	}
+	
+	/*
+	 * 
+	 * get messagefolderinfo from xml-configuration
+	 * 
+	 */
+	protected void loadMessageFolderInfo()
+		{
+			XmlElement property = getFolderItem().getElement("property");
+			if ( property == null ) return;
+			
+			MessageFolderInfo info = getMessageFolderInfo();
+			
+			String exists = property.getAttribute("exists");
+			if ( exists != null ) info.setExists(Integer.parseInt(exists));
+			String recent = property.getAttribute("recent");
+			if ( recent != null ) info.setRecent(Integer.parseInt(recent));
+			String unseen = property.getAttribute("unseen");
+			if ( unseen != null ) info.setUnseen(Integer.parseInt(unseen));
+			
+			
+		}
 
 }

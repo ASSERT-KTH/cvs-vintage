@@ -202,6 +202,9 @@ public abstract class AbstractHeaderCache {
 		worker.setProgressBarValue(0);
 
 		int nextUid = -1;
+		
+		// exists/unread/recent should be set to 0
+		folder.setMessageFolderInfo(new MessageFolderInfo());
 
 		for (int i = 0; i < capacity; i++) {
 
