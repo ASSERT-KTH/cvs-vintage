@@ -28,6 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -87,9 +88,13 @@ public class ExpungeFolderAction extends AbstractColumbaAction implements
 
 				if (folder instanceof VirtualFolder) {
 					setEnabled(false);
+				} else if (folder instanceof RootFolder) {
+					setEnabled(false);
 				} else {
+
 					setEnabled(true);
 				}
+
 			}
 		} else {
 			setEnabled(false);
