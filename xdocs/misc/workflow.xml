@@ -20,11 +20,11 @@ questions about plans for workflow in Scarab.
 is available in the Scarab users mail list.</p>
 
 <p>
-<strong>A user has volunteered to contribute their workflow efforts!</strong>  This will be a basic implementation, but may help
-get us closer.
+<strong>A basic implementation of workflow, providing state-transition definition and conditionally required fields has been commited as of October 2004, and is now part of the standard Scarab distribution.
+</strong>
 </p>
-
     
   </section>
 </body>
 </document>
+
