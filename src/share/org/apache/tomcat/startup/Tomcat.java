@@ -34,7 +34,7 @@ public class Tomcat extends Log {
     // relative to TOMCAT_HOME 
     static final String DEFAULT_CONFIG="conf/server.xml";
     
-    Tomcat() {
+    public Tomcat() {
 	super("tc_log");
     }
 
@@ -77,12 +77,16 @@ public class Tomcat extends Log {
 	
 	tcat.start();
     }
+
+    public void setAction(String s ) {
+	action=s;
+    }
     
     public static void main(String args[] ) {
 	try {
 	    Tomcat tomcat=new Tomcat();
-	    if( ! tcat.processArgs( args )) {
-		action="help";
+	    if( ! tomcat.processArgs( args )) {
+		tomcat.setAction("help");
 	    }
 	    tomcat.execute();
 	} catch(Exception ex ) {
@@ -117,7 +121,7 @@ public class Tomcat extends Log {
 	    } else if (arg.equals("-stop")) {
 		action="stop";
 	    } else if (arg.equals("-g") || arg.equals("-generateConfigs")) {
-		doGenerate=true;
+		// config generation is now a module. //doGenerate=true;
 	    } else if (arg.equals("-f") || arg.equals("-config")) {
 		i++;
 		if( i < args.length )

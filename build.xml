@@ -116,11 +116,13 @@
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>    
       <include name="org/apache/tomcat/util/SimpleClassLoader.java"/>    
+      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar" basedir="${tomcat.build}/classes" manifest="src/build/manifest"> 
       <include name="org/apache/tomcat/startup/Main.class"/> 
       <include name="org/apache/tomcat/startup/Main$*.class"/> 
       <include name="org/apache/tomcat/util/SimpleClassLoader**"/> 
+      <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
     </jar>
   </target>
 

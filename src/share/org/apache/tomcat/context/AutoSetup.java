@@ -88,7 +88,6 @@ public class AutoSetup extends BaseInterceptor {
      *  virtual hosts too
      */
     public void engineStart(ContextManager cm) throws TomcatException {
-	super.engineInit( cm );
 	String home=cm.getHome();
 	File webappD=new File(home + "/webapps");
 	if (! webappD.exists() || ! webappD.isDirectory()) {
@@ -96,17 +95,17 @@ public class AutoSetup extends BaseInterceptor {
 	    return ; // nothing to set up
 	}
 
-    Enumeration en=cm.getContexts();
-    while (en.hasMoreElements()){
-        Context ctx=(Context)en.nextElement();
-        if( ctx.getHost()== null ) {
-            // this is a context that goes into the default server
-            // we care only about the root context for autosetup
-            // until we define a pattern for automatic vhost setup.
-            definedContexts.put( ctx.getPath(), ctx );
-            if(debug>0) log("Register explicit context " + ctx.getPath());
-        }
-    }
+	Enumeration en=cm.getContexts();
+	while (en.hasMoreElements()){
+	    Context ctx=(Context)en.nextElement();
+	    if( ctx.getHost()== null ) {
+		// this is a context that goes into the default server
+		// we care only about the root context for autosetup
+		// until we define a pattern for automatic vhost setup.
+		definedContexts.put( ctx.getPath(), ctx );
+		if(debug>0) log("Register explicit context " + ctx.getPath());
+	    }
+	}
 
 	String[] list = webappD.list();
 	if( list.length==0 ) {
@@ -122,11 +121,9 @@ public class AutoSetup extends BaseInterceptor {
 		    // To update you need to "remove" the context first!!!
 		    appDir.mkdirs();
 		    // Expand war file
-		    Expand expand=new Expand();
-		    expand.setSrc( home + "/webapps/" + name );
-		    expand.setDest( home + "/webapps/" + fname);
 		    try {
-			expand.execute();
+			expand(home + "/webapps/" + name,
+			       home + "/webapps/" + fname);
 		    } catch( IOException ex) {
 			log("expanding webapp " + name, ex);
 			// do what ?
@@ -173,6 +170,44 @@ public class AutoSetup extends BaseInterceptor {
             }
             }
 	}
+    }
+
+    private void expand( String src, String dest)
+	throws IOException
+    {
+	File srcF=new File( source);
+	File dir=new File( dest );
+	
+	ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
+	ZipEntry ze = null;
+	
+	while ((ze = zis.getNextEntry()) != null) {
+	    try {
+		File f = new File(dir, ze.getName());
+		// create intermediary directories - sometimes zip don't add them
+		File dirF=new File(f.getParent());
+		dirF.mkdirs();
+		
+		if (ze.isDirectory()) {
+		    f.mkdirs(); 
+		} else {
+		    byte[] buffer = new byte[1024];
+		    int length = 0;
+		    FileOutputStream fos = new FileOutputStream(f);
+		    
+		    while ((length = zis.read(buffer)) >= 0) {
+			fos.write(buffer, 0, length);
+		    }
+		    
+		    fos.close();
+		}
+	    } catch( FileNotFoundException ex ) {
+		//loghelper.log("FileNotFoundException: " +
+		//   ze.getName(), Logger.ERROR );
+		throw ex;
+	    }
+	}
+
     }
 
 }

@@ -60,40 +60,116 @@
 
 package org.apache.tomcat.util;
 import java.lang.reflect.*;
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+// Depends: JDK1.1
 
 /**
  *  Utils for introspection and reflection
  */
 public final class IntrospectionUtils {
 
-    /** Test if the interceptor implements a particular
-     *  method
+    /** Call execute() - any ant-like task should work
      */
-    public static boolean hasHook( Object obj, String methodN ) {
-	try {
-	    Method myMethods[]=obj.getClass().getMethods();
-	    for( int i=0; i< myMethods.length; i++ ) {
-		if( methodN.equals ( myMethods[i].getName() )) {
-		    // check if it's overriden
-		    Class declaring=myMethods[i].getDeclaringClass();
-		    Class parentOfDeclaring=declaring.getSuperclass();
-		    // this works only if the base class doesn't extend
-		    // another class.
-
-		    // if the method is declared in a top level class
-		    // like BaseInterceptor parent is Object, otherwise
-		    // parent is BaseInterceptor or an intermediate class
-		    if( ! "java.lang.Object".
-			equals(parentOfDeclaring.getName() )) {
-			return true;
-		    }
-		}
-	    }
-	} catch ( Exception ex ) {
-	    ex.printStackTrace();
+    public static void execute( Object proxy, String method  )
+	throws Exception
+    {
+	Method executeM=null;
+	Class c=proxy.getClass();
+	Class params[]=new Class[0];
+	//	params[0]=args.getClass();
+	executeM=c.getMethod( method, params );
+	if( executeM == null ) {
+	    throw new RuntimeException("No execute in " + proxy.getClass() );
 	}
-	return false;
+	executeM.invoke(proxy, null );//new Object[] { args });
     }
 
-    
+    /** 
+     *  Call void setAttribute( String ,Object )
+     */
+    public static void setAttribute( Object proxy, String n, Object v)
+	throws Exception
+    {
+	Method executeM=null;
+	Class c=proxy.getClass();
+	Class params[]=new Class[2];
+	params[0]= String.class;
+	params[1]= Object.class;
+	executeM=c.getMethod( "setAttribute", params );
+	if( executeM == null ) {
+	    System.out.println("No setAttribute in " + proxy.getClass() );
+	    return;
+	}
+	if( false )
+	    System.out.println("Setting " + n + "=" + v + "  in " + proxy);
+	executeM.invoke(proxy, new Object[] { n, v });
+	return; 
+    }
+
+    /** Construct a URLClassLoader. Will compile and work in JDK1.1 too.
+     */
+    public static ClassLoader getURLClassLoader( URL urls[],
+						 ClassLoader parent )
+    {
+	try {
+	    Class urlCL=Class.forName( "java.net.URLClassLoader");
+	    Class paramT[]=new Class[2];
+	    paramT[0]= urls.getClass();
+	    paramT[1]=ClassLoader.class;
+	    Method m=urlCL.getMethod( "newInstance", paramT);
+	    
+	    ClassLoader cl=(ClassLoader)m.invoke( urlCL,
+						  new Object[] { urls,
+								 parent } );
+	    return cl;
+	} catch(ClassNotFoundException ex ) {
+	    // jdk1.1
+	    return null;
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	    return null;
+	}
+    }
+
+
+    /** Guess a product home by analyzing the class path.
+     *  It works for product using the pattern: lib/executable.jar
+     *  or if executable.jar is included in classpath by a shell
+     *  script. ( java -jar also works )
+     */
+    public static String guessHome(String systemProperty, String jarName) {
+	String h=null;
+	
+	if( systemProperty != null )
+	    h=System.getProperty( systemProperty );
+	
+	if( h!=null ) return h;
+
+	// Find the directory where jarName.jar is located
+	
+	String cpath=System.getProperty( "java.class.path");
+	String pathSep=System.getProperty( "path.separator");
+	StringTokenizer st=new StringTokenizer( cpath, pathSep );
+	while( st.hasMoreTokens() ) {
+	    String path=st.nextToken();
+	    //	    log( "path " + path );
+	    if( path.endsWith( jarName ) ) {
+		h=path.substring( 0, path.length() - jarName.length() );
+		try {
+		    File f=new File( h );
+		    File f1=new File ( h, "..");
+		    h = f1.getCanonicalPath();
+		    if( systemProperty != null )
+			System.getProperties().put( systemProperty, h );
+		    return h;
+		} catch( Exception ex ) {
+		    ex.printStackTrace();
+		}
+	    }
+	}
+	return null;
+    }
 }

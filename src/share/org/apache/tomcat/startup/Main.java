@@ -67,37 +67,20 @@ import java.util.*;
 import java.net.*;
 
 import org.apache.tomcat.util.SimpleClassLoader;
+import org.apache.tomcat.util.IntrospectionUtils;
 
-// XXX there is a nice trick to "guess" TOMCAT_HOME from
-// classpath - you open each component of cp and check if
-// it contains this file. When you find it just take the
-// path and use it.
-
-// Since the .sh will need to include it in CP probably it
-// already know where it is.
-
-
-// <b> Thanks ANT </b>
+// Depends:
+// JDK1.1
+// tomcat.util.IntrospectionUtils, SimpleClassLoader
 
 /**
- * Starter for Tomcat. This is the standalone started - the only component that is
- * part of the system CLASSPATH. It will process command line options and
- * load the right jars ( like JAXP and anything else required to start tomcat).
+ * Starter for Tomcat.
  *
- * This is a replacement for all the scripting we use to do in tomcat.sh and tomcat.bat.
+ * This is a replacement/enhancement for the .sh and .bat files - you can
+ * use JDK1.2 "java -jar tomcat.jar", or ( for jdk 1.1 ) you just need to
+ * include a single jar file in the classpath.
  *
- * This class have (only) the following dependencies( that need to be included in the
- * same jar): 
- *  - org.apache.tomcat.util.SimpleClassLoader - for JDK1.1
- *
- *
- * <b>Starting tomcat</b>. 
- * Add tcstarter.jar to CLASSPATH
- * Launch org.apache.tomcat.startup.Tomcat with TOMCAT_HOME parameter
- * pointing to the tomcat install directory.
- * 
- * 
- * @author Costin
+ * @author Costin Manolache
  */
 public class Main {
     String installDir;
@@ -109,15 +92,6 @@ public class Main {
     // null means user didn't set one
     String configFile;
     
-    static boolean jdk12=false;
-    static {
-	try {
-	    Class.forName( "java.security.PrivilegedAction" );
-	    jdk12=true;
-	} catch(Throwable ex ) {
-	}
-    }
-
     public Main() {
     }
 
@@ -137,39 +111,6 @@ public class Main {
 
     // -------------------- Guess tomcat.home --------------------
 
-    public String guessTomcatHome() {
-	// If -Dtomcat.home is used - Great
-	String h=System.getProperty( "tomcat.home" );
-	if( h!=null ) return h;
-
-	// Find the directory where tomcat.jar is located
-	
-	String cpath=System.getProperty( "java.class.path");
-	String pathSep=System.getProperty( "path.separator");
-	StringTokenizer st=new StringTokenizer( cpath, pathSep );
-	while( st.hasMoreTokens() ) {
-	    String path=st.nextToken();
-	    //	    log( "path " + path );
-	    if( path.endsWith( "tomcat.jar" ) ) {
-		h=path.substring( 0, path.length() - "tomcat.jar".length() );
-		//		log( "Path1 " + h );
-		try {
-		    File f=new File( h );
-		    File f1=new File ( h, "..");
-		    //    log( "Path2 " + f1 );
-		    h = f1.getCanonicalPath();
-		    //log( "Guessed " + h + " from " + path );
-		    System.getProperties().put( "tomcat.home", h );
-		    return h;
-		} catch( Exception ex ) {
-		    ex.printStackTrace();
-		}
-	    }
-	}
-
-	return null;
-    }
-    
     
     // -------------------- Utils --------------------
     
@@ -203,34 +144,14 @@ public class Main {
     public String getLibDir() {
 	if( libBase!=null ) return libBase;
 
-	String pkg=guessTomcatHome();
+	String pkg=IntrospectionUtils.guessHome("tomcat.home", "tomcat.jar");
+	System.out.println("Guessed home=" + pkg);
 	if( pkg!=null ) setLibDir( pkg + "/lib");
 	else setLibDir("./lib");
 	return libBase;
     }
 
-    ClassLoader getURLClassLoader( URL urls[], ClassLoader parent )
-	throws Exception
-    {
-	Class urlCL=Class.forName( "java.net.URLClassLoader");
-	Class paramT[]=new Class[2];
-	paramT[0]= urls.getClass();
-	paramT[1]=ClassLoader.class;
-	Method m=urlCL.getMethod( "newInstance", paramT);
-
-	ClassLoader cl=(ClassLoader)m.invoke( urlCL,
-					      new Object[] { urls, parent } );
-	return cl;
-    }
-	
     
-/*    String cpComp[]=new String[] { "../classes/", "jaxp.jar",
-				   "parser.jar", "jasper.jar",
-				   "webserver.jar",
-                                   "tomcat_core.jar", "tomcat_util.jar",
-                                   "tomcat_modules.jar", "tomcat_config.jar",
-				   "facade.jar", "servlet.jar"};
-*/
     void execute( String args[] ) throws Exception {
 
 	try {
@@ -272,65 +193,23 @@ public class Main {
 	    System.out.println("ParentL " + parentL );
 
 	    ClassLoader cl=null;
-	    if( jdk12 )
-		cl= getURLClassLoader( urls, parentL );
-	    else
+	    cl= IntrospectionUtils.getURLClassLoader( urls, parentL );
+	    if( cl==null )
 		cl=new SimpleClassLoader(urls, parentL);
 
 	    
-	    Object proxy=instantiate( cl, 
-				      "org.apache.tomcat.task.StartTomcat");
+	    Class cls=cl.loadClass("org.apache.tomcat.startup.Tomcat");
+	    Object proxy=cls.newInstance();
+	    
 	    processArgs( proxy, args );
-	    setAttribute( proxy, "parentClassLoader", parentL );
+	    IntrospectionUtils.setAttribute( proxy,
+					     "parentClassLoader", parentL );
 	    //	    setAttribute( proxy, "serverClassPath", urls );
-	    execute(  proxy, "execute" );
+	    IntrospectionUtils.execute(  proxy, "execute" );
 	    return;
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	}
-    }
-
-    /** Create an instance of the target task
-     */
-    Object instantiate( ClassLoader cl, String classN  ) throws Exception {
-	Class sXmlC=cl.loadClass(classN );
-	return sXmlC.newInstance();
-    }
-
-    /** 
-	Call void setAttribute( String ,Object )
-    */
-    void setAttribute( Object proxy, String n, Object v) throws Exception {
-	Method executeM=null;
-	Class c=proxy.getClass();
-	Class params[]=new Class[2];
-	params[0]= String.class;
-	params[1]= Object.class;
-	executeM=c.getMethod( "setAttribute", params );
-	if( executeM == null ) {
-	    log("No setAttribute in " + proxy.getClass() );
-	    return;
-	}
-	log( "Setting " + n + "=" + v + "  in " + proxy);
-	executeM.invoke(proxy, new Object[] { n, v });
-	return; 
-    }
-
-    /** Call execute() - any ant-like task should work
-     */
-    void execute( Object proxy, String method  ) throws Exception {
-	Method executeM=null;
-	Class c=proxy.getClass();
-	Class params[]=new Class[0];
-	//	params[0]=args.getClass();
-	executeM=c.getMethod( method, params );
-	if( executeM == null ) {
-	    log("No execute in " + proxy.getClass() );
-	    return;
-	}
-	log( "Calling proxy ");
-	executeM.invoke(proxy, null );//new Object[] { args });
-	return; 
     }
 
     // -------------------- Command-line args processing --------------------
@@ -360,7 +239,7 @@ public class Main {
 
 	    for( int j=0; j< args0.length ; j++ ) {
 		if( args0[j].equalsIgnoreCase( arg )) {
-		    setAttribute( proxy, args0[j], "true");
+		    IntrospectionUtils.setAttribute( proxy, args0[j], "true");
 		    break;
 		}
 	    }
@@ -368,7 +247,8 @@ public class Main {
 		if( args1[j].equalsIgnoreCase( arg )) {
 		    i++;
 		    if( i < args.length )
-			setAttribute( proxy, args1[j], args[i]);
+			IntrospectionUtils.setAttribute( proxy,
+							 args1[j], args[i]);
 		    break;
 		}
 	    }

@@ -56,7 +56,7 @@ package org.apache.tomcat.task;
 
 import java.io.*;
 import java.util.zip.*;
-import org.apache.tomcat.util.log.*;
+//import org.apache.tomcat.util.log.*;
 
 /**
  * Unzip a file. "Imported" from Ant, with small adaptations.
@@ -67,7 +67,7 @@ public class Expand {
     private String dest; // req
     private String source; // req
 
-    Log loghelper = new Log("tc_log", this);    
+    //    Log loghelper = new Log("tc_log", this);    
     
     /**
      * Do the work.
@@ -103,7 +103,9 @@ public class Expand {
 		    fos.close();
 		}
 	    } catch( FileNotFoundException ex ) {
-		loghelper.log("FileNotFoundException: " +  ze.getName(), Logger.ERROR );
+		//loghelper.log("FileNotFoundException: " +
+		//   ze.getName(), Logger.ERROR );
+		throw ex;
 	    }
 	}
     }
