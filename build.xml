@@ -34,7 +34,7 @@
      dest="${dest}/etc/web.xml"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
      dest="${dest}/etc/web.dtd"/>
-    <copyfile src="src/etc/license.txt" dest="${dest}/LICENSE"/>
+    <copyfile src="LICENSE" dest="${dest}/LICENSE"/>
     <copyfile src="src/etc/readme" dest="${dest}/README"/>
     <copyfile src="src/etc/faq" dest="${dest}/FAQ"/>
     <copyfile src="src/etc/SimpleStartup.java"
