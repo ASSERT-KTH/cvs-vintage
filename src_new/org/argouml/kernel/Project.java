@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.68 2003/06/01 09:01:55 linus Exp $
+// $Id: Project.java,v 1.69 2003/06/01 09:36:57 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1198,12 +1198,32 @@ public class Project implements java.io.Serializable, TargetListener {
         stats.addElement(new UsageStatistic(name, value));
     }
 
+
+    /** Cache for the default model.
+     */
+    private HashMap _defaultModelCache = new HashMap();
+
     public void setDefaultModel(MModel defaultModel) {
         _defaultModel = defaultModel;
+	_defaultModelCache = new HashMap();
     }
 
     public MModel getDefaultModel() {
         return _defaultModel;
+    }
+
+    /** Find a type by name in the default model.
+     *
+     * @param the name.
+     * @returns the type.
+     */
+    public Object findTypeInDefaultModel(String name) {
+	if (_defaultModelCache.containsKey(name))
+	    return _defaultModelCache.get(name);
+
+	Object result = findTypeInModel(name, getDefaultModel());
+	_defaultModelCache.put(name, result);
+	return result;
     }
 
     static final long serialVersionUID = 1399111233978692444L;
