@@ -32,7 +32,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -144,7 +144,7 @@ public class MessageDrivenContainer
     }
 
     // Container implementation - overridden here ----------------------
-   /*
+
     public void init() throws Exception
     {
         try {
@@ -180,47 +180,16 @@ public class MessageDrivenContainer
             throw e;
         }
     }
-*/
-   public void start()
+
+    public void start()
         throws Exception
     {
-       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        try {
-            // Associate thread with classloader
-            Thread.currentThread().setContextClassLoader(getClassLoader());
-
-            // Call default init
-            super.start();
-
-            // Map the bean methods
-            setupBeanMapping();
-
-            // Initialize pool
-            instancePool.init();
-
-            // Init container invoker
-            containerInvoker.init();
-
-            // Initialize the interceptor by calling the chain
-            for (Interceptor in = interceptor; in != null; in = in.getNext()) 
-            {
-                in.setContainer(this);
-                in.init();
-            }
-
-            // Reset classloader
-            //Thread.currentThread().setContextClassLoader(oldCl);
-        }
-        catch (Exception e) {
-            log.error("Serious error in init: ", e);
-            throw e;
-        }
         // Associate thread with classloader
-        //ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        //Thread.currentThread().setContextClassLoader(getClassLoader());
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClassLoader());
 
         // Call default start
-        //super.start();
+        super.start();
 
         // Start container invoker
         containerInvoker.start();
@@ -228,9 +197,11 @@ public class MessageDrivenContainer
         instancePool.start();
 
         // Start all interceptors in the chain
-        for (Interceptor in = interceptor; in != null; in = in.getNext()) 
+        Interceptor in = interceptor;
+        while (in != null)
         {
            in.start();
+           in = in.getNext();
         }
 
         // Reset classloader
@@ -253,36 +224,17 @@ public class MessageDrivenContainer
         instancePool.stop();
 
         // Stop all interceptors in the chain
-        for (Interceptor in = interceptor; in != null; in = in.getNext()) 
+        Interceptor in = interceptor;
+        while (in != null)
         {
            in.stop();
-        }
-
-        // Reset classloader
-        //Thread.currentThread().setContextClassLoader(oldCl);
-        // Associate thread with classloader
-        //ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        //Thread.currentThread().setContextClassLoader(getClassLoader());
-
-        // Call default destroy
-        //super.destroy();
-
-        // Destroy container invoker
-        containerInvoker.destroy();
-
-        // Destroy the pool
-        instancePool.destroy();
-
-        // Destroy all the interceptors in the chain
-        for (Interceptor in = interceptor; in != null; in = in.getNext()) 
-        {
-           in.destroy();
+           in = in.getNext();
         }
 
         // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
     }
-   /*
+
     public void destroy()
     {
         // Associate thread with classloader
@@ -309,7 +261,7 @@ public class MessageDrivenContainer
         // Reset classloader
         Thread.currentThread().setContextClassLoader(oldCl);
     }
-*/
+
 
     public Object invokeHome(MethodInvocation mi)
         throws Exception

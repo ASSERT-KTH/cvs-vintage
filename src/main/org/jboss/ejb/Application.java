@@ -28,7 +28,7 @@ import org.jboss.system.Service;
  * @see ContainerFactory
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class Application
    implements Service
@@ -193,10 +193,14 @@ public class Application
     */
    public void start() throws Exception
    {
-      Iterator enum = containers.values().iterator();
-      while (enum.hasNext())
+      for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
-         Container con = (Container)enum.next();
+         Container con = (Container)i.next();
+         con.init();        
+      }
+      for (Iterator i = containers.values().iterator(); i.hasNext();)
+      {
+         Container con = (Container)i.next();
          con.start();        
       }
    }
@@ -206,11 +210,10 @@ public class Application
     */
    public void stop()
    {
-      Iterator enum = containers.values().iterator();
-      while (enum.hasNext())
+      for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
-         Container con = (Container)enum.next();
-         con.stop();
+         Container con = (Container)i.next();
+         con.stop();        
       }
    }
 	
