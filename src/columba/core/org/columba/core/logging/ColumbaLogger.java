@@ -39,8 +39,9 @@ public class ColumbaLogger {
 		
 		if ( MainInterface.DEBUG) {
 			log.setLevel(Level.DEBUG);
-    }	else {
+    	}
+		else {
 			log.setLevel(Level.INFO);
-    }
+    	}
 	}
 }

@@ -172,7 +172,7 @@ public class GlobalResourceLoader {
 							generateBundlePath(GLOBAL_RESOURCE_PATH, "global"));
 				if (rbGlobal == null) {
 					if (/*!useEnglishFallback*/
-						org.columba.core.main.MainInterface.DEBUG == true) {
+						org.columba.core.main.MainInterface.DEBUG) {
 						//It's a translator: return FIX_ME
 						return FIX_ME;
 					} //Else fallback.
@@ -182,8 +182,7 @@ public class GlobalResourceLoader {
 					} catch (MissingResourceException ex) {
 
 						if (/*!useEnglishFallback*/
-							org.columba.core.main.MainInterface.DEBUG
-								== true) {
+							org.columba.core.main.MainInterface.DEBUG) {
 							ColumbaLogger.log.error(
 								"'"
 									+ sID
@@ -225,8 +224,7 @@ public class GlobalResourceLoader {
 							return rbEnglish.getString(sID);
 						} catch (MissingResourceException exGlobal) {
 							if (/*!useEnglishFallback*/
-								org.columba.core.main.MainInterface.DEBUG
-									== true)
+								org.columba.core.main.MainInterface.DEBUG )
 								ColumbaLogger.log.error(
 									"'"
 										+ sID
