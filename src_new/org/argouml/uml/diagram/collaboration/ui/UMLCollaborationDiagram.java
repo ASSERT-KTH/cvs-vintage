@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.70 2005/02/05 14:09:44 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.71 2005/02/06 16:08:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,8 +100,11 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * 
      * @param namespace the namespace for the diagram
      */
-    private UMLCollaborationDiagram(Object namespace) {
+    public UMLCollaborationDiagram(Object namespace) {
         this();
+        if (Model.getFacade().isACollaboration(namespace)) {
+            collaboration = namespace;
+        }
         setNamespace(namespace);
     }
 
@@ -109,7 +112,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * The constructor.
      *
      * @param namespace the namespace for the diagram
-     * @param collab the collaboration represented by this diagram
+     * @param collab the collaboration of this diagram
      */
     public UMLCollaborationDiagram(Object namespace, Object collab) {
         this();

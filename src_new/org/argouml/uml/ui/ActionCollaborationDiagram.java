@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.43 2005/01/30 20:47:49 linus Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.44 2005/02/06 16:08:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,26 +68,8 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         } else if (Model.getFacade().isAClassifier(target)) {
             collaboration = Model.getCollaborationsFactory()
                             .buildCollaboration(namespace, target);
-//        } else if (Model.getFacade().isAModel(target)) {
-//            collaboration = Model.getCollaborationsFactory()
-//                            .buildCollaboration(target);
-//        } else if (Model.getFacade().isAInteraction(target)) {
-//            collaboration = Model.getFacade().getContext(target);
-//        } else if (target instanceof UMLCollaborationDiagram) {
-//            Object owner = ((UMLCollaborationDiagram) target).getOwner();
-//            if (Model.getFacade().isACollaboration(owner)) {
-//                //preventing backward compat problems
-//                collaboration = owner;
-//            }
-//        } else if (Model.getFacade().isACollaboration(target)) {
-//            collaboration = target;
-//        } else {
-//            collaboration =
-//                Model.getCollaborationsFactory().buildCollaboration(
-//                    namespace);
         }
-        UMLCollaborationDiagram d =
-            new UMLCollaborationDiagram(namespace, collaboration);
+        UMLDiagram d = new UMLCollaborationDiagram(collaboration);
         return d;
     }
 
@@ -101,9 +83,8 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }
-        Object/*MNamespace*/ ns = handle;
         return Model.getCollaborationsHelper()
-                                    .isAddingCollaborationAllowed(ns);
+                                    .isAddingCollaborationAllowed(handle);
     }
 
     /**
