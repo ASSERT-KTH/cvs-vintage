@@ -411,7 +411,7 @@
  $pageNum of $scarabR.NbrPages
  #if ($scarabR.NextPage != 0)
   #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPathInfo("sortColumn", "$sortColumn").setPathInfo("sortPolarity", "$sortPolarity").setPage($scarabR.getCurrentTemplate()))
-  | <a href="$nextLink">&raquo; next</a>
+  | <a href="$nextLink">next &raquo;</a>
  #end
  </p>
 #end
