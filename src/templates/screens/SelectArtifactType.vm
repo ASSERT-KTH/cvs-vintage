@@ -3,7 +3,7 @@
    #set ($nextTemplate = "entry,Wizard1.vm")
 #end
      <div class="app" id="divselect_module">
-        <h3>Issue types: The '$scarabR.CurrentModule.Name' module</h3>
+        <h3>Issue types: The '$scarabR.CurrentModule.RealName' module</h3>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
