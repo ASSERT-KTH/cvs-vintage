@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.155 2004/03/15 16:28:02 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.156 2004/03/18 06:37:08 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -448,6 +448,7 @@
         <include name="org/jboss/invocation/InvocationType.class"/>
         <include name="org/jboss/invocation/Invoker.class"/>
         <include name="org/jboss/invocation/InvokerInterceptor.class"/>
+        <include name="org/jboss/invocation/MarshallingInvokerInterceptor.class"/>
         <include name="org/jboss/invocation/PayloadKey.class"/>
         <include name="org/jboss/invocation/MarshalledInvocation.class"/>
         <include name="org/jboss/invocation/MarshalledValue.class"/>
