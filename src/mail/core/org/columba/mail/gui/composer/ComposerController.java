@@ -58,7 +58,7 @@ public class ComposerController
 	private EditorController editorController;
 	private HeaderController headerController;
 	//private MessageComposer messageComposer;
-	private CharsetManager charsetManager;
+	//private CharsetManager charsetManager;
 	private ComposerSpellCheck composerSpellCheck;
 
 	private ComposerModel composerModel;
@@ -387,10 +387,14 @@ public class ComposerController
 	/**
 	 * @return CharsetManager
 	 */
+	
+	// FIXME
+	/*
 	public CharsetManager getCharsetManager() {
 		return charsetManager;
 	}
-
+	*/
+	
 	/**
 	 * @return ComposerSpellCheck
 	 */
@@ -462,8 +466,9 @@ public class ComposerController
 
 		//composerInterface.composerFolder = new TempFolder();
 
-		charsetManager = new CharsetManager();
-		charsetManager.addCharsetListener(this);
+		// FIXME
+		//charsetManager = new CharsetManager();
+		MainInterface.charsetManager.addCharsetListener(this);
 
 		composerSpellCheck = new ComposerSpellCheck(this);
 

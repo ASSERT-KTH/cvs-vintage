@@ -34,6 +34,7 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.xml.XmlElement;
@@ -104,6 +105,8 @@ public class MessageController
 		keys[2] = new String("Date");
 		keys[3] = new String("To");
 		*/
+		
+		MainInterface.charsetManager.addCharsetListener(this);
 
 		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
