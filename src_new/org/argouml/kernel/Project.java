@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.87 2003/11/10 12:14:01 jhraigniac Exp $
+// $Id: Project.java,v 1.88 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1354,6 +1354,57 @@ public class Project implements java.io.Serializable, TargetListener {
         }                  
     }
 
+    /**
+     * prepare project for gc.
+     */
+    public void remove(){
+        
+        if(_members != null){
+            Iterator membersIt = _members.iterator();
+            while(membersIt.hasNext()){
+                
+                ((ProjectMember)membersIt.next()).remove();
+            }
+            
+            _members.clear();
+        }
+        
+        if(_models != null)
+            _models.clear();
+        
+        if(_diagrams != null)
+            _diagrams.clear();
+        
+        if(_UUIDRefs != null)
+            _UUIDRefs.clear();
+        
+        if(_defaultModelCache != null)
+            _defaultModelCache.clear();
+        
+        _members=null;
+        _models=null;
+        _diagrams=null;
+        _UUIDRefs=null;
+        _defaultModelCache=null;
+        
+        expander=null;
+        _url=null;
+        _saveRegistry=null;
+        _authorname=null;
+        _description=null;
+        _version=null;
+        _searchpath=null;
+        _historyFile=null;
+        _defaultModel=null;
+        _currentNamespace=null;
+        _cgPrefs=null;
+        _vetoSupport=null;
+        _root=null;
+        _activeDiagram=null;
+        _defaultModelCache=null;
+        
+        TargetManager.getInstance().removeTargetListener(this);
+    }
 } /* end class Project */
 
 /**

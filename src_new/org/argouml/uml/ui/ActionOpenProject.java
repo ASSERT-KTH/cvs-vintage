@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.25 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: ActionOpenProject.java,v 1.26 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,6 +153,7 @@ public class ActionOpenProject extends UMLAction {
                     Globals.setLastDirectory(path);
                     URL url = theFile.toURL();
                     if (url != null) {
+                        
 			loadProject(url);
                     }
 
@@ -258,6 +259,11 @@ public class ActionOpenProject extends UMLAction {
 			      + "These things cannot be restored. "
 			      + "You can continue working with what "
 			      + "was actually loaded.\n");
+            }
+            else if (oldProject != null){
+                
+                //prepare the old project for gc
+                ProjectManager.getManager().removeProject(oldProject);
             }
             ProjectManager.getManager().setCurrentProject(p);
             Designer.enableCritiquing();

@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeModel.java,v 1.8 2003/11/03 21:45:01 alexb Exp $
+// $Id: ExplorerTreeModel.java,v 1.9 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,6 +133,8 @@ ItemListener{
             else{
                 nodes.remove(changeNode);
             }
+            // remove reference for gc
+            changeNode.remove();
         }
     }
     
@@ -140,6 +142,16 @@ ItemListener{
      * the model structure has changed, eg a new project.
      */
     public void structureChanged() {
+        
+        // remove references for gc
+        if(this.getRoot() instanceof ExplorerTreeNode)
+            ((ExplorerTreeNode)this.getRoot()).remove();
+        Collection values = modelElementMap.values();
+        Iterator valuesIt = values.iterator();
+        while(valuesIt.hasNext()){
+            ((Collection)valuesIt.next()).clear();
+        }
+        modelElementMap.clear();
         
         Project proj = ProjectManager.getManager().getCurrentProject();
         ExplorerTreeNode rootNode = new ExplorerTreeNode(proj);

@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.16 2003/11/10 12:14:01 jhraigniac Exp $
+// $Id: ProjectMember.java,v 1.17 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -155,5 +155,10 @@ public abstract class ProjectMember {
       
     }
 
+    public void remove(){
+        
+        _name = null;
+        _project = null;
+    }
 } /* end class ProjectMember */
 

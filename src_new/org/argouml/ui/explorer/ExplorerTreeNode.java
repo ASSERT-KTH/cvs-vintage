@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeNode.java,v 1.3 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: ExplorerTreeNode.java,v 1.4 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,6 +60,25 @@ implements Comparable{
     public void orderChildren(){
         if(children != null)
             Collections.sort(this.children,order);
+    }
+    
+    /**
+     * cleans up for gc.
+     */
+    public void remove(){
+        
+        this.userObject = null;
+        order = null;
+        if(children != null){
+            Iterator childrenIt = children.iterator();
+            while(childrenIt.hasNext()){
+                
+                ((ExplorerTreeNode)childrenIt.next()).remove();
+            }
+            
+            children.clear();
+            children=null;
+        }
     }
     
 }

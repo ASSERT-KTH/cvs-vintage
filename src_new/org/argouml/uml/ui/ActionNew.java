@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.18 2003/09/15 06:54:39 linus Exp $
+// $Id: ActionNew.java,v 1.19 2003/11/10 20:36:25 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,6 +98,7 @@ public class ActionNew extends UMLAction {
 	Designer.clearCritiquing();
 	// clean the history
 	TargetManager.getInstance().cleanHistory();
+        p.remove();
 	p = ProjectManager.getManager().makeEmptyProject();
 	FindDialog.getInstance().doClearTabs();
 	FindDialog.getInstance().doResetFields();
