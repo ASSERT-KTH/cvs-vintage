@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.8 2003/06/19 19:37:39 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.9 2003/06/19 19:48:28 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -83,6 +83,8 @@ public class KeyEventTranslator
 			}
 			else
 			{
+				if(keyCode == KeyEvent.VK_TAB)
+					evt.consume();
 				returnValue = new Key(getModifierString(evt),keyCode,'\0');
 			}
 			break;
