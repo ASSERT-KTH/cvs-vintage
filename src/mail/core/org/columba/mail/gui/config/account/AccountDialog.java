@@ -23,15 +23,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.DialogStore;
@@ -44,7 +40,7 @@ import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
-public class AccountDialog implements ActionListener, ListSelectionListener {
+public class AccountDialog implements ActionListener {
 	private JDialog dialog;
 
 	private AccountItem accountItem;
@@ -54,11 +50,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	private OutgoingServerPanel outgoingServerPanel;
 	private SecurityPanel securityPanel;
 
-	//private SpecialFoldersPanel specialFoldersPanel;
-
 	private ReceiveOptionsPanel receiveOptionsPanel;
-
-	//private PanelChooser panelChooser;
 
 	private JPanel selected = null;
 
@@ -74,8 +66,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		this.accountItem = item;
 		createPanels();
 		initComponents();
-
-		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
@@ -94,11 +84,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
-		/*
-		specialFoldersPanel = new SpecialFoldersPanel(accountItem,
-				accountItem.getSpecialFoldersItem());
-		*/
-
 		securityPanel = new SecurityPanel(accountItem.getPGPItem());
 	}
 
@@ -107,16 +92,11 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		//mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
 		JTabbedPane tp = new JTabbedPane();
 		tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		tp.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
-
-		/*
-		IdentityItem identityItem = accountItem.getIdentityItem();
-		identityPanel = new IdentityPanel( accountItem, identityItem);
-		*/
+		tp.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 
 		tp.add(
 			MailResourceLoader.getString("dialog", "account", "identity"),
@@ -137,32 +117,12 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			receiveOptionsPanel);
 
 		SmtpItem smtpItem = accountItem.getSmtpItem();
-		/*
-		outgoingServerPanel = new OutgoingServerPanel( smtpItem);
-		*/
+
 		tp.add(
 			MailResourceLoader.getString("dialog", "account", "outgoingserver"),
 			outgoingServerPanel);
 		//$NON-NLS-1$
 
-		/*
-		specialFoldersPanel =
-			new SpecialFoldersPanel(
-				accountItem,
-				accountItem.getSpecialFoldersItem());
-		*/
-		/*
-		tp.add(MailResourceLoader.getString(
-		                                "dialog",
-		                                "account",
-		                                "specialfolders"),
-			specialFoldersPanel);
-		*/
-		//$NON-NLS-1$
-
-		/*
-		securityPanel = new SecurityPanel( accountItem.getPGPItem());
-		*/
 		tp.add(
 			MailResourceLoader.getString("dialog", "account", "security"),
 			securityPanel);
@@ -184,46 +144,21 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
-	/*
-	protected void initComponents()
-	{
-		dialog.getContentPane().setLayout(new BorderLayout());
-		
-		
-		
-		dialog.getContentPane().add( identityPanel, BorderLayout.CENTER );
-		selected = identityPanel;
-		
-		panelChooser = new PanelChooser();
-		dialog.getContentPane().add( panelChooser, BorderLayout.WEST );
-		
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder( new WizardTopBorder() );
-		bottomPanel.setLayout( new BorderLayout() );
-		
-		JPanel buttonPanel = createButtonPanel();
-		bottomPanel.add( buttonPanel, BorderLayout.CENTER );
-		
-		dialog.getContentPane().add( bottomPanel, BorderLayout.SOUTH );
-		
-	}
-	*/
-
 	protected JPanel createButtonPanel() {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
-		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
-		//bottom.add( Box.createHorizontalStrut());
+		bottom.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic cancelButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic okButton =
+			new ButtonWithMnemonic(
 				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
@@ -243,8 +178,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(helpButton);
 
-		//bottom.add( Box.createHorizontalGlue() );
-
 		bottom.add(buttonPanel, BorderLayout.EAST);
 
 		return bottom;
@@ -260,10 +193,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			incomingServerPanel.updateComponents(false);
 			receiveOptionsPanel.updateComponents(false);
 			outgoingServerPanel.updateComponents(false);
-			securityPanel.updateComponents(false);
-			/*
-			specialFoldersPanel.updateComponents(false);
-			*/
 
 			if (accountItem.isPopAccount()) {
 
@@ -272,7 +201,6 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 					MainInterface.popServerCollection.uidGet(uid);
 				c.restartTimer();
 
-				//MainInterface.popServerCollection.enableMailCheckIcon();
 			} else {
 				// update tree label
 				int uid = accountItem.getUid();
@@ -281,58 +209,14 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 					(IMAPRootFolder) MainInterface.treeModel.getImapFolder(uid);
 				folder.updateConfiguration();
 
-				//folder.setName(accountItem.getName());
-
-				//folder.restartTimer();
-
 			}
 
 			dialog.setVisible(false);
 		} else if (action.equals("CANCEL")) //$NON-NLS-1$
 			{
 			dialog.setVisible(false);
-		} else if (action.equals("HELP")) {
-			/*
-			URLController c = new URLController();
-			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
-			} catch (MalformedURLException mue) {
-			}
-			*/
-
 		}
 
 	}
 
-	protected void setSelection(JPanel panel) {
-		dialog.getContentPane().remove(selected);
-		dialog.getContentPane().add(panel, BorderLayout.CENTER);
-		dialog.validate();
-		dialog.repaint();
-		selected = panel;
-	}
-
-	public void valueChanged(ListSelectionEvent e) {
-		JList lsm = (JList) e.getSource();
-		switch (lsm.getSelectedIndex()) {
-			case 0 :
-				setSelection(identityPanel);
-				break;
-			case 1 :
-				setSelection(incomingServerPanel);
-				break;
-			case 2 :
-				setSelection(outgoingServerPanel);
-				break;
-			case 3 :
-				setSelection(securityPanel);
-				break;
-				/*
-				case 4 :
-					setSelection(securityPanel);
-					break;
-				*/
-		}
-	}
 }
