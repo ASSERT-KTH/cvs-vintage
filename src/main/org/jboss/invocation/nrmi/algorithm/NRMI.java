@@ -12,9 +12,14 @@ package org.jboss.invocation.nrmi.algorithm;
  * Since all the methods are static, it makes no sense to instantiate
  * this class.
  * @author <a href="mailto:tilevich@cc.gatech.edu">Eli Tilevich</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class NRMI {
+
+/**
+ * The key for the copy restore boolean array value
+ */
+public final static String PASS_BY_COPY_RESTORE = "PassByCopyRestore";
 
 /**
  * Creates linear map representations for all copy-restore arguments specified by true values

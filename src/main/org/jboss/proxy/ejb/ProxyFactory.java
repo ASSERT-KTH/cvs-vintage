@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBObject;
@@ -28,6 +29,7 @@ import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.Invoker;
+import org.jboss.invocation.nrmi.algorithm.NRMI;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
@@ -66,7 +68,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -483,6 +485,11 @@ public class ProxyFactory
       // The behavior for home proxying should be isolated in an interceptor FIXME
       context.setInvoker(invoker);
       context.setInvokerProxyBinding(invokerMetaData.getName());
+     
+      Set copyRestoreMethodsNames = (Set)container.getBeanMetaData().getCopyRestoreMethodsNames();
+      if (copyRestoreMethodsNames.size () > 0)
+      	context.setValue (NRMI.PASS_BY_COPY_RESTORE, copyRestoreMethodsNames);
+      
       String connectorName = invokerMetaData.getConnectorMBean();
       if (connectorName != null)
       {

@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -109,6 +109,9 @@ public abstract class BeanMetaData
    private ArrayList methodAttributes = new ArrayList();
 
    private HashMap cachedMethodAttributes = new HashMap();
+
+   // Methods names that pass all their parameters by copy-restore
+   private Set copyRestoreMethodsNames = new HashSet();
 
    // The assembly-descriptor/method-permission element(s) info
    private ArrayList permissionMethods = new ArrayList();
@@ -530,6 +533,16 @@ public abstract class BeanMetaData
       return methodAttributesForMethod(method.getName()).readOnly;
    }
 
+   /**
+     * Returns the names of those methods that pass all (for now) their parameters
+     * by copy-restore using NRMI.
+     * TODO: Handling for method overloading (not just here but for all 
+     * method attributes).
+     */
+   public Set getCopyRestoreMethodsNames() 
+   {
+      return copyRestoreMethodsNames;
+   }
 
    /**
     * A somewhat tedious method that builds a Set<Principal> of the
@@ -813,6 +826,9 @@ public abstract class BeanMetaData
             ma.readOnly = getOptionalChildBooleanContent(maNode, "read-only");
             ma.idempotent = getOptionalChildBooleanContent(maNode,
                                                            "idempotent");
+            if (getOptionalChildBooleanContent(maNode, "copy-restore"))
+               copyRestoreMethodsNames.add (ma.pattern);
+                                                                 
             methodAttributes.add(ma);
          }
       }

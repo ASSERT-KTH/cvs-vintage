@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_4_0.dtd,v 1.1 2003/06/16 02:01:42 d_jencks Exp $
-$Revision: 1.1 $
+$Id: jboss_4_0.dtd,v 1.2 2003/07/11 02:07:12 eli201 Exp $
+$Revision: 1.2 $
 
 Overview of the architecture of jboss.xml
 
@@ -479,7 +479,7 @@ container or ejb depends.
   The method element is used to specify attributes for one method or all those
   matching a pattern startingstring*.
 -->
-<!ELEMENT method (method-name, read-only?, idempotent?)>
+<!ELEMENT method (method-name, read-only?, idempotent?, copy-restore?)>
 
 <!--
   The method-name element specifies a complete method name or a pattern consisting of an
@@ -492,6 +492,12 @@ container or ejb depends.
   is completely stateless. Really the same as read-only and should be dropped.
 -->
 <!ELEMENT idempotent (#PCDATA)>
+
+<!--
+  The copy-restore element is used in method-attributes to indicate that a method
+  passes all its non-constant serializable parameters by-copy-restore using NRMI.
+-->
+<!ELEMENT copy-restore (#PCDATA)>
 
 <!--
   The clustered element indicates if this bean will run in a cluster of JBoss instances.
