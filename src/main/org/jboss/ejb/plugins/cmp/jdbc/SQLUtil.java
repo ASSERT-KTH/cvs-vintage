@@ -31,7 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class SQLUtil
 {
@@ -326,7 +326,7 @@ public final class SQLUtil
    /**
     * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
-   public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity, String eagerLoadGroup, StringBuffer sb)
+   public static StringBuffer appendColumnNamesClause(JDBCAbstractEntityBridge entity, String eagerLoadGroup, StringBuffer sb)
    {
       return appendColumnNamesClause(entity, eagerLoadGroup, "", sb);
    }
@@ -334,7 +334,7 @@ public final class SQLUtil
    /**
     * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
-   public static StringBuffer appendColumnNamesClause(JDBCEntityBridge entity,
+   public static StringBuffer appendColumnNamesClause(JDBCAbstractEntityBridge entity,
                                                       String eagerLoadGroup,
                                                       String alias,
                                                       StringBuffer sb)
@@ -668,7 +668,7 @@ public final class SQLUtil
                                             StringBuffer buf)
    {
       JDBCAbstractEntityBridge parentEntity = cmrField.getEntity();
-      JDBCAbstractEntityBridge childEntity = (JDBCEntityBridge)cmrField.getRelatedEntity();
+      JDBCAbstractEntityBridge childEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
 
       JDBCFieldBridge parentField;
       JDBCFieldBridge childField;
