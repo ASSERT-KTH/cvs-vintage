@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.37 $
+*   @version $Revision: 1.38 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -352,7 +352,7 @@ implements J2eeDeployerMBean
           !dir.mkdirs ())
          throw new IOException ("Temporary directory \""+dir.getCanonicalPath ()+"\" does not exist!");
       
-	  installer = new InstallerFactory(dir, log);
+	  installer = new InstallerFactory(dir, category);
 
       // Save JMX name of the deployers
       jarDeployer = new ObjectName(jarDeployerName);
