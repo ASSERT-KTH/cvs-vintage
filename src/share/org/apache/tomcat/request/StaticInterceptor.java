@@ -248,7 +248,7 @@ class FileHandler extends ServletWrapper  {
 	if (mimeType == null) {
 	    mimeType = "text/plain";
 	}
-	log( "Serving  " + absPath);
+	if( debug>0) log( "Serving  " + absPath);
 	
 	res.setContentType(mimeType);
 	res.setContentLength((int)file.length());
@@ -308,7 +308,7 @@ class FileHandler extends ServletWrapper  {
 	}
 
 	String relPath=absPath.substring( base.length());
-	log( "RelPath = " + relPath );
+	if( debug>0) log( "RelPath = " + relPath );
 
 	String relPathU=relPath.toUpperCase();
         if ( relPathU.startsWith("WEB-INF") ||

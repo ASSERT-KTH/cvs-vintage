@@ -96,7 +96,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 
     // We store the extension maps as per/context notes.
     int ctExtMapNote=-1;
-
+    int defaultMapNOTE=-1;
+    
     // Property for the PrefixMapper - cache the mapping results
     boolean mapCacheEnabled=false;
     
@@ -125,6 +126,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	// set-up a per/container note for maps
 	ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
 				     "map.extension");
+	defaultMapNOTE=cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				     "tomcat.map.default");
     }
 
     /** Called when a context is added.
@@ -181,6 +184,17 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 			    ctxP + path.substring( 0, path.length()-2 ), ct);
 	    if( debug>0 )
 		log("SM: prefix map " + vhost + ":" +  ctxP +
+		    path + " -> " + ct + " " );
+	    break;
+	case Container.DEFAULT_MAP:
+	    // This will be used if no other map match.
+	    // AVOID USING IT - STATIC FILES SHOULD BE HANDLED BY
+	    // APACHE ( or tomcat )
+	    Container defMapC=ct.getContext().getContainer();
+
+	    defMapC.setNote( defaultMapNOTE, ct );
+	    if( debug>0 )
+		log("SM: default map " + vhost + ":" +  ctxP +
 		    path + " -> " + ct + " " );
 	    break;
 	case Container.EXTENSION_MAP:
@@ -241,7 +255,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    String host=req.getServerName();
 	    if(debug>0) cm.log("Host = " + host);
 
-	    Context ctx = null;
 	    Container container =(Container)map.getLongestPrefixMatch(  host,
 									path );
 	    
@@ -279,9 +292,23 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 		}
 	    }
 	    
+	    // Default map - if present
+	    if( container.getHandler() == null ) {
+		Container ctxDef=req.getContext().getContainer();
+		Container defC=(Container)ctxDef.getNote( defaultMapNOTE );
+		if( defC != null && defC.getHandler() !=null ) {
+		    fixRequestPaths( path, req, defC );
+
+		    if( debug > 0 )
+			log("SM: Found default mapping " +
+			    defC.getHandler() + " " + defC.getPath() +
+			     " " + defC.getMapType());
+		}
+	    }
+
 	    if(debug>0) log("SM: After mapping " + req + " " +
 			    req.getWrapper());
-	
+
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
 	    return 500;
@@ -368,13 +395,15 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	case Container.DEFAULT_MAP:
 	    s="/";
 	    pathI= path.substring( ctxPLen ) ;
+	    if( debug>0 ) log( "Default map " + s + " " + pathI );
 	    break;
 	case Container.PATH_MAP:
 	    pathI= null;
 	    // For exact matching - can't have path info ( or it's 
 	    // a prefix map )
 	    //path.substring( ctxPLen + sLen , pathLen);
-	    if( debug>0 ) log( "Adjust for path map " + s + " " + pathI );
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    if( debug>0 ) log( "Adjust for path map " + s + " " + pathI + container.getPath());
 	    break; // keep the path
 	case Container.EXTENSION_MAP:
 	    /*  adjust paths */

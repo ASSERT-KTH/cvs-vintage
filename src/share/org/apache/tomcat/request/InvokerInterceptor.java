@@ -86,9 +86,18 @@ public class InvokerInterceptor extends BaseInterceptor {
 
     public int requestMap(Request req) {
 	// If we have an explicit mapper - return
-	if( req.getWrapper() != null )
-	    return 0;
+	Container ct=req.getContainer();
 
+	// 	log( "Ct: " + ct.getHandler() + " " +
+// 	     ct.getPath() + " " + ct.getMapType());
+	
+	if(  req.getWrapper()!=null &&
+	     ct!=null &&
+	     ct.getMapType() != Container.DEFAULT_MAP )
+	    return 0;
+	
+	// default servlet / container
+	
 	// if doesn't starts with /servlet - return
 	String pathInfo = req.getPathInfo();
 	String servletPath=req.getServletPath();
