@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.82 2004/07/21 16:33:37 loubyansky Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.83 2004/07/30 17:40:28 tdiesler Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -242,12 +242,6 @@
         <register-ejbs-in-jnp-context>true</register-ejbs-in-jnp-context>
         <jnp-context>iiop</jnp-context>
       </proxy-factory-config>
-    </invoker-proxy-binding>
-    <invoker-proxy-binding>
-      <name>session-webservice-invoker</name>
-      <invoker-mbean/>
-      <proxy-factory>org.jboss.net.ws4ee.server.EJBProxyFactoryImpl</proxy-factory>
-      <proxy-factory-config/>
     </invoker-proxy-binding>
   </invoker-proxy-bindings>
 
@@ -540,8 +534,6 @@
       <container-name>Standard Stateless SessionBean</container-name>
       <call-logging>false</call-logging>
       <invoker-proxy-binding-name>stateless-rmi-invoker</invoker-proxy-binding-name>
-      <!-- the next invoker is for additional ws transports and will be ignored when jb.net is not installed -->
-      <invoker-proxy-binding-name>session-webservice-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -572,8 +564,6 @@
       <container-name>Clustered Stateless SessionBean</container-name>
       <call-logging>false</call-logging>
       <invoker-proxy-binding-name>clustered-stateless-rmi-invoker</invoker-proxy-binding-name>
-      <!-- the next invoker is for additional ws transports and will be ignored when jb.net is not installed -->
-      <invoker-proxy-binding-name>session-webservice-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
@@ -606,8 +596,6 @@
       <container-name>Standard Stateful SessionBean</container-name>
       <call-logging>false</call-logging>
       <invoker-proxy-binding-name>stateful-rmi-invoker</invoker-proxy-binding-name>
-      <!-- the next invoker is for additional ws transports and will be ignored when jb.net is not installed -->
-      <invoker-proxy-binding-name>session-webservice-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
@@ -650,8 +638,6 @@
       <container-name>Clustered Stateful SessionBean</container-name>
       <call-logging>false</call-logging>
       <invoker-proxy-binding-name>clustered-stateful-rmi-invoker</invoker-proxy-binding-name>
-      <!-- the next invoker is for additional ws transports and will be ignored when jb.net is not installed -->
-      <invoker-proxy-binding-name>session-webservice-invoker</invoker-proxy-binding-name>
       <container-interceptors>
         <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
         <interceptor>org.jboss.ejb.plugins.CleanShutdownInterceptor</interceptor>
