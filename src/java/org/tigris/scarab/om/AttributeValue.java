@@ -52,6 +52,18 @@ public abstract class AttributeValue
     }
 
     /**
+     * Get the OptionId
+     * @return String
+     */
+    public String getOptionIdAsString()
+    {
+      String optionIdString = "";
+      if (getOptionId() != null) 
+          optionIdString = getOptionId().toString();
+      return optionIdString;
+    }
+
+    /**
      * Makes sure to set the Value as well, to make display of the
      * option easier
      *

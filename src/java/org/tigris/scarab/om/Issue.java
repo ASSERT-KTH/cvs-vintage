@@ -376,7 +376,9 @@ public class Issue
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
             .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
                      AttachmentPeer.ATTACHMENT_TYPE_ID)
-            .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 2);
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 2)
+            .addOrderByColumn(AttachmentPeer.CREATED_DATE);
+
         return  AttachmentPeer.doSelect(crit);
     }
 
@@ -461,10 +463,18 @@ public class Issue
         Depend depend = null;
         Criteria crit = new Criteria(2)
             .add(DependPeer.OBSERVED_ID, getIssueId() )        
-            .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );        
+            .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );
         Vector depends = DependPeer.doSelect(crit);
-        if (depends.size() > 0) 
+
+        Criteria crit2 = new Criteria(2)
+            .add(DependPeer.OBSERVER_ID, getIssueId() )        
+            .add(DependPeer.OBSERVED_ID, childIssue.getIssueId() );
+        Vector depends2 = DependPeer.doSelect(crit2);
+
+        if (depends.size() > 0 )
             depend = (Depend)depends.get(0);
+        else if (depends2.size() > 0 )
+            depend = (Depend)depends2.get(0);
         return depend;
     }
 
