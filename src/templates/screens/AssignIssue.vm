@@ -1,155 +1,118 @@
      
 <div id="projectlist" class="app">
 
-#set ($att = $scarabR.Attribute)
+$page.setTitle("Assign users")
 
-#if (!$att.AttributeId)
-  $page.setTitle("Assign users.")
-  <p class="alert">No user attribute has been selected.</p>
+#set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.CurrentIssueType)
+#set ($userAttrs = $module.getUserAttributes($issueType)) 
+#set ($issueGroup = $intake.Issue.Default)
+
+#set ($issueIdList = $data.Parameters.getString("issueIdList"))
+#if ($issueIdList)
+ #set ($issueList = $issueIdList)
 #else
-  $page.setTitle("Assign users to attribute $att.Name")
+ #set ($issueList = $issueGroup.Ids.Value)
+#end
 
 <div class="app" id="assignissue">
 <h2>$page.Title</h2>
-#if (!$scarabR.Issue.isNew())
- #set ($issue = $scarabR.Issue)
-#elseif ( $scarabR.Issues )
- #set ($multiple = true)
- #set ($issue = $scarabR.Issues.get(0))
-#elseif ($issueIdList)
- #set ($multiple = true)
- #set ($issue = $scarabR.getIssue($issueIdList.get(0)))
-#else  ## this could grab all the issues
- #set ($multiple = true)
- #set ($issue = $scarabR.IssueList.get(0))
-#end
-#if ($data.Parameters.getString("action") && $data.Parameters.getString("action").equals("AssignIssue"))
- #set ( $reentry = true )
-#end
+
+#if ($userAttrs.isEmpty())
+ <p><strong class="alert">
+  There are no active user attributes to which to assign users.
+ </strong></p>
+#elseif (!$issueList || $issueList.isEmpty())
+ <p><strong class="alert">
+ Please select an issue or issues with which to associate users.
+ </strong></p>
+#else
 
 #if (!$actionLink)
   #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
 #end
 
-#set ($addedUsers = $data.Parameters.getStrings("addedusers"))
-#set ($removedUsers = $data.Parameters.getStrings("removedUsers"))
-#set ($assignedUsers =  $issue.getAttributeValues($att))
-
-#if ($addedUsers || $removedUsers)
- <p><strong class="alert">
-  Remember to add note and submit, when ready to save changes.
- </strong></p>
-#end
-
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-<input type="hidden" name="$intake.Attribute.Default.Id.Key" value="$att.AttributeId" />
-<input type="hidden" name="$scarabG.Constant.CURRENT_TEMPLATE" value="ViewIssue.vm" />
-#if ($multiple)
-  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssueLong.vm" />
-#else
-  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-#end
-
-#set ($issueGroup = $intake.Issue.Default)
-#if ($multiple)
- #if ($issueIdList)
-  #foreach ($id in $issueIdList)
-   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-  #end
- #elseif ($issueGroup.Ids.Value)
-  #foreach ($id in $issueGroup.Ids.Value)
-   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
-  #end
- #else
-  #foreach ($issue in $scarabR.IssueList)
-   <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
-  #end
- #end
-#else
- <input type="hidden" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
-#end
-
-
 <div class="functnbar">
-#if ($addedUsers || $removedUsers)
- <input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
-#end
-<input type="submit" value="Cancel" />
+<input type="submit" value="Done" />
 </div>
+</form>
+
+<a href="$link.setPage("AssignIssue.vm")">Click here</a> to select users to associate with this issue
 		
+<P>
 
+##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
-#set ($noAddedUsers = false)
-#if ((!$reentry && !$addedUsers && $assignedUsers.isEmpty())
-     || ($reentry && !$addedUsers))
-  #set ($noAddedUsers = true)
-#end
+#foreach ($issueId in $issueList)
+ #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="id" value="$issue.UniqueId" />
+#PassIssueIds()
 
-#if ($noAddedUsers)
+<h3>Personnel associated with the issue $issue.UniqueId</h3>
+
+    #set ($noUsers = "true")
+    #foreach ($userAttr in $userAttrs)
+      #if (!$issue.getAttributeValues($userAttr).isEmpty())
+        #set ($noUsers = "false")
+      #end
+    #end
+
+    #if ($noUsers.equals("true"))
      <p><strong class="alert">None assigned.</strong></P>
-#else
-		<h3>Assignee list</h3>
+    #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
 		<th nowrap="nowrap">&#160;</th>
 		<th>Name</th>
 		<th><a href="#" title="sort">email</a></th>
+		<th>User attribute</th>
 		</tr>
 
-  #if (!$reentry)
-    #foreach ($assignee in $assignedUsers)
-      #set ($assignedUser = $scarabR.getUserByUserName($assignee.Value))
-      <input type="hidden" name="addedusers" value="$assignee.Value" />
-		<tr class="a">
-		<td><input type="checkbox" name="newremoveusers" value="$assignedUser.UserName" /></td>
-		<td><strong>$assignedUser.FirstName $assignedUser.LastName</strong></td>
-		<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
-		</tr>
-    #end
-  #else
-   #foreach ($addedUserId in $addedUsers)
-      #set ($addedUser = $scarabR.getUserByUserName($addedUserId))
-      <input type="hidden" name="addedusers" value="$addedUser.UserName" />
-		<tr class="a">
-		<td><input type="checkbox" name="newremoveusers" value="$addedUser.UserName"/></td>
-		<td><strong>$addedUser.FirstName $addedUser.LastName</strong></td>
-		<td><a href="mailto:$addedUser.Email">$addedUser.UserName</a></td>
-		</tr>
-   #end
-  #end
-		
+	  #foreach ($userAttr in $userAttrs)
+		#set ($assignees = $issue.getAttributeValues($userAttr))
+		#foreach ($assignee in $assignees)
+		  #set ($attrInput = $intake.AttributeValue.mapTo($assignee))
+		  #set ($assignedUser = $scarabR.getUser($assignee.UserId))
+			<tr class="a">
+			<td>#booleanCheckbox($attrInput.Deleted)</td>
+			<td><strong>$assignedUser.FirstName $assignedUser.LastName</strong></td>
+			<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
+			<td><select name="$attrInput.AttributeId.Key">
+			 #foreach ($selectUserAttr in $userAttrs)
+				<option value="$selectUserAttr.AttributeId"
+				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) "selected='selected'" #end
+				 >$selectUserAttr.Name</option>
+			 #end
+			   </select></td>
+			</tr>
+		#end
+	  #end
+			
    </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doRemove" value="Remove selected from assignee list" />
+ <input type="submit" name="eventSubmit_doSave" value="Save" />&#160;
+ <input type="submit" name="eventSubmit_doSave" value="Remove selected from assignee list" />
 </div>
   #end
-
-## ATTACHMENT
-#if ($addedUsers || $removedUsers)
- #set ($atch = $scarabR.Attachment)
- #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
- <h4>Message to assignees</h4>
- <div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-             <tr>
-       <th>Message contents</td>
-       <td>
-                This message is emailed to the assignees, and is appended as a note on the issue's change history
-                <p>
-                #textAreaMedium ("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString.Value)
-                     
-       </td>
-     </tr>
-      </table>
-</div>
+$intake.declareGroups()
+</form>
 #end
+
+
+## USER SEARCH
+<form action="$actionLink" method="post">
+<input type="hidden" name="action" value="AssignIssue" />
+#PassIssueIds()
 
 #set ($searchString = $data.Parameters.getString("searchString"))
 
-		<h3>Users</h3>
+<h3>Users</h3>
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
@@ -165,31 +128,43 @@
 </table>
 </div>
 
-## USER SEARCH
+
 #if ($searchString && $searchString.length() > 0)
    #set ($searchResults = $scarabR.UserSearchResults) 
-   #if ( $searchResults.isEmpty())
-      <p class="alert">No users match your criteria.</p>
-   #else
+#else
+   #set ($searchResults = $module.getUsers($module.getUserPermissions($issueType)))
+#end
+   
+#if ( $searchResults.isEmpty() && $searchString)
+  <p class="alert">No users match your criteria. Displaying full user list.</p>
+  #set ($searchResults = $module.getUsers("Issue | Enter"))
+#end
+
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr>
+	<th nowrap="nowrap">&#160;</th>
+	<th>Name</th>
+	<th><a href="#" title="sort">email</a></th>
+	<th>User attribute</th>
+	</tr>
         ##<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap">&#160;</th>
-		<th>Name</th>
-		<th><a href="#" title="sort">email</a></th>
-		</tr>
 		
        #foreach ($user in $searchResults)
 		<tr class="a">
-		<td><input type="checkbox" name="newaddusers" value="$user.UserName" /></td>
+		<td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
 		<td><strong>$user.FirstName $user.LastName</strong></td>
 		<td><a href="mailTo:$user.Email">$user.UserName</td>
+        <td><select name="user_attr_$user.UserId">
+         #foreach ($userAttr in $userAttrs)
+          #if ($user.hasPermission($userAttr.Permission, $module))
+            <option value="$userAttr.AttributeId">$userAttr.Name</option>
+          #end
+         #end
+           </select></td>
+    		    
 		</tr>
        #end
-   #end   
    </table>  
-
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
 </div>
@@ -208,19 +183,25 @@
       </table>
 </div>
 *#
-#end
 
-
-<div class="functnbar">
-#if ($addedUsers || $removedUsers)
- <input type="submit" value="Done" name="eventSubmit_doSubmit" />&#160;
-#end
-<input type="submit" value="Cancel" />
-</div>
 
     </td>
    </tr>
   </table>
 $intake.declareGroups()
 </form>
+
 #end
+
+#macro (PassIssueIds)
+  #if ($issueIdList)
+    #foreach ($id in $issueIdList)
+      <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+    #end
+  #elseif ($issueGroup.Ids.Value)
+    #foreach ($id in $issueGroup.Ids.Value)
+      <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+    #end
+  #end
+#end
+
