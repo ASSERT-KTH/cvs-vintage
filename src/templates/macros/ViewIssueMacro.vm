@@ -3,7 +3,6 @@
 <h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
 
 <div class="functnbar">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 <input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
 <input type="submit" value="Copy" name="eventSubmit_doCopy"  />&#160;issue
@@ -94,7 +93,7 @@
 #end
 
 ### PERSONNEL
-<h3>Personel associated with issue</h3>
+<h3>Personnel associated with issue</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
   <th>Name</th>
@@ -512,7 +511,6 @@
   #end
 #end
 <div class="functnbar2">
-<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
 <input type="submit" value="Move" name="eventSubmit_doMove"  />&#160;
 <input type="submit" value="Copy" name="eventSubmit_doCopy"  />&#160;issue
