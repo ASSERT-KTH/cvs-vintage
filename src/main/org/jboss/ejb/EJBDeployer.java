@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.28 $</tt>
+ * @version <tt>$Revision: 1.29 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -381,6 +381,7 @@ public class EJBDeployer
          {
             // unset verifier context
             NDC.pop();
+            NDC.remove();
          }
 
          // If the verifier is in strict mode and an error/warning

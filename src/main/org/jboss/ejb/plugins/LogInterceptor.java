@@ -37,7 +37,7 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -141,6 +141,7 @@ public class LogInterceptor extends AbstractInterceptor
             log.trace("End method=" + methodName);
          }
          NDC.pop();
+         NDC.remove();
       }
    }
 
@@ -215,6 +216,7 @@ public class LogInterceptor extends AbstractInterceptor
             log.trace("End method=" + methodName);
          }
          NDC.pop();
+         NDC.remove();
       }
    }
 
