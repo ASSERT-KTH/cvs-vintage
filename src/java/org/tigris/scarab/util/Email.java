@@ -73,6 +73,7 @@ import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.EmailLink;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.email.VelocityEmail;
@@ -83,12 +84,26 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.30 2003/04/25 19:37:10 jon Exp $
+ * @version $Id: Email.java,v 1.31 2003/04/30 01:12:13 jon Exp $
  */
 public class Email extends TemplateEmail
 {
     private static final int TO = 0;
     private static final int CC = 1;
+
+    /**
+     * Single user recipient.
+     */ 
+    public static boolean sendEmail(EmailContext context, Module module,
+                                     Object fromUser, Object replyToUser, 
+                                     ScarabUser toUser, String template)
+        throws Exception
+    {
+        Collection toUsers = new ArrayList(2);
+        toUsers.add(toUser);
+        return sendEmail(context, module, fromUser, replyToUser, toUsers, 
+                          null, template);
+    }
 
     public static boolean sendEmail(EmailContext context, Module module, 
                                     Object fromUser, Object replyToUser,
@@ -144,7 +159,8 @@ public class Email extends TemplateEmail
             Locale locale = (Locale)i.next();
             Log.get().debug("Sending email for locale=" + locale);
             l10n.init(locale);
-            Email te = getEmail(context, fromUser, replyToUser, template);
+            Email te = getEmail(context, module, fromUser, 
+                                replyToUser, template);
             te.setCharset(getCharset(locale));
        
             List[] toAndCC = (List[])userLocaleMap.get(locale);
@@ -196,8 +212,8 @@ public class Email extends TemplateEmail
         {
             Log.get().debug("Archive was sent separately.");
             l10n.init(moduleLocale);
-            Email te = getEmail(context, fromUser, 
-                                                replyToUser, template);        
+            Email te = getEmail(context, module, fromUser,
+                                replyToUser, template);
             te.setCharset(getCharset(moduleLocale));
             te.addTo(archiveEmail, null);
             try
@@ -226,20 +242,6 @@ public class Email extends TemplateEmail
             userLocaleMap.put(locale, toAndCC);
         }
         toAndCC[toOrCC].add(user);
-    }
-
-    /**
-     * Single user recipient.
-     */ 
-    public static boolean sendEmail(EmailContext context, Module module,
-                                     Object fromUser, Object replyToUser, 
-                                     ScarabUser toUser, String template)
-        throws Exception
-    {
-        Collection toUsers = new ArrayList(2);
-        toUsers.add(toUser);
-        return sendEmail(context, module, fromUser, replyToUser, toUsers, 
-                          null, template);
     }
 
     /**
@@ -278,8 +280,9 @@ public class Email extends TemplateEmail
      * element String[] composed of name and address, base portion of
      * the key used for a name and address property lookup.
      */
-    private static Email getEmail(EmailContext context,
-        Object fromUser, Object replyToUser, String template)
+    private static Email getEmail(EmailContext context, Module module,
+                                  Object fromUser, Object replyToUser,
+                                  String template)
         throws Exception
     {
         Email te = new Email();
@@ -288,7 +291,10 @@ public class Email extends TemplateEmail
             context = new EmailContext();
         }        
         te.setContext(context);
-        
+
+        EmailLink el = new EmailLink(module);
+        context.setLinkTool(el);
+
         String[] nameAndAddr = getNameAndAddress(fromUser);
         te.setFrom(nameAndAddr[0], nameAndAddr[1]);
 
