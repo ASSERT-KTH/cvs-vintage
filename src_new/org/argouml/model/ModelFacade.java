@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.230 2004/12/26 15:33:57 linus Exp $
+// $Id: ModelFacade.java,v 1.231 2004/12/26 22:12:54 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.ExtensionMechanismsHelper;
 import org.argouml.model.uml.UmlException;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.Diagram;
 
 import ru.novosoft.uml.MBase;
@@ -4985,10 +4984,6 @@ public class ModelFacade {
         if (isABase(base)) {
             return ((MBase) base).getUUID();
         }
-        if (base instanceof CommentEdge) {
-            return (String) ((CommentEdge) base).getUUID();
-        }
-        //
 	illegalArgument(base);
 	return "";
     }

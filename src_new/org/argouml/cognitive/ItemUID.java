@@ -1,4 +1,4 @@
-// $Id: ItemUID.java,v 1.13 2004/09/05 10:32:30 mvw Exp $
+// $Id: ItemUID.java,v 1.14 2004/12/26 22:12:55 bobtarling Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.apache.log4j.Logger;
+import org.argouml.model.ModelFacade;
+import org.argouml.uml.UUIDManager;
 
 /**
  * An instances of this class is supposed to be attached to an instance
@@ -153,11 +155,10 @@ public class ItemUID
      * @param obj The object whose ID to read.
      * @return	The ID of the object, or null.
      */
-    protected static String readObjectID(Object obj)
-    {
-	if (org.argouml.model.ModelFacade.isABase(obj))
-	    return org.argouml.model.ModelFacade.getUUID(obj);
-
+    protected static String readObjectID(Object obj) {
+        if (ModelFacade.isABase(obj)) {
+            return UUIDManager.getInstance().getUUID(obj);
+        }
 	/*
 	// Want to use the "built in" UID of the MXxx instances
 	// d00mst 2002-10-08
