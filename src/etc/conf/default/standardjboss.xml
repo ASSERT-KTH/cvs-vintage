@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.85 2004/08/11 20:33:25 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.86 2004/08/13 16:03:42 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -224,6 +224,22 @@
            </activation-config-property>
            <activation-config-property>
               <activation-config-property-name>reconnectInterval</activation-config-property-name>
+              <activation-config-property-value>10</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>useDLQ</activation-config-property-name>
+              <activation-config-property-value>true</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQHandler</activation-config-property-name>
+              <activation-config-property-value>org.jboss.resource.adapter.jms.inflow.dlq.GenericDLQHandler</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQJNDIName</activation-config-property-name>
+              <activation-config-property-value>queue/DLQ</activation-config-property-value>
+           </activation-config-property>
+           <activation-config-property>
+              <activation-config-property-name>dLQMaxResent</activation-config-property-name>
               <activation-config-property-value>10</activation-config-property-value>
            </activation-config-property>
         </activation-config>
