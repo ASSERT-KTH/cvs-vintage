@@ -1,4 +1,5 @@
-#if ($data.User.hasLoggedIn())
+#set ($module = $scarabR.CurrentModule)
+#if ($data.User.hasLoggedIn() && $module)
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
@@ -6,8 +7,6 @@
     <div id="navsearch">
 
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
-     #set ($module = $scarabR.CurrentModule)
-     #if ($module)
      #set ($issuetype = $scarabR.CurrentIssueType)
      #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
      #set ($globalQueries = $module.getGlobalQueries($issuetype))
@@ -22,7 +21,6 @@
         </select>
         <input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>&#160;
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     #end
      #end
         <input type="text" name="id" size="15" maxlength="255" />&#160;
         <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
