@@ -50,7 +50,7 @@ import org.jboss.util.Sync;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.35 $
+*   @version $Revision: 1.36 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -148,16 +148,21 @@ extends AbstractInterceptor
          // return;
          //}
 
+	 // associate the entity bean with the transaction so that
+	 // we can do things like synchronizeEntitiesWithinTransaction
+	 ((EntityContainer)ctx.getContainer()).getTxEntityMap().associate(tx, ctx);  
+
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
 
        } catch (RollbackException e) {
+	 ((EntityContainer)ctx.getContainer()).getTxEntityMap().disassociate(tx, ctx);  
 
          // The state in the instance is to be discarded, we force a reload of state
          ctx.setValid(false);
 
        } catch (Exception e) {
-
+	 ((EntityContainer)ctx.getContainer()).getTxEntityMap().disassociate(tx, ctx);  
          throw new EJBException(e);
 
        }
@@ -173,12 +178,48 @@ extends AbstractInterceptor
        // OSH: Pool seems to do this: ctx.setInvoked(false);
     }
 
+    /**
+     * As per the spec 9.6.4, entities must be synchronized with the datastore
+     * when an ejbFind<METHOD> is called.
+     */
+    private void synchronizeEntitiesWithinTransaction(Transaction tx) throws Exception
+    {
+	Object[] entities = ((EntityContainer)getContainer()).getTxEntityMap().getEntities(tx);
+	for (int i = 0; i < entities.length; i++)
+	{
+	    EntityEnterpriseContext ctx = (EntityEnterpriseContext)entities[i];
+	    storeEntity(ctx);
+	}
+    }
+
+    private void storeEntity(EntityEnterpriseContext ctx) throws Exception
+    {
+	if (ctx.getId() != null)
+	{
+	    boolean dirty = true;
+	    // Check isModified bean flag
+	    if (isModified != null)
+	    {
+		dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+	    }
+	    
+	    // Store entity
+	    if (dirty)
+		((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+	}
+    }
     // Interceptor implementation --------------------------------------
 
     public Object invokeHome(MethodInvocation mi)
     throws Exception
     {
        try {
+	 if (mi.getTransaction() != null && mi.getMethod().getName().startsWith("find"))
+	 {
+	     // As per the spec 9.6.4, entities must be synchronized with the datastore
+	     // when an ejbFind<METHOD> is called.
+	     synchronizeEntitiesWithinTransaction(mi.getTransaction());
+	 }
          return getNext().invokeHome(mi);
        } finally {
          // Anonymous was sent in, so if it has an id it was created
@@ -281,16 +322,7 @@ extends AbstractInterceptor
           // the EJB specification? Think of SequenceBean.getNext().
           if (ctx.getId() != null)
           {
-              boolean dirty = true;
-              // Check isModified bean flag
-              if (isModified != null)
-              {
-                 dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
-              }
-
-              // Store entity
-              if (dirty)
-                 ((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+	      storeEntity(ctx);
           }
 
           return result;
@@ -412,7 +444,6 @@ extends AbstractInterceptor
           // If rolled back -> invalidate instance
           // If removed -> send back to the pool
           if (status == Status.STATUS_ROLLEDBACK || ctx.getId() == null) {
-	      EntityContainer container = (EntityContainer)ctx.getContainer();
 	      AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
 	      Object id = ctx.getCacheKey();
 	      // Hopefully this transaction has an exclusive lock
@@ -423,7 +454,9 @@ extends AbstractInterceptor
 		 // We really should be acquiring a mutex before
 		 // mucking with the InstanceCache or InstancePool
 		 mutex.acquire();
+
                  // finish the transaction association
+	         ((EntityContainer)ctx.getContainer()).getTxEntityMap().disassociate(tx, ctx);  
                  ctx.setTransaction(null);
 
                  // remove from the cache
@@ -479,6 +512,7 @@ extends AbstractInterceptor
               }
 
               // finish the transaction association
+	      ((EntityContainer)ctx.getContainer()).getTxEntityMap().disassociate(tx, ctx);  
               ctx.setTransaction(null);
           }
          }
