@@ -89,40 +89,56 @@ public class Scheduler
    // -------------------------------------------------------------------------
    // Constants
    // -------------------------------------------------------------------------
-
+   
+   /** Class logger. */
+   private static final Logger log = Logger.getLogger( Scheduler.class );
+   
    public static String JNDI_NAME = "scheduler:domain";
    public static String JMX_NAME = "scheduler";
-
+   
+   private static final int NOTIFICATION = 0;
+   private static final int DATE = 1;
+   private static final int REPETITIONS = 2;
+   private static final int SCHEDULER_NAME = 3;
+   private static final int NULL = 4;
+   
    // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------
-
-   /** Class logger. */
-   private static final Logger log = Logger.getLogger( Scheduler.class );
-
+   
    private long mActualSchedulePeriod;
    private long mRemainingRepetitions = 0;
    private int mActualSchedule = -1;
    private ObjectName mTimer;
    private Schedulable mSchedulable;
-
+//as   private Object mSchedulableMBeanObjectName;
+   
    private boolean mScheduleIsStarted = false;
    private boolean mWaitForNextCallToStop = false;
    private boolean mStartOnStart = false;
    private boolean mIsRestartPending = true;
-
+   
    // Pending values which can be different to the actual ones
+   private boolean mUseMBean = false;
+   
    private Class mSchedulableClass;
    private String mSchedulableArguments;
    private String[] mSchedulableArgumentList = new String[ 0 ];
    private String mSchedulableArgumentTypes;
    private Class[] mSchedulableArgumentTypeList = new Class[ 0 ];
+   
+   private ObjectName mSchedulableMBean;
+   private String mSchedulableMBeanMethod;
+   private String mSchedulableMBeanMethodName;
+   private int[] mSchedulableMBeanArguments = new int[ 0 ];
+   private String[] mSchedulableMBeanArgumentTypes = new String[ 0 ];
+   
    private DateFormat mDateFormatter;
    private Date mStartDate;
    private String mStartDateString;
    private long mSchedulePeriod;
    private long mInitialRepetitions;
-
+   
    // -------------------------------------------------------------------------
    // Constructors
    // -------------------------------------------------------------------------
@@ -165,17 +181,34 @@ public class Scheduler
       if( !isStarted() ) {
          try {
             // Check the given attributes if correct
-            if( mSchedulableClass == null ) {
-               log.debug( "Schedulable Class is not set" );
-               throw new InvalidParameterException(
-                  "Schedulable Class must be set"
-               );
-            }
-            if( mSchedulableArgumentList.length != mSchedulableArgumentTypeList.length ) {
-               log.debug( "Schedulable Class Arguments and Types do not match in length" );
-               throw new InvalidParameterException(
-                  "Schedulable Class Arguments and Types do not match in length"
-               );
+            if( mUseMBean ) {
+               if( mSchedulableMBean == null ) {
+                  log.debug( "Schedulable MBean Object Name is not set" );
+                  throw new InvalidParameterException(
+                     "Schedulable MBean must be set"
+                  );
+               }
+               if( mSchedulableMBeanMethodName == null ) {
+                  mSchedulableMBeanMethodName = "perform";
+                  mSchedulableMBeanArguments = new int[] { DATE, REPETITIONS };
+                  mSchedulableMBeanArgumentTypes = new String[] {
+                     Date.class.getName(),
+                     Integer.TYPE.getName()
+                  };
+               }
+            } else {
+               if( mSchedulableClass == null ) {
+                  log.debug( "Schedulable Class is not set" );
+                  throw new InvalidParameterException(
+                     "Schedulable Class must be set"
+                  );
+               }
+               if( mSchedulableArgumentList.length != mSchedulableArgumentTypeList.length ) {
+                  log.debug( "Schedulable Class Arguments and Types do not match in length" );
+                  throw new InvalidParameterException(
+                     "Schedulable Class Arguments and Types do not match in length"
+                  );
+               }
             }
             if( mSchedulePeriod <= 0 ) {
                log.debug( "Schedule Period is less than 0 (ms)" );
@@ -183,53 +216,55 @@ public class Scheduler
                   "Schedule Period must be set and greater than 0 (ms)"
                );
             }
-            // Create all the Objects for the Constructor to be called
-            Object[] lArgumentList = new Object[ mSchedulableArgumentTypeList.length ];
-            try {
-               for( int i = 0; i < mSchedulableArgumentTypeList.length; i++ ) {
-                  Class lClass = mSchedulableArgumentTypeList[ i ];
-                  if( lClass == Boolean.TYPE ) {
-                     lArgumentList[ i ] = new Boolean( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Integer.TYPE ) {
-                     lArgumentList[ i ] = new Integer( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Long.TYPE ) {
-                     lArgumentList[ i ] = new Long( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Short.TYPE ) {
-                     lArgumentList[ i ] = new Short( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Float.TYPE ) {
-                     lArgumentList[ i ] = new Float( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Double.TYPE ) {
-                     lArgumentList[ i ] = new Double( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Byte.TYPE ) {
-                     lArgumentList[ i ] = new Byte( mSchedulableArgumentList[ i ] );
-                  } else
-                  if( lClass == Character.TYPE ) {
-                     lArgumentList[ i ] = new Character( mSchedulableArgumentList[ i ].charAt( 0 ) );
-                  } else {
-                     Constructor lConstructor = lClass.getConstructor( new Class[] { String.class } );
-                     lArgumentList[ i ] = lConstructor.newInstance( new Object[] { mSchedulableArgumentList[ i ] } );
+            if( !mUseMBean ) {
+               // Create all the Objects for the Constructor to be called
+               Object[] lArgumentList = new Object[ mSchedulableArgumentTypeList.length ];
+               try {
+                  for( int i = 0; i < mSchedulableArgumentTypeList.length; i++ ) {
+                     Class lClass = mSchedulableArgumentTypeList[ i ];
+                     if( lClass == Boolean.TYPE ) {
+                        lArgumentList[ i ] = new Boolean( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Integer.TYPE ) {
+                        lArgumentList[ i ] = new Integer( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Long.TYPE ) {
+                        lArgumentList[ i ] = new Long( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Short.TYPE ) {
+                        lArgumentList[ i ] = new Short( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Float.TYPE ) {
+                        lArgumentList[ i ] = new Float( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Double.TYPE ) {
+                        lArgumentList[ i ] = new Double( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Byte.TYPE ) {
+                        lArgumentList[ i ] = new Byte( mSchedulableArgumentList[ i ] );
+                     } else
+                     if( lClass == Character.TYPE ) {
+                        lArgumentList[ i ] = new Character( mSchedulableArgumentList[ i ].charAt( 0 ) );
+                     } else {
+                        Constructor lConstructor = lClass.getConstructor( new Class[] { String.class } );
+                        lArgumentList[ i ] = lConstructor.newInstance( new Object[] { mSchedulableArgumentList[ i ] } );
+                     }
                   }
                }
-            }
-            catch( Exception e ) {
-               log.error( "Could not load or create constructor argument", e );
-               throw new InvalidParameterException( "Could not load or create a constructor argument" );
-            }
-            try {
-               // Check if constructor is found
-               Constructor lSchedulableConstructor = mSchedulableClass.getConstructor( mSchedulableArgumentTypeList );
-               // Create an instance of it
-               mSchedulable = (Schedulable) lSchedulableConstructor.newInstance( lArgumentList );
-            }
-            catch( Exception e ) {
-               log.error( "Could not find the constructor or create Schedulable instance", e );
-               throw new InvalidParameterException( "Could not find the constructor or create the Schedulable Instance" );
+               catch( Exception e ) {
+                  log.error( "Could not load or create constructor argument", e );
+                  throw new InvalidParameterException( "Could not load or create a constructor argument" );
+               }
+               try {
+                  // Check if constructor is found
+                  Constructor lSchedulableConstructor = mSchedulableClass.getConstructor( mSchedulableArgumentTypeList );
+                  // Create an instance of it
+                  mSchedulable = (Schedulable) lSchedulableConstructor.newInstance( lArgumentList );
+               }
+               catch( Exception e ) {
+                  log.error( "Could not find the constructor or create Schedulable instance", e );
+                  throw new InvalidParameterException( "Could not find the constructor or create the Schedulable Instance" );
+               }
             }
 
             mRemainingRepetitions = mInitialRepetitions;
@@ -279,14 +314,25 @@ public class Scheduler
                   Long.TYPE.getName()
                }
             ) ).intValue();
-            // Register the notification listener at the MBeanServer
-            getServer().addNotificationListener(
-               mTimer,
-               new Listener( mSchedulable ),
-               new Scheduler.NotificationFilter( new Integer( mActualSchedule ) ),
-               // No object handback necessary
-               null
-            );
+            if( mUseMBean ) {
+               // Register the notification listener at the MBeanServer
+               getServer().addNotificationListener(
+                  mTimer,
+                  new MBeanListener( mSchedulableMBean ),
+                  new Scheduler.NotificationFilter( new Integer( mActualSchedule ) ),
+                  // No object handback necessary
+                  null
+               );
+            } else {
+               // Register the notification listener at the MBeanServer
+               getServer().addNotificationListener(
+                  mTimer,
+                  new Listener( mSchedulable ),
+                  new Scheduler.NotificationFilter( new Integer( mActualSchedule ) ),
+                  // No object handback necessary
+                  null
+               );
+            }
             mScheduleIsStarted = true;
             mIsRestartPending = false;
          }
@@ -461,7 +507,105 @@ public class Scheduler
       mSchedulableArgumentTypes = pTypeList;
       mIsRestartPending = true;
    }
-
+   
+   public String getSchedulableMBean() {
+      return mSchedulableMBean == null ?
+         null :
+         mSchedulableMBean.toString();
+   }
+   
+   public void setSchedulableMBean( String pSchedulableMBean )
+      throws InvalidParameterException
+   {
+      if( pSchedulableMBean == null ) {
+         throw new InvalidParameterException( "Schedulable MBean must be specified" );
+      }
+      try {
+         mSchedulableMBean = new ObjectName( pSchedulableMBean );
+         mUseMBean = true;
+      }
+      catch( MalformedObjectNameException mone ) {
+         log.error( "Schedulable MBean Object Name is malformed", mone );
+         throw new InvalidParameterException( "Schedulable MBean is not correctly formatted" );
+      }
+   }
+   
+   public String getSchedulableMBeanMethod() {
+      return mSchedulableMBeanMethod;
+   }
+   
+   public void setSchedulableMBeanMethod( String pSchedulableMBeanMethod )
+      throws InvalidParameterException
+   {
+      if( pSchedulableMBeanMethod == null ) {
+         mSchedulableMBeanMethod = null;
+         return;
+      }
+      int lIndex = pSchedulableMBeanMethod.indexOf( '(' );
+      String lMethodName = "";
+      if( lIndex < 0 ) {
+         lMethodName = pSchedulableMBeanMethod.trim();
+         mSchedulableMBeanArguments = new int[ 0 ];
+         mSchedulableMBeanArgumentTypes = new String[ 0 ];
+      } else
+      if( lIndex > 0 ) {
+         lMethodName = pSchedulableMBeanMethod.substring( 0, lIndex ).trim();
+      }
+      if( lMethodName.equals( "" ) ) {
+         lMethodName = "perform";
+      }
+      if( lIndex >= 0 ) {
+         int lIndex2 = pSchedulableMBeanMethod.indexOf( ')' );
+         if( lIndex2 < lIndex ) {
+            throw new InvalidParameterException( "Schedulable MBean Method: closing bracket must be after opening bracket" );
+         }
+         if( lIndex2 < pSchedulableMBeanMethod.length() - 1 ) {
+            String lRest = pSchedulableMBeanMethod.substring( lIndex2 + 1 ).trim();
+            if( lRest.length() > 0 ) {
+               throw new InvalidParameterException( "Schedulable MBean Method: nothing should be after closing bracket" );
+            }
+         }
+         String lArguments = pSchedulableMBeanMethod.substring( lIndex + 1, lIndex2 ).trim();
+         if( lArguments.equals( "" ) ) {
+            mSchedulableMBeanArguments = new int[ 0 ];
+            mSchedulableMBeanArgumentTypes = new String[ 0 ];
+         } else {
+            StringTokenizer lTokenizer = new StringTokenizer( lArguments, "," );
+            mSchedulableMBeanArguments = new int[ lTokenizer.countTokens() ];
+            mSchedulableMBeanArgumentTypes = new String[ lTokenizer.countTokens() ];
+            for( int i = 0; lTokenizer.hasMoreTokens(); i++ ) {
+               String lToken = lTokenizer.nextToken().trim();
+               if( lToken.equals( "NOTIFICATION" ) ) {
+                  mSchedulableMBeanArguments[ i ] = NOTIFICATION;
+                  mSchedulableMBeanArgumentTypes[ i ] = Notification.class.getName();
+               } else
+               if( lToken.equals( "DATE" ) ) {
+                  mSchedulableMBeanArguments[ i ] = DATE;
+                  mSchedulableMBeanArgumentTypes[ i ] = Date.class.getName();
+               } else
+               if( lToken.equals( "REPETITIONS" ) ) {
+                  mSchedulableMBeanArguments[ i ] = REPETITIONS;
+                  mSchedulableMBeanArgumentTypes[ i ] = Long.TYPE.getName();
+               } else
+               if( lToken.equals( "SCHEDULER_NAME" ) ) {
+                  mSchedulableMBeanArguments[ i ] = SCHEDULER_NAME;
+                  mSchedulableMBeanArgumentTypes[ i ] = ObjectName.class.getName();
+               } else {
+                  mSchedulableMBeanArguments[ i ] = NULL;
+                  //AS ToDo: maybe later to check if this class exists !
+                  mSchedulableMBeanArgumentTypes[ i ] = lToken;
+               }
+            }
+         }
+      }
+      mSchedulableMBeanMethodName = lMethodName;
+      mSchedulableMBeanMethod = pSchedulableMBeanMethod;
+   }
+   
+   public boolean isUsingMBean() {
+      return mUseMBean;
+   }
+   
    public long getSchedulePeriod() {
       return mSchedulePeriod;
    }
@@ -528,6 +672,10 @@ public class Scheduler
 
    public boolean isRestartPending() {
       return mIsRestartPending;
+   }
+   
+   public boolean isStartAtStartup() {
+      return mStartOnStart;
    }
    
    public void setStartAtStartup( boolean pStartAtStartup ) {
@@ -620,6 +768,90 @@ public class Scheduler
                      lTimeStamp,
                      getRemainingRepetitions()
                   );
+                  log.debug( "Remaining Repititions: " + getRemainingRepetitions() +
+                     ", wait for next call to stop: " + mWaitForNextCallToStop );
+                  if( getRemainingRepetitions() == 0 || mWaitForNextCallToStop ) {
+                     stopSchedule( true );
+                  }
+               }
+            }
+            else {
+               // Schedule is stopped therefore remove the Schedule
+               getServer().invoke(
+                  mTimer,
+                  "removeNotification",
+                  new Object[] {
+                     new Integer( mActualSchedule )
+                  },
+                  new String[] {
+                     "java.lang.Integer",
+                  }
+               );
+               mActualSchedule = -1;
+            }
+         }
+         catch( Exception e ) {
+            e.printStackTrace();
+         }
+      }
+   }
+
+   public class MBeanListener
+      implements NotificationListener
+   {
+
+      private ObjectName mDelegate;
+
+      public MBeanListener( ObjectName pDelegate ) {
+         mDelegate = pDelegate;
+      }
+
+      public void handleNotification(
+         Notification pNotification,
+         Object pHandback
+      ) {
+         log.debug( "MBeanListener.handleNotification(), notification: " + pNotification );
+         try {
+            // If schedule is started invoke the schedule method on the Schedulable instance
+            log.debug( "Scheduler is started: " + isStarted() );
+            Date lTimeStamp = new Date( pNotification.getTimeStamp() );
+            if( isStarted() ) {
+               if( getRemainingRepetitions() > 0 || getRemainingRepetitions() < 0 ) {
+                  if( mRemainingRepetitions > 0 ) {
+                     mRemainingRepetitions--;
+                  }
+                  Object[] lArguments = new Object[ mSchedulableMBeanArguments.length ];
+                  for( int i = 0; i < lArguments.length; i++ ) {
+                     switch( mSchedulableMBeanArguments[ i ] ) {
+                        case NOTIFICATION:
+                           lArguments[ i ] = pNotification;
+                           break;
+                        case DATE:
+                           lArguments[ i ] = lTimeStamp;
+                           break;
+                        case REPETITIONS:
+                           lArguments[ i ] = new Long( mRemainingRepetitions );
+                           break;
+                        case SCHEDULER_NAME:
+                           lArguments[ i ] = getServiceName();
+                           break;
+                        default:
+                           lArguments[ i ] = null;
+                     }
+                  }
+                  log.debug( "MBean Arguments are: " + java.util.Arrays.asList( lArguments ) );
+                  log.debug( "MBean Arguments Types are: " + java.util.Arrays.asList( mSchedulableMBeanArgumentTypes ) );
+                  try {
+                  getServer().invoke(
+                     mDelegate,
+                     mSchedulableMBeanMethodName,
+                     lArguments,
+                     mSchedulableMBeanArgumentTypes
+                  );
+                  }
+                  catch( javax.management.RuntimeOperationsException roe ) {
+                     log.error( "Caught ROE in Schedulable MBean Call", roe.getTargetException() );
+                  }
                   log.debug( "Remaining Repititions: " + getRemainingRepetitions() +
                      ", wait for next call to stop: " + mWaitForNextCallToStop );
                   if( getRemainingRepetitions() == 0 || mWaitForNextCallToStop ) {

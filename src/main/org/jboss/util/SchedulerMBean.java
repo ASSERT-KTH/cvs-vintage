@@ -14,7 +14,14 @@ import org.jboss.system.ServiceMBean;
 /**
  * This interface defines the manageable interface for a Scheduler Service
  * allowing the client to create a Schedulable instance which is then run
- * by this service at given times.
+ * by this service at given times or to use a MBean which is called by this
+ * service at given times.
+ * <br>
+ * <b>Attention: </b> You have two ways to specify the Schedulable. Either
+ * you specify a Schedulable Class which is created and used by the Scheduler
+ * or you specify a JMX MBean which the specified method is called. Note that
+ * the last method of {@link #setSchedulableClass} or {@link #setSchedulableMBean}
+ * defines which one is used. Therefore you should <b>never mixed these two</b>.
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  **/
@@ -119,6 +126,72 @@ public interface SchedulerMBean
       throws InvalidParameterException;
    
    /**
+    * @return Object Name if a Schedulalbe MBean is set
+    **/
+   public String getSchedulableMBean();
+   
+   /**
+    * Sets the fully qualified JMX MBean name of the Schedulable MBean to be called.
+    * <b>Attention: </b>if set the all values set by {@link #setSchedulableClass},
+    * {@link #setSchedulableArguments} and {@link #setSchedulableArgumentTypes} are
+    * cleared and not used anymore. Therefore only use either Schedulable Class or
+    * Schedulable MBean. If {@link #setSchedulableMBeanMethod} is not set then the
+    * schedule method as in the {@link Schedulable#perform} will be called with the
+    * same arguments. Also note that the Object Name will not be checked if the
+    * MBean is available. If the MBean is not available it will not be called but
+    * the remaining repetitions will be decreased.
+    *
+    * @param pSchedulableMBean JMX MBean Object Name which should be called.
+    *
+    * @throws InvalidParameterException If the given value is an valid Object Name.
+    **/
+   public void setSchedulableMBean( String pSchedulableMBean )
+      throws InvalidParameterException;
+   
+   /**
+    * @return Schedulable MBean Method description if set
+    **/
+   public String getSchedulableMBeanMethod();
+   
+   /**
+    * Sets the method name to be called on the Schedulable MBean. It can optionally be
+    * followed by an opening bracket, list of attributes (see below) and a closing bracket.
+    * The list of attributes can contain:
+    * <ul>
+    * <li>NOTIFICATION which will be replaced by the timers notification instance
+    *     (javax.management.Notification)</li>
+    * <li>DATE which will be replaced by the date of the notification call
+    *     (java.util.Date)</li>
+    * <li>REPETITIONS which will be replaced by the number of remaining repetitions
+    *     (long)</li>
+    * <li>SCHEDULER_NAME which will be replaced by the Object Name of the Scheduler
+    *     (javax.management.ObjectName)</li>
+    * <li>any full qualified Class name which the Scheduler will be set a "null" value
+    *     for it</li>
+    * </ul>
+    * <br>
+    * An example could be: "doSomething( NOTIFICATION, REPETITIONS, java.lang.String )"
+    * where the Scheduler will pass the timer's notification instance, the remaining
+    * repetitions as int and a null to the MBean's doSomething() method which must
+    * have the following signature: doSomething( javax.management.Notification, long,
+    * java.lang.String ).
+    *
+    * @param pSchedulableMBeanMethod Name of the method to be called optional followed
+    *                                by method arguments (see above).
+    *
+    * @throws InvalidParameterException If the given value is not of the right
+    *                                   format
+    **/
+   public void setSchedulableMBeanMethod( String pSchedulableMBeanMethod )
+      throws InvalidParameterException;
+   
+   /**
+   * @return True if the Scheduler uses a Schedulable MBean, false if it uses a
+   *         Schedulable class
+   **/
+   public boolean isUsingMBean();
+   
+   /**
     * @return Schedule Period between two scheduled calls in Milliseconds. It will always
     *         be bigger than 0 except it returns -1 then the schedule is stopped.
     **/
@@ -197,6 +270,11 @@ public interface SchedulerMBean
     * @return True if any attributes are changed but the Schedule is not restarted yet.
     **/
    public boolean isRestartPending();
+   
+   /**
+   * @return True if the Schedule when the Scheduler is started
+   **/
+   public boolean isStartAtStartup();
    
    /**
    * Set the scheduler to start when MBean started or not. Note that this method only

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.22 2002/01/17 21:57:22 schaefera Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.23 2002/01/18 18:48:11 schaefera Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -140,7 +140,7 @@
   <!-- Scheduler Service                                                    -->
   <!-- ==================================================================== -->
 
-  <!-- Uncomment this to enable Scheduling - ->
+  <!-- Uncomment this to enable Scheduling with Schedulable class - ->
   <mbean code="org.jboss.util.Scheduler" name="jboss:service=Scheduler">
     <attribute name="StartAtStartup">true</attribute>
     <attribute name="SchedulableClass">org.jboss.util.Scheduler$SchedulableExample</attribute>
@@ -149,6 +149,18 @@
     <attribute name="InitialStartDate">0</attribute>
     <attribute name="SchedulePeriod">10000</attribute>
     <attribute name="InitialRepetitions">-1</attribute>
+  </mbean>
+  <!- - -->
+  <!-- Uncomment this to enable Scheduling with Schedulable MBean - ->
+  <mbean code="org.jboss.util.SchedulableExample" name="jboss:type=example,name=schedulable">
+  </mbean>
+  <mbean code="org.jboss.util.Scheduler" name="jboss:service=Scheduler">
+    <attribute name="StartAtStartup">true</attribute>
+    <attribute name="SchedulableMBean">jboss:type=example,name=schedulable</attribute>
+    <attribute name="SchedulableMBeanMethod">hit( NOTIFICATION, DATE, REPETITIONS, SCHEDULER_NAME, java.lang.String )</attribute>
+    <attribute name="InitialStartDate">NOW</attribute>
+    <attribute name="SchedulePeriod">10000</attribute>
+    <attribute name="InitialRepetitions">10</attribute>
   </mbean>
   <!- - -->
 
