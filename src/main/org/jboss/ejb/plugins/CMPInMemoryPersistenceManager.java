@@ -37,7 +37,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @see org.jboss.ejb.EntityPersistenceStore
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
@@ -373,7 +373,7 @@ public class CMPInMemoryPersistenceManager
     * @return true, if the entity has been modified
     * @throws Exception    thrown if some system exception occurs
     */
-   public boolean isModified (EntityEnterpriseContext ctx) throws Exception
+   public boolean isStoreRequired (EntityEnterpriseContext ctx) throws Exception
    {
       if(isModified == null)
       {
@@ -383,7 +383,12 @@ public class CMPInMemoryPersistenceManager
       Boolean modified = (Boolean) isModified.invoke (ctx.getInstance (), new Object[0]);
       return modified.booleanValue ();
    }
-   
+
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   {
+      return isStoreRequired(ctx);
+   }
+
    /**
     * This method is called whenever an entity shall be stored to the
     * underlying storage. The persistence manager must call ejbStore on the

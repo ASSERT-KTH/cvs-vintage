@@ -25,7 +25,7 @@ import javax.ejb.RemoveException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -163,6 +163,17 @@ public interface EntityPersistenceStore
     * @param instance    the instance to check
     * @return true, if the entity has been modified
     * @throws Exception    thrown if some system exception occurs
+    */
+   boolean isStoreRequired(EntityEnterpriseContext instance) throws Exception;
+
+   /**
+    * This method is used to determined whether the instance was modified.
+    * NOTE, even if the method returns true the isStoreRequired for this same instance
+    * might return false, e.g. a CMR field that doesn't have a foreign key was modified.
+    *
+    * @param instance
+    * @return
+    * @throws Exception
     */
    boolean isModified(EntityEnterpriseContext instance) throws Exception;
 

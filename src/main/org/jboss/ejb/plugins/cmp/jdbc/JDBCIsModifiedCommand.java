@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 
 public final class JDBCIsModifiedCommand
@@ -30,7 +30,7 @@ public final class JDBCIsModifiedCommand
 
    public boolean execute(EntityEnterpriseContext ctx)
    {
-      return bridge.isModified(ctx);
+      return bridge.isStoreRequired(ctx);
    }
 }
 

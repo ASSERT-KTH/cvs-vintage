@@ -7,6 +7,10 @@
 
 package org.jboss.cache.invalidation.triggers;
 
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.MetaData;
+import org.w3c.dom.Element;
+
 /**
  * The role of this interceptor is to detect that an entity has been modified
  * after an invocation has been performed an use the InvalidationsTxGrouper
@@ -15,16 +19,18 @@ package org.jboss.cache.invalidation.triggers;
  *
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class EntityBeanCacheBatchInvalidatorInterceptor 
-      extends org.jboss.ejb.plugins.AbstractInterceptor
+   extends org.jboss.ejb.plugins.AbstractInterceptor
+   implements XmlLoadable
 {
    protected boolean doCacheInvalidations = true;
    protected org.jboss.cache.invalidation.InvalidationManagerMBean invalMgr = null;
    protected org.jboss.cache.invalidation.InvalidationGroup ig = null;
    protected org.jboss.ejb.EntityContainer container = null;
-    
+   public boolean invalidateRelated;
+
    public void start() throws Exception
    {
       org.jboss.metadata.EntityMetaData emd = ((org.jboss.metadata.EntityMetaData)this.getContainer ().getBeanMetaData ());      
@@ -65,10 +71,9 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
             if(method == null ||
                !container.getBeanMetaData().isMethodReadOnly(method.getName()))
             {
-               if (container.getPersistenceManager().isModified(ctx))
-               {
-                  return true;
-               }
+               return invalidateRelated ?
+                  container.getPersistenceManager().isModified(ctx) :
+                  container.getPersistenceManager().isStoreRequired(ctx);
             }
       }
       return false;
@@ -90,7 +95,6 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
          {
             //Invoke down the chain
             Object retVal = getNext().invoke(mi);  
-            //Object retVal = getNext().invoke(mi);  
 
             if (changed(mi, ctx))
             {
@@ -121,5 +125,16 @@ public class EntityBeanCacheBatchInvalidatorInterceptor
    public void setContainer(org.jboss.ejb.Container container) { this.container = (org.jboss.ejb.EntityContainer)container; }
 
    public org.jboss.ejb.Container getContainer() { return container; }
-   
+
+   // XmlLoadable implementation --------------------------------------------------------
+
+   public void importXml(Element element) throws Exception
+   {
+      String str = MetaData.getElementAttribute(element, "invalidate-related");
+      invalidateRelated = (str == null ? true : Boolean.valueOf(str).booleanValue());
+      if(log.isTraceEnabled())
+      {
+         log.trace("invalidate-related: " + invalidateRelated);
+      }
+   }
 }

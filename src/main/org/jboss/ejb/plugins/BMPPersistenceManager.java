@@ -37,7 +37,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.53 $
+*  @version $Revision: 1.54 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -446,7 +446,7 @@ public class BMPPersistenceManager
       }
    }
 
-   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   public boolean isStoreRequired(EntityEnterpriseContext ctx) throws Exception
    {
       if(isModified == null)
       {
@@ -457,12 +457,17 @@ public class BMPPersistenceManager
       return modified.booleanValue();
    }
 
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   {
+      return isStoreRequired(ctx);
+   }
+
    public void invokeEjbStore(EntityEnterpriseContext ctx)
       throws RemoteException
    {
       try
       {
-         if(!isModified(ctx))
+         if(!isStoreRequired(ctx))
          {
             return;
          }

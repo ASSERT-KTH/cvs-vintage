@@ -39,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.55 $
+ * @version $Revision: 1.56 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -394,6 +394,11 @@ public class CMPPersistenceManager
       invokeLoad(ctx);
    }
 
+   public boolean isStoreRequired(EntityEnterpriseContext ctx) throws Exception
+   {
+      return store.isStoreRequired(ctx);
+   }
+
    public boolean isModified(EntityEnterpriseContext ctx) throws Exception
    {
       return store.isModified(ctx);
@@ -430,7 +435,7 @@ public class CMPPersistenceManager
             boolean modified = false;
             try
             {
-               modified = isModified(ctx);
+               modified = isStoreRequired(ctx);
             }
             catch(Exception e)
             {

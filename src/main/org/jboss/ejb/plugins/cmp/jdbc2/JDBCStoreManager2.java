@@ -45,7 +45,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -362,9 +362,20 @@ public class JDBCStoreManager2
       }
    }
 
-   public boolean isModified(EntityEnterpriseContext instance)
+   public boolean isStoreRequired(EntityEnterpriseContext instance)
    {
       return entityBridge.isDirty(instance);
+   }
+
+   /**
+    * todo this is not really is dirty
+    * @param ctx
+    * @return
+    * @throws Exception
+    */
+   public boolean isModified(EntityEnterpriseContext ctx) throws Exception
+   {
+      return isStoreRequired(ctx);
    }
 
    public void storeEntity(EntityEnterpriseContext instance)

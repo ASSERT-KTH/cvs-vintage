@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
@@ -625,22 +625,42 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
       getEntityState(ctx).ejbCreateDone = true;
    }
 
+   /**
+    * This method is used to determined whether the instance was modified.
+    * NOTE, even if the method returns true the isStoreRequired for this same instance
+    * might return false, e.g. a CMR field that doesn't have a foreign key was modified.
+    * @param ctx
+    * @return
+    */
    public boolean isModified(EntityEnterpriseContext ctx)
+   {
+      boolean invalidateCache = false;
+      final EntityState entityState = getEntityState(ctx);
+      if(entityState.isCreated())
+      {
+         invalidateCache = areCmpFieldsDirty(ctx, entityState);
+         if(!invalidateCache)
+         {
+            for(int i = 0; i < cmrFields.length; ++i)
+            {
+               if(cmrFields[i].invalidateCache(ctx))
+               {
+                  invalidateCache = true;
+                  break;
+               }
+            }
+         }
+      }
+      return invalidateCache;
+   }
+
+   public boolean isStoreRequired(EntityEnterpriseContext ctx)
    {
       boolean modified = false;
       final EntityState entityState = getEntityState(ctx);
       if(entityState.isCreated())
       {
-         for(int i = 0; i < tableFields.length; ++i)
-         {
-            final JDBCCMPFieldBridge field = tableFields[i];
-            if(entityState.isCheckDirty(i) && field.isDirty(ctx))
-            {
-               modified = true;
-               break;
-            }
-         }
-
+         modified = areCmpFieldsDirty(ctx, entityState);
          if(!modified)
          {
             for(int i = 0; i < cmrFields.length; ++i)
@@ -654,6 +674,20 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
          }
       }
       return modified;
+   }
+
+   private boolean areCmpFieldsDirty(final EntityEnterpriseContext ctx,
+                                     final EntityState entityState)
+   {
+      for(int i = 0; i < tableFields.length; ++i)
+      {
+         final JDBCCMPFieldBridge field = tableFields[i];
+         if(entityState.isCheckDirty(i) && field.isDirty(ctx))
+         {
+            return true;
+         }
+      }
+      return false;
    }
 
    public FieldIterator getDirtyIterator(EntityEnterpriseContext ctx)
