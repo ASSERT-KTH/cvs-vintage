@@ -13,8 +13,6 @@ import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.rmi.NoSuchObjectException;
 
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
 
@@ -22,8 +20,8 @@ import javax.ejb.EJBException;
 import javax.ejb.NoSuchEntityException;
 import javax.ejb.NoSuchObjectLocalException;
 import javax.ejb.TransactionRolledbackLocalException;
+import org.jboss.ejb.Interceptor;
 
-import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationResponse;
 import org.jboss.invocation.InvocationType;
@@ -40,10 +38,12 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
-public abstract class AbstractTxInterceptor extends AbstractInterceptor
+public class AbstractTxInterceptor
 {
+	private static Logger log = Logger.getLogger(AbstractTxInterceptor.class);
+	
    /**
     * This method calls the next interceptor in the chain.
     *
@@ -63,13 +63,13 @@ public abstract class AbstractTxInterceptor extends AbstractInterceptor
     * actual exception throw is governed by the rules in the EJB 2.0 
     * specification section 18.3
     */
-   protected InvocationResponse invokeNext(Invocation invocation, boolean inheritedTx)
+   public static InvocationResponse invokeNext(Invocation invocation, boolean inheritedTx, Interceptor next)
       throws Exception
    {
       InvocationType type = invocation.getType();
       try 
       {
-         return getNext().invoke(invocation);
+         return next.invoke(invocation);
       } 
       catch (Throwable e) 
       {
@@ -198,7 +198,7 @@ public abstract class AbstractTxInterceptor extends AbstractInterceptor
       }
    }
    
-   private final String formatException(String msg, Throwable t)
+   private static final String formatException(String msg, Throwable t)
    {
       StringWriter sw = new StringWriter();
       PrintWriter pw = new PrintWriter(sw);

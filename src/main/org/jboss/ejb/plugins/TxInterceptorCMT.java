@@ -40,9 +40,9 @@ import org.jboss.metadata.MetaData;
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  */
-public final class TxInterceptorCMT extends AbstractTxInterceptor
+public final class TxInterceptorCMT extends AbstractInterceptor
 {
    public static int MAX_RETRIES = 5;
    public static Random random = new Random();

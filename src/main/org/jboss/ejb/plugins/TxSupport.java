@@ -11,8 +11,6 @@ package org.jboss.ejb.plugins;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.ejb.EJBException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -205,7 +203,7 @@ public abstract class TxSupport
          {
             throw new IllegalStateException("Transaction present on server in Never call");
          } // end of if ()
-         return next.invoke(invocation);
+         return AbstractTxInterceptor.invokeNext(invocation, false, next);
       }
 
 
@@ -258,7 +256,7 @@ public abstract class TxSupport
          {
             throw new IllegalStateException("Transaction present on server in NotSupported call");
          } // end of if ()
-         return next.invoke(invocation);
+ 	   	return AbstractTxInterceptor.invokeNext(invocation, false, next);
       }
 
    }
@@ -295,7 +293,7 @@ public abstract class TxSupport
                                  org.jboss.ejb.Interceptor next)
          throws Exception
       {
-         return next.invoke(invocation);
+		return AbstractTxInterceptor.invokeNext(invocation, tm.getTransaction() != null, next);
       }
 
    }
@@ -338,7 +336,7 @@ public abstract class TxSupport
             tx = tm.getTransaction();
             try
             {
-               return next.invoke(invocation);
+				return AbstractTxInterceptor.invokeNext(invocation, false, next);
             }
             finally
             {
@@ -349,7 +347,7 @@ public abstract class TxSupport
 
          else
          {
-            return next.invoke(invocation);
+			return AbstractTxInterceptor.invokeNext(invocation, true, next);
          } // end of else
       }
 
@@ -400,7 +398,7 @@ public abstract class TxSupport
          Transaction tx = tm.getTransaction();
          try
          {
-            return next.invoke(invocation);
+			return AbstractTxInterceptor.invokeNext(invocation, false, next);
          }
          finally
          {
@@ -447,7 +445,7 @@ public abstract class TxSupport
             throw new EJBException("Transaction required");
          } // end of if ()
          invocation.setTransaction(tx);
-         return next.invoke(invocation);
+ 		return AbstractTxInterceptor.invokeNext(invocation, true, next);
       }
 
    }

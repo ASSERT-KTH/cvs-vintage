@@ -42,9 +42,9 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
-public final class TxInterceptorBMT extends AbstractTxInterceptor
+public final class TxInterceptorBMT extends AbstractInterceptor
 {
    /**
     * This associates the thread to the UserTransaction.
@@ -205,7 +205,7 @@ public final class TxInterceptorBMT extends AbstractTxInterceptor
          {
             // Let the superclass call next interceptor and do the exception
             // handling
-            return super.invokeNext(invocation, false);
+            return AbstractTxInterceptor.invokeNext(invocation, false, getNext());
          } 
          finally 
          {
