@@ -5,15 +5,16 @@
 <form action="$link.setPage("admin,ViewXMLExportIssues.vm")" method="post" name="xmlexportissues">
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.User.HomePage" />
 
+<div class="colbar">
+$l10n.SpecifyACommaSepparatedList
+</div>
+
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
  <th>$l10n.Issues</th>
  <td>
   <input name="exportissues" value="$!exportissues" type="text" size="50" />
-  <div class="colbar">
-  $l10n.SpecifyACommaSepparatedList
-  </div>
  </td>
 </tr>
 <tr>
