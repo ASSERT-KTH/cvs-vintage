@@ -61,7 +61,15 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.50 $
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.51 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>2001/07/26 bill burke:</b>
+ * <ul>
+ * <li> Added BeanLockManager.
+ * </ul>
  */
 public abstract class Container
 {
@@ -110,6 +118,9 @@ public abstract class Container
 
    /** The custom security proxy used by the SecurityInterceptor */
    protected Object securityProxy;
+
+   /** This is the bean lock manager that is to be used */
+   protected BeanLockManager lockManager = new BeanLockManager();
 
    /** ??? */
    protected LocalContainerInvoker localContainerInvoker = 
@@ -166,6 +177,11 @@ public abstract class Container
    public EJBSecurityManager getSecurityManager()
    {
       return sm;
+   }
+
+   public BeanLockManager getLockManager()
+   {
+      return lockManager;
    }
 
    public void setRealmMapping(RealmMapping rm)
