@@ -26,13 +26,13 @@
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
     
-    <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
+    <!--property name="torque.dir.scarab" value="${src.dir}/java"/-->
+    <property name="torque.java.dir" value="${build.src.scarab}/torque"/>
+    
     <property name="torquedoc.destdir" value="${basedir}/target/torquedoc"/>
     <property name="scarab.war.file.dir" value="${build.webapps}"/>
     <property name="scarab.war.file.name" value="scarab.war"/>
     <property name="scarab.war.file" value="${scarab.war.file.dir}/${scarab.war.file.name}"/>
-    <property name="scarab.ear.file.dir" value="${build.webapps}"/>
-    <property name="scarab.ear.file.name" value="scarab.ear"/>
 
     <property name="extensions.lib.dir" value="${extensions.dir}/usermods/lib"/>
     <property name="extensions.templates.dir" value="${extensions.dir}/usermods/templates"/>
@@ -59,7 +59,6 @@
 
         <echo message="Build Dir: ${build.dir}"/>
         <mkdir dir="${build.dir}"/>
-        <mkdir dir="${build.dir}/webapps"/>
         <tstamp/>
     <echo>
   _________                         ___.    
@@ -565,12 +564,7 @@
       <exclude name="torque/**"/>
         </javac>
 
-        <!-- Copy pipeline definitions. -->
-        <copy todir="${build.dest.scarab}/org" filtering="no">
-            <fileset dir="${src.java.dir.scarab}/org">
-                <include name="**/*.xml"/>
-            </fileset>
-        </copy>
+      
     </target>
 
     
@@ -679,34 +673,7 @@
         </war>
     </target>
 
-    <!-- ================================================================== -->
-    <!-- Create a ear file                                                  -->
-    <!-- ================================================================== -->
-    <target name="ear" depends="war">
-       <mkdir dir="META-INF"/>
-       <copy file="${src.conf.dir}/application.xml.ear.txt"
-             tofile="META-INF/application.xml"
-             filtering="true">
-           <filterset>
-               <filter token="WAR_FILE_NAME" value="${scarab.war.file.name}"/>
-           </filterset>
-       </copy>
-
-       <copy file="${src.conf.dir}/manifest.mf.ear.txt"
-             tofile="META-INF/manifest.mf"/>
-
-       <zip destfile="${scarab.ear.file.dir}/${scarab.ear.file.name}">
-           <fileset dir="${scarab.war.file.dir}">
-                <include name="${scarab.war.file.name}"/>
-           </fileset>
-           <fileset dir=".">
-               <include name="META-INF/**"/>
-           </fileset>
-      </zip>
-
-      <delete dir="META-INF"/>
-      
-    </target>
+  
 
   
 
