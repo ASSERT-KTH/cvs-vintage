@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.core.gui.util;
@@ -37,263 +39,158 @@ import java.util.zip.ZipFile;
 
 import javax.swing.ImageIcon;
 
-
 public class ImageLoader {
-    static boolean ICON_SET = false;
-    private static ResourceBundle bundle;
-    private static Properties properties;
-    private static String iconset;
-    private static Hashtable hashtable = new Hashtable();
+	static boolean ICON_SET = false;
 
-    /*
-public ImageLoader()
-{
+	private static ResourceBundle bundle;
 
-        iconset = MainInterface.themeItem.getIconset();
+	private static Properties properties;
 
-        if (iconset.toLowerCase().equals("default"))
-                ICON_SET = false;
-        else
-                ICON_SET = true;
+	private static String iconset;
 
-        if (ICON_SET == true)
-        {
-                File zipFile =
-                        new File(
-                                MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
-                System.out.println("zipfile:"+zipFile );
+	private static Hashtable hashtable = new Hashtable();
 
-                String zipFileEntry = iconset + "/icons.properties";
+	// ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol)
+	// ***************
+	public static ImageIcon getUnsafeImageIcon(String name) {
+		URL url;
 
-                try
-                {
-                        properties = loadProperties(zipFile, zipFileEntry);
-                }
-                catch ( Exception ex )
-                {
-                        ex.printStackTrace();
+		if (hashtable.containsKey(name) == true) {
+			return (ImageIcon) hashtable.get(name);
+		}
 
-                        StringBuffer buf = new StringBuffer();
-                        buf.append("Error while loading iconset!");
-                        JOptionPane.showMessageDialog(MainInterface.mainFrame, buf.toString() );
+		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
 
-                        ICON_SET = false;
-                        MainInterface.themeItem.setIconset("default");
-                }
-        }
+		if (url == null) {
+			return null;
+		}
 
-        ICON_SET = false;
+		ImageIcon icon = new ImageIcon(url);
 
-}  // constructor
-*/
+		hashtable.put(name, icon);
 
-    // ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol) ***************
-    public static ImageIcon getUnsafeImageIcon(String name) {
-        URL url;
+		return icon;
+	}
 
-        if (hashtable.containsKey(name) == true) {
-            return (ImageIcon) hashtable.get(name);
-        }
+	// this is revised and may be used !
+	public static ImageIcon getSmallImageIcon(String name) {
+		URL url;
 
-        url = DiskIO.getResourceURL("org/columba/core/images/" + name);
+		if (hashtable.containsKey(name) == true) {
+			return (ImageIcon) hashtable.get(name);
+		}
 
-        if (url == null) {
-            return null;
-        }
+		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
 
-        ImageIcon icon = new ImageIcon(url);
+		if (url == null) {
+			url = DiskIO
+					.getResourceURL("org/columba/core/images/brokenimage_small.png");
+		}
 
-        hashtable.put(name, icon);
+		ImageIcon icon = new ImageIcon(url);
 
-        return icon;
-    }
+		hashtable.put(name, icon);
 
-    // this is revised and may be used !
-    public static ImageIcon getSmallImageIcon(String name) {
-        URL url;
+		return icon;
+	}
 
-        if (hashtable.containsKey(name) == true) {
-            return (ImageIcon) hashtable.get(name);
-        }
+	public static ImageIcon getImageIcon(String name) {
+		URL url;
 
-        url = DiskIO.getResourceURL("org/columba/core/images/" + name);
+		if (hashtable.containsKey(name) == true) {
+			return (ImageIcon) hashtable.get(name);
+		}
 
-        if (url == null) {
-            url = DiskIO.getResourceURL(
-                    "org/columba/core/images/brokenimage_small.png");
-        }
+		url = DiskIO.getResourceURL("org/columba/core/images/" + name);
 
-        ImageIcon icon = new ImageIcon(url);
+		if (url == null) {
+			url = DiskIO
+					.getResourceURL("org/columba/core/images/brokenimage.png");
+		}
 
-        hashtable.put(name, icon);
+		ImageIcon icon = new ImageIcon(url);
 
-        return icon;
-    }
+		hashtable.put(name, icon);
 
-    public static ImageIcon getImageIcon(String name) {
-        URL url;
+		return icon;
+	}
+	
+	public static ImageIcon getImageIconResource(String name) {
+		URL url;
 
-        if (hashtable.containsKey(name) == true) {
-            return (ImageIcon) hashtable.get(name);
-        }
+		url = DiskIO.getResourceURL(name);
 
-        url = DiskIO.getResourceURL("org/columba/core/images/" + name);
+		if (url == null) {
+			url = DiskIO
+					.getResourceURL("org/columba/core/images/brokenimage.png");
+		}
 
-        if (url == null) {
-            url = DiskIO.getResourceURL(
-                    "org/columba/core/images/brokenimage.png");
-        }
+		ImageIcon icon = new ImageIcon(url);
 
-        ImageIcon icon = new ImageIcon(url);
+		hashtable.put(name, icon);
 
-        hashtable.put(name, icon);
+		return icon;
+	}
 
-        return icon;
-    }
+	// ******** FOLLOWS SPECIALIZED ZIP-FILE EXTRACTION
+	// *************************
+	// load image out of jar/zip file
+	public static synchronized Image loadImage(File zipFile, String entry) {
+		byte[] bytes = loadBytes(zipFile, entry);
+		Image image = Toolkit.getDefaultToolkit().createImage(bytes);
 
-    /*
-public static ImageIcon getDefaultImageIcon( String id, String failCase )
-{
-        ImageIcon icon = (ImageIcon) UIManager.getIcon(id);
-URL url;
+		return image;
+	}
 
-        if (icon == null)
-        {
+	// load image out of jar/zip file
+	public static synchronized Properties loadProperties(File zipFile,
+			String entry) {
+		byte[] bytes = loadBytes(zipFile, entry);
 
-                url =
-                        ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".gif");
-                if (url == null)
-                {
-                        url =
-                                ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".jpeg");
-                        if (url == null)
-                        {
-                                url =
-                                        ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".png");
-                                if (url == null)
-                                {
-                                        if (id.indexOf("small") != -1)
-                                        {
-                                                url =
-                                                        ClassLoader.getSystemResource("org/columba/core/images/brokenimage_small.png");
-                                        }
-                                        else
-                                        {
-                                                url = ClassLoader.getSystemResource("org/columba/core/images/brokenimage.png");
+		ByteArrayInputStream input = new ByteArrayInputStream(bytes);
 
-                                        }
-                                }
-                        }
-                }
+		Properties properties = new Properties();
 
-                if (url == null)
-                        return null;
+		try {
+			properties.load(input);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-                icon = new ImageIcon( url );
-        }
+		return properties;
+	}
 
-        return icon;
-}
-*/
+	// load byte-array out of jar/zip file
+	protected static synchronized byte[] loadBytes(File zipFile, String entry) {
+		byte[] bytes = null;
 
-    // ******** FOLLOWS SPECIALIZED ZIP-FILE EXTRACTION *************************
-    // load image out of jar/zip file
-    public static synchronized Image loadImage(File zipFile, String entry) {
-        byte[] bytes = loadBytes(zipFile, entry);
-        Image image = Toolkit.getDefaultToolkit().createImage(bytes);
+		try {
+			ZipFile zipfile = new ZipFile(zipFile);
+			ZipEntry zipentry = zipfile.getEntry(entry);
 
-        return image;
-    }
+			if (zipentry != null) {
+				long size = zipentry.getSize();
 
-    // load image out of jar/zip file
-    public static synchronized Properties loadProperties(File zipFile,
-        String entry) {
-        byte[] bytes = loadBytes(zipFile, entry);
+				if (size > 0) {
+					bytes = new byte[(int) size];
 
-        ByteArrayInputStream input = new ByteArrayInputStream(bytes);
+					InputStream in = new BufferedInputStream(zipfile
+							.getInputStream(zipentry));
+					in.read(bytes);
+					in.close();
+				}
+			}
+		} catch (ZipException e) {
+			System.out.println(e);
 
-        Properties properties = new Properties();
+			return null;
+		} catch (IOException e) {
+			System.out.println(e);
 
-        try {
-            properties.load(input);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+			return null;
+		}
 
-        return properties;
-    }
+		return bytes;
+	}
 
-    // load byte-array out of jar/zip file
-    protected static synchronized byte[] loadBytes(File zipFile, String entry) {
-        byte[] bytes = null;
-
-        try {
-            ZipFile zipfile = new ZipFile(zipFile);
-            ZipEntry zipentry = zipfile.getEntry(entry);
-
-            if (zipentry != null) {
-                long size = zipentry.getSize();
-
-                if (size > 0) {
-                    bytes = new byte[(int) size];
-
-                    InputStream in = new BufferedInputStream(zipfile.getInputStream(
-                                zipentry));
-                    in.read(bytes);
-                    in.close();
-                }
-            }
-        } catch (ZipException e) {
-            System.out.println(e);
-
-            return null;
-        } catch (IOException e) {
-            System.out.println(e);
-
-            return null;
-        }
-
-        return bytes;
-    }
-
-    /*
-public synchronized static ImageIcon getImageIcon ( String id, String failCase )
-{
-        if (ICON_SET == true)
-        {
-                String str = (String) properties.getProperty(id);
-                if (str == null)
-                        return getDefaultImageIcon(id, failCase);
-
-                //System.out.println("str="+str);
-
-                ImageIcon icon = null;
-                try
-                {
-                        File zipFile =
-                                new File(
-                                        MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
-                        //System.out.println("zipfile:"+zipFile );
-
-                        String zipFileEntry = iconset + "/" + str;
-
-                        icon = new ImageIcon( loadImage(zipFile, zipFileEntry) );
-                }
-                catch (Exception ex)
-                {
-                        //ex.printStackTrace();
-                        return getDefaultImageIcon(id, failCase);
-                }
-
-                if (icon == null)
-                        return getDefaultImageIcon(id, failCase);
-
-                return icon;
-        }
-        else
-        {
-                return getDefaultImageIcon(id, failCase);
-        }
-}
-*/
 }

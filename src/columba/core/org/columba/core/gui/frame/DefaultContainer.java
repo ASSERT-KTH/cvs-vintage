@@ -198,7 +198,7 @@ public class DefaultContainer extends JFrame implements Container,
 	/**
 	 * @see org.columba.core.gui.frame.Container#setFrameMediator(org.columba.core.gui.frame.FrameMediator)
 	 */
-	public void setFrameMediator(FrameMediator m) {
+	public void setFrameMediator(final FrameMediator m) {
 		LOG.fine("set framemediator to " + m.getClass());
 
 		this.mediator = m;
@@ -210,8 +210,15 @@ public class DefaultContainer extends JFrame implements Container,
 
 		switchedFrameMediator = false;
 
-		// update content-pane
-		setContentPane(m.getContentPane());
+//		 awt-event-thread
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+//				 update content-pane
+				setContentPane(m.getContentPane());
+
+			}
+		});
+		
 
 	}
 

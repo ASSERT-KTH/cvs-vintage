@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -479,7 +480,9 @@ public class IMAPServer {
 				// Show the password dialog
 				if (password == null)
 					password = new char[0];
-				dialog.showDialog(item.get("user"), item.get("host"),
+				dialog.showDialog(MessageFormat.format(MailResourceLoader
+						.getString("dialog", "password", "enter_password"),
+						new Object[] { item.get("user"), item.get("host") }),
 						new String(password), item.getBoolean("save_password"));
 				if (dialog.success()) {
 					// User pressed OK

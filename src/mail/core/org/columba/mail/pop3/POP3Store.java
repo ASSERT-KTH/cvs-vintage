@@ -18,6 +18,7 @@ package org.columba.mail.pop3;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -323,7 +324,9 @@ public class POP3Store {
             .toCharArray()).length == 0) {
                 dialog = new PasswordDialog();
                 
-                dialog.showDialog(popItem.get("user"), popItem.get("host"),
+                dialog.showDialog(MessageFormat.format(MailResourceLoader
+						.getString("dialog", "password", "enter_password"),
+						new Object[] { popItem.get("user"), popItem.get("host") }),
                     popItem.get("password"), popItem.getBoolean("save_password"));
                 
                 if (dialog.success()) {

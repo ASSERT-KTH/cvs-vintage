@@ -20,6 +20,7 @@ package org.columba.mail.smtp;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -242,8 +243,11 @@ public class SMTPServer {
 
 			// ask password from user
 			if (password.length == 0) {
-				passDialog.showDialog(username, accountItem.getSmtpItem().get(
-						"host"), new String(password), savePassword);
+				passDialog.showDialog(MessageFormat.format(MailResourceLoader
+						.getString("dialog", "password", "enter_password"),
+						new Object[] { username,
+								accountItem.getSmtpItem().get("host") }),
+						new String(password), savePassword);
 
 				if (passDialog.success()) {
 					password = passDialog.getPassword();
@@ -295,8 +299,11 @@ public class SMTPServer {
 						}
 					}
 				} catch (SMTPException e) {
-					passDialog.showDialog(username, smtpItem.get("host"),
-							new String(password), savePassword);
+					passDialog.showDialog(MessageFormat.format(
+							MailResourceLoader.getString("dialog", "password",
+									"enter_password"), new Object[] { username,
+									smtpItem.get("host") }), new String(
+							password), savePassword);
 
 					if (!passDialog.success()) {
 						throw new CommandCancelledException();
