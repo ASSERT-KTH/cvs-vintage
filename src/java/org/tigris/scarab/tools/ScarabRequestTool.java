@@ -112,8 +112,6 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.om.MITListItem;
-import org.tigris.scarab.om.MITListItemManager;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.om.ReportManager;
@@ -126,7 +124,6 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;  
-import org.tigris.scarab.util.ScarabPaginatedList;
 import org.tigris.scarab.util.SnippetRenderer;  
 import org.tigris.scarab.util.SimpleSkipFiltering;  
 import org.tigris.scarab.util.word.IssueSearch;
@@ -610,22 +607,6 @@ try{
     {
         return getAttributeOption(new NumberKey(key));
     }    
-
-    public MITList getCurrentMITList()
-        throws Exception
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        MITList mitList = user.getCurrentMITList();
-        if (mitList == null)
-        {
-            mitList = new MITList();
-            MITListItem item = MITListItemManager.getInstance();
-            item.setModuleId(getCurrentModule().getModuleId());
-            item.setIssueTypeId(getCurrentIssueType().getIssueTypeId());
-            mitList.addMITListItem(item);        
-        }
-        return mitList;
-    }
 
     /**
      * First attempts to get the RModuleUserAttributes from the user.
@@ -2255,88 +2236,6 @@ try{
         IssueType issueType = getCurrentIssueType();  
         return getUsers(module, issueType);
     }
-
-
-    /**
-     *  Full featured, paginated, sorted method for returning the results 
-     *  of user search.  Returns all users (no search criteria). 
-     */
-    public ScarabPaginatedList UserSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
-                                                 String sortColumn, String sortPolarity)
-        throws Exception
-    {
-        return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
-                                         sortColumn, sortPolarity, "", "");
-
-    }
-
-    /**
-     * Full featured, paginated, sorted version for returning results 
-     * of a user search.
-     */
-    public ScarabPaginatedList UserFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
-                                                         String sortColumn, String sortPolarity)
-        throws Exception
-    {
-        ScarabLocalizationTool l10n = getLocalizationTool();
-        String searchString = data.getParameters()
-               .getString("searchString"); 
-        String searchField = data.getParameters()
-               .getString("searchField"); 
-
-        if (searchField == null)
-        {
-            setInfoMessage(l10n.get("SearchFieldPrompt"));
-            return null ;
-        }
-        
-        return userFilteredSearchResults(mitList, pageNum, resultsPerPage, 
-                                         sortColumn, sortPolarity, 
-                                         searchString, searchField);
-
-    }
-
-    private ScarabPaginatedList userFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage,
-                                                          String sortColumn, String sortPolarity, 
-                                                          String searchString, String searchField)
-        throws Exception
-    {
-
-        String name = null;
-        String userName = null;
-        Module module = getCurrentModule();  
-        ScarabPaginatedList list = null;
-
-        if (searchField.equals("FullName"))
-        {
-            name = searchString;
-        }
-        else if (searchField.equals("Username"))
-        {
-            userName = searchString;
-        }
-
-        try 
-        {
-            list =  module.getUsers(name, userName, mitList,
-                                    (pageNum-1)*resultsPerPage, resultsPerPage, 
-                                    sortColumn, sortPolarity);
-        } 
-        catch (Exception e)
-        {
-            list = new ScarabPaginatedList();
-            Log.get().error("", e);
-        }
-
-        // these are object members are used by GlobalMacros.vm via the bean interface.
-        // leave them here until all users of the paginate macro can be updated. 
-        this.nbrPages = list.getNumberOfPages();
-        this.nextPage = list.getNextPageNumber();
-        this.prevPage = list.getPrevPageNumber();
-
-        return list;
-    }
-                                
 
     /**
      * Return results of user search.
