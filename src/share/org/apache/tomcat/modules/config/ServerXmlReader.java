@@ -162,7 +162,7 @@ public class ServerXmlReader extends BaseInterceptor {
 
     public static void setTagRules( XmlMapper xh ) {
 	xh.addRule( "module",  new XmlAction() {
-		public void end(SaxContext ctx ) throws Exception {
+		public void start(SaxContext ctx ) throws Exception {
 		    Object elem=ctx.currentObject();
 		    AttributeList attributes = ctx.getCurrentAttributes();
 		    String name=attributes.getValue("name");
@@ -178,9 +178,12 @@ public class ServerXmlReader extends BaseInterceptor {
     public static  void addDefaultTags( ContextManager cm, XmlMapper xh)
 	throws TomcatException
     {
+	if( cm.getNote( "modules" ) != null )
+	    return;
 	File f=new File( cm.getHome(), "/conf/modules.xml");
 	if( f.exists() ) {
-            cm.setNote( "configFile", f.getAbsoluteFile());
+	    //            cm.setNote( "configFile", f.getAbsoluteFile());
+	    cm.setNote( "modules", new Hashtable());
 	    loadConfigFile( xh, f, cm );
             // load module-*.xml
             Vector v = getUserConfigFiles(f);
@@ -195,7 +198,7 @@ public class ServerXmlReader extends BaseInterceptor {
     // similar with ant's taskdef
     public static void addTag( XmlMapper xh, String tag, String classN) {
 	xh.addRule( tag ,
-		    xh.objectCreate( null, classN ));
+		    xh.objectCreate( classN, null ));
 	xh.addRule( tag ,
 		    xh.setProperties());
 	xh.addRule( tag,
@@ -277,3 +280,4 @@ public class ServerXmlReader extends BaseInterceptor {
 
 
 }
+

@@ -106,11 +106,19 @@ public class PolicyInterceptor extends PolicyLoader { //  BaseInterceptor {
 	if( System.getSecurityManager() != null ) return;
 	try {
 	    if( null == System.getProperty("java.security.policy")) {
+		File f=null;
 		if( policyFile==null ) {
-		    // XXX ugly API - change CM
-		    File f= new File(cm.getHome(), "conf/tomcat.policy");
-		    policyFile=f.getPath();
-		}
+		    policyFile="conf/tomcat.policy";
+		} 
+		    
+		if( FileUtil.isAbsolute(policyFile)) 
+		    f=new File(policyFile);
+		else
+		    f=new File(cm.getHome() + File.separator +
+			       policyFile);
+		try {
+		    policyFile=f.getCanonicalPath();
+		} catch(IOException ex ) {}
 		log("Setting policy file to " + policyFile);
 		System.setProperty("java.security.policy",
 				   policyFile);
