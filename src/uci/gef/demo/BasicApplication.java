@@ -19,7 +19,7 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.4 1998/03/27 00:33:57 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.5 1998/03/27 01:04:19 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -39,7 +39,6 @@ public class BasicApplication {
 
   private JGraphFrame _gf;
   private Frame _palFrame;
-  private PaletteTop _pal;
 
   ////////////////////////////////////////////////////////////////
   // constructors
