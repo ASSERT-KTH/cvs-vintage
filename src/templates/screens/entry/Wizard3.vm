@@ -46,11 +46,16 @@
     #end
 #end
 
-<p class="functnbar">
+<div class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+ 
+<p>
+<small>"<strong>*</strong>" indicates required fields</small>
 </p>
+
     
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
@@ -239,11 +244,11 @@
 </div>  
 
 
-<p class="functnbar2">
+<div class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</p>
+</div>
 
 $intake.declareGroups()
 </form>

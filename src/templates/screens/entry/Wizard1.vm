@@ -20,10 +20,10 @@ $page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
-<p class="functnbar">
+<div class="functnbar">
 <input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
 <input type="reset" value="Reset" />
-</p>
+</div>
 
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
@@ -53,6 +53,11 @@ $page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
 #if ($templateId)
 <input type="hidden" name="templateId" value="$templateId" />
 #end
+
+<p>
+<small>"<strong>*</strong>" indicates required fields</small>
+</p>
+
 
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
@@ -109,10 +114,10 @@ $page.setTitle("Enter new: $scarabR.CurrentIssueType.Name")
  #end
 </div>
 
-<p class="functnbar2">
+<div class="functnbar2">
 <input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
 <input type="reset" value="Reset" />
-</p>
+</div>
 
 $intake.declareGroups()
 
