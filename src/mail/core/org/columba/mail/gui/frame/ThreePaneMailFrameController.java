@@ -150,12 +150,6 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
         attachmentController.createPopupMenu();
     }
 
-    /* *20030831, karlpeder* Not used, close method is used instead
-    public void saveAndClose() {
-            tableController.saveColumnConfig();
-            super.saveAndClose();
-    }
-    */
     /* (non-Javadoc)
      * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
      */
