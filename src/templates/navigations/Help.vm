@@ -3,7 +3,7 @@ Links given doc and label in 'Help window' mode.
 Usage: #enterHelp($link "#middle" "label")
 ------------------------------------------------------------------------- *#
 #macro (enterHelp $link $anchor $linktext)
-    <a href="$link$anchor" onclick="return launch(this.href, 1)" title="Note: may open in new window">$linktext</a>
+    <a href="$link$anchor" onclick="return launch(this.href, 1)" title="$l10n.NoteMayOpenNewWindow" class="helplink">$linktext</a>
 #end
 
 #if( $link.setPage("help,Introduction.vm").isAllowed() ) 
