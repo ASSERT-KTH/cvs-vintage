@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import javax.swing.ImageIcon;
+
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
-
-import javax.swing.ImageIcon;
 
 
 /**

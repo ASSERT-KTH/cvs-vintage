@@ -15,10 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree.util;
 
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -32,6 +28,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 
 
 public class EditAddressbookFolderDialog {

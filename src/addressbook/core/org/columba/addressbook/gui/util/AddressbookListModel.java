@@ -15,14 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.table.util.TableModelPlugin;
-
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractListModel;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
 
 
 /**

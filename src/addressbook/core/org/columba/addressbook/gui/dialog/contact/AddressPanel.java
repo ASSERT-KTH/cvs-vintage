@@ -15,11 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-
 import java.awt.BorderLayout;
-
 import java.util.List;
 import java.util.Vector;
 
@@ -28,6 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
 
 
 public class AddressPanel extends JPanel {

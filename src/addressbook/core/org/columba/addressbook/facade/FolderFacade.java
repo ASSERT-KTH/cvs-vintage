@@ -18,8 +18,6 @@ package org.columba.addressbook.facade;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.main.AddressbookInterface;
 
-import org.columba.core.main.MainInterface;
-
 
 /**
  * @author fdietz

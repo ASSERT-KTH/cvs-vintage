@@ -18,16 +18,15 @@
 
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.ristretto.coder.Base64;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.ByteBuffer;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.ristretto.coder.Base64;
 
 /**
  * Import addressbook data in LDIF format.

@@ -89,7 +89,7 @@ public class EditPropertiesAction extends DefaultTableAction {
 		//TODO: Why do we need this HeaderItem anyway?
 		//      -> just get the card from the folder, wether it is a contact or
 		// group card
-		HeaderItem item = mediator.getTable().getView().getSelectedItem();
+		HeaderItem item = mediator.getTable().getSelectedItem();
 
 		if (item.isContact()) {
 			ContactCard card = (ContactCard) folder.get(uids[0]);

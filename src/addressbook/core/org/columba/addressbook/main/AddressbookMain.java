@@ -21,8 +21,6 @@ import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;

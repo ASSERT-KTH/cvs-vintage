@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.config.AdapterNode;
+import java.util.Hashtable;
 
+import org.columba.addressbook.config.AdapterNode;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Hashtable;
 
 
 /**

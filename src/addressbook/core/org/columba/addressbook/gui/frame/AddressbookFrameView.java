@@ -66,7 +66,7 @@ public class AddressbookFrameView extends AbstractFrameView {
 	public void init(TreeView tree, TableView table) {
 		Container c = getContentPane();
 
-		table.setupRenderer();
+		//table.setupRenderer();
 
 		JScrollPane treeScrollPane = new JScrollPane(tree);
 		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));

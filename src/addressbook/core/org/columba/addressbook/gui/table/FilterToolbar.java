@@ -15,11 +15,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table;
 
-import org.columba.addressbook.gui.table.util.TableModelFilteredView;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;

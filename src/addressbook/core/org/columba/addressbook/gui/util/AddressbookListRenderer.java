@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.core.gui.util.ImageLoader;
 
 
 public class AddressbookListRenderer extends JLabel implements ListCellRenderer {

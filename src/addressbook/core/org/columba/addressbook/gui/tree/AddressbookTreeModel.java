@@ -15,21 +15,20 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
+import java.util.Enumeration;
+
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.plugin.FolderPluginHandler;
-
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-
-import java.util.Enumeration;
-
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 
 
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {

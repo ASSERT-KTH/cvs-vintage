@@ -15,14 +15,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.config.AdapterNode;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.columba.addressbook.config.AdapterNode;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 public class GroupListCard extends DefaultCard {

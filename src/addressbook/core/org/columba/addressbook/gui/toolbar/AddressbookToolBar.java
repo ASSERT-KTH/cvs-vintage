@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.toolbar;
 
-import org.columba.addressbook.main.AddressbookInterface;
-
-import org.columba.core.gui.toolbar.ToolbarButton;
-
 import java.util.ResourceBundle;
 
 import javax.swing.JToolBar;
+
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.gui.toolbar.ToolbarButton;
 
 
 public class AddressbookToolBar extends JToolBar {

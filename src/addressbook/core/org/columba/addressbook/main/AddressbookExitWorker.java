@@ -16,10 +16,10 @@
 
 package org.columba.addressbook.main;
 
+import java.util.Enumeration;
+
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.Folder;
-
-import java.util.Enumeration;
 
 public class AddressbookExitWorker {
     public AddressbookExitWorker() {}

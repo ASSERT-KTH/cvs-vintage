@@ -15,22 +15,20 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.Folder;
-
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.util.Lock;
-import org.columba.core.xml.XmlElement;
-
 import java.lang.reflect.Method;
-
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.Folder;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
 
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {

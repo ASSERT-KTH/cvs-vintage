@@ -16,12 +16,12 @@
 
 package org.columba.addressbook.config;
 
+import java.io.File;
+
 import org.columba.core.config.Config;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
-
-import java.io.File;
 
 /**
  * @version         1.0

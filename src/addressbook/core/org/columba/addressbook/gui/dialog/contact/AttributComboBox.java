@@ -15,15 +15,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
-import org.columba.addressbook.folder.ContactCard;
-
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -40,6 +35,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**

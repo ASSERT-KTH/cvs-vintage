@@ -19,7 +19,6 @@ import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.AddressCollector;
 
 /**

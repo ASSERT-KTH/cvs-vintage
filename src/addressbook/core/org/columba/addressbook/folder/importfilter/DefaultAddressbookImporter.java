@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.gui.util.ImageLoader;

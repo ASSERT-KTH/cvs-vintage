@@ -47,7 +47,6 @@ import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
