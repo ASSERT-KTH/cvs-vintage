@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.1 2000/09/04 12:50:22 1sturm Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.2 2000/09/25 15:09:22 toby Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -269,6 +269,16 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
          MGeneralization s = (MGeneralization) iter.next();
          if(canAddEdge(s))
            addEdge(s);
+      }
+    }
+    if ( node instanceof MModelElement ) {
+      Vector specs = new Vector(((MModelElement)node).getClientDependencies());
+      specs.addAll(((MModelElement)node).getSupplierDependencies());
+      Iterator iter = specs.iterator();
+      while (iter.hasNext()) {
+         MDependency dep = (MDependency) iter.next();
+         if(canAddEdge(dep))
+           addEdge(dep);
       }
     }
   }

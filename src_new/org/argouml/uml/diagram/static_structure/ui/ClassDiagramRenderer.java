@@ -24,7 +24,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.1 2000/09/04 12:50:22 1sturm Exp $
+// $Id: ClassDiagramRenderer.java,v 1.2 2000/09/25 15:09:23 toby Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -143,8 +143,10 @@ implements GraphNodeRenderer, GraphEdgeRenderer {
       return realFig;
 	  }*/
     if (edge instanceof MDependency) {
+	System.out.println("get fig for "+edge);
       MDependency dep = (MDependency) edge;
-	  if (dep.getStereotype() != null && dep.getStereotype().equals(MMUtil.SINGLETON.getRealizationStereotype())) {
+	System.out.println("stereo "+dep.getStereotype());
+      if (dep.getStereotype() != null && dep.getStereotype().getName().equals("realize")) {
 		  FigRealization realFig = new FigRealization(dep);
 		  
 		  MModelElement supplier = (MModelElement)((dep.getSuppliers().toArray())[0]);
