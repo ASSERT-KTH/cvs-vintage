@@ -75,6 +75,7 @@ import org.apache.tomcat.util.*;
  */
 final class ServletInputStreamFacade extends ServletInputStream {
     private int bytesRead = 0;
+    // Stop after reading ContentLength bytes. 
     private int limit = -1;
 
     private Request reqA;
@@ -84,6 +85,7 @@ final class ServletInputStreamFacade extends ServletInputStream {
 
     void prepare() {
 	int contentLength = reqA.getContentLength();
+	//System.out.println("ContentLength= " + contentLength);
 	if (contentLength != -1) {
 	    limit=contentLength;
 	}
@@ -95,13 +97,14 @@ final class ServletInputStreamFacade extends ServletInputStream {
     }
 
     void recycle() {
-	
+	limit=-1;
     }
 
     /** Read a byte. Detect if a ByteBuffer is used, if not
      *  use the old method.
      */
     private int doRead() throws IOException {
+	//System.out.println("DoRead");
 	return reqA.doRead();
     }
 
@@ -112,6 +115,7 @@ final class ServletInputStreamFacade extends ServletInputStream {
     // -------------------- ServletInputStream methods 
 
     public int read() throws IOException {
+	//	System.out.println("Read " + limit );
 	if (limit != -1) {
 	    if (bytesRead < limit) {
 		bytesRead++;
@@ -120,7 +124,9 @@ final class ServletInputStreamFacade extends ServletInputStream {
 		return -1;
 	    }
 	} else {
-	    return doRead();
+	    return -1;
+	    // no content-length, no body
+	    //	    return doRead();
 	}
     }
 
@@ -142,7 +148,8 @@ final class ServletInputStreamFacade extends ServletInputStream {
 	    }
 	    return numRead;
 	} else {
-	    return doRead(b, off, len);
+	    return 0;
+	    //return doRead(b, off, len);
 	}
     }
     
