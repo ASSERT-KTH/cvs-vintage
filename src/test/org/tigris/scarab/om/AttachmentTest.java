@@ -58,7 +58,7 @@ import org.apache.commons.fileupload.FileItem;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.11 2003/09/11 17:07:32 dlr Exp $
+ * @version $Id: AttachmentTest.java,v 1.12 2003/12/08 00:46:36 thierrylach Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -130,7 +130,7 @@ public class AttachmentTest extends BaseTestCase
     private void testGetRepositoryDirectory() throws Exception
     {
         System.out.println("\ntestGetRepositoryDirectory()");
-		File control = new File("../target/webapps/scarab/WEB-INF/attachments");
+        File control = new File("../target/webapps/scarab/WEB-INF/attachments");
         File testPath = new File(Attachment.getRepositoryDirectory());
         assertEquals(control.getPath(),
                      testPath.getPath());
