@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.47 2002/02/15 00:20:26 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.48 2002/02/18 19:04:31 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -30,9 +30,13 @@
                     SCARAB_R_ATTRIBUTE_VALUE_WORD, and SCARAB_WORD tables as 
                     they were not used. (JDM)</li>
                 <li>Automatically add issue type to module if user came 
-                    from ManageIssueTypes screen , and return to that 
+                    from ManageIssueTypes screen, and return to that 
                     screen instead of making them add issue type in extra 
-                    step. (EWD) </li>
+                    step. (EWD)</li>
+                <li>Changed the build system to default to having Velocity 
+                    template caching on in the Scarab distributions. It is
+                    still default off in the nightly/cvs distributions. 
+                    (JSS)</li>
             </ul>
         </td>
     </tr>
@@ -47,6 +51,10 @@
                     (And their attributes) (EWD)</li>
                 <li>Broke up attributes into their groups on View Issue
                 <li>Can now save a query first without submitting it. (EWD)</li>
+                <li>Patch to set the DATABASE_DRIVER in the TR.props
+                    based on what is in the default/build.properties file
+                    instead of being hard coded. Thanks to: Jean-François El Fouly
+                    (JSS)</li>
             </ul>
         </td>
     </tr>
