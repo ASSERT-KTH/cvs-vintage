@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.InetAddress;
 
 import org.apache.log4j.LogManager;
+import org.apache.log4j.MDC;
 import org.apache.log4j.spi.LoggerRepository;
 import org.apache.log4j.net.SocketNode;
 
@@ -34,7 +35,7 @@ import org.jboss.logging.Logger;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public class Log4jSocketServer
@@ -185,11 +186,13 @@ public class Log4jSocketServer
       {
          this.enabled = enabled;
 
-         synchronized (lock) {
+         synchronized (lock)
+         {
             lock.notifyAll();
          }
 
-         if (log.isDebugEnabled()) {
+         if (log.isDebugEnabled())
+         {
             log.debug("Notified that enabled: " + enabled);
          }
       }
@@ -199,30 +202,39 @@ public class Log4jSocketServer
          enabled = false;
          shuttingDown = true;
 
-         synchronized (lock) {
+         synchronized (lock)
+         {
             lock.notifyAll();
          }
 
-         if (log.isDebugEnabled()) {
+         if (log.isDebugEnabled())
+         {
             log.debug("Notified to shutdown");
          }
       }
       
       public void run()
       {
-         while (!shuttingDown) {
-
-            if (!enabled) {
-               try {
+         while (!shuttingDown)
+         {
+            
+            if (!enabled)
+            {
+               try
+               {
                   log.debug("Disabled, waiting for notification");
-                  synchronized (lock) {
+                  synchronized (lock)
+                  {
                      lock.wait();
                   }
                }
-               catch (InterruptedException ignore) {}
+               catch (InterruptedException ignore)
+               {
+               }
             }
-            
-            try {
+
+            try
+            {
                doRun();
             }
             catch (Exception e)
@@ -234,7 +246,8 @@ public class Log4jSocketServer
 
       protected void doRun() throws Exception
       {
-         while (enabled) {
+         while (enabled)
+         {
             Socket socket = serverSocket.accept();
             InetAddress addr =  socket.getInetAddress();
             log.debug("Connected to client at " + addr); 
@@ -248,10 +261,31 @@ public class Log4jSocketServer
             
             log.debug("Starting new socket node");
             SocketNode node = new SocketNode(socket, repo);
-            Thread thread = new Thread(node);
+            /* Create a thread with and MDC.host value set to the client
+            hostname to allow for distiguished output
+            */
+            String clientHost = addr.getHostName();
+            SocketThread thread = new SocketThread(node, clientHost);
             thread.start();
             log.debug("Socket node started");
          }
+      }
+   }
+
+   static class SocketThread
+      extends Thread
+   {
+      String host;
+
+      SocketThread(Runnable target, String host)
+      {
+         super(target, host+" LoggingEvent Thread");
+         this.host = host;
+      }
+      public void run()
+      {
+         MDC.put("host", host);
+         super.run();
       }
    }
 
@@ -292,7 +326,8 @@ public class Log4jSocketServer
       listenerThread.start();
       log.debug("Socket listener thread started");
 
-      if (loggerRepositoryFactory == null) {
+      if (loggerRepositoryFactory == null)
+      {
          log.debug("Using default logger repository factory");
          loggerRepositoryFactory = new DefaultLoggerRepositoryFactory();
       }
@@ -304,13 +339,15 @@ public class Log4jSocketServer
          throw new MissingAttributeException("Port");
 
       // create a new server socket to handle port number changes
-      if (bindAddress == null) {
+      if (bindAddress == null)
+      {
          serverSocket = new ServerSocket(port, backlog);
       }
-      else {
+      else
+      {
          serverSocket = new ServerSocket(port, backlog, bindAddress);
       }
-      
+
       log.info("Listening on " + serverSocket);
       
       listenerThread.setEnabled(listenerEnabled);
