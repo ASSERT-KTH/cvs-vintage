@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.71 2003/04/03 22:36:42 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.72 2003/04/04 02:48:03 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -160,7 +160,6 @@ public abstract class AbstractScarabUser
     private transient ThreadLocal currentModule = null;
     private transient ThreadLocal currentIssueType = null;
 
-    
     /**
      * Calls the superclass constructor to initialize this object.
      */
@@ -678,7 +677,7 @@ public abstract class AbstractScarabUser
     {
         if (enterIssueRedirect == 0)
         {
-            UserPreference up = UserPreference.getInstance(getUserId());
+            UserPreference up = getUserPreference();
             if (up != null && up.getEnterIssueRedirect() != 0)
             {
                 enterIssueRedirect = up.getEnterIssueRedirect();
@@ -719,11 +718,8 @@ public abstract class AbstractScarabUser
         throws Exception
     {
         String homePage = null;
-        UserPreference up = UserPreference.getInstance(getUserId());
-        if (up != null)
-        {
-            homePage = up.getHomePage();
-        }
+        UserPreference up = getUserPreference();
+        homePage = up.getHomePage();
         int i=0;
         while (homePage == null || !isHomePageValid(homePage, module)) 
         {
@@ -737,7 +733,6 @@ public abstract class AbstractScarabUser
                 Log.get().warn("Error determining user homepage.", e);
             }
         }
-        
         return homePage;
     }
 
@@ -772,10 +767,10 @@ public abstract class AbstractScarabUser
     private UserPreference getUserPreference()
         throws Exception
     {
-        UserPreference up = UserPreference.getInstance(getUserId());
+        UserPreference up = UserPreferenceManager.getInstance(getUserId());
         if (up == null)
         {
-            up = UserPreference.getInstance();
+            up = UserPreferenceManager.getInstance();
             up.setUserId(getUserId());
             up.setPasswordExpire(null);
         }
@@ -808,7 +803,6 @@ public abstract class AbstractScarabUser
 
         return result;
     }
-
 
     /**
      * @see ScarabUser#getSearchableRMITs(String, String, String, String).
