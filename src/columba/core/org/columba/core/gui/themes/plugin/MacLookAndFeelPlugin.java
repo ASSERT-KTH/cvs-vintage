@@ -36,6 +36,8 @@ public class MacLookAndFeelPlugin extends AbstractThemePlugin {
  * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
  */
     public void setLookAndFeel() throws Exception {
-        UIManager.setLookAndFeel("javax.swing.plaf.mac.MacLookAndFeel");
+        // BUGFIX: Adhamh Findlay <adhamh@adhamh.com>
+        UIManager.setLookAndFeel("apple.laf.AquaLookAndFeel");
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
 }
