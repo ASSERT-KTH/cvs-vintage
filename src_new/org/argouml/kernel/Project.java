@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.101 2004/07/17 16:22:43 mvw Exp $
+// $Id: Project.java,v 1.102 2004/07/19 21:10:21 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
+import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ProjectBrowser;
@@ -1269,7 +1270,9 @@ public class Project implements java.io.Serializable, TargetListener {
         if (ModelFacade.isABase(obj)) { // an object that can be represented
             ProjectBrowser.getInstance().getEditorPane()
 		.removePresentationFor(obj, getDiagrams());
+            UmlModelEventPump.getPump().stopPumpingEvents();
             UmlFactory.getFactory().delete(obj);
+            UmlModelEventPump.getPump().startPumpingEvents();
             if (_members.contains(obj)) {
                 _members.remove(obj);
             }
