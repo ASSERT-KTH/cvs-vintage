@@ -13,42 +13,59 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.logging;
 
-import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
-import java.util.logging.*;
-
-import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
+import org.columba.ristretto.log.RistrettoLogger;
 
 /**
  * Depending on the debug flag (--debug command line
  * option reflected in MainInterface.DEBUG) the logger will either
  * show all debug messages or just severe errors.
+ * <p>
+ * Changed this from a completely static class, to something
+ * which has to be instanciated explicitly from org.columba.core.main.Main.
+ * This is necessary to have a proper initialization of MainInterface.DEBUG.
+ * <p>
+ * Switched to ConsoleHandler, instead of FileHandler. Nevertheless, would be
+ * useful to add a commandline switch to optionally enable a file handler.
+ * 
  */
 public class ColumbaLogger {
-    public static final Logger log;
+    public static Logger log;
 
-    static {
+    public ColumbaLogger() {
         log = Logger.getLogger("org.columba");
         log.setUseParentHandlers(false);
-        try {
-            FileHandler handler = new FileHandler("log/columba.log", false);
-            handler.setFormatter(new SimpleFormatter());
-            log.addHandler(handler);
-        } catch(IOException ioe) {
-            log.severe(ioe.getMessage());
-        }
+
+        /*
+        // create logging file in users config-folder
+        File loggingFile = new File(ConfigPath.getConfigDirectory(), "columba.log");
+        FileHandler handler = new FileHandler(loggingFile.getPath(), false);
+        */
+
+        // init console handler
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new SimpleFormatter());
+        log.addHandler(handler);
+
         if (MainInterface.DEBUG) {
             log.setLevel(Level.ALL);
-            System.setProperty("org.columba.ristretto.debug",
-                    Boolean.TRUE.toString());
-            System.setProperty("javax.net.debug",
-                    "ssl,handshake,data,trustmanager");
+
+            // init java.net.ssl debugging
+            System.setProperty(
+                "javax.net.debug",
+                "ssl,handshake,data,trustmanager");
         } else {
             log.setLevel(Level.SEVERE);
         }
+
+        RistrettoLogger.setParentLogger(log);
+
     }
 }
