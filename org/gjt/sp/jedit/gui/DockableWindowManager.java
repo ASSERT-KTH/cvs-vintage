@@ -103,7 +103,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.81 2003/05/31 20:08:29 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.82 2003/06/03 20:35:52 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1135,6 +1135,10 @@ public class DockableWindowManager extends JPanel implements EBComponent
 				}
 
 				propertiesChanged();
+			}
+			else if(pmsg.isExiting())
+			{
+				// we don't care
 			}
 			else if(pmsg.getWhat() == PluginUpdate.DEACTIVATED)
 			{

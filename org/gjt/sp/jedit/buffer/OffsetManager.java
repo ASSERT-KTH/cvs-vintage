@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.64 2003/05/28 01:52:50 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.65 2003/06/03 20:35:52 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -344,7 +344,7 @@ public class OffsetManager
 		//{{{ Update line info and line context arrays
 		if(numLines > 0)
 		{
-			moveGap(-1,0,"contentRemoved");
+			//moveGap(-1,0,"contentRemoved");
 
 			if(startLine + numLines < gapLine)
 				gapLine -= numLines;
