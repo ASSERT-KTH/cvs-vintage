@@ -258,5 +258,18 @@ public class ServerSession {
     public final Object getNote( int pos ) {
 	return notes[pos];
     }
+
+    public Object getNote( String name ) throws TomcatException {
+	int id=context.getContextManager().
+	    getNoteId( ContextManager.SESSION_NOTE,  name );
+	return getNote( id );
+    }
+
+    public void setNote( String name, Object value ) throws TomcatException {
+	int id=context.getContextManager().
+	    getNoteId( ContextManager.SESSION_NOTE,name );
+	setNote( id, value );
+    }
+
 }
 
