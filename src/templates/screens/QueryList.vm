@@ -13,7 +13,7 @@
    #set ($noQueries = "true")
 #end
 
-#if ($noQueries.equals("true"))
+#if ($noQueries.equals("true") || ! $module)
     <div class="alert">There are no stored queries.</div>
 #else
 
