@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -56,7 +58,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-
 /**
  * @author freddy
  * @version
@@ -64,38 +65,61 @@ import javax.swing.JTextField;
 public class IncomingServerPanel extends DefaultPanel implements ActionListener {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.config.account");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.gui.config.account");
 
-    private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern.compile(
-            "([^;]+);?");
+    private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern
+            .compile("([^;]+);?");
+
     private JLabel loginLabel;
+
     private JTextField loginTextField;
+
     private JLabel passwordLabel;
+
     private JTextField passwordTextField;
+
     private JLabel hostLabel;
+
     private JTextField hostTextField;
+
     private JLabel portLabel;
+
     private JTextField portTextField;
+
     private JLabel typeLabel;
+
     private JComboBox typeComboBox;
+
     private JCheckBox storePasswordCheckBox;
+
     private JCheckBox secureCheckBox;
+
     private JLabel authenticationLabel;
+
     private JComboBox authenticationComboBox;
+
     private JLabel typeDescriptionLabel;
+
     private PopAttributPanel popPanel;
+
     private ImapAttributPanel imapPanel;
+
     private DefaultItem serverItem = null;
+
     private AccountItem accountItem;
+
     private JCheckBox defaultAccountCheckBox;
+
     private ReceiveOptionsPanel receiveOptionsPanel;
+
     private JButton checkAuthMethods;
 
     //private ConfigFrame frame;
     private JDialog dialog;
 
     public IncomingServerPanel(JDialog dialog, AccountItem account,
-        ReceiveOptionsPanel receiveOptionsPanel) {
+            ReceiveOptionsPanel receiveOptionsPanel) {
         super();
 
         this.dialog = dialog;
@@ -139,20 +163,21 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             hostTextField.setText(serverItem.get("host"));
             portTextField.setText(serverItem.get("port"));
 
-            storePasswordCheckBox.setSelected(serverItem.getBoolean(
-                    "save_password"));
+            storePasswordCheckBox.setSelected(serverItem
+                    .getBoolean("save_password"));
 
-            defaultAccountCheckBox.setSelected(serverItem.getBoolean(
-                    "use_default_account"));
+            defaultAccountCheckBox.setSelected(serverItem
+                    .getBoolean("use_default_account"));
 
-            authenticationComboBox.setSelectedItem(serverItem.get(
-                    "login_method"));
+            authenticationComboBox.setSelectedItem(serverItem
+                    .get("login_method"));
 
-            secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl", false));
+            secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl",
+                    false));
 
-            defaultAccountCheckBox.setEnabled(MailInterface.config.getAccountList()
-                                                                  .getDefaultAccountUid() != accountItem.getInteger(
-                    "uid"));
+            defaultAccountCheckBox.setEnabled(MailInterface.config
+                    .getAccountList().getDefaultAccountUid() != accountItem
+                    .getInteger("uid"));
 
             if (defaultAccountCheckBox.isEnabled()
                     && defaultAccountCheckBox.isSelected()) {
@@ -174,14 +199,14 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
                 // if securest write DEFAULT
                 if (authenticationComboBox.getSelectedIndex() != 0) {
                     serverItem.set("login_method",
-                        (String) authenticationComboBox.getSelectedItem());
+                            (String) authenticationComboBox.getSelectedItem());
                 } else {
                     serverItem.set("login_method", "DEFAULT");
                 }
             }
 
-            serverItem.set("use_default_account",
-                defaultAccountCheckBox.isSelected());
+            serverItem.set("use_default_account", defaultAccountCheckBox
+                    .isSelected());
         }
     }
 
@@ -205,13 +230,13 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 
         /*
- * mainConstraints.fill = GridBagConstraints.BOTH;
- * mainConstraints.insets = new Insets(0, 0, 0, 0);
- * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
- * mainConstraints.weightx = 1.0; mainConstraints.weighty = 1.0;
- */
+         * mainConstraints.fill = GridBagConstraints.BOTH;
+         * mainConstraints.insets = new Insets(0, 0, 0, 0);
+         * mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+         * mainConstraints.weightx = 1.0; mainConstraints.weighty = 1.0;
+         */
         JLabel label = new JLabel(MailResourceLoader.getString("dialog",
-                    "account", "using_default_account_settings"));
+                "account", "using_default_account_settings"));
         Font newFont = label.getFont().deriveFont(Font.BOLD);
         label.setFont(newFont);
         mainLayout.setConstraints(label, mainConstraints);
@@ -220,10 +245,11 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
     protected void layoutComponents() {
         // Create a FormLayout instance.
-        FormLayout layout = new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+        FormLayout layout = new FormLayout(
+                "10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
 
-            // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+                // 2 columns
+                ""); // rows are added dynamically (no need to define them here)
 
         JPanel topPanel = new JPanel();
 
@@ -261,10 +287,11 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         builder.nextLine();
 
         JPanel panel = new JPanel();
-        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default), 2dlu, left:max(50dlu;default)",
+        FormLayout l = new FormLayout(
+                "max(100;default), 3dlu, left:max(50dlu;default), 2dlu, left:max(50dlu;default)",
 
-            // 2 columns
-            ""); // rows are added dynamically (no need to define them here)
+                // 2 columns
+                ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
@@ -280,15 +307,15 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     protected void initComponents() {
-        defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "use_default_account_settings"));
+        defaultAccountCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
+                .getString("dialog", "account", "use_default_account_settings"));
 
         defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
         defaultAccountCheckBox.addActionListener(this);
 
         //defaultAccountCheckBox.setEnabled(false);
         typeLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "server_type"));
+                "dialog", "account", "server_type"));
 
         typeComboBox = new JComboBox();
         typeComboBox.addItem("POP3");
@@ -308,35 +335,36 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         typeDescriptionLabel.setEnabled(false);
 
         loginLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "login"));
+                "dialog", "account", "login"));
 
         loginTextField = new JTextField();
         loginLabel.setLabelFor(loginTextField);
         passwordLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "password"));
+                "dialog", "account", "password"));
 
         passwordTextField = new JTextField();
 
         hostLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "host"));
+                "dialog", "account", "host"));
 
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
 
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "port"));
+                "dialog", "account", "port"));
 
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
 
-        storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "store_password_in_configuration_file"));
+        storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader
+                .getString("dialog", "account",
+                        "store_password_in_configuration_file"));
 
         secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "use_SSL_for_secure_connection"));
+                "dialog", "account", "use_SSL_for_secure_connection"));
 
-        authenticationLabel = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "authentication_type"));
+        authenticationLabel = new LabelWithMnemonic(MailResourceLoader
+                .getString("dialog", "account", "authentication_type"));
 
         authenticationComboBox = new JComboBox();
         authenticationLabel.setLabelFor(authenticationComboBox);
@@ -344,7 +372,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         updateAuthenticationComboBox();
 
         checkAuthMethods = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "authentication_checkout_methods"));
+                "dialog", "account", "authentication_checkout_methods"));
         checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
         checkAuthMethods.addActionListener(this);
     }
@@ -361,7 +389,8 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
             // Add previously fetch authentication modes
             if (authMethods != null) {
-                Matcher matcher = AUTH_MODE_TOKENIZE_PATTERN.matcher(authMethods);
+                Matcher matcher = AUTH_MODE_TOKENIZE_PATTERN
+                        .matcher(authMethods);
 
                 while (matcher.find()) {
                     authenticationComboBox.addItem(matcher.group(1));
@@ -403,10 +432,9 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
                     list = getAuthPOP3();
                 } catch (IOException e1) {
                     String name = e1.getClass().getName();
-                    JOptionPane.showMessageDialog(null,
-                        e1.getLocalizedMessage(),
-                        name.substring(name.lastIndexOf(".")),
-                        JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, e1
+                            .getLocalizedMessage(), name.substring(name
+                            .lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
                 } catch (POP3Exception e1) {
                     LOG.fine("Server does not support the CAPA command");
 
@@ -426,7 +454,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
                 }
 
                 accountItem.set("popserver", "authentication_methods",
-                    authMethods.toString());
+                        authMethods.toString());
             }
 
             updateAuthenticationComboBox();
@@ -435,8 +463,8 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
     private LinkedList getAuthPOP3() throws IOException, POP3Exception {
         LinkedList list;
-        POP3Protocol protocol = new POP3Protocol(accountItem.get("popserver",
-                    "host"), accountItem.getInteger("popserver", "port"));
+        POP3Protocol protocol = new POP3Protocol(hostTextField.getText(),
+                Integer.parseInt(portTextField.getText()));
         protocol.openPort();
 
         String[] capas = protocol.capa();
@@ -464,16 +492,14 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         String login = getLogin();
 
         if (host.length() == 0) {
-            JOptionPane.showMessageDialog(null,
-                MailResourceLoader.getString("dialog", "account",
-                    "You_have_to_enter_a_host_name"));
+            JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+                    "dialog", "account", "You_have_to_enter_a_host_name"));
 
             //$NON-NLS-1$
             return false;
         } else if (login.length() == 0) {
-            JOptionPane.showMessageDialog(null,
-                MailResourceLoader.getString("dialog", "account",
-                    "You_have_to_enter_a_login_name"));
+            JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+                    "dialog", "account", "You_have_to_enter_a_login_name"));
 
             //$NON-NLS-1$
             return false;

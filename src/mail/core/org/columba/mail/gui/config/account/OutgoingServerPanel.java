@@ -461,8 +461,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
       */
     private List getAuthSMTP() throws IOException, SMTPException {
         List result = new LinkedList();
-        SMTPProtocol protocol = new SMTPProtocol(accountItem.get("smtpserver",
-                    "host"), accountItem.getInteger("smtpserver", "port"));
+        SMTPProtocol protocol = new SMTPProtocol(hostTextField.getText(),
+                Integer.parseInt(portTextField.getText()));
 
         protocol.openPort();
 
