@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.26 2002/01/08 01:58:45 jon Exp $
+    @version $Id: ScarabLink.java,v 1.27 2002/01/11 17:29:49 dlr Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -159,7 +159,12 @@ public class ScarabLink extends TemplateLink
      */
     public String getCurrentView()
     {
-        return ScarabPage.getScreenTemplate(data).replace('/', ',');
+        String temp = data.getParameters().getString("template",null);
+        if ( temp != null )
+        {
+            temp = temp.replace(',', '/');
+        }
+        return temp;
     }
 
     public ScarabLink setPathInfo(String key, String value)
