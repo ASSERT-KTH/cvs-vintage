@@ -63,6 +63,7 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.buf.DateTool;
+import org.apache.tomcat.util.buf.UEncoder;
 import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.facade.*;
@@ -95,11 +96,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     ServletInputStreamFacade isFacade=new ServletInputStreamFacade();
     boolean isFacadeInitialized=false;
     BufferedReader reader;
-    DateFormat []dateFormats = {
-	new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
-	new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
-	new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
-    };
+    DateFormat []dateFormats;
+    UEncoder uencoder;
 
     private boolean usingStream = false;
     private boolean usingReader = false;
@@ -111,6 +109,31 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     HttpServletRequestFacade(Request request) {
         this.request = request;
 	isFacade.setRequest( request );
+	try {
+	    // we may create facades more often than requests 
+	    Object o=request.getNote( "req.dateFormats" );
+	    if( o==null ) {
+		o=new DateFormat[] {
+		    new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
+		    new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
+		    new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
+		};
+		request.setNote( "req.dateFormats", o );
+	    }
+	    dateFormats=(DateFormat[])o;
+	    o=request.getNote( "req.uencoder" );
+	    if( o==null ) {
+		uencoder=new UEncoder();
+		uencoder.addSafeCharacter(';');
+		uencoder.addSafeCharacter('/');
+		request.setNote( "req.uencoder", uencoder );
+	    } else {
+		uencoder=(UEncoder)o;
+	    }
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	}
+
     }
 
     /** Not public - is called only from FacadeManager on behalf of Request
@@ -288,10 +311,12 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
     
     public String getPathInfo() {
+	// DECODED
         return request.pathInfo().toString();
     }
 
     public String getPathTranslated() {
+	// DECODED
 	// Servlet 2.2 spec differs from what Apache and
 	// all other web servers consider to be PATH_TRANSLATED.
 	// It's important not to use CGI PATH_TRANSLATED - this
@@ -309,7 +334,8 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getQueryString() {
-	// unprocessed
+	// ENCODED. We don't decode the original query string,
+	// we we can return the same thing
 	String qS=request.queryString().toString();
 	if( "".equals(qS) )
 	    return null;
@@ -379,11 +405,22 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public String getRequestURI() {
-	if( request.unparsedURI().isNull() )
-	    return request.requestURI().toString();
+	// ENCODED
+	if( request.unparsedURI().isNull() ) {
+	    // unparsed URI is used as a cache.
+	    // request.unparsedURI().duplicate( request.requestURI() );
+	    String decoded=request.requestURI().toString();
+	    // XXX - I'm not sure what encoding should we use - maybe output ?,
+	    // since this will probably be used for the output
+	    uencoder.setEncoding(request.getCharacterEncoding());
+	    String encoded= uencoder.encodeURL( decoded );
+	    
+	    request.unparsedURI().setString( encoded );
+	}
         return request.unparsedURI().toString();
     }
 
+    
     /** Facade: we delegate to the right object ( the context )
      */
     public RequestDispatcher getRequestDispatcher(String path) {
@@ -423,10 +460,16 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Delegate to Context
      */
     public String getContextPath() {
+	// Should be ENCODED ( in 2.3 ). tomcat4.0 doesn't seem to do that
+	// ( it's in fact returning 404 on any encoded context paths ), and
+	// is very likely to result in user errors - if anyone expects it to
+	// be decoded, as it allways was in 3.x or if anyone will use it as
+	// a key.
         return request.getContext().getPath();
     }
 
     public String getServletPath() {
+	// DECODED
         return request.servletPath().toString();
     }
 
