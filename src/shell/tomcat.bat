@@ -1,5 +1,5 @@
 @echo off
-rem $Id: tomcat.bat,v 1.1 1999/11/25 20:42:20 harishp Exp $
+rem $Id: tomcat.bat,v 1.2 1999/11/28 23:53:58 harishp Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
@@ -23,11 +23,11 @@ rem else
 set CLASSPATH=%CLASSPATH%;%cp% 
  
 :next
-if "%1" == "-start" goto startServer
-if "%1" == "-stop" goto stopServer
+if "%1" == "start" goto startServer
+if "%1" == "stop" goto stopServer
 @echo on
 @echo Usage:
-@echo tomcat [-start|-stop]
+@echo tomcat [start|stop]
 @echo off
 goto cleanup
 
