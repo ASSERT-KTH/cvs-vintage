@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.16 2001/10/09 05:44:30 dlr Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.17 2001/10/09 05:53:33 dlr Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -215,7 +215,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
-        List rmas = (List) module.getRModuleAttributes(false).clone();
+        List rmas = (List)((Vector) module.getRModuleAttributes(false)).clone();
         List attributeGroups = module.getAttributeGroups();
 
         boolean isValid = true;
