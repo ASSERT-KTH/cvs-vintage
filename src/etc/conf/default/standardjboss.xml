@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.45 2002/06/20 20:32:47 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.46 2002/07/27 23:28:55 starksm Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -551,7 +551,7 @@
 	 <container-interceptors>
 	    <interceptor>org.jboss.ejb.plugins.ProxyFactoryFinderInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.LogInterceptor</interceptor>
-	    <interceptor>org.jboss.ejb.plugins.SecurityInterceptor</interceptor>
+	    <interceptor>org.jboss.ejb.plugins.RunAsSecurityInterceptor</interceptor>
 	    <!-- CMT -->
 	    <interceptor transaction="Container">org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
 	    <interceptor transaction="Container" metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
