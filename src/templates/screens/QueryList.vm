@@ -8,7 +8,7 @@
 
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
  <h3>Saved queries</h3>
- <p><strong class="alert">There are no stored queries.
+ <p><strong class="alert">There are no saved queries.
  Please go to $link.setPage("AdvancedQuery.vm").setLabel("Advanced query")
  to create a new stored query.</strong></p>
 
