@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.24 2002/02/07 01:35:41 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.25 2002/02/07 18:33:59 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -31,8 +31,14 @@
             <ul>
                 <li>Updated Wizard2.vm to match the UI mockups (NR)</li>
                 <li>Bug Report #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=174">174</a> (JSS)</li>
-                <li>Bug Report #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=138">174</a> (JSS)</li>
+                <li>Bug Report #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=138">138</a> (JSS)</li>
                 <li>Bug Report #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=175">175</a> (JSS)</li>
+                <li>Fixed the module name display to always show the delim properly. With sample data,
+                    Turbine &gt; SourceJava turned into Turbine &gt; Source &gt; Java (JSS)</li>
+                <li>Fixed the Login page to always send one to SelectModule if the next
+                    template is set to Login.vm. The issue was that after confirming registration,
+                    one would login and would not go to SelectModule.vm after that, leading
+                    to confusing behavior. (JSS)</li>
             </ul>
         </td>
     </tr>
