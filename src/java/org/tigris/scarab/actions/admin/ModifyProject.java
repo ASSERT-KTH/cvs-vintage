@@ -56,15 +56,13 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 import org.tigris.scarab.om.*;
 
 /**
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.3 2001/02/23 03:11:31 jmcnally Exp $
+    @version $Id: ModifyProject.java,v 1.4 2001/03/03 00:07:07 jmcnally Exp $
 */
 public class ModifyProject extends RequireLoginFirstAction
 {

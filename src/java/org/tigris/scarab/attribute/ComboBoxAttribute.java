@@ -47,7 +47,7 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.apache.turbine.util.*;
-import org.tigris.scarab.baseom.*;
+import org.tigris.scarab.om.*;
 import java.util.*;
 /**
  *  This class represents attribute displayed as a combo-box.

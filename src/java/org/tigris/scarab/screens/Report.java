@@ -61,8 +61,6 @@ import org.apache.turbine.util.*;
 
 // Scarab Stuff
 import org.tigris.scarab.om.*;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.system.ScarabSystem;
 
@@ -71,7 +69,7 @@ import org.tigris.scarab.system.ScarabSystem;
     for the Report Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Report.java,v 1.4 2001/02/23 03:11:38 jmcnally Exp $
+    @version $Id: Report.java,v 1.5 2001/03/03 00:07:12 jmcnally Exp $
 */
 public class Report extends VelocityScreen
 {
@@ -87,13 +85,13 @@ public class Report extends VelocityScreen
         // HashMap report = new HashMap();
         // context.put("report", report);
         
-        Module module = ModulePeer.retrieveByPK(new SimpleKey("5"));
+        Module module = ModulePeer.retrieveByPK(new NumberKey("5"));
         
         ScarabSystem scarab = (ScarabSystem)
             context.get(ScarabConstants.SCARAB_SYSTEM);
         
         ScarabUser user = new ScarabUser();
-        user.setPrimaryKey(new SimpleKey("2"));
+        user.setPrimaryKey(new NumberKey("2"));
         user.setCurrentModule(module);
         scarab.setUser(user);
 

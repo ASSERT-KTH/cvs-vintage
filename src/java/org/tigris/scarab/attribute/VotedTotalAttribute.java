@@ -46,8 +46,7 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.om.*;
 import org.apache.turbine.util.*;
 
 import java.util.*;
@@ -55,7 +54,7 @@ import java.util.*;
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.3 $ $Date: 2001/03/03 00:07:07 $
  */
 public class VotedTotalAttribute extends VotedAttribute
 {

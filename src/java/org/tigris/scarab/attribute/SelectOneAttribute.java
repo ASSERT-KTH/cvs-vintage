@@ -47,15 +47,14 @@ package org.tigris.scarab.attribute;
  */ 
 import java.util.*;
 
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.om.*;
 import org.apache.turbine.util.db.*;
 import org.apache.turbine.util.*;
 
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.4 $ $Date: 2001/03/03 00:07:07 $
  */
 public abstract class SelectOneAttribute extends OptionAttribute
 {

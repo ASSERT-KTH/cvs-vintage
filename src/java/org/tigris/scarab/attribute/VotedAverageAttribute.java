@@ -47,12 +47,12 @@ package org.tigris.scarab.attribute;
  */ 
 
 import org.apache.turbine.util.*;
-import org.tigris.scarab.baseom.AttributeOption;
+import org.tigris.scarab.om.AttributeOption;
 import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.2 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.3 $ $Date: 2001/03/03 00:07:07 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {

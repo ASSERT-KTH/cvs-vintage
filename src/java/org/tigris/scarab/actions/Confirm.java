@@ -60,7 +60,7 @@ import org.apache.turbine.modules.actions.*;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.peer.ScarabUserPeer;
+import org.tigris.scarab.om.ScarabUserPeer;
 import org.tigris.scarab.system.*;
 import org.tigris.scarab.util.*;
 
@@ -69,7 +69,7 @@ import org.tigris.scarab.util.*;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.3 2001/01/23 07:30:09 jon Exp $
+    @version $Id: Confirm.java,v 1.4 2001/03/03 00:07:06 jmcnally Exp $
 */
 public class Confirm extends VelocityAction
 {

@@ -57,9 +57,6 @@ import org.apache.turbine.util.db.*;
 import org.apache.turbine.services.security.*;
 import org.apache.turbine.services.uniqueid.*;
 // Scarab
-import org.tigris.scarab.om.peer.ScarabUserPeer;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 
 /**
     This class is an abstraction that is currently based around
@@ -68,7 +65,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.12 2001/02/23 03:11:37 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.13 2001/03/03 00:07:09 jmcnally Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    

@@ -50,14 +50,13 @@ import java.util.*;
 import org.apache.turbine.om.*;
 import org.apache.turbine.util.db.*;
 
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.om.*;
 
 /**
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.4 $ $Date: 2001/02/23 03:11:32 $
+ * @version $Revision: 1.5 $ $Date: 2001/03/03 00:07:07 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {

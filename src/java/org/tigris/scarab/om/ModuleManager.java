@@ -51,8 +51,6 @@ import java.math.*;
 import java.util.*;
 
 // Scarab
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 
 // Turbine
 import org.apache.turbine.om.security.*;
@@ -66,7 +64,7 @@ import org.apache.turbine.services.security.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.7 2001/02/23 03:11:37 jmcnally Exp $
+    @version $Id: ModuleManager.java,v 1.8 2001/03/03 00:07:09 jmcnally Exp $
 */
 public class ModuleManager
 {
@@ -210,8 +208,8 @@ public class ModuleManager
             if (project_qacontact == null )
                 throw new Exception ("Could not find a registered user for the project qa contact!");
 
-            sm.setOwnerId((SimpleKey)((ScarabUser)project_owner).getPrimaryKey() );
-            sm.setQaContactId((SimpleKey)((ScarabUser)
+            sm.setOwnerId((NumberKey)((ScarabUser)project_owner).getPrimaryKey() );
+            sm.setQaContactId((NumberKey)((ScarabUser)
                                 project_qacontact).getPrimaryKey() );
         }
         return sm;

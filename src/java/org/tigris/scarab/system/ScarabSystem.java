@@ -51,12 +51,11 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.om.*;
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
+import org.tigris.scarab.om.*;
 // import org.tigris.scarab.intake.IntakeSystem;
 
 // Velocity
-import org.apache.velocity.util.FieldMethodizer;
+import org.apache.velocity.app.FieldMethodizer;
 
 /**
  * This class is used by the Scarab API
@@ -122,7 +121,7 @@ public class ScarabSystem
      */
     public Module getModule(String key) throws Exception
     {
-        return ModulePeer.retrieveByPK(new SimpleKey(key));
+        return ModulePeer.retrieveByPK(new NumberKey(key));
     }
 
     /**
@@ -133,7 +132,7 @@ public class ScarabSystem
      */
     public Issue getIssue(String key) throws Exception
     {
-        return IssuePeer.retrieveByPK(new SimpleKey(key));
+        return IssuePeer.retrieveByPK(new NumberKey(key));
     }
 
     /**
@@ -145,3 +144,6 @@ public class ScarabSystem
     }
     */
 }
+
+
+

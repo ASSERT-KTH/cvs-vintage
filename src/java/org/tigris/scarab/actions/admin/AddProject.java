@@ -57,15 +57,13 @@ import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.*;
-import org.tigris.scarab.baseom.*;
-import org.tigris.scarab.baseom.peer.*;
 import org.tigris.scarab.om.*;
 
 /**
     This class will handle creation of a new project
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: AddProject.java,v 1.2 2001/01/04 03:02:10 jon Exp $
+    @version $Id: AddProject.java,v 1.3 2001/03/03 00:07:07 jmcnally Exp $
 */
 public class AddProject extends RequireLoginFirstAction
 {
