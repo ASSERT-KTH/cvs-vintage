@@ -35,13 +35,10 @@ $page.setTitle("Stored query list")
 <p><b>Click query name to edit. Click on location to execute.</b></p>
 
 <h3>Saved Queries</h3>
-
+ 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th nowrap="nowrap">
-  <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-  <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-  </th>
+  <th nowrap="nowrap"></th>
   <th>Query name</th>
   <th>Query description</th>
   <th>Location</th>

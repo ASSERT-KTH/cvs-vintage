@@ -89,6 +89,7 @@ $page.setTitle("Custom Search")
  </div>
 #end
 
+## FIXME: use intake
 <h3>Results display options</h3>
 		
 <div class="axial">
