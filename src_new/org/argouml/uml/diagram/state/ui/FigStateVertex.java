@@ -1,4 +1,4 @@
-// $Id: FigStateVertex.java,v 1.25 2005/02/18 18:33:34 mvw Exp $
+// $Id: FigStateVertex.java,v 1.26 2005/02/19 12:02:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,9 +98,9 @@ public abstract class FigStateVertex extends FigNodeModelElement {
      */
     public void redrawEnclosedFigs() {
         Editor editor = Globals.curEditor();
-        LayerDiagram lay =
-            ((LayerDiagram) editor.getLayerManager().getActiveLayer());
-        if (!getEnclosedFigs().isEmpty()) {
+        if (editor != null && !getEnclosedFigs().isEmpty()) {
+            LayerDiagram lay =
+                ((LayerDiagram) editor.getLayerManager().getActiveLayer());
             for (int i = 0; i < getEnclosedFigs().size(); i++) {
                 FigStateVertex f = 
                     ((FigStateVertex) getEnclosedFigs().elementAt(i));
