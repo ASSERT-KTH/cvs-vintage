@@ -17,13 +17,14 @@
   </mbean>
 
 
-<!-- should be mbean refs-->
   <!-- Make sure you change EmbeddedTomcat to Jetty if you are using Jetty -->
   <mbean code="org.jboss.deployment.J2eeDeployer"
 	 name="J2EE:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">JBOSS-SYSTEM:service=Jetty</attribute>
+    <mbean-ref name="JarDeployer">JBOSS-SYSTEM:service=ContainerFactory</mbean-ref>
+    <mbean-ref name="RarDeployer">JCA:service=RARDeployer</mbean-ref>
+    <mbean-ref name="WarDeployer">JBOSS-SYSTEM:service=Jetty</mbean-ref>
+    <mbean-ref name="ServiceDeployer">JBOSS-SYSTEM:service=ServiceDeployer</mbean-ref>
   </mbean>
 
   <!-- 
@@ -33,8 +34,10 @@
   <mbean code="org.jboss.deployment.scope.J2eeGlobalScopeDeployer"
          name="J2EE:service=J2eeDeployer">
     <attribute name="DeployerName">Default</attribute>
-    <attribute name="JarDeployerName">:service=ContainerFactory</attribute>
-    <attribute name="WarDeployerName">JBOSS-SYSTEM:service=Jetty</attribute>
+    <mbean-ref name="JarDeployer">JBOSS-SYSTEM:service=ContainerFactory</mbean-ref>
+    <mbean-ref name="RarDeployer">JCA:service=RARDeployer</mbean-ref>
+    <mbean-ref name="WarDeployer">JBOSS-SYSTEM:service=Jetty</mbean-ref>
+    <mbean-ref name="ServiceDeployer">JBOSS-SYSTEM:service=ServiceDeployer</mbean-ref>
   </mbean>
   -->
   <!-- ==================================================================== -->
