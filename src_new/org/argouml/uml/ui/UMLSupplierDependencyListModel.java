@@ -52,7 +52,7 @@ public class UMLSupplierDependencyListModel extends UMLModelElementListModel  {
             value = getContainer().formatCollection(target.iterator());
         }
         return value;
-    }
+    }    
     
             
 }

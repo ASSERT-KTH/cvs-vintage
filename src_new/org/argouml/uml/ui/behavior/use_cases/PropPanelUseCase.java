@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.11 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.12 2002/08/21 09:27:09 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -100,11 +100,11 @@ public class PropPanelUseCase extends PropPanelClassifier {
         Class              mclass = MUseCase.class;
 
         mPanel.add("isAbstract", mclass, "isAbstract", "setAbstract",
-                   "Abstract", this);
+                   Argo.localize("UMLMenu", "checkbox.abstract-lc"), this);
         mPanel.add("isLeaf", mclass, "isLeaf", "setLeaf",
-                   "Final", this);
+                   Argo.localize("UMLMenu", "checkbox.final-lc"), this);
         mPanel.add("isRoot", mclass, "isRoot", "setRoot",
-                   "Root", this);
+                   localize("root"), this);
 
         addCaption(Argo.localize("UMLMenu", "label.modifiers"), 4, 0, 1);
         addField(mPanel, 4, 0, 0);
