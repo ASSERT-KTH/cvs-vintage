@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public abstract class Container
 {
@@ -169,19 +169,18 @@ public abstract class Container
       instancePool.init();
       
       containerInvoker.init();
-      
-      // MF why addInterceptor here and not ContainerFactory? due to the protected?
-      // dude this is hard, no comments, no hints, please throw the dog a bone man!
-      
-      //addInterceptor(createContainerInterceptor());
+	  
+	  
+	  // Initialize the interceptor by calling the chain
       Interceptor in = interceptor;
       while (in != null)
       {
+		
          in.setContainer(this);
          in.init();
          in = in.getNext();
       }
-      
+        
       Thread.currentThread().setContextClassLoader(oldCl);
    }
    
