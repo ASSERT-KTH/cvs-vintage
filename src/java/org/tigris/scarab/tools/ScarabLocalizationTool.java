@@ -84,7 +84,7 @@ public class ScarabLocalizationTool
     private static final String DEFAULT_SCOPE = "default";
 
     /**
-     * The portion of a key denoting the 
+     * The portion of a key denoting the title property.
      */
     private static final String TITLE_PROP = "title";
 
