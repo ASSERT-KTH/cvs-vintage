@@ -118,7 +118,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.17 $
+@version $Revision: 1.18 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -178,8 +178,6 @@ implements AbstractWebContainerMBean
          {
             J2eeApplicationMetaData app = (J2eeApplicationMetaData) di.parent.metaData;
 
-	    System.out.println("[0] DEBUG:"+app);
-            
             J2eeModuleMetaData mod;
             Iterator it = app.getModules();
             while (it.hasNext())
@@ -189,28 +187,19 @@ implements AbstractWebContainerMBean
                
                if (mod.isWeb())        
                {
-		 System.out.println("[1] DEBUG:"+mod.getWebContext());
-		 System.out.println("[2] DEBUG:"+mod.getFileName());
-		 System.out.println("[3] DEBUG:"+di.shortName);
-		 System.out.println("[4] DEBUG:"+mod.getFileName().indexOf(di.shortName));
                   //only pick up the context for our war
                   if (mod.getFileName().indexOf(di.shortName) != -1) di.webContext = mod.getWebContext();
-               
                }     
             }
          }
          
-	    System.out.println("[5] DEBUG:"+di.webContext);
          if (di.webContext == null) di.webContext = di.shortName;
             
          // if it is not a sub-deployment get the context from the name of the deployment
          // FIXME marcf: I can't believe there is no way to specify the context in web.xml
          
          // make sure the context starts with a slash
-	    System.out.println("[6] DEBUG:"+di.webContext);
          if (!di.webContext.startsWith("/")) di.webContext = "/"+di.webContext;
-	    System.out.println("[7] DEBUG:"+di.webContext);
-            
          
          // resolve the watch
          if (di.url.getProtocol().startsWith("http"))
@@ -274,7 +263,6 @@ implements AbstractWebContainerMBean
          URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser();
-	    System.out.println("[8] DEBUG performDeploy:"+di.webContext);
          WebApplication warInfo = performDeploy(di.webContext, di.localUrl.toString(), webAppParser);
          deploymentMap.put(di.localUrl.toString(), warInfo);
       }
@@ -324,7 +312,6 @@ implements AbstractWebContainerMBean
    {
       try
       {
-	 System.out.println("UNDEPLOY: "+warUrl);
          performUndeploy(warUrl);
          // Remove the web application ENC...
          deploymentMap.remove(warUrl);
@@ -347,7 +334,6 @@ implements AbstractWebContainerMBean
    */
    public boolean isDeployed(String warUrl)
    {
-      System.out.println("IS-DEPLOYED: "+warUrl);
       return deploymentMap.containsKey(warUrl);
    }
    
@@ -358,7 +344,6 @@ implements AbstractWebContainerMBean
    */
    public WebApplication getDeployedApp(String warUrl)
    {
-      System.out.println("GET-DEPLOYED-APP: "+warUrl);
       WebApplication appInfo = (WebApplication) deploymentMap.get(warUrl);
       return appInfo;
    }
