@@ -137,7 +137,7 @@ public  class AttributeGroup
                          RAttributeAttributeGroupPeer.ATTRIBUTE_ID)
                 .add(RAttributeAttributeGroupPeer.GROUP_ID,
                          getAttributeGroupId());
-                 List results = RModuleAttributePeer.doSelect(c);
+            List results = RModuleAttributePeer.doSelect(c);
             for (int i=0; i<results.size(); i++)
             {
                  RModuleAttribute rma = (RModuleAttribute)results.get(i);
