@@ -58,7 +58,7 @@
  * Based on:    mod_jserv.c by Alexei Kosut <akosut@apache.org>              *
  *              mod_example.c by Apache Group <apache@apache.org>            *
  * Modified by: Pierpaolo Fumagalli <ianosh@iname.com> June, 12 1998         *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -780,7 +780,11 @@ static int jserv_status_out_baljserv(jserv_config *cfg, jserv_request *req,
     ret = sscanf(r->uri,
   "/jserv/engine/direct/%127[a-zA-Z1-9.-]/%127[a-zA-Z1-9.-]/%127[a-zA-Z1-9.-]",
           buffer1, buffer2, buffer3);
-    if (ret != 2)    
+    if (ret == 3) {   
+        if (strcmp(buffer3, JSERV_SERVLET))
+            return FORBIDDEN;
+    }  
+    else if (ret != 2)    
         return FORBIDDEN;
     sta = '\0';
     job = 0;
