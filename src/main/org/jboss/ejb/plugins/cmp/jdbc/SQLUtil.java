@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -643,7 +643,7 @@ public class SQLUtil {
       return buf.toString();
    }   
 
-   private static List getJDBCTypes(List fields) {
+   public static List getJDBCTypes(List fields) {
       ArrayList types = new ArrayList(fields.size());
 
       for(Iterator iter = fields.iterator(); iter.hasNext();) {
