@@ -86,23 +86,23 @@ public class AddressPanel extends JPanel {
         add(panel, BorderLayout.NORTH);
 
         List v = new Vector();
-        v.add("home");
-        v.add("work");
-        v.add("pref");
-        v.add("voice");
-        v.add("fax");
-        v.add("msg");
-        v.add("cell");
-        v.add("pager");
-        v.add("bbs");
-        v.add("modem");
-        v.add("car");
-        v.add("isdn");
-        v.add("video");
-        v.add("pcs");
+        v.add("home"); //$NON-NLS-1$
+        v.add("work"); //$NON-NLS-1$
+        v.add("pref"); //$NON-NLS-1$
+        v.add("voice"); //$NON-NLS-1$
+        v.add("fax"); //$NON-NLS-1$
+        v.add("msg"); //$NON-NLS-1$
+        v.add("cell"); //$NON-NLS-1$
+        v.add("pager"); //$NON-NLS-1$
+        v.add("bbs"); //$NON-NLS-1$
+        v.add("modem"); //$NON-NLS-1$
+        v.add("car"); //$NON-NLS-1$
+        v.add("isdn"); //$NON-NLS-1$
+        v.add("video"); //$NON-NLS-1$
+        v.add("pcs"); //$NON-NLS-1$
 
         phone1TextField = new JTextField(20);
-        phone1ComboBox = new AttributComboBox("tel", v, phone1TextField);
+        phone1ComboBox = new AttributComboBox("tel", v, phone1TextField); //$NON-NLS-1$
 
         panel.addLabel(phone1ComboBox);
         panel.addTextField(phone1TextField);
@@ -127,17 +127,17 @@ public class AddressPanel extends JPanel {
         panel.addTextField( phone4TextField );
         */
         v = new Vector();
-        v.add("home");
-        v.add("work");
-        v.add("pref");
-        v.add("dom");
-        v.add("intl");
-        v.add("postal");
-        v.add("parcel");
+        v.add("home"); //$NON-NLS-1$
+        v.add("work"); //$NON-NLS-1$
+        v.add("pref"); //$NON-NLS-1$
+        v.add("dom"); //$NON-NLS-1$
+        v.add("intl"); //$NON-NLS-1$
+        v.add("postal"); //$NON-NLS-1$
+        v.add("parcel"); //$NON-NLS-1$
 
         addressTextArea = new JTextArea(5, 20);
         addressTextArea.setEnabled(false);
-        addressComboBox = new AttributComboBox("adr", v, addressTextArea);
+        addressComboBox = new AttributComboBox("adr", v, addressTextArea); //$NON-NLS-1$
         addressComboBox.setEnabled(false);
         panel.addLabel(addressComboBox);
         panel.addTextField(new JScrollPane(addressTextArea));

@@ -101,7 +101,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         JPanel list1TopPanel = new JPanel(new BorderLayout());
         list1TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        JLabel label1 = new JLabel("To:");
+        JLabel label1 = new JLabel(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "to")); //$NON-NLS-1$
         list1TopPanel.add(label1, BorderLayout.WEST);
         list1Panel.add(list1TopPanel, BorderLayout.NORTH);
 
@@ -135,7 +135,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         JPanel list2TopPanel = new JPanel(new BorderLayout());
         list2TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        JLabel label2 = new JLabel("Cc:");
+        JLabel label2 = new JLabel(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "cc")); //$NON-NLS-1$
         list2TopPanel.add(label2, BorderLayout.WEST);
         list2Panel.add(list2TopPanel, BorderLayout.NORTH);
         dialogList[1] = new AddressbookListModel();
@@ -154,7 +154,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         JPanel list3TopPanel = new JPanel(new BorderLayout());
         list3TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        JLabel label3 = new JLabel("Bcc:");
+        JLabel label3 = new JLabel(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "bcc")); //$NON-NLS-1$
 
         list3TopPanel.add(label3, BorderLayout.WEST);
         list3Panel.add(list3TopPanel, BorderLayout.NORTH);
@@ -193,37 +193,37 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
         middlePanel.add(Box.createVerticalGlue());
 
-        toButton = new JButton("<- To");
+        toButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "left_arrow_to")); //$NON-NLS-1$
         toButton.addActionListener(this);
-        toButton.setActionCommand("TO");
+        toButton.setActionCommand("TO"); //$NON-NLS-1$
         middlePanel.add(toButton);
-        toRemoveButton = new JButton("To ->");
+        toRemoveButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "right_arrow_to")); //$NON-NLS-1$
         toRemoveButton.addActionListener(this);
-        toRemoveButton.setActionCommand("TO_REMOVE");
+        toRemoveButton.setActionCommand("TO_REMOVE"); //$NON-NLS-1$
         middlePanel.add(toRemoveButton);
 
         //middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
         middlePanel.add(Box.createVerticalGlue());
 
-        ccButton = new JButton("<- Cc");
+        ccButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "left_arrow_cc")); //$NON-NLS-1$
         ccButton.addActionListener(this);
-        ccButton.setActionCommand("CC");
+        ccButton.setActionCommand("CC"); //$NON-NLS-1$
         middlePanel.add(ccButton);
-        ccRemoveButton = new JButton("Cc ->");
+        ccRemoveButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "right_arrow_cc")); //$NON-NLS-1$
         ccRemoveButton.addActionListener(this);
-        ccRemoveButton.setActionCommand("CC_REMOVE");
+        ccRemoveButton.setActionCommand("CC_REMOVE"); //$NON-NLS-1$
         middlePanel.add(ccRemoveButton);
 
         //middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
         middlePanel.add(Box.createVerticalGlue());
 
-        bccButton = new JButton("<- Bcc");
+        bccButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "left_arrow_bcc")); //$NON-NLS-1$
         bccButton.addActionListener(this);
-        bccButton.setActionCommand("BCC");
+        bccButton.setActionCommand("BCC"); //$NON-NLS-1$
         middlePanel.add(bccButton);
-        bccRemoveButton = new JButton("Bcc ->");
+        bccRemoveButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "right_arrow_bcc")); //$NON-NLS-1$
         bccRemoveButton.addActionListener(this);
-        bccRemoveButton.setActionCommand("BCC_REMOVE");
+        bccRemoveButton.setActionCommand("BCC_REMOVE"); //$NON-NLS-1$
         middlePanel.add(bccRemoveButton);
 
         middlePanel.add(Box.createVerticalGlue());
@@ -237,10 +237,10 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         JPanel rightTopPanel = new JPanel();
 
         //rightTopPanel.setLayout( new GridBagLayout() );
-        chooseLabel = new JLabel("Addressbook:");
+        chooseLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "addressbook")); //$NON-NLS-1$
         rightTopPanel.add(chooseLabel);
-        chooseButton = new JButton("Personal Addressbook");
-        chooseButton.setActionCommand("CHOOSE");
+        chooseButton = new JButton(AddressbookResourceLoader.getString("dialog", "selectaddressdialog", "personal_addressbook")); //$NON-NLS-1$
+        chooseButton.setActionCommand("CHOOSE"); //$NON-NLS-1$
         chooseButton.addActionListener(this);
         rightTopPanel.add(chooseButton);
         rightPanel.add(rightTopPanel, BorderLayout.NORTH);
@@ -264,20 +264,20 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
         ButtonWithMnemonic okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok"));
-        okButton.setActionCommand("OK");
+                    "global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
 
         ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel"));
-        cancelButton.setActionCommand("CANCEL");
+                    "global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
+        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(okButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL",
+        getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
         pack();
@@ -340,26 +340,26 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if (command.equals("CANCEL")) {
+        if (command.equals("CANCEL")) { //$NON-NLS-1$
             setVisible(false);
-        } else if (command.equals("OK")) {
+        } else if (command.equals("OK")) { //$NON-NLS-1$
             setVisible(false);
 
             for (int i = 0; i < 3; i++) {
                 Object[] array = dialogList[i].toArray();
                 headerItemList[i].clear();
 
-                System.out.println("array-size=" + array.length);
+                System.out.println("array-size=" + array.length); //$NON-NLS-1$
 
                 for (int j = 0; j < array.length; j++) {
                     HeaderItem item = (HeaderItem) array[j];
 
                     if (item.isContact()) {
-                        String address = (String) item.get("email;internet");
-                        System.out.println("old address:" + address);
+                        String address = (String) item.get("email;internet"); //$NON-NLS-1$
+                        System.out.println("old address:" + address); //$NON-NLS-1$
 
                         if (address == null) {
-                            address = "";
+                            address = ""; //$NON-NLS-1$
                         }
 
                         /*
@@ -370,11 +370,11 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                     }
 
                     if (i == 0) {
-                        item.add("field", "To");
+                        item.add("field", "To"); //$NON-NLS-1$ //$NON-NLS-2$
                     } else if (i == 1) {
-                        item.add("field", "Cc");
+                        item.add("field", "Cc"); //$NON-NLS-1$ //$NON-NLS-2$
                     } else if (i == 2) {
-                        item.add("field", "Bcc");
+                        item.add("field", "Bcc"); //$NON-NLS-1$ //$NON-NLS-2$
                     }
 
                     headerItemList[i].add((HeaderItem) item.clone());
@@ -382,7 +382,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                     //headerItemList[i].add(item);
                 }
             }
-        } else if (command.equals("TO")) {
+        } else if (command.equals("TO")) { //$NON-NLS-1$
             int[] array = addressbook.getSelectedIndices();
             ListModel model = addressbook.getModel();
             HeaderItem item;
@@ -391,7 +391,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                 item = (HeaderItem) model.getElementAt(array[j]);
                 dialogList[0].addElement((HeaderItem) item.clone());
             }
-        } else if (command.equals("CC")) {
+        } else if (command.equals("CC")) { //$NON-NLS-1$
             int[] array = addressbook.getSelectedIndices();
             ListModel model = addressbook.getModel();
             HeaderItem item;
@@ -400,7 +400,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                 item = (HeaderItem) model.getElementAt(array[j]);
                 dialogList[1].addElement((HeaderItem) item.clone());
             }
-        } else if (command.equals("BCC")) {
+        } else if (command.equals("BCC")) { //$NON-NLS-1$
             int[] array = addressbook.getSelectedIndices();
             ListModel model = addressbook.getModel();
             HeaderItem item;
@@ -409,25 +409,25 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                 item = (HeaderItem) model.getElementAt(array[j]);
                 dialogList[2].addElement((HeaderItem) item.clone());
             }
-        } else if (command.equals("TO_REMOVE")) {
+        } else if (command.equals("TO_REMOVE")) { //$NON-NLS-1$
             Object[] array = toList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
                 dialogList[0].removeElement(array[j]);
             }
-        } else if (command.equals("CC_REMOVE")) {
+        } else if (command.equals("CC_REMOVE")) { //$NON-NLS-1$
             Object[] array = ccList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
                 dialogList[1].removeElement(array[j]);
             }
-        } else if (command.equals("BCC_REMOVE")) {
+        } else if (command.equals("BCC_REMOVE")) { //$NON-NLS-1$
             Object[] array = bccList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
                 dialogList[2].removeElement(array[j]);
             }
-        } else if (command.equals("CHOOSE")) {
+        } else if (command.equals("CHOOSE")) { //$NON-NLS-1$
             SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
             Folder selectedFolder = dialog.getSelectedFolder();

@@ -15,24 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.frame.AddressbookFrameController;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.gui.util.AddressbookDNDListView;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.addressbook.gui.util.AddressbookListRenderer;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -56,6 +38,23 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.addressbook.config.AdapterNode;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.gui.util.AddressbookDNDListView;
+import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.gui.util.AddressbookListRenderer;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.main.MainInterface;
 
 
 public class EditGroupDialog extends JDialog implements ActionListener {
@@ -107,16 +106,16 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 
         LabelTextFieldPanel infoPanel = new LabelTextFieldPanel();
         Border border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                " Description ");
+                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description")); //$NON-NLS-1$
         Border margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
         infoPanel.setBorder(new CompoundBorder(border, margin));
 
-        nameLabel = new JLabel("Name:");
+        nameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "name")); //$NON-NLS-1$
         nameTextField = new JTextField();
         infoPanel.addLabel(nameLabel);
         infoPanel.addTextField(nameTextField);
 
-        descriptionLabel = new JLabel("Description:");
+        descriptionLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "editgroupdialog", "description_2")); //$NON-NLS-1$
         descriptionTextField = new JTextField();
         infoPanel.addLabel(descriptionLabel);
         infoPanel.addTextField(descriptionTextField);
@@ -126,7 +125,7 @@ public class EditGroupDialog extends JDialog implements ActionListener {
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BorderLayout());
         border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                " Members ");
+                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "members")); //$NON-NLS-1$
         margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
         listPanel.setBorder(new CompoundBorder(border, margin));
 
@@ -150,14 +149,14 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 
         middlePanel.add(Box.createVerticalGlue());
 
-        addButton = new JButton("<-");
+        addButton = new JButton("<-"); //$NON-NLS-1$
         addButton.addActionListener(this);
-        addButton.setActionCommand("ADD");
+        addButton.setActionCommand("ADD"); //$NON-NLS-1$
         middlePanel.add(addButton);
         middlePanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        removeButton = new JButton("->");
+        removeButton = new JButton("->"); //$NON-NLS-1$
         removeButton.addActionListener(this);
-        removeButton.setActionCommand("REMOVE");
+        removeButton.setActionCommand("REMOVE"); //$NON-NLS-1$
         middlePanel.add(removeButton);
 
         middlePanel.add(Box.createVerticalGlue());
@@ -168,7 +167,7 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 
         JPanel rightPanel = new JPanel(new BorderLayout());
         border = BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-                " Addressbook ");
+                AddressbookResourceLoader.getString("dialog", "editgroupdialog", "addressbook")); //$NON-NLS-1$
         margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
         rightPanel.setBorder(new CompoundBorder(border, margin));
 
@@ -189,20 +188,20 @@ public class EditGroupDialog extends JDialog implements ActionListener {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
         ButtonWithMnemonic okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok"));
-        okButton.setActionCommand("OK");
+                    "global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
 
         ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel"));
-        cancelButton.setActionCommand("CANCEL");
+                    "global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
+        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(okButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL",
+        getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
         pack();
@@ -223,8 +222,8 @@ public class EditGroupDialog extends JDialog implements ActionListener {
         boolean b) {
         if (b) {
             // gettext
-            nameTextField.setText(card.get("displayname"));
-            descriptionTextField.setText(card.get("description"));
+            nameTextField.setText(card.get("displayname")); //$NON-NLS-1$
+            descriptionTextField.setText(card.get("description")); //$NON-NLS-1$
 
             members = new AddressbookListModel();
 
@@ -236,8 +235,8 @@ public class EditGroupDialog extends JDialog implements ActionListener {
             this.list.setModel(members);
         } else {
             // settext
-            card.set("displayname", nameTextField.getText());
-            card.set("description", descriptionTextField.getText());
+            card.set("displayname", nameTextField.getText()); //$NON-NLS-1$
+            card.set("description", descriptionTextField.getText()); //$NON-NLS-1$
 
             // remove all children
             card.removeMembers();
@@ -254,10 +253,10 @@ public class EditGroupDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        if (command.equals("CANCEL")) {
+        if (command.equals("CANCEL")) { //$NON-NLS-1$
             result = false;
             setVisible(false);
-        } else if (command.equals("CHOOSE")) {
+        } else if (command.equals("CHOOSE")) { //$NON-NLS-1$
             SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
             Folder selectedFolder = dialog.getSelectedFolder();
@@ -266,17 +265,17 @@ public class EditGroupDialog extends JDialog implements ActionListener {
                 HeaderItemList list = selectedFolder.getHeaderItemList();
                 setHeaderList(list);
             }
-        } else if (command.equals("OK")) {
+        } else if (command.equals("OK")) { //$NON-NLS-1$
             if (nameTextField.getText().length() == 0) {
                 JOptionPane.showMessageDialog(this,
-                    "You must enter a name for the group!");
+                    AddressbookResourceLoader.getString("dialog", "editgroupdialog", "you_must_enter_a_name_for_the_group")); //$NON-NLS-1$
 
                 return;
             }
 
             result = true;
             setVisible(false);
-        } else if (command.equals("ADD")) {
+        } else if (command.equals("ADD")) { //$NON-NLS-1$
             int[] array = addressbook.getSelectedIndices();
             HeaderItem item;
 
@@ -285,7 +284,7 @@ public class EditGroupDialog extends JDialog implements ActionListener {
 
                 members.addElement(item);
             }
-        } else if (command.equals("REMOVE")) {
+        } else if (command.equals("REMOVE")) { //$NON-NLS-1$
             int[] array = list.getSelectedIndices();
 
             for (int j = 0; j < array.length; j++) {

@@ -15,13 +15,9 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.List;
 import java.util.Vector;
 
@@ -30,6 +26,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 
 public class IdentityPanel extends JPanel implements ActionListener {
@@ -78,19 +78,19 @@ public class IdentityPanel extends JPanel implements ActionListener {
         emailComboBox.updateComponents(card, b);
 
         if (b == true) {
-            nameTextField.setText(card.formatGet("fn"));
-            organisationTextField.setText(card.get("org"));
-            displayNameTextField.setText(card.get("displayname"));
-            nickNameTextField.setText(card.get("nickname"));
-            positionTextField.setText(card.get("role"));
-            urlTextField.setText(card.get("url"));
+            nameTextField.setText(card.formatGet("fn")); //$NON-NLS-1$
+            organisationTextField.setText(card.get("org")); //$NON-NLS-1$
+            displayNameTextField.setText(card.get("displayname")); //$NON-NLS-1$
+            nickNameTextField.setText(card.get("nickname")); //$NON-NLS-1$
+            positionTextField.setText(card.get("role")); //$NON-NLS-1$
+            urlTextField.setText(card.get("url")); //$NON-NLS-1$
         } else {
-            card.formatSet("fn", nameTextField.getText());
-            card.set("org", organisationTextField.getText());
-            card.set("displayname", displayNameTextField.getText());
-            card.set("nickname", nickNameTextField.getText());
-            card.set("role", positionTextField.getText());
-            card.set("url", urlTextField.getText());
+            card.formatSet("fn", nameTextField.getText()); //$NON-NLS-1$
+            card.set("org", organisationTextField.getText()); //$NON-NLS-1$
+            card.set("displayname", displayNameTextField.getText()); //$NON-NLS-1$
+            card.set("nickname", nickNameTextField.getText()); //$NON-NLS-1$
+            card.set("role", positionTextField.getText()); //$NON-NLS-1$
+            card.set("url", urlTextField.getText()); //$NON-NLS-1$
         }
     }
 
@@ -104,8 +104,8 @@ public class IdentityPanel extends JPanel implements ActionListener {
         add(panel, BorderLayout.NORTH);
 
         //LOCALIZE
-        nameButton = new JButton("Full Name..");
-        nameButton.setActionCommand("NAME");
+        nameButton = new JButton(AddressbookResourceLoader.getString("dialog", "contact", "full_name")); //$NON-NLS-1$
+        nameButton.setActionCommand("NAME"); //$NON-NLS-1$
         nameButton.addActionListener(this);
 
         nameTextField = new JTextField(20);
@@ -113,13 +113,13 @@ public class IdentityPanel extends JPanel implements ActionListener {
         panel.addTextField(nameTextField);
 
         //LOCALIZE
-        nickNameLabel = new JLabel("Nickname:");
+        nickNameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "nickname")); //$NON-NLS-1$
         nickNameTextField = new JTextField(20);
         panel.addLabel(nickNameLabel);
         panel.addTextField(nickNameTextField);
 
         //LOCALIZE
-        displayNameLabel = new JLabel("Sorting Displayname:");
+        displayNameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "sorting_displayname")); //$NON-NLS-1$
         displayNameTextField = new JTextField(20);
         panel.addLabel(displayNameLabel);
         panel.addTextField(displayNameTextField);
@@ -127,13 +127,13 @@ public class IdentityPanel extends JPanel implements ActionListener {
         panel.addSeparator();
 
         //LOCALIZE
-        positionLabel = new JLabel("Position:");
+        positionLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "position")); //$NON-NLS-1$
         positionTextField = new JTextField(20);
         panel.addLabel(positionLabel);
         panel.addTextField(positionTextField);
 
         //LOCALIZE
-        organisationLabel = new JLabel("Organisation:");
+        organisationLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "organisation")); //$NON-NLS-1$
         organisationTextField = new JTextField(20);
         panel.addLabel(organisationLabel);
         panel.addTextField(organisationTextField);
@@ -141,18 +141,18 @@ public class IdentityPanel extends JPanel implements ActionListener {
         panel.addSeparator();
 
         //LOCALIZE
-        urlLabel = new JLabel("Website:");
+        urlLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "website")); //$NON-NLS-1$
         urlTextField = new JTextField(20);
         panel.addLabel(urlLabel);
         panel.addTextField(urlTextField);
 
         emailList = new Vector();
-        emailList.add("internet");
-        emailList.add("x400");
-        emailList.add("x-email2");
-        emailList.add("x-email3");
+        emailList.add("internet"); //$NON-NLS-1$
+        emailList.add("x400"); //$NON-NLS-1$
+        emailList.add("x-email2"); //$NON-NLS-1$
+        emailList.add("x-email3"); //$NON-NLS-1$
         emailTextField = new JTextField(20);
-        emailComboBox = new AttributComboBox("email", emailList, emailTextField);
+        emailComboBox = new AttributComboBox("email", emailList, emailTextField); //$NON-NLS-1$
 
         panel.addLabel(emailComboBox);
         panel.addTextField(emailTextField);
@@ -161,7 +161,7 @@ public class IdentityPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent ev) {
         String action = ev.getActionCommand();
 
-        if (action.equals("NAME")) {
+        if (action.equals("NAME")) { //$NON-NLS-1$
             dialog.setVisible(true);
         }
     }

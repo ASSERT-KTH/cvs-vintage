@@ -47,7 +47,7 @@ public class ContactDialog extends JDialog implements ActionListener {
         super(frame, true);
 
         //LOCALIZE
-        setTitle("Add Contact");
+        setTitle(AddressbookResourceLoader.getString("dialog", "contact", "add_contact")); //$NON-NLS-1$
         initComponents();
         pack();
         setLocationRelativeTo(null);
@@ -75,11 +75,11 @@ public class ContactDialog extends JDialog implements ActionListener {
         identityPanel.dialog = new FullNameDialog(this, identityPanel);
 
         //LOCALIZE
-        centerPane.add(identityPanel, "Identity");
+        centerPane.add(identityPanel, AddressbookResourceLoader.getString("dialog", "contact", "identity")); //$NON-NLS-1$
         addressPanel = new AddressPanel();
 
         //LOCALIZE
-        centerPane.add(addressPanel, "Address & Phone");
+        //centerPane.add(addressPanel, "Address & Phone");
         contentPane.add(centerPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -88,8 +88,8 @@ public class ContactDialog extends JDialog implements ActionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
 
         okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok"));
-        okButton.setActionCommand("OK");
+                    "global", "ok")); //$NON-NLS-1$ //$NON-NLS-2$
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
@@ -98,11 +98,11 @@ public class ContactDialog extends JDialog implements ActionListener {
         getRootPane().setDefaultButton(okButton);
 
         ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel"));
-        cancelButton.setActionCommand("CANCEL");
+                    "global", "cancel")); //$NON-NLS-1$ //$NON-NLS-2$
+        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
-        getRootPane().registerKeyboardAction(this, "CANCEL",
+        getRootPane().registerKeyboardAction(this, "CANCEL", //$NON-NLS-1$
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
@@ -110,10 +110,10 @@ public class ContactDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String action = event.getActionCommand();
 
-        if (action.equals("OK")) {
+        if (action.equals("OK")) { //$NON-NLS-1$
             result = true;
             setVisible(false);
-        } else if (action.equals("CANCEL")) {
+        } else if (action.equals("CANCEL")) { //$NON-NLS-1$
             result = false;
             setVisible(false);
         }

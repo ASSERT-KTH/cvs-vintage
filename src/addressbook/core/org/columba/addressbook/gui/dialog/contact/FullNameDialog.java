@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -30,6 +27,10 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 
 public class FullNameDialog extends JDialog implements ActionListener {
@@ -57,17 +58,17 @@ public class FullNameDialog extends JDialog implements ActionListener {
 
     public void updateComponents(ContactCard card, boolean b) {
         if (b) {
-            titleTextField.setText(card.get("n", "prefix"));
-            lastnameTextField.setText(card.get("n", "family"));
-            fornameTextField.setText(card.get("n", "given"));
-            middlenameTextField.setText(card.get("n", "middle"));
-            suffixTextField.setText(card.get("n", "suffix"));
+            titleTextField.setText(card.get("n", "prefix")); //$NON-NLS-1$ //$NON-NLS-2$
+            lastnameTextField.setText(card.get("n", "family")); //$NON-NLS-1$ //$NON-NLS-2$
+            fornameTextField.setText(card.get("n", "given")); //$NON-NLS-1$ //$NON-NLS-2$
+            middlenameTextField.setText(card.get("n", "middle")); //$NON-NLS-1$ //$NON-NLS-2$
+            suffixTextField.setText(card.get("n", "suffix")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            card.set("n", "prefix", titleTextField.getText());
-            card.set("n", "family", lastnameTextField.getText());
-            card.set("n", "given", fornameTextField.getText());
-            card.set("n", "middle", middlenameTextField.getText());
-            card.set("n", "suffix", suffixTextField.getText());
+            card.set("n", "prefix", titleTextField.getText()); //$NON-NLS-1$ //$NON-NLS-2$
+            card.set("n", "family", lastnameTextField.getText()); //$NON-NLS-1$ //$NON-NLS-2$
+            card.set("n", "given", fornameTextField.getText()); //$NON-NLS-1$ //$NON-NLS-2$
+            card.set("n", "middle", middlenameTextField.getText()); //$NON-NLS-1$ //$NON-NLS-2$
+            card.set("n", "suffix", suffixTextField.getText()); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -81,27 +82,27 @@ public class FullNameDialog extends JDialog implements ActionListener {
         LabelTextFieldPanel panel = new LabelTextFieldPanel();
         mainPanel.add(panel, BorderLayout.CENTER);
 
-        titleLabel = new JLabel("Title:");
+        titleLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "title")); //$NON-NLS-1$
         titleTextField = new JTextField(20);
         panel.addLabel(titleLabel);
         panel.addTextField(titleTextField);
 
-        fornameLabel = new JLabel("First Name:");
+        fornameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "first_name")); //$NON-NLS-1$
         fornameTextField = new JTextField(20);
         panel.addLabel(fornameLabel);
         panel.addTextField(fornameTextField);
 
-        middlenameLabel = new JLabel("Middle Name:");
+        middlenameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "middle_name")); //$NON-NLS-1$
         middlenameTextField = new JTextField(20);
         panel.addLabel(middlenameLabel);
         panel.addTextField(middlenameTextField);
 
-        lastnameLabel = new JLabel("Last Name:");
+        lastnameLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "last_name")); //$NON-NLS-1$
         lastnameTextField = new JTextField(20);
         panel.addLabel(lastnameLabel);
         panel.addTextField(lastnameTextField);
 
-        suffixLabel = new JLabel("Suffix:");
+        suffixLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "contact", "suffix")); //$NON-NLS-1$
         suffixTextField = new JTextField(20);
         panel.addLabel(suffixLabel);
         panel.addTextField(suffixTextField);
@@ -114,12 +115,12 @@ public class FullNameDialog extends JDialog implements ActionListener {
         buttonPanel.setLayout(new GridLayout(0, 2, 10, 0));
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-        changeButton = new JButton("Change formatted name");
-        changeButton.setActionCommand("CHANGE");
+        changeButton = new JButton(AddressbookResourceLoader.getString("dialog", "contact", "change_formatted_name")); //$NON-NLS-1$
+        changeButton.setActionCommand("CHANGE"); //$NON-NLS-1$
         changeButton.addActionListener(this);
         buttonPanel.add(changeButton);
-        okButton = new JButton("Close");
-        okButton.setActionCommand("OK");
+        okButton = new JButton("Close"); //$NON-NLS-1$
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
 
@@ -129,13 +130,13 @@ public class FullNameDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         String action = event.getActionCommand();
 
-        if (action.equals("OK")) {
+        if (action.equals("OK")) { //$NON-NLS-1$
             setVisible(false);
 
             if (identityPanel.fnIsEmpty() == true) {
                 setFormattedName();
             }
-        } else if (action.equals("CHANGE")) {
+        } else if (action.equals("CHANGE")) { //$NON-NLS-1$
             setFormattedName();
         }
     }
@@ -144,23 +145,23 @@ public class FullNameDialog extends JDialog implements ActionListener {
         StringBuffer buf = new StringBuffer();
 
         if (titleTextField.getText().length() > 0) {
-            buf.append(titleTextField.getText() + " ");
+            buf.append(titleTextField.getText() + " "); //$NON-NLS-1$
         }
 
         if (fornameTextField.getText().length() > 0) {
-            buf.append(fornameTextField.getText() + " ");
+            buf.append(fornameTextField.getText() + " "); //$NON-NLS-1$
         }
 
         if (middlenameTextField.getText().length() > 0) {
-            buf.append(middlenameTextField.getText() + " ");
+            buf.append(middlenameTextField.getText() + " "); //$NON-NLS-1$
         }
 
         if (lastnameTextField.getText().length() > 0) {
-            buf.append(lastnameTextField.getText() + " ");
+            buf.append(lastnameTextField.getText() + " "); //$NON-NLS-1$
         }
 
         if (suffixTextField.getText().length() > 0) {
-            buf.append(suffixTextField.getText() + " ");
+            buf.append(suffixTextField.getText() + " "); //$NON-NLS-1$
         }
 
         identityPanel.setFn(buf.toString());

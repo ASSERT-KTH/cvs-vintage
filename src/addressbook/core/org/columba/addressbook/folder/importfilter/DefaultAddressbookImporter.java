@@ -17,19 +17,19 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.main.AddressbookInterface;
-
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginInterface;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginInterface;
 
 
 /**
@@ -73,7 +73,7 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
      * enter a description which will be shown to the user here
      */
     public String getDescription() {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
         } catch (Exception ex) {
             if (ex instanceof FileNotFoundException) {
                 NotifyDialog dialog = new NotifyDialog();
-                dialog.showDialog("Source File not found!");
+                dialog.showDialog(AddressbookResourceLoader.getString("dialog", "addressbookimport", "source_file_not_found")); //$NON-NLS-1$
             } else {
                 new ExceptionDialog(ex);
                 
@@ -122,7 +122,7 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
 
             NotifyDialog dialog = new NotifyDialog();
             dialog.showDialog(
-                "Addressbook import failed! No contacts were added to your folder.");
+                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_failed")); //$NON-NLS-1$
 
             return;
         }
@@ -130,16 +130,16 @@ public abstract class DefaultAddressbookImporter implements PluginInterface {
         if (getCount() == 0) {
             NotifyDialog dialog = new NotifyDialog();
             dialog.showDialog(
-                "Addressbook import failed! No contacts were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
+                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_failed_2")); //$NON-NLS-1$
 
             return;
         }
 
         if (getCount() > 0) {
             JOptionPane.showMessageDialog(null,
-                "Addressbook import was successfull!", "Information",
+                AddressbookResourceLoader.getString("dialog", "addressbookimport", "addressbook_import_was_successfull"), AddressbookResourceLoader.getString("dialog", "contact", "information"), //$NON-NLS-1$ //$NON-NLS-2$
                 JOptionPane.INFORMATION_MESSAGE,
-                ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+                ImageLoader.getImageIcon("stock_dialog_info_48.png")); //$NON-NLS-1$
 
             addressbookInterface.table.setFolder(destinationFolder);
         }

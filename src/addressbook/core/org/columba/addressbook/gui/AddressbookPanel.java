@@ -15,14 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui;
 
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.util.AddressbookDNDListView;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-
-import org.columba.core.gui.util.CTabbedPane;
-
-import org.columba.mail.gui.composer.ComposerController;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -30,7 +22,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.List;
 import java.util.Vector;
 
@@ -42,6 +33,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.util.AddressbookDNDListView;
+import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.CTabbedPane;
+import org.columba.mail.gui.composer.ComposerController;
 
 
 /**
@@ -84,8 +82,8 @@ public class AddressbookPanel extends JPanel implements ActionListener,
 
         add(pane, BorderLayout.CENTER);
 
-        pane.add("Personal Addressbook", new JPanel());
-        pane.add("Collected Addresses", new JPanel());
+        pane.add(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "personal_addressbook"), new JPanel()); //$NON-NLS-1$
+        pane.add(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "collected_addresses"), new JPanel()); //$NON-NLS-1$
     }
 
     public JPanel createPanel(int uid) {
@@ -107,14 +105,14 @@ public class AddressbookPanel extends JPanel implements ActionListener,
         JPanel labelPanel = new JPanel();
         labelPanel.setLayout(new GridLayout(1, 3, 5, 5));
 
-        toButton = new JButton("To:");
-        toButton.setActionCommand("TO");
+        toButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "to")); //$NON-NLS-1$
+        toButton.setActionCommand("TO"); //$NON-NLS-1$
         toButton.addActionListener(this);
-        ccButton = new JButton("Cc:");
-        ccButton.setActionCommand("CC");
+        ccButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "cc")); //$NON-NLS-1$
+        ccButton.setActionCommand("CC"); //$NON-NLS-1$
         ccButton.addActionListener(this);
-        bccButton = new JButton("Bcc:");
-        bccButton.setActionCommand("BCC");
+        bccButton = new JButton(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "bcc")); //$NON-NLS-1$
+        bccButton.setActionCommand("BCC"); //$NON-NLS-1$
         bccButton.addActionListener(this);
         labelPanel.add(toButton);
         labelPanel.add(ccButton);
@@ -128,7 +126,7 @@ public class AddressbookPanel extends JPanel implements ActionListener,
 
         GridBagConstraints c = new GridBagConstraints();
 
-        JLabel containsLabel = new JLabel("contains:");
+        JLabel containsLabel = new JLabel(AddressbookResourceLoader.getString("dialog", "addressbookpanel", "contains")); //$NON-NLS-1$
         containsLabel.setEnabled(false);
 
         JTextField textField = new JTextField();
