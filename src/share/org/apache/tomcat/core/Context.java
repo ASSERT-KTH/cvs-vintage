@@ -181,6 +181,8 @@ public class Context implements LogAware {
     boolean trusted=false;
     String vhost=null;
     Vector vhostAliases=new Vector();
+
+    String facadeClassName;
     FacadeManager facadeM;
     
     public Context() {
@@ -208,11 +210,41 @@ public class Context implements LogAware {
 	contextM=cm;
     }
 
+    public void setFacadeClassName(String s ) {
+	facadeClassName=s;
+    }
+
+    public String getFacadeClassName() {
+	return facadeClassName;
+    }
+
+    private static final String DEFAULT_FACADE="org.apache.tomcat.facade.Servlet22Manager";
+
+    /** The servlet API variant that will be used for requests in this
+     *  context
+     */ 
+    public void setServletAPI( String s ) {
+	if( s!=null &&
+	    ( s.endsWith("23") || s.endsWith("2.3")) ) {
+	    facadeClassName="org.apache.tomcat.facade23.Servlet23Manager";
+	} else {
+	    facadeClassName=DEFAULT_FACADE;
+	}
+    }
+
     public FacadeManager getFacadeManager() {
 	if( facadeM==null ) {
-	    /* XXX make it configurable
-	     */
-	    facadeM=new SimpleFacadeManager( this );
+	    if( facadeClassName==null) 
+		facadeClassName=DEFAULT_FACADE;
+	    try {
+		Class facadeMC=Class.forName( facadeClassName );
+		if( facadeMC==null )
+		    facadeMC=Class.forName( DEFAULT_FACADE );
+		Constructor cons=facadeMC.getConstructor( new Class[] { this.getClass() });
+		facadeM=(FacadeManager)cons.newInstance( new Object[] {this });
+	    } catch( Exception ex ) {
+		ex.printStackTrace();
+	    }
 	}
 	return facadeM;
     }

@@ -79,12 +79,12 @@ import javax.servlet.http.*;
  *   everything very often.
  *  
  */
-public final class SimpleFacadeManager implements FacadeManager {
+public final class Servlet22Manager implements FacadeManager {
     Context ctx;
 
     Logger.Helper loghelper = new Logger.Helper("tc_log", this);
     
-    private SimpleFacadeManager() {
+    private Servlet22Manager() {
     }
 
     // XXX XXX XXX The key to open the gate - this is the first attempt,
@@ -96,7 +96,7 @@ public final class SimpleFacadeManager implements FacadeManager {
      *
      * The FacadeManager will work only for the Context used at construction time.
      */
-    public SimpleFacadeManager(Context ctx)  {
+    public Servlet22Manager(Context ctx)  {
 	//	checkAccess();
 	this.ctx=ctx;
     }
