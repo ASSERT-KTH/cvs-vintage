@@ -72,16 +72,16 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.35 2002/02/23 19:30:28 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.36 2002/03/08 00:46:24 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
 {
+    private static final String TEMPLATE_KEY = "template";
     private RunData data;
     private String label;
     private String attributeText;
     private String alternateText;
-    private String template;
     private String currentModuleId;
 
     /**
@@ -92,7 +92,6 @@ public class ScarabLink extends TemplateLink
     public ScarabLink()
     {
     }
-
 
     /**
      * This will initialise a TemplateLink object that was
@@ -116,10 +115,11 @@ public class ScarabLink extends TemplateLink
         super.refresh();
         setAbsolute(false);
         label = null;
-        template = null;
         attributeText = null;
         alternateText = null;
         currentModuleId = null;
+        super.setPage(null);
+        super.removePathInfo(TEMPLATE_KEY);
     }
 
     /**
@@ -196,7 +196,6 @@ public class ScarabLink extends TemplateLink
         }
         
         super.setPage(t);
-        template = t;
         return this;
     }
     
@@ -206,7 +205,7 @@ public class ScarabLink extends TemplateLink
      */
     public String getCurrentView()
     {
-        String temp = data.getParameters().getString("template",null);
+        String temp = data.getParameters().getString(TEMPLATE_KEY,null);
         if ( temp != null )
         {
             temp = temp.replace(',', '/');
@@ -307,7 +306,7 @@ public class ScarabLink extends TemplateLink
         String tostring = null;
         String alternateText = this.alternateText;
         // will reset link if false
-        if(isAllowed())
+        if (isAllowed())
         {
             tostring = getLink();
         }
@@ -329,7 +328,7 @@ public class ScarabLink extends TemplateLink
      */
     public boolean isAllowed()
     {
-        boolean allowed = isAllowed(template);
+        boolean allowed = isAllowed(getPage());
 
         if ( !allowed ) 
         {
@@ -343,10 +342,15 @@ public class ScarabLink extends TemplateLink
 
     /**
      * Check if the user has the permission to see the template t. If the user
-     * has the permission(s), <code>true</code> is returned.
+     * has the permission(s), <code>true</code> is returned. If template t is
+     * null, this method returns false.
      */
     public boolean isAllowed(String t)
     {
+        if (t == null)
+        {
+            return false;
+        }
         boolean allowed = false;
         try
         {
