@@ -1,4 +1,4 @@
-// $Id: ArgoVersion.template,v 1.8 2004/01/29 07:41:42 linus Exp $
+// $Id: ArgoVersion.template,v 1.9 2004/09/04 15:28:21 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,29 +25,32 @@
 package org.argouml.application;
 
 /**
- *   This class <strong>only</strong> encapsulates the Argo version string.
+ * This class <strong>only</strong> encapsulates the ArgoUML version string.<p>
  *
- *   It should <strong>not</strong> be edited manually because it is
- *   build from the file ArgoVersion.template when necessary.
+ * It should <strong>not</strong> be edited manually because it is
+ * build from the file ArgoVersion.template when necessary.<p>
  *
- *   @author Thierry Lach
- *   @since  Argo0.11.1
+ * @author Thierry Lach
+ * @since  Argo0.11.1
  */
-public class ArgoVersion {
+public final class ArgoVersion {
     /** 
-     * Version number
+     * Version number.
      */
     private static final String VERSION = "@ARGO_RELEASE_VERSION@";
 
-    /** Retrieve the version number.
+    /**
+     * Retrieve the version number.
+     *
      * @return the version number.
      */
     public static String getVersion() {
         return VERSION;
     }
 
-    /** Don't allow instantiation
+    /**
+     * Don't allow instantiation.
      */
-    private ArgoVersion() { }
-
+    private ArgoVersion() {
+    }
 }
