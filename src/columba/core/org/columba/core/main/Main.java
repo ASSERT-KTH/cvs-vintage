@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import org.columba.addressbook.main.AddressbookMain;
@@ -45,7 +46,6 @@ import org.columba.mail.main.MailMain;
 import java.io.PrintWriter;
 
 import java.net.Socket;
-
 
 public class Main {
     private static ColumbaLoader columbaLoader;
@@ -92,7 +92,7 @@ public class Main {
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
         loadInVMInstance(args);
 
-        final StartUpFrame frame = new StartUpFrame();
+        StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);
 
         // enable logging 
@@ -151,12 +151,8 @@ public class Main {
         // initialze JavaHelp manager
         new HelpManager();
 
-        frame.advance();
-
         //MainInterface.frameModelManager = new FrameModelManager();
         addressbook.initGui();
-
-        frame.advance();
 
         mail.initGui();
 
