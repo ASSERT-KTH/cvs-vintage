@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.83 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.84 2003/08/30 18:16:29 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,6 +97,7 @@ import ru.novosoft.uml.foundation.core.MDependency;
 import ru.novosoft.uml.foundation.core.MElement;
 import ru.novosoft.uml.foundation.core.MElementResidence;
 import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MFlow;
 import ru.novosoft.uml.foundation.core.MGeneralizableElement;
 import ru.novosoft.uml.foundation.core.MGeneralization;
@@ -1215,6 +1216,18 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * Recognizer for MBehaviouralFeature's that are queries.
+     */
+    public static boolean isQuery(Object handle){
+        
+        if (!(handle instanceof MBehavioralFeature)) {
+            throw new IllegalArgumentException();
+        }
+        
+        return ((MBehavioralFeature)handle).isQuery();
+    }
+    
     /** Recognizer for attributes with protected
      *
      * @param handle candidate
