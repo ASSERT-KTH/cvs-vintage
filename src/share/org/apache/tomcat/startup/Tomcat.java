@@ -55,11 +55,15 @@ public class Tomcat {
 	xh.addRule( "ContextManager/RequestInterceptor", xh.setParent("setContextManager") );
 	xh.addRule( "ContextManager/RequestInterceptor", xh.addChild( "addRequestInterceptor",
 								      "org.apache.tomcat.core.RequestInterceptor" ) );
-	
+
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Context", xh.setProperties() );
 	xh.addRule( "ContextManager/Context", xh.addChild( "addContext", null ) );
+
+    }
+
+    void setConnectorHelper( XmlMapper xh ) {
 
 	xh.addRule( "ContextManager/Connector", xh.objectCreate(null, "className"));
 	xh.addRule( "ContextManager/Connector", xh.setParent( "setContextManager") );
@@ -97,6 +101,7 @@ public class Tomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setHelper( xh );
+	setConnectorHelper( xh );
 	setLogHelper( xh );
 
 	File f=new File(cm.getHome(), configFile);
@@ -142,8 +147,8 @@ public class Tomcat {
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
-	setHelper( xh );
-	// no log helper - we don't want stop to override the logs
+	setConnectorHelper( xh );
+	// read only connector information out of server.xml
 
 	File f=new File(cm.getHome(), configFile);
 

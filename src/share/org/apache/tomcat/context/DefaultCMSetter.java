@@ -163,7 +163,9 @@ public class DefaultCMSetter extends BaseInterceptor {
             ContextManager cm = context.getContextManager();
 	    dir = new File(cm.getHome(), base + "/WEB-INF/classes");
         }
-	loader.addRepository( dir );
+	if( dir.exists() ) {
+	    loader.addRepository( dir );
+	}
 
 	File f =  new File(base + "/WEB-INF/lib");
 	Vector jars = new Vector();
