@@ -18,7 +18,7 @@ import javax.transaction.Transaction;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public interface ContainerRemote
    extends Remote
@@ -37,10 +37,12 @@ public interface ContainerRemote
    public Object invoke(MarshalledObject mi)
       throws Exception;
 
-   public Object invokeHome(Method m, Object[] args, Transaction tx, Principal identity)
+   public Object invokeHome(Method m, Object[] args, Transaction tx,
+    Principal identity, Object credential )
       throws Exception;
 
-   public Object invoke(Object id, Method m, Object[] args, Transaction tx, Principal identity)
+   public Object invoke(Object id, Method m, Object[] args, Transaction tx,
+    Principal identity, Object credential )
       throws Exception;
    // Package protected ---------------------------------------------
     

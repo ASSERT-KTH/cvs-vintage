@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.7 $
+ *      @version $Revision: 1.8 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -70,12 +70,14 @@ public class HomeProxy
 	      {
 	         return container.invokeHome(m, args, 
 		         								tm != null ? tm.getTransaction() : null,
-		         								null);
+		         								getPrincipal(), getCredential());
 	      } else
 	      {
 	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
 	         if (tm != null)
 	            rmi.setTransaction(tm.getTransaction());
+           rmi.setPrincipal(getPrincipal());
+           rmi.setCredential(getCredential());
 	         return container.invokeHome(new MarshalledObject(rmi));
 	      }
       }

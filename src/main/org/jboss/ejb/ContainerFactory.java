@@ -55,6 +55,8 @@ import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 
+import org.jboss.system.EJBSecurityManager;
+import org.jboss.system.RealmMapping;
 
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to
@@ -66,7 +68,7 @@ import org.jboss.verifier.event.VerificationListener;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.26 $
+*   @version $Revision: 1.27 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -314,8 +316,17 @@ public class ContainerFactory
                         // use the new metadata classes in org.jboss.metadata
                         container.setBeanMetaData(efm.getMetaData().getBean(bean.getEjbName()));
 
+            // set assembly descriptor info
+            container.setAssemblyDescriptor(jar.getAssemblyDescriptor() );
+
 						// Set transaction manager
 						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+
+						// Set security manager (should be chosen based on container config)
+						container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+
+            // Set realm mapping (should be chosen based on container config)
+            container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
 
 						// Get container configuration
 						ContainerConfiguration conf = bean.getContainerConfiguration();

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import javax.transaction.TransactionManager;
 
@@ -15,13 +16,15 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 import org.jboss.tm.TxManager;
 
 import java.util.HashMap;
+import org.jboss.system.SecurityAssociation;
+
 
 /**
  *      <description> 
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
 public class GenericProxy
    implements java.io.Serializable
@@ -37,17 +40,27 @@ public class GenericProxy
    
    // Static --------------------------------------------------------
    static TransactionManager tm;
-	
+
    static HashMap invokers = new HashMap(); // Prevent DGC
    public static ContainerRemote getLocal(String jndiName) { return (ContainerRemote)invokers.get(jndiName); }
    public static void addLocal(String jndiName, ContainerRemote invoker) { invokers.put(jndiName, invoker); }
    public static void removeLocal(String jndiName) { invokers.remove(jndiName); }
-	
+
 	public static void setTransactionManager(TransactionManager txMan)
 	{
-		if (tm == null) 
+		if (tm == null)
 		   tm = txMan;
 	}
+
+  public Principal getPrincipal()
+  {
+    return SecurityAssociation.getPrincipal();
+  }
+
+  public Object getCredential()
+  {
+    return SecurityAssociation.getCredential();
+  }
 
    // Constructors --------------------------------------------------
    protected GenericProxy(String name, ContainerRemote container, boolean optimize)

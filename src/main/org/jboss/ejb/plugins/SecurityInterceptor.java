@@ -11,6 +11,8 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -30,29 +32,39 @@ import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
 import org.jboss.logging.Log;
 
+import org.jboss.system.EJBSecurityManager;
+import org.jboss.system.RealmMapping;
+
+import com.dreambean.ejx.ejb.AssemblyDescriptor;
+
+
 /**
- *   <description> 
- *      
+ *   <description>
+ *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    protected Container container;
-   
+   protected EJBSecurityManager securityManager;
+   protected RealmMapping realmMapping;
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   
+
    // Public --------------------------------------------------------
-   public void setContainer(Container container) 
-   { 
-   	this.container = container; 
+   public void setContainer(Container container)
+   {
+   	this.container = container;
+    securityManager = container.getSecurityManager();
+    realmMapping = container.getRealmMapping();
    }
 
    public  Container getContainer()
@@ -70,29 +82,58 @@ public class SecurityInterceptor
    public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-		// TODO security checks
-	
+      if (!(mi.getPrincipal() == null)) // for now, security is optional
+      {
+        if (!securityManager.isValid( mi.getPrincipal(), mi.getCredential() ))
+        {
+          // should log illegal access
+          throw new java.rmi.RemoteException("Authentication exception");
+        }
+
+        Set methodPermissions = container.getMethodPermissions( mi.getMethod(), true );
+        if (!realmMapping.doesUserHaveRole( mi.getPrincipal(), methodPermissions ))
+        {
+          // should log illegal access
+          throw new java.rmi.RemoteException("Illegal access exception");
+        }
+      }
+
       return getNext().invokeHome(mi);
    }
 
    /**
-    *   This method does invocation interpositioning of tx and security, 
+    *   This method does invocation interpositioning of tx and security,
     *   retrieves the instance from an object table, and invokes the method
     *   on the particular instance
     *
-    * @param   id  
-    * @param   m  
-    * @param   args  
-    * @return     
-    * @exception   Exception  
+    * @param   id
+    * @param   m
+    * @param   args
+    * @return
+    * @exception   Exception
     */
    public Object invoke(MethodInvocation mi)
       throws Exception
    {
-		// TODO security checks
+      if (!(mi.getPrincipal() == null)) // for now, security is optional
+      {
+        if (!securityManager.isValid( mi.getPrincipal(), mi.getCredential() ))
+        {
+          // should log illegal access
+          throw new java.rmi.RemoteException("Authentication exception");
+        }
+
+        Set methodPermissions = container.getMethodPermissions( mi.getMethod(), false );
+        if (!realmMapping.doesUserHaveRole( mi.getPrincipal(), methodPermissions ))
+        {
+          // should log illegal access
+          throw new java.rmi.RemoteException("Illegal access exception");
+        }
+      }
+
       return getNext().invoke(mi);
    }
-   
+
    // Private -------------------------------------------------------
 }
 

@@ -98,7 +98,7 @@
     <jar jarfile="${build.bin.dir}/run.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/run.mf"
-         includes="org/jboss/Main*.*"
+         includes="org/jboss/Main*.*,org/jboss/system/**"
     />
 
     <mkdir dir="${build.lib.dir}/ext"/>
@@ -106,14 +106,14 @@
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
          includes="org/jboss/**"
-         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/ejb/plugins/jaws/deployment/**"
+         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/system/**,org/jboss/ejb/plugins/jaws/deployment/**"
     />
 
     <mkdir dir="${build.dir}/client"/>
     <jar jarfile="${build.dir}/client/jboss-client.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss-client.mf"
-         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class"
+         includes="org/jboss/ejb/DeploymentException.class,org/jboss/proxy/**,org/jboss/ejb/plugins/jrmp/server/*Stub.class,org/jboss/ejb/plugins/jrmp/interfaces/**,org/jboss/ejb/plugins/jrmp12/interfaces/**,org/jboss/ejb/plugins/jrmp13/interfaces/**,org/jboss/util/SerializableEnumeration.class,org/jboss/system/SecurityAssociation.class,org/jboss/system/SimplePrincipal.class"
     />
 
     <jar jarfile="${build.dir}/client/deploy.jar"

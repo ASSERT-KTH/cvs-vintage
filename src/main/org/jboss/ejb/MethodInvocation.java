@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class MethodInvocation
 {
@@ -38,20 +38,23 @@ public class MethodInvocation
 	
 	Transaction tx;
 	Principal identity;
-	
+  Object credential;
+
 	Method m;
 	EnterpriseContext ctx;
-	
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
-   public MethodInvocation(Object id, Method m, Object[] args, Transaction tx, Principal identity)
+   public MethodInvocation(Object id, Method m, Object[] args, Transaction tx,
+    Principal identity, Object credential )
    {
       	this.id = id;
 		this.m = m;
       	this.args = args;
 		this.tx = tx;
 		this.identity = identity;
+    this.credential = credential;
    }
    // Public --------------------------------------------------------
    public Object getId() { return id; }
@@ -88,7 +91,17 @@ public class MethodInvocation
 	{
 		return identity;
 	}
-	 
+
+	public void setCredential(Object credential)
+	{
+		this.credential = credential;
+	}
+
+	public Object getCredential()
+	{
+		return credential;
+	}
+
 	/*
 	* setEnterpriseContext()
 	*

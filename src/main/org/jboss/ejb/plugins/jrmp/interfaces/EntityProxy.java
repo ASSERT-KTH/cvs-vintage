@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.10 $
+ *      @version $Revision: 1.11 $
  */
 public class EntityProxy
    extends GenericProxy
@@ -108,12 +108,14 @@ public class EntityProxy
 	      {
 	         return container.invoke(id, m, args, 
 												tm != null ? tm.getTransaction() : null,
-												null);
+												getPrincipal(), getCredential());
 	      } else
 	      {
 	         RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
 	         if (tm != null)
 	            rmi.setTransaction(tm.getTransaction());
+           rmi.setPrincipal( getPrincipal() );
+           rmi.setCredential( getCredential() );
 	         return container.invoke(new MarshalledObject(rmi));
 	      }
       }

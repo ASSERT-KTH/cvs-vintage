@@ -62,7 +62,7 @@ import org.jboss.logging.Logger;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.9 $
+ *      @version $Revision: 1.10 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -129,7 +129,8 @@ public abstract class JRMPContainerInvoker
 			if (tx == null)
 				tx = container.getTransactionManager().getTransaction();
 		
-			return invokeHome(rmi.getMethod(), rmi.getArguments(), tx, rmi.getPrincipal());
+			return invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
+        rmi.getPrincipal(), rmi.getCredential() );
       } catch (Exception e)
       {
       	e.printStackTrace();
@@ -156,23 +157,27 @@ public abstract class JRMPContainerInvoker
          if (tx == null)
          	tx = container.getTransactionManager().getTransaction();
 				
-         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx, rmi.getPrincipal());
+         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx,
+          rmi.getPrincipal(), rmi.getCredential() );
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
     
-   public Object invokeHome(Method m, Object[] args, Transaction tx, Principal identity)
+   public Object invokeHome(Method m, Object[] args, Transaction tx,
+    Principal identity, Object credential)
       throws Exception
    {
-	   return container.invokeHome(new MethodInvocation(null , m, args, tx, identity));
+	   return container.invokeHome(new MethodInvocation(null , m, args, tx,
+      identity, credential));
    }
-      
-   public Object invoke(Object id, Method m, Object[] args, Transaction tx, Principal identity)
+
+   public Object invoke(Object id, Method m, Object[] args, Transaction tx,
+    Principal identity, Object credential )
       throws Exception
    {
-	   return container.invoke(new MethodInvocation(id, m, args, tx, identity));
+	   return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
    }
    
    // ContainerService implementation -------------------------------

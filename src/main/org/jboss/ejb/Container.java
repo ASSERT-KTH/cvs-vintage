@@ -13,6 +13,11 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collection;
+import java.util.Enumeration;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -34,6 +39,10 @@ import javax.naming.spi.ObjectFactory;
 import javax.transaction.TransactionManager;
 import javax.sql.DataSource;
 
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JCheckBox;
+
 import org.jboss.ejb.deployment.jBossEnterpriseBean;
 import com.dreambean.ejx.ejb.EnvironmentEntry;
 import org.jboss.ejb.deployment.jBossEjbJar;
@@ -45,10 +54,15 @@ import org.jboss.ejb.deployment.JDBCResource;
 import org.jboss.ejb.deployment.URLResource;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.system.EJBSecurityManager;
+import org.jboss.system.RealmMapping;
 
 import org.jnp.interfaces.Naming;
 import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
+
+import com.dreambean.ejx.ejb.AssemblyDescriptor;
+import com.dreambean.ejx.ejb.MethodPermission;
 
 /**
  *    This is the base class for all EJB-containers in jBoss. A Container
@@ -64,7 +78,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public abstract class Container
 {
@@ -82,6 +96,9 @@ public abstract class Container
     // This is the jBoss-specific metadata. Note that it extends the generic EJB 1.1 class from EJX
    protected jBossEnterpriseBean metaData;
 
+   // This is the assembly descriptor information
+   protected AssemblyDescriptor assemblyDescriptor;
+
     // This is the Home interface class
    protected Class homeInterface;
 
@@ -94,8 +111,17 @@ public abstract class Container
    // This is the TransactionManager
    protected TransactionManager tm;
 
+   // This is the SecurityManager
+   protected EJBSecurityManager sm;
+
+   // This is the realm mapping
+   protected RealmMapping rm;
+
    // This is the new MetaData construct
    protected BeanMetaData newMetaData;
+
+   // This is a cache for method permissions
+   private HashMap methodPermissionsCache = new HashMap();
 
    // Public --------------------------------------------------------
 
@@ -120,6 +146,27 @@ public abstract class Container
     {
         return tm;
     }
+
+    public void setSecurityManager(EJBSecurityManager sm)
+    {
+   	    this.sm = sm;
+    }
+
+    public EJBSecurityManager getSecurityManager()
+    {
+        return sm;
+    }
+
+    public void setRealmMapping(RealmMapping rm)
+    {
+   	    this.rm = rm;
+    }
+
+    public RealmMapping getRealmMapping()
+    {
+        return rm;
+    }
+
 
     /**
      * Sets the application deployment unit for this container. All the bean
@@ -187,7 +234,138 @@ public abstract class Container
         return metaData;
     }
 
-    
+    /**
+     * Sets the assembly descriptor for this container. The meta data consists of the
+     * properties found in the XML descriptors.
+     *
+     * @param   assemblyDescriptor
+     */
+    public void setAssemblyDescriptor(AssemblyDescriptor assemblyDescriptor)
+    {
+        this.assemblyDescriptor = assemblyDescriptor;
+    }
+
+    /**
+     * Returns the assembly descriptor of this container.
+     *
+     * @return assemblyDescriptor;
+     */
+    public AssemblyDescriptor getAssemblyDescriptor()
+    {
+        return assemblyDescriptor;
+    }
+
+    private void addRoles( Collection roles, Set permissions )
+    {
+      Iterator iter = roles.iterator();
+      while (iter.hasNext())
+      {
+        JCheckBox checkBox = (JCheckBox) iter.next();
+        permissions.add( checkBox.getLabel() );
+      }
+    }
+
+    /**
+     * Returns the permissions for a method.
+     *
+     * @return assemblyDescriptor;
+     */
+    public Set getMethodPermissions( Method m, boolean home )
+    {
+      Set permissions = (Set) methodPermissionsCache.get( m );
+      if (permissions != null)
+        return permissions;
+      permissions = new HashSet();
+
+      Iterator iterPermissions = assemblyDescriptor.getMethodPermissions();
+      // go fishing in ejx's tree to build method permissions
+      while (iterPermissions.hasNext())
+      {
+        MethodPermission methodPermission =
+          (MethodPermission) iterPermissions.next();
+        Collection roles = methodPermission.getRoles();
+        TreeModel model = methodPermission.getMethods();
+        int count = model.getChildCount( model.getRoot() );
+        // look at the specific grants in a method permission
+        boolean rolesAdded_shouldBreak = false; // if we're in an inner loop
+        for (int iter=0; iter<count; iter++)
+        {
+          DefaultMutableTreeNode beannode =
+            (DefaultMutableTreeNode) model.getChild( model.getRoot(), iter );
+          com.dreambean.ejx.ejb.Method bean =
+            (com.dreambean.ejx.ejb.Method)beannode.getUserObject();
+
+          // check if this is the bean under consideration
+          if (!bean.getEjbName().equals( metaData.getEjbName() ))
+            continue;
+
+          // see if everything in the bean is selected regardless of interface
+          if (bean.isSelected())
+          {
+            addRoles( roles, permissions );
+            break;
+          }
+
+          // depends on ejb ordering home then remote (could check name)
+          DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode)
+            beannode.getChildAt( home ? 0 : 1 );
+          com.dreambean.ejx.ejb.Method beaninterface =
+            (com.dreambean.ejx.ejb.Method) interfaceNode.getUserObject();
+          // see if everything in the interface is selected regardless of method
+          if (beaninterface.isSelected())
+          {
+            addRoles( roles, permissions );
+            break;
+          }
+
+          // check the method
+          Enumeration enumMethods = interfaceNode.children();
+          while (enumMethods.hasMoreElements())
+          {
+            DefaultMutableTreeNode methodNode =
+              (DefaultMutableTreeNode) enumMethods.nextElement();
+            com.dreambean.ejx.ejb.Method beanmethod =
+              (com.dreambean.ejx.ejb.Method) methodNode.getUserObject();
+
+            // name doesn't match
+            if (!beanmethod.getMethodName().equals( m.getName() ))
+              continue;
+
+            String[] descriptorParams = beanmethod.getParams();
+            Class[] declaredParams = m.getParameterTypes();
+
+            // different number of parameters
+            if (descriptorParams.length != declaredParams.length)
+              continue;
+
+            boolean paramDoesntMatch = false;
+            for (int iterParams=0; iterParams<descriptorParams.length; iterParams++)
+            {
+              if (!descriptorParams[iterParams].equals( declaredParams[iterParams].getName() ))
+              {
+                paramDoesntMatch = true;
+                break;
+              }
+            }
+            if (paramDoesntMatch)
+              continue;
+
+            if (beanmethod.isSelected())
+            {
+              addRoles( roles, permissions );
+              rolesAdded_shouldBreak = true; // outer loop
+              // (could also use label)
+            }
+            break; // we've already found the method
+          }
+          if (rolesAdded_shouldBreak)
+            break;
+        }
+      }
+      methodPermissionsCache.put( m, permissions );
+      return permissions;
+    }
+
     // the following two methods use the new metadata structures from
     // package org.jboss.metadata
     public void setBeanMetaData(BeanMetaData metaData) {

@@ -27,7 +27,7 @@ import javax.transaction.Transaction;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Serializable
@@ -43,6 +43,7 @@ public final class RemoteMethodInvocation
 	
 	Transaction tx;
 	Principal identity;
+  Object credential;
 	
 	transient Map methodMap;
 
@@ -131,6 +132,16 @@ public final class RemoteMethodInvocation
 	{
 		return identity;
 	}
+
+  public Object getCredential()
+  {
+    return credential;
+  }
+
+  public void setCredential( Object credential )
+  {
+    this.credential = credential;
+  }
 	 
    // Package protected ---------------------------------------------
 
