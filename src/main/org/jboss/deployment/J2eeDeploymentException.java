@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ package org.jboss.deployment;
  *      
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class J2eeDeploymentException 
    extends DeploymentException

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  *	This immutable class contains information about the an overriden field property.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public final class JDBCCMPFieldPropertyMetaData {
 	/**

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * mapping of java classes to multipul columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface JDBCType {
 	public String[] getColumnNames();	

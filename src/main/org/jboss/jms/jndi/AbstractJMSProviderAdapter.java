@@ -1,5 +1,5 @@
 /**
- * JBoss, the OpenSource EJB server.
+ * JBoss, the OpenSource J2EE webOS.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,7 +27,7 @@ import javax.naming.NamingException;
  *
  * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
- * @version <pre>$Revision: 1.5 $</pre>
+ * @version <pre>$Revision: 1.6 $</pre>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  */

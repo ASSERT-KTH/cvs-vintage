@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -46,7 +46,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see org.jboss.ejb.plugins.SessionObjectInputStream
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 class SessionObjectOutputStream
 	extends ObjectOutputStream

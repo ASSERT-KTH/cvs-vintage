@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ import java.io.Serializable;
  *      
  *	@see org.jboss.ejb.plugins.SessionObjectOutputStream, org.jboss.ejb.plugins.SessionObjectInputStream
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 class StatefulSessionBeanField implements java.io.Serializable {
    static final byte SESSION_CONTEXT = 0;

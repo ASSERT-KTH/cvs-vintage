@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -19,7 +19,7 @@ import org.jboss.ejb.Container;
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public interface StatefulSessionPersistenceManager
    extends ContainerPlugin

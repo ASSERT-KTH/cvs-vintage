@@ -1,5 +1,5 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ pass the message onto the instance log4j Category.
 @see #logToCategory(String, String, Category)
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class LogToCategory extends Log
 {

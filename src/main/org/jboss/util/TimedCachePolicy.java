@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -23,7 +23,7 @@ This is a lazy cache policy in that objects are not checked for expiration
 until they are accessed.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class TimedCachePolicy extends TimerTask implements CachePolicy
 {

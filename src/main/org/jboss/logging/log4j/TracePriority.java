@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ import org.apache.log4j.Priority;
  @see org.apache.log4j.Priority
  
  @author Scott.Stark@jboss.org
- @version $Revision: 1.1 $
+ @version $Revision: 1.2 $
  */
 public class TracePriority extends Priority
 {

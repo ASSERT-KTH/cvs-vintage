@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -26,7 +26,7 @@ import javax.management.ReflectionException;
  * The remote interface of a JMX adapter.
  *      
  * @author Unknown
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface JMXAdaptor
    extends Remote

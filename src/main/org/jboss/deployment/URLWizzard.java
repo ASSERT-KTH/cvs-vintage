@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.7 $
+*	@version $Revision: 1.8 $
 */
 public class URLWizzard
 {

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -14,7 +14,7 @@ import javax.security.auth.Subject;
 Subject and security domain.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public interface SubjectSecurityManager extends EJBSecurityManager
 {

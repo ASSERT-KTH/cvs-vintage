@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -28,7 +28,7 @@ import org.jboss.naming.NonSerializableFactory;
  * in JNDI under java:/ namespace with the name provided with method {@link #setJNDIName}.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MailService
 	extends ServiceMBeanSupport

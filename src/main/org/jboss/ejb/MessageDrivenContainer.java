@@ -1,5 +1,5 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class MessageDrivenContainer
     extends Container

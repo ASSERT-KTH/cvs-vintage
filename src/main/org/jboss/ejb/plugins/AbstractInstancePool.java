@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -38,7 +38,7 @@ import org.jboss.management.JBossCountStatistic;
 *	@author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *	
-*  @version $Revision: 1.13 $
+*  @version $Revision: 1.14 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -31,7 +31,7 @@ as approriate.
 
 <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.15 $
+@version $Revision: 1.16 $
 
 Revisions:
 20010619 scott.stark: use the full service class name as the log4j category name

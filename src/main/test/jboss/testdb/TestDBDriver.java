@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ import java.util.Properties;
 /**
  * Database driver for unit tests.  Creates connections that implement virtually
  * nothing - enough to test with, in other words.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class TestDBDriver implements Driver {

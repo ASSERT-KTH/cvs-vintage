@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -32,7 +32,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public final class SecurityAssociation
 {

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -39,7 +39,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ import org.jboss.logging.Log;
  *   A utility class to cover up the rough bits of xml parsing
  *      
  *   @author <a href="mailto:chris@kimptoc.net">Chris Kimpton</a>
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class XmlHelper
 {

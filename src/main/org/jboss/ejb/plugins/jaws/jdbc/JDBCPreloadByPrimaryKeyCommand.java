@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -21,7 +21,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *
  * @see <related>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCPreloadByPrimaryKeyCommand extends JDBCPreloadFinderCommand
 {

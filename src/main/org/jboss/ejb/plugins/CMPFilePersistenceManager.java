@@ -1,6 +1,6 @@
 
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -43,7 +43,7 @@ import org.jboss.util.FinderResults;
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 *   <p><b>20010801 marc fleury:</b>
 *   <ul>
 *   <li>- insertion in cache upon create in now done in the instance interceptor

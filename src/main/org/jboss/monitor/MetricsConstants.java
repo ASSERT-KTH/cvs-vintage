@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -22,7 +22,7 @@ package org.jboss.monitor;
  * identifiers for the metrics messages.
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */     
 public interface MetricsConstants {
     

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------

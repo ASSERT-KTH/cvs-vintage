@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  * ???
  *
  * @author Unknown
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface EntityPersistenceStore2
    extends EntityPersistenceStore

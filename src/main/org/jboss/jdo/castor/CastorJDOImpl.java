@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -50,7 +50,7 @@ import org.jboss.proxy.InvocationHandler;
  *   Castor JDO support
  *
  *   @author Oleg Nitz (on@ibis.odessa.ua)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class CastorJDOImpl extends ServiceMBeanSupport 
         implements DataObjects, ObjectFactory, Referenceable, Serializable,

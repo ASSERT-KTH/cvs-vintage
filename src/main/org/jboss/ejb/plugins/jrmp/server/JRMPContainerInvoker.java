@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -68,7 +68,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *  @version $Revision: 1.40 $
+ *  @version $Revision: 1.41 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer

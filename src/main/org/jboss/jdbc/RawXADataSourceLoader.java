@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  * Service that loads a JDBC 2 std. extension-compliant
  * <code>XADataSource</code> and makes it available through JNDI.
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  */

@@ -1,5 +1,5 @@
 /*
- * jBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -19,7 +19,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

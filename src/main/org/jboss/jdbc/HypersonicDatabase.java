@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -31,7 +31,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author Peter Fagerlund pf@iprobot.se @see stopService()
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * violate the container contract by loading data before ejbActivate is called.
  *      
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface JPMLoadEntitiesCommand
 {

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  * Contains information about ejb-ql queries.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class QueryMetaData extends MetaData {
 	// Constants -----------------------------------------------------

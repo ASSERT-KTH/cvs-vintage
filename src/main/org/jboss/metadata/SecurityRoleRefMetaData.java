@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -24,7 +24,7 @@ Used in: entity and session
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class SecurityRoleRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -27,7 +27,7 @@ import org.jboss.monitor.StatisticsProvider;
  * @see EntityContainer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin, StatisticsProvider

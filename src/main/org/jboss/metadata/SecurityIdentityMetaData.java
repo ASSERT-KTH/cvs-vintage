@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -20,7 +20,7 @@ identity to be used.
 Used in: session, entity, message-driven
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class SecurityIdentityMetaData extends MetaData
 {

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -18,7 +18,7 @@ import java.util.jar.Manifest;
 /** Represents a J2EE application or module (EJB.jar, Web.war or App.ear). <br>
  *
  *  @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 public class Deployment
 implements java.io.Serializable

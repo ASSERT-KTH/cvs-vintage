@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
  *   The JMX interface for scoped deployment services
  *
  *   @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface J2eeGlobalScopeDeployerMBean extends J2eeDeployerMBean
 {

@@ -1,5 +1,5 @@
 /*
-* jBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class MessageDrivenTxInterceptorBMT
    extends AbstractTxInterceptorBMT

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ package org.jboss.configuration;
  * @see ConfigurationService
  *
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <pre>$Revision: 1.2 $</pre>
+ * @version <pre>$Revision: 1.3 $</pre>
  */
 public class ConfigurationException
    extends Exception

@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -35,7 +35,7 @@ import org.jboss.jmx.interfaces.JMXAdaptor;
 *      
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class JMXAdaptorImpl
    extends UnicastRemoteObject

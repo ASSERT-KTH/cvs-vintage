@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ Note that this class is not likely to operate correctly in a collection
 since the hashCode() and equals() methods are not correlated.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class AnybodyPrincipal implements Comparable, Principal
 {

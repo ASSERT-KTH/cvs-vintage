@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *      
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class StatefulSessionInstanceCache 
 	extends AbstractInstanceCache

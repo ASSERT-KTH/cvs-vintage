@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -44,7 +44,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *  @see TyrexTransactionPropagationContextManager, tyrex.tm.TransactionDomain
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport

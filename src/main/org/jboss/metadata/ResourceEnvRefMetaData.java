@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -27,7 +27,7 @@ Example:
 </resource-env-ref>
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class ResourceEnvRefMetaData extends MetaData
 {

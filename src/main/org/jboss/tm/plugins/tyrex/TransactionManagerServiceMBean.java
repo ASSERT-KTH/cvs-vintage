@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -13,7 +13,7 @@ package org.jboss.tm.plugins.tyrex;
  *
  *   @see TransactionManagerService
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface TransactionManagerServiceMBean
    extends org.jboss.util.ServiceMBean

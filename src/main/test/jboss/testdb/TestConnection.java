@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -13,7 +13,7 @@ import java.util.Map;
  * Database connection for unit tests.  Currently nothing is implemented except
  * close, isClosed, isAutoCommit, setAutoCommit(true), and rollback.  Everything
  * else throws a SQLException.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class TestConnection implements Connection {

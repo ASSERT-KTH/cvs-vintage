@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -30,7 +30,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *   
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class BeanCacheMonitor
 	implements BeanCacheMonitorMBean, MBeanRegistration

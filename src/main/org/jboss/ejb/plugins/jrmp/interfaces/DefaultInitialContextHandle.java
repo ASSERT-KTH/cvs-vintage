@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -29,7 +29,7 @@ import org.jboss.naming.NamingServiceMBean;
  *    the <tt>org.jnp.*</tt> naming classes.
  *      
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class DefaultInitialContextHandle
     extends InitialContextHandle

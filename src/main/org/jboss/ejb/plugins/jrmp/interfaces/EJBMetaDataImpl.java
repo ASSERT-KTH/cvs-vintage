@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -21,7 +21,7 @@ import javax.ejb.EJBException;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class EJBMetaDataImpl
     implements EJBMetaData, Serializable

@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -20,7 +20,7 @@ import org.jboss.metadata.SessionMetaData;
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *   @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class TxInterceptorBMT
    extends AbstractTxInterceptorBMT

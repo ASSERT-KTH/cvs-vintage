@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -40,7 +40,7 @@ import org.jboss.metadata.BeanMetaData;
  *
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public class LogInterceptor
    extends AbstractInterceptor

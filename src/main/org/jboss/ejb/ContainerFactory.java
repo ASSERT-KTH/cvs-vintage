@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -67,7 +67,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version $Revision: 1.85 $
+* @version $Revision: 1.86 $
 */
 public class ContainerFactory
 extends ServiceMBeanSupport

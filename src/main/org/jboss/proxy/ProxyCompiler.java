@@ -1,5 +1,5 @@
 /*
- * JBoss, the OpenSource EJB server
+ * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
@@ -12,7 +12,7 @@ import java.lang.reflect.*;
  * Manages bytecode assembly for dynamic proxy generation.
  *
  * @author Unknown
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class ProxyCompiler
 {

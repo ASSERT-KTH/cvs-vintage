@@ -1,5 +1,5 @@
 /*
-* JBoss, the OpenSource EJB server
+* JBoss, the OpenSource J2EE webOS
 *
 * Distributable under LGPL license.
 * See terms of license at gnu.org.
@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created   June 22, 2001
-* @version   $Revision: 1.1 $
+* @version   $Revision: 1.2 $
  */
 public interface XMLAdaptorServiceMBean
   extends ServiceMBean
