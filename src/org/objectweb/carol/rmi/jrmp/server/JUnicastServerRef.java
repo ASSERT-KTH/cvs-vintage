@@ -33,14 +33,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteRef;
+import java.rmi.server.RemoteStub;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
-import org.objectweb.carol.rmi.jrmp.interceptor.JRMPServerRequestInfoImpl;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
-import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
 import sun.rmi.server.UnicastServerRef;
@@ -65,6 +65,8 @@ public class JUnicastServerRef extends UnicastServerRef {
      * ClientRequestInterceptor array
      */
     protected JClientRequestInterceptor [] cis = null;
+
+	private int localId = -2;
     
     /**
      * constructor 
@@ -106,13 +108,26 @@ public class JUnicastServerRef extends UnicastServerRef {
     }
 
     /**
-     * use a different kind of RemoteRef instance
-     * @return remoet Ref the remote reference
+     * use a different kind of RemoteRef instance. This method is 
+     * used by the remote client to get the Client reference
+     * @return remote Ref the remote reference
      */
     protected RemoteRef getClientRef() {
-        return new JUnicastRef(ref, cis, JInterceptorStore.getJRMPInitializers());
+        return new JUnicastRef(ref, cis, JInterceptorStore.getJRMPInitializers(), localId);
     }
-
+	
+	
+	/**
+	 * @param obj
+	 * @param localId
+	 * @param object
+	 * @return
+	 */
+	public Remote exportObject(Remote obj, Object object, int localId) throws RemoteException {
+		this.localId=localId;
+		return super.exportObject(obj,object);
+	}    
+	
     /**
      * override unmarshalCustomCallData to receive and establish contexts
      * sent by the client
@@ -150,7 +165,7 @@ public class JUnicastServerRef extends UnicastServerRef {
     private void runDispatch(Remote obj, RemoteCall call) throws IOException {
         super.dispatch(obj, new JRemoteServerCall(call, sis));
     }
-
+	
     /**
      * Class used to run dispatch in a separated thread
      */
@@ -159,7 +174,7 @@ public class JUnicastServerRef extends UnicastServerRef {
 	/**
 	 * the remote object
 	 */
-        Remote obj;
+     Remote obj;
 	
 	/**
 	 * the remote call

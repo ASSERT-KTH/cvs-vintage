@@ -72,7 +72,7 @@
       <available file="${jonathan.jar}"/>
     </condition>   
     <antcall target="compile.base"/>
-    <antcall target="compile.iiop"/> 
+    <antcall target="compile.stub"/> 
     <antcall target="compile.jonathan"/>
     <antcall target="compile.jvm.daemon"/>
     <antcall target="compile.cmi"/>
@@ -103,18 +103,28 @@
     </rmic>     
   </target>
 
-  <target name="compile.iiop"> 
+  <target name="compile.stub"> 
+    
+    <!-- for sun jrmp  -->
+    <rmic base="${build}/classes" compiler="sun"
+      classname="org.objectweb.carol.jndi.reference.JNDIResourceWrapper">
+      <classpath refid="carol.classpath"/>
+    </rmic> 
+    <rmic base="${build}/classes" compiler="sun"
+      classname="org.objectweb.carol.jndi.reference.JNDIReferenceWrapper">
+      <classpath refid="carol.classpath"/>
+    </rmic>
     
      <!-- for sun iiop  -->
     <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
+      classname="org.objectweb.carol.jndi.reference.JNDIResourceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic> 
     <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper">
+      classname="org.objectweb.carol.jndi.reference.JNDIReferenceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic>
-       
+        
     <javac 
       srcdir="${src}"
       destdir="${build}/classes"

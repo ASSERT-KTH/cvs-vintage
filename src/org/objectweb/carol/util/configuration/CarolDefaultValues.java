@@ -83,6 +83,11 @@ public class CarolDefaultValues {
     public static String URL_PREFIX="url";
 
     /**
+     * carol jrmp local call optimization
+     */
+	public static String LOCAL_JRMP_PROPERTY="rmi.local.call";
+
+    /**
      * carol factory Prefix
      */
     public static String FACTORY_PREFIX="context.factory";

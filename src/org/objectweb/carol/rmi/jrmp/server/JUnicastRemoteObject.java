@@ -30,16 +30,15 @@ package org.objectweb.carol.rmi.jrmp.server;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.ExportException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.RemoteStub;
 import java.rmi.server.ServerCloneException;
-import java.rmi.server.ServerRef;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 import sun.rmi.transport.ObjectTable;
 
@@ -56,16 +55,13 @@ public class JUnicastRemoteObject extends RemoteServer {
     protected RMIClientSocketFactory csf = null;
     protected RMIServerSocketFactory ssf = null;
     private static JUnicastThreadFactory defaultThreadFactory = null;
-
-    // parameter for generic export method
-    protected static final Class[] exportObjectParamType = new Class[]{int.class,  
-								       JServerRequestInterceptor[].class,  
-								       JClientRequestInterceptor[].class};
-    protected static final Class[] exportObjectWithFactoryParamType = new Class[]{int.class, RMIClientSocketFactory.class,
-										  RMIServerSocketFactory.class,  
-										  JServerRequestInterceptor[].class, 
-										  JClientRequestInterceptor[].class};
-										  
+    										  
+	//static boolean for local call optimization
+	private static boolean localO;
+    					  
+    static {
+    	localO=new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();					  	
+    }
     protected JUnicastRemoteObject(JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
 	// search in the jvm properties if the port number properties exist
         this(0, sis, cis);
@@ -85,24 +81,8 @@ public class JUnicastRemoteObject extends RemoteServer {
         this.ssf = ssf;
         JUnicastRemoteObject.exportObject((Remote) this, p, csf, ssf, sis, cis);
     }
-
-    private void readObject(java.io.ObjectInputStream in)
-            throws java.io.IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        exportObject(null, null);
-    }
-
-    public Object clone() throws CloneNotSupportedException {
-        try {
-            JUnicastRemoteObject cloned = (JUnicastRemoteObject) super.clone();
-            cloned.exportObject(null, null);
-            return cloned;
-        } catch (RemoteException e) {
-            throw new ServerCloneException("Clone failed", e);
-        }
-    }
-
-
+    
+	// exports methods
     protected void exportObject( JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis) throws RemoteException {
         if (csf == null && ssf == null) {
             JUnicastRemoteObject.exportObject((Remote) this, 0, sis, cis);
@@ -119,9 +99,7 @@ public class JUnicastRemoteObject extends RemoteServer {
     public static Remote exportObject(Remote obj, int p,  JServerRequestInterceptor [] sis, JClientRequestInterceptor [] cis)
             throws RemoteException {
 
-        return JUnicastRemoteObject.exportObject(obj, "org.objectweb.carol.rmi.jrmp.server.JUnicastServerRef",
-                exportObjectParamType,
-                new Object[]{ new Integer(p), sis, cis });
+        return JUnicastRemoteObject.exportObjectR(obj, new JUnicastServerRef(p, sis, cis));
     }
 
 
@@ -132,43 +110,58 @@ public class JUnicastRemoteObject extends RemoteServer {
 				      JClientRequestInterceptor [] cis)
             throws RemoteException {
 
-        return JUnicastRemoteObject.exportObject(obj, "org.objectweb.carol.rmi.jrmp.server.JUnicastServerRefSf",
-                exportObjectWithFactoryParamType,
-                new Object[]{ new Integer(p), csf, ssf, sis, cis});
+        return JUnicastRemoteObject.exportObjectR(obj, new JUnicastServerRefSf(p, csf, ssf, sis, cis));
     }
-
-    public static boolean unexportObject(Remote obj, boolean force)
-            throws NoSuchObjectException {
+    
+	/**
+	 * Real export object (localy and remotly)
+	 * @param obj
+	 * @param serverRef
+	 * @param params
+	 * @param args
+	 * @return
+	 * @throws RemoteException
+	 */
+	protected static Remote exportObjectR(Remote obj, JUnicastServerRef serverRef)  throws RemoteException {
+		int localId = -2;
+		if (localO) {
+					localId = JLocalObjectStore.storeObject(obj);
+		}
+		if (obj instanceof JUnicastRemoteObject) ((JUnicastRemoteObject) obj).ref = serverRef;
+		Remote rob = serverRef.exportObject(obj, null, localId);
+		return rob;
+	}
+	
+   /**
+    * Real unexport Object (localy and remotly)
+    * @param obj
+    * @param force
+    * @return
+    * @throws NoSuchObjectException
+    */
+    public static boolean unexportObject(Remote obj, boolean force) throws NoSuchObjectException {
+        if (localO) {
+        		JUnicastRef remoteref = (JUnicastRef)ObjectTable.getStub(obj).getRef();
+            	JLocalObjectStore.removeObject(remoteref.getLocalId());
+        }
         return ObjectTable.unexportObject(obj, force);
     }
+   
+	private void readObject(java.io.ObjectInputStream in)
+			throws java.io.IOException, ClassNotFoundException {
+		in.defaultReadObject();
+		exportObject(null, null);
+	}
 
-    protected static Remote exportObject(Remote obj, String refClassName,  Class[] params, Object[] args)  throws RemoteException {
-        Class refClass;
-        try {
-            refClass = Class.forName(refClassName);
-        } catch (ClassNotFoundException e) {
-            throw new ExportException("Class " + refClassName + " not found");
-        }
-
-        if (!ServerRef.class.isAssignableFrom(refClass)) {
-            throw new ExportException("Class " + refClassName + " not instance of " + ServerRef.class.getName());
-        }
-
-        // create server ref instance using given constructor and arguments
-        ServerRef serverRef;
-        try {
-            java.lang.reflect.Constructor cons = refClass.getConstructor(params);
-            serverRef = (ServerRef) cons.newInstance(args);
-            // if impl does extends JUnicastRemoteObject set its ref
-            if (obj instanceof JUnicastRemoteObject)
-                ((JUnicastRemoteObject) obj).ref = serverRef;
-
-        } catch (Exception e) {
-            throw new ExportException("Exception creating instance of " + refClassName, e);
-        }
-        return serverRef.exportObject(obj, null);
-    }
-
+	public Object clone() throws CloneNotSupportedException {
+		try {
+			JUnicastRemoteObject cloned = (JUnicastRemoteObject) super.clone();
+			cloned.exportObject(null, null);
+			return cloned;
+		} catch (RemoteException e) {
+			throw new ServerCloneException("Clone failed", e);
+		}
+	}
     /**
      * set the default thread factory to to used when dispatching the call.
      * No new thread is created when the factory is <code>null</code>

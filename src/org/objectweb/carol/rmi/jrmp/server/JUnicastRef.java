@@ -42,15 +42,9 @@ import java.rmi.server.UID;
 import java.util.Arrays;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
-import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
-import org.objectweb.carol.rmi.jrmp.interceptor.JRMPClientRequestInfoImpl;
-import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
-import org.objectweb.carol.util.configuration.TraceCarol;
 
 import sun.rmi.server.UnicastRef;
 import sun.rmi.transport.Connection;
@@ -90,6 +84,8 @@ public class JUnicastRef extends UnicastRef {
 	* Interceptors initialisers for this References
 	*/
    protected transient String [] initializers = null;
+
+   private transient int localId = -2;
     
     /**
      * empty constructor
@@ -108,14 +104,16 @@ public class JUnicastRef extends UnicastRef {
     /**
      * Constructor with interceptor
      * @param liveRef the live reference
-     * @param cis the client interceptor array     
+     * @param cis the client interceptor array
+     * @param int localId   
      */
-    public JUnicastRef(LiveRef liveRef, JClientRequestInterceptor [] cis, String [] initial) {
+    public JUnicastRef(LiveRef liveRef, JClientRequestInterceptor [] cis, String [] initial, int local) {
         super(liveRef);
 	this.initializers=initial;
 	this.cis=cis;
 	this.raddr=JInterceptorHelper.getInetAddress();
 	this.ruid=JInterceptorHelper.getSpaceID();
+	this.localId=local;
     }
 
     /**
@@ -139,7 +137,12 @@ public class JUnicastRef extends UnicastRef {
                          Object[] params,
                          long opnum)
             throws Exception {
-
+		if ((localRef) && (localId!=-2)){
+			// local call on the object
+			//System.out.println("local call on object id:"+localId);
+			return method.invoke(JLocalObjectStore.getObject(localId), params);
+		} else {
+			//System.out.println("remote (local ref="+localRef+") call on object id:"+localId);
         Connection conn = ref.getChannel().newConnection();
         java.rmi.server.RemoteCall call = null;
         boolean reuse = true;
@@ -205,6 +208,7 @@ public class JUnicastRef extends UnicastRef {
                 ref.getChannel().free(conn, reuse);
             }
         }
+		}
     }
 
     /**
@@ -297,6 +301,7 @@ public class JUnicastRef extends UnicastRef {
 	}
 		this.initializers=ia;
         cis = JInterceptorStore.setRemoteInterceptors(raddr, ruid,ia);
+		localId=in.readInt();
         ref = LiveRef.read(in, newFormat);
     }
 
@@ -316,7 +321,17 @@ public class JUnicastRef extends UnicastRef {
 	for (int i=0; i< ia.length; i++) {
 	    out.writeUTF(ia[i]);
 	}
+	// write the local identificator
+	out.writeInt(getLocalId());
     ref.write(out, newFormat);
     out.flush();
     }
+
+	/**
+	 * @return
+	 */
+	public int getLocalId() {
+		// TODO Auto-generated method stub
+		return localId;
+	}
 }

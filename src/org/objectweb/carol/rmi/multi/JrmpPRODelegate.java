@@ -49,6 +49,11 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
 	 * private port number 
 	 */
 	private int port;
+	
+	/**
+	 * private local optimisation activation boolean
+	 */
+	private boolean localOpt = false;
 
     /**
      * private Interceptor for Context propagation

@@ -56,8 +56,8 @@ public class JUnicastRefSf extends JUnicastRef {
      * @param liveRef the live reference
      * @param cis the client interceptor array
      */
-    public JUnicastRefSf(LiveRef liveRef, JClientRequestInterceptor [] cis, String [] initial) {
-        super(liveRef, cis, initial);
+    public JUnicastRefSf(LiveRef liveRef, JClientRequestInterceptor [] cis, String [] initial, int local) {
+        super(liveRef, cis, initial, local);
     }
 
     /**

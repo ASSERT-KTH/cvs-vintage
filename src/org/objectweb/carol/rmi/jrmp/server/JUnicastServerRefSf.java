@@ -94,6 +94,6 @@ public class JUnicastServerRefSf extends JUnicastServerRef {
      * @return remoet Ref the remote reference
      */
     protected RemoteRef getClientRef() {
-        return new JUnicastRefSf(ref, cis, JInterceptorStore.getJRMPInitializers());
+        return new JUnicastRefSf(ref, cis, JInterceptorStore.getJRMPInitializers(), -2);
     }
 }
