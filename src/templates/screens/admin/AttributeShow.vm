@@ -18,13 +18,8 @@ This page is for editing the Attributes which are defined globally.
 </div>
 
 <div class="grouper">
-<div class="datatitle">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<td>Attributes</td>
-</tr>
-</table>
-</div>
+
+#datatitle("Attributes")
 
 <p>#actionErrorMsg()</p>
 
