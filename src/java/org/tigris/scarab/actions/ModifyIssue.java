@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.140 2002/12/19 21:05:22 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.141 2002/12/20 00:06:15 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -514,7 +514,7 @@ public class ModifyIssue extends BaseModifyIssue
                 try 
                 {
                     String filename = 
-                        ((FileItem)fileField.getValue()).getFileName();
+                        ((FileItem)fileField.getValue()).getName();
                     String contentType = 
                         TurbineMimeTypes.getContentType(filename, null);
                     if (contentType == null) 

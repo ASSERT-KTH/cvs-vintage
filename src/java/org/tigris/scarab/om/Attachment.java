@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.50 2002/12/10 06:01:20 jon Exp $
+ * @version $Id: Attachment.java,v 1.51 2002/12/20 00:07:35 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -154,7 +154,7 @@ public class Attachment
         {
             setMimeType(v.getContentType());
         }
-        setFileName(v.getFileName());
+        setFileName(v.getName());
     }    
     
     /**

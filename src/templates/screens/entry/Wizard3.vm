@@ -123,7 +123,7 @@
        <td>
          <input type="checkbox" name="file_delete_$velocityCount" />
        </td>
-       <td>$file.File.FileName</td>
+       <td>$file.File.Name</td>
        <td>$file.Name</td>
        <td>$file.MimeType</td>
      </tr>
