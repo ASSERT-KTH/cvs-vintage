@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.25 2002/09/11 21:47:07 elicia Exp $
+ * @version $Id: IssueType.java,v 1.26 2002/09/12 00:59:09 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -573,8 +573,9 @@ public  class IssueType
                 Criteria crit = new Criteria();
                 crit.add(RIssueTypeOptionPeer.ISSUE_TYPE_ID, getIssueTypeId());
                 crit.addIn(RIssueTypeOptionPeer.OPTION_ID, optIds);
+                crit.addJoin(RIssueTypeOptionPeer.OPTION_ID, AttributeOptionPeer.OPTION_ID);
                 crit.addAscendingOrderByColumn(RIssueTypeOptionPeer.PREFERRED_ORDER);
-                crit.addAscendingOrderByColumn(RIssueTypeOptionPeer.DISPLAY_VALUE);
+                crit.addAscendingOrderByColumn(AttributeOptionPeer.OPTION_NAME);
                 rIssueTypeOpts = RIssueTypeOptionPeer.doSelect(crit);
             }
             ScarabCache.put(rIssueTypeOpts, this, GET_ALL_R_ISSUETYPE_OPTIONS, 
