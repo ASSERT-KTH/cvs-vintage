@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.70 2002/03/07 22:26:35 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.71 2002/03/11 21:54:32 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -36,6 +36,11 @@
                        (2) to fill out the list.</li>
                     </ol>(JDM)
                 </li>
+                <li>Overall better support for Postgresql and
+                    potentially other databases as well. (JSS, JDM, List members)</li>
+                <li>Re-wrote the create-mysql-database.sh script as create-db.sh
+                    and added support for command line arguments, as well as
+                    postgresql database creation. (JSS)</li>
                 <li>Changes to torque and scarab's use of torque to allow
                     the transaction that occurs during entering an issue to
                     to succeed on db's that have transactional support
@@ -110,8 +115,10 @@
                 <li>Fixed help doc links bug. See Bug Report
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=201">201</a>
                     (JSS)</li>
-                <li>Can now copy multiple queries, and copy subscription information along with them.(EWD)</li>
-                <li>Workflow: returning to TemplateList page after adding a new template. (EWD) </li>
+                <li>Can now copy multiple queries, and copy subscription
+                    information along with them. (EWD)</li>
+                <li>Workflow: returning to TemplateList page after
+                    adding a new template. (EWD)</li>
             </ul>
         </td>
     </tr>    
