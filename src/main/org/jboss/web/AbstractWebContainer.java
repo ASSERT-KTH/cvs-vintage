@@ -10,7 +10,9 @@ package org.jboss.web;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.io.File;
 import java.io.InputStream;
@@ -18,7 +20,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.jar.JarFile;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -31,7 +35,9 @@ import javax.naming.Name;
 import javax.naming.NameNotFoundException;
 import javax.management.ObjectName;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.DeploymentException;
@@ -43,6 +49,7 @@ import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
+import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
@@ -139,7 +146,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.28 $
+@version $Revision: 1.29 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -174,7 +181,8 @@ public abstract class AbstractWebContainer
    
    /** A mapping of deployed warUrl strings to the WebApplication object */
    protected HashMap deploymentMap = new HashMap();
-   
+
+
    public AbstractWebContainer()
    {
    }
@@ -203,28 +211,13 @@ public abstract class AbstractWebContainer
             {
                // iterate the war modules
                mod = (J2eeModuleMetaData) it.next();
-
-               if (mod.isWeb())        
+               if( mod.isWeb() )
                {
-                  //only pick up the context for our war, the names should match
-                  // The wars come from packages and thus are unpackaged under /tmp/deploy/<intNumber>.myweb.war
-                  if (di.shortName.lastIndexOf(mod.getFileName()) != -1)
-                     di.webContext = mod.getWebContext();
-               }     
+                  di.webContext = mod.getWebContext();
+               }
             }
          }
-         
-         if (di.webContext == null)
-         {
-            di.webContext = di.shortName;
-         }
-  
-         // if it is not a sub-deployment get the context from the name of the deployment
-         // FIXME marcf: I can't believe there is no way to specify the context in web.xml
-         
-         // make sure the context starts with a slash
-         if (!di.webContext.startsWith("/")) di.webContext = "/"+di.webContext;
-            
+
          // resolve the watch
          if (di.url.getProtocol().startsWith("http"))
          {
@@ -374,8 +367,20 @@ public abstract class AbstractWebContainer
          URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser(di);
-         WebApplication warInfo = performDeploy(di.webContext, di.localUrl.toString(), webAppParser);
-         deploymentMap.put(di.localUrl.toString(), warInfo);
+         // If there is no di.webContext build it from the war or jboss-web.xml
+         String webContext = di.webContext;
+         if( webContext != null )
+         {
+            if( webContext.length() > 0 && webContext.charAt(0) != '/' )
+               webContext = "/" + webContext;
+         }
+         // Get the war URL
+         URL warURL = di.localUrl != null ? di.localUrl : di.url;
+         // If there is no webContext build one
+         if( webContext == null )
+            webContext = buildWebContext(di);
+         WebApplication warInfo = performDeploy(webContext, warURL.toString(), webAppParser);
+         deploymentMap.put(warURL.toString(), warInfo);
       }
       catch(DeploymentException e)
       {
@@ -383,7 +388,7 @@ public abstract class AbstractWebContainer
       }
       catch(Exception e)
       {
-         e.printStackTrace();
+         log.error("Error during deploy", e);
          throw new DeploymentException("Error during deploy", e);
       }
       finally
@@ -396,7 +401,9 @@ public abstract class AbstractWebContainer
    subclasses to perform the web container specific deployment steps. 
    @param ctxPath, The context-root element value from the J2EE
    application/module/web application.xml descriptor. This may be null
-   if war was is not being deployed as part of an enterprise application.
+   if war was is not being deployed as part of an enterprise application. If it
+   is null, you should check the jboss-web.xml descriptor for a context-root
+   element.
    @param warUrl, The string for the URL of the web application war.
    @param webAppParser, The callback interface the web container should use to
    setup the web app JNDI environment for use by the web app components. This
@@ -407,7 +414,7 @@ public abstract class AbstractWebContainer
    */
    protected abstract WebApplication performDeploy(String ctxPath, String warUrl,
       WebDescriptorParser webAppParser) throws Exception;
-   
+
    /** A template pattern implementation of the undeploy() method. This method
    calls the {@link #performUndeploy(String) performUndeploy()} method to
    perform the container specific undeployment steps and unregisters the
@@ -483,6 +490,42 @@ public abstract class AbstractWebContainer
    {
    }
 
+   public void startService() throws Exception
+   {
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
+            "addDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e)
+      {
+         log.error("Could not register with MainDeployer", e);
+      }
+   }
+
+   /**
+   * Implements the template method in superclass. This method stops all the
+   * applications in this server.
+   */
+   public void stopService()
+   {
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
+            "removeDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+   
+   }
+
    /** This method is invoked from within subclass performDeploy() method
    implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
    
@@ -547,7 +590,7 @@ public abstract class AbstractWebContainer
       linkSecurityDomain(securityDomain, envCtx);
       log.debug("AbstractWebContainer.parseWebAppDescriptors, End");
    }
-   
+
    protected void addEnvEntries(Iterator envEntries, Context envCtx)
       throws ClassNotFoundException, NamingException
    {
@@ -650,53 +693,15 @@ public abstract class AbstractWebContainer
          EjbLocalRefMetaData ejb = (EjbLocalRefMetaData) ejbRefs.next();
          String name = ejb.getName();
          String linkName = ejb.getLink();
-         String jndiName = di.findEjbLink(linkName);
+         String jndiName = di.findEjbLocalLink(linkName);
 
          if( jndiName == null )
-            throw new NamingException("ejb-ref: "+name+", target not found, add valid ejb-link");
-         // The local home location is "local/"+jndiName
-         jndiName = "local/" + jndiName;
+            throw new NamingException("ejb-local-ref: "+name+", target not found, add valid ejb-link");
          log.debug("Linking ejb-local-ref: "+name+" to JNDI name: "+jndiName);
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
    }
 
-   public void startService() throws Exception
-   {
-      try
-      {
-         // Register with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "addDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e)
-      {
-         log.error("Could not register with MainDeployer", e);
-      }
-   }
-
-   /**
-   * Implements the template method in superclass. This method stops all the
-   * applications in this server.
-   */
-   public void stopService()
-   {
-      try
-      {
-         // Register with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "removeDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
-   
-   }
-   
    /** This creates a java:comp/env/security context that contains a
    securityMgr binding pointing to an AuthenticationManager implementation
    and a realmMapping binding pointing to a RealmMapping implementation.
@@ -727,7 +732,178 @@ public abstract class AbstractWebContainer
          Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
       }
    }
-   
+
+   /** A utility method that searches the given loader for the
+    resources: "javax/servlet/resources/web-app_2_3.dtd",
+    "org/apache/jasper/resources/jsp12.dtd", and "javax/ejb/EJBHome.class"
+    and returns an array of URL strings. Any jar: urls are reduced to the
+    underlying <url> portion of the 'jar:<url>!/{entry}' construct.
+    */
+   public String[] getStandardCompileClasspath(ClassLoader loader)
+   {
+      String[] jspResources = {
+         "javax/servlet/resources/web-app_2_3.dtd",
+         "org/apache/jasper/resources/jsp12.dtd",
+         "javax/ejb/EJBHome.class"
+      };
+      ArrayList tmp = new ArrayList();
+      for(int j = 0; j < jspResources.length; j ++)
+      {
+         URL rsrcURL = loader.getResource(jspResources[j]);
+         if( rsrcURL != null )
+         {
+            String url = rsrcURL.toExternalForm();
+            if( rsrcURL.getProtocol().equals("jar") )
+            {
+               // Parse the jar:<url>!/{entry} URL
+               url = url.substring(4);
+               int seperator = url.indexOf('!');
+               url = url.substring(0, seperator);
+            }
+            tmp.add(url);
+         }
+         else
+         {
+            log.warn("Failed to fin jsp rsrc: "+jspResources[j]);
+         }
+      }
+      log.trace("JSP StandardCompileClasspath: " + tmp);
+      String[] cp = new String[tmp.size()];
+      tmp.toArray(cp);
+      return cp;
+   }
+
+   /** A utility method that walks up the ClassLoader chain starting at
+    the given loader and queries each ClassLoader for a 'URL[] getURLs()'
+    method from which a complete classpath of URL strings is built.
+    */
+   public String[] getCompileClasspath(ClassLoader loader)
+   {
+      HashSet tmp = new HashSet();
+      ClassLoader cl = loader;
+      while( cl != null )
+      {
+         URL[] urls = getClassLoaderURLs(cl);
+         for(int u = 0; u < urls.length; u ++)
+         {
+            URL url = urls[u];
+            tmp.add(url.toExternalForm());
+         }
+         cl = cl.getParent();
+      }
+
+      log.trace("JSP CompileClasspath: " + tmp);
+      String[] cp = new String[tmp.size()];
+      tmp.toArray(cp);
+      return cp;
+   }
+
+   /** Use reflection to access a URL[] getURLs method so that non-URLClassLoader
+    *class loaders that support this method can provide info.
+    */
+   private URL[] getClassLoaderURLs(ClassLoader cl)
+   {
+      URL[] urls = {};
+      try
+      {
+         Class returnType = urls.getClass();
+         Class[] parameterTypes = {};
+         Method getURLs = cl.getClass().getMethod("getURLs", parameterTypes);
+         if( returnType.isAssignableFrom(getURLs.getReturnType()) )
+         {
+            Object[] args = {};
+            urls = (URL[]) getURLs.invoke(cl, args);
+         }
+      }
+      catch(Exception ignore)
+      {
+      }
+      return urls;
+   }
+
+   /** This method creates a context-root string from either the
+      WEB-INF/jboss-web.xml context-root element is one exists, or the
+      filename portion of the warURL. It is called if the DeploymentInfo
+      webContext value is null which indicates a standalone war deployment.
+      A war name of ROOT.war is handled as a special case of a war that
+      should be installed as the default web context.
+    */
+   protected String buildWebContext(DeploymentInfo di)
+   {
+      String webContext = null;
+      String warName = di.shortName;
+      URL warURL = di.url;
+
+      try
+      {
+         // First check for a WEB-INF/jboss-web.xml context-root element
+         InputStream warIS = warURL.openStream();
+         java.util.zip.ZipInputStream zipIS = new java.util.zip.ZipInputStream(warIS);
+         java.io.FilterInputStream wrapperIS = new java.io.FilterInputStream(zipIS)
+         {
+            public void close()
+            {
+            }
+         };
+         java.util.zip.ZipEntry entry;
+         while( (entry = zipIS.getNextEntry()) != null )
+         {
+            if( entry.getName().equals("WEB-INF/jboss-web.xml") )
+            {
+               try
+               {
+               XmlFileLoader xmlLoader = new XmlFileLoader();
+               Document jbossWebDoc = xmlLoader.getDocument(wrapperIS, "WEB-INF/jboss-web.xml");
+               Element jbossWeb = jbossWebDoc.getDocumentElement();
+               NodeList contextRoot = jbossWeb.getElementsByTagName("context-root");
+               if( contextRoot.getLength() > 0 )
+               {
+                  webContext = contextRoot.item(0).getFirstChild().getNodeValue();
+                  webContext = webContext.trim();
+                  log.trace("Found jboss-web/context-root="+webContext);
+               }
+               }
+               catch(Exception e)
+               {
+               }
+               break;
+            }
+         }
+         zipIS.close();
+      }
+      catch(Exception e)
+      {
+         log.trace("Failed to parse warURL("+warURL+") WEB-INF/jboss-web.xml", e);
+      }
+
+      if( webContext == null )
+      {
+         // Build the context from the war name, strip the .war suffix
+         webContext = warName;
+         int suffix = webContext.indexOf(".war");
+         if( suffix > 0 )
+            webContext = webContext.substring(0, suffix);
+         // Strip any '<int-value>.' prefix
+         int index = 0;
+         for(; index < webContext.length(); index ++)
+         {
+            char c = webContext.charAt(index);
+            if( Character.isDigit(c) == false && c != '.' )
+               break;
+         }
+         webContext = webContext.substring(index);
+         // Special hanling for a war file named ROOT
+         if( webContext.equals("ROOT") )
+            webContext = "";
+      }
+
+      // Servlet containers are anal about the web context starting with '/'
+      if( webContext.length() > 0 && webContext.charAt(0) != '/' )
+         webContext = "/" + webContext;
+
+      return webContext;
+   }
+
    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
    onto the protected parseWebAppDescriptors() AbstractWebContainer method.
    */
