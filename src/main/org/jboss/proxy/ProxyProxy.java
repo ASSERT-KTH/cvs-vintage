@@ -20,12 +20,12 @@ import org.jboss.logging.Logger;
  * ???
  *
  * @author Unknown
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class ProxyProxy
    implements Serializable, EJBObject
 {
-   private static Logger log = Logger.create(ProxyProxy.class);
+   private static Logger log = Logger.getLogger(ProxyProxy.class);
    InvocationHandler handler;
    String[] targetNames;
 

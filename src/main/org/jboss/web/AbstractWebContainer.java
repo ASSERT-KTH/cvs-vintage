@@ -13,9 +13,8 @@ import javax.naming.NameNotFoundException;
 
 import org.w3c.dom.Element;
 
-import org.apache.log4j.Category;
-
-import org.jboss.ejb.DeploymentException;
+import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
@@ -113,7 +112,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.7 $
+@version $Revision: 1.8 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -146,7 +145,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     /** The "WebContainer" log4j category instance available for logging related
         to WebContainer events.
      */
-    public static final Category category = Category.getInstance("WebContainer");
+    protected Logger category = Logger.getLogger(this.getClass());
     /** A mapping of deployed warUrl strings to the WebApplication object */
     protected HashMap deploymentMap = new HashMap();
 

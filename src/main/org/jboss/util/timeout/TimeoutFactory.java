@@ -22,11 +22,12 @@ import org.jboss.logging.Logger;
  *  allocating anything on the heap.
  *
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.8 $
+ *  @version $Revision: 1.9 $
  */
-public class TimeoutFactory {
+public class TimeoutFactory
+{
 
-   private static Logger log = Logger.create(TimeoutFactory.class);
+   private static Logger log = Logger.getLogger(TimeoutFactory.class);
 
   //  Code commented out with the mark "INV:" are runtime checks
   //  of invariants that are not needed for a production system.

@@ -24,7 +24,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -36,7 +36,7 @@ public class ServiceCreator
 {
    // Attributes ----------------------------------------------------
    
-   private final Logger log = Logger.create(getClass());
+   private final Logger log = Logger.getLogger(getClass());
 	
    private MBeanServer server;
 	

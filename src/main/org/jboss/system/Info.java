@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -32,7 +32,7 @@ public class Info
    // Attributes ----------------------------------------------------
 
    /** Class logger. */
-   private static Logger log = Logger.create("GPA");
+   private static Logger log = Logger.getLogger("org.jboss.system.GPA");
 
    //
    // System information

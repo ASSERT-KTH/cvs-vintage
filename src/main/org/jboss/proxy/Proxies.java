@@ -18,7 +18,7 @@ import org.jboss.logging.Logger;
  */
 public final class Proxies
 {
-   private static Logger log = Logger.create(Proxies.class);
+   private static Logger log = Logger.getLogger(Proxies.class);
    private Proxies()
    {}
    

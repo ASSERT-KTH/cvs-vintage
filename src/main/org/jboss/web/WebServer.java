@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  *
  *   Revisions:
  *   
@@ -54,7 +54,7 @@ public class WebServer
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   private static Logger log = Logger.create(WebServer.class);
+   private static Logger log = Logger.getLogger(WebServer.class);
    /** The port the web server listens on */
    private int port = 8083;
 

@@ -31,7 +31,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see Monitorable
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class BeanCacheMonitor
    implements BeanCacheMonitorMBean, MBeanRegistration
@@ -39,7 +39,7 @@ public class BeanCacheMonitor
    // Constants ----------------------------------------------------
    
    // Attributes ---------------------------------------------------
-   static Logger log = Logger.create(BeanCacheMonitor.class);
+   static Logger log = Logger.getLogger(BeanCacheMonitor.class);
    MBeanServer m_mbeanServer;
    // Static -------------------------------------------------------
    

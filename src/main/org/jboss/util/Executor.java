@@ -19,14 +19,14 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=Executor";
-   private static Logger log = Logger.create("Executor");
+   private static Logger log = Logger.getLogger("Executor");
     
    // Attributes ----------------------------------------------------
    String exec;

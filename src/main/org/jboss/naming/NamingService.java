@@ -28,7 +28,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -47,7 +47,7 @@ public class NamingService
    // Constructors --------------------------------------------------
    public NamingService()
    {
-      String categoryName = log.getName();
+      String categoryName = log.getCategory().getName();
       naming = new Main(categoryName);
    }
    

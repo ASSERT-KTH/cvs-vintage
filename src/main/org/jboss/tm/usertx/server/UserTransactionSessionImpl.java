@@ -45,49 +45,57 @@ public class UserTransactionSessionImpl
 {
    /** Cache a reference to the TM. */
    private static TransactionManager tm = null;
-   private static Logger log = Logger.create(UserTransactionSessionImpl.class);
-
+   private static Logger log = Logger.getLogger(UserTransactionSessionImpl.class);
+   
    /**
     *  Get a reference to the transaction manager.
     */
    protected static TransactionManager getTransactionManager()
    {
-      if (tm == null) {
-         try {
+      if (tm == null)
+      {
+         try
+         {
             Context ctx = new InitialContext();
             tm = (TransactionManager)ctx.lookup("java:/TransactionManager");
-         } catch (NamingException ex) {
+         }
+         catch (NamingException ex)
+         {
             log.error("java:/TransactionManager lookup failed", ex);
          }
       }
       return tm;
    }
-
+   
    /** Cache a reference to the TPC Factory. */
    private static TransactionPropagationContextFactory tpcFactory = null;
-
+   
    /**
     *  Get a reference to the TPC Factory
     */
    protected static TransactionPropagationContextFactory getTPCFactory()
    {
-      if (tpcFactory == null) {
-         try {
+      if (tpcFactory == null)
+      {
+         try
+         {
             Context ctx = new InitialContext();
             tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
-         } catch (NamingException ex) {
+         }
+         catch (NamingException ex)
+         {
             log.error("java:/TransactionPropagationContextExporter lookup failed", ex);
          }
       }
       return tpcFactory;
    }
-
+   
    /**
     *  Maps the TPCs of all active transactions to their transactions.
     */
    private Map activeTx = new HashMap();
-
-
+   
+   
    /**
     *  A no-args constructor that throws <code>RemoteException</code>.
     */
@@ -96,21 +104,21 @@ public class UserTransactionSessionImpl
    {
       super();
    }
-
+   
    //
    // implements interface UserTransactionSession
    //
-
+   
    /**
     *  Destroy this session.
     */
    public void destroy()
-      throws RemoteException
+   throws RemoteException
    {
       unexportObject(this, true);
       unreferenced();
    }
-
+   
    /**
     *  Start a new transaction, and return its TPC.
     *
@@ -120,8 +128,8 @@ public class UserTransactionSessionImpl
     */
    public Object begin(int timeout)
       throws RemoteException,
-             NotSupportedException,
-             SystemException
+      NotSupportedException,
+      SystemException
    {
       TransactionManager tm = getTransactionManager();
       // Set timeout value
@@ -136,41 +144,48 @@ public class UserTransactionSessionImpl
       // return the TPC
       return tpc;
    }
-
+   
    /**
     *  Commit the transaction.
     *
     *  @param tpc The transaction propagation context for the transaction.
     */
    public void commit(Object tpc)
-      throws RemoteException,
-             RollbackException,
-             HeuristicMixedException,
-             HeuristicRollbackException,
-             SecurityException,
-             IllegalStateException,
-             SystemException
+   throws RemoteException,
+   RollbackException,
+   HeuristicMixedException,
+   HeuristicRollbackException,
+   SecurityException,
+   IllegalStateException,
+   SystemException
    {
       Transaction tx = (Transaction)activeTx.get(tpc);
-
+      
       if (tx == null)
          throw new IllegalStateException("No transaction.");
-
+      
       boolean finished = true;
-
-      try {
+      
+      try
+      {
          tx.commit();
-      } catch (java.lang.SecurityException ex) {
+      }
+      catch (java.lang.SecurityException ex)
+      {
          finished = false;
          throw ex;
-      } catch (java.lang.IllegalStateException ex) {
+      }
+      catch (java.lang.IllegalStateException ex)
+      {
          finished = false;
          throw ex;
-      } finally {
+      }
+      finally
+      {
          activeTx.remove(tpc);
       }
    }
-
+   
    /**
     *  Rollback the transaction.
     *
@@ -178,19 +193,19 @@ public class UserTransactionSessionImpl
     */
    public void rollback(Object tpc)
       throws RemoteException,
-             SecurityException,
-             IllegalStateException,
-             SystemException
+      SecurityException,
+      IllegalStateException,
+      SystemException
    {
       Transaction tx = (Transaction)activeTx.get(tpc);
-
+      
       if (tx == null)
          throw new IllegalStateException("No transaction.");
-
+      
       tx.rollback();
       activeTx.remove(tpc);
    }
-
+   
    /**
     *  Mark the transaction for rollback only.
     *
@@ -198,17 +213,17 @@ public class UserTransactionSessionImpl
     */
    public void setRollbackOnly(Object tpc)
       throws RemoteException,
-             IllegalStateException,
-             SystemException
+      IllegalStateException,
+      SystemException
    {
       Transaction tx = (Transaction)activeTx.get(tpc);
-
+      
       if (tx == null)
          throw new IllegalStateException("No transaction.");
-
+      
       tx.setRollbackOnly();
    }
-
+   
    /**
     *  Return status of the transaction.
     *
@@ -216,21 +231,21 @@ public class UserTransactionSessionImpl
     */
    public int getStatus(Object tpc)
       throws RemoteException,
-             SystemException
+      SystemException
    {
       Transaction tx = (Transaction)activeTx.get(tpc);
-
+      
       if (tx == null)
          return Status.STATUS_NO_TRANSACTION;
-
+      
       return tx.getStatus();
    }
-
-
+   
+   
    //
    // implements interface Unreferenced
    //
-
+   
    /**
     *  When no longer referenced, be sure to rollback any
     *  transactions that are still active.
@@ -238,23 +253,27 @@ public class UserTransactionSessionImpl
    public void unreferenced()
    {
       log.debug("Lost connection to UserTransaction client.");
-
+      
       if (!activeTx.isEmpty())
       {
          log.error("Lost connection to UserTransaction clients: " +
-                      "Rolling back " + activeTx.size() +
-                      " active transaction(s).");
+         "Rolling back " + activeTx.size() +
+         " active transaction(s).");
          Collection txs = activeTx.values();
          Iterator iter = txs.iterator();
-         while (iter.hasNext()) {
+         while (iter.hasNext())
+         {
             Transaction tx = (Transaction)iter.next();
-            try {
-              tx.rollback();
-            } catch (Exception ex) {
+            try
+            {
+               tx.rollback();
+            }
+            catch (Exception ex)
+            {
                log.error("rollback failed", ex);
             }
          }
       }
    }
-
+   
 }

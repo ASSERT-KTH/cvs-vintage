@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.14 $ <p>
+ * @version $Revision: 1.15 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -61,7 +61,7 @@ public class ServiceController
        implements ServiceControllerMBean, MBeanRegistration
 {
 
-   private final Logger log = Logger.create(getClass());
+   private final Logger log = Logger.getLogger(getClass());
 
 
    /**

@@ -41,7 +41,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -72,7 +72,7 @@ public class ServiceConfigurator
    private MBeanServer server;
 
    /** The instance logger. */
-   private static Logger log = Logger.create(ServiceConfigurator.class);
+   private static Logger log = Logger.getLogger(ServiceConfigurator.class);
 	
    // Constructors --------------------------------------------------
 	

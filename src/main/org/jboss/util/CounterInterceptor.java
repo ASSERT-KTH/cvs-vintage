@@ -39,7 +39,6 @@ import org.jboss.util.CounterService;
  */
 public class CounterInterceptor extends AbstractInterceptor
 {
-   static protected Logger log = Logger.create(CounterInterceptor.class);
    Container container = null;
    CounterService counter = null;
    boolean loggedNoCounter = false;
