@@ -196,10 +196,12 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( buff[i]== '/' && buff[i+1]=='/' ) {
                 if (! (i == start + 5 && bc.startsWith(HTTP)) &&
                     ! (i == start + 6 && bc.startsWith(HTTPS))) {
-		    while( buff[i+1]=='/' ) i++;
+		    while( i < end-1 && buff[i+1]=='/' ) i++;
                 }
 	    } 
-	    buff[j++]=buff[i];
+	    if( i < end-1 ) {
+		buff[j++]=buff[i];
+	    }
 	}
 	if( i!=j ) {
 	    buff[j++]=buff[end-1];
@@ -214,7 +216,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	// remove /./
 	for( i=start, j=start; i<end-1; i++ ) {
 	    if( buff[i]== '.' && buff[i+1]=='/' &&
-		( i==0 || buff[i-1]=='/' )) {
+		( i==start || buff[i-1]=='/' )) {
 		// "/./"
 		i+=1;
 		if( i==end-1 ) j--; // cut the ending /
@@ -234,11 +236,12 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	
 	// remove  /. at the end
 	j=end;
-	if( end==start+1 && buff[start]== '.' )
+	if( end==start+1 && buff[start]== '.' ) {
 	    end--;
-	else if( end > start+1 && buff[ end-1 ] == '.' &&
+	    buff[start] = '/';
+	} else if( end >= start+1 && buff[ end-1 ] == '.' &&
 		 buff[end-2]=='/' ) {
-	    end=end-2;
+	    end=end-1;
 	}
 	if( end!=j ) {
 	    bc.setEnd( end );
@@ -253,12 +256,15 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( buff[i] == '.' &&
 		buff[i+1] == '.' &&
 		buff[i+2]== '/' &&
-		( i==0 || buff[ i-1 ] == '/' ) ) {
+		( i==start || buff[ i-1 ] == '/' ) ) {
 
 		i+=1;
 		// look for the previous /
 	        j=j-2;
-		while( j>0 && buff[j]!='/' ) {
+		if(j < start) {
+		    j = start;
+		}
+		while( j>start && buff[j]!='/' ) {
 		    j--;
 		}
 	    } else {
@@ -279,12 +285,15 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
 	// remove trailing xx/..
 	j=end;
-	if( end>start + 3 &&
+	if( end>=start + 3 &&
 	    buff[end-1]=='.' &&
 	    buff[end-2]=='.' &&
 	    buff[end-3]=='/' ) {
 	    end-=4;
-	    while( end>0 &&  buff[end]!='/' )
+	    if(end < start) {
+		end = start;
+	    }
+	    while( end>start &&  buff[end]!='/' )
 		end--; 
 	}
 	if( end!=j ) {
@@ -311,10 +320,12 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( buff[i]== '/' && buff[i+1]=='/' ) {
                 if (! (i == start + 5 && str.startsWith("http:")) &&
                     ! (i == start + 6 && str.startsWith("https:"))) {
-		    while( buff[i+1]=='/' ) i++;
+		    while( i < end-1 && buff[i+1]=='/' ) i++;
                 }
 	    } 
-	    buff[j++]=buff[i];
+	    if(i < end-1 ) {
+		buff[j++]=buff[i];
+	    }
 	}
 	if( i!=j ) {
 	    buff[j++]=buff[end-1];
@@ -328,7 +339,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	// remove /./
 	for( i=start, j=start; i<end-1; i++ ) {
 	    if( buff[i]== '.' && buff[i+1]=='/' &&
-		( i==0 || buff[i-1]=='/' )) {
+		( i==start || buff[i-1]=='/' )) {
 		// "/./"
 		i+=1;
 		if( i==end-1 ) j--; // cut the ending /
@@ -351,7 +362,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    end--;
 	else if( end > start+1 && buff[ end-1 ] == '.' &&
 		 buff[end-2]=='/' ) {
-	    end=end-2;
+	    end=end-1;
 	}
 	if( end!=j ) {
 	    modified=true;
@@ -365,12 +376,15 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( buff[i] == '.' &&
 		buff[i+1] == '.' &&
 		buff[i+2]== '/' &&
-		( i==0 || buff[ i-1 ] == '/' ) ) {
+		( i==start || buff[ i-1 ] == '/' ) ) {
 
 		i+=1;
 		// look for the previous /
 	        j=j-2;
-		while( j>0 && buff[j]!='/' ) {
+		if(j < start) {
+		    j = start;
+		}
+		while( j>start && buff[j]!='/' ) {
 		    j--;
 		}
 	    } else {
@@ -390,12 +404,15 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
 	// remove trailing xx/..
 	j=end;
-	if( end>start + 3 &&
+	if( end>=start + 3 &&
 	    buff[end-1]=='.' &&
 	    buff[end-2]=='.' &&
 	    buff[end-3]=='/' ) {
 	    end-=4;
-	    while( end>0 &&  buff[end]!='/' )
+	    if(end < start) {
+		end = start;
+	    }
+	    while( end>start &&  buff[end]!='/' )
 		end--; 
 	}
 	if( end!=j ) {
