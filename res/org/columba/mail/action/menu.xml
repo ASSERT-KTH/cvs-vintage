@@ -7,9 +7,7 @@
 	</menu>
 	
 	
-	<menu name="menu_file" extensionpoint="top">
-		<menuitem action="SaveMessageSourceAs" />
-        <separator/>
+	<menu name="menu_file" extensionpoint="top">		
 		<menuitem imenu="ReceiveMenu" />
 		<separator/>
 		<menuitem action="ReceiveSend"/>	
@@ -18,6 +16,9 @@
 		<!--	
 		<separator/>
 		<menuitem imenu="ManageServerMenu" />-->
+		<separator/>
+		<menuitem action="SaveMessageSourceAs" />
+        
 	</menu>
 
 	<menu name="menu_edit" extensionpoint="bottom">

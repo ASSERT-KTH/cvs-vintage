@@ -84,6 +84,8 @@
  <action name="CopyLinkLocationAction" class="org.columba.mail.gui.message.action.CopyLinkLocationAction"/>
  <action name="AddToAddressbookAction" class="org.columba.mail.gui.message.action.AddToAddressbookAction"/>
  <action name="ComposeMessageAction" class="org.columba.mail.gui.message.action.ComposeMessageAction"/>
+ <action name="OpenUrlAction" class="org.columba.mail.gui.message.action.OpenAction"/>
+ <action name="OpenUrlWithAction" class="org.columba.mail.gui.message.action.OpenWithAction"/>
      
  <!-- composer -->
  <action name="Addressbook" class="org.columba.mail.gui.composer.action.AddressbookAction"/>

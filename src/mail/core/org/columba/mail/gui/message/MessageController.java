@@ -273,7 +273,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
         // -> this has to happen in the awt-event dispatcher thread
         SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    getPopupMenu().show(getView(), event.getX(), event.getY());
+                    getPopupMenu().show(event.getComponent(), event.getX(), event.getY());
                 }
             });
     }

@@ -47,8 +47,8 @@ public class OpenAction extends AbstractColumbaAction implements SelectionListen
                 "attachmentopen_tooltip").replaceAll("&", ""));
 
         // icons
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
-        putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+        putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 
         if (frameMediator.getSelectionManager() != null) {
             ((MailFrameMediator) frameMediator).registerAttachmentSelectionListener(this);

@@ -6,6 +6,9 @@
  	<menuitem action="CopyLinkLocationAction" />
  	<menuitem action="SelectAll"/>	
  	<separator/>
+ 	<menuitem action="OpenUrlAction"/>
+ 	<menuitem action="OpenUrlWithAction"/>
+ 	<separator/>
  	<menuitem action="AddToAddressbookAction"/>
  	<menuitem action="ComposeMessageAction"/>
 </menu>
