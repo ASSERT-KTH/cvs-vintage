@@ -86,6 +86,12 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 
 <h3>$l10n.AttributeGroups</h3>
 #set ($maxNum = $groups.size()+1)
+#if ($groups.isEmpty())
+    <p class="alert">There are no attribute groups.</p>
+    <div class="functnbar3">
+    <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+    </div>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">$l10n.Select</th>
@@ -120,7 +126,6 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </tr>
 </table>
 
-#end
 
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />&#160;
@@ -128,6 +133,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
 <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
+#end
 
 <h3>$l10n.UserAttributes</h3>
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
@@ -182,6 +188,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>        
 
+#end
 $intake.declareGroups()
 </form>
 </div>

@@ -1,10 +1,10 @@
-#set ($module = $scarabR.CurrentModule)
+
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeGroupEdit.vm"))
 #set ($attTypeName = $attType.AttributeClass.Name)
 
-#macro (ModuleAttributeEditBar $val)
+#macro (IssueTypeAttributeEditBar $val)
 <div class="functnbar$val">
 #if ($attTypeName.equals("select-one"))
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
@@ -20,8 +20,8 @@
 $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 #else
 
-<form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
-<input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
+<form action="$link.setPage("admin,IssueTypeAttributeEdit.vm")" method="post">
+<input type="hidden" name="action" value="admin.IssueTypeAttributeEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
@@ -29,7 +29,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" /> 
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" /> 
 
-#ModuleAttributeEditBar("")
+#IssueTypeAttributeEditBar("")
 
 <h3>$l10n.AttributeInfo</h3>
 
@@ -64,12 +64,12 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 </table>
 </div>
 
-#set ($editIssueType = $scarabR.IssueType)
-#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $editIssueType, false))
+#set ($issueType = $scarabR.IssueType)
+#set ($rios = $issueType.getRIssueTypeOptions($attribute, false))
 #if ($attTypeName.equals("select-one"))
-#set ($maxNum = $rmos.size())
+#set ($maxNum = $rios.size())
 #datatitle ("Attribute Options")
-#if (!$rmos || $rmos.isEmpty())
+#if (!$rios || $rios.isEmpty())
   There are no attribute options.
   <div class="functnbar3">
   <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
@@ -79,19 +79,20 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 <table width="100%" border="1" cellspacing="2" cellpadding="2">
 <tr>
  <th>$l10n.Select</th>
+ <th>$l10n.AttributeOption</th>
  <th>$l10n.ParentAttributeOptions</th>
- <th>$l10n.DisplayName</th>
  <th>$l10n.Active</th>
  <th>$l10n.PreferredOrder</th>
  <th>$l10n.Weight</th>
 </tr>
-#foreach ($rmo in $rmos)
-    #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
+#foreach ($rio in $rios)
+    #set ($rioGroup = $intake.RIssueTypeOption.mapTo($rio))
     #indexedRows($velocityCount)
-     <td><input type="checkbox" name="delete_$rmo.OptionId"></td>
+     <td><input type="checkbox" name="delete_$rio.OptionId"></td>
+     <td>$rio.AttributeOption.Name</td>
      <td>
        #set ($comma = "")
-       #set ($parents = $rmo.AttributeOption.Parents)
+       #set ($parents = $rio.AttributeOption.Parents)
        #foreach ($parent in $parents)
          #if ($parents.size() > 1)
            #if ($velocityCount < $parents.size())
@@ -103,15 +104,14 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
          $parent.Name$comma
        #end
      </td>
-     <td><input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" /></td>
      <td>
-        #booleanCheckbox($rmoGroup.Active)
+        #booleanCheckbox($rioGroup.Active)
      </td>
      <td>
-        #numericSelect($rmoGroup.Order.Key 1 $maxNum $rmoGroup.Order.Value 1)
+        #numericSelect($rioGroup.Order.Key 1 $maxNum $rioGroup.Order.Value 1)
      </td>
      <td>
-        #numericSelect($rmoGroup.Weight.Key 1 $maxNum $rmoGroup.Weight.Value 1)
+        #numericSelect($rioGroup.Weight.Key 1 $maxNum $rioGroup.Weight.Value 1)
      </td>
     </tr>
 #end
@@ -128,7 +128,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 
 #end
 
-#ModuleAttributeEditBar("2")
+#IssueTypeAttributeEditBar("2")
 
 $intake.declareGroups()
 </form>

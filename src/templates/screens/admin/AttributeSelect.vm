@@ -1,7 +1,15 @@
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 #set ($issueType = $scarabR.IssueType)
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "data"))
 #set ($agGroup = $intake.AttributeGroup.Default)
+#set ($groupId = $data.Parameters.getString("groupId",""))
+#set ($group = $scarabR.getAttributeGroup($groupId))
+#if ($group.isGlobal())
+   #set ($attributes = $issueType.getAvailableAttributes("data"))
+   #set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
+#else
+   #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "data"))
+   #set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
+#end
 
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
@@ -20,10 +28,10 @@
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
-<input type="hidden" name="groupid" value="$data.Parameters.getString("groupId","").trim()" />
+<input type="hidden" name="groupid" value="$groupId" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroupEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
 #AttributeSelectBar("")
 

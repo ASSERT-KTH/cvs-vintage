@@ -1,4 +1,3 @@
-#set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
 
@@ -21,8 +20,8 @@
 
 <form method="post" action="$link.setPage("admin,GlobalArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalArtifactTypeShow.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalUserAttributeSelect.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 #if (!$createNew)
   <input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" />
 #end
@@ -55,6 +54,93 @@
 
 #asterisk()
 
+#if ($createNew.equals(false))
+## LIST GROUPS
+#set ($groups = $issueType.getAttributeGroups(false))
+
+<h3>$l10n.AttributeGroups</h3>
+#set ($maxNum = $groups.size()+1)
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+#if (!$groups.isEmpty())
+<tr>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Active</th>
+<th>$l10n.Sequence</th>
+</tr>
+
+#set ($issueDedupeSequence = $issueType.DedupeSequence)
+#foreach ($group in $groups)
+ #if ($velocityCount == $issueDedupeSequence && $issueType.getAttributeGroups(false).size() > 1)
+ <tr>
+   <td>&#160;</td>
+   <td>$l10n.DuplicateCheck</td>
+   <td>#booleanCheckbox ($itGroup.Dedupe)</td>
+   <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
+ </tr>
+ #end
+  #set ($agGroup = $intake.AttributeGroup.mapTo($group))
+  #indexedRows($velocityCount)
+  <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
+  <td>$link.setPage("admin,GlobalAttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$group.Name")</td>
+  <td>#booleanCheckbox ($agGroup.Active)</td>
+  <td>
+  #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
+#end
+#else
+<p class="alert">There are no attribute groups.
+#end
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+</div>
+
+
+<h3>$l10n.UserAttributes</h3>
+#set ($userAttrs = $issueType.getUserAttributes(false))
+#if ($userAttrs.isEmpty())
+  <p class="alert">$l10n.NoUserAttributesForType</p>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+</div>
+
+#else
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.UserAttributeName</th>
+<th>Active</th>
+<th>Sequence #</th>
+</tr>
+
+#foreach ($userAttr in $userAttrs)
+   #set ($ria = $issueType.getRIssueTypeAttribute($userAttr))
+   #set ($riaGroup = $intake.RIssueTypeAttribute.mapTo($ria))
+   #set ($maxNum = $userAttrs.size())
+ #indexedRows($velocityCount)
+ <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
+ <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
+<td>#booleanCheckbox ($riaGroup.Active)</td>
+<td>#numericSelect( "$riaGroup.Order.Key" 1 $maxNum $riaGroup.Order.Value 1 )</td>
+</tr>
+#end
+
+</table>
+
+<div class="functnbar3">
+<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
+</div>
+#end
+
+#end
 #GlobalArtifactTypeEdit("2")
 
 $intake.declareGroups()
