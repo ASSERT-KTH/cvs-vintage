@@ -38,7 +38,7 @@
         </ant:fileset>
      </ant:delete>     
      <ant:delete>
-        <ant:fileset dir="../tomcat/logs">
+        <ant:fileset dir="tomcat/logs">
             <ant:include name="*log*.txt"/>
         </ant:fileset>
         <ant:fileset dir="${basedir}">
