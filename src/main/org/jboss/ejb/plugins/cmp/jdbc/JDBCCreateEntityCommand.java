@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
@@ -124,17 +124,16 @@ public class JDBCCreateEntityCommand {
                "primary key field is read only.");
       }
 
-      // AL: set unknown pk if needed
+      // set unknown pk if needed
       for( Iterator iter = entity.getPrimaryKeyFields().iterator(); iter.hasNext(); )
       {
          JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) iter.next();
          Class primaryKeyClass = entity.getPrimaryKeyClass();
          if( primaryKeyClass == java.lang.Object.class )
          {
-            // AS UGLY AS POSSIBLE
-            // here the primary key factory should be asked for
-            // a new primary key
-            cmpField.setInstanceValue( ctx, "" + System.currentTimeMillis() );
+            cmpField.setInstanceValue( ctx,
+               entity.getKeyGenerator().generateKey() );
+            break;
          }
       }
 
