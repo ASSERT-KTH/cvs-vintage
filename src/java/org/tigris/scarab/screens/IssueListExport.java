@@ -46,17 +46,12 @@ package org.tigris.scarab.screens;
  * individuals on behalf of CollabNet.
  */ 
 
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.List;
 import java.util.Iterator;
 
-// Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.commons.lang.StringUtils;
 
-// Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.Attribute;
@@ -64,42 +59,24 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.util.export.ExportFormat;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 
 /**
- * <p>Sends file contents directly to the output stream, setting the
- * <code>Content-Type</code> and writing back to the browser a
- * tab-delimited file (Excel digests this fine).  We used to use <a
- * href="http://jakarta.apache.org/poi/">POI</a> to compose an Excel
- * binary data file, but its outrageous memory consumption didn't
- * scale for large result sets. POI assembles the its output in
- * memory.  After study of the native OLE2 excel file format, it
- * appears very difficult to generate the file in another fashion.</p>
- *
- * <p>Regards output encoding, for now we're assuming the response
- * stream is appropriately set upon fetching. Also, we're assuming
- * that Excel will do the right thing on receipt of our TSV file with
- * Japanese or other multibyte characters (we're not setting an
- * encoding on the <code>Content-Type</code> we return).  Both of the
- * above to be verified.</p>
+ * Handles export of an issue list non-web formats.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:stack@collab.net">St.Ack</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ * @see org.tigris.scarab.screens.DataExport
+ * @since Scarab 1.0
  */
-public class IssueListExport extends Default
+public class IssueListExport extends DataExport
 {
     /**
-     * What to show if cell is empty.
-     */
-    private static final String NO_CONTENT = "-------";
-
-    /**
-     * Builds up the context for display of variables on the page.
+     * Writes the response.
      */
     public void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
@@ -110,28 +87,10 @@ public class IssueListExport extends Default
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         MITList mitlist = user.getCurrentMITList();
-
-        String format = ExportFormat.determine(data);
-        if (ExportFormat.TSV_FORMAT.equalsIgnoreCase(format))
-        {
-            data.getResponse().setContentType("text/plain");
-        }
-        else
-        {
-            data.getResponse().setContentType("application/vnd.ms-excel");
-        }
-        // Since we're streaming the TSV content directly from our
-        // data source, we don't know its length ahead of time.
-        //data.getResponse().setContentLength(?);
-        
         TSVPrinter printer = new TSVPrinter(data.getResponse().getWriter());
-
         List rmuas = scarabR.getRModuleUserAttributes();
         writeHeading(printer, mitlist, l10n, rmuas);
         writeRows(printer, mitlist, l10n, scarabR, rmuas);
-
-        // Above we sent the response, so no target to render
-        data.setTarget(null);
     }
 
     /**
@@ -148,14 +107,17 @@ public class IssueListExport extends Default
                               ScarabLocalizationTool l10n, List rmuas)
         throws Exception
     {
-        if (mitlist != null && !mitlist.isSingleModule())
+        if (mitlist != null)
         {
-            printer.print(l10n.get("CapModule"));
-        }
+            if (!mitlist.isSingleModule())
+            {
+                printer.print(l10n.get("CapModule"));
+            }
 
-        if (mitlist != null && !mitlist.isSingleIssueType())
-        {
-            printer.print(l10n.get("IssueType"));
+            if (!mitlist.isSingleIssueType())
+            {
+                printer.print(l10n.get("IssueType"));
+            }
         }
 
         printer.print(l10n.get("IssueId"));
@@ -219,14 +181,17 @@ public class IssueListExport extends Default
             ScarabLocalizationTool l10n, List rmuas, Issue issue)
         throws Exception
     {
-        if (mitlist != null && !mitlist.isSingleModule())
+        if (mitlist != null)
         {
-            printer.print(issue.getModule().getRealName());
-        }
+            if (!mitlist.isSingleModule())
+            {
+                printer.print(issue.getModule().getRealName());
+            }
 
-        if (mitlist != null && !mitlist.isSingleIssueType())
-        {
-            printer.print(issue.getRModuleIssueType().getDisplayName());
+            if (!mitlist.isSingleIssueType())
+            {
+                printer.print(issue.getRModuleIssueType().getDisplayName());
+            }
         }
 
         printer.print(issue.getUniqueId());
@@ -275,136 +240,6 @@ public class IssueListExport extends Default
                 
                 printer.print(value);
             }
-        }       
-    }
-
-    private boolean containsElements(List l)
-    {
-        return l != null && !l.isEmpty();
-    }
-
-    /**
-     * Escape any commas in passed string.
-     *
-     * @param s String to check.
-     * @return Passed string with commas escaped.
-     */
-    private String escapeCommas(String s)
-    {
-        // Not sure how to escape commas. What to use instead? Quote for now.
-        return quote(s);
-    }
-
-    /**
-     * Quote passed string.
-     *
-     * @param s String to quote.
-     * @return Passed string quoted.
-     */
-    private String quote(String s)
-    {
-        return '"' + StringUtils.replace(s, "\"", "\"\"") + '"';
-    }
-
-    /**
-     * Inner-class to write out tab-delimited file.
-     *
-     * Uses a printwriter internally to do actual writing.  
-     *
-     * <p>If you dbl-quote content w/ tabs and newlines in it, excel does the 
-     * right thing parsing.
-     *
-     * <p>This code helped me: <a 
-     * href="http://ostermiller.org/utils/ExcelCSVPrinter.java.html">ExcelCSVPrinter.java.html</a>.
-     *
-     * <p>Inherit javadoc from parent.
-     */
-    private class TSVPrinter
-    {
-        /**
-         * Start of a new line flag.
-         */
-        private boolean lineStart = true;
-
-        /**
-         * Printer write on.
-         */
-        private PrintWriter printer = null;
-
-        /**
-         * Constructor.
-         *
-         * @param writer Writer to output on.
-         */
-        private TSVPrinter(Writer writer)
-        {
-            if (writer == null)
-            {
-                throw new NullPointerException("Got a null writer.");
-            }
-            
-            if (writer instanceof PrintWriter)
-            {
-                this.printer = (PrintWriter) writer;
-            }
-            else
-            {
-                this.printer = new PrintWriter(writer);
-            }
-        }
-
-        /**
-         * Prints one field at a time.
-         */
-        private void print(String s)
-        {
-            if (!lineStart)
-            {
-                // Print a tab seperator before we print our field content.
-                printer.print('\t');
-            }
-            lineStart = false;
-
-            if (StringUtils.isNotEmpty(s))
-            {
-                printer.print(escape(s));
-            }
-        }
-
-        private void println()
-        {
-            printer.println();  
-            printer.flush();
-            lineStart = true;
-        }
-
-        /**
-         * Escape string.
-         *
-         * If the passed string has any problematic characters, quote the
-         * whole thing after escaping any quotes already present. Excel
-         * does the right thing parsing if it gets quoted content.
-         *
-         * @param s String to escape.
-         *
-         * @return Escaped version of passed string.
-         */
-        private String escape(String s)
-        {
-            if (StringUtils.isNotEmpty(s))
-            {
-                for (int i = 0; i < s.length(); i++)
-                {
-                    char c = s.charAt(i);
-                    if(c == '"' || c == '\t' || c == '\n' || c == '\r')
-                    {
-                        s = quote(s);
-                        break;
-                    }
-                }
-            }
-
-            return s;
         }
     }
 }

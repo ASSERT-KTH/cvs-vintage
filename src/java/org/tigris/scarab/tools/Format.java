@@ -47,6 +47,7 @@ package org.tigris.scarab.tools;
  */
 
 import java.util.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
@@ -55,12 +56,17 @@ import java.text.SimpleDateFormat;
 public class Format
 {
     /**
-     * Formats the date according to the passed in SimpleDateFormat
+     * The default date/time format string.
+     */
+    public static final String DATE_TIME_FMT = "yyyy-MM-dd HH:mm";
+
+    /**
+     * Formats the date according to the passed in <code>DateFormat</code>.
      * This is generally used with SRT.getDateFormat() and in the templates
      * it looks something like this:
      * $format.getDate($scarabR.DateFormat, $issue.CreatedDate)
      */
-    public static String getDate(SimpleDateFormat format, Date date)
+    public static String getDate(DateFormat format, Date date)
     {
         return format.format(date);
     }
