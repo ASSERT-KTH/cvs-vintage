@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * A JAR file.
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.6 2003/04/29 03:21:49 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.7 2003/04/29 03:44:37 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -473,6 +473,7 @@ public class PluginJAR
 			else
 			{
 				plugin = new EditPlugin.Deferred(className);
+				plugin.jar = (EditPlugin.JAR)this;
 				generateCacheForPluginCoreClass(className,cache);
 				label = _label;
 				break;

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.78 2003/04/29 03:31:43 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.79 2003/04/29 03:44:37 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -1334,26 +1334,11 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		{
 			public void actionPerformed(ActionEvent evt)
 			{
-				if(evt.getActionCommand().equals("plugin-manager"))
-				{
-					new org.gjt.sp.jedit.pluginmgr.PluginManager(
-						JOptionPane.getFrameForComponent(
-						VFSBrowser.this));
-				}
-				else if(evt.getActionCommand().equals("plugin-options"))
-				{
-					new org.gjt.sp.jedit.options.PluginOptions(
-						JOptionPane.getFrameForComponent(
-						VFSBrowser.this));
-				}
-				else
-				{
-					VFS vfs = VFSManager.getVFSByName(evt.getActionCommand());
-					String directory = vfs.showBrowseDialog(null,
-						VFSBrowser.this);
-					if(directory != null)
-						setDirectory(directory);
-				}
+				VFS vfs = VFSManager.getVFSByName(evt.getActionCommand());
+				String directory = vfs.showBrowseDialog(null,
+					VFSBrowser.this);
+				if(directory != null)
+					setDirectory(directory);
 			}
 		} //}}}
 
@@ -1362,6 +1347,8 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 		{
 			public void mousePressed(MouseEvent evt)
 			{
+				createPopupMenu();
+
 				if(!popup.isVisible())
 				{
 					GUIUtilities.showPopupMenu(
