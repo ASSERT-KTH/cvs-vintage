@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.34 2002/07/17 15:33:13 kataka Exp $
+// $Id: GeneratorJava.java,v 1.35 2002/07/24 08:43:45 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -203,8 +203,15 @@ implements PluggableNotation, FileGenerator {
 
   public String generateOperation (MOperation op, boolean documented) {
     StringBuffer sb = new StringBuffer(80);
-    String nameStr = generateName (op.getName());
-    String clsName = generateName (op.getOwner().getName());
+    String nameStr = null;
+    boolean constructor = false;
+    MStereotype stereo = op.getStereotype();
+    if (stereo != null && stereo.getName().equals("create")) { // constructor
+    	nameStr = generateName (op.getOwner().getName());
+    	constructor = true;
+    } else {
+    	nameStr = generateName (op.getName());
+    }
 
     if (documented)
 	sb.append('\n');
@@ -226,7 +233,7 @@ implements PluggableNotation, FileGenerator {
     MParameter rp = MMUtil.SINGLETON.getReturnParameter(op);
 	  if ( rp != null) {
       MClassifier returnType = rp.getType();
-      if (returnType == null && !nameStr.equals (clsName)) {
+      if (returnType == null && !constructor) {
         sb.append("void ");
       }
       else if (returnType != null) {
