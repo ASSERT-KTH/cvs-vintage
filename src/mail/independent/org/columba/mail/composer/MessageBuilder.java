@@ -563,6 +563,7 @@ public class MessageBuilder {
 		String to = createTo(header);
 
 		if (to != null) {
+			to = EncodedWord.decode(to).toString();
 			model.setTo(to);
 			addSenderToAddressbook(to);
 		}
