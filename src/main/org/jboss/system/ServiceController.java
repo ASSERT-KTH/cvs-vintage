@@ -36,33 +36,34 @@ import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
 
 /**
-* This is the main Service Controller. A controller can deploy a service to a
-* jboss.system It installs by delegating, it configures by delegating
-*
-* @see org.jboss.system.Service
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.26 $ <p>
-*
-* <b>Revisions:</b> <p>
-*
-* <b>20010830 marcf</b>
-* <ol>
-*   <li>Initial version checked in
-* </ol>
-* <b>20010908 david jencks</b>
-* <ol>
-*   <li>fixed tabs to spaces and log4j logging. Made it report the number
-*       of successes on init etc.  Modified to support remove and work with
-*       .sar dependency management and recursive sar deployment.
-* </ol>
-* <b>2001210 marcf</b>
-* <ol>
-*   <li>Rewrite
-* </ol>
-*/
+ * This is the main Service Controller. A controller can deploy a service to a
+ * jboss.system It installs by delegating, it configures by delegating
+ *
+ * @see org.jboss.system.Service
+ * 
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.27 $ <p>
+ *
+ * <b>Revisions:</b> <p>
+ *
+ * <b>20010830 marcf</b>
+ * <ol>
+ *   <li>Initial version checked in
+ * </ol>
+ * <b>20010908 david jencks</b>
+ * <ol>
+ *   <li>fixed tabs to spaces and log4j logging. Made it report the number
+ *       of successes on init etc.  Modified to support remove and work with
+ *       .sar dependency management and recursive sar deployment.
+ * </ol>
+ * <b>2001210 marcf</b>
+ * <ol>
+ *   <li>Rewrite
+ * </ol>
+ */
 public class ServiceController
-implements ServiceControllerMBean, MBeanRegistration
+   implements ServiceControllerMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
    
@@ -297,9 +298,16 @@ implements ServiceControllerMBean, MBeanRegistration
       boolean debug = log.isDebugEnabled();
 
       ServiceContext ctx = (ServiceContext) getServiceContext(serviceName);
+
+      if (ctx == null) {
+         log.warn("Ignoring request to start non-existant service: " + serviceName);
+         return;
+      }
       
       // If we are already started (can happen in dependencies) just return
-      if (ctx.state == ServiceContext.RUNNING) return;
+      if (ctx.state == ServiceContext.RUNNING) {
+         return;
+      }
          
       // JSR 77, and to avoid circular dependencies
       int oldState = ctx.state; 
@@ -362,34 +370,42 @@ implements ServiceControllerMBean, MBeanRegistration
       boolean debug = log.isDebugEnabled();
       
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
-      if (debug)
+      if (debug) {
          log.debug("stopping service: " + serviceName);
-      if (ctx != null)
-      {
-         // If we are already stopped (can happen in dependencies) just return
-         if (ctx.state == ServiceContext.STOPPED) return;
-            
-         // JSR 77 and to avoid circular dependencies
-         ctx.state = ServiceContext.STOPPED;
-         
-         if (debug)
-            log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
-         Iterator iterator = ctx.dependsOnMe.iterator();
-         while (iterator.hasNext())
-         {
-            // stop all the mbeans that depend on me
-            ObjectName other = ((ServiceContext) iterator.next()).objectName;
-            if (debug)
-               log.debug("stopping dependent service " + other);
-            stop(other);
-         }
-         
-         // Call create on the service Proxy
-         try { ctx.proxy.stop(); }
-            
-         catch (Exception e){ ctx.state = ServiceContext.FAILED; throw e;}
       }
-   }   
+      
+      if (ctx == null) {
+         log.warn("Ignoring request to stop non-existant service: " + serviceName);
+         return;
+      }
+      
+      // If we are already stopped (can happen in dependencies) just return
+      if (ctx.state == ServiceContext.STOPPED) return;
+      
+      // JSR 77 and to avoid circular dependencies
+      ctx.state = ServiceContext.STOPPED;
+      
+      if (debug)
+         log.debug("service context has " + ctx.dependsOnMe.size() + " depending services");
+      Iterator iterator = ctx.dependsOnMe.iterator();
+      while (iterator.hasNext())
+      {
+         // stop all the mbeans that depend on me
+         ObjectName other = ((ServiceContext) iterator.next()).objectName;
+         if (debug)
+            log.debug("stopping dependent service " + other);
+         stop(other);
+      }
+         
+      // Call create on the service Proxy
+      try {
+         ctx.proxy.stop();
+      }
+      catch (Exception e) {
+         ctx.state = ServiceContext.FAILED;
+         throw e;
+      }
+   }
    
    /**
    * #Description of the Method
@@ -404,33 +420,35 @@ implements ServiceControllerMBean, MBeanRegistration
       ServiceContext ctx = (ServiceContext) nameToServiceMap.get(serviceName);
       if (debug)
          log.debug("destroying service: " + serviceName);
+
+      if (ctx == null) {
+         log.warn("Ignoring request to destroy non-existant service: " + serviceName);
+         return;
+      }
       
-      if (ctx != null) 
-      {
-         // If we are already destroyed (can happen in dependencies) just return
-         if (ctx.state == ServiceContext.DESTROYED) return;
-            
-         // JSR 77, and to avoid circular dependencies
-         ctx.state = ServiceContext.DESTROYED;
-         
-         Iterator iterator = ctx.dependsOnMe.iterator();
-         while (iterator.hasNext())
-         {        
-            // destroy all the mbeans that depend on me
-            ObjectName other = ((ServiceContext) iterator.next()).objectName;
-            if (debug)
-               log.debug("destroying dependent service " + other);
-            destroy(other);
-         }
-         
-         // Call create on the service Proxy  
-         try {
-            ctx.proxy.destroy();
-         }   
-         catch (Exception e){
-            ctx.state = ServiceContext.FAILED;
-            throw e;
-         }
+      // If we are already destroyed (can happen in dependencies) just return
+      if (ctx.state == ServiceContext.DESTROYED) return;
+      
+      // JSR 77, and to avoid circular dependencies
+      ctx.state = ServiceContext.DESTROYED;
+      
+      Iterator iterator = ctx.dependsOnMe.iterator();
+      while (iterator.hasNext())
+      {        
+         // destroy all the mbeans that depend on me
+         ObjectName other = ((ServiceContext) iterator.next()).objectName;
+         if (debug)
+            log.debug("destroying dependent service " + other);
+         destroy(other);
+      }
+      
+      // Call create on the service Proxy  
+      try {
+         ctx.proxy.destroy();
+      }   
+      catch (Exception e){
+         ctx.state = ServiceContext.FAILED;
+         throw e;
       }
    }   
    
@@ -458,6 +476,11 @@ implements ServiceControllerMBean, MBeanRegistration
       ServiceContext ctx = getServiceContext(objectName);
       if (debug)
          log.debug("removing service: " + objectName);
+
+      if (ctx == null) {
+         log.warn("Ignoring request to remove non-existant service: " + objectName);
+         return;
+      }
       
       // Notify those that think I depend on them
       Iterator iterator = ctx.iDependOn.iterator();
