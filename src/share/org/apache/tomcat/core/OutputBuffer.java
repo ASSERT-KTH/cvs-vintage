@@ -424,6 +424,17 @@ public final class OutputBuffer extends Writer {
 	return bytesWritten;
     }
 
+    public int getCharsWritten() {
+	return charsWritten;
+    }
+
+    /** True if this buffer hasn't been used ( since recycle() ) -
+	i.e. no chars or bytes have been added to the buffer.  
+    */
+    public boolean isNew() {
+	return bytesWritten==0 && charsWritten==0;
+    }
+    
     public void setBufferSize(int size) {
 	if( size > buf.length ) {
 	    buf=new byte[size];
