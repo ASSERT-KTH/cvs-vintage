@@ -64,7 +64,7 @@ import org.tigris.scarab.om.IssueType;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewIssue.java,v 1.1 2002/05/24 03:26:09 jmcnally Exp $
+ * @version $Id: ViewIssue.java,v 1.2 2002/05/24 04:17:42 jmcnally Exp $
  */
 public class ViewIssue extends Default
 {
@@ -81,8 +81,8 @@ public class ViewIssue extends Default
         String id = l10n.get("ID");
         String unique = issue.getUniqueId();
         StringBuffer sb = new StringBuffer(name.length() + id.length() + 
-                                           unique.length());
-        sb.append(name).append(id).append(unique);
+                                           unique.length() + 3);
+        sb.append(name).append(' ').append(id).append(": ").append(unique);
         return sb.toString();
     }
 }
