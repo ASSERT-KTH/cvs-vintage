@@ -3,38 +3,24 @@
 <document>
 
 <properties>
-    <title>How to Build Scarab Using the Webapp Reorg Branch</title>
+    <title>How to Build Scarab</title>
     <author email="epugh@opensourceconnections.com">Eric Pugh</author>
 </properties>
 
 <body>
 
-<section name="Old Ant Build">
-<p>
-	Previously the build was dirt simple:
-	<source>
-	cd build
-	ant create-db
-	ant	
-	</source>
-	However, the build magic under the covers was ungodly complex.  Additionally, everytime you wanted
-	to build a war file or site documenation, then you had lots of complex Ant scripting.  And many of
-	the targets just plain don't work!
 
-</p>
-</section>
-
-<section name="New Maven and/or Ant Build">
+<section name=" Maven and/or Ant Build">
 <subsection name="Generating Database">
 <p>
 	Now you can compile your code in either Ant or Maven.  However,	all of the database and torque OM related steps are 
-	still in the old ant build.  You still
-	generate your database by doing this:
+	performed by the ant build.  You still generate your database by doing this:
 	<source>
 	cd build
 	ant create-db
 	</source>
-	This will create in <code>/target/webapps/scarab/WEB-INF/sql</code> the various SQL files that you need.  
+	This will create in <code>/target/webapps/scarab/WEB-INF/sql</code> the various SQL files that you need.  It will also
+	install the database for certain types of databases.  
 </p>
 </subsection>
 <subsection name="Generating Torque Objects">
@@ -46,8 +32,8 @@
 	ant
 	</source>
 	This will create in <code>/src/java</code> the various Torque objects.  You are now done with Ant and 
-	you can continue the rest of the
-	process is in Maven or continue to use Ant.  You can now perform all the various functions of Maven that you would expect.
+	you can continue the rest of the process in Maven or continue to use Ant.  You can now perform all the
+	various functions of Maven that you would expect like running unit tests, producing WAR files, etc.
 </p>
 <p>
 	<strong>Note:</strong> There is a Torque plugin for Maven that will do all of this.  The Ant steps
