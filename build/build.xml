@@ -2,7 +2,7 @@
 
 <!-- Build file for Scarab -->
 
-<project name="Scarab" default="jar" basedir=".">
+<project name="Scarab" default="compile" basedir=".">
 
     <!-- Give user a chance to override without editing this file
         (and without typing -D each time it compiles it -->
