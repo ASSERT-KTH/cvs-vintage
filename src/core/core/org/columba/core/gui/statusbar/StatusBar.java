@@ -82,6 +82,7 @@ public class StatusBar
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		onlineButton = new JButton(ImageLoader.getImageIcon("online.png"));
+		onlineButton.setToolTipText("You are in ONLINE state");
 		onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		onlineButton.setRolloverEnabled(true);
 		onlineButton.setFocusable(false);
@@ -90,14 +91,16 @@ public class StatusBar
 
 		progressBar = new JProgressBar(0, 100);
 		progressBar.setFocusable(false);
+		
 		//progressBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		//progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
 		progressBar.setStringPainted(false);
 		progressBar.setBorderPainted(false);
 		progressBar.setValue(0);
 
-		taskButton = new JButton("Tasks: 0");
-		//taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
+		taskButton = new JButton();
+		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
+		taskButton.setToolTipText("Show list of running tasks");
 		taskButton.setRolloverEnabled(true);
 		taskButton.setFocusable(false);
 		//taskButton.setMargin(new Insets(0, 0, 0, 0));
@@ -122,7 +125,7 @@ public class StatusBar
 
 		JPanel labelPanel = new JPanel();
 		labelPanel.setLayout(new BorderLayout());
-		margin = new EmptyBorder(0, 2, 0, 2);
+		margin = new EmptyBorder(0, 10, 0, 10);
 		labelPanel.setBorder(new CompoundBorder(border, margin));
 
 		margin = new EmptyBorder(0, 0, 0, 2);
@@ -178,7 +181,7 @@ public class StatusBar
 
 		Runnable run = new Runnable() {
 			public void run() {
-				taskButton.setText("Tasks: " + n);
+				//taskButton.setText("Tasks: " + n);
 
 			}
 		};
