@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EJBException;
+import javax.ejb.TransactionRequiredLocalException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRequiredException;
@@ -28,7 +29,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -280,8 +281,21 @@ extends AbstractTxInterceptor
             }
             case MetaData.TX_MANDATORY:
             {
-               if (oldTransaction == null) // no transaction = bad!
-                  throw new TransactionRequiredException("Transaction Required, read the spec!");
+               if (oldTransaction == null) 
+               {
+                  if (type == InvocationType.LOCAL ||
+                        type == InvocationType.LOCALHOME) 
+                  {
+                     throw new TransactionRequiredLocalException(
+                           "Transaction Required");
+                  }
+                  else
+                  {
+                     throw new TransactionRequiredException(
+                           "Transaction Required");
+                  }
+               }
+
                // Associate it with the thread
                tm.resume(oldTransaction);
                try
