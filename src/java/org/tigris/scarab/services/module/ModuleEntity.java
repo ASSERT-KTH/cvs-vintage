@@ -58,10 +58,10 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 
 /**
- * This class describes a Module
+ * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.13 2001/09/21 20:54:52 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.14 2001/09/26 02:12:51 jon Exp $
  */
 public interface ModuleEntity
 {

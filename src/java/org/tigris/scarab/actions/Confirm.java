@@ -46,7 +46,8 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.fulcrum.security.TurbineSecurity;
+import java.util.List;
+import java.util.Iterator;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateAction;
@@ -54,9 +55,16 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.services.pull.ApplicationTool;
 
+import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.TurbineSecurity;
+
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
+import org.tigris.scarab.om.ScarabModulePeer;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -65,7 +73,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Confirm.java,v 1.17 2001/08/28 15:19:38 dlr Exp $
+    @version $Id: Confirm.java,v 1.18 2001/09/26 02:12:50 jon Exp $
 */
 public class Confirm extends TemplateAction
 {
@@ -96,6 +104,25 @@ public class Confirm extends TemplateAction
                 confirmedUser.setHasLoggedIn(Boolean.TRUE);
                 data.setUser(confirmedUser);
                 data.save();
+                
+                // FIXME: Hack to give every new account a Developer Role
+                // within every Group (ie: Module). This is a major major
+                // major major major hole. The point however is to allow people
+                // using the runbox or downloading scarab a chance to be able
+                // to enter an issue without having to muck with Flux to get
+                // the right roles. Hopefully someone from the community will
+                // contribute code to clean this up. For more information, 
+                // please read this thread:
+                // http://scarab.tigris.org/servlets/ReadMsg?msgId=38339&listName=dev
+                List allModules = ScarabModulePeer.getAllModules();
+                Iterator itr = allModules.iterator();
+                Role role = TurbineSecurity.getRole("Developer");
+                while (itr.hasNext())
+                {
+                    Group group = (Group) itr.next();
+                    group.grant((User)confirmedUser, role);
+                    ((ModuleEntity)group).save();
+                }
             }
             else
             {

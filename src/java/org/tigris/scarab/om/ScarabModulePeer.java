@@ -47,9 +47,7 @@ package org.tigris.scarab.om;
  */
 
 // JDK classes
-import java.util.Vector;
-
-// Village classes
+import java.util.List;
 
 // Turbine classes
 import org.apache.fulcrum.security.entity.Group;
@@ -80,6 +78,16 @@ public class ScarabModulePeer
     }
 
     /**
+     * Gets a List of all of the ScarabModule objects
+     * in the system.
+     */
+    public static List getAllModules()
+        throws Exception
+    {
+        return (List) doSelect(new Criteria());
+    }
+
+    /**
      * Checks if a Group is defined in the system. The name
      * is used as query criteria.
      *
@@ -97,7 +105,7 @@ public class ScarabModulePeer
         String name = ((ModuleEntity)group).getName();
         criteria.add(MODULE_NAME, name);
         criteria.add(PARENT_ID, ((ModuleEntity)group).getParentId());
-        Vector results = BasePeer.doSelect(criteria);
+        List results = (List) BasePeer.doSelect(criteria);
         if(results.size() > 1)
         {
             throw new DataBackendException("Multiple groups named '" +
