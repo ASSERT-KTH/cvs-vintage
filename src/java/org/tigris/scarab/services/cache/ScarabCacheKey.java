@@ -48,17 +48,23 @@ package org.tigris.scarab.services.cache;
 
 import java.io.Serializable;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.log4j.Category;
+import org.apache.log4j.Logger;
 import org.apache.fulcrum.pool.RecyclableSupport;
 
+/** 
+ *
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ScarabCacheKey.java,v 1.9 2003/03/28 00:01:15 jon Exp $
+ */
 public class ScarabCacheKey
     extends RecyclableSupport
     implements Serializable
 {
-    private static final Category log = 
-        Category.getInstance("org.apache.torque");
+    private static final Logger LOG = 
+        Logger.getLogger("org.apache.torque");
 
-    int n;
+    private int n;
     private Serializable instanceOrClass;
     private String method;
     private Serializable arg1;
@@ -240,39 +246,39 @@ public class ScarabCacheKey
 
             if (equal) 
             {
-                log.debug("Saved db hit on " + instanceOrClass + "::" 
+                LOG.debug("Saved db hit on " + instanceOrClass + "::" 
                           + method + ". YAY!");
             }
         }            
         return equal;
     }
 
-        public int hashCode()
+    public int hashCode()
+    {
+        int h = instanceOrClass.hashCode();
+        h += method.hashCode();
+        if (n > 0) 
         {
-            int h = instanceOrClass.hashCode();
-            h += method.hashCode();
-            if (n > 0) 
+            h += (arg1 == null ? 0 : arg1.hashCode());
+            if (n > 1) 
             {
-                h += (arg1 == null ? 0 : arg1.hashCode());
-                if (n > 1) 
+                h += (arg2 == null ? 0 : arg2.hashCode());
+                if (n > 2) 
                 {
-                    h += (arg2 == null ? 0 : arg2.hashCode());
-                    if (n > 2) 
+                    h += (arg3 == null ? 0 : arg3.hashCode());
+                    if (n > 3) 
                     {
-                        h += (arg3 == null ? 0 : arg3.hashCode());
-                        if (n > 3) 
+                        for (int i=5; i<n+2; i++) 
                         {
-                            for (int i=5; i<n+2; i++) 
-                            {
-                                h+= (moreThanThree[i] == null ?
-                                     0 : moreThanThree[i].hashCode());
-                            }
-                        }        
-                    }    
-                }
+                            h+= (moreThanThree[i] == null ?
+                                 0 : moreThanThree[i].hashCode());
+                        }
+                    }        
+                }    
             }
-            return h;
         }
+        return h;
+    }
 
     // ****************** Recyclable implementation ************************
 
