@@ -39,7 +39,7 @@ import javax.swing.event.*;
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.8 2003/03/10 02:42:53 spestov Exp $
+ * @version $Id: Log.java,v 1.9 2003/03/10 03:09:11 spestov Exp $
  */
 public class Log
 {
@@ -273,7 +273,13 @@ public class Log
 				{
 					_log(urgency,_source,st.nextToken());
 				}
-				listModel.fireChanged();
+				SwingUtilities.invokeLater(new Runnable()
+				{
+					public void run()
+					{
+						listModel.fireChanged();
+					}
+				});
 			}
 		}
 	} //}}}
