@@ -3,7 +3,7 @@ $page.setTitle("Global Issue Types")
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
 <p>
-This page is for selecting an Artifact Type to edit which is defined in a global scope.
+This page is for selecting an Issue type to edit which is defined in a global scope.
 </p>
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="get">
@@ -42,7 +42,7 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="Copy" />&#160;
 <input type="submit" value="Delete selected" name="eventSubmit_doSave" />&#160;
-<small>artifact type(s)</small>
+<small>issue type(s)</small>
 </div>
 
 <div class="functnbar2">
