@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.10 2003/10/18 21:42:16 alexb Exp $
+// $Id: ExplorerTree.java,v 1.11 2003/10/18 22:12:02 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,7 +194,10 @@ extends DisplayTextTree
             else if (ModelFacade.isAComment(value)) {
                 name = ModelFacade.getName(value);
                 
-                if (name != null && name.indexOf("\n") < 80) {
+                if (name != null &&
+                    name.indexOf("\n") < 80 &&
+                    name.indexOf("\n") > -1) {
+                        
                     name = name.substring(0, name.indexOf("\n")) + "...";
                 }
                 else if (name != null && name.length() > 80) {
