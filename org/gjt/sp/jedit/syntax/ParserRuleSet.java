@@ -33,7 +33,7 @@ import javax.swing.text.Segment;
 /**
  * A set of parser rules.
  * @author mike dillon
- * @version $Id: ParserRuleSet.java,v 1.17 2002/06/05 02:59:49 spestov Exp $
+ * @version $Id: ParserRuleSet.java,v 1.18 2002/08/16 19:18:23 spestov Exp $
  */
 public class ParserRuleSet
 {
@@ -87,7 +87,7 @@ public class ParserRuleSet
 	{
 		ruleCount++;
 
-		int key = Character.toUpperCase(r.start[0])
+		int key = Character.toUpperCase(r.hashChar)
 			% RULE_BUCKET_COUNT;
 		ParserRule last = ruleMapLast[key];
 		if(last == null)
