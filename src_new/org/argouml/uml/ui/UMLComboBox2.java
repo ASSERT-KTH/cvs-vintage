@@ -1,4 +1,4 @@
-// $Id: UMLComboBox2.java,v 1.18 2004/07/24 15:44:46 mkl Exp $
+// $Id: UMLComboBox2.java,v 1.19 2004/07/26 08:33:34 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class UMLComboBox2
     }
            
     public UMLComboBox2(UMLComboBoxModel2 arg0, UMLAction action) {
-        this(arg0, action, false);
+        this(arg0, action, true);
     }
 
     /**
