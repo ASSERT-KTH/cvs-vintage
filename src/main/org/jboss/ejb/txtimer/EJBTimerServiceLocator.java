@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceLocator.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: EJBTimerServiceLocator.java,v 1.4 2004/04/14 13:44:46 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
@@ -74,7 +74,7 @@ public class EJBTimerServiceLocator
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
                     "createTimerService",
-                    new Object[]{containerId, instancePk},
+                    new Object[]{containerId, instancePk, container},
                     new String[]{String.class.getName(), Object.class.getName(), Container.class.getName()});
             return timerService;
          }
@@ -92,7 +92,7 @@ public class EJBTimerServiceLocator
          {
             TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
                     "createTimerService",
-                    new Object[]{containerId, instancePk},
+                    new Object[]{containerId, instancePk, invoker},
                     new String[]{String.class.getName(), Object.class.getName(), TimedObjectInvoker.class.getName()});
             return timerService;
          }
@@ -127,7 +127,7 @@ public class EJBTimerServiceLocator
          {
             server.invoke(EJBTimerService.OBJECT_NAME,
                     "retryTimeout",
-                    new Object[]{containerId, instancePk},
+                    new Object[]{containerId, instancePk, timer},
                     new String[]{String.class.getName(), Object.class.getName(), Timer.class.getName()});
          }
          catch (Exception e)
