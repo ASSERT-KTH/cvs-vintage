@@ -398,6 +398,7 @@ $l10n.NoAttachments
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
+       #fieldErrorMsg($intakeAttachment.File "")
        <p><small>$l10n.SelectFile</small></p>
       </td>
     </tr>
