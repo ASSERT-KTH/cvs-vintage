@@ -6,7 +6,7 @@
 <!-- jEdit FAQ                                            -->
 <!-- Copyright (C) 2001-2002 John Gellene                 -->
 
-<!-- $Id: faq.xml,v 1.3 2002/02/17 21:43:09 jgellene Exp $
+<!-- $Id: faq.xml,v 1.4 2003/02/09 04:02:51 krisko Exp $
 -->
 
 <!-- Changes required for posting on jEdit Community:     -->
@@ -97,6 +97,11 @@
       <revnumber>0.8</revnumber>
       <date>Feb. 17, 2002</date>
       <revremark>Additional revisions for jEdit 4.0 release</revremark>
+    </revision>
+    <revision>
+      <revnumber>0.9</revnumber>
+      <date>Feb. 9, 2003</date>
+      <revremark>Additional revisions for jEdit 4.1 release</revremark>
     </revision>
     </revhistory>
 	<releaseinfo>
