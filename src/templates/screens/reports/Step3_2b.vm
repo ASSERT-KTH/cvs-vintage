@@ -10,7 +10,8 @@
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
 			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
+			<td>2: <a href="#" title="primary filter attribute">
+                Primary filter attribute (PFA)</a></td>
 			<th>3: Select row/column heading(s)</th>
 			</tr>
 			</table>
@@ -31,11 +32,18 @@
 		<tr>
 			<th>Row content</th>
 			<td>
-			<select name="$intakeReport.Axis1AttributesAndOptions.Key" 
+#set ($options = $report.Axis1OptionList)
+#if ($report.Axis1Category == 0 || $report.Axis1Category == 1 || $report.Axis1Category == 2)
+			<select name="$intakeReport.Axis1Keys.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions $report.Axis1AttributesAndOptions )
+                #attributeOptionOptionList( $options $report.Axis1Keys)
 			</select>
+
+#else
+    No category was chosen, did you hack the url, 
+    or is this an application error?
+#end
 			</td>
 		</tr>
 			

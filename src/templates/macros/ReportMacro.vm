@@ -24,6 +24,146 @@
 #end
 
 
+#*
+#macro ( reportTable $model )
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+
+	<tr>
+#foreach ($heading in $model.Headings)
+    #if (!$heading.Label || $heading.Label.toString().length() == 0)
+        #set ($label = "&nbsp;")
+    #elseif ($model.isDate($column.Heading.Label))
+        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $heading.Label"))
+    #else
+        #set ($label = "$heading.Label")
+    #end
+    #set ($quote = '"')
+    #if ($heading.SubHeadings)
+        #set ($hasSubHeadings = true)
+        #set ($colspan = " colspan=$quote$heading.SubHeadings.size()$quote")
+    #else
+        #set ($colspan = "")
+    #end
+		<th$colspan>$label</th>
+#end
+	</tr>
+
+#if ($hasSubHeadings)
+	<tr>
+    #foreach ($superheading in $model.Headings)
+    #foreach ($heading in $superheading.SubHeadings)
+        #if (!$heading.Label || $heading.Label.toString().length() == 0)
+            #set ($label = "&nbsp;")
+        #elseif ($model.isDate($column.Heading.Label))
+            #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $heading.Label)")
+        #else
+            #set ($label = "$heading.Label")
+        #end
+        #set ($quote = '"')
+		<th>$label</th>
+    #end
+    #end
+	</tr>
+#end
+
+
+    #foreach ( $row in $model.Rows )
+
+    #rows()
+        #foreach ($cell in $row)
+            #if ( $model.isHeading($cell) )
+                #if ($cell.SubHeadings)
+                    #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
+                #else
+                    #set ($rowspan = "")
+                #end
+		        <td$rowspan><strong>$cell.Label</strong></td>
+            #elseif ($model.isDate($cell))
+                <td>$format.getDate('MM/dd/yyyy HH:mm', $heading.Label)</td>
+            #else
+                <td>$cell</td>
+            #end
+        #end
+    </tr>
+    #end
+
+</table>
+
+#end
+*#
+
+
+## the rowspan and colspan stuff below will not work as written.  We must
+## track which cells to skip.  For now assume rowspan and colspan are always 1.
+#macro ( reportTable $model )
+    #set ($quote = '"')
+    #set ($maxRow = $model.RowCount)
+    #set ($maxColumn = $model.ColumnCount)
+$maxRow $maxColumn
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+
+#foreach ($rowIndex in [0..$maxRow])
+	<tr>
+        #foreach ($columnIndex in [0..$maxColumn])
+            #set ($cell = $model.getValueAt($rowIndex, $columnIndex))
+            #if ($model.isHeading($cell))
+
+                #if (!$cell.Label)
+                    #set ($label = "&nbsp;")
+                #else
+                    #set ($cellLabel = $cell.Label)
+                    #if ($model.isDate($cellLabel))
+                        #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $cellLabel"))
+                    #elseif ($cellLabel.isOption())
+                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue")
+                    #elseif ($cellLabel.isOptionGroup())
+                        #set ($label = "$cellLabel.SubLabel1.DisplayValue")
+                    #elseif ($cellLabel.isOptionAndGroup())
+                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue $cellLabel.SubLabel2.DisplayValue")
+                    #elseif ($cellLabel.isOptionAndOption())
+                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue $cellLabel.SubLabel2.RModuleAttribute.DisplayValue:$cellLabel.SubLabel2.DisplayValue")
+                    #elseif ($cellLabel.isAttributeAndUser())
+                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.User.UserName")
+                    #elseif ($cellLabel.isUser())
+                        #set ($label = "Author:$cellLabel.SubLabel1.User.UserName")
+                    #end
+                #end
+                #if ($model.isColumnHeading($cell))
+                    #if ($cell.Colspan > 1)
+                        #set ($colspan = " colspan=$quote$cell.Colspan$quote")
+                    #else
+                        #set ($colspan = "")
+                    #end
+		            <th$colspan>$columnIndex $label</th>
+                #else
+                    #if ($cell.Rowspan > 1)
+                        #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
+                    #else
+                        #set ($rowspan = "")
+                    #end
+		        <td$rowspan><strong>$label</strong></td>
+                #end
+            #else
+                <td>
+                #if ($model.isDate($cell))
+                    $format.getDate('MM/dd/yyyy HH:mm', $cell)
+                #elseif (!$cell)
+                    &nbsp;
+                #else
+                    $cell
+                #end
+                </td>
+            #end
+        #end
+	</tr>
+#end
+
+</table>
+
+#end
+
+
 
 #macro ( addReportHiddenInputs $report $template)
 

@@ -27,16 +27,38 @@
 #end
 	</tr>
 		
+#if ($report.Axis1Category == 0)
 
-#foreach ( $option1 in $report.SelectedAxis1Options )
+    #foreach ( $option1 in $report.SelectedAxis1Options )
+
     #rows()
-		<td><strong>$option1.DisplayValue</strong></td>
-    #foreach ($date in $report.ReportDates)
+		    <td><strong>$option1.DisplayValue</strong></td>
+        #foreach ($date in $report.ReportDates)
     		<td>
-                $report.getIssueCount($option1.AttributeOption, $date.Date )
+                $report.getIssueCount($option1, $date.Date )
             </td>
-    #end
+        #end
     </tr>
+    #end
+
+#elseif ($report.Axis1Category == 1 || $report.Axis1Category == 2)
+
+    #foreach ( $option in $report.SelectedAxis1UserOptions )
+
+    #rows()
+		    <td><strong>$option.User.UserName</strong></td>
+        #foreach ($date in $report.ReportDates)
+    		<td>
+                #if ($report.Axis1Category == 1)
+                    $report.getIssueCount($option.Attribute, $option.User, $date.Date )
+                #else
+                    $report.getCommittedByIssueCount($option.User, $date.Date )
+                #end
+            </td>
+        #end
+    </tr>
+    #end
+
 #end
 
 </table>

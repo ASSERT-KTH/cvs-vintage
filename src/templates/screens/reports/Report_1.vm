@@ -20,44 +20,7 @@
 		
 <p>Report Date/Time: $report.NewDate</p>
 		
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
-	<tr>
-		<th>&nbsp;</th>
-#if ($report.OptionGroups)
-    #set ($secondCriteria = $report.OptionGroups)
-#elseif ($report.SelectedOptionsForGrouping)
-    #set ($secondCriteria = $report.SelectedOptionsForGrouping)
-#end
-
-#foreach ( $option in $report.SelectedAxis2Options )
-    #if ($secondCriteria)
-        #foreach ( $optionGroup in $secondCriteria )
-    		<th>$option.DisplayValue $optionGroup.DisplayValue</th>
-        #end
-    #else
-		<th>$option.DisplayValue</th>
-    #end
-#end
-    </tr>
-
-#foreach ( $option1 in $report.SelectedAxis1Options )
-    #rows()
-		<td><strong>$option1.DisplayValue</strong></td>
-    #foreach ( $option2 in $report.SelectedAxis2Options )
-        #if ($secondCriteria)
-            #foreach ( $optionGroup in $secondCriteria )
-    		<td>
-                $report.getIssueCount($option1.AttributeOption, $option2.AttributeOption, $optionGroup, $report.NewDate )
-            </td>
-            #end
-        #else
-    		<td>FIXME</td>
-        #end
-    #end
-    </tr>
-#end
-		
-</table>
+#reportTable( $report.Model )
 		
 <p>page 1 of 1</p>
 

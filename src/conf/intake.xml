@@ -391,9 +391,9 @@
         </field>
         <field name="Axis1Category" key="a1c" type="int"/>
         <field name="Axis2Category" key="a2c" type="int"/>
-        <field name="Axis1AttributesAndOptions" key="a1ao" 
+        <field name="Axis1Keys" key="a1k" 
                type="String" multiValued="true"/>
-        <field name="Axis2AttributesAndOptions" key="a2ao" 
+        <field name="Axis2Keys" key="a2k" 
                type="String" multiValued="true"/>
 </group>
 

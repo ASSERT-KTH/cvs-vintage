@@ -35,8 +35,6 @@
                     value="$intakeReport.NewDate" />
             </td>
         </tr>
-#* commenting out until user attributes are sorted out, otherwise there is
-   only one valid option
 
 		<tr>
 			<th>rows: criteria</th>
@@ -64,7 +62,6 @@
 			    </select>
 			</td>
 		</tr>
-*#
 	</table>
 </div>
 

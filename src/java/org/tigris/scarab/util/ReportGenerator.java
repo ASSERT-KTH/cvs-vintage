@@ -50,6 +50,7 @@ package org.tigris.scarab.util;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Arrays;
 
 import org.apache.commons.util.ObjectUtils;
 import com.workingdogs.village.Record;
@@ -91,12 +92,13 @@ public class ReportGenerator
          "rate of change (multiple date/time)"};
 
     private static final String[] AXIS_CATEGORIES = 
-        {"attributes/options", "users"};
+        {"attributes/options", "attributes/users", "committed by/author"};
 
     private static List reportTypes;
     private static List axisCategories;
 
-
+    private static final String ACT_ATTRIBUTE_ID;
+    private static final String ACT_NEW_USER_ID;
     private static final String ACT_NEW_OPTION_ID;
     private static final String ACT_ISSUE_ID;
     private static final String ACT_TRANSACTION_ID;
@@ -114,8 +116,8 @@ public class ReportGenerator
     private List dates;
     private int axis1Category;
     private int axis2Category;
-    private String[] axis1AttributesAndOptions;
-    private String[] axis2AttributesAndOptions;
+    private String[] axis1Keys;
+    private String[] axis2Keys;
     private List optionGroups;
 
     /** used to store query key as part of Retrievable interface */ 
@@ -136,6 +138,10 @@ public class ReportGenerator
         }
 
         // column names only
+        ACT_ATTRIBUTE_ID = ActivityPeer.ATTRIBUTE_ID.substring(
+            ActivityPeer.ATTRIBUTE_ID.indexOf('.')+1);
+        ACT_NEW_USER_ID = ActivityPeer.NEW_USER_ID.substring(
+            ActivityPeer.NEW_USER_ID.indexOf('.')+1);
         ACT_NEW_OPTION_ID = ActivityPeer.NEW_OPTION_ID.substring(
             ActivityPeer.NEW_OPTION_ID.indexOf('.')+1);
         ACT_ISSUE_ID = ActivityPeer.ISSUE_ID.substring(
@@ -294,13 +300,11 @@ public class ReportGenerator
 
     public List getOptionGroups()
     {
-        System.out.println("returning og's: " + optionGroups );
         return optionGroups;
     }
 
     public OptionGroup getNewOptionGroup()
     {
-        System.out.println("getting new option group");
         return new OptionGroup();
     }
 
@@ -368,14 +372,20 @@ public class ReportGenerator
         return newArray;
     }
 
-    private void moveToFront(String[] array, int index)
+    private void moveTo(String[] array, int currentPosition, int endPosition)
+        throws ScarabException
     {
-        String tmp = array[index];
-        for ( int i=index-1; i>=0; i-- ) 
+        if ( endPosition > currentPosition ) 
+        {
+            throw new ScarabException(
+                "Cannot move towards a higher indexed position");
+        }
+        String tmp = array[currentPosition];
+        for ( int i=currentPosition-1; i>=endPosition; i-- ) 
         {
             array[i+1] = array[i];
         }
-        array[0] = tmp;
+        array[endPosition] = tmp;
     }
 
     /**
@@ -391,7 +401,6 @@ public class ReportGenerator
         for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
         {
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-            System.out.println("Attribute: " + rma.getAttribute().getName() );
             if ( rma.getAttribute().isOptionAttribute()) 
             {            
                 String rmaId = getKey(rma);
@@ -402,7 +411,7 @@ public class ReportGenerator
                     {
                         isRMASelected = true;
                         //removing the key, as it is already matched
-                        moveToFront(keys, j);
+                        moveTo(keys, j, start);
                         start++;
                         break;
                     }                    
@@ -430,7 +439,7 @@ public class ReportGenerator
                             {
                                 isRMOSelected = true;
                                 //removing the key, as it is already matched
-                                moveToFront(keys, k);
+                                moveTo(keys, k, start);
                                 start++;
                                 break;
                             }                    
@@ -446,36 +455,155 @@ public class ReportGenerator
         return options;
     }
 
-    public List getSelectedAxis1Options()
+    /**
+     * fill out list of AttributeAndUser's based on selected attributes
+     * and users
+     */
+    private List getSelectedAttributeAndUsers(String[] keys)
         throws Exception
     {
-        List options = null;
-        String[] axis1AOs = getAxis1AttributesAndOptions();
-        if ( axis1AOs == null ) 
+        List rmas = module.getRModuleAttributes(true);
+        List ausers = new ArrayList(7*rmas.size());
+        int start = 0;
+        for ( int i=0; i<rmas.size() && keys.length != start; i++ ) 
         {
-            options = new ArrayList(0);
+            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+            Attribute attribute = rma.getAttribute(); 
+            if ( attribute.isUserAttribute()) 
+            {            
+                String rmaId = getKey(rma);
+                boolean isRMASelected = false;
+                for ( int j=start; j<keys.length; j++ ) 
+                {
+                    if ( rmaId.equals(keys[j]) ) 
+                    {
+                        isRMASelected = true;
+                        //removing the key, as it is already matched
+                        moveTo(keys, j, start);
+                        start++;
+                        break;
+                    }                    
+                }
+                // if selected add all the attributes otherwise we still need
+                // to check for a partial list
+                List users = Arrays.asList(module.getEligibleUsers(attribute));
+                if ( isRMASelected ) 
+                {
+                    for ( int j=0; j<users.size(); j++ ) 
+                    {
+                        ausers.add( new AttributeAndUser( 
+                            rma, (ScarabUser)users.get(j) ));
+                    }               
+                }
+                else 
+                {
+                    for ( int j=0; j<users.size(); j++ ) 
+                    {
+                        String userId = 
+                            getKey(attribute, (ScarabUser)users.get(j));
+                        boolean isRMOSelected = false;
+                        for ( int k=start; k<keys.length; k++ ) 
+                        {
+                            if ( userId.equals(keys[k]) ) 
+                            {
+                                isRMOSelected = true;
+                                //removing the key, as it is already matched
+                                moveTo(keys, k, start);
+                                start++;
+                                break;
+                            }                    
+                        }
+                        if ( isRMOSelected ) 
+                        {
+                            ausers.add( new AttributeAndUser(
+                                rma, (ScarabUser)users.get(j)) );
+                        }                                   
+                    }
+                }
+            }
         }
-        else 
-        {
-            options = getSelectedOptions(axis1AOs);
-        }
-        return options;
+        return ausers;
     }
 
-    public List getSelectedAxis2Options()
+    /**
+     * fill out list of ScarabUser's based on selected committers
+     */
+    private List getSelectedCommitters(String[] keys)
         throws Exception
     {
-        List options = null;
-        String[] axis2AOs = getAxis2AttributesAndOptions();
-        if ( axis2AOs == null ) 
+        List users = Arrays.asList(module.getEligibleIssueReporters());
+        List committers = new ArrayList(users.size());
+        int start = 0;
+        for ( int j=0; j<users.size(); j++ ) 
         {
-            options = new ArrayList(0);
+            ScarabUser user = (ScarabUser)users.get(j);
+
+            String userId = getKey(user);
+            for ( int k=start; k<keys.length; k++ ) 
+            {
+                if ( userId.equals(keys[k]) ) 
+                {
+                    //removing the key, as it is already matched
+                    moveTo(keys, k, start);
+                    start++;
+                    committers.add(user);
+                    break;
+                }                    
+            }
+        }
+
+        return committers;
+    }
+
+    public List getSelectedAxis1()
+        throws Exception
+    {
+        List list = null;
+        String[] keys = getAxis1Keys();
+        if ( keys == null ) 
+        {
+            list = new ArrayList(0);
         }
         else 
         {
-            options = getSelectedOptions(axis2AOs);
+            list = pickSelectedList(getAxis1Category(), keys);
         }
-        return options;
+        return list;
+    }
+
+    public List getSelectedAxis2()
+        throws Exception
+    {
+        List list = null;
+        String[] keys = getAxis2Keys();
+        if ( keys == null ) 
+        {
+            list = new ArrayList(0);
+        }
+        else 
+        {
+            list = pickSelectedList(getAxis2Category(), keys);
+        }
+        return list;
+    }
+
+    private List pickSelectedList(int category, String[] keys)
+        throws Exception
+    {
+        List list = null;
+        switch ( category ) 
+        {
+        case 0: // option attributes
+            list = getSelectedOptions(keys);
+            break;
+        case 1: // user attributes
+            list = getSelectedAttributeAndUsers(keys);
+            break;
+        case 2: // committed by
+            list = getSelectedCommitters(keys);           
+            break;
+        }
+        return list;
     }
 
     public List getAllOptionsForGrouping()
@@ -488,12 +616,12 @@ public class ReportGenerator
             RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
             if ( rma.getAttribute().isOptionAttribute()) 
             {            
-                allOptions.add( new AttributeOrOptionSelectOption(rma) );
+                allOptions.add( new ReportKeyedSelectOption(rma) );
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
                 {
-                    allOptions.add( new AttributeOrOptionSelectOption(
+                    allOptions.add( new ReportKeyedSelectOption(
                         (RModuleOption)rmos.get(j) ));
                 }               
             }
@@ -512,23 +640,14 @@ public class ReportGenerator
             {
                 d[i] = (Date)((ReportDate)dates.get(i)).getDate();
             }
-        System.out.println("getting dates: " + d + " size="+d.length);
         }
-        System.out.println("getting dates: " + d);
         
         return d;
     }
 
-    /*
-    public void setDates(List v)
-    {
-        this.dates = v;
-    }
-    */
 
     public void setDates(Date[] v)
     {
-        System.out.println("setting dates: " + v);
         if ( v == null ) 
         {
             dates = null;
@@ -593,6 +712,36 @@ public class ReportGenerator
         return new ReportDate();
     }
 
+    public List getAxis1OptionList()
+        throws Exception
+    {
+        return pickOptionList(getAxis1Category());
+    } 
+
+    public List getAxis2OptionList()
+        throws Exception
+    {
+        return pickOptionList(getAxis2Category());
+    }
+
+    private List pickOptionList(int category)
+        throws Exception
+    {
+        List options = null;
+        switch ( category ) 
+        {
+        case 0: // option attributes
+            options = getOptionsMinusGroupedOptions();
+            break;
+        case 1: // user attributes
+            options = getUserOptions();
+            break;
+        case 2: // committers
+            options = getPossibleCommitters();
+        }
+        return options;
+    }
+
 
     public List getOptionsMinusGroupedOptions()
         throws Exception
@@ -606,7 +755,7 @@ public class ReportGenerator
             if ( !isGroupedAttribute(rma) && 
                  rma.getAttribute().isOptionAttribute()) 
             {            
-                options.add( new AttributeOrOptionSelectOption(rma) );
+                options.add( new ReportKeyedSelectOption(rma) );
                 List rmos = module.getLeafRModuleOptions(rma.getAttribute());
 
                 for ( int j=0; j<rmos.size(); j++ ) 
@@ -614,11 +763,50 @@ public class ReportGenerator
                     RModuleOption rmo = (RModuleOption)rmos.get(j);
                     if ( !isGroupedOption(rmo)) 
                     {
-                        options.add( new AttributeOrOptionSelectOption(rmo));
+                        options.add( new ReportKeyedSelectOption(rmo));
                     }   
                 }               
             }
         }
+        return options;
+    }
+
+    public List getUserOptions()
+        throws Exception
+    {
+        List rmas = module.getRModuleAttributes(true);
+        List options = new ArrayList(7*rmas.size());
+        for ( int i=0; i<rmas.size(); i++ ) 
+        {
+            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+            Attribute attribute = rma.getAttribute();
+            if ( attribute.isUserAttribute()) 
+            {            
+                options.add( new ReportKeyedSelectOption(rma) );
+                List users = Arrays.asList(module.getEligibleUsers(attribute));
+
+                for ( int j=0; j<users.size(); j++ ) 
+                {
+                    ScarabUser user = (ScarabUser)users.get(j);
+                    options.add( 
+                        new ReportKeyedSelectOption(attribute, user) );
+                }               
+            }
+        }
+        return options;
+    }
+
+    public List getPossibleCommitters()
+        throws Exception
+    {
+        List users = Arrays.asList(module.getEligibleIssueReporters());
+        List options = new ArrayList(users.size());
+        for ( int j=0; j<users.size(); j++ ) 
+        {
+            ScarabUser user = (ScarabUser)users.get(j);
+            options.add( new ReportKeyedSelectOption(user) );
+        }               
+
         return options;
     }
 
@@ -701,43 +889,43 @@ public class ReportGenerator
     
     /**
      */
-    public String[] getAxis1AttributesAndOptions() 
+    public String[] getAxis1Keys() 
     {
-        return this.axis1AttributesAndOptions;
+        return this.axis1Keys;
     }
     
     /**
      */
-    public void setAxis1AttributesAndOptions(String[] v) 
+    public void setAxis1Keys(String[] v) 
     {
         if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
         {
-            this.axis1AttributesAndOptions = null;
+            this.axis1Keys = null;
         }
         else 
         {
-            this.axis1AttributesAndOptions = v;
+            this.axis1Keys = v;
         }
     }
 
     /**
      */
-    public String[] getAxis2AttributesAndOptions() 
+    public String[] getAxis2Keys() 
     {
-        return this.axis2AttributesAndOptions;
+        return this.axis2Keys;
     }
     
     /**
      */
-    public void setAxis2AttributesAndOptions(String[] v) 
+    public void setAxis2Keys(String[] v) 
     {
         if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
         {
-            this.axis2AttributesAndOptions = null;
+            this.axis2Keys = null;
         }
         else 
         {
-            this.axis2AttributesAndOptions = v;
+            this.axis2Keys = v;
         }
     }
 
@@ -793,11 +981,11 @@ public class ReportGenerator
     private void addOptionOrGroup(int alias, Object optionOrGroup, 
                                   Date date, Criteria crit)
     {
-        registerAlias(alias, crit);
         String a = "a"+alias;
-        String t = "t"+alias;
-        crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
-        crit.add(t, TRAN_CREATED_DATE, date, Criteria.LESS_THAN);
+        if ( optionOrGroup != null ) 
+        {
+            addCommonCriteria(alias, date, crit);            
+        }
 
         if ( optionOrGroup instanceof OptionGroup ) 
         {
@@ -829,17 +1017,47 @@ public class ReportGenerator
             crit.add(a, ACT_NEW_OPTION_ID, 
                      ((AttributeOption)optionOrGroup).getOptionId());
         }
+        else if (optionOrGroup instanceof AttributeAndUser)
+        {
+            RModuleAttribute rma = ((AttributeAndUser)optionOrGroup)
+                .getRModuleAttribute();
+            ScarabUser user = ((AttributeAndUser)optionOrGroup).getUser();
+            crit.add(a, ACT_ATTRIBUTE_ID, rma.getAttributeId());
+            crit.add(a, ACT_NEW_USER_ID, user.getUserId());
+        }
+    }
 
+    private void addCommonCriteria(int alias, Date date, Criteria crit)
+    {
+        String a = "a"+alias;
+        String t = "t"+alias;
+        registerAlias(alias, crit);
+        crit.addJoin(a+"."+ACT_TRANSACTION_ID, t+'.'+TRAN_TRANSACTION_ID);
+        crit.add(t, TRAN_CREATED_DATE, date, Criteria.LESS_THAN);            
         // end date criteria
-        Criteria.Criterion c1 = crit.getNewCriterion(
-            a, ACT_END_DATE, date, Criteria.GREATER_THAN);
-        c1.or(crit.getNewCriterion(
-            a, ACT_END_DATE, null, Criteria.EQUAL) );
+        Criteria.Criterion c1 = crit
+            .getNewCriterion(a, ACT_END_DATE, date, Criteria.GREATER_THAN);
+        c1.or(crit.getNewCriterion(a, ACT_END_DATE, null, Criteria.EQUAL) );
         crit.add(c1);
     }
 
-    private int runQuery(AttributeOption o1, AttributeOption o2,
-                         Object ogOrRmo, Date date)
+    /*
+    private void addAttributeAndUser(int alias, AttributeAndUser au, 
+                                     Date date, Criteria crit)
+    {
+        Attribute attribute = au.getAttribute();
+        ScarabUser user = au.getUser();
+        if ( au != null && attribute != null && user != null ) 
+        {
+            addCommonCriteria(alias, date, crit);            
+            String a = "a"+alias;
+            crit.add(a, ACT_ATTRIBUTE_ID, attribute.getAttributeId());
+            crit.add(a, ACT_NEW_USER_ID, user.getUserId());
+        }
+    }
+    */
+
+    private int runQuery(Object o1, Object o2, Object ogOrRmo, Date date)
         throws Exception
     {
         Criteria crit = new Criteria();
@@ -863,6 +1081,166 @@ public class ReportGenerator
         }
         return ((Record)records.get(0)).getValue(1).asInt();
     }
+
+
+    public TableModel getModel()
+        throws Exception
+    {
+        return new Report1TableModel();
+    }
+        
+    public class Report1TableModel extends TableModel
+    {           
+        List secondCriteria;
+        List columnData;
+        List rowData;
+        boolean isGroups;
+
+            public Report1TableModel()
+                throws Exception
+            {
+                columnData = getSelectedAxis2();
+                rowData = getSelectedAxis1();
+                secondCriteria = getOptionGroups();
+                isGroups = true;
+                if ( secondCriteria == null ) 
+                {
+                    isGroups = false;
+                    secondCriteria = getSelectedOptionsForGrouping();
+                }
+            }         
+
+            public int getColumnCount()
+            {
+                int size = columnData.size();
+                if ( secondCriteria != null && secondCriteria.size() > 1 ) 
+                {
+                    size *= secondCriteria.size();
+                }
+                
+                return size;
+            }
+
+            public int getRowCount()
+            {
+                return rowData.size();
+            }
+
+
+        public Object getValueAt(int row, int column)
+            throws Exception
+        {
+            Object contents = null;
+            int r = row - 1;
+            int c = column - 1;
+            
+            if ( c >= 0 ) 
+            {
+                Object secCrit = null;
+                int size = 1;
+                if ( secondCriteria != null && secondCriteria.size() > 0 ) 
+                {
+                    size = secondCriteria.size();
+                    secCrit = secondCriteria.get(c%size);
+                }
+
+                Object cData = columnData.get(c/size);
+                if ( r >= 0) 
+                {
+                    Object rData = rowData.get(r);
+                    contents = new Integer( 
+                        runQuery(rData, cData, secCrit, getNewDate())); 
+                }
+                else   
+                {                      
+                    ColumnHeading heading = new ColumnHeading();
+                    heading.setLabel(new Label(cData, secCrit));
+                    contents = heading;
+                }
+            }
+            else if ( r >= 0 && c == -1 )
+            {                     
+                Object rData = rowData.get(r);
+                RowHeading heading = new RowHeading();
+                heading.setLabel(new Label(rData));
+                contents = heading;
+            }
+            else 
+            {
+                contents  = new ColumnHeading();
+            }
+                            
+            return contents;
+        }
+
+        public class Label 
+        {
+            List objs;
+            
+            public Label(Object obj)
+            {
+                objs = new ArrayList(1);
+                objs.add(obj);
+            }
+
+            public Label(Object obj1, Object obj2)
+            {
+                if ( obj2 == null ) 
+                {
+                    objs = new ArrayList(1);
+                    objs.add(obj1);
+                }
+                else 
+                {
+                    objs = new ArrayList(2);
+                    objs.add(obj1);
+                    objs.add(obj2);
+                }
+            }
+
+            public boolean isOption()
+            {
+                return objs.size() == 1 && objs.get(0) instanceof RModuleOption;
+            }
+            public boolean isOptionGroup()
+            {
+                return objs.size() == 1 && objs.get(0) instanceof OptionGroup;
+            }
+            public boolean isOptionAndGroup()
+            {
+                return objs.size() == 2 && objs.get(1) instanceof OptionGroup;
+            }
+            public boolean isOptionAndOption()
+            {
+                return objs.size() == 2 && objs.get(1) instanceof RModuleOption;
+            }
+            public boolean isAttributeAndUser()
+            {
+                return objs.size() == 1 && 
+                    objs.get(0) instanceof AttributeAndUser;
+            }
+            public boolean isUser()
+            {
+                return objs.size() == 1 && 
+                    objs.get(0) instanceof ScarabUser;
+            }
+            public List getSubLabels()
+            {
+                return objs;
+            }
+            public Object getSubLabel1()
+            {
+                return objs.get(0);
+            }
+            public Object getSubLabel2()
+            {
+                return objs.get(1);
+            }
+        }
+
+    }
+
+
 
     // *********************************************************
     // Retrievable implementation
@@ -1226,12 +1604,12 @@ public class ReportGenerator
 
     // *********************************************************
 
-    public static class AttributeOrOptionSelectOption
+    public static class ReportKeyedSelectOption
         extends SimpleSelectOption
     {
         private boolean isAttribute;
 
-        AttributeOrOptionSelectOption(RModuleAttribute rma)
+        ReportKeyedSelectOption(RModuleAttribute rma)
             throws Exception
         {
             setIsAttribute(true);
@@ -1239,12 +1617,28 @@ public class ReportGenerator
             setValue( getKey(rma) );
         }
 
-        AttributeOrOptionSelectOption(RModuleOption rmo)
+        ReportKeyedSelectOption(RModuleOption rmo)
             throws Exception
         {
             setIsAttribute(false);
             super.setName(rmo.getDisplayValue());
             setValue( getKey(rmo) );
+        }
+
+        ReportKeyedSelectOption(Attribute a, ScarabUser user)
+            throws Exception
+        {
+            setIsAttribute(false);
+            super.setName(user.getUserName());
+            setValue( getKey(a, user) );
+        }
+
+        ReportKeyedSelectOption(ScarabUser user)
+            throws Exception
+        {
+            setIsAttribute(false);
+            super.setName(user.getUserName());
+            setValue( getKey(user) );
         }
 
         /**
@@ -1266,29 +1660,97 @@ public class ReportGenerator
         }   
     }    
 
-        private static String getKey(RModuleAttribute rma)
-            throws Exception
+    private static String getKey(RModuleAttribute rma)
+        throws Exception
+    {
+        return getKey(rma.getAttribute());
+    }
+    
+    private static String getKey(Attribute a)
+        throws Exception
+    {
+        String key = null;
+        if ( a.isUserAttribute() ) 
         {
-            return getKey(rma.getAttribute());
+            key = "ua" + a.getQueryKey();
         }
-
-        private static String getKey(Attribute a)
+        else 
         {
-            return "a" + a.getQueryKey();
-        }
-
-        private static String getKey(RModuleOption rmo)
-            throws Exception
-        {
-            return getKey(rmo.getAttributeOption());
-        }
-
-        private static String getKey(AttributeOption o)
-        {
-            return o.getQueryKey();
+            key = "a" + a.getQueryKey();
         }
         
+        return key;
+    }
+    
+    private static String getKey(RModuleOption rmo)
+        throws Exception
+    {
+        return getKey(rmo.getAttributeOption());
+    }
+    
+    private static String getKey(AttributeOption o)
+    {
+        return o.getQueryKey();
+    }
+    
+    private static String getKey(Attribute a, ScarabUser user)
+    {
+        return "au" + a.getQueryKey() + ':' + user.getQueryKey();
+    }
 
+    private static String getKey(ScarabUser user)
+    {
+        return 'u' + user.getQueryKey();
+    }
+
+    public static class AttributeAndUser
+    {
+        private RModuleAttribute attribute;
+        private ScarabUser user;
+
+        public AttributeAndUser(RModuleAttribute attribute, ScarabUser user)
+        {
+            this.attribute = attribute;
+            this.user = user;
+        }
+
+        /**
+         * Get the value of attribute.
+         * @return value of attribute.
+         */
+        public RModuleAttribute getRModuleAttribute() 
+        {
+            return attribute;
+        }
+        
+        /**
+         * Set the value of attribute.
+         * @param v  Value to assign to attribute.
+         */
+        public void setRModuleAttribute(RModuleAttribute  v) 
+        {
+            this.attribute = v;
+        }
+                
+        /**
+         * Get the value of user.
+         * @return value of user.
+         */
+        public ScarabUser getUser() 
+        {
+            return user;
+        }
+        
+        /**
+         * Set the value of user.
+         * @param v  Value to assign to user.
+         */
+        public void setUser(ScarabUser  v) 
+        {
+            this.user = v;
+        }
+        
+    }
 }
 
 

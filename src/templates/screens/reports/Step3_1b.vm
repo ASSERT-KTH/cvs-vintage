@@ -32,22 +32,37 @@
 		<tr>
 			<th>Row content</th>
 			<td>
-			<select name="$intakeReport.Axis1AttributesAndOptions.Key" 
+#set ($options = $report.Axis1OptionList)
+#if ($report.Axis1Category == 0 || $report.Axis1Category == 1 || $report.Axis1Category == 2)
+			<select name="$intakeReport.Axis1Keys.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions $report.Axis1AttributesAndOptions)
+                #attributeOptionOptionList( $options $report.Axis1Keys)
 			</select>
+
+#else
+    No category was chosen, did you hack the url, 
+    or is this an application error?
+#end
 			</td>
 		</tr>
 
 		<tr>
 			<th>Column content</th>
 			<td>
-			<select name="$intakeReport.Axis2AttributesAndOptions.Key" 
+#set ($options = $report.Axis2OptionList)
+#if ($report.Axis2Category == 0 || $report.Axis2Category == 1 || $report.Axis2Category == 2)
+
+			<select name="$intakeReport.Axis2Keys.Key" 
                 multiple="multiple" size="15">
 
-                #attributeOptionOptionList( $report.OptionsMinusGroupedOptions $report.Axis2AttributesAndOptions)
+                #attributeOptionOptionList( $options $report.Axis2Keys)
 			</select>
+
+#else
+    No category was chosen, did you hack the url, 
+    or is this an application error?
+#end
 			</td>
 		</tr>
 	</table>
