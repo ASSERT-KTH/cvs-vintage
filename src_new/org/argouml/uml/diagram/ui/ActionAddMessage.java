@@ -1,4 +1,4 @@
-// $Id: ActionAddMessage.java,v 1.2 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddMessage.java,v 1.3 2004/12/19 11:05:38 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,8 @@
 package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
-import org.argouml.model.ModelFacade;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLChangeAction;
@@ -37,8 +37,9 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigNode;
 
-/** Action to add a message.
- *  @stereotype singleton
+/** 
+ * Action to add a message.
+ * @stereotype singleton
  */
 public class ActionAddMessage extends UMLChangeAction {
 
@@ -54,7 +55,9 @@ public class ActionAddMessage extends UMLChangeAction {
     /**
      * The constructor.
      */
-    public ActionAddMessage() { super("action.add-message"); }
+    private ActionAddMessage() { 
+        super("action.add-message"); 
+    }
 
 
     ////////////////////////////////////////////////////////////////
@@ -65,37 +68,34 @@ public class ActionAddMessage extends UMLChangeAction {
      */
     public void actionPerformed(ActionEvent ae) {
     	Object target =  TargetManager.getInstance().getModelTarget();
-    
-    	
+
     	if (!(ModelFacade.isAAssociationRole(target))
 	    && ModelFacade.isACollaboration(ModelFacade.getNamespace(target)))
 	    return;
-    	Object/*MAssociationRole*/ ar = target;
-        this.addMessage(ar);
+        // So, the target is a MAssociationRole
+    	this.addMessage(target);
         super.actionPerformed(ae);
     }
     
     /**
-     * <p> add a message to an associationRole: it builds it using the
+     * Add a message to an associationRole: it builds it using the
      * Factory method and then it creates the Fig and adds it to the
-     * diagram </p>
-     * @param ar the associationRole to which the new message must be added
-     * @return the MMessage object
+     * diagram.
+     * 
+     * @param associationrole the associationRole to which the new message 
+     *                        must be added
      */
-    public Object/*MMessage*/ addMessage(Object/*MAssociationRole*/ ar) {
-        Object/*MCollaboration*/ collab = ModelFacade.getNamespace(ar);
-        Object/*MMessage*/ msg = UmlFactory.getFactory().getCollaborations()
-                                                .buildMessage(collab, ar);
-        String nextStr = "" + ModelFacade.getMessages(
-                (ModelFacade.getInteractions(collab).toArray())[0]).size();	
+    private void addMessage(Object associationrole) {
+        Object collaboration = ModelFacade.getNamespace(associationrole);
+        Object message = UmlFactory.getFactory().getCollaborations()
+                .buildMessage(collaboration, associationrole);
         Editor e = Globals.curEditor();
         GraphModel gm = e.getGraphModel();
         Layer lay = e.getLayerManager().getActiveLayer();
         GraphNodeRenderer gr = e.getGraphNodeRenderer();
-        FigNode figMsg = gr.getFigNodeFor(gm, lay, msg);
+        FigNode figMsg = gr.getFigNodeFor(gm, lay, message);
         ((FigMessage) figMsg).addPathItemToFigAssociationRole(lay);
-        e.damageAll();                
-        return msg;
+        TargetManager.getInstance().setTarget(message);
     }
 
     /**
