@@ -232,11 +232,14 @@ public class PGPMessageFilter extends AbstractFilter
           pgpMessage = StreamUtils.readInString(res.getErrorStream())
               .toString();
           LOG.fine("error message: " + pgpMessage);
-          return null;
+          decryptedStream = res.getResultStream();
+          //return null;
         }
-
-        decryptedStream = res.getResultStream();
-        pgpMode = SecurityInformationController.DECRYPTION_SUCCESS;
+        else
+        {
+          decryptedStream = res.getResultStream();
+          pgpMode = SecurityInformationController.DECRYPTION_SUCCESS;
+        }
       }
       catch (JSCFException e)
       {
@@ -258,14 +261,21 @@ public class PGPMessageFilter extends AbstractFilter
       {
         // TODO should be removed if we only use Streams!
         decryptedBodyPart = StreamUtils.readInString(decryptedStream);
+        // check if the returned String is has a length != 0
+        if (decryptedBodyPart.length() == 0)
+        {
+          LOG.fine("decrypted body part has a 0 length ... fixing it");
+          decryptedBodyPart = new StringBuffer(
+              "Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n");
+        }
       }
       // else we set the body to the i18n String
       else
       {
         decryptedBodyPart = new StringBuffer(
             "Content-Type: text/plain; charset=\"ISO-8859-15\"\n\n"
-                + MailResourceLoader.getString("menu", "mainframe", "security_decrypt_encrypted") 
-                +"\n");
+                + MailResourceLoader.getString("menu", "mainframe",
+                    "security_decrypt_encrypted") + "\n");
       }
       LOG.fine("the decrypted Body part: " + decryptedBodyPart);
       // construct new Message from decrypted string
