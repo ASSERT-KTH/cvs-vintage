@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.26 2003/08/15 07:42:24 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.27 2003/08/15 07:51:46 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager

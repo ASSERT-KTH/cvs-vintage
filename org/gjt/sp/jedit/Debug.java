@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.19 2003/08/15 07:42:24 spestov Exp $
+ * @version $Id: Debug.java,v 1.20 2003/08/15 07:51:45 spestov Exp $
  */
 public class Debug
 {
@@ -136,5 +136,5 @@ public class Debug
 	/**
 	 * Dump key events received by text area?
 	 */
-	public static boolean DUMP_KEY_EVENTS = true;
+	public static boolean DUMP_KEY_EVENTS = false;
 }
