@@ -100,13 +100,13 @@ public class PooledInvokerProxy
     * instances of proxies attached to a specific invoker
     */
    protected LinkedList pool = null;
+   protected int maxPoolSize;
 
    protected static class ClientSocket
    {
       public ObjectOutputStream out;
       public ObjectInputStream in;
       public Socket socket;
-      public boolean pooled = false;
       public int timeout;
       public ClientSocket(Socket socket, int timeout) throws Exception
       {
@@ -116,6 +116,14 @@ public class PooledInvokerProxy
          out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
          out.flush();
          in = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+      }
+
+      protected void finalize()
+      {
+         if (socket != null)
+         {
+            try { socket.close(); } catch (Exception ignored) {}
+         }
       }
    }
 
@@ -132,9 +140,10 @@ public class PooledInvokerProxy
     * Create a new Proxy.
     *
     */
-   public PooledInvokerProxy(ServerAddress sa)
+   public PooledInvokerProxy(ServerAddress sa, int maxPoolSize)
    {
       this.address = sa;
+      this.maxPoolSize = maxPoolSize;
    }
 
    /**
@@ -155,6 +164,7 @@ public class PooledInvokerProxy
                try
                {
                   socket.socket.close();
+                  socket.socket = null;
                }
                catch (Exception ignored)
                {
@@ -198,42 +208,6 @@ public class PooledInvokerProxy
 
    protected ClientSocket getConnection() throws Exception
    {
-      ClientSocket socket = null;
-      do
-      {
-         socket = getSocket();
-         try
-         {
-            // Test to see if socket is alive by send ACK message
-            final byte ACK = 1;
-            socket.out.writeByte(ACK);
-            socket.out.flush();
-            socket.in.readByte();
-            return socket;
-         }
-         catch (Exception ex)
-         {
-            if (socket.pooled)
-            {
-               // since the socket was pooled and the ACK failed
-               // try again because the failed pooled socket may be stale
-               continue;
-            }
-            else
-            {
-               // Ok, the socket is a new connection so there is something
-               // probably wrong.
-               throw ex;
-            }
-         }
-      } while (true);
-
-      // return blah; not reached
-   }
-
-   protected ClientSocket getSocket() throws Exception
-   {
-      ClientSocket pooled = null;
       Exception failed = null;
       Socket socket = null;
 
@@ -254,11 +228,14 @@ public class PooledInvokerProxy
       {
          synchronized(pool)
          {
-            while (pool.size() > 0)
+            if (pool.size() > 0)
             {
-               pooled = (ClientSocket)pool.removeFirst();
-               usedPooled++;
-               return pooled;
+               ClientSocket pooled = getPooledConnection();
+               if (pooled != null)
+               {
+                  usedPooled++;
+                  return pooled;
+               }
             }
          }
          
@@ -281,6 +258,33 @@ public class PooledInvokerProxy
       return new ClientSocket(socket, address.timeout); 
    }
  
+   protected ClientSocket getPooledConnection()
+   {
+      ClientSocket socket = null;
+      while (pool.size() > 0)
+      {
+         socket = (ClientSocket)pool.removeFirst();
+         try
+         {
+            // Test to see if socket is alive by send ACK message
+            final byte ACK = 1;
+            socket.out.writeByte(ACK);
+            socket.out.flush();
+            socket.in.readByte();
+            return socket;
+         }
+         catch (Exception ex)
+         {
+            try
+            {
+               socket.socket.close();
+            }
+            catch (Exception ignored) {}
+         }
+      }
+      return null;
+   }
+
    /**
     * The name of of the server.
     */
@@ -352,8 +356,18 @@ public class PooledInvokerProxy
       // Put socket back in pool for reuse
       synchronized (pool)
       {
-         socket.pooled = true;
-         pool.add(socket);
+         if (pool.size() < maxPoolSize)
+         {
+            pool.add(socket);
+         }
+         else
+         {
+            try
+            {
+               socket.socket.close();
+            }
+            catch (Exception ignored) {}
+         }
       }
       
       // Return response
@@ -396,6 +410,7 @@ public class PooledInvokerProxy
       throws IOException
    { 
       out.writeObject(address);
+      out.writeInt(maxPoolSize);
    }
  
    /**
@@ -406,6 +421,7 @@ public class PooledInvokerProxy
       throws IOException, ClassNotFoundException
    {
       address = (ServerAddress)in.readObject();
+      maxPoolSize = in.readInt();
       initPool();
    }
 }

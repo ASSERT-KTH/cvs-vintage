@@ -21,11 +21,15 @@ import java.net.Socket;
 import java.rmi.MarshalledObject;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
+import java.util.LinkedList;
 
 /**
  * This Thread object hold a single Socket connection to a client
  * and is kept alive until a timeout happens, or it is aged out of the
  * PooledInvoker's LRU cache.
+ *
+ * There is also a separate thread pool that is used if the client disconnects.
+ * This thread/object is re-used in that scenario and that scenario only.
  *
  * This class will demarshal then delegate to PooledInvoker for invocation.
  *
@@ -44,23 +48,139 @@ public class ServerThread extends Thread
    protected ObjectOutputStream out;
    protected Socket socket;
    protected PooledInvoker invoker;
-   protected LRUPool pool;
+   protected LRUPool clientpool;
+   protected LinkedList threadpool;
+   protected boolean handlingResponse = false;
+   protected boolean shutdown = false;
+   protected static int id = 0;
 
-   public ServerThread(Socket socket, PooledInvoker invoker, LRUPool pool, int timeout) throws Exception
+   public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool, LinkedList threadpool, int timeout) throws Exception
    {
+      super("PooledInvokerThread-" + id++);
       this.socket = socket;
       this.invoker = invoker;
-      this.pool = pool;
+      this.clientpool = clientpool;
+      this.threadpool = threadpool;
       socket.setSoTimeout(timeout);
    }
 
    public void shutdown()
    {
+      shutdown = true;
       running = false;
+      // This is a race and there is a chance
+      // that a invocation is going on at the time
+      // of the interrupt.  But I see know way right
+      // now to protect for this.
+
+      // NOTE ALSO!:
+      // Shutdown should never be synchronized.
+      // We don't want to hold up accept() thread! (via LRUpool)
+      if (!handlingResponse)
+      {
+         try
+         {
+            this.interrupt();
+            this.interrupted(); // clear
+         }
+         catch (Exception ignored) {}
+      }
+      
+   }
+
+
+   public synchronized void wakeup(Socket socket, int timeout) throws Exception
+   {
+      //System.out.println("**** reused");
+      this.socket = socket;
+      socket.setSoTimeout(timeout);
+      this.notify();
    }
 
    public void run()
    {
+      try
+      {
+         while (true)
+         {
+            dorun();
+            //System.out.println("finished....");
+            if (shutdown)
+            {
+               //System.out.println("doing shutdown");
+               synchronized (clientpool)
+               {
+                  clientpool.remove(this);
+               }
+               return; // exit thread
+            }
+            else
+            {
+               //System.out.println("save thread");
+               synchronized (this)
+               {
+                  //System.out.println("synch on client pool");
+                  synchronized(clientpool)
+                  {
+                     //System.out.println("synch on thread pool");
+                     synchronized(threadpool)
+                     {
+                        //System.out.println("removing myself from the pool: " + clientpool.size());
+                        clientpool.remove(this);
+                        if (clientpool.size() + threadpool.size() < invoker.getMaxPoolSize())
+                        {
+                           //System.out.println("adding myself to threadpool");
+                           threadpool.add(this);
+                        }
+                     }
+                  }
+                  this.wait();
+               }
+            }
+         }
+      }
+      catch (Exception ignored) 
+      {
+         ignored.printStackTrace();
+      }
+   }
+
+   protected void acknowledge() throws Exception
+   {
+      //System.out.println("****acknowledge " + Thread.currentThread());
+      // Perform acknowledgement to convince client
+      // that the socket is still active
+      byte ACK = in.readByte();
+      //System.out.println("****acknowledge read byte" + Thread.currentThread());
+      handlingResponse = true;
+      
+      out.writeByte(ACK);
+      out.flush();
+   }
+
+   protected void processInvocation() throws Exception
+   {
+      handlingResponse = true;
+      // Ok, now read invocation and invoke
+      Invocation invocation = (Invocation)in.readObject();
+      Object response = null;
+      try
+      {
+         response = invoker.invoke(invocation);
+      }
+      catch (Exception ex)
+      {
+         response = ex;
+      }
+      out.writeObject(response);
+      out.flush();
+      handlingResponse = false;
+   }
+
+   protected void dorun()
+   {
+      running = true;
+      handlingResponse = true;
       try
       {
          out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -71,58 +191,44 @@ public class ServerThread extends Thread
       {
          log.error("Failed to initialize", e);
       }
-      final byte alive = 1;
+
+      // Always do first one without an ACK because its not needed
+      try
+      {
+         processInvocation();
+      }
+      catch (Exception ex)
+      {
+         running = false;
+      }
+
+      //System.out.println("****entering re-use loop");
+      // Re-use loop
       while (running)
       {
          try
          {
-            // Perform acknowledgement to convince client
-            // that the socket is still active
-            byte ACK = in.readByte();
-            out.writeByte(ACK);
-            out.flush();
-
-            // Ok, now read invocation and invoke
-            Invocation invocation = (Invocation)in.readObject();
-            Object response = null;
-            try
-            {
-               response = invoker.invoke(invocation);
-            }
-            catch (Exception ex)
-            {
-               response = ex;
-            }
-            out.writeObject(response);
-            out.flush();
+            acknowledge();
+            processInvocation();
          }
          catch (InterruptedIOException iex)
          {
+            //System.out.println("exception found!");
             log.debug("socket timed out");
             running = false;
          }
          catch (Exception ex)
          {
+            //System.out.println("exception found!");
             running = false;
          }
       }
-
+      //System.out.println("finished loop:" + Thread.currentThread());
       // Ok, we've been shutdown.  Do appropriate cleanups.
       try
       {
-         synchronized(pool)
-         {
-            pool.remove(this);
-         }
-      }
-      catch (Exception ex)
-      {
-         log.error("Failed cleanup", ex);
-      }
-      try
-      {
-         in.close();
-         out.close();
+         if (in != null) in.close();
+         if (out != null) out.close();
       }
       catch (Exception ex)
       {
@@ -138,6 +244,5 @@ public class ServerThread extends Thread
       socket = null;
       in = null;
       out = null;
-      pool = null;
    }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.68 2002/10/07 15:10:10 slaboure Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.69 2002/11/13 20:17:46 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -200,6 +200,11 @@
     <depends>jboss:service=TransactionManager</depends>
   </mbean>
   
+  <mbean code="org.jboss.invocation.pooled.server.PooledInvoker"
+         name="jboss:service=invoker,type=pooled">
+    <depends>jboss:service=TransactionManager</depends>
+  </mbean>
+
   <mbean code="org.jboss.invocation.local.LocalInvoker" 
          name="jboss:service=invoker,type=local">
 

@@ -98,9 +98,14 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
 
    protected int maxPoolSize = 300;
 
-   protected int numAcceptThreads = 1;
+   protected int clientMaxPoolSize = 300;
 
-   protected LRUPool pool;
+   protected int numAcceptThreads = 1;
+   protected Thread[] acceptThreads;
+
+   protected LRUPool clientpool;
+   protected LinkedList threadpool;
+   protected boolean running = true;
    /**
     * ObjectName of the <code>transactionManagerService</code> we use.
     * Probably should not be here -- used to set txInterceptor tx mananger.
@@ -166,13 +171,14 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
             : clientConnectAddress;
 
 
-      pool = new LRUPool(2, maxPoolSize);
-      pool.create();
+      clientpool = new LRUPool(2, maxPoolSize);
+      clientpool.create();
+      threadpool = new LinkedList();
       serverSocket = new ServerSocket(serverBindPort, backlog, bindAddress);
       clientConnectPort = (clientConnectPort == 0) ? serverSocket.getLocalPort() : clientConnectPort;
 
       ServerAddress sa = new ServerAddress(clientConnectAddress, clientConnectPort, enableTcpNoDelay, timeout); 
-      optimizedInvokerProxy = new PooledInvokerProxy(sa);
+      optimizedInvokerProxy = new PooledInvokerProxy(sa, clientMaxPoolSize);
 
       ///////////////////////////////////////////////////////////      
       // Register the service with the rest of the JBoss Kernel
@@ -185,31 +191,57 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
       
       log.debug("Bound invoker for JMX node");
       ctx.close();
-      
+
+      acceptThreads = new Thread[numAcceptThreads];
       for (int i = 0; i < numAcceptThreads; i++)
-         new Thread(this).start();
+      {
+         acceptThreads[i] = new Thread(this);
+         acceptThreads[i].start();
+      }
    }
    
    public void run()
    {
       
-      while (true)
+      while (running)
       {
          try
          {
             Socket socket = serverSocket.accept();
             //System.out.println("Thread accepted: " + Thread.currentThread());
 
-            ServerThread thread = new ServerThread(socket, this, pool, timeout);
-            synchronized(pool)
+            ServerThread thread = null;
+            boolean newThread = false;
+            synchronized(clientpool)
             {
-               pool.insert(thread, thread);
+               synchronized(threadpool)
+               {
+                  if (threadpool.size() > 0)
+                  {
+                     thread = (ServerThread)threadpool.removeFirst();
+                  }
+                  else
+                  {
+                     thread = new ServerThread(socket, this, clientpool, threadpool, timeout);
+                     newThread = true;
+                  }
+                  clientpool.insert(thread, thread);
+               }
             }
-            thread.start();
+            
+            if (newThread)
+            {
+               thread.start();
+            }
+            else
+            {
+               thread.wakeup(socket, timeout);
+            }
          }
          catch (Exception ex)
          {
-            log.error("Failed to accept socket connection", ex);
+            if (running)
+               log.error("Failed to accept socket connection", ex);
          }
       }
    }
@@ -221,7 +253,22 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
    {
 
       InitialContext ctx = new InitialContext();
-
+      running = false;
+      maxPoolSize = 0; // so ServerThreads don't reinsert themselves
+      for (int i = 0; i < acceptThreads.length; i++)
+      {
+         try
+         {
+            acceptThreads[i].interrupt();
+         }
+         catch (Exception ignored){}
+      }
+      clientpool.flush();
+      for (int i = 0; i < threadpool.size(); i++)
+      {
+         ServerThread thread = (ServerThread)threadpool.removeFirst();
+         thread.shutdown();
+      }
       try
       {
          ctx.unbind("invokers/" + clientConnectAddress + "/trunk");
@@ -331,6 +378,28 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
    }
 
    /**
+    * Getter for property maxPoolSize;
+    *
+    * @return Value of property maxPoolSize.
+    * @jmx:managed-attribute
+    */
+   public int getClientMaxPoolSize()
+   {
+      return clientMaxPoolSize;
+   }
+
+   /**
+    * Setter for property maxPoolSize.
+    *
+    * @param serverBindPort New value of property serverBindPort.
+    * @jmx:managed-attribute
+    */
+   public void setClientMaxPoolSize(int clientMaxPoolSize)
+   {
+      this.clientMaxPoolSize = clientMaxPoolSize;
+   }
+
+   /**
     * Getter for property timeout
     *
     * @return Value of property timeout
@@ -353,14 +422,23 @@ public final class PooledInvoker extends ServiceMBeanSupport implements PooledIn
    }
 
    /**
-    * Getter for property serverBindPort.
     *
     * @return Value of property serverBindPort.
     * @jmx:managed-attribute
     */
-   public int getCurrentPoolSize()
+   public int getCurrentClientPoolSize()
    {
-      return pool.size();
+      return clientpool.size();
+   }
+
+   /**
+    *
+    * @return Value of property serverBindPort.
+    * @jmx:managed-attribute
+    */
+   public int getCurrentThreadPoolSize()
+   {
+      return threadpool.size();
    }
 
    /**
