@@ -81,6 +81,9 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
     // Note ids
     private int encodingInfoNote;
+    // req.decoded - Is set after the request is decoded. The value is the
+    // module that provided the decoding ( test for not null only )
+    private int decodedNote;
     private int encodingSourceNote;
     private int sessionEncodingNote;
 
@@ -139,6 +142,8 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 				  "req.encodingSource" );
 	sessionEncodingNote=cm.getNoteId(ContextManager.SESSION_NOTE,
 				  "session.encoding" );
+	decodedNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				  "req.decoded" );
     }
     /* -------------------- Request mapping -------------------- */
 
@@ -146,15 +151,38 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     // Based on Apache's path normalization code
     private void normalizePath(MessageBytes pathMB ) {
 	if( debug> 0 ) log( "Normalize " + pathMB.toString());
-	if( pathMB.getType() != MessageBytes.T_BYTES ) return;
-	
-	ByteChunk bc=pathMB.getByteChunk();
-					       
+	if( pathMB.getType() == MessageBytes.T_BYTES ) {
+	    boolean modified=normalize( pathMB.getByteChunk());
+	    if( modified ) {
+		pathMB.resetStringValue();
+	    }
+	} else if( pathMB.getType() == MessageBytes.T_CHARS ) {
+	    String orig=pathMB.toString();
+	    String str1=normalize( orig );
+	    if( orig!=str1 ) {
+		pathMB.resetStringValue();
+		pathMB.setString( str1 );
+	    }
+	} else if( pathMB.getType() == MessageBytes.T_STR ) {
+	    String orig=pathMB.toString();
+	    String str1=normalize( orig );
+	    if( orig!=str1 ) {
+		pathMB.resetStringValue();
+		pathMB.setString( str1 );
+	    }
+	}
+
+    }
+
+    private boolean normalize(  ByteChunk bc ) {
 	int start=bc.getStart();
 	int end=bc.getEnd();
 	byte buff[]=bc.getBytes();
 	int i=0;
 	int j=0;
+	boolean modified=false;
+	String orig=null;
+	if( debug>0 ) orig=new String( buff, start, end-start);
 	
 	// remove //
 	for( i=start, j=start; i<end-1; i++ ) {
@@ -167,9 +195,9 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    buff[j++]=buff[end-1];
 	    end=j;
 	    bc.setEnd( end );
-	    pathMB.resetStringValue();
+	    modified=true;
 	    if( debug > 0 ) {
-		log( "Eliminate // " + pathMB.toString() + " " + start + " " + end );
+		log( "Eliminate // " + orig + " " + start + " " + end );
 	    }
 	}
 	
@@ -188,9 +216,9 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    buff[j++]=buff[end-1];
 	    end=j;
 	    bc.setEnd( end );
-	    pathMB.resetStringValue();
+	    modified=true;
 	    if( debug > 0 ) {
-		log( "Eliminate /./ " + pathMB.toString());
+		log( "Eliminate /./ " + orig);
 	    }
 	}
 	
@@ -204,9 +232,9 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	}
 	if( end!=j ) {
 	    bc.setEnd( end );
-	    pathMB.resetStringValue();
+	    modified=true;
 	    if( debug > 0 ) {
-		log( "Eliminate ending /. " + pathMB.toString());
+		log( "Eliminate ending /. " + orig);
 	    }
 	}
 
@@ -232,9 +260,9 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    buff[j++]=buff[end-1];
 	    end=j;
 	    bc.setEnd( end );
-	    pathMB.resetStringValue();
+	    modified=true;
 	    if( debug > 0 ) {
-		log( "Eliminate /../ " + pathMB.toString());
+		log( "Eliminate /../ " + orig);
 	    }
 	}
 
@@ -251,12 +279,122 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	}
 	if( end!=j ) {
 	    bc.setEnd( end );
-	    pathMB.resetStringValue();
+	    modified=true;
 	    if( debug > 0 ) {
-		log( "Eliminate ending /.. " + pathMB.toString());
+		log( "Eliminate ending /.. " + orig);
+	    }
+	}
+	return modified;
+    }
+
+    private String normalize(  String str ) {
+	int start=0;
+	int end=str.length();
+	char buff[]=str.toCharArray();
+	int i=0;
+	int j=0;
+	boolean modified=false;
+	String orig=str;
+	
+	// remove //
+	for( i=start, j=start; i<end-1; i++ ) {
+	    if( buff[i]== '/' && buff[i+1]=='/' ) {
+		while( buff[i+1]=='/' ) i++;
+	    } 
+	    buff[j++]=buff[i];
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    modified=true;
+	    if( debug > 0 ) {
+		log( "Eliminate // " + orig + " " + start + " " + end );
 	    }
 	}
 	
+	// remove /./
+	for( i=start, j=start; i<end-1; i++ ) {
+	    if( buff[i]== '.' && buff[i+1]=='/' &&
+		( i==0 || buff[i-1]=='/' )) {
+		// "/./"
+		i+=1;
+		if( i==end-1 ) j--; // cut the ending /
+	    } else {
+		buff[j++]=buff[i];
+	    }
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    modified=true;
+	    if( debug > 0 ) {
+		log( "Eliminate /./ " + orig);
+	    }
+	}
+	
+	// remove  /. at the end
+	j=end;
+	if( end==start+1 && buff[start]== '.' )
+	    end--;
+	else if( end > start+1 && buff[ end-1 ] == '.' &&
+		 buff[end-2]=='/' ) {
+	    end=end-2;
+	}
+	if( end!=j ) {
+	    modified=true;
+	    if( debug > 0 ) {
+		log( "Eliminate ending /. " + orig);
+	    }
+	}
+
+	// remove /../
+	for( i=start, j=start; i<end-2; i++ ) {
+	    if( buff[i] == '.' &&
+		buff[i+1] == '.' &&
+		buff[i+2]== '/' &&
+		( i==0 || buff[ i-1 ] == '/' ) ) {
+
+		i+=1;
+		// look for the previous /
+	        j=j-2;
+		while( j>0 && buff[j]!='/' ) {
+		    j--;
+		}
+	    } else {
+		buff[j++]=buff[i];
+	    }
+	}
+	if( i!=j ) {
+	    buff[j++]=buff[end-2];
+	    buff[j++]=buff[end-1];
+	    end=j;
+	    modified=true;
+	    if( debug > 0 ) {
+		log( "Eliminate /../ " + orig);
+	    }
+	}
+
+
+	// remove trailing xx/..
+	j=end;
+	if( end>start + 3 &&
+	    buff[end-1]=='.' &&
+	    buff[end-2]=='.' &&
+	    buff[end-3]=='/' ) {
+	    end-=4;
+	    while( end>0 &&  buff[end]!='/' )
+		end--; 
+	}
+	if( end!=j ) {
+	    modified=true;
+	    if( debug > 0 ) {
+		log( "Eliminate ending /.. " +orig);
+	    }
+	}
+	if( modified )
+	    return new String( buff, 0, end );
+	else
+	    return str;
     }
 
     private boolean isSafeURI(MessageBytes pathMB) {
@@ -375,7 +513,10 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    req.setCharEncoding( charEncoding );
 
 	// Decode request, save the original for the facade
-	
+
+	// Already decoded
+	if( req.getNote( decodedNote ) != null )
+	    return 0;
 	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
 	    try {
 		req.unparsedURI().duplicate( pathMB );
@@ -388,6 +529,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		if( pathMB.indexOf( '\0' ) >=0 ) {
 		    return 404; // XXX should be 400 
 		}
+		req.setNote( decodedNote, this );
 	    } catch( IOException ex ) {
 		log( "Error decoding request ", ex);
 		return 400;
