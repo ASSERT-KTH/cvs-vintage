@@ -72,7 +72,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.22 2002/09/11 23:44:44 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.23 2002/09/12 00:45:19 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -110,7 +110,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
                Attribute newAttribute = attribute
                   .copyAttribute((ScarabUser)data.getUser());
                newAttribute.save();
-               scarabR.setConfirmMessage(DEFAULT_MSG);  
+               getScarabRequestTool(context).setConfirmMessage(DEFAULT_MSG);  
              }
          }
      }

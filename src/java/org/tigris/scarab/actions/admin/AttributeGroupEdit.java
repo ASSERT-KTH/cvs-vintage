@@ -86,7 +86,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.30 2002/09/11 23:44:44 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.31 2002/09/12 00:45:19 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -105,7 +105,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                     ag.getQueryKey(), false);
         agGroup.setProperties(ag);
         ag.save();
-        scarabR.setConfirmMessage(DEFAULT_MSG);  
+        getScarabRequestTool(context).setConfirmMessage(DEFAULT_MSG);  
     }
 
     /**
