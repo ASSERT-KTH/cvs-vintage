@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.13 $
+@version $Revision: 1.14 $
  */
 public final class SecurityAssociation
 {
@@ -65,9 +65,9 @@ public final class SecurityAssociation
    /** The permission required to access setServer */
    private static final RuntimePermission setServerPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.setServer");
-   /** The permission required to access pushRunAsRole/popRunAsRole */
-   private static final RuntimePermission setRunAsRole =
-      new RuntimePermission("org.jboss.security.SecurityAssociation.setRunAsRole");
+   /** The permission required to access pushRunAsIdentity/popRunAsIdentity */
+   private static final RuntimePermission setRunAsIdentity =
+      new RuntimePermission("org.jboss.security.SecurityAssociation.setRunAsIdentity");
 
    static
    {
@@ -260,31 +260,31 @@ public final class SecurityAssociation
       }
    }
 
-   /** Push the current thread of control's run-as principal role.
+   /** Push the current thread of control's run-as identity.
     */
-   public static void pushRunAsRole(Principal runAsRole)
+   public static void pushRunAsIdentity(RunAsIdentity runAs)
    {
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
-         sm.checkPermission(setRunAsRole);
-      threadRunAsStacks.push(runAsRole);
+         sm.checkPermission(setRunAsIdentity);
+      threadRunAsStacks.push(runAs);
    }
-   /** Pop the current thread of control's run-as principal role.
+   /** Pop the current thread of control's run-as identity.
     */
-   public static Principal popRunAsRole()
+   public static RunAsIdentity popRunAsIdentity()
    {
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
-         sm.checkPermission(setRunAsRole);
-      Principal runAsRole = threadRunAsStacks.pop();
-      return runAsRole;
+         sm.checkPermission(setRunAsIdentity);
+      RunAsIdentity runAs = threadRunAsStacks.pop();
+      return runAs;
    }
-   /** Look at the current thread of control's run-as principal role.
+   /** Look at the current thread of control's run-as identity.
     */
-   public static Principal peekRunAsRole()
+   public static RunAsIdentity peekRunAsIdentity()
    {
-      Principal runAsRole = threadRunAsStacks.peek();
-      return runAsRole;
+      RunAsIdentity runAs = threadRunAsStacks.peek();
+      return runAs;
    }
 
    /** Set the server mode of operation. When the server property has
@@ -320,27 +320,27 @@ public final class SecurityAssociation
       {
          return new ArrayList();
       }
-      void push(Principal runAs)
+      void push(RunAsIdentity runAs)
       {
          ArrayList stack = (ArrayList) super.get();
          stack.add(runAs);
       }
-      Principal pop()
+      RunAsIdentity pop()
       {
          ArrayList stack = (ArrayList) super.get();
-         Principal runAs = null;
+         RunAsIdentity runAs = null;
          int lastIndex = stack.size() - 1;
          if( lastIndex >= 0 )
-            runAs = (Principal) stack.remove(lastIndex);
+            runAs = (RunAsIdentity) stack.remove(lastIndex);
          return runAs;
       }
-      Principal peek()
+      RunAsIdentity peek()
       {
          ArrayList stack = (ArrayList) super.get();
-         Principal runAs = null;
+         RunAsIdentity runAs = null;
          int lastIndex = stack.size() - 1;
          if( lastIndex >= 0 )
-            runAs = (Principal) stack.get(lastIndex);
+            runAs = (RunAsIdentity) stack.get(lastIndex);
          return runAs;
       }
    }
