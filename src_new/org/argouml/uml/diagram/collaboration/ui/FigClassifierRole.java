@@ -23,7 +23,7 @@
 
 // File: FigClassifierRole.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.3 2000/10/02 13:46:59 toby Exp $
+// $Id: FigClassifierRole.java,v 1.4 2000/10/02 14:26:49 toby Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -94,7 +94,7 @@ public class FigClassifierRole extends FigNodeModelElement {
     setOwner(node);
   }
 
-  public String placeString() { return "new MClassifierRole"; }
+  public String placeString() { return "new ClassifierRole"; }
 
   public Object clone() {
     FigClassifierRole figClone = (FigClassifierRole) super.clone();
