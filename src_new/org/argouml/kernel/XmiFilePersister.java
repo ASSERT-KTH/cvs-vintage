@@ -1,4 +1,4 @@
-// $Id: XmiFilePersister.java,v 1.7 2004/09/07 14:09:15 bobtarling Exp $
+// $Id: XmiFilePersister.java,v 1.8 2004/09/07 18:56:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.ArgoVersion;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.xml.xmi.XMIParser;
