@@ -71,9 +71,6 @@ public class DefaultSearchEngine {
     }
 
     protected synchronized AbstractFilter getFilter(String type) {
-        ColumbaLogger.log.debug("trying to re-use cached instanciation =" +
-            type);
-
         // try to re-use already instanciated class
         if (filterCache.containsKey(type) == true) {
             return (AbstractFilter) filterCache.get(type);
