@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
 public abstract class HomeProxy
    extends GenericProxy
@@ -56,7 +56,9 @@ public abstract class HomeProxy
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = new Object[0];
-         
+      System.out.println(); 
+	  System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   
       if (m.equals(toStr))
       {
          return name+" home";

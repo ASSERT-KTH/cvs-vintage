@@ -52,7 +52,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -108,6 +108,10 @@ public abstract class JRMPContainerInvoker
       
       try
       {
+		 
+		  Method m = mi.getMethod();
+		 System.out.println("In invoke Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   
          return con.invokeHome(mi.getMethod(), mi.getArguments());
 //         return new MarshalledObject(con.invoke(mi.getId(), mi.getMethod(), mi.getArguments()));
       } finally

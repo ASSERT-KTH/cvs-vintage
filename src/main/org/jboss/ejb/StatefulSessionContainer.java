@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -246,7 +246,12 @@ public class StatefulSessionContainer
    public EJBObject createHome(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
       throws java.rmi.RemoteException, CreateException
    {
-      getPersistenceManager().createSession(m, args, ctx);
+	  
+      System.out.println("The context is "+ctx);
+	  
+	  System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   
+	  getPersistenceManager().createSession(m, args, ctx);
       return ctx.getEJBObject();
    }
 

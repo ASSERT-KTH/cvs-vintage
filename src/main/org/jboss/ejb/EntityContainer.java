@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class EntityContainer
    extends Container
@@ -255,6 +255,8 @@ public class EntityContainer
    public EJBObject createHome(Method m, Object[] args, EntityEnterpriseContext ctx)
       throws java.rmi.RemoteException, CreateException
    {
+	   System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   
       getPersistenceManager().createEntity(m, args, ctx);
       return ctx.getEJBObject();
    }
@@ -288,6 +290,7 @@ public class EntityContainer
       Method[] m = homeInterface.getMethods();
       for (int i = 0; i < m.length; i++)
       {
+		  System.out.println("THE NEW METHOD IS "+m[i].getName()+m[i].getParameterTypes().length);
 			try
 			{
 	         // Implemented by container
@@ -356,15 +359,24 @@ public class EntityContainer
       public Object invokeHome(Method method, Object[] args, EnterpriseContext ctx)
          throws Exception
       {
+		 
+		  //Debug
+		 System.out.println("InvokingHome "+method.getName());
+         //Debug
+		 
          Method m = (Method)homeMapping.get(method);
          // Invoke and handle exceptions
          
-         try
+		 try
          {
             return m.invoke(EntityContainer.this, new Object[] { method, args, ctx});
          } catch (InvocationTargetException e)
          {
-            Throwable ex = e.getTargetException();
+			//Debug
+			e.printStackTrace();
+			System.out.println("Home Exception seen  "+e.getMessage());
+            //Debug
+			Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
             else
@@ -377,6 +389,10 @@ public class EntityContainer
       {
          // Get method
          Method m = (Method)beanMapping.get(method);
+		 
+		 //Debug
+		 System.out.println("InvokingBean "+method.getName());
+		 //Debug
          
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(EntityContainer.class))
@@ -387,7 +403,10 @@ public class EntityContainer
                return m.invoke(EntityContainer.this, new Object[] { method, args, ctx });
             } catch (InvocationTargetException e)
             {
-               Throwable ex = e.getTargetException();
+               //Debug
+			   System.out.println("Bean Exception seen  "+e.getMessage());
+			   //Debug
+			   Throwable ex = e.getTargetException();
                if (ex instanceof Exception)
                   throw (Exception)ex;
                else

@@ -63,7 +63,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *	 @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public abstract class Container
 {
@@ -385,8 +385,10 @@ public abstract class Container
 	         Iterator enum = getMetaData().getEjbReferences();
 	         while(enum.hasNext())
 	         {
+				 
 	            jBossEjbReference ref = (jBossEjbReference)enum.next();
-	            
+	            System.out.println("Binding an EJBReference "+ref);
+				
 	            Name n = ctx.getNameParser("").parse(ref.getLink());
 	            
 	            if (!ref.getJndiName().equals(""))
@@ -528,13 +530,13 @@ public abstract class Container
    }
 	
 	public static class EjbReferenceFactory
-		implements ObjectFactory
+	implements ObjectFactory
 	{
 		public Object getObjectInstance(Object ref,
-		                                Name name,
-		                                Context nameCtx,
-		                                Hashtable environment)
-		                         throws Exception
+										Name name,
+										Context nameCtx,
+										Hashtable environment)
+										throws Exception
 		{
 			Object con = ((Reference)ref).get(0).getContent();
 			if (con instanceof EntityContainer)

@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
 public abstract class StatefulSessionProxy
    extends GenericProxy
@@ -54,6 +54,9 @@ public abstract class StatefulSessionProxy
 //          this.getClass().getClassLoader() == Thread.currentThread().getContextClassLoader())
 //             return container.invoke(id, m, args, null, null);
                 
+				
+	System.out.println("In creating Home "+m.getDeclaringClass()+m.getName()+m.getParameterTypes().length);
+	   
       Object result = container.invoke(new MarshalledObject(new MethodInvocation(id, m, args)), null, null);
       if (result instanceof MarshalledObject)
          return ((MarshalledObject)result).get();
