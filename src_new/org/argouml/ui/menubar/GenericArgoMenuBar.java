@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: GenericArgoMenuBar.java,v 1.25 2003/05/11 16:53:11 kataka Exp $
+//$Id: GenericArgoMenuBar.java,v 1.26 2003/06/02 07:43:15 mkl Exp $
 
 package org.argouml.ui.menubar;
 
@@ -250,7 +250,10 @@ public class GenericArgoMenuBar extends JMenuBar
         KeyStroke ctrlC = KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_MASK);
         KeyStroke ctrlV = KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_MASK);
         KeyStroke ctrlX = KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_MASK);
+        KeyStroke ctrlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_MASK);
+        KeyStroke ctrlEquals = KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_MASK);
 
+        
         KeyStroke F3 = KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0);
         KeyStroke F7 = KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0);
         KeyStroke altF4 = KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK);
@@ -376,9 +379,14 @@ public class GenericArgoMenuBar extends JMenuBar
         // zoom.add(new ActionZoom(75));
         // zoom.add(new ActionZoom(100));
         // zoom.add(new ActionZoom(150));
-        zoom.add(new CmdZoom(0.9));
+        JMenuItem zoomOut = zoom.add(new CmdZoom(0.9));
+        zoomOut.setAccelerator(ctrlMinus);
+
         zoom.add(new CmdZoom(0.0));
-        zoom.add(new CmdZoom(1.1));
+
+        JMenuItem zoomIn = zoom.add(new CmdZoom(1.1));
+        zoomIn.setAccelerator(ctrlEquals);
+
 
         _view.addSeparator();
 
