@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -239,6 +239,12 @@ public abstract class EnterpriseContext
       return locked != 0;
    }
    
+   public Principal getCallerPrincipal()
+   {
+      EJBContextImpl ctxImpl = (EJBContextImpl) getEJBContext();
+      return ctxImpl.getCallerPrincipalInternal();
+   }
+   
    /**
     * before reusing this context we clear it of previous state called
     * by pool.free()
@@ -361,7 +367,14 @@ public abstract class EnterpriseContext
       */
       public Principal getCallerPrincipal() 
       { 
-
+         return getCallerPrincipalInternal();
+      }
+      
+      /**
+       * The implementation of getCallerPrincipal()
+       */
+      Principal getCallerPrincipalInternal()
+      {
          if( beanPrincipal == null )
          {
             RealmMapping rm = con.getRealmMapping();           

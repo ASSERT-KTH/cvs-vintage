@@ -185,7 +185,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       // Audit principal fields
       if(securityManager != null)
       {
-         String principalName = ctx.getEJBContext().getCallerPrincipal().getName();
+         String principalName = ctx.getCallerPrincipal().getName();
          if(createdPrincipal != null && createdPrincipal.getInstanceValue(ctx) == null)
          {
             createdPrincipal.setInstanceValue(ctx, principalName);
