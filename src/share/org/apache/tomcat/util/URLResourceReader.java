@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLResourceReader.java,v 1.1 1999/11/28 23:52:31 harishp Exp $
- * $Revision: 1.1 $
- * $Date: 1999/11/28 23:52:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLResourceReader.java,v 1.2 1999/12/03 18:07:07 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/03 18:07:07 $
  *
  * ====================================================================
  *
@@ -68,22 +68,48 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
+/**
+ * This implementation of URL Resource Reader assumes 2 types
+ * of base urls. A base url that ends with / is considered a
+ * resource folder, whereas a resource that does not end with
+ * / is considered a zip/jar resource folder.
+ *
+ * If the resource folder happens is a zip/jar archive, the
+ * entries are always cached.
+ * For non-zip base urls, one could specify whether or not it should
+ * be cached.
+ *
+ * @author Harish Prabandham
+ */
 public class URLResourceReader  {
     private Hashtable resourceCache = new Hashtable();
     private boolean iszip = true;
     private URL url = null;
+    private boolean cache = true;
 
     /**
      * Creates a new URLResourceReader object. You can either give
      * the URL of the zip/jar file or a base url where to
      * look for additional resources. If the url ends with
      * "/" then it is assumed to be  a Base URL. 
-     *
+     * @param The base url to look for the resources.
+     * @param If the base url is not a zip/jar, then true indicates
+     * that entries should be cached, false otherwise.
      */
-    public URLResourceReader(URL url) throws IOException {
-        this.url = url;
-        this.iszip = !url.getFile().endsWith("/"); 
+    public URLResourceReader(URL baseurl, boolean cache) throws IOException {
+        this.url = baseurl;
+        this.cache = cache;
+        this.iszip = !url.getFile().endsWith("/");
+        if(this.iszip)
+            this.cache = true;
         initialize();
+    }
+
+    /**
+     * equivalent to URLResourceReader(baseurl, false)
+     */
+    public URLResourceReader(URL baseurl) throws IOException {
+        this(baseurl, false);
     }
 
     /**
@@ -121,7 +147,8 @@ public class URLResourceReader  {
         
         while( (entry = zstream.getNextEntry()) != null) {
             byte[] entryData = readFully(zstream);
-            resourceCache.put(entry.getName(), entryData);
+            if(cache)
+                resourceCache.put(entry.getName(), entryData);
             zstream.closeEntry();
         }
         
@@ -149,7 +176,8 @@ public class URLResourceReader  {
         }
 
         // if the data was to come from a zip file that we
-        // already read fully, then it is probably not there.
+        // already read fully & cached , then it is probably
+        // not there.
         if(iszip) {
             return null;
         }
@@ -159,8 +187,9 @@ public class URLResourceReader  {
             URL realURL = new URL(url.getProtocol(), url.getHost(),
                                   url.getFile() + resource);
             data = readFully(realURL.openStream());
-            // add it to cache..
-            resourceCache.put(resource, data);
+            // add it to cache if needed...
+            if(cache)
+                resourceCache.put(resource, data);
             return data;
         } catch(Exception e) {
             return null;
@@ -170,20 +199,6 @@ public class URLResourceReader  {
     public void close() {
         resourceCache.clear();
         resourceCache = null;
-    }
-
-    public static void main(String[] args) {
-        try {
-            URL url = new URL("http://www.professionals.com/~harish/xml.jar");
-            URLResourceReader urdr = new URLResourceReader(url);
-
-            for(Enumeration e=urdr.getResourceNames(); e.hasMoreElements();) {
-                System.out.println(e.nextElement());
-            }
-            System.out.println("length=" + urdr.getResource("Main.class"));
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
     }
 }
 
