@@ -5,55 +5,57 @@
 <div>
 <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
 <small>
-    #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
 
-#if ($adminMenu.equals("1"))
-<div><strong>Users</strong>
- <div>$link.setPage("admin,ManageUserSearch.vm").setLabel("User Management")</div>
- <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User")</div>
-#else
-<div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")
+#if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
+
+  #if ($adminMenu.equals("3"))
+    <div><strong>Global Data</strong>
+    $renderer.render("navigations", "GlobalAdmin.vm")
+  #else
+    <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")
+  #end
+    </div>
+
 #end
-</div>
 
-    #end
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
 
-    #if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
+  #if ($adminMenu.equals("4"))
+    <div><strong>Modules</strong>
+    $renderer.render("navigations", "ModuleAdmin.vm")
+  #else
+    <div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")
+  #end
+    </div>
 
-#if ($adminMenu.equals("2"))
-<div><strong>Roles</strong>
- <div>$link.setPage("admin,ManageRoles.vm").setLabel("Role List")</div>
- <div>$link.setPage("admin,AddRole.vm").setLabel("Add New Role")</div>
-#else
-<div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")
 #end
-</div>
 
-    #end
+#if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
 
-    #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
+  #if ($adminMenu.equals("2"))
+    <div><strong>Roles</strong>
+    <div>$link.setPage("admin,ManageRoles.vm").setLabel("Role List")</div>
+    <div>$link.setPage("admin,AddRole.vm").setLabel("Add New Role")</div>
+  #else
+    <div>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")
+  #end
+    </div>
 
-#if ($adminMenu.equals("3"))
-<div><strong>Global Data</strong>
-$renderer.render("navigations", "GlobalAdmin.vm")
-#else
-<div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global Data")
 #end
-</div>
 
-    #end
+#if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
 
-    #if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
+  #if ($adminMenu.equals("1"))
+    <div><strong>Users</strong>
+    <div>$link.setPage("admin,ManageUserSearch.vm").setLabel("User Management")</div>
+    <div>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User")</div>
+  #else
+    <div>$link.setPage("admin,ManageUserSearch.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")
+  #end
+    </div>
 
-#if ($adminMenu.equals("4"))
-<div><strong>Modules</strong>
-$renderer.render("navigations", "ModuleAdmin.vm")
-#else
-<div>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")
 #end
-</div>
 
-    #end
 </small>
 </div>
 #end
