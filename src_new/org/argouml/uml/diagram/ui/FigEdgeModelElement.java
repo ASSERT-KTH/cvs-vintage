@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.82 2005/01/30 20:47:54 linus Exp $
+// $Id: FigEdgeModelElement.java,v 1.83 2005/01/30 21:46:51 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -445,6 +445,9 @@ public abstract class FigEdgeModelElement
             textEdited((FigText) src);
             calcBounds();
             endTrans();
+        } else if (pName.equals("removed") && (pve.getSource() == getOwner())) {
+            ProjectManager.getManager().getCurrentProject()
+                .moveToTrash(getOwner());
         } else
             super.propertyChange(pve);
         if (Model.getFacade().isABase(src)) {

@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.3 2005/01/07 09:11:01 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.4 2005/01/30 21:46:52 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -404,8 +404,9 @@ abstract class NSUMLEventListener implements MElementListener {
      *         ru.novosoft.uml.MElementEvent)
      */
     public void removed(MElementEvent arg0) {
-        fire(new PropertyChangeEvent(arg0.getSource(), arg0.getName(),
-                		     arg0.getOldValue(), arg0.getNewValue()));
+        fire(new PropertyChangeEvent(arg0.getSource(), 
+            /*arg0.getName()*/ "removed",
+	    arg0.getOldValue(), arg0.getNewValue()));
     }
 
     /**

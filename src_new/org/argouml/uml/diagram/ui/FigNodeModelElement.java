@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.149 2005/01/30 20:47:54 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.150 2005/01/30 21:46:52 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,7 +360,8 @@ public abstract class FigNodeModelElement
         if (Model.getFacade().isAModelElement(getOwner())) {
             String placeString = Model.getFacade().getName(getOwner());
             if (placeString == null) {
-                placeString = "new " + Model.getFacade().getUMLClassName(getOwner());
+                placeString = 
+                    "new " + Model.getFacade().getUMLClassName(getOwner());
             }
             return placeString;
         }
@@ -576,7 +577,8 @@ public abstract class FigNodeModelElement
         public ActionModifierAbstract(Object o) {
             super("checkbox.abstract-uc", NO_ICON);
             owner = o;
-            putValue("SELECTED", new Boolean(Model.getFacade().isAbstract(owner)));
+            putValue("SELECTED", 
+                    new Boolean(Model.getFacade().isAbstract(owner)));
         }
 
         /**
@@ -605,7 +607,8 @@ public abstract class FigNodeModelElement
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-            Model.getCoreHelper().setLeaf(owner, !Model.getFacade().isLeaf(owner));
+            Model.getCoreHelper().setLeaf(owner, 
+                    !Model.getFacade().isLeaf(owner));
         }
     }
 
@@ -626,7 +629,8 @@ public abstract class FigNodeModelElement
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-            Model.getCoreHelper().setRoot(owner, !Model.getFacade().isRoot(owner));
+            Model.getCoreHelper().setRoot(owner, 
+                    !Model.getFacade().isRoot(owner));
         }
     }
 
@@ -640,7 +644,8 @@ public abstract class FigNodeModelElement
         public ActionModifierActive(Object o) {
             super("checkbox.active-uc", NO_ICON);
             owner = o;
-            putValue("SELECTED", new Boolean(Model.getFacade().isActive(owner)));
+            putValue("SELECTED", 
+                    new Boolean(Model.getFacade().isActive(owner)));
         }
 
         /**
@@ -1014,6 +1019,9 @@ public abstract class FigNodeModelElement
 			  + "PropertyVetoException",
 			  ex);
             }
+        } else if (pName.equals("removed") && (pve.getSource() == getOwner())) {
+            ProjectManager.getManager().getCurrentProject()
+                .moveToTrash(getOwner());
         } else {
             super.propertyChange(pve);
         }
