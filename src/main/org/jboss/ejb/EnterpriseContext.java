@@ -38,7 +38,7 @@ import java.util.*;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.70 $
+ * @version $Revision: 1.71 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -514,11 +514,15 @@ public abstract class EnterpriseContext
        * The current caller is either the principal associated with the method invocation
        * or the current run-as principal.
        */ 
-      public boolean isCallerInRole(String id)
+      public boolean isCallerInRole(String role)
       {
          RunAsIdentity runAs = SecurityAssociation.peekRunAsIdentity();
          if (principal == null && runAs == null)
             return false;
+
+         // Caller is an anonymous run-as principal that has just one role
+         if (runAs != null && runAs.isAnonymousPrincipal())
+            return role.equals(runAs.getRunAsRole());
 
          RealmMapping rm = con.getRealmMapping();
          if (rm == null)
@@ -542,24 +546,22 @@ public abstract class EnterpriseContext
          while (it.hasNext())
          {
             SecurityRoleRefMetaData meta = (SecurityRoleRefMetaData) it.next();
-            if (meta.getName().equals(id))
+            if (meta.getName().equals(role))
             {
-               id = meta.getLink();
+               role = meta.getLink();
                matchFound = true;
                break;
             }
          }
 
          if (!matchFound)
-            log.warn("no match found for security role " + id +
+            log.warn("no match found for security role " + role +
                     " in the deployment descriptor.");
 
          HashSet set = new HashSet();
-         set.add(new SimplePrincipal(id));
+         set.add(new SimplePrincipal(role));
 
-         Principal callerPrincipal = (runAs != null ? runAs : principal);
-         boolean ret = rm.doesUserHaveRole(callerPrincipal, set);
-
+         boolean ret = rm.doesUserHaveRole(principal, set);
          return ret;
       }
    
