@@ -22,6 +22,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.DefaultWizardDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 import org.columba.core.gui.util.wizard.WizardPanelSequence;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -214,34 +215,24 @@ public class AccountWizard extends DefaultWizardDialog {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		super.actionPerformed(e);
+		
 
 		String action = e.getActionCommand();
 
-		if (action.equals("CANCEL")) {
-			//identityPanel.showDialog();
-			//incomingServerPanel.showDialog();
-			//outgoingServerPanel.showDialog();
+		ColumbaLogger.log.info("action="+action);
+		
+		if (action.equals("ACCOUNT")) {
 			dialog.setVisible(false);
-		} else if (action.equals("ACCOUNT")) {
-			dialog.setVisible(false);
-
 			AccountItem item = finish();
-
 			AccountDialog dialog = new AccountDialog(item);
 		} else if (action.equals("FINISH")) {
-			if (add == true)
-				//outgoingServerPanel.hideDialog();
-				dialog.setVisible(false);
-			else
-				//finishPanel.hideDialog();
-				dialog.setVisible(false);
-
-			//System.out.println("saving data");
-
 			finish();
-
+			dialog.setVisible(false);
+			
+			return;
 		}
+		
+		super.actionPerformed(e);
 
 	}
 

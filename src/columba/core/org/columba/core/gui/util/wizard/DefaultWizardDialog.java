@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.3  2003/02/11 10:01:13  fdietz
+//[intern]added debug output
+//
 //Revision 1.2  2003/02/04 19:02:13  fdietz
 //[bug]account-wizard never received focus - using DialogStore now to handle it correctly
 //
@@ -69,6 +72,8 @@ public class DefaultWizardDialog implements ActionListener {
 	public static int LAST = 1;
 	public static int MIDDLE = 2;
 
+	// set to default size, if window is smaller than 640x480
+	// else use value "pack()" creates
 	public static Dimension WINDOW_DIMENSION = new Dimension(640, 480);
 
 	protected JDialog dialog;
@@ -91,14 +96,16 @@ public class DefaultWizardDialog implements ActionListener {
 		finishButton = new JButton("Finish");
 		finishButton.setActionCommand("FINISH");
 		finishButton.addActionListener(this);
-
 		finishButton.setEnabled(true);
+		
 		prevButton = new JButton("< Prev");
 		prevButton.setActionCommand("PREV");
 		prevButton.addActionListener(this);
+		
 		cancelButton = new JButton("Cancel");
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
+		
 		init(p);
 
 		dialog.getContentPane().add(p, BorderLayout.CENTER);
@@ -242,8 +249,11 @@ public class DefaultWizardDialog implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		
 		String action = e.getActionCommand();
 
+		ColumbaLogger.log.info("action="+action);
+		
 		if (action.equals("NEXT")) {
 			dialog.getContentPane().removeAll();
 			DefaultWizardPanel p = getSequence().getNextPanel();
@@ -262,6 +272,9 @@ public class DefaultWizardDialog implements ActionListener {
 
 		} else if (action.equals("CANCEL")) {
 
+			dialog.setVisible(false);
+		} else if (action.equals("FINISH"))
+		{
 			dialog.setVisible(false);
 		}
 	}
