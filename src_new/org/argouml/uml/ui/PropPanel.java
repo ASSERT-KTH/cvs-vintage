@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.88 2004/08/18 18:56:18 mvw Exp $
+// $Id: PropPanel.java,v 1.89 2004/09/07 18:50:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,15 +24,10 @@
 
 package org.argouml.uml.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.util.Iterator;
 import java.util.MissingResourceException;
@@ -115,10 +110,10 @@ public abstract class PropPanel
 
     private JPanel captionPanel = new JPanel();
 
-    protected static ImageIcon _deleteIcon =
+    private static ImageIcon deleteIcon =
 	ResourceLoaderWrapper
 	    .lookupIconResource("RedDelete");
-    protected static ImageIcon _navUpIcon =
+    protected static ImageIcon navUpIcon =
 	ResourceLoaderWrapper
 	    .lookupIconResource("NavigateUp");
 
@@ -159,8 +154,8 @@ public abstract class PropPanel
      * Constructs a new Proppanel without an icon. If there is an icon it's
      * updated at runtime via settarget.<p>
      *
-     * @param title
-     * @param orientation
+     * @param title the title
+     * @param orientation the orientation
      */
     public PropPanel(String title, Orientation orientation) {
         this (title, null, orientation);
@@ -280,6 +275,9 @@ public abstract class PropPanel
         return localized;
     }
 
+    /**
+     * Add a seperator.
+     */
     protected final void addSeperator() {
         add(LabelledLayout.getSeperator());
     }
@@ -431,9 +429,9 @@ public abstract class PropPanel
     /**
      * @see org.argouml.ui.TabTarget#shouldBeEnabled(java.lang.Object)
      */
-    public boolean shouldBeEnabled(Object target) {
-        target = (target instanceof Fig) ? ((Fig) target).getOwner() : target;
-        return ModelFacade.isAModelElement(target);
+    public boolean shouldBeEnabled(Object t) {
+        t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
+        return ModelFacade.isAModelElement(t);
     }
 
     /**
@@ -603,6 +601,9 @@ public abstract class PropPanel
         }
     }
 
+    /**
+     * Remove this element.
+     */
     public void removeElement() {
         Object theTarget = getTarget();
         if (ModelFacade.isABase(theTarget)) {
@@ -697,10 +698,16 @@ public abstract class PropPanel
 	}
     }
 
+    /**
+     * @param theTitleLabel
+     */
     protected void setTitleLabel(JLabel theTitleLabel) {
         this.titleLabel = theTitleLabel;
     }
 
+    /**
+     * @return
+     */
     protected JLabel getTitleLabel() {
         return titleLabel;
     }

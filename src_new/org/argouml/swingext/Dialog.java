@@ -1,4 +1,4 @@
-// $Id: Dialog.java,v 1.8 2004/08/19 19:27:20 mvw Exp $
+// $Id: Dialog.java,v 1.9 2004/09/07 18:50:08 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,24 +51,24 @@ import javax.swing.JPanel;
 public abstract class Dialog extends JDialog implements ActionListener {
     
     // The set of available optionTypes
-    public static final int CLOSE_OPTION              = 0;
-    public static final int YES_NO_OPTION             = 1;
-    public static final int YES_NO_HELP_OPTION        = 2;
-    public static final int YES_NO_CANCEL_OPTION      = 3;
-    public static final int YES_NO_CANCEL_HELP_OPTION = 4;
-    public static final int OK_CANCEL_OPTION          = 5;
-    public static final int OK_CANCEL_HELP_OPTION     = 6;
-    public static final int DEFAULT_OPTION            = CLOSE_OPTION;
+    public  static final int CLOSE_OPTION              = 0;
+    private static final int YES_NO_OPTION             = 1;
+    private static final int YES_NO_HELP_OPTION        = 2;
+    private static final int YES_NO_CANCEL_OPTION      = 3;
+    private static final int YES_NO_CANCEL_HELP_OPTION = 4;
+    public  static final int OK_CANCEL_OPTION          = 5;
+    private static final int OK_CANCEL_HELP_OPTION     = 6;
+    private static final int DEFAULT_OPTION            = CLOSE_OPTION;
     
     //TODO: These should be overridden on ArgoDialog to populate from
     //the config file
-    protected int leftBorder = 10;
-    protected int rightBorder = 10;
-    protected int topBorder = 10;
-    protected int bottomBorder = 10;
+    private int leftBorder = 10;
+    private int rightBorder = 10;
+    private int topBorder = 10;
+    private int bottomBorder = 10;
     protected int componentGap = 10;
     protected int labelGap = 5;
-    protected int buttonGap = 5;
+    private int buttonGap = 5;
     
     private JButton okButton = null;
     private JButton cancelButton = null;

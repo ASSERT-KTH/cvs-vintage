@@ -1,4 +1,4 @@
-// $Id: PropPanelAbstraction.java,v 1.17 2004/07/31 08:31:58 mkl Exp $
+// $Id: PropPanelAbstraction.java,v 1.18 2004/09/07 18:50:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,18 +38,26 @@ public class PropPanelAbstraction extends PropPanelDependency {
     public PropPanelAbstraction() {
         super("Abstraction", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("UMLMenu", "label.name"), getNameTextField());
-        // addField(Translator.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
-        addField(Translator.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
+        addField(Translator.localize("UMLMenu", "label.name"), 
+                getNameTextField());
+        // addField(Translator.localize("UMLMenu", "label.stereotype"), 
+        // new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", 
+        // "tooltip.nav-stereo"), getStereotypeBox()));
+        addField(Translator.localize("UMLMenu", "label.stereotype"), 
+                getStereotypeBox());
+        addField(Translator.localize("UMLMenu", "label.namespace"), 
+                getNamespaceComboBox());
 
         addSeperator();
 
-        addField(Translator.localize("UMLMenu", "label.suppliers"), _supplierScroll);
-        addField(Translator.localize("UMLMenu", "label.clients"), _clientScroll);
+        addField(Translator.localize("UMLMenu", "label.suppliers"), 
+                _supplierScroll);
+        addField(Translator.localize("UMLMenu", "label.clients"), 
+                _clientScroll);
 
         // TODO: add Mapping
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
+        new PropPanelButton(this, buttonPanel, navUpIcon, Translator.localize(
+                "UMLMenu", "button.go-up"), "navigateUp", null);
         buttonPanel
         .add(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }

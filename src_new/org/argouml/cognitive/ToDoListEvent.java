@@ -1,4 +1,4 @@
-// $Id: ToDoListEvent.java,v 1.3 2003/06/30 19:23:17 linus Exp $
+// $Id: ToDoListEvent.java,v 1.4 2004/09/07 18:50:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,23 @@ import java.util.Vector;
 
 public class ToDoListEvent {
 
-    protected Vector _items;
+    private Vector items;
 
-    public ToDoListEvent() { _items = null; }
-    public ToDoListEvent(Vector items) { _items = items; }
+    /**
+     * The constructor.
+     * 
+     */
+    public ToDoListEvent() { items = null; }
+    /**
+     * The constructor.
+     * 
+     * @param i the todo list events
+     */
+    public ToDoListEvent(Vector i) { items = i; }
 
-    public Vector getToDoItems() { return _items; }
+    /**
+     * @return the todo list events
+     */
+    public Vector getToDoItems() { return items; }
 
 } /* end class ToDoListEvent */

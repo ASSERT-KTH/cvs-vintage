@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.6 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: CrMultipleInheritance.java,v 1.7 2004/09/07 18:50:05 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.6 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: CrMultipleInheritance.java,v 1.7 2004/09/07 18:50:05 mvw Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -40,10 +40,14 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.cognitive.critics.CrUML;
 import org.argouml.uml.cognitive.critics.WizCueCards;
 /** Well-formedness rule [2] for MAssociationEnd. See page 28 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
-
+ *  Semantics. OMG document ad/97-08-04. 
+ */
 public class CrMultipleInheritance extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrMultipleInheritance() {
 	setHeadline("Change Multiple Inheritance to Interfaces");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -51,10 +55,13 @@ public class CrMultipleInheritance extends CrUML {
 	addTrigger("generalization");
     }
 
-    // TODO - I hate short variable names - what is dm?
-    public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
-	Object cls = /*(MClassifier)*/ dm;
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
+    public boolean predicate2(Object designMaterial, Designer dsgr) {
+	if (!(ModelFacade.isAClassifier(designMaterial))) return NO_PROBLEM;
+	Object cls = /*(MClassifier)*/ designMaterial;
 	Collection gen = ModelFacade.getGeneralizations(cls);
 	if (gen != null && gen.size() > 1)
 	    return PROBLEM_FOUND;
@@ -62,25 +69,33 @@ public class CrMultipleInheritance extends CrUML {
 	    return NO_PROBLEM;
     }
 
+    /**
+     * @see org.argouml.cognitive.critics.Critic#initWizard(org.argouml.kernel.Wizard)
+     */
     public void initWizard(Wizard w) {
 	if (w instanceof WizCueCards) {
 	    WizCueCards wcc = (WizCueCards) w;
 	    ToDoItem item = w.getToDoItem();
-	    Object modelElement = /*(MModelElement)*/ item.getOffenders().elementAt(0);
+	    Object modelElement = /*(MModelElement)*/ 
+	        item.getOffenders().elementAt(0);
 	    String nameStr = ModelFacade.getName(modelElement);
-	    wcc.addCue("Remove the generalization arrow to one of the base " +
-		       "classes of {name}.");
-	    wcc.addCue("Optionally, use the MInterface tool to create a new " +
-		       "MInterface for {name} to implement.");
-	    wcc.addCue("Use the Realization tool to add a dashed arrow from " +
-		       "{name} to the new MInterface.");
-	    wcc.addCue("Move method declarations from the unused base class " +
-		       "to the new MInterface and move method bodies down into " +
-		       "{name}.");
-	    wcc.addCue("If the unused base class is not used by anything else " +
-		       "then it can be removed.");
+	    wcc.addCue("Remove the generalization arrow to one of the base "
+		   + "classes of {name}.");
+	    wcc.addCue("Optionally, use the MInterface tool to create a new " 
+		   + "MInterface for {name} to implement.");
+	    wcc.addCue("Use the Realization tool to add a dashed arrow from " 
+		   + "{name} to the new MInterface.");
+	    wcc.addCue("Move method declarations from the unused base class " 
+		   + "to the new MInterface and move method bodies down into "
+		   + "{name}.");
+	    wcc.addCue("If the unused base class is not used by anything else "
+		   + "then it can be removed.");
 	}
     }
+    
+    /**
+     * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
+     */
     public Class getWizardClass(ToDoItem item) { return WizCueCards.class; }
 
 } /* end class CrMultipleInheritance.java */

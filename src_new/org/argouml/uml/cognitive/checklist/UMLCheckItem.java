@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.12 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: UMLCheckItem.java,v 1.13 2004/09/07 18:50:08 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,19 +79,20 @@ public class UMLCheckItem extends CheckItem {
 	// first offender
 	while (matchPos != -1) {
 	    int endExpr = res.indexOf(OCLEvaluator.OCL_END, matchPos + 1);
-	    String expr =
-            res.substring(matchPos + OCLEvaluator.OCL_START.length(), endExpr);
-        String evalStr = null;
-        
-        try {
-    	    evalStr = CriticOclEvaluator.getInstance().evalToString(dm, expr);
-        } catch (ExpansionException e) {
-            // Really ought to have a CriticException to throw here.
-            LOG.error("Failed to evaluate critic expression", e);
-        }
+	    String expr = res.substring(matchPos 
+                + OCLEvaluator.OCL_START.length(), endExpr);
+	    String evalStr = null;
+	    
+	    try {
+	        evalStr = CriticOclEvaluator.getInstance()
+	                            .evalToString(dm, expr);
+	    } catch (ExpansionException e) {
+	        // Really ought to have a CriticException to throw here.
+	        LOG.error("Failed to evaluate critic expression", e);
+	    }
 	    LOG.debug("expr='" + expr + "' = '" + evalStr + "'");
 	    res = res.substring(0, matchPos) + evalStr 
-            + res.substring(endExpr + OCLEvaluator.OCL_END.length());
+	        + res.substring(endExpr + OCLEvaluator.OCL_END.length());
 	    searchPos = endExpr + 1;
 	    matchPos = res.indexOf(OCLEvaluator.OCL_START, searchPos);
 	}

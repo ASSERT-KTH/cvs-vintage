@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.7 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: CrMultipleRealization.java,v 1.8 2004/09/07 18:50:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.7 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: CrMultipleRealization.java,v 1.8 2004/09/07 18:50:05 mvw Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -42,6 +42,10 @@ import org.argouml.model.uml.UmlHelper;
  */
 public class CrMultipleRealization extends CrUML {
 
+    /**
+     * The constructor.
+     * 
+     */
     public CrMultipleRealization() {
 	setHeadline("Interface cannot realize another interface");
 	addSupportedDecision(CrUML.decINHERITANCE);
@@ -49,8 +53,13 @@ public class CrMultipleRealization extends CrUML {
 	addTrigger("generalization");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
+     * java.lang.Object, org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAInterface(dm))) return NO_PROBLEM;
+	if (!(org.argouml.model.ModelFacade.isAInterface(dm))) 
+	    return NO_PROBLEM;
 	Object inter = /*(MInterface)*/ dm;
    
 	Collection realize =
