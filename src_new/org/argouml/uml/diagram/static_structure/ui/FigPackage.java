@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.6 2002/03/12 14:43:56 linus Exp $
+// $Id: FigPackage.java,v 1.7 2002/03/20 12:33:17 mkl Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -87,6 +87,7 @@ public class FigPackage extends FigNodeModelElement {
       }
     };
     _body = new FigText(x, y + textH, width, height - textH);
+    _body.setEditable(false);
     _name.setBounds(x, y, width - indentX, textH + 2);
     _name.setJustification(FigText.JUSTIFY_LEFT);
 
