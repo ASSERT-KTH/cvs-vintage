@@ -346,8 +346,8 @@
             <transaction src="${src.sql.dir}/mysql-scarab-id-table-init.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-required-data.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-default-data.sql"/>
-            <transaction src="${src.sql.dir}/mysql-scarab-sample-data.sql"/>
             <transaction src="${src.sql.dir}/mysql-scarab-security.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-sample-data.sql"/>
         </sql>
     </target>
 
