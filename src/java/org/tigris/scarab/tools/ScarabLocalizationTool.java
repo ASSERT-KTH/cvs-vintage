@@ -61,7 +61,7 @@ import org.tigris.scarab.util.Log;
  * <code>Scarab.properties</code>):
  *
  * <blockquote><code><pre>
- * template.[dir/]<scope>.<title>
+ * template.[dir/]&lt;scope&gt;.&lt;title&gt;
  * </pre></code></blockquote>
  *
  * Defaults for scope can be specified using the
