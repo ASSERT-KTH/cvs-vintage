@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.14 2005/01/04 16:54:31 linus Exp $
+// $Id: TestUMLAssociationRoleBaseComboBoxModel.java,v 1.15 2005/01/04 21:41:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,6 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
-import ru.novosoft.uml.MFactoryImpl;
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.model_management.MModel;
@@ -45,8 +42,7 @@ import ru.novosoft.uml.model_management.MModel;
  */
 public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
 
-    private int oldEventPolicy;
-    private MAssociationRole elem;
+    private Object elem;
     private UMLAssociationRoleBaseComboBoxModel model;
     private MAssociation[] bases;
 
@@ -89,8 +85,6 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
         ModelFacade.setNamespace(role2, col);
         elem =
 	    Model.getCollaborationsFactory().buildAssociationRole(role1, role2);
-        oldEventPolicy = MFactoryImpl.getEventPolicy();
-        MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model.targetSet(new TargetEvent(this,
 					"set",
 					new Object[0],
@@ -105,7 +99,6 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         Model.getUmlFactory().delete(elem);
-        MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
 
@@ -125,7 +118,7 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
      * Test setting the Base.
      */
     public void testSetBase() {
-        elem.setBase(bases[0]);
+        ModelFacade.setBase(elem, bases[0]);
         assertTrue(model.getSelectedItem() == bases[0]);
     }
 
@@ -133,7 +126,7 @@ public class TestUMLAssociationRoleBaseComboBoxModel extends TestCase {
      * Test setting the Base to null.
      */
     public void testSetBaseToNull() {
-        elem.setBase(null);
+        ModelFacade.setBase(elem, null);
         assertNull(model.getSelectedItem());
     }
 

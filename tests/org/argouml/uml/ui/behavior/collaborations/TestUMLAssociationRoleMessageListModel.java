@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.11 2005/01/03 18:21:19 linus Exp $
+// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.12 2005/01/04 21:41:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,8 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
-
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.behavior.collaborations.MMessage;
 
 /**
  * @since Oct 27, 2002
@@ -65,10 +63,10 @@ public class TestUMLAssociationRoleMessageListModel
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
     protected Object[] fillModel() {
-        MMessage[] messages = new MMessage[10];
+        Object[] messages = new Object[10];
         for (int i = 0; i < messages.length; i++) {
             messages[i] = Model.getCollaborationsFactory().createMessage();
-            ((MAssociationRole) getElem()).addMessage(messages[i]);
+            ModelFacade.addMessage(getElem(), messages[i]);
         }
         return messages;
     }
@@ -78,8 +76,7 @@ public class TestUMLAssociationRoleMessageListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MAssociationRole) getElem()).removeMessage(
-                    (MMessage) elements[i]);
+            ModelFacade.removeMessage(getElem(), elements[i]);
         }
     }
 

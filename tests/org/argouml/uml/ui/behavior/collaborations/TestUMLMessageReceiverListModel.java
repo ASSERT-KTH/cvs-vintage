@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageReceiverListModel.java,v 1.13 2005/01/04 16:54:33 linus Exp $
+// $Id: TestUMLMessageReceiverListModel.java,v 1.14 2005/01/04 21:41:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,18 +30,14 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
 
-import ru.novosoft.uml.MFactoryImpl;
-import ru.novosoft.uml.behavior.collaborations.MMessage;
-
 /**
  * @since Oct 30, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
 public class TestUMLMessageReceiverListModel extends TestCase {
 
-    private int oldEventPolicy;
     private UMLMessageReceiverListModel model;
-    private MMessage elem;
+    private Object elem;
 
     /**
      * Constructor for TestUMLMessageReceiverListModel.
@@ -57,15 +53,10 @@ public class TestUMLMessageReceiverListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         elem = Model.getCollaborationsFactory().createMessage();
-        oldEventPolicy = MFactoryImpl.getEventPolicy();
-        MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         MockUMLUserInterfaceContainer cont =
             new MockUMLUserInterfaceContainer();
         cont.setTarget(elem);
         model = new UMLMessageReceiverListModel();
-
-        // TODO: This must be replaced!
-        elem.addMElementListener(model);
         model.setTarget(elem);
     }
 
@@ -75,7 +66,6 @@ public class TestUMLMessageReceiverListModel extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         Model.getUmlFactory().delete(elem);
-        MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
 
@@ -97,8 +87,7 @@ public class TestUMLMessageReceiverListModel extends TestCase {
         Object role =
             Model.getCollaborationsFactory().createClassifierRole();
         ModelFacade.setReceiver(elem, role);
-        // TODO: Isn't there a way to do this through the ModelFacade?
-        ((MMessage) elem).setReceiver(null);
+        ModelFacade.setReceiver(elem, null);
         assertEquals(0, model.getSize());
         assertTrue(model.isEmpty());
     }
