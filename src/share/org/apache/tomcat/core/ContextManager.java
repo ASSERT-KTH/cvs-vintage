@@ -86,6 +86,9 @@ public class ContextManager {
      */
     private StringManager sm =StringManager.getManager("org.apache.tomcat.core");
 
+    private Vector requestInterceptors = new Vector();
+    private Vector contextLifecycleInterceptors = new Vector();
+    
     ContextMapperInterceptor contextInterceptor=new ContextMapperInterceptor( this );
     SessionInterceptor sessionInterceptor=new SessionInterceptor();
     MapperInterceptor mapperInterceptor=new MapperInterceptor();

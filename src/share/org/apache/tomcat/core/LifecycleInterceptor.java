@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LifecycleInterceptor.java,v 1.2 1999/10/15 03:20:25 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LifecycleInterceptor.java,v 1.3 2000/01/13 23:28:27 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/13 23:28:27 $
  *
  * ====================================================================
  *
@@ -65,13 +65,18 @@
 package org.apache.tomcat.core;
 import javax.servlet.Servlet;
 
+
+/*
+  This interceptor is used for Servlet lifecycle.
+  ContextInterceptor is for Context lifecycle
+*/
+
 /**
  * For intercepting calls before & after the init() destroy()
  * methods are called.
  *
  * @author Harish Prabandham
  */
-
 //
 // WARNING: Some of the APIs in this class are used by J2EE. 
 // Please talk to harishp@eng.sun.com before making any changes.

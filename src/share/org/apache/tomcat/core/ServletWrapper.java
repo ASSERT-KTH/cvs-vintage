@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.11 2000/01/13 18:20:33 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/01/13 18:20:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.12 2000/01/13 23:28:27 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/01/13 23:28:27 $
  *
  * ====================================================================
  *
@@ -102,7 +102,6 @@ public class ServletWrapper {
 
     ServletWrapper(Context context) {
         this.context = context;
-
         config = new ServletConfigImpl(context);
     }
 
@@ -180,15 +179,7 @@ public class ServletWrapper {
 		}
 		
 		try {
-		    final Servlet sinstance = servlet;
-
-		    handleInvocation(
-		        context.getDestroyInterceptors().elements(), 
-			new LifecycleInvocationHandler(context, servlet) {
-		            void method() throws ServletException {
-			        sinstance.destroy();
-			    }
-		        });
+		    handleDestroy( context, servlet );
 		} catch(IOException ioe) {
 		    // Should never come here...
 		} catch(ServletException se) {
@@ -197,55 +188,63 @@ public class ServletWrapper {
 	    }
 	}
     }
+
+    private void loadJsp( String path )
+    	throws ClassNotFoundException, InstantiationException,
+	IllegalAccessException, ServletException
+    {
+	// XXX XXX XXX
+	// core shouldn't depend on a particular connector!
+	// need to find out what this code does!
+	
+	// XXX XXX find a better way !!!
+	RequestAdapterImpl reqA=new RequestAdapterImpl();
+	ResponseAdapterImpl resA=new ResponseAdapterImpl();
+	
+	RequestImpl request = new RequestImpl();
+	ResponseImpl response = new ResponseImpl();
+	request.recycle();
+	response.recycle();
+	
+	request.setRequestAdapter( reqA );
+	response.setResponseAdapter( resA );
+	
+	request.setResponse(response);
+	response.setRequest(request);
+	
+	String requestURI = path + "?" +
+	    Constants.JSP.Directive.Compile.Name + "=" +
+	    Constants.JSP.Directive.Compile.Value;
+	
+	reqA.setRequestURI(context.getPath() + path);
+	reqA.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
+			     Constants.JSP.Directive.Compile.Value );
+	
+	request.setContext(context);
+	request.updatePaths();
+	request.getSession(true);
+	
+	RequestDispatcher rd =
+	    config.getServletContext().getRequestDispatcher(requestURI);
+	
+	try {
+	    rd.forward(request.getFacade(), response.getFacade());
+	} catch (ServletException se) {
+	} catch (IOException ioe) {
+	}
+    } 
     
     public void loadServlet()
-    throws ClassNotFoundException, InstantiationException,
-        IllegalAccessException, ServletException {
+	throws ClassNotFoundException, InstantiationException,
+	IllegalAccessException, ServletException
+    {
         // Check if this is a JSP, they get special treatment
 
         if (path != null &&
             servletClass == null &&
             servletClassName == null) {
-	    // XXX XXX XXX
-	    // core shouldn't depend on a particular connector!
-	    // need to find out what this code does!
-
-	    // XXX XXX find a better way !!!
-	    RequestAdapterImpl reqA=new RequestAdapterImpl();
-	    ResponseAdapterImpl resA=new ResponseAdapterImpl();
-	    
-	    RequestImpl request = new RequestImpl();
-            ResponseImpl response = new ResponseImpl();
-            request.recycle();
-            response.recycle();
-
-	    request.setRequestAdapter( reqA );
-	    response.setResponseAdapter( resA );
-
-            request.setResponse(response);
-            response.setRequest(request);
-
-            String requestURI = path + "?" +
-                Constants.JSP.Directive.Compile.Name + "=" +
-                Constants.JSP.Directive.Compile.Value;
-
-            reqA.setRequestURI(context.getPath() + path);
-	    reqA.setQueryString( Constants.JSP.Directive.Compile.Name + "=" +
-				 Constants.JSP.Directive.Compile.Value );
-
-            request.setContext(context);
-	    request.updatePaths();
-            request.getSession(true);
-
-            RequestDispatcher rd =
-                config.getServletContext().getRequestDispatcher(requestURI);
-
-            try {
-                rd.forward(request.getFacade(), response.getFacade());
-            } catch (ServletException se) {
-            } catch (IOException ioe) {
-            }
-        } else {
+	    loadJsp( path );
+	}  else {
 	    if (servletClass == null) {
 	        if (servletClassName == null) {
 		    String msg = sm.getString("wrapper.load.noclassname");
@@ -273,12 +272,7 @@ public class ServletWrapper {
 	        final Servlet sinstance = servlet;
 	        final ServletConfigImpl servletConfig = config;
 
-	        handleInvocation(context.getInitInterceptors().elements(), 
-	            new LifecycleInvocationHandler(context, servlet) {
-	                void method() throws ServletException {
-		            sinstance.init(servletConfig);
-		        }
-	            });
+	        handleInit(context, servlet, servletConfig);
 	    } catch(IOException ioe) {
 	    // Should never come here...
 	    }
@@ -287,22 +281,24 @@ public class ServletWrapper {
 
     private Context getContext() {
 	return context;
-    } 
+    }
+
+    private boolean isJsp() {
+	return path != null &&
+	    servletClass == null &&
+	    servletClassName == null;
+    }
 
     public void handleRequest(final HttpServletRequestFacade request,
-        final HttpServletResponseFacade response)
-    throws IOException {
+			      final HttpServletResponseFacade response)
+	throws IOException
+    {
         synchronized (this) {
-	    // XXX
-	    // rather klunky - this method needs a once over
-
-	    if (path != null &&
-                servletClass == null &&
-                servletClassName == null) {
+	    if ( isJsp() ) {
+		System.out.println("XXX XXX XXX " +path );
                 String requestURI = path + request.getPathInfo();
-	        RequestDispatcher rd =
-                    request.getRequestDispatcher(requestURI);
-
+	        RequestDispatcher rd = request.getRequestDispatcher(requestURI);
+		
 		try {
 		    // Watch out, ugly code ahead...
 		    // We need to do a forward or include here, but we can't
@@ -361,15 +357,10 @@ public class ServletWrapper {
 	    synchronized(this) {
 		serviceCount++;
 	    }
-	
-	    Context context = getContext();
-            Enumeration serviceInterceptors =
-                context.getServiceInterceptors().elements();
-            ServiceInvocationHandler serviceHandler =
-                new ServiceInvocationHandler(context, servlet,
-                    request, response);
 
-	    handleInvocation(serviceInterceptors, serviceHandler);
+	    Context context = getContext();
+
+	    handleInvocation( context, servlet, request, response );
 	} catch (ServletException e) {
             // XXX
 	    // check to see if it's unavailable and set internal status
@@ -514,104 +505,78 @@ public class ServletWrapper {
 	}
     }
 
-    private void handleInvocation(Enumeration interceptors,
-        InvocationHandler inv)
-    throws ServletException, IOException {
+    /** Call the init method and all init interceptors
+     */
+    private void handleInit(Context context, Servlet servlet, ServletConfig servletConfig )
+	throws ServletException, IOException
+    {
 	Stack iStack = new Stack();
 
-	try {
-	    for (Enumeration e = interceptors; e.hasMoreElements(); ) {
-		iStack.push(e.nextElement());
-		inv.preInvoke(iStack.peek());
+	Vector v=context.getInitInterceptors();
+	for( int i=0; i<v.size(); i++ ) {
+	    try { 
+		((LifecycleInterceptor)v.elementAt(i)).preInvoke( context, servlet );
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
 	    }
+	}
+	servlet.init(servletConfig);
+	// if an exception is thrown in init, no end interceptors will be called.
+	// that was in the origianl code
 
-	    inv.method();
-	} catch(InterceptorException ie) {
-	} finally {
-	    // in any case, we should make sure we call the
-	    // postInvoke before leaving.
-
-	    while (! iStack.empty()) {
-		try {
-		    inv.postInvoke(iStack.pop());
-		} catch(InterceptorException ie) {
-		    // can't do much ....
-		}
+	for( int i=v.size()-1; i>=0 ; i-- ) {
+	    try { 
+		((LifecycleInterceptor)v.elementAt(i)).postInvoke( context, servlet );
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
 	    }
 	}
     }
-}
 
+    /** Call destroy(), with all interceptors before and after in the
+	right order;
+    */
+    private void handleDestroy(Context context, Servlet servlet )
+	throws ServletException, IOException
+    {
+	Vector v=context.getDestroyInterceptors();
+	for( int i=0; i<v.size(); i++ ) {
+	    try { 
+		((LifecycleInterceptor)v.elementAt(i)).preInvoke( context, servlet );
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
+	    }
+	}
+	servlet.destroy();
+	// if an exception is thrown in init, no end interceptors will be called.
+	// that was in the origianl code
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-abstract class InvocationHandler {
-    protected Servlet servlet;
-    protected Context context;
-
-    InvocationHandler(Context context, Servlet servlet) {
-	this.context = context;
-	this.servlet = servlet;
+	for( int i=v.size()-1; i>=0 ; i-- ) {
+	    try { 
+		((LifecycleInterceptor)v.elementAt(i)).postInvoke( context, servlet );
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
+	    }
+	}
     }
+    
 
-    abstract void preInvoke(Object interceptor)
-    throws InterceptorException;
-
-    abstract void method()
-    throws ServletException, IOException;
-
-    abstract void postInvoke(Object interceptor)
-    throws InterceptorException;
-}
-
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-abstract class LifecycleInvocationHandler extends InvocationHandler {
-    LifecycleInvocationHandler(Context context, Servlet servlet) {
-	super(context, servlet);
-    }
-
-    void preInvoke(Object interceptor)
-    throws InterceptorException {
-	((LifecycleInterceptor)interceptor).preInvoke(context, servlet);
-    }
-
-    void postInvoke(Object interceptor)
-    throws InterceptorException {
-	((LifecycleInterceptor)interceptor).postInvoke(context, servlet);
-    }
-}
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class ServiceInvocationHandler extends InvocationHandler {
-    private HttpServletRequestFacade request;
-    private HttpServletResponseFacade response;
-
-    ServiceInvocationHandler(Context context, Servlet servlet,
-        HttpServletRequestFacade request,
-	HttpServletResponseFacade response) {
-	super(context, servlet);
-
-	this.request = request;
-	this.response = response;
-    }
-
-    void preInvoke(Object interceptor)
-    throws InterceptorException {
-	((ServiceInterceptor)interceptor).preInvoke(context, servlet,
-            request, response);
-    }
-
-    void method()
-    throws ServletException, IOException {
+    /** Call service(), with all interceptors before and after in the
+	right order;
+    */
+    private void handleInvocation(Context ctx, Servlet servlet,
+				  HttpServletRequestFacade request, HttpServletResponseFacade response )
+	throws ServletException, IOException
+    {
+	Vector v = context.getServiceInterceptors();
+	for( int i=0; i<v.size(); i++ ) {
+	    try { 
+		((ServiceInterceptor)v.elementAt(i)).preInvoke(context, servlet,
+								  request, response);
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
+	    }
+	}
 	if (servlet instanceof SingleThreadModel) {
 	    synchronized(servlet) {
 		servlet.service(request, response);
@@ -619,11 +584,14 @@ class ServiceInvocationHandler extends InvocationHandler {
 	} else {
 	    servlet.service(request, response);
 	}
-    }
-    
-    void postInvoke(Object interceptor)
-    throws InterceptorException {
-	((ServiceInterceptor)interceptor).postInvoke(context, servlet,
-            request, response);
+
+	for( int i=v.size()-1; i>=0 ; i-- ) {
+	    try { 	
+		((ServiceInterceptor)v.elementAt(i)).postInvoke(context, servlet,
+								  request, response);
+	    } catch(InterceptorException ex ) {
+		ex.printStackTrace();
+	    }
+	}
     }
 }
