@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.34 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabDiagram.java,v 1.35 2003/12/23 20:44:18 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.34 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: TabDiagram.java,v 1.35 2003/12/23 20:44:18 jjones Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -40,6 +40,7 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.ToolTipManager;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
@@ -416,13 +417,13 @@ class ArgoEditor extends Editor {
 	setUnderMouse(me);
 	if (_curFig != null && Globals.getShowFigTips()) {
 	    String tip = _curFig.getTipString(me);
-	    if (tip != null && tip.length() > 0 && !tip.endsWith(" "))
-		tip += " ";
 	    if (tip != null && (getAwtComponent() instanceof JComponent)) {
-		if (((JComponent) getAwtComponent()).getToolTipText() != null
-		    && !((JComponent) getAwtComponent()).getToolTipText().equals(tip))
-                    ((JComponent) getAwtComponent()).setToolTipText(tip);
-	    }
+	        JComponent c = (JComponent) getAwtComponent();
+	        if (c.getToolTipText() == null 
+		    || !(c.getToolTipText().equals(tip))) {
+	            c.setToolTipText(tip);
+	        }
+            }
 	} else if (getAwtComponent() instanceof JComponent) {
 	    if (((JComponent) getAwtComponent()).getToolTipText() != null)
 		((JComponent) getAwtComponent()).setToolTipText(null); //was ""
