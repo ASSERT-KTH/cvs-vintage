@@ -7,35 +7,53 @@
 <body bgcolor="#FFFFFF">
 
 <h3>Below are some notes for doing development with Scarab.</h3>
-<p>$Id: development.html,v 1.1 2001/10/06 01:11:46 jon Exp $</p>
+<p>$Id: development.html,v 1.2 2003/04/30 16:38:40 dlr Exp $</p>
 
 <hr noshade="true" size="1"/>
 
-<p>
-We use the coding standards that the Turbine project uses. They are 
-documented here:
-</p>
-
-<p>
-    <a href="http://jakarta.apache.org/turbine/code-standards.html">
-    http://jakarta.apache.org/turbine/code-standards.html</a>
-</p>
+<p>Unless otherwise noted, we use the <a
+href="http://jakarta.apache.org/turbine/code-standards.html">coding
+standards from the Turbine project</a>, and the <a
+href="http://jakarta.apache.org/site/guidelines.html">general project
+guidelines from the Jakarta project</a>.</p>
 
 <hr noshade="true" size="1"/>
 
-<p>
-The general project guidelines that we follow are documented here:
-</p>
+<h3>Change log messages</h3>
+
+<p>Concise and descriptive change log messages are a major factor in
+eking the most value out of your <a
+href="http://www.cvshome.org/">version control</a>/<a
+href="http://scm.tigris.org/">software configuration managment</a>
+tools.</p>
+
+<p>Change log messsages are sometimes referred to as "commit logs",
+"commit log messages", or just "log messages".  These phrases will be
+used interchangeably throughout the docs.</p>
+
+<p>Guidelines for writing change log messages are essentially as laid
+out in the "Writing log messages" section of the <a
+href="http://subversion.tigris.org/">Subversion</a> project's <a
+href="http://svn.collab.net/repos/svn/trunk/HACKING">HACKING</a>
+file.</p>
+
+<p>It's encouraged that developers start their log messages as early
+in the change process as possible.  Recording a brief, high level
+change summary before actually making the change, and/or recording the
+change as it's made are excellent technique for producing accurate and
+valuable log messages which truly aid in change tracking.  When using
+a CVS/SVN style VC/SCM tool, diffing the list of files you plan on
+checking in and comparing the actual changes to what's in your log
+message is a great way to verify the accuracy of your log message, or
+produce a change log message after the fact.</p>
+
+
+<h3>Misc. development comments</h3>
 
 <p>
-    <a href="http://jakarta.apache.org/site/guidelines.html">
-    http://jakarta.apache.org/site/guidelines.html</a>
-</p>
-
-<p>
-Because Scarab uses a build->compile->run development framework, you should 
-remember to always edit only the files in the src directory and not the 
-target build directory.
+As Scarab uses a build -&gt; compile -&gt; run development framework,
+please remember to always edit only the files in the src directory,
+and not the build target directory.
 </p>
 
 <p>
@@ -113,9 +131,7 @@ keyed by a constant of the ScarabConstants interface, and have its
 name prefixed with "scarab.".
 </p>
 
-<p>
-For example:
-</p>
+<p>For example:
 
 <pre>
 YourAction.java:
@@ -129,7 +145,8 @@ public static final String ISSUE_ID_LIST = "scarab.issueIdList";
 
 YourAction.java:
 List issueIdList = (List) user.getTemp(ScarabConstants.ISSUE_ID_LIST);
-</pre>
+</pre></p>
+
 
 </body>
 </html>
