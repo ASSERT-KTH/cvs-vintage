@@ -1,3 +1,2 @@
  <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("Manage issue types")</small></div>
  <div><small>$link.setPage("admin,ManageModules.vm").setLabel("Manage modules")</small></div>
- <div><small>$link.setPage("admin,Approval.vm").setLabel("Approve")</small></div>

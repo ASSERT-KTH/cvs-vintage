@@ -6,48 +6,57 @@
 <strong>$link.setPage("admin,AdminIndex.vm").setLabel("Admin")</strong>
 
 #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
-  #if ($adminMenu.equals("3"))
+  #if ($adminMenu.equals("1"))
     <div><small><strong>Global data</strong></small>
     $renderer.render("navigations", "GlobalAdmin.vm")
     </div>
   #else
-    <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Global data")</small></div>
+    <div><small>$link.setPage("admin,GlobalArtifactTypeShow.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Global data")</small></div>
   #end
 #end
 
-#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,Approval.vm"))
-  #if ($adminMenu.equals("4"))
+#if ($link.isAllowed("admin,Approval.vm"))
+  #if ($adminMenu.equals("2"))
+    <div><small><strong>Approve</strong></small></div>
+  #else
+    <div><small>$link.setPage("admin,Approval.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Approve")</small></div>
+  #end
+#end
+
+
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm"))
+  #if ($adminMenu.equals("3"))
     <div><small><strong>Modules</strong></small>
     $renderer.render("navigations", "ModuleAdmin.vm")
     </div>
   #else
     #if ($link.isAllowed("admin,ManageModules.vm") && ! $link.isAllowed("admin,ManageArtifactTypes.vm"))
-      <div><small>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")</small></div>
+      <div><small>$link.setPage("admin,ManageModules.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
     #else
-      <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Modules")</small></div>
+      <div><small>$link.setPage("admin,ManageArtifactTypes.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "3").setLabel("Modules")</small></div>
     #end
   #end
 #end
 
 #if ($link.isAllowed("admin,ManageRoles.vm") || $link.isAllowed("admin,AddRole.vm"))
-  #if ($adminMenu.equals("2"))
+  #if ($adminMenu.equals("4"))
     <div><small><strong>Roles</strong></small>
     <div><small>$link.setPage("admin,ManageRoles.vm").setLabel("Role list")</small></div>
     <div><small>$link.setPage("admin,AddRole.vm").setLabel("Add new role")</small></div>
     </diV>
   #else
-    <div><small>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "2").setLabel("Roles")</small></div>
+    <div><small>$link.setPage("admin,ManageRoles.vm").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "4").setLabel("Roles")</small></div>
   #end
 #end
 
 #if ($link.isAllowed("admin,ManageUserSearch.vm") || $link.isAllowed("admin,AddUser.vm"))
-  #if ($adminMenu.equals("1"))
+  #if ($adminMenu.equals("5"))
     <div><small><strong>Users</strong></small>
     <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</small></div>
     <div><small>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</small></div>
     </div>
   #else
-    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "1").setLabel("Users")</small></div>
+    <div><small>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setPathInfo($scarabG.Constant.CURRENT_ADMIN_MENU, "5").setLabel("Users")</small></div>
   #end
 #end
 
