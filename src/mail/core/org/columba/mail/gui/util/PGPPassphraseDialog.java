@@ -36,10 +36,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 public class PGPPassphraseDialog implements ActionListener {
@@ -75,19 +73,25 @@ public class PGPPassphraseDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
+		cancelButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		okButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
+		helpButton =
+			new ButtonWithMnemonic(
+				MailResourceLoader.getString("global", "help"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();
@@ -103,10 +107,7 @@ public class PGPPassphraseDialog implements ActionListener {
 		return bottom;
 	}
 
-	public void showDialog(
-		String userID,
-		String password,
-		boolean save) {
+	public void showDialog(String userID, String password, boolean save) {
 
 		this.userID = userID;
 
@@ -124,8 +125,6 @@ public class PGPPassphraseDialog implements ActionListener {
 
 		JLabel passwordLabel = new JLabel("Passphrase:");
 
-		
-
 		passwordField = new JPasswordField(password, 40);
 
 		checkbox =
@@ -134,11 +133,14 @@ public class PGPPassphraseDialog implements ActionListener {
 					"dialog",
 					"password",
 					"save_passphrase"));
-				checkbox.setSelected(save);
+		checkbox.setSelected(save);
 
 		dialog = new JDialog(new JFrame(), true);
 		dialog.setTitle(
-			MailResourceLoader.getString("dialog", "password", "dialog_title_passphrase"));
+			MailResourceLoader.getString(
+				"dialog",
+				"password",
+				"dialog_title_passphrase"));
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -180,9 +182,11 @@ public class PGPPassphraseDialog implements ActionListener {
 
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(okButton);
-				dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
-									KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-									JComponent.WHEN_IN_FOCUSED_WINDOW);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CANCEL",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 		dialog.show();
@@ -200,8 +204,6 @@ public class PGPPassphraseDialog implements ActionListener {
 	public boolean getSave() {
 		return save;
 	}
-
-	
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
