@@ -61,6 +61,7 @@
   <th>$l10n.Description</th>
   <td>
   #textAreaMedium("$templateGroup.Description.Key" $templateGroup.Description)
+  #fieldErrorMsg($templateGroup.Description '')
   </td>
 </tr>
 <tr>
