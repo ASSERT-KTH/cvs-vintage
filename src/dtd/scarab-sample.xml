@@ -90,28 +90,16 @@ ID_CODE, not the primary key column.
                     </description>
                 </activity>
             </transaction>
-
-            <transaction id="8">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-        	        	<type>non-blocking</type>
-    	            	<child>TBNS203</child>
-	            	</dependency>
-                </activity>
-            </transaction>
-
-            <transaction id="10">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-                		<type>blocking</type>
-                		<child>TBNS304</child>
-            		</dependency>
-                </activity>
-            </transaction>
+            
+            <dependency>
+                <type>non-blocking</type>
+                <child>TBNS203</child>
+            </dependency>
+                    
+            <dependency>
+                <type>blocking</type>
+                <child>TBNS304</child>
+            </dependency>
 
             <attachment>
                 <name>My cool file</name>
@@ -153,16 +141,10 @@ ID_CODE, not the primary key column.
                 </activity>
             </transaction>
             
-            <transaction id="12">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-                		<type>non-blocking</type>
-                		<parent>TBNS101</parent>
-            		</dependency>
-                </activity>
-            </transaction>
+            <dependency>
+                <type>non-blocking</type>
+                <parent>TBNS101</parent>
+            </dependency>
         </issue>
         <issue id="304">
             <artifact-type>Defect</artifact-type>
@@ -191,27 +173,15 @@ ID_CODE, not the primary key column.
                 </activity>
             </transaction>
             
-            <transaction id="12">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-                		<type>blocking</type>
-                		<parent>TBNS101</parent>
-            		</dependency>
-                </activity>
-            </transaction>
-            
-            <transaction id="12">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-                		<type>blocking</type>
-                		<parent>TBNS405</parent>
-            		</dependency>
-                </activity>
-            </transaction>
+            <dependency>
+                <type>blocking</type>
+                <parent>TBNS101</parent>
+            </dependency>
+                    
+            <dependency>
+                <type>blocking</type>
+                <parent>TBNS405</parent>
+            </dependency>
         </issue>
         <issue id="405">
             <artifact-type>Defect</artifact-type>
@@ -230,16 +200,10 @@ ID_CODE, not the primary key column.
                 </activity>
             </transaction>
             
-            <transaction id="12">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-            		<dependency>
-                		<type>blocking</type>
-                		<child>TBNS304</child>
-            		</dependency>
-                </activity>
-            </transaction>
+            <dependency>
+                <type>blocking</type>
+                <child>TBNS304</child>
+            </dependency>
         </issue>
     </module>
 </scarab>

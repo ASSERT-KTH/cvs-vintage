@@ -10,7 +10,7 @@
         <xsl:for-each select="bug">
         <issue id="{bug_id}">
             <artifact-type>defect</artifact-type>
-
+            
             <transaction id="1">
                 <type>Create Issue</type>
                 <committed-by><xsl:value-of select="reporter"/></committed-by>
@@ -92,25 +92,21 @@
                     <description>Resolution set to <xsl:value-of select="resolution"/></description>
                 </activity>
                 </xsl:if>
-            
-            	<xsl:for-each select="dependson">
-                <activity>
-            		<dependency>
-        		        <type>blocking</type>
-    		            <child>TBNS<xsl:value-of select="."/></child>
-		            </dependency>
-                </activity>
-            	</xsl:for-each>
-        	    
-    	        <xsl:for-each select="blocks">
-                <activity>
-	        	    <dependency>
-        	    	    <type>blocking</type>
-    	    	        <parent>TBNS<xsl:value-of select="."/></parent>
-	    	        </dependency>
-                </activity>
-	            </xsl:for-each>
             </transaction>
+            
+            <xsl:for-each select="dependson">
+            <dependency>
+                <type>blocking</type>
+                <child>TBNS<xsl:value-of select="."/></child>
+            </dependency>
+            </xsl:for-each>
+                
+            <xsl:for-each select="blocks">
+            <dependency>
+                <type>blocking</type>
+                <parent>TBNS<xsl:value-of select="."/></parent>
+            </dependency>
+            </xsl:for-each>
             
             <xsl:for-each select="attachment">
             <attachment>

@@ -55,15 +55,11 @@ import org.tigris.scarab.om.AttributeType;
  */
 public class ActivityInfo
 {
-    public static final String TYPE_DEPENDENCY = "DEPENDENCY";
-    public static final String TYPE_ATTRIBUTE = "ATTRIBUTE";
-    
     private String name;
     private String value;
     private String oldValue;
     private AttributeType type;
     private String description;
-    private String activityInfoType;
     
     public ActivityInfo()
     {
@@ -72,7 +68,6 @@ public class ActivityInfo
         value = null;
         type = null;
         description = null;
-        activityInfoType = null;
     }
     
     public void setName(String name)
@@ -123,15 +118,5 @@ public class ActivityInfo
     public String getDescription()
     {
         return description;
-    }
-    
-    public void setActivityInfoType(String activityInfoType)
-    {
-        this.activityInfoType = activityInfoType;
-    }
-    
-    public String getActivityInfoType()
-    {
-        return activityInfoType;
     }
 }

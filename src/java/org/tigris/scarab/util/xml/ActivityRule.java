@@ -121,50 +121,6 @@ public class ActivityRule extends BaseRule
         ActivityInfo activityInfo = (ActivityInfo)digester.pop();
         Transaction transaction = (Transaction)digester.pop();
         Issue issue = (Issue)digester.pop();
-        
-        if (activityInfo.getActivityInfoType().equals(ActivityInfo.TYPE_ATTRIBUTE))
-        {
-            addAttribute(activityInfo, transaction, issue);
-        }
-        else if (activityInfo.getActivityInfoType().equals(ActivityInfo.TYPE_DEPENDENCY))
-        {
-            // do nothing.
-        }
-        else
-        {
-            throw new Exception("Activity type is undefined: " + activityInfo.getActivityInfoType());
-        }
-        
-        digester.push(issue);
-        digester.push(transaction);
-    }
-    
-    protected void doValidationAtEnd()
-        throws Exception
-    {
-        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
-        if (activityInfo.getActivityInfoType().equals(ActivityInfo.TYPE_ATTRIBUTE))
-        {
-            if (activityInfo.getName().equals("Assigned To")) {
-                validateUser(activityInfo.getValue());
-                if (activityInfo.getOldValue() != null) {
-                    validateUser(activityInfo.getOldValue());
-                }
-            }
-        }
-        else if (activityInfo.getActivityInfoType().equals(ActivityInfo.TYPE_DEPENDENCY))
-        {
-            // do nothing.
-        }
-        else
-        {
-            throw new Exception("Activity type is undefined: " + activityInfo.getActivityInfoType());
-        }
-    }
-    
-    private void addAttribute(ActivityInfo activityInfo, Transaction transaction, Issue issue)
-        throws Exception
-    {
         Attribute attribute = Attribute.getInstance(activityInfo.getName());
         if(attribute == null)
         {
@@ -221,6 +177,21 @@ public class ActivityRule extends BaseRule
             Activity activity = new Activity();
             activity.create(issue, attribute, activityInfo.getDescription(), transaction,
                             activityInfo.getOldValue(), activityInfo.getValue());
+        }
+        
+        digester.push(issue);
+        digester.push(transaction);
+    }
+    
+    protected void doValidationAtEnd()
+        throws Exception
+    {
+        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        if (activityInfo.getName().equals("Assigned To")) {
+            validateUser(activityInfo.getValue());
+            if (activityInfo.getOldValue() != null) {
+                validateUser(activityInfo.getOldValue());
+            }
         }
     }
 }
