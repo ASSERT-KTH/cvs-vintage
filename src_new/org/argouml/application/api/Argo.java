@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.14 2002/12/27 16:59:58 linus Exp $
+// $Id: Argo.java,v 1.15 2003/04/28 11:20:41 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import org.apache.log4j.spi.*;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.application.modules.ModuleLoader;
 import org.argouml.util.logging.ThrowableRenderer;
+
+import org.workingfrog.i18n.util.Translator;
 
 /**
  * The <code>Argo</code> class provides static methods and definitions
@@ -206,9 +208,12 @@ public class Argo
     /** Helper for localization to eliminate the need to import
      *  the gef util library.
      */
-    public static String localize(String bundle, String key)
-    {
-	return org.tigris.gef.util.Localizer.localize(bundle, key);
+    public static String localize(String bundle, String key) {
+        if (Translator.isValidBundle(key)) {
+            return Translator.localize(key, bundle);
+        } else {
+            return org.tigris.gef.util.Localizer.localize(bundle, key);
+        }
     }
 
     /** Returns a vector of plugins of the class type passed
