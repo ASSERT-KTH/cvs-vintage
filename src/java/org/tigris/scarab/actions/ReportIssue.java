@@ -50,6 +50,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -96,10 +97,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.119 2002/04/09 23:43:53 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.120 2002/04/10 03:57:11 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
+    /** list of invalid characters when doing searches */
+    public static final String invalidChars = " \t(){}[]!,;:?./*-+=+&|<>";
     
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
@@ -166,8 +169,26 @@ public class ReportIssue extends RequireLoginFirstAction
         
         // search on the option attributes and keywords
         IssueSearch search = new IssueSearch(issue);                
+        // remove special characters from the text attributes
+        Iterator textAVs = search.getTextAttributeValues().iterator();        
+        while (textAVs.hasNext()) 
+        {
+            AttributeValue av = (AttributeValue)textAVs.next();
+            String s = av.getValue();
+            if (s != null && s.length() > 0) 
+            {
+                StringTokenizer tokens = new StringTokenizer(s, invalidChars);
+                StringBuffer query = new StringBuffer(s.length() + 10);
+                while (tokens.hasMoreTokens())
+                {
+                    query.append(" ");
+                    query.append(tokens.nextToken());
+                }
+                av.setValue(query.toString());       
+            }
+        }
         List matchingIssues = search.getMatchingIssues();
-        
+
         // set the template to dedupe unless none exist, then skip
         // to final entry screen
         String template = null;

@@ -50,6 +50,7 @@ package org.tigris.scarab.util.word;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,11 +154,11 @@ public class IssueSearch
     {
         this(issue.getModule(), issue.getIssueType());
 
-        List avs = issue.getAttributeValues();
+        Iterator avs = issue.getAttributeValues().iterator();
         List newAvs = getAttributeValues();
-        for (int i=0; i<avs.size(); i++)
+        while (avs.hasNext())
         {
-            newAvs.add(avs.get(i));
+            newAvs.add( ((AttributeValue)avs.next()).copy() );
         }
     }
 
@@ -586,9 +587,9 @@ public class IssueSearch
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
             if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute())
-                 && searchValue instanceof StringAttribute ) 
+                 && searchValue.getAttribute().isTextAttribute() ) 
             {
-                searchAttributes.add(searchValue.getAttribute());
+                searchAttributes.add(searchValue);
             }
         }
 
