@@ -1,0 +1,184 @@
+/*
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
+
+package org.jboss.ejb.plugins.lock;
+
+import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Collections;
+import java.lang.reflect.Method;
+
+import javax.transaction.Transaction;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.TransactionManager;
+import javax.transaction.RollbackException;
+import javax.ejb.EJBObject;
+
+import org.jboss.ejb.BeanLock;
+
+import org.jboss.ejb.MethodInvocation;
+import org.jboss.logging.log4j.JBossCategory;
+
+/**
+ * Support for the BeanLock
+ *
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
+ *
+ * @version $Revision: 1.1 $
+ *
+ * <p><b>Revisions:</b><br>
+*  <p><b>2001/07/29: marcf</b>
+*  <ol>
+*   <li>Initial revision
+* </ol>
+ */
+public abstract class BeanLockSupport implements BeanLock
+{
+   /** The actual lock object **/
+   public Object lock = new Object();
+ 
+   /** number of threads invoking methods on this bean (1 normally >1 if reentrant) **/
+   protected int numMethodLocks = 0;
+   /** number of threads that retrieved this lock from the manager (0 means removing) **/ 
+   protected int refs = 0;
+ 
+   /**The Cachekey corresponding to this Bean */
+   protected Object id = null;
+ 
+   /**Are reentrant calls allowed? */
+   protected boolean reentrant;
+ 
+   /** Use a JBoss custom log4j category for trace level logging */
+   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(BeanLock.class);
+ 
+   protected Transaction tx = null;
+ 
+   protected boolean synched = false;
+
+   protected int txTimeout;
+
+	
+	public void setId(Object id) { this.id = id;}
+   public Object getId() { return id;}
+	public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
+	public void setTimeout(int timeout) {txTimeout = timeout;}
+	
+	public Object getLock() {return lock;}
+	
+   public void sync()
+   {
+      synchronized(this)
+      {
+         while(synched)
+         {
+            try
+            {
+					this.wait();
+            }
+            catch (InterruptedException ex) { /* ignore */ }
+         }
+         synched = true;
+      }
+   }
+ 
+   public void releaseSync()
+   {
+      synchronized(this)
+      {
+         synched = false;
+         this.notify();
+      }
+   }
+ 
+   public abstract boolean schedule(MethodInvocation mi) throws Exception;
+	
+   /**
+    * setTransaction(Transaction tx)
+    * 
+    * The setTransaction associates a transaction with the lock.  The current transaction is associated
+    * by the schedule call.  
+    */
+   public void setTransaction(Transaction tx){this.tx = tx;}
+   public Transaction getTransaction(){return tx;}
+   
+	public abstract void endTransaction(Transaction tx);
+	public abstract void wontSynchronize(Transaction tx);
+	
+	/* you can overwrite these in the extensions */
+	public void notifyOne() 
+	{
+		synchronized(lock) {
+	
+			lock.notify();
+		}
+	};
+	
+	public void notifyEveryone() {
+		
+		synchronized(lock) {
+			
+			lock.notifyAll();
+		}
+	};
+   
+   public boolean isMethodLocked() { return numMethodLocks > 0;}
+   public int getNumMethodLocks() { return numMethodLocks;}
+   public void addMethodLock() { numMethodLocks++; }
+	
+	public abstract void releaseMethodLock() ;
+   
+   public void addRef() { refs++;}
+   public void removeRef() { refs--;}
+   public int getRefs() { return refs;}
+   
+   // Private --------------------------------------------------------
+   
+   private static Method getEJBHome;
+   private static Method getHandle;
+   private static Method getPrimaryKey;
+   private static Method isIdentical;
+   private static Method remove;
+   
+   static
+   {
+      try
+      {
+         Class[] noArg = new Class[0];
+         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
+         getHandle = EJBObject.class.getMethod("getHandle", noArg);
+         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
+         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
+         remove = EJBObject.class.getMethod("remove", noArg);
+      }
+      catch (Exception x) {x.printStackTrace();}
+   }
+   
+   protected boolean isCallAllowed(MethodInvocation mi)
+   {
+      if (reentrant)
+      {
+         return true;
+      }
+      else
+      {
+         Method m = mi.getMethod();
+         if (m.equals(getEJBHome) ||
+             m.equals(getHandle) ||
+             m.equals(getPrimaryKey) ||
+             m.equals(isIdentical) ||
+             m.equals(remove))
+         {
+            return true;
+         }
+      }
+      
+      return false;
+   }
+}
+
