@@ -50,7 +50,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Peter Antman (peter.antman@tim.se)
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -304,7 +304,7 @@ extends AbstractInterceptor
             userTransaction.set(oldUserTx);
             
 //DEBUG         Logger.debug("TxInterceptorBMT reassociating client tx " +
-//DEBUG                      t1.hashCode());
+//DEBUG                      (t1==null?"null":String.valueOf(t1.hashCode())));
                 
             // reassociate the previous transaction before returning,
             // even if it was null
