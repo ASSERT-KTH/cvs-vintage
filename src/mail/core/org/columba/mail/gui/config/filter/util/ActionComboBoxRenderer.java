@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -30,6 +32,7 @@ public class ActionComboBoxRenderer
 
 	FilterActionPluginHandler pluginHandler;
 
+	protected static Border noFocusBorder;
 	/**
 	 * 
 	 */
@@ -47,6 +50,11 @@ public class ActionComboBoxRenderer
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
 		}
+		if (noFocusBorder == null) {
+			noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+		}
+		setOpaque(true);
+		setBorder(noFocusBorder);
 
 	}
 
@@ -58,7 +66,7 @@ public class ActionComboBoxRenderer
 		Object value,
 		int index,
 		boolean isSelected,
-		boolean arg4) {
+		boolean cellHasFocus) {
 		if (cellHasFocus) {
 			setBackground(list.getSelectionBackground());
 			setForeground(list.getSelectionForeground());
