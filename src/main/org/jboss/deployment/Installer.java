@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.12 $
+ *	@version $Revision: 1.13 $
  */
 public class Installer
 {
@@ -606,13 +606,18 @@ public class Installer
             int x = name.lastIndexOf("/");
             if (x != -1)
             {
-               File dir = new File(_destDir.getCanonicalPath() + File.separator + name.substring(0, x));
+               File dir = new File(_destDir, name.substring(0, x));
                if (!dir.exists())
                   dir.mkdirs();
             }
             // and extract...
-            out = new FileOutputStream(_destDir.getCanonicalPath() + File.separator + name);
+            File file = new File(_destDir, name);
+            out = new FileOutputStream(file);
             copy(_in, out, false);
+            // Preserve the last modified time if it exists
+            long time = entry.getTime();
+            if( time > 0 )
+               file.setLastModified(time);
          }
       }
       _in.close();
