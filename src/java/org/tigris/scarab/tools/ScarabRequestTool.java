@@ -669,7 +669,7 @@ public class ScarabRequestTool
                     
                     issueListColumns = DAFactory.getAttributeAccess()
                         .retrieveQueryColumnIDs(user.getUserId().toString(),
-                            module.getModuleId().toString(),
+                            null, module.getModuleId().toString(),
                             issueType.getIssueTypeId().toString());
                     if (issueListColumns.isEmpty())
                     {
@@ -687,7 +687,7 @@ public class ScarabRequestTool
             {
                 issueListColumns = DAFactory.getAttributeAccess()
                     .retrieveQueryColumnIDs(user.getUserId().toString(),
-                        module.getModuleId().toString(),
+                        null, module.getModuleId().toString(),
                         issueType.getIssueTypeId().toString());
                 if (issueListColumns.isEmpty())
                 {
