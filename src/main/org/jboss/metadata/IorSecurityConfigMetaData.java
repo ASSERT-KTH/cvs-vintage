@@ -15,7 +15,7 @@ import org.jboss.deployment.DeploymentException;
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -255,15 +255,17 @@ public class IorSecurityConfigMetaData
 
    /**
     * as-context (CSIv2 authentication service) is the element describing the authentication
-    * mechanism that will be used to authenticate the client. If specified it will be the
-    * username-password mechanism.
+    * mechanism that will be used to authenticate the client. It can be either
+    * the username-password mechanism, or none (default).
     */
    public class AsContext
    {
-      public static final String USERNAME_PASSWORD = "USERNAME_PASSWORD";
+      public static final String AUTH_METHOD_USERNAME_PASSWORD = "USERNAME_PASSWORD";
+      public static final String AUTH_METHOD_NONE = "NONE";
 
       /**
-       * auth-method element describes the authentication method. The only supported value is USERNAME_PASSWORD.
+       * auth-method element describes the authentication method. The only supported values
+       * are USERNAME_PASSWORD and NONE.
        * Required element.
        */
       private final String authMethod;
@@ -287,14 +289,19 @@ public class IorSecurityConfigMetaData
       private AsContext(Element element) throws DeploymentException
       {
          String value = MetaData.getUniqueChildContent(element, "auth-method");
-         if(USERNAME_PASSWORD.equalsIgnoreCase(value))
+         if(AUTH_METHOD_USERNAME_PASSWORD.equalsIgnoreCase(value))
          {
-            authMethod = USERNAME_PASSWORD;
+            authMethod = AUTH_METHOD_USERNAME_PASSWORD;
+         }
+         else if (AUTH_METHOD_NONE.equalsIgnoreCase(value))
+         {
+            authMethod = AUTH_METHOD_NONE;
          }
          else
          {
-            throw new DeploymentException("The only allowed value for auth-method is " + USERNAME_PASSWORD +
-               " but gor " + value);
+            throw new DeploymentException("The only allowed values for auth-method are "
+            + AUTH_METHOD_USERNAME_PASSWORD + ", " + AUTH_METHOD_NONE +
+               " but got " + value);
          }
 
          realm = MetaData.getUniqueChildContent(element, "realm");
