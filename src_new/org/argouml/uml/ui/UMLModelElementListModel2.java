@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.22 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.23 2004/12/14 20:48:16 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JPopupMenu;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
@@ -427,4 +428,15 @@ public abstract class UMLModelElementListModel2
             super.fireIntervalRemoved(source, index0, index1);
     }
 
+    /**
+     * Override this if you want a popup menu.
+     * 
+     * @param popup the popup menu
+     * @param index the selected item in the list at the moment 
+     *              the mouse was clicked
+     * @return true if a popup menu is created, and needs to be shown
+     */
+    public boolean buildPopup(JPopupMenu popup, int index) {
+        return false;
+    }
 }

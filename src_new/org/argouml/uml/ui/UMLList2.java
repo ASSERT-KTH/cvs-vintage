@@ -1,4 +1,4 @@
-// $Id: UMLList2.java,v 1.16 2004/09/13 19:21:23 mvw Exp $
+// $Id: UMLList2.java,v 1.17 2004/12/14 20:48:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,12 @@
 
 package org.argouml.uml.ui;
 
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -39,7 +44,7 @@ import org.argouml.ui.targetmanager.TargettableModelView;
  */
 public abstract class UMLList2
     extends JList
-    implements ListSelectionListener, TargettableModelView {
+    implements ListSelectionListener, TargettableModelView, MouseListener {
 
     /**
      * Constructor for UMLList2.
@@ -53,6 +58,7 @@ public abstract class UMLList2
         getSelectionModel().addListSelectionListener(this);
         setCellRenderer(new UMLListCellRenderer2(showIcon));
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        addMouseListener(this);
     }
 
     /**
@@ -79,6 +85,7 @@ public abstract class UMLList2
         if (renderer != null)
             setCellRenderer(renderer);
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        addMouseListener(this);
     }
 
     /**
@@ -114,4 +121,60 @@ public abstract class UMLList2
         return (TargetListener) getModel();
     }
 
+    /**
+     * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+     */
+    public void mouseClicked(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+    /**
+     * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+     */
+    public void mouseEntered(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+    /**
+     * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+     */
+    public void mouseExited(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+    /**
+     * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+     */
+    public void mousePressed(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+    /**
+     * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+     */
+    public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            showPopup(e);
+        }
+    }
+    
+    private final void showPopup(MouseEvent event) {
+        Point point = event.getPoint();
+        int index = locationToIndex(point);
+
+       /* JList returns -1 if list is empty or user right clicks on an area
+        * that has no list item, such as when the JList is not full. This code
+        * compensates for the user not clicking over a list item. */
+        if (index != -1) {
+            JPopupMenu popup = new JPopupMenu();
+            if (((UMLModelElementListModel2) getModel())
+                    .buildPopup(popup, index)) {
+                popup.show(this, point.x, point.y);
+            }
+        }
+    }
 }
