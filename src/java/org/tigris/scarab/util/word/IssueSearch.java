@@ -169,7 +169,7 @@ public class IssueSearch
     }
 
     public IssueSearch(MITList mitList)
-        throws TorqueException
+        throws Exception
     {
         super();
         if (mitList == null || mitList.size() == 0) 
@@ -186,6 +186,10 @@ public class IssueSearch
         else 
         {
             this.mitList = mitList;   
+            if (mitList.isSingleModule()) 
+            {
+                setModule(mitList.getModule());
+            }
         }        
     }
 
