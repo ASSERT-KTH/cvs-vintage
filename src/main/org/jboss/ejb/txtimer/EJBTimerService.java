@@ -6,70 +6,73 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerService.java,v 1.7 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: EJBTimerService.java,v 1.8 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.ejb.Container;
+import org.jboss.mx.util.ObjectNameFactory;
 
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import javax.management.ObjectName;
 
 /**
  * A service that implements this interface provides an Tx aware EJBTimerService.
- * 
+ *
  * @author Thomas.Diesler@jboss.org
  * @since 07-Apr-2004
  */
 public interface EJBTimerService
 {
-   /** default object name
+   /**
+    * default object name
     */
-   public static final javax.management.ObjectName OBJECT_NAME = org.jboss.mx.util.ObjectNameFactory.create("jboss.ejb:service=EJBTimerService");
+   public static final javax.management.ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ejb:service=EJBTimerService");
 
    /**
     * Create a TimerService for a given TimedObjectId that lives in a JBoss Container.
     * The TimedObjectInvoker is constructed from the invokerClassName.
     *
     * @param containerId The string identifier for a class of TimedObjects
-    * @param instancePk The rimary key for an instance of a TimedObject, may be null
+    * @param pKey        The rimary key for an instance of a TimedObject, may be null
     * @param container   The Container that is associated with the TimerService
     * @return the TimerService
     */
-   TimerService createTimerService(String containerId, Object instancePk, Container container) throws IllegalStateException;
+   TimerService createTimerService(ObjectName containerId, Object pKey, Container container) throws IllegalStateException;
 
    /**
     * Create a TimerService for a given TimedObjectId that is invoked through the given invoker
     *
     * @param containerId The string identifier for a class of TimedObjects
-    * @param instancePk The rimary key for an instance of a TimedObject, may be null
+    * @param pKey        The rimary key for an instance of a TimedObject, may be null
     * @param invoker     The TimedObjectInvoker
     * @return the TimerService
     */
-   TimerService createTimerService(String containerId, Object instancePk, TimedObjectInvoker invoker) throws IllegalStateException;
+   TimerService createTimerService(ObjectName containerId, Object pKey, TimedObjectInvoker invoker) throws IllegalStateException;
 
    /**
     * Get the TimerService for a given TimedObjectId
     *
     * @param containerId The string identifier for a class of TimedObjects
-    * @param instancePk The rimary key for an instance of a TimedObject, may be null
+    * @param pKey        The rimary key for an instance of a TimedObject, may be null
     * @return The TimerService, or null if it does not exist
     */
-   TimerService getTimerService(String containerId, Object instancePk) throws IllegalStateException;
+   TimerService getTimerService(ObjectName containerId, Object pKey) throws IllegalStateException;
 
    /**
     * Invokes the ejbTimeout method a given TimedObjectId
     *
     * @param containerId The string identifier for a class of TimedObjects
-    * @param instancePk The rimary key for an instance of a TimedObject, may be null
-    * @param timer         the Timer that is passed to ejbTimeout
+    * @param pKey        The rimary key for an instance of a TimedObject, may be null
+    * @param timer       the Timer that is passed to ejbTimeout
     */
-   void retryTimeout(String containerId, Object instancePk, Timer timer);
+   void retryTimeout(ObjectName containerId, Object pKey, Timer timer);
 
    /**
     * Remove the TimerService for a given TimedObjectId
     *
     * @param containerId The string identifier for a class of TimedObjects
-    * @param instancePk The rimary key for an instance of a TimedObject, may be null
+    * @param pKey        The rimary key for an instance of a TimedObject, may be null
     */
-   void removeTimerService(String containerId, Object instancePk) throws IllegalStateException;
+   void removeTimerService(ObjectName containerId, Object pKey) throws IllegalStateException;
 
 }

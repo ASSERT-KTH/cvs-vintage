@@ -6,15 +6,18 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceLocator.java,v 1.4 2004/04/14 13:44:46 tdiesler Exp $
+// $Id: EJBTimerServiceLocator.java,v 1.5 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
+import org.jboss.mx.util.MBeanProxy;
+import org.jboss.mx.util.MBeanProxyCreationException;
 
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 /**
  * Locates the EJBTimerService, either as MBean or as local instance.
@@ -60,22 +63,26 @@ public class EJBTimerServiceLocator
     */
    public static class MBeanDelegate implements EJBTimerService
    {
-      private MBeanServer server;
+      private EJBTimerService ejbTimerService;
 
       public MBeanDelegate(MBeanServer server)
       {
-         this.server = server;
+         try
+         {
+            ejbTimerService = (EJBTimerService)MBeanProxy.get(EJBTimerService.class, EJBTimerService.OBJECT_NAME, server);
+         }
+         catch (MBeanProxyCreationException e)
+         {
+            throw new IllegalStateException("Cannot create EJBTimerService proxy");
+         }
       }
 
-      public TimerService createTimerService(String containerId, Object instancePk, Container container)
+      public TimerService createTimerService(ObjectName containerId, Object instancePk, Container container)
               throws IllegalStateException
       {
          try
          {
-            TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
-                    "createTimerService",
-                    new Object[]{containerId, instancePk, container},
-                    new String[]{String.class.getName(), Object.class.getName(), Container.class.getName()});
+            TimerService timerService = (TimerService)ejbTimerService.createTimerService(containerId, instancePk, container);
             return timerService;
          }
          catch (Exception e)
@@ -85,15 +92,12 @@ public class EJBTimerServiceLocator
          }
       }
 
-      public TimerService createTimerService(String containerId, Object instancePk, TimedObjectInvoker invoker)
+      public TimerService createTimerService(ObjectName containerId, Object instancePk, TimedObjectInvoker invoker)
               throws IllegalStateException
       {
          try
          {
-            TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
-                    "createTimerService",
-                    new Object[]{containerId, instancePk, invoker},
-                    new String[]{String.class.getName(), Object.class.getName(), TimedObjectInvoker.class.getName()});
+            TimerService timerService = (TimerService)ejbTimerService.createTimerService(containerId, instancePk, invoker);
             return timerService;
          }
          catch (Exception e)
@@ -103,15 +107,12 @@ public class EJBTimerServiceLocator
          }
       }
 
-      public TimerService getTimerService(String containerId, Object instancePk)
+      public TimerService getTimerService(ObjectName containerId, Object instancePk)
               throws IllegalStateException
       {
          try
          {
-            TimerService timerService = (TimerService) server.invoke(EJBTimerService.OBJECT_NAME,
-                    "getTimerService",
-                    new Object[]{containerId, instancePk},
-                    new String[]{String.class.getName(), Object.class.getName()});
+            TimerService timerService = (TimerService)ejbTimerService.getTimerService(containerId, instancePk);
             return timerService;
          }
          catch (Exception e)
@@ -121,14 +122,11 @@ public class EJBTimerServiceLocator
          }
       }
 
-      public void retryTimeout(String containerId, Object instancePk, Timer timer)
+      public void retryTimeout(ObjectName containerId, Object instancePk, Timer timer)
       {
          try
          {
-            server.invoke(EJBTimerService.OBJECT_NAME,
-                    "retryTimeout",
-                    new Object[]{containerId, instancePk, timer},
-                    new String[]{String.class.getName(), Object.class.getName(), Timer.class.getName()});
+            ejbTimerService.retryTimeout(containerId, instancePk, timer);
          }
          catch (Exception e)
          {
@@ -136,15 +134,12 @@ public class EJBTimerServiceLocator
          }
       }
 
-      public void removeTimerService(String containerId, Object instancePk)
+      public void removeTimerService(ObjectName containerId, Object instancePk)
               throws IllegalStateException
       {
          try
          {
-            server.invoke(EJBTimerService.OBJECT_NAME,
-                    "removeTimerService",
-                    new Object[]{containerId, instancePk},
-                    new String[]{String.class.getName(), Object.class.getName()});
+            ejbTimerService.removeTimerService(containerId, instancePk);
          }
          catch (Exception e)
          {

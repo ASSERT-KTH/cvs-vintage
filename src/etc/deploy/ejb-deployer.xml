@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.5 2004/09/10 07:59:16 tdiesler Exp $
+$Id: ejb-deployer.xml,v 1.6 2004/09/10 14:05:45 tdiesler Exp $
 -->
 <server>
 
@@ -38,12 +38,18 @@ $Id: ejb-deployer.xml,v 1.5 2004/09/10 07:59:16 tdiesler Exp $
      <attribute name="InitialDateColumn">INITIALDATE</attribute>
      <!-- Column that contains the optional interval value -->
      <attribute name="IntervalColumn">INTERVAL</attribute>
+     <!-- Column that contains the optional entity bean pk object -->
+     <attribute name="InstancePkColumn">INSTANCEPK</attribute>
+     <!-- Column that contains the optional info object -->
+     <attribute name="InfoColumn">INFO</attribute>
      <!-- Create table DDL -->
      <attribute name="CreateTableDDL">
         create table TIMERS (
            TARGETID varchar(50) not null,
-           INITIALDATE TIMESTAMP not null,
-           INTERVAL bigint null,
+           INITIALDATE timestamp not null,
+           INTERVAL bigint,
+           INSTANCEPK other,
+           INFO other,
            constraint timers_pk primary key (TARGETID, INITIALDATE)
         )
      </attribute>

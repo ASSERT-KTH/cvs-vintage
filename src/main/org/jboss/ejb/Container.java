@@ -85,7 +85,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.160 $
+ * @version $Revision: 1.161 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -646,8 +646,7 @@ public abstract class Container
       try
       {
          EJBTimerService service = (EJBTimerService)MBeanProxy.get(EJBTimerService.class, EJBTimerService.OBJECT_NAME, server);
-         String containerId = getJmxName().getCanonicalName();
-         timerService = service.createTimerService(containerId, pKey, this);
+         timerService = service.createTimerService(getJmxName(), pKey, this);
       }
       catch (Exception e)
       {
@@ -670,8 +669,7 @@ public abstract class Container
       try
       {
          EJBTimerService service = (EJBTimerService)MBeanProxy.get(EJBTimerService.class, EJBTimerService.OBJECT_NAME, server);
-         String containerId = getJmxName().getCanonicalName();
-         service.removeTimerService(containerId, pKey);
+         service.removeTimerService(getJmxName(), pKey);
       }
       catch (Exception e)
       {

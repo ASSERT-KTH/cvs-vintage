@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.8 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.9 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -183,7 +183,7 @@ public class TimerServiceImpl implements TimerService
       try
       {
          TimerImpl timer = new TimerImpl(timedObjectId, timedObjectInvoker, info);
-         persistencePolicy.createTimer(timer, initialExpiration, intervalDuration);
+         persistencePolicy.insertTimer(timedObjectId, initialExpiration, intervalDuration, info);
          timer.startTimer(initialExpiration, intervalDuration);
          return timer;
       }
@@ -313,9 +313,8 @@ public class TimerServiceImpl implements TimerService
    {
       synchronized (timers)
       {
-         TimerHandle handle = new TimerHandleImpl(txtimer);
-         persistencePolicy.destroyTimer(txtimer);
-         timers.remove(handle);
+         persistencePolicy.deleteTimer(txtimer.getTimedObjectId(), txtimer.getFirstTime());
+         timers.remove(new TimerHandleImpl(txtimer));
       }
    }
 }

@@ -6,18 +6,23 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: NoopPersistencePolicy.java,v 1.1 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: NoopPersistencePolicy.java,v 1.2 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
 import javax.ejb.Timer;
+import javax.management.ObjectName;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
+import java.sql.SQLException;
 
 /**
  * This service implements a PersistencePolicy that does not persist the timer.
  *
  * @author Thomas.Diesler@jboss.org
- * @jmx.mbean name="jboss.ejb:service=EJBTimerService,plugin=PersistencePolicy"
+ * @jmx.mbean name="jboss.ejb:service=EJBTimerService,persistencePolicy=noop"
  * extends="org.jboss.ejb.txtimer.PersistencePolicy"
  * @since 09-Sep-2004
  */
@@ -29,20 +34,22 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
 
    /** Creates the timer in  persistent storage.
     *
-    * @param timer             The Timer that is passed to ejbTimeout
-    * @param initialExpiration The point in time at which the first txtimer expiration must occur.
-    * @param intervalDuration  The number of milliseconds that must elapse between txtimer expiration notifications.
+    * @param timedObjectId The timed object id
+    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param firstEvent The point in time at which the first txtimer expiration must occur.
+    * @param periode  The number of milliseconds that must elapse between txtimer expiration notifications.
     */
-   public void createTimer(TimerImpl timer, Date initialExpiration, long intervalDuration)
+   public void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info)
    {
       log.debug("Noop on createTimer");
    }
 
    /** Removes the timer from persistent storage.
     *
-    * @param timer The Timer that is passed to ejbTimeout
+    * @param timedObjectId The timed object id
+    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
     */
-   public void destroyTimer(TimerImpl timer)
+   public void deleteTimer(TimedObjectId timedObjectId, Date firstEvent)
    {
       log.debug("Noop on destroyTimer");
    }
@@ -52,5 +59,22 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
    public void restoreTimers()
    {
       log.debug("Noop on restoreTimers");
+   }
+
+   /**
+    * Return a List of TimerHandle objects.
+    */
+   public List listTimerHandles()
+   {
+      log.debug("Noop on getTimerHandles");
+      return new ArrayList();
+   }
+
+   /**
+    * Delete all persisted timers
+    */
+   public void deleteAllTimers()
+   {
+      log.debug("Noop on deleteAllTimers");
    }
 }

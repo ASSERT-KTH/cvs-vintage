@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: FixedDelayRetryPolicy.java,v 1.4 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: FixedDelayRetryPolicy.java,v 1.5 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
@@ -18,7 +18,7 @@ import javax.ejb.Timer;
  * the call to ejbTimeout after a fixed delay.
  *
  * @author Thomas.Diesler@jboss.org
- * @jmx.mbean name="jboss.ejb:service=EJBTimerService,plugin=RetryPolicy"
+ * @jmx.mbean name="jboss.ejb:service=EJBTimerService,retryPolicy=fixedDelay"
  * extends="org.jboss.system.Service, org.jboss.ejb.txtimer.RetryPolicy"
  * @since 07-Apr-2004
  */

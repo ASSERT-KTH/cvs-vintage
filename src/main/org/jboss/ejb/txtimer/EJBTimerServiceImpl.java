@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceImpl.java,v 1.2 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: EJBTimerServiceImpl.java,v 1.3 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
@@ -111,9 +111,8 @@ public class EJBTimerServiceImpl
     * @param instancePk  The rimary key for an instance of a TimedObject, may be null
     * @param container   The Container that is associated with the TimerService
     * @return the TimerService
-    * @jmx.managed-operation
     */
-   public TimerService createTimerService(String containerId, Object instancePk, Container container)
+   public TimerService createTimerService(ObjectName containerId, Object instancePk, Container container)
    {
       TimedObjectInvoker invoker = null;
       try
@@ -139,9 +138,8 @@ public class EJBTimerServiceImpl
     * @param instancePk  The rimary key for an instance of a TimedObject, may be null
     * @param invoker     The TimedObjectInvoker
     * @return the TimerService
-    * @jmx.managed-operation
     */
-   public TimerService createTimerService(String containerId, Object instancePk, TimedObjectInvoker invoker)
+   public TimerService createTimerService(ObjectName containerId, Object instancePk, TimedObjectInvoker invoker)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
       TimerServiceImpl timerService = (TimerServiceImpl)timerServiceMap.get(timedObjectId);
@@ -160,9 +158,8 @@ public class EJBTimerServiceImpl
     * @param containerId The string identifier for a class of TimedObjects
     * @param instancePk  The rimary key for an instance of a TimedObject, may be null
     * @return The TimerService, or null if it does not exist
-    * @jmx.managed-operation
     */
-   public TimerService getTimerService(String containerId, Object instancePk)
+   public TimerService getTimerService(ObjectName containerId, Object instancePk)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
       return (TimerServiceImpl)timerServiceMap.get(timedObjectId);
@@ -174,9 +171,8 @@ public class EJBTimerServiceImpl
     * @param containerId The string identifier for a class of TimedObjects
     * @param instancePk  The rimary key for an instance of a TimedObject, may be null
     * @param timer       the Timer that is passed to ejbTimeout
-    * @jmx.managed-operation
     */
-   public void retryTimeout(String containerId, Object instancePk, Timer timer)
+   public void retryTimeout(ObjectName containerId, Object instancePk, Timer timer)
    {
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
       TimerServiceImpl timerService = (TimerServiceImpl)timerServiceMap.get(timedObjectId);
@@ -203,9 +199,8 @@ public class EJBTimerServiceImpl
     *
     * @param containerId The string identifier for a class of TimedObjects
     * @param instancePk  The rimary key for an instance of a TimedObject, may be null
-    * @jmx.managed-operation
     */
-   public void removeTimerService(String containerId, Object instancePk)
+   public void removeTimerService(ObjectName containerId, Object instancePk)
    {
       // remove a single timer service
       TimedObjectId timedObjectId = new TimedObjectId(containerId, instancePk);
@@ -240,7 +235,6 @@ public class EJBTimerServiceImpl
 
    /**
     * List the timers registered with all TimerService objects
-    *
     * @jmx.managed-operation
     */
    public String listTimers()

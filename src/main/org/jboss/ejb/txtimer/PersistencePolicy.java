@@ -6,13 +6,16 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: PersistencePolicy.java,v 1.1 2004/09/09 22:04:29 tdiesler Exp $
+// $Id: PersistencePolicy.java,v 1.2 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.mx.util.ObjectNameFactory;
 
 import javax.ejb.Timer;
 import javax.ejb.TimerHandle;
+import javax.management.ObjectName;
 import java.util.Date;
+import java.util.List;
+import java.io.Serializable;
 
 /**
  * Timers are persistent objects. In the event of a container crash, any single-event timers that have expired
@@ -25,21 +28,36 @@ import java.util.Date;
  */
 public interface PersistencePolicy
 {
-   /** Inserts a timer into persistent storage.
+   /**
+    * Inserts a timer into persistent storage.
     *
-    * @param timer             The Timer that is passed to ejbTimeout
-    * @param initialExpiration The point in time at which the first txtimer expiration must occur.
-    * @param intervalDuration  The number of milliseconds that must elapse between txtimer expiration notifications.
+    * @param timedObjectId The timed object id
+    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param periode       The number of milliseconds that must elapse between txtimer expiration notifications.
+    * @param info          A serializable handback object.
     */
-   void createTimer(TimerImpl timer, Date initialExpiration, long intervalDuration);
+   void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info);
 
-   /** Deletes a timer from persistent storage.
+   /**
+    * Deletes a timer from persistent storage.
     *
-    * @param timer The Timer that is passed to ejbTimeout
+    * @param timedObjectId The timed object id
+    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
     */
-   void destroyTimer(TimerImpl timer);
+   void deleteTimer(TimedObjectId timedObjectId, Date firstEvent);
 
-   /** Restore the persistet timers
+   /**
+    * Clear the persisted timers
+    */
+   void deleteAllTimers();
+
+   /**
+    * Restore the persistet timers
     */
    void restoreTimers();
+
+   /**
+    * Return a List of TimerHandle objects.
+    */
+   List listTimerHandles();
 }

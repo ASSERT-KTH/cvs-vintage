@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.8 2004/04/22 17:44:22 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.9 2004/09/10 14:05:46 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.ejb.AllowedOperationsAssociation;
@@ -17,6 +17,7 @@ import javax.ejb.TimerHandle;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
+import javax.management.ObjectName;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Timer;
@@ -71,7 +72,6 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private TimedObjectId timedObjectId;
    private TimedObjectInvoker timedObjectInvoker;
    private Date firstTime;
-   private Date createDate;
    private long periode;
    private Serializable info;
 
@@ -87,7 +87,6 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    {
       this.timedObjectId = timedObjectId;
       this.timedObjectInvoker = timedObjectInvoker;
-      this.createDate = new Date();
       this.info = info;
 
       setTimerState(CREATED);
@@ -109,11 +108,6 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public TimedObjectId getTimedObjectId()
    {
       return timedObjectId;
-   }
-
-   public Date getCreateDate()
-   {
-      return createDate;
    }
 
    public Date getFirstTime()
@@ -272,7 +266,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    {
       if (hashCode == 0)
       {
-         String hash = "[" + timedObjectId + "," + createDate + "," + firstTime + "," + periode + "]";
+         String hash = "[" + timedObjectId + "," + firstTime + "," + periode + "]";
          hashCode = hash.hashCode();
       }
       return hashCode;
@@ -350,7 +344,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    private TimerServiceImpl getTimerService()
    {
       EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
-      String containerId = timedObjectId.getContainerId();
+      ObjectName containerId = timedObjectId.getContainerId();
       Object instancePk = timedObjectId.getInstancePk();
       TimerServiceImpl timerService = (TimerServiceImpl) ejbTimerService.getTimerService(containerId, instancePk);
       if (timerService == null)
@@ -429,7 +423,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
             setTimerState(RETRY_TIMEOUT);
             log.debug("retry: " + this);
             EJBTimerService ejbTimerService = EJBTimerServiceLocator.getEjbTimerService();
-            String containerId = timedObjectId.getContainerId();
+            ObjectName containerId = timedObjectId.getContainerId();
             Object instancePk = timedObjectId.getInstancePk();
             ejbTimerService.retryTimeout(containerId, instancePk, this);
          }
