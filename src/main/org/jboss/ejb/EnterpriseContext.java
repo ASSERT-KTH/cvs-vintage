@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import java.security.Identity;
 import java.security.Principal;
 import java.util.Properties;
+import java.util.HashSet;
 
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
@@ -34,7 +35,7 @@ import org.jboss.logging.Logger;
  *	@see EntityEnterpriseContext
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public abstract class EnterpriseContext
 {
@@ -188,8 +189,12 @@ public abstract class EnterpriseContext
    
       // TODO - how to handle this best?
       public boolean isCallerInRole(String id) 
-		{ 
-			return false; 
+		{
+      if (principal == null)
+        return false;
+      HashSet set = new HashSet();
+      set.add( id );
+      return con.getRealmMapping().doesUserHaveRole( principal, set );
 		}
    
       // TODO - how to handle this best?
