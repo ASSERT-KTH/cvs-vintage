@@ -127,11 +127,13 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
     // name dispatchers
     String name;
-
+    private Object accessControlContext=null;
+    
     /** Used for Context.getRD( path )
      */
-    public RequestDispatcherImpl(Context context) {
+    public RequestDispatcherImpl(Context context, Object acc) {
         this.context = context;
+	accessControlContext=acc;
     }
 
     public void setPath( String urlPath ) {
@@ -164,7 +166,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( System.getSecurityManager() != null ) {
 	    try {
 		forwardAction.prepare( request, response );
-		jdk11Compat.doPrivileged( forwardAction, jdk11Compat.getAccessControlContext() );
+		jdk11Compat.doPrivileged( forwardAction, accessControlContext );
 	    } catch( Exception e) {
 		wrapException( e, null );
 	    }
@@ -179,7 +181,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( System.getSecurityManager() != null ) {
 	    try {
 		includeAction.prepare( request, response );
-		jdk11Compat.doPrivileged( includeAction, jdk11Compat.getAccessControlContext() );
+		jdk11Compat.doPrivileged( includeAction, accessControlContext );
 	    } catch( Exception e) {
 		wrapException( e, null );
 	    }

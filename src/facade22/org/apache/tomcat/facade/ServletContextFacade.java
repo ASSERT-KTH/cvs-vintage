@@ -63,6 +63,7 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.compat.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -84,10 +85,17 @@ final class ServletContextFacade implements ServletContext {
     private StringManager sm = StringManager.getManager("org.apache.tomcat.resources");
     private ContextManager contextM;
     private Context context;
-
+    Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
+    Object accessControlContext=null;
+    
     ServletContextFacade(ContextManager server, Context context) {
         this.contextM = server;
         this.context = context;
+	try {
+	    accessControlContext=jdk11Compat.getAccessControlContext();
+	} catch( Exception ex) {
+	    ex.printStackTrace();
+	}
     }
 
     Context getRealContext() {
@@ -175,7 +183,7 @@ final class ServletContextFacade implements ServletContext {
 	if ( path == null  || ! path.startsWith("/")) {
 	    return null; // spec say "return null if we can't return a dispather
 	}
-	RequestDispatcherImpl rD=new RequestDispatcherImpl( context );
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( context, accessControlContext);
 	rD.setPath( path );
 	
 	return rD;
@@ -189,7 +197,7 @@ final class ServletContextFacade implements ServletContext {
 	Handler wrapper = context.getServletByName( name );
 	if (wrapper == null)
 	    return null;
-	RequestDispatcherImpl rD=new RequestDispatcherImpl( context );
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( context, accessControlContext );
 	rD.setName( name );
 
 	return rD;
