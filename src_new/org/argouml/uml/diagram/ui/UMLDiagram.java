@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.43 2003/12/23 20:35:32 bobtarling Exp $
+// $Id: UMLDiagram.java,v 1.44 2004/01/06 19:23:37 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.ButtonModel;
 import javax.swing.JToolBar;
 
 import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
@@ -80,28 +81,36 @@ public abstract class UMLDiagram
         new CmdSetMode(ModeBroom.class, "Broom");
 
     protected static Action _actionRectangle =
-        new RadioAction(new CmdSetMode(ModeCreateFigRect.class, "Rectangle"));
+        new RadioAction(new CmdSetMode(ModeCreateFigRect.class, "Rectangle",
+        Translator.localize("misc.primitive.rectangle")));
 
     protected static Action _actionRRectangle =
-        new RadioAction(new CmdSetMode(ModeCreateFigRRect.class, "RRect"));
+        new RadioAction(new CmdSetMode(ModeCreateFigRRect.class, "RRect",
+        Translator.localize("misc.primitive.rounded-rectangle")));
 
     protected static Action _actionCircle =
-        new RadioAction(new CmdSetMode(ModeCreateFigCircle.class, "Circle"));
+        new RadioAction(new CmdSetMode(ModeCreateFigCircle.class, "Circle",
+        Translator.localize("misc.primitive.circle")));
 
     protected static Action _actionLine =
-        new RadioAction(new CmdSetMode(ModeCreateFigLine.class, "Line"));
+        new RadioAction(new CmdSetMode(ModeCreateFigLine.class, "Line",
+        Translator.localize("misc.primitive.line")));
 
     protected static Action _actionText =
-        new RadioAction(new CmdSetMode(ModeCreateFigText.class, "Text"));
+        new RadioAction(new CmdSetMode(ModeCreateFigText.class, "Text",
+        Translator.localize("misc.primitive.text")));
 
     protected static Action _actionPoly =
-        new RadioAction(new CmdSetMode(ModeCreateFigPoly.class, "Polygon"));
+        new RadioAction(new CmdSetMode(ModeCreateFigPoly.class, "Polygon",
+        Translator.localize("misc.primitive.polygon")));
 
     protected static Action _actionSpline =
-        new RadioAction(new CmdSetMode(ModeCreateFigSpline.class, "Spline"));
+        new RadioAction(new CmdSetMode(ModeCreateFigSpline.class, "Spline",
+        Translator.localize("misc.primitive.spline")));
 
     protected static Action _actionInk =
-        new RadioAction(new CmdSetMode(ModeCreateFigInk.class, "Ink"));
+        new RadioAction(new CmdSetMode(ModeCreateFigInk.class, "Ink",
+        Translator.localize("misc.primitive.ink")));
 
     ////////////////////////////////////////////////////////////////
     // instance variables
