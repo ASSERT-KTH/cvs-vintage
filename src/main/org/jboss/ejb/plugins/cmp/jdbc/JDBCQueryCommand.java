@@ -19,52 +19,52 @@ import java.sql.SQLException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCQueryCommand extends JDBCCommand
 {
    // Constructors --------------------------------------------------
    
    protected JDBCQueryCommand(JDBCStoreManager manager, String name) {
-		super(manager, name);
-	}
-	
+      super(manager, name);
+   }
+   
    // Protected -----------------------------------------------------
    
-	/**
-	 * Template Method that executes the PreparedStatement and calls
-	 * <code>handleResult</code> on the resulting ResultSet.
-	 *
-	 * @param stmt the prepared statement, with its parameters already set.
-	 * @param argOrArgs argument or array of arguments passed in from
-	 *  subclass execute method.
-	 * @return any result produced by the handling of the result of executing
-	 *  the prepared statement.
-	 * @throws Exception if execution or result handling fails.
-	 */
-	protected Object executeStatementAndHandleResult(
-						PreparedStatement ps,
-						Object argOrArgs)
-		throws Exception
-	{
-		ResultSet rs = null;		
-		try {
-			rs = ps.executeQuery();
-			return handleResult(rs, argOrArgs);
-		} finally  {
-			JDBCUtil.safeClose(rs);
-		}
-	}
+   /**
+    * Template Method that executes the PreparedStatement and calls
+    * <code>handleResult</code> on the resulting ResultSet.
+    *
+    * @param stmt the prepared statement, with its parameters already set.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
+    * @throws Exception if execution or result handling fails.
+    */
+   protected Object executeStatementAndHandleResult(
+                  PreparedStatement ps,
+                  Object argOrArgs)
+      throws Exception
+   {
+      ResultSet rs = null;      
+      try {
+         rs = ps.executeQuery();
+         return handleResult(rs, argOrArgs);
+      } finally  {
+         JDBCUtil.safeClose(rs);
+      }
+   }
    
-	/**
-	 * Handles the result of successful execution of the query.
-	 *
-	 * @param rs the result set from the query.
-	 * @param argOrArgs argument or array of arguments passed in from
-	 *  subclass execute method.
-	 * @return any result produced by the handling of the result of executing
-	 *  the prepared statement.
-	 * @throws Exception if execution or result handling fails.
-	 */
-	protected abstract Object handleResult(ResultSet rs, Object argOrArgs) throws Exception;
+   /**
+    * Handles the result of successful execution of the query.
+    *
+    * @param rs the result set from the query.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return any result produced by the handling of the result of executing
+    *  the prepared statement.
+    * @throws Exception if execution or result handling fails.
+    */
+   protected abstract Object handleResult(ResultSet rs, Object argOrArgs) throws Exception;
 }

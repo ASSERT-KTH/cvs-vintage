@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 {
@@ -40,62 +40,62 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
    public JDBCEJBQLFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) throws DeploymentException {
       super(manager, q);
 
-		JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
-		log.debug("EQL-QL: "+metadata.getEjbQl());
-		
-		// get a parser
-		Parser ejbql = new EJBQLParser().ejbqlQuery();
-		
-		// initialize the assembly
-		Assembly a = new Assembly(metadata.getEjbQl());
-		a.setTarget(new SQLTarget(manager.getContainer().getApplication()));
-		
-		// match the query
-		a = ejbql.soleMatch(a);
-		log.debug("Assembly: "+a);
-		
-		// get the final target
-		SQLTarget target = (SQLTarget)a.getTarget();
-		
-		// set the target to use select distinct if the return type is set
-		if(metadata.getMethod().getReturnType().equals(Set.class)) {
-			target.setSelectDistinct(true);
-		}
-		
-		// set the sql
-		setSQL(target.toSQL());
-		
-		// select bridge object
-		Object selectBridgeObject = target.getSelectObject();
-		if(selectBridgeObject instanceof JDBCEntityBridge) {
-			selectEntity = (JDBCEntityBridge)selectBridgeObject;
-			selectCMPField = null;
-		} else if(selectBridgeObject instanceof JDBCCMPFieldBridge) {
-			selectCMPField = (JDBCCMPFieldBridge)selectBridgeObject;
-			selectEntity = null;
-		} else {
-			throw new IllegalStateException("Select bridge object is instance of unknown type: " +
-					"selectBridgeObject=" + selectBridgeObject);
-		}
-		
-		// get the parameter order
-		List l  = target.getInputParameters();
-		parameterArray = new int[l.size()];
-		for(int i=0; i<l.size(); i++) {
-			// convert to 0 based parameter index
-			parameterArray[i] = ((Integer)l.get(i)).intValue()-1;
-		}
-	}
+      JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
+      log.debug("EQL-QL: "+metadata.getEjbQl());
+      
+      // get a parser
+      Parser ejbql = new EJBQLParser().ejbqlQuery();
+      
+      // initialize the assembly
+      Assembly a = new Assembly(metadata.getEjbQl());
+      a.setTarget(new SQLTarget(manager.getContainer().getApplication()));
+      
+      // match the query
+      a = ejbql.soleMatch(a);
+      log.debug("Assembly: "+a);
+      
+      // get the final target
+      SQLTarget target = (SQLTarget)a.getTarget();
+      
+      // set the target to use select distinct if the return type is set
+      if(metadata.getMethod().getReturnType().equals(Set.class)) {
+         target.setSelectDistinct(true);
+      }
+      
+      // set the sql
+      setSQL(target.toSQL());
+      
+      // select bridge object
+      Object selectBridgeObject = target.getSelectObject();
+      if(selectBridgeObject instanceof JDBCEntityBridge) {
+         selectEntity = (JDBCEntityBridge)selectBridgeObject;
+         selectCMPField = null;
+      } else if(selectBridgeObject instanceof JDBCCMPFieldBridge) {
+         selectCMPField = (JDBCCMPFieldBridge)selectBridgeObject;
+         selectEntity = null;
+      } else {
+         throw new IllegalStateException("Select bridge object is instance of unknown type: " +
+               "selectBridgeObject=" + selectBridgeObject);
+      }
+      
+      // get the parameter order
+      List l  = target.getInputParameters();
+      parameterArray = new int[l.size()];
+      for(int i=0; i<l.size(); i++) {
+         // convert to 0 based parameter index
+         parameterArray[i] = ((Integer)l.get(i)).intValue()-1;
+      }
+   }
  
    // JDBCFinderCommand overrides ------------------------------------
 
-	protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
-		Object[] args = (Object[])argOrArgs;
-	
-		for(int i = 0; i < parameterArray.length; i++) {
-			Object arg = args[parameterArray[i]];
-			int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
-			JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
-		}
-	}
+   protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
+      Object[] args = (Object[])argOrArgs;
+   
+      for(int i = 0; i < parameterArray.length; i++) {
+         Object arg = args[parameterArray[i]];
+         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
+         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
+      }
+   }
 }

@@ -17,13 +17,13 @@ import java.rmi.RemoteException;
  * to 0 or null, as is required by the EJB 2.0 specification.  
  *      
  * Life-cycle:
- *		Tied to CMPStoreManager.
+ *      Tied to CMPStoreManager.
  *    
- * Multiplicity:	
- *		One per CMPStoreManager.
+ * Multiplicity:   
+ *      One per CMPStoreManager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface InitEntityCommand
 {

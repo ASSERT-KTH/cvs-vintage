@@ -31,45 +31,45 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * fields.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCLoadFieldCommand
    extends JDBCQueryCommand
 {
    // Constructors --------------------------------------------------
 
-	public JDBCLoadFieldCommand(JDBCStoreManager manager) {
-		super(manager, "LoadField");
-	}
-	
-	// LoadEntityCommand implementation ---------------------------
-	
-	public void execute(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
-		// start with a set with containing just the field 
-		ArrayList fields = new ArrayList(entityMetaData.getCMPFields().size());
-		fields.add(field);
-		
-		// union all the groups of which field is a member
-		Iterator groups = entity.getLazyLoadGroups();
-		while(groups.hasNext()) {
-			ArrayList group = (ArrayList)groups.next();
-			if(group.contains(field)) {
-				fields.addAll(group);
-			}
-		}
-		
-		// pass this info on 
-		ExecutionState es = new ExecutionState();
-		es.fields = (JDBCCMPFieldBridge[]) fields.toArray(new JDBCCMPFieldBridge[fields.size()]);
-	   es.ctx = ctx;
-		
-		try {
-			jdbcExecute(es);
-		} catch(EJBException e) {
-			throw e;
-		} catch(Exception e) {
-			throw new EJBException("Could not load field value: " + field, e);
-		}
+   public JDBCLoadFieldCommand(JDBCStoreManager manager) {
+      super(manager, "LoadField");
+   }
+   
+   // LoadEntityCommand implementation ---------------------------
+   
+   public void execute(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
+      // start with a set with containing just the field 
+      ArrayList fields = new ArrayList(entityMetaData.getCMPFields().size());
+      fields.add(field);
+      
+      // union all the groups of which field is a member
+      Iterator groups = entity.getLazyLoadGroups();
+      while(groups.hasNext()) {
+         ArrayList group = (ArrayList)groups.next();
+         if(group.contains(field)) {
+            fields.addAll(group);
+         }
+      }
+      
+      // pass this info on 
+      ExecutionState es = new ExecutionState();
+      es.fields = (JDBCCMPFieldBridge[]) fields.toArray(new JDBCCMPFieldBridge[fields.size()]);
+      es.ctx = ctx;
+      
+      try {
+         jdbcExecute(es);
+      } catch(EJBException e) {
+         throw e;
+      } catch(Exception e) {
+         throw new EJBException("Could not load field value: " + field, e);
+      }
    }
 
    // JDBCQueryCommand overrides ------------------------------------
@@ -77,41 +77,41 @@ public class JDBCLoadFieldCommand
    protected String getSQL(Object argOrArgs) throws Exception {
       ExecutionState es = (ExecutionState)argOrArgs;
 
-		
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.fields));
-		sql.append(" FROM ").append(entityMetaData.getTableName());
-		sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
-		
-		return sql.toString();
-	}
+      
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.fields));
+      sql.append(" FROM ").append(entityMetaData.getTableName());
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+      
+      return sql.toString();
+   }
 
-	protected void setParameters(PreparedStatement ps, Object arg)
-		throws Exception
-	{
-		ExecutionState es = (ExecutionState)arg;		
-	   entity.setPrimaryKeyParameters(ps, 1, es.ctx.getId());
-	}
+   protected void setParameters(PreparedStatement ps, Object arg)
+      throws Exception
+   {
+      ExecutionState es = (ExecutionState)arg;      
+      entity.setPrimaryKeyParameters(ps, 1, es.ctx.getId());
+   }
 
    protected Object handleResult(ResultSet rs, Object arg) throws Exception {
-		ExecutionState es = (ExecutionState)arg;		
+      ExecutionState es = (ExecutionState)arg;      
 
-		if(!rs.next()) {
-			throw new EJBException("Entity " + es.ctx.getId() + " not found");
-		}
-		
+      if(!rs.next()) {
+         throw new EJBException("Entity " + es.ctx.getId() + " not found");
+      }
+      
       // load each field
-		int parameterIndex = 1;
-		for(int i=0; i<es.fields.length; i++) {
-			parameterIndex = es.fields[i].loadInstanceResults(rs, parameterIndex, es.ctx);
-			es.fields[i].setClean(es.ctx);
-		}
-		
-		return null;
-	}
-	
-	private class ExecutionState {
-		public JDBCCMPFieldBridge[] fields;
-		public EntityEnterpriseContext ctx;
-	}
+      int parameterIndex = 1;
+      for(int i=0; i<es.fields.length; i++) {
+         parameterIndex = es.fields[i].loadInstanceResults(rs, parameterIndex, es.ctx);
+         es.fields[i].setClean(es.ctx);
+      }
+      
+      return null;
+   }
+   
+   private class ExecutionState {
+      public JDBCCMPFieldBridge[] fields;
+      public EntityEnterpriseContext ctx;
+   }
 }

@@ -42,17 +42,17 @@ import org.jboss.util.FinderResults;
  * are the classic EntityBean messages (e.g., activate, passivate...). 
  *
  * Dependency:
- *		In general, this package depends as little as possible on other packages.
+ *      In general, this package depends as little as possible on other packages.
  * Specifically it depends on container information from org.jboss.ejb, such as
  * EntityEnterpriseContext.  Additionally, implementations of this class, will
  * depend on org.jboss.metadata to aquire information about the entity.
  *
  * Life-cycle:
- *		Tied to the life-cycle of the entity container.
+ *      Tied to the life-cycle of the entity container.
  *
- * Multiplicity:	
- *		One per cmp entity bean. This could be less if another implementaion of 
- * EntityPersistenceStore is created and thoes beans use the implementation 		
+ * Multiplicity:   
+ *      One per cmp entity bean. This could be less if another implementaion of 
+ * EntityPersistenceStore is created and thoes beans use the implementation       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
@@ -61,7 +61,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2
@@ -99,13 +99,13 @@ public abstract class CMPStoreManager
    public void setContainer(Container container) {
       this.container = (EntityContainer)container;
    }
-	
-	public Log getLog() {
-		return log;
-	}
+   
+   public Log getLog() {
+      return log;
+   }
 
-	protected abstract CommandFactory createCommandFactory()  throws Exception ;
-	
+   protected abstract CommandFactory createCommandFactory()  throws Exception ;
+   
    // Container Life cycle commands -------------------------
 
    public void init() throws Exception {
@@ -226,7 +226,7 @@ public abstract class CMPStoreManager
    // This class supports tuned updates and read-only entities
 
    public static class PersistenceContext {
-		public Map fieldState = new HashMap();
+      public Map fieldState = new HashMap();
    }
 }
 

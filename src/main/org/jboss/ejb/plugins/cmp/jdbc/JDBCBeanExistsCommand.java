@@ -21,7 +21,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
@@ -31,11 +31,11 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
    {
       super(manager, "Exists");
 
-		StringBuffer sql = new StringBuffer();
+      StringBuffer sql = new StringBuffer();
       sql.append("SELECT COUNT(*) ");
-		sql.append("FROM ").append(entityMetaData.getTableName());
-		sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
-		
+      sql.append("FROM ").append(entityMetaData.getTableName());
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+      
       setSQL(sql.toString());
    }
 
@@ -47,7 +47,7 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
       try {
          return ((Boolean)jdbcExecute(primaryKeyObject)).booleanValue();
       } catch (Exception e) {
-	      log.debug(e);
+         log.debug(e);
       }
 
       return false;
@@ -63,8 +63,8 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
       if( !rs.next() ) {
          throw new SQLException("Unable to check for EJB in database");
       }
-		
-		// Do we have atleast one matching row?
+      
+      // Do we have atleast one matching row?
       int total = rs.getInt(1);
       return new Boolean(total >= 1);
    }

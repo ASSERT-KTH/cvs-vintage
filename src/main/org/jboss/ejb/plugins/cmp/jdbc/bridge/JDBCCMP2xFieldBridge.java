@@ -28,119 +28,119 @@ import org.jboss.logging.Log;
  * a dirty flag if the value has changed.
  *
  * Life-cycle:
- *		Tied to the EntityBridge.
+ *      Tied to the EntityBridge.
  *
- * Multiplicity:	
- *		One for each entity bean cmp field. 		
+ * Multiplicity:   
+ *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
-	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
-		super(manager, metadata);
-	}
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
+      super(manager, metadata);
+   }
 
-	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
-		super(manager, metadata, jdbcType);
-	}
+   public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
+      super(manager, metadata, jdbcType);
+   }
 
-	public Object getInstanceValue(EntityEnterpriseContext ctx) {
-		FieldState fieldState = getFieldState(ctx);
-		if(!fieldState.isLoaded) {
-			manager.loadField(this, ctx);
-			if(!fieldState.isLoaded) {
-				throw new EJBException("Could not load field value: " + getFieldName());
-			}
-		}
-		return fieldState.value;
-	}
-	
+   public Object getInstanceValue(EntityEnterpriseContext ctx) {
+      FieldState fieldState = getFieldState(ctx);
+      if(!fieldState.isLoaded) {
+         manager.loadField(this, ctx);
+         if(!fieldState.isLoaded) {
+            throw new EJBException("Could not load field value: " + getFieldName());
+         }
+      }
+      return fieldState.value;
+   }
+   
    public void setInstanceValue(EntityEnterpriseContext ctx, Object value) {
-		FieldState fieldState = getFieldState(ctx);
+      FieldState fieldState = getFieldState(ctx);
 
-		// short-circuit to avoid repetive comparisons
-		// if it is not currently loaded or it is already dirty or if it has changed
-		fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value);
-		
-		// we are loading the field right now so it isLoaded 
-		fieldState.isLoaded = true;
-		
-		// update current value
-		fieldState.value = value;
-	}
-	
+      // short-circuit to avoid repetive comparisons
+      // if it is not currently loaded or it is already dirty or if it has changed
+      fieldState.isDirty = !fieldState.isLoaded || fieldState.isDirty || changed(fieldState.value, value);
+      
+      // we are loading the field right now so it isLoaded 
+      fieldState.isLoaded = true;
+      
+      // update current value
+      fieldState.value = value;
+   }
+   
   /**
-	* Has the value of this field changes since the last time clean was called.
-	*/
-	public boolean isDirty(EntityEnterpriseContext ctx) {
-		// read only and primary key fields are never dirty
-		if(isReadOnly() || isPrimaryKeyMember()) {
-			return false; 
-		}
-		
-		return getFieldState(ctx).isDirty;
-	}
-	
-	/**
-	* Mark this field as clean.
-	* Saves the current state in context, so it can be compared when isDirty is called.
-	*/
-	public void setClean(EntityEnterpriseContext ctx) {
-		FieldState fieldState = getFieldState(ctx);
-		fieldState.isDirty = false;
+   * Has the value of this field changes since the last time clean was called.
+   */
+   public boolean isDirty(EntityEnterpriseContext ctx) {
+      // read only and primary key fields are never dirty
+      if(isReadOnly() || isPrimaryKeyMember()) {
+         return false; 
+      }
+      
+      return getFieldState(ctx).isDirty;
+   }
+   
+   /**
+   * Mark this field as clean.
+   * Saves the current state in context, so it can be compared when isDirty is called.
+   */
+   public void setClean(EntityEnterpriseContext ctx) {
+      FieldState fieldState = getFieldState(ctx);
+      fieldState.isDirty = false;
 
-		// update last read time
-		if(isReadOnly()) {
-			fieldState.lastRead = System.currentTimeMillis();
-		}
-	}
-	
-	public void resetPersistenceContext(EntityEnterpriseContext ctx) {
-		if(isReadTimedOut(ctx)) {
-			Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
-			fieldStates.put(this, new FieldState());
-		}
-	}
-	
-	public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
-		if(isReadOnly()) {
-			long readInterval = System.currentTimeMillis() - getFieldState(ctx).lastRead; 
-			return readInterval > metadata.getReadTimeOut();
-		}
-		
-		// if we are read/write then we are always timed out
-		return true;
-	}
+      // update last read time
+      if(isReadOnly()) {
+         fieldState.lastRead = System.currentTimeMillis();
+      }
+   }
+   
+   public void resetPersistenceContext(EntityEnterpriseContext ctx) {
+      if(isReadTimedOut(ctx)) {
+         Map fieldStates = ((CMPStoreManager.PersistenceContext)ctx.getPersistenceContext()).fieldState;
+         fieldStates.put(this, new FieldState());
+      }
+   }
+   
+   public boolean isReadTimedOut(EntityEnterpriseContext ctx) {
+      if(isReadOnly()) {
+         long readInterval = System.currentTimeMillis() - getFieldState(ctx).lastRead; 
+         return readInterval > metadata.getReadTimeOut();
+      }
+      
+      // if we are read/write then we are always timed out
+      return true;
+   }
 
-	private CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
-		return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
-	}
-	   
-	public FieldState getFieldState(EntityEnterpriseContext ctx) {
-		Map fieldStates = getPersistenceContext(ctx).fieldState;
+   private CMPStoreManager.PersistenceContext getPersistenceContext(EntityEnterpriseContext ctx) {
+      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
+   }
+      
+   public FieldState getFieldState(EntityEnterpriseContext ctx) {
+      Map fieldStates = getPersistenceContext(ctx).fieldState;
       FieldState fieldState = (FieldState)fieldStates.get(this);
-		if(fieldState == null) {
-			fieldState = new FieldState();
-			fieldStates.put(this, fieldState);
-		}
-		return fieldState;
-	}
+      if(fieldState == null) {
+         fieldState = new FieldState();
+         fieldStates.put(this, fieldState);
+      }
+      return fieldState;
+   }
 
-	public static class FieldState {
-		private Object value;
-		private boolean isLoaded = false;
-		private boolean isDirty = false;
-		private long lastRead = -1;
-		
-		public Object getValue() {
-			return value;
-		}
-		public boolean isLoaded() {
-			return isLoaded;
-		}
-		public boolean isDirty() {
-			return isDirty;
-		}
-	}
+   public static class FieldState {
+      private Object value;
+      private boolean isLoaded = false;
+      private boolean isDirty = false;
+      private long lastRead = -1;
+      
+      public Object getValue() {
+         return value;
+      }
+      public boolean isLoaded() {
+         return isLoaded;
+      }
+      public boolean isDirty() {
+         return isDirty;
+      }
+   }
 }

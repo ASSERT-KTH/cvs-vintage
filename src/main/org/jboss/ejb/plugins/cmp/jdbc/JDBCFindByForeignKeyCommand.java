@@ -21,68 +21,68 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * entity's table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindByForeignKeyCommand extends JDBCQueryCommand {
-	// Constructors --------------------------------------------------
-	
-	public JDBCFindByForeignKeyCommand(JDBCStoreManager manager) {
-		super(manager, "FindByForeignKey");
-	}
-	
-	// FindEntitiesCommand implementation -------------------------
-	
-	public Set execute(Object foreignKey,
-			JDBCCMPFieldBridge[] foreignKeyFields) {
-				
-		ExecutionState es = new ExecutionState();
-		es.foreignKey = foreignKey;
-		es.foreignKeyFields = foreignKeyFields;
+   // Constructors --------------------------------------------------
+   
+   public JDBCFindByForeignKeyCommand(JDBCStoreManager manager) {
+      super(manager, "FindByForeignKey");
+   }
+   
+   // FindEntitiesCommand implementation -------------------------
+   
+   public Set execute(Object foreignKey,
+         JDBCCMPFieldBridge[] foreignKeyFields) {
+            
+      ExecutionState es = new ExecutionState();
+      es.foreignKey = foreignKey;
+      es.foreignKeyFields = foreignKeyFields;
 
-		try {
-			return (Set)jdbcExecute(es);
-		} catch (Exception e) {
-			log.debug(e);
-			throw new EJBException("FindByForeignKey failed", e);
-		}
-	}
-
-	protected String getSQL(Object arg) throws Exception {
-		ExecutionState es = (ExecutionState)arg;
-
-		// Create table SQL
-		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
-		sql.append(" FROM ").append(entityMetaData.getTableName());
-		sql.append(" WHERE ").append(SQLUtil.getWhereClause(es.foreignKeyFields));
-		
-		return sql.toString();
-	}
-
-	protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
-		ExecutionState es = (ExecutionState)arg;
-		
-		int parameterIndex = 1;
-		for(int i=0; i<es.foreignKeyFields.length; i++) {
-			parameterIndex = es.foreignKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, es.foreignKey);
-		}
+      try {
+         return (Set)jdbcExecute(es);
+      } catch (Exception e) {
+         log.debug(e);
+         throw new EJBException("FindByForeignKey failed", e);
+      }
    }
 
-	protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {	
-		Set result = new HashSet();	
+   protected String getSQL(Object arg) throws Exception {
+      ExecutionState es = (ExecutionState)arg;
 
-		Object[] pkRef = new Object[1];
-		while(rs.next()) {
-			pkRef[0] = null;
-			entity.loadPrimaryKeyResults(rs, 1, pkRef);
-			result.add(pkRef[0]);
-		}
+      // Create table SQL
+      StringBuffer sql = new StringBuffer();
+      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
+      sql.append(" FROM ").append(entityMetaData.getTableName());
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(es.foreignKeyFields));
+      
+      return sql.toString();
+   }
 
-		return result;
-	}
+   protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
+      ExecutionState es = (ExecutionState)arg;
+      
+      int parameterIndex = 1;
+      for(int i=0; i<es.foreignKeyFields.length; i++) {
+         parameterIndex = es.foreignKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, es.foreignKey);
+      }
+   }
 
-	private static class ExecutionState {
-		public Object foreignKey;
-		public JDBCCMPFieldBridge[] foreignKeyFields;
-	}
+   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {   
+      Set result = new HashSet();   
+
+      Object[] pkRef = new Object[1];
+      while(rs.next()) {
+         pkRef[0] = null;
+         entity.loadPrimaryKeyResults(rs, 1, pkRef);
+         result.add(pkRef[0]);
+      }
+
+      return result;
+   }
+
+   private static class ExecutionState {
+      public Object foreignKey;
+      public JDBCCMPFieldBridge[] foreignKeyFields;
+   }
 }

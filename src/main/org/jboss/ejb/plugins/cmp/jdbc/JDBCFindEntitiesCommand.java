@@ -38,112 +38,112 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
-	// Attributes ----------------------------------------------------
-	private final Map knownFinderCommands = new HashMap();
-	private final JDBCStoreManager manager;
-	
-	// Constructors --------------------------------------------------
-	
-	public JDBCFindEntitiesCommand(JDBCStoreManager manager) {
-		this.manager = manager;
-	}
-	
-	public void start() {
-		JDBCCommandFactory factory = manager.getCommandFactory();		
-		
-		//
-		// Custom finders - Overrides defined and automatic finders.
-		//
-		try {
-			Class ejbClass = manager.getMetaData().getEntityClass();
+   // Attributes ----------------------------------------------------
+   private final Map knownFinderCommands = new HashMap();
+   private final JDBCStoreManager manager;
+   
+   // Constructors --------------------------------------------------
+   
+   public JDBCFindEntitiesCommand(JDBCStoreManager manager) {
+      this.manager = manager;
+   }
+   
+   public void start() {
+      JDBCCommandFactory factory = manager.getCommandFactory();      
+      
+      //
+      // Custom finders - Overrides defined and automatic finders.
+      //
+      try {
+         Class ejbClass = manager.getMetaData().getEntityClass();
 
-			Method[] customMethods = ejbClass.getMethods();	      
-			for (int i = 0; i < customMethods.length; i++) {
-				Method m = customMethods[i];
-				String name = m.getName();
-				if(name.startsWith("ejbFindBy")) {
-					knownFinderCommands.put(m, new CustomFindByEntitiesCommand(m));
-					manager.getLog().debug("Added custom finder " + name +".");
-				}
-			}
-		} catch (Exception e) {
-			// for some reason, this failed; try to use defined or automatic instead
-			manager.getLog().debug(e);
-		}
+         Method[] customMethods = ejbClass.getMethods();         
+         for (int i = 0; i < customMethods.length; i++) {
+            Method m = customMethods[i];
+            String name = m.getName();
+            if(name.startsWith("ejbFindBy")) {
+               knownFinderCommands.put(m, new CustomFindByEntitiesCommand(m));
+               manager.getLog().debug("Added custom finder " + name +".");
+            }
+         }
+      } catch (Exception e) {
+         // for some reason, this failed; try to use defined or automatic instead
+         manager.getLog().debug(e);
+      }
 
-		//
-		// Defined finders - Overrides automatic finders.
-		//
-		try {
-			Iterator definedFinders = manager.getMetaData().getQueries().iterator();
-			while(definedFinders.hasNext()) {
-				JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
+      //
+      // Defined finders - Overrides automatic finders.
+      //
+      try {
+         Iterator definedFinders = manager.getMetaData().getQueries().iterator();
+         while(definedFinders.hasNext()) {
+            JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
-				if(!knownFinderCommands.containsKey(q.getMethod()) ) {
-					if(q instanceof JDBCDeclaredQueryMetaData) {
-						knownFinderCommands.put(q.getMethod(), factory.createDefinedFinderCommand(q));
-					} else if(q instanceof JDBCQlQueryMetaData) {
-						knownFinderCommands.put(q.getMethod(), factory.createEJBQLFinderCommand(q));
-					}
-				}
-			}
-		} catch (Exception e) {
-			// for some reason, this failed; try to use automatic instead
-			manager.getLog().debug(e);
-		}
-		
-		//
-		// Automatic finders - The last resort
-		//
-		Class homeClass = manager.getContainer().getHomeClass();
-		if(homeClass != null) {
-			addAutomaticFinders(manager, homeClass.getMethods());
-		}
-		
-		Class localHomeClass = manager.getContainer().getLocalHomeClass();
-		if(localHomeClass != null) {
-			addAutomaticFinders(manager, localHomeClass.getMethods());
-		}
-	}
-	
-	protected void addAutomaticFinders(JDBCStoreManager manager, Method[] homeMethods) {
-		for (int i = 0; i < homeMethods.length; i++) {
-			Method m = homeMethods[i];
-			
-			if(!knownFinderCommands.containsKey(m)) {
-				String name = m.getName();
-				if(name.equals("findAll")) {
-					JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
-					knownFinderCommands.put(m, manager.getCommandFactory().createFindAllCommand(q));
-				} else if(name.startsWith("findBy") && !name.equals("findByPrimaryKey")) {
-					try {
-						JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
-						knownFinderCommands.put(m, manager.getCommandFactory().createFindByCommand(q));
-					} catch (IllegalArgumentException e) {
-						manager.getLog().debug("Could not create the finder " + name +
-								", because no matching CMP field was found.");
-					}
-				}
-			}
-		}
+            if(!knownFinderCommands.containsKey(q.getMethod()) ) {
+               if(q instanceof JDBCDeclaredQueryMetaData) {
+                  knownFinderCommands.put(q.getMethod(), factory.createDefinedFinderCommand(q));
+               } else if(q instanceof JDBCQlQueryMetaData) {
+                  knownFinderCommands.put(q.getMethod(), factory.createEJBQLFinderCommand(q));
+               }
+            }
+         }
+      } catch (Exception e) {
+         // for some reason, this failed; try to use automatic instead
+         manager.getLog().debug(e);
+      }
+      
+      //
+      // Automatic finders - The last resort
+      //
+      Class homeClass = manager.getContainer().getHomeClass();
+      if(homeClass != null) {
+         addAutomaticFinders(manager, homeClass.getMethods());
+      }
+      
+      Class localHomeClass = manager.getContainer().getLocalHomeClass();
+      if(localHomeClass != null) {
+         addAutomaticFinders(manager, localHomeClass.getMethods());
+      }
+   }
+   
+   protected void addAutomaticFinders(JDBCStoreManager manager, Method[] homeMethods) {
+      for (int i = 0; i < homeMethods.length; i++) {
+         Method m = homeMethods[i];
+         
+         if(!knownFinderCommands.containsKey(m)) {
+            String name = m.getName();
+            if(name.equals("findAll")) {
+               JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
+               knownFinderCommands.put(m, manager.getCommandFactory().createFindAllCommand(q));
+            } else if(name.startsWith("findBy") && !name.equals("findByPrimaryKey")) {
+               try {
+                  JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
+                  knownFinderCommands.put(m, manager.getCommandFactory().createFindByCommand(q));
+               } catch (IllegalArgumentException e) {
+                  manager.getLog().debug("Could not create the finder " + name +
+                        ", because no matching CMP field was found.");
+               }
+            }
+         }
+      }
    }
    
    // FindEntitiesCommand implementation -------------------------
    
-	public FinderResults execute(Method finderMethod,
-			Object[] args,
-			EntityEnterpriseContext ctx)
-		throws Exception
-	{	
-		FindEntitiesCommand finderCommand =
-				(FindEntitiesCommand)knownFinderCommands.get(finderMethod);
-	
-		if(finderCommand == null) {
-			throw new FinderException("Unknown finder: " + finderMethod.getName());
-		}
-		return finderCommand.execute(finderMethod, args, ctx);
-	}
+   public FinderResults execute(Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx)
+      throws Exception
+   {   
+      FindEntitiesCommand finderCommand =
+            (FindEntitiesCommand)knownFinderCommands.get(finderMethod);
+   
+      if(finderCommand == null) {
+         throw new FinderException("Unknown finder: " + finderMethod.getName());
+      }
+      return finderCommand.execute(finderMethod, args, ctx);
+   }
 }

@@ -35,222 +35,222 @@ import org.jboss.logging.Log;
  * the CMP version used.
  *
  * Life-cycle:
- *		Tied to the EntityBridge.
+ *      Tied to the EntityBridge.
  *
- * Multiplicity:	
- *		One for each entity bean cmp field. 		
+ * Multiplicity:   
+ *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
-	protected JDBCStoreManager manager;
+   protected JDBCStoreManager manager;
    protected JDBCCMPFieldMetaData metadata;
-	protected JDBCType jdbcType;
-	protected Log log;
-	
-	public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {		
-		this(manager, metadata, manager.getJDBCTypeFactory().getFieldJDBCType(metadata));
-	}
-	
-	public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
-		this.manager = manager;
-		this.metadata = metadata;
-		this.jdbcType = jdbcType;
-		this.log = manager.getLog();
-	}
+   protected JDBCType jdbcType;
+   protected Log log;
+   
+   public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {      
+      this(manager, metadata, manager.getJDBCTypeFactory().getFieldJDBCType(metadata));
+   }
+   
+   public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
+      this.manager = manager;
+      this.metadata = metadata;
+      this.jdbcType = jdbcType;
+      this.log = manager.getLog();
+   }
 
    public JDBCCMPFieldMetaData getMetaData() {
-		return metadata;
-	}
+      return metadata;
+   }
 
-	public String getFieldName() {
-		return metadata.getFieldName();
-	}
-	
-	public Class getFieldType() {
-		return metadata.getFieldType();
-	}
+   public String getFieldName() {
+      return metadata.getFieldName();
+   }
+   
+   public Class getFieldType() {
+      return metadata.getFieldType();
+   }
 
-	public boolean isReadOnly() {
-		return metadata.isReadOnly();
-	}
+   public boolean isReadOnly() {
+      return metadata.isReadOnly();
+   }
 
-	public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
-	
-	public boolean isPrimaryKeyMember() {
-		return metadata.isPrimaryKeyMember();
-	}
+   public abstract boolean isReadTimedOut(EntityEnterpriseContext ctx);
+   
+   public boolean isPrimaryKeyMember() {
+      return metadata.isPrimaryKeyMember();
+   }
 
-	public Object getPrimaryKeyValue(Object primaryKey) throws IllegalArgumentException {
-		try {
-			if(metadata.getPrimaryKeyField() != null) {
-				if(primaryKey == null) {
-					return null;
-				}
-				
-				// Extract this field's value from the primary key.
-				return metadata.getPrimaryKeyField().get(primaryKey);
-			} else {
-				// This field is the primary key, so no extraction is necessary.
-				return primaryKey;
-			}
-		} catch(Exception e) {
-			// Non recoverable internal exception
-			throw new EJBException("Internal error getting primary key field member " + getFieldName() + ": " + e);
-		}
-	}
+   public Object getPrimaryKeyValue(Object primaryKey) throws IllegalArgumentException {
+      try {
+         if(metadata.getPrimaryKeyField() != null) {
+            if(primaryKey == null) {
+               return null;
+            }
+            
+            // Extract this field's value from the primary key.
+            return metadata.getPrimaryKeyField().get(primaryKey);
+         } else {
+            // This field is the primary key, so no extraction is necessary.
+            return primaryKey;
+         }
+      } catch(Exception e) {
+         // Non recoverable internal exception
+         throw new EJBException("Internal error getting primary key field member " + getFieldName() + ": " + e);
+      }
+   }
 
-	public Object setPrimaryKeyValue(Object primaryKey, Object value) throws IllegalArgumentException {
-		try {
-			if(metadata.getPrimaryKeyField() != null) {
-				// if we are tring to set a null value 
-				// into a null pk, we are already done.
-				if(value == null && primaryKey == null) {
-					return null;
-				}
-				
-				// if we don't have a pk object yet create one
-				if(primaryKey == null) {
-					primaryKey = manager.getEntityBridge().createPrimaryKeyInstance();
-				}
-				
-				// Set this field's value into the primary key object.
-				metadata.getPrimaryKeyField().set(primaryKey, value);
-				return primaryKey;
-			} else {
-				// This field is the primary key, so no extraction is necessary.
-				return value;
-			}
-		} catch(Exception e) {
-			// Non recoverable internal exception
-			throw new EJBException("Internal error setting instance field " + getFieldName() + ": " + e);
-		}
-	}
+   public Object setPrimaryKeyValue(Object primaryKey, Object value) throws IllegalArgumentException {
+      try {
+         if(metadata.getPrimaryKeyField() != null) {
+            // if we are tring to set a null value 
+            // into a null pk, we are already done.
+            if(value == null && primaryKey == null) {
+               return null;
+            }
+            
+            // if we don't have a pk object yet create one
+            if(primaryKey == null) {
+               primaryKey = manager.getEntityBridge().createPrimaryKeyInstance();
+            }
+            
+            // Set this field's value into the primary key object.
+            metadata.getPrimaryKeyField().set(primaryKey, value);
+            return primaryKey;
+         } else {
+            // This field is the primary key, so no extraction is necessary.
+            return value;
+         }
+      } catch(Exception e) {
+         // Non recoverable internal exception
+         throw new EJBException("Internal error setting instance field " + getFieldName() + ": " + e);
+      }
+   }
 
-	public abstract void resetPersistenceContext(EntityEnterpriseContext ctx);
-	
-	/**
-	* Set CMPFieldValue to Java default value (i.e., 0 or null).
-	*/
-	public void initInstance(EntityEnterpriseContext ctx) {
-		if(!isReadOnly()) {
-			Object value;
-			if(getFieldType().equals(boolean.class))  {
-				value = Boolean.FALSE;
-			} else if(getFieldType().equals(byte.class))  {
-				value = new Byte((byte)0);
-			} else if (getFieldType().equals(int.class))  {
-				value = new Integer(0);
-			} else if (getFieldType().equals(long.class))  {
-				value = new Long(0L);
-			} else if (getFieldType().equals(short.class))  {
-				value = new Short((short)0);
-			} else if (getFieldType().equals(char.class))  {
-				value = new Character('\u0000');
-			} else if (getFieldType().equals(double.class))  {
-				value = new Double(0d); 
-			} else if (getFieldType().equals(float.class))  {
-				value = new Float(0f);
-			} else  {
-				value = null;
-			}
-	
-			setInstanceValue(ctx, value);
-		}
-	}		
+   public abstract void resetPersistenceContext(EntityEnterpriseContext ctx);
+   
+   /**
+   * Set CMPFieldValue to Java default value (i.e., 0 or null).
+   */
+   public void initInstance(EntityEnterpriseContext ctx) {
+      if(!isReadOnly()) {
+         Object value;
+         if(getFieldType().equals(boolean.class))  {
+            value = Boolean.FALSE;
+         } else if(getFieldType().equals(byte.class))  {
+            value = new Byte((byte)0);
+         } else if (getFieldType().equals(int.class))  {
+            value = new Integer(0);
+         } else if (getFieldType().equals(long.class))  {
+            value = new Long(0L);
+         } else if (getFieldType().equals(short.class))  {
+            value = new Short((short)0);
+         } else if (getFieldType().equals(char.class))  {
+            value = new Character('\u0000');
+         } else if (getFieldType().equals(double.class))  {
+            value = new Double(0d); 
+         } else if (getFieldType().equals(float.class))  {
+            value = new Float(0f);
+         } else  {
+            value = null;
+         }
+   
+         setInstanceValue(ctx, value);
+      }
+   }      
 
-	public JDBCType getJDBCType() {
-		return jdbcType;
-	}
+   public JDBCType getJDBCType() {
+      return jdbcType;
+   }
 
-	public int setInstanceParameters(PreparedStatement ps, int parameterIndex, EntityEnterpriseContext ctx) {
-		Object instanceValue = getInstanceValue(ctx);
-		return setArgumentParameters(ps, parameterIndex, instanceValue);
-	}	
+   public int setInstanceParameters(PreparedStatement ps, int parameterIndex, EntityEnterpriseContext ctx) {
+      Object instanceValue = getInstanceValue(ctx);
+      return setArgumentParameters(ps, parameterIndex, instanceValue);
+   }   
 
-	public int setPrimaryKeyParameters(PreparedStatement ps, int parameterIndex, Object primaryKey) throws IllegalArgumentException {
-		Object primaryKeyValue = getPrimaryKeyValue(primaryKey);
-		return setArgumentParameters(ps, parameterIndex, primaryKeyValue);
-	}
-	
-	public int setArgumentParameters(PreparedStatement ps, int parameterIndex, Object arg) {
-		try {
-			int[] jdbcTypes = getJDBCType().getJDBCTypes();
-			for(int i=0; i<jdbcTypes.length; i++) {
-				Object columnValue = getJDBCType().getColumnValue(i, arg);
-				JDBCUtil.setParameter(log, ps, parameterIndex++, jdbcTypes[i], columnValue);
-			}
-			return parameterIndex;
-		} catch(SQLException e) {
-			// Non recoverable internal exception
-			throw new EJBException("Internal error setting parameters for field " + getFieldName() + ": " + e);
-		}
-	}	
+   public int setPrimaryKeyParameters(PreparedStatement ps, int parameterIndex, Object primaryKey) throws IllegalArgumentException {
+      Object primaryKeyValue = getPrimaryKeyValue(primaryKey);
+      return setArgumentParameters(ps, parameterIndex, primaryKeyValue);
+   }
+   
+   public int setArgumentParameters(PreparedStatement ps, int parameterIndex, Object arg) {
+      try {
+         int[] jdbcTypes = getJDBCType().getJDBCTypes();
+         for(int i=0; i<jdbcTypes.length; i++) {
+            Object columnValue = getJDBCType().getColumnValue(i, arg);
+            JDBCUtil.setParameter(log, ps, parameterIndex++, jdbcTypes[i], columnValue);
+         }
+         return parameterIndex;
+      } catch(SQLException e) {
+         // Non recoverable internal exception
+         throw new EJBException("Internal error setting parameters for field " + getFieldName() + ": " + e);
+      }
+   }   
 
-	public int loadInstanceResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx) {
-		try {
-			// value of this field,  will be filled in below
-			Object[] argumentRef = new Object[1];
-			
-			// load the cmp field value from the result set
-			parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
+   public int loadInstanceResults(ResultSet rs, int parameterIndex, EntityEnterpriseContext ctx) {
+      try {
+         // value of this field,  will be filled in below
+         Object[] argumentRef = new Object[1];
+         
+         // load the cmp field value from the result set
+         parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
 
-			// set the value into the context
-			setInstanceValue(ctx, argumentRef[0]);
-			return parameterIndex;
-		} catch(EJBException e) {
-			// to avoid double wrap of EJBExceptions
-			throw e;
-		} catch(Exception e) {
-			// Non recoverable internal exception
-			e.printStackTrace();
-			throw new EJBException("Internal error getting results for field " + getFieldName() + ": " + e);
-		}
-	}		
-	
-	public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException {
-		// value of this field,  will be filled in below
-		Object[] argumentRef = new Object[1];
-		
-		// load the cmp field value from the result set
-		parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
-					
-		// set the value of this field into the pk
-		pkRef[0] = setPrimaryKeyValue(pkRef[0], argumentRef[0]);
-		
-		// retrun the updated parameterIndex
-		return parameterIndex;
-	}		
+         // set the value into the context
+         setInstanceValue(ctx, argumentRef[0]);
+         return parameterIndex;
+      } catch(EJBException e) {
+         // to avoid double wrap of EJBExceptions
+         throw e;
+      } catch(Exception e) {
+         // Non recoverable internal exception
+         e.printStackTrace();
+         throw new EJBException("Internal error getting results for field " + getFieldName() + ": " + e);
+      }
+   }      
+   
+   public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException {
+      // value of this field,  will be filled in below
+      Object[] argumentRef = new Object[1];
+      
+      // load the cmp field value from the result set
+      parameterIndex = loadArgumentResults(rs, parameterIndex, argumentRef);
+               
+      // set the value of this field into the pk
+      pkRef[0] = setPrimaryKeyValue(pkRef[0], argumentRef[0]);
+      
+      // retrun the updated parameterIndex
+      return parameterIndex;
+   }      
 
-	public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef) throws IllegalArgumentException {
-		try {
-			// value of this field,  will be filled in below
-			// set the value of this field into the pk
-			argumentRef[0] = null;
-			
-			// update the value from the result set
-			Class[] javaTypes = getJDBCType().getJavaTypes();
-			for(int i=0; i<javaTypes.length; i++) {
-				Object columnValue = JDBCUtil.getResult(log, rs, parameterIndex++, javaTypes[i]);
-				argumentRef[0] = getJDBCType().setColumnValue(i, argumentRef[0], columnValue);
-			}
-					   
-			// retrun the updated parameterIndex
-			return parameterIndex;
-		} catch(SQLException e) {
-			// Non recoverable internal exception
-			throw new EJBException("Internal error getting results for field member " + getFieldName() + ": " + e);
-		}
-	}
-	
-	protected final boolean changed(Object current, Object old) {
-		return	
-			(current == null && old != null) ||   // TRUE if I am null and I wasn't before   
-	   	(current != null &&                   // TRUE if I was null and now I'm not
-				( old == null || (!current.equals(old)) ) // TRUE if i'm not equal to my oldstate 
-			);                                           //   tied to last check to assure that current is not null
-				
-	}
+   public int loadArgumentResults(ResultSet rs, int parameterIndex, Object[] argumentRef) throws IllegalArgumentException {
+      try {
+         // value of this field,  will be filled in below
+         // set the value of this field into the pk
+         argumentRef[0] = null;
+         
+         // update the value from the result set
+         Class[] javaTypes = getJDBCType().getJavaTypes();
+         for(int i=0; i<javaTypes.length; i++) {
+            Object columnValue = JDBCUtil.getResult(log, rs, parameterIndex++, javaTypes[i]);
+            argumentRef[0] = getJDBCType().setColumnValue(i, argumentRef[0], columnValue);
+         }
+                  
+         // retrun the updated parameterIndex
+         return parameterIndex;
+      } catch(SQLException e) {
+         // Non recoverable internal exception
+         throw new EJBException("Internal error getting results for field member " + getFieldName() + ": " + e);
+      }
+   }
+   
+   protected final boolean changed(Object current, Object old) {
+      return   
+         (current == null && old != null) ||   // TRUE if I am null and I wasn't before   
+         (current != null &&                   // TRUE if I was null and now I'm not
+            ( old == null || (!current.equals(old)) ) // TRUE if i'm not equal to my oldstate 
+         );                                           //   tied to last check to assure that current is not null
+            
+   }
 }
                                          

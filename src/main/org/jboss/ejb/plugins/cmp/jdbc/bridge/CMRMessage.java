@@ -15,10 +15,10 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface CMRMessage {
-	public Object getRelatedId(EntityEnterpriseContext myCtx, JDBCCMRFieldBridge cmrField);
-	public void addRelation(EntityEnterpriseContext myCtx, Object relatedId);
-	public void removeRelation(EntityEnterpriseContext myCtx, Object relatedId);
+   public Object getRelatedId(EntityEnterpriseContext myCtx, JDBCCMRFieldBridge cmrField);
+   public void addRelation(EntityEnterpriseContext myCtx, Object relatedId);
+   public void removeRelation(EntityEnterpriseContext myCtx, Object relatedId);
 }

@@ -15,14 +15,14 @@ import javax.ejb.FinderException;
  * FindEntityCommand handles finders that return a single bean.
  *      
  * Life-cycle:
- *		Tied to CMPStoreManager.
+ *      Tied to CMPStoreManager.
  *    
- * Multiplicity:	
- *		One per CMPStoreManager.
+ * Multiplicity:   
+ *      One per CMPStoreManager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface FindEntityCommand
 {

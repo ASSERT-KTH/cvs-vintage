@@ -17,41 +17,41 @@ import java.sql.SQLException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCUpdateCommand extends JDBCCommand {
    // Constructors --------------------------------------------------
    
    protected JDBCUpdateCommand(JDBCStoreManager manager, String name) {
-		super(manager, name);
-	}
-		
+      super(manager, name);
+   }
+      
    // Protected -----------------------------------------------------
    
-	/**
-	 * Template Method that executes the PreparedStatement and calls
-	 * <code>handleResult</code> on the integer result.
-	 *
-	 * @param stmt the prepared statement, with its parameters already set.
-	 * @param argOrArgs argument or array of arguments passed in from
-	 *  subclass execute method.
-	 * @return the result from <code>handleResult</code>.
-	 * @throws Exception if execution or result handling fails.
-	 */
-	protected Object executeStatementAndHandleResult(
-					PreparedStatement ps,
-					Object argOrArgs)
-			throws Exception {
-	
-		int rowsAffected = ps.executeUpdate();
-	
-		if(debug) {
-			log.debug("Rows affected = " + rowsAffected);
-		}
-	
-		return handleResult(rowsAffected, argOrArgs);
-	}
-	
+   /**
+    * Template Method that executes the PreparedStatement and calls
+    * <code>handleResult</code> on the integer result.
+    *
+    * @param stmt the prepared statement, with its parameters already set.
+    * @param argOrArgs argument or array of arguments passed in from
+    *  subclass execute method.
+    * @return the result from <code>handleResult</code>.
+    * @throws Exception if execution or result handling fails.
+    */
+   protected Object executeStatementAndHandleResult(
+               PreparedStatement ps,
+               Object argOrArgs)
+         throws Exception {
+   
+      int rowsAffected = ps.executeUpdate();
+   
+      if(debug) {
+         log.debug("Rows affected = " + rowsAffected);
+      }
+   
+      return handleResult(rowsAffected, argOrArgs);
+   }
+   
    /**
     * Handle the result of successful execution of the update.
     
@@ -62,5 +62,5 @@ public abstract class JDBCUpdateCommand extends JDBCCommand {
     * @throws Exception if result handling fails.
     */
    protected abstract Object handleResult(int rowsAffected, Object argOrArgs) 
-	      throws Exception;
+         throws Exception;
 }

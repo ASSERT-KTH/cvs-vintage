@@ -1,16 +1,16 @@
 package org.jboss.ejb.plugins.cmp.jdbc.ejbql;
 
 public abstract class PathElement {
-	protected final EntityPathElement parent;
+   protected final EntityPathElement parent;
 
-	public PathElement(EntityPathElement parent) {
-		this.parent = parent;
-	}
+   public PathElement(EntityPathElement parent) {
+      this.parent = parent;
+   }
 
-	public EntityPathElement getParent() {
-		return parent;
-	}	
+   public EntityPathElement getParent() {
+      return parent;
+   }   
 
-	public abstract String getName();
-	public abstract Class getFieldType();
+   public abstract String getName();
+   public abstract Class getFieldType();
 }

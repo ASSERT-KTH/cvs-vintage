@@ -37,108 +37,108 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
    implements FindEntitiesCommand
 {
-	protected JDBCQueryMetaData queryMetaData;
-	protected JDBCEntityBridge selectEntity;
-	protected JDBCCMPFieldBridge selectCMPField;
-	
-	// Constructors --------------------------------------------------
-	
-	public JDBCFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) {
-		super(manager, q.getMethod().getName());
+   protected JDBCQueryMetaData queryMetaData;
+   protected JDBCEntityBridge selectEntity;
+   protected JDBCCMPFieldBridge selectCMPField;
+   
+   // Constructors --------------------------------------------------
+   
+   public JDBCFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) {
+      super(manager, q.getMethod().getName());
 
-		queryMetaData = q;
-		selectEntity = entity;
-	}
-	
-	public JDBCQueryMetaData getQueryMetaData() {
-		return queryMetaData;
-	}
-	
-	// FindEntitiesCommand implementation -------------------------
-	
-	public FinderResults execute(Method finderMethod,
-			Object[] args,
-			EntityEnterpriseContext ctx)
-		throws RemoteException, FinderException
-	{
-		FinderResults result = null;
-		
-		try {
-			//
-			// Execute the find... will return a collection of pks
-			Collection keys = (Collection)jdbcExecute(args);
+      queryMetaData = q;
+      selectEntity = entity;
+   }
+   
+   public JDBCQueryMetaData getQueryMetaData() {
+      return queryMetaData;
+   }
+   
+   // FindEntitiesCommand implementation -------------------------
+   
+   public FinderResults execute(Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx)
+      throws RemoteException, FinderException
+   {
+      FinderResults result = null;
+      
+      try {
+         //
+         // Execute the find... will return a collection of pks
+         Collection keys = (Collection)jdbcExecute(args);
 
 //
-//	The commented out code is for the old readahead code
-//			// creat the finder results
-//			if(finderMetaData.hasReadAhead()) {
-//				result = new FinderResults(keys, getWhereClause(args), this, args);
-//			} else {
-				result = new FinderResults(keys, null, null, null);
-//			}
-		} catch (Exception e) {
-			log.debug(e);
-			throw new FinderException("Find failed");
-		}
-		return result;
-	}
+//   The commented out code is for the old readahead code
+//         // creat the finder results
+//         if(finderMetaData.hasReadAhead()) {
+//            result = new FinderResults(keys, getWhereClause(args), this, args);
+//         } else {
+            result = new FinderResults(keys, null, null, null);
+//         }
+      } catch (Exception e) {
+         log.debug(e);
+         throw new FinderException("Find failed");
+      }
+      return result;
+   }
 
    // JDBCQueryCommand overrides ------------------------------------
-	protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {
-		
-		Collection result = new ArrayList();	
+   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception {
+      
+      Collection result = new ArrayList();   
       try {
-			// are we selecting an entity (or just a field)
-			if(selectEntity != null) {
-				
-				// load the pks into the result list
-				Object[] pkRef = new Object[1];
-				while(rs.next()) {
-					pkRef[0] = null;
-					selectEntity.loadPrimaryKeyResults(rs, 1, pkRef);
-					result.add(pkRef[0]);
-				}
-				
-				// is this an ejb select command
-				if(queryMetaData.getMethod().getName().startsWith("ejbSelect")) {
-					// convert the list of pks into real ejbs
-					EntityContainer container = manager.getContainer();
-					if(queryMetaData.isResultTypeMappingLocal()) {
-						result = container.getLocalContainerInvoker().getEntityLocalCollection(result);
-					} else {
-						result = container.getContainerInvoker().getEntityCollection(result);
-					}
-				}
-			} else {
-				// this is a select for field
-				Object[] valueRef = new Object[1];
-				while(rs.next()) {
-					valueRef[0] = null;
-					selectCMPField.loadArgumentResults(rs, 1, valueRef);
-					result.add(valueRef[0]);
-				}
-			}	
-		} catch(Exception e) {
-			throw new ServerException("Finder failed: ", e);
-		}
+         // are we selecting an entity (or just a field)
+         if(selectEntity != null) {
+            
+            // load the pks into the result list
+            Object[] pkRef = new Object[1];
+            while(rs.next()) {
+               pkRef[0] = null;
+               selectEntity.loadPrimaryKeyResults(rs, 1, pkRef);
+               result.add(pkRef[0]);
+            }
+            
+            // is this an ejb select command
+            if(queryMetaData.getMethod().getName().startsWith("ejbSelect")) {
+               // convert the list of pks into real ejbs
+               EntityContainer container = manager.getContainer();
+               if(queryMetaData.isResultTypeMappingLocal()) {
+                  result = container.getLocalContainerInvoker().getEntityLocalCollection(result);
+               } else {
+                  result = container.getContainerInvoker().getEntityCollection(result);
+               }
+            }
+         } else {
+            // this is a select for field
+            Object[] valueRef = new Object[1];
+            while(rs.next()) {
+               valueRef[0] = null;
+               selectCMPField.loadArgumentResults(rs, 1, valueRef);
+               result.add(valueRef[0]);
+            }
+         }   
+      } catch(Exception e) {
+         throw new ServerException("Finder failed: ", e);
+      }
 
-		return result;
-	}
-	
-	/** @todo: remove this next bit and add 'getWhereClause' to FinderCommands */
-	protected String getWhereClause(Object[] executeArgs) throws Exception {		
-		//look for 'where' and ditch everything before it		
-		String sql = getSQL(executeArgs);
-		int pos = sql.toUpperCase().indexOf("WHERE");
-		if(pos >= 0) {
-			return sql.substring(pos);
-		}
-		return "";
-	}
+      return result;
+   }
+   
+   /** @todo: remove this next bit and add 'getWhereClause' to FinderCommands */
+   protected String getWhereClause(Object[] executeArgs) throws Exception {      
+      //look for 'where' and ditch everything before it      
+      String sql = getSQL(executeArgs);
+      int pos = sql.toUpperCase().indexOf("WHERE");
+      if(pos >= 0) {
+         return sql.substring(pos);
+      }
+      return "";
+   }
 }

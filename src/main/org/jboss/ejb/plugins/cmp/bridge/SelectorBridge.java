@@ -14,18 +14,18 @@ import javax.ejb.FinderException;
  * SelectorBridge represents one ejbSelect method. 
  *
  * Life-cycle:
- *		Tied to the EntityBridge.
+ *      Tied to the EntityBridge.
  *
- * Multiplicity:	
- *		One for each entity bean ejbSelect method. 		
+ * Multiplicity:   
+ *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public interface SelectorBridge {
-	public String getSelectorName();
-	public Method getMethod();
-	public Class getReturnType();
-		
-	public Object execute(Object[] args) throws FinderException;
+   public String getSelectorName();
+   public Method getMethod();
+   public Class getReturnType();
+      
+   public Object execute(Object[] args) throws FinderException;
 }

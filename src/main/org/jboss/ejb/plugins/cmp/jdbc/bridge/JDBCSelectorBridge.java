@@ -11,13 +11,13 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
  * JDBCSelectorBridge represents one ejbSelect method. 
  *
  * Life-cycle:
- *		Tied to the EntityBridge.
+ *      Tied to the EntityBridge.
  *
- * Multiplicity:	
- *		One for each entity bean ejbSelect method. 		
+ * Multiplicity:   
+ *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
@@ -35,54 +35,54 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 
 public class JDBCSelectorBridge implements SelectorBridge {
-	protected final JDBCQlQueryMetaData queryMetaData;
-	protected final JDBCStoreManager manager;
-	
-	public JDBCSelectorBridge(JDBCStoreManager manager, JDBCQlQueryMetaData queryMetaData) {
-		this.queryMetaData = queryMetaData;		
-		this.manager = manager;
-	}
-	
-	public String getSelectorName() {
-		return queryMetaData.getMethod().getName();
-	}
-	
-	public Method getMethod() {
-		return queryMetaData.getMethod();
-	}
-	
-	public Class getReturnType() {
-		return queryMetaData.getMethod().getReturnType();
-	}
-		
-	public Object execute(Object[] args) throws FinderException {
-		Collection retVal = null;
-		try {
-			retVal = manager.findEntities(getMethod(), args, null);
-		} catch(FinderException e) {
-			throw e;
-		} catch(EJBException e) {
-			throw e;
-		} catch(Exception e) {
-			throw new EJBException("Error in " + getSelectorName(), e);
-		}
-			
-		if(!Collection.class.isAssignableFrom(getReturnType())) {
-			// single object
-			if(retVal.size() == 0) {
-				throw new ObjectNotFoundException();
-			}
-			if(retVal.size() > 1) {
-				throw new FinderException(getSelectorName() + " returned " + retVal.size() + " objects");
-			}
-			return retVal.iterator().next();
-		} else {
-			// collection or set
-			if(Set.class.isAssignableFrom(getReturnType())) {
-				return new HashSet(retVal);
-			} else {
-				return new ArrayList(retVal);
-			}
-		}
-	}
+   protected final JDBCQlQueryMetaData queryMetaData;
+   protected final JDBCStoreManager manager;
+   
+   public JDBCSelectorBridge(JDBCStoreManager manager, JDBCQlQueryMetaData queryMetaData) {
+      this.queryMetaData = queryMetaData;      
+      this.manager = manager;
+   }
+   
+   public String getSelectorName() {
+      return queryMetaData.getMethod().getName();
+   }
+   
+   public Method getMethod() {
+      return queryMetaData.getMethod();
+   }
+   
+   public Class getReturnType() {
+      return queryMetaData.getMethod().getReturnType();
+   }
+      
+   public Object execute(Object[] args) throws FinderException {
+      Collection retVal = null;
+      try {
+         retVal = manager.findEntities(getMethod(), args, null);
+      } catch(FinderException e) {
+         throw e;
+      } catch(EJBException e) {
+         throw e;
+      } catch(Exception e) {
+         throw new EJBException("Error in " + getSelectorName(), e);
+      }
+         
+      if(!Collection.class.isAssignableFrom(getReturnType())) {
+         // single object
+         if(retVal.size() == 0) {
+            throw new ObjectNotFoundException();
+         }
+         if(retVal.size() > 1) {
+            throw new FinderException(getSelectorName() + " returned " + retVal.size() + " objects");
+         }
+         return retVal.iterator().next();
+      } else {
+         // collection or set
+         if(Set.class.isAssignableFrom(getReturnType())) {
+            return new HashSet(retVal);
+         } else {
+            return new ArrayList(retVal);
+         }
+      }
+   }
 }

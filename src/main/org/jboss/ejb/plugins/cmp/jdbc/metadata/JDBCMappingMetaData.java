@@ -20,85 +20,85 @@ import org.w3c.dom.Element;
  * and a SQL type.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.4 $
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.5 $
  */
 public final class JDBCMappingMetaData {
-    /**
-     * Gets the JDBC type constant int for the name. The mapping from name to jdbc
-     * type is contained in java.sql.Types.
-     *
-     * @param name the name for the jdbc type
-     * @return the int type constant from java.sql.Types
-     * @see java.sql.Types
-     */
-    public static int getJdbcTypeFromName(String name) throws DeploymentException {     
-        if (name == null) {
-            throw new DeploymentException("jdbc-type cannot be null");
-        }
-        
-        try {
-            Integer constant = (Integer)Types.class.getField(name).get(null);
-            return constant.intValue();
-        
-        } catch (Exception e) {
-            Logger.warning("Unrecognized jdbc-type: " + name + ", using Types.OTHER");
-            return Types.OTHER;
-        }
-    }
-    
-    
-    
-    private final String javaType;
-    
-    private final int jdbcType;
-    
-    private final String sqlType;
-    
-    /**
-     * Constructs a mapping with the data contained in the mapping xml element
-     * from a jbosscmp-jdbc xml file.
-     *
-     * @param element the xml Element which contains the metadata about
-     *      this mapping
-     * @throws DeploymentException if the xml element is not semantically correct
-     */
-    public JDBCMappingMetaData(Element element) throws DeploymentException {
-        
-        javaType = MetaData.getUniqueChildContent(element, "java-type");
-        
-        jdbcType = getJdbcTypeFromName(MetaData.getUniqueChildContent(element, "jdbc-type"));
-        
-        sqlType = MetaData.getUniqueChildContent(element, "sql-type");
-    }   
+   /**
+    * Gets the JDBC type constant int for the name. The mapping from name to jdbc
+    * type is contained in java.sql.Types.
+    *
+    * @param name the name for the jdbc type
+    * @return the int type constant from java.sql.Types
+    * @see java.sql.Types
+    */
+   public static int getJdbcTypeFromName(String name) throws DeploymentException {
+      if (name == null) {
+         throw new DeploymentException("jdbc-type cannot be null");
+      }
 
-    /**
-     * Getts the java type of this mapping. The java type is used to differentiate
-     * this mapping from other mappings.
-     *
-     * @return the java type of this mapping
-     */
-    public String getJavaType() {
-        return javaType;
-    }
-    
-    /**
-     * Gets the jdbc type of this mapping. The jdbc type is used to retrieve data
-     * from a result set and to set parameters in a prepared statement.
-     *
-     * @return the jdbc type of this mapping
-     */
-    public int getJdbcType() {
-        return jdbcType;
-    }
-    
-    /**
-     * Gets the sql type of this mapping. The sql type is the sql column data
-     * type, and is used in CREATE TABLE statements.
-     *
-     * @return the sql type String of this mapping
-     */
-    public String getSqlType() {
-        return sqlType;
-    }   
+      try {
+         Integer constant = (Integer)Types.class.getField(name).get(null);
+         return constant.intValue();
+
+      } catch (Exception e) {
+         Logger.warning("Unrecognized jdbc-type: " + name + ", using Types.OTHER");
+         return Types.OTHER;
+      }
+   }
+
+
+
+   private final String javaType;
+
+   private final int jdbcType;
+
+   private final String sqlType;
+
+   /**
+    * Constructs a mapping with the data contained in the mapping xml element
+    * from a jbosscmp-jdbc xml file.
+    *
+    * @param element the xml Element which contains the metadata about
+    *      this mapping
+    * @throws DeploymentException if the xml element is not semantically correct
+    */
+   public JDBCMappingMetaData(Element element) throws DeploymentException {
+
+      javaType = MetaData.getUniqueChildContent(element, "java-type");
+
+      jdbcType = getJdbcTypeFromName(MetaData.getUniqueChildContent(element, "jdbc-type"));
+
+      sqlType = MetaData.getUniqueChildContent(element, "sql-type");
+   }
+
+   /**
+    * Getts the java type of this mapping. The java type is used to differentiate
+    * this mapping from other mappings.
+    *
+    * @return the java type of this mapping
+    */
+   public String getJavaType() {
+      return javaType;
+   }
+
+   /**
+    * Gets the jdbc type of this mapping. The jdbc type is used to retrieve data
+    * from a result set and to set parameters in a prepared statement.
+    *
+    * @return the jdbc type of this mapping
+    */
+   public int getJdbcType() {
+      return jdbcType;
+   }
+
+   /**
+    * Gets the sql type of this mapping. The sql type is the sql column data
+    * type, and is used in CREATE TABLE statements.
+    *
+    * @return the sql type String of this mapping
+    */
+   public String getSqlType() {
+      return sqlType;
+   }
 }

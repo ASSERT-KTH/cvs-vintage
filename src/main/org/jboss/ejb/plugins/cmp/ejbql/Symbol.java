@@ -1,20 +1,20 @@
 package org.jboss.ejb.plugins.cmp.ejbql;
 
 public class Symbol extends Terminal {
-	private SymbolToken symbol;
+   private SymbolToken symbol;
 
-	public Symbol(String symbolString) {
-		if(symbolString == null) {
-			throw new IllegalArgumentException("symbolString is null");
-		}
-		symbol = new SymbolToken(symbolString);
-	}
+   public Symbol(String symbolString) {
+      if(symbolString == null) {
+         throw new IllegalArgumentException("symbolString is null");
+      }
+      symbol = new SymbolToken(symbolString);
+   }
 
-	protected boolean isValidToken(Token token) {
-		return symbol.equals(token);
-	}
-	
-	public String toString() {
-		return "[Symbol: symbol="+symbol+"]";
-	}
+   protected boolean isValidToken(Token token) {
+      return symbol.equals(token);
+   }
+   
+   public String toString() {
+      return "[Symbol: symbol="+symbol+"]";
+   }
 }

@@ -30,51 +30,51 @@ import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCFindEntityCommand implements FindEntityCommand {
    // Attributes ----------------------------------------------------
    
-	JDBCBeanExistsCommand beanExistsCommand;
-	FindEntitiesCommand findEntitiesCommand;
+   JDBCBeanExistsCommand beanExistsCommand;
+   FindEntitiesCommand findEntitiesCommand;
    
-	// Constructors --------------------------------------------------
+   // Constructors --------------------------------------------------
    
-	public JDBCFindEntityCommand(JDBCStoreManager manager) {
-		beanExistsCommand = manager.getCommandFactory().createBeanExistsCommand();
-		findEntitiesCommand = manager.getCommandFactory().createFindEntitiesCommand();
-	}
+   public JDBCFindEntityCommand(JDBCStoreManager manager) {
+      beanExistsCommand = manager.getCommandFactory().createBeanExistsCommand();
+      findEntitiesCommand = manager.getCommandFactory().createFindEntitiesCommand();
+   }
    
-	// FindEntityCommand implementation ---------------------------
+   // FindEntityCommand implementation ---------------------------
    
-	public Object execute(Method finderMethod,
-						Object[] args,
-						EntityEnterpriseContext ctx)
-				throws Exception {
+   public Object execute(Method finderMethod,
+                  Object[] args,
+                  EntityEnterpriseContext ctx)
+            throws Exception {
 
-		if(finderMethod.getName().equals("findByPrimaryKey")) {
-			return findByPrimaryKey(args[0]);
-		} else {
-			Collection result = (Collection)findEntitiesCommand.execute(finderMethod, args, ctx);
-			
-			if (result.size() == 0) {
-				throw new ObjectNotFoundException("No such entity!");
-			} else if (result.size() == 1) {
-				Object [] objects = result.toArray();
-				return objects[0];
-			} else {
-				throw new FinderException("More than one entity matches the finder criteria.");
-			}
-		}
-	}
+      if(finderMethod.getName().equals("findByPrimaryKey")) {
+         return findByPrimaryKey(args[0]);
+      } else {
+         Collection result = (Collection)findEntitiesCommand.execute(finderMethod, args, ctx);
+         
+         if (result.size() == 0) {
+            throw new ObjectNotFoundException("No such entity!");
+         } else if (result.size() == 1) {
+            Object [] objects = result.toArray();
+            return objects[0];
+         } else {
+            throw new FinderException("More than one entity matches the finder criteria.");
+         }
+      }
+   }
    
    // Protected -----------------------------------------------------
    
-	protected Object findByPrimaryKey(Object primaryKey) throws FinderException {
-		if(beanExistsCommand.execute(primaryKey)) {
-			return primaryKey;
-		} else {
-			throw new ObjectNotFoundException("Object with primary key " + primaryKey + " not found in storage");
-		}
-	}
+   protected Object findByPrimaryKey(Object primaryKey) throws FinderException {
+      if(beanExistsCommand.execute(primaryKey)) {
+         return primaryKey;
+      } else {
+         throw new ObjectNotFoundException("Object with primary key " + primaryKey + " not found in storage");
+      }
+   }
 }

@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyCommand {
    // Constructors --------------------------------------------------
@@ -35,60 +35,60 @@ public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyComm
    
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
-			log.debug("Droping tables for entity " + entity.getEntityName());
-			dropTable(entityMetaData.getTableName());
+         log.debug("Droping tables for entity " + entity.getEntityName());
+         dropTable(entityMetaData.getTableName());
 
-			// drop relation tables
-			JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
-			for(int i=0; i<cmrFields.length; i++) {
-				if(!cmrFields[i].hasForeignKey() && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
-					if(cmrFields[i].getRelationTableName() == null)  log.debug("Table name null for cmr field " + cmrFields[i].getFieldName());
-					dropTable(cmrFields[i].getRelationTableName());
-				}
-			}
+         // drop relation tables
+         JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
+         for(int i=0; i<cmrFields.length; i++) {
+            if(!cmrFields[i].hasForeignKey() && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
+               if(cmrFields[i].getRelationTableName() == null)  log.debug("Table name null for cmr field " + cmrFields[i].getFieldName());
+               dropTable(cmrFields[i].getRelationTableName());
+            }
+         }
       }
    }
    
    public void dropTable(String tableName) {
-			Connection con = null;
-		ResultSet rs = null;
-		try {
-			con = manager.getConnection();
-			DatabaseMetaData dmd = con.getMetaData();
-			rs = dmd.getTables(con.getCatalog(), null, tableName, null);
-			if(!rs.next()) {
-				// table already deleted
-				return;
-			}
-		} catch(SQLException e) {
-			// ignore - bad driver
-			return;
-		} finally {
-			JDBCUtil.safeClose(rs);
-			JDBCUtil.safeClose(con);
-		}
+         Connection con = null;
+      ResultSet rs = null;
+      try {
+         con = manager.getConnection();
+         DatabaseMetaData dmd = con.getMetaData();
+         rs = dmd.getTables(con.getCatalog(), null, tableName, null);
+         if(!rs.next()) {
+            // table already deleted
+            return;
+         }
+      } catch(SQLException e) {
+         // ignore - bad driver
+         return;
+      } finally {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
 
-		try {
-			// since we use the pools, we have to do this within a transaction
-			manager.getContainer().getTransactionManager().begin ();
-			jdbcExecute("DROP TABLE " + tableName);
-			manager.getContainer().getTransactionManager().commit ();
-			log.log("Dropped table '" + tableName + "' successfully.");
-		} catch (Exception e) {
-			log.debug("Could not drop table " + tableName + ": " + e.getMessage());
-			try {
-				manager.getContainer().getTransactionManager().rollback ();
-			} catch (Exception _e) {
-				log.error("Could not roll back transaction: "+ _e.getMessage());
-			}
-		}
+      try {
+         // since we use the pools, we have to do this within a transaction
+         manager.getContainer().getTransactionManager().begin ();
+         jdbcExecute("DROP TABLE " + tableName);
+         manager.getContainer().getTransactionManager().commit ();
+         log.log("Dropped table '" + tableName + "' successfully.");
+      } catch (Exception e) {
+         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+         try {
+            manager.getContainer().getTransactionManager().rollback ();
+         } catch (Exception _e) {
+            log.error("Could not roll back transaction: "+ _e.getMessage());
+         }
+      }
    }
    
    // JDBCUpdateCommand overrides -----------------------------------
-	protected String getSQL(Object sql) throws Exception {
-		return (String) sql;
-	}
-	   
+   protected String getSQL(Object sql) throws Exception {
+      return (String) sql;
+   }
+      
    protected Object handleResult(int rowsAffected, Object argOrArgs) 
       throws Exception
    {     

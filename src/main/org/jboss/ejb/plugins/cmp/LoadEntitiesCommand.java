@@ -17,14 +17,14 @@ import org.jboss.util.FinderResults;
  * in the finder results.
  *      
  * Life-cycle:
- *		Tied to CMPStoreManager.
+ *      Tied to CMPStoreManager.
  *    
- * Multiplicity:	
- *		One per CMPStoreManager.
+ * Multiplicity:   
+ *      One per CMPStoreManager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface LoadEntitiesCommand
 {

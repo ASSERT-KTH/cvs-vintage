@@ -19,54 +19,54 @@ import org.w3c.dom.Element;
  * class.
  *     
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *	@version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public final class JDBCValueClassMetaData {
-	private final Class javaType;
-	private final List properties;
+   private final Class javaType;
+   private final List properties;
 
-	/**
-	 * Constructs a value class metadata class with the data contained in 
-	 * the dependent-value-class xml element from a jbosscmp-jdbc xml file.
-	 *
-	 * @param classElement the xml Element which contains the metadata about
-	 * 		this value class
-	 * @param classLoader the ClassLoader which is used to load this value class 
-	 * @throws DeploymentException if the xml element is not semantically correct
-	 */
-	public JDBCValueClassMetaData(Element classElement, ClassLoader classLoader) throws DeploymentException {		
-		String className = MetaData.getUniqueChildContent(classElement, "class");
-		try {
-			javaType = classLoader.loadClass(className);
-		} catch (ClassNotFoundException e) {
-			throw new DeploymentException("dependent-value-class not found: " + className);
-		}
-		
-		List propertyList = new ArrayList();
-		Iterator iterator = MetaData.getChildrenByTagName(classElement, "property");
-		while(iterator.hasNext()) {
-			Element propertyElement = (Element)iterator.next();
-		
-			propertyList.add(new JDBCValuePropertyMetaData(propertyElement, javaType));
-		}
-		properties = Collections.unmodifiableList(propertyList);
-	}
+   /**
+    * Constructs a value class metadata class with the data contained in 
+    * the dependent-value-class xml element from a jbosscmp-jdbc xml file.
+    *
+    * @param classElement the xml Element which contains the metadata about
+    *       this value class
+    * @param classLoader the ClassLoader which is used to load this value class 
+    * @throws DeploymentException if the xml element is not semantically correct
+    */
+   public JDBCValueClassMetaData(Element classElement, ClassLoader classLoader) throws DeploymentException {      
+      String className = MetaData.getUniqueChildContent(classElement, "class");
+      try {
+         javaType = classLoader.loadClass(className);
+      } catch (ClassNotFoundException e) {
+         throw new DeploymentException("dependent-value-class not found: " + className);
+      }
+      
+      List propertyList = new ArrayList();
+      Iterator iterator = MetaData.getChildrenByTagName(classElement, "property");
+      while(iterator.hasNext()) {
+         Element propertyElement = (Element)iterator.next();
+      
+         propertyList.add(new JDBCValuePropertyMetaData(propertyElement, javaType));
+      }
+      properties = Collections.unmodifiableList(propertyList);
+   }
 
-	/**
-	 * Gets the Java Class of this value class.
-	 *
-	 * @return the java Class of this value class
-	 */
-	public Class getJavaType() {
-		return javaType;
-	}
+   /**
+    * Gets the Java Class of this value class.
+    *
+    * @return the java Class of this value class
+    */
+   public Class getJavaType() {
+      return javaType;
+   }
 
-	/**
-	 * Gets the properties of this value class which are to be saved into the database.
-	 *
-	 * @return an unmodifiable list which contains the JDBCValuePropertyMetaData objects
-	 */
-	public List getProperties() {
-		return properties;
-	}
+   /**
+    * Gets the properties of this value class which are to be saved into the database.
+    *
+    * @return an unmodifiable list which contains the JDBCValuePropertyMetaData objects
+    */
+   public List getProperties() {
+      return properties;
+   }
 }

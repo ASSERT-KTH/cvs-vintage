@@ -30,13 +30,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
    // Attributes ----------------------------------------------------
    
-	private JDBCDeclaredQueryMetaData metadata;
+   private JDBCDeclaredQueryMetaData metadata;
    private int[] parameterArray;
 
    // Constructors --------------------------------------------------
@@ -44,30 +44,30 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
    public JDBCDefinedFinderCommand(JDBCStoreManager manager, JDBCQueryMetaData q) throws DeploymentException {
       super(manager, q);
 
-		metadata = (JDBCDeclaredQueryMetaData) q;
-		
-		StringBuffer sql = new StringBuffer();
-		
-		String from = metadata.getFrom();
+      metadata = (JDBCDeclaredQueryMetaData) q;
+      
+      StringBuffer sql = new StringBuffer();
+      
+      String from = metadata.getFrom();
       if(from != null && from.length()>0) {
-			sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields(), entityMetaData.getTableName()));
-			sql.append(" FROM ").append(entityMetaData.getTableName());
+         sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields(), entityMetaData.getTableName()));
+         sql.append(" FROM ").append(entityMetaData.getTableName());
       } else {
-			sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
-			sql.append(" FROM ").append(entityMetaData.getTableName());
-		}
-		
-		String where = parseWhere(metadata.getWhere());
-		if(where.length() > 0) {
-			sql.append(" WHERE ").append(where);
-		}
-		
-		String order = metadata.getOrder();
+         sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
+         sql.append(" FROM ").append(entityMetaData.getTableName());
+      }
+      
+      String where = parseWhere(metadata.getWhere());
+      if(where.length() > 0) {
+         sql.append(" WHERE ").append(where);
+      }
+      
+      String order = metadata.getOrder();
       if(order != null && order.trim().length() > 0) {
          sql.append(" ORDER BY ").append(order);
       }
 
-		String other = metadata.getOther();
+      String other = metadata.getOther();
       if(other != null && other.trim().length() > 0) {
          sql.append(other);
       }
@@ -77,58 +77,58 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
  
    // JDBCFinderCommand overrides ------------------------------------
 
-	protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
-		Object[] args = (Object[])argOrArgs;
-	
-		for(int i = 0; i < parameterArray.length; i++) {
-			Object arg = args[parameterArray[i]];
-			int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
-			JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
-		}
-	}
-	
-	protected String parseWhere(String where) throws DeploymentException {
-		StringBuffer whereBuf = new StringBuffer();
-      ArrayList parameters = new ArrayList();		
-		
+   protected void setParameters(PreparedStatement ps, Object argOrArgs) throws Exception {
+      Object[] args = (Object[])argOrArgs;
+   
+      for(int i = 0; i < parameterArray.length; i++) {
+         Object arg = args[parameterArray[i]];
+         int jdbcType = manager.getJDBCTypeFactory().getJDBCTypeForJavaType(arg.getClass());
+         JDBCUtil.setParameter(log, ps, i+1, jdbcType, arg);
+      }
+   }
+   
+   protected String parseWhere(String where) throws DeploymentException {
+      StringBuffer whereBuf = new StringBuffer();
+      ArrayList parameters = new ArrayList();      
+      
       // Replace placeholders {0} with ?
       if(where != null) {
-	   	where = where.trim();
+         where = where.trim();
 
-	      StringTokenizer queryWhere = new StringTokenizer(where,"{}", true);
-	      while(queryWhere.hasMoreTokens()) {
-	         String token = queryWhere.nextToken();
-	         if(token.equals("{")) {
-					
-					token = queryWhere.nextToken();
-					try {
-						Integer parameterIndex = new Integer(token);
-						
-						// of if we are here we can assume that we have a parameter and not a function
-						whereBuf.append("?");
-					   parameters.add(parameterIndex);
-						
-						if(!queryWhere.nextToken().equals("}")) {
-							throw new DeploymentException("Invalid parameter - missing closing '}' : " + where);
-						}
-					} catch(NumberFormatException e) {
-						// ok we don't have a parameter, we have a function
-						// push the tokens on the buffer and continue
-						whereBuf.append("{").append(token);						
-					}	
-	         } else {
-					// not parameter... just append it
-	            whereBuf.append(token);
-				}
-	      }
+         StringTokenizer queryWhere = new StringTokenizer(where,"{}", true);
+         while(queryWhere.hasMoreTokens()) {
+            String token = queryWhere.nextToken();
+            if(token.equals("{")) {
+               
+               token = queryWhere.nextToken();
+               try {
+                  Integer parameterIndex = new Integer(token);
+                  
+                  // of if we are here we can assume that we have a parameter and not a function
+                  whereBuf.append("?");
+                  parameters.add(parameterIndex);
+                  
+                  if(!queryWhere.nextToken().equals("}")) {
+                     throw new DeploymentException("Invalid parameter - missing closing '}' : " + where);
+                  }
+               } catch(NumberFormatException e) {
+                  // ok we don't have a parameter, we have a function
+                  // push the tokens on the buffer and continue
+                  whereBuf.append("{").append(token);                  
+               }   
+            } else {
+               // not parameter... just append it
+               whereBuf.append(token);
+            }
+         }
       }
 
-		// save out the parameter order
-		parameterArray = new int[parameters.size()];
-		for(int i=0; i<parameterArray.length; i++) {
-			parameterArray[i] = ((Integer)parameters.get(i)).intValue();
-		}
-		
-		return whereBuf.toString().trim();
-	}
+      // save out the parameter order
+      parameterArray = new int[parameters.size()];
+      for(int i=0; i<parameterArray.length; i++) {
+         parameterArray[i] = ((Integer)parameters.get(i)).intValue();
+      }
+      
+      return whereBuf.toString().trim();
+   }
 }

@@ -24,20 +24,20 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
  
 public class JDBCActivateEntityCommand implements ActivateEntityCommand {
    // Constructors --------------------------------------------------
    JDBCEntityBridge entity;
-	
+   
    public JDBCActivateEntityCommand(JDBCStoreManager manager) {
-		entity = manager.getEntityBridge();
+      entity = manager.getEntityBridge();
    }
    
    // ActivateEntityCommand implementation -----------------------
    
    public void execute(EntityEnterpriseContext ctx) throws RemoteException {
-		entity.initPersistenceContext(ctx);
+      entity.initPersistenceContext(ctx);
    }
 }

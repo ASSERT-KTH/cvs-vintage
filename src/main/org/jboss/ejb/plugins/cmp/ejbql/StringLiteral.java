@@ -2,14 +2,14 @@ package org.jboss.ejb.plugins.cmp.ejbql;
 
 public class StringLiteral extends Terminal {
 
-	public StringLiteral() {
-	}
+   public StringLiteral() {
+   }
 
-	protected boolean isValidToken(Token token) {
-		return token instanceof StringToken;
-	}
-	
-	public String toString() {
-		return "[StringLiteral]";
-	}
+   protected boolean isValidToken(Token token) {
+      return token instanceof StringToken;
+   }
+   
+   public String toString() {
+      return "[StringLiteral]";
+   }
 }

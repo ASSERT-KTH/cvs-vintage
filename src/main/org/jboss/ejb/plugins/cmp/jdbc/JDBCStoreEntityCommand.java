@@ -35,48 +35,48 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCStoreEntityCommand
    extends JDBCUpdateCommand
    implements StoreEntityCommand
 {
-	// Constructors --------------------------------------------------
-	
-	public JDBCStoreEntityCommand(JDBCStoreManager manager) {
-		super(manager, "Store");
-	}
-	
-	// StoreEntityCommand implementation ---------------------------
-	
-	/**
-	* if the readOnly flag is specified in the xml file this won't store.
-	* if not a tuned or untuned update is issued.
-	*/
-	public void execute(EntityEnterpriseContext ctx) throws RemoteException {
-		// Check for read-only
-		// JF: Shouldn't this throw an exception?
-		if (entityMetaData.isReadOnly()) {
-			return;
-		}
-		
-		try {
-			ExecutionState es = new ExecutionState();
-			es.ctx = ctx;
-			es.fields = (JDBCCMPFieldBridge[])entity.getDirtyFields(ctx);
-			
-			if(es.fields.length > 0) {
-				jdbcExecute(es);			
-			} else {
-				if(debug) {
-					log.debug(name + " command NOT executed bean is not dirty: id=" + ctx.getId());
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServerException("Store failed", e);
-		}
-	}
+   // Constructors --------------------------------------------------
+   
+   public JDBCStoreEntityCommand(JDBCStoreManager manager) {
+      super(manager, "Store");
+   }
+   
+   // StoreEntityCommand implementation ---------------------------
+   
+   /**
+   * if the readOnly flag is specified in the xml file this won't store.
+   * if not a tuned or untuned update is issued.
+   */
+   public void execute(EntityEnterpriseContext ctx) throws RemoteException {
+      // Check for read-only
+      // JF: Shouldn't this throw an exception?
+      if (entityMetaData.isReadOnly()) {
+         return;
+      }
+      
+      try {
+         ExecutionState es = new ExecutionState();
+         es.ctx = ctx;
+         es.fields = (JDBCCMPFieldBridge[])entity.getDirtyFields(ctx);
+         
+         if(es.fields.length > 0) {
+            jdbcExecute(es);         
+         } else {
+            if(debug) {
+               log.debug(name + " command NOT executed bean is not dirty: id=" + ctx.getId());
+            }
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+         throw new ServerException("Store failed", e);
+      }
+   }
    
    // JDBCUpdateCommand overrides -----------------------------------
    
@@ -88,40 +88,40 @@ public class JDBCStoreEntityCommand
       ExecutionState es = (ExecutionState)argOrArgs;
 
       StringBuffer sql = new StringBuffer(); 
-	   sql.append("UPDATE ").append(entityMetaData.getTableName());
-		sql.append(" SET ").append(SQLUtil.getSetClause(es.fields));
-		sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
-		return sql.toString();
-	}
+      sql.append("UPDATE ").append(entityMetaData.getTableName());
+      sql.append(" SET ").append(SQLUtil.getSetClause(es.fields));
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+      return sql.toString();
+   }
    
-	protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
-		ExecutionState es = (ExecutionState)arg;
-		
-		int index = 1;
-		index = entity.setInstanceParameters(ps, index, es.ctx, es.fields);
-		index = entity.setPrimaryKeyParameters(ps, index, es.ctx.getId());
-	}
+   protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
+      ExecutionState es = (ExecutionState)arg;
+      
+      int index = 1;
+      index = entity.setInstanceParameters(ps, index, es.ctx, es.fields);
+      index = entity.setPrimaryKeyParameters(ps, index, es.ctx.getId());
+   }
    
-	protected Object handleResult(int rowsAffected, Object arg) throws Exception {
-		ExecutionState es = (ExecutionState)arg;		
+   protected Object handleResult(int rowsAffected, Object arg) throws Exception {
+      ExecutionState es = (ExecutionState)arg;      
 
-		if(rowsAffected != 1) {
-			throw new EJBException("Update of " + entity.getEntityName() + " EJB failed id=" + es.ctx.getId() + " rowsAffected=" + rowsAffected);
-		}
+      if(rowsAffected != 1) {
+         throw new EJBException("Update of " + entity.getEntityName() + " EJB failed id=" + es.ctx.getId() + " rowsAffected=" + rowsAffected);
+      }
 
-		for(int i=0; i<es.fields.length; i++) {
-			es.fields[i].setClean(es.ctx);
-		}
+      for(int i=0; i<es.fields.length; i++) {
+         es.fields[i].setClean(es.ctx);
+      }
 
-		return null;
-	}
+      return null;
+   }
    
    // Protected -----------------------------------------------------
    
    // Inner Classes -------------------------------------------------
    
-	protected static class ExecutionState {
-		public EntityEnterpriseContext ctx;
-		public JDBCCMPFieldBridge[] fields;
-	}
+   protected static class ExecutionState {
+      public EntityEnterpriseContext ctx;
+      public JDBCCMPFieldBridge[] fields;
+   }
 }

@@ -16,14 +16,14 @@ import java.rmi.RemoteException;
  * This command should load the current state of the instance.
  *      
  * Life-cycle:
- *		Tied to CMPStoreManager.
+ *      Tied to CMPStoreManager.
  *    
- * Multiplicity:	
- *		One per CMPStoreManager.
+ * Multiplicity:   
+ *      One per CMPStoreManager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public interface LoadEntityCommand
 {

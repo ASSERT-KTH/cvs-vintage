@@ -23,81 +23,81 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCTypeComplex implements JDBCType {
-	private JDBCTypeComplexProperty[] properties;
-	private String[] columnNames;	
-	private Class[] javaTypes;	
-	private int[] jdbcTypes;	
-	private String[] sqlTypes;
-	private Class fieldType;
+   private JDBCTypeComplexProperty[] properties;
+   private String[] columnNames;   
+   private Class[] javaTypes;   
+   private int[] jdbcTypes;   
+   private String[] sqlTypes;
+   private Class fieldType;
 
    public JDBCTypeComplex(JDBCTypeComplexProperty[] properties, Class fieldType) {
-		this.properties = properties;
-		this.fieldType = fieldType;
-		
-		columnNames = new String[properties.length];
-		for(int i=0; i<columnNames.length; i++) {
-			columnNames[i] = properties[i].getColumnName();
-		}
-		
-		javaTypes = new Class[properties.length];
-		for(int i=0; i<javaTypes.length; i++) {
-			javaTypes[i] = properties[i].getJavaType();
-		}
-		
-		jdbcTypes = new int[properties.length];
-		for(int i=0; i<jdbcTypes.length; i++) {
-			jdbcTypes[i] = properties[i].getJDBCType();
-		}
-		
-		sqlTypes = new String[properties.length];
-		for(int i=0; i<sqlTypes.length; i++) {
-			sqlTypes[i] = properties[i].getSQLType();
-		}
-		
-	}
+      this.properties = properties;
+      this.fieldType = fieldType;
+      
+      columnNames = new String[properties.length];
+      for(int i=0; i<columnNames.length; i++) {
+         columnNames[i] = properties[i].getColumnName();
+      }
+      
+      javaTypes = new Class[properties.length];
+      for(int i=0; i<javaTypes.length; i++) {
+         javaTypes[i] = properties[i].getJavaType();
+      }
+      
+      jdbcTypes = new int[properties.length];
+      for(int i=0; i<jdbcTypes.length; i++) {
+         jdbcTypes[i] = properties[i].getJDBCType();
+      }
+      
+      sqlTypes = new String[properties.length];
+      for(int i=0; i<sqlTypes.length; i++) {
+         sqlTypes[i] = properties[i].getSQLType();
+      }
+      
+   }
 
-	public String[] getColumnNames() {
-		return columnNames;
-	}
-	
-	public Class[] getJavaTypes() {
-		return javaTypes;
-	}
-	
-	public int[] getJDBCTypes() {
-		return jdbcTypes;
-	}
-	
-	public String[] getSQLTypes() {
-		return sqlTypes;
-	}
-	
-	public Object getColumnValue(int index, Object value) {
-		try {
-			return properties[index].getColumnValue(value);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw new EJBException("Error getting column value", e);
-		}
-	}
+   public String[] getColumnNames() {
+      return columnNames;
+   }
+   
+   public Class[] getJavaTypes() {
+      return javaTypes;
+   }
+   
+   public int[] getJDBCTypes() {
+      return jdbcTypes;
+   }
+   
+   public String[] getSQLTypes() {
+      return sqlTypes;
+   }
+   
+   public Object getColumnValue(int index, Object value) {
+      try {
+         return properties[index].getColumnValue(value);
+      } catch(Exception e) {
+         e.printStackTrace();
+         throw new EJBException("Error getting column value", e);
+      }
+   }
 
-	public Object setColumnValue(int index, Object value, Object columnValue) {
-		if(value==null && columnValue==null) {
-			// nothing to do
-			return null;
-		}
-			
-		try {
-			if(value == null) {
-				value = fieldType.newInstance();
-			}
-			return properties[index].setColumnValue(value, columnValue);
-		} catch(Exception e) {
-			e.printStackTrace();
-			throw new EJBException("Error setting column value", e);
-		}
-	}
+   public Object setColumnValue(int index, Object value, Object columnValue) {
+      if(value==null && columnValue==null) {
+         // nothing to do
+         return null;
+      }
+         
+      try {
+         if(value == null) {
+            value = fieldType.newInstance();
+         }
+         return properties[index].setColumnValue(value, columnValue);
+      } catch(Exception e) {
+         e.printStackTrace();
+         throw new EJBException("Error setting column value", e);
+      }
+   }
 }

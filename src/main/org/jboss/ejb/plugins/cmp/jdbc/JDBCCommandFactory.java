@@ -43,7 +43,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {
@@ -52,13 +52,13 @@ public class JDBCCommandFactory implements CommandFactory
    // These support singletons (within the scope of this factory)
    private JDBCBeanExistsCommand beanExistsCommand;
    private FindEntitiesCommand findEntitiesCommand;
-	
-	private JDBCStoreManager manager;
+   
+   private JDBCStoreManager manager;
    
    // Constructors --------------------------------------------------
    
    public JDBCCommandFactory(JDBCStoreManager manager) throws Exception {
-		this.manager = manager;		
+      this.manager = manager;      
    }
    
    // Public --------------------------------------------------------
@@ -89,13 +89,13 @@ public class JDBCCommandFactory implements CommandFactory
    }
    
    public FindEntitiesCommand createDefinedFinderCommand(JDBCQueryMetaData q) 
-		throws Exception
+      throws Exception
    {
       return new JDBCDefinedFinderCommand(manager, q);
    }
    
    public FindEntitiesCommand createEJBQLFinderCommand(JDBCQueryMetaData q) 
-		throws Exception
+      throws Exception
    {
       return new JDBCEJBQLFinderCommand(manager, q);
    }
@@ -106,23 +106,23 @@ public class JDBCCommandFactory implements CommandFactory
       return new JDBCFindByCommand(manager, q);
    }
    
-	public JDBCFindByForeignKeyCommand createFindByForeignKeyCommand() {
-		return new JDBCFindByForeignKeyCommand(manager);
-	}
+   public JDBCFindByForeignKeyCommand createFindByForeignKeyCommand() {
+      return new JDBCFindByForeignKeyCommand(manager);
+   }
 
-	public JDBCLoadRelationCommand createLoadRelationCommand() {
-		return new JDBCLoadRelationCommand(manager);
-	}
+   public JDBCLoadRelationCommand createLoadRelationCommand() {
+      return new JDBCLoadRelationCommand(manager);
+   }
    
-	public JDBCDeleteRelationsCommand createDeleteRelationsCommand() {
-		return new JDBCDeleteRelationsCommand(manager);
-	}
+   public JDBCDeleteRelationsCommand createDeleteRelationsCommand() {
+      return new JDBCDeleteRelationsCommand(manager);
+   }
    
-	public JDBCInsertRelationsCommand createInsertRelationsCommand() {
-		return new JDBCInsertRelationsCommand(manager);
-	}
+   public JDBCInsertRelationsCommand createInsertRelationsCommand() {
+      return new JDBCInsertRelationsCommand(manager);
+   }
    
-	// CommandFactory implementation ------------------------------
+   // CommandFactory implementation ------------------------------
    
    // lifecycle commands
    
