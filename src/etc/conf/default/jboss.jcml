@@ -133,6 +133,17 @@
   <mbean code="org.jboss.resource.RARDeployer" name="JCA:service=RARDeployer">
   </mbean>
 
+  <!-- Minerva no transaction connection manager factory.
+  
+       Use this for resource adapters that don't support 
+       transactions. -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory">
+    <attribute name="FactoryName">MinervaNoTransCMFactory</attribute>
+    <attribute name="FactoryClass">org.opentools.minerva.connector.jboss.MinervaNoTransCMFactory</attribute>
+    <attribute name="Properties"></attribute>
+  </mbean>
+
   <!-- Minerva local transaction connection manager factory.
   
        Use this for resource adapters that support "local"
