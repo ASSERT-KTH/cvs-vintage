@@ -130,10 +130,14 @@
               <!-- username -->
               <!ELEMENT old-user ( #PCDATA ) >
               <!ELEMENT new-user ( #PCDATA ) >
-              <!-- attribute option -->
+
+              <!-- Attribute options. Overrides old-value/new-value
+                   elements for option values.  -->
               <!ELEMENT old-option ( #PCDATA ) >
               <!ELEMENT new-option ( #PCDATA ) >
-              <!-- text value -->
+
+              <!-- Text values.  Ignored when the attribute activity
+                   takes option values. -->
               <!ELEMENT old-value ( #PCDATA ) >
               <!ELEMENT new-value ( #PCDATA ) >
               
