@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.104 2003/05/15 18:42:24 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.105 2003/07/28 14:40:35 thierrylach Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -683,8 +683,7 @@ public class ScarabUserImpl
         else
         {
             Calendar expireDate = Calendar.getInstance();
-            expireDate.add(Calendar.DATE, 
-                           new Integer(expireDays).intValue());
+            expireDate.add(Calendar.DATE, Integer.parseInt(expireDays));
             setPasswordExpire(expireDate);
         }
     }
