@@ -788,7 +788,7 @@ public class IMAPFolder extends RemoteFolder {
 				address,
 				getImapPath()))
 			.getInputStream();
-		;
+		//;
 	}
 
 }
