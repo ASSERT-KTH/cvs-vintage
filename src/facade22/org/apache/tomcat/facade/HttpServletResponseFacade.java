@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.26 2002/02/18 03:43:38 billbarker Exp $
- * $Revision: 1.26 $
- * $Date: 2002/02/18 03:43:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/HttpServletResponseFacade.java,v 1.27 2002/02/22 06:12:14 billbarker Exp $
+ * $Revision: 1.27 $
+ * $Date: 2002/02/22 06:12:14 $
  *
  * ====================================================================
  *
@@ -383,6 +383,10 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    String file = url.getFile();
 	    if ((file == null) || !file.startsWith(contextPath))
 		return (false);
+	    // XXX endsWith() ? However, that confilicts with
+	    // the ;charset= attribute.
+	    if(file.indexOf(";jsessionid=" + session.getId()) >= 0)
+		return (false); // Already encoded
 	}
 
 	// This URL belongs to our web application, so it is encodeable
