@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.filter;
@@ -18,10 +18,21 @@ package org.columba.mail.filter;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-
+/**
+ * A list of filters.
+ *
+ */
 public class FilterList extends DefaultItem {
+
+    /** The name of this object when stored in a XML document. */
+    public static final String XML_NAME = "filterlist";
+
     //private Vector list;
     // private Folder folder;
+    /**
+     * Creates a FilterList with the specified element as the root.
+     * @param root the element to use as the root.
+     */
     public FilterList(XmlElement root) {
         super(root);
     }
@@ -30,49 +41,13 @@ public class FilterList extends DefaultItem {
      * Creates an empty filter list.
      */
     public FilterList() {
-        super(new XmlElement("filterlist"));
+        super(new XmlElement(FilterList.XML_NAME));
     }
 
-    /*
-    public FilterList( Folder folder )
-    {
-        this.folder = folder;
-        folder.setFilterList( this );
-        list = new Vector();
-
-        FolderItem item = folder.getFolderItem();
-        AdapterNode filterListNode = item.getFilterListNode();
-
-        if ( filterListNode != null )
-        {
-            AdapterNode child;
-            for ( int i=0; i< filterListNode.getChildCount(); i++)
-            {
-                child = (AdapterNode) filterListNode.getChild( i );
-                Filter filter = new Filter( child );
-                filter.setFolder( folder );
-                add( filter );
-            }
-        }
-    }
-    */
-    public void removeAllElements() {
-        getRoot().removeAllElements();
-
-        /*
-        list.removeAllElements();
-        getFilterListNode().removeChildren();
-        */
-    }
-
-    /*
-    public void clear()
-    {
-
-        if ( list.size() > 0 )
-            list.clear();
-    }
-    */
+    /**
+     * Returns an empty default filter.
+     * @return an empty default Filter.
+     */
     public static Filter createEmptyFilter() {
         XmlElement filter = new XmlElement("filter");
         filter.addAttribute("description", "new filter");
@@ -232,6 +207,10 @@ public class FilterList extends DefaultItem {
         return index;
     }
 
+    /**
+     * Returns the number of filters in this list.
+     * @return the number of filters in this list.
+     */
     public int count() {
         return getChildCount();
     }
@@ -240,15 +219,17 @@ public class FilterList extends DefaultItem {
      * Returns the filter at the specified position in the list.
      * @param index the index
      * @return a Filter
-     * @throws IndexOutOfBoundsException if the index is out of range (index
-    *                   &lt; 0 || index &gt;= count()).
      */
-    public Filter get(int index) throws IndexOutOfBoundsException {
+    public Filter get(int index) {
         Filter filter = new Filter(getRoot().getElement(index));
 
         return filter;
     }
 
+    /**
+     * Removes the filter at the specified list index.
+     * @param index the index of the filter to remove from this list.
+     */
     public void remove(int index) {
         getRoot().removeElement(index);
     }
