@@ -1,7 +1,7 @@
 <td id="rightcol" width="20%">
     <div class="help" id="artifacttypehelp">
         
-        <p><img src="$data.Request.ContextPath/images/artifact.gif"
+        <p><img src="$staticLink.setPath("/images/artifact.gif")"
         width="113" height="72" alt="" border="0" /></p>
         
         <p>An issue type is a unique instance of a Scarab

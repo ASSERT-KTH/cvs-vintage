@@ -40,7 +40,7 @@
   <th nowrap="nowrap">
   </th>
   <th>
-  <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+  <img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
    Template name</th>
   <th>Template description</th>
   <th>Project</th>

@@ -25,7 +25,7 @@ href="$link.setPage("Register.vm")">create an account</a>.
 
 <td>
 <p>
-<img src="$data.Request.ContextPath/images/module.gif" alt="What is a
+<img src="$staticLink.setPath("/images/module.gif")" alt="What is a
 module?" width="260" height="105" />
 </p>
 
@@ -56,7 +56,7 @@ contact the administrator.
 
 <td>
 <p>
-<img src="$data.Request.ContextPath/images/artifact_type.gif" alt="What is an issue type?" width="260"
+<img src="$staticLink.setPath("/images/artifact_type.gif")" alt="What is an issue type?" width="260"
 height="105" /></p> Select an <strong>issue type</strong> from the
 left side navigation. An issue type encapsulates a unique set of
 attributes and attribute options:

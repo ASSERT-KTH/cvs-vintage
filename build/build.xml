@@ -176,6 +176,7 @@
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
         <filter token="MODULE_SERVICE" value="${scarab.module.service}"/>
         <filter token="SCARAB_LINK" value="${scarab.pull.link}"/>
+        <filter token="SCARAB_STATIC_LINK" value="${scarab.pull.staticlink}"/>
         <filter token="LUCENE_INDEX_PATH" value="${scarab.lucene.index.path}"/>
         <filter token="ATTACHMENTS_PATH" value="${scarab.attachments.path}"/>
         <filter token="INTAKE_SERIALIZE_FILE" value="${scarab.intake.serialize.file}"/>

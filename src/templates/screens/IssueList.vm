@@ -76,10 +76,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
      #if (!$sortAttrId || $sortAttrId.length() == 0)
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").addPathInfo("sortAttrId", ""))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").addPathInfo("sortAttrId", ""))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
         #end
      Issue ID
      #else
@@ -99,10 +99,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
      #if ($sortAttrId.equals($userAttribute.AttributeId.toString()))
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "asc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
            #set ($arrowLink = $link.setPage("IssueList.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortAttrId", "$userAttribute.AttributeId"))
-           <a href="$arrowLink"><img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #end
         $userAttribute.Name
      #else
@@ -142,7 +142,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
    <input type="submit" value="Assign" name="eventSubmit_doReassignselected" />&#160;
 #end
 <input type="submit" value="View verbose"  name="eventSubmit_doViewselected" />&#160;
-<small>selected</small>&#160;&#160;<img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
+<small>selected</small>&#160;&#160;<img src="$staticLink.setPath("/images/seperator.gif")" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
   <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
 #end

@@ -6,10 +6,10 @@
   <title>$page.Title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
   <style type="text/css">
-  @import url($data.Request.ContextPath/style/ns4_toxins.css);
+  @import url($staticLink.setPath("/style/ns4_toxins.css"));
   </style>
-  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/main.css" />
-  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
+  <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/main.css")" />
+  <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
  </head>
 <body class="docs">
 $renderer.render("screens", $template)

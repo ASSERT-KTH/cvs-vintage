@@ -1,7 +1,7 @@
 <td id="rightcol" width="20%">
     <div class="help" id="modulehelp">
         
-        <p><img src="$data.Request.ContextPath/images/module2.gif" 
+        <p><img src="$staticLink.setPath("/images/module2.gif")" 
         width="113" height="51" alt="" border="0" /></p>
         
         <p>A module is the unit of work space representing a
