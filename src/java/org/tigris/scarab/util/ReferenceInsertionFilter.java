@@ -59,7 +59,7 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * each request.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.8 2002/02/16 01:54:17 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.9 2002/03/30 01:21:29 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler
@@ -136,7 +136,7 @@ public class ReferenceInsertionFilter
                     result.append("&gt;");
                     break;
                 case '&':
-                    if (content[i+1] == '#') 
+                    if (i+1 >= content.length && content[i+1] == '#') 
                     {
                         result.append('&');
                     }
