@@ -1,5 +1,5 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.11 2003/09/21 14:11:13 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.12 2003/11/11 21:54:09 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -93,7 +93,7 @@ public class UMLClassifierRoleAssociationRoleListModel
     /**
      * @see
      * org.argouml.uml.ui.UMLBinaryRelationListModel#connect(MutableGraphModel,
-     * MModelElement, MModelElement)
+     * Object, Object)
      */
     protected void connect(
 			   MutableGraphModel gm,
@@ -103,9 +103,7 @@ public class UMLClassifierRoleAssociationRoleListModel
     }
 
     /**
-     * @see
-     * org.argouml.uml.ui.UMLBinaryRelationListModel#build(MModelElement,
-     * MModelElement)
+     * @see org.argouml.uml.ui.UMLBinaryRelationListModel#build(Object,Object)
      */
     protected void build(Object/*MModelElement*/ from, Object/*MModelElement*/ to) {
 	if (from != null && to != null && ModelFacade.isAClassifierRole(from) && ModelFacade.isAClassifierRole(to)) { 
@@ -115,8 +113,7 @@ public class UMLClassifierRoleAssociationRoleListModel
 
     /**
      * @see
-     * org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(MModelElement,
-     * MModelElement)
+     * org.argouml.uml.ui.UMLBinaryRelationListModel#getRelation(Object,Object)
      */
     protected Object getRelation(Object/*MModelElement*/ from, Object/*MModelElement*/ to) {
 	if (from != null && to != null && ModelFacade.isAClassifierRole(from) && ModelFacade.isAClassifierRole(to)) { 

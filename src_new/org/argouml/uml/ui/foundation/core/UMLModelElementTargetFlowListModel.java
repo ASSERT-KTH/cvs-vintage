@@ -1,5 +1,5 @@
-// $Id: UMLModelElementTargetFlowListModel.java,v 1.8 2003/09/20 13:10:44 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLModelElementTargetFlowListModel.java,v 1.9 2003/11/11 21:54:10 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -54,7 +53,7 @@ public class UMLModelElementTargetFlowListModel
 
     
     /**
-     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
         return ModelFacade.isAFlow(o) && ModelFacade.getTargetFlows(getTarget()).contains(o);

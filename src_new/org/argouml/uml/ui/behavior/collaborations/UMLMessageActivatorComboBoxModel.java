@@ -1,5 +1,5 @@
-// $Id: UMLMessageActivatorComboBoxModel.java,v 1.16 2003/09/14 18:10:44 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLMessageActivatorComboBoxModel.java,v 1.17 2003/11/11 21:54:09 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -61,7 +61,7 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
 
     
     /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object m) {
         return ((org.argouml.model.ModelFacade.isAMessage(m))  && 

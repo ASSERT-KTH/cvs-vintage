@@ -1,4 +1,4 @@
-// $Id: UMLAttributeInitialValueListModel.java,v 1.4 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLAttributeInitialValueListModel.java,v 1.5 2003/11/11 21:54:10 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,8 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-//$Id: UMLAttributeInitialValueListModel.java,v 1.4 2003/09/20 13:10:44 bobtarling Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -55,7 +53,7 @@ public class UMLAttributeInitialValueListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ element) {
 	return ModelFacade.getInitialValue(getTarget()) == element;

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.15 2003/09/21 14:11:12 bobtarling Exp $
+// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.16 2003/11/11 21:54:10 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.Collection;
@@ -55,7 +54,7 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
 
     
     /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
         return org.argouml.model.ModelFacade.isAStereotype(o) 

@@ -1,5 +1,5 @@
-// $Id: ActionActivityDiagram.java,v 1.26 2003/09/22 18:58:41 bobtarling Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionActivityDiagram.java,v 1.27 2003/11/11 21:54:08 linus Exp $
+// Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -46,7 +46,7 @@ public class ActionActivityDiagram extends ActionStateDiagram {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(MNamespace, Object)
+     * @see org.argouml.uml.ui.ActionAddDiagram#createDiagram(Object)
      */
     public UMLDiagram createDiagram(Object ns) {
         Object target = TargetManager.getInstance().getModelTarget();
@@ -66,8 +66,9 @@ public class ActionActivityDiagram extends ActionStateDiagram {
         return super.shouldBeEnabled()
 	    || org.argouml.model.ModelFacade.isAPackage(TargetManager.getInstance().getModelTarget());
     }
+
     /**
-     * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(MNamespace)
+     * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(Object)
      */
     public boolean isValidNamespace(Object handle) {
         return super.isValidNamespace(handle) || ModelFacade.isAPackage(handle);

@@ -1,5 +1,5 @@
-// $Id: UMLExtendExtensionPointListModel.java,v 1.11 2003/09/20 13:10:43 bobtarling Exp $
-// Copyright (c) 2002 The Regents of the University of California. All
+// $Id: UMLExtendExtensionPointListModel.java,v 1.12 2003/11/11 21:54:10 linus Exp $
+// Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -52,7 +52,7 @@ public class UMLExtendExtensionPointListModel
    
 
     /**
-     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
+     * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
         return ModelFacade.isAExtensionPoint(o) && ModelFacade.getExtensionPoints(getTarget()).contains(o);

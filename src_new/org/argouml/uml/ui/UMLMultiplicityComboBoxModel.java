@@ -1,5 +1,4 @@
-
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.7 2003/10/26 16:40:02 alexb Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.8 2003/11/11 21:54:08 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.7 2003/10/26 16:40:02 alexb Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.8 2003/11/11 21:54:08 linus Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
     }
 
     /**
-     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
         return org.argouml.model.ModelFacade.isAMultiplicity(element);
