@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -78,7 +78,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 if(pool.isInvalidateOnError()) {
                     pool.markObjectAsInvalid(evt.getSource());
                 }
-                closeConnection(evt, XAResource.TMFAIL);
+//                closeConnection(evt, XAResource.TMFAIL);
             }
 
             public void connectionClosed(ConnectionEvent evt) {
@@ -87,11 +87,16 @@ public class XAConnectionFactory extends PoolObjectFactory {
 
             private void closeConnection(ConnectionEvent evt, int status) {
                 XAConnection con = (XAConnection)evt.getSource();
+                try {
+                    con.removeConnectionEventListener(listener);
+                } catch(IllegalArgumentException e) {
+                    return; // Removed twice somehow?
+                }
                 Transaction trans = null;
                 try {
                     if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                         trans = tm.getTransaction();
-                        XAResource res = (XAResource)rms.get(con);//con.getXAResource();
+                        XAResource res = (XAResource)rms.get(con);
                         trans.delistResource(res, status);
                         rms.remove(con);
                     }
@@ -99,7 +104,6 @@ public class XAConnectionFactory extends PoolObjectFactory {
                     Logger.exception(e);
                     throw new RuntimeException("Unable to deregister with TransactionManager: "+e);
                 }
-                con.removeConnectionEventListener(listener);
 
                 if(!(con instanceof XAConnectionImpl)) {
                     // Real XAConnection -> not associated w/ transaction

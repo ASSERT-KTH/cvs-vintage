@@ -43,7 +43,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection, PooledObject {
@@ -179,7 +179,8 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
     }
 
     public void removeConnectionEventListener(ConnectionEventListener listener) {
-        listeners.remove(listener);
+        if(!listeners.remove(listener))
+            throw new IllegalArgumentException();
     }
 
     public Connection getConnection() {

@@ -32,7 +32,7 @@ import org.jboss.minerva.pools.PoolEvent;
  * returned to the pool) until the transactional details are taken care of.
  * This instance only lives as long as one client is using it - though we
  * probably want to consider reusing it to save object allocations.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAClientConnection implements ConnectionWrapper {
@@ -172,12 +172,16 @@ public class XAClientConnection implements ConnectionWrapper {
 
     public void setAutoCommit(boolean autoCommit) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
+        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction() && autoCommit)
+            throw new SQLException("Cannot set AutoCommit for a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
+
         try {
             con.setAutoCommit(autoCommit);
         } catch(SQLException e) {
             setError(e);
             throw e;
         }
+
     }
 
     public boolean getAutoCommit() throws SQLException {
@@ -192,6 +196,8 @@ public class XAClientConnection implements ConnectionWrapper {
 
     public void commit() throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
+        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction())
+            throw new SQLException("Cannot commit a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
         try {
             con.commit();
         } catch(SQLException e) {
@@ -202,12 +208,8 @@ public class XAClientConnection implements ConnectionWrapper {
 
     public void rollback() throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
-        try {
-            con.rollback();
-        } catch(SQLException e) {
-            setError(e);
-            throw e;
-        }
+        if(((XAResourceImpl)xaCon.getXAResource()).isTransaction())
+            throw new SQLException("Cannot rollback a transactional connection: See JDBC 2.0 Optional Package Specification section 7.1 (p25)");
     }
 
     public void close() throws SQLException {
