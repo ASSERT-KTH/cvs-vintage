@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.13 2003/05/21 06:32:12 dlr Exp $
+ * @version $Id: ActivitySet.java,v 1.14 2003/09/12 23:47:13 elicia Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -117,6 +117,18 @@ public class ActivitySet
         }
 */
         return result;
+    }
+
+    /**
+     * Returns a list of Activity objects associated with this ActivitySet
+     * And this issue.
+     */
+    public List getActivityListForIssue(Issue issue) throws Exception
+    {
+            Criteria crit = new Criteria()
+                .add(ActivityPeer.TRANSACTION_ID, getActivitySetId());
+            crit.add(ActivityPeer.ISSUE_ID, issue.getIssueId());
+            return ActivityPeer.doSelect(crit);
     }
 
     public ScarabUser getCreator()

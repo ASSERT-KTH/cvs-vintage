@@ -25,11 +25,11 @@
 #if ($isSingleIssueOp)
   ## For single issue move, display attribute values for this issue
   #set ($matchingAttributes = $issue.getMatchingAttributeValuesList($newModule, $newIssueType))
-  #set ($orphanAttributes = $issue.getOrphanAttributeValuesList($newModule, $newIssueType))
+  #set ($nonMatchingAttributes = $issue.getNonMatchingAttributeValuesList($newModule, $newIssueType))
 #else
   ## For multiple issue move, cannot display attribute values, only attributes.
   #set ($matchingAttributes = $issueType.getMatchingAttributeValuesList($module, $newModule, $newIssueType))
-  #set ($orphanAttributes = $issueType.getOrphanAttributeValuesList($module, $newModule, $newIssueType))
+  #set ($nonMatchingAttributes = $issueType.getNonMatchingAttributeValuesList($module, $newModule, $newIssueType))
 #end
 
 #if ($selectAction.toString().equals("move"))
@@ -105,7 +105,7 @@
 </table>
 #end
 
-#if (!$orphanAttributes.isEmpty())
+#if (!$nonMatchingAttributes.isEmpty())
 <h3>$l10n.AttributesThatDoNotExist</h3>
 <div class="colbar">$l10n.IncludedAsComment</div>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -117,7 +117,7 @@
 <th>$l10n.Value</th>
 #end
 </tr>
-#foreach($attr in $orphanAttributes)
+#foreach($attr in $nonMatchingAttributes)
   #if ($isSingleIssueOp)
      #set ($attVal=$attr)
      #set ($attr = $attVal.Attribute)

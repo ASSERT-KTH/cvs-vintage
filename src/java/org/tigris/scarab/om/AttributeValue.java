@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.98 2003/07/28 14:41:21 thierrylach Exp $
+ * @version $Id: AttributeValue.java,v 1.99 2003/09/12 23:47:13 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -813,22 +813,25 @@ Leaving here so that John can remove or fix.
             {
                 throw new TorqueException(e);
             }
-            // Save activity record
-            if (getDeleted())
+            // Save new activity record, if activity has not been set
+            if (saveActivity == null)
             {
-                saveActivity = ActivityManager
-                                .create(getIssue(), getAttribute(), activitySet, 
-                                        desc, null, getNumericValue(), ScarabConstants.INTEGER_0,
-                                        getUserId(), null, getOptionId(), null, 
-                                        getValue(), null, dbcon);
-            }
-            else
-            {
-                saveActivity = ActivityManager
-                                .create(getIssue(), getAttribute(), activitySet, 
-                                        desc, null, oldNumericValue, getNumericValue(), 
-                                        oldUserId, getUserId(), oldOptionId, getOptionId(), 
-                                        oldValue, getValue(), dbcon);
+                if (getDeleted())
+                {
+                    saveActivity = ActivityManager
+                           .create(getIssue(), getAttribute(), activitySet, 
+                                   desc, null, getNumericValue(), ScarabConstants.INTEGER_0,
+                                   getUserId(), null, getOptionId(), null, 
+                                   getValue(), null, dbcon);
+                }
+                else
+                {
+                    saveActivity = ActivityManager
+                          .create(getIssue(), getAttribute(), activitySet, 
+                                  desc, null, oldNumericValue, getNumericValue(), 
+                                  oldUserId, getUserId(), oldOptionId, getOptionId(), 
+                                  oldValue, getValue(), dbcon);
+                }
             }
         }
         super.save(dbcon);
@@ -849,6 +852,11 @@ Leaving here so that John can remove or fix.
         return this.saveActivity;
     }
 
+    public void setActivity(Activity activity)
+    {
+        this.saveActivity = activity;
+    }
+ 
     /**
      * Allows you to override the description for
      * the activity that is generated when this attributevalue
