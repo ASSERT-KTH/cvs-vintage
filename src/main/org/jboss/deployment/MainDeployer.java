@@ -45,7 +45,8 @@ import org.jboss.util.jmx.MBeanProxy;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.19 $
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.20 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -685,10 +686,11 @@ public class MainDeployer
    protected void deploySubPackages(DeploymentInfo di)
       throws DeploymentException
    {
-      // If XML only no subdeployment to speak of
+      // If XML only no subdeployment to speak of. We also do not
+      // break a war into subdeployments as this opens the door to
+      // servlet 2.3 classloading stuff we don't want to deal with here
       // FIXME do the sub deploy for directory and the move to 
-      // if (di.isXML) return;
-      if (di.isXML || di.isDirectory)
+      if (di.isXML || di.isDirectory || di.shortName.endsWith(".war") )
       {
          return ;
       }
@@ -1020,4 +1022,3 @@ public class MainDeployer
    
    private synchronized int getNextID() { return id++;}
 }
-
