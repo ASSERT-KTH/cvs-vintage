@@ -144,7 +144,6 @@
 <h3>$l10n.Personnel</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-  <th nowrap="nowrap">&nbsp;</th>
   <th>$l10n.Name</th>
   <th>$l10n.Username</th>
   <th>$l10n.Association</th>
@@ -152,7 +151,6 @@
 
 <tr class="a">
   #set ($createdUser = $currentIssue.CreatedBy)
-  <td>&nbsp;</td>
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
   <td>$createdUser.UserName</td>
   <td>Committed by</td>
@@ -164,9 +162,6 @@
       #set ($userId = $attVal.UserId)
       #set ($assignedUser = $scarabR.getUser($userId))
 
-      <td>
-         ##<input type="checkbox">
-      </td>
       <td>
         $!assignedUser.Name
         #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
