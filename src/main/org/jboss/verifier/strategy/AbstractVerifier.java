@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.42 2003/12/02 16:13:02 cgjung Exp $
+ * $Id: AbstractVerifier.java,v 1.43 2004/03/27 13:01:30 tdiesler Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -35,6 +35,7 @@ import java.util.Arrays;
 
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.rmi.RemoteException;
 
 // non-standard class dependencies
 import org.jboss.metadata.BeanMetaData;
@@ -82,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -301,7 +302,8 @@ public abstract class AbstractVerifier
          Class ex = exceptions[e];
          boolean isError = Error.class.isAssignableFrom(ex);
          boolean isRuntimeException = RuntimeException.class.isAssignableFrom(ex);
-         if( isError == false && isRuntimeException == false )
+         boolean isRemoteException = RemoteException.class.isAssignableFrom(ex);
+         if( isError == false && isRuntimeException == false && isRemoteException == false)
             hasCheckedException = true;
       }
       return hasCheckedException == false;
