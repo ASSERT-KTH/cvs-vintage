@@ -43,6 +43,9 @@
         <fileset dir="${ant.home}/lib">
             <include name="**/ant*.jar"/>
         </fileset>
+        <fileset dir="${tomcat.dist.dir}/common/lib">
+            <include name="**/servlet*.jar"/>
+        </fileset>
     </path>
 
     <!-- ================================================================== -->
