@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.107 2003/09/04 08:04:55 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.108 2003/09/04 15:31:53 sz9 Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3897,8 +3897,9 @@ public class ModelFacade {
         if (isABase(base)) {
             ((MBase) base).setUUID(uuid);
         }
-        //
-        throw new IllegalArgumentException("Unrecognized object " + base);
+        else {
+            throw new IllegalArgumentException("Unrecognized object " + base);
+        }
     }
     
     /**
