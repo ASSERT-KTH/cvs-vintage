@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-minimal.xml,v 1.11 2004/09/05 04:57:08 starksm Exp $ -->
+<!-- $Id: jboss-minimal.xml,v 1.12 2004/09/05 15:06:32 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -34,8 +34,6 @@
       <attribute name="ThreadGroupName">System Threads</attribute>
       <!-- How long a thread will live without any tasks in MS -->
       <attribute name="KeepAliveTime">60000</attribute>
-      <!-- The min number of threads in the pool -->
-      <attribute name="MinimumPoolSize">1</attribute>
       <!-- The max number of threads in the pool -->
       <attribute name="MaximumPoolSize">10</attribute>
       <!-- The max number of tasks before the queue is full -->
