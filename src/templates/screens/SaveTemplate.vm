@@ -9,7 +9,7 @@
 #macro (SaveTemplateBar $var)
 <div class="functnbar$var">
 <input type="submit" value="Save" name="eventSubmit_doSave" />
-#if ($currentTemplate.getIssueId())
+#if ($currentTemplate.IssueId)
   <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
   <input type="submit" value="Use template" name="eventSubmit_doUsetemplate" />&#160;
 #end
@@ -23,6 +23,7 @@
 <h2>$page.Title</h2>
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="entry,Wizard1.vm" />
 
 #if ($templateId)

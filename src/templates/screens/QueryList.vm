@@ -6,7 +6,6 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-
 <form method="post" action="$link.setPage("QueryList.vm").setAction("QueryList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
@@ -78,7 +77,7 @@
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$query.QueryId" /></td>
   <td>#booleanCheckbox($rquGroup.Subscribed) </td>
-  <td>#fieldErrorMsg ($rquGroup.Frequency "<br>")
+  <td>#fieldErrorMsg ($rquGroup.Frequency "")
     <select name="$rquGroup.Frequency.Key">
         #frequencySelectBox ($rqu.SubscriptionFrequency)
     </select>
