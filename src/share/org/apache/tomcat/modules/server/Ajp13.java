@@ -376,14 +376,14 @@ public class Ajp13
     	if(contentLength > 0) {
 	    req.setContentLength( contentLength );
 	    /* Read present data */
-	    int err = receive(msg);
+	    int err = receive(inBuf);
             if(err < 0) {
             	return 500;
 	    }
 	    
-	    blen = msg.peekInt();
+	    blen = inBuf.peekInt();
 	    pos = 0;
-	    msg.getBytes(bodyBuff);
+	    inBuf.getBytes(bodyBuff);
     	}
     
         return 200; // Success
