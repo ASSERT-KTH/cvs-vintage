@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.48 2003/05/02 08:33:42 kataka Exp $
+// $Id: PropPanel.java,v 1.49 2003/05/02 20:51:18 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -458,11 +458,8 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
         
     }
 
-    /**
-     * @deprecated use TargetManager.getInstance().getModelTarget() instead
-     */
     public final Object getTarget() {
-        return TargetManager.getInstance().getModelTarget();
+        return _target;
     }
 
     public final MModelElement getModelElement() {

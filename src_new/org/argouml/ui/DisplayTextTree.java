@@ -64,7 +64,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
  * // naming for extension points in convertValueToText.
  * </pre>
  *
- * $Id: DisplayTextTree.java,v 1.26 2003/05/02 14:01:51 kataka Exp $
+ * $Id: DisplayTextTree.java,v 1.27 2003/05/02 20:51:18 kataka Exp $
  */
 public class DisplayTextTree extends JTree implements TargetListener {
 
@@ -425,8 +425,9 @@ public class DisplayTextTree extends JTree implements TargetListener {
                         }
                     }
                 }
-                scrollRowToVisible(rowToSelect);
+                
             }
+            scrollRowToVisible(rowToSelect);
         }
     }
 

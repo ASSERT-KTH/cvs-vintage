@@ -59,7 +59,7 @@ import tudresden.ocl.parser.OclParserException;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.20 2003/05/01 09:47:10 alexb Exp $
+  * <p>$Id: TabConstraints.java,v 1.21 2003/05/02 20:51:18 kataka Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
@@ -695,7 +695,6 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -703,7 +702,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        // TODO Auto-generated method stub
+        setTarget(e.getNewTargets()[0]);
 
     }
 
@@ -711,7 +710,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        // TODO Auto-generated method stub
+        setTarget(e.getNewTargets()[0]);
 
     }
 

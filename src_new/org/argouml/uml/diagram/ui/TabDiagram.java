@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.18 2003/05/02 14:01:51 kataka Exp $
+// $Id: TabDiagram.java,v 1.19 2003/05/02 20:51:18 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -280,14 +280,19 @@ public class TabDiagram
         LayerManager manager = _jgraph.getEditor().getLayerManager();
         Vector figList = new Vector();
         for (int i = 0; i < targets.length; i++) {
-           Object target = (targets[i] instanceof Fig && manager.getContents().contains(targets[i])) ? targets[i] : manager.presentationFor(targets[i]);
-           if (target != null ) {
-               figList.add(target);
-           }
+            if (targets[i] != null) {
+                Object target =
+                    (targets[i] instanceof Fig
+                        && manager.getContents().contains(targets[i]))
+                        ? targets[i]
+                        : manager.presentationFor(targets[i]);
+                if (target != null) {
+                    figList.add(target);
+                }
+            }
         }
         _jgraph.select(figList);
-                
-        
+
     }
 
 }
