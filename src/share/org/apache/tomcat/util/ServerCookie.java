@@ -25,7 +25,7 @@
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -72,16 +72,16 @@ public class ServerCookie implements Serializable {
     private MessageBytes value=new MessageBytes();
 
     private MessageBytes comment=new MessageBytes();    // ;Comment=VALUE
-    
-    private MessageBytes domain;    // ;Domain=VALUE ... 
+
+    private MessageBytes domain;    // ;Domain=VALUE ...
 
     private int maxAge = -1;	// ;Max-Age=VALUE
 				// ;Discard ... implied by maxAge < 0
     private MessageBytes path;	// ;Path=VALUE .
-    private boolean secure;	// ;Secure 
+    private boolean secure;	// ;Secure
     private int version = 0;	// ;Version=1
 
-    
+
     public ServerCookie() {
 
     }
@@ -91,7 +91,7 @@ public class ServerCookie implements Serializable {
 	value.recycle();
 	comment.recycle();
 	maxAge=-1;
-	path.recycle();
+//	path.recycle();
 	version=0;
 	secure=false;
     }
@@ -99,12 +99,12 @@ public class ServerCookie implements Serializable {
     public void parse( MessageBytes input ) {
 	// Not implemented
     }
-    
-    
+
+
     public MessageBytes getComment() {
 	return comment;
     }
-    
+
     public MessageBytes getDomain() {
 	return domain;
     }
@@ -116,7 +116,7 @@ public class ServerCookie implements Serializable {
     public int getMaxAge() {
 	return maxAge;
     }
-    
+
 
     public MessageBytes getPath() {
 	return path;
@@ -149,19 +149,19 @@ public class ServerCookie implements Serializable {
 
     // Note -- disabled for now to allow full Netscape compatibility
     // from RFC 2068, token special case characters
-    // 
+    //
     // private static final String tspecials = "()<>@,;:\\\"/[]?={} \t";
     private static final String tspecials = ",;";
 
     /*
-     * Tests a string and returns true if the string counts as a 
+     * Tests a string and returns true if the string counts as a
      * reserved token in the Java language.
-     * 
+     *
      * @param value		the <code>String</code> to be tested
      *
      * @return			<code>true</code> if the <code>String</code> is
      *				a reserved token; <code>false</code>
-     *				if it is not			
+     *				if it is not
      */
     public static boolean isToken(String value) {
 	int len = value.length();
