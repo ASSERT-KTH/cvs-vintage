@@ -6,8 +6,11 @@
  */
 package org.jboss.tm;
 
+import java.util.Hashtable;
+
 import javax.transaction.Status;
 import javax.transaction.TransactionManager;
+import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.NotSupportedException;
 import javax.transaction.SystemException;
@@ -15,6 +18,10 @@ import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
+import javax.transaction.xa.Xid;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.XAException;
+
 
 import org.jboss.logging.Logger;
 
@@ -23,7 +30,8 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.6 $
  */
 public class TxManager
    implements TransactionManager
@@ -31,9 +39,11 @@ public class TxManager
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
-   ThreadLocal tx = new ThreadLocal();
-   Transaction noTx = new TransactionImpl(null);
-   
+   // threadTx keeps track of a thread local association of tx
+   ThreadLocal threadTx = new ThreadLocal();
+   // transactions maps
+   Hashtable txCapsules = new Hashtable();
+
    int timeOut = 60*1000; // Timeout in milliseconds
    
    // Static --------------------------------------------------------
@@ -45,7 +55,15 @@ public class TxManager
       throws NotSupportedException,SystemException
    {
 //      System.out.println("begin tx");
-      tx.set(new TransactionImpl(this, timeOut));
+		
+		// create tx capsule
+		TxCapsule txCap = new TxCapsule(this, timeOut);
+		
+		// Store it 
+		txCapsules.put(txCap.getTransaction(), txCap);
+		
+		// Associate it with the Thread
+      	threadTx.set(txCap.getTransaction());
    }
    
    public void commit()
@@ -57,47 +75,60 @@ public class TxManager
                    SystemException
    {
 //      System.out.println("commit tx");
-      getTransaction().commit();
+		
+		try {
+      	
+			getTransaction().commit();
+		}
+		finally {
+		
+			// Disassociation
+			threadTx.set(null);
+		}
    }
    
    public int getStatus()
               throws SystemException
    {
-      Transaction current = getTransaction();
-      if (current == null)
+	   // Get the txCapsule running now with the thread
+	  TxCapsule txCap = (TxCapsule) txCapsules.get(threadTx.get());
+      
+	  if (txCap == null)
          return Status.STATUS_NO_TRANSACTION;
       else
-         return current.getStatus();
+         return txCap.getStatus();
    }
    
    public Transaction getTransaction()
                            throws SystemException
    {
-      Transaction current = (Transaction)tx.get();
+      return (Transaction)threadTx.get();
       
-//DEBUG      Logger.debug("Current="+current);
-      
-    //  if (current == null)
-
-         // MF FIXME 
-		 // WHY?????
-	//	 return noTx;
-    //  else
-         return current;
    }
 
-   // FIXME MF: resume has another meaning
-   // it means "resume the suspended transaction"
-   // Not resume the association with thread 
    public void resume(Transaction tobj)
             throws InvalidTransactionException,
                    java.lang.IllegalStateException,
                    SystemException
    {
-//      Logger.debug("resume tx with "+tobj);
-      tx.set(tobj);
+	   //Useless
+	   
+	   //throw new Exception("txMan.resume() NYI");
    }
                    
+							   
+   public Transaction suspend()
+                    throws SystemException
+   {
+//      System.out.println("suspend tx");
+      
+	   // Useless
+	   
+	   return null;
+	   //throw new Exception("txMan.suspend() NYI");
+   }
+   
+				   
    public void rollback()
               throws java.lang.IllegalStateException,
                      java.lang.SecurityException,
@@ -121,41 +152,25 @@ public class TxManager
       timeOut = seconds;
    }
    
-   public Transaction suspend()
-                    throws SystemException
-   {
-//      System.out.println("suspend tx");
-      
-      Transaction current = (Transaction)tx.get();
-      tx.set(null);
-      
-      return current;
-   }
-   
    /*
    * The following 2 methods are here to provide association and disassociation of the thread
    */
    public Transaction disassociateThread() {
 	
-	   	Transaction current = (Transaction) tx.get();
+	   	Transaction current = (Transaction) threadTx.get();
 	
-	   	tx.set(null);
+	   	threadTx.set(null);
 
 		return current;
    }
    
    public void associateThread(Transaction transaction) {
 	
-	   tx.set(transaction);
+	   threadTx.set(transaction);
    }
    
    
    // Package protected ---------------------------------------------
-   void removeTransaction()
-   {
-      tx.set(null);
-   }
-   
    
    // There has got to be something better :)
    static TxManager getTransactionManager() {
@@ -177,7 +192,69 @@ public class TxManager
    {
       return timeOut;
    }
+   
+   
+   
     
+   // Public --------------------------------------------------------
+   public void commit(Transaction tx)
+            throws RollbackException,
+                   HeuristicMixedException,
+                   HeuristicRollbackException,
+                   java.lang.SecurityException,
+                   java.lang.IllegalStateException,
+                   SystemException
+   {
+	  // Look up the txCapsule and delegate
+	  ((TxCapsule) txCapsules.get(tx)).commit();
+   }
+
+   public boolean delistResource(Transaction tx, XAResource xaRes, int flag)
+   {
+	   // Look up the txCapsule and delegate
+	   return ((TxCapsule) txCapsules.get(tx)).delistResource(xaRes, flag);
+   }
+    
+   public boolean enlistResource(Transaction tx, XAResource xaRes)
+      throws RollbackException
+   {
+   		// Look up the txCapsule and delegate
+	   return ((TxCapsule) txCapsules.get(tx)).enlistResource(xaRes);
+   }
+
+   public int getStatus(Transaction tx)
+              throws SystemException
+   {
+      // Look up the txCapsule and delegate
+	  return ((TxCapsule) txCapsules.get(tx)).getStatus();
+   }
+
+   public void registerSynchronization(Transaction tx, Synchronization s)
+   {
+      // Look up the txCapsule and delegate
+	  ((TxCapsule) txCapsules.get(tx)).registerSynchronization(s);
+   }
+
+   public void rollback(Transaction tx)
+              throws java.lang.IllegalStateException,
+                     java.lang.SecurityException,
+                     SystemException
+   {
+	   // Look up the txCapsule and delegate
+	  ((TxCapsule) txCapsules.get(tx)).rollback();
+   }
+
+   public void setRollbackOnly(Transaction tx)
+                     throws java.lang.IllegalStateException,
+                            SystemException
+   {                                        
+   		// Look up the txCapsule and delegate
+	  	((TxCapsule) txCapsules.get(tx)).setRollbackOnly();
+  
+   }
+
+
+	
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
