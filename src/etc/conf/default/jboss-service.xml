@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.10 2001/09/11 02:48:05 dmaplesden Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.11 2001/09/11 05:28:08 user57 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -33,11 +33,9 @@
   <classpath archives="
   	 castor.jar,
 	 castor-jdo-plugin.jar,
-	 com.mortbay.ftp.jar,
-	 com.mortbay.jetty.jar,
-	 com.mortbay.jetty.jmx.jar,
-	 com.mortbay.jetty.sasl.jar,
-	 com.mortbay.tools.jar,
+	 org.mortbay.jetty.jar,
+	 org.mortbay.jetty.jmx.jar,
+	 org.mortbay.tools.jar,
 	 concurrent.jar,
 	 crimson.jar,
 	 cryptix-sasl-jetty.jar,
