@@ -296,7 +296,6 @@ public class IMAPFolder extends RemoteFolder {
 			}
 			
 			LOG.fine("Found " + newMessages + " new Messages");
-			
 
 			// If we have new messages add them to the headerlist
 			if (newMessages > 0 ) {
@@ -417,11 +416,17 @@ public class IMAPFolder extends RemoteFolder {
 
 		}
 
-		// Update MessageFolderInfo
-		messageFolderInfo = getServer().getMessageFolderInfo(this);
-		messageFolderInfo.setUnseen(status.getUnseen());
+		// Check if MessageFolderInfo is up to date
+		messageFolderInfo.setExists(status.getMessages());
+		messageFolderInfo.setRecent(status.getRecent());
+		
+		// Somehow and error got introduced ->
+		// use this heuristic to solve the problem
+		if( messageFolderInfo.getUnseen() < 0) {
+			messageFolderInfo.setUnseen(0);
+		}
 
-		fireFolderPropertyChanged();		
+		fireFolderPropertyChanged();
 	}
 
 	public void synchronizeFlags() throws Exception, IOException,
