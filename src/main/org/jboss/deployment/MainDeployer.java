@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.4 $
+* @version $Revision: 1.5 $
 *
 *
 */
@@ -386,7 +386,6 @@ implements MainDeployerMBean, Runnable
       }  
       catch (DeploymentException e) 
       { 
-         log.error("Deployment failed: "+ deployment.url,e); 
          
          deployment.status="Deployment FAILED reason: "+e.getMessage();
          
@@ -557,6 +556,11 @@ implements MainDeployerMBean, Runnable
          JarEntry entry = (JarEntry)e.nextElement();
          String name = entry.getName();
          
+         // Make sure the name is flat no directory structure in subs name
+         // example war's WEBINF/lib/myjar.jar appears as myjar.jar in the tmp directory
+         if (name.lastIndexOf("/") != -1)  
+            name = name.substring(name.lastIndexOf("/"));
+         
          // Everything that is not 
          // a- an XML file
          // b- a class in a normal directory structure
@@ -572,6 +576,7 @@ implements MainDeployerMBean, Runnable
             try 
             {
                File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");
+               
                
                // We use the name of the entry as the name of the file under deploy 
                // (marcf note: I don't think we need the getNextID, not important)
@@ -595,7 +600,7 @@ implements MainDeployerMBean, Runnable
             catch (DeploymentException e3) { throw e3;} //just throw
             catch (Exception e2) 
             { 
-               log.error("Error in subDeployment with name "+name);
+               log.error("Error in subDeployment with name "+name, e2);
                
                throw new DeploymentException("Could not deploy sub deployment "+name+" of deployment "+di.url);
             }
