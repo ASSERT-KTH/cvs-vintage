@@ -4,7 +4,7 @@
 <!-- jEdit FAQ									                        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-appendix.xml,v 1.2 2002/01/26 13:40:00 jgellene Exp $
+<!-- $Id: faq-appendix.xml,v 1.3 2003/02/07 17:42:28 spestov Exp $
 -->
 
 <appendix id="appendix"><title>List of contributors</title>
@@ -13,11 +13,12 @@
     the following:
   </para>
   <itemizedlist>
+    <listitem><para>Dominic Stolerman</para></listitem>
+    <listitem><para>Frank Rocca</para></listitem>
+    <listitem><para>Kris Kopicki</para></listitem>
+    <listitem><para>Maik Schreiber</para></listitem>
     <listitem><para>Mike Dillon</para></listitem>
     <listitem><para>Slava Pestov</para></listitem>
-    <listitem><para>Frank Rocca</para></listitem>
-    <listitem><para>Maik Schreiber</para></listitem>
-    <listitem><para>Dominic Stolerman</para></listitem>
     <!--
     <listitem><para></para></listitem>
     <listitem><para></para></listitem>

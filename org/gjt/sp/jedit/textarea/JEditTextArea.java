@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.180 2003/02/03 02:08:00 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.181 2003/02/07 17:42:31 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6152,6 +6152,14 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				return;
 			if(startLine < getFirstPhysicalLine())
 			{
+				if(startLine < getFoldVisibilityManager().getFirstVisibleLine())
+				{
+					// need to update these two!
+					physFirstLine = virtualToPhysical(firstLine);
+					delayedRecalculateLastPhysicalLine = true;
+					return;
+				}
+
 				int virtStartLine = physicalToVirtual(startLine);
 
 				int pos;

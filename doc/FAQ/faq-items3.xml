@@ -4,7 +4,7 @@
 <!-- jEdit FAQ									                        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-items3.xml,v 1.8 2002/02/18 15:22:26 jgellene Exp $
+<!-- $Id: faq-items3.xml,v 1.9 2003/02/07 17:42:29 spestov Exp $
 -->
 
 <sect1 id="working-files"><title>Working with Files</title>
@@ -34,8 +34,8 @@
         <answer><para>
             To add a directory to the list of favorites, navigate so that
             the directory is at the top of the tree displayed in the File System
-            Browser window, click the <guimenuitem>More</guimenuitem> button (or
-            right-click anywhere in the browser window), and select
+            Browser window, click the <guimenuitem>Favorites</guimenuitem> button,
+            and select
             <guimenuitem>Add to favorites</guimenuitem> from the resulting menu.
             To delete a directory from the favorites list, use the same menu
             to go to the favorites list. Right-click on the directory to

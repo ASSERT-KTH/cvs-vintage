@@ -41,7 +41,14 @@ import org.gjt.sp.util.*;
 //}}}
 
 /**
- * An in-memory copy of an open file.
+ * An in-memory copy of an open file.<p>
+ *
+ * In a BeanShell script, you can obtain the current buffer instance from the
+ * <code>buffer</code> variable.<p>
+ *
+ * This class does not have a public constructor.
+ * Buffers can be opened and closed using methods in the <code>jEdit</code>
+ * class.<p>
  *
  * This class is partially thread-safe, however you must pay attention to a few
  * very important issues:
@@ -54,7 +61,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.115 2003/02/01 17:18:58 spestov Exp $
+ * @version $Id: Buffer.java,v 1.116 2003/02/07 17:42:30 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
