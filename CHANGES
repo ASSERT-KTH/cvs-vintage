@@ -12,7 +12,7 @@ Version CVS (upcoming 0.9.10)
  - addressbook-component:
     * address parser fixes
     * dnd support for addressbook JList-component
-    
+    * address auto-completion
     
 Version 0.9.9
 
