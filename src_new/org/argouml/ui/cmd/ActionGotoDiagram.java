@@ -1,4 +1,4 @@
-// $Id: ActionGotoDiagram.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: ActionGotoDiagram.java,v 1.2 2004/10/18 05:55:34 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,17 +30,22 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
 
+import org.argouml.application.api.CommandLineInterface;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.TabResults;
+import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.UMLAction;
+import org.tigris.gef.base.Diagram;
 
 ////////////////////////////////////////////////////////////////
 // items on view menu
 
-class ActionGotoDiagram extends UMLAction {
+public class ActionGotoDiagram 
+	extends UMLAction 
+	implements CommandLineInterface {
 
     public ActionGotoDiagram() { super("action.goto-diagram", NO_ICON); }
 
@@ -91,6 +96,19 @@ class ActionGotoDiagram extends UMLAction {
 	f.setContent(mainPanel);
 	//TODO: tabs for class, state, usecase, help
 	f.setVisible(true);
+    }
+
+    /**
+     * @see org.argouml.application.api.CommandLineInterface#doCommand(java.lang.String)
+     */
+    public boolean doCommand(String argument) {
+	Project p = ProjectManager.getManager().getCurrentProject();
+        Diagram d = p.getDiagram(argument);
+        if (d != null) {
+            TargetManager.getInstance().setTarget(d);
+            return true;
+        }
+        return false;
     }
 } /* end class ActionGotoDiagram */
 
