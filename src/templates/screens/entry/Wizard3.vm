@@ -75,7 +75,7 @@ $page.setTitle("Enter issue")
         <tr>
             <th>
     #if ($attVal.isRequired())*#end
-    $attVal.RModuleAttribute.DisplayValue:
+    $attVal.getRModuleAttribute($issueType).DisplayValue:
     #attrValueErrorMsg ($attVal $field)<br />
             </th>
             <td>
