@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.6 2000/09/29 07:00:38 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/09/29 07:00:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.7 2000/12/07 19:52:42 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/12/07 19:52:42 $
  *
  * ====================================================================
  * 
@@ -68,7 +68,7 @@ import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.JspEngineInfo;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.tomcat.util.SimplePool;
+import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.log.*;
 
 /**

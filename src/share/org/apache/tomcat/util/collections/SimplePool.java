@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,47 +55,84 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
+package org.apache.tomcat.util.collections;
 
-package org.apache.tomcat.util;
+import java.util.zip.*;
+import java.net.*;
+import java.util.*;
+import java.io.*;
 
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
+/**
+ * Simple object pool. Based on ThreadPool and few other classes
+ *
+ * The pool will ignore overflow and return null if empty.
+ *
+ * @author Gal Shachor
+ * @author Costin
+ */
+public final class SimplePool  {
+    /*
+     * Where the threads are held.
+     */
+    private Object pool[];
 
-// Added to avoid the conversion of [] to Vector - reduce garbage + cleaner
-// code is similar to VectorEnumeration in java.util.Vector
+    private int max;
+    private int minSpare;
+    private int maxSpare;
 
-public class ArrayEnumerator implements Enumeration {
+    private int current=-1;
 
-    Object array[];
-    int pos;
-    int end;
+    Object lock;
+    public static final int DEFAULT_SIZE=16;
     
-    public ArrayEnumerator( Object array[] ) {
-	this.array=array;
-	pos=0;
-	end=array.length;
+    public SimplePool() {
+	this.max=DEFAULT_SIZE;
+	pool=new Object[max];
+	lock=new Object();
     }
 
-    public ArrayEnumerator( Object array[], int start, int end ) {
-	this.array=array;
-	pos=start;
-	this.end=end;
+    public SimplePool(int max) {
+	this.max=max;
+	pool=new Object[max];
+	lock=new Object();
     }
-    
-    public Object nextElement( ) {
-	synchronized( array ) {
-	    if( pos < end )
-		return array[ pos ++ ];
+
+    public  void set(Object o) {
+	put(o);
+    }
+    /**
+     * Add the object to the pool, silent nothing if the pool is full
+     */
+    public  void put(Object o) {
+	int idx=-1;
+	synchronized( lock ) {
+	    if( current < max - 1 )
+		idx=++current;
+	    if( idx >= 0 ) 
+		pool[idx]=o;
 	}
-	throw new NoSuchElementException( "No more elements: " +
-					  pos + " / " + end);
-	
     }
 
-    public boolean hasMoreElements() {
-	return pos < end;
+    /**
+     * Get an object from the pool, null if the pool is empty.
+     */
+    public  Object get() {
+	int idx=-1;
+	synchronized( lock ) {
+	    if( current >= 0 )
+		idx=current--;
+	    if( idx >= 0  ) 
+		return pool[idx];
+	}
+	return null;
     }
-    
+
+    /** Return the size of the pool
+     */
+    public int getMax() {
+	return max;
+    }
+
 }

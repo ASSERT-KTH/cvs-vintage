@@ -62,8 +62,6 @@ import java.io.PrintWriter;
 
 import java.util.Date;
 
-import org.apache.tomcat.util.Queue;
-
 /**
  * This is an entry that is created in response to every
  * Logger.log(...) call.

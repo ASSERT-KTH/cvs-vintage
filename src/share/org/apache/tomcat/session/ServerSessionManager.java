@@ -63,6 +63,7 @@ package org.apache.tomcat.session;
 import java.io.IOException;
 import java.util.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.*;

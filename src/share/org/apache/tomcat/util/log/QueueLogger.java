@@ -62,7 +62,7 @@ import java.io.PrintWriter;
 
 import java.util.Date;
 
-import org.apache.tomcat.util.Queue;
+import org.apache.tomcat.util.collections.Queue;
 
 /**
  * A real implementation of the Logger abstraction.

@@ -1,9 +1,9 @@
 /*
  * ====================================================================
- *
+ * 
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
+ *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,86 +53,76 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * [Additional notices, if required by prior licensing conditions]
- *
- */
+ */ 
+package org.apache.tomcat.util.collections;
 
-package org.apache.tomcat.util;
-
-import java.util.zip.*;
-import java.net.*;
-import java.util.*;
-import java.io.*;
+import java.util.Vector;
 
 /**
- * Simple object pool. Based on ThreadPool and few other classes
+ * A simple FIFO queue class which causes the calling thread to wait
+ * if the queue is empty and notifies threads that are waiting when it
+ * is not empty.
  *
- * The pool will ignore overflow and return null if empty.
- *
- * @author Gal Shachor
- * @author Costin
+ * @author Anil V (akv@eng.sun.com)
  */
-public final class SimplePool  {
-    /*
-     * Where the threads are held.
+public class Queue {
+    private Vector vector = new Vector();
+
+    /** 
+     * Put the object into the queue.
+     * 
+     * @param	object		the object to be appended to the
+     * 				queue. 
      */
-    private Object pool[];
-
-    private int max;
-    private int minSpare;
-    private int maxSpare;
-
-    private int current=-1;
-
-    Object lock;
-    public static final int DEFAULT_SIZE=16;
+    public synchronized void put(Object object) {
+	vector.addElement(object);
+	notify();
+    }
     
-    public SimplePool() {
-	this.max=DEFAULT_SIZE;
-	pool=new Object[max];
-	lock=new Object();
-    }
-
-    public SimplePool(int max) {
-	this.max=max;
-	pool=new Object[max];
-	lock=new Object();
-    }
-
-    public  void set(Object o) {
-	put(o);
-    }
     /**
-     * Add the object to the pool, silent nothing if the pool is full
+     * Pull the first object out of the queue. Wait if the queue is
+     * empty.
      */
-    public  void put(Object o) {
-	int idx=-1;
-	synchronized( lock ) {
-	    if( current < max - 1 )
-		idx=++current;
-	    if( idx >= 0 ) 
-		pool[idx]=o;
-	}
+    public synchronized Object pull() {
+	while (isEmpty())
+	    try {
+		wait();
+	    } catch (InterruptedException ex) {
+	    }
+	return get();
     }
 
     /**
-     * Get an object from the pool, null if the pool is empty.
+     * Get the first object out of the queue. Return null if the queue
+     * is empty. 
      */
-    public  Object get() {
-	int idx=-1;
-	synchronized( lock ) {
-	    if( current >= 0 )
-		idx=current--;
-	    if( idx >= 0  ) 
-		return pool[idx];
-	}
-	return null;
+    public synchronized Object get() {
+	Object object = peek();
+	if (object != null)
+	    vector.removeElementAt(0);
+	return object;
     }
 
-    /** Return the size of the pool
+    /**
+     * Peek to see if something is available.
      */
-    public int getMax() {
-	return max;
+    public Object peek() {
+	if (isEmpty())
+	    return null;
+	return vector.elementAt(0);
+    }
+    
+    /**
+     * Is the queue empty?
+     */
+    public boolean isEmpty() {
+	return vector.isEmpty();
     }
 
+    /**
+     * How many elements are there in this queue?
+     */
+    public int size() {
+	return vector.size();
+    }
 }
