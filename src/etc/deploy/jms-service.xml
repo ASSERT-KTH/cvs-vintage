@@ -72,7 +72,7 @@
     <depends optional-attribute-name="CachedConnectionManager">jboss.jca:service=CachedConnectionManager</depends>
     <attribute name="SecurityDomainJndiName">java:/jaas/JmsXARealm</attribute>
 
-    <depends optional-attribute-name="JaasSecurityManagerService">jboss.security:name=JaasSecurityManager</depends>
+    <depends optional-attribute-name="JaasSecurityManagerService">jboss.security:service=JaasSecurityManager</depends>
 
     <attribute name="TransactionManager">java:/TransactionManager</attribute>
   </mbean>
