@@ -265,7 +265,7 @@
 #if ($tab.equals("4") || $tab.equals("all"))
 ## URLS
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
-<h3>Related links $currentIssue.Urls.isEmpty()</h3>
+<h3>Related links</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      #if (!$currentIssue.Urls.isEmpty())
