@@ -6,7 +6,7 @@
      <property name="tomcat.home" value="." />
      <property name="gdir" value="${tomcat.home}/lib/test/Golden" />
 
-     <taskdef name="gtest" class="org.apache.tomcat.task.GTest" />
+     <taskdef name="gtest" classname="org.apache.tomcat.task.GTest" />
    </target>
 
   <!-- ==================== File tests ==================== -->
@@ -568,32 +568,32 @@
              returnCode="HTTP/1.0 404"
             />
 
-      <gtest request="POST /test/ HTTP/0.9"
+      <gtest request="POST /test/"
              content=""
              returnCode="HTTP/1.0 400 Bad Request"
             />
 
-      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+      <gtest request="POST /test/servlet/request.EchoServlet"
              content="name=lightness of being"
              returnCode="HTTP/1.0 200 OK"
             />
 
-      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+      <gtest request="POST /test/servlet/request.EchoServlet"
              content="name=lightness of being,,,,,,,....###///&amp;&amp;@@@@@***"
              returnCode="HTTP/1.0 200 OK"
             />
 
-      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+      <gtest request="POST /test/servlet/request.EchoServlet"
              content="name=lightness of being,,,,,,,....###///&amp;&amp;&amp;&amp;@@@@@***"
              returnCode="HTTP/1.0 200 OK"
             />
 
-      <gtest request="POST \/test/servlet/request.EchoServlet?name=sun&amp;age=2000 HTTP/0.9"
+      <gtest request="POST \/test/servlet/request.EchoServlet?name=sun&amp;age=2000"
              content="name=lightness of being,,,,,,,....###///&amp;@@@@@***"
              returnCode="HTTP/1.0 200 OK"
             />
 
-      <gtest request="POST \ HTTP/0.9"
+      <gtest request="POST \"
              content="name=lightness of being"
              returnCode="Error: 400"
             />
@@ -627,7 +627,7 @@
 
 
    <target name="startup">
-     <java class="org.apache.tomcat.startup.Tomcat" args="" />
+     <java classname="org.apache.tomcat.startup.Tomcat" args="" />
    </target>
 
 
@@ -636,7 +636,7 @@
 
 
    <target name="shutdown">
-     <java class="org.apache.tomcat.startup.Tomcat" args="-stop" />
+     <java classname="org.apache.tomcat.startup.Tomcat" args="-stop" />
    </target>
 
 
