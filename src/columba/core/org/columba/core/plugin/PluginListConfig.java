@@ -30,7 +30,6 @@ import org.columba.core.xml.XmlIO;
  */
 public class PluginListConfig extends XmlIO {
 
-	File file;
 	/**
 	 * Constructor for PluginListConfig.
 	 */
@@ -39,11 +38,8 @@ public class PluginListConfig extends XmlIO {
 
 		URL url = DiskIO.getResourceURL(fileName);
 
-		file = new File(url.getFile());
-		setFile(file);
+		setFile( new File( url.getFile() ) );
 		
 		load();
-		
 	}
-
 }

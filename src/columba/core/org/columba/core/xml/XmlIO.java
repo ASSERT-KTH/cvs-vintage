@@ -27,6 +27,9 @@
 //
 //
 // $Log: XmlIO.java,v $
+// Revision 1.3  2003/01/07 11:02:25  javaprog
+// [intern] reduced code size
+//
 // Revision 1.2  2003/01/06 19:18:26  tonyparent
 // [intern] Escape '<', '>', and '&' when writing data and attributes.
 //
@@ -77,7 +80,7 @@ public class XmlIO extends DefaultHandler {
 	// the "characters" SAX event.
 	private CharArrayWriter contents = new CharArrayWriter();
 
-	private File file;
+	protected File file = null;
 
 	/*
 	// Default constructor
