@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.7 2000/06/11 21:41:06 mandar Exp $
- * $Revision: 1.7 $
- * $Date: 2000/06/11 21:41:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.8 2000/07/13 16:51:57 alex Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/07/13 16:51:57 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -355,7 +355,7 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 	writer.println ("} catch (Exception exc) {");
 	writer.pushIndent ();
 	writer.println (" throw new ServletException (\" Cannot create bean of class \""  +
-			"+\"" + clsname + "\");"); 
+			"+\"" + clsname + "\", exc);"); 
 	writer.popIndent ();
 	writer.println ("}");
 	
