@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.20 2001/10/08 05:06:03 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.21 2001/10/09 01:35:35 jon Exp $
 */
 
 public interface ScarabConstants
@@ -137,4 +137,9 @@ public interface ScarabConstants
      */
     public static final String NO_PERMISSION_MESSAGE = "You do not have " +
                                "permissions to perform this action.";
+
+    /**
+     * Name of the global module.
+     */
+    public static final String GLOBAL_MODULE_NAME = "Global";
 }    
