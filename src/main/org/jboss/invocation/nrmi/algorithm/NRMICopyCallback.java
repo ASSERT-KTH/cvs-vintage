@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * A callback to update the original object after the call completes
  * @author <a href="mailto:tilevich@cc.gatech.edu">Eli Tilevich</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * */
 
 public class NRMICopyCallback implements DFObjectWalker.EntryExitCallback
@@ -138,9 +138,9 @@ if (oldObj.getClass ().isArray () &&
 	return;	
 } //if
 	
-int modifiers = Caches.Modifiers.getClassModifiers (objClass);
-if (Modifier.isFinal (modifiers))
-	return;
+//int modifiers = Caches.Modifiers.getClassModifiers (objClass);
+//if (Modifier.isFinal (modifiers))
+//	return;
 		
 Class curClass = newObj.getClass ();
 		
