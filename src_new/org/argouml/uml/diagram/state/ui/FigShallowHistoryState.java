@@ -24,7 +24,7 @@
 // File: FigShallowHistoryState.java
 // Classes: FigShallowHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigShallowHistoryState.java,v 1.6 2002/12/25 10:22:28 kataka Exp $
+// $Id: FigShallowHistoryState.java,v 1.7 2003/02/15 12:42:50 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -92,7 +92,7 @@ public class FigShallowHistoryState extends FigStateVertex {
 
   public FigShallowHistoryState(GraphModel gm, Object node) {
     this();
-    // setOwner(node);
+    setOwner(node);
   }
 
   public Object clone() {
