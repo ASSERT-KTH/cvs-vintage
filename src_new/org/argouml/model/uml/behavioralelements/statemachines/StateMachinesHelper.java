@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.20 2004/05/30 06:11:09 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.21 2004/06/12 06:22:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,6 +161,20 @@ public class StateMachinesHelper {
 	{
             return true;
 	}
+        return false;
+    }
+    
+    /**
+     * Returns true is the given state is the top state.
+     * 
+     * @author MVW
+     * @param o CompositeState
+     * @return boolean 
+     */
+    public boolean isTopState(Object o) {
+        if (ModelFacade.isACompositeState(o))
+            if (ModelFacade.getContainer(o) == null)
+                return true;
         return false;
     }
     

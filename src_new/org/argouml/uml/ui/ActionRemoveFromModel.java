@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.37 2004/02/28 12:29:44 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.38 2004/06/12 06:22:46 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelper;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.UMLDiagram;
@@ -118,6 +119,11 @@ public class ActionRemoveFromModel extends UMLChangeAction {
 			     .getModel())) {
             return false;
         }
+        if (StateMachinesHelper.getHelper().isTopState(target))
+            /* we can not delete a "top" state, 
+             * it comes and goes with the statemachine. Issue 2655.
+             */
+            return false;
         return target != null;
     }
 
