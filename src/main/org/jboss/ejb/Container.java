@@ -27,6 +27,7 @@ import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
 import javax.management.DynamicMBean;
 import javax.management.InvalidAttributeValueException;
+import javax.management.MalformedObjectNameException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanException;
@@ -87,8 +88,9 @@ import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.util.jmx.ObjectNameFactory;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
-import org.w3c.dom.Element;
 import org.jboss.system.Registry;
+import org.jboss.util.jmx.ObjectNameConverter;
+import org.w3c.dom.Element;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -110,7 +112,7 @@ import org.jboss.system.Registry;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.102 $
+ * @version $Revision: 1.103 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an aspect/interceptor.  Make this whole stack into a model mbean.
  */
@@ -531,16 +533,23 @@ public abstract class Container
          throw new IllegalStateException("cannot get Container object " +
                "name unless jndi name is set!");
       }
-      
-      if (jmxName == null) 
+
+      if (jmxName == null)
       {
-         jmxName = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + 
-               ",jndiName=" + jndiName);
+         // The name must be escaped since the jndiName may be arbitrary
+         String name = BASE_EJB_CONTAINER_NAME + ",jndiName=" + jndiName;
+         try
+         {
+            jmxName = ObjectNameConverter.convert(name);
+         }
+         catch(MalformedObjectNameException e)
+         {
+            throw new RuntimeException("Failed to create ObjectName, msg="+e.getMessage());
+         }
       }
-      
       return jmxName;
    }
-    
+ 
    /**
     * The EJBDeployer calls this method.  The EJBDeployer has set
     * all the plugins and interceptors that this bean requires and now proceeds
