@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.20 2001/12/26 05:32:34 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.21 2001/12/31 02:13:24 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -422,7 +422,18 @@ public class VFSBrowser extends JPanel implements EBComponent
 
 		pathField.setText(path);
 
+		if(!startRequest())
+			return;
+
 		browserView.loadDirectory(path);
+
+		VFSManager.runInAWTThread(new Runnable()
+		{
+			public void run()
+			{
+				endRequest();
+			}
+		});
 	} //}}}
 
 	//{{{ reloadDirectory() method
@@ -658,9 +669,6 @@ public class VFSBrowser extends JPanel implements EBComponent
 
 		Object session = vfs.createVFSSession(path,this);
 		if(session == null)
-			return;
-
-		if(!startRequest())
 			return;
 
 		VFSManager.runInWorkThread(new BrowserIORequest(

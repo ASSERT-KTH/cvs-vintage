@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * number to another.
  *
  * @author Slava Pestov
- * @version $Id: FoldVisibilityManager.java,v 1.17 2001/12/25 03:06:50 spestov Exp $
+ * @version $Id: FoldVisibilityManager.java,v 1.18 2001/12/31 02:13:24 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FoldVisibilityManager
@@ -572,7 +572,8 @@ public class FoldVisibilityManager
 
 				for(int i = line + 1; i < lineCount; i++)
 				{
-					if(buffer._isLineVisible(i,index) && buffer.getFoldLevel(i) <= initialFoldLevel)
+					if(/* buffer._isLineVisible(i,index) && */
+						buffer.getFoldLevel(i) <= initialFoldLevel)
 					{
 						end = i - 1;
 						break;
@@ -602,7 +603,8 @@ public class FoldVisibilityManager
 
 				for(int i = line + 1; i < lineCount; i++)
 				{
-					if(buffer._isLineVisible(i,index) && buffer.getFoldLevel(i) < initialFoldLevel)
+					if(/* buffer._isLineVisible(i,index) && */
+						buffer.getFoldLevel(i) < initialFoldLevel)
 					{
 						end = i - 1;
 						break;
@@ -614,6 +616,11 @@ public class FoldVisibilityManager
 
 			// we need a different value of initialFoldLevel here!
 			initialFoldLevel = buffer.getFoldLevel(start);
+
+			for(int i = start; i <= end; i++)
+			{
+				buffer.getFoldLevel(i);
+			}
 
 			for(int i = start; i <= end; i++)
 			{

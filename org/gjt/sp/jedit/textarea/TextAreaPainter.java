@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.22 2001/12/30 07:35:03 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.23 2001/12/31 02:13:24 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -654,9 +654,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	 */
 	public float nextTabStop(float x, int tabOffset)
 	{
-		int offset = textArea.getHorizontalOffset();
-		int ntabs = (int)((x - offset) / tabSize);
-		return (ntabs + 1) * tabSize + offset;
+		int ntabs = (int)(x / tabSize);
+		return (ntabs + 1) * tabSize;
 	} //}}}
 
 	//{{{ getPreferredSize() method

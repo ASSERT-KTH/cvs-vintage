@@ -34,7 +34,7 @@ import org.gjt.sp.util.WorkThread;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.5 2001/11/30 11:40:16 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.6 2001/12/31 02:13:24 spestov Exp $
  */
 public class BrowserIORequest extends WorkRequest
 {
@@ -98,7 +98,8 @@ public class BrowserIORequest extends WorkRequest
 			break;
 		}
 
-		browser.endRequest();
+		if(type != LIST_DIRECTORY)
+			browser.endRequest();
 	} //}}}
 
 	//{{{ toString() method
