@@ -5,8 +5,8 @@
 $page.setTitle("User Administration")
 
 #set ($username = $data.Parameters.getString("username"))
-#set ($user = $scarabG.getUserByUsername($username))
-#set ($acl = $scarabG.getACL($user))
+#set ($user = $securityAdmin.getUserByUsername($username))
+#set ($acl = $securityAdmin.getACL($user))
 
 <div id="adduser" class="app">
 
@@ -29,7 +29,7 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
         &nbsp;
     </td>
       
-    #foreach ($role in $scarabG.Roles)
+    #foreach ($role in $securityAdmin.Roles)
     <td bgcolor="#ffffff">
         <b>$role.Name</b>
     </td>
@@ -40,13 +40,13 @@ Modifying roles for <b>$user.FirstName $user.LastName</b> [$user.UserName]
   <form method="post" action="admin,EditUserRoles.vm">
     <input type="hidden" name="action" value="admin.ManageUser">
 
-  #foreach ($group in $scarabG.Groups)
+  #foreach ($group in $securityAdmin.Groups)
   #indexedRows ($velocityCount)
     <td bgcolor="#ffffff">
         <b>$group.Name</b>
     </td>
 
-    #foreach ($role in $scarabG.Roles)
+    #foreach ($role in $securityAdmin.Roles)
       #if ($acl.hasRole($role, $group))
         #set ($checked = "checked")
       #else

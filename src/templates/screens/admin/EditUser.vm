@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditUser.vm,v 1.4 2001/11/28 21:15:51 dr Exp $
+@version $Id: EditUser.vm,v 1.5 2001/12/04 15:59:30 dr Exp $
 *#
 
 $page.setTitle("User Administration")
@@ -25,7 +25,7 @@ $page.setTitle("User Administration")
 
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ((!$user.FirstName) && ($state == "showedituser"))
-  #set ($user2 = $scarabG.getUserByUsername($data.Parameters.getString("username")))
+  #set ($user2 = $securityAdmin.getUserByUsername($data.Parameters.getString("username")))
   #set ($regGroup = $intake.Register.Default)
   #set ($firstNameData = $user2.FirstName)
   #set ($lastNameData = $user2.LastName)
