@@ -65,6 +65,9 @@ import org.apache.commons.lang.RandomStringUtils;
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.tools.localization.L10NMessage;
+import org.tigris.scarab.tools.localization.Localizable;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
@@ -92,8 +95,6 @@ public class ForgotPassword extends ScarabTemplateAction
         IntakeTool intake = getIntakeTool(context);
         if (intake.isAllValid() && forgotPassword(data, context))
         {
-            getScarabRequestTool(context).setConfirmMessage(
-                "An email has been sent to you with your password.");
             setTarget(data, "Login.vm");
         }
     }
@@ -159,10 +160,16 @@ public class ForgotPassword extends ScarabTemplateAction
                     .getString("scarab.email.forgotpassword.template",
                                "email/ForgotPassword.vm"));
             te.send();
+            
+            // create confirmation message
+            Localizable msg = new L10NMessage(L10NKeySet.PasswordResetMessage,
+                                              user.getEmail()); 
+            getScarabRequestTool(context).setConfirmMessage(msg);
         }
         catch (TurbineSecurityException e)
         {
-            getScarabRequestTool(context).setAlertMessage("Invalid username.");
+            Localizable msg = new L10NMessage(L10NKeySet.InvalidUsername,username);
+            getScarabRequestTool(context).setAlertMessage(msg);
             Log.get().error("ForgotPassword: ", e);
             setTarget(data, "ForgotPassword.vm");
             return false;

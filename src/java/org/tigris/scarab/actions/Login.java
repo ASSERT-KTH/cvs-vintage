@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.54 2004/10/14 11:33:15 dep4b Exp $
+ * @version $Id: Login.java,v 1.55 2004/12/04 12:15:33 dabbous Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -147,6 +147,7 @@ public class Login extends ScarabTemplateAction
         String password = login.get("Password").toString();
         
         ScarabUser user = null;
+
         try
         {
             // Authenticate the user and get the object.
@@ -192,8 +193,18 @@ public class Login extends ScarabTemplateAction
                 scarabR.setAlertMessage(L10NKeySet.UserIsNotConfirmed);
                 return failAction(data, "Confirm.vm");
             }
+
+
+            // store the user object
+            data.setUser(user);
+            // mark the user as being logged in
+            user.setHasLoggedIn(Boolean.TRUE);
+            // set the last_login date in the database
+            user.updateLastLogin();
+
             // check if the password is expired
-            if (user.isPasswordExpired())
+            boolean userPasswordExpired = user.isPasswordExpired();
+            if (userPasswordExpired)
             {
                 if (scarabR != null)
                 {
@@ -202,23 +213,24 @@ public class Login extends ScarabTemplateAction
                 }
 
                 scarabR.setAlertMessage(L10NKeySet.YourPasswordHasExpired);
-                return failAction(data, "ChangePassword.vm");
+                //return failAction(data, "ChangePassword.vm");
+
+                setTarget(data, "ChangePassword.vm");
+                //change next screen to allow password reset.
+                data.save();
+                return false;
             }
 
-            // store the user object
-            data.setUser(user);
-            // mark the user as being logged in
-            user.setHasLoggedIn(Boolean.TRUE);
-            // set the last_login date in the database
-            user.updateLastLogin();
             // update the password expire
             user.setPasswordExpire();
             // this only happens if the user is valid
             // otherwise, we will get a valueBound in the User
             // object when we don't want to because the username is
             // not set yet.
+                       
             // save the User object into the session
             data.save();
+
         }
         catch (TurbineSecurityException e)
         {
