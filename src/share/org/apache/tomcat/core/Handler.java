@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.3 2000/06/19 21:53:11 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/19 21:53:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.4 2000/06/22 00:15:00 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/22 00:15:00 $
  *
  * ====================================================================
  *
@@ -112,6 +112,11 @@ public class Handler {
     protected int origin;
     protected boolean internal=false;
 
+    // Debug
+    protected int debug=0;
+    protected String debugHead=null;
+
+    
     public Handler() {
     }
 
@@ -303,36 +308,16 @@ public class Handler {
 		// ignore the error - like in the original code
 	    }
 	}
-	
-	handleError( req, res, t );
+
+	if( t==null ) return;
+	contextM.handleError( req, res, t );
     }
 
-    protected void handleError( Request req, Response res, Throwable t) {
-	if( t==null)
-	    return;
+//     protected void handleError( Request req, Response res, Throwable t) {
+// 	if( t==null)  return;
 	
-	if( t instanceof IOException ) {
-	    if( ((IOException)t).getMessage().equals("Broken pipe"))
-		return;
-	    System.out.println("XXX XXX " + t.getMessage());
-	}
-	    
-	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
-	    // we are in handleRequest for the "default" error handler
-	    System.out.println("ERROR: can't find default error handler "+
-			       "or error in default error page");
-	    t.printStackTrace();
-	} else {
-	    String msg=t.getMessage();
-	    context.log( "Error in " + getName() +
-			 " service() : " + msg, t);
-	    // XXX XXX Security - we should log the message, but nothing
-	    // should show up  to the user - it gives up information
-	    // about the internal system !
-	    // Developers can/should use the logs !!!
-	    contextM.handleError( req, res, t );
-	}
-    }
+// 	contextM.handleError( req, res, t );
+//     }
     
     public String toString() {
 	return name;
@@ -353,6 +338,26 @@ public class Handler {
     public int getOrigin() {
 	return origin;
     }
+
+    // -------------------- Debug --------------------
+    public void setDebug( int d ) {
+	debug=d;
+    }
+
+    protected void log( String s ) {
+	if( debugHead == null ) {
+	    String cname=this.getClass().getName();
+	    debugHead=cname.substring( cname.lastIndexOf(".") +1);
+	    debugHead += ": ";
+	}
+	if( context!= null )
+	    context.log( debugHead + s );
+	else 
+	    System.out.println(debugHead + s ); 
+    }
+
+
+
     // -------------------- Accounting --------------------
 
     /** ServletWrapper counts. The accounting desing is not

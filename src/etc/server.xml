@@ -80,7 +80,13 @@
           -->
         <RequestInterceptor 
             className="org.apache.tomcat.request.InvokerInterceptor" 
-            debug="20" />
+            debug="0" />
+
+        <!-- "default" handler - static files and dirs
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.StaticInterceptor" 
+            debug="0" />
 
         <!-- Plug a session manager. You can plug in more advanced session
              modules.

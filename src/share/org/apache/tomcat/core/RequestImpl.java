@@ -154,6 +154,10 @@ public class RequestImpl  implements Request {
     protected String localHost;
     protected ByteBuffer bBuffer;
 
+    Request top;
+    Request parent;
+    Request child;
+    
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
 
@@ -301,7 +305,8 @@ public class RequestImpl  implements Request {
 	// not set yet - we'll compute it
 	pathTranslatedIsSet=true;
 	String path=getPathInfo();
-	// In CGI spec, PATH_TRANSLATED shouldn't be set if no path info is present
+	// In CGI spec, PATH_TRANSLATED shouldn't be set if no path
+	// info is present
 	pathTranslated=null;
 	if(path==null || "".equals( path ) ) return null;
 	pathTranslated=context.getRealPath( path );
@@ -581,6 +586,48 @@ public class RequestImpl  implements Request {
     }
     // End Attributes
 
+    // -------------------- Sub requests
+
+    /** If this is a sub-request, return the parent
+     */
+    public Request getParent() {
+	return parent;
+    }
+
+    public void setParent( Request req ) {
+	parent =req;
+    }
+
+    /** During include, a sub-request will be created.
+     *  This represents the current included request
+     */
+    public Request getChild() {
+	return child;
+    }
+    
+    public void setChild( Request req ) {
+	child=req;
+    }
+
+    /** This is the top request ( for a sub-request )
+     */
+    public Request getTop() {
+	if( top == null  ) {
+	    if( parent==null )
+		top=this;
+	    else {
+		int i=MAX_INCLUDE;
+		Request p=parent;
+		while( i-- > 0 && p.getParent()!= null )
+		    p=p.getParent();
+		if( i == 0 )
+		    throw new IllegalStateException("Too deep includes");
+		top=p;
+	    }
+	}
+	return top;
+    }
+    
     // -------------------- Facade for MimeHeaders
     public Enumeration getHeaders(String name) {
 	//	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
@@ -656,6 +703,9 @@ public class RequestImpl  implements Request {
 	if( bBuffer != null ) bBuffer.recycle();
         for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
+	parent=null;
+	child=null;
+	top=null;
     }
 
     public MimeHeaders getMimeHeaders() {

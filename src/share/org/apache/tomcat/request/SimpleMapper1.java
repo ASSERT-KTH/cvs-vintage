@@ -176,6 +176,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	switch( ct.getMapType() ) {
 	case Container.PREFIX_MAP:
 	    // cut /* ( no need to do a string concat for every match )
+	    // workaround for frequent bug in web.xml ( backw. compat )
+	    if( ! path.startsWith( "/" ) ) path="/" + path;
 	    map.addMapping( vhost, ctxP + path.substring( 0, path.length()-2 ), ct);
 	    if( debug>0 ) log("SM: prefix map " + vhost + ":" +  ctxP + path + " -> " + ct + " " );
 	    break;
@@ -196,6 +198,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    if(debug>0) log( "SM: extension map " + ctxP + "/" + path + " " + ct + " " );
 	    break;
 	case Container.PATH_MAP:
+	    // workaround for frequent bug in web.xml
+	    if( ! path.startsWith( "/" ) ) path="/" + path;
 	    map.addExactMapping( vhost, ctxP + path, ct);
 	    if( debug>0 ) log("SM: exact map " + vhost + ":" + ctxP + path + " -> " + ct + " " );
 	    break;
@@ -222,31 +226,38 @@ public class SimpleMapper1 extends  BaseInterceptor  {
      */
     public int contextMap( Request req ) {
 	String path = req.getRequestURI();
-	if( path==null) throw new RuntimeException("ASSERT: null path in request URI");
-	if( path.indexOf("?") >=0 ) throw new RuntimeException("ASSERT: ? in requestURI");
+	if( path==null)
+	    throw new RuntimeException("ASSERT: null path in request URI");
+	if( path.indexOf("?") >=0 )
+	    throw new RuntimeException("ASSERT: ? in requestURI");
 	
 	try {
 	    String host=req.getServerName();
 	    if(debug>0) cm.log("Host = " + host);
 
 	    Context ctx = null;
-	    Container container =(Container)map.getLongestPrefixMatch(  host, path );
+	    Container container =(Container)map.getLongestPrefixMatch(  host,
+									path );
 	    
-	    if( container == null ) throw new RuntimeException( "Assertion failed - container==null");
-	    if( container.getHandler() == null ) throw new RuntimeException( "Assertion failed - container.handler==null " +
-									     req.toString());
-	    
-	    if(debug>0) cm.log("SM: Prefix match " + path + " -> " + container.getPath() + " " +
-			       container.getHandler()  + " " + container.getRoles());
+	    if( container == null )
+		throw new RuntimeException( "Assertion failed: " +
+					    "container==null");
+
+	    if(debug>0)
+		cm.log("SM: Prefix match " + path + " -> " +
+		       container.getPath() + " " + container.getHandler()  +
+		       " " + container.getRoles());
 
 	    // Once - adjust for prefix and context path
-	    // If cached - we don't need to do it again ( since it is the final Container,
+	    // If cached - we don't need to do it again ( since it is the
+	    // final Container,
 	    // either prefix or extension )
 	    fixRequestPaths( path, req, container );
 	
 
 	    // if it's default container - try extension match
-	    if (  container.getMapType() == Container.DEFAULT_MAP ) {
+	    //	    if (  container.getMapType() == Container.DEFAULT_MAP ) {
+	    if (  container.getHandler() == null ) {
 		Container extC = matchExtension( req );
 	
 		if( extC != null ) {
@@ -255,12 +266,15 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 			fixRequestPaths( path, req, extC );
 			container=extC;
 		    }
-		    if( debug > 0 ) log("SM: Found extension mapping " + extC.getHandler());
+		    if( debug > 0 )
+			log("SM: Found extension mapping " +
+			    extC.getHandler());
 		    // change security roles
 		}
 	    }
 	    
-	    if(debug>0) log("SM: After mapping " + req + " " + req.getWrapper());
+	    if(debug>0) log("SM: After mapping " + req + " " +
+			    req.getWrapper());
 	
 	} catch(Exception ex ) {
 	    ex.printStackTrace();

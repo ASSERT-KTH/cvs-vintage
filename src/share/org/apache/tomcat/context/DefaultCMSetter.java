@@ -150,6 +150,13 @@ class NotFoundHandler extends ServletWrapper {
     {
 	res.setContentType("text/html");	// ISO-8859-1 default
 
+	String requestURI = (String)req.
+	    getAttribute("javax.servlet.include.request_uri");
+
+	if (requestURI == null) {
+	    requestURI = req.getRequestURI();
+	}
+
 	StringBuffer buf = new StringBuffer();
 	buf.append("<head><title>")
 	    .append(sm.getString("defaulterrorpage.notfound404"))
@@ -158,7 +165,7 @@ class NotFoundHandler extends ServletWrapper {
 	    .append(sm.getString("defaulterrorpage.notfound404"))
 	    .append("</h1>\r\n");
 	buf.append(sm.getString("defaulterrorpage.originalrequest"))
-	    .append( req.getRequestURI());
+	    .append( requestURI );
 	buf.append("</body>\r\n");
 
 	String body = buf.toString();
@@ -206,7 +213,8 @@ class ExceptionHandler extends ServletWrapper {
 	StringBuffer buf = new StringBuffer();
 	buf.append("<h1>");
 	if( res.isIncluded() ) {
-	    buf.append(sm.getString("defaulterrorpage.includedservlet") );
+	    buf.append(sm.getString("defaulterrorpage.includedservlet") ).
+		append(" ");
 	}  else {
 	    buf.append("Error: ");
 	}
@@ -367,6 +375,7 @@ class RedirectHandler extends ServletWrapper {
 	}
     }
 
+    // XXX Move it to URLUtil !!!
     private String makeAbsolute(Request req, String location) {
         URL url = null;
         try {
@@ -386,7 +395,4 @@ class RedirectHandler extends ServletWrapper {
 	}
         return url.toString();
     }
-
-
-    
 }

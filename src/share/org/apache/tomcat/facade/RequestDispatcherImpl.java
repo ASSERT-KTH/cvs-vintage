@@ -141,7 +141,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	/** We need to find the request/response. The servlet API
 	 *  guarantees that we will receive the original request as parameter.
 	 */
-	Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
+	Request realRequest = ((HttpServletRequestFacade)request).
+	    getRealRequest();
         Response realResponse = realRequest.getResponse();
 
 	// according to specs (as of 2.2: started is OK, just not committed)
@@ -161,7 +162,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// the way they process the request - if you don't understand the code
 	// try to understand the spec.
 	
-	// in forward case, the Path parametrs of the request are what you would
+	// in forward case, the Path parametrs of the request are what you 
 	// expect, so we just do a new processRequest on the modified request
 
 	// set the context - no need to fire context parsing again
@@ -186,14 +187,15 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 
 	// CM should have set the wrapper - call it
-	realRequest.getWrapper().service(realRequest,
-					 realResponse);
+	ServletWrapper wr=realRequest.getWrapper();
+	if( wr!=null ) wr.service(realRequest, realResponse);
     }
 
     public void include(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
-        Request realRequest = ((HttpServletRequestFacade)request).getRealRequest();
+        Request realRequest = ((HttpServletRequestFacade)request).
+	    getRealRequest();
 	Response realResponse = realRequest.getResponse();
 
 	// the strange case in a separate method
@@ -203,7 +205,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	}
 	
 	// Implement the spec that "no changes in response, only write"
-	// can also be done by setting the response to 0.9 mode ( as Apache does!)
+	// can also be done by setting the response to 0.9 mode
 	//	IncludedResponse iResponse = new IncludedResponse(realResponse);
 	boolean old_included=realResponse.isIncluded();
 	if( ! old_included ) {
@@ -212,8 +214,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// Here the spec is very special, pay attention
 
-	// We need to pass the original request, with all the paths - and the new paths
-	// in special attributes.
+	// We need to pass the original request, with all the paths -
+	// and the new paths in special attributes.
 
 	// We still need to find out where do we want to go ( today )
 	// That means we create a subRequest with the new paths ( since
@@ -223,8 +225,11 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// That also means that some special cases ( like the invoker !! )
 	// will have to pay attention to the attributes, or we'll get a loop
 
-	Request subRequest=context.getContextManager().createRequest( context, path );
-
+	Request subRequest=context.getContextManager().
+	    createRequest( context, path );
+	subRequest.setParent( realRequest );
+	subRequest.getTop(); // control inclusion depth
+	
 	// I hope no interceptor (or code) in processRequest use any
 	// of the original request info ( like Auth headers )
 	//
@@ -244,31 +249,38 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// We will use the stack a bit - save all path attributes, set the
 	// new values, and after return from wrapper revert to the original
-
-	Object old_request_uri=realRequest.getAttribute("javax.servlet.include.request_uri");
+	Object old_request_uri=realRequest.
+	    getAttribute("javax.servlet.include.request_uri");
 	realRequest.setAttribute("javax.servlet.include.request_uri",
 				 //				 path);
 				 context.getPath() + path );
 
-	Object old_context_path=realRequest.getAttribute("javax.servlet.include.context_path");
+	Object old_context_path=realRequest.
+	    getAttribute("javax.servlet.include.context_path");
 	realRequest.setAttribute("javax.servlet.include.context_path",
-				 context.getPath()); // never change anyway - RD can't get out
+				 context.getPath());
+	// never change anyway - RD can't get out
 
-	Object old_servlet_path=realRequest.getAttribute("javax.servlet.include.servlet_path");
+	Object old_servlet_path=realRequest.
+	    getAttribute("javax.servlet.include.servlet_path");
 	realRequest.setAttribute("javax.servlet.include.servlet_path",
 				 subRequest.getServletPath());
 	
-	Object old_path_info=realRequest.getAttribute("javax.servlet.include.path_info");
+	Object old_path_info=realRequest.
+	    getAttribute("javax.servlet.include.path_info");
 	realRequest.setAttribute("javax.servlet.include.path_info",
 				 subRequest.getPathInfo());
 
-	Object old_query_string=realRequest.getAttribute("javax.servlet.include.query_string");
-	realRequest.setAttribute("javax.servlet.include.query_string", queryString);
-
+	Object old_query_string=realRequest.
+	    getAttribute("javax.servlet.include.query_string");
+	realRequest.setAttribute("javax.servlet.include.query_string",
+				 queryString);
 	
-	// Not explicitely stated, but we need to save the old parameters before
-	// adding the new ones
-	realRequest.getParameterNames(); // force reading of parameters from POST
+	
+	// Not explicitely stated, but we need to save the old parameters
+	// before adding the new ones
+	realRequest.getParameterNames();
+	// force reading of parameters from POST
 	Hashtable old_parameters=(Hashtable)realRequest.getParameters().clone();
 
 	// NOTE: it has a side effect of _reading_ the form data - which
@@ -282,13 +294,19 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	addQueryString( realRequest, queryString );
 
+	Request old_child = realRequest.getChild();
+	realRequest.setChild( subRequest );
+	
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
-	subRequest.getWrapper().service(realRequest , realResponse);
+	ServletWrapper wr=subRequest.getWrapper();
+	if( wr!=null ) wr.service(realRequest, realResponse);
 
 	// After request, we want to restore the include attributes - for
 	// chained includes.
+	realRequest.setChild( old_child );
+
 	realRequest.setParameters( old_parameters);
 
 	replaceAttribute( realRequest, "javax.servlet.include.request_uri",
@@ -320,8 +338,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// We got here if name!=null, so assert it
 	ServletWrapper wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
-	
-	wrapper.service( realR, realR.getResponse());
+	if( wrapper!=null)
+	    wrapper.service( realR, realR.getResponse());
     }
 
     /** Named forward
@@ -331,8 +349,9 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     {
 	ServletWrapper wrapper = context.getServletByName( name );
 	Request realR=((HttpServletRequestFacade)request).getRealRequest();
-	
-	wrapper.service( realR, realR.getResponse());
+
+	if( wrapper!=null)
+	    wrapper.service( realR, realR.getResponse());
     }    
 
     /**

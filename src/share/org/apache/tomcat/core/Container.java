@@ -274,10 +274,10 @@ public class Container implements Cloneable {
     /** The handler for this container
      */
     public ServletWrapper getHandler() {
-        if (handler == null) {
-	    ///* assert */ throw new RuntimeException( "Assert: container.getHandler==null");
-	    handler=context.getDefaultServlet();
-	}
+	//         if (handler == null) {
+	// 	    ///* assert */ throw new RuntimeException( "Assert: container.getHandler==null");
+	// 	    handler=context.getDefaultServlet();
+	// 	}
 	return handler;
     }
 

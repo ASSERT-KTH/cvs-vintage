@@ -386,6 +386,19 @@ public class RequestUtil {
         return encoding;
     }
 
+    public static Locale getLocale(Request req) {
+	String acceptLanguage = req.getHeader("Accept-Language");
+	if( acceptLanguage == null ) return Locale.getDefault();
+
+        Hashtable languages = new Hashtable();
+	processAcceptLanguage(acceptLanguage, languages);
+	if (languages.size() == 0)
+	    return Locale.getDefault();
+	Vector l = new Vector();
+	extractLocales( languages, l);
+	return (Locale)l.elementAt(0);
+    }
+    
     public static Enumeration getLocales(HttpServletRequest req) {
 	String acceptLanguage = req.getHeader("Accept-Language");
 	// Short circuit with an empty enumeration if null header
@@ -396,7 +409,22 @@ public class RequestUtil {
         }
 
         Hashtable languages = new Hashtable();
+	processAcceptLanguage(acceptLanguage, languages );
 
+        if (languages.size() == 0) {
+            Vector v = new Vector();
+
+            v.addElement(org.apache.tomcat.core.Constants.LOCALE_DEFAULT);
+            languages.put("1.0", v);
+        }
+	Vector l = new Vector();
+	extractLocales( languages, l);
+	return l.elements();
+    }
+
+    public static void processAcceptLanguage( String acceptLanguage,
+					      Hashtable languages )
+    {
         StringTokenizer languageTokenizer =
             new StringTokenizer(acceptLanguage, ",");
 
@@ -427,7 +455,7 @@ public class RequestUtil {
                     }
                 }
             }
-
+	    
 	    // XXX
 	    // may need to handle "*" at some point in time
 
@@ -440,15 +468,10 @@ public class RequestUtil {
 		languages.put(key, v);
 	    }
         }
+    }
 
-        if (languages.size() == 0) {
-            Vector v = new Vector();
-
-            v.addElement(org.apache.tomcat.core.Constants.LOCALE_DEFAULT);
-            languages.put("1.0", v);
-        }
-
-        Vector l = new Vector();
+    public static void extractLocales(Hashtable languages, Vector l)
+    {
         Enumeration e = languages.keys();
 
         while (e.hasMoreElements()) {
@@ -469,8 +492,6 @@ public class RequestUtil {
                 l.addElement(new Locale(language, country));
             }
         }
-
-        return l.elements();
     }
 
 

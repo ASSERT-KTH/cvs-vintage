@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.6 2000/04/26 18:57:36 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/04/26 18:57:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.7 2000/06/22 00:15:05 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/06/22 00:15:05 $
  *
  * ====================================================================
  *
@@ -123,6 +123,69 @@ public class FileUtil {
 	
 	return lookupPath + "/" + path;
     }
+
+    /** All the safety checks from getRealPath() and
+	DefaultServlet.
+
+    */
+    public static String safePath( String base, String path ) {
+	// Hack for Jsp ( and other servlets ) that use rel. paths 
+	if( ! path.startsWith("/") ) path="/"+ path;
+
+	String normP=path;
+	if( path.indexOf('\\') >=0 )
+	    normP= path.replace('\\', '/');
+	
+	String realPath= base + normP;
+
+	// Probably not needed - it will be used on the local FS
+	realPath = FileUtil.patch(realPath);
+	String canPath=null;
+	
+	try {
+	    canPath=new File(realPath).getCanonicalPath();
+	} catch( IOException ex ) {
+	    ex.printStackTrace();
+	    return null;
+	}
+
+	// This absPath/canPath comparison plugs security holes...
+	// On Windows, makes "x.jsp.", "x.Jsp", and "x.jsp%20"
+        // return 404 instead of the JSP source
+	// On all platforms, makes sure we don't let ../'s through
+        // Unfortunately, on Unix, it prevents symlinks from working
+	// So, a check for File.separatorChar='\\' ..... It hopefully
+	// happens on flavors of Windows.
+	if (File.separatorChar  == '\\') {
+	    // On Windows check ignore case....
+	    if(!realPath.equalsIgnoreCase(canPath)) {
+		return null;
+	    }
+	}
+
+	// The following code on Non Windows disallows ../
+	// in the path but also disallows symlinks....
+	//
+	// if( ! canPath.startsWith(base) ) {
+	// 	// no access to files in a different context.
+	//		return null;
+	//   }
+	// if(!absPath.equals(canPath)) {
+	// response.sendError(response.SC_NOT_FOUND);
+	// return;
+	// }
+	// instead lets look for ".." in the absolute path
+	// and disallow only that.
+	// Why should we loose out on symbolic links?
+	//
+	
+	if(realPath.indexOf("..") != -1) {
+	    // We have .. in the path...
+	    return null;
+	}
+	// extra-extra safety check, ( but slow )
+	return realPath;
+    }
     
     public static String patch(String path) {
         String patchPath = path.trim();
@@ -181,29 +244,6 @@ public class FileUtil {
 	return false;
     }
     
-    // Probably not needed, original code used by Context.getRealPath()
-    // XXX Find if it is duplicated, merge with the other "path" functions
-    public static String normPath( String path ) {
-	int i = -1;
-	// norm path
-	if( path==null) {
-	    // Shouldn't happen, find out what is wrong
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	    return "";
-	}
-        while ((i = path.indexOf('\\')) > -1) {
-            String a = path.substring(0, i);
-            String b = "";
- 
-            if (i < path.length() - 1) {
-                b = path.substring(i + 1);
-            } 
- 
-            path = a + "/" + b;
-        }
-	return path;
-    }
-
     // Used in few places.
     public static String getCanonicalPath(String name ) {
 	if( name==null ) return null;

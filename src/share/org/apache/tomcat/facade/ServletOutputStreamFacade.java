@@ -70,7 +70,8 @@ import javax.servlet.ServletOutputStream;
  */
 final class ServletOutputStreamFacade extends ServletOutputStream {
     // Use the strings from core
-    protected StringManager sm = StringManager.getManager("org.apache.tomcat.core");
+    protected StringManager sm = StringManager.
+	getManager("org.apache.tomcat.core");
 
     // encoding
     private Writer writer=null;

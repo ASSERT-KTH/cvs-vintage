@@ -276,7 +276,7 @@ public class Context {
     }
 
     // -------------------- Web.xml properties --------------------
-    
+
     public Enumeration getWelcomeFiles() {
 	return welcomeFiles.elements();
     }
@@ -303,6 +303,10 @@ public class Context {
     public void addWelcomeFile( String s) {
 	// user specified at least one user welcome file, remove the system
 	// files
+	if (s == null ) return;
+	s=s.trim();
+	if(s.length() == 0)
+	    return;
 	if(  expectUserWelcomeFiles  ) {
 	    removeWelcomeFiles();
 	    expectUserWelcomeFiles=false;
@@ -520,23 +524,10 @@ public class Context {
 	}
         ServletWrapper sw = (ServletWrapper)servlets.get(servletName);
 	if (sw == null) {
-	    //	    System.out.println("Servlet not registered " + servletName );
 	    // Workaround for frequent "bug" in web.xmls
-	    // Declare a mapping for a JSP or servlet that is not
-	    // declared as servlet.
-
-	    sw = new ServletWrapper();
-	    sw.setContext(this);
-
-	    sw.setServletName(servletName);
-	    if ( servletName.startsWith("/")) {
-	        sw.setPath(servletName);
-	    } else {
-		sw.setServletClass(servletName);
-	    }
-	    addServlet( sw );
-
-	    // or throw an exception !
+	    // Declare a default mapping
+	    log("Mapping with unregistered servlet " + servletName );
+	    addServlet( servletName, servletName );
 	}
 	if( "/".equals(path) )
 	    defaultServlet = sw;
@@ -602,11 +593,11 @@ public class Context {
 	containers.remove(ct.getPath());
     }
 
-    public ServletWrapper getDefaultServlet() {
-	if( defaultServlet==null)
-	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
-	return defaultServlet;
-    }
+//     public ServletWrapper getDefaultServlet() {
+// 	if( defaultServlet==null)
+// 	    defaultServlet=getServletByName(Constants.DEFAULT_SERVLET_NAME );
+// 	return defaultServlet;
+//     }
 
     // -------------------- Servlets management --------------------
 
@@ -644,6 +635,22 @@ public class Context {
 	    //	    getServletByName(name).destroy();
         }
 	servlets.put(name, wrapper);
+    }
+
+    public ServletWrapper addServlet(String name, String classN)
+	throws TomcatException
+    {
+	ServletWrapper sw = new ServletWrapper();
+	sw.setContext(this);
+	
+	sw.setServletName(name);
+	if ( classN.startsWith("/")) {
+	    sw.setPath(classN);
+	} else {
+	    sw.setServletClass(classN);
+	}
+	addServlet( sw );
+	return sw;
     }
 
     public Enumeration getServletNames() {
@@ -753,20 +760,16 @@ public class Context {
 	if ("".equals(rpath))
 	    return new URL( "file", null, 0, absPath );
 
-
-	if ( ! rpath.startsWith("/")) {
+	if ( ! rpath.startsWith("/")) 
 	    rpath="/" + rpath;
-	}
 
-	String realPath=absPath + rpath;
+	String realPath=FileUtil.safePath( absPath, rpath);
+	if( realPath==null ) {
+	    log( "Unsafe path " + absPath + " " + rpath );
+	    return null;
+	}
+	
 	try {
-	    if( ! new File(realPath).getCanonicalPath().startsWith(absPath) ) {
-		// no access to files in a different context.
-		// XXX needs a better design - it should be in an interceptor,
-		// in order to support non-file based repositories.
-		return null;
-	    }
-	    
             url=new URL("file", null, 0,realPath );
 	    if( debug>9) log( "getResourceURL=" + url + " request=" + rpath );
 	    return url;
@@ -788,6 +791,9 @@ public class Context {
      *    prior knowledge of the mappings !
      */
     public String getRealPath( String path) {
+	String base=getAbsolutePath();
+
+	String realPath=FileUtil.safePath( base, path );
 	// No need for a sub-request, that's a great simplification
 	// in servlet space.
 
@@ -795,36 +801,9 @@ public class Context {
 	// expect and how other server APIs work, but that's how it's
 	// specified in 2.2. From a security point of view that's very
 	// good, it keeps inter-webapp communication under control.
-
-	// XXX Everything can/should be abstracted out as soon as we
-	// are ready to support non-file-based servers.
-
-	// Hack for Jsp ( and other servlets ) that use rel. paths 
-	if( ! path.startsWith("/") ) path="/"+ path;
-	String normP=FileUtil.normPath(path);
-
-	String absPath=getAbsolutePath();
-	String realPath= absPath + normP;
-
-	// Probably not needed - it will be used on the local FS
-	realPath = FileUtil.patch(realPath);
-
-	// extra-extra safety check, ( but slow )
-	try {
-	    if( ! new File(realPath).getCanonicalPath().startsWith(absPath) ) {
-		// no access to files in a different context.
-		// XXX needs a better design - it should be in an interceptor,
-		// in order to support non-file based repositories.
-		return null;
-	    }
-	} catch( IOException ex ) {
-	    ex.printStackTrace();
-	    return null;
-	}
-
+	
 	if( debug>5) {
-	    log("Get real path " + path + " " + realPath + " " + normP );
-	    //   /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    log("Get real path " + path + " " + realPath + " " + base );
 	}
 	return realPath;
     }

@@ -304,6 +304,26 @@ public interface Request  {
      *  @deprecated - use Container instead
      */
     public void setWrapper(ServletWrapper handler) ;
+
+    // -------------------- Included requests --------------------
+    public static final int MAX_INCLUDE=10;
+    
+    /** If this is a sub-request, return the parent
+     */
+    public Request getParent();
+    
+    public void setParent( Request req );    
+
+    /** During include, a sub-request will be created.
+     *  This represents the current included request
+     */
+    public Request getChild();
+    
+    public void setChild( Request req );
+
+    /** This is the top request ( for a sub-request )
+     */
+    public Request getTop();
     // -------------------- Buffers --------------------
 
     public ByteBuffer getInputBuffer();

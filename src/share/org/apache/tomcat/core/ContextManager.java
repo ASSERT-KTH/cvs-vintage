@@ -202,7 +202,8 @@ public class ContextManager {
 	    logInt( "getHome " + home + " " + installDir + " " +
 		 System.getProperty("tomcat.home") + " " +
 		 FileUtil.getCanonicalPath( "." ));
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex)
+		{ex.printStackTrace();}
 	}
 	
 	if(home!=null) return home;
@@ -231,7 +232,8 @@ public class ContextManager {
 	    // and find how it's computed - for embeding tc.
 	    logInt( "getInstallDir " + installDir + " " +
 		 System.getProperty("tomcat.home"));
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {
+		ex.printStackTrace();}
 	}
 
 	if(installDir!= null) return installDir;
@@ -647,6 +649,9 @@ public class ContextManager {
 		status=authenticate( rrequest, rresponse );
 	    if(status == 0)
 		status=authorize( rrequest, rresponse );
+	    if ( status==0 && rrequest.getWrapper() == null )
+		status = 404;
+
 	    if( status == 0 ) {
 		rrequest.getWrapper().service(rrequest, rresponse);
 	    } else {
@@ -672,13 +677,18 @@ public class ContextManager {
      */
     public int processRequest( Request req ) {
 	if(debug>9) logInt("ProcessRequest: "+req.toString());
-
+	int status=0;
+	
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
+	    status=((RequestInterceptor)requestInterceptors.elementAt(i)).
+		contextMap( req );
+	    if( status!=0 ) return status;
 	}
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
+	    status=((RequestInterceptor)requestInterceptors.elementAt(i)).
+		requestMap( req );
+	    if( status!=0 ) return status;
 	}
 
 	if(debug>9) logInt("After processing: "+req.toString());
@@ -799,7 +809,6 @@ public class ContextManager {
 		queryString =urlPath.substring(i + 1, urlPath.length());
 	    urlPath = urlPath.substring(0, i);
 	}
-	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 
 	/** Creates an "internal" request
 	 */
@@ -851,6 +860,11 @@ public class ContextManager {
 	errorServlet.service( req, res );
     }
 
+    // XXX XXX Security - we should log the message, but nothing
+    // should show up  to the user - it gives up information
+    // about the internal system !
+    // Developers can/should use the logs !!!
+    
     /** General error handling mechanism. It will try to find an error handler
      * or use the default handler.
      */
@@ -864,7 +878,26 @@ public class ContextManager {
 	    Note that it is _WRONG_ to send the trace back to
 	    the client. AFAIK the trace is the _best_ debugger.
 	*/
-	ctx.log("Exception in: " + req , t );
+	if( t instanceof IllegalStateException ) {
+	    ctx.log("IllegalStateException in: " + req  + " " +
+		    t.getMessage() );
+	} else if( t instanceof org.apache.jasper.JasperException ) {
+	    ctx.log("JasperException: " + req + " "  + t.getMessage());
+	} else if( t instanceof IOException ) {
+	    if( ((IOException)t).getMessage().equals("Broken pipe"))
+		return;
+	    ctx.log("IOException in: " + req + " "  + t.getMessage());
+	} else {
+	    ctx.log("Exception in: " + req , t );
+	}
+	
+	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
+	    // we are in handleRequest for the "default" error handler
+	    System.out.println("ERROR: can't find default error handler "+
+			       "or error in default error page");
+	    t.printStackTrace();
+	} 
+
 	
 	String errorPath=null;
 	Handler errorServlet=null;

@@ -325,7 +325,7 @@ public class EmbededTomcat { // extends WebService
 
 	PolicyInterceptor polI=new PolicyInterceptor();
 	addContextInterceptor( polI );
-	polI.setDebug(20);
+	polI.setDebug(0);
 
 	LoaderInterceptor loadI=new LoaderInterceptor();
 	addContextInterceptor( loadI );
@@ -349,18 +349,22 @@ public class EmbededTomcat { // extends WebService
 
 	SimpleMapper1 mapI=new SimpleMapper1();
 	addRequestInterceptor( mapI );
-	mapI.setDebug(20);
+	mapI.setDebug(0);
 
 	InvokerInterceptor invI=new InvokerInterceptor();
 	addRequestInterceptor( invI );
-	invI.setDebug(20);
+	invI.setDebug(0);
 	
+	StaticInterceptor staticI=new StaticInterceptor();
+	addRequestInterceptor( staticI );
+	mapI.setDebug(0);
+
 	addRequestInterceptor( new StandardSessionInterceptor());
 	
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
 	addRequestInterceptor( accessI );
-	accessI.setDebug(20);
+	accessI.setDebug(0);
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();

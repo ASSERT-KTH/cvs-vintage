@@ -86,8 +86,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 
     public int requestMap(Request req) {
 	// If we have an explicit mapper - return
-	if( req.getWrapper() != null &&
-	    ! "default".equals( req.getWrapper().getName()))
+	if( req.getWrapper() != null )
 	    return 0;
 
 	// if doesn't starts with /servlet - return

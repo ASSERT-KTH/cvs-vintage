@@ -354,16 +354,11 @@ class BasicAuthHandler extends ServletWrapper {
     error page.
 */
 class FormAuthHandler extends ServletWrapper {
-    int debug=1;
     
     FormAuthHandler() {
 	initialized=true;
 	internal=true;
 	name="tomcat.formAuthHandler";
-    }
-
-    void log( String s ) {
-	context.log( "FormAuthHandler: " + s );
     }
 
     public void doService(Request req, Response res)
@@ -411,18 +406,12 @@ class FormAuthHandler extends ServletWrapper {
     This is called after the user POST the form login page.
 */
 class FormSecurityCheckHandler extends ServletWrapper {
-    int debug=1;
     
     FormSecurityCheckHandler() {
 	initialized=true;
 	internal=true;
 	name="tomcat.formSecurityCheck";
     }
-
-    void log( String s ) {
-	context.log( "FormSecurityCheck: " + s );
-    }
-
 
     /** Will set the j_username and j_password attributes
 	in the session, and redirect to the original
