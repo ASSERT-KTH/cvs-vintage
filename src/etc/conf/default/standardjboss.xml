@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.93 2005/02/24 20:32:32 ejort Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.94 2005/02/24 23:40:19 recampbell Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -494,7 +494,7 @@
       </container-pool-conf>
       <commit-option>B</commit-option>
       <cluster-config>
-         <parition-name>${jboss.partition.name:DefaultPartition}</partition-name>
+         <partition-name>${jboss.partition.name:DefaultPartition}</partition-name>
       </cluster-config>
     </container-configuration>
 
@@ -655,7 +655,7 @@
       </container-pool-conf>
       <commit-option>A</commit-option>
       <cluster-config>
-         <parition-name>${jboss.partition.name:DefaultPartition}</partition-name>
+         <partition-name>${jboss.partition.name:DefaultPartition}</partition-name>
       </cluster-config>
     </container-configuration>
 
@@ -745,7 +745,7 @@
         <MaximumSize>100</MaximumSize>
       </container-pool-conf>
       <cluster-config>
-         <parition-name>${jboss.partition.name:DefaultPartition}</partition-name>
+         <partition-name>${jboss.partition.name:DefaultPartition}</partition-name>
       </cluster-config>
     </container-configuration>
 
@@ -831,7 +831,7 @@
         <MaximumSize>100</MaximumSize>
       </container-pool-conf>
       <cluster-config>
-         <parition-name>${jboss.partition.name:DefaultPartition}</partition-name>
+         <partition-name>${jboss.partition.name:DefaultPartition}</partition-name>
       </cluster-config>
     </container-configuration>
 
@@ -919,7 +919,7 @@
       </container-pool-conf>
       <commit-option>A</commit-option>
       <cluster-config>
-         <parition-name>${jboss.partition.name:DefaultPartition}</partition-name>
+         <partition-name>${jboss.partition.name:DefaultPartition}</partition-name>
       </cluster-config>
     </container-configuration>
 
