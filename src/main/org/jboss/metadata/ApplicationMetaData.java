@@ -28,7 +28,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -42,6 +42,7 @@ public class ApplicationMetaData extends MetaData {
     private HashMap resources = new HashMap();
     private HashMap plugins = new HashMap();
     private String securityDomain;
+    private boolean enforceEjbRestrictions;
     
     // Static --------------------------------------------------------
     
@@ -98,6 +99,10 @@ public class ApplicationMetaData extends MetaData {
     {
         return securityDomain;
     }
+    public boolean getEnforceEjbRestrictions()
+    {
+        return enforceEjbRestrictions;
+    }
 
     public void importEjbJarXml (Element element) throws DeploymentException {
        
@@ -146,7 +151,8 @@ public class ApplicationMetaData extends MetaData {
        // read the assembly descriptor (optional)
        Element assemblyDescriptor = getOptionalChild(element, "assembly-descriptor");
        
-       if (assemblyDescriptor != null) {
+       if (assemblyDescriptor != null)
+       {
          
          // set the security roles (optional)
          iterator = getChildrenByTagName(assemblyDescriptor, "security-role");
@@ -165,14 +171,25 @@ public class ApplicationMetaData extends MetaData {
          try {
           while (iterator.hasNext()) {
               Element methodPermission = (Element)iterator.next();
-          
-              // find the list of roles
-              Set roles = new HashSet();
-              Iterator rolesIterator = getChildrenByTagName(methodPermission, "role-name");
-              while (rolesIterator.hasNext()) {
-                 roles.add(getElementContent((Element)rolesIterator.next()));
+              // Look for the unchecked element
+              Element unchecked = getOptionalChild(methodPermission, "unchecked");
+              boolean isUnchecked = false;
+              Set roles = null;
+              if( unchecked != null )
+                  isUnchecked = true;
+              else
+              {
+                  // Get the role-name elements
+                  roles = new HashSet();
+                  Iterator rolesIterator = getChildrenByTagName(methodPermission, "role-name");
+                  while (rolesIterator.hasNext())
+                  {
+                     roles.add(getElementContent((Element)rolesIterator.next()));
+                  }
+                  if( roles.size() == 0 )
+                      throw new DeploymentException("An unchecked element or one or more role-name elements must be specified in method-permission");
               }
-          
+
               // find the methods
               Iterator methods = getChildrenByTagName(methodPermission, "method");
               while (methods.hasNext()) {
@@ -180,7 +197,10 @@ public class ApplicationMetaData extends MetaData {
                  // load the method
                  MethodMetaData method = new MethodMetaData();
                  method.importEjbJarXml((Element)methods.next());
-                       method.setRoles(roles);
+                 if( isUnchecked )
+                     method.setUnchecked();
+                 else
+                    method.setRoles(roles);
                  
                  // give the method to the right bean
                  BeanMetaData bean = getBeanByEjbName(method.getEjbName());
@@ -240,15 +260,47 @@ public class ApplicationMetaData extends MetaData {
          } catch (DeploymentException e) {
           throw new DeploymentException("Error in ejb-jar.xml, in container-transaction: " + e.getMessage());
          }
+
+            // Get the exclude-list methods
+            Element excludeList = getOptionalChild(assemblyDescriptor, "exclude-list");
+            if( excludeList != null )
+            {
+                iterator = getChildrenByTagName(excludeList, "method");
+                while (iterator.hasNext())
+                {
+                    Element methodInf = (Element) iterator.next();
+                    // load the method
+                    MethodMetaData method = new MethodMetaData();
+                    method.importEjbJarXml(methodInf);
+                    method.setExcluded();
+
+                    // give the method to the right bean
+                    BeanMetaData bean = getBeanByEjbName(method.getEjbName());
+                    if (bean == null)
+                    {
+                        throw new DeploymentException("bean " + method.getEjbName() + " doesn't exist");
+                    }
+                    bean.addExcludedMethod(method);
+                }
+            }
        }
     }
 
     
     
-    public void importJbossXml(Element element) throws DeploymentException {
+    public void importJbossXml(Element element) throws DeploymentException
+    {
        Iterator iterator;
        
        // all the tags are optional
+
+       // Get the enforce-ejb-restrictions
+       Element enforce = getOptionalChild(element, "enforce-ejb-restrictions");
+       if( enforce != null )
+       {
+          String tmp = getElementContent(enforce);
+          enforceEjbRestrictions = Boolean.valueOf(tmp).booleanValue();
+       }
 
        // Get the security domain name
        Element securityDomainElement = getOptionalChild(element, "security-domain");

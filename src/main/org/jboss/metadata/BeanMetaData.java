@@ -19,41 +19,73 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.ejb.DeploymentException;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** A common meta data class for the entity, message-driven and session beans.
+ *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.19 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.20 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
-	
+	public static final char SESSION_TYPE = 'S';
+	public static final char ENTITY_TYPE = 'E';
+	public static final char MDB_TYPE = 'M';
+
 	// Attributes ----------------------------------------------------
 	private ApplicationMetaData application;
     
 	// from ejb-jar.xml
+    /** The ejb-name element specifies an enterprise bean’s name. This name is
+    assigned by the ejb-jar file producer to name the enterprise bean in
+    the ejb-jar file’s deployment descriptor. The name must be unique
+    among the names of the enterprise beans in the same ejb-jar file.
+    */
 	private String ejbName;
+    /** The home element contains the fully-qualified name of the enterprise
+    bean’s home interface. */
 	private String homeClass;
+    /** The remote element contains the fully-qualified name of the enterprise
+    bean’s remote interface. */
     private String remoteClass;
+    /** The local-home element contains the fully-qualified name of the enterprise
+    bean’s local home interface. */
     private String localHomeClass;
+    /** The local element contains the fully-qualified name of the enterprise
+    bean’s local interface */
     private String localClass;
+    /** The ejb-class element contains the fully-qualified name of the enter-prise
+    bean’s class. */
     private String ejbClass;
-    protected boolean session;
-    protected boolean messageDriven = false;
-	
-	private HashMap ejbReferences = new HashMap();
-        private HashMap ejbLocalReferences = new HashMap();
+    /** The type of bean: ENTITY_TYPE, SESSION_TYPE, MDB_TYPE */
+    protected char beanType;
+
+    /** The The env-entry element(s) contains the declaration of an enterprise
+    bean’s environment entry */
 	private ArrayList environmentEntries = new ArrayList();
+    /** The The ejb-ref element(s) for the declaration of a reference to an
+    enterprise bean’s home */
+	private HashMap ejbReferences = new HashMap();
+    /** The ejb-local-ref element(s) info */
+    private HashMap ejbLocalReferences = new HashMap();
+    /** The security-role-ref element(s) info */
     private ArrayList securityRoleReferences = new ArrayList();
+    /** The security-idemtity element info */
+    private SecurityIdentityMetaData securityIdentity = null;
+    /** The resource-ref element(s) info */
 	private HashMap resourceReferences = new HashMap();
-	
+    /** The resource-env-ref element(s) info */
+	private HashMap resourceEnvReferences = new HashMap();
+    /** The assembly-descriptor/method-permission element(s) info */
 	private ArrayList permissionMethods = new ArrayList();
+    /** The assembly-descriptor/container-transaction element(s) info */
 	private ArrayList transactionMethods = new ArrayList();
-	
+    /** The assembly-descriptor/exclude-list method(s) */
+	private ArrayList excludedMethods = new ArrayList();
+
 	// from jboss.xml
+    /** The JNDI name under with the home interface should be bound */
 	private String jndiName;
 	protected String configurationName;
 	private ConfigurationMetaData configuration;
@@ -62,16 +94,18 @@ public abstract class BeanMetaData extends MetaData {
 	// Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
-    public BeanMetaData(ApplicationMetaData app) {
+    public BeanMetaData(ApplicationMetaData app, char beanType)
+    {
 		application = app;
+        this.beanType = beanType;
 	}
-	
+
     // Public --------------------------------------------------------
-    public boolean isSession() { return session; }
+    public boolean isSession() { return beanType == SESSION_TYPE; }
 
-    public boolean isMessageDriven() { return messageDriven; }
+    public boolean isMessageDriven() { return beanType == MDB_TYPE; }
 
-	public boolean isEntity() { return !session && !messageDriven; }
+	public boolean isEntity() { return beanType == ENTITY_TYPE; }
                                             	
 	public String getHome() { return homeClass; }
 	
@@ -87,7 +121,7 @@ public abstract class BeanMetaData extends MetaData {
 	
 	public Iterator getEjbReferences() { return ejbReferences.values().iterator(); }
         
-        public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
+    public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
 	
 	public EjbRefMetaData getEjbRefByName(String name) {
 		return (EjbRefMetaData)ejbReferences.get(name);
@@ -127,6 +161,10 @@ public abstract class BeanMetaData extends MetaData {
 	}
 
     public String getSecurityProxy() { return securityProxy; }
+    private SecurityIdentityMetaData getSecurityIdentityMetaData()
+    {
+        return securityIdentity;
+    }
 
 	public ApplicationMetaData getApplicationMetaData() { return application; }
 	
@@ -135,7 +173,8 @@ public abstract class BeanMetaData extends MetaData {
 	public Iterator getTransactionMethods() { return transactionMethods.iterator(); }
 	
 	public Iterator getPermissionMethods() { return permissionMethods.iterator(); }
-	
+	public Iterator getExcludedMethods() { return excludedMethods.iterator(); }
+
 	
 	public void addTransactionMethod(MethodMetaData method) { 
 		transactionMethods.add(method);
@@ -144,7 +183,10 @@ public abstract class BeanMetaData extends MetaData {
 	public void addPermissionMethod(MethodMetaData method) { 
 		permissionMethods.add(method);
 	}
-	
+	public void addExcludedMethod(MethodMetaData method) { 
+		excludedMethods.add(method);
+	}
+
 	public byte getMethodTransactionType(String methodName, Class[] params, boolean remote) {
 		
 		// default value
@@ -190,11 +232,12 @@ public abstract class BeanMetaData extends MetaData {
 
 		// set the classes
 		// Not for MessageDriven
-		if (!messageDriven) {
-		    homeClass = getElementContent(getOptionalChild(element, "home"));
-		    remoteClass = getElementContent(getOptionalChild(element, "remote"));
-                    localHomeClass = getElementContent(getOptionalChild(element, "local-home"));
-                    localClass = getElementContent(getOptionalChild(element, "local"));
+		if( isMessageDriven() == false )
+        {
+            homeClass = getElementContent(getOptionalChild(element, "home"));
+            remoteClass = getElementContent(getOptionalChild(element, "remote"));
+            localHomeClass = getElementContent(getOptionalChild(element, "local-home"));
+            localClass = getElementContent(getOptionalChild(element, "local"));
 		}
 		ejbClass = getElementContent(getUniqueChild(element, "ejb-class"));
 		
@@ -246,7 +289,15 @@ public abstract class BeanMetaData extends MetaData {
 			
 			securityRoleReferences.add(securityRoleRefMetaData);
 		}
-			
+
+        // The security-identity element
+        Element securityIdentityElement = getOptionalChild(element, "security-identity");
+        if( securityIdentityElement != null )
+        {
+            securityIdentity = new SecurityIdentityMetaData();
+            securityIdentity.importEjbJarXml(securityIdentityElement);
+        }
+
 		// set the resource references
         iterator = getChildrenByTagName(element, "resource-ref");
 		
@@ -258,6 +309,16 @@ public abstract class BeanMetaData extends MetaData {
 			
 			resourceReferences.put(resourceRefMetaData.getRefName(), resourceRefMetaData);
 		}
+
+        // Parse the resource-env-ref elements
+        iterator = getChildrenByTagName(element, "resource-env-ref");
+        while( iterator.hasNext() )
+        {
+			Element resourceRef = (Element) iterator.next();	
+			ResourceEnvRefMetaData refMetaData = new ResourceEnvRefMetaData();
+			refMetaData.importEjbJarXml(resourceRef);
+			resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
+        }
 	}
 
 	public void importJbossXml(Element element) throws DeploymentException {
@@ -287,7 +348,21 @@ public abstract class BeanMetaData extends MetaData {
             }
             resourceRefMetaData.importJbossXml(resourceRef);
 		}
-		
+
+        // Set the resource-env-ref deployed jndi names
+        iterator = getChildrenByTagName(element, "resource-env-ref");
+        while( iterator.hasNext() )
+        {
+			Element resourceRef = (Element) iterator.next();	
+			String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
+			ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
+            if( refMetaData == null)
+            {
+                throw new DeploymentException("resource-env-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
+            }
+            refMetaData.importJbossXml(resourceRef);
+        }
+
 		// set the external ejb-references (optional)
 		iterator = getChildrenByTagName(element, "ejb-ref");
 		while (iterator.hasNext()) {

@@ -11,12 +11,11 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.ejb.DeploymentException;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** The meta data information specific to session beans.
+ *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.5 $
  */
 public class SessionMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -28,9 +27,9 @@ public class SessionMetaData extends BeanMetaData {
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
-    public SessionMetaData(ApplicationMetaData app) {
-		super(app);
-		session = true;
+    public SessionMetaData(ApplicationMetaData app)
+    {
+		super(app, BeanMetaData.SESSION_TYPE);
 	}
 	
     // Public --------------------------------------------------------

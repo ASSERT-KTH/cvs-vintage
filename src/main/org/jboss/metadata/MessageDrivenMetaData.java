@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -47,9 +47,7 @@ public class MessageDrivenMetaData extends BeanMetaData {
     
     // Constructors --------------------------------------------------
     public MessageDrivenMetaData(ApplicationMetaData app) {
-	super(app);
-	messageDriven = true;
-	session = false;
+    	super(app, BeanMetaData.MDB_TYPE);
 	}
 	
     // Public --------------------------------------------------------

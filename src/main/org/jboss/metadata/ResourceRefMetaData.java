@@ -10,33 +10,66 @@ import org.w3c.dom.Element;
 
 import org.jboss.ejb.DeploymentException;
 
-/**
- *   <description> 
- *      
- *   @see <related>
+/** The meta data information for a resource-ref element.
+The resource-ref element contains a declaration of enterprise bean’s
+reference to an external resource. It consists of an optional description,
+the resource manager connection factory reference name, the
+indication of the resource manager connection factory type expected
+by the enterprise bean code, the type of authentication (Application
+or Container), and an optional specification of the shareability of
+connections obtained from the resource (Shareable or Unshareable).
+Used in: entity, message-driven, and session
+
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.5 $
  */
 public class ResourceRefMetaData extends MetaData {
     // Constants -----------------------------------------------------
-    
+
     // Attributes ----------------------------------------------------
-    /** The ejb-jar.xml/../resource-ref/res-ref-name element used by the bean code */
+    /** The ejb-jar/../resource-ref/res-ref-name element used by the bean code.
+     The res-ref-name element specifies the name of a resource manager con-nection
+    factory reference. The name is a JNDI name relative to the
+    java:comp/env context. The name must be unique within an enterprise
+    bean.
+    */
 	private String refName;
-    /** The jboss.xml/../resource-ref/resource-name value that maps to a resource-manager */
+    /** The jboss/../resource-ref/resource-name value that maps to a resource-manager */
 	private String name;
     /** The jndi name of the deployed resource, or the URL in the case of
      a java.net.URL resource type. This comes from either the:
-     jboss.xml/../resource-ref/jndi-name element value or the
-     jboss.xml/../resource-ref/res-url element value or the
-     jboss.xml/../resource-manager/res-jndi-name element value
-     jboss.xml/../resource-manager/res-url element value
+     jboss/../resource-ref/jndi-name element value or the
+     jboss/../resource-ref/res-url element value or the
+     jboss/../resource-manager/res-jndi-name element value
+     jboss/../resource-manager/res-url element value
      */
-     private String jndiName;
-     /** The ejb-jar.xml/../resource-ref/res-type java classname of the resource */
+    private String jndiName;
+    /** The ejb-jar/../resource-ref/res-type element.
+     The res-type element specifies the Java class or interface of the data source
+     */
     private String type;
-    /** The ejb-jar.xml/../resource-ref/res-auth value */
+    /** The ejb-jar/../resource-ref/res-auth value.
+    The res-auth element specifies whether the enterprise bean code signs
+    on programmatically to the resource manager, or whether the Container
+    will sign on to the resource manager on behalf of the enterprise bean.
+    In the latter case, the Container uses information that is supplied by
+    the Deployer.
+    The value of this element must be one of the two following:
+    <res-auth>Application</res-auth>
+    <res-auth>Container</res-auth>
+     */
 	private boolean containerAuth;
+    /** The ejb-jar/../resource-ref/res-sharing-scope value
+    The res-sharing-scope element specifies whether connections obtained
+    through the given resource manager connection factory reference can
+    be shared. The value of this element, if specified, must be one of the
+    two following:
+    <res-sharing-scope>Shareable</res-sharing-scope>
+    <res-sharing-scope>Unshareable</res-sharing-scope>
+    The default value is Shareable.
+    */
+	private boolean isShareable;
 
     // Static --------------------------------------------------------
     
@@ -63,7 +96,7 @@ public class ResourceRefMetaData extends MetaData {
 	public String getType() { return type; }
 
 	public boolean isContainerAuth() { return containerAuth; }
-
+    public boolean isShareable() { return isShareable; }
 
     public void importEjbJarXml(Element element) throws DeploymentException {
 		refName = getElementContent(getUniqueChild(element, "res-ref-name"));
@@ -78,8 +111,11 @@ public class ResourceRefMetaData extends MetaData {
 		} else {
 			throw new DeploymentException("res-auth tag should be 'Container' or 'Application'");
 		}
+        // The res-sharing-scope element
+        String sharing = getElementContent(getOptionalChild(element, "res-sharing-scope"), "Shareable");
+        isShareable = sharing.equals("Shareable");
 	}
-	
+
 	public void importJbossXml(Element element) throws DeploymentException {
         // Look for the resource-ref/resource-name element
         Element child = getOptionalChild(element, "resource-name");

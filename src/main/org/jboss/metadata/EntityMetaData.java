@@ -12,12 +12,12 @@ import java.util.Iterator;
 import org.w3c.dom.Element;
 import org.jboss.ejb.DeploymentException;
 
-/**
- *   <description> 
+/** The meta data information specific to entity beans.
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.6 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.7 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -33,8 +33,7 @@ public class EntityMetaData extends BeanMetaData {
     
     // Constructors --------------------------------------------------
 	public EntityMetaData(ApplicationMetaData app) {
-		super(app);
-		session = false;
+		super(app, BeanMetaData.ENTITY_TYPE);
 	}
 
     // Public --------------------------------------------------------
