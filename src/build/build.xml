@@ -376,6 +376,10 @@
      <copy todir="${dist.dir}/src">
         <fileset dir="${src.dir}"/>
      </copy>
+    <fixcrlf srcdir="${dist.dir}/bin" cr="remove" eof="remove"
+      includes="*.sh" />
+    <fixcrlf srcdir="${dist.dir}/bin" cr="add" eof="remove"
+      includes="*.bat" />
   </target>
 
   <!-- =================================================================== -->
