@@ -6,7 +6,7 @@
 #if ($issueId)
    #set ($issue = $scarabR.Issue)
 #else
-   #set ($issue = $data.User.getReportingIssue($module))
+   #set ($issue = $module.NewIssue)
 #end
 
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
