@@ -97,7 +97,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.121 2002/04/13 02:39:32 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.122 2002/04/13 04:52:13 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -477,7 +477,8 @@ public class ReportIssue extends RequireLoginFirstAction
         Group group = intake.get("Attachment", 
                                  attachment.getQueryKey(), false);
 
-        ModifyIssue.addAttachment(issue, group, attachment, data, intake);
+        ModifyIssue.addAttachment(issue, group, attachment, 
+                                  scarabR, data, intake);
 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, intake, context);
