@@ -21,7 +21,7 @@
 
 #macro ( attrValueText $attrValue $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
-    <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end>
+    <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
 #end
 
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size )
@@ -87,16 +87,16 @@
 
 #macro ( booleanCheckbox $booleanField )
    <input type="checkbox" name="$booleanField.Key" value="true"
-        #if ($booleanField.Value) checked #end>
+        #if ($booleanField.Value) checked #end />
    <input type="hidden" name="$booleanField.ValueIfAbsent"
-        value="false">
+        value="false" />
 #end
 
 #macro ( textField $field $size )
     #if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0 )
         #set ( $maxLength = $field.Validator.MaxLength )
     #end
-    <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end>
+    <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
 #end
 
 #macro (userSelectBox $attrValue $size)

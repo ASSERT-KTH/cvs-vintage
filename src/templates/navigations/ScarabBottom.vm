@@ -11,5 +11,6 @@
   </table>
 <!-- end copyright -->
 
-<p>Debugging:</p>
+<p>Debugging:<br />
 [ $data.Parameters ]
+</p>
