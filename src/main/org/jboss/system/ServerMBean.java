@@ -14,7 +14,7 @@ import java.util.Date;
  * The JMX MBean interface for the <tt>Server</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface ServerMBean
 {
@@ -99,6 +99,10 @@ public interface ServerMBean
    ///////////////////////////////////////////////////////////////////////////
 
    Date getStarted();
+
+   String getHostName();
+
+   String getHostAddress();
    
    Long getTotalMemory();
    

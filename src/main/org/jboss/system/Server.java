@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class Server
     implements ServerMBean
@@ -397,6 +397,26 @@ public class Server
       return started;
    }
    
+   public String getHostName() {
+      try {
+	 return java.net.InetAddress.getLocalHost().getHostName();
+      }
+      catch (java.net.UnknownHostException e) {
+	 log.error("Error looking up local hostname", e);
+	 return "<unknown>";
+      }
+   }
+
+   public String getHostAddress() {
+      try {
+	 return java.net.InetAddress.getLocalHost().getHostAddress();
+      }
+      catch (java.net.UnknownHostException e) {
+	 log.error("Error looking up local address", e);
+	 return "<unknown>";
+      }
+   }
+
    public Long getTotalMemory() {
       return new Long(Runtime.getRuntime().totalMemory());
    }
