@@ -40,12 +40,31 @@
                 <attribute>$scarabR.getAttribute($activity.AttributeId).Name</attribute>
                 <old-numeric-value>$activity.OldNumericValue</old-numeric-value>
                 <new-numeric-value>$activity.NewNumericValue</new-numeric-value>
+                #if ($activity.OldUserId)
+
                 <old-user>$!scarabR.getUser($activity.OldUserId).UserName</old-user>
+                #end
+                #if ($activity.NewUserId)
+
                 <new-user>$!scarabR.getUser($activity.NewUserId).UserName</new-user>
+                #end
+                #if ($activity.OldOptionId)
+
                 <old-option>$!scarabR.getAttributeOption($activity.OldOptionId).Name</old-option>
+                #end
+                #if ($activity.NewOptionId)
+
                 <new-option>$!scarabR.getAttributeOption($activity.NewOptionId).Name</new-option>
+                #end
+                #if ($activity.OldValue && $activity.OldValue.length() > 0)
+
                 <old-value>$!activity.OldValue</old-value>
+                #end
+                #if ($activity.NewValue && $activity.NewValue.length() > 0)
+
                 <new-value>$!activity.NewValue</new-value>
+                #end
+
                 <description>$activity.Description</description>
               </activity>
             #end
@@ -83,7 +102,11 @@
                 <timestamp>$sdf.format($attachment.ModifiedDate)</timestamp>
               </modified-date>
               <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
+              #if ($attachment.ModifiedBy)
+
               <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
+              #end
+
             </attachment>
               #set ($attachment = "")
             #end
