@@ -35,7 +35,11 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.12 $
+ *
+ * Revisions:
+ * 20010621 Bill Burke: added constructor to facilitate re-use. Removed extra login for setting up FinderResults since this class is really not used anymore.
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -44,6 +48,10 @@ public abstract class JDBCFinderCommand
    protected FinderMetaData finderMetaData = null;
    // Constructors --------------------------------------------------
 
+   public JDBCFinderCommand(JDBCCommandFactory factory, String name)
+   {
+      super(factory, name);
+   }
    public JDBCFinderCommand(JDBCCommandFactory factory, FinderMetaData f)
    {
       super(factory, f.getName());
@@ -85,20 +93,7 @@ public abstract class JDBCFinderCommand
       try
       {
          Collection keys = (Collection)jdbcExecute(args);
-         /** @todo: remove this next bit and add 'getWhereClause' to FinderCommands */
-         //look for 'where' and ditch everything before it
-         String sql = getSQL(args);
-         sql.toUpperCase();
-         int pos = sql.indexOf("WHERE");
-         String where = "";
-         if (pos != -1) {
-            where = sql.substring(pos);
-         }
-         if (finderMetaData.hasReadAhead()) {
-            result = new FinderResults(keys, where, this, args);
-         } else {
-            result = new FinderResults(keys, null, null, null);
-         }
+         result = new FinderResults(keys, null, null, null);
       } catch (Exception e)
       {
          log.debug(e);
