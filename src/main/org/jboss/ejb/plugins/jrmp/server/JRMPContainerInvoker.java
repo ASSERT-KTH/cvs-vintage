@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.28 $
+ *      @version $Revision: 1.29 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -174,7 +174,8 @@ public abstract class JRMPContainerInvoker
    {
       // Check if this call really can be optimized
       // If parent of callers classloader is != parent of our classloader -> not optimizable!
-      if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+//      if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+      if (!m.getDeclaringClass().isAssignableFrom(((ContainerInvokerContainer)container).getHomeClass()))
       {
          RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
       
@@ -210,7 +211,8 @@ public abstract class JRMPContainerInvoker
    {
 	   // Check if this call really can be optimized
 	   // If parent of callers classloader is != parent of our classloader -> not optimizable!
-	   if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+//	   if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+	   if (!m.getDeclaringClass().isAssignableFrom(((ContainerInvokerContainer)container).getRemoteClass()))
 	   {
 	      RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
 	   
