@@ -17,6 +17,7 @@ package org.columba.mail.gui.table;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -37,8 +38,6 @@ import org.columba.mail.gui.table.util.TableModelThreadedView;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
-import org.columba.mail.message.MessageCollection;
-import java.util.List;
 
 public class HeaderTableModel extends AbstractTableModel {
 
@@ -48,8 +47,6 @@ public class HeaderTableModel extends AbstractTableModel {
 	protected HeaderList headerList;
 
 	protected Hashtable uidList;
-
-	private MessageCollection messageCollection;
 
 	private MessageNode root;
 
@@ -88,10 +85,6 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	public Folder getFolder() {
 		return folder;
-	}
-
-	public MessageCollection getMessageCollection() {
-		return messageCollection;
 	}
 
 	public MessageNode getRootNode() {
