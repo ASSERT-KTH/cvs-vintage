@@ -150,7 +150,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		toList = new AddressbookDNDListView(dialogList[0]);
 		//toList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane toPane = new JScrollPane(toList);
-		toPane.setPreferredSize(new Dimension(250, 200));
+		toPane.setPreferredSize(new Dimension(250, 150));
 		list1Panel.add(toPane, BorderLayout.CENTER);
 		leftPanel.add(list1Panel);
 
@@ -170,7 +170,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		ccList = new AddressbookDNDListView(dialogList[1]);
 		//ccList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane ccPane = new JScrollPane(ccList);
-		ccPane.setPreferredSize(new Dimension(250, 200));
+		ccPane.setPreferredSize(new Dimension(250, 150));
 		list2Panel.add(ccPane, BorderLayout.CENTER);
 		leftPanel.add(list2Panel);
 
@@ -192,7 +192,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 		bccList = new AddressbookDNDListView(dialogList[2]);
 		//bccList.setCellRenderer(new AddressbookListRenderer());
 		JScrollPane bccPane = new JScrollPane(bccList);
-		bccPane.setPreferredSize(new Dimension(250, 200));
+		bccPane.setPreferredSize(new Dimension(250, 150));
 		list3Panel.add(bccPane, BorderLayout.CENTER);
 		leftPanel.add(list3Panel);
 
@@ -392,7 +392,9 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			{
 				Object[] array = dialogList[i].toArray();
 				headerItemList[i].clear();
-
+		
+				System.out.println("array-size="+array.length);
+				
 				for (int j = 0; j < array.length; j++)
 				{
 					HeaderItem item = (HeaderItem) array[j];
@@ -400,18 +402,21 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 					{
 
 						String address = (String) item.get("email;internet");
-						//System.out.println("old address:" + address);
+						System.out.println("old address:" + address);
 						if ( address == null ) address = "";
+						/*
 						String newaddress = AddressParser.quoteAddress(address);
-						//System.out.println("new address:" + newaddress);
+						System.out.println("new address:" + newaddress);
 						item.add("email;internet", newaddress);
+						*/
 					}
 					
 					if ( i == 0 ) item.add("field","To");
 					else if ( i == 1 ) item.add("field","Cc");
 					else if ( i == 2 ) item.add("field","Bcc");					
 
-					headerItemList[i].add(item);
+					headerItemList[i].add((HeaderItem)item.clone());
+					//headerItemList[i].add(item);
 				}
 
 			}
@@ -426,7 +431,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
 
-				dialogList[0].addElement(item);
+				dialogList[0].addElement((HeaderItem)item.clone());
 			}
 		}
 		else if (command.equals("CC"))
@@ -439,7 +444,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
 
-				dialogList[1].addElement(item);
+				dialogList[1].addElement((HeaderItem)item.clone());
 			}
 		}
 		else if (command.equals("BCC"))
@@ -452,7 +457,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			{
 				item = (HeaderItem) model.getElementAt(array[j]);
 
-				dialogList[2].addElement(item);
+				dialogList[2].addElement((HeaderItem)item.clone());
 			}
 		}
 		else if (command.equals("TO_REMOVE"))

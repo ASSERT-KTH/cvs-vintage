@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 import org.columba.addressbook.gui.SelectAddressDialog;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -37,7 +38,6 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.composer.util.ExternalEditor;
 import org.columba.mail.smtp.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 public class ComposerActionListener implements ActionListener {
 	private ComposerInterface composerInterface;
@@ -891,7 +891,6 @@ public class ComposerActionListener implements ActionListener {
 
 			System.out.println("addressbook");
 
-			/*
 			composerInterface.headerController.cleanupHeaderItemList();
 
 			SelectAddressDialog dialog =
@@ -901,14 +900,16 @@ public class ComposerActionListener implements ActionListener {
 					composerInterface.headerController.getHeaderItemLists());
 
 			org.columba.addressbook.folder.Folder folder =
-				MainInterface.addressbookInterface.tree.getFolder(101);
+				(org.columba.addressbook.folder.Folder) MainInterface
+					.addressbookInterface
+					.treeModel
+					.getFolder(101);
 			dialog.setHeaderList(folder.getHeaderItemList());
 
 			dialog.setVisible(true);
 
 			composerInterface.headerController.setHeaderItemLists(
 				dialog.getHeaderItemLists());
-			*/
 
 		}
 		if (command.equals("SIGN")) {
@@ -919,7 +920,6 @@ public class ComposerActionListener implements ActionListener {
 		}
 		if (command.equals("VIEW_ADDRESSBOOK")) {
 
-			/*
 			ViewItem item = MailConfig.getComposerOptionsConfig().getViewItem();
 
 			if (item.getBoolean("addressbook", "enabled") == true) {
@@ -929,7 +929,7 @@ public class ComposerActionListener implements ActionListener {
 				composerInterface.composerController.showAddressbookWindow();
 				item.set("addressbook", "enabled", true);
 			}
-			*/
+
 		}
 
 		// 09/16/02 ALP
@@ -943,7 +943,7 @@ public class ComposerActionListener implements ActionListener {
 			final SwingWorker worker = new SwingWorker() {
 				public Object construct() {
 						//composerInterface.composerFrame.setCursor(Cursor.WAIT_CURSOR);
-	composerInterface.composerFrame.setEnabled(false);
+					composerInterface.composerFrame.setEnabled(false);
 					composerInterface.editorController.getView().setEnabled(
 						false);
 					ExternalEditor Ed = new ExternalEditor();

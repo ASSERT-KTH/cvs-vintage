@@ -69,7 +69,7 @@ public class HeaderItem {
 
 			return false;
 		} else {
-			String displayname = (String)  get("displayname");
+			String displayname = (String) get("displayname");
 
 			if (displayname != null) {
 				displayname = displayname.toLowerCase();
@@ -89,13 +89,13 @@ public class HeaderItem {
 		folder = f;
 	}
 
-	public boolean contains( String key )
-	{
-		if ( hashtable.containsKey(key) ) return true;
-		
+	public boolean contains(String key) {
+		if (hashtable.containsKey(key))
+			return true;
+
 		return false;
 	}
-	
+
 	public boolean isContact() {
 		String type = (String) get("type");
 		if (type.equals("contact"))
@@ -161,12 +161,23 @@ public class HeaderItem {
 		item.setHashtable((Hashtable) hashtable.clone());
 		return item;
 		*/
-		
+
 		HeaderItem item = new HeaderItem();
-		item.setUid( getUid() );
-		item.setFolder( getFolder() );
-		item.setHashtable( (Hashtable) hashtable.clone() );
+		item.setUid(getUid());
+		item.setFolder(getFolder());
+
+		Hashtable t = new Hashtable();
+		for (Enumeration keys = hashtable.keys(); keys.hasMoreElements();) {
+			String key = (String) keys.nextElement();
+
+			Object value = hashtable.get(key);
+			t.put(key,value);
+			
+		}
 		
+		item.setHashtable(t);
+		//item.setHashtable( (Hashtable) hashtable.clone() );
+
 		return item;
 	}
 }
