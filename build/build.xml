@@ -305,28 +305,25 @@
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_USER" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
+        <!-- copy the schema's to the torque directory -->
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
-              filtering="true" overwrite="true"/>
-        <copy file="${src.conf.dir}/torque.props" 
-              tofile="${torque.dir.scarab}/build.properties"
               filtering="true" overwrite="true"/>
         <copy file="${src.sql.dir}/id-table-schema.xml" 
               todir="${torque.dir.scarab}/schema"
               filtering="true" overwrite="true"/>
-
-        <!-- 
-            Patch oracle property file in torque. Supplied by Thierry Lach.
-            Should these be included in the standard torque dist?
-        -->
-        <replace file="${torque.dir.scarab}/templates/sql/base/oracle/db.props">
-            <replacefilter token="INTEGER = INT" value="INTEGER = NUMBER"/>
-            <replacefilter token="BINARY = RAW" value="BINARY = LONG RAW"/>
-        </replace>
-
+        <copy file="${src.sql.dir}/turbine-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <copy file="${src.sql.dir}/scheduler-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <!-- copy the scarab specific build.properties over -->
+        <copy file="${src.conf.dir}/torque.props" 
+              tofile="${torque.dir.scarab}/build.properties"
+              filtering="true" overwrite="true"/>
     </target>
  
-
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
     <!-- ================================================================== -->
@@ -342,17 +339,66 @@
 
     <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
             unless="schema.uptodate">
+
         <ant antfile="build.xml"
-                dir="${torque.dir.scarab}" target="project-sql" inheritAll="false">
+                dir="${torque.dir.scarab}" target="project-sql-no-idtable" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
             <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
         </ant>
 
+        <!-- move the generated .sql files into the target directory -->
         <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
+        <move file="${src.sql.dir}/turbine-schema.sql"
+            tofile="${build.sql.scarab}/${scarab.database.type}-turbine.sql"/>
+        <move file="${src.sql.dir}/scheduler-schema.sql"
+            tofile="${build.sql.scarab}/${scarab.database.type}-scheduler.sql"/>
+        <move file="${src.sql.dir}/id-table-schema.sql"
+            tofile="${build.sql.scarab}/${scarab.database.type}-id-table.sql"/>
     </target>
 
+    <!-- ================================================================== -->
+    <!-- Generate OM/Peer classes from Torque                               -->
+    <!-- ================================================================== -->
+    <target name="generated-check" depends="prepare">
+        <echo message="checking: ${torque.dir.scarab}/report.scarab.om.generation"/>
+        <uptodate property="gen.uptodate"
+            targetfile=
+               "${torque.dir.scarab}/report.scarab.om.generation">
+            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+        </uptodate>
+    </target>
+
+    <target name="om-peer" depends="generated-check,torque-init,sql" 
+            unless="gen.uptodate">
+
+        <!-- we don't want to generate the OM objects for Turbine 
+             tables because they already exists in the fulcrum.jar -->
+        <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
+        <delete file="${torque.dir.scarab}/schema/scheduler-schema.xml"/>
+
+        <ant antfile="build.xml" dir="${torque.dir.scarab}" 
+                target="project-om" inheritAll="false">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${build.project.webinf.lib}"/>
+            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
+        </ant>
+
+        <move todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
+            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
+                <include name="**/Base*.java"/>
+                <exclude name="**/BaseScarabObject.java"/>
+                <include name="**/map/*MapBuilder.java"/>
+                <include name="report.scarab.om.generation"/>
+            </fileset>
+        </move>
+
+        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
+              overwrite="true" todir="${torque.dir.scarab}"/>
+
+        <delete dir="${src.java.dir.scarab}/org/tigris/scarab/om/map"/>
+    </target>
 
     <!-- ================================================================== -->
     <!-- Create DB from Torque                                              -->
@@ -467,48 +513,6 @@
         </ant>
         <move file="${src.java.dir.scarab}/${project}-data.sql"
             tofile="${src.sql.dir}/${project}-data.sql"/>
-    </target>
-
-    <!-- ================================================================== -->
-    <!-- Generate OM/Peer classes from Torque                               -->
-    <!-- ================================================================== -->
-    <target name="generated-check" depends="prepare">
-        <echo message="checking: ${torque.dir.scarab}/report.scarab.om.generation"/>
-        <uptodate property="gen.uptodate"
-            targetfile=
-               "${torque.dir.scarab}/report.scarab.om.generation">
-            <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
-        </uptodate>
-    </target>
-
-    <target name="om-peer" depends="generated-check,torque-init,sql" 
-            unless="gen.uptodate">
-
-        <echo message="+------------------------------------------+"/>
-        <echo message="|                                          |"/>
-        <echo message="|        Building OM/Peer classes          |"/>
-        <echo message="|                                          |"/>
-        <echo message="+------------------------------------------+"/>
-        <ant antfile="build.xml" dir="${torque.dir.scarab}" 
-                target="project-om" inheritAll="false">
-            <property name="torque.home" value="${torque.dir.scarab}"/>
-            <property name="lib.dir" value="${build.project.webinf.lib}"/>
-            <property name="build.properties" value="${torque.dir.scarab}/build.properties"/>
-        </ant>
-
-        <move todir="${build.src.scarab}/org/tigris/scarab/om" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org/tigris/scarab/om">
-                <include name="**/Base*.java"/>
-                <exclude name="**/BaseScarabObject.java"/>
-                <include name="**/map/*MapBuilder.java"/>
-                <include name="report.scarab.om.generation"/>
-            </fileset>
-        </move>
-
-        <copy file="${src.java.dir.scarab}/report.scarab.om.generation" 
-              overwrite="true" todir="${torque.dir.scarab}"/>
-
-        <delete dir="${src.java.dir.scarab}/org/tigris/scarab/om/map"/>
     </target>
 
     <!-- ================================================================== -->
