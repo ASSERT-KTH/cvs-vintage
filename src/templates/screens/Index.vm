@@ -28,7 +28,11 @@ href="$link.setPage("Register.vm")">create an account</a>.
 <td>
 <p>
 <img src="$data.Request.ContextPath/images/module.gif" alt="What is a
-module?" width="260" height="105" /></p> Select a <a
+module?" width="260" height="105" />
+</p>
+
+<p>
+Select a <a
 href="$link.setPage("SelectModule.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE","Index.vm")"><strong>module</strong></a>.
 A module is the unit of work space representing a unique set of
 "artifact types" (issues). Each new module also has the following unique
