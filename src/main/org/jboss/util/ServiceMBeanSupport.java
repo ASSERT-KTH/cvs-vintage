@@ -13,8 +13,11 @@ import javax.management.AttributeChangeNotification;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+
+import org.apache.log4j.Category;
    
 import org.jboss.logging.Log;
+import org.jboss.logging.LogToCategory;
 
 /** An abstract base class JBoss services can subclass to implement a
 service that conforms to the ServiceMBean interface. Subclasses must
@@ -27,7 +30,7 @@ as approriate.
 
 @author Rickard Öberg (rickard.oberg@telkel.com)
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.11 $
+@version $Revision: 1.12 $
 */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -38,6 +41,7 @@ public abstract class ServiceMBeanSupport
    private MBeanServer server;
    private int id = 0;
    protected Log log;
+   protected Category category;
 
    // Static --------------------------------------------------------
 
@@ -62,7 +66,8 @@ public abstract class ServiceMBeanSupport
     public void init()
             throws Exception
     {
-        log = Log.createLog( getName() );
+        category = Category.getInstance(getName());
+        log = new LogToCategory(category);
         log.log("Initializing");
         log.setLog(log);
         try
