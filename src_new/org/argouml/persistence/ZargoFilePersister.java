@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.22 2005/01/21 18:20:04 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.23 2005/01/22 16:41:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,6 @@ import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.uml.ProjectMemberModel;
-import org.argouml.uml.cognitive.ProjectMemberTodoList;
-import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.util.FileConstants;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;
@@ -316,8 +313,7 @@ public class ZargoFilePersister extends UmlFilePersister {
             writer.println("</uml>");
             writer.close();
             LOG.info("Complated combining files");
-            Project p = 
-                super.doLoad(combinedFile);
+            Project p =  super.doLoad(file, combinedFile);
             p.setURL(file.toURL());
             return p;
         } catch (IOException e) {

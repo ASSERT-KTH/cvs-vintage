@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.10 2005/01/20 17:27:50 bobtarling Exp $
+// $Id: AbstractFilePersister.java,v 1.11 2005/01/22 16:41:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ public abstract class AbstractFilePersister extends FileFilter
      * @throws IOException if there is some problems with the files.
      * @throws FileNotFoundException if any of the files cannot be found.
      */
-    private File copyFile(File src, File dest)
+    protected File copyFile(File src, File dest)
         throws FileNotFoundException, IOException {
 
         FileInputStream fis  = new FileInputStream(src);

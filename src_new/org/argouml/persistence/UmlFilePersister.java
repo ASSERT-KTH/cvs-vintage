@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.23 2005/01/21 18:20:04 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.24 2005/01/22 16:41:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -275,7 +275,15 @@ public class UmlFilePersister extends AbstractFilePersister
      * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.io.File,
      * javax.swing.JProgressBar, org.argouml.persistence.ProgressListener)
      */
-    public Project doLoad(File file)
+    public Project doLoad(File file) throws OpenException {
+        return doLoad(file, file);
+    }
+        
+    /**
+     * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.io.File,
+     * javax.swing.JProgressBar, org.argouml.persistence.ProgressListener)
+     */
+    public Project doLoad(File originalFile, File file)
         throws OpenException {
         
         XmlInputStream inputStream = null;
@@ -285,6 +293,8 @@ public class UmlFilePersister extends AbstractFilePersister
             // Run through any stylesheet upgrades
             int fileVersion = getPersistenceVersionFromFile(file);
             
+            // If we're trying to load a file from a future version
+            // complain and refuse.
             if (fileVersion > PERSISTENCE_VERSION) {
                 String release = getReleaseVersionFromFile(file);
                 throw new VersionException(
@@ -293,6 +303,15 @@ public class UmlFilePersister extends AbstractFilePersister
                     + release
                     + ". Please load with that or a more up to date"
                     + "release of ArgoUML");
+            }
+
+            // If we're about to upgrade the file lets take an archive
+            // of it first.
+            if (fileVersion < PERSISTENCE_VERSION) {
+                String release = getReleaseVersionFromFile(file);
+                copyFile(
+                    originalFile,
+                    new File(originalFile.getAbsolutePath() + '~' + release));
             }
             
             // The progress is split into equal sections, 1 for
