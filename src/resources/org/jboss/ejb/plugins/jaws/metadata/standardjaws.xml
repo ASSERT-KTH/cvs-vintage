@@ -16,8 +16,8 @@
             <name>PostgreSQL</name>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
-                <jdbc-type>BIT</jdbc-type>
-                <sql-type>BIT</sql-type>
+                <jdbc-type>VARCHAR</jdbc-type>
+                <sql-type>VARCHAR(5)</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Short</java-type>
@@ -32,7 +32,7 @@
             <mapping>
                 <java-type>java.lang.Double</java-type>
                 <jdbc-type>DOUBLE</jdbc-type>
-                <sql-type>DOUBLE</sql-type>
+                <sql-type>FLOAT8</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Character</java-type>
@@ -41,8 +41,8 @@
             </mapping>
             <mapping>
                 <java-type>java.lang.Object</java-type>
-                <jdbc-type>BLOB</jdbc-type>
-                <sql-type>BLOB</sql-type>
+                <jdbc-type>JAVA_OBJECT</jdbc-type>
+                <sql-type>OID</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.sql.TimeStamp</java-type>
@@ -57,7 +57,7 @@
             <mapping>
                 <java-type>java.lang.Byte</java-type>
                 <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>TINYINT</sql-type>
+                <sql-type>INT2</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Float</java-type>
@@ -72,7 +72,7 @@
             <mapping>
                 <java-type>java.lang.Long</java-type>
                 <jdbc-type>BIGINT</jdbc-type>
-                <sql-type>BIGINT</sql-type>
+                <sql-type>INT4</sql-type>
             </mapping>
         </type-mapping>
         <type-mapping>
@@ -94,8 +94,8 @@
             </mapping>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
-                <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>TINYINT</sql-type>
+                <jdbc-type>VARCHAR</jdbc-type>
+                <sql-type>VARCHAR(5)</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Float</java-type>
