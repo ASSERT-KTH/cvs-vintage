@@ -6,7 +6,7 @@
 
     <!-- Allow the user to have multiple configuration files and
          specify them using -Dconfiguration.file=filename 
-    	 By default we load build.properties.     
+       By default we load build.properties.     
     -->         
     <property name="configuration.file" value="build.properties"/>
 
@@ -90,9 +90,18 @@
 
     <target name="prepare" depends="prepare-build-dir">
 
-		<echo> Scarab database admin user = ${scarab.database.admin.username}</echo>
-		<echo> Scarab database admin pwd  = ${scarab.database.admin.password}</echo>
-
+        <echo>
+        +-------------------------------------------------------------
+        |
+	    | Scarab database type       = ${scarab.database.type}
+        | Scarab database name       = ${scarab.database.name}
+        | Scarab database admin user = ${scarab.database.admin.username}
+        | Scarab database admin pwd  = ${scarab.database.admin.password}
+        |
+        | Scarab Administrator name  = ${scarab.user.username}
+        |
+        +-------------------------------------------------------------
+        </echo>
 
         <!-- things to go into the project directory -->      
          <copy todir="${build.project}" filtering="no">
@@ -109,7 +118,7 @@
              </fileset>
          </copy>
         
-		<!-- Copy the miscellaneous runtime configuration files into the webapp -->
+    <!-- Copy the miscellaneous runtime configuration files into the webapp -->
         <copy todir="${build.project.webinf}/conf" filtering="no">
              <fileset dir="${src.dir}/conf/conf">
                  <include name="**/*.*"/>
@@ -124,7 +133,7 @@
                    file="${extensions.conf.dir}"/>
         <antcall target="copy-conf-extensions"/>
 
-		<!-- things to go into the web-inf directory -->
+    <!-- things to go into the web-inf directory -->
         <copy todir="${build.project.webinf}/lib" filtering="no" flatten="true">
             <fileset dir="${lib.dir}/">
                 <exclude name="**/servlet*.jar"/>
@@ -142,13 +151,15 @@
         <antcall target="copy-lib-extensions"/>
 
         <!-- Copy the appropriate database driver to the webapp lib folder -->
-        <echo>Using ${scarab.database.type} JDBC driver from:
-    ${lib.dir}/${scarab.jdbc.driver.jar}
+        <echo>Using ${scarab.database.type} JDBC driver named ${scarab.jdbc.driver.jar}
         </echo>
 
         <copy todir="${build.project.webinf}/lib" filtering="no"
               preservelastmodified="yes">
             <fileset dir="${lib.dir}/">
+                <include name="**/${scarab.jdbc.driver.jar}"/>
+            </fileset>
+            <fileset dir="${basedir}/../www/repository">
                 <include name="**/${scarab.jdbc.driver.jar}"/>
             </fileset>
         </copy>
@@ -263,7 +274,7 @@
         </uptodate>
     </target>
 
-  	<!-- ================================================================== -->
+    <!-- ================================================================== -->
     <!-- Generate SQL from Torque for all databases                         -->
     <!-- ================================================================== -->
     <target name="sql-all" depends="schema-check" description="Generate SQL DDL for all databases"
@@ -348,7 +359,7 @@
             <param name="generatesql.database.type"
                    value="${scarab.database.type}"/>
         </antcall>
- 		
+    
         <!-- we don't want to generate the OM objects for Turbine 
              tables because they already exists in the fulcrum.jar -->
         <delete file="${torque.dir.scarab}/schema/turbine-schema.xml"/>
@@ -435,6 +446,7 @@
         <!-- onerror of the actual creation class to "continue", this  -->
         <!-- pre-creates dummy tables (ignoring any errors if the      -->
         <!-- tables already exist) so that they can be dropped.        -->
+        <!--
         <sql
             rdbms="oracle"
             onerror="continue"
@@ -446,7 +458,7 @@
             <transaction 
                 src="${build.sql.scarab}/prepare-oracle-dummy-tables.sql"/>
         </sql>
-
+-->
 
         <echo message=
             "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
@@ -578,7 +590,7 @@
             password="${scarab.test.database.password}">
             <classpath refid="classpath"/>
             <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
-	    <transaction src="${build.sql.scarab}/${project}-sample-data.sql"/>
+      <transaction src="${build.sql.scarab}/${project}-sample-data.sql"/>
         </sql>
     </target>
 
@@ -642,10 +654,32 @@
             tofile="${src.sql.dir}/${project}-data.sql"/>
     </target>
 
+    <target name="check-ant-version">
+      <condition property="can.compile">
+        <contains string="${ant.version}" substring="1.5."/>
+      </condition>
+      <fail unless="can.compile">
+        
++-----------------------------------------------------------------------+
+| Your version of ant is                                                |
+|                                                                       |
+| ${ant.version}
+|                                                                       |
+| Due to dependencies between ant and Torque you                        |
+| need to use ant-1.5.* in order to compile successfully.               |
+| Please get a supported version of ant and try again.                  |
+| Following ant download is known to work for building scarab :         |
+|                                                                       |
+| http://archive.apache.org/dist/ant/binaries/apache-ant-1.5.4-bin.zip  |
+|                                                                       |
++-----------------------------------------------------------------------+
+      </fail>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Compiles the source directory                                      -->
     <!-- ================================================================== -->
-    <target name="compile" depends="om-peer,prepare">
+    <target name="compile" depends="check-ant-version, om-peer,prepare">
         <mkdir dir="${build.dest.scarab}"/>
         <javac srcdir="${src.java.dir.scarab}"
                destdir="${build.dest.scarab}"
