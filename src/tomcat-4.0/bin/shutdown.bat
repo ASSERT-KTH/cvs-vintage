@@ -2,7 +2,7 @@
 rem ---------------------------------------------------------------------------
 rem shutdown.bat - Stop Script for the CATALINA Server
 rem
-rem $Id: shutdown.bat,v 1.1 2000/12/18 05:03:38 jon Exp $
+rem $Id: shutdown.bat,v 1.2 2001/02/23 21:51:27 jon Exp $
 rem ---------------------------------------------------------------------------
 
 set _CATALINA_HOME=%CATALINA_HOME%

@@ -12,7 +12,7 @@ rem                 "stop", or "run" command is executed.
 rem
 rem   JAVA_HOME     Must point at your Java Development Kit installation.
 rem
-rem $Id: catalina.bat,v 1.1 2000/12/18 05:03:38 jon Exp $
+rem $Id: catalina.bat,v 1.2 2001/02/23 21:51:27 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
@@ -36,7 +36,8 @@ if exist "%CATALINA_HOME%\bin\catalina.bat" goto okCatalinaHome
 set CATALINA_HOME=..
 :gotCatalinaHome
 if exist "%CATALINA_HOME%\bin\catalina.bat" goto okCatalinaHome
-echo Unable to determine the value of CATALINA_HOME
+echo Cannot find catalina.bat in %CATALINA_HOME%\bin
+echo Please check your CATALINA_HOME setting
 goto cleanup
 :okCatalinaHome
 

@@ -12,7 +12,7 @@
 #
 #   JAVA_HOME     Must point at your Java Development Kit installation.
 #
-# $Id: catalina.sh,v 1.1 2000/12/18 05:03:38 jon Exp $
+# $Id: catalina.sh,v 1.2 2001/02/23 21:51:27 jon Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -52,7 +52,7 @@ fi
 
 # ----- Set Up The System Classpath -------------------------------------------
 
-CP="$CATALINA_HOME/bin/bootstrap.jar:$CATALINA_HOME/bin/servlet.jar:$CATALINA_HOME/bin/naming.jar"
+CP="$CATALINA_HOME/bin/bootstrap.jar"
 
 if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
   CP=$CP:"$JAVA_HOME/lib/tools.jar"
