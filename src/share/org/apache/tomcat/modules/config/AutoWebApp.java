@@ -197,7 +197,7 @@ public class AutoWebApp extends BaseInterceptor {
 		String name = list[i];
 		File f=new File( webappD, name );
 		if( f.isDirectory() ) {
-		    if( ignoreDot && name.statsWith("." )) {
+		    if( ignoreDot && name.startsWith("." )) {
 			continue;
 		    } else
 			addVHost( cm, webappD, name );
