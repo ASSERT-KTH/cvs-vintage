@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_editpane.xml,v 1.15 2003/10/29 20:59:52 mvw Exp $ -->
+<!-- $Id: ref_editpane.xml,v 1.16 2003/11/01 17:22:37 mvw Exp $ -->
 
 <!--
 
@@ -586,8 +586,8 @@ graphic artifacts to diagrams.</para></listitem>
           </imageobject></inlinemediaobject></guiicon>
           <literal>Package</literal>. Add a package to the
           diagram.</para>
-          <!-- TODO: Why is a package a drop-down selector with 1 item? Enter an
-          issue for this. See issue ... -->
+          <!-- TODO: Why is a package a drop-down selector with 1 item? 
+          See issue 2095. -->
         </listitem>
 
         <listitem><para><guiicon><inlinemediaobject><imageobject>
