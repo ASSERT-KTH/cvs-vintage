@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.99 2004/04/04 06:41:37 mvw Exp $
+// $Id: ParserDisplay.java,v 1.100 2004/04/04 16:19:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.99 2004/04/04 06:41:37 mvw Exp $
+// $Id: ParserDisplay.java,v 1.100 2004/04/04 16:19:06 mvw Exp $
 
 
 
@@ -2182,7 +2182,6 @@ public class ParserDisplay extends Parser {
             // case 1 and 2
             if (evt == null) {
                 // case 1
-                /* TODO: Why not createCallEvent() in the next line? */
                 evt = UmlFactory.getFactory().getStateMachines()
 						 	.buildCallEvent();
                 if (evt != null) {
@@ -2232,12 +2231,21 @@ public class ParserDisplay extends Parser {
 		    ModelFacade.setGuard(trans, g);
 		}
 	    } else {
-                // case 2
-		/* TODO: Creating a new expression here, 
-		which causes the language to be reset to "Java".  
-		Instead we should only change the string! */
-		ModelFacade.setExpression(g, UmlFactory.getFactory()
-		    .getDataTypes().createBooleanExpression("Java", guard));
+                // case 2   
+		// Beware: the language should not be reset to "Java" or lost.
+		
+		//TODO: This does not work! Why not?
+	        //Object expr = ModelFacade.getExpression(g);
+		//ModelFacade.setBody(expr,guard);
+	        
+	        //hence a less elegant workaround that works:
+	        String language = 
+			ModelFacade.getLanguage(ModelFacade.getExpression(g));
+                LOG.info("Guard - Case 2 - Language = '" + language + "'.");
+	        ModelFacade.setExpression(g, UmlFactory.getFactory()
+                    .getDataTypes().createBooleanExpression(language, guard));
+                /*  TODO: In this case, the properties panel is not updated 
+		    with the changed expression!  */
 	    }
 	} else { 
 	    if (g == null) {
