@@ -59,19 +59,19 @@
  
  
  <!-- composer -->
- <action name="AddressbookAction" class="org.columba.mail.gui.composer.action.AddressbookAction"/>
- <action name="AttachFileAction" class="org.columba.mail.gui.composer.action.AttachFileAction"/>
- <action name="CloseComposerAction" class="org.columba.mail.gui.composer.action.CloseComposerAction"/>
- <action name="EncryptMessageAction" class="org.columba.mail.gui.composer.action.EncryptMessageAction"/>
- <action name="ExternalEditorAction" class="org.columba.mail.gui.composer.action.ExternalEditorAction"/>
- <action name="NewMessageAction" class="org.columba.mail.gui.composer.action.NewMessageAction"/>
- <action name="SaveAsDraftAction" class="org.columba.mail.gui.composer.action.SaveAsDraftAction"/>
- <action name="SaveAsTemplateAction" class="org.columba.mail.gui.composer.action.SaveAsTemplateAction"/>
- <action name="SaveMessageAction" class="org.columba.mail.gui.composer.action.SaveMessageAction"/>
- <action name="SendAction" class="org.columba.mail.gui.composer.action.SendAction"/>
- <action name="SendLaterAction" class="org.columba.mail.gui.composer.action.SendLaterAction"/>
- <action name="SignMessageAction" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
- <action name="SpellcheckAction" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
+ <action name="Addressbook" class="org.columba.mail.gui.composer.action.AddressbookAction"/>
+ <action name="AttachFile" class="org.columba.mail.gui.composer.action.AttachFileAction"/>
+ <action name="CloseComposer" class="org.columba.mail.gui.composer.action.CloseComposerAction"/>
+ <action name="EncryptMessage" class="org.columba.mail.gui.composer.action.EncryptMessageAction"/>
+ <action name="ExternalEditor" class="org.columba.mail.gui.composer.action.ExternalEditorAction"/>
+ <action name="NewMessage" class="org.columba.mail.gui.composer.action.NewMessageAction"/>
+ <action name="SaveAsDraft" class="org.columba.mail.gui.composer.action.SaveAsDraftAction"/>
+ <action name="SaveAsTemplate" class="org.columba.mail.gui.composer.action.SaveAsTemplateAction"/>
+ <action name="SaveMessage" class="org.columba.mail.gui.composer.action.SaveMessageAction"/>
+ <action name="Send" class="org.columba.mail.gui.composer.action.SendAction"/>
+ <action name="SendLater" class="org.columba.mail.gui.composer.action.SendLaterAction"/>
+ <action name="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
+ <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
  
  
 </actionlist>
