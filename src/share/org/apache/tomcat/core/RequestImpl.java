@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.32 2000/05/09 17:56:14 costin Exp $
- * $Revision: 1.32 $
- * $Date: 2000/05/09 17:56:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.33 2000/05/12 02:19:59 costin Exp $
+ * $Revision: 1.33 $
+ * $Date: 2000/05/12 02:19:59 $
  *
  * ====================================================================
  *
@@ -160,6 +160,7 @@ public class RequestImpl  implements Request {
         StringManager.getManager("org.apache.tomcat.core");
 
     public RequestImpl() {
+	//	System.out.println("XXX new ri " );
  	headers = new MimeHeaders();
  	recycle(); // XXX need better placement-super()
     }

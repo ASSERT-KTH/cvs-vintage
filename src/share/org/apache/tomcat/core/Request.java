@@ -74,10 +74,6 @@ import javax.servlet.http.*;
  */
 public interface Request  {
 
-    // -------------------- Multiple JVM support --------------------
-    // GS, used by the load balancing layer
-    public String getJvmRoute();
-
     // -------------------- Basic Request properties --------------------
     public String getScheme() ;
 
@@ -141,15 +137,6 @@ public interface Request  {
 
     public Context getContext() ;
 
-    /** Everything after context path ( servletPath + pathInfo + queryInfo )
-     * @deprecated - artificial construct in tomcat implementation
-     */
-    public void setLookupPath( String l ) ;
-
-    /** @deprecated - artificial construct in tomcat implementation
-     */
-    public String getLookupPath() ;
-
     /** Real Path - should be implemented as a callback ( override it in adapters).
      *  Map interceptor should set it to something reasonable ( context home + path )
      *  MappedPath is similar - it contain mappings inside a context, for normal
@@ -207,6 +194,10 @@ public interface Request  {
 
 
     // -------------------- Session --------------------
+    // -------------------- Multiple JVM support --------------------
+    // GS, used by the load balancing layer
+    public String getJvmRoute();
+
     // Will be set by session interceptors
     public String getRequestedSessionId() ;
 
@@ -277,14 +268,14 @@ public interface Request  {
     // -------------------- Internal/deprecated--------------------
     // Derived from parsing query string and body (for POST)
 
+    // Used in ReqDispatcher
     /** @deprecated internal use only */
     public void setParameters( Hashtable h ) ;
-
     /** @deprecated internal use only */
     public Hashtable getParameters() ;
 
     /** @deprecated  */
-    Principal getUserPrincipal() ;
+     Principal getUserPrincipal() ;
 
     void setUserPrincipal(Principal p) ;
 
@@ -303,17 +294,7 @@ public interface Request  {
      */
     public void setWrapper(ServletWrapper handler) ;
 
-    /** The file - result of mapping the request ( using aliases and other
-     *  mapping rules. Usefull only for static resources.
-     *  @deprecated - internal use only
-     */
-    public String getMappedPath() ;
-
-    /**
-     *  @deprecated - internal use only
-     */
-    public void setMappedPath( String m ) ;
-
+    // -------------------- Notes --------------------
     /** Add a per/request internal attribute.
      *  We keep internal attributes in a separate space to prevent
      *  servlets from accessing them. We also use indexed access for

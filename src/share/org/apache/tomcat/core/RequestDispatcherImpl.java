@@ -149,7 +149,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	realRequest.setContext( context );
 
 	// Note that Mapper interceptor uses lookup path. 
-	realRequest.setLookupPath( path );
+	//realRequest.setLookupPath( path );
 	realRequest.setRequestURI( context.getPath() + path );
 
 	// merge query string as specified in specs - before, it may affect
