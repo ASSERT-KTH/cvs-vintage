@@ -14,6 +14,20 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Set;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.DynamicMBean;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.InitialContext;
@@ -39,10 +53,6 @@ import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 
-import org.jnp.interfaces.Naming;
-import org.jnp.interfaces.java.javaURLContextFactory;
-import org.jnp.server.NamingServer;
-
 import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 
 /**
@@ -59,11 +69,11 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *
  * @see ContainerFactory
  * 
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  *
  * <p><b>Revisions:</b>
  *
@@ -71,8 +81,12 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * <ul>
  * <li> Added BeanLockManager.
  * </ul>
+ * <p><b>2001/08/13 scott.stark:</b>
+ * <ul>
+ * <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
+ * </ul>
  */
-public abstract class Container
+public abstract class Container implements DynamicMBean
 {
    // Constants -----------------------------------------------------
 
@@ -135,6 +149,8 @@ public abstract class Container
    
    /** ??? */   
    protected Class localInterface;
+
+   protected MBeanServer mbeanServer;
 
    // Public --------------------------------------------------------
 
@@ -208,6 +224,10 @@ public abstract class Container
    public Object getSecurityProxy()
    {
       return securityProxy;
+   }
+   void setMBeanServer(MBeanServer mbeanServer)
+   {
+      this.mbeanServer = mbeanServer;
    }
 
    /**
@@ -383,6 +403,9 @@ public abstract class Container
       throws Exception
    {
       localContainerInvoker.start();
+      
+      ObjectName jmxName = new ObjectName(":service=Container,jndiName="+this.getBeanMetaData().getJndiName());
+      mbeanServer.registerMBean(this, jmxName);
    }
 
    /**
@@ -393,6 +416,14 @@ public abstract class Container
    public void stop()
    {
       localContainerInvoker.stop();
+      try
+      {
+         ObjectName jmxName = new ObjectName(":service=Container,jndiName="+this.getBeanMetaData().getJndiName());
+         mbeanServer.unregisterMBean(jmxName);
+      }
+      catch(Exception e)
+      {
+      }
    }
 
    /**
@@ -434,6 +465,148 @@ public abstract class Container
     */
    public abstract Object invoke(MethodInvocation mi)
       throws Exception;
+
+   // Begin DynamicMBean interface implementation
+   public Object getAttribute(String attribute)
+      throws AttributeNotFoundException,
+      MBeanException,
+      ReflectionException
+   {
+      return null;
+   }
+   
+   public void setAttribute(Attribute attribute)
+      throws AttributeNotFoundException,
+      InvalidAttributeValueException,
+      MBeanException,
+      ReflectionException
+   {
+   }
+
+   public AttributeList getAttributes(String[] attributes)
+   {
+      return null;
+   }
+
+   public AttributeList setAttributes(AttributeList attributes)
+   {
+      return null;
+   }
+
+   /** Handle a operation invocation.
+    */
+   public Object invoke(String actionName, Object[] params, String[] signature)
+      throws MBeanException, ReflectionException
+   {
+      if( params != null && params.length == 1 && (params[0] instanceof MethodInvocation) == false )
+         throw new MBeanException(new IllegalArgumentException("Expected zero or single MethodInvocation argument"));
+
+      Object value = null;
+      MethodInvocation mi = null;
+      if( params != null && params.length == 1 )
+         mi = (MethodInvocation) params[0];
+
+      ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
+      try
+      {
+         Thread.currentThread().setContextClassLoader(this.classLoader);
+         // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
+         if( actionName.equals("remote") )
+         {
+            value = invoke(mi);
+         }
+         else if( actionName.equals("local") )
+         {
+            throw new MBeanException(new UnsupportedOperationException("local is not supported yet"));
+         }
+         else if( actionName.equals("home") )
+         {
+            value = invokeHome(mi);
+         }
+         else if( actionName.equals("localHome") )
+         {
+            throw new MBeanException(new UnsupportedOperationException("localHome is not supported yet"));
+         }
+         else if( actionName.equals("getHome") )
+         {
+            String className = this.getBeanMetaData().getHome();
+            if( clasName != null )
+            {
+               Class clazz = this.classLoader.loadClass(className);
+               value = clazz;
+            }
+         }
+         else if( actionName.equals("getRemote") )
+         {
+            String className = this.getBeanMetaData().getRemote();
+            if( className != null )
+            {
+               Class clazz = this.classLoader.loadClass(className);
+               value = clazz;
+            }
+         }
+         else if( actionName.equals("getLocalHome") )
+         {
+            value = this.localHomeInterface;
+         }
+         else if( actionName.equals("getLocal") )
+         {
+            value = this.localInterface;
+         }
+         else
+         {
+            throw new MBeanException(new IllegalArgumentException("Unknown action: "+actionName));
+         }
+      }
+      catch(Exception e)
+      {
+         log.error("invoke returned an exception", e);
+         throw new MBeanException(e, "invoke returned an exception");
+      }
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(callerClassLoader);
+      }
+
+      return value;
+   }
+
+   /** Build the container MBean information on attributes, contstructors, operations,
+    and notifications. Currently there are no attributes, no constructors, no
+    notifications, and the following ops:
+    <ul>
+    <li>'home' -> invokeHome(MethodInvocation);</li>
+    <li>'remote' -> invoke(MethodInvocation);</li>
+    <li>'localHome' -> not implemented;</li>
+    <li>'local' -> not implemented;</li>
+    <li>'getHome' -> return EBJHome interface;</li>
+    <li>'getRemote' -> return EJBObject interface</li>
+    </ul>
+    */
+   public MBeanInfo getMBeanInfo()
+   {
+      MBeanParameterInfo miInfo = new MBeanParameterInfo("method", MethodInvocation.class.getName(), "MethodInvocation data");
+      MBeanConstructorInfo[] ctorInfo = null;
+      MBeanOperationInfo[] opInfo = {
+         new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
+            new MBeanParameterInfo[] {miInfo},
+            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+         new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
+            new MBeanParameterInfo[] {miInfo},
+            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+         new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
+            null,
+            "java.lang.Class", MBeanOperationInfo.INFO),
+         new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
+            null,
+            "java.lang.Class", MBeanOperationInfo.INFO)
+      };
+      MBeanNotificationInfo[] notifyInfo = null;
+      return new MBeanInfo(getClass().getName(), "EJB Container MBean",
+         null, ctorInfo, opInfo, notifyInfo);
+   }
+
+   // End DynamicMBean interface
 
    // Protected -----------------------------------------------------
 

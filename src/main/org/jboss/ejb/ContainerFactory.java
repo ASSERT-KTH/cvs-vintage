@@ -68,7 +68,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.89 $
+* @version $Revision: 1.90 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -579,26 +579,29 @@ public class ContainerFactory
                                       ClassLoader localCl )
       throws Exception
    {
+      Container container = null;
       // Added message driven deployment
       if( bean.isMessageDriven() )
       {
-         return createMessageDrivenContainer( bean, cl, localCl );
+         container = createMessageDrivenContainer( bean, cl, localCl );
       }
       else if( bean.isSession() )   // Is session?
       {
          if( ( (SessionMetaData) bean ).isStateless() )   // Is stateless?
          {
-            return createStatelessSessionContainer( bean, cl, localCl );
+            container = createStatelessSessionContainer( bean, cl, localCl );
          }
          else   // Stateful
          {
-            return createStatefulSessionContainer( bean, cl, localCl );
+            container = createStatefulSessionContainer( bean, cl, localCl );
          }
       }
       else   // Entity
       {
-         return createEntityContainer( bean, cl, localCl );
+         container = createEntityContainer( bean, cl, localCl );
       }
+      container.setMBeanServer(this.getServer());
+      return container;
    }
 
    private MessageDrivenContainer createMessageDrivenContainer( BeanMetaData bean,
@@ -713,11 +716,14 @@ public class ContainerFactory
     * Either creates the Management MBean wrapper for a container and start
     * it or it destroy it.
     **/
-   private void handleContainerManagement( Container container, boolean doStart ) {
-      try {
+   private void handleContainerManagement( Container container, boolean doStart )
+   {
+      try
+      {
          // Create and register the ContainerMBean
          ObjectName name = new ObjectName( "Management", "jndiName", container.getBeanMetaData().getJndiName() );
-         if( doStart ) {
+         if( doStart )
+         {
             getServer().createMBean(
                                     "org.jboss.management.ContainerManagement",
                                     name,
@@ -727,7 +733,8 @@ public class ContainerFactory
             getServer().invoke( name, "init", new Object[] {}, new String[] {} );
             getServer().invoke( name, "start", new Object[] {}, new String[] {} );
          }
-         else {
+         else
+         {
             // If not startup then assume that the MBean is there
             getServer().invoke( name, "stop", new Object[] {}, new String[] {} );
             getServer().invoke( name, "destroy", new Object[] {}, new String[] {} );
