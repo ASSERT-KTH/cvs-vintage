@@ -127,7 +127,8 @@
   #set ($selectedType = $data.Parameters.getInt("headingtype", 0))
 #end
 
-        <select name="headingtype">
+        <select name="headingtype"
+                onchange="javascript:submitFormTo(this.form, 'eventSubmit_doSettype');">
           <option value="0" #if ($selectedType == 0)selected="selected"#end>$l10n.AttributesOrOptions</option>
 #set ($userAttrs = $report.MITList.CommonUserAttributes)
 #if ($userAttrs && !$userAttrs.isEmpty())
@@ -137,7 +138,7 @@
           <option value="2" #if ($selectedType == 2)selected="selected"#end>$l10n.DatesOrDatesRanges</option>
   #end
         </select>
-        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go"/>
+        <noscript>&nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go"/></noscript>
       </td>
     </tr>
   </table>
