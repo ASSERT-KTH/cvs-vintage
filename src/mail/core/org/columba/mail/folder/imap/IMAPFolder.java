@@ -125,44 +125,26 @@ public class IMAPFolder extends RemoteFolder {
         super.removeFolder();
     }
 
-    /**
-     * @see org.columba.mail.folder.Folder#renameFolder(java.lang.String)
-     */
-    public boolean renameFolder(String name) throws Exception {
-        String oldPath = getImapPath();
-        LOG.info("old path=" + oldPath);
+    public void setName(String name) {
+        try {
+            String oldPath = getImapPath();
+            LOG.info("old path=" + oldPath);
 
-        String newPath = null;
+            String newPath = null;
 
-        if (getParent() instanceof IMAPFolder) {
-            newPath = ((IMAPFolder) getParent()).getImapPath();
+            if (getParent() instanceof IMAPFolder) {
+                newPath = ((IMAPFolder) getParent()).getImapPath();
+            }
+
+            newPath += (getStore().getDelimiter() + name);
+            LOG.info("new path=" + newPath);
+
+            if (getStore().renameFolder(oldPath, newPath)) {
+                super.setName(name);
+            }
+        } catch (Exception e) {
+            LOG.severe(e.getMessage());
         }
-
-        newPath += (getStore().getDelimiter() + name);
-        LOG.info("new path=" + newPath);
-
-        boolean result = getStore().renameFolder(oldPath, newPath);
-
-        if (!result) {
-            return false;
-        }
-
-        return super.renameFolder(name);
-    }
-
-    /**
-     * @see org.columba.mail.folder.Folder#getRootFolder()
-     */
-    public AbstractFolder getRootFolder() {
-        AbstractFolder folderTreeNode = (AbstractFolder) getParent();
-
-        while (folderTreeNode != null) {
-            if (folderTreeNode instanceof IMAPRootFolder) { return (IMAPRootFolder) folderTreeNode; }
-
-            folderTreeNode = (AbstractFolder) folderTreeNode.getParent();
-        }
-
-        return null;
     }
 
     /**

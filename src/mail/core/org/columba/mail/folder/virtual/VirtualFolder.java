@@ -256,7 +256,7 @@ public class VirtualFolder extends MessageFolder {
             buf.append(")");
         }
 
-        newFolder.renameFolder(buf.toString());
+        newFolder.setName(buf.toString());
 
         // update tree-view
         MailInterface.treeModel.nodeStructureChanged(searchFolder);

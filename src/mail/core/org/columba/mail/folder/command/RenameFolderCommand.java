@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
@@ -24,7 +25,6 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.main.MailInterface;
-
 
 /**
  * Rename selected folder.
@@ -63,6 +63,6 @@ public class RenameFolderCommand extends Command {
         String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
 
         // rename folder
-        ((MessageFolder) parentFolder).renameFolder(name);
+        ((MessageFolder) parentFolder).setName(name);
     }
 }

@@ -344,19 +344,6 @@ public abstract class MessageFolder extends AbstractFolder implements MailboxInt
     }
 
     /**
-     * Rename folder.
-     * 
-     * @param name
-     *            new folder name
-     * @return boolean true if success, false otherwise
-     * @throws Exception
-     */
-    public boolean renameFolder(String name) throws Exception {
-        setName(name);
-        return true;
-    }
-
-    /**
      * save messagefolderinfo to xml-configuration
      *  
      */
