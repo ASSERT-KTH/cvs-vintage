@@ -24,7 +24,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.10 2003/04/09 15:08:40 alexb Exp $
+// $Id: Designer.java,v 1.11 2003/05/19 11:34:34 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -38,10 +38,10 @@ import java.awt.*;
 import java.beans.*;
 import javax.swing.*;
 
-import org.apache.log4j.Category;
+import ru.novosoft.uml.MElementListener;
+import ru.novosoft.uml.MElementEvent;
 
-// TODO get rid.
-import ru.novosoft.uml.*;
+import org.apache.log4j.Category;
 
 /** This class models the designer who is building a complex design in
  * some application domain and needs continuous feedback to aid in the
