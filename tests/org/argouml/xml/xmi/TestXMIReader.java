@@ -1,4 +1,4 @@
-// $Id: TestXMIReader.java,v 1.10 2004/08/26 19:34:55 mvw Exp $
+// $Id: TestXMIReader.java,v 1.11 2004/08/26 23:03:17 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,13 +71,14 @@ public class TestXMIReader extends TestCase {
      * @throws Exception
      */
     public void testReadReturnParameter()
-	throws IOException, MalformedURLException, IllegalFormatException,
-	       Exception
-    {
+        throws IOException, 
+               MalformedURLException, 
+               IllegalFormatException,
+	           Exception {
         // next statement should be in an ArgoTestCase or something,  
         // is almost always needed
         Project p = ProjectManager.getManager().makeEmptyProject();
-        MClass clazz = CoreFactory.getFactory().buildClass(p.getModel());
+        Object clazz = CoreFactory.getFactory().buildClass(p.getModel());
         MOperation oper = CoreFactory.getFactory().buildOperation(clazz);
         ModelFacade.setType(oper.getParameter(0), p.findType("String"));
         File file = new File("test.zargo");

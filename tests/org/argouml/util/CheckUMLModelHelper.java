@@ -1,4 +1,4 @@
-// $Id: CheckUMLModelHelper.java,v 1.5 2004/08/26 19:35:01 mvw Exp $
+// $Id: CheckUMLModelHelper.java,v 1.6 2004/08/26 23:03:18 bobtarling Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -226,15 +226,16 @@ public class CheckUMLModelHelper {
         }
     } 
     
-    public static void isValidStereoType(TestCase tc, 
+    public static void isValidStereoType(
+            TestCase tc, 
             AbstractUmlModelFactory f, 
             String[] names) {
         try {
             MNamespace ns = CoreFactory.getFactory().createNamespace();
-            MClass clazz = CoreFactory.getFactory().buildClass(ns);
+            Object clazz = CoreFactory.getFactory().buildClass(ns);
             MStereotype stereo1 = ExtensionMechanismsFactory.getFactory()
                     .buildStereotype(clazz, "test1", ns);
-	    for (int i = 0; i < names.length; i++) {
+            for (int i = 0; i < names.length; i++) {
                 try {
                     Method m = f.getClass()
                         .getMethod("create" + names[i], new Class[] {});

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.208 2004/08/26 20:06:48 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.209 2004/08/26 23:03:17 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4694,15 +4694,14 @@ public class ModelFacade {
      * Adds a supplier classifier to some abstraction.
      *
      * @param handle abstraction
-     * @param cls supplier classifier
+     * @param element supplier model element
      */
-    public static void addSupplier(Object handle, Object cls) {
-        if (handle instanceof MAbstraction
-            && cls instanceof MClassifier) {
-            ((MAbstraction) handle).addSupplier((MClassifier) cls);
+    public static void addSupplier(Object handle, Object element) {
+        if (isADependency(handle) && isAModelElement(element)) {
+            ((MDependency) handle).addSupplier((MModelElement) element);
             return;
         }
-	illegalArgument(handle, cls);
+        illegalArgument(handle, element);
     }
 
     /**
@@ -4711,14 +4710,14 @@ public class ModelFacade {
      * @param dependency the dependency
      */
     public static void addSupplierDependency(
-        Object supplier,
-        Object dependency) {
+            Object supplier, 
+            Object dependency) {
         if (isAModelElement(supplier) && isADependency(dependency)) {
             MModelElement me = (MModelElement) supplier;
             me.addSupplierDependency((MDependency) dependency);
             return;
         }
-	illegalArgument(supplier, dependency);
+        illegalArgument(supplier, dependency);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementConstraintListModel.java,v 1.8 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLModelElementConstraintListModel.java,v 1.9 2004/08/26 23:03:17 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class TestUMLModelElementConstraintListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ns = ModelManagementFactory.getFactory().createModel();
-        elem = CoreFactory.getFactory().buildClass(ns);
+        elem = (MModelElement)CoreFactory.getFactory().buildClass(ns);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLModelElementConstraintListModel();
