@@ -1,0 +1,54 @@
+        
+#set ($action = $link.setPage("SaveTemplate.vm").setAction("SaveTemplate").addPathInfo("nextTemplate", "TemplateList.vm"))
+#set ($template = $scarabR.IssueTemplate)
+#set ($templateGroup = $intake.IssueTemplate.mapTo($template)) 
+#set ($user = $data.User)
+#set ($module = $scarabR.CurrentModule)
+#set ($templateString = $data.Parameters.getString("templateString"))
+
+
+#set ($templateString = "blah")
+
+<form method="post" action="$action" >
+<input type="hidden" name="$templateGroup.Value.Key" value="$templateString" />
+
+
+#if ($templateString)
+
+<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavetemplate" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+
+<h3>Save Template</h3>
+        <div class="axial">
+    <table border="1" cellspacing="2" cellpadding="3">
+       <tr>
+            <th>template name:</th>
+            <td><input type="text" size="25" value="" name="$templateGroup.Name.Key"/></td>
+       </tr>
+            
+       <tr>
+            <th>template descr:</th>
+            <td><textarea rows="4" cols="40" name="$templateGroup.Description.Key"></textarea></td>
+       </tr>
+            
+       <tr>
+         <th width="120">Availability:</th>
+
+         <td>#templateTypeSelectBox ($template)
+         </td>
+        
+       </tr>
+
+       <tr>
+         <th width="120">location:</th>
+         <td>current project '$module.Name'</td>
+         <input type = "hidden" name="$templateGroup.ModuleId.Key" value = "$module.ModuleId">
+       </tr>
+    </table>
+        </div>
+        
+<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavetemplate" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+
+#else
+   There are no templates to save. Please <a href="">enter a template</a>/
+#end
+

@@ -1,0 +1,49 @@
+
+#set ( $action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm") )
+
+#set ($module = $scarabR.CurrentModule)
+
+
+<form method="post" action="$action" >
+
+        <p class="functnbar"><input type="submit" value="create new" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+        <h3>Templates</h3>
+        
+#if ( !$module.IssueTemplates.isEmpty() )
+
+##        <p>&#171; previous | 1 of 1 | next &#187;</p>
+        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+        <th><a href="#" title="sort">template name</a></th>
+        <th><a href="#" title="sort">template descr</a></th>
+        <th><a href="#" title="sort">project</a></th>
+        <th><a href="#" title="sort">author</a></th>
+        </tr>
+        
+#foreach ( $template in $module.IssueTemplates )
+
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+        <td><input type="checkbox" name="delete_$template.IssueTemplateId"/></td>
+        <td><a href="#">$template.Name</a></td>
+        <td>#if ($template.Description) $template.Description #end</td>
+        <td>project '$scarabR.getModule($template.ModuleId.toString()).Name'</td>
+        #set ($createdUser = $scarabR.getUser($template.UserId.toString()) )
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+        </tr>
+#end
+        
+        </table>
+        
+ ##       <p>&#171; previous | 1 of 1 | next &#187;</p>
+
+        <p class="functnbar"><input type="submit" value="create new" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+#else
+    <div class="alert">There are no stored issue templates.</div>
+#end
+    </div>
