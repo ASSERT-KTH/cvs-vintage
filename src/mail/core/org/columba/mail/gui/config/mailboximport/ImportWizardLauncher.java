@@ -54,7 +54,7 @@ public class ImportWizardLauncher {
                                 "dialog",
                                 "mailboximport",
                                 "title"),
-                                ImageLoader.getSmallImageIcon("stock_preferences.png"));
+                                ImageLoader.getSmallImageIcon("stock_convert.png"));
                 wizard.setSize(500, 400);
                 wizard.setLocationRelativeTo(null);
                 wizard.setVisible(true);
