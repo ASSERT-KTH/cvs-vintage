@@ -65,6 +65,20 @@
             </issue-attribute>
             </xsl:if>
             
+            <xsl:for-each select="dependson">
+			<dependency>
+				<type>blocking</type>
+				<child>TBNS<xsl:value-of select="."/></child>
+			</dependency>
+            </xsl:for-each>
+            
+            <xsl:for-each select="blocks">
+			<dependency>
+				<type>blocking</type>
+				<parent>TBNS<xsl:value-of select="."/></parent>
+			</dependency>
+            </xsl:for-each>
+            
             <xsl:for-each select="attachment">
             <attachment>
                 <name>Bugzilla Attachment</name>
