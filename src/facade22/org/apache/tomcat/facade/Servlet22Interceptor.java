@@ -132,24 +132,6 @@ public final class Servlet22Interceptor
 	    
     }
     
-    public Object createServletContextFacade(Context ctx) {
-	//if( ctx != this.ctx ) return null; // throw
-	return new ServletContextFacade(ctx.getContextManager() , ctx);
-    }
-    
-    
-    public Object createHttpServletRequestFacade(Request req) {
-	Context reqCtx=req.getContext();
-	//	if( reqCtx != ctx && reqCtx != null ) return null; // throw
-	return new HttpServletRequestFacade(req);
-    }
-
-    public Object createHttpServletResponseFacade(Response res) {
-	Context resCtx=res.getRequest().getContext();
-	//if( resCtx != ctx && resCtx != null ) return null; // throw
-	return new HttpServletResponseFacade(res);
-    }
-
     public int postRequest(Request rreq, Response rres ) {
 	//if( rreq.getContext() != ctx ) return; // throw
 

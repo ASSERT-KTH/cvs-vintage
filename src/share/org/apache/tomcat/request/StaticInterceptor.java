@@ -108,7 +108,6 @@ public class StaticInterceptor extends BaseInterceptor {
 	DirHandler dirHandler=new DirHandler();
 	fileHandler.setNoteId( realFileNote );
 	dirHandler.setNoteId( realFileNote );
-	debug=0;
 	ctx.addServlet( fileHandler );
 	if (listings)
 	    ctx.addServlet( dirHandler );
@@ -130,6 +129,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	String absPath=FileUtil.safePath( ctx.getAbsolutePath(),
 					  pathInfo);
 
+	if( debug > -1 ) log( "RequestMap " + req + " " + absPath + " " + ctx.getAbsolutePath() );
 	if( absPath == null ) return 0;
 	String requestURI=req.getRequestURI();
 

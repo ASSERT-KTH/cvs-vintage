@@ -121,6 +121,7 @@ public class Handler {
     public void setContext( Context context) {
         this.context = context;
 	contextM=context.getContextManager();
+	loghelper.setLogger(context.getLog().getLogger());
     }
 
     public Context getContext() {
@@ -290,8 +291,14 @@ public class Handler {
 	    }
 	}
 
-	if( ! internal )
-	    contextM.doPreService( req, res );
+	BaseInterceptor reqI[]=
+	    contextM.getInterceptors(req, Container.H_postService);
+
+	if( ! internal ) {
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].preService( req, res );
+	    }
+	}
 	
 	Throwable t=null;
 	try {
@@ -301,21 +308,14 @@ public class Handler {
 	}
 	
 	// continue with the postService
-	if( ! internal )
-	    contextM.doPostService( req, res );
+	if( ! internal ) {
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].postService( req, res );
+	    }
+	}
 
 	if( t==null ) return;
 	contextM.handleError( req, res, t );
-    }
-
-//     protected void handleError( Request req, Response res, Throwable t) {
-// 	if( t==null)  return;
-	
-// 	contextM.handleError( req, res, t );
-//     }
-    
-    public String toString() {
-	return name;
     }
 
     // -------------------- Origin 
@@ -336,6 +336,10 @@ public class Handler {
 
     // -------------------- Debug --------------------
 
+    public String toString() {
+	return name;
+    }
+
     Log loghelper = new Log("tc_log", this);
     
     public void setDebug( int d ) {
@@ -343,14 +347,10 @@ public class Handler {
     }
 
     protected void log( String s ) {
-	if (context != null)
-	    loghelper.setLogger(context.getLog().getLogger());
 	loghelper.log(s);
     }
 
     protected void log( String s, Throwable t ) {
-	if (context != null)
-	    loghelper.setLogger(context.getLog().getLogger());
 	loghelper.log(s, t);
     }
 
@@ -371,21 +371,16 @@ public class Handler {
     public static final int ACC_IN_INCLUDE=5;
     
     public static final int ACCOUNTS=6;
-    long accTable[]=new long[ACCOUNTS];
 
-    public void setAccount( int pos, long value ) {
-	accTable[pos]=value;
-    }
+    private Counters cntr=new Counters( ACCOUNTS );
 
-    public long getAccount( int pos ) {
-	return accTable[pos];
+    public final Counters getCounters() {
+	return cntr;
     }
 
     // -------------------- Notes
     Object notes[]=new Object[ContextManager.MAX_NOTES];
 
-    /** See ContextManager comments.
-     */
     public void setNote( int pos, Object value ) {
 	notes[pos]=value;
     }

@@ -364,7 +364,18 @@ public class Request {
     public String getRemoteUser() {
 	if( notAuthenticated ) {
 	    notAuthenticated=false;
-	    contextM.doAuthenticate(this, response);
+
+	    int status=0;
+	    BaseInterceptor reqI[]= context.getContainer().
+		getInterceptors(Container.H_authenticate);
+	    for( int i=0; i< reqI.length; i++ ) {
+		status=reqI[i].authenticate( this, response );
+		if ( status != 0 ) {
+		    break;
+		}
+	    }
+
+	    //contextM.doAuthenticate(this, response);
 	    // 	    context.log("Auth " + remoteUser );
 	}
 	return remoteUser;
@@ -519,7 +530,12 @@ public class Request {
 
 	if( ! create ) return null;
 
-	contextM.doNewSessionRequest( this, response );
+	BaseInterceptor reqI[]= contextM.
+	    getInterceptors(this, Container.H_newSessionRequest);
+
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].newSessionRequest( this, response );
+	}
 
 	if ( serverSession == null ) {
 	    return null;

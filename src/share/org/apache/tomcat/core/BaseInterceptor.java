@@ -208,8 +208,12 @@ public class BaseInterceptor
 
     /** Called before the first body write, and before sending
      *  the headers. The interceptor have a chance to change the
-     *  output headers. 
-     */
+     *  output headers.
+     *
+     *  Before body allows you do do various
+     *	actions before the first byte of the response is sent. After all
+     *  those callbacks are called tomcat may send the status and headers
+    */
     public int beforeBody( Request rrequest, Response response ) {
 	return 0;
     }
@@ -233,7 +237,11 @@ public class BaseInterceptor
 
     /** Called after the output stream is closed ( either by servlet
      *  or automatically at end of service ).
-     */
+     *
+     * It is called after the servlet finished
+     * sending the response ( either closeing the stream or ending ). You
+     * can deal with connection reuse or do other actions
+    */
     public int afterBody( Request request, Response response) {
 	return 0;
     }

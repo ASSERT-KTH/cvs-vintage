@@ -38,7 +38,6 @@ public class EmbededTomcat { // extends WebService
     Object application;
     // null == not set up
     Vector requestInt=null;
-    Vector contextInt=null;
     /** Right now we assume all web apps use the same
 	servlet API version. This will change after we
 	finish the FacadeManager implementation
@@ -74,7 +73,7 @@ public class EmbededTomcat { // extends WebService
 
 	// In our case the adapter must be BaseInterceptor.
 	if ( adapter instanceof BaseInterceptor ) {
-	    addRequestInterceptor( (BaseInterceptor)adapter);
+	    addInterceptor( (BaseInterceptor)adapter);
 	}
     }
 
@@ -110,7 +109,7 @@ public class EmbededTomcat { // extends WebService
 	
 	//	sc.setTcpConnectionHandler( new HttpConnectionHandler());
 	
-	contextM.addRequestInterceptor(  sc );
+	contextM.addInterceptor(  sc );
     }
 
     /** Add a secure web service.
@@ -134,7 +133,7 @@ public class EmbededTomcat { // extends WebService
 	// sc.setTcpConnectionHandler( hc );
 	// XXX add the secure socket
 	
-	contextM.addRequestInterceptor(  sc );
+	contextM.addInterceptor(  sc );
     }
 
     // -------------------- Context add/remove --------------------
@@ -289,17 +288,11 @@ public class EmbededTomcat { // extends WebService
     }
     
     // -------------------- Private methods
-    public void addRequestInterceptor( BaseInterceptor ri ) {
+    public void addInterceptor( BaseInterceptor ri ) {
 	if( requestInt == null ) requestInt=new Vector();
 	requestInt.addElement( ri );
 	if( ri instanceof BaseInterceptor )
 	    ((BaseInterceptor)ri).setDebug( debug );
-    }
-    public void addContextInterceptor( BaseInterceptor ci ) {
-	if( contextInt == null ) contextInt=new Vector();
-	contextInt.addElement( ci );
-	if( ci instanceof BaseInterceptor )
-	    ((BaseInterceptor)ci).setDebug( debug );
     }
 
     private void initContextManager() {
@@ -307,14 +300,9 @@ public class EmbededTomcat { // extends WebService
 	contextM=new ContextManager();
 	contextM.setDebug( debug );
 	
-	for( int i=0; i< contextInt.size() ; i++ ) {
-	    contextM.addContextInterceptor( (BaseInterceptor)
-					    contextInt.elementAt( i ) );
-	}
-
 	for( int i=0; i< requestInt.size() ; i++ ) {
-	    contextM.addRequestInterceptor( (BaseInterceptor)
-					    requestInt.elementAt( i ) );
+	    contextM.addInterceptor( (BaseInterceptor)
+				     requestInt.elementAt( i ) );
 	}
 
 	contextM.setWorkDir( workDir );
@@ -341,57 +329,57 @@ public class EmbededTomcat { // extends WebService
 	// multiple APIs at the same time in embeded mode )
 	
 	BaseInterceptor webXmlI= (BaseInterceptor)newObject("org.apache.tomcat.facade.WebXmlReader");
-	addContextInterceptor( webXmlI );
+	addInterceptor( webXmlI );
 
 	PolicyInterceptor polI=new PolicyInterceptor();
-	addContextInterceptor( polI );
+	addInterceptor( polI );
 	polI.setDebug(0);
         
 	LoaderInterceptor12 loadI=new LoaderInterceptor12();
-	addContextInterceptor( loadI );
+	addInterceptor( loadI );
 
 	DefaultCMSetter defaultCMI=new DefaultCMSetter();
-	addContextInterceptor( defaultCMI );
+	addInterceptor( defaultCMI );
 
 	WorkDirInterceptor wdI=new WorkDirInterceptor();
-	addContextInterceptor( wdI );
+	addInterceptor( wdI );
 
 	
 	LoadOnStartupInterceptor loadOnSI=new LoadOnStartupInterceptor();
-	addContextInterceptor( loadOnSI );
+	addInterceptor( loadOnSI );
 
 	// Debug
 	// 	LogEvents logEventsI=new LogEvents();
 	// 	addRequestInterceptor( logEventsI );
 
 	SessionInterceptor sessI=new SessionInterceptor();
-	addRequestInterceptor( sessI );
+	addInterceptor( sessI );
 
 	SimpleMapper1 mapI=new SimpleMapper1();
-	addRequestInterceptor( mapI );
+	addInterceptor( mapI );
 	mapI.setDebug(0);
 
 	InvokerInterceptor invI=new InvokerInterceptor();
-	addRequestInterceptor( invI );
+	addInterceptor( invI );
 	invI.setDebug(0);
 	
 	StaticInterceptor staticI=new StaticInterceptor();
-	addRequestInterceptor( staticI );
+	addInterceptor( staticI );
 	mapI.setDebug(0);
 
-	addRequestInterceptor( new StandardSessionInterceptor());
+	addInterceptor( new StandardSessionInterceptor());
 	
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
-	addRequestInterceptor( accessI );
+	addInterceptor( accessI );
 	accessI.setDebug(0);
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();
-	addRequestInterceptor( jdk12I );
+	addInterceptor( jdk12I );
 
 	// xXXX
-	//	addRequestInterceptor( new SimpleRealm());
+	//	addInterceptor( new SimpleRealm());
     }
     
 

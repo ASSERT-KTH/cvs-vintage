@@ -284,15 +284,18 @@ public final class Context implements LogAware {
 	map.setHandler( sw );
 	map.setPath( path );
 
-	// callback - hooks are called. 
-	contextM.addContainer( map );
+	// Notify interceptors that a new container is added
+	BaseInterceptor cI[]=contextM.getInterceptors(map);
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].addContainer( map );
+	}
 
 	sw = getServletByName(servletName);
 	
 	
 	if (sw == null) {
 	    // web.xml validation - a mapping with no servlet rollback
-	    contextM.removeContainer( map );
+	    removeContainer( map );
  	    throw new TomcatException( "Mapping with invalid servlet  " +
 				       path + " " + servletName );
 	}
@@ -327,7 +330,12 @@ public final class Context implements LogAware {
 	    // XXX check if exists, merge if true.
 	    constraints.put( path[i], ct );
 	    //contextM.addSecurityConstraint( this, path[i], ct);
-	    contextM.addContainer(  ct );
+
+	    // Notify interceptors that a new container is added
+	    BaseInterceptor cI[]=contextM.getInterceptors(ct);
+	    for( int j=0; j< cI.length; j++ ) {
+		cI[j].addContainer( ct );
+	    }
 	}
     }
 
@@ -753,8 +761,16 @@ public final class Context implements LogAware {
 
     /** Remove a container
      */
-    public final  void removeContainer( Container ct ) {
+    public final  void removeContainer( Container ct )
+	throws TomcatException
+    {
 	containers.remove(ct.getPath());
+
+	// notify modules that a container was removed
+	BaseInterceptor cI[]=contextM.getInterceptors(ct);
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].removeContainer( ct );
+	}
     }
 
     // -------------------- Servlets management --------------------
@@ -1011,13 +1027,7 @@ public final class Context implements LogAware {
      *	known at that time
      */
     public final  void addInterceptor( BaseInterceptor ri ) {
-        defaultContainer.addRequestInterceptor(ri);
+        defaultContainer.addInterceptor(ri);
     }
 
-
-    // -------------------- Deprecated --------------------
-    
-    public final  void addRequestInterceptor( BaseInterceptor ri ) {
-        addInterceptor( ri );
-    }
 }

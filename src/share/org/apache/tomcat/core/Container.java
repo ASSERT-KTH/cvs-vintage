@@ -408,7 +408,7 @@ public class Container implements Cloneable{
     BaseInterceptor hooks[][]=new BaseInterceptor[MAX_HOOKS][];
 
     // used internally 
-    Vector getLocalInterceptors(int hookId) {
+    private Vector getLocalInterceptors(int hookId) {
 	if( interceptors[hookId]==null )
 	    interceptors[hookId]=new Vector();
 	return interceptors[hookId];
@@ -418,7 +418,7 @@ public class Container implements Cloneable{
 	in
     */
     public void addInterceptor( BaseInterceptor bi ) {
-	for( int i=0; i< PREDEFINED_I.length; i++ ) {
+	for( int i=0; i< PREDEFINED_I.length -1 ; i++ ) {
 	    if( bi.hasHook( PREDEFINED_I[i] )) {
 		if( interceptors[i]==null )
 		    interceptors[i]=new Vector();
@@ -426,6 +426,12 @@ public class Container implements Cloneable{
 		interceptors[i].addElement( bi );
 	    }
 	}
+	// last position just gets all interceptors
+	// ( to be used for context-level hooks )
+	if( interceptors[H_engineInit]==null )
+	    interceptors[H_engineInit]=new Vector();
+	
+	interceptors[ H_engineInit ].addElement( bi );
     }
 
     // make sure we reset the cache.
@@ -450,7 +456,7 @@ public class Container implements Cloneable{
 	if( hooks[type] != null ) {
 	    return hooks[type];
 	}
-	if( dL>0 ) 
+	if( dL>5 ) 
 	    debug("create hooks for " + type + " " + PREDEFINED_I[type]);
 	
 	Container globalIntContainer=getContextManager().getContainer();
@@ -466,152 +472,28 @@ public class Container implements Cloneable{
 	
 	for ( int i = 0 ; i < gsize ; i++ ){
 	    hooks[type][i]=(BaseInterceptor)globals.elementAt(i);
-	    if( dL > 0 ) debug( "Add " + i + " " + hooks[type][i]);
+	    if( dL > 5 ) debug( "Add " + i + " " + hooks[type][i]);
 	}
 	for ( int i = 0 ; i < lsize  ; i++ ){
 	    hooks[type][gsize+i]=(BaseInterceptor)locals.elementAt(i);
-	    if( dL > 0 ) debug( "Add " + i + " " + hooks[type][i+gsize]);
+	    if( dL > 5 ) debug( "Add " + i + " " + hooks[type][i+gsize]);
 	}
 
 	return hooks[type];
     }
 
-    
-    // -------------------- Old code handling interceptors 
-    // DEPRECATED ( after the new code is tested )
-
-    /** Per/container interceptors.
+    /** Get all interceptors
      */
-    Vector contextInterceptors=new Vector();
-    Vector requestInterceptors=new Vector();
-
-    // interceptor cache - avoid Vector enumeration
-    BaseInterceptor cInterceptors[];
-    BaseInterceptor rInterceptors[];
-    BaseInterceptor rCachedRequestInterceptors[]={};
-    BaseInterceptor rCachedContextInterceptors[]={};
-
-    /** Add a per/container context interceptor. It will be notified
-     *  of all context events happening inside this container.
-     *   XXX incomplete implementation
-     */
-    public void addContextInterceptor( BaseInterceptor ci) {
-	addInterceptor( (BaseInterceptor) ci );
-        // XXX will be deprecated when hooks end testing
-	contextInterceptors.addElement( ci );
-    }
-
-    /** Add a per/container request interceptor. It will be called back for
-     *  all operations for requests that are mapped to this container.
-     *  Note that all global interceptors will be called first.
-     *   XXX incomplete implementation.
-     */
-    public void addRequestInterceptor( BaseInterceptor ri) {
-	addInterceptor( (BaseInterceptor) ri );
-        // XXX will be deprecated when hooks end testing
-	requestInterceptors.addElement( ri );
-	if( ri instanceof BaseInterceptor )
-	        contextInterceptors.addElement( ri );
-    }
-
-    // -------------------- Getting the active interceptors 
-    
-    /** Return the context interceptors as an array.
-     *	For performance reasons we use an array instead of
-     *  returning the vector - the interceptors will not change at
-     *	runtime and array access is faster and easier than vector
-     *	access
-     */
-    public BaseInterceptor[] getContextInterceptors() {
-	if( cInterceptors == null ||
-	    cInterceptors.length != contextInterceptors.size()) {
-	    cInterceptors=new BaseInterceptor[contextInterceptors.size()];
-	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(BaseInterceptor)contextInterceptors.
-		    elementAt(i);
-	    }
-	}
-	return cInterceptors;
-    }
-
-    /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-    */
-    public BaseInterceptor[] getRequestInterceptors() {
-	if( rInterceptors == null ||
-	    rInterceptors.length != requestInterceptors.size())
-	{
-	    rInterceptors=new BaseInterceptor[requestInterceptors.size()];
-	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(BaseInterceptor)requestInterceptors.
-		    elementAt(i);
-	    }
-	}
-	return rInterceptors;
-    }
-
-    /** Return all interceptors for this container ( local and
-	global )
-    */
-    public BaseInterceptor[] getCachedRequestInterceptors()
+    public BaseInterceptor[] getInterceptors()
     {
-	BaseInterceptor[] ari=rCachedRequestInterceptors;
-	
-	if (ari.length == 0){
-            BaseInterceptor[] cri=this.getRequestInterceptors();
-            BaseInterceptor[] gri=getContextManager()
-		.getRequestInterceptors();
-            if  (cri!=null && cri.length > 0) {
-                int al=cri.length+gri.length;
-                ari=new BaseInterceptor[al];
-                int i;
-                for ( i = 0 ; i < gri.length ; i++ ){
-                    ari[i]=gri[i];
-                }
-                for (int j = 0 ; j < cri.length ; j++ ){
-                    ari[i+j]=cri[j];
-                }
-            } else {
-                ari=gri;
-            }
-            rCachedRequestInterceptors=ari;
-        }
-        return rCachedRequestInterceptors;
+	// We don't check for "hasHook", so all
+	// interceptors are available here
+	return getInterceptors( H_engineInit );
     }
 
-    /** Return all interceptors for this container ( local and
-	global )
-    */
-    public BaseInterceptor[] getCachedContextInterceptors()
-    {
-	BaseInterceptor[] aci=rCachedContextInterceptors;
-	if (aci.length == 0){
-            BaseInterceptor[] cci=this.getContextInterceptors();
-            BaseInterceptor[] gci=getContextManager().
-		getContextInterceptors();
-            if  (cci!=null && cci.length > 0) {
-                int al=cci.length+gci.length;
-                aci=new BaseInterceptor[al];
-                int i;
-                for ( i = 0 ; i < gci.length ; i++ ){
-                    aci[i]=gci[i];
-                }
-                for (int j = 0 ; j < cci.length ; j++ ){
-                    aci[i+j]=cci[j];
-                }
-            } else {
-                aci=gci;
-            }
-            rCachedContextInterceptors=aci;
-        }
-	return rCachedContextInterceptors;
-    }
-
+    
     // debug
-    public static final int dL=0;
+    public static final int dL=4;
     private void debug( String s ) {
 	System.out.println("Container: " + s );
     }

@@ -194,7 +194,13 @@ public class Response {
 
     public void finish() throws IOException {
         oBuffer.close();
-	request.getContextManager().doAfterBody(request, this);
+	ContextManager cm=request.getContextManager();
+	BaseInterceptor reqI[]= cm.
+	    getInterceptors(request, Container.H_afterBody);
+
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].afterBody( request, this );
+	}
     }
 
     public boolean containsHeader(String name) {
@@ -369,22 +375,20 @@ public class Response {
 
 	// let CM notify interceptors and give a chance to fix
 	// the headers
-	if(request.getContext() != null && ! included ) 
-	    request.getContext().getContextManager().doBeforeBody(request, this);
+	if(request.getContext() != null && ! included ) {
+	    // call before body hooks
+	    ContextManager cm=request.getContext().getContextManager();
 
+	    BaseInterceptor reqI[]= cm.
+		getInterceptors(request, Container.H_beforeBody);
+
+	    for( int i=0; i< reqI.length; i++ ) {
+		reqI[i].beforeBody( request, this );
+	    }
+	}
+	
 	// No action.. 
     }
-
-//     public void addUserCookie(Object cookie) {
-// 	if( ! included ) userCookies.addElement(cookie);
-//     }
-
-//     /** All cookies set explicitely by users with addCookie()
-//      *  - I'm not sure if it's used or needed
-//      */
-//     public Enumeration getUserCookies() {
-// 	return userCookies.elements();
-//     }
 
     public Locale getLocale() {
         return locale;

@@ -70,16 +70,80 @@ import java.security.*;
 
 import org.apache.tomcat.util.log.*;
 
+// don't extend - replace !
+
 /**
  * Check ContextManager and set defaults for non-set properties
  *
  * @author costin@dnt.ro
  */
-public class DefaultCMSetter extends BaseInterceptor {
+public final class DefaultCMSetter extends BaseInterceptor {
 
     public DefaultCMSetter() {
     }
 
+    /** Adjust context manager paths
+     */
+    public void engineInit( ContextManager cm )
+    	throws TomcatException
+    {
+	// Adjust paths in CM
+	String home=cm.getHome();
+	if( home==null ) {
+	    // try system property
+	    home=System.getProperty(ContextManager.TOMCAT_HOME);
+	}
+	
+	// Make it absolute
+	if( home!= null ) {
+	    home=FileUtil.getCanonicalPath( home );
+	    cm.setHome( home );
+	    log( "Setting server home to " + home );
+	}
+	
+	
+	String installDir=cm.getInstallDir();
+	if( installDir!= null ) {
+	    installDir=FileUtil.getCanonicalPath( installDir );
+	    cm.setInstallDir( installDir );
+	    log( "Setting server install dir to " + installDir );
+	}
+
+	// if only one is set home==installDir
+
+	if( home!=null && installDir == null )
+	    cm.setInstallDir( home );
+
+	if( home==null && installDir != null )
+	    cm.setHome( installDir );
+
+	// if neither home or install is set,
+	// and no system property, try "."
+	if( home==null && installDir==null ) {
+	    home=FileUtil.getCanonicalPath( "." );
+	    installDir=home;
+
+	    cm.setHome( home );
+	    cm.setInstallDir( home );
+	}
+
+	// Adjust work dir
+	String workDir=cm.getWorkDir();
+	if( workDir==null ) {
+	    workDir= ContextManager.DEFAULT_WORK_DIR;
+	}
+
+	if( ! FileUtil.isAbsolute( workDir )) {
+	    workDir=FileUtil.
+		getCanonicalPath(home + File.separator+
+				 workDir);
+	}
+	cm.setWorkDir( workDir );
+
+    }
+    
+    /** Adjust paths
+     */
     public void addContext( ContextManager cm, Context ctx)
 	throws TomcatException
     {
@@ -98,7 +162,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    }
 	    ctx.setAbsolutePath( absPath );
 	}
-
+	log( ctx.getPath() + " " + docBase + " " + absPath + " " +cm.getHome());
 	
 	// this would belong to a logger interceptor ?
 	Log loghelper=ctx.getLog();
@@ -111,6 +175,8 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    cm.addLogger( loghelperServlet.getLogger() );
     }
 
+    /** Add default error handlers
+     */
     public void contextInit( Context ctx)
 	throws TomcatException
     {
