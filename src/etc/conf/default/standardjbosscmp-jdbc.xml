@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.22 2002/04/14 15:53:02 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.23 2002/04/14 17:35:31 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -209,6 +209,10 @@
             <function-sql>substr(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>len(?1)</function-sql>
          </function-mapping>    
@@ -223,6 +227,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
 
          <mapping>
@@ -324,6 +332,10 @@
             <function-sql>substr(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>len(?1)</function-sql>
          </function-mapping>    
@@ -338,6 +350,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
 
          <mapping>
@@ -443,6 +459,10 @@
             <function-sql>substr(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>len(?1)</function-sql>
          </function-mapping>    
@@ -457,6 +477,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
 
          <mapping>
@@ -636,6 +660,10 @@
             <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>length(?1)</function-sql>
          </function-mapping>    
@@ -650,6 +678,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
     
          <mapping>
@@ -748,6 +780,10 @@
             <function-sql>SUBSTRING(?1, ?2, ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lcase(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>LENGTH(?1)</function-sql>
          </function-mapping>    
@@ -762,6 +798,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>SQRT(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>ucase(?1)</function-sql>
          </function-mapping>    
 
          <mapping>
@@ -976,6 +1016,10 @@
             <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>length(?1)</function-sql>
          </function-mapping>    
@@ -990,6 +1034,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
 
          <mapping>
@@ -1082,6 +1130,10 @@
             <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>len(?1)</function-sql>
          </function-mapping>    
@@ -1096,6 +1148,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
     
          <mapping>
@@ -1193,6 +1249,10 @@
             <function-sql>substring(?1 FROM ?2 FOR ?3)</function-sql>
          </function-mapping>    
          <function-mapping>
+            <function-name>lcase</function-name>
+            <function-sql>lower(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
             <function-name>length</function-name>
             <function-sql>len(?1)</function-sql>
          </function-mapping>    
@@ -1207,6 +1267,10 @@
          <function-mapping>
             <function-name>sqrt</function-name>
             <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>ucase</function-name>
+            <function-sql>upper(?1)</function-sql>
          </function-mapping>    
     
          <mapping> 
