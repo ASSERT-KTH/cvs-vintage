@@ -169,9 +169,25 @@ public class MarkMessageCommand extends FolderCommand {
      */
     private void processSpamFilter(
             Object[] uids, MessageFolder srcFolder, int markVariant) throws Exception {
+        
+        // update status message
+        worker.setDisplayText("Training messages...");
+        worker.setProgressBarMaximum(uids.length);
+        
         // mark as/as not spam
         // for each message
         for (int j = 0; j < uids.length; j++) {
+            
+            worker.setDisplayText("Training messages...");
+            worker.setProgressBarMaximum(uids.length);
+            // increase progressbar value
+            worker.setProgressBarValue(j);
+
+            // cancel here if user requests 
+            if (worker.cancelled()) {
+                break;
+            }
+            
             // message belongs to which account?
             AccountItem item = CommandHelper.retrieveAccountItem(srcFolder,
                     uids[j]);
@@ -232,6 +248,8 @@ public class MarkMessageCommand extends FolderCommand {
                 MainInterface.processor.addOp(new MoveMessageCommand(ref2));
 
             }
+            
+            
 
         }
     }

@@ -73,8 +73,10 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
             MessageFolder srcFolder = (MessageFolder) r[i].getFolder();
 
             //	update status message
+            if ( uids.length> 1) {
             worker.setDisplayText("Training messages...");
             worker.setProgressBarMaximum(uids.length);
+            }
 
             for (int j = 0; j < uids.length; j++) {
                 try {
@@ -102,7 +104,8 @@ public class LearnMessageAsSpamCommand extends FolderCommand {
                     SpamController.getInstance().trainMessageAsSpam(istream,
                         list);
 
-                    worker.setProgressBarValue(j);
+                    if ( uids.length> 1)
+                        worker.setProgressBarValue(j);
 
                     if (worker.cancelled()) {
                         break;
