@@ -2,7 +2,7 @@
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ConfigureIssueList.vm").toString())
+#set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList"))
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
@@ -13,10 +13,9 @@
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
 <input type="hidden" name="module_id" value="$module.ModuleId" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
 
 <div class="functnbar">
-  <input type="submit" value="Done" name="eventSubmit_doSelectattributes" />&#160; 
+  <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160;
 </div>
@@ -62,11 +61,11 @@
 </table>
 
 <div class="functnbar3">
-  <input type="submit" value="Re-sort" name="eventSubmit_doResort" />&#160; 
+  <input type="submit" value="Save" name="eventSubmit_doSave" />&#160; 
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="Done" name="eventSubmit_doSelectattributes" />&#160; 
+  <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160; 
 </div>
