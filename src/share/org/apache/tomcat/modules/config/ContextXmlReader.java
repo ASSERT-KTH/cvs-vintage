@@ -101,9 +101,12 @@ public class ContextXmlReader extends BaseInterceptor {
     public void engineInit(ContextManager cm)
 	throws TomcatException
     {
-        configFile=(String)cm.getNote("configFile");
+        if( configFile==null )
+	    configFile=(String)cm.getNote("configFile");
+
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
+
 	// use the same tags for context-local modules
 	ServerXmlReader.setTagRules( xh );
 	ServerXmlReader.addDefaultTags(cm, xh);
@@ -127,6 +130,12 @@ public class ContextXmlReader extends BaseInterceptor {
 	for (Enumeration e = v.elements();
 	     e.hasMoreElements() ; ) {
 	    f = (File)e.nextElement();
+	    if( f.exists() ) {
+		String s=f.getAbsolutePath();
+		if( s.startsWith( cm.getHome()))
+		    s="$TOMCAT_HOME" + s.substring( cm.getHome().length());
+		log( "Context config=" + s);
+	    }
 	    ServerXmlReader.loadConfigFile(xh,f,cm);
 	}
     }
