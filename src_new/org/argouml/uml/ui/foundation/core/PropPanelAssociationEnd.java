@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.64 2005/03/27 15:40:21 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.65 2005/03/27 16:01:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,7 @@ import org.tigris.swidgets.GridLayout2;
 import org.tigris.swidgets.Orientation;
 
 /**
- * TODO: this property panel needs refactoring to remove dependency on old gui
- * components.
+ * The properties panel for an association end.
  */
 public class PropPanelAssociationEnd extends PropPanelModelElement {
 
@@ -255,6 +254,7 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
      * @param label the label
      */
     protected void setAssociationLabel(String label) {
+        associationLabel = label;
     }
 
     /**
