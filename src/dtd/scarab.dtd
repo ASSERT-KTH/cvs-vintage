@@ -1,10 +1,10 @@
-<!ELEMENT scarab (user*, module+)>
+<!ELEMENT scarab (module+)>
 
-<!ELEMENT user (firstname, lastname, email)>
-
-<!ELEMENT module (name, code, issue+)>
+<!ELEMENT module (name, code, user*, issue*)>
 <!ATTLIST module id CDATA #REQUIRED>
 <!ATTLIST module parent CDATA #REQUIRED>
+
+<!ELEMENT user (firstname, lastname, email, role*)>
 
 <!ELEMENT issue (artifact-type, transaction+, dependency*, attachment*)>
 <!ATTLIST issue id CDATA #REQUIRED>
@@ -29,6 +29,7 @@
 <!ELEMENT firstname (#PCDATA)>
 <!ELEMENT lastname (#PCDATA)>
 <!ELEMENT email (#PCDATA)>
+<!ELEMENT role (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
