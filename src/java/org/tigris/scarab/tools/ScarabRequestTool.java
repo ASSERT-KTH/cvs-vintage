@@ -1093,7 +1093,7 @@ try{
     }
 
     /**
-     * The id may only be the issue's unique id.
+     * The id may only be the issue's primary key.
      *
      * @param key a <code>String</code> value
      * @return a <code>Issue</code> value
@@ -1453,6 +1453,60 @@ try{
             }
         }
         return matchingIssueIds;
+    }
+
+    /**
+     * Returns index of issue's position in current issue list.
+    */
+    public int getIssuePosInList()
+        throws Exception, ScarabException
+    {
+        List srchResults = getCurrentSearchResults();
+        Issue issue = getIssue();
+        int issuePos = 0;
+        for (int i = 0; i<srchResults.size(); i++)
+        {
+            if (srchResults.get(i).equals(issue.getIssueId()))
+            {
+                issuePos = i + 1;
+                break;
+            }
+        }
+        return issuePos;
+    }
+
+    /**
+     * Returns next issue id in list.
+    */
+    public String getNextIssue()
+        throws Exception, ScarabException
+    {
+        String nextIssueId = null;
+        int issuePos = getIssuePosInList();
+        if (issuePos < getCurrentSearchResults().size())
+        {
+            Issue nextIssue = getIssueByPk(getCurrentSearchResults()
+                                          .get(getIssuePosInList()).toString());
+            nextIssueId = nextIssue.getUniqueId();
+        }
+        return nextIssueId;
+    }
+
+    /**
+     * Returns previous issue id in list.
+    */
+    public String getPrevIssue()
+        throws Exception, ScarabException
+    {
+        String prevIssueId = null;
+        int issuePos = getIssuePosInList();
+        if (issuePos > 1)
+        {
+            Issue prevIssue = getIssueByPk(getCurrentSearchResults()
+                                          .get(getIssuePosInList() - 2).toString());
+            prevIssueId = prevIssue.getUniqueId();
+        }
+        return prevIssueId;
     }
 
     /**
