@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.Buffer;
  * implementing it directly.
  *
  * @author Slava Pestov
- * @version $Id: BufferChangeListener.java,v 1.10 2003/05/11 23:17:51 spestov Exp $
+ * @version $Id: BufferChangeListener.java,v 1.11 2003/11/16 22:54:36 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface BufferChangeListener
@@ -118,15 +118,5 @@ public interface BufferChangeListener
 	 * @since jEdit 4.2pre2
 	 */
 	void foldHandlerChanged(Buffer buffer);
-	//}}}
-
-	//{{{ wrapModeChanged() method
-	/**
-	 * Called to notify the text area that the word wrap mode has changed.
-	 *
-	 * @param buffer The buffer in question
-	 * @since jEdit 4.2pre2
-	 */
-	void wrapModeChanged(Buffer buffer);
 	//}}}
 }

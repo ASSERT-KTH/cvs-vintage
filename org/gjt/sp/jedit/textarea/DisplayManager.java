@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.76 2003/11/16 00:04:08 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.77 2003/11/16 22:54:37 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1048,8 +1048,6 @@ loop:		for(;;)
 			if(Debug.SCROLL_DEBUG)
 				Log.log(Log.DEBUG,this,"reset()");
 
-			updateWrapSettings();
-
 			physicalLine = getFirstVisibleLine();
 			scrollLine = 0;
 			while(physicalLine != -1)
@@ -1444,13 +1442,6 @@ loop:		for(;;)
 				textArea.invalidateLineRange(start - 1,
 					textArea.getLastPhysicalLine());
 			}
-		} //}}}
-
-		//{{{ wrapModeChanged() method
-		public void wrapModeChanged(Buffer buffer)
-		{
-			firstLine.reset();
-			scrollLineCount.reset();
 		} //}}}
 
 		//{{{ contentInserted() method
