@@ -745,18 +745,6 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Build our version of Flux easily                                   -->
-    <!-- ================================================================== -->
-    <target name="build-flux">
-        <exec executable="ant" dir="${flux.dir}">
-            <arg line="clean"/>
-        </exec>
-        <exec executable="ant" dir="${flux.dir}">
-            <arg line="install-jar"/>
-        </exec>
-    </target>
-
-    <!-- ================================================================== -->
     <!-- Build our version of Commons-Collections easily                    -->
     <!-- There is a dependency on stuff in here in fulcrum                  -->
     <!-- ================================================================== -->
@@ -795,6 +783,42 @@
             <arg line="clean"/>
         </exec>
         <exec executable="ant" dir="${commons-sandbox-email.dir}">
+            <arg line="install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Codec easily                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-codec">
+        <exec executable="ant" dir="${commons-sandbox-codec.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-sandbox-codec.dir}">
+            <arg line="install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Lang easily                   -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-lang">
+        <exec executable="ant" dir="${commons-sandbox-lang.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-sandbox-lang.dir}">
+            <arg line="install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Beanutils easily                      -->
+    <!-- ================================================================== -->
+    <target name="build-commons-beanutils">
+        <exec executable="ant" dir="${commons-beanutils.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-beanutils.dir}">
             <arg line="install-jar"/>
         </exec>
     </target>
@@ -864,22 +888,6 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Upgrade our version of Flux easily                                 -->
-    <!-- ================================================================== -->
-    <target name="upgrade-flux" depends="build-flux">
-        <delete>
-            <fileset dir="${lib.dir}">
-                <include name="**/flux*.jar"/>
-            </fileset>
-        </delete>
-        <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${flux.dir}/bin">
-                <include name="**/flux*.jar"/>
-            </fileset>
-        </copy>
-    </target>
-
-    <!-- ================================================================== -->
     <!-- Upgrade our version of Commons-Collections easily                  -->
     <!-- ================================================================== -->
     <target name="upgrade-commons-collections" depends="build-commons-collections">
@@ -928,6 +936,54 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Sandbox-Codec easily                -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-codec" depends="build-commons-sandbox-codec">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-codec*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-codec.dir}/dist">
+                <include name="**/commons-codec*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Sandbox-Lang easily                -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-lang" depends="build-commons-sandbox-lang">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-lang*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-lang.dir}/dist">
+                <include name="**/commons-lang*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+   <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Beanutils easily                    -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-beanutils" depends="build-commons-beanutils">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-beanutils*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-beanutils.dir}/dist">
+                <include name="**/commons-beanutils.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our dependencies easily                                    -->
     <!-- These are in dependency order for themselves                       -->
     <!-- ================================================================== -->
@@ -935,8 +991,11 @@
             depends="upgrade-commons-collections,
                      upgrade-commons-sandbox-util,
                      upgrade-commons-sandbox-email,
+                     upgrade-commons-sandbox-codec,
+                     upgrade-commons-sandbox-lang,
+                     upgrade-commons-beanutils,
                      upgrade-torque,upgrade-fulcrum,upgrade-stratum,
-                     upgrade-turbine,upgrade-flux
+                     upgrade-turbine
                      ">
     </target>
 
@@ -952,12 +1011,14 @@
         <cvs dest="${torque.dir}" command="update"/>
         <echo>${turbine.dir}</echo>
         <cvs dest="${turbine.dir}" command="update"/>
-        <echo>${flux.dir}</echo>
-        <cvs dest="${flux.dir}" command="update"/>
+        <echo>${commons-beanutils.dir}</echo>
+        <cvs dest="${commons-beantuils.dir}" command="update"/>
         <echo>${commons-sandbox-util.dir}</echo>
         <cvs dest="${commons-sandbox-util.dir}" command="update"/>
         <echo>${commons-sandbox-email.dir}</echo>
         <cvs dest="${commons-sandbox-email.dir}" command="update"/>
+        <echo>${commons-sandbox-codec.dir}</echo>
+        <cvs dest="${commons-sandbox-codec.dir}" command="update"/>
     </target>
 
     <!-- ================================================================== -->
