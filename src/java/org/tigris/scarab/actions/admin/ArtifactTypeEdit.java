@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.17 2002/03/15 00:01:48 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.18 2002/04/09 23:26:33 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -177,8 +177,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
 
                 // If an attribute group falls before the dedupe screen,
                 // Mark it as a dedupe group
-                if (Integer.parseInt(agGroup.get("Order").toString()) 
-                                     < dupeOrder)
+                if (attGroup.getOrder() < dupeOrder)
                 {
                     if (!attGroup.getAttributes().isEmpty())
                     {
