@@ -1,4 +1,4 @@
-// $Id: CollaborationsHelperImpl.java,v 1.7 2005/01/22 22:24:34 linus Exp $
+// $Id: CollaborationsHelperImpl.java,v 1.8 2005/01/22 22:32:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -671,16 +671,18 @@ class CollaborationsHelperImpl implements CollaborationsHelper {
 	    (MAssociationEndRole)
 	    nsmodel.getCoreHelper().getAssociationEnd(receiver, role);
 
-        Collection baseConnections = base.getConnections();
-        Iterator it = baseConnections.iterator();
-        while (it.hasNext()) {
-            MAssociationEnd end = (MAssociationEnd) it.next();
-            if (senderBases.contains(end.getType())) {
-		senderRole.setBase(end);
-            } else if (receiverBases.contains(end.getType())) {
-		receiverRole.setBase(end);
+	if (base != null) {
+	    Collection baseConnections = base.getConnections();
+	    Iterator it = baseConnections.iterator();
+	    while (it.hasNext()) {
+	        MAssociationEnd end = (MAssociationEnd) it.next();
+	        if (senderBases.contains(end.getType())) {
+	            senderRole.setBase(end);
+	        } else if (receiverBases.contains(end.getType())) {
+	            receiverRole.setBase(end);
+	        }
 	    }
-        }
+	}
     }
 
 
