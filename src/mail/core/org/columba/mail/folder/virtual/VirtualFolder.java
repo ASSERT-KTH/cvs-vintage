@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.virtual;
 
 import java.io.InputStream;
@@ -28,12 +29,14 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderFactory;
+import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -41,6 +44,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
@@ -58,6 +62,8 @@ public class VirtualFolder extends Folder {
 	protected int nextUid;
 	protected HeaderList headerList;
 
+        // FIXME: Reduce redundancy in both constructors, eventually create
+        // private method that cares for the missing XmlElement.
 	public VirtualFolder(FolderItem item) {
 		super(item);
 
@@ -89,6 +95,41 @@ public class VirtualFolder extends Folder {
 		//searchFilter = new Search(this);
 	}
 
+	public VirtualFolder(String name, String type) {
+		super(name, type);
+
+		FolderItem item = getFolderItem();
+		item.set("property", "accessrights", "user");
+		item.set("property", "subfolder", "true");
+		item.set("property", "include_subfolders", "true");
+		item.set("property", "source_uid", "101");
+
+		headerList = new HeaderList();
+
+		XmlElement filterElement = node.getElement("filter");
+		if (filterElement == null) {
+			/*
+			filterElement = new XmlElement("filter");
+			*/
+			XmlElement filter = new XmlElement("filter");
+			filter.addAttribute("description", "new filter");
+			filter.addAttribute("enabled", "true");
+			XmlElement rules = new XmlElement("rules");
+			rules.addAttribute("condition", "matchall");
+			XmlElement criteria = new XmlElement("criteria");
+			criteria.addAttribute("type", "Subject");
+			criteria.addAttribute("headerfield", "Subject");
+			criteria.addAttribute("criteria", "contains");
+			criteria.addAttribute("pattern", "pattern");
+			rules.addElement(criteria);
+			filter.addElement(rules);
+
+			Filter f = new Filter(filter);
+
+			getFolderItem().getRoot().addElement(f.getRoot());
+		}
+	}
+
 	public ImageIcon getCollapsedIcon() {
 		return virtualIcon;
 	}
@@ -114,18 +155,15 @@ public class VirtualFolder extends Folder {
 	}
 
 	public HeaderList getHeaderList() throws Exception {
-
 		headerList.clear();
 		getMessageFolderInfo().clear();
 
 		applySearch();
 
 		return headerList;
-
 	}
 
 	public void addSearchToHistory() throws Exception {
-
 		VirtualFolder searchFolder =
 			(VirtualFolder) MailInterface.treeModel.getFolder(106);
 
@@ -235,11 +273,9 @@ public class VirtualFolder extends Folder {
 
 		// update tree-node (for renaming the new folder)
 		MailInterface.treeModel.nodeChanged(newFolder);
-
 	}
 
 	protected void applySearch() throws Exception {
-
 		int uid = getFolderItem().getInteger("property", "source_uid");
 		Folder srcFolder = (Folder) MailInterface.treeModel.getFolder(uid);
 
@@ -267,11 +303,9 @@ public class VirtualFolder extends Folder {
 
 		VirtualFolder folder =
 			(VirtualFolder) MailInterface.treeModel.getFolder(106);
-
 	}
 
 	protected void applySearch(Folder parent, Filter filter) throws Exception {
-
 		Folder folder = parent;
 
 		Object[] resultUids = folder.searchMessages(filter);
@@ -302,7 +336,6 @@ public class VirtualFolder extends Folder {
 				applySearch(folder, filter);
 			}
 		}
-
 	}
 
 	public DefaultSearchEngine getSearchEngine() {
@@ -327,9 +360,7 @@ public class VirtualFolder extends Folder {
 					return virtualUid;
 			}
 		}
-
 		return null;
-
 	}
 
 	public void add(HeaderInterface header, Folder f, Object uid)
@@ -350,20 +381,18 @@ public class VirtualFolder extends Folder {
 		getMessageFolderInfo().incExists();
 
 		headerList.add(virtualHeader, newUid);
-
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
 	 */
 	public void expungeFolder() throws Exception {
-
 		Object[] uids = getUids();
 
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
-			if (exists(uid) == false)
+			if (!exists(uid))
 				continue;
 
 			ColumbaHeader h = getMessageHeader(uid);
@@ -378,7 +407,6 @@ public class VirtualFolder extends Folder {
 
 				// remove message
 				removeMessage(uid);
-
 			}
 		}
 	}
@@ -408,7 +436,6 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
 	 */
 	public void removeMessage(Object uid) throws Exception {
-
 		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
 
 		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
@@ -426,14 +453,12 @@ public class VirtualFolder extends Folder {
 		throws Exception {
 
 		return null;
-
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object, WorkerStatusController)
 	 */
 	public String getMessageSource(Object uid) throws Exception {
-
 		return null;
 	}
 
@@ -441,7 +466,6 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
-
 		return null;
 	}
 
@@ -449,7 +473,6 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object, WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
-
 		return (ColumbaHeader) headerList.get(uid);
 	}
 
@@ -460,7 +483,6 @@ public class VirtualFolder extends Folder {
 		throws Exception {
 
 		return null;
-
 	}
 
 	/**
@@ -493,7 +515,6 @@ public class VirtualFolder extends Folder {
 	}
 
 	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
-
 		FolderCommandReference[] newReference = null;
 
 		Object[] uids = r[0].getUids();
@@ -503,7 +524,6 @@ public class VirtualFolder extends Folder {
 			if (uids == null)
 				uids = getUids();
 		} catch (Exception e1) {
-
 			e1.printStackTrace();
 		}
 
@@ -576,7 +596,6 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids() throws Exception {
-
 		int count = headerList.count();
 		Object[] uids = new Object[count];
 		int i = 0;
@@ -585,45 +604,6 @@ public class VirtualFolder extends Folder {
 		}
 
 		return uids;
-	}
-
-	/**
-	 * @param type
-	 */
-	public VirtualFolder(String name, String type) {
-		super(name, type);
-
-		FolderItem item = getFolderItem();
-		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");
-		item.set("property", "include_subfolders", "true");
-		item.set("property", "source_uid", "101");
-
-		headerList = new HeaderList();
-
-		XmlElement filterElement = node.getElement("filter");
-		if (filterElement == null) {
-			/*
-			filterElement = new XmlElement("filter");
-			*/
-			XmlElement filter = new XmlElement("filter");
-			filter.addAttribute("description", "new filter");
-			filter.addAttribute("enabled", "true");
-			XmlElement rules = new XmlElement("rules");
-			rules.addAttribute("condition", "matchall");
-			XmlElement criteria = new XmlElement("criteria");
-			criteria.addAttribute("type", "Subject");
-			criteria.addAttribute("headerfield", "Subject");
-			criteria.addAttribute("criteria", "contains");
-			criteria.addAttribute("pattern", "pattern");
-			rules.addElement(criteria);
-			filter.addElement(rules);
-
-			Filter f = new Filter(filter);
-
-			getFolderItem().getRoot().addElement(f.getRoot());
-		}
-
 	}
 
 	/* (non-Javadoc)
@@ -688,5 +668,9 @@ public class VirtualFolder extends Folder {
 	public boolean supportsAddMessage() {
 		return false;
 	}
-
+        
+        /**
+         * Not implemented.
+         */
+        public void innerCopy(MailboxInterface destFolder, Object[] uids) {}
 }

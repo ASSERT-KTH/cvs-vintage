@@ -13,9 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-//
-//$Log: Folder.java,v $
-//
+
 package org.columba.mail.folder;
 
 import java.io.File;
@@ -114,6 +112,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 * accessing the folder. 
 	 */
 	protected StatusObservable observable;
+        
 	/**
 	 * Standard constructor. 
 	 * 
@@ -141,7 +140,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 		loadMessageFolderInfo();
 		
 		observable = new StatusObservableImpl();
-		
 	}
 	
 	
@@ -357,21 +355,19 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	 * 
 	 */
 	protected void loadMessageFolderInfo()
-		{
-			XmlElement property = getFolderItem().getElement("property");
-			if ( property == null ) return;
-			
-			MessageFolderInfo info = getMessageFolderInfo();
-			
-			String exists = property.getAttribute("exists");
-			if ( exists != null ) info.setExists(Integer.parseInt(exists));
-			String recent = property.getAttribute("recent");
-			if ( recent != null ) info.setRecent(Integer.parseInt(recent));
-			String unseen = property.getAttribute("unseen");
-			if ( unseen != null ) info.setUnseen(Integer.parseInt(unseen));
-			
-			
-		}
+        {
+                XmlElement property = getFolderItem().getElement("property");
+                if ( property == null ) return;
+
+                MessageFolderInfo info = getMessageFolderInfo();
+
+                String exists = property.getAttribute("exists");
+                if ( exists != null ) info.setExists(Integer.parseInt(exists));
+                String recent = property.getAttribute("recent");
+                if ( recent != null ) info.setRecent(Integer.parseInt(recent));
+                String unseen = property.getAttribute("unseen");
+                if ( unseen != null ) info.setUnseen(Integer.parseInt(unseen));
+        }
 		
 	/**
 	 * 
@@ -389,7 +385,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	* returns null. The return-value is the uid of the last selected message.
 	**/
 	public Object getLastSelection() {
-		return this.lastSelection;
+		return lastSelection;
 	}
 	
 	/**
@@ -397,7 +393,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 	* for the current folder.
 	*/
 	public void setLastSelection(Object lastSel) {
-		this.lastSelection = lastSel;
+		lastSelection = lastSel;
 	}
 
 	/**
@@ -421,127 +417,11 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 		if (DiskIO.ensureDirectory(dir))
 			directoryFile = new File(dir);
 			
-		
 		loadMessageFolderInfo();
 		
 		observable = new StatusObservableImpl();
-
 	}
 	
-	
-	
-	
-	/******************************** MailboxInterface ****************************/
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(org.columba.mail.message.ColumbaMessage)
-	 */
-	public abstract Object addMessage(ColumbaMessage message) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.lang.String)
-	 */
-	public abstract Object addMessage(String source) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#exists(java.lang.Object)
-	 */
-	public abstract boolean exists(Object uid) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
-	 */
-	public abstract void expungeFolder() throws Exception;
-	
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderList()
-	 */
-	public abstract HeaderList getHeaderList() throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageHeader(java.lang.Object)
-	 */
-	public abstract ColumbaHeader getMessageHeader(Object uid) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageSource(java.lang.Object)
-	 */
-	public abstract String getMessageSource(Object uid) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePart(java.lang.Object, java.lang.Integer[])
-	 */
-	public abstract MimePart getMimePart(Object uid, Integer[] address)
-		throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartTree(java.lang.Object)
-	 */
-	public abstract MimeTree getMimePartTree(Object uid) throws Exception;
-
-	/**
-	 * Nobody ever calls this method.
-	 * We should consider making it abstract.
-	 * 
-	 * @see org.columba.mail.folder.MailboxInterface#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object[])
-	 */
-	public void innerCopy(MailboxInterface destFolder, Object[] uids)
-		throws Exception {
-			
-			for( int i=0; i<uids.length; i++) {
-				destFolder.addMessage(getMessageSourceStream(uids[i]));
-			}
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#markMessage(java.lang.Object[], int)
-	 */
-	public abstract void markMessage(Object[] uids, int variant) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#removeMessage(java.lang.Object)
-	 */
-	public abstract void removeMessage(Object uid) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
-	 */
-	public abstract Object getAttribute(Object uid, String key) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
-	 */
-	public abstract Flags getFlags(Object uid) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.String[])
-	 */
-	public abstract Header getHeaderFields(Object uid, String[] keys) throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
-	 */
-	public abstract InputStream getMessageSourceStream(Object uid) throws Exception;
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
-	 */
-	public abstract InputStream getMimePartBodyStream(Object uid, Integer[] address)
-		throws Exception;
-		
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
-	 */
-	public abstract InputStream getMimePartSourceStream(Object uid, Integer[] address)
-		throws Exception;
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
-	 */
-	public abstract Object addMessage(InputStream in) throws Exception;
-
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
 	 */

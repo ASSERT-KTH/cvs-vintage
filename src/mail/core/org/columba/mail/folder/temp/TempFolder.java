@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.temp;
 
 import java.io.File;
@@ -25,14 +26,17 @@ import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.filter.Filter;
+
 import org.columba.mail.folder.DataStorageInterface;
+import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.MailboxInterface;
 import org.columba.mail.folder.search.AbstractSearchEngine;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -69,20 +73,10 @@ public class TempFolder extends Folder {
 	public TempFolder() {
 		super();
 
-		// FIXME: why is this needed?
-		// children is already initialised by DefaultMutableTreeNode
-		//children = new Vector();
-
-		messageFolderInfo = new MessageFolderInfo();
-
-		changed = false;
-				
 		String dir = ConfigPath.getConfigDirectory() + "/mail/" + "temp";
 		if (DiskIO.ensureDirectory(dir))
 			directoryFile = new File(dir);
 			
-		observable = new StatusObservableImpl();
-
 		headerList = new HeaderList();
 		messageList = new Hashtable();
 
@@ -127,8 +121,6 @@ public class TempFolder extends Folder {
 		nextUid = next;
 	}
 
-	
-
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
 	 */
@@ -150,7 +142,6 @@ public class TempFolder extends Folder {
 		messageList.put(newUid, message);
 
 		return newUid;
-		
 	}
 
 	/**
@@ -222,7 +213,6 @@ public class TempFolder extends Folder {
 				System.out.println(e.nextElement());
 
 			}
-
 		}
 
 		return message.getStringSource();
@@ -300,11 +290,20 @@ public class TempFolder extends Folder {
 	public String toString() {
 		return (String) getUserObject();
 	}
+        
+        // TODO: Do we need this implementation in a TempFolder?
+        // If not, just put an empty method here, just like in VirtualFolder.
+        public void innerCopy(MailboxInterface destFolder, Object[] uids)
+                throws Exception {
+                
+                for (int i = 0; i < uids.length; i++) {
+                        destFolder.addMessage(getMessageSourceStream(uids[i]));
+                }
+        }
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
-	 */
 	public Object addMessage(InputStream in) throws Exception {
+                // FIXME: Directly pass the InputStream to the MessageParser,
+                // DO NOT READ THE EMAIL INTO A STRING!!!!
 		StringBuffer source = StreamUtils.readInString( in );
 		Message message = MessageParser.parse( new CharSequenceSource( source ) );
 
@@ -384,5 +383,4 @@ public class TempFolder extends Folder {
 			
 			return new SourceInputStream( mimepart.getSource() );
 	}
-
 }
