@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.Buffer;
  * implementing it directly.
  *
  * @author Slava Pestov
- * @version $Id: BufferChangeListener.java,v 1.9 2003/04/14 05:21:57 spestov Exp $
+ * @version $Id: BufferChangeListener.java,v 1.10 2003/05/11 23:17:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public interface BufferChangeListener
@@ -105,5 +105,28 @@ public interface BufferChangeListener
 	 * @since jEdit 4.0pre6
 	 */
 	void transactionComplete(Buffer buffer);
+	//}}}
+
+	//{{{ foldHandlerChanged() method
+	/**
+	 * Called to notify the text area that folds need to be collapsed if
+	 * the "collapseFolds" property is set. This method is called after the
+	 * buffer has been loaded, and also if the user changes the fold
+	 * handler.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.2pre2
+	 */
+	void foldHandlerChanged(Buffer buffer);
+	//}}}
+
+	//{{{ wrapModeChanged() method
+	/**
+	 * Called to notify the text area that the word wrap mode has changed.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.2pre2
+	 */
+	void wrapModeChanged(Buffer buffer);
 	//}}}
 }

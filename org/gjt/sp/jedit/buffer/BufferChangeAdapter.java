@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.Buffer;
  * An adapter you can subclass to avoid having to implement all the methods
  * of the {@link BufferChangeListener} interface.
  * @author Slava Pestov
- * @version $Id: BufferChangeAdapter.java,v 1.10 2003/04/14 05:21:57 spestov Exp $
+ * @version $Id: BufferChangeAdapter.java,v 1.11 2003/05/11 23:17:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class BufferChangeAdapter implements BufferChangeListener
@@ -99,5 +99,28 @@ public abstract class BufferChangeAdapter implements BufferChangeListener
 	 * @since jEdit 4.0pre6
 	 */
 	public void transactionComplete(Buffer buffer) {}
+	//}}}
+
+	//{{{ foldHandlerChanged() method
+	/**
+	 * Called to notify the text area that folds need to be collapsed if
+	 * the "collapseFolds" property is set. This method is called after the
+	 * buffer has been loaded, and also if the user changes the fold
+	 * handler.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.2pre2
+	 */
+	public void foldHandlerChanged(Buffer buffer) {}
+	//}}}
+
+	//{{{ wrapModeChanged() method
+	/**
+	 * Called to notify the text area that the word wrap mode has changed.
+	 *
+	 * @param buffer The buffer in question
+	 * @since jEdit 4.2pre2
+	 */
+	public void wrapModeChanged(Buffer buffer) {}
 	//}}}
 }

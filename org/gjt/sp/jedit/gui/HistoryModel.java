@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * A history list. One history list can be used by several history text
  * fields.
  * @author Slava Pestov
- * @version $Id: HistoryModel.java,v 1.9 2003/03/11 02:02:04 spestov Exp $
+ * @version $Id: HistoryModel.java,v 1.10 2003/05/11 23:17:51 spestov Exp $
  */
 public class HistoryModel
 {
@@ -82,6 +82,16 @@ public class HistoryModel
 	public String getItem(int index)
 	{
 		return (String)data.elementAt(index);
+	} //}}}
+
+	//{{{ clear() method
+	/**
+	 * Removes all entries from this history model.
+	 * @since jEdit 4.2pre2
+	 */
+	public void clear()
+	{
+		data.removeAllElements();
 	} //}}}
 
 	//{{{ getSize() method
@@ -265,6 +275,8 @@ public class HistoryModel
 			{
 				HistoryModel model = (HistoryModel)modelEnum
 					.nextElement();
+				if(model.getSize() == 0)
+					continue;
 
 				out.write('[');
 				out.write(model.getName());
