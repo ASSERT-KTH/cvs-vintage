@@ -236,9 +236,9 @@ public class FilterDialog implements ActionListener {
 			int index = condList.getSelectedIndex();
 			FilterRule filterRule = filter.getFilterRule();
 			if (index == 0)
-				filterRule.set("conditon", "matchall");
+				filterRule.setCondition("matchall");
 			else
-				filterRule.set("condition","matchany");
+				filterRule.setCondition("matchany");
 		}
 
 	}

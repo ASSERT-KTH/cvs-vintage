@@ -65,7 +65,7 @@ public class VirtualFolder extends Folder {
 			filter.addAttribute("description", "new filter");
 			filter.addAttribute("enabled", "true");
 			XmlElement rules = new XmlElement("rules");
-			rules.addAttribute("condition", "match_all");
+			rules.addAttribute("condition", "matchall");
 			XmlElement criteria = new XmlElement("criteria");
 			criteria.addAttribute("type", "Subject");
 			criteria.addAttribute("headerfield", "Subject");
@@ -468,6 +468,20 @@ public class VirtualFolder extends Folder {
 
 		return newReference;
 
+	}
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
+	 */
+	public void releaseLock() {
+		super.releaseLock();
+	}
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#tryToGetLock(java.lang.Object)
+	 */
+	public boolean tryToGetLock(Object locker) {
+		return super.tryToGetLock(locker);
 	}
 
 }

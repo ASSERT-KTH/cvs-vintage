@@ -39,6 +39,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
@@ -89,7 +90,6 @@ public class LuceneSearchEngine
 	Analyzer analyzer;
 
 	Mutex indexMutex;
-	
 
 	private final static String[] caps =
 		{ "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield" };
@@ -109,7 +109,7 @@ public class LuceneSearchEngine
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		luceneLastModified = -1;
 		ramLastModified = -1;
 
@@ -118,7 +118,7 @@ public class LuceneSearchEngine
 
 		File folderInDir = folder.getDirectoryFile();
 		indexDir = new File(folderInDir, ".index");
-		
+
 		try {
 			if (!indexDir.exists()) {
 				createIndex();
@@ -147,7 +147,7 @@ public class LuceneSearchEngine
 			if (writeLock.exists())
 				writeLock.delete();
 		}
-		
+
 		// Check if index is consitent with mailbox
 		//if( getReader().numDocs() != folder.size() ) {
 		//	recreateIndex();
@@ -158,15 +158,15 @@ public class LuceneSearchEngine
 
 	protected void createIndex() throws IOException {
 		DiskIO.ensureDirectory(indexDir);
-		IndexWriter	indexWriter = new IndexWriter(indexDir, null, true);
+		IndexWriter indexWriter = new IndexWriter(indexDir, null, true);
 		indexWriter.close();
 	}
 
 	protected IndexReader getFileReader() {
 		try {
-			if (IndexReader.lastModified(luceneIndexDir) != luceneLastModified) {
+			if (IndexReader.lastModified(luceneIndexDir)
+				!= luceneLastModified) {
 				fileIndexReader = IndexReader.open(luceneIndexDir);
-				System.out.println(fileIndexReader.numDocs());
 				luceneLastModified = IndexReader.lastModified(luceneIndexDir);
 			}
 		} catch (IOException e) {
@@ -225,8 +225,11 @@ public class LuceneSearchEngine
 				Token token = tokenStream.next();
 
 				while (token != null) {
+					String pattern = "*" + token.termText() + "*";
+					ColumbaLogger.log.debug(
+						"Field = \"" + field + "\" Text = \"" + pattern + "\"");
 					termQuery.add(
-						new TermQuery(new Term(field, token.termText())),
+						new WildcardQuery(new Term(field, pattern)),
 						true,
 						false);
 
@@ -266,36 +269,47 @@ public class LuceneSearchEngine
 		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
-		Integer uid;			
+		Integer uid;
 		Query query = getLuceneQuery(filter, analyzer);
 
 		LinkedList result = search(query);
 
 		ListTools.substract(result, deleted);
-		
-		//checkResult( result, worker );
+
+		//DEBUG
+		checkResult(result, worker);
 
 		return result;
 	}
 
 	protected LinkedList search(Query query) throws IOException {
-		
-		indexMutex.getMutex();		
-		
-		Hits hitsFile = new IndexSearcher(getFileReader()).search(query);
-		Hits hitsRAM = new IndexSearcher(getRAMReader()).search(query);
-		
-		indexMutex.releaseMutex();
 
 		LinkedList result = new LinkedList();
-		for (int i = 0; i < hitsFile.length(); i++) {
-			result.add( new Integer(hitsFile.doc(i).getField("uid").stringValue())); 
+
+		indexMutex.getMutex();
+
+		if (getFileReader().numDocs() > 0) {
+			Hits hitsFile =
+				new IndexSearcher(getFileReader()).search(query);
+
+			for (int i = 0; i < hitsFile.length(); i++) {
+				result.add(
+					new Integer(hitsFile.doc(i).getField("uid").stringValue()));
+			}
 		}
 
-		for (int i = 0; i < hitsRAM.length(); i++) {
-			result.add( new Integer(hitsRAM.doc(i).getField("uid").stringValue())); 
+		if (getRAMReader().numDocs() > 0) {
+			Hits hitsRAM =
+				new IndexSearcher(getRAMReader()).search(query);
+
+			for (int i = 0; i < hitsRAM.length(); i++) {
+				result.add(
+					new Integer(hitsRAM.doc(i).getField("uid").stringValue()));
+			}
 		}
-		
+
+		indexMutex.releaseMutex();
+
 		return result;
 	}
 
@@ -343,7 +357,7 @@ public class LuceneSearchEngine
 			messageDoc.add(Field.UnStored("body", body.getBody()));
 
 		indexMutex.getMutex();
-		IndexWriter writer = new IndexWriter(ramIndexDir,analyzer,false);
+		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, false);
 		writer.addDocument(messageDoc);
 		writer.close();
 		incOperationCounter();
@@ -368,15 +382,15 @@ public class LuceneSearchEngine
 				"Error while removing Message from Lucene Index",
 				JOptionPane.ERROR_MESSAGE);
 		}*/
-		
+
 	}
 
 	protected void mergeRAMtoIndex() throws IOException {
-		IndexWriter fileIndex = new IndexWriter(luceneIndexDir,analyzer,false);
 		IndexReader ramReader = getRAMReader();
-		
+		IndexReader fileReader = getFileReader();
+
 		Document doc;
-		
+
 		/*
 		for( int i=0; i<ramReader.numDocs(); i++) {
 			doc = ramReader.document(i);
@@ -385,80 +399,51 @@ public class LuceneSearchEngine
 			}
 		}*/
 		ListIterator it = deleted.listIterator();
-		
-		while( it.hasNext() ) {
-			ramReader.delete(new Term("uid", it.next().toString()));
+
+		while (it.hasNext()) {
+			String uid = it.next().toString();
+			if( ramReader.delete(new Term("uid", uid)) == 0) {
+				fileReader.delete(new Term("uid", uid));
+			}
 		}
-		
+
+		fileReader.close();
 		ramReader.close();
-		
-		fileIndex.addIndexes(new Directory[] {ramIndexDir});
+
+		IndexWriter fileIndex =
+			new IndexWriter(luceneIndexDir, analyzer, false);
+
+		fileIndex.addIndexes(new Directory[] { ramIndexDir });
 
 		fileIndex.optimize();
 		fileIndex.close();
-		
-		//System.out.println( getFileReader().document(1) );
-				
+
 		initRAMDir();
-		
+
 		deleted.clear();
-	}
-	
-	private void initRAMDir() throws IOException {
-		ramIndexDir = new RAMDirectory();
-		IndexWriter writer = new IndexWriter(ramIndexDir,analyzer,true);
-		writer.close(); 		
 	}
 
-	private void commitDeletion() {
-		if( deleted.size() == 0) return;
-		
-		indexMutex.getMutex();
-		
-		ListIterator it = deleted.listIterator();
-		int deletedDocs = 0;
-		Object uid = null;
-		
-		while( it.hasNext() ) {		
-			try {
-				uid = it.next();
-				deletedDocs = getRAMReader().delete(new Term("uid", uid.toString()));
-				if( deletedDocs != 1 ) 
-					throw new Exception( "Deletion from Index failed");
-			} catch (Exception e) {
-				/*JOptionPane.showMessageDialog(
-					null,
-					e.getMessage(),
-					"Error while removing Message from Lucene Index",
-					JOptionPane.ERROR_MESSAGE);*/
-				
-				try {
-					ColumbaLogger.log.error(e.getMessage() + " - uid = " + uid + " - deleted = " + deletedDocs + " - exists " + folder.exists(uid,null));
-				} catch (Exception ex) {
-				}
-			}
-		}
-		
-		indexMutex.releaseMutex();		
-		
-		deleted.clear();
+	private void initRAMDir() throws IOException {
+		ramIndexDir = new RAMDirectory();
+		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, true);
+		writer.close();
 	}
-	
+
 	private void incOperationCounter() throws IOException {
 		operationCounter++;
-		if( operationCounter > OPTIMIZE_AFTER_N_OPERATIONS ) {			
+		if (operationCounter > OPTIMIZE_AFTER_N_OPERATIONS) {
 			mergeRAMtoIndex();
-			operationCounter = 0; 
+			operationCounter = 0;
 		}
-		
+
 	}
 
 	/**
 	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
 	 */
 	public void shutdown() {
-		try {		
-			mergeRAMtoIndex();		
+		try {
+			mergeRAMtoIndex();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -475,15 +460,16 @@ public class LuceneSearchEngine
 	private void checkResult(List result, WorkerStatusController wc) {
 		ListIterator it = result.listIterator();
 		try {
-			while( it.hasNext() ) {
-				if( !folder.exists(it.next(), wc)) throw new Exception("Assertion failed");
+			while (it.hasNext()) {
+				if (!folder.exists(it.next(), wc))
+					throw new Exception("Assertion failed");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.clear();
 			recreateIndex();
 		}
-		
+
 	}
 
 	/**
@@ -492,22 +478,24 @@ public class LuceneSearchEngine
 	public void reset() throws Exception {
 		createIndex();
 	}
-	
+
 	public void recreateIndex() {
 		ColumbaLogger.log.error("Recreating Lucene Index");
-		
+
 		try {
 			createIndex();
-			Object[] uids = folder.getUids(NullWorkerStatusController.getInstance());
-			
-			for( int i=0; i<uids.length; i++) {
-				messageAdded(((LocalFolder)folder).getMessage(uids[i],NullWorkerStatusController.getInstance()));
+			Object[] uids =
+				folder.getUids(NullWorkerStatusController.getInstance());
+
+			for (int i = 0; i < uids.length; i++) {
+				messageAdded(
+					((LocalFolder) folder).getMessage(
+						uids[i],
+						NullWorkerStatusController.getInstance()));
 			}
-			
+
 		} catch (Exception e) {
 		}
 	}
-	
+
 }
-
-

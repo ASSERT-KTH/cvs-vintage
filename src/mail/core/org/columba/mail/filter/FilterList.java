@@ -73,7 +73,7 @@ public class FilterList extends DefaultItem {
 		filter.addAttribute("description", "new filter");
 		filter.addAttribute("enabled","true");
 		XmlElement rules = new XmlElement("rules");
-		rules.addAttribute("condition", "match_all");
+		rules.addAttribute("condition", "matchall");
 		XmlElement criteria = new XmlElement("criteria");
 		criteria.addAttribute("type", "Subject");
 		criteria.addAttribute("headerfield", "Subject");
