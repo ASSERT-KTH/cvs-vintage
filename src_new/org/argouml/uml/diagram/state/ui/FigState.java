@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigState.java,v 1.8 2003/01/01 18:23:33 kataka Exp $
+// $Id: FigState.java,v 1.9 2003/06/21 08:44:18 mkl Exp $
 package org.argouml.uml.diagram.state.ui;
 
 import java.awt.Color;
@@ -75,6 +75,11 @@ public abstract class FigState extends FigStateVertex {
     public FigState(GraphModel gm, Object node) {
         this();
         setOwner(node);
+    }
+
+    public void setOwner(Object node) {
+        super.setOwner(node);
+        updateInternal();
     }
 
     /**
