@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public class EntityContainer
    extends Container
@@ -391,6 +391,10 @@ public class EntityContainer
 														
 		 //First we create the EJBObject
 		 EJBObject ejbObject = (EJBObject)containerInvoker.getEntityEJBObject(id);
+		 
+		 //MF FIXME: this is not right, the EJBObject should not really have an instance associated
+		 // to it yet (it does for the finder but it is a fluke).  In other words this fix is 
+		 // temporary (bug does fix the "getEJBObject" problem.  It is temporary. Working on a fix
 		 
 		 // Set the context with the EJBObject
 		 ((EntityEnterpriseContext)mi.getEnterpriseContext()).setEJBObject(ejbObject);
