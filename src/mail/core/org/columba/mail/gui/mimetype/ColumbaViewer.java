@@ -61,9 +61,11 @@ public class ColumbaViewer extends AbstractViewer {
     }
 
     public Process open(MimeHeader header, File tempFile) {
+    		File viewerFile = null;
         String viewer = MimeRouter.getInstance().getViewer(header);
-
-        File viewerFile = new File(viewer);
+        if (viewer != null) {
+        	viewerFile = new File(viewer);
+        }
 
         // if viewer is not yet specified
         // or if viewer app is not found
