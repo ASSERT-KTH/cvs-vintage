@@ -69,7 +69,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Loads XML into Scarab via import, returning XML-formatted results
  *
  * @author <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
- * @version $Id: XMLImportIssuesResults.java,v 1.9 2003/07/27 03:25:21 elicia Exp $
+ * @version $Id: XMLImportIssuesResults.java,v 1.10 2003/08/11 21:25:34 dlr Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
@@ -113,7 +113,7 @@ public class XMLImportIssuesResults extends Default
                     importErrors = importIssues.runImport(issuesToImport, 
                         scarabR.getCurrentModule());
                     si = importIssues.getScarabIssuesBeanReader();
-                    if (importErrors != null)
+                    if (importErrors != null && !importErrors.isEmpty())
                     {
                         resultCode = RESULT_ERROR_INVALID_ISSUE_DATA;
                         resultString = l10n.get("ProcessingErrors");
