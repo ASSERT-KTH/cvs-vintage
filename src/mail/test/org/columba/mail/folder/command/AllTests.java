@@ -35,8 +35,7 @@ import org.columba.mail.folder.TempFolderFactory;
 public class AllTests {
 
     private static String[] list = { "CopyMessageCommandTest",
-            "MoveMessageTest", "MarkMessageCommandTest",
-            "MoveFolderCommandTest"};
+           "MarkMessageTest",  "MoveMessageTest",  "MoveFolderCommandTest"};
 
     /**
      * Add all testcases to the passed testsuite, using a the folder type as
