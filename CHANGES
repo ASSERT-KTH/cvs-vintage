@@ -4,6 +4,8 @@ New features:
 - replaced recipient editor in composer with new component (fdietz)
 - replaced attachment editor with iconpanel (fdietz)
 - added Redirect Message action/command (kastanie)
+- POP3: messages can be deleted from server after n days (tstich)
+
 
 Fixed bugs:
 - #987481, classcast exception in ToRenderer (fdietz)
