@@ -372,6 +372,24 @@ public class Container implements Cloneable{
 
     // -------------------- Interceptors --------------------
     public static final int MAX_HOOKS=20;
+
+    // Hook Ids - keep them in sync with PREDEFINED_I
+    // ( static final for performance and to simplify code )
+    // H_ is from "hook"
+    
+    public static final int H_requestMap=0;
+    public static final int H_contextMap=1;
+    public static final int H_authenticate=2;
+    public static final int H_authorize=3;
+    public static final int H_preService=4;
+    public static final int H_beforeBody=5;
+    public static final int H_newSessionRequest=6;
+    public static final int H_beforeCommit=7;
+    public static final int H_afterBody=8;
+    public static final int H_postService=9;
+    public static final int H_postRequest=10;
+    public static final int H_engineInit=11;
+
     public static final String PREDEFINED_I[]= {
 	"requestMap", "contextMap", "authenticate",
 	"authorize", "preService", "beforeBody",

@@ -1308,32 +1308,6 @@ public final class ContextManager implements LogAware{
 	removeContext( context);
     }
 
-    public void doPreServletInit(Context ctx, Handler sw)
-	throws TomcatException
-    {
-	BaseInterceptor cI[]=getContextInterceptors(ctx);
-	for( int i=0; i< cI.length; i++ ) {
-	    try {
-		cI[i].preServletInit( ctx, sw );
-	    } catch( TomcatException ex) {
-		log("preServletInit" , ex);
-	    }
-	}
-    }
-
-    public void doPostServletInit(Context ctx, Handler sw)
-	throws TomcatException
-    {
-	BaseInterceptor cI[]=getContextInterceptors(ctx);
-	for( int i=0; i< cI.length; i++ ) {
-	    try {
-		cI[i].postServletInit( ctx, sw );
-	    } catch( TomcatException ex) {
-		log("postServletInit", ex);
-	    }
-	}
-    }
-
     public void doPreServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {

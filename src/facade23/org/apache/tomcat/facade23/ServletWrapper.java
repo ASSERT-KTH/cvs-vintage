@@ -248,8 +248,25 @@ public class ServletWrapper extends Handler {
 	    }
 
 	    try {
-		if( servlet!=null) 
+		if( servlet!=null) {
+		    BaseInterceptor cI[]=contextM.getContextInterceptors(context);
+		    for( int i=0; i< cI.length; i++ ) {
+			try {
+			    cI[i].preServletDestroy( context, this );
+			} catch( TomcatException ex) {
+			    log("preServletDestroy", ex);
+			}
+		    }
 		    servlet.destroy();
+
+		    for( int i=0; i< cI.length; i++ ) {
+			try {
+			    cI[i].postServletDestroy( context, this );
+			} catch( TomcatException ex) {
+			    log("postServletDestroy", ex);
+			}
+		    }
+		}
 	    } catch(Exception ex) {
 		// Should never come here...
 		log( "Error in destroy ", ex );
@@ -301,15 +318,28 @@ public class ServletWrapper extends Handler {
 	//	} catch( InstantiationException ex ) {
 	//} catch( IllegalStateException ex ) {
 	//}
-	
+
 	// Call pre, doInit and post
-	contextM.doPreServletInit( context, this);
+	BaseInterceptor cI[]=contextM.getContextInterceptors(context);
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].preServletInit( context, this );
+	    } catch( TomcatException ex) {
+		log("preServletInit" , ex);
+	    }
+	}
+
 	doInit();
 	
 	// if an exception is thrown in init, no end interceptors will
 	// be called. that was in the origianl code J2EE used
-	
-	contextM.doPostServletInit( context, this);
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].postServletInit( context, this );
+	    } catch( TomcatException ex) {
+		log("postServletInit" , ex);
+	    }
+	}
     }
 
     protected void doInit()
