@@ -29,7 +29,7 @@ public class Query
     {
        return link 
           + "/template/IssueList.vm?action=Search&eventSubmit_doSearch=Search" 
-          + getValue();
+          + "&resultsperpage=25&pagenum=1" + getValue();
     }
 
     /**
