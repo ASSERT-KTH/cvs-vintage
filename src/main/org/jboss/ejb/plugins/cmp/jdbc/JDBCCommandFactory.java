@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCCommandFactory {
 
@@ -140,6 +140,10 @@ public class JDBCCommandFactory {
       log.debug("entity-command: " + manager.getMetaData().getEntityCommand());
 
       return cec;
+   }
+
+   public JDBCPostCreateEntityCommand createPostCreateEntityCommand() {
+      return new JDBCPostCreateEntityCommand(manager);
    }
    
    public JDBCRemoveEntityCommand createRemoveEntityCommand() {
