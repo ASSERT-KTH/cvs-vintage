@@ -123,8 +123,6 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	while( sessionEnum.hasMoreElements() ) {
 	    ServerSession session = (ServerSession)sessionEnum.nextElement();
 
-	    session.setState( ServerSession.STATE_SUSPEND, req );
-	    
 	    ClassLoader oldLoader=(ClassLoader)ctx.getContainer().
 		getNote("oldLoader");
 
@@ -144,7 +142,19 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 		    newSession.put( key, newValue );
 		} 
 	    }
+	    // Remove all objects we know how to handle
+	    e=newSession.keys();
+	    while( e.hasMoreElements() )   {
+		String key = (String) e.nextElement();
+		session.removeAttribute(key);
+	    }
 
+	    if( debug > 0 ) log("Prepare for reloading, SUSPEND " + session );
+	    // If anyone can save the rest of the attributes or at least notify
+	    // the owner...
+	    session.setState( ServerSession.STATE_SUSPEND, req );
+	    
+	    if( debug > 0 ) log("After reloading, RESTORED " + session );
 	    session.setState( ServerSession.STATE_RESTORED, req );
 
 	    /* now put back all attributs */
@@ -336,7 +346,9 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    sessions.remove(session.getId().toString());
 	    recycled.put(session);
 	    session.setValid(false);
-	    session.recycle();
+	    // Do not recycle it yet - whoever expires it should also recyle.
+	    // Otherwise we may miss something
+	    // session.recycle();
 	    //	    session.removeAllAttributes();
 	}
 
@@ -346,11 +358,12 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    if (session == null) {
 		session = ctx.getContextManager().createServerSession();
 		session.setManager( this );
+		session.setDebug( debug );
 	    }
 	    session.setContext( ctx );
 
 	    session.setState( ServerSession.STATE_NEW, req );
-
+	    
 	    // The id will be set by one of the modules
 	    String newId=session.getId().toString();
 	    
@@ -365,6 +378,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    if( oldS!=null) {
 		// that's what the original code did
 		oldS.setState( ServerSession.STATE_EXPIRED );
+		oldS.recycle();
 	    }
 	    sessions.put( newId, session );
 	    return (session);
