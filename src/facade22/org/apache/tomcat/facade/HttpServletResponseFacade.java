@@ -112,10 +112,19 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	if( response.isIncluded() ) return;
 	// layer costs - this can be avoided, but it's not a
 	// frequent operation ( for example sc can be reused )
-	ServerCookie sc=new ServerCookie();
-	cookie2serverCookie( cookie, sc);
-	addHeader( sc.getCookieHeaderName(),
-		   sc.getCookieHeaderValue());
+
+	// XXX reuse
+	StringBuffer sb=new StringBuffer();
+	ServerCookie.appendCookieValue( sb, cookie.getVersion(),
+				       cookie.getName(), cookie.getValue(),
+				       cookie.getPath(), cookie.getDomain(),
+				       cookie.getComment(), cookie.getMaxAge(),
+				       cookie.getSecure());
+	// the header name is Set-Cookie for both "old" and v.1 ( RFC2109 )
+	// RFC2965 is not supported by browsers and the Servlet spec
+	// asks for 2109.
+	addHeader( "Set-Cookie", 
+		   sb.toString());
     }
 
     public boolean containsHeader(String name) {
@@ -447,17 +456,5 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    sb.append(query);
 	return (sb.toString());
 
-    }
-
-
-    private void cookie2serverCookie( Cookie cookie, ServerCookie sc ) {
-	sc.getName().setString( cookie.getName() );
-	sc.setVersion( cookie.getVersion());
-	sc.getValue().setString( cookie.getValue() );
-	sc.getPath().setString(cookie.getPath());
-	sc.getDomain().setString( cookie.getDomain());
-	sc.getComment().setString( cookie.getComment());
-	sc.setMaxAge( cookie.getMaxAge() );
-	sc.setSecure( cookie.getSecure());
     }
 }
