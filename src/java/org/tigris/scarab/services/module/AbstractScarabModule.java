@@ -114,13 +114,16 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.20 2002/01/31 20:26:26 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.21 2002/01/31 22:16:28 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
     implements ModuleEntity, Comparable
 {
 
+    private static final String USER = "user";
+    private static final String NON_USER = "non-user";
+    
     /* removing the internal cache until it can be fixed using artifact_types
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
@@ -448,7 +451,7 @@ public abstract class AbstractScarabModule
     public List getUserAttributes(IssueType issueType, boolean activeOnly)
         throws Exception
     {
-        List rModuleAttributes = getRModuleAttributes(issueType, activeOnly, "user");
+        List rModuleAttributes = getRModuleAttributes(issueType, activeOnly, USER);
         List userAttributes = new ArrayList();
 
         for ( int i=0; i<rModuleAttributes.size(); i++ )
@@ -718,7 +721,7 @@ public abstract class AbstractScarabModule
     public RModuleAttribute addRModuleAttribute(IssueType issueType)
         throws Exception
     {
-        return addRModuleAttribute(issueType, "non-user");
+        return addRModuleAttribute(issueType, NON_USER);
     }
 
     /**
@@ -811,11 +814,11 @@ public abstract class AbstractScarabModule
         List rmas = null;
         if (attribute.isUserAttribute())
         {
-            rmas = getRModuleAttributes(issueType, false, "user");
+            rmas = getRModuleAttributes(issueType, false, USER);
         }
         else
         {
-            rmas = getRModuleAttributes(issueType, false, "non-user");
+            rmas = getRModuleAttributes(issueType, false, NON_USER);
         }
         Iterator i = rmas.iterator();
         while ( i.hasNext() )
@@ -868,12 +871,12 @@ public abstract class AbstractScarabModule
             crit.add(RModuleAttributePeer.ACTIVE, true);
         }
 
-        if (attributeType.equals("user"))
+        if (attributeType.equals(USER))
         {
            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                     AttributeTypePeer.USER_TYPE_KEY);
         }
-        else if (attributeType.equals("non-user"))
+        else if (attributeType.equals(NON_USER))
         {
            crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                     AttributeTypePeer.USER_TYPE_KEY,
