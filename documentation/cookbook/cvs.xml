@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cvs.xml,v 1.3 2003/08/13 19:22:32 linus Exp $ -->
+<!-- $Id: cvs.xml,v 1.4 2003/12/17 21:42:16 linus Exp $ -->
 
   <chapter id="cvs">
   <title>CVS in the ArgoUML project</title>
@@ -677,6 +677,11 @@ This will contain one directory for each component within
 ArgoUML.
 They will all compile and be tested with controlled dependencies
 to other components.
+</para>
+        <para>
+The upcoming structure is used for the different language part of the
+internationalization component under
+<filename class="directory">i18n/<replaceable>language</replaceable></filename>.
 </para>
       </listitem>
       <listitem>
