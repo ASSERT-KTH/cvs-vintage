@@ -14,16 +14,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.spam;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
+
 import org.macchiato.DBWrapper;
 import org.macchiato.Message;
 import org.macchiato.SpamFilter;
@@ -47,256 +51,225 @@ import org.macchiato.maps.ProbabilityMap;
  * <p>
  * If training mode is enabled, the spam filter automatically adds messages to
  * its frequency database.
- * 
+ *
  * @author fdietz
  */
 public class SpamController {
-
-	/**
-	 * Delete messages from DB, if DB size > THRESHOLD
-	 */
-	public final static int THRESHOLD = 200000;
-	
-	/**
-	 * Delete messages from DB after 7 days, if they don't 
-	 * affect the scoring process because of low occurences.
-	 */
-	public final static int AGE = 7;
-	/**
-	 * singleton pattern instance of this class
-	 */
-	private static SpamController instance;
-
-	/**
-	 * spam filter in macchiator library doing the actual work
-	 */
-	private SpamFilter filter;
-
-	/**
-	 * database of tokens, storing occurences of tokens, etc.
-	 */
-	private FrequencyDB db;
-
-	/**
-	 * file to store the token database
-	 */
-	private File file;
-
-	/**
-	 * dirty flag for database changes
-	 */
-	private boolean hasChanged;
-
-	/**
-	 * is cache already loaded?
-	 */
-	private boolean alreadyLoaded;
-
-	/**
-	 * private constructor
-	 *  
-	 */
-	private SpamController() {
-		db = new DBWrapper(new FrequencyDBImpl());
-
-		filter = new SpamFilterImpl(db);
-
-		hasChanged = false;
-
-		alreadyLoaded = false;
-
-		// make Columba logger parent of macchiato logger
-		MacchiatoLogger.setParentLogger(Logger
-				.getLogger("org.columba.mail.spam"));
-
-	}
-
-	/**
-	 * Get instance of class.
-	 * 
-	 * @return spam controller
-	 */
-	public static SpamController getInstance() {
-		if (instance == null) {
-			instance = new SpamController();
-
-			File configDirectory = MainInterface.config.getConfigDirectory();
-
-			File mailDirectory = new File(configDirectory, "mail");
-
-			instance.file = new File(mailDirectory, "spam.db");
-
-		}
-
-		return instance;
-	}
-
-	/**
-	 * Add this message to the token database as spam.
-	 * 
-	 * @param istream
-	 */
-	public void trainMessageAsSpam(InputStream istream, List list) {
-		//		 load database from file
-		load();
-
-		try {
-			CloneStreamMaster master = new CloneStreamMaster(istream);
-			InputStream inputStream = master.getClone();
-
-			byte[] md5sum = MD5SumHelper.createMD5(inputStream);
-			// close stream
-			inputStream.close();
-
-			// get new inputstream
-			inputStream = master.getClone();
-
-			Message message = new Message(inputStream, list, md5sum);
-			// check if this message was already learned
-			// -> only add if this is not the case
-			if (db.MD5SumExists(md5sum)) {
-				// message already exists
-				// --> correct token data
-				filter.correctMessageAsSpam(message);
-			} else {
-				// new message
-				filter.trainMessageAsSpam(message);
-			}
-
-			// close stream
-			inputStream.close();
-
-			// set dirty flag
-			hasChanged = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Add this message to the token database as ham.
-	 * 
-	 * @param istream
-	 * @param list
-	 */
-	public void trainMessageAsHam(InputStream istream, List list) {
-		//		 load database from file
-		load();
-
-		try {
-			CloneStreamMaster master = new CloneStreamMaster(istream);
-			InputStream inputStream = master.getClone();
-
-			byte[] md5sum = MD5SumHelper.createMD5(inputStream);
-			// close stream
-			inputStream.close();
-
-			// get new inputstream
-			inputStream = master.getClone();
-			Message message = new Message(inputStream, list, md5sum);
-
-			// check if this message was already learned
-			if (db.MD5SumExists(md5sum)) {
-				// message already exists
-
-				// --> correct token data
-				filter.correctMessageAsHam(message);
-			} else {
-				// new message
-
-				filter.trainMessageAsHam(message);
-			}
-
-			// close stream
-			inputStream.close();
-
-			// set dirty flag
-			hasChanged = true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Score message. Using a threshold of 90% here. Every message with at least
-	 * 90% is spam. This value should be increased in the future.
-	 * 
-	 * @param istream
-	 * 
-	 * @return true, if message is spam. False, otherwise.
-	 */
-	public boolean scoreMessage(InputStream istream, ProbabilityMap map) {
-
-		// load database from file
-		load();
-
-		float score = filter.scoreMessage(new Message(istream), map);
-
-		if (score >= 0.9) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public void printDebug() {
-		((FrequencyDBImpl) db).printDebug();
-	}
-
-	/**
-	 * Load frequency DB from file.
-	 *  
-	 */
-	private void load() {
-		// only load if necessary
-		if (alreadyLoaded)
-			return;
-
-		try {
-			if (file.exists()) {
-				FrequencyIO.load(db, file);
-				
-			}
-			
-			alreadyLoaded = true;
-		} catch (Exception e) {
-
-			if (MainInterface.DEBUG) {
-				e.printStackTrace();
-			}
-
-			// fail-case
-			db = new FrequencyDBImpl();
-			
-			alreadyLoaded = true;
-		}
-	}
-
-	/**
-	 * Save frequency DB to file.
-	 *  
-	 */
-	public void save() {
-		if (alreadyLoaded == false)
-			return;
-		try {
-			// only save if changes exist
-			if (hasChanged) {
-				// cleanup DB -> remove old tokens
-				db.cleanupDB(THRESHOLD);
-				
-				// save DB to disk
-				FrequencyIO.save(db, file);
-			}
-		} catch (Exception e) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(e);
-
-			if (MainInterface.DEBUG) {
-				e.printStackTrace();
-			}
-		}
-	}
-
+    
+    /**
+     * Delete messages from DB, if DB size > THRESHOLD
+     */
+    public final static int THRESHOLD = 200000;
+    
+    /**
+     * Delete messages from DB after 7 days, if they don't
+     * affect the scoring process because of low occurences.
+     */
+    public final static int AGE = 7;
+    /**
+     * singleton pattern instance of this class
+     */
+    private static SpamController instance;
+    
+    /**
+     * spam filter in macchiator library doing the actual work
+     */
+    private SpamFilter filter;
+    
+    /**
+     * database of tokens, storing occurences of tokens, etc.
+     */
+    private FrequencyDB db;
+    
+    /**
+     * file to store the token database
+     */
+    private File file;
+    
+    /**
+     * dirty flag for database changes
+     */
+    private boolean hasChanged = false;
+    
+    /**
+     * is cache already loaded?
+     */
+    private boolean alreadyLoaded = false;
+    
+    /**
+     * private constructor
+     */
+    private SpamController() {
+        db = new DBWrapper(new FrequencyDBImpl());
+        
+        filter = new SpamFilterImpl(db);
+        
+        // make Columba logger parent of macchiato logger
+        MacchiatoLogger.setParentLogger(Logger.getLogger("org.columba.mail.spam"));
+    }
+    
+    /**
+     * Get instance of class.
+     *
+     * @return spam controller
+     */
+    public static SpamController getInstance() {
+        if (instance == null) {
+            instance = new SpamController();
+            File configDirectory = MainInterface.config.getConfigDirectory();
+            File mailDirectory = new File(configDirectory, "mail");
+            instance.file = new File(mailDirectory, "spam.db");
+        }
+        
+        return instance;
+    }
+    
+    /**
+     * Add this message to the token database as spam.
+     *
+     * @param istream
+     */
+    public void trainMessageAsSpam(InputStream istream, List list) {
+        // load database from file
+        load();
+        
+        try {
+            CloneStreamMaster master = new CloneStreamMaster(istream);
+            InputStream inputStream = master.getClone();
+            
+            byte[] md5sum = MD5SumHelper.createMD5(inputStream);
+            // close stream
+            inputStream.close();
+            
+            // get new inputstream
+            inputStream = master.getClone();
+            
+            Message message = new Message(inputStream, list, md5sum);
+            // check if this message was already learned
+            // -> only add if this is not the case
+            if (db.MD5SumExists(md5sum)) {
+                // message already exists
+                // --> correct token data
+                filter.correctMessageAsSpam(message);
+            } else {
+                // new message
+                filter.trainMessageAsSpam(message);
+            }
+            
+            // close stream
+            inputStream.close();
+            
+            // set dirty flag
+            hasChanged = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException nsae) {} //does not occur
+    }
+    
+    /**
+     * Add this message to the token database as ham.
+     *
+     * @param istream
+     * @param list
+     */
+    public void trainMessageAsHam(InputStream istream, List list) {
+        // load database from file
+        load();
+        
+        try {
+            CloneStreamMaster master = new CloneStreamMaster(istream);
+            InputStream inputStream = master.getClone();
+            
+            byte[] md5sum = MD5SumHelper.createMD5(inputStream);
+            // close stream
+            inputStream.close();
+            
+            // get new inputstream
+            inputStream = master.getClone();
+            Message message = new Message(inputStream, list, md5sum);
+            
+            // check if this message was already learned
+            if (db.MD5SumExists(md5sum)) {
+                // message already exists
+                
+                // --> correct token data
+                filter.correctMessageAsHam(message);
+            } else {
+                // new message
+                
+                filter.trainMessageAsHam(message);
+            }
+            
+            // close stream
+            inputStream.close();
+            
+            // set dirty flag
+            hasChanged = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException nsae) {} //does not occur
+    }
+    
+    /**
+     * Score message. Using a threshold of 90% here. Every message with at least
+     * 90% is spam. This value should be increased in the future.
+     *
+     * @param istream
+     *
+     * @return true, if message is spam. False, otherwise.
+     */
+    public boolean scoreMessage(InputStream istream, ProbabilityMap map) {
+        // load database from file
+        load();
+        
+        float score = filter.scoreMessage(new Message(istream), map);
+        return score >= 0.9;
+    }
+    
+    public void printDebug() {
+        ((FrequencyDBImpl) db).printDebug();
+    }
+    
+    /**
+     * Load frequency DB from file.
+     */
+    private void load() {
+        try {
+            // only load if necessary
+            if (!alreadyLoaded && file.exists()) {
+                FrequencyIO.load(db, file);
+            }
+            
+            alreadyLoaded = true;
+        } catch (Exception e) {
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
+            
+            // fail-case
+            db = new FrequencyDBImpl();
+            
+            alreadyLoaded = true;
+        }
+    }
+    
+    /**
+     * Save frequency DB to file.
+     */
+    public void save() {
+        try {
+            // only save if changes exist
+            if (alreadyLoaded && hasChanged) {
+                // cleanup DB -> remove old tokens
+                db.cleanupDB(THRESHOLD);
+                
+                // save DB to disk
+                FrequencyIO.save(db, file);
+            }
+        } catch (Exception e) {
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
