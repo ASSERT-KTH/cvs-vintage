@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.9 2001/03/31 21:48:00 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2001/03/31 21:48:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.10 2001/04/04 04:04:49 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2001/04/04 04:04:49 $
  *
  * ====================================================================
  *
@@ -123,8 +123,8 @@ public class PrefixMapper {
      */
     public void removeAllMappings( String host, String path ) {
 	PrefixMapper vmap=this;
-	host=host.toLowerCase();
 	if( host!=null ) {
+	    host=host.toLowerCase();
 	    vmap=(PrefixMapper)vhostMaps.get(host);
 	}
 	
@@ -207,10 +207,11 @@ public class PrefixMapper {
         String s = path;
 
 	PrefixMapper myMap=null;
-	if( host!=null )
+	if( host!=null ) {
 	    myMap=(PrefixMapper)vhostMaps.get( host );
-	if( myMap==null ) {
-	    myMap=(PrefixMapper)vhostMaps.get( host.toLowerCase() );
+	    if( myMap==null ) {
+		myMap=(PrefixMapper)vhostMaps.get( host.toLowerCase() );
+	    }
 	}
 	
 	if( myMap==null ) myMap = this; // default server
