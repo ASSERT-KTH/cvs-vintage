@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE server>
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -6,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss.jcml,v 1.55 2001/08/12 15:41:06 chirino Exp $ -->
+<!-- $Id: jboss.jcml,v 1.56 2001/08/14 22:53:52 user57 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -211,13 +212,18 @@
          name="DefaultDomain:service=EmbeddedTomcat"/>
   -->
 
-  <!-- Uncomment and set file URL to add Jetty service 
-       (you can set config more than once)
+  <!-- 
+     | Uncomment to enable the Jetty service.
+     |
+     | Besure to check that the configuration values are valid for your
+     | environment.
   <mbean code="org.jboss.jetty.JettyService"
-         name="DefaultDomain:service=Jetty">
-    <attribute name="Configuration">
-      file URL to jetty.xml e.g. file:/usr/local/jboss/dist/conf/default/jetty.xml
-    </attribute>
+	 name=":service=Jetty">
+    <attribute name="JettyHome">../../jetty</attribute>
+    <attribute name="Configuration">jetty.xml</attribute>
+    <attribute name="WebDefault">../../jetty/etc/webdefault.xml</attribute>
+    <attribute name="UnpackWars">true</attribute>
+    <attribute name="PublishMBeans">true</attribute>
   </mbean>
   -->
 
