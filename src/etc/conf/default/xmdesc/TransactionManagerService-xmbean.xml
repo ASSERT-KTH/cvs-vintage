@@ -3,7 +3,7 @@
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
 
-<!-- $Id: TransactionManagerService-xmbean.xml,v 1.6 2004/04/05 08:38:26 ejort Exp $ -->
+<!-- $Id: TransactionManagerService-xmbean.xml,v 1.7 2005/01/12 02:17:07 patriot1burke Exp $ -->
 <mbean>
 	 <description>TransactionManager Service.</description>
 	 <class>org.jboss.tm.TransactionManagerService</class>
@@ -27,6 +27,11 @@
 	 	<description>Name of the xidFactory</description>
 	 	<name>XidFactory</name>
 	 	<type>javax.management.ObjectName</type>
+	 </attribute>
+	 <attribute access="write-only" setMethod="setRecoveryLogger">
+	 	<description>Recovery Logger</description>
+	 	<name>RecoveryLogger</name>
+	 	<type>org.jboss.tm.recovery.RecoveryLoggerInstance</type>
 	 </attribute>
 	 <attribute access="read-only" getMethod="getTransactionManager">
 	 	<description>Returns the TransactionManager managed by this service</description>

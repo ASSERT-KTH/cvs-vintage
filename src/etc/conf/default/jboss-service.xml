@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.122 2005/01/12 00:06:19 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.123 2005/01/12 02:17:03 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -251,7 +251,7 @@
    </mbean>
 
    <mbean code="org.jboss.tm.recovery.RecoveryManagerService" name="jboss:service=RecoveryManager">
-      <depends optional-attribute-name="RecoveryLoggerInstance" proxy-type="org.jboss.tm.recovery.RecoveryLoggerInstance">jboss:service=RecoveryLogger</depends>
+      <depends optional-attribute-name="RecoveryLogger" proxy-type="org.jboss.tm.recovery.RecoveryLoggerInstance">jboss:service=RecoveryLogger</depends>
    </mbean>
    -->
 
@@ -265,7 +265,7 @@
       <!-- set to false to disable transaction demarcation over IIOP -->
       <attribute name="GlobalIdsEnabled">true</attribute>
       <depends optional-attribute-name="XidFactory">jboss:service=XidFactory</depends>
-      <!-- depends optional-attribute-name="RecoveryLoggerInstance" proxy-type="org.jboss.tm.recovery.RecoveryLoggerInstance">jboss:service=RecoveryLogger</depends-->
+      <!-- depends optional-attribute-name="RecoveryLogger" proxy-type="org.jboss.tm.recovery.RecoveryLoggerInstance">jboss:service=RecoveryLogger</depends-->
    </mbean>
 
    <!--
