@@ -1,4 +1,4 @@
-// $Id: PropPanelLink.java,v 1.25 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.26 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.25 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelLink.java,v 1.26 2003/09/21 14:11:13 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -41,7 +41,6 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.common_behavior.MLink;
 public class PropPanelLink extends PropPanelModelElement {
 
 
@@ -50,7 +49,7 @@ public class PropPanelLink extends PropPanelModelElement {
     public PropPanelLink() {
         super("Link Properties", _linkIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MLink.class;
+        Class mclass = (Class)ModelFacade.LINK;
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
@@ -78,4 +77,3 @@ public class PropPanelLink extends PropPanelModelElement {
 	if (newTarget != null) TargetManager.getInstance().setTarget(newTarget);
     }
 } /* end class PropPanelLink */
-

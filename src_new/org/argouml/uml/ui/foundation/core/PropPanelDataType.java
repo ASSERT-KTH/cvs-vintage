@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.32 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelDataType.java,v 1.33 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,6 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.util.ConfigLoader;
 import ru.novosoft.uml.foundation.core.MClassifier;
 
-import ru.novosoft.uml.foundation.core.MDataType;
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -56,7 +55,7 @@ public class PropPanelDataType extends PropPanelClassifier {
     public PropPanelDataType() {
         super("DataType", _dataTypeIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MDataType.class;
+        Class mclass = (Class)ModelFacade.DATATYPE;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));

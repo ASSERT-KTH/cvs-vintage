@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.33 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelClassifierRole.java,v 1.34 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.33 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelClassifierRole.java,v 1.34 2003/09/21 14:11:13 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -33,6 +33,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -42,8 +43,6 @@ import org.argouml.uml.ui.UMLMultiplicityComboBox;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -57,7 +56,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     public PropPanelClassifierRole() {
 	super("ClassifierRole", ConfigLoader.getTabPropsOrientation());
 
-	Class mclass = MClassifierRole.class;
+	Class mclass = (Class)ModelFacade.CLASSIFIER_ROLE;
 
 	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 	addField(Argo.localize("UMLMenu", "label.stereotype"),
@@ -124,4 +123,3 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 
 } /* end class PropPanelClassifierRole */
-

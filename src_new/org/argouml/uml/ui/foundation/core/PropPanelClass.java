@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.44 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelClass.java,v 1.45 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,6 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.core.MClass;
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -66,7 +65,7 @@ public class PropPanelClass extends PropPanelClassifier {
     // contructors
     public PropPanelClass() {
 	super("Class", ConfigLoader.getTabPropsOrientation());
-	Class mclass = MClass.class;
+	Class mclass = (Class)ModelFacade.CLASS;
 
 	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));

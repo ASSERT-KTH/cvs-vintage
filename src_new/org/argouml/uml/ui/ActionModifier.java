@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.10 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.9 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: ActionModifier.java,v 1.10 2003/09/21 14:11:12 bobtarling Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -39,6 +39,7 @@ import org.tigris.gef.presentation.*;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.util.*;
+import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
 import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MInterface;
@@ -56,10 +57,10 @@ import ru.novosoft.uml.model_management.MPackage;
 public class ActionModifier extends UMLAction {
     private UMLBooleanProperty _property;
     private Object object;
-    Class mclassClass = MClass.class;
-    Class mpackageClass = MPackage.class;
-    Class minterfaceClass = MInterface.class;
-    Class museCaseClass = MUseCase.class;      // Jeremy Bennett
+    Class mclassClass = (Class)ModelFacade.CLASS;
+    Class mpackageClass = (Class)ModelFacade.PACKAGE;
+    Class minterfaceClass = (Class)ModelFacade.INTERFACE;
+    Class museCaseClass = (Class)ModelFacade.USE_CASE;      // Jeremy Bennett
     Object trueValue = null;
     Object falseValue = null;
 

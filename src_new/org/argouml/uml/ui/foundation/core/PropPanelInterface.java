@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.33 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelInterface.java,v 1.34 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,8 +40,6 @@ import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.core.MInterface;
-
 public class PropPanelInterface extends PropPanelClassifier {
 
     ////////////////////////////////////////////////////////////////
@@ -49,7 +47,7 @@ public class PropPanelInterface extends PropPanelClassifier {
     public PropPanelInterface() {
 	super("Interface", ConfigLoader.getTabPropsOrientation());
 
-	Class mclass = MInterface.class;
+	Class mclass = (Class)ModelFacade.INTERFACE;
 
 	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));

@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.32 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelSignal.java,v 1.33 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,6 @@ import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.common_behavior.MSignal;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
@@ -62,7 +61,7 @@ public class PropPanelSignal extends PropPanelModelElement {
     public PropPanelSignal() {
         super("Signal", _signalIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MSignal.class;
+        Class mclass = (Class)ModelFacade.SIGNAL;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());

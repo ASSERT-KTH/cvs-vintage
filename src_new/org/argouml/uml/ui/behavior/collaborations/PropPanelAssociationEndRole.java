@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.14 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.15 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociationEnd;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.behavior.collaborations.MAssociationEndRole;
-
 
 public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
 
@@ -45,7 +43,7 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
     public PropPanelAssociationEndRole() {
         super("AssociationEndRoleRole", ConfigLoader.getTabPropsOrientation());
         setAssociationLabel(Argo.localize("UMLMenu", "label.association-role"));
-        createControls(MAssociationEndRole.class);
+        createControls((Class)ModelFacade.ASSOCIATION_END_ROLE);
         positionStandardControls();
         positionControls();
     }
@@ -62,4 +60,3 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
     }
 
 } /* end class PropPanelAssociationEndRole */
-

@@ -1,4 +1,4 @@
-// $Id: ActionAddLink.java,v 1.5 2003/06/29 23:52:16 linus Exp $
+// $Id: ActionAddLink.java,v 1.6 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,20 +34,14 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.CmdSetMode;
 import org.tigris.gef.base.ModeCreatePolyEdge;
 
-import ru.novosoft.uml.behavior.common_behavior.MLink;
-
 public class ActionAddLink extends CmdSetMode {
     public ActionAddLink(Class actionClass, String name) {
-	super(ModeCreatePolyEdge.class, "edgeClass", MLink.class, name);
+	super(ModeCreatePolyEdge.class, "edgeClass", (Class)ModelFacade.LINK, name);
 	_modeArgs.put("action", actionClass);
     }
-
-
-
-
 }
-
 

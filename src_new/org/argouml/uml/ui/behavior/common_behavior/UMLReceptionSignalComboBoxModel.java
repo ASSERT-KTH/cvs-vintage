@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.11 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.12 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,6 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
-import ru.novosoft.uml.behavior.common_behavior.MSignal;
-import ru.novosoft.uml.foundation.core.MNamespace;
-
 /**
  * The model for the signal combobox on the reception proppanel.
  */
@@ -43,7 +40,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLReceptionSignalComboBoxModel() {
         super("signal", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, MNamespace.class, "ownedElement");
+        UmlModelEventPump.getPump().addClassModelEventListener(this, (Class)ModelFacade.NAMESPACE, "ownedElement");
     }
 
     /**
@@ -54,7 +51,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
         if (org.argouml.model.ModelFacade.isAReception(target)) {
             Object rec = /*(MReception)*/ target;
             removeAllElements();
-            setElements(ModelManagementHelper.getHelper().getAllModelElementsOfKind(MSignal.class));
+            setElements(ModelManagementHelper.getHelper().getAllModelElementsOfKind((Class)ModelFacade.SIGNAL));
             setSelectedItem(ModelFacade.getSignal(rec));      
         }
          

@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.45 2003/09/17 23:26:45 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.46 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,14 +51,10 @@ import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.uml.ui.UMLVisibilityPanel;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.data_types.MCallConcurrencyKind;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
 /** A property panel for operations.
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -73,15 +69,15 @@ public class PropPanelOperation extends PropPanelModelElement {
 	      _operationIcon,
 	      ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MOperation.class;
+        Class mclass = (Class)ModelFacade.OPERATION;
         //
         //   this will cause the components on this page to be notified
         //      anytime a stereotype, namespace, operation, etc
         //      has its name changed or is removed anywhere in the model
         Class[] namesToWatch = {
-	    MStereotype.class, 
-	    MNamespace.class, 
-	    MClassifier.class 
+	    (Class)ModelFacade.STEREOTYPE, 
+	    (Class)ModelFacade.NAMESPACE, 
+	    (Class)ModelFacade.CLASSIFIER 
 	};
         setNameEventListening(namesToWatch);
 

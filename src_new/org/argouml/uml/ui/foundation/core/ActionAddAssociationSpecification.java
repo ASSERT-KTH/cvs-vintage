@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.4 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.5 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddAssociationSpecification.java,v 1.4 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.5 2003/09/21 14:11:12 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -31,8 +31,6 @@ import java.util.Vector;
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
-
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 /**
  * 
@@ -62,7 +60,7 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(MClassifier.class));
+            ret.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind((Class)ModelFacade.CLASSIFIER));
         }
         return ret;
     }

@@ -1,4 +1,4 @@
-// $Id: CmdCreateNode.java,v 1.8 2003/06/30 18:00:23 linus Exp $
+// $Id: CmdCreateNode.java,v 1.9 2003/09/21 14:11:14 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,8 +89,8 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
      * @param nodeClass
      * @param name
      */
-    public CmdCreateNode(Class nodeClass, String name) {
-        super(nodeClass, name);
+    public CmdCreateNode(Object nodeClass, String name) {
+        super((Class)nodeClass, name);
     }
 
     /**
@@ -114,8 +114,8 @@ public class CmdCreateNode extends org.tigris.gef.base.CmdCreateNode {
      * @param sticky
      * @param name
      */
-    public CmdCreateNode(Class nodeClass, boolean sticky, String name) {
-        super(nodeClass, sticky, name);
+    public CmdCreateNode(Object nodeClass, boolean sticky, String name) {
+        super((Class)nodeClass, sticky, name);
     }
 
     /**

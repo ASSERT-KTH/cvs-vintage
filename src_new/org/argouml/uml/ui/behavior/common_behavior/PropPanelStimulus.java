@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.34 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.35 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.34 2003/09/20 13:10:45 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.35 2003/09/21 14:11:13 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -67,7 +67,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
 	};
         setNameEventListening(namesToWatch);
 
-        Class mclass = MStimulus.class;
+        Class mclass = (Class)ModelFacade.STIMULUS;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField("Action:", new UMLStimulusActionTextField(this, new UMLStimulusActionTextProperty("name")));

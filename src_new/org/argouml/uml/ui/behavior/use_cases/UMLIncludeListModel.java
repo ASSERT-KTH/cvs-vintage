@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.12 2003/09/20 13:10:43 bobtarling Exp $
+// $Id: UMLIncludeListModel.java,v 1.13 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 
-import ru.novosoft.uml.behavior.use_cases.MInclude;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
 
@@ -166,7 +165,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 
     protected MModelElement getModelElementAt(int index) {
 
-        return elementAtUtil(getIncludes(), index, MInclude.class);
+        return elementAtUtil(getIncludes(), index, (Class)ModelFacade.INCLUDE);
     }
             
         
@@ -289,7 +288,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 			if (figclass != null && figeusecase != null) {
 			    GraphModel gm = diagram.getGraphModel();
 			    if (gm instanceof MutableGraphModel) {
-				((MutableGraphModel) gm).connect(usecase, includedusecase, MInclude.class);
+				((MutableGraphModel) gm).connect(usecase, includedusecase, (Class)ModelFacade.INCLUDE);
 			    }
 			} else {
 			    UseCasesFactory.getFactory().buildInclude(usecase, includedusecase);
@@ -521,4 +520,3 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 
 
 } /* End of class UMLIncludeListModel */
-

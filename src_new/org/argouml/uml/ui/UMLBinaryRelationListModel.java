@@ -1,4 +1,4 @@
-// $Id: UMLBinaryRelationListModel.java,v 1.13 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: UMLBinaryRelationListModel.java,v 1.14 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -240,7 +240,7 @@ abstract public class UMLBinaryRelationListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel#getModelElementAt(int)
      */
     protected MModelElement getModelElementAt(int index) {
-        return elementAtUtil(getSelected(), index, MModelElement.class);
+        return elementAtUtil(getSelected(), index, (Class)ModelFacade.MODELELEMENT);
     }
 
     /**

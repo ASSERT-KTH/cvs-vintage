@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.16 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelGuard.java,v 1.17 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.16 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelGuard.java,v 1.17 2003/09/21 14:11:13 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -35,6 +35,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -44,9 +45,6 @@ import org.argouml.uml.ui.UMLExpressionModel;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 
 /**
  * A property panel for Guards. Rewrote this class to comply to Bob Tarling's layout
@@ -73,8 +71,8 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         addSeperator();
 
-        UMLExpressionModel expressionModel = new UMLExpressionModel(this, MGuard.class, "expression",
-								    MBooleanExpression.class, "getExpression", "setExpression");
+        UMLExpressionModel expressionModel = new UMLExpressionModel(this, (Class)ModelFacade.GUARD, "expression",
+								    (Class)ModelFacade.BOOLEAN_EXPRESSION, "getExpression", "setExpression");
         addField(Argo.localize("UMLMenu", "label.expression"), new JScrollPane(new UMLExpressionBodyField(expressionModel, true), JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
         addField(Argo.localize("UMLMenu", "label.language"), new UMLExpressionLanguageField(expressionModel, true));
 
@@ -84,6 +82,4 @@ public class PropPanelGuard extends PropPanelModelElement {
     }
 
 } /* end class PropPanelState */
-
-
 

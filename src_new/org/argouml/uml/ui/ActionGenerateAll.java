@@ -1,4 +1,4 @@
-// $Id: ActionGenerateAll.java,v 1.13 2003/09/11 21:10:10 bobtarling Exp $
+// $Id: ActionGenerateAll.java,v 1.14 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,9 +37,6 @@ import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.generator.ui.ClassGenerationDialog;
-
-import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MInterface;
 
 /** Action to trigger code generation for one or more classes.
  *  @stereotype singleton
@@ -91,8 +88,8 @@ public class ActionGenerateAll extends UMLAction {
 	    while (selectedObjects.hasNext()) {
 		Object selected = selectedObjects.next();
 		if (ModelFacade.isAPackage(selected)) {
-		    addCollection(ModelManagementHelper.getHelper().getAllModelElementsOfKind(selected, MClass.class), classes);
-		    addCollection(ModelManagementHelper.getHelper().getAllModelElementsOfKind(selected, MInterface.class), classes);
+		    addCollection(ModelManagementHelper.getHelper().getAllModelElementsOfKind(selected, (Class)ModelFacade.CLASS), classes);
+		    addCollection(ModelManagementHelper.getHelper().getAllModelElementsOfKind(selected, (Class)ModelFacade.INTERFACE), classes);
 		} else if (ModelFacade.isAClass(selected) || ModelFacade.isAInterface(selected)) {
 		    if (!classes.contains(selected))
 			classes.addElement(selected);

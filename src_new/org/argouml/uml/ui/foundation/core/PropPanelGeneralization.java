@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.36 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.37 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,17 +41,6 @@ import org.argouml.uml.ui.UMLTextField;
 import org.argouml.uml.ui.UMLTextProperty;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.common_behavior.MSignal;
-import ru.novosoft.uml.behavior.use_cases.MActor;
-import ru.novosoft.uml.foundation.core.MClass;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MDataType;
-import ru.novosoft.uml.foundation.core.MGeneralization;
-import ru.novosoft.uml.foundation.core.MInterface;
-import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
-
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -64,9 +53,9 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
     public PropPanelGeneralization() {
         super("Generalization", ConfigLoader.getTabPropsOrientation());
-        Class mclass = MGeneralization.class;
+        Class mclass = (Class)ModelFacade.GENERALIZATION;
 
-        Class[] namesToWatch = {MStereotype.class, MNamespace.class, MClassifier.class };
+        Class[] namesToWatch = {(Class)ModelFacade.STEREOTYPE, (Class)ModelFacade.NAMESPACE, (Class)ModelFacade.CLASSIFIER };
         setNameEventListening(namesToWatch);
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
@@ -253,11 +242,11 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 				 Object/*MModelElement*/ candidate) {
         boolean isCompatible = true;
         Class[] keys = {
-	    MClass.class, 
-	    MDataType.class,
-	    MInterface.class, 
-	    MActor.class, 
-	    MSignal.class 
+	    (Class)ModelFacade.CLASS, 
+	    (Class)ModelFacade.DATATYPE,
+	    (Class)ModelFacade.INTERFACE, 
+	    (Class)ModelFacade.ACTOR, 
+	    (Class)ModelFacade.SIGNAL 
 	};
         int i;
         for (i = 0; i < keys.length; i++) {

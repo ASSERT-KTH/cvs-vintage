@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.72 2003/09/19 21:28:41 d00mst Exp $
+// $Id: PropPanel.java,v 1.73 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.72 2003/09/19 21:28:41 d00mst Exp $
+// $Id: PropPanel.java,v 1.73 2003/09/21 14:11:12 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -85,8 +85,6 @@ import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
 /**
  *   <p>This abstract class provides the basic layout and event dispatching
  *   support for all Property Panels.</p>
@@ -575,13 +573,13 @@ abstract public class PropPanel
         */
         for (int i = 0; i < metaclasses.length; i++) {
             Class clazz = metaclasses[i];
-            if (MNamespace.class.isAssignableFrom(clazz)) {
+            if (((Class)ModelFacade.NAMESPACE).isAssignableFrom(clazz)) {
                 UmlModelEventPump.getPump().addClassModelEventListener(this, clazz, "ownedElement");
             }
-            if (MModelElement.class.isAssignableFrom(clazz)) {
+            if (((Class)ModelFacade.MODELELEMENT).isAssignableFrom(clazz)) {
                 UmlModelEventPump.getPump().addClassModelEventListener(this, clazz, "name");
             }
-            if (clazz.equals(MStereotype.class)) {
+            if (clazz.equals(ModelFacade.STEREOTYPE)) {
                 UmlModelEventPump.getPump().addClassModelEventListener(this, clazz, "baseClass");
             }
         }

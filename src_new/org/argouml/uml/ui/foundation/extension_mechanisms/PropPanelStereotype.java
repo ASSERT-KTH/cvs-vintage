@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.28 2003/09/17 23:25:52 bobtarling Exp $
+// $Id: PropPanelStereotype.java,v 1.29 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,6 @@ import org.argouml.uml.ui.UMLSpecializationListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -61,7 +59,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
     public PropPanelStereotype() {
         super("Stereotype", _stereotypeIcon, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MStereotype.class;
+        Class mclass = (Class)ModelFacade.STEREOTYPE;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
 

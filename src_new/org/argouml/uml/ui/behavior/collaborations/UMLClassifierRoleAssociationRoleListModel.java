@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.10 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: UMLClassifierRoleAssociationRoleListModel.java,v 1.11 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,6 @@ import org.argouml.uml.ui.UMLConnectionListModel;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 import org.tigris.gef.graph.MutableGraphModel;
 
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 /**
  * Binary relation list model for associationsroles between classifierroles
  * 
@@ -100,7 +99,7 @@ public class UMLClassifierRoleAssociationRoleListModel
 			   MutableGraphModel gm,
 			   Object/*MModelElement*/ from,
 			   Object/*MModelElement*/ to) {
-	gm.connect(from, to, MAssociationRole.class);
+	gm.connect(from, to, (Class)ModelFacade.ASSOCIATION_ROLE);
     }
 
     /**

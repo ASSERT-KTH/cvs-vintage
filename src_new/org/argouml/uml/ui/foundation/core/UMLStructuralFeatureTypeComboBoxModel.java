@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.8 2003/09/17 23:25:51 bobtarling Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.9 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,8 +39,6 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MNamespace;
 /**
  * The combobox model for the type belonging to some attribute.
  * @since Nov 2, 2002
@@ -58,7 +56,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
         super("type", false);
         UmlModelEventPump.getPump().addClassModelEventListener(
 							       this,
-							       MNamespace.class,
+							       (Class)ModelFacade.NAMESPACE,
 							       "ownedElement");
     }
 
@@ -120,7 +118,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 		paths,
 		ModelManagementHelper.getHelper().getAllModelElementsOfKind(
 									    model,
-									    MClassifier.class)
+									    (Class)ModelFacade.CLASSIFIER)
 		);
         }
 
@@ -129,7 +127,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 	    paths,
 	    ModelManagementHelper.getHelper().getAllModelElementsOfKind(
 									p.getDefaultModel(),
-									MClassifier.class)
+									(Class)ModelFacade.CLASSIFIER)
 	    );
 
         setElements(elements);

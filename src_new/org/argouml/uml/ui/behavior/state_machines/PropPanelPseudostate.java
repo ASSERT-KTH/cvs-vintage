@@ -1,4 +1,4 @@
-// $Id: PropPanelPseudostate.java,v 1.15 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelPseudostate.java,v 1.16 2003/09/21 14:11:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelPseudostate.java
 // Classes: PropPanelPseudostate
 // Original Author: your email address here
-// $Id: PropPanelPseudostate.java,v 1.15 2003/06/29 23:50:12 linus Exp $
+// $Id: PropPanelPseudostate.java,v 1.16 2003/09/21 14:11:13 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -38,6 +38,7 @@ import javax.swing.JPanel;
 
 import org.argouml.application.api.Argo;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.diagram.state.ui.FigBranchState;
 import org.argouml.uml.diagram.state.ui.FigDeepHistoryState;
@@ -51,7 +52,6 @@ import org.argouml.uml.ui.UMLEnumerationBooleanProperty;
 import org.argouml.uml.ui.UMLRadioButton;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.state_machines.MPseudostate;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 /**
@@ -66,7 +66,7 @@ public class PropPanelPseudostate extends PropPanelStateVertex {
     public PropPanelPseudostate() {
         super("Pseudostate", null, ConfigLoader.getTabPropsOrientation());
 
-        Class mclass = MPseudostate.class;
+        Class mclass = (Class)ModelFacade.PSEUDOSTATE;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));

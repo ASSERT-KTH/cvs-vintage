@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.34 2003/09/20 13:10:44 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.35 2003/09/21 14:11:12 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,12 +45,7 @@ import org.argouml.uml.ui.UMLRadioButton;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
 /**
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -62,13 +57,13 @@ public class PropPanelParameter extends PropPanelModelElement {
 	      "Parameter",
 	      _parameterIcon,
 	      ConfigLoader.getTabPropsOrientation());
-        Class mclass = MParameter.class;
+        Class mclass = (Class)ModelFacade.PARAMETER;
 
         Class[] namesToWatch = {
-	    MStereotype.class,
-	    MOperation.class,
-	    MParameter.class,
-	    MClassifier.class 
+	    (Class)ModelFacade.STEREOTYPE,
+	    (Class)ModelFacade.OPERATION,
+	    (Class)ModelFacade.PARAMETER,
+	    (Class)ModelFacade.CLASSIFIER 
 	};
         setNameEventListening(namesToWatch);
 
