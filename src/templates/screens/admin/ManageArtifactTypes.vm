@@ -46,7 +46,7 @@
 <h3>Issue types</h3>
 
 #if (!$rmits || $rmits.isEmpty())
-   <p><strong class="alert">There are no issue types in this module.</strong></p>
+   <p class="alert">There are no issue types in this module.</p>
 <div class="functnbar3">
 <input type="submit" value="Create new"  name="eventSubmit_doGotoothertemplate"/>
 </div>

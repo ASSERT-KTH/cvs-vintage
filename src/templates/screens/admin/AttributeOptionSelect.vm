@@ -27,8 +27,8 @@
 
 #if ($availOptions.size() == 0)
 
-<p><strong class="alert">There are no more global attribute options that are not already
-associated with this attribute in this module.</strong></p>
+<p class="alert">There are no more global attribute options that are not already
+associated with this attribute in this module.</p>
 
 #else
 

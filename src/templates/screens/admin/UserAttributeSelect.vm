@@ -27,7 +27,8 @@
 
 #if ($attributes.size() == 0)
 
-<p><strong class="alert">There are no user attributes that are not already associated with this module.</strong></p>
+<p class="alert">There are no user attributes that are not already
+associated with this module.</p>
 
 #else
 

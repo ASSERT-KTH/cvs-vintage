@@ -29,9 +29,9 @@
 
 #if ($attributes.size() == 0)
 
-<p><strong class="alert">There are no more global attributes that are
+<p class="alert">There are no more global attributes that are
 not already associated with an attribute group in this
-module.</strong></p>
+module.</p>
 
 #else
 

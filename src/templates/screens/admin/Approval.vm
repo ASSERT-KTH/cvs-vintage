@@ -6,7 +6,7 @@
 #set ($module = $scarabR.CurrentModule)
 #if ($module.UnapprovedQueries.isEmpty() && $module.UnapprovedTemplates.isEmpty() && $securityAdmin.getPendingGroupUserRoles($module).isEmpty())
 
-  <p><strong class="alert">$l10n.NoItemsToApprove</strong></p>
+  <p class="alert">$l10n.NoItemsToApprove</p>
 
 #else
 

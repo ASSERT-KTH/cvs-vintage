@@ -102,7 +102,7 @@
 </table>
 <p><small>$l10n.DefaultText </small></p>
 #else
-  <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
+  <p class="alert">Click the Add button to add attributes to this group.</p>
 #end
 
 <div class="functnbar3">

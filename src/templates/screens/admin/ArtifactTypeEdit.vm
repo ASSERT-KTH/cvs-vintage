@@ -132,7 +132,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
 <h3>User attributes</h3>
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if ($userAttrs.isEmpty())
-  <p><strong class="alert">There are no user attributes for this issue type.</strong></p>
+  <p class="alert">There are no user attributes for this issue type.</p>
 
 <div class="functnbar3">
 <input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate" />&#160;

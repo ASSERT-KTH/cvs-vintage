@@ -63,7 +63,7 @@ module that you can edit.
 
 #set ($moduleGroup = $intake.Module.mapTo($editModule))
 #if ( !$moduleGroup.get("Id").isValid())
-<p><strong class="alert">$moduleGroup.get("Id").Message</strong></p>
+<p class="alert">$moduleGroup.get("Id").Message</p>
 #end
 
 <div class="axial">
@@ -126,7 +126,7 @@ module that you can edit.
    </td>
   </tr>
 #end
-#if ($createNew != "true")
+#if ($createNew && $createNew != "true")
   <tr>
     <th>* Deleted</td>
     <td>
