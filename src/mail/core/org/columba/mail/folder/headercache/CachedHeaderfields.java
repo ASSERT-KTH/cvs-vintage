@@ -195,7 +195,7 @@ public class CachedHeaderfields {
             return stringList;
         }
 
-        return null;
+        return new String[] {};
     }
 
     /**
