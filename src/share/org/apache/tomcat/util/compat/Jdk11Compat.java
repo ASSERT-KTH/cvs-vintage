@@ -58,6 +58,7 @@
  */
 
 package org.apache.tomcat.util.compat;
+import org.apache.tomcat.util.depend.*;
 
 import java.net.URL;
 
@@ -110,13 +111,18 @@ public class Jdk11Compat {
 	return null;
     }
 
-    public URL[] getURLs(ClassLoader cl){
-        return ((SimpleClassLoader)cl).getURLs();
+    public URL[] getURLs(ClassLoader cl,int depth){
+        int c=0;
+        do{
+            while(! (cl instanceof SimpleClassLoader))
+                cl=((DependClassLoader)cl).getParent();
+            if (depth==c) return ((SimpleClassLoader)cl).getURLs();
+            c++;
+            cl=((SimpleClassLoader)cl).getParentLoader();
+        }while((cl!=null) && ( depth < c ));
+        return null;
     }
-    public URL[] getParentURLs(ClassLoader cl){
-        SimpleClassLoader scl=(SimpleClassLoader)cl;
-        return ((SimpleClassLoader)scl.getParentLoader()).getURLs();
-    }
+
     // Other methods, as needed
         
 

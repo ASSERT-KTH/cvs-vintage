@@ -87,12 +87,12 @@ public class DependClassLoader extends ClassLoader {
     DependManager dependM;
 
     public DependClassLoader( DependManager depM, ClassLoader parent ) {
-	super(); // will check permissions 
+	super(); // will check permissions
 	this.parent=parent;
 	dependM=depM;
     }
 
-    // debug only 
+    // debug only
     final void log( String s ) {
 	System.out.println("DependClassLoader: " + s );
     }
@@ -129,7 +129,7 @@ public class DependClassLoader extends ClassLoader {
 	if( res==null ) {
 	    if( debug >0  )  log( "Resource not found !!! " + name + " " + classFileName);
 	}
-	
+
 	try {
 	    c = parent.loadClass(name);
 	    if (c != null) {
@@ -175,7 +175,11 @@ public class DependClassLoader extends ClassLoader {
 	dep.setLastModified( f.lastModified() );
 	dep.setTarget( c );
 	dep.setOrigin( f );
-	
+
 	dependM.addDependency( dep );
+    }
+
+    public ClassLoader getParentLoader() {
+        return parent;
     }
 }

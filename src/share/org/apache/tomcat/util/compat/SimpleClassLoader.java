@@ -524,7 +524,6 @@ public class SimpleClassLoader extends ClassLoader {
     }
 
     public URL[] getURLs() {
-        //TODO:  Add custom implementation.
         return urls;
     }
 

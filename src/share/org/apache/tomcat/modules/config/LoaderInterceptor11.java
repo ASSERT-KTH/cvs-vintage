@@ -190,8 +190,8 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	if( debug>5 ) {
 	    log("  Context classpath URLs:");
 	    for (int i = 0; i < classP.length; i++)
-		log("    " + classP[i].toString() );
-	}
+                log("    " + classP[i].toString() );
+        }
 
 	ClassLoader parent=null;
 	if( useAL && !context.isTrusted() ) {
@@ -246,11 +246,11 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	URL classPaths[]=ctx.getClassPath();
 	convertClassPath( cpath , classPaths );
 
-        ClassLoader parentLoader=ctx.getContextManager().getParentLoader();
-	// apps class path 
-	convertClassPath(cpath, jdkProxy.getParentURLs(parentLoader));
+        ClassLoader Loader=ctx.getClassLoader();
+        // apps class loader
+	convertClassPath(cpath, jdkProxy.getURLs(Loader,1));
 	// common class loader
-	convertClassPath(cpath, jdkProxy.getURLs(parentLoader));
+	convertClassPath(cpath, jdkProxy.getURLs(Loader,2));
 	if( debug>9 )
 	    log("Getting classpath " + cpath);
 	return cpath.toString();

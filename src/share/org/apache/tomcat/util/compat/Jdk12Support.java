@@ -62,6 +62,7 @@ package org.apache.tomcat.util.compat;
 import java.net.*;
 import java.util.*;
 import java.security.*;
+import org.apache.tomcat.util.depend.*;
 /**
  *  
  */
@@ -103,16 +104,21 @@ public class Jdk12Support extends Jdk11Compat {
     public ClassLoader getContextClassLoader() {
 	return Thread.currentThread().getContextClassLoader();
     }
-
-    public URL[] getURLs(ClassLoader cl){
-        return ((URLClassLoader)cl).getURLs();
+    
+    public URL[] getURLs(ClassLoader cl,int depth){
+        int c=0;
+        do{
+            while(! (cl instanceof URLClassLoader) && cl != null )
+                cl=((DependClassLoader)cl).getParentLoader();
+            if (cl==null) break;
+            if (depth==c) return ((URLClassLoader)cl).getURLs();
+            c++;
+            cl=((URLClassLoader)cl).getParent();
+        }while((cl!=null) && ( depth >= c ));
+        return null;
     }
-    public URL[] getParentURLs(ClassLoader cl){
-        URLClassLoader scl=(URLClassLoader)cl;
-        return ((URLClassLoader)cl.getParent()).getURLs();
-    }
 
-    // -------------------- Support -------------------- 
+    // -------------------- Support --------------------
     static class PrivilegedProxy implements PrivilegedExceptionAction
     {
 	Action action;
