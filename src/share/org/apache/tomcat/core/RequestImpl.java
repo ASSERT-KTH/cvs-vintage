@@ -596,11 +596,11 @@ public class RequestImpl  implements Request {
 
     // -------------------- End utils
     public void recycle() {
-	if( requestFacade != null && context!=null ) {
-	    context.getFacadeManager().recycle(this);
-	}
+        if( requestFacade != null && context!=null ) {
+            context.getFacadeManager().recycle(this);
+        }
 
-	context = null;
+        context = null;
         attributes.clear();
         parameters.clear();
         cookies.removeAllElements();
@@ -612,31 +612,32 @@ public class RequestImpl  implements Request {
         authType = null;
         remoteUser = null;
         reqSessionId = null;
-	serverSession = null;
-	didParameters = false;
-	didReadFormData = false;
-	didCookies = false;
-	container=null;
-	handler=null;
-	jvmRoute = null;
-	scheme = "http";// no need to use Constants
-	method = "GET";
-	requestURI="/";
-	queryString=null;
-	protocol="HTTP/1.0";
-	headers.clear(); // XXX use recycle pattern
-	serverName=null;
-	serverPort=8080;
-	pathTranslated=null;
-	pathInfo=null;
-	pathTranslatedIsSet=false;
+        serverSession = null;
+        didParameters = false;
+        didReadFormData = false;
+        didCookies = false;
+        container=null;
+        handler=null;
+        jvmRoute = null;
+        scheme = "http";// no need to use Constants
+        method = "GET";
+        requestURI="/";
+        queryString=null;
+        protocol="HTTP/1.0";
+        headers.clear(); // XXX use recycle pattern
+        serverName=null;
+        serverPort=8080;
+        pathTranslated=null;
+        pathInfo=null;
+        pathTranslatedIsSet=false;
 
-	// XXX a request need to override those if it cares
-	// about security
-	remoteAddr="127.0.0.1";
-	remoteHost="localhost";
-	localHost="localhost";
-	for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
+        // XXX a request need to override those if it cares
+        // about security
+        remoteAddr="127.0.0.1";
+        remoteHost="localhost";
+        localHost="localhost";
+        for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
+        for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
     }
 
     public MimeHeaders getMimeHeaders() {
