@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelper.java,v 1.6 2003/09/17 21:18:15 thierrylach Exp $
+// $Id: ActivityGraphsHelper.java,v 1.7 2004/08/08 12:57:08 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class ActivityGraphsHelper {
     
     /** Singleton instance.
      */
-    private static ActivityGraphsHelper SINGLETON =
+    private static ActivityGraphsHelper singleton =
                    new ActivityGraphsHelper();
 
     
@@ -50,7 +50,7 @@ public class ActivityGraphsHelper {
      * @return the singleton instance of the helper
      */
     public static ActivityGraphsHelper getHelper() {
-        return SINGLETON;
+        return singleton;
     }
 }
 
