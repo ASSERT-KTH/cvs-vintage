@@ -61,7 +61,7 @@ import tudresden.ocl.OclException;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.22 2003/05/03 14:28:15 alexb Exp $
+  * <p>$Id: TabConstraints.java,v 1.23 2003/05/03 15:04:17 alexb Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
@@ -394,14 +394,17 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
                                 m_mmeiTarget.addConstraint(mc);
 
+                                // the constraint _must_ be owned by a namespace
                                 if (m_mmeiTarget.getNamespace() != null) {
-                                    // Apparently namespace management is not supported for all model
-                                    // elements. As this does not seem to cause problems, I'll just
-                                    // leave it at that for the moment...
                                     m_mmeiTarget
                                         .getNamespace()
                                         .addOwnedElement(
                                         mc);
+                                }
+                                else if(mmeContext.getNamespace() != null){
+                                    
+                                    mmeContext.getNamespace().addOwnedElement(
+                                    m_mcConstraint);
                                 }
 
                                 m_alConstraints.add(mc);
@@ -434,11 +437,14 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
                         m_mmeiTarget.addConstraint(m_mcConstraint);
 
+                        // the constraint _must_ be owned by a namespace
                         if (m_mmeiTarget.getNamespace() != null) {
-                            // Apparently namespace management is not supported for all model
-                            // elements. As this does not seem to cause problems, I'll just
-                            // leave it at that for the moment...
                             m_mmeiTarget.getNamespace().addOwnedElement(
+                                m_mcConstraint);
+                        }
+                        else if(mmeContext.getNamespace() != null){
+                            
+                            mmeContext.getNamespace().addOwnedElement(
                                 m_mcConstraint);
                         }
 
