@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -29,7 +30,6 @@ import java.util.List;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -39,6 +39,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.PGPMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.LocalMimePart;
@@ -73,7 +74,7 @@ public class MessageComposer {
 		if (model.getBccList().size() > 0)
 			header.set("Bcc", ListParser.parse(model.getBccList()));
 
-		header.set("Subject", model.getSubject());
+		header.set("Subject", EncodedWord.encode(model.getSubject(), Charset.forName(model.getCharsetName()), EncodedWord.QUOTED_PRINTABLE).toString());
 
 		AccountItem item = model.getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
