@@ -7,11 +7,34 @@
 
 package org.jboss.web;
 
+import org.jboss.deployment.DeploymentException;
+import org.jboss.deployment.DeploymentInfo;
+import org.jboss.deployment.WebserviceClientDeployer;
+import org.jboss.ejb.EjbUtil;
+import org.jboss.logging.Logger;
+import org.jboss.metadata.EjbLocalRefMetaData;
+import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.ResourceEnvRefMetaData;
+import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.metadata.WebMetaData;
+import org.jboss.metadata.XmlFileLoader;
+import org.jboss.mx.loading.LoaderRepositoryFactory;
+import org.jboss.naming.Util;
+import org.jboss.security.plugins.NullSecurityManager;
+import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.management.MBeanServer;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.LinkRef;
+import javax.naming.NamingException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,34 +43,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.LinkRef;
-import javax.naming.NamingException;
-import javax.management.MBeanServer;
-
-import org.jboss.deployment.DeploymentException;
-import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.WebserviceClientDeployer;
-import org.jboss.ejb.EjbUtil;
-import org.jboss.metadata.EjbLocalRefMetaData;
-import org.jboss.metadata.EjbRefMetaData;
-import org.jboss.metadata.EnvEntryMetaData;
-import org.jboss.metadata.ResourceEnvRefMetaData;
-import org.jboss.metadata.ResourceRefMetaData;
-import org.jboss.metadata.WebMetaData;
-import org.jboss.metadata.XmlFileLoader;
-import org.jboss.metadata.MetaData;
-import org.jboss.mx.loading.LoaderRepositoryFactory;
-import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
-import org.jboss.naming.Util;
-import org.jboss.security.plugins.NullSecurityManager;
-import org.jboss.util.file.JarUtils;
-import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
-import org.jboss.logging.Logger;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /** A template pattern class for web deployer integration into JBoss. This class
 should be subclasses by war deployers providers wishing to integrate into
@@ -64,13 +59,13 @@ into the JBoss server JNDI namespace:
 
 Subclasses need to implement the {@link #performDeploy(WebApplication, String,
  WebDescriptorParser) performDeploy()}
-and {@link #performUndeploy(String) performUndeploy()} methods to perform the
+and {@link #performUndeploy(String, WebApplication) performUndeploy()} methods to perform the
 container specific steps and return the web application info required by the
 AbstractWebContainer class.
 
 Integration with the JBossSX security framework is based on the establishment
 of a java:comp/env/security context as described in the
-{@link linkSecurityDomain(String, Context) linkSecurityDomain } comments.
+{@link #linkSecurityDomain(String,Context) linkSecurityDomain } comments.
 The security context provides access to the JBossSX security mgr interface
 implementations for use by subclass request interceptors. A outline of the
 steps for authenticating a user is:
@@ -119,7 +114,7 @@ An outline of the steps for authorizing the user is:
 The one thing to be aware of is the relationship between the thread context
 class loader and the JNDI ENC context. Any method that attempts to access
 the JNDI ENC context must have the ClassLoader in the WebApplication returned
-from the {@link #performDeploy(String, String) performDeploy} as its thread
+from the {@link #performDeploy(WebApplication, String, WebDescriptorParser) performDeploy} as its thread
 context ClassLoader or else the lookup for java:comp/env will fail with a
 name not found exception, or worse, it will receive some other web application
 ENC context. If your adapting a web container that is trying be compatible with
@@ -128,16 +123,11 @@ to. For example, I have seen problems a request interceptor that was handling
 the authentication/authorization callouts in tomcat3.2.1 not having the same
 thread context ClassLoader as was used to dispatch the http service request.
 
-For a complete example see the
-{@link org.jboss.web.catalina.EmbeddedCatalinaServiceSX EmbeddedCatalinaServiceSX}
-in the catalina module.
-
 @see #performDeploy(WebApplication webApp, String warUrl,
         WebDescriptorParser webAppParser)
 @see #performUndeploy(String, WebApplication)
-@see #parseWebAppDescriptors(ClassLoader, WebMetaData)
+@see #parseWebAppDescriptors(DeploymentInfo,ClassLoader, WebMetaData)
 @see #linkSecurityDomain(String, Context)
-@see org.jboss.security.SecurityManager;
 @see org.jboss.security.RealmMapping;
 @see org.jboss.security.SimplePrincipal;
 @see org.jboss.security.SecurityAssociation;
@@ -145,7 +135,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -233,8 +223,6 @@ public abstract class AbstractWebDeployer
     /**
      * Set the flag indicating if ejb-link errors should be ignored
      * in favour of trying the jndi-name in jboss-web.xml
-     * @return a <code>boolean</code> value
-     *    
      * @jmx:managed-attribute
      */    
     public void setLenientEjbLink (boolean flag)
@@ -256,7 +244,7 @@ public abstract class AbstractWebDeployer
    }
 
    /** A template pattern implementation of the deploy() method. This method
-   calls the {@link #performDeploy(String, String) performDeploy()} method to
+   calls the {@link #performDeploy(WebApplication, String, WebDescriptorParser) performDeploy()} method to
    perform the container specific deployment steps and registers the
    returned WebApplication in the deployment map. The steps performed are:
 
@@ -283,7 +271,7 @@ public abstract class AbstractWebDeployer
     Expose this information via MinServiceTime, MaxServiceTime and TotalServiceTime
     attributes to integrate seemlessly with the JSR77 factory layer.
 
-   @param di, The deployment info that contains the context-root element value
+   @param di The deployment info that contains the context-root element value
     from the J2EE application/module/web application.xml descriptor. This may
     be null if war was is not being deployed as part of an enterprise application.
     It also contains the URL of the web application war.
@@ -341,22 +329,20 @@ public abstract class AbstractWebDeployer
 
    /** This method is called by the deploy() method template and must be overriden by
    subclasses to perform the web container specific deployment steps.
-   @param webApp, The web application information context. This contains the
+   @param webApp The web application information context. This contains the
     metadata such as the context-root element value from the J2EE
    application/module/web application.xml descriptor and virtual-host.
-   @param warUrl, The string for the URL of the web application war.
-   @param webAppParser, The callback interface the web container should use to
+   @param warUrl The string for the URL of the web application war.
+   @param webAppParser The callback interface the web container should use to
    setup the web app JNDI environment for use by the web app components. This
    needs to be invoked after the web app class loader is known, but before
    and web app components attempt to access the java:comp/env JNDI namespace.
-   @return WebApplication, the web application information required by the
-   AbstractWebContainer class to track the war deployment status.
    */
    protected abstract void performDeploy(WebApplication webApp, String warUrl,
       WebDescriptorParser webAppParser) throws Exception;
 
    /** A template pattern implementation of the undeploy() method. This method
-   calls the {@link #performUndeploy(String) performUndeploy()} method to
+   calls the {@link #performUndeploy(String, WebApplication) performUndeploy()} method to
    perform the container specific undeployment steps and unregisters the
    the warUrl from the deployment map.
    */
@@ -389,8 +375,8 @@ public abstract class AbstractWebDeployer
    /** This method is invoked from within subclass performDeploy() method
    implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
 
-   @param loader, the ClassLoader for the web application. May not be null.
-   @param metaData, the WebMetaData from the WebApplication object passed to
+   @param loader the ClassLoader for the web application. May not be null.
+   @param metaData the WebMetaData from the WebApplication object passed to
     the performDeploy method.
    */
    protected void parseWebAppDescriptors(DeploymentInfo di, ClassLoader loader,
