@@ -56,21 +56,21 @@ import org.tigris.scarab.om.Attachment;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.13 2003/03/25 16:57:55 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.14 2003/03/28 00:54:59 jon Exp $
  */
 public interface SearchIndex
 {
-    static String PARSE_ERROR = 
+    String PARSE_ERROR = 
         "Search engine could not parse the query: ";
-    static String INDEX_PATH = "searchindex.path";
-    static String CLASS_NAME = "searchindex.class";
-    static String VALUE_ID = "valid";
-    static String ISSUE_ID = "issid";
-    static String ATTRIBUTE_ID = "attid";
-    static String ATTACHMENT_ID = "atchid";
-    static String ATTACHMENT_TYPE_ID = "atchtypeid";
-    static String TEXT = "text";
-    static Long[] EMPTY_LIST = new Long[0];
+    String INDEX_PATH = "searchindex.path";
+    String CLASS_NAME = "searchindex.class";
+    String VALUE_ID = "valid";
+    String ISSUE_ID = "issid";
+    String ATTRIBUTE_ID = "attid";
+    String ATTACHMENT_ID = "atchid";
+    String ATTACHMENT_TYPE_ID = "atchtypeid";
+    String TEXT = "text";
+    Long[] EMPTY_LIST = new Long[0];
 
     /**
      *  Specify search criteria. This is incremental.

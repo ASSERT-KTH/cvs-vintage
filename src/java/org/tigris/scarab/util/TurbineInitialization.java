@@ -60,22 +60,22 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.5 2003/03/28 00:02:23 jon Exp $
+ * @version $Id: TurbineInitialization.java,v 1.6 2003/03/28 00:54:59 jon Exp $
  */
 public class TurbineInitialization
 {
-    public static String tr_props = "/WEB-INF/conf/TurbineResources.properties";
+    public static String trProps = "/WEB-INF/conf/TurbineResources.properties";
 
     protected static void initTurbine (String configDir)
         throws Exception
     {
-        TurbineConfig tc = new TurbineConfig(configDir, tr_props);
+        TurbineConfig tc = new TurbineConfig(configDir, trProps);
         tc.init();
     }
 
-    public static void setTurbineResources(String trprops)
+    public static void setTurbineResources(String trProps)
     {
-        tr_props = trprops;
+        this.trProps = trProps;
     }
     
     public static void setUp(String configDir, String configFile)

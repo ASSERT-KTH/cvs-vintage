@@ -605,7 +605,10 @@ e.printStackTrace();
         {
            attributeOption = AttributeOptionManager.getInstance(pk);
         }
-        catch(Exception e){e.printStackTrace();}
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return attributeOption;
     }
 

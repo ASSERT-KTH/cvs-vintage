@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.66 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: Module.java,v 1.67 2003/03/28 00:54:58 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -82,12 +82,12 @@ public interface Module
      * This is used to build up the getName() results.
      * FIXME: define this in a properties file
      */
-    static String NAME_DELIMINATOR = " > ";
+    String NAME_DELIMINATOR = " > ";
 
-    static final Integer ROOT_ID = new Integer(0);
+    final Integer ROOT_ID = new Integer(0);
 
-    static String USER = "user";
-    static String NON_USER = "non-user";
+    String USER = "user";
+    String NON_USER = "non-user";
 
     /**
      * Get a list of <code>ScarabUser</code>'s that have the given

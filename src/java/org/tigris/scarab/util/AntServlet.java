@@ -69,10 +69,10 @@ import javax.servlet.http.HttpServletResponse;
 public class AntServlet
     extends HttpServlet
 {
-    private static String build_command = 
+    private static String buildCommand = 
         new String ("ant -buildfile");
 
-    private static File build_file =
+    private static File buildFile =
         new File ("../webapps/newapp/WEB-INF/build/build.xml");
 
     /**
@@ -86,19 +86,19 @@ public class AntServlet
     {
         super.init(config);
 
-        String command = config.getInitParameter("build_command");
+        String command = config.getInitParameter("buildCommand");
         if (command != null)
         {
-            build_command = command;
+            buildCommand = command;
             System.out.println ("AntServlet Command: " + 
-                build_command);
+                buildCommand);
         }
-        String file = config.getInitParameter("build_file");
+        String file = config.getInitParameter("buildFile");
         if (file != null)
         {
-            build_file = new File(file);
+            buildFile = new File(file);
             System.out.println ("AntServlet File: " + 
-                build_file.getAbsolutePath());
+                buildFile.getAbsolutePath());
         }
     }
 
@@ -156,7 +156,7 @@ public class AntServlet
             BufferedReader in = null;
             try
             {
-                Process pro = runtime.exec(build_command + " " + build_file + 
+                Process pro = runtime.exec(buildCommand + " " + buildFile + 
                     " " + target);
                 in = new BufferedReader(
                                        new InputStreamReader(

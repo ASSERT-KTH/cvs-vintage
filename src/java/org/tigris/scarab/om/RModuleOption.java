@@ -54,8 +54,6 @@ import java.sql.Connection;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.ObjectKey;
-import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
@@ -70,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleOption
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleOption.java,v 1.35 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: RModuleOption.java,v 1.36 2003/03/28 00:54:58 jon Exp $
  */
 public class RModuleOption 
     extends BaseRModuleOption
