@@ -34,9 +34,9 @@ import org.jboss.util.XmlHelper;
  * The ConfigurationService MBean is loaded when JBoss starts up by the
  * JMX MLet.
  *
- * <p>The ConfigurationService in turn loads the jboss.jcml configuration 
- *    when {@link #loadConfiguration} is invoked. This instantiates JBoss 
- *    specific mbean services that wish to be controlled by the JBoss 
+ * <p>The ConfigurationService in turn loads the jboss.jcml configuration
+ *    when {@link #loadConfiguration} is invoked. This instantiates JBoss
+ *    specific mbean services that wish to be controlled by the JBoss
  *    {@link ServiceControl}/{@link Service} lifecycle service.
  *
  * @see org.jboss.util.Service
@@ -45,7 +45,7 @@ import org.jboss.util.XmlHelper;
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  Scott_Stark@displayscape.com
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class ConfigurationService
     extends ServiceMBeanSupport
@@ -56,10 +56,10 @@ public class ConfigurationService
 
     /** The name of the file that running state will be written into. */
     public static final String RUNNING_STATE_FILE = "jboss-auto.jcml";
-    
+
     /** Primitive type name -> class map. */
     private static Hashtable primitives = new Hashtable();
-    
+
     /** Setup the primitives map. */
     static {
         primitives.put("int", Integer.TYPE);
@@ -68,7 +68,7 @@ public class ConfigurationService
         primitives.put("float", Float.TYPE);
         primitives.put("long", Long.TYPE);
     }
-    
+
     /**
      * A mapping from the Service interface method names to the
      * corresponding index into the ServiceProxy.hasOp array.
@@ -84,22 +84,22 @@ public class ConfigurationService
         serviceOpMap.put("destroy", new Integer(2));
         serviceOpMap.put("stop", new Integer(3));
     }
-    
+
 
     /** Instance logger. */
     private final Log log = Log.createLog(getName());
-    
+
     /** The MBean server which this service is registered in. */
     private MBeanServer server;
-    
+
     /** The name of the ServiceControl service. */
     private ObjectName serviceControl;
-    
+
     /** Flag to indicate if attribute values should be automatically trimmed. */
     private boolean autoTrim;
-    
+
     // Constructors --------------------------------------------------
-    
+
     /**
      * Construct a <tt>ConfigurationService</tt>.
      *
@@ -108,7 +108,7 @@ public class ConfigurationService
     public ConfigurationService(final boolean autoTrim) {
         this.autoTrim = autoTrim;
     }
-    
+
     /**
      * Construct a <tt>ConfigurationService</tt> that auto-trim
      * attribute values.
@@ -116,9 +116,9 @@ public class ConfigurationService
     public ConfigurationService() {
         this(true);
     }
-    
+
     // Public --------------------------------------------------------
-    
+
     /**
      * Get the attribute value auto-trim flag.
      *
@@ -127,7 +127,7 @@ public class ConfigurationService
     public boolean getAutoTrim() {
         return autoTrim;
     }
-    
+
     /**
      * Get the name of this object.  Always ignores the given
      * object name.
@@ -165,13 +165,13 @@ public class ConfigurationService
         if (server.isRegistered(serviceControl) == false)
             throw new IllegalStateException
                 ("Failed to find ServiceControl mbean, name=" + serviceControl);
-            
+
         try {
             // Set configuration to MBeans from XML
             NodeList nl = configuration.getElementsByTagName("mbean");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element mbeanElement = (Element)nl.item(i);
-                
+
                 // get the name of the mbean
                 ObjectName objectName = parseObjectName(mbeanElement);
                 MBeanInfo info;
@@ -182,7 +182,7 @@ public class ConfigurationService
                     // It's ok, skip to next one
                     continue;
                 }
-                
+
                 // Set attributes
                 NodeList attrs = mbeanElement.getElementsByTagName("attribute");
                 for (int j = 0; j < attrs.getLength(); j++) {
@@ -190,11 +190,11 @@ public class ConfigurationService
                     String attributeName = attributeElement.getAttribute("name");
                     if (attributeElement.hasChildNodes()) {
                         String attributeValue = ((Text)attributeElement.getFirstChild()).getData();
-                        
+
                         if (autoTrim) {
                             attributeValue = attributeValue.trim();
                         }
-                        
+
                         MBeanAttributeInfo[] attributes = info.getAttributes();
                         for (int k = 0; k < attributes.length; k++) {
                             if (attributeName.equals(attributes[k].getName())) {
@@ -208,16 +208,16 @@ public class ConfigurationService
                                 PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
                                 editor.setAsText(attributeValue);
                                 Object value = editor.getValue();
-                                
+
                                 log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
                                 server.setAttribute(objectName, new Attribute(attributeName, value));
-                                
+
                                 break;
                             }
                         }
                     }
                 }
-                
+
                 // Register the mbean with the JBoss ServiceControl mbean
                 registerService(objectName, info, mbeanElement);
             }
@@ -238,13 +238,13 @@ public class ConfigurationService
      */
     public String save() throws Exception {
         Writer out = new StringWriter();
-        
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
-        
+
         Element serverElement = doc.createElement("server");
-        
+
         // Store attributes as XML
         Iterator mbeans = server.queryMBeans(null, null).iterator();
         while (mbeans.hasNext()) {
@@ -252,7 +252,7 @@ public class ConfigurationService
             ObjectName name = (ObjectName)instance.getObjectName();
             Element mbeanElement = doc.createElement("mbean");
             mbeanElement.setAttribute("name", name.toString());
-            
+
             MBeanInfo info = server.getMBeanInfo(name);
             mbeanElement.setAttribute("code", info.getClassName());
             MBeanAttributeInfo[] attributes = info.getAttributes();
@@ -264,30 +264,30 @@ public class ConfigurationService
                     }
                     Element attributeElement = doc.createElement("attribute");
                     Object value = server.getAttribute(name, attributes[i].getName());
-                    
+
                     attributeElement.setAttribute("name", attributes[i].getName());
-                    
+
                     if (value != null) {
                         attributeElement.appendChild(doc.createTextNode(value.toString()));
                     }
-                        
+
                     mbeanElement.appendChild(attributeElement);
                     hasAttributes = true;
                 }
             }
-            
+
             if (hasAttributes) {
                 serverElement.appendChild(mbeanElement);
             }
         }
-        
+
         doc.appendChild(serverElement);
-        
+
         // Write configuration
         XmlHelper.write(out, doc);
-        
+
         out.close();
-        
+
         // Return configuration
         return out.toString();
     }
@@ -302,11 +302,11 @@ public class ConfigurationService
     public void saveConfiguration() throws Exception {
         // Get XML
         String xml = save();
-        
+
         // Get JCML file
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL confFile = loader.getResource(RUNNING_STATE_FILE);
-        
+
         if (confFile != null) {
             // Store to auto-saved JCML file
             PrintWriter out = null;
@@ -324,7 +324,7 @@ public class ConfigurationService
             }
         }
     }
-    
+
     /**
      * Load the configuration from the {@link #CONFIGURATION_FILE},
      * installs and initailize configured MBeans and registeres the
@@ -341,26 +341,32 @@ public class ConfigurationService
     public void loadConfiguration() throws Exception {
         // The class loader used to kocal the configuration file
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        
+
         // Load user config from XML, and create the MBeans
         InputStream input = loader.getResourceAsStream(CONFIGURATION_FILE);
-        String data = null;
+
+        //Modified by Vinay Menon
+        StringBuffer sbufData = new StringBuffer();
+        BufferedReader br = new BufferedReader(new InputStreamReader(input));
+
+        String sTmp;
+
         try {
-            byte[] buffer = new byte[input.available()];
-            input.read(buffer);
-            data = new String(buffer);
-        }
-        finally {
+            while((sTmp = br.readLine())!=null){
+               sbufData.append(sTmp);
+            }
+        } finally {
             input.close();
         }
-        
+        //Modification Ends
+
         // Parse XML
         Document doc;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder parser = factory.newDocumentBuilder();
-        
+
         try {
-            doc = parser.parse(new InputSource(new StringReader(data)));
+            doc = parser.parse(new InputSource(new StringReader(sbufData.toString())));
         } catch (SAXException e) {
             throw new IOException(e.getMessage());
         }
@@ -371,15 +377,15 @@ public class ConfigurationService
         // load each created mbean, set attributes and register services
         load(doc);
     }
-    
+
     // Protected -----------------------------------------------------
-    
+
     /**
      * Parse an object name from the given element attribute 'name'.
      *
      * @param element    Element to parse name from.
      * @return           Object name.
-     * 
+     *
      * @throws ConfigurationException   Missing attribute 'name'
      *                                  (thrown if 'name' is null or "").
      * @throws MalformedObjectNameException
@@ -392,12 +398,12 @@ public class ConfigurationService
             throw new ConfigurationException
             ("MBean attribute 'name' must be given.");
         }
-        
+
         return new ObjectName(name);
     }
-    
+
     /**
-     * Provides a wrapper around the information about which constructor 
+     * Provides a wrapper around the information about which constructor
      * that MBeanServer should use to construct a MBean.
      *
      * <p>XML syntax for contructor:
@@ -416,13 +422,13 @@ public class ConfigurationService
 
         /** An signature list. */
         public static final String EMPTY_SIGNATURE[] = {};
-        
+
         /** The constructor signature. */
         public String[] signature = EMPTY_SIGNATURE;
-        
+
         /** The constructor parameters. */
         public Object[] params = EMPTY_PARAMS;
-        
+
         /**
          * Create a ConstructorInfo object for the given configuration.
          *
@@ -435,7 +441,7 @@ public class ConfigurationService
             throws ConfigurationException
         {
             ConstructorInfo info = new ConstructorInfo();
-            
+
             NodeList list = element.getElementsByTagName("constructor");
             if (list.getLength() > 1) {
                 throw new ConfigurationException
@@ -443,13 +449,13 @@ public class ConfigurationService
             }
             else if (list.getLength() == 1) {
                 element = (Element)list.item(0);
-                
+
                 // get all of the "arg" elements
                 list = element.getElementsByTagName("arg");
                 int length = list.getLength();
                 info.params = new Object[length];
                 info.signature = new String[length];
-                
+
                 // decode the values into params & signature
                 for (int j=0; j<length; j++) {
                     Element arg = (Element)list.item(j);
@@ -460,11 +466,11 @@ public class ConfigurationService
                     info.params[j] = arg.getAttribute("value");
                 }
             }
-            
+
             return info;
         }
     }
-    
+
     /**
      * Parses the given configuration document and creates MBean
      * instances in the current MBean server.
@@ -479,15 +485,15 @@ public class ConfigurationService
         try {
             ObjectName loader =
                 new ObjectName(server.getDefaultDomain(), "service", "MLet");
-            
+
             // Set configuration to MBeans from XML
             NodeList nl = configuration.getElementsByTagName("mbean");
             for (int i = 0; i < nl.getLength(); i++) {
                 Element mbeanElement = (Element)nl.item(i);
-                
+
                 // get the name of the mbean
                 ObjectName objectName = parseObjectName(mbeanElement);
-                
+
                 MBeanInfo info;
                 try {
                     info = server.getMBeanInfo(objectName);
@@ -499,12 +505,12 @@ public class ConfigurationService
                         throw new ConfigurationException
                             ("missing 'code' attribute");
                     }
-                    
+
                     try {
                         // get the constructor params/sig to use
                         ConstructorInfo constructor =
                             ConstructorInfo.create(mbeanElement);
-                        
+
                         // Create the MBean instance
                         ObjectInstance instance =
                             server.createMBean(code,
@@ -517,7 +523,7 @@ public class ConfigurationService
                         log.error("Could not create MBean " +
                                   objectName + "(" + code + ")");
                         logException(ex);
-                        
+
                         // Ah what the heck.. skip it
                         continue;
                     }
@@ -532,7 +538,7 @@ public class ConfigurationService
             throw (Exception)e;
         }
     }
-    
+
     /**
      * Checks if an attribute of a given class is writtable.
      *
@@ -571,7 +577,7 @@ public class ConfigurationService
             log.error("Unable to check parameter of type '" + type + "'");
             return false;
         }
-        
+
         try {
             cls = Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -583,7 +589,7 @@ public class ConfigurationService
             Method m = cls.getMethod("set" + attribute, new Class[] { arg });
             return isSetterMethod(m);
         } catch (NoSuchMethodException ignore) {}
-        
+
         return false;
     }
 
@@ -603,7 +609,7 @@ public class ConfigurationService
 
         return false;
     }
-    
+
     /**
      * Register the mbean given by objectName with the ServiceControl service.
      *
@@ -623,7 +629,7 @@ public class ConfigurationService
         // Check for a serviceFactory attribute
         String serviceFactory = mbeanElement.getAttribute("serviceFactory");
         Service service = getServiceInstance(objectName, info, serviceFactory);
-        
+
         if (service != null) {
             Object[] args = { service };
             String[] signature = { "org.jboss.util.Service" };
@@ -634,11 +640,11 @@ public class ConfigurationService
             }
         }
     }
-    
+
     /**
-     * Get the Service interface through which the mbean given by 
+     * Get the Service interface through which the mbean given by
      * objectName will be managed.
-     * 
+     *
      * @param objectName
      * @param info
      * @param serviceFactory
@@ -664,10 +670,10 @@ public class ConfigurationService
             InvocationHandler handler = new ServiceProxy(objectName, opInfo);
             service = (Service) Proxy.newProxyInstance(loader, interfaces, handler);
         }
-        
+
         return service;
     }
-    
+
     /**
      * Go through the myriad of nested JMX exception to pull out the
      * true exception if possible and log it.
@@ -686,7 +692,7 @@ public class ConfigurationService
         } else if (e instanceof ReflectionException) {
             e = ((ReflectionException)e).getTargetException();
         }
-        
+
         log.exception(e);
     }
 
@@ -702,7 +708,7 @@ public class ConfigurationService
     {
         private boolean[] hasOp = { false, false, false, false };
         private ObjectName objectName;
-        
+
         /**
          * Go through the opInfo array and for each operation that
          * matches on of the Service interface methods set the corresponding
@@ -716,7 +722,7 @@ public class ConfigurationService
         {
             this.objectName = objectName;
             int opCount = 0;
-            
+
             for (int op = 0; op < opInfo.length; op ++) {
                 MBeanOperationInfo info = opInfo[op];
                 String name = info.getName();
@@ -724,24 +730,24 @@ public class ConfigurationService
                 if (opID == null) {
                     continue;
                 }
-                    
+
                 // Validate that is a no-arg void return type method
                 if (info.getReturnType().equals("void") == false)
                     continue;
                 if (info.getSignature().length != 0)
                     continue;
-                
+
                 hasOp[opID.intValue()] = true;
                 opCount++;
             }
-            
+
             // Log a warning if the mbean does not implement
             // any Service methods
             if (opCount == 0)
                 log.warning(objectName +
                             " does not implement any Service methods");
         }
-        
+
         /**
          * Map the method name to a Service interface method index and
          * if the corresponding hasOp array element is true, dispatch the
@@ -759,7 +765,7 @@ public class ConfigurationService
         {
             String name = method.getName();
             Integer opID = (Integer) serviceOpMap.get(name);
-            
+
             if (opID != null && hasOp[opID.intValue()] == true ) {
                 try {
                     String[] sig = {}
@@ -772,7 +778,7 @@ public class ConfigurationService
                     logException(e);
                 }
             }
-            
+
             return null;
         }
     }
