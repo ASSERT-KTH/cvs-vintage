@@ -35,7 +35,7 @@ import org.jboss.metadata.XmlLoadable;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -172,48 +172,11 @@ public abstract class EnterpriseInstanceCache
 		}
 	}
 
-	/**
-	 * Returns the minimum capacity of the cache.
-	 */
-	public int getMinCapacity() {return m_minCapacity;}
-	/**
-	 * Returns the maximum capacity of the cache.
-	 */
-	public int getMaxCapacity() {return m_maxCapacity;}
-
 	// XmlLoadable implementation ----------------------------------------------
 	public void importXml(Element element) throws DeploymentException 
 	{
-		String min = MetaData.getElementContent(MetaData.getOptionalChild(element, "MinimumCapacity"));
-		String max = MetaData.getElementContent(MetaData.getOptionalChild(element, "MaximumCapacity"));
-		try 
-		{
-			if (min != null)
-			{
-				int s = Integer.parseInt(min);
-				if (s <= 0) 
-				{
-					throw new DeploymentException("Min cache capacity can't be <= 0");
-				}
-				m_minCapacity = s;
-			}
-			if (max != null)
-			{
-				int s = Integer.parseInt(max);
-				if (s <= 0)
-				{
-					throw new DeploymentException("Max cache capacity can't be <= 0");
-				}
-				m_maxCapacity = s;
-			}				
-		}
-		catch (NumberFormatException x) 
-		{
-			throw new DeploymentException("Can't parse cache configuration", x);
-		}
-		
 		// This one is mandatory
-		String p = MetaData.getElementContent(MetaData.getUniqueChild(element, "CachePolicy"));
+		String p = MetaData.getElementContent(MetaData.getUniqueChild(element, "cache-policy"));
 		try 
 		{
 			Class cls = Thread.currentThread().getContextClassLoader().loadClass(p);
@@ -247,12 +210,14 @@ public abstract class EnterpriseInstanceCache
 	{
 		getCache().init();
 		m_passivationHelper = new PassivationHelper();
+		String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
+		ClassLoader cl = getContainer().getClassLoader();
+		m_passivator = new PassivatorQueue(threadName, cl);
 	}
 	/* From Service interface*/
 	public void start() throws Exception 
 	{
 		getCache().start();
-		m_passivator = new WorkerQueue("Passivator Thread for " + getContainer().getBeanMetaData().getEjbName());
 		m_passivator.start();
 	}
 	/* From Service interface*/
@@ -494,5 +459,31 @@ abstract class PassivationJob implements Executable
 	final synchronized boolean isExecuted() 
 	{
 		return m_executed;
+	}
+}
+
+class PassivatorQueue extends WorkerQueue
+{
+	/**
+	 * Creates a new passivator queue with default thread name of
+	 * "Passivator Thread".
+	 */
+	PassivatorQueue() 
+	{
+		this("Passivator Thread", null);
+	}
+	/**
+	 * Creates a new passivator queue with the given thread name and given
+	 * context class loader. <br>
+	 * @param threadName the name of the passivator thread
+	 * @param cl the context class loader; if null the context class loader is not set.
+	 */
+	PassivatorQueue(String threadName, ClassLoader cl) 
+	{
+		super(threadName);
+		if (cl != null) 
+		{
+			m_queueThread.setContextClassLoader(cl);
+		}
 	}
 }
