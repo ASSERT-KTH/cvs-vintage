@@ -1,4 +1,4 @@
-// $Id: FigDependency.java,v 1.12 2004/07/26 13:33:08 bobtarling Exp $
+// $Id: FigDependency.java,v 1.13 2004/08/12 21:16:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,10 +44,14 @@ import ru.novosoft.uml.MElementEvent;
  */
 public class FigDependency extends FigEdgeModelElement {
 
+    private ArrowHeadGreater endArrow;
+    
     ////////////////////////////////////////////////////////////////
     // constructors
-    protected ArrowHeadGreater endArrow;
 
+    /**
+     * Constructor
+     */
     public FigDependency() {
         addPathItem(getStereotypeFig(), new PathConvPercent(this, 50, 10));
         endArrow = new ArrowHeadGreater();
@@ -59,17 +63,28 @@ public class FigDependency extends FigEdgeModelElement {
         getFig().setDashed(true);
     }
 
+    /**
+     * Constructor that sets the UML element
+     * @param edge the UML element
+     */
     public FigDependency(Object edge) {
         this();
         setOwner(edge);
     }
 
+    /**
+     * @param edge theUML element
+     * @param lay the layer
+     */
     public FigDependency(Object edge, Layer lay) {
         this();
         setOwner(edge);
         setLayer(lay);
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
+     */
     public void setOwner(Object own) {
         Object oldOwner = getOwner();
         super.setOwner(own);
