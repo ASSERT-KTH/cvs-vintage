@@ -70,6 +70,7 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
 import org.jboss.util.jmx.ObjectNameFactory;
 
+import org.w3c.dom.Element;
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
  * functions as the central hub of all metadata and plugins. Through this
@@ -90,7 +91,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.97 $
+ * @version $Revision: 1.98 $
  */
 public abstract class Container
    extends ServiceMBeanSupport
@@ -1149,8 +1150,11 @@ public abstract class Container
       implements Interceptor
    {
       protected final Logger log = Logger.getLogger(this.getClass());
+      protected Element config = null;
       
       public void setContainer(Container con) {}
+
+      public void setConfiguration(Element e) { config = e; }
       
       public void setNext(Interceptor interceptor) {}
       
