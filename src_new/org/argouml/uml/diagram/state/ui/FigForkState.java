@@ -1,4 +1,4 @@
-// $Id: FigForkState.java,v 1.11 2004/07/26 18:16:37 mvw Exp $
+// $Id: FigForkState.java,v 1.12 2004/08/03 19:59:49 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.11 2004/07/26 18:16:37 mvw Exp $
+// $Id: FigForkState.java,v 1.12 2004/08/03 19:59:49 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -58,7 +58,6 @@ public class FigForkState extends FigStateVertex {
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private FigRect bigPort;
     private FigRect head;
 
     ////////////////////////////////////////////////////////////////
@@ -68,10 +67,10 @@ public class FigForkState extends FigStateVertex {
      * The main constructor.
      */
     public FigForkState() {
-        bigPort = new FigRect(X, Y, WIDTH, HEIGHT, Color.cyan, Color.cyan);
+        setBigPort(new FigRect(X, Y, WIDTH, HEIGHT, Color.cyan, Color.cyan));
         head = new FigRect(X, Y, WIDTH, HEIGHT, Color.black, Color.black);
         // add Figs to the FigNode in back-to-front order
-        addFig(bigPort);
+        addFig(getBigPort());
         addFig(head);
 
         setBlinkPorts(false); //make port invisble unless mouse enters
@@ -94,7 +93,7 @@ public class FigForkState extends FigStateVertex {
     public Object clone() {
         FigForkState figClone = (FigForkState) super.clone();
         Iterator it = figClone.getFigs(null).iterator();
-        figClone.bigPort = (FigRect) it.next();
+        figClone.setBigPort((FigRect) it.next());
         figClone.head = (FigRect) it.next();
         return figClone;
     }
@@ -111,7 +110,7 @@ public class FigForkState extends FigStateVertex {
             h = 9;
         else
             w = 9;
-        bigPort.setBounds(x, y, w, h);
+        getBigPort().setBounds(x, y, w, h);
         head.setBounds(x, y, w, h);
 
         calcBounds(); //_x = x; _y = y; _w = w; _h = h;
