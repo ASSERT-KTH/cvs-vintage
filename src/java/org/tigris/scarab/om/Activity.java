@@ -66,7 +66,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.36 2002/10/15 20:54:39 jon Exp $
+ * @version $Id: Activity.java,v 1.37 2002/10/15 21:59:41 jmcnally Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -150,6 +150,7 @@ public class Activity
             Criteria crit = new Criteria();
             crit.add(ActivityPeer.ISSUE_ID, getIssueId());
             crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
+            crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
             crit.add(ActivityPeer.END_DATE, null);
             List result = ActivityPeer.doSelect(crit);
             if (result.size() == 1) 
@@ -173,6 +174,7 @@ public class Activity
                 crit = new Criteria();
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
                 crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
+                crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
                 result = ActivityPeer.doSelect(crit);
                 if (result.size() != 0) 
                 {
