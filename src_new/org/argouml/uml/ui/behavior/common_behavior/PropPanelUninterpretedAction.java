@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.13 2003/06/21 07:53:08 mkl Exp $
+// $Id: PropPanelUninterpretedAction.java,v 1.1 2003/06/21 07:53:08 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,12 +40,12 @@ import org.argouml.util.ConfigLoader;
  * @todo this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
-public class PropPanelCallAction extends PropPanelAction {
+public class PropPanelUninterpretedAction extends PropPanelAction {
 
     ////////////////////////////////////////////////////////////////
     // contructors
-    public PropPanelCallAction() {
-        super("CallAction", _callActionIcon);
+    public PropPanelUninterpretedAction() {
+        super("UninterpretedAction", _callActionIcon);
     }
 
-} /* end class PropPanelCallAction */
+} 
