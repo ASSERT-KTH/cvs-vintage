@@ -82,7 +82,7 @@ import org.apache.tomcat.core.*;
  * In Servlet terminology there are many types of containers:
  * virtual host, context, prefix map, extension map, security
  * prefix and extension maps.
- * 
+ *
  * It is possible to add/remove containers at runtime (usefull
  * for Invoker or Jsp servlet - if they want to avoid double
  * servlet call overhead ). To make this possible for Jsps we
@@ -110,7 +110,7 @@ public class Container implements Cloneable{
     public static final int DEFAULT_MAP=4;
     int mapType=0;
 
-    
+
     // Common map parameters ( path prefix, ext, etc)
     String transport;
     String path;
@@ -129,7 +129,8 @@ public class Container implements Cloneable{
     // interceptor cache - avoid Vector enumeration
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
-    RequestInterceptor rCachedInterceptors[]={};
+    RequestInterceptor rCachedRequestInterceptors[]={};
+    ContextInterceptor rCachedContextInterceptors[]={};
     /** The handler associated with this container.
      */
     Handler handler;
@@ -419,37 +420,20 @@ public class Container implements Cloneable{
 	return notes[pos];
     }
 
-    public RequestInterceptor[] getCachedInterceptors() {
-        return rCachedInterceptors;
+    public RequestInterceptor[] getCachedRequestInterceptors() {
+        return rCachedRequestInterceptors;
     }
 
-    public void setCachedInterceptors(RequestInterceptor[] newRCachedInterceptors) {
-        rCachedInterceptors = newRCachedInterceptors;
+    public void setCachedRequestInterceptors(RequestInterceptor[] newRCachedInterceptors) {
+        rCachedRequestInterceptors = newRCachedInterceptors;
+    }
+    public ContextInterceptor[] getCachedContextInterceptors() {
+        return rCachedContextInterceptors;
     }
 
-    public RequestInterceptor[] getRequestInterceptors( Request req ) {
-        Container ct=req.getContext().getContainer();
-        RequestInterceptor[] ari=ct.getCachedInterceptors();
-        if (ari.length == 0){
-            RequestInterceptor[] cri=ct.getRequestInterceptors();
-            RequestInterceptor[] gri=getRequestInterceptors();
-            if  (cri!=null && cri.length > 0) {
-                int al=cri.length+gri.length;
-                ari=new RequestInterceptor[al];
-                int i;
-                for ( i = 0 ; i < gri.length ; i++ ){
-                    ari[i]=gri[i];
-                }
-                for (int j = 0 ; j < cri.length ; j++ ){
-                    ari[i+j]=cri[j];
-                }
-            } else {
-                ari=gri;
-            }
-            ct.setCachedInterceptors(ari);
-        }
-
-	return ari;
+    public void setCachedContextInterceptors(ContextInterceptor[] newRCachedInterceptors) {
+        rCachedContextInterceptors = newRCachedInterceptors;
     }
+
 
 }

@@ -279,7 +279,7 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param credentials Password or other credentials to use in
      *  authenticating this username
      */
-    public synchronized boolean authenticate(String username
+    public synchronized boolean checkPassword(String username
             , String credentials) {
         try {
 
@@ -301,7 +301,6 @@ public final class JDBCRealm extends BaseInterceptor {
                     log(sm.getString("jdbcRealm.authDBReOpenFail"));
                     return false;
                 }
-                //dbConnection.setReadOnly(true);
             }
 
             // Create the authentication search prepared statement if necessary
@@ -495,7 +494,7 @@ public final class JDBCRealm extends BaseInterceptor {
         String user=(String)cred.get("username");
         String password=(String)cred.get("password");
 	
-	if( authenticate( user, password ) ) {
+	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
 	    req.setRemoteUser( user );
 	}
@@ -514,13 +513,13 @@ public final class JDBCRealm extends BaseInterceptor {
         String userRoles[]=null;
 
 	String user=req.getRemoteUser();
-	if( user==null ) 
+	if( user==null )
             return 401; //HttpServletResponse.SC_UNAUTHORIZED
-	
+
 	if( debug > 0 )
             log( "Controled access for " + user + " " + req + " "
                  + req.getContainer() );
-	
+
 	userRoles = getUserRoles( user );
 	req.setUserRoles( userRoles );
 

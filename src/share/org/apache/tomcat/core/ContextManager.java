@@ -347,7 +347,7 @@ public class ContextManager implements LogAware{
      * or after the admin added a new context.
      */
     public void initContext( Context ctx ) throws TomcatException {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextInit( ctx );
 	}
@@ -373,7 +373,7 @@ public class ContextManager implements LogAware{
 	    }
 	}
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextShutdown( ctx );
 	}
@@ -426,7 +426,7 @@ public class ContextManager implements LogAware{
 	// The mapping alghoritm may use more than path and host -
 	// if not now, then in future.
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContext( this, ctx );
 	}
@@ -447,7 +447,7 @@ public class ContextManager implements LogAware{
 
 	log( "Removing context " + context.toString());
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContext( this, context );
 	}
@@ -463,7 +463,7 @@ public class ContextManager implements LogAware{
 
 	if( debug>0 ) log( "Reloading context " + context.toString());
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].reload(  req, context );
 	}
@@ -475,7 +475,7 @@ public class ContextManager implements LogAware{
     public void addContainer( Container container )
     	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(container);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContainer( container);
 	}
@@ -486,7 +486,7 @@ public class ContextManager implements LogAware{
     public void removeContainer( Container container )
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(container);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContainer( container);
 	}
@@ -525,8 +525,30 @@ public class ContextManager implements LogAware{
 	XXX Todo: container-level interceptors are not supported.
 	Dynamic add of interceptors is not supported.
     */
+
     public RequestInterceptor[] getRequestInterceptors( Request req ) {
-        return defaultContainer.getRequestInterceptors( req );
+        Container ct=req.getContext().getContainer();
+        RequestInterceptor[] ari=ct.getCachedRequestInterceptors();
+        if (ari.length == 0){
+            RequestInterceptor[] cri=ct.getRequestInterceptors();
+            RequestInterceptor[] gri=getRequestInterceptors();
+            if  (cri!=null && cri.length > 0) {
+                int al=cri.length+gri.length;
+                ari=new RequestInterceptor[al];
+                int i;
+                for ( i = 0 ; i < gri.length ; i++ ){
+                    ari[i]=gri[i];
+                }
+                for (int j = 0 ; j < cri.length ; j++ ){
+                    ari[i+j]=cri[j];
+                }
+            } else {
+                ari=gri;
+            }
+            ct.setCachedRequestInterceptors(ari);
+        }
+
+	return ari;
     }
 
     /** Return the context interceptors as an array.
@@ -536,23 +558,10 @@ public class ContextManager implements LogAware{
 	access
     */
     public RequestInterceptor[] getRequestInterceptors() {
-//	if( rInterceptors == null ||
-//	    rInterceptors.length != requestInterceptors.size())
-//	{
-//	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
-//	    for( int i=0; i<rInterceptors.length; i++ ) {
-//		rInterceptors[i]=(RequestInterceptor)
-//		    requestInterceptors.elementAt(i);
-//	    }
-//	}
 	return defaultContainer.getRequestInterceptors();
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
-//	if(debug>0) log("Add contextInterceptor javaClass=\"" +
-//			   ci.getClass().getName() + "\" ");
-
-//	contextInterceptors.addElement( ci );
         defaultContainer.addContextInterceptor(ci);
     }
 
@@ -564,16 +573,35 @@ public class ContextManager implements LogAware{
 	access
     */
     public ContextInterceptor[] getContextInterceptors() {
-//	if( cInterceptors == null ||
-//	    cInterceptors.length != contextInterceptors.size())
-//	{
-//	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
-//	    for( int i=0; i<cInterceptors.length; i++ ) {
-//		cInterceptors[i]=(ContextInterceptor)contextInterceptors.
-//		    elementAt(i);
-//	    }
-//	}
 	return defaultContainer.getContextInterceptors();
+    }
+
+    public ContextInterceptor[] getContextInterceptors(Container ct) {
+        ContextInterceptor[] aci=ct.getCachedContextInterceptors();
+        if (aci.length == 0){
+            ContextInterceptor[] cci=ct.getContextInterceptors();
+            ContextInterceptor[] gci=getContextInterceptors();
+            if  (cci!=null && cci.length > 0) {
+                int al=cci.length+gci.length;
+                aci=new ContextInterceptor[al];
+                int i;
+                for ( i = 0 ; i < gci.length ; i++ ){
+                    aci[i]=gci[i];
+                }
+                for (int j = 0 ; j < cci.length ; j++ ){
+                    aci[i+j]=cci[j];
+                }
+            } else {
+                aci=gci;
+            }
+            ct.setCachedContextInterceptors(aci);
+        }
+
+	return aci;
+    }
+
+    public ContextInterceptor[] getContextInterceptors(Context ctx) {
+        return getContextInterceptors(ctx.getContainer());
     }
     // -------------------- Request processing / subRequest ------------------
     // -------------------- Main request processing methods ------------------
@@ -1283,7 +1311,7 @@ public class ContextManager implements LogAware{
     public void doPreServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].preServletInit( ctx, sw );
@@ -1364,5 +1392,6 @@ public class ContextManager implements LogAware{
     public void setContainer(Container newDefaultContainer) {
         defaultContainer = newDefaultContainer;
     }
+
 
 }
