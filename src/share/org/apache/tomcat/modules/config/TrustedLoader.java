@@ -107,6 +107,7 @@ public class TrustedLoader extends BaseInterceptor {
     {
 	if( state!=ContextManager.STATE_CONFIG ) return;
 
+	if( debug>0 ) log("TrustedLoader: " + state );
 	Enumeration ctxsE= cm.getContexts();
 	while( ctxsE.hasMoreElements() ) {
 	    Context context=(Context)ctxsE.nextElement();
@@ -133,12 +134,15 @@ public class TrustedLoader extends BaseInterceptor {
 	    loaderHelper.contextInit( context );
 
 	    Vector modV=new Vector();
+	    if(debug>0) log("loadInterceptors in a dummy classloader for setup " + context + " " +
+			    context.isTrusted() + " " + context.getDocBase());
 	    loadInterceptors( context, modules, modV );
 	    cm.setNote( "trustedLoader.currentContext", context );
 
 	    // Now add all modules to cm
 	    for( int i=0; i< modV.size(); i++ ) {
 		BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
+		if(debug>0) log( "Add dummy module, for configuration " + context.getDocBase() + " " + context);
 		cm.addInterceptor( bi );
 		allModules.addElement( bi );
 	    }	
@@ -154,6 +158,8 @@ public class TrustedLoader extends BaseInterceptor {
 	// like a reload, the modules will be removed and added back
 	if( ! ctx.isTrusted() ) return;
 
+	if(debug>0) log("contextInit " + ctx + " " + cm.getState());
+
 	File modules=getModuleFile( ctx );
 	if( modules==null ) return;
 
@@ -163,6 +169,7 @@ public class TrustedLoader extends BaseInterceptor {
     private  void reInitModules( Context ctx, File modules )
 	throws TomcatException
     {
+	if(debug>0) log("reInit " + modules );
 	// remove modules
 	for( int i=0; i< allModules.size(); i++ ) {
 	    BaseInterceptor bi=(BaseInterceptor)allModules.elementAt( i );
@@ -172,6 +179,7 @@ public class TrustedLoader extends BaseInterceptor {
 
 	// The real loader is set. 
 	Vector modV=new Vector();
+	if( debug > 0 ) log( "Loading the real module " + ctx + " " + modules);
 	loadInterceptors( ctx, modules, modV );
 	cm.setNote( "trustedLoader.currentContext", ctx );
 
@@ -205,7 +213,7 @@ public class TrustedLoader extends BaseInterceptor {
 	
 	XmlMapper xh=new XmlMapper();
 	xh.setClassLoader( ctx.getClassLoader());
-	xh.setDebug( debug );
+	//xh.setDebug( debug );
 
 	// no backward compat rules. The file must be self-contained,
 	// with <module> definition and the module itself

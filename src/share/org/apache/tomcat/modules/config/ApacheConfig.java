@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.29 2001/12/17 02:30:48 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.30 2001/12/17 05:24:09 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -149,7 +149,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.29 $ $Date: 2001/12/17 02:30:48 $
+	@version $Revision: 1.30 $ $Date: 2001/12/17 05:24:09 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -162,7 +162,7 @@ public class ApacheConfig  extends BaseJkConfig {
     /** default mod_jk log file location */
     public static final String JK_LOG_LOCATION = "logs/mod_jk.log";
     /** default location of mod_jk Apache plug-in. */
-    public static final String MOD_JK;
+    public static String MOD_JK;
     
     //set up some defaults based on OS type
     static{

@@ -122,7 +122,7 @@ import org.apache.tomcat.modules.server.Ajp12Interceptor;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-        @version $Revision: 1.4 $ $Date: 2001/08/19 22:47:04 $
+        @version $Revision: 1.5 $ $Date: 2001/12/17 05:24:09 $
  */
 public class JservConfig  extends BaseInterceptor { 
     
@@ -131,7 +131,7 @@ public class JservConfig  extends BaseInterceptor {
     /** default mod_jserv log file location */
     public static final String JSERV_LOG_LOCATION = "logs/mod_jserv.log";
     /** default location of mod_jserv Apache plug-in. */
-    public static final String MOD_JSERV;
+    public static  String MOD_JSERV;
     public static final String AJPV12="ajpv12";
     
     //set up some defaults based on OS type
