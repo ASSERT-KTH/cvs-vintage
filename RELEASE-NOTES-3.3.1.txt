@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.32 2002/02/05 03:56:55 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.33 2002/02/08 13:12:30 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -85,12 +85,12 @@ Bug No.  Description
          the locale and character set encoding of the directory listings
          are derived.
 
-         Added a delaySocketClose attribute to Http10Interceptor.  The
-         default is false.  If set true, a Thread.sleep(0) is executed
-         before the socket is closed.  This was needed by Cactus when
-         run on a high powered Windows XP box.  The sleep(0) helps ensure
-         the test get a chance to receive its input before the socket
-         is closed.  Otherwise, "Socket reset by peer" errors occur.
+         Added a socketCloseDelay attribute to Http10Interceptor.  The
+         default is -1, which disables the delay.  If set > 0, a
+         Thread.sleep(<delay>) is executed prior to reading and discarding
+         unread input and closing the socket.  This is intended to
+         help diagnose problems resulting from unread input that
+         arrives during the closing of the socket.
 
 	 Make the App-classloader configurable to allow using the 1.1
 	 loader even when running under Java2.  This should allow for better
@@ -129,6 +129,11 @@ Bug No.  Description
          not already been set.  This primarily affects the status code used
          when the StaticInterceptor module redirects a "directory" URL that
          doesn't end with a '/' and redirects to welcome files.
+
+         Added shutdown support using Ajp13 and updated StopTomcat task
+         to support automatic or explicit use of Ajp12 or Ajp13 protocol to
+         shutdown Tomcat.  This includes use of an optional "secret" password
+         with either protocol.
 
 
 Server:
@@ -223,7 +228,8 @@ Bug No.  Description
 
 5983	 Fix the flushing of unread POST data on the HTTP connector.  On the
 	 reported bug, it was mostly a nuisance.  In other cases (see 6143)
-	 it was causing major problems.
+	 it was causing major problems.  To avoid DOS attacks, the number
+         of flush attempts is configurable, with a default of 20.
 
 6234	 Recycle the Writer in the ResponseFacade if it is the error state when
 	 the facade is recycled.
