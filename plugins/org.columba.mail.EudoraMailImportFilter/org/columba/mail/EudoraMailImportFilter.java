@@ -194,11 +194,14 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			return dateHeader.toString();
 		} catch (java.util.NoSuchElementException e) {
 			// invalid date format - not enough tokens in it!!
-			ColumbaLogger.log.severe(
-				"Not enough tokens in \""
-					+ dateStr
-					+ "\" to create Date: header. Returning null",
-				e);
+			
+			//ColumbaLogger.log.severe(
+			//	"Not enough tokens in \""
+			//		+ dateStr
+			//		+ "\" to create Date: header. Returning null",
+			//	e);
+			ColumbaLogger.log.severe("Not enough tokens in \""
+					+ dateStr + "\" to create Date: header. Returning null");
 			return null;
 		}
 	} // ** End of method getDateHeader
@@ -431,7 +434,9 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			saveMessage(buf.toString(), worker, destFolder);
 			return true;
 		} catch (Exception e) {
-			ColumbaLogger.log.severe("Error saving converted message", e);
+			//ColumbaLogger.log.severe("Error saving converted message", e);
+			ColumbaLogger.log.severe("Error saving converted message: " 
+					+ e.getMessage());
 			return false;
 		}
 	} // ** End of method saveMessage
@@ -560,7 +565,9 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 			try {
 				line = reader.readLine();
 			} catch (IOException e) {
-				ColumbaLogger.log.severe("Error while looking for charset", e);
+				//ColumbaLogger.log.severe("Error while looking for charset", e);
+				ColumbaLogger.log.severe("Error while looking for charset: "
+						+ e.getMessage());
 			}
 			String charset = null;
 			while (line != null) {
@@ -605,9 +612,11 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 				try {
 					line = reader.readLine();
 				} catch (IOException e) {
-					ColumbaLogger.log.severe(
-						"Error while looking for charset",
-						e);
+					//ColumbaLogger.log.severe(
+					//	"Error while looking for charset",
+					//	e);
+					ColumbaLogger.log.severe("Error while looking for charset: "
+							+ e.getMessage());
 					line = null; // this will terminate the loop
 				}
 			} // end of while loop
@@ -760,7 +769,9 @@ public class EudoraMailImportFilter extends DefaultMailboxImporter {
 				return retVal;
 			}
 		} catch (IOException e) {
-			ColumbaLogger.log.severe("Error parsing body for attachments", e);
+			//ColumbaLogger.log.severe("Error parsing body for attachments", e);
+			ColumbaLogger.log.severe("Error parsing body for attachments: "
+					+ e.getMessage());
 			return null;
 		}
 	} // ** End of method createAttachmentListFromAttachmentConverted
