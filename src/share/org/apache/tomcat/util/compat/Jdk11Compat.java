@@ -117,7 +117,7 @@ public class Jdk11Compat {
         int c=0;
         do{
             while(! (cl instanceof SimpleClassLoader))
-                cl=((DependClassLoader)cl).getParent();
+                cl=((DependClassLoader)cl).getParentLoader();
             if (depth==c) return ((SimpleClassLoader)cl).getURLs();
             c++;
             cl=((SimpleClassLoader)cl).getParentLoader();
