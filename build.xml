@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.49 2002/01/03 04:00:56 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.50 2002/01/15 16:45:55 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -338,6 +338,7 @@
         <include name="org/jboss/jmx/adaptor/ejb/*Bean.java"/>
         <exclude name="org/jboss/jmx/adaptor/ejb/*MBean.java"/>
       </fileset>
+      <packageSubstitution packages="ejb" substituteWith="interfaces"/>
       <remoteinterface/>
       <homeinterface/>
       <session/>
@@ -358,6 +359,7 @@
         <include name="org/jboss/management/mejb/*Bean.java"/>
         <exclude name="org/jboss/management/mejb/*MBean.java"/>
       </fileset>
+      <packageSubstitution packages="ejb" substituteWith="interfaces"/>
       <remoteinterface/>
       <homeinterface/>
       <session/>
