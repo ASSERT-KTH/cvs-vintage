@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/TomcatServletEngine.java,v 1.3 2000/02/09 20:36:09 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/09 20:36:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/TomcatServletEngine.java,v 1.4 2000/05/24 00:47:42 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/24 00:47:42 $
  *
  * ====================================================================
  * 
@@ -62,7 +62,6 @@ package org.apache.jasper.runtime;
 
 import java.io.File;
 import javax.servlet.ServletContext;
-import org.apache.tomcat.core.ServletContextFacade;
 
 /**
  * Implementation of Servlet Engine that is used when the JSP engine
