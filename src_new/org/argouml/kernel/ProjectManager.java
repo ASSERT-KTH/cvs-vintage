@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ProjectManager.java,v 1.8 2003/05/05 09:48:24 kataka Exp $
+// $Id: ProjectManager.java,v 1.9 2003/05/05 19:44:02 kataka Exp $
 
 package org.argouml.kernel;
 
@@ -39,6 +39,7 @@ import org.apache.log4j.Category;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.uml.UmlHelper;
+import org.argouml.ui.ArgoDiagram;
 import org.argouml.xml.argo.ArgoParser;
 import org.argouml.xml.xmi.XMIParser;
 import org.argouml.xml.xmi.XMIReader;
@@ -155,8 +156,11 @@ public final class ProjectManager {
      * @param newProject The new project.
      */
     public void setCurrentProject(Project newProject) {
-        Project oldProject = _currentProject;
+        Project oldProject = _currentProject;        
         _currentProject = newProject;
+        if (_currentProject.getActiveDiagram() == null) {
+            _currentProject.setActiveDiagram((ArgoDiagram)_currentProject.getDiagrams().get(0));
+        }
         firePropertyChanged(CURRENT_PROJECT_PROPERTY_NAME, oldProject, newProject);
     }
 
