@@ -321,6 +321,7 @@ public class GTest  {
 	    HttpResponse resp=httpRequest.getHttpResponse();
 
 	    result=httpClient.getResult();
+	    failMessage=httpClient.getFailureMessage();
 
 	    if( "text".equals(outType) )
 		textReport();
