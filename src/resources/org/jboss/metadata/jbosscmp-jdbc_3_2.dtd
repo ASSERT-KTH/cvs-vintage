@@ -489,8 +489,9 @@ The type-mapping element contains a named java to sql mapping.
 This includes both type mapping and function mapping.
 -->
 <!ELEMENT type-mapping (name, row-locking-template, pk-constraint-template,
-      fk-constraint-template, alias-header-prefix, alias-header-suffix,
-      alias-max-length, subquery-supported, true-mapping, false-mapping,
+      fk-constraint-template, auto-increment-template?, alias-header-prefix,
+      alias-header-suffix, alias-max-length, subquery-supported,
+      true-mapping, false-mapping,
       function-mapping*, mapping+, entity-commands*)>
 
 <!--
@@ -545,6 +546,12 @@ be empty. The most common form of a foreign key constraint follows:
 ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)
 -->
 <!ELEMENT fk-constraint-template (#PCDATA)>
+
+<!--
+This element is used to define an auto-increment template
+-->
+<!ELEMENT auto-increment-template (#PCDATA)>
+
 
 <!--
 An alias header is prepended to a generated table alias by the EJB-QL compiler
@@ -610,8 +617,8 @@ follows:
 <!--
 Unknown primary key configuration
 -->
-<!ELEMENT unknown-pk (unknown-pk-class, field-name?, read-only?, read-time-out?,
-   column-name?, (jdbc-type, sql-type)?, auto-increment? )>
+<!ELEMENT unknown-pk (key-generator-factory?, unknown-pk-class, field-name?, read-only?, read-time-out?,
+   column-name?, (jdbc-type, sql-type)?, auto-increment?)>
 
 <!--
 The unknown primary key class.
