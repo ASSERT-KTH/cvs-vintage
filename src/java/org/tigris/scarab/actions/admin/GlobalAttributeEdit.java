@@ -58,6 +58,7 @@ import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeGroup;
 import org.tigris.scarab.om.AttributeType;
 import org.tigris.scarab.om.AttributeTypeManager;
 import org.tigris.scarab.om.ROptionOption;
@@ -66,6 +67,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -75,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.55 2003/06/08 18:43:47 dlr Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.56 2003/06/17 04:00:30 irk_tpt Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -156,6 +158,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     }
                 }
                 attr.save();
+                mapAttribute(data,context);
                 if (success)
                 {
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
@@ -452,24 +455,21 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
         }
     }
-    
-    /**
-     * Manages clicking of the cancel button.
-     * FIXME! document that the doCancel method alters the database
-     * Why does it do this?!!
+ /*
+     * manages attribute to module/issue type mapping.
      */
-    public void doCancel(RunData data, TemplateContext context)
+
+    private void mapAttribute(RunData data, TemplateContext context)
         throws Exception
     {
-        // If they came from the manage module page,
-        // Add the attribute and return there.
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         String lastTemplate = getCancelTemplate(data);
         Attribute attribute = scarabR.getAttribute();
-        if (log().isDebugEnabled()) 
+
+        if (log().isDebugEnabled())
         {
-            log().debug("called doCancel; lastTemplate=" + lastTemplate + 
+            log().debug("called mapAttribute; lastTemplate=" + lastTemplate +
                         " and attribute id=" + attribute.getAttributeId());
         }
         if (lastTemplate != null && attribute.getAttributeId() != null)
@@ -482,39 +482,67 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 String groupId = data.getParameters().getString("groupId");
                 if (groupId != null)
                 {
-                    if (log().isDebugEnabled()) 
+                    if (log().isDebugEnabled())
                     {
                         log().debug("Adding attribute to group id=" + groupId);
                     }
-                    scarabR.getAttributeGroup(groupId).addAttribute(attribute);
-                    scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+                    AttributeGroup attributeGroup = scarabR.getAttributeGroup(groupId);
+                    if(!attributeGroup.hasAttribute(attribute))
+                    {
+                        scarabR.getAttributeGroup(groupId).addAttribute(attribute);
+                        scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+                    }
                 }
             }
             else if (lastTemplate.equals("admin,ArtifactTypeEdit.vm"))
             {
-                if (log().isDebugEnabled()) 
+	        Module currentModule = scarabR.getCurrentModule();
+                IssueType issueType = scarabR.getIssueType();
+                if (log().isDebugEnabled())
                 {
-                    log().debug("Adding attribute to module id=" + 
-                                scarabR.getCurrentModule().getModuleId());
+                    log().debug("Adding attribute to module id=" +
+                                currentModule.getModuleId());
                 }
                 // Add user attribute to module
-                scarabR.getCurrentModule()
-                       .addRModuleAttribute(scarabR.getIssueType(), attribute);
+                if(!attribute.hasMapping(currentModule,issueType))
+                {
+                      currentModule.addRModuleAttribute(issueType,attribute);
+                      scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+                }
+
             }
             else if (lastTemplate.equals("admin,GlobalArtifactTypeEdit.vm"))
             {
                 IssueType issueType = scarabR.getIssueType();
-                if (log().isDebugEnabled()) 
+                if (log().isDebugEnabled())
                 {
                     log().debug("Assuming user attribute and adding to "
                                 + "issuetype id "
                                 + issueType.getIssueTypeId());
                 }
                 // Add user attribute to issue type
-                issueType.addRIssueTypeAttribute(attribute);
-                scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+                if(!attribute.hasMapping(issueType))
+                {
+                   issueType.addRIssueTypeAttribute(attribute);
+                   scarabR.setConfirmMessage(l10n.get("AttributeAdded"));
+                }
             }
             ScarabCache.clear();
+        }
+
+    }
+
+    /**
+     * Manages clicking of the cancel button.
+     * FIXME! document that the doCancel method alters the database
+     * Why does it do this?!!
+     */
+    public void doCancel(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String lastTemplate = getCancelTemplate(data);
+        if (lastTemplate != null)
+        {
             setTarget(data, lastTemplate);
         }
         else
@@ -522,5 +550,4 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             super.doCancel(data, context);
         }
     }
-
 }

@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.67 2003/06/06 00:33:02 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.68 2003/06/17 04:00:31 irk_tpt Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -722,7 +722,7 @@ public class Attribute
             .getValue(1).asInt() > 0;
     }
  
-    /* 
+    /*
      * Returns true if this attribute is mapped to any issue types.
      */
     public boolean hasIssueTypeMappings()
@@ -736,6 +736,41 @@ public class Attribute
             .getValue(1).asInt() > 0;
     }
 
+    /*
+     * Returns true if this attribute is already mapped to the module and issue type.
+     */
+
+    public boolean hasMapping(Module module, IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
+                 getAttributeId());
+        crit.add(RModuleAttributePeer.MODULE_ID,
+                 module.getModuleId());
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID,
+                 issueType.getIssueTypeId());
+        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt() > 0;
+    }
+
+    /*
+     * Returns true if this attribute is already mapped to the issue type.
+     */
+
+    public boolean hasMapping(IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleAttributePeer.ATTRIBUTE_ID,
+                 getAttributeId());
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID,
+                 issueType.getIssueTypeId());
+        crit.addSelectColumn("count(" + RModuleAttributePeer.ATTRIBUTE_ID + ")");
+        return ((Record)IssuePeer.doSelectVillageRecords(crit).get(0))
+            .getValue(1).asInt() > 0;
+    }
     /* 
      * Delete mappings with all modules and issue types.
      */

@@ -1,5 +1,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
+#set ($groupId = $data.Parameters.getString("groupid"))
 
 <div class="app" id="div3-0-2-0">
 
@@ -7,6 +8,7 @@
    <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
+   <input type="hidden" name="groupId" value="$groupId" />
 
    #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />

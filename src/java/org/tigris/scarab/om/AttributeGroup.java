@@ -213,7 +213,35 @@ public  class AttributeGroup
         }
         return result;
     }
+     /**
+     * Checks whether an attribute group has a particular attribute
+     */
+    public boolean hasAttribute(Attribute attribute)
+        throws Exception
+    {
+        List raags = null;
+        Object obj = getMethodResult().get(this, GET_ATTRIBUTES);
+        if (obj == null)
+        {
+            Log.get().debug("getAttributes() not cached, getting from db");
+            Criteria crit = new Criteria()
+                .add(RAttributeAttributeGroupPeer.GROUP_ID,
+                     getAttributeGroupId())
+                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID,
+                     attribute.getAttributeId())
 
+                .addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID,
+                         AttributePeer.ATTRIBUTE_ID)
+                .add(AttributePeer.ATTRIBUTE_TYPE_ID,
+                     AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL)
+                .add(AttributePeer.DELETED, false)
+                .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                           .PREFERRED_ORDER);
+                 raags = RAttributeAttributeGroupPeer.doSelect(crit);
+
+          }
+          return !raags.isEmpty();
+    }
     /**
      * Retrieves the attribute in this group with the highest preferred order.
      */

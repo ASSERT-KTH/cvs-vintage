@@ -2,11 +2,13 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE))
+#set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
 
 #if ($deleting)
    <form action="$link.setPage("admin,UserAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
+   <input type="hidden" name="issueTypeId" value="$issueTypeId" />
    #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
