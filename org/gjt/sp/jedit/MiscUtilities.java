@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.61 2003/09/03 05:09:26 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.62 2003/09/23 18:19:36 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1495,6 +1495,18 @@ loop:		for(;;)
 
 		return (String[])returnValue.toArray(
 			new String[returnValue.size()]);
+	} //}}}
+
+	//{{{ throwableToString() method
+	/**
+	 * Returns a string containing the stack trace of the given throwable.
+	 * @since jEdit 4.2pre6
+	 */
+	public static String throwableToString(Throwable t)
+	{
+		StringWriter s = new StringWriter();
+		t.printStackTrace(new PrintWriter(s));
+		return s.toString();
 	} //}}}
 
 	//{{{ Private members

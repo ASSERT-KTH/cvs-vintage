@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.29 2003/08/22 18:49:54 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.30 2003/09/23 18:19:37 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -73,10 +73,6 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 			"hypersearch-results.multi.label"));
 		multi.addActionListener(ah);
 		toolBar.add(multi);
-
-		multiStatus = jEdit.getBooleanProperty(
-			"hypersearch-results.multi");
-		updateMultiStatus();
 
 		add(BorderLayout.NORTH, toolBar);
 
@@ -115,7 +111,9 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 	{
 		super.addNotify();
 		EditBus.addToBus(this);
-		multi.setSelected(jEdit.getBooleanProperty("hypersearch-results.multi-toggle"));
+		multiStatus = jEdit.getBooleanProperty(
+			"hypersearch-results.multi");
+		updateMultiStatus();
 	} //}}}
 
 	//{{{ removeNotify() method
@@ -123,7 +121,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 	{
 		super.removeNotify();
 		EditBus.removeFromBus(this);
-		jEdit.setBooleanProperty("hypersearch-results.multi-toggle",multi.isSelected());
+		jEdit.setBooleanProperty("hypersearch-results.multi",multiStatus);
 	} //}}}
 
 	//{{{ handleMessage() method
