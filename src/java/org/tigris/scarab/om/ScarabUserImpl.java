@@ -90,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.60 2002/04/30 06:58:19 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.61 2002/05/08 19:55:32 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -111,6 +111,12 @@ public class ScarabUserImpl
      * creation time.
      */
     private static final int UNIQUE_ID_MAX_LEN = 10;
+
+    /** 
+     * Code for user's preference on which screen to return to
+     * After entering an issue
+     */
+    private int enterIssueRedirect = 0;
     
     /**
      * Call the superclass constructor to initialize this object.
@@ -740,4 +746,48 @@ public class ScarabUserImpl
         List result = UserPreferencePeer.doSelect(crit);
         return result.size() == 1 ? true : false;
     }
+
+    /**
+     * Returns integer representing user preference for
+     * Which screen to return to after entering an issue.
+     * 1 = Enter New Issue. 2 = Assign Issue (default)
+     * 3 = View Issue. 4 = Issue Types index.
+     */
+    public int getEnterIssueRedirect()
+        throws Exception
+    {
+        if (enterIssueRedirect == 0)
+        {
+            UserPreference up = UserPreference.getInstance(getUserId());
+            if (up != null && up.getEnterIssueRedirect() != 0)
+            {
+                enterIssueRedirect = up.getEnterIssueRedirect();
+            }
+        } 
+        return enterIssueRedirect;
+    }
+    
+
+    /**
+     * Sets integer representing user preference for
+     * Which screen to return to after entering an issue.
+     * 1 = Enter New Issue. 2 = Assign Issue (default)
+     * 3 = View Issue. 4 = Issue Types index.
+     */
+    public void setEnterIssueRedirect(int templateCode)
+        throws Exception
+    {
+        UserPreference up = UserPreference.getInstance(getUserId());
+        String userPreference = null;
+        if (up == null)
+        {
+            up = UserPreference.getInstance();
+            up.setUserId(getUserId());
+            up.setPasswordExpire(null);
+        }
+        up.setEnterIssueRedirect(templateCode);
+        up.save();
+        enterIssueRedirect = templateCode;
+    }
+                
 }

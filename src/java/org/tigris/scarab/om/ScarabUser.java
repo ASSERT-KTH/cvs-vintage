@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.59 2002/03/15 11:33:33 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.60 2002/05/08 19:55:32 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -292,4 +292,18 @@ public interface ScarabUser extends User
      * The user's full name.
      */
     public String getName();
+
+    /**
+     * Sets integer representing user preference for
+     * Which screen to return to after entering an issue.
+     */
+    public void setEnterIssueRedirect(int templateCode)
+        throws Exception;
+
+    /**
+     * Returns integer representing user preference for
+     * Which screen to return to after entering an issue.
+     */
+    public int getEnterIssueRedirect()
+        throws Exception;
 }
