@@ -1,4 +1,4 @@
-// $Id: ActionAddAllClassesFromModel.java,v 1.6 2005/01/30 20:47:53 linus Exp $
+// $Id: ActionAddAllClassesFromModel.java,v 1.7 2005/02/05 19:44:59 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,7 +99,8 @@ public class ActionAddAllClassesFromModel extends UMLAction {
 		Model.getFacade().getOwnedElements(namespace).iterator();
 	    while (elements.hasNext()) {
 		Object element = elements.next();
-		if (Model.getFacade().isAClass(element)) {
+		if (Model.getFacade().isAClass(element) 
+		    && !Model.getFacade().isAAssociationClass(element)) {
 		    diagram.addClass(element, false);
 		}
 	    }
