@@ -145,12 +145,13 @@ public class FreshenUserValve
             try
             {
                 mitList = MITListManager.getInstance(new NumberKey(mitid));
+                user.setCurrentMITList(mitList);
+                mitList.setScarabUser(user);
             }
             catch (TorqueException e)
             {
                 throw new TurbineException(e);
             }
-            user.setCurrentMITList(mitList);
         }
 
         // should add the currently reporting issue here as well
