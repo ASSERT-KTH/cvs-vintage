@@ -55,3 +55,27 @@ b {
     font-size: smaller;
     color: #000000
 }
+
+/* Classloader table classes */
+
+.cltable {
+	background-color : #E0E0E0;
+	text-align : center;
+}
+
+.clt_loader {
+	text-align : center;
+	font-weight : bold;
+	color : #0033CC;
+}
+
+.clt_label {
+	text-align : left;
+	font-weight : bolder;
+}
+
+.clt_data {
+	text-align : center;
+	vertical-align : top;
+	font-size : smaller;
+}
