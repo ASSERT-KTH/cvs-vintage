@@ -26,13 +26,13 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.3 1999/03/16 19:01:40 jrobbins Exp $
+// $Id: WizMEName.java,v 1.4 1999/03/17 03:19:35 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

@@ -26,14 +26,14 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.15 1999/03/08 22:43:37 jrobbins Exp $
+// $Id: FigUseCase.java,v 1.16 1999/03/17 03:22:25 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

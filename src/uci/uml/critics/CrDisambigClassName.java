@@ -26,12 +26,12 @@
 // File: CrDisambigClassName.java
 // Classes: CrDisambigClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.13 1999/03/16 19:01:32 jrobbins Exp $
+// $Id: CrDisambigClassName.java,v 1.14 1999/03/17 03:19:11 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

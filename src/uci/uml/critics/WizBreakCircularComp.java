@@ -26,13 +26,13 @@
 // File: WizBreakCircularComp.java
 // Classes: WizBreakCircularComp
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizBreakCircularComp.java,v 1.1 1999/03/16 19:01:38 jrobbins Exp $
+// $Id: WizBreakCircularComp.java,v 1.2 1999/03/17 03:19:34 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

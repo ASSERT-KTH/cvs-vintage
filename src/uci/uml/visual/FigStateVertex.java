@@ -26,14 +26,14 @@
 // File: FigStateVertex.java
 // Classes: FigStateVertex
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigStateVertex.java,v 1.2 1999/02/19 22:27:57 jrobbins Exp $
+// $Id: FigStateVertex.java,v 1.3 1999/03/17 03:22:25 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

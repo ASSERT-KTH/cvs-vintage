@@ -27,7 +27,7 @@
 // File: ModeManager.java
 // Classes: ModeManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeManager.java,v 1.11 1999/03/15 21:50:01 jrobbins Exp $
+// $Id: ModeManager.java,v 1.12 1999/03/17 03:18:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -38,7 +38,7 @@ import java.io.Serializable;
 
 import uci.util.*;
 import uci.gef.event.*;
-import com.sun.java.swing.event.EventListenerList;
+import javax.swing.event.EventListenerList;
 
 /** ModeManager keeps track of all the Modes for a given Editor.
  *  Events are passed to the Modes for handling.  The submodes are

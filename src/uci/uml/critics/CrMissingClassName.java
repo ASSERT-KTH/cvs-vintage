@@ -26,12 +26,12 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.14 1999/03/08 22:42:55 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.15 1999/03/17 03:19:14 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

@@ -26,12 +26,12 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.11 1999/03/16 19:01:34 jrobbins Exp $
+// $Id: CrNameConfusion.java,v 1.12 1999/03/17 03:19:16 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

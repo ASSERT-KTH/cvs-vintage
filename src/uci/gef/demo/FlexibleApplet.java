@@ -27,14 +27,14 @@
 // File: FlexibleApplet.java
 // Classes: FlexibleApplet
 // Original Author: ics125b spring 1996
-// $Id: FlexibleApplet.java,v 1.10 1999/02/19 22:19:46 jrobbins Exp $
+// $Id: FlexibleApplet.java,v 1.11 1999/03/17 03:18:52 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.applet.*;
 import java.awt.*;
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 import uci.gef.*;

@@ -26,7 +26,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125 spring 1996
-// $Id: FigText.java,v 1.20 1999/03/11 01:11:45 jrobbins Exp $
+// $Id: FigText.java,v 1.21 1999/03/17 03:18:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -34,8 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import uci.ui.*;
 import uci.util.*;

@@ -27,13 +27,13 @@
 // File: ColorTilePanel.java
 // Classes: ColorTilePanel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ColorTilePanel.java,v 1.5 1999/02/19 22:17:29 jrobbins Exp $
+// $Id: ColorTilePanel.java,v 1.6 1999/03/17 03:18:31 jrobbins Exp $
 
 package uci.beans.editors;
 
 import java.awt.*;
 import java.awt.event.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 import java.applet.*;
 import java.util.*;
 

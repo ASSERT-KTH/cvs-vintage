@@ -26,7 +26,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.9 1999/02/19 22:28:09 jrobbins Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.10 1999/03/17 03:22:30 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -34,7 +34,7 @@ package uci.uml.visual;
 import java.util.*;
 import java.awt.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

@@ -23,14 +23,14 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.7 1999/02/19 22:27:51 jrobbins Exp $
+// $Id: FigMessage.java,v 1.8 1999/03/17 03:22:20 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

@@ -27,14 +27,14 @@
 // File: PropSheet.java
 // Interfaces: PropSheet
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropSheet.java,v 1.5 1999/02/19 22:20:22 jrobbins Exp $
+// $Id: PropSheet.java,v 1.6 1999/03/17 03:18:56 jrobbins Exp $
 
 package uci.ui;
 
 import java.beans.*;
 import java.lang.reflect.*;
 import java.awt.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 import java.util.*;
 
 import uci.gef.Fig;

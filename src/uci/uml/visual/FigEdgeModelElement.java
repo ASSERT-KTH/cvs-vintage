@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.14 1999/03/08 22:43:35 jrobbins Exp $
+// $Id: FigEdgeModelElement.java,v 1.15 1999/03/17 03:22:13 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -34,8 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.gef.*;
 import uci.graph.*;

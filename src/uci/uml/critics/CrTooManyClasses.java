@@ -24,12 +24,12 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.3 1999/02/19 22:23:25 jrobbins Exp $
+// $Id: CrTooManyClasses.java,v 1.4 1999/03/17 03:19:26 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

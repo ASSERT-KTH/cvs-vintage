@@ -26,12 +26,12 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.16 1999/03/16 19:01:27 jrobbins Exp $
+// $Id: ToDoList.java,v 1.17 1999/03/17 03:18:27 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
-import com.sun.java.swing.event.EventListenerList;
+import javax.swing.event.EventListenerList;
 
 import uci.util.*;
 

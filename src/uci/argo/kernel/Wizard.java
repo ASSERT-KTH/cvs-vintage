@@ -25,12 +25,12 @@
 // File: Wizard.java
 // Classes: Wizard
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Wizard.java,v 1.3 1999/03/16 19:01:29 jrobbins Exp $
+// $Id: Wizard.java,v 1.4 1999/03/17 03:18:28 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 

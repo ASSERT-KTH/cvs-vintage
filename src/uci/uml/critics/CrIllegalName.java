@@ -26,12 +26,12 @@
 // File: CrIllegalName.java
 // Classes: CrIllegalName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.9 1999/02/19 22:22:46 jrobbins Exp $
+// $Id: CrIllegalName.java,v 1.10 1999/03/17 03:19:13 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

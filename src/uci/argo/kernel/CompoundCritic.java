@@ -26,12 +26,12 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.2 1999/02/19 22:17:00 jrobbins Exp $
+// $Id: CompoundCritic.java,v 1.3 1999/03/17 03:18:21 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 

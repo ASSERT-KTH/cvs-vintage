@@ -24,7 +24,7 @@
 // File: PropPanelActionState.java
 // Classes: PropPanelActionState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.2 1999/02/19 22:26:10 jrobbins Exp $
+// $Id: PropPanelActionState.java,v 1.3 1999/03/17 03:21:17 jrobbins Exp $
 
 package uci.uml.ui.props;
 
@@ -33,13 +33,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.event.*;
-import com.sun.java.swing.tree.*;
-import com.sun.java.swing.text.*;
-import com.sun.java.swing.table.*;
-import com.sun.java.swing.plaf.metal.*;
-import com.sun.java.swing.border.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.*;
+import javax.swing.text.*;
+import javax.swing.table.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.border.*;
 
 import uci.util.*;
 import uci.uml.Foundation.Core.*;

@@ -28,12 +28,12 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.13 1999/02/19 22:23:10 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.14 1999/03/17 03:19:18 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

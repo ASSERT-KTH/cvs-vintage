@@ -26,13 +26,13 @@
 // File: WizAssocComposite.java
 // Classes: WizAssocComposite
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizAssocComposite.java,v 1.1 1999/03/11 01:36:54 jrobbins Exp $
+// $Id: WizAssocComposite.java,v 1.2 1999/03/17 03:19:33 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

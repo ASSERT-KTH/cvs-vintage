@@ -24,12 +24,12 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.15 1999/03/08 22:42:48 jrobbins Exp $
+// $Id: Critic.java,v 1.16 1999/03/17 03:18:22 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 
@@ -476,7 +476,7 @@ public class Critic implements Poster, java.io.Serializable {
   }
   public void setMoreInfoURL(String m) {  _moreInfoURL = m; }
   public String getMoreInfoURL() {
-    return _moreInfoURL;
+    return getMoreInfoURL(null, null);
   }
 
   protected void setArg(String name, Object value) {

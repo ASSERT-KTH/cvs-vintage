@@ -26,7 +26,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.12 1999/03/08 22:43:36 jrobbins Exp $
+// $Id: FigNodeModelElement.java,v 1.13 1999/03/17 03:22:21 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -34,8 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.gef.*;
 import uci.graph.*;

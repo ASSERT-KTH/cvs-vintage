@@ -24,13 +24,13 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.2 1999/02/19 22:23:49 jrobbins Exp $
+// $Id: CrZeroLengthEdge.java,v 1.3 1999/03/17 03:19:39 jrobbins Exp $
 
 package uci.uml.critics.presentation;
 
 import java.util.*;
 import java.awt.*;
-//import com.sun.java.swing.*;
+//import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

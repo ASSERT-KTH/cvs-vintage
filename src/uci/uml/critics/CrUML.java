@@ -26,7 +26,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.14 1999/03/08 22:42:59 jrobbins Exp $
+// $Id: CrUML.java,v 1.15 1999/03/17 03:19:29 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -95,7 +95,7 @@ public class CrUML extends Critic {
   public static final Decision decSTATE_MACHINES = new
   Decision("State Machines", 5);
 
-
+  public static String CRITICS_SITE = "http://www.ics.uci.edu/pub/arch/uml/critics/";
 
   /** Static initializer for this class. Called when the class is
    *  loaded (which is before any subclass instances are instanciated). */
@@ -139,6 +139,12 @@ public class CrUML extends Critic {
 
   public boolean predicate2(Object dm, Designer dsgr) {
     return super.predicate(dm, dsgr);
+  }
+
+  public String getMoreInfoURL(Set offenders, Designer dsgr) {
+    String clsName = getClass().getName();
+    clsName = clsName.substring(clsName.lastIndexOf(".") + 1);
+    return CRITICS_SITE + clsName + ".html";
   }
 
   ////////////////////////////////////////////////////////////////

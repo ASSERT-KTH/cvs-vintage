@@ -24,14 +24,14 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.11 1999/02/19 22:27:30 jrobbins Exp $
+// $Id: FigActor.java,v 1.12 1999/03/17 03:22:06 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

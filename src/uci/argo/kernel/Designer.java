@@ -26,13 +26,13 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.18 1999/02/19 22:17:08 jrobbins Exp $
+// $Id: Designer.java,v 1.19 1999/03/17 03:18:23 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
 import java.awt.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 

@@ -27,13 +27,13 @@
 // File: ColorPickerGrid.java
 // Classes: ColorPickerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ColorPickerGrid.java,v 1.6 1999/02/19 22:17:28 jrobbins Exp $
+// $Id: ColorPickerGrid.java,v 1.7 1999/03/17 03:18:30 jrobbins Exp $
 
 package uci.beans.editors;
 
 import java.awt.*;
 import java.awt.event.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 //import java.beans.*;
 
 /** A small window that allows the user to choose a color. This window

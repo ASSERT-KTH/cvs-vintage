@@ -26,12 +26,12 @@
 // File: CrUnconventionalPackName.java
 // Classes: CrUnconventionalPackName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalPackName.java,v 1.1 1999/03/08 22:43:03 jrobbins Exp $
+// $Id: CrUnconventionalPackName.java,v 1.2 1999/03/17 03:19:31 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

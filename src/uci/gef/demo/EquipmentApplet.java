@@ -27,7 +27,7 @@
 // File: EquipmentApplet.java
 // Classes: EquipmentApplet
 // Original Author: ics125b spring 1996
-// $Id: EquipmentApplet.java,v 1.10 1999/02/19 22:19:44 jrobbins Exp $
+// $Id: EquipmentApplet.java,v 1.11 1999/03/17 03:18:51 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -38,7 +38,7 @@ import java.util.*;
 import uci.util.*;
 import uci.gef.*;
 import uci.graph.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 /** An example application to show off <B>some</B> of the capabilities
  *  of the UCI Graph Editing Framework. This example is about

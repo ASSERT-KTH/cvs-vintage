@@ -26,7 +26,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.13 1999/02/19 22:28:05 jrobbins Exp $
+// $Id: UMLClassDiagram.java,v 1.14 1999/03/17 03:22:27 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -34,7 +34,7 @@ package uci.uml.visual;
 import java.util.*;
 import java.awt.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

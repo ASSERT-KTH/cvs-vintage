@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.4 1999/02/19 22:28:04 jrobbins Exp $
+// $Id: UMLActivityDiagram.java,v 1.5 1999/03/17 03:22:26 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -32,7 +32,7 @@ package uci.uml.visual;
 import java.util.*;
 import java.awt.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

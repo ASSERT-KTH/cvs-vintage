@@ -24,7 +24,7 @@
 // File: FigForkState.java
 // Classes: FigForkState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigForkState.java,v 1.6 1999/02/19 22:27:42 jrobbins Exp $
+// $Id: FigForkState.java,v 1.7 1999/03/17 03:22:15 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

@@ -26,7 +26,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.30 1999/02/19 22:27:35 jrobbins Exp $
+// $Id: FigClass.java,v 1.31 1999/03/17 03:22:10 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -34,8 +34,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.*;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import uci.gef.*;
 import uci.graph.*;

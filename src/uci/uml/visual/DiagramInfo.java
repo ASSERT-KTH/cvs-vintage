@@ -27,7 +27,7 @@
 // File: DiagramInfo.java
 // Classes: DiagramInfo
 // Original Author: jrobbins@ics.uci.edy
-// $Id: DiagramInfo.java,v 1.2 1999/02/19 22:27:28 jrobbins Exp $
+// $Id: DiagramInfo.java,v 1.3 1999/03/17 03:22:04 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -35,8 +35,8 @@ package uci.uml.visual;
 import java.util.*;
 import java.awt.*;
 import java.beans.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.border.*;
+import javax.swing.*;
+import javax.swing.border.*;
 
 import uci.gef.*;
 import uci.graph.*;

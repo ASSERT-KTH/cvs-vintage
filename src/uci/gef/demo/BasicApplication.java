@@ -27,13 +27,13 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.13 1999/02/19 22:19:40 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.14 1999/03/17 03:18:50 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
 import java.awt.event.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

@@ -26,13 +26,13 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.1 1999/03/08 22:43:08 jrobbins Exp $
+// $Id: WizNavigable.java,v 1.2 1999/03/17 03:19:38 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

@@ -24,7 +24,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigHistoryState.java,v 1.3 1999/02/19 22:27:44 jrobbins Exp $
+// $Id: FigHistoryState.java,v 1.4 1999/03/17 03:22:15 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

@@ -24,12 +24,12 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.5 1999/02/19 22:23:06 jrobbins Exp $
+// $Id: CrNoAssociations.java,v 1.6 1999/03/17 03:19:17 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

@@ -24,7 +24,7 @@
 // File: FigJoinState.java
 // Classes: FigJoinState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigJoinState.java,v 1.6 1999/02/19 22:27:48 jrobbins Exp $
+// $Id: FigJoinState.java,v 1.7 1999/03/17 03:22:19 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

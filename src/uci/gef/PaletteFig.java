@@ -27,13 +27,13 @@
 // File: PaletteFig.java
 // Classes: PaletteFig
 // Original Author: ics125 spring 1996
-// $Id: PaletteFig.java,v 1.10 1999/02/19 22:19:20 jrobbins Exp $
+// $Id: PaletteFig.java,v 1.11 1999/03/17 03:18:47 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 /** A Palette that defines buttons to create lines, rectangles,
  *  rounded rectangles, circles, and text. Also a select button is

@@ -26,12 +26,12 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.12 1999/03/16 19:01:26 jrobbins Exp $
+// $Id: ToDoItem.java,v 1.13 1999/03/17 03:18:26 jrobbins Exp $
 
 package uci.argo.kernel;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 import uci.ui.Highlightable;

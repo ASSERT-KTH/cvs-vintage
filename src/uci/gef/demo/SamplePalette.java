@@ -27,13 +27,13 @@
 // File: SamplePalette.java
 // Classes: SamplePalette
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SamplePalette.java,v 1.8 1999/02/19 22:19:58 jrobbins Exp $
+// $Id: SamplePalette.java,v 1.9 1999/03/17 03:18:53 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
 import java.util.*;
-import com.sun.java.swing.Action;
+import javax.swing.Action;
 
 import uci.gef.*;
 

@@ -27,7 +27,7 @@
 // File: TabPropFrame.java
 // Interfaces: TabPropFrame
 // Original Author: jrobbins@ics.uci.edu
-// $Id: TabPropFrame.java,v 1.10 1999/02/19 22:20:28 jrobbins Exp $
+// $Id: TabPropFrame.java,v 1.11 1999/03/17 03:19:01 jrobbins Exp $
 
 
 
@@ -36,8 +36,8 @@ package uci.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import com.sun.java.swing.*;
-import com.sun.java.swing.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
 /** A window that displays a tabbed Property Sheet user interface with
  *  one tab for each PropSheet instance that is added to this object.

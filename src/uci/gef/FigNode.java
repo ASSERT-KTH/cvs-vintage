@@ -26,7 +26,7 @@
 // File: FigNode.java
 // Classes: FigNode
 // Original Author: ics125 spring 1996
-// $Id: FigNode.java,v 1.24 1999/02/19 22:18:32 jrobbins Exp $
+// $Id: FigNode.java,v 1.25 1999/03/17 03:18:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -35,7 +35,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.io.Serializable;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 import uci.ui.*;

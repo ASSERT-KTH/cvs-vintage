@@ -27,13 +27,13 @@
 // File: ColorEditor.java
 // Interfaces: ColorEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ColorEditor.java,v 1.6 1999/02/19 22:17:27 jrobbins Exp $
+// $Id: ColorEditor.java,v 1.7 1999/03/17 03:18:30 jrobbins Exp $
 
 package uci.beans.editors;
 
 import java.awt.*;
 import java.awt.event.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 import java.beans.*;
 
 /** <A HREF="../features.html#color_picker">

@@ -26,12 +26,12 @@
 // File: CrMissingStateName.java
 // Classes: CrMissingStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingStateName.java,v 1.4 1999/03/08 22:42:56 jrobbins Exp $
+// $Id: CrMissingStateName.java,v 1.5 1999/03/17 03:19:15 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;

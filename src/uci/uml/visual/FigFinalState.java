@@ -24,7 +24,7 @@
 // File: FigFinalState.java
 // Classes: FigFinalState
 // Original Author: ics125b spring 98
-// $Id: FigFinalState.java,v 1.9 1999/02/19 22:27:40 jrobbins Exp $
+// $Id: FigFinalState.java,v 1.10 1999/03/17 03:22:14 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -32,7 +32,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.gef.*;
 import uci.graph.*;

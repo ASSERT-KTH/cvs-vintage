@@ -27,7 +27,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.26 1999/03/11 01:11:43 jrobbins Exp $
+// $Id: FigEdge.java,v 1.27 1999/03/17 03:18:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -36,7 +36,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.beans.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.util.*;
 import uci.ui.*;

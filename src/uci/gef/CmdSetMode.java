@@ -27,12 +27,12 @@
 // File: CmdSetMode.java
 // Classes: CmdSetMode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSetMode.java,v 1.7 1999/02/19 22:18:09 jrobbins Exp $
+// $Id: CmdSetMode.java,v 1.8 1999/03/17 03:18:35 jrobbins Exp $
 
 package uci.gef;
 
 import java.util.*;
-import com.sun.java.swing.ImageIcon;
+import javax.swing.ImageIcon;
 
 /** Cmd that sets the next global editor mode. The global editor
  *  mode effects the next editor that you move the mouse into. For

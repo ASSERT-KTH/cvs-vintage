@@ -27,12 +27,12 @@
 // File: RectangleEditor.java
 // Interfaces: RectangleEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RectangleEditor.java,v 1.5 1999/02/19 22:17:30 jrobbins Exp $
+// $Id: RectangleEditor.java,v 1.6 1999/03/17 03:18:32 jrobbins Exp $
 
 package uci.beans.editors;
 
 import java.awt.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 import java.beans.*;
 
 /** A widget that allows the user to edit rectangles in the property

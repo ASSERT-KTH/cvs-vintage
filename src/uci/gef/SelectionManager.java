@@ -27,7 +27,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.15 1999/02/19 22:19:33 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.16 1999/03/17 03:18:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -35,7 +35,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.Serializable;
-import com.sun.java.swing.event.EventListenerList;
+import javax.swing.event.EventListenerList;
 
 import uci.util.*;
 import uci.gef.event.*;

@@ -26,12 +26,12 @@
 // File: CrUnconventionalClassName.java
 // Classes: CrUnconventionalClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalClassName.java,v 1.17 1999/03/08 22:43:01 jrobbins Exp $
+// $Id: CrUnconventionalClassName.java,v 1.18 1999/03/17 03:19:30 jrobbins Exp $
 
 package uci.uml.critics;
 
 import java.util.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 import uci.argo.kernel.*;
 import uci.util.*;
@@ -56,7 +56,8 @@ public class CrUnconventionalClassName extends CrUML {
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof Classifier)) return NO_PROBLEM;
+    if (!(dm instanceof MMClass) && !(dm instanceof Interface))
+      return NO_PROBLEM;
     Classifier cls = (Classifier) dm;
     Name myName = cls.getName();
     if (myName == null || myName.equals(Name.UNSPEC)) return NO_PROBLEM;

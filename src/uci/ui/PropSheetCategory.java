@@ -27,12 +27,12 @@
 // File: PropSheetCategory.java
 // Interfaces: PropSheetCategory
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropSheetCategory.java,v 1.8 1999/02/19 22:20:23 jrobbins Exp $
+// $Id: PropSheetCategory.java,v 1.9 1999/03/17 03:18:57 jrobbins Exp $
 
 package uci.ui;
 
 import java.awt.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 import java.util.*;
 import java.beans.*;
 import java.lang.reflect.*;

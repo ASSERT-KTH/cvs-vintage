@@ -27,13 +27,13 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.9 1999/02/19 22:17:44 jrobbins Exp $
+// $Id: Cmd.java,v 1.10 1999/03/17 03:18:34 jrobbins Exp $
 
 package uci.gef;
 
 import java.util.*;
 import java.awt.event.*;
-import com.sun.java.swing.*;
+import javax.swing.*;
 
 /** Abstract class for all editor commands. The editor serves as a
  *  command shell for executing actions in much the same way that a
