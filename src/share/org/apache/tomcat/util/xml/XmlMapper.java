@@ -98,13 +98,14 @@ public class XmlMapper  extends HandlerBase implements SaxContext
 	sb.append("/");
 	for( int i=0; i< sp ; i++ ) sb.append( tagStack[i] ).append( "/" );
 	sb.append(" ");
-	AttributeList attributes=(AttributeList) attributeStack[sp-1];
-	if( attributes!=null)
-	    for (int i = 0; i < attributes.getLength (); i++) {
-		sb.append(attributes.getName(i)).append( "=" ).append(attributes.getValue(i));
-		sb.append(" ");
-	    }
-
+        if( sp > 0 ) {
+  	    AttributeList attributes=(AttributeList) attributeStack[sp-1];
+	    if( attributes!=null)
+	        for (int i = 0; i < attributes.getLength (); i++) {
+		    sb.append(attributes.getName(i)).append( "=" ).append(attributes.getValue(i));
+		    sb.append(" ");
+	        }
+	}
 	return sb.toString();
     }
 
