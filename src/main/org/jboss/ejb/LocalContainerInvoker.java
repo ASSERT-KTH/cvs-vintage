@@ -22,7 +22,7 @@ import javax.ejb.EJBLocalObject;
  *	@author Daniel OConnor (docodan@mvcsoft.com)
  */
 public interface LocalContainerInvoker
-   extends ContainerInvoker
+   extends ContainerPlugin
 {
    // Public --------------------------------------------------------
 
