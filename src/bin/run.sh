@@ -19,7 +19,9 @@ JBOSS_CLASSPATH=$JBOSS_CLASSPATH
 # Check for SUN(tm) JVM w/ HotSpot support
 #
 HOTSPOT=`java -version 2>&1 | grep HotSpot`"x"
-if [ "$HOTSPOT" != "x" ]; then
+# only set the HOTSPOT variable if JAVA_OPTS is not set
+# assumed user knows what they want if they set it explicitly
+if [ "${JAVA_OPTS}x" = "x" -a "$HOTSPOT" != "x" ]; then
        HOTSPOT="-server"
 else
        HOTSPOT=""
@@ -30,6 +32,16 @@ fi
 JBOSS_CLASSPATH=$JBOSS_CLASSPATH:../lib/crimson.jar
 JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.crimson.jaxp.DocumentBuilderFactoryImpl
 JAXP="$JAXP -Djavax.xml.parsers.SAXParserFactory=org.apache.crimson.jaxp.SAXParserFactoryImpl"
+
+echo =======================================================
+echo =======================================================
+echo Environment settings
+echo "HOTSPOT   = $HOTSPOT"
+echo "JAVA_OPTS = $JAVA_OPTS"
+echo "CLASSPATH = $JBOSS_CLASSPATH"
+echo "JAXP      = $JAXP"
+echo =======================================================
+echo =======================================================
 
 echo JBOSS_CLASSPATH=$JBOSS_CLASSPATH
 java $HOTSPOT $JAVA_OPTS $JAXP -classpath $JBOSS_CLASSPATH org.jboss.Main $@
