@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.13 2003/06/16 03:04:44 spestov Exp $
+ * @version $Id: Debug.java,v 1.14 2003/06/24 23:24:39 spestov Exp $
  */
 public class Debug
 {
@@ -117,4 +117,14 @@ public class Debug
 	 * <b>On by default on MacOS.</b>
 	 */
 	public static boolean ALT_KEY_PRESSED_DISABLED = OperatingSystem.isMacOS();
+
+	/**
+	 * Geometry workaround for X11.
+	 */
+	public static boolean GEOMETRY_WORKAROUND = false;
+
+	/**
+	 * Position tree debugging.
+	 */
+	public static boolean POSITION_DEBUG = false;
 }

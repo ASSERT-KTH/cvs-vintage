@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * for matching XML tags.
  *
  * @author Slava Pestov
- * @version $Id: StructureMatcher.java,v 1.2 2003/06/22 02:25:10 spestov Exp $
+ * @version $Id: StructureMatcher.java,v 1.3 2003/06/24 23:24:39 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public interface StructureMatcher
@@ -134,6 +134,9 @@ public interface StructureMatcher
 			int physicalLine, int start, int end, int y,
 			Match match)
 		{
+			if(!textArea.isStructureHighlightVisible())
+				return;
+
 			if(match.start >= end || match.end < start)
 			{
 				return;

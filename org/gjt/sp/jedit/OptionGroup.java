@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * option pane instances.
  *
  * @author Mike Dillon
- * @version $Id: OptionGroup.java,v 1.7 2003/05/05 23:11:47 spestov Exp $
+ * @version $Id: OptionGroup.java,v 1.8 2003/06/24 23:24:39 spestov Exp $
  */
 public class OptionGroup
 {
@@ -93,19 +93,27 @@ public class OptionGroup
 	//{{{ addOptionGroup() method
 	public void addOptionGroup(OptionGroup group)
 	{
-		members.addElement(group);
+		insertionSort(group.getLabel(),group);
 	} //}}}
 
 	//{{{ addOptionPane() method
 	public void addOptionPane(OptionPane pane)
 	{
-		members.addElement(pane);
+		String label = jEdit.getProperty("options."
+			+ pane.getName() + ".label","NO LABEL PROPERTY: "
+			+ pane.getName());
+
+		insertionSort(label,pane);
 	} //}}}
 
 	//{{{ addOptionPane() method
 	public void addOptionPane(String pane)
 	{
-		members.addElement(pane);
+		String label = jEdit.getProperty("options."
+			+ pane + ".label","NO LABEL PROPERTY: "
+			+ pane);
+
+		insertionSort(label,pane);
 	} //}}}
 
 	//{{{ getMembers() method
@@ -137,5 +145,35 @@ public class OptionGroup
 	private String name;
 	private String label;
 	private Vector members;
+
+	//{{{ insertionSort() method
+	private void insertionSort(String newLabel, Object newObj)
+	{
+		for(int i = 0; i < members.size(); i++)
+		{
+			Object obj = members.elementAt(i);
+			String label;
+			if(obj instanceof OptionPane)
+			{
+				String name = ((OptionPane)obj).getName();
+				label = jEdit.getProperty("options."
+					+ name + ".label","NO LABEL PROPERTY: "
+					+ name);
+			}
+			else if(obj instanceof OptionGroup)
+				label = ((OptionGroup)obj).getLabel();
+			else
+				throw new InternalError();
+
+			if(newLabel.compareTo(label) < 0)
+			{
+				members.insertElementAt(newObj,i);
+				return;
+			}
+		}
+
+		members.addElement(newObj);
+	} //}}}
+
 	//}}}
 }

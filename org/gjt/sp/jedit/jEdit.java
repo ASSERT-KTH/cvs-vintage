@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.184 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: jEdit.java,v 1.185 2003/06/24 23:24:39 spestov Exp $
  */
 public class jEdit
 {
@@ -88,8 +88,7 @@ public class jEdit
 			System.exit(1);
 		}
 
-		settingsDirectory = MiscUtilities.constructPath(
-			System.getProperty("user.home"),".jedit");
+		settingsDirectory = ".jedit";
 
 		// MacOS users expect the app to keep running after all windows
 		// are closed
@@ -198,6 +197,13 @@ public class jEdit
 				args[i] = null;
 			}
 		} //}}}
+
+		if(settingsDirectory != null)
+		{
+			settingsDirectory = MiscUtilities.constructPath(
+				System.getProperty("user.home"),
+				settingsDirectory);
+		}
 
 		if(settingsDirectory != null && portFile != null)
 			portFile = MiscUtilities.constructPath(settingsDirectory,portFile);
@@ -2081,7 +2087,7 @@ public class jEdit
 				Rectangle desired = new Rectangle(
 					config.x,config.y,config.width,
 					config.height);
-				if(OperatingSystem.isX11())
+				if(OperatingSystem.isX11() && Debug.GEOMETRY_WORKAROUND)
 				{
 					new GUIUtilities.UnixWorkaround(newView,
 						"view",desired,config.extState);
