@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.4 2002/01/22 00:37:42 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.5 2002/01/22 21:55:28 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -106,11 +106,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         boolean areThereDupes = false;
         Field order1 = null;
         Field order2 = null;
+        int dupeOrder = 2;
 
         // Manage attribute groups
         if (attributeGroups.size() > 0)
         {
-            int dupeOrder = Integer.parseInt(data.getParameters()
+            dupeOrder = Integer.parseInt(data.getParameters()
                                                  .getString("dupe_order"));
             // Check for duplicate sequence numbers
             for (int i=0; i<attributeGroups.size(); i++) 
@@ -156,6 +157,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         if (intake.isAllValid() && isValid) 
         {
+            // Set properties for module
+            Group modGroup = intake.get("Module", module.getQueryKey(), false);
+            modGroup.setProperties(module);
+            module.save();
+
             // Set properties for module-issue type info
             Group rmitGroup = intake.get("RModuleIssueType", 
                                         rmit.getQueryKey(), false);
@@ -170,6 +176,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 Group agGroup = intake.get("AttributeGroup", 
                                  attGroup.getQueryKey(), false);
                 agGroup.setProperties(attGroup);
+                if (Integer.parseInt(agGroup.get("Order").toString()) < dupeOrder)
+                {
+                    attGroup.setDedupe(true);
+                }
+                else
+                {
+                    attGroup.setDedupe(false);
+                }
                 attGroup.save();
             }
         }
