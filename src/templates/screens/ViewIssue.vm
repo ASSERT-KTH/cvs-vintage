@@ -12,13 +12,7 @@
  
 #set($attVal =  $attrValues.get("OPERATING SYSTEM"))
 #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
-$attrInput
-    #set ( $module = $attVal.Issue.Module )
-#foreach ($option in $module.getLeafRModuleOptions($attVal.Attribute))
- $option.DisplayValue
-#end
 
-      <p> $attrInput.Value </p>
 
       <div class="functnbar">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -65,6 +59,7 @@ $attrInput
           <td class="b">
 
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+          #attrValueErrorMsg ( $attVal $field )
        #userSelectBox ($attVal "")
     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
           #attrValueLeafSelect ($attVal $field "")
@@ -91,6 +86,7 @@ $attrInput
            <td colspan="2">Please add a comment to explain your change(s):
            <BR>
         #set( $attCommentGroup = $intake.Attachment.setKey("attCommentKey") )
+         #fieldErrorMsg($attCommentGroup.DataAsString "<br>")
            <textarea rows="4" cols="35" class="text" name ="$attCommentGroup.DataAsString.Key"></textarea>
            <input type="hidden" name="$attCommentGroup.Name.Key" value="comment">
            </td>
@@ -141,11 +137,15 @@ $attrInput
           <td><strong>add url:</strong></td>
 
 #set( $urlGroup = $intake.Attachment.setKey("urlKey") )
-          <td><input type="text" size="25" class="text" name="$urlGroup.Name.Key" />
+          <td>
          #fieldErrorMsg($urlGroup.Name "<br>")
+         <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
          </td>
 
-          <td><input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" /></td>
+          <td>
+         #fieldErrorMsg($urlGroup.DataAsString "<br>")
+         <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString"/>
+          </td>
 
          </tr>
 
@@ -333,7 +333,8 @@ $attrInput
          <tr>
           <td width="120" class="a"><strong>add comment:</strong></td>
           <td class="b">
-#set( $commentGroup = $intake.Attachment.setKey("commentKey") )
+        #set( $commentGroup = $intake.Attachment.setKey("commentKey") )
+        #fieldErrorMsg($commentGroup.DataAsString "<br>")
            <textarea rows="2" cols="35" class="text" name ="$commentGroup.DataAsString.Key"></textarea>
            <input type="hidden" name="$commentGroup.Name.Key" value="comment">
            <p><input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"  class="button" /></p>
