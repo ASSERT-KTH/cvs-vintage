@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -44,6 +45,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import org.columba.mail.util.MailResourceLoader;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -143,7 +145,6 @@ public class IMAPFolder extends RemoteFolder {
 			return list.toArray();
 
 		return null;
-
 	}
 
 	/**
@@ -176,11 +177,10 @@ public class IMAPFolder extends RemoteFolder {
 		String path = getImapPath();
 
 		boolean result = getStore().deleteFolder(path);
-		if (result == false)
+		if (!result)
 			return;
 
 		super.removeFolder();
-
 	}
 
 	/**
@@ -188,17 +188,21 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public boolean renameFolder(String name) throws Exception {
 		String oldPath = getImapPath();
-		ColumbaLogger.log.debug("old path=" + oldPath);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("old path=" + oldPath);
+                }
 
 		String newPath = null;
 		if (getParent() instanceof IMAPFolder)
 			newPath = ((IMAPFolder) getParent()).getImapPath();
 
 		newPath += getStore().getDelimiter() + name;
-		ColumbaLogger.log.debug("new path=" + newPath);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("new path=" + newPath);
+                }
 
 		boolean result = getStore().renameFolder(oldPath, newPath);
-		if (result == false)
+		if (!result)
 			return false;
 
 		return super.renameFolder(name);
@@ -211,14 +215,12 @@ public class IMAPFolder extends RemoteFolder {
 	public FolderTreeNode getRootFolder() {
 		FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
 		while (folderTreeNode != null) {
-			// System.out.println("name: "+ folder.getName() );
 			if (folderTreeNode instanceof IMAPRootFolder) {
 
 				return (IMAPRootFolder) folderTreeNode;
 			}
 
 			folderTreeNode = (FolderTreeNode) folderTreeNode.getParent();
-
 		}
 
 		return null;
@@ -247,7 +249,10 @@ public class IMAPFolder extends RemoteFolder {
 		if (headerList.count() == 0)
 			changed = true;
 
-		worker.setDisplayText("Fetching UID list...");
+		worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "fetch_uid_list"));
 
 		List newList = getStore().fetchUIDList(worker, getImapPath());
 
@@ -256,11 +261,17 @@ public class IMAPFolder extends RemoteFolder {
 
 		List result = synchronize(headerList, newList);
 
-		worker.setDisplayText("Fetching FLAGS list...");
+		worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "fetch_flags_list"));
 
 		IMAPFlags[] flags = getStore().fetchFlagsList(worker, getImapPath());
 
-		worker.setDisplayText("Fetching header list ");
+		worker.setDisplayText(MailResourceLoader.getString(
+                                "statusbar",
+                                "message",
+                                "fetch_header_list"));
 
 		// if available -> fetch new headers
 		if (result.size() > 0) {
@@ -317,7 +328,6 @@ public class IMAPFolder extends RemoteFolder {
 
 			info.incExists();
 		}
-
 	}
 
 	/**
@@ -325,12 +335,10 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public void save(WorkerStatusController worker) throws Exception {
 		// only save header-cache if folder data changed
-		if (getChanged() == true) {
-
+		if (getChanged()) {
 			cache.save(worker);
 			setChanged(false);
 		}
-
 	}
 
 	/**
@@ -482,7 +490,6 @@ public class IMAPFolder extends RemoteFolder {
 
 		//			mailbox was modified
 		changed = true;
-
 	}
 
 	/**
@@ -595,9 +602,8 @@ public class IMAPFolder extends RemoteFolder {
 			markMessage(uids[i], variant, worker);
 		}
 
-		//		mailbox was modified
+		// mailbox was modified
 		changed = true;
-
 	}
 
 	/**
@@ -628,7 +634,7 @@ public class IMAPFolder extends RemoteFolder {
 	public void expungeFolder(WorkerStatusController worker) throws Exception {
 
 		boolean result = getStore().expunge(worker, getImapPath());
-		if (result == false)
+		if (!result)
 			return;
 
 		Object[] uids = getUids(worker);
@@ -641,13 +647,17 @@ public class IMAPFolder extends RemoteFolder {
 
 				Boolean expunged = (Boolean) h.get("columba.flags.expunged");
 
-				ColumbaLogger.log.debug("expunged=" + expunged);
+				if (MainInterface.DEBUG) {
+                                            ColumbaLogger.log.debug("expunged=" + expunged);
+                                }
 
 				if (expunged.equals(Boolean.TRUE)) {
 					// move message to trash
 
-					ColumbaLogger.log.debug(
+					if (MainInterface.DEBUG) {
+                                                    ColumbaLogger.log.debug(
 						"moving message with UID " + uid + " to trash");
+                                        }
 
 					// remove message
 					headerList.remove(uid);
@@ -710,7 +720,6 @@ public class IMAPFolder extends RemoteFolder {
 			String n = ((IMAPFolder) child).getName();
 
 			path.insert(0, n + getStore().getDelimiter());
-
 		}
 
 		return path.toString();
@@ -771,5 +780,4 @@ public class IMAPFolder extends RemoteFolder {
 		if (getRootFolder() != null)
 			getRootFolder().releaseLock();
 	}
-
 }
