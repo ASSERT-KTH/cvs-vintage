@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.26 2003/12/06 18:12:56 alexb Exp $
+// $Id: ClassGenerationDialog.java,v 1.27 2004/01/17 07:08:48 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,11 +178,11 @@ public class ClassGenerationDialog extends ArgoDialog implements ActionListener 
         
         // Compile Checkbox
 
-        _compileCheckBox = new JCheckBox();
-        nameButton(_compileCheckBox, "checkbox.compile-generated-source");       
+        //_compileCheckBox = new JCheckBox();
+        //nameButton(_compileCheckBox, "checkbox.compile-generated-source");       
         // TODO: Implement the compile feature. For now, disable the checkbox.
-        _compileCheckBox.setEnabled(false);     
-        southPanel.add(_compileCheckBox, BorderLayout.SOUTH);
+        //_compileCheckBox.setEnabled(false);     
+        //southPanel.add(_compileCheckBox, BorderLayout.SOUTH);
 
         contentPanel.add(southPanel, BorderLayout.SOUTH);
 
