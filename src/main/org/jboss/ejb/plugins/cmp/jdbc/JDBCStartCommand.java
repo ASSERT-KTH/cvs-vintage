@@ -20,16 +20,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.sql.DataSource;
-import javax.ejb.EJBException;
-import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMP2xFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
@@ -45,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class JDBCStartCommand {
 
@@ -222,57 +220,45 @@ public class JDBCStartCommand {
          throws DeploymentException {
 
       StringBuffer sql = new StringBuffer();
-      sql.append("CREATE TABLE ").append(entity.getTableName());
-      
-      sql.append(" (");
-      // add fields
-      // sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
+      sql.append("CREATE TABLE ").append(entity.getTableName()).append(" (");
 
-      boolean firstField = true;
+      // add fields
+      int columnCount = 0; // just to decide whether to sql.append(", ")
       for(Iterator iter = entity.getFields().iterator(); iter.hasNext();) {
 
          JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
-
-         // skip it if it is a foreign key that is a part of the primary key
-         if(field instanceof JDBCCMRFieldBridge
-            && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) {
-            continue;
-         }
-
          JDBCType type = field.getJDBCType();
+
          // the side that doesn't have a foreign key has JDBCType null
          if(type==null)
             continue;
 
-         if(!firstField)
-            sql.append( ", " );
-         else
-            firstField = false;
+         // add foreign key fields unless they mapped to primary key fields
+         if(field instanceof JDBCCMRFieldBridge) {
+            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
+            Iterator fkFieldIter = cmrField.getForeignKeyFields().iterator();
+            while(fkFieldIter.hasNext()) {
+               JDBCCMP2xFieldBridge fkField = (JDBCCMP2xFieldBridge)fkFieldIter.next();
+               if(fkField.isFkFieldMappedToPkField())
+                  continue;
 
+               if(columnCount > 0)
+                  sql.append( ", " );
 
-         // apply auto-increment template
-         if(type.getAutoIncrement()[0]) {
-            String columnClause = 
-            SQLUtil.getCreateTableColumnsClause( type );
-
-            JDBCFunctionMappingMetaData autoIncrement = 
-               manager.getMetaData().getTypeMapping().
-               getAutoIncrementTemplate();
-            if(autoIncrement == null) {
-               throw new IllegalStateException(
-                  "auto-increment template not found");
+               addField(fkField.getJDBCType(), sql);
+               ++columnCount;
             }
-
-            String[] args = new String[] { columnClause };
-            sql.append(autoIncrement.getFunctionSql(args));
          } else {
-            sql.append(SQLUtil.getCreateTableColumnsClause(type));
+            if(columnCount > 0)
+               sql.append( ", " );
+            addField(type, sql);
+            ++columnCount;
          }
       }
 
       // add a pk constraint
       if(entityMetaData.hasPrimaryKeyConstraint())  {
-         JDBCFunctionMappingMetaData pkConstraint = 
+         JDBCFunctionMappingMetaData pkConstraint =
             manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
          if(pkConstraint == null) {
             throw new IllegalStateException("Primary key constraint is " +
@@ -288,8 +274,29 @@ public class JDBCStartCommand {
       }
 
       sql.append(")");
-      
+
       return sql.toString();
+   }
+
+   private void addField(JDBCType type, StringBuffer sqlBuffer) {
+      // apply auto-increment template
+      if(type.getAutoIncrement()[0]) {
+         String columnClause =
+         SQLUtil.getCreateTableColumnsClause( type );
+
+         JDBCFunctionMappingMetaData autoIncrement =
+            manager.getMetaData().getTypeMapping().
+            getAutoIncrementTemplate();
+         if(autoIncrement == null) {
+            throw new IllegalStateException(
+               "auto-increment template not found");
+         }
+
+         String[] args = new String[] { columnClause };
+         sqlBuffer.append(autoIncrement.getFunctionSql(args));
+      } else {
+         sqlBuffer.append(SQLUtil.getCreateTableColumnsClause(type));
+      }
    }
 
    private String getRelationCreateTableSQL(
@@ -303,37 +310,36 @@ public class JDBCStartCommand {
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE TABLE ").append(
             cmrField.getTableName());
-      
+
       sql.append(" (");
-         // add field declaration
-         sql.append(SQLUtil.getCreateTableColumnsClause(fields));
+      // add field declaration
+      sql.append(SQLUtil.getCreateTableColumnsClause(fields));
 
-         // add a pk constraint
-         if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())  {
-            JDBCFunctionMappingMetaData pkConstraint = 
-               manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
-            if(pkConstraint == null) {
-               throw new IllegalStateException("Primary key constraint is " +
-                     "not allowed for this type of data store");
-            }
+      // add a pk constraint
+      if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())  {
+         JDBCFunctionMappingMetaData pkConstraint =
+            manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
+         if(pkConstraint == null) {
+            throw new IllegalStateException("Primary key constraint is " +
+                  "not allowed for this type of data store");
+         }
 
-            String name = 
-               "pk_" + cmrField.getRelationMetaData().getDefaultTableName();
-            name = SQLUtil.fixConstraintName(name, dataSource);
-            String[] args = new String[] {
-               name,
-               SQLUtil.getColumnNamesClause(fields)};
-            sql.append(", ").append(pkConstraint.getFunctionSql(args));
-         }   
+         String name = "pk_" + cmrField.getRelationMetaData().getDefaultTableName();
+         name = SQLUtil.fixConstraintName(name, dataSource);
+         String[] args = new String[] {
+            name,
+            SQLUtil.getColumnNamesClause(fields)};
+         sql.append(", ").append(pkConstraint.getFunctionSql(args));
+      }
       sql.append(")");
-      
+
       return sql.toString();
    }
 
-   private void addForeignKeyConstraint(JDBCCMRFieldBridge cmrField) 
+   private void addForeignKeyConstraint(JDBCCMRFieldBridge cmrField)
          throws DeploymentException {
       if(cmrField.getMetaData().hasForeignKeyConstraint()) {
-      
+
          if(cmrField.getRelationMetaData().isTableMappingStyle()) {
             addForeignKeyConstraint(
                   cmrField.getRelationMetaData().getDataSource(),
@@ -353,7 +359,7 @@ public class JDBCStartCommand {
                   cmrField.getRelatedJDBCEntity().getPrimaryKeyFields());
          }
       } else {
-         log.debug("Foreign key constraint not added as requested: " + 
+         log.debug("Foreign key constraint not added as requested: " +
                "relationshipRolename=" +
                cmrField.getMetaData().getRelationshipRoleName());
       }
@@ -373,7 +379,7 @@ public class JDBCStartCommand {
          return;
       }
 
-      JDBCFunctionMappingMetaData fkConstraint = 
+      JDBCFunctionMappingMetaData fkConstraint =
             manager.getMetaData().getTypeMapping().getFkConstraintTemplate();
       if(fkConstraint == null) {
          throw new IllegalStateException("Foreign key constraint is not " +
@@ -384,7 +390,7 @@ public class JDBCStartCommand {
 
 
       String[] args = new String[] {
-         tableName, 
+         tableName,
          SQLUtil.fixConstraintName(
                "fk_"+tableName+"_"+cmrFieldName, dataSource),
          a,
@@ -409,15 +415,15 @@ public class JDBCStartCommand {
          try {
             // get the connection
             con = dataSource.getConnection();
-      
+
             // create the statement
             statement = con.createStatement();
-         
+
             // execute sql
             log.debug("Executing SQL: " + sql);
             statement.executeUpdate(sql);
          } finally {
-            // make sure to close the connection and statement before 
+            // make sure to close the connection and statement before
             // comitting the transaction or XA will break
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
@@ -437,7 +443,6 @@ public class JDBCStartCommand {
                   "transaction after create table");
          }
       }
-
 
       // success
       log.info("Added foreign key constraint to table '" + tableName + "'" );
