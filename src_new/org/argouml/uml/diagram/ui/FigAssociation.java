@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.82 2005/01/30 20:47:50 linus Exp $
+// $Id: FigAssociation.java,v 1.83 2005/01/31 19:42:18 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -190,7 +190,8 @@ public class FigAssociation extends FigEdgeModelElement {
 	super.setOwner(association);
 
 	if (Model.getFacade().isAAssociation(association)) {
-	    Collection connections = Model.getFacade().getConnections(association);
+	    Collection connections = 
+	        Model.getFacade().getConnections(association);
 	    for (int i = 0; i < connections.size(); i++) {
 		Object assEnd = (connections.toArray())[i];
 		Model.getPump()
@@ -276,8 +277,10 @@ public class FigAssociation extends FigEdgeModelElement {
         Object stereo = null;
         if (Model.getFacade().isNavigable(end)
 	    && (Model.getFacade().isAClass(Model.getFacade().getType(end))
-		|| Model.getFacade().isAInterface(Model.getFacade().getType(end)))) {
-	    visi = Notation.generate(this, Model.getFacade().getVisibility(end));
+		|| Model.getFacade().isAInterface(Model.getFacade()
+		        .getType(end)))) {
+	    visi = 
+	        Notation.generate(this, Model.getFacade().getVisibility(end));
         }
         if (Model.getFacade().getStereotypes(end).size() > 0) {
             stereo = Model.getFacade().getStereotypes(end).iterator().next();
@@ -285,12 +288,14 @@ public class FigAssociation extends FigEdgeModelElement {
 
 	multiToUpdate.setText(Notation.generate(this, multi));
 	orderingToUpdate.setText(getOrderingName(order));
+	String n = Notation.generate(this, name);
+	if (n.length() < 1) visi = ""; //temporary solution for issue 1011
 	if (stereo != null) {
 	    roleToUpdate.setText(Notation.generate(this, stereo)
 				 + " " + visi
-				 + Notation.generate(this, name));
+				 + n);
 	} else {
-	    roleToUpdate.setText(visi + Notation.generate(this, name));
+	    roleToUpdate.setText(visi + n);
 	}
     }
 
@@ -456,8 +461,10 @@ public class FigAssociation extends FigEdgeModelElement {
 	    Object ascStart = iter.next();
 	    Object ascEnd = iter.next();
 
-	    if (Model.getFacade().isAClassifier(Model.getFacade().getType(ascStart))
-                    && Model.getFacade().isAClassifier(Model.getFacade().getType(ascEnd))) {
+	    if (Model.getFacade().isAClassifier(
+	            Model.getFacade().getType(ascStart))
+                    && Model.getFacade().isAClassifier(
+                            Model.getFacade().getType(ascEnd))) {
                 ArgoJMenu navMenu =
 		    new ArgoJMenu("menu.popup.navigability");
 
