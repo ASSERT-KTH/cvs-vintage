@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:18 linus Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,16 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:18 linus Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 
 /**
@@ -66,8 +66,8 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
      */
     public void buildModel() {
         if (getTarget() != null) {
-            MStructuralFeature target = (MStructuralFeature) getTarget();
-            MChangeableKind kind = target.getChangeability();
+            Object target = /*(MStructuralFeature)*/ getTarget();
+            Object/*MChangeableKind*/ kind = ModelFacade.getChangeability(target);
             if (kind == null || kind.equals(MChangeableKind.ADD_ONLY)) {
                 setSelected(ActionSetStructuralFeatureChangeability.ADDONLY_COMMAND);
             } else

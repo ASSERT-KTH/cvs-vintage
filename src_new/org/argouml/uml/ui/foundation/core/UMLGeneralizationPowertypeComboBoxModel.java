@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.7 2003/09/01 21:49:21 bobtarling Exp $
+// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.8 2003/09/17 23:25:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,6 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
 
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MNamespace;
-import ru.novosoft.uml.model_management.MModel;
-
 /**
  * @since Nov 3, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -74,7 +72,7 @@ public class UMLGeneralizationPowertypeComboBoxModel
         Project p = ProjectManager.getManager().getCurrentProject();
         Iterator it = p.getUserDefinedModels().iterator();
         while (it.hasNext()) {
-	    MModel model = (MModel) it.next();
+	    Object model = /*(MModel)*/ it.next();
 	    elements.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(model, MClassifier.class));
         }
         elements.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(p.getDefaultModel(), MClassifier.class));

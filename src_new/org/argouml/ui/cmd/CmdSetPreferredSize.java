@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.9 2003/09/15 06:54:39 linus Exp $
+// $Id: CmdSetPreferredSize.java,v 1.10 2003/09/17 23:26:46 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.ui.cmd;
 import java.awt.*;
 import java.util.Vector;
 import org.argouml.application.api.Argo;
-import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.state.ui.FigCompositeState;
 import org.argouml.uml.diagram.static_structure.ui.FigPackage;
 
@@ -132,4 +131,3 @@ public class CmdSetPreferredSize extends Cmd {
     public void undoIt() { }
             
 }
-

@@ -1,5 +1,4 @@
-
-// $Id: ActionSetAssociationEndNavigable.java,v 1.3 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetAssociationEndNavigable.java,v 1.4 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,16 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetAssociationEndNavigable.java,v 1.3 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetAssociationEndNavigable.java,v 1.4 2003/09/17 23:26:45 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLCheckBox2;
-
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
 /**
  * 
@@ -60,8 +58,8 @@ public class ActionSetAssociationEndNavigable extends UMLChangeAction {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
             if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
-                MAssociationEnd m = (MAssociationEnd) target;
-                m.setNavigable(source.isSelected());                
+                Object m = /*(MAssociationEnd)*/ target;
+                ModelFacade.setNavigable(m, source.isSelected());                
             }
         }
     }

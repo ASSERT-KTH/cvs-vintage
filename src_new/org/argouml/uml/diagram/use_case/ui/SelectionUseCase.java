@@ -1,4 +1,4 @@
-// $Id: SelectionUseCase.java,v 1.15 2003/09/14 17:07:32 alexb Exp $
+// $Id: SelectionUseCase.java,v 1.16 2003/09/17 23:25:52 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,11 +49,6 @@ import org.tigris.gef.graph.MutableGraphModel;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.Handle;
-
-import ru.novosoft.uml.behavior.use_cases.MActorImpl;
-import ru.novosoft.uml.behavior.use_cases.MUseCaseImpl;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MGeneralization;
 
 public class SelectionUseCase extends SelectionWButtons {
     protected static Logger cat =

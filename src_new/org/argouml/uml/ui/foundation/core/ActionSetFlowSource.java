@@ -1,5 +1,4 @@
-
-// $Id: ActionSetFlowSource.java,v 1.5 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetFlowSource.java,v 1.6 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,11 +30,9 @@ import java.util.Collection;
 import java.util.Vector;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
-import ru.novosoft.uml.foundation.core.MFlow;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * @since Oct 12, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -61,17 +58,17 @@ public class ActionSetFlowSource extends UMLChangeAction {
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isAFlow(target)) {
-                MFlow flow = (MFlow) target;
-                MModelElement old = null;
-                if (!flow.getSources().isEmpty()) {
-                    old = (MModelElement) flow.getSources().toArray()[0];
+            if (ModelFacade.isAFlow(target)) {
+                Object flow = /*(MFlow)*/ target;
+                Object old = null;
+                if (!ModelFacade.getSources(flow).isEmpty()) {
+                    old = /*(MModelElement)*/ ModelFacade.getSources(flow).toArray()[0];
                 }
                 if (old != source.getSelectedItem()) {
                     if (source.getSelectedItem() != null) {
                         Vector sources = new Vector();
                         sources.add(source.getSelectedItem());
-                        flow.setSources((Collection) sources);
+                        ModelFacade.setSources(flow, (Collection) sources);
                     }
                 }
             }

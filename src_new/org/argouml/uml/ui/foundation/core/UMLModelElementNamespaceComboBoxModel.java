@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.11 2003/08/30 18:59:42 bobtarling Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.12 2003/09/17 23:25:51 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,12 +29,11 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
  * A model for a namespace combo box,
- * $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.11 2003/08/30 18:59:42 bobtarling Exp $
+ * $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.12 2003/09/17 23:25:51 bobtarling Exp $
  *
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl, alexb
@@ -56,7 +55,7 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(Object o) {
-        return org.argouml.model.ModelFacade.isANamespace(o) && CoreHelper.getHelper().isValidNamespace((MModelElement) getTarget(), (MNamespace) o);
+        return org.argouml.model.ModelFacade.isANamespace(o) && CoreHelper.getHelper().isValidNamespace(/*(MModelElement)*/ getTarget(), /*(MNamespace)*/ o);
     }
     
     /**  
@@ -64,7 +63,7 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
      */
     protected void buildModelList() {
         setElements(CoreHelper.getHelper()
-		    .getAllPossibleNamespaces((MModelElement) getTarget()));
+		    .getAllPossibleNamespaces(/*(MModelElement)*/ getTarget()));
     }
     
     /**

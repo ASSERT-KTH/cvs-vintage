@@ -1,4 +1,4 @@
-// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,16 +22,16 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLModelElementVisibilityRadioButtonPanel.java,v 1.3 2003/09/17 23:25:51 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
 
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 
 /**
@@ -66,8 +66,8 @@ public class UMLModelElementVisibilityRadioButtonPanel extends UMLRadioButtonPan
      */
     public void buildModel() {
         if (getTarget() != null) {
-            MModelElement target = (MModelElement) getTarget();
-            MVisibilityKind kind = target.getVisibility();
+            Object target = /*(MModelElement)*/ getTarget();
+            Object kind = ModelFacade.getVisibility(target);
             if (kind == null || kind.equals(MVisibilityKind.PUBLIC)) {
                 setSelected(ActionSetModelElementVisibility.PUBLIC_COMMAND);
             } else

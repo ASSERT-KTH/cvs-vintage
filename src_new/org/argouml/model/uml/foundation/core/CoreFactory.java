@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.57 2003/09/14 18:51:33 alexb Exp $
+// $Id: CoreFactory.java,v 1.58 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1402,12 +1402,12 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param directionKind The directionkind. If null it is not set.
      * @return      The newly created parameter.
      */
-    public MParameter buildParameter(
-				     MBehavioralFeature oper,
-				     MParameterDirectionKind directionKind) {
+    public Object buildParameter(Object feature, Object dk) {
+        MBehavioralFeature oper = (MBehavioralFeature) feature;
+        MParameterDirectionKind directionKind = (MParameterDirectionKind) dk;
 	MParameter res = buildParameter(oper);
 	if (directionKind != null) {
-	    res.setKind(directionKind);
+	    ModelFacade.setKind(res, directionKind);
 	}
 	return res;
     }

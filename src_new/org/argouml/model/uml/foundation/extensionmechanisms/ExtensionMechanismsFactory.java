@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.22 2003/08/20 22:27:32 alexb Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.23 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -120,7 +120,7 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
      * @param namespace
      * @return an initialized stereotype.
      */
-    public MStereotype buildStereotype(String text, Object ns) {
+    public Object/*MStereotype*/ buildStereotype(String text, Object ns) {
     	MStereotype stereo = createStereotype();
     	stereo.setName(text);
     	if (ns != null && ns instanceof MNamespace)
@@ -128,7 +128,8 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
     	return stereo;
     }
 
-    public MStereotype buildStereotype(MModelElement m, String text) {
+    public MStereotype buildStereotype(Object/*MModelElement*/ modelElement, String text) {
+        MModelElement m = (MModelElement)modelElement;
         // if (m == null && text == null)
 	//  throw new IllegalArgumentException("one of the arguments is null");
         MStereotype stereo = createStereotype();

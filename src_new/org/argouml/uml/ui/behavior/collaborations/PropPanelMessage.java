@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.38 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.39 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.38 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: PropPanelMessage.java,v 1.39 2003/09/17 23:26:45 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -46,7 +46,6 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
-import ru.novosoft.uml.behavior.common_behavior.MCallAction;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /**

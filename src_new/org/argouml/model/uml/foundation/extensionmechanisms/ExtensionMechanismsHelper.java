@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.22 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.23 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,7 +175,8 @@ public class ExtensionMechanismsHelper {
      * @param m
      * @return Collection
      */
-    public Collection getAllPossibleStereotypes(MModelElement m) {
+    public Collection getAllPossibleStereotypes(Object modelElement) {
+        MModelElement m = (MModelElement)modelElement;
         List ret = new ArrayList();
         if (m == null) return ret;
         Iterator it = getStereotypes().iterator();
@@ -229,7 +230,9 @@ public class ExtensionMechanismsHelper {
      * @param m
      * @param stereo
      */
-    public void setStereoType(MModelElement m, MStereotype stereo) {
+    public void setStereoType(Object modelElement, Object stereotype) {
+        MModelElement m = (MModelElement)modelElement;
+        MStereotype stereo = (MStereotype)stereotype;
         if (stereo != null && m.getModel() != stereo.getModel()) {
             stereo.setNamespace(m.getModel());
         }

@@ -1,5 +1,4 @@
-
-// $Id: PropPanelInterface.java,v 1.32 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: PropPanelInterface.java,v 1.33 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +32,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import org.argouml.ui.targetmanager.TargetManager;
@@ -86,9 +86,9 @@ public class PropPanelInterface extends PropPanelClassifier {
     public void newInterface() {
 	Object target = getTarget();
 	if (org.argouml.model.ModelFacade.isAInterface(target)) {
-	    MInterface iface = (MInterface) target;
-	    MInterface newInterface = CoreFactory.getFactory().createInterface();
-	    iface.getNamespace().addOwnedElement(newInterface);
+	    Object iface = /*(MInterface)*/ target;
+	    Object newInterface = CoreFactory.getFactory().createInterface();
+	    ModelFacade.addOwnedElement(ModelFacade.getNamespace(iface), newInterface);
 	    TargetManager.getInstance().setTarget(newInterface);
 	}
     }

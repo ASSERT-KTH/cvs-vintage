@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.32 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: PropPanelParameter.java,v 1.33 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,7 +47,6 @@ import org.argouml.util.ConfigLoader;
 
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
@@ -116,7 +115,7 @@ public class PropPanelParameter extends PropPanelModelElement {
     }
 
     public Object getType() {
-        MClassifier type = null;
+        Object type = null;
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAParameter(target)) {
             return org.argouml.model.ModelFacade.getType(target);
@@ -146,10 +145,10 @@ public class PropPanelParameter extends PropPanelModelElement {
 
     public void addDataType() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isANamespace(target)) {
-            MNamespace ns = (MNamespace) target;
-            MModelElement ownedElem = CoreFactory.getFactory().createDataType();
-            ns.addOwnedElement(ownedElem);
+        if (ModelFacade.isANamespace(target)) {
+            Object ns = /*(MNamespace)*/ target;
+            Object ownedElem = CoreFactory.getFactory().createDataType();
+            ModelFacade.addOwnedElement(ns, ownedElem);
             TargetManager.getInstance().setTarget(ownedElem);
         }
     }

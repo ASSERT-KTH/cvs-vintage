@@ -1,4 +1,4 @@
-// $Id: ActionNewModelElementConstraint.java,v 1.3 2003/06/29 23:50:17 linus Exp $
+// $Id: ActionNewModelElementConstraint.java,v 1.4 2003/09/17 23:25:21 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,6 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 /**
  * @since Oct 12, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -56,7 +54,7 @@ public class ActionNewModelElementConstraint
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        CoreFactory.getFactory().buildConstraint((MModelElement) getTarget());
+        CoreFactory.getFactory().buildConstraint(/*(MModelElement)*/ getTarget());
     }
 
 }

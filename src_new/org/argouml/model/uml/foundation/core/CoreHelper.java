@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.70 2003/09/14 18:10:45 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.71 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1325,7 +1325,8 @@ public class CoreHelper {
      * @param m
      * @return Collection
      */
-    public Collection getAllPossibleNamespaces(MModelElement m) {
+    public Collection getAllPossibleNamespaces(Object modelElement) {
+        MModelElement m = (MModelElement)modelElement;
         List ret = new ArrayList();
         if (m == null)
             return ret;

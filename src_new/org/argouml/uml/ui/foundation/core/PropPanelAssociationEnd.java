@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.36 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.37 2003/09/17 23:26:45 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,8 +219,8 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
     public void gotoOther() {
         Object target = getTarget();
         if (ModelFacade.isAAssociationEnd(target)) {
-            MAssociationEnd end = (MAssociationEnd) target;
-            TargetManager.getInstance().setTarget(end.getOppositeEnd());
+            Object end = /*(MAssociationEnd)*/ target;
+            TargetManager.getInstance().setTarget(ModelFacade.getOppositeEnd(end));
         }
     }
 
