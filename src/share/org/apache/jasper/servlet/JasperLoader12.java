@@ -57,30 +57,18 @@
 
 package org.apache.jasper.servlet;
 
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.ProtectionDomain;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
-import java.net.URL;
-
-import java.security.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.jasper.JasperException;
-import org.apache.jasper.Constants;
-import org.apache.jasper.JspCompilationContext;
-import org.apache.jasper.JspEngineContext;
-import org.apache.jasper.Options;
-import org.apache.jasper.compiler.Compiler;
 
-import org.apache.tomcat.util.log.*;
-import javax.servlet.http.*;
 /**
  * 1.2 version of the JspLoader
  * 

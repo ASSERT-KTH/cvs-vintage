@@ -61,16 +61,15 @@
 
 package org.apache.jasper;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.jasper.compiler.JspReader;
-import org.apache.jasper.compiler.ServletWriter;
-import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.CommandLineCompiler;
 import org.apache.jasper.compiler.Compiler;
-
-//import org.apache.jasper.runtime.JspLoader;
-// Use the jasper loader - the only function used is to add a jar
+import org.apache.jasper.compiler.JspReader;
+import org.apache.jasper.compiler.ServletWriter;
 import org.apache.jasper.servlet.JasperLoader;
 
 /**

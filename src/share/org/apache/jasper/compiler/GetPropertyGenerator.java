@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.6 2001/05/04 00:57:11 nacho Exp $
- * $Revision: 1.6 $
- * $Date: 2001/05/04 00:57:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.7 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -61,11 +61,10 @@
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
-import org.apache.jasper.JasperException;
-import org.apache.jasper.runtime.JspRuntimeLibrary;
-import java.lang.reflect.Method;
 
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
+import org.apache.jasper.runtime.JspRuntimeLibrary;
 
 /**
  * Generator for <jsp:getProperty.../>

@@ -56,25 +56,22 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.net.URL;
-
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
-import org.apache.jasper.Constants;
-import org.apache.jasper.JasperException;
-
-import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
+import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /** 
  * This class has all the utility method(s).

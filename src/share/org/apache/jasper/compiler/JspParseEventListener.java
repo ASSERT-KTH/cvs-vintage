@@ -58,27 +58,24 @@
 
 package org.apache.jasper.compiler;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.util.StringTokenizer;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.util.Vector;
 
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
-
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * JSP code generator "backend".

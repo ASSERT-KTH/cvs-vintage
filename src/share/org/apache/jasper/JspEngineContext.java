@@ -62,23 +62,21 @@
 
 package org.apache.jasper;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import org.apache.jasper.compiler.JspReader;
-import org.apache.jasper.compiler.ServletWriter;
-//import org.apache.jasper.runtime.JspLoader;
-import org.apache.jasper.servlet.JasperLoader;
-import org.apache.jasper.compiler.TagLibraries;
 
 import org.apache.jasper.compiler.Compiler;
-import org.apache.jasper.compiler.JspCompiler;
-import org.apache.jasper.compiler.SunJavaCompiler;
 import org.apache.jasper.compiler.JavaCompiler;
+import org.apache.jasper.compiler.JspCompiler;
+import org.apache.jasper.compiler.JspReader;
+import org.apache.jasper.compiler.ServletWriter;
+import org.apache.jasper.compiler.SunJavaCompiler;
+import org.apache.jasper.servlet.JasperLoader;
+import org.apache.tomcat.util.log.Log;
 
-import org.apache.tomcat.util.log.*;
 /**
  * A place holder for various things that are used through out the JSP
  * engine. This is a per-request/per-context data structure. Some of

@@ -54,13 +54,8 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
+import java.io.File;
 
-import org.apache.jasper.compiler.Mangler;
-
-// utils - can be moved here if needed
 import org.apache.tomcat.util.JavaGeneratorTool;
 import org.apache.tomcat.util.io.FileUtil;
 

@@ -58,12 +58,11 @@ package org.apache.jasper.compiler;
 import java.util.Hashtable;
 import java.util.Stack;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
 
 
 /**

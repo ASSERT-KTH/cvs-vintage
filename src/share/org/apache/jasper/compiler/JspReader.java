@@ -56,21 +56,18 @@
 
 package org.apache.jasper.compiler;
 
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.Reader;
 import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.Stack;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * JspReader is an input buffer for the JSP parser. It should allow

@@ -55,24 +55,21 @@
  */
 package org.apache.jasper.compiler;
 
+import java.lang.reflect.Method;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Stack;
-import java.util.Enumeration;
-import java.lang.reflect.Method;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.TagAttributeInfo;
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
-import org.apache.jasper.Constants;
-
-import org.apache.jasper.compiler.ServletWriter;
 
 /**
  * Custom tag support.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.6 2000/06/14 22:51:49 mandar Exp $
- * $Revision: 1.6 $
- * $Date: 2000/06/14 22:51:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.7 2003/09/22 09:17:47 hgomez Exp $
+ * $Revision: 1.7 $
+ * $Date: 2003/09/22 09:17:47 $
  *
  * ====================================================================
  * 
@@ -61,13 +61,12 @@
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
-import java.util.Vector;
 
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagLibraryInfo;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 /**
  * An abstract base class to make things easy during development.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/servlet/ServletEngine.java,v 1.1 2000/06/23 21:37:32 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/06/23 21:37:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/servlet/ServletEngine.java,v 1.2 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -59,8 +59,6 @@
  *
  */ 
 package org.apache.jasper.servlet;
-
-import java.io.File;
 
 import javax.servlet.ServletContext;
 

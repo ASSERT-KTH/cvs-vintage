@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.3 2000/06/27 20:59:39 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/27 20:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.4 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.4 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -65,12 +65,11 @@
 
 package org.apache.jasper;
 
+import java.io.IOException;
+
+import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
-//import org.apache.jasper.runtime.JspLoader;
-import org.apache.jasper.compiler.TagLibraries;
-import java.io.IOException;
-import org.apache.jasper.compiler.Compiler;
 
 /**
  * A place holder for various things that are used through out the JSP

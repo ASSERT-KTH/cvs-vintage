@@ -55,36 +55,35 @@
 
 package org.apache.jasper.compiler;
 
-import java.net.URL;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Vector;
+import java.net.URL;
 import java.util.Hashtable;
+import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.TagInfo;
+import javax.servlet.jsp.tagext.TagLibraryInfo;
 
-import org.w3c.dom.*;
-import org.xml.sax.*;
-
-import org.apache.jasper.JspCompilationContext;
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-//import org.apache.jasper.runtime.JspLoader;
-
-import org.apache.tomcat.util.log.*;
+import org.apache.jasper.JasperException;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.tomcat.util.log.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * Implementation of the TagLibraryInfo class from the JSP spec. 

@@ -58,24 +58,7 @@
 
 package org.apache.jasper.compiler;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-
 import org.apache.jasper.JasperException;
-import org.apache.jasper.Constants;
-import org.apache.jasper.JspCompilationContext;
 
 /**
  * Generates original "Jakarta"-style comments

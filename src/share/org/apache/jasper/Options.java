@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.13 2001/01/14 20:45:40 larryi Exp $
- * $Revision: 1.13 $
- * $Date: 2001/01/14 20:45:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.14 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.14 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -62,9 +62,6 @@
 package org.apache.jasper;
 
 import java.io.File;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 
 /**
  * A class to hold all init parameters specific to the JSP engine. 

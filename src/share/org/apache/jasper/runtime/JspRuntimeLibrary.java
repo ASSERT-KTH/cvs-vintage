@@ -58,27 +58,13 @@
 
 package org.apache.jasper.runtime;
 
-import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
 
-import java.lang.reflect.Method;
-
-import java.io.Writer;
-import java.io.Reader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import java.beans.PropertyDescriptor;
-import java.beans.IndexedPropertyDescriptor;
-
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 
 /**

@@ -55,35 +55,32 @@
 
 package org.apache.jasper.servlet;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
 import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.SingleThreadModel;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.HttpJspPage;
 import javax.servlet.jsp.JspFactory;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-import org.apache.jasper.Options;
 import org.apache.jasper.EmbededServletOptions;
+import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JspEngineContext;
-import org.apache.jasper.compiler.Mangler;
-import org.apache.jasper.runtime.*;
-
+import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
-
+import org.apache.jasper.compiler.Mangler;
+import org.apache.jasper.runtime.HttpJspBase;
+import org.apache.jasper.runtime.JspFactoryImpl;
 import org.apache.tomcat.util.log.Log;
 
 /**

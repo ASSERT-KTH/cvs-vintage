@@ -57,27 +57,13 @@
 
 package org.apache.jasper.runtime;
 
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
-
-import java.util.Hashtable;
 import java.util.Vector;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
-import java.net.URL;
 
-import java.security.*;
-
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.Options;
+import org.apache.tomcat.util.log.Log;
 
-import org.apache.tomcat.util.log.*;
-import javax.servlet.http.*;
 /**
  * Jsp compiler and runtime depends on special features from the
  * ClassLoader.

@@ -54,11 +54,8 @@
  */ 
 package org.apache.jasper;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-
-import org.apache.jasper.Options;
+import java.io.File;
+import java.util.Properties;
 
 
 /** Another implementation of Options, backed by a Properties file

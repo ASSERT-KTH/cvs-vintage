@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.7 2001/04/28 21:13:36 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2001/04/28 21:13:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SetPropertyGenerator.java,v 1.8 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -61,12 +61,9 @@
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
-import org.apache.jasper.JasperException;
-import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.beans.*;
 
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 /**
  * Generator for <jsp:setProperty .../>

@@ -1,5 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/TagHandlerPoolImpl.java,v 1.2 2001/05/11 18:43:18 clucas Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/TagHandlerPoolImpl.java,v 1.3 2003/09/22 09:17:47 hgomez Exp $
  *
  * ====================================================================
  *
@@ -59,10 +59,11 @@
 
 package org.apache.jasper.runtime;
 
-import javax.servlet.jsp.tagext.Tag;
-import java.util.Stack;
-import java.util.EmptyStackException;
 import java.util.Enumeration;
+import java.util.Stack;
+
+import javax.servlet.jsp.tagext.Tag;
+
 import org.apache.tomcat.util.log.Log;
 
 /**

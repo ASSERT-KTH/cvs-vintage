@@ -54,13 +54,9 @@
  */ 
 package org.apache.jasper.compiler;
 
-import java.lang.reflect.Constructor;
-
 import java.util.Hashtable;
 
 import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.Tag;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;

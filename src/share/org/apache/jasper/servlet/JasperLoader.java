@@ -57,30 +57,22 @@
 
 package org.apache.jasper.servlet;
 
-import java.io.FileInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipEntry;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-import java.security.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
-import org.apache.jasper.JspCompilationContext;
-import org.apache.jasper.JspEngineContext;
-import org.apache.jasper.Options;
-import org.apache.jasper.compiler.Compiler;
+import org.apache.jasper.JasperException;
 
-import org.apache.tomcat.util.log.*;
-import javax.servlet.http.*;
 /**
  * This is a class loader that loads JSP files as though they were
  * Java classes. It calls the compiler to compile the JSP file into a

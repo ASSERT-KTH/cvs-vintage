@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanRepository.java,v 1.1 1999/10/09 00:20:34 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:34 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanRepository.java,v 1.2 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.2 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * ====================================================================
  * 
@@ -61,15 +61,11 @@
 package org.apache.jasper.compiler;
 
 
-import java.util.Vector;
+import java.beans.Beans;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
-import java.beans.Beans;
-import java.beans.BeanInfo;
-import java.beans.PropertyDescriptor;
-
-import javax.servlet.ServletException;
 import org.apache.jasper.JasperException;
 
 /**

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.9 2001/03/09 22:26:13 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2001/03/09 22:26:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BeanGenerator.java,v 1.10 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.10 $
+ * $Date: 2003/09/22 09:17:46 $
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -59,12 +59,9 @@
 package org.apache.jasper.compiler;
 
 import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.lang.reflect.Method;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 /**
  * Generate code for useBean.

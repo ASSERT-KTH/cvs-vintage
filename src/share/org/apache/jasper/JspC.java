@@ -57,20 +57,21 @@
 
 package org.apache.jasper;
 
-import java.io.*;
-import java.util.*;
+import java.io.CharArrayWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Writer;
+import java.util.Enumeration;
+import java.util.Stack;
+import java.util.Vector;
 
-import org.apache.jasper.compiler.JspReader;
-import org.apache.jasper.compiler.ServletWriter;
-import org.apache.jasper.compiler.TagLibraries;
-import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.CommandLineCompiler;
-
-//import org.apache.jasper.runtime.JspLoader;
 import org.apache.jasper.servlet.JasperLoader;
-
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.util.compat.Jdk11Compat;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * Shell for the jspc compiler.  Handles all options associated with the 

@@ -54,17 +54,13 @@
  */ 
 package org.apache.jasper;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
+
+import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspReader;
 import org.apache.jasper.compiler.ServletWriter;
-import org.apache.jasper.compiler.Compiler;
-
-import java.util.*;
-import java.io.*;
-import java.net.*;
-
-import org.apache.jasper.JspCompilationContext;
 
 /** Alternative implementation of JspCompilationContext ( in addition
     to the servlet and standalone ). Used by JspInterceptor - but

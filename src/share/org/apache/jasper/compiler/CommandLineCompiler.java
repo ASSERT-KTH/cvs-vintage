@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.7 2002/02/22 03:16:09 billbarker Exp $
- * $Revision: 1.7 $
- * $Date: 2002/02/22 03:16:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.8 2003/09/22 09:17:46 hgomez Exp $
+ * $Revision: 1.8 $
+ * $Date: 2003/09/22 09:17:46 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -60,11 +60,9 @@
 package org.apache.jasper.compiler;
 
 import java.io.File;
-import java.io.IOException;
 
-import org.apache.jasper.Constants;
-import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.CommandLineContext;
+import org.apache.jasper.Constants;
 
 /**
  * Overrides some methods so that we get the desired effects.

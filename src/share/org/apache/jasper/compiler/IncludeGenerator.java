@@ -57,12 +57,11 @@
 
 package org.apache.jasper.compiler;
 
-import java.util.Hashtable;
 import java.util.Enumeration;
-import java.io.File;
+import java.util.Hashtable;
 
-import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
+import org.apache.jasper.JasperException;
 
 
 

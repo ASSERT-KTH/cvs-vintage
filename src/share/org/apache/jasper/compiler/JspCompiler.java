@@ -56,13 +56,11 @@
 package org.apache.jasper.compiler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
-
-import org.apache.tomcat.util.log.*;
+import org.apache.jasper.JspCompilationContext;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * JspCompiler is an implementation of Compiler with a funky code
