@@ -64,7 +64,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.352 2005/03/22 00:33:59 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.353 2005/03/27 20:28:10 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4699,7 +4699,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		
 		hiddenCursor = getToolkit().createCustomCursor(
 			getGraphicsConfiguration()
-			.createCompatibleImage(1,1,
+			.createCompatibleImage(16,16,
 			Transparency.BITMASK),
 			new Point(0,0),"Hidden");
 	} //}}}
