@@ -432,20 +432,20 @@ insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
  * Insert attribute groups for project 0
  * group_id, name, description, module_id, issue_type_id, active, dedupe, preferred order
  */
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (1, 'Attribute Group One', 'dedupe attributes', 0, 1, 1, 1, 1);
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (2, 'Attribute Group Two', 'non-dedupe attributes', 0, 1, 1, 0, 3);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (1, 'Attribute group one', 'dedupe attributes', 0, 1, 1, 1, 1);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (2, 'Attribute group two', 'non-dedupe attributes', 0, 1, 1, 0, 3);
 
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (3, 'Attribute Group One', 'dedupe attributes', 0, 3, 1, 1, 1);
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (4, 'Attribute Group Two', 'non-dedupe attributes', 0, 3, 1, 0, 3);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (3, 'Attribute group one', 'dedupe attributes', 0, 3, 1, 1, 1);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (4, 'Attribute group two', 'non-dedupe attributes', 0, 3, 1, 0, 3);
 
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (5, 'Attribute Group One', 'dedupe attributes', 0, 5, 1, 1, 1);
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (6, 'Attribute Group Two', 'non-dedupe attributes', 0, 5, 1, 0, 3);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (5, 'Attribute group one', 'dedupe attributes', 0, 5, 1, 1, 1);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (6, 'Attribute group two', 'non-dedupe attributes', 0, 5, 1, 0, 3);
 
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (7, 'Attribute Group One', 'dedupe attributes', 0, 7, 1, 1, 1);
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (8, 'Attribute Group Two', 'non-dedupe attributes', 0, 7, 1, 0, 3);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (7, 'Attribute group one', 'dedupe attributes', 0, 7, 1, 1, 1);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (8, 'Attribute group two', 'non-dedupe attributes', 0, 7, 1, 0, 3);
 
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (9, 'Attribute Group One', 'dedupe attributes', 0, 9, 1, 1, 1);
-INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (10, 'Attribute Group Two', 'non-dedupe attributes', 0, 9, 1, 0, 3);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (9, 'Attribute group one', 'dedupe attributes', 0, 9, 1, 1, 1);
+INSERT INTO SCARAB_ATTRIBUTE_GROUP VALUES (10, 'Attribute group two', 'non-dedupe attributes', 0, 9, 1, 0, 3);
 
 /* 
  * Insert mapping between attributes and groups 
