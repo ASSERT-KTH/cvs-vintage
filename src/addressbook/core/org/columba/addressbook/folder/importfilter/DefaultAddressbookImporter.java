@@ -15,33 +15,34 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.folder.importfilter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
+
+import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.Plugin;
 
-
+/**
+ * Abstract base class for addressbook data importers.
+ */
 public abstract class DefaultAddressbookImporter implements Plugin {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
+    
     protected AbstractFolder destinationFolder;
     protected File sourceFile;
 
     //protected AddressbookFolder tempFolder;
     protected int counter;
 
-    public DefaultAddressbookImporter() {
-    }
+    public DefaultAddressbookImporter() {}
 
     public DefaultAddressbookImporter(File sourceFile, AbstractFolder destinationFolder) {
         this.sourceFile = sourceFile;
@@ -54,9 +55,9 @@ public abstract class DefaultAddressbookImporter implements Plugin {
         //tempFolder = new AddressbookFolder(null,addressbookInterface);
     }
 
-    /** ********* overwrite the following messages ************************* */
+    /** ********* override the following messages ************************* */
     /**
-     * overwrite this method to specify type the wizard dialog will open the
+     * override this method to specify type the wizard dialog will open the
      * correct file/directory dialog automatically
      */
     public int getType() {
@@ -67,7 +68,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
      * enter a description which will be shown to the user here
      */
     public String getDescription() {
-        return ""; //$NON-NLS-1$
+        return "";
     }
 
     /**
@@ -101,33 +102,25 @@ public abstract class DefaultAddressbookImporter implements Plugin {
         try {
             importAddressbook(sourceFile);
         } catch (Exception ex) {
-            if (ex instanceof FileNotFoundException) {
-                NotifyDialog dialog = new NotifyDialog();
-                dialog.showDialog(AddressbookResourceLoader.getString(
-                        "dialog", "addressbookimport", "source_file_not_found")); //$NON-NLS-1$
-            } else {
-                new ExceptionDialog(ex);
-            }
-
-            NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog(AddressbookResourceLoader.getString("dialog",
-                    "addressbookimport", "addressbook_import_failed")); //$NON-NLS-1$
-
+            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+                AddressbookResourceLoader.getString("dialog",
+                    "addressbookimport", "addressbook_import_failed"), "",
+                JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         if (getCount() == 0) {
-            NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog(AddressbookResourceLoader.getString("dialog",
-                    "addressbookimport", "addressbook_import_failed_2")); //$NON-NLS-1$
+            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(), 
+                AddressbookResourceLoader.getString("dialog",
+                    "addressbookimport", "addressbook_import_failed_2"), "",
+                JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "addressbook_import_was_successfull"),
                 AddressbookResourceLoader.getString("dialog", "contact",
-                    "information"), //$NON-NLS-1$ //$NON-NLS-2$
-                JOptionPane.INFORMATION_MESSAGE,
-                ImageLoader.getImageIcon("stock_dialog_info_48.png")); //$NON-NLS-1$
+                    "information"),
+                JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
