@@ -2,6 +2,11 @@
 <!-- DTD for account". -->
 
 
+<!ELEMENT template ( pop3, imap )>
+
+<!ELEMENT pop3 ( account)>
+<!ELEMENT imap ( account)>
+
 <!ELEMENT accountlist ( account* )>
 
 <!ELEMENT account ( identity, (popserver | imapserver), smtpserver, pgp, specialfolders)>
@@ -63,7 +68,76 @@
  <!ATTLIST popserver use_default_account (true|false) "false">
 
 <!ELEMENT imapserver>
+  <!-- username -->
+ <!ATTLIST imapserver user CDATA #REQUIRED>
+  <!-- password -->
+ <!ATTLIST imapserver password CDATA #REQUIRED>
+  <!-- username -->
+ <!ATTLIST imapserver user CDATA #REQUIRED>
+  <!-- host (POP3 server) -->
+ <!ATTLIST imapserver host CDATA #REQUIRED>
+  <!-- POP3 server port -->
+ <!ATTLIST imapserver port CDATA "110">
+  <!-- save password in config file -->
+ <!ATTLIST imapserver save_password (true|false) "false">
+  <!-- enable mailcheck  -->
+ <!ATTLIST imapserver enable_mailcheck (true|false) "false">
+  <!-- mailcheck interval in minutes (default is every 10 minutes) -->
+ <!ATTLIST imapserver mailcheck_interval CDATA "10">
+  <!-- login-method  -->
+ <!ATTLIST imapserver login-method (LOGIN) "LOGIN">
+  <!-- enable sound notification  -->
+ <!ATTLIST imapserver enable_sound (true|false) "false">
+  <!-- soundfile to play -->
+ <!ATTLIST imapserver sound_file CDATA "default">
+  <!-- use IMAP settings from default account instead  -->
+ <!ATTLIST imapserver use_default_account (true|false) "false">
+  <!-- automatically apply filter when opening INBOX folder -->
+ <!ATTLIST imapserver automatically_apply_filter (true|false) "false">
 
 <!ELEMENT smtpserver >
+  <!-- username -->
+ <!ATTLIST smtpserver user CDATA #REQUIRED>
+  <!-- password -->
+ <!ATTLIST smtpserver password CDATA #REQUIRED>
+  <!-- username -->
+ <!ATTLIST smtpserver user CDATA #REQUIRED>
+  <!-- host (POP3 server) -->
+ <!ATTLIST smtpserver host CDATA #REQUIRED>
+  <!-- POP3 server port -->
+ <!ATTLIST smtpserver port CDATA "110">
+  <!-- save password in config file -->
+ <!ATTLIST smtpserver save_password (true|false) "false">
+  <!-- login-method  -->
+ <!ATTLIST smtpserver login-method (LOGIN) "LOGIN">
+  <!-- use SMTP settings from default account instead  -->
+ <!ATTLIST smtpserver use_default_account (true|false) "false">
+  <!-- automatically apply filter when opening INBOX folder -->
+ <!ATTLIST smtpserver automatically_apply_filter (true|false) "false">
 
-
+<!ELEMENT pgp >
+   <!-- pgp user id -->
+ <!ATTLIST pgp id CDATA #REQUIRED>
+    <!-- type of pgp software (0=GnuPG,1=PGP,etc.) -->
+ <!ATTLIST pgp type CDATA (0|1) "0">
+   <!-- path to commandline pgp tool -->
+ <!ATTLIST pgp path CDATA "/usr/bin/gpg">
+    <!-- always sign when sending message -->
+ <!ATTLIST pgp always_sign (true|false) "false">
+    <!-- always encrypt when sending message -->
+ <!ATTLIST pgp always_encrypt (true|false) "false">    
+    <!-- enable pgp for this account -->
+ <!ATTLIST pgp enable (true|false) "false">
+ 
+<!ELEMENT specialfolders >
+    <!-- inbox -->
+ <!ATTLIST specialfolders inbox CDATA "101">
+    <!-- drafts -->
+ <!ATTLIST specialfolders drafts CDATA "102">
+    <!-- templates-->
+ <!ATTLIST specialfolders templates CDATA "107">
+    <!-- sent -->
+ <!ATTLIST specialfolders sent CDATA "104">
+    <!-- trash -->
+ <!ATTLIST specialfolders trash CDATA "105">
+ 
