@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.11 2000/07/11 20:07:40 nacho Exp $
- * $Revision: 1.11 $
- * $Date: 2000/07/11 20:07:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.12 2000/07/25 04:19:29 craigmcc Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/07/25 04:19:29 $
  *
  * ====================================================================
  *
@@ -134,12 +134,47 @@ public class FileUtil {
     */
     public static String safePath( String base, String path ) {
 	// Hack for Jsp ( and other servlets ) that use rel. paths 
-	if( ! path.startsWith("/") ) path="/"+ path;
+	// if( ! path.startsWith("/") ) path="/"+ path;
 
 	String normP=path;
 	if( path.indexOf('\\') >=0 )
 	    normP= path.replace('\\', '/');
-	
+	if ( !normP.startsWith("/"))
+	    normP = "/" + normP;
+
+	int index = normP.indexOf("/../");
+	if (index >= 0) {
+
+	    // Clean out "//" and "/./" so they will not be confused
+	    // with real parent directories
+	    int index2 = 0;
+	    while ((index2 = normP.indexOf("//", index2)) >= 0) {
+		normP = normP.substring(0, index2) +
+		    normP.substring(index2 + 1);
+		if (index2 < index)
+		    index--;
+	    }
+	    index2 = 0;
+	    while ((index2 = normP.indexOf("/./", index2)) >= 0) {
+		normP = normP.substring(0, index2) +
+		    normP.substring(index2 + 2);
+		if (index2 < index)
+		    index -= 2;
+	    }
+
+	    // Remove cases of "/{directory}/../"
+	    while (index >= 0) {
+		// If no parent directory to remove, return null
+		if (index == 0)
+		    return (null);	// Trying to leave our context
+		index2 = normP.lastIndexOf('/', index-1);
+		normP = normP.substring(0, index2) +
+		    normP.substring(index + 3);
+		index = normP.indexOf("/../", index2);
+	    }
+
+	}
+
 	String realPath= base + normP;
 
 	// Probably not needed - it will be used on the local FS
