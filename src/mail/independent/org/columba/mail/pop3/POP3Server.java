@@ -185,6 +185,7 @@ public class POP3Server {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 		header.set("columba.pop3uid", uid);
+		header.set("columba.flags.recent", Boolean.TRUE);
 
 		headerCache.getHeaderList().add(header, uid);
 

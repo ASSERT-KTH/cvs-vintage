@@ -20,7 +20,7 @@ import org.columba.mail.folder.FolderTreeNode;
 public class RenameFolderCommand extends Command {
 
 	private FolderTreeNode parentFolder;
-	
+
 	/**
 	 * Constructor for RenameFolderCommand.
 	 * @param frameController
@@ -36,23 +36,19 @@ public class RenameFolderCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-			MainInterface
-			.frameController
-			.treeController
-			.getModel()
-			.nodeStructureChanged(
-			parentFolder);
+		MainInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
-		String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
+		parentFolder =
+			((FolderCommandReference) getReferences()[0]).getFolder();
+		String name =
+			((FolderCommandReference) getReferences()[0]).getFolderName();
 
-
-		((Folder)parentFolder).renameFolder(name);
+		((Folder) parentFolder).renameFolder(name);
 	}
 
 }

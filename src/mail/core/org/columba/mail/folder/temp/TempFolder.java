@@ -150,7 +150,7 @@ public class TempFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
 	 */
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
 		headerList.remove(uid);
 		messageList.remove(uid);
 	}

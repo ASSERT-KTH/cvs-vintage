@@ -152,6 +152,10 @@ public class MHDataStorage implements DataStorageInterface {
 				
 				h.set("columba.uid", new Integer(i) );
 				
+				if ( h.get("columba.flags.recent").equals(Boolean.TRUE) ) folder.getMessageFolderInfo().incRecent();
+				if ( h.get("columba.flags.seen").equals(Boolean.FALSE)  ) folder.getMessageFolderInfo().incUnseen();
+				folder.getMessageFolderInfo().incExists();
+			
 				headerList.add(header, new Integer(i));
 				
 				worker.incProgressBarValue();

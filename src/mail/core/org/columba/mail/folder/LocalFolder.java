@@ -86,6 +86,8 @@ public abstract class LocalFolder extends Folder {
 		String source = message.getSource();
 
 		getDataStorageInstance().saveMessage(source, newUid);
+		
+		getMessageFolderInfo().incExists();
 
 		return newUid;
 	}
@@ -97,12 +99,16 @@ public abstract class LocalFolder extends Folder {
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
 		getDataStorageInstance().saveMessage(source, newUid);
+		
+		getMessageFolderInfo().incExists();
 
 		return newUid;
 	}
 
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
 		getDataStorageInstance().removeMessage(uid);
+		
+		getMessageFolderInfo().decExists();
 	}
 
 	public AbstractMessage getMessage(

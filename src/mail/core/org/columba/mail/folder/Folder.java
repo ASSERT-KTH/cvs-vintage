@@ -293,7 +293,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @param uid
 	 * @throws Exception
 	 */
-	public abstract void removeMessage(Object uid) throws Exception;
+	public abstract void removeMessage(Object uid, WorkerStatusController worker) throws Exception;
 
 	/**
 	 * Method getMimePart.

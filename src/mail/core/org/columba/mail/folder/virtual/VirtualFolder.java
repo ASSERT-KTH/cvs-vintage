@@ -164,6 +164,13 @@ public class VirtualFolder extends Folder {
 		VirtualHeader virtualHeader =
 			new VirtualHeader((ColumbaHeader) header, f, uid);
 		virtualHeader.set("columba.uid", newUid);
+		
+		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
+		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+			
+		getMessageFolderInfo().incExists();
 
 		headerList.add(virtualHeader, newUid);
 
@@ -214,7 +221,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#removeMessage(Object)
 	 */
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
 	}
 
 	/**

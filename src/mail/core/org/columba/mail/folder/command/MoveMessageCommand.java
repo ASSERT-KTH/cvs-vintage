@@ -9,6 +9,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -49,6 +50,9 @@ public class MoveMessageCommand extends FolderCommand {
 		TableChangedEvent ev2 = new TableChangedEvent( TableChangedEvent.UPDATE, srcFolder);
 		 
 		frame.tableController.tableChanged(ev2);
+		
+		MainInterface.treeModel.nodeChanged(destFolder);
+		MainInterface.treeModel.nodeChanged(srcFolder);
 	}
 
 	/**

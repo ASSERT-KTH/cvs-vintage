@@ -254,6 +254,9 @@ public class IMAPFolder extends RemoteFolder {
 
 			if (flags.isSeen())
 				header.set("columba.flags.seen", Boolean.TRUE);
+			else
+				getMessageFolderInfo().incUnseen();
+				
 			if (flags.isAnswered())
 				header.set("columba.flags.answered", Boolean.TRUE);
 			if (flags.isDeleted())
@@ -261,7 +264,12 @@ public class IMAPFolder extends RemoteFolder {
 			if (flags.isFlagged())
 				header.set("columba.flags.flagged", Boolean.TRUE);
 			if (flags.isRecent())
+			{
 				header.set("columba.flags.recent", Boolean.TRUE);
+				getMessageFolderInfo().incRecent();
+			}
+				
+			getMessageFolderInfo().incExists();
 		}
 	}
 
@@ -388,6 +396,9 @@ public class IMAPFolder extends RemoteFolder {
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
+					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+						getMessageFolderInfo().decUnseen();
+						
 					h.set("columba.flags.seen", Boolean.TRUE);
 					break;
 				}
@@ -423,7 +434,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	}
 
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
 	}
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {

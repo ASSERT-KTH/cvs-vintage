@@ -22,6 +22,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.HeaderList;
+import org.columba.main.MainInterface;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -30,6 +31,7 @@ import org.columba.mail.message.HeaderList;
 public class ViewHeaderListCommand extends Command {
 
 	private HeaderList headerList;
+	private Folder folder;
 
 	public ViewHeaderListCommand( FrameController frame, DefaultCommandReference[] references ) {
 		super( frame, references );
@@ -47,6 +49,7 @@ public class ViewHeaderListCommand extends Command {
 		((MailFrameController)frameController).tableController.getView().clearSelection();
 		((MailFrameController)frameController).tableController.getActionListener().changeMessageActions();
 		
+		MainInterface.treeModel.nodeChanged(folder);
 	}
 
 	/**
@@ -55,6 +58,7 @@ public class ViewHeaderListCommand extends Command {
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 		
-		headerList = ((Folder)r[0].getFolder()).getHeaderList(worker);
+		folder = (Folder)r[0].getFolder();
+		headerList = (folder).getHeaderList(worker);
 	}
 }

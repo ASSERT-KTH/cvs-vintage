@@ -108,6 +108,8 @@ public class FolderTreeCellRenderer
 		if (folder != null) {
 
 			if (folder.getMessageFolderInfo().getRecent() > 0) {
+				System.out.println("bold="+folder.getName());
+				
 				setFont(boldFont);
 			} else {
 				setFont(plainFont);

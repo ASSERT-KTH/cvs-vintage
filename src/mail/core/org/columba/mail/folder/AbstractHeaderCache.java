@@ -152,6 +152,10 @@ public abstract class AbstractHeaderCache {
 
 			headerList.add(h, (Integer) h.get("columba.uid"));
 
+			if ( h.get("columba.flags.recent").equals(Boolean.TRUE) ) folder.getMessageFolderInfo().incRecent();
+			if ( h.get("columba.flags.seen").equals(Boolean.FALSE)  ) folder.getMessageFolderInfo().incUnseen();
+			folder.getMessageFolderInfo().incExists();
+		
 			int aktUid = ((Integer) h.get("columba.uid")).intValue();
 			if (nextUid < aktUid)
 				nextUid = aktUid;

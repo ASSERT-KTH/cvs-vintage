@@ -9,6 +9,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -49,6 +50,8 @@ public class MarkMessageCommand extends FolderCommand {
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.MARK, folder, uids, markVariant );
 		 
 		frame.tableController.tableChanged(ev);
+		
+		MainInterface.treeModel.nodeChanged(folder);
 	}
 
 	/**

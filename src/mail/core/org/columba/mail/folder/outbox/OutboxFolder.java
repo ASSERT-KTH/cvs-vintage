@@ -83,6 +83,11 @@ public class OutboxFolder extends MHFolder {
 		h.set("columba.size", new Integer(size));
 
 		h.set("columba.uid", newUid);
+		
+		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
 
 		cache.add(h);
 
@@ -102,6 +107,11 @@ public class OutboxFolder extends MHFolder {
 			(SendableHeader) ((SendableHeader) message.getHeader());
 
 		h.set("columba.uid", newUid);
+		
+		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
 
 		cache.add(h);
 
@@ -142,7 +152,7 @@ public class OutboxFolder extends MHFolder {
 					"moving message with UID " + uid + " to trash");
 
 				// remove message
-				removeMessage(uid);
+				removeMessage(uid, worker);
 
 			}
 		}
@@ -158,6 +168,9 @@ public class OutboxFolder extends MHFolder {
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
+					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+						getMessageFolderInfo().decUnseen();
+						
 					h.set("columba.flags.seen", Boolean.TRUE);
 					break;
 				}
@@ -269,9 +282,9 @@ public class OutboxFolder extends MHFolder {
 	}
 	*/
 	
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker) throws Exception {
 		cache.remove(uid);
-		super.removeMessage(uid);
+		super.removeMessage(uid, worker);
 	}
 
 	private void swapListManagers() throws Exception {

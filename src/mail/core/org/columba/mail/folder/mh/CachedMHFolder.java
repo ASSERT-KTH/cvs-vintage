@@ -53,9 +53,9 @@ public class CachedMHFolder extends MHFolder {
 
 	public Object addMessage(String source, WorkerStatusController worker)
 		throws Exception {
-			
+
 		getHeaderList(worker);
-		
+
 		Object newUid = super.addMessage(source, worker);
 
 		Rfc822Parser parser = new Rfc822Parser();
@@ -67,6 +67,10 @@ public class CachedMHFolder extends MHFolder {
 
 		parser.addColumbaHeaderFields(h);
 
+		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
 		Integer sizeInt = new Integer(source.length());
 		int size = Math.round(sizeInt.intValue() / 1024);
 		h.set("columba.size", new Integer(size));
@@ -82,15 +86,20 @@ public class CachedMHFolder extends MHFolder {
 		AbstractMessage message,
 		WorkerStatusController worker)
 		throws Exception {
-			
+
 		getHeaderList(worker);
-		
+
 		Object newUid = super.addMessage(message, worker);
 
 		ColumbaHeader h =
 			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
 
 		h.set("columba.uid", newUid);
+
+		if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+		if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
 
 		cache.add(h);
 
@@ -115,15 +124,24 @@ public class CachedMHFolder extends MHFolder {
 					"moving message with UID " + uid + " to trash");
 
 				// remove message
-				removeMessage(uid);
+				removeMessage(uid, worker);
 
 			}
 		}
 	}
 
-	public void removeMessage(Object uid) throws Exception {
+	public void removeMessage(Object uid, WorkerStatusController worker)
+		throws Exception {
+		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid, worker);
+
+		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().decUnseen();
+		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().decRecent();
+
 		cache.remove(uid);
-		super.removeMessage(uid);
+		super.removeMessage(uid, worker);
+
 	}
 
 	protected void markMessage(
@@ -136,6 +154,9 @@ public class CachedMHFolder extends MHFolder {
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
+					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+						getMessageFolderInfo().decUnseen();
+
 					h.set("columba.flags.seen", Boolean.TRUE);
 					break;
 				}
@@ -146,6 +167,8 @@ public class CachedMHFolder extends MHFolder {
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
+					
+
 					h.set("columba.flags.expunged", Boolean.TRUE);
 					break;
 				}
@@ -188,7 +211,7 @@ public class CachedMHFolder extends MHFolder {
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 		cache.getHeaderList(worker);
-		
+
 		int count = cache.count();
 		Object[] uids = new Object[count];
 
