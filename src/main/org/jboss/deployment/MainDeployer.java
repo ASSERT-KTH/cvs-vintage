@@ -42,7 +42,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 *
 *
 */
@@ -75,7 +75,11 @@ implements MainDeployerMBean, Runnable
    /** period of scanning **/
    int period = 5000;
    
+   /** an increment for tmp files **/
    int id = 0;
+   
+   /** Given a flat set of files, this is the order of deployment **/
+   String[] order = {"sar", "service.xml", "rar", "jar", "war", "ear", "zip"};
    
    // Static --------------------------------------------------------
    
@@ -301,7 +305,12 @@ implements MainDeployerMBean, Runnable
       Iterator subs = di.subDeployments.iterator();
       while (subs.hasNext())
       {
-         undeploy((DeploymentInfo) subs.next());
+         DeploymentInfo sub = (DeploymentInfo) subs.next();
+         
+         // undeploy((DeploymentInfo) subs.next());
+         log.info("DEPLOYMENT OF SUB "+sub.url);
+         undeploy(sub);
+            
       }
       
       // Them remove the deployment itself
@@ -313,7 +322,7 @@ implements MainDeployerMBean, Runnable
          // remove from local maps
          deployments.remove(di.url);
          if (deploymentsList.lastIndexOf(di) != -1) deploymentsList.remove(deploymentsList.lastIndexOf(di));
-         
+            
          // Nuke my stuff, this includes the class loader
          di.cleanup(log);
          
@@ -546,6 +555,7 @@ implements MainDeployerMBean, Runnable
       JarFile jarFile =null;
       
       // Then the packages inside the package being deployed
+      HashSet subDeployments = new HashSet();
       
       // marcf FIXME FIXME FIXME add support for directories not just jar files
       
@@ -596,9 +606,8 @@ implements MainDeployerMBean, Runnable
                DeploymentInfo sub = new DeploymentInfo(subURL, di);
                
                // And deploy it, this call is recursive
-               deploy(sub);
+               subDeployments.add(sub);
             }
-            catch (DeploymentException e3) { throw e3;} //just throw
             catch (Exception e2) 
             { 
                log.error("Error in subDeployment with name "+name, e2);
@@ -616,6 +625,19 @@ implements MainDeployerMBean, Runnable
          // works
          // We should encapsulate "opening and closing of the jarFile" in the DeploymentInfo
          // Here we let it be open and cached
+      
+      }
+      
+      // Order the deployments
+      Iterator lt = sortDeployments(subDeployments).listIterator();
+      
+      // Deploy them all 
+      while (lt.hasNext()) 
+      { 
+         
+         try{ deploy((DeploymentInfo) lt.next());}
+         
+         catch (DeploymentException de) { di.subDeployments.remove(di);}
       }
    }
    
@@ -733,26 +755,28 @@ implements MainDeployerMBean, Runnable
          {
             URL lib = null;
             
-            try 
-            {
-               String tk = st.nextToken();
+            String tk = st.nextToken();
+               
+            DeploymentInfo sub = null;
+            
+            log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
+               
+            try {
                
                lib = new URL(sdi.url, tk);
                
-               log.debug("new manifest entry for sdi at "+sdi.shortName+" entry is "+tk);
-               
                if (!deployments.containsKey(lib))
                {
+                  
                   // Try having it as a full subdeployment
-                  DeploymentInfo sub = new DeploymentInfo(lib, sdi);
-                  
+                  sub = new DeploymentInfo(lib, sdi);
+
                   deploy(sub);
-                  
-                  sdi.subDeployments.add(sub);
                }
             }
             catch (Exception ignore) { 
-               log.error("The manifest entry in "+sdi.url+" references URL "+lib+ " which could not be opened, entry ignored, please fix classpath in manifest.mf");
+               log.error("The manifest entry in "+sdi.url+" references URL "+lib+ 
+               " which could not be opened, entry ignored");
             } 
          }
       }
@@ -761,8 +785,6 @@ implements MainDeployerMBean, Runnable
    public ArrayList sortURLs(Set urls)
    {
       ArrayList list = new ArrayList(urls.size());
-      
-      String[] order = {"sar", "service.xml", "rar", "ear",  "jar", "zip","war"};
       
       for (int i = 0 ; i < order.length ; i++)
       {
@@ -788,8 +810,6 @@ implements MainDeployerMBean, Runnable
    public ArrayList sortDeployments(Set urls)
    {
       ArrayList list = new ArrayList(urls.size());
-      
-      String[] order = {"sar", "service.xml", "rar", "ear", "war", "jar", "zip"};
       
       for (int i = 0 ; i < order.length ; i++)
       {

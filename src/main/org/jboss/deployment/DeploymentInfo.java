@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.3 $ <p>
+* @version   $Revision: 1.4 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -140,6 +140,10 @@ public class DeploymentInfo
       // The key url the deployment comes from 
       this.url = url;
       
+      // Does it even exist?
+      try { url.openStream().close(); }
+         catch (Exception e) {throw new DeploymentException("url "+url+" could not be opened, does it exist?");}
+      
       // this may be changed by deployers in case of directory and xml file following
       this.watch =url;
       
@@ -164,9 +168,7 @@ public class DeploymentInfo
       
       // Do we have an XML descriptor only deployment?
       isXML = shortName.toLowerCase().endsWith("xml");
-      
-      // Does it even exist?
-      try { url.openStream().close(); } catch (Exception e) {throw new DeploymentException("url "+url+" could not be opened, does it exist?");}
+   
    }
    
    public void createClassLoaders()
@@ -228,7 +230,7 @@ public class DeploymentInfo
       subDeployments.clear();
       
       mbeans.clear();
-         
+   
    }
    
    
