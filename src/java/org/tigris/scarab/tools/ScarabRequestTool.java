@@ -1753,8 +1753,8 @@ try{
                 }
                 else
                 {
-                    i =  polarity * ((ScarabUser)o1).getFirstName()
-                         .compareTo(((ScarabUser)o2).getFirstName());
+                    i =  polarity * ((ScarabUser)o1).getName()
+                         .compareTo(((ScarabUser)o2).getName());
                 }
                 return i;
              }
