@@ -7,17 +7,12 @@
 
 package org.jboss.ejb.plugins.cmp.ejbql;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 
 /**
  * This abstract syntax node represents a count function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ASTCount
    extends AggregateFunction
@@ -28,16 +23,14 @@ public class ASTCount
       super(id);
    }
 
+   protected Class getDefaultResultType()
+   {
+      return Long.class;
+   }
+
    /** Accept the visitor. **/
    public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
    {
       return visitor.visit(this, data);
-   }
-
-   // SelectFunction implementation
-
-   public Object readResult(ResultSet rs) throws SQLException
-   {
-      return JDBCUtil.LONG_READER.getFirst(rs, Long.class);
    }
 }

@@ -1001,71 +1001,78 @@ public final class JDBCUtil
             break;
          default:
             {
-               if(destination == java.util.Date.class)
-               {
-                  reader = JAVA_UTIL_DATE_READER;
-               }
-               else if(destination == java.sql.Date.class)
-               {
-                  reader = JAVA_SQL_DATE_READER;
-               }
-               else if(destination == java.sql.Time.class)
-               {
-                  reader = JAVA_SQL_TIME_READER;
-               }
-               else if(destination == java.sql.Timestamp.class)
-               {
-                  reader = JAVA_SQL_TIMESTAMP_READER;
-               }
-               else if(destination == java.math.BigDecimal.class)
-               {
-                  reader = BIGDECIMAL_READER;
-               }
-               else if(destination == java.sql.Ref.class)
-               {
-                  reader = REF_READER;
-               }
-               else if(destination == String.class)
-               {
-                  reader = STRING_READER;
-               }
-               else if(destination == Boolean.class || destination == Boolean.TYPE)
-               {
-                  reader = BOOLEAN_READER;
-               }
-               else if(destination == Byte.class || destination == Byte.TYPE)
-               {
-                  reader = BYTE_READER;
-               }
-               else if(destination == Character.class || destination == Character.TYPE)
-               {
-                  reader = CHARACTER_READER;
-               }
-               else if(destination == Short.class || destination == Short.TYPE)
-               {
-                  reader = SHORT_READER;
-               }
-               else if(destination == Integer.class || destination == Integer.TYPE)
-               {
-                  reader = INT_READER;
-               }
-               else if(destination == Long.class || destination == Long.TYPE)
-               {
-                  reader = LONG_READER;
-               }
-               else if(destination == Float.class || destination == Float.TYPE)
-               {
-                  reader = FLOAT_READER;
-               }
-               else if(destination == Double.class || destination == Double.TYPE)
-               {
-                  reader = DOUBLE_READER;
-               }
-               else
-               {
-                  reader = OBJECT_READER;
-               }
+               reader = getResultReaderByType(destination);
             }
+      }
+      return reader;
+   }
+
+   public static ResultSetReader getResultReaderByType(Class destination)
+   {
+      ResultSetReader reader;
+      if(destination == java.util.Date.class)
+      {
+         reader = JAVA_UTIL_DATE_READER;
+      }
+      else if(destination == java.sql.Date.class)
+      {
+         reader = JAVA_SQL_DATE_READER;
+      }
+      else if(destination == java.sql.Time.class)
+      {
+         reader = JAVA_SQL_TIME_READER;
+      }
+      else if(destination == java.sql.Timestamp.class)
+      {
+         reader = JAVA_SQL_TIMESTAMP_READER;
+      }
+      else if(destination == BigDecimal.class)
+      {
+         reader = BIGDECIMAL_READER;
+      }
+      else if(destination == java.sql.Ref.class)
+      {
+         reader = REF_READER;
+      }
+      else if(destination == String.class)
+      {
+         reader = STRING_READER;
+      }
+      else if(destination == Boolean.class || destination == Boolean.TYPE)
+      {
+         reader = BOOLEAN_READER;
+      }
+      else if(destination == Byte.class || destination == Byte.TYPE)
+      {
+         reader = BYTE_READER;
+      }
+      else if(destination == Character.class || destination == Character.TYPE)
+      {
+         reader = CHARACTER_READER;
+      }
+      else if(destination == Short.class || destination == Short.TYPE)
+      {
+         reader = SHORT_READER;
+      }
+      else if(destination == Integer.class || destination == Integer.TYPE)
+      {
+         reader = INT_READER;
+      }
+      else if(destination == Long.class || destination == Long.TYPE)
+      {
+         reader = LONG_READER;
+      }
+      else if(destination == Float.class || destination == Float.TYPE)
+      {
+         reader = FLOAT_READER;
+      }
+      else if(destination == Double.class || destination == Double.TYPE)
+      {
+         reader = DOUBLE_READER;
+      }
+      else
+      {
+         reader = OBJECT_READER;
       }
       return reader;
    }

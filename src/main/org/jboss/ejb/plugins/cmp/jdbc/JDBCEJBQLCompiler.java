@@ -73,7 +73,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  *          <p/>
  *          TODO: collecting join paths needs rewrite
  */
@@ -990,9 +990,6 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    public Object visit(ASTNullComparison node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
-      //
-      // TODO: add support for input parameter, not only for single-valued path
-      //
 
       final Node child0 = node.jjtGetChild(0);
       if(child0 instanceof ASTPath)
@@ -1008,37 +1005,35 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
                return buf;
             }
          }
-         else
+
+         String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
+         JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
+
+         // if jdbc type is null then it should be a cmr field in
+         // a one-to-one mapping that isn't a foreign key.
+         // handle it the way the IS EMPTY on the one side of one-to-many
+         // relationship is handled
+         if(field.getJDBCType() == null)
          {
-            String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
-            JDBCFieldBridge field = (JDBCFieldBridge)path.getField();
+            existsClause(path, buf, !node.not);
+            return buf;
+         }
 
-            // if jdbc type is null then it should be a cmr field in
-            // a one-to-one mapping that isn't a foreign key.
-            // handle it the way the IS EMPTY on the one side of one-to-many
-            // relationship is handled
-            if(field.getJDBCType() == null)
+         // check the path for cmr fields and add them to join paths
+         if(path.fieldList.size() > 2)
+         {
+            for(int i = 0; i < path.fieldList.size(); ++i)
             {
-               existsClause(path, buf, !node.not);
-               return buf;
-            }
-
-            // check the path for cmr fields and add them to join paths
-            if(path.fieldList.size() > 2)
-            {
-               for(int i = 0; i < path.fieldList.size(); ++i)
+               Object pathEl = path.fieldList.get(i);
+               if(pathEl instanceof JDBCCMRFieldBridge)
                {
-                  Object pathEl = path.fieldList.get(i);
-                  if(pathEl instanceof JDBCCMRFieldBridge)
-                  {
-                     addJoinPath(path);
-                     break;
-                  }
+                  addJoinPath(path);
+                  break;
                }
             }
-
-            SQLUtil.getIsNullClause(node.not, field, alias, buf);
          }
+
+         buf = SQLUtil.getIsNullClause(node.not, field, alias, buf);
       }
       else if(child0 instanceof ASTParameter)
       {
@@ -1465,6 +1460,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
    public Object visit(ASTCount node, Object data)
    {
       StringBuffer buf = (StringBuffer)data;
+      node.setResultType(returnType);
 
       Object args[];
       final ASTPath cntPath = (ASTPath)node.jjtGetChild(0);
@@ -1498,6 +1494,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(ASTMax node, Object data)
    {
+      node.setResultType(returnType);
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
          node.distinct,
@@ -1508,6 +1505,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(ASTMin node, Object data)
    {
+      node.setResultType(returnType);
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
          node.distinct,
@@ -1518,6 +1516,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(ASTAvg node, Object data)
    {
+      node.setResultType(returnType);
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
          node.distinct,
@@ -1528,6 +1527,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor
 
    public Object visit(ASTSum node, Object data)
    {
+      node.setResultType(returnType);
       StringBuffer buf = (StringBuffer)data;
       Object[] args = new Object[]{
          node.distinct,

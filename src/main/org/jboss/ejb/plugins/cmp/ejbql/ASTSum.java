@@ -7,17 +7,12 @@
 
 package org.jboss.ejb.plugins.cmp.ejbql;
 
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 
 /**
  * This abstract syntax node represents SUM function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class ASTSum
    extends AggregateFunction
@@ -32,12 +27,5 @@ public final class ASTSum
    public Object jjtAccept(JBossQLParserVisitor visitor, Object data)
    {
       return visitor.visit(this, data);
-   }
-
-   // SelectFunction implementation
-
-   public Object readResult(ResultSet rs) throws SQLException
-   {
-      return JDBCUtil.DOUBLE_READER.getFirst(rs, Double.class);
    }
 }
