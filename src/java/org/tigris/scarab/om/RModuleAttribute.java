@@ -68,7 +68,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.37 2003/03/27 23:57:19 jon Exp $
+ * @version $Id: RModuleAttribute.java,v 1.38 2003/04/18 23:06:09 elicia Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
@@ -229,11 +229,14 @@ public class RModuleAttribute
                     { 
                         optionIdList.add(((RModuleOption)optionList.get(i)).getOptionId());
                     }
-                    Criteria c2 = new Criteria()
-                        .add(RModuleOptionPeer.MODULE_ID, getModuleId())
-                        .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
-                        .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
-                    RModuleOptionPeer.doDelete(c2);
+                    if (optionIdList != null && optionIdList.size() > 0)
+                    {
+                        Criteria c2 = new Criteria()
+                            .add(RModuleOptionPeer.MODULE_ID, getModuleId())
+                            .add(RModuleOptionPeer.ISSUE_TYPE_ID, getIssueTypeId())
+                            .addIn(RModuleOptionPeer.OPTION_ID, optionIdList);
+                        RModuleOptionPeer.doDelete(c2);
+                    }
                 }
             }
         } 
