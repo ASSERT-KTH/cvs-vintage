@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.9 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelDiagram.java,v 1.10 2003/01/03 17:18:34 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,49 +24,61 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JTextField;
 
-import org.tigris.gef.base.*;
-import org.tigris.gef.util.Util;
+import org.argouml.application.api.Argo;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
+import org.argouml.ui.ArgoDiagram;
+import org.argouml.uml.ui.PropPanel;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.UMLTextField;
+import org.argouml.uml.ui.UMLTextProperty;
+import org.argouml.util.ConfigLoader;
 
-import org.argouml.application.api.*;
-import org.argouml.ui.*;
-import org.argouml.uml.ui.*;
-import org.argouml.kernel.*;
+public class PropPanelDiagram extends PropPanel {
 
-public class PropPanelDiagram extends PropPanel  {
+    /**
+     * Constructs a proppanel with a given name.
+     * @see org.argouml.ui.TabSpawnable#TabSpawnable(String)
+     */
+    protected PropPanelDiagram(String diagramName) {
+        super(diagramName, ConfigLoader.getTabPropsOrientation());
+        
+        JTextField field = new UMLTextField(this, new UMLTextProperty(ArgoDiagram.class, "name", "getName", "setName"));
+        
 
+        addField(Argo.localize("UMLMenu", "label.name"), field);
+       
+        
+        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
+        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
+    }
+    
+    /**
+     * Default constructor if there is no child of this class that can show the
+     * diagram.
+     */
     public PropPanelDiagram() {
-	super("Diagram",null, 2);
-
-	addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
-	addField(new UMLTextField(this,
-				  new UMLTextProperty(ArgoDiagram.class,"name","getName","setName")),1,0,0);
-	//
-	//   filler to take up rest of panel
-	addCaption(new JPanel(),1,0,1);
-	new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-	new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+        this("Diagram");
     }
 
     public void removeElement() {
         Object target = getTarget();
-        if(target instanceof ArgoDiagram) {
-          try {
-            ArgoDiagram diagram = (ArgoDiagram) target;
-            Project project = ProjectManager.getManager().getCurrentProject();
-            //
-            //  can't easily find owner of diagram
-            //    set new target to the model
-            //
-            Object newTarget = project.getModel();
-            project.moveToTrash(diagram);
-            navigateTo(newTarget);
-          }
-          catch(Exception e) {
-            e.printStackTrace();
-          }
+        if (target instanceof ArgoDiagram) {
+            try {
+                ArgoDiagram diagram = (ArgoDiagram) target;
+                Project project = ProjectManager.getManager().getCurrentProject();
+                //
+                //  can't easily find owner of diagram
+                //    set new target to the model
+                //
+                Object newTarget = project.getModel();
+                project.moveToTrash(diagram);
+                navigateTo(newTarget);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
