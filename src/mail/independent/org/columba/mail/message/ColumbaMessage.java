@@ -187,4 +187,8 @@ public class ColumbaMessage {
     public Flags getFlags() {
         return flags;
     }
+    
+    public void close() {
+    	message.close();
+    }
 }

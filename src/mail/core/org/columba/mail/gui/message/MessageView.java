@@ -108,8 +108,9 @@ public class MessageView extends JScrollPane {
             text.append((char) next);
             next = in.read();
         }
-
+        
         setDoc(header, text.toString(), html, hasAttachments);
+        in.close();
     }
 
     /**

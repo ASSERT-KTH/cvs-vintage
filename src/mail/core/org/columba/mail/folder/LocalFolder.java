@@ -406,6 +406,10 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
     /** {@inheritDoc} */
     public void expungeFolder() throws Exception {
+    	if( aktMessage != null ) {
+    		aktMessage.close();
+        	aktMessage = null;
+    	}
     }
 
     /*

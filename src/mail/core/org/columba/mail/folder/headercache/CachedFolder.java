@@ -141,6 +141,7 @@ public abstract class CachedFolder extends LocalFolder {
      * @see org.columba.mail.folder.Folder#expungeFolder(org.columba.core.command.WorkerStatusController)
      */
     public void expungeFolder() throws Exception {
+    	super.expungeFolder();
         // get list of all uids
         Object[] uids = getUids();
 
