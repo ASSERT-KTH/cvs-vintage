@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.7 2001/11/29 03:35:17 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.8 2001/11/30 05:35:10 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -40,6 +40,8 @@ Bug No.  Description
 
 	 Moved the setting of the default "*.jsp" mapping so that it is now 
 	 possible to entirely disable support for jsp files.
+
+	 Fixed problem with jsp_precompile parameter to JSP files.
 
 Server:
 
