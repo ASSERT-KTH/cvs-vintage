@@ -20,6 +20,7 @@ import javax.ejb.ObjectNotFoundException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JPMFindEntityCommand;
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
+import org.jboss.util.FinderResults;
 
 /**
  * JAWSPersistenceManager JDBCFindEntityCommand
@@ -29,20 +30,32 @@ import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.7 $
+ *
+ * Revision:
+ * 20010621 Bill Burke: findByPrimaryKey may now do a read-ahead depending on configuration
  */
 public class JDBCFindEntityCommand implements JPMFindEntityCommand
 {
    // Attributes ----------------------------------------------------
    
-   JDBCBeanExistsCommand beanExistsCommand;
+   JDBCBeanExistsCommand beanExistsCommand = null;
+    JDBCPreloadByPrimaryKeyCommand preloadByPrimaryKey = null;
    JPMFindEntitiesCommand findEntitiesCommand;
    
    // Constructors --------------------------------------------------
    
    public JDBCFindEntityCommand(JDBCCommandFactory factory)
    {
-      beanExistsCommand = factory.createBeanExistsCommand();
+       if (factory.getMetaData().hasReadAhead())
+       {
+	   preloadByPrimaryKey = new JDBCPreloadByPrimaryKeyCommand(factory);
+       }
+       else
+       {
+	   beanExistsCommand = factory.createBeanExistsCommand();
+       }
       findEntitiesCommand = factory.createFindEntitiesCommand();
    }
    
@@ -55,8 +68,25 @@ public class JDBCFindEntityCommand implements JPMFindEntityCommand
    {
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
-      
-         return findByPrimaryKey(args[0]);
+	  Object id = args[0];
+	  if (preloadByPrimaryKey != null)
+	  {
+	      FinderResults result = preloadByPrimaryKey.execute(finderMethod, args, ctx);
+	      if (result.size() == 0)
+	      {
+		  throw new ObjectNotFoundException("No such entity!");
+	      }
+	      return id;
+	  }
+	  else if (beanExistsCommand.execute(id))
+	  {
+	      return id;
+	  } 
+	  else
+	  {
+	      throw new ObjectNotFoundException("Object with primary key " + id +
+						" not found in storage");
+	  }
       }
       else
       {
@@ -77,17 +107,4 @@ public class JDBCFindEntityCommand implements JPMFindEntityCommand
       }
    }
    
-   // Protected -----------------------------------------------------
-   
-   protected Object findByPrimaryKey(Object id) throws FinderException
-   {
-      if (beanExistsCommand.execute(id))
-      {
-         return id;
-      } else
-      {
-         throw new ObjectNotFoundException("Object with primary key " + id +
-                                           " not found in storage");
-      }
-   }
 }
