@@ -37,6 +37,7 @@ import javax.management.MBeanServer;
 import javax.management.MBeanException;
 import javax.management.JMException;
 import javax.management.ObjectName;
+import javax.management.RuntimeMBeanException;
 
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
@@ -63,7 +64,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.15 $
+*   @version $Revision: 1.16 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -427,13 +428,23 @@ implements J2eeDeployerMBean
                new Object[] { m.localUrls.firstElement().toString () }, new String[] { "java.lang.String" });
          }       
 	  }
-      catch (MBeanException _mbe) {
+      catch (MBeanException _mbe)
+      {
          log.error ("Starting "+m.name+" failed!");
          throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
-      } catch (JMException _jme){
+      }
+      catch (RuntimeMBeanException e)
+      {
+         log.error ("Starting "+m.name+" failed!");
+         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + e.getTargetException ().getMessage (), e.getTargetException ());
+      }
+      catch (JMException _jme)
+      {
          log.error ("Starting failed!");
          throw new J2eeDeploymentException ("Fatal error while interacting with deployer MBeans... " + _jme.getMessage ());
-      } finally {  			
+      }
+      finally
+      {
          Thread.currentThread().setContextClassLoader (oldCl);
       }
    }
