@@ -631,9 +631,9 @@ final class DirHandler extends Handler  {
 	// To avoid 0.0 for non-zero file, we bump to 0.1
 	if (leftside == 0 && rightside == 0 && filesize != 0) 
 	    rightside = 1;
-	buf.write(leftside);
+	buf.write(String.valueOf(leftside));
 	buf.write(".");
-	buf.write(rightside);
+	buf.write(String.valueOf(rightside));
 	buf.write(" KB");
     }
 }
