@@ -1,0 +1,57 @@
+		       Tomcat 3.1 Release Plan
+
+Objective: 
+
+   The objective of 3.1 release is to enable us to demonstrate by
+   ApacheCon substantial progress towards the goals of having a Tomcat
+   that:
+
+     (a) is better integrated with Apache 
+     (b) is moving towards becoming a clear replacement to Apache
+         JServ.
+
+The Tomcat 3.1 release cycle has two intermediate milestones (with
+"burn-in" periods for both) as well as a final milestone. 
+
+Milestone 1:
+
+* Code freeze date: Jan 15
+* Tag date: Jan 22
+* Goals:
+    * Rearchitect request processing and deployment/configuration
+       - Developers: Costin Manolache (costin@eng.sun.com)
+       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+
+    * Rearchitect session management, incorporate some of Craig's
+      Tomcat.Next (www2.mytownnet.com/tomcat) concepts into the
+      Tomcat: 
+       - Developers: Craig Mcclanahan (cmcclanahan@mytownnet.com)
+                     Costin Manolache (costin@eng.sun.com)
+       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+
+Milestone 2:
+
+* Code freeze date: Feb 15
+* Tag date: Feb 22
+* Goals: 
+
+    * Implement Servlet Reloading
+       - Developers: Sam Ruby (rubys@us.ibm.com)
+       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+ 
+    * Implement logging
+       - Developers: Anil Vijendran (akv@eng.sun.com)
+       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+
+    * A Minimal Admin/Deployment Tool
+       - Developers: Justyna Horwat (horwat@eng.sun.com)
+       - QA: Ramesh Mandava (rameshm@eng.sun.com)
+             
+                     
+Tomcat 3.1 Final:
+
+* Code freeze date: Mar 1
+* Tag date: Mar 7
+* Goals: 
+    * Fix all bugs reported
+* Release Manager: Sam Ruby (rubys@us.ibm.com)
