@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.59 2003/09/18 23:35:15 bobtarling Exp $
+// $Id: CoreFactory.java,v 1.60 2003/11/07 19:40:02 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1465,7 +1465,6 @@ public class CoreFactory extends AbstractUmlModelFactory {
 								"realize", ns);
 	ModelFacade.addClientDependency(client, realization);
 	ModelFacade.addSupplierDependency(supplier, realization);
-	ModelFacade.addClientDependency(client, realization);         
 	return realization;
     }
 
