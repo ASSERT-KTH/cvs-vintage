@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.example.AddHeaderPOP3PreProcessingFilter" name="My Hello World Plugin" description="Simple Example" version="1.0" >
+<plugin id="org.columba.example.AddHeaderPOP3PreProcessingFilter" name="Add headerfield POP3 preprocessor" description="Simple Example" category="Examples" version="1.0" >
  <extension name="org.columba.mail.pop3preprocessingfilter">
   <pop3preprocessingfilter name="AddHeader" class="AddHeaderPOP3PreProcessingFilterPlugin"/>
  </extension>

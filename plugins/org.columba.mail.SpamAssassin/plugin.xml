@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" version="1.0" >
+<plugin id="org.columba.mail.SpamAssassin" name="SpamAssassin Plugin" description="Simple Example" category="Spam" version="1.0" >
 
 <!-- POP3 preprocessing filter -->
 

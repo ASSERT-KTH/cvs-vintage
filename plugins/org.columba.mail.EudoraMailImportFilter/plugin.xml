@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<plugin id="org.columba.mail.EudoraMailImportFilter" 
-        name="Eudora Mail Importfilter"
-        description="Imports Eudora Mail boxes"
-        version="1.0 beta" >
-    <extension name="org.columba.mail.import">
-        <filter name="EudoraMailImportFilter" class="org.columba.mail.EudoraMailImportFilter"/>
-    </extension>
-    <runtime type="java" jar="EudoraMailImportFilter.jar" />
+<plugin name="Eudora Mail Importfilter" description="Imports Eudora Mail boxes" id="org.columba.mail.EudoraMailImportFilter" version="1.0 beta" category="Mail Import" enabled="true">
+  <extension name="org.columba.mail.import">
+    <filter name="EudoraMailImportFilter" class="org.columba.mail.EudoraMailImportFilter"></filter>
+  </extension>
+  <runtime jar="EudoraMailImportFilter.jar" type="java"></runtime>
 </plugin>
