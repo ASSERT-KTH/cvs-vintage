@@ -39,9 +39,8 @@
 <h3>$l10n.SavedQueries</h3>
 
 #if ($allQueries.size() < 1)
- <p class="alert">There are no saved queries.
- Please go to $link.setPage("AdvancedQuery.vm").setLabel("Advanced query")
- to create a new saved query.</p>
+ <p class="alert">$l10n.NoSavedQueries $link.setPage("AdvancedQuery.vm").setLabel("Advanced query").
+ </p>
 
 #else
 #if ($paginated)
@@ -53,8 +52,8 @@
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">$l10n.Select</th>
-##  <th>Subscribe</th>
-##  <th>Subscribe frequency</th>
+##  <th>$l10n.Subscribe</th>
+##  <th>$l10n.SubscribeFrequency</th>
   <th>#sort ("name" "$l10n.Name")
   <th>#sort ("desc" "$l10n.Description")</th>
   <th>Default</th>
