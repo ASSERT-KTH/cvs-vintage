@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.42 2003/02/06 19:09:07 thn Exp $
+// $Id: Modeller.java,v 1.43 2003/02/11 20:47:56 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -948,6 +948,8 @@ public class Modeller
 	}
 	else if((modifiers & JavaRecognizer.ACC_PUBLIC) > 0) {
 	    element.setVisibility(MVisibilityKind.PUBLIC);
+	} else {
+            element.setTaggedValue("src_visibility", "default");
 	}
     }
 
