@@ -57,8 +57,12 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
+
+#ifndef WIN32
+#include <dlfcn.h>
+#endif
 
 #include <jni.h>
 
@@ -474,7 +478,7 @@ static int load_jvm_dll(jni_worker_t *p,
         FreeLibrary(hInst);
     }
 #else 
-    void *handle = dlopen(path, RTLD_NOW | RTLD_GLOBAL);
+    void *handle = dlopen(p->jvm_dll_path, RTLD_NOW | RTLD_GLOBAL);
     if(handle) {
         jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
         jni_get_default_java_vm_init_args = dlsym(handle, "JNI_GetDefaultJavaVMInitArgs");
@@ -494,7 +498,6 @@ static int open_jvm(jni_worker_t *p,
 {
     JDK1_1InitArgs vm_args;  
     JNIEnv *penv;
-    jsize num_JavaVMs = 0;    
     *env = NULL;
 
     if(0 != jni_get_default_java_vm_init_args(&vm_args)) {
@@ -547,10 +550,6 @@ static int get_bridge_object(jni_worker_t *p,
                              JNIEnv *env,
                              jk_logger_t *l)
 {
-    char    *ctor_method_name     = "<init>";
-    char    *ose_ctor_method_sig    = "()V";
-    jmethodID  constructor_method_id = NULL;
-
     p->jk_java_bridge_class = (*env)->FindClass(env, JAVA_BRIDGE_CLASS_NAME);
     if(p->jk_java_bridge_class) {
         jmethodID  constructor_method_id = (*env)->GetMethodID(env,

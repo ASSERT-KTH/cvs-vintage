@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 
@@ -95,14 +95,14 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
                                     const char * const *header_values,
                                     unsigned num_of_headers);
 
-static int JK_METHOD read(jk_ws_service_t *s,
-                          void *b,
-                          unsigned l,
-                          unsigned *a);
+static int JK_METHOD ws_read(jk_ws_service_t *s,
+                             void *b,
+                             unsigned l,
+                             unsigned *a);
 
-static int JK_METHOD write(jk_ws_service_t *s,
-                           const void *b,
-                           unsigned l);
+static int JK_METHOD ws_write(jk_ws_service_t *s,
+                              const void *b,
+                              unsigned l);
 
 NSAPI_PUBLIC int jk_init(pblock *pb, 
                          Session *sn, 
@@ -174,10 +174,10 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
-static int JK_METHOD read(jk_ws_service_t *s,
-                          void *b,
-                          unsigned l,
-                          unsigned *a)
+static int JK_METHOD ws_read(jk_ws_service_t *s,
+                             void *b,
+                             unsigned l,
+                             unsigned *a)
 {
     if(s && s->ws_private && b && a) {
         nsapi_private_data_t *p = s->ws_private;
@@ -209,9 +209,9 @@ static int JK_METHOD read(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
-static int JK_METHOD write(jk_ws_service_t *s,
-                           const void *b,
-                           unsigned l)
+static int JK_METHOD ws_write(jk_ws_service_t *s,
+                              const void *b,
+                              unsigned l)
 {
     if(s && s->ws_private && b) {
         nsapi_private_data_t *p = s->ws_private;
@@ -243,6 +243,7 @@ NSAPI_PUBLIC int jk_init(pblock *pb,
     int rc = REQ_ABORTED;
     jk_map_t *init_map;
 
+    fprintf(stderr, "In jk_init %s %s %s\n",worker_prp_file, log_level_str,  log_file);
     if(!worker_prp_file) {
         worker_prp_file = JK_WORKER_FILE_DEF;
     }
@@ -361,8 +362,8 @@ static int init_ws_service(nsapi_private_data_t *private_data,
 
     s->jvm_route = NULL;
     s->start_response = start_response;
-    s->read = read;
-    s->write = write;
+    s->read = ws_read;
+    s->write = ws_write;
     
     s->auth_type        = pblock_findval("auth-type", private_data->rq->vars);
     s->remote_user      = pblock_findval("auth-user", private_data->rq->vars);
