@@ -49,14 +49,16 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.9 $
+*   @author Peter Antman (peter.antman@tim.se)
+*   @version $Revision: 1.10 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
 {
     
     // Attributes ----------------------------------------------------
-    private TxManager tm;
+    // Protected to be able to inherit, pra
+    protected TxManager tm;
     
     // lookup on java:comp/UserTransaction should be redirected to
     //   sessionContext.getUserTransaction()
@@ -353,3 +355,4 @@ extends AbstractInterceptor
     }
     
 }
+
