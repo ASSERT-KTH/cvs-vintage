@@ -3,12 +3,12 @@ $l10n.Details:
 
 #set ($args = [$user.getUserName(), $actionIndex, $artifactIndex, $artifactName])
 $l10n.format("ApprovalEmailBody", $args)
-#if(!$comment.equals(""))
+#if ($comment.length() > 0)
 
 $l10n.Comment:
  $comment
 #end
-#if(!$globalComment.equals(""))
+#if ($globalComment.length() > 0)
 
 $l10n.GeneralComment:
  $globalComment
