@@ -318,50 +318,6 @@ public class Issue
         return allValuesMap;
     }
 
-    /**
-     * If there is an Attribute called "Assigned To" that has a value 
-     * Returns a list of values for this attribute.
-     */
-    public List getAssignedTo() throws Exception
-    {
-        ArrayList assignees = new ArrayList();
-        Criteria crit = new Criteria()
-            .addJoin(AttributeValuePeer.ATTRIBUTE_ID, 
-                     AttributePeer.ATTRIBUTE_ID)        
-            .add(AttributePeer.ATTRIBUTE_NAME, "Assigned To");
-        List attValues = getAttributeValues(crit);
-        for ( int i=0; i<attValues.size(); i++ ) 
-        {
-            AttributeValue attVal = (AttributeValue) attValues.get(i);
-            //TurbineUser user = TurbineUserPeer.retrieveByPK(new NumberKey(attValues.get(i)));
-            assignees.add(attVal.getValue());
-        }
-        return assignees;
-    }
-        
-    /**
-     * Returns a list of Attachment objects with type "Comment"
-     * That are associated with this issue.
-     */
-    public Vector getComments() throws Exception
-    {
-        Criteria crit = new Criteria()
-            .add(AttachmentPeer.ISSUE_ID, getIssueId());
-        Vector results = AttachmentPeer.doSelect(crit);
-        return  AttachmentPeer.doSelect(crit);
-    }
-
-    /**
-     * Returns list of Activity objects associated with this Issue.
-     */
-    public Vector getActivity() throws Exception  
-    {
-        Criteria crit = new Criteria()
-            .add(ActivityPeer.ISSUE_ID, getIssueId());
-        return ActivityPeer.doSelect(crit);
-    }
-        
-
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
@@ -399,6 +355,125 @@ public class Issue
 
         return result;
     }       
+
+    /**
+     * Returns userid, the value of the "AssignedTo" Attribute 
+     */
+    public List getAssignedTo() throws Exception
+    {
+        ArrayList assignees = new ArrayList();
+        Criteria crit = new Criteria()
+            .addJoin(AttributeValuePeer.ATTRIBUTE_ID, 
+                     AttributePeer.ATTRIBUTE_ID)        
+            .add(AttributePeer.ATTRIBUTE_NAME, "Assigned To");
+        List attValues = getAttributeValues(crit);
+        for ( int i=0; i<attValues.size(); i++ ) 
+        {
+            AttributeValue attVal = (AttributeValue) attValues.get(i);
+            assignees.add(attVal.getValue());
+        }
+        return assignees;
+    }
+        
+    /**
+     * Returns a list of Attachment objects with type "Comment"
+     * That are associated with this issue.
+     */
+    public Vector getComments() throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttachmentPeer.ISSUE_ID, getIssueId())
+            .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
+                     AttachmentPeer.ATTACHMENT_TYPE_ID)
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_NAME,
+                 AttachmentTypePeer.URL_TYPE_NAME);
+        return  AttachmentPeer.doSelect(crit);
+    }
+
+    /**
+     * Returns a list of Attachment objects with type "URL"
+     * That are associated with this issue.
+     */
+    public Vector getUrls() throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(AttachmentPeer.ISSUE_ID, getIssueId())
+            .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
+                     AttachmentPeer.ATTACHMENT_TYPE_ID)
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_NAME, 
+                 AttachmentTypePeer.COMMENT_TYPE_NAME);
+        return  AttachmentPeer.doSelect(crit);
+    }
+
+    /**
+     * Returns list of Activity objects associated with this Issue.
+     */
+    public Vector getActivity() throws Exception  
+    {
+        Criteria crit = new Criteria()
+            .add(ActivityPeer.ISSUE_ID, getIssueId());
+        return ActivityPeer.doSelect(crit);
+    }
+
+    /**
+     * Returns list of child issues
+     * i.e., related to this issue through the DEPEND table.
+     */
+    public List getChildren() throws Exception  
+    {
+        ArrayList children = new ArrayList();
+        Criteria crit = new Criteria()
+            .add(DependPeer.OBSERVED_ID, getIssueId());
+        Vector depends = DependPeer.doSelect(crit);
+        for ( int i=0; i<depends.size(); i++ ) 
+        {
+            Depend depend = (Depend) depends.get(i); 
+            Issue childIssue = (Issue) IssuePeer.retrieveByPK(new NumberKey(depend.getObserverId()));
+            children.add(childIssue);
+        }
+        return children;
+    }
+
+    /**
+     * Returns list of parent issues
+     * i.e., related to this issue through the DEPEND table.
+     */
+    public List getParents() throws Exception  
+    {
+        ArrayList parents = new ArrayList();
+        Criteria crit = new Criteria()
+            .add(DependPeer.OBSERVER_ID, getIssueId());
+        Vector depends = DependPeer.doSelect(crit);
+        for ( int i=0; i<depends.size(); i++ ) 
+        {
+            Depend depend = (Depend) depends.get(i); 
+            Issue parentIssue = (Issue) IssuePeer.retrieveByPK(new NumberKey(depend.getObservedId()));
+            parents.add(parentIssue);
+        }
+        return parents;
+    }
+        
+    /**
+     * Returns list of all types of dependencies an issue can have
+     * On another issue.
+     */
+    public Vector getAllDependencyTypes() throws Exception
+    {
+        return DependTypePeer.doSelect(new Criteria());
+    }
+
+    /**
+     * Returns type of dependency the passed-in issue has on
+     * This issue.
+     */
+    public String getDependencyType(Issue childIssue) throws Exception
+    {
+        Criteria crit = new Criteria(2)
+            .add(DependPeer.OBSERVED_ID, getIssueId() )        
+            .add(DependPeer.OBSERVER_ID, childIssue.getIssueId() );        
+        Depend depend = (Depend)DependPeer.doSelect(crit).get(0);
+        return depend.getTypeId().toString();
+    }
 
     public void save(DBConnection dbCon)
         throws Exception
