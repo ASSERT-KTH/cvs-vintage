@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.41 2001/09/09 00:46:28 costin Exp $
+/* $Id: Main.java,v 1.42 2002/01/24 11:16:03 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -313,7 +313,13 @@ public class Main{
             IntrospectionUtils.execute(  proxy, "execute" );
         } catch( Exception ex ) {
             System.out.println("Guessed home=" + installDir);
+            System.out.println("Exception: " + ex);
             ex.printStackTrace();
+            if( ex instanceof InvocationTargetException ) {
+                Throwable t = ((InvocationTargetException)ex).getTargetException();
+                System.out.println("Root Exception: " + t );
+                t.printStackTrace();
+            }
         }
     }
 
