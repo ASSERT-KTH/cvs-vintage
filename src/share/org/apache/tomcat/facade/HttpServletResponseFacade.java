@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.8 2000/07/11 03:48:45 alex Exp $
- * $Revision: 1.8 $
- * $Date: 2000/07/11 03:48:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.9 2000/07/18 00:22:01 craigmcc Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/07/18 00:22:01 $
  *
  * ====================================================================
  *
@@ -355,7 +355,10 @@ final class HttpServletResponseFacade  implements HttpServletResponse
         if (urlPort == -1) {
             urlPort = 80;
         }
-	if (request.getServerPort() != urlPort)
+	int serverPort = request.getServerPort();
+	if (serverPort == -1)	// Work around bug in java.net.URL.getHost()
+	    serverPort = 80;
+	if (serverPort != urlPort)
 	    return (false);
 	String contextPath = request.getContext().getPath();
 	if ((contextPath != null) && (contextPath.length() > 0)) {
