@@ -214,7 +214,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	
 	ClassLoader loader=constructLoader( context );
 	if( debug>5 ) {
-	    URL classP=context.getClassPath();
+	    URL classP[]=context.getClassPath();
 	    log("  Context classpath URLs:");
 	    for (int i = 0; i < classP.length; i++)
                 log("    " + classP[i].toString() );
@@ -242,7 +242,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	    }
 	}
 	if( debug>5 ) {
-	    URL classP=context.getClassPath();
+	    URL classP[]=context.getClassPath();
 	    log("  Context classpath URLs:");
 	    for (int i = 0; i < classP.length; i++)
                 log("    " + classP[i].toString() );
