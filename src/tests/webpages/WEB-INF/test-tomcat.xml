@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.23 $" />  
+     <property name="revision" value="$Revision: 1.24 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -440,7 +440,13 @@
              returnCode="${http.protocol} 302" 
        />
 
-    
+      <httpClient>
+          <comment>Get a session and then include a JSP.</comment>
+          <httpRequest path="/test/servlet/dispatch.IncludeJspWithSession HTTP/1.0" />
+          <httpStatusMatch match="200" />
+          <responseMatch match="This is an inner file"/>
+          <headerMatch name="Set-Cookie2" value="JSESSIONID=" />
+      </httpClient>
 
     </target>
 
