@@ -446,8 +446,6 @@ public class ScarabRequestTool
     public AttributeOption getAttributeOption()
         throws Exception
     {
-try
-{
         if (attributeOption == null)
         {
             String optId = getIntakeTool()
@@ -463,11 +461,6 @@ try
                     .getInstance(new Integer(optId));
             }
         }
-}
-catch(Exception e)
-{
-e.printStackTrace();
-}
         return attributeOption;
     }
 
