@@ -15,16 +15,28 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
+import java.util.Vector;
+
+import javax.swing.tree.TreeNode;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.ConfigPath;
+import org.columba.core.io.DiskIO;
+import org.columba.mail.folder.FolderTreeNode;
 
-public abstract class Folder extends AddressbookTreeNode
-{
+public abstract class Folder extends AddressbookTreeNode {
+
+	protected Vector folderListeners;
+
+	/**
+	 *    Description of the Field
+	 *
+	 *@since
+	 */
+	protected Vector treeNodeListeners;
 
 	/**
 	 *  unique identification number
@@ -45,29 +57,90 @@ public abstract class Folder extends AddressbookTreeNode
 
 	protected AddressbookInterface addressbookInterface;
 
-	public Folder(FolderItem item, AddressbookInterface addressbookInterface)
-	{
-		super(item.getName());
+	public Folder(FolderItem item) {
+		super(item);
 
+		/*
 		this.folderItem = item;
 		this.uid = folderItem.getUid();
 		this.addressbookInterface = addressbookInterface;
-
+		
 		String dir =
 			ConfigPath.getConfigDirectory() + "/addressbook" + "/" + new Integer(uid).toString();
-
+		
 		directoryFile = new File(dir);
 		if (directoryFile.exists() == false)
 		{
 			directoryFile.mkdir();
 		}
+		*/
+
+		init();
+
+		String dir =
+			ConfigPath.getConfigDirectory() + "/addressbook/" + getUid();
+		if (DiskIO.ensureDirectory(dir))
+			directoryFile = new File(dir);
+	}
+
+	public Folder(String name) {
+		super(name);
+
+		children = new Vector();
+
+		init();
+
+		String dir = ConfigPath.getConfigDirectory() + "/addressbook/" + name;
+		if (DiskIO.ensureDirectory(dir))
+			directoryFile = new File(dir);
+
+	}
+
+	/**
+		 * Do some initialization work both constructors share
+		 *
+		 */
+	protected void init() {
+
+		//messageFolderInfo = new MessageFolderInfo();
+
+		//changed = false;
+
+		folderListeners = new Vector();
+
+		treeNodeListeners = new Vector();
+
+	}
+
+	public File getDirectoryFile() {
+		return directoryFile;
+	}
+
+	/*
+	public AddressbookTreeNode getRootFolder() {
+		AddressbookTreeNode folderTreeNode = (AddressbookTreeNode) getParent();
+		while (folderTreeNode != null) {
+
+			if (folderTreeNode instanceof Root) {
+
+				return (Root) folderTreeNode;
+			}
+
+			folderTreeNode = (AddressbookTreeNode) folderTreeNode.getParent();
+
+		}
+
+		return null;
+	}
+	*/
+
+	public void createChildren(WorkerStatusController worker) {
 	}
 
 	/**
 	 * return FolderItem 
 	 */
-	public FolderItem getFolderItem()
-	{
+	public FolderItem getFolderItem() {
 		return folderItem;
 	}
 
@@ -80,7 +153,7 @@ public abstract class Folder extends AddressbookTreeNode
 	 * to get *all* the data of a contact use the uidGet-method
 	 */
 	public abstract HeaderItemList getHeaderItemList();
-	
+
 	/**
 	 * this method it ATM only needed for group-support
 	 *  -> get the uid-list (the grouplist-members!) from the
@@ -88,15 +161,15 @@ public abstract class Folder extends AddressbookTreeNode
 	 * 
 	 *  -> this method return a HeaderItemList for use in a JList-object, etc.
 	 */
-	public abstract HeaderItemList getHeaderItemList( Object[] uids );
+	public abstract HeaderItemList getHeaderItemList(Object[] uids);
 
 	/** 
 	 * add ContactCard to Folder
 	 */
 	public abstract void add(DefaultCard item);
 
-	public abstract void modify(DefaultCard item, Object uid );
-	
+	public abstract void modify(DefaultCard item, Object uid);
+
 	//public abstract void add(GroupListCard item);
 
 	/**
@@ -107,7 +180,7 @@ public abstract class Folder extends AddressbookTreeNode
 	/**
 	 * this is for address-completion
 	 */
-	public abstract HeaderItemList searchPattern( String pattern );
+	public abstract HeaderItemList searchPattern(String pattern);
 
 	/**
 	 * return ContactCard containing every information 
@@ -115,23 +188,24 @@ public abstract class Folder extends AddressbookTreeNode
 	 * use this method for the EditContact-Dialog
 	 */
 	public abstract DefaultCard get(Object uid);
-	
-	public abstract boolean exists( String email );
+
+	public abstract boolean exists(String email);
 
 	/**
 	 * remove folder from parent
 	 */
-	public void removeFolder()
-	{
+	/*
+	public void removeFolder() {
 		// remove treenode from xml-config-file
 		FolderItem item = getFolderItem();
 		AdapterNode rootNode = item.getRootNode();
 		rootNode.remove();
-		
+	
 		// remove treenode from JTree
 		removeFromParent();
 	}
-	
+	*/
+
 	/**
 	 * save header-cache (HeaderItemList)
 	 */
@@ -142,4 +216,82 @@ public abstract class Folder extends AddressbookTreeNode
 	 */
 	public abstract void load(WorkerStatusController worker) throws Exception;
 
+	/**
+		 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
+		 */
+	protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
+		TreeNode[] retNodes;
+
+		if (aNode == null) {
+			if (depth == 0)
+				return null;
+			else
+				retNodes = new TreeNode[depth];
+		} else {
+			depth++;
+			retNodes = getPathToRoot(aNode.getParent(), depth);
+			retNodes[retNodes.length - depth] = aNode;
+		}
+		return retNodes;
+	}
+
+	/**
+	 * Method getTreePath.
+	 * @return String
+	 */
+	public String getTreePath() {
+		TreeNode[] treeNode = getPathToRoot(this, 0);
+
+		StringBuffer path = new StringBuffer();
+
+		for (int i = 1; i < treeNode.length; i++) {
+			FolderTreeNode folder = (FolderTreeNode) treeNode[i];
+			path.append("/" + folder.getName());
+		}
+
+		return path.toString();
+	}
+
+	public boolean isParent(Folder folder) {
+
+		Folder parent = (Folder) folder.getParent();
+		if (parent == null)
+			return false;
+
+		//while ( parent.getUid() != 100 )
+		while (parent.getFolderItem() != null) {
+
+			if (parent.getUid() == getUid()) {
+
+				return true;
+			}
+
+			parent = (Folder) parent.getParent();
+		}
+
+		return false;
+	}
+
+	public String getName() {
+		String name = null;
+
+		FolderItem item = getFolderItem();
+		name = item.get("property", "name");
+
+		return name;
+	}
+
+	/**
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+	 */
+	public void setName(String newName) {
+
+		FolderItem item = getFolderItem();
+		item.set("property", "name", newName);
+
+	}
+
+	public String toString() {
+		return getName();
+	}
 }

@@ -4,10 +4,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.HeaderInterface;
-import org.columba.mail.message.HeaderItem;
+
 
 /**
  * @author freddy
@@ -54,12 +55,13 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		String host = (String) p.readObject();
 		h.set("columba.host", host);
 
-		HeaderTableItem v =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem v =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
 		Object o;
 		for (int j = 0; j < v.count(); j++) {
-			column = (String) v.getName(j);
+			HeaderItem headerItem = v.getHeaderItem(j);
+			column = (String) headerItem.get("name");
 			o = p.readObject();
 
 			if (o == null) {
@@ -105,13 +107,14 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 		p.writeObject(h.get("columba.host"));
 
-		HeaderTableItem v =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem v =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
-		HeaderItem item;
+		
 		Object o;
 		for (int j = 0; j < v.count(); j++) {
-			column = (String) v.getName(j);
+			HeaderItem headerItem = v.getHeaderItem(j);
+			column = (String) headerItem.get("name");
 			o = h.get(column);
 			p.writeObject(o);
 		}

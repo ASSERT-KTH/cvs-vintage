@@ -7,7 +7,6 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.POP3CommandReference;
@@ -26,10 +25,8 @@ public class CheckForNewMessagesCommand extends Command {
 
 	POP3Server server;
 
-	public CheckForNewMessagesCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public CheckForNewMessagesCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
@@ -38,7 +35,7 @@ public class CheckForNewMessagesCommand extends Command {
 	public void execute(Worker worker) throws Exception {
 
 		FetchNewMessagesCommand command =
-			new FetchNewMessagesCommand(frameController, getReferences());
+			new FetchNewMessagesCommand( getReferences());
 
 		POP3CommandReference[] r =
 			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);
@@ -58,10 +55,16 @@ public class CheckForNewMessagesCommand extends Command {
 
 			int newMessagesCount = newMessagesUIDList.size();
 			if ((newMessagesCount > 0)
-				&& (server.getAccountItem().getPopItem().isPlaysound()))
+				&& (server
+					.getAccountItem()
+					.getPopItem()
+					.getBoolean("enable_sound")))
 				playSound();
 
-			if (server.getAccountItem().getPopItem().isAutoDownload())
+			if (server
+				.getAccountItem()
+				.getPopItem()
+				.getBoolean("automatically_download_new_messages"))
 				command.downloadNewMessages(
 					newUIDList,
 					messageSizeList,
@@ -79,7 +82,7 @@ public class CheckForNewMessagesCommand extends Command {
 
 		AccountItem item = server.getAccountItem();
 		PopItem popItem = item.getPopItem();
-		String file = popItem.getSoundfile();
+		String file = popItem.get("sound_file");
 
 		ColumbaLogger.log.info("playing sound file=" + file);
 

@@ -120,7 +120,7 @@ public class POP3Store {
 		
 		parser.addColumbaHeaderFields(h);
 		
-		h.set("columba.host", popItem.getHost());
+		h.set("columba.host", popItem.get("host"));
 		
 		h.set("columba.fetchstate", new Boolean(true));
 		
@@ -153,8 +153,8 @@ public class POP3Store {
 
 		boolean b =
 			protocol.openPort(
-				popItem.getHost(),
-				(new Integer(popItem.getPort())).intValue());
+				popItem.get("host"),
+				popItem.getInteger("port"));
 
 		String password = new String("");
 		String user = new String("");
@@ -162,13 +162,13 @@ public class POP3Store {
 		boolean save = false;
 
 		while (login == false) {
-			if (popItem.getPassword().length() == 0) {
+			if (popItem.get("password").length() == 0) {
 				dialog = new PasswordDialog();
 
 				dialog.showDialog(
-					popItem.getHost(),
-					popItem.getPassword(),
-					popItem.isSavePassword());
+					popItem.get("host"),
+					popItem.get("password"),
+					popItem.getBoolean("save_password"));
 
 				char[] name;
 
@@ -187,9 +187,9 @@ public class POP3Store {
 					//setCancel(true);
 				}
 			} else {
-				password = popItem.getPassword();
+				password = popItem.get("password");
 				//user = popItem.getUser();
-				save = popItem.isSavePassword();
+				save = popItem.getBoolean("save_password");
 				//method = popItem.getLoginMethod();
 			}
 
@@ -205,14 +205,14 @@ public class POP3Store {
 
 			//pop3Connection.openPort();
 
-			protocol.setLoginMethod(popItem.getLoginMethod());
-			login = protocol.login(popItem.getUser(), password);
+			protocol.setLoginMethod(popItem.get("login_method"));
+			login = protocol.login(popItem.get("user"), password);
 			//stopTimer();
 
 			if (login == false) {
 				//JOptionPane.showMessageDialog(popServer.getFrame(), "Authorization failed!");
 
-				popItem.setPassword("");
+				popItem.set("password","");
 				state = STATE_NONAUTHENTICATE;
 
 			}
@@ -224,7 +224,7 @@ public class POP3Store {
 
 		if (login) {
 			//popItem.setUser(user);
-			popItem.setSavePassword(save);
+			popItem.set("save_password",save);
 			//popItem.setLoginMethod( method );
 			state = STATE_AUTHENTICATE;
 
@@ -232,7 +232,7 @@ public class POP3Store {
 
 				// save plain text password in config file
 				// this is a security risk !!!
-				popItem.setPassword(password);
+				popItem.set("password", password);
 			}
 		}
 

@@ -27,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 
 public class FilterToolbar extends JToolBar implements ActionListener
 {
@@ -59,10 +59,11 @@ public class FilterToolbar extends JToolBar implements ActionListener
 	public void addCButtons()
 	{
 
+		/*
 		//addSeparator();
 
 		//HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
-		HeaderTableItem list = table.getHeaderTableItem();
+		TableItem list = table.getHeaderTableItem();
 		comboBox = new JComboBox();
 		String name;
 
@@ -128,7 +129,7 @@ public class FilterToolbar extends JToolBar implements ActionListener
 		add(searchButton);
 
 		addSeparator();
-
+			*/
 	}
 
 	public void update()

@@ -262,10 +262,14 @@ public class SelectAddressbookFolderDialog
 
 		FolderItem item = node.getFolderItem();
 
+		/*
 		if ( item.getType().equals("root") )
 			buttons[1].setEnabled(false);
 		else
 			buttons[1].setEnabled(true);
+		*/
+		
+		
 		/*
 		if ( item.isAddAllowed() )
 		{

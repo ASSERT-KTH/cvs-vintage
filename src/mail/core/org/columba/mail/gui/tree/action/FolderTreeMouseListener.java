@@ -70,7 +70,7 @@ public class FolderTreeMouseListener extends MouseAdapter
 
     public void mouseClicked(MouseEvent e)
     {
-    	treeController.selectFolder();
+    	if ( e.getButton() == MouseEvent.BUTTON1 ) treeController.selectFolder();
     	/*
         if ( e.getClickCount() == 1 )
         {

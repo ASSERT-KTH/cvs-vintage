@@ -1,27 +1,19 @@
 package org.columba.mail.gui.tree;
 
+import java.lang.reflect.Constructor;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.MissingResourceException;
 
+import javax.swing.JFrame;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.mail.config.AccountItem;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
-import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.filter.FilterList;
-import org.columba.mail.filter.Search;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.Root;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.folder.mh.CachedMHFolder;
-import org.columba.mail.folder.outbox.OutboxFolder;
-import org.columba.mail.folder.virtual.VirtualFolder;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -37,20 +29,22 @@ public class TreeModel extends DefaultTreeModel {
 	protected FolderXmlConfig folderXmlConfig;
 	protected Root rootNode;
 
+	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class};
+
 	public TreeModel(FolderXmlConfig folderConfig) {
 		super(null);
 
-		rootNode = new Root(folderConfig.getRootNode());
+		rootNode = new Root(folderConfig.getRoot().getElement("tree"));
 		setRoot(rootNode);
-		System.out.println("root-uid=" + rootNode.getUid());
+		//System.out.println("root-uid=" + rootNode.getUid());
 		this.folderXmlConfig = folderConfig;
 
-		System.out.println("root1=" + getRoot().toString());
+		//System.out.println("root1=" + getRoot().toString());
 		createDirectories(
 			((FolderTreeNode) getRoot()).getNode(),
 			(FolderTreeNode) getRoot());
 
-		System.out.println("root2=" + getRoot());
+		//System.out.println("root2=" + getRoot());
 
 	}
 
@@ -59,163 +53,45 @@ public class TreeModel extends DefaultTreeModel {
 	}
 
 	public void createDirectories(
-		AdapterNode parentTreeNode,
+		XmlElement parentTreeNode,
 		FolderTreeNode parentFolder) {
-		int count = parentTreeNode.getChildCount();
-		AdapterNode child;
+		int count = parentTreeNode.count();
+	
+		XmlElement child;
 
 		if (count > 0) {
 			for (int i = 0; i < count; i++) {
 
-				child = parentTreeNode.getChild(i);
+				child = parentTreeNode.getElement(i);
 				String name = child.getName();
-				AdapterNode nameNode = child.getChild("name");
+				//XmlElement nameNode = child.getName();
 
 				//                System.out.println( "node: "+child );
 				//                System.out.println( "nodename: "+nameNode.getValue());
+
+				/*
 				if ((name.equals("tree")) || (name.equals("folder"))) {
 					FolderTreeNode folder = add(child, parentFolder);
 					if (folder != null)
 						createDirectories(child, folder);
 				}
+				*/
+				if (name.equals("folder")) {
+					FolderTreeNode folder = add(child, parentFolder);
+					if (folder != null)
+						createDirectories(child, folder);
+				}
+
 			}
 		}
 	}
 
-	public FolderItem getItem(AdapterNode node) {
-		return folderXmlConfig.getFolderItem(node);
-	}
-
-	public AdapterNode addFolder(
-		FolderTreeNode parentFolder,
-		Hashtable folderAttributes) {
-		AdapterNode adapterNode =
-			MailConfig.getFolderConfig().addFolderNode(
-				parentFolder.getNode(),
-				(String) folderAttributes.get("name"),
-				(String) folderAttributes.get("accessrights"),
-				(String) folderAttributes.get("messagefolder"),
-				(String) folderAttributes.get("type"),
-				(String) folderAttributes.get("subfolder"),
-				(String) folderAttributes.get("add"),
-				(String) folderAttributes.get("remove"),
-				(Integer) folderAttributes.get("accountuid"));
-
-		return adapterNode;
-	}
-
-	/*
-	public void addUserFolder(FolderTreeNode parentFolder, String name) {
-		AdapterNode adapterNode =
-			MailConfig.getFolderConfig().addFolderNode(
-				parentFolder.getNode(),
-				name,
-				"user",
-				"true",
-				"columba",
-				"true",
-				"true",
-				"true",new Integer(-1));
-	
-		FolderItem item = folderXmlConfig.getFolderItem(adapterNode);
-	
-	}
-	*/
-
-	/*
-	public FolderTreeNode addVirtualFolder(
-		FolderTreeNode parentFolder,
-		String name) {
-		AdapterNode adapterNode =
-			MailConfig.getFolderConfig().addFolderNode(
-				parentFolder.getNode(),
-				name,
-				"user",
-				"true",
-				"virtual",
-				"false",
-				"false",
-				"true",
-				new Integer(-1));
-	
-		FolderItem item = folderXmlConfig.getFolderItem(adapterNode);
-	
-		VirtualFolder newFolder = new VirtualFolder(adapterNode, item);
-		Search search = new Search(adapterNode, newFolder);
-		// newFolder.addTreeNodeListener( this );
-		parentFolder.add(newFolder);
-	
-		return newFolder;
-	}
-	*/
-
-	/*
-	public FolderTreeNode addImapFolder(
-		FolderTreeNode parentFolder,
-		String name,
-		ImapItem imapItem,
-		FolderTreeNode rootFolder,
-		int uid) {
-		AdapterNode adapterNode =
-			MailConfig.getFolderConfig().addFolderNode(
-				parentFolder.getNode(),
-				name,
-				"user",
-				"true",
-				"imap",
-				"true",
-				"true",
-				"true",new Integer(-1)
-				);
-	
-		FolderItem item = folderXmlConfig.getFolderItem(adapterNode);
-	
-		IMAPFolder newFolder =
-			new IMAPFolder(
-				adapterNode,
-				item,
-				imapItem,
-				(IMAPRootFolder) rootFolder);
-		//newFolder.addTreeNodeListener( this );
-		parentFolder.add(newFolder);
-	
-		return newFolder;
-	}
-	*/
-	public FolderTreeNode addImapRootFolder(
-		String name,
-		ImapItem imapItem,
-		int uid) {
-		FolderTreeNode parentFolder = (FolderTreeNode) getRoot();
-		AdapterNode adapterNode =
-			MailConfig.getFolderConfig().addFolderNode(
-				parentFolder.getNode(),
-				name,
-				"system",
-				"false",
-				"imaproot",
-				"true",
-				"false",
-				"false",
-				new Integer(uid));
-
-		FolderItem item = folderXmlConfig.getFolderItem(adapterNode);
-		if (item.getName() == null)
-			item.setName(name);
-
-		IMAPRootFolder newFolder =
-			new IMAPRootFolder(adapterNode, item, imapItem, uid);
-		//newFolder.addTreeNodeListener( this );
-		parentFolder.add(newFolder);
-
-		return newFolder;
-	}
-
-	public FolderTreeNode add(
-		AdapterNode childNode,
+			public FolderTreeNode add(
+		XmlElement childNode,
 		FolderTreeNode parentFolder) {
 
-		FolderItem item = MailConfig.getFolderConfig().getFolderItem(childNode);
+		FolderItem item = new FolderItem(childNode);
+
 		if (item == null)
 			return null;
 
@@ -223,7 +99,9 @@ public class TreeModel extends DefaultTreeModel {
 
 		String name = null;
 
-		int uid = item.getUid();
+		//XmlElement.printNode(item.getRoot(), "");
+
+		int uid = item.getInteger("uid");
 
 		try {
 			if (uid == 100)
@@ -249,60 +127,90 @@ public class TreeModel extends DefaultTreeModel {
 				name = MailResourceLoader.getString("tree", "templates");
 
 			else
-				name = item.getName();
+				name = item.get("property", "name");
 
-			item.setName(name);
+			item.set("property", "name", name);
 
 		} catch (MissingResourceException ex) {
-			name = item.getName();
+			name = item.get("property", "name");
 		}
 
 		// now instanciate the folder classes
 
+		String className = item.get("class");
+		ClassLoader loader = ClassLoader.getSystemClassLoader();
+		try {
+			Class actClass = loader.loadClass(className);
+			//System.out.println("superclass="+actClass.getSuperclass().getName());
+			
+			/*
+			if (actClass
+				.getSuperclass()
+				.getName()
+				.equals("org.columba.mail.folder.Folder")) {
+
+				Folder folder = (Folder) actClass.newInstance();
+			}
+			*/
+			
+			Constructor c = actClass.getConstructor(FOLDER_ITEM_ARG);
+			
+			if( c != null ) {
+				Object[] args ={item};
+			
+				FolderTreeNode folder = (FolderTreeNode) c.newInstance( args);
+				parentFolder.add( folder );
+			
+				return folder;
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		/*
 		if (item.getType().equals("columba")) {
 			//ColumbaFolder f = new ColumbaFolder(childNode, item);
 			CachedMHFolder f = new CachedMHFolder(childNode, item);
-
+		
 			FilterList list = new FilterList(f);
 			parentFolder.add(f);
-
+		
 			return f;
 		} else if (item.getType().equals("virtual")) {
-
+		
 			VirtualFolder f = new VirtualFolder(childNode, item);
 			Search search = new Search(childNode, f);
 			parentFolder.add(f);
-
+		
 			return f;
 		} else if (item.getType().equals("outbox")) {
-
+		
 			OutboxFolder f = new OutboxFolder(childNode, item);
 			parentFolder.add(f); // Do never exchange with line below!!
-
+		
 			return f;
-
+		
 		} else if (item.getType().equals("imap")) {
 			AccountItem accountItem =
 				MailConfig.getAccountList().uidGet(item.getAccountUid());
-
+		
 			ImapItem item2 = accountItem.getImapItem();
-
+		
 			IMAPRootFolder imapRootFolder = null;
-
+		
 			IMAPFolder f =
 				new IMAPFolder(childNode, item, item2, imapRootFolder);
 			FilterList list = new FilterList(f);
 			parentFolder.add(f);
-
+		
 			return f;
-
+		
 		} else if (item.getType().equals("imaproot")) {
-
+		
 			AccountItem accountItem =
 				MailConfig.getAccountList().uidGet(item.getAccountUid());
-
+		
 			ImapItem item2 = accountItem.getImapItem();
-
+		
 			IMAPRootFolder f =
 				new IMAPRootFolder(
 					childNode,
@@ -311,10 +219,10 @@ public class TreeModel extends DefaultTreeModel {
 					item.getAccountUid());
 			f.setName(accountItem.getName());
 			parentFolder.add(f);
-
+		
 			return f;
 		}
-
+		*/
 		return null;
 	}
 
@@ -358,11 +266,13 @@ public class TreeModel extends DefaultTreeModel {
 				if (item == null)
 					continue;
 
-				if (item.getType().equals("imaproot")) {
-					int account = item.getAccountUid();
+				if (item
+					.get("class")
+					.equals("org.columba.mail.folder.imap.IMAPRootFolder")) {
+					int account = item.getInteger("account_uid");
 
 					if (account == accountUid) {
-						int uid = item.getUid();
+						int uid = item.getInteger("uid");
 
 						return getFolder(uid);
 					}
@@ -424,5 +334,11 @@ public class TreeModel extends DefaultTreeModel {
 
 		return null;
 	}
-
+	
+	
+	public SelectFolderDialog getSelectFolderDialog()
+	{
+		return new SelectFolderDialog();
+	}
+	
 }

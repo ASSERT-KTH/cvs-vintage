@@ -348,6 +348,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 				org.columba.mail.gui.config.search.SearchFrame frame =
 					new org.columba.mail.gui.config.search.SearchFrame(
+						tableController.getMailFrameController(),
 						searchFolder);
 
 				frame.setSourceFolder(folder);

@@ -1,6 +1,6 @@
 package org.columba.mail.folder.mh;
 
-import org.columba.core.config.AdapterNode;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
@@ -15,11 +15,11 @@ import org.columba.mail.folder.LocalFolder;
  */
 public abstract class MHFolder extends LocalFolder {
 
-	public MHFolder( AdapterNode node, FolderItem item )
+	public MHFolder( FolderItem item )
 	{
-		super( node, item );
+		super( item );
 	}
-	
+
 	public DataStorageInterface getDataStorageInstance()
 	{
 		if (dataStorage == null)
@@ -28,4 +28,15 @@ public abstract class MHFolder extends LocalFolder {
 		return dataStorage;
 	}
 	
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
+	 */
+	public static XmlElement getDefaultProperties() {
+		XmlElement props = new XmlElement("property");
+		props.addAttribute("accessrights","user");
+		props.addAttribute("subfolder","true");
+				
+		return props;
+	}
+
 }

@@ -22,7 +22,8 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
 import org.columba.core.gui.util.treetable.TreeTableModel;
 import org.columba.mail.folder.Folder;
@@ -38,7 +39,7 @@ import org.columba.mail.message.MessageCollection;
 
 public class HeaderTableModel extends AbstractTreeTableModel {
 
-	private HeaderTableItem item;
+	private TableItem item;
 
 	private Folder folder;
 	protected HeaderList headerList;
@@ -53,9 +54,10 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 	private Vector tableModelPlugins;
 
-	public HeaderTableModel(HeaderTableItem item) {
+	public HeaderTableModel(TableItem item) {
 		//super(null);
 		this.item = item;
+
 
 		tableModelPlugins = new Vector();
 
@@ -323,12 +325,22 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 	}
 
 	public int getColumnCount() {
-		return item.count();
+		int count = 0;
+		
+		for ( int i=0; i<item.count(); i++ )
+		{
+			HeaderItem headerItem = item.getHeaderItem(i);
+			boolean enabled = headerItem.getBoolean("enabled");
+			
+			if ( enabled == true ) count++;
+		}
+		
+		return count;
 	}
 
 	public String getColumnName(int column) {
 
-		return item.getName(column);
+		return item.getHeaderItem(column).get("name");
 	}
 
 	public int getColumnNumber(String name) {

@@ -38,6 +38,13 @@ public class MessageFolderInfo
     public MessageFolderInfo()
     {}
 
+	public void clear()
+	{
+		exists = 0;
+		recent = 0;
+		unseen = 0;
+	}
+	
     public void setFlags( Flags f )
     {
         flags = f;

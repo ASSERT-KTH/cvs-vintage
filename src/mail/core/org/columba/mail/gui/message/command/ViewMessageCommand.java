@@ -7,7 +7,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.HeaderInterface;
@@ -55,12 +54,17 @@ public class ViewMessageCommand extends FolderCommand {
 		
 		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
 
+		// FIXME
+		/*
 		boolean viewhtml =
 			MailConfig
 				.getMainFrameOptionsConfig()
 				.getWindowItem()
 				.getHtmlViewer();
-
+		*/
+		
+		boolean viewhtml = true;
+		
 		// Which Bodypart shall be shown? (html/plain)
 
 		if (viewhtml)

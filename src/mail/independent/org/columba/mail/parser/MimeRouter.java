@@ -158,6 +158,9 @@ public class MimeRouter {
 	}
 
 	public void setViewer(String contentType, String subType, String value) {
+		
+		// FIXME
+		/*
 		AdapterNode section = config.getMimeTypeNode();
 
 		AdapterNode actMime = null;
@@ -204,6 +207,8 @@ public class MimeRouter {
 		subMime = actMime.addElement(config.createElementNode("subtype"));
 		subMime.addElement(config.createTextElementNode("type", subType));
 		subMime.addElement(config.createTextElementNode("viewer", value));
+		
+		*/
 	}
 
 	private void loadAllParser() {

@@ -8,7 +8,6 @@ import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.filter.Filter;
@@ -39,10 +38,8 @@ public class FetchNewMessagesCommand extends Command {
 	 * @param frameController
 	 * @param references
 	 */
-	public FetchNewMessagesCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public FetchNewMessagesCommand(DefaultCommandReference[] references) {
+		super(references);
 
 		POP3CommandReference[] r =
 			(POP3CommandReference[]) getReferences(FIRST_EXECUTION);
@@ -120,8 +117,7 @@ public class FetchNewMessagesCommand extends Command {
 				inboxFolder,
 				headerList);
 
-		((MailFrameController) frameController).tableController.tableChanged(
-			ev);
+		MainInterface.frameModel.tableChanged(ev);
 
 		FilterList list = inboxFolder.getFilterList();
 		for (int j = 0; j < list.count(); j++) {
@@ -130,7 +126,7 @@ public class FetchNewMessagesCommand extends Command {
 			Object[] result = inboxFolder.searchMessages(filter, uids, worker);
 			if (result.length != 0) {
 				CompoundCommand command =
-					filter.getCommand(frameController, inboxFolder, result);
+					filter.getCommand(inboxFolder, result);
 
 				MainInterface.processor.addOp(command);
 			}
@@ -184,7 +180,7 @@ public class FetchNewMessagesCommand extends Command {
 			ColumbaLogger.log.info("fetch message with UID=" + serverUID);
 
 			log(
-				"Fetching " + (i+1) + "/" + newMessageCount + " messages...",
+				"Fetching " + (i + 1) + "/" + newMessageCount + " messages...",
 				worker);
 
 			//int index = ( (Integer) result.get(serverUID) ).intValue();
@@ -195,11 +191,13 @@ public class FetchNewMessagesCommand extends Command {
 			int size = Integer.parseInt((String) messageSizeList.get(index));
 			size = Math.round(size / 1024);
 
-			if (server.getAccountItem().getPopItem().isLimit()) {
+			if (server
+				.getAccountItem()
+				.getPopItem()
+				.getBoolean("enable_limit")) {
 				// check if message isn't too big to download
 				int maxSize =
-					Integer.parseInt(
-						server.getAccountItem().getPopItem().getLimit());
+					server.getAccountItem().getPopItem().getInteger("limit");
 
 				// if message-size is bigger skip download of this message
 				if (size > maxSize) {

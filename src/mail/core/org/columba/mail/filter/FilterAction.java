@@ -14,106 +14,39 @@
 
 package org.columba.mail.filter;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 public class FilterAction extends DefaultItem {
-	// move = 0, copy = 1, delete = 2, markasread = 3, ...
-	//private String action;
-	private AdapterNode actionNode;
-	private AdapterNode uidNode;
 
-	private AdapterNode node;
-	private AdapterNode treeNode;
-	//private int uid;
+	public FilterAction(XmlElement root) {
+		super(root);
 
-	public FilterAction(AdapterNode node, Document doc) {
-		super(doc);
-
-		this.node = node;
-		//list = new TreeNodeList();
-		if (node != null)
-			parseNode();
-
-	}
-
-	public AdapterNode getRootNode() {
-		return node;
-	}
-
-	protected void parseNode() {
-		AdapterNode child;
-		//System.out.println("parsing actionnode: ");
-
-		child = node.getChild("name");
-		actionNode = child;
-
-		String action = getTextValue(actionNode);
-
-		if ((action.equals("move")) || (action.equals("copy"))) {
-			AdapterNode subChild = node.getChild("uid");
-			uidNode = subChild;
-
-		}
 	}
 
 	public int getUid() {
-		uidNode = node.getChild("uid");
+		if (contains("uid") == false) {
+			set("uid", 101);
 
-		if (uidNode == null) {
-			addUidNode();
-		}
+			return getInteger("uid");
+		} else
+			return getInteger("uid");
 
-		Integer value = new Integer(getTextValue(uidNode));
-
-		int uid = value.intValue();
-
-		return uid;
-	}
-
-	public void removeUidNode() {
-		AdapterNode parent = node;
-
-		AdapterNode treePathNode = parent.getChild("uid");
-
-		treePathNode.remove();
-	}
-
-	public void addUidNode() {
-		AdapterNode parent = node;
-
-		org.w3c.dom.Element treePathNode = createTextElementNode("uid", "101");
-
-		parent.domNode.appendChild(treePathNode);
-
-		uidNode = node.getChild("uid");
 	}
 
 	public void setUid(int i) {
-		Integer value = new Integer(i);
+		set("uid", i);
 
-		setTextValue(uidNode, value.toString());
 	}
 
 	public String getAction() {
-		return getTextValue(actionNode);
+
+		return get("type");
 	}
 
 	public void setAction(String s) {
-		setTextValue(actionNode, s);
-	}
+		set("type", s);
 
-	public int getActionInt() {
-		if (getAction().equals("move"))
-			return 0;
-		if (getAction().equals("copy"))
-			return 1;
-		if (getAction().equals("markasread"))
-			return 2;
-		if (getAction().equals("delete"))
-			return 3;
-		return -1;
 	}
 
 }

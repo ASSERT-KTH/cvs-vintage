@@ -126,9 +126,7 @@ public class AttachmentActionListener implements ActionListener {
 						.getSelection();
 
 				MainInterface.processor.addOp(
-					new SaveAttachmentCommand(
-						attachmentController.getFrameController(),
-						commandReference));
+					new SaveAttachmentCommand(commandReference));
 			}
 
 		} else if (e.getActionCommand().equals("OPEN_WITH")) //$NON-NLS-1$
@@ -155,9 +153,7 @@ public class AttachmentActionListener implements ActionListener {
 						.getSelection();
 
 				MainInterface.processor.addOp(
-					new OpenWithAttachmentCommand(
-						attachmentController.getFrameController(),
-						commandReference));
+					new OpenWithAttachmentCommand(commandReference));
 			}
 
 		} else if (e.getActionCommand().equals("OPEN")) //$NON-NLS-1$
@@ -183,9 +179,7 @@ public class AttachmentActionListener implements ActionListener {
 						.getSelection();
 
 				MainInterface.processor.addOp(
-					new OpenAttachmentCommand(
-						attachmentController.getFrameController(),
-						commandReference));
+					new OpenAttachmentCommand(commandReference));
 			}
 
 		} else if (e.getActionCommand().equals("VIEW_HEADER")) //$NON-NLS-1$

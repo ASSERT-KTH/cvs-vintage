@@ -32,19 +32,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterAction;
+import org.columba.mail.filter.FilterActionList;
+import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
+import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
+import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.main.MainInterface;
 
-class ActionList extends JPanel implements ActionListener {
+
+public class ActionList extends JPanel implements ActionListener {
 
 	private Config config;
 
 	private Filter filter;
+	
 
-	private HeaderTableItem v;
+	private TableItem v;
 
 	private Vector list;
 
@@ -59,6 +66,7 @@ class ActionList extends JPanel implements ActionListener {
 		this.config = MainInterface.config;
 		this.filter = filter;
 
+		
 		list = new Vector();
 
 		panel = new JPanel();
@@ -80,7 +88,8 @@ class ActionList extends JPanel implements ActionListener {
 		if (b == false) {
 
 			for (int i = 0; i < list.size(); i++) {
-				DefaultActionRow row = (DefaultActionRow) list.get(i);
+				DefaultActionRow row =
+					(DefaultActionRow) list.get(i);
 				row.updateComponents(false);
 			}
 		}
@@ -89,8 +98,11 @@ class ActionList extends JPanel implements ActionListener {
 	public void add() {
 
 		boolean allowed = true;
-		for (int i = 0; i < filter.getActionCount(); i++) {
-			FilterAction action = filter.getFilterAction(i);
+
+		FilterActionList actionList = filter.getFilterActionList();
+
+		for (int i = 0; i < actionList.getChildCount(); i++) {
+			FilterAction action = actionList.get(i);
 			String name = action.getAction();
 
 			if ((action.equals("move")) || (action.equals("delete")))
@@ -100,18 +112,20 @@ class ActionList extends JPanel implements ActionListener {
 
 		if (allowed) {
 			updateComponents(false);
-			filter.addEmptyAction();
+			actionList.addEmptyAction();
 		}
 
 		update();
 	}
 
 	public void remove(int i) {
-		if (filter.getActionCount() > 1) {
+		FilterActionList actionList = filter.getFilterActionList();
+
+		if (actionList.getChildCount() > 1) {
 
 			updateComponents(false);
 
-			filter.removeAction(i);
+			actionList.remove(i);
 
 			update();
 		}
@@ -131,17 +145,66 @@ class ActionList extends JPanel implements ActionListener {
 		c.anchor = GridBagConstraints.NORTHWEST;
 		*/
 
-		for (int i = 0; i < filter.getActionCount(); i++) {
-			FilterAction action = filter.getFilterAction(i);
-			int type = action.getActionInt();
+		/*
+		FilterActionPluginList actionListItem =
+					MailConfig.getFilterActionConfig().getFilterActionList();
+		*/
+
+		FilterActionPluginHandler pluginHandler =
+			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
+				"filter_actions");
+
+		FilterActionList actionList = filter.getFilterActionList();
+
+		for (int i = 0; i < actionList.getChildCount(); i++) {
+			FilterAction action = actionList.get(i);
+			//int type = action.getActionInt();
+			String name = action.getAction();
 			DefaultActionRow row = null;
 
+			Object[] args = { this, action };
+
+			try {
+				row =
+					(DefaultActionRow) ((AbstractFilterPluginHandler)pluginHandler).getGuiPlugin(
+						name,
+						args);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			if ( row == null )
+			{
+				// maybe the plugin wasn't loaded correctly
+				//  -> use default
+				
+				//row = new MarkActionRow(this,action);
+				row = new MarkActionRow(this,action);
+			}
+			
+			//row.init(this,action);
+
+			/*
+			String className = actionListItem.getGuiClassName(name);
+			DefaultActionRow row = null;
+			
+			
+			try
+			{
+				row = (DefaultActionRow) CClassLoader.instanciate(className, args);
+			}
+			catch ( Exception ex )
+			{
+				ex.printStackTrace();
+			} 
+			*/
+			/*
 			if (type == 0) {
 				// move
-				row = new ActionRow(this, action);
+				row = new FolderChooserActionRow(this, action);
 			} else if (type == 1) {
 				// copy
-				row = new ActionRow(this, action);
+				row = new FolderChooserActionRow(this, action);
 			} else if (type == 2) {
 				// mark as read
 				row = new MarkActionRow(this, action);
@@ -149,6 +212,7 @@ class ActionList extends JPanel implements ActionListener {
 				// delete
 				row = new MarkActionRow(this, action);
 			}
+			*/
 
 			if (row != null) {
 				c.fill = GridBagConstraints.NONE;
@@ -156,10 +220,10 @@ class ActionList extends JPanel implements ActionListener {
 				c.gridy = i;
 				c.weightx = 1.0;
 				c.anchor = GridBagConstraints.NORTHWEST;
-				gridbag.setConstraints(row, c);
+				gridbag.setConstraints(row.getContentPane(), c);
 
 				list.add(row);
-				panel.add(row);
+				panel.add(row.getContentPane());
 
 				JButton addButton =
 					new JButton(

@@ -20,8 +20,8 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-import org.columba.core.config.WindowItem;
-import org.columba.mail.config.MailConfig;
+import org.columba.core.config.Config;
+import org.columba.core.config.GuiItem;
 import org.columba.mail.gui.action.BasicAction;
 
 public class ToolbarButton extends JButton {
@@ -50,20 +50,23 @@ public class ToolbarButton extends JButton {
 		setRequestFocusEnabled(false);
 		setMargin(new Insets(1, 1, 1, 1));
 
+		GuiItem item = Config.getOptionsConfig().getGuiItem();
+		/*
 		WindowItem item =
 			MailConfig.getMainFrameOptionsConfig().getWindowItem();
-
-		if (item.isToolbarShowIcon() == true)
+		*/
+		
+		if (item.getBoolean("toolbar","enable_icon") == true)
 			WITH_ICON = true;
 		else
 			WITH_ICON = false;
 
-		if (item.isToolbarShowText() == true)
+		if (item.getBoolean("toolbar","enable_text") == true)
 			WITH_TEXT = true;
 		else
 			WITH_TEXT = false;
 
-		if (item.isToolbarTextPosition() == true)
+		if (item.getBoolean("toolbar","text_position") == true)
 			ALIGNMENT = true;
 		else
 			ALIGNMENT = false;

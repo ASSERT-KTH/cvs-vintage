@@ -2,7 +2,6 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilder;
@@ -20,22 +19,20 @@ import org.columba.mail.message.MimePartTree;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ReplyAsAttachmentCommand extends FolderCommand{
+public class ReplyAsAttachmentCommand extends FolderCommand {
 
 	/**
 	 * Constructor for ReplyAsAttachmentCommand.
 	 */
 	ComposerController controller;
-	
+
 	/**
 	 * Constructor for ReplyCommand.
 	 * @param frameController
 	 * @param references
 	 */
-	public ReplyAsAttachmentCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
@@ -49,29 +46,28 @@ public class ReplyAsAttachmentCommand extends FolderCommand{
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		Folder folder = (Folder) ( (FolderCommandReference) getReferences()[0] ).getFolder();
-		Object[] uids = ( (FolderCommandReference) getReferences()[0] ).getUids();
+		Folder folder =
+			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
 		Message message = new Message();
-		
 
-		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+		ColumbaHeader header =
+			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
 		message.setHeader(header);
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
 		message.setMimePartTree(mimePartTree);
-		
-		
-		String source = folder.getMessageSource(uids[0],worker);
+
+		String source = folder.getMessageSource(uids[0], worker);
 		message.setSource(source);
-					
-		controller = new ComposerController(frameController);
+
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,
 			controller.getModel(),
 			MessageBuilder.REPLY_AS_ATTACHMENT);
 
-		
 	}
 
 	/**

@@ -82,7 +82,7 @@ public class URLController implements ActionListener {
 	}
 
 	public void compose(String address) {
-		ComposerController controller = new ComposerController(null);
+		ComposerController controller = new ComposerController();
 
 		controller.getModel().setTo(address);
 

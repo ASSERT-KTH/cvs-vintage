@@ -15,16 +15,13 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 
 public class AccountItem extends DefaultItem
 {
-    private AdapterNode name;
-    private AdapterNode uid;
-    private AdapterNode defaultAccount;
+    private AccountItem defaultAccount;
     private boolean pop3;
 
     private IdentityItem identity;
@@ -34,140 +31,27 @@ public class AccountItem extends DefaultItem
     private PGPItem pgp;
     private SpecialFoldersItem folder;
 
-    private AdapterNode rootNode;
-
-    public AccountItem( AdapterNode rootNode, Document doc )
+    public AccountItem( XmlElement e )
     {
-        super( doc );
+        super( e );
 
-        this.rootNode = rootNode;
+        pop3=(e.getElement("/popserver") != null);
+  	}
 
-        pop3=false;
-
-        identity = null;
-        pop = null;
-        imap = null;
-        identity = null;
-        smtp = null;
-
-        if ( rootNode != null ) parse();
-
-
-		createMissingElements();
-    }
-
-    public AdapterNode getRootNode()
-    {
-        return rootNode;
-    }
-
-    protected void parse()
-    {
-        //System.out.println("parseing accountitem");
-
-		int count = getRootNode().getChildCount();
-        for ( int i=0; i<count; i++ )
-        {
-            AdapterNode child = getRootNode().getChildAt(i);
-			String str = child.getName();
-			
-            if ( str.equals("name") )
-            {
-                name = child;
-            }
-            else  if ( str.equals("uid") )
-            {
-                uid = child;
-            }
-            else  if ( str.equals("identity") )
-            {
-                identity = new IdentityItem( child, getDocument() );
-            }
-            else  if ( str.equals("popserver") )
-            {
-                pop3 = true;
-                pop = new PopItem( child, getDocument() );
-            }
-            else  if ( str.equals("imapserver") )
-            {
-                pop3 = false;
-                imap = new ImapItem( child, getDocument() );
-            }
-            else  if ( str.equals("smtpserver") )
-            {
-                smtp = new SmtpItem( child, getDocument() );
-            }
-            else  if ( str.equals("pgp") )
-            {
-                pgp = new PGPItem( getDocument(), child );
-            }
-            else  if ( str.equals("specialfolders") )
-            {
-                folder = new SpecialFoldersItem( getDocument(), child );
-            }
-        }
-    }
-
-	protected void createMissingElements() {
-		/*
-		if (defaultAccount == null)
-			defaultAccount = addKey(rootNode, "defaultaccount","false");
-		*/
-	}
-	
-   
 
     public boolean isPopAccount()
     {
         return pop3;
     }
 
-    public void remove()
-    {
-        AdapterNode parent = new AdapterNode( name.domNode.getParentNode() );
-        AdapterNode top = new AdapterNode( parent.domNode.getParentNode() );
-
-	top.removeChild( parent );
-    }
-
-
-
-    public void setNameNode( AdapterNode node )
-    {
-        name = node;
-    }
-
-    public void setUidNode( AdapterNode node )
-    {
-        uid = node;
-    }
-
-
-    public void setPopItem( PopItem item )
-    {
-        pop = item;
-    }
-
-    public void setImapItem( ImapItem item )
-    {
-        imap = item;
-    }
-
-    public void setIdentityItem( IdentityItem item )
-    {
-        identity = item;
-    }
-
-    public void setSmtpItem( SmtpItem item )
-    {
-        smtp = item;
-    }
 
     public SpecialFoldersItem getSpecialFoldersItem()
     {
-    	if ( isDefault() ) return folder;
+    	if( folder == null) {
+    		folder = new SpecialFoldersItem( getRoot().getElement("specialfolders") );
+    	}
     	
-    	if ( folder.isUseDefaultAccount() ) 
+    	if ( folder.getBoolean("use_default_account") ) 
     	{
     		// return default-account ImapItem instead 
     		
@@ -178,11 +62,21 @@ public class AccountItem extends DefaultItem
         return folder;
     }
 
+	private AccountItem getDefaultAccount() {
+		if( defaultAccount == null) {
+			defaultAccount = MailConfig.getAccountList().getDefaultAccount();	
+		}
+		
+		return defaultAccount;
+	}
+
     public PopItem getPopItem()
     {
-    	if ( isDefault() ) return pop;
+    	if( pop == null) {
+    		pop = new PopItem( getRoot().getElement("popserver") );	
+    	}
     	
-    	if ( pop.isUseDefaultAccount() ) 
+    	if ( pop.getBoolean("use_default_account") ) 
     	{
     		// return default-account ImapItem instead 
     		
@@ -195,14 +89,15 @@ public class AccountItem extends DefaultItem
 
     public SmtpItem getSmtpItem()
     {
-    	if ( isDefault() ) return smtp;
-    	
-    	if ( smtp.isUseDefaultAccount() ) 
+		if( smtp == null) {
+			smtp = new SmtpItem( getRoot().getElement("smtpserver") );	
+		}
+		    	
+    	if ( smtp.getBoolean("use_default_account") ) 
     	{
     		// return default-account ImapItem instead 
     		
-    		SmtpItem item = MailConfig.getAccountList().getDefaultAccount().getSmtpItem();
-    		return item;
+    		return getDefaultAccount().getSmtpItem();
     	}
     	
         return smtp;
@@ -210,28 +105,28 @@ public class AccountItem extends DefaultItem
 
     public PGPItem getPGPItem()
     {
-    	// uncomment this to make default account support working
+    	if( pgp == null) {
+    		pgp = new PGPItem(getRoot().getElement("pgp"));	
+    	}
     	
-    	/*
-    	if ( isDefault() ) return pgp;
-    	
-    	if ( pgp.isUseDefaultAccount() ) 
+    	if ( pgp.getBoolean("use_default_account") ) 
     	{
     		// return default-account ImapItem instead 
     		
     		PGPItem item = MailConfig.getAccountList().getDefaultAccount().getPGPItem();
     		return item;
     	}
-    	*/
     	
         return pgp;
     }
 
     public ImapItem getImapItem()
     {
-    	if ( isDefault() ) return imap;
+    	if( imap == null ) {
+    		imap = new ImapItem(getRoot().getElement("imapserver"));
+    	}
     	
-    	if ( imap.isUseDefaultAccount() ) 
+    	if ( imap.getBoolean("use_default_account") ) 
     	{
     		// return default-account ImapItem instead 
     		
@@ -244,15 +139,21 @@ public class AccountItem extends DefaultItem
 
     public IdentityItem getIdentityItem()
     {
+    	if( identity == null ) {
+    		identity = new IdentityItem(getRoot().getElement("identity"));
+    	}
+
+    	if ( identity.getBoolean("use_default_account") )
+    	{
+    		// return default-account identityItem instead
+
+    		IdentityItem item = MailConfig.getAccountList().getDefaultAccount().getIdentityItem();
+    		return item;
+    	}
+    	
         return identity;
     }
 
-	public void setDefault(boolean b)
-	{
-		if ( b==true ) setTextValue(defaultAccount,"true");
-			else setTextValue(defaultAccount,"true");
-	}
-	
     /*
     public boolean isPopAccount()
     {
@@ -266,27 +167,23 @@ public class AccountItem extends DefaultItem
 
     public void setName( String str )
     {
-        setTextValue( name, str );
+        set( "name", str );
     }
 
     public String getName()
     {
-        return getTextValue( name );
+        return get( "name" );
     }
 
     public void setUid( int i )
     {
-        Integer h = new Integer( i );
-
-        setTextValue( uid, h.toString() );
+        set( "uid", i );
     }
 
 
     public int getUid()
     {
-        Integer i = new Integer(  getTextValue( uid ) );
-
-        return i.intValue();
+        return getInteger("uid");
     }
 
 	public boolean isDefault()
@@ -295,12 +192,6 @@ public class AccountItem extends DefaultItem
 				== getUid() ) return true;
 		
 		return false;		
-		/*
-		String s = getTextValue( defaultAccount );
-		
-		if ( s.equals("true") ) return true;
-		else return false;
-		*/
 	}
 	
 }

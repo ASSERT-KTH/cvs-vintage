@@ -42,9 +42,9 @@ public abstract class LocalFolder extends Folder
 	protected int nextUid;
 	
 
-	public LocalFolder(FolderItem item, AddressbookInterface addressbookInterface)
+	public LocalFolder(FolderItem item)
 	{
-		super(item, addressbookInterface);
+		super(item);
 		nextUid = 0;
 	}
 	
@@ -78,6 +78,7 @@ public abstract class LocalFolder extends Folder
 		getDataStorageInstance().removeCard(uid);
 	}
 	
+	/*
 	public void removeFolder()
 	{
 		super.removeFolder();
@@ -85,7 +86,8 @@ public abstract class LocalFolder extends Folder
 		// remove folder from disc
 		directoryFile.delete();
 	}
-
+	*/
+	
 	public DefaultCard get(Object uid)
 	{
 		return getDataStorageInstance().loadDefaultCard(uid);

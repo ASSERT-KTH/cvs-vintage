@@ -106,7 +106,7 @@ public class CmdLineArgumentHandler {
 				// open composer window
 
 				//ComposerFrame frame = new ComposerFrame();
-				ComposerController controller = new ComposerController(null);
+				ComposerController controller = new ComposerController();
 
 				if (rcpt != null) {
 					String rcptString = (String) rcpt;

@@ -27,9 +27,7 @@ import org.columba.mail.gui.attachment.action.AttachmentActionListener;
 import org.columba.mail.gui.attachment.menu.AttachmentMenu;
 import org.columba.mail.gui.attachment.util.IconPanel;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.gui.table.MessageSelectionListener;
-import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 
@@ -143,6 +141,7 @@ public class AttachmentController implements MessageSelectionListener {
 
 	}
 
+	/*
 	public void openWith(MimePart part, File tempFile) {
 		MimeHeader header = part.getHeader();
 
@@ -150,7 +149,9 @@ public class AttachmentController implements MessageSelectionListener {
 		viewer.openWith(header, tempFile);
 
 	}
-
+	*/
+	
+	/*
 	public void open(MimePart part, File tempFile) {
 		MimeHeader header = part.getHeader();
 
@@ -164,7 +165,8 @@ public class AttachmentController implements MessageSelectionListener {
 		}
 
 	}
-
+	*/
+	
 	protected void openInlineMessage(MimePart part, File tempFile) {
 
 		/*

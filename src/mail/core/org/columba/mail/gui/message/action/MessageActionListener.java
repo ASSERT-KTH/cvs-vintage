@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 
 import org.columba.mail.gui.action.BasicAction;
 import org.columba.mail.gui.message.MessageController;
-import org.columba.main.MainInterface;
 
 /**
  * Title:
@@ -54,6 +53,7 @@ public class MessageActionListener implements ActionListener
 	{
 		String action = e.getActionCommand();
 
+		/*
 		if (action
 			.equals(MainInterface.frameController.globalActionCollection.copyAction.getActionCommand()))
 		{
@@ -65,7 +65,9 @@ public class MessageActionListener implements ActionListener
 		{
 			selectAll();
 		}
-		else if ( action.equals( dictAction.getActionCommand() ) )
+		*/
+		
+		if ( action.equals( dictAction.getActionCommand() ) )
 		{
 			// FIXME
 			/*

@@ -1,25 +1,17 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-
+<?xml version="1.0" encoding="UTF-8"?>
 
 <options>
  <gui>
-  <mainfont> 
-   <name>Default</name> 
-   <size>12</size> 
-  </mainfont> 
-  <textfont> 
-   <name>Default</name> 
-   <size>12</size> 
-  </textfont> 
-  <theme>2</theme>
-  <markasreaddelay>2</markasreaddelay>   
+  <mainfont name="Default" size="12"/> 
+  <textfont name="Default" size="12"/> 
+  <theme id="2">
+   <foreground r="255" g="255" b="255"/>
+   <background b="131" r="74" g="105"/>
+  </theme> 
+  <toolbar enable_icon="true" enable_text="true" text_position="false" />
  </gui>
  <mimetypes> 
-    <mimetype> 
-      <type>multipart</type> 
-      <parser>MimeMultipartParser</parser>      
-    </mimetype> 
+    <mimetype type="multipart" parser="MimeMultipartParser"/> 
   </mimetypes> 
 </options>
 

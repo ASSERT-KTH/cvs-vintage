@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderItem;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -111,12 +111,13 @@ public class RemoteHeaderCache {
 		String host = (String) p.readObject();
 		h.set("columba.host", host);
 
-		HeaderTableItem v =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem v =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
 		Object o;
 		for (int j = 0; j < v.count(); j++) {
-			column = (String) v.getName(j);
+			HeaderItem headerItem = v.getHeaderItem(j);
+			column = (String) headerItem.get("name");
 			o = p.readObject();
 
 			if (o == null) {
@@ -162,13 +163,14 @@ public class RemoteHeaderCache {
 
 		p.writeObject(h.get("columba.host"));
 
-		HeaderTableItem v =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem v =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
-		HeaderItem item;
+		
 		Object o;
 		for (int j = 0; j < v.count(); j++) {
-			column = (String) v.getName(j);
+			HeaderItem headerItem = v.getHeaderItem(j);
+			column = (String) headerItem.get("name");
 			o = h.get(column);
 			p.writeObject(o);
 		}

@@ -164,7 +164,7 @@ public abstract class AbstractHeaderCache {
 
 		nextUid++;
 		ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
-		folder.setNextUid(nextUid);
+		folder.setNextMessageUid(nextUid);
 
 		// close stream
 		p.close();

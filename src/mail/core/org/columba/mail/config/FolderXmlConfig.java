@@ -15,36 +15,17 @@
 package org.columba.mail.config;
 
 import java.io.File;
-import java.util.Vector;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.config.DomToTreeModelAdapter;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class FolderXmlConfig extends DefaultXmlConfig {
-	private File file;
+	//private File file;
 
 	public FolderXmlConfig(File file) {
 		super(file);
 	}
 
-	public AdapterNode getRootNode() {
-		AdapterNode node = new AdapterNode(getDocument());
-
-		AdapterNode rootNode = node.getChild(0);
-
-		return rootNode;
-	}
-
-	public DomToTreeModelAdapter getTreeModel() {
-		DomToTreeModelAdapter treeModel =
-			new DomToTreeModelAdapter(getDocument());
-
-		return treeModel;
-	}
-
+/*
 	// create uid list from all accounts
 	protected void getUids(Vector v, AdapterNode parent) {
 
@@ -70,7 +51,9 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 			}
 		}
 	}
-
+	*/
+	
+	/*
 	// find a free uid for a new account
 	protected String createUid() {
 		Vector v = new Vector();
@@ -102,7 +85,8 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 
 		return newUid.toString();
 	}
-
+	*/
+	
 	/*
 	public AdapterNode addVirtualFolderNode( AdapterNode parentNode,
 	                                         int uid,
@@ -194,6 +178,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 	}
 	*/
 
+	/*
 	public AdapterNode addFolderNode(
 		AdapterNode parentNode,
 		String name,
@@ -206,11 +191,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 		Integer uid) {
 		Element parentElement = createElementNode("folder");
 
-		/*
-		Element childElement = createElementNode("name");
-		CDATASection cdata = createCDATAElementNode(name);
-		addCDATASection( childElement, cdata );
-		*/
+		
 		Element childElement = createTextElementNode("name", name);
 		addElement(parentElement, childElement);
 		childElement = createTextElementNode("accessrights", access);
@@ -241,12 +222,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 
 			Element treePathNode = createTextElementNode("uid", "101");
 
-			/*
-			  Element treePathNode = createElementNode("treepath");
 			
-			  CDATASection cdata = createCDATAElementNode("/Local Message/Inbox");
-			  addCDATASection( treePathNode, cdata );
-			*/
 
 			addElement(searchElement, treePathNode);
 
@@ -262,12 +238,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 			addElement(subChild, subNode);
 			subNode = createTextElementNode("criteria", "contains");
 			addElement(subChild, subNode);
-			/*
-			childElement = createElementNode("pattern");
-			cdata = createCDATAElementNode("pattern");
-			addCDATASection( childElement, cdata );
-			addElement( subChild, childElement );
-			*/
+			
 
 			subNode = createTextElementNode("pattern", "pattern");
 			addElement(subChild, subNode);
@@ -313,7 +284,9 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 
 		return childNode;
 	}
-
+	*/
+	
+	/*
 	public FolderItem getFolderItem(AdapterNode node) {
 		if (node != null) {
 			if (node.getName().equals("folder")) {
@@ -339,14 +312,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 				if (filterNode != null) {
 					folderItem.setFilterListNode(filterNode);
 
-					/*
-					AdapterNode child;
-					for ( int i=0; i< filterNode.getChildCount(); i++)
-					{
-					    child = filterNode.getChild( i );
-					    folderItem.addFilterNode( child );
-					}
-					*/
+					
 				} else {
 					AdapterNode searchNode = node.getChild("search");
 					if (searchNode != null) {
@@ -364,7 +330,9 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 
 		return null;
 	}
-
+	*/
+	
+	/*
 	public AdapterNode addEmptyFilterCriteria(AdapterNode filterRuleNode) {
 		Element child = createElementNode("filtercriteria");
 
@@ -377,18 +345,13 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 		subNode = createTextElementNode("type", "Subject");
 		addElement(child, subNode);
 
-		/*
-		Element childElement = createElementNode("pattern");
-		CDATASection cdata = createCDATAElementNode("pattern");
-		addCDATASection( childElement, cdata );
-		addElement( child, childElement );
-		*/
 
 		filterRuleNode.domNode.appendChild(child);
 
 		return new AdapterNode(child);
 	}
-
+	*/
+	/*
 	public AdapterNode addEmptyFilterAction(AdapterNode filterActionNode) {
 		Element actionNode = createElementNode("action");
 
@@ -427,12 +390,7 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 		addElement(subChild, subNode);
 		subNode = createTextElementNode("type", "Subject");
 		addElement(subChild, subNode);
-		/*
-		Element childElement = createElementNode("pattern");
-		CDATASection cdata = createCDATAElementNode("pattern");
-		addCDATASection( childElement, cdata );
-		addElement( subChild, childElement );
-		*/
+		
 		addElement(child, subChild);
 
 		subNode = createTextElementNode("condition", "matchall");
@@ -475,5 +433,6 @@ public class FolderXmlConfig extends DefaultXmlConfig {
 		}
 
 	}
+	*/
 
 }

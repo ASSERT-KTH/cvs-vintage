@@ -113,7 +113,8 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener 
 
 	protected void init() {
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
-		String pulsator = item.getPulsator();
+		//String pulsator = item.getPulsator();
+		String pulsator = "default";
 
 		if (pulsator.toLowerCase().equals("default"))
 			initDefault();
@@ -178,7 +179,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener 
 				buf.append("Error while loading pulsator icons!");
 				JOptionPane.showMessageDialog(null, buf.toString());
 
-				Config.getOptionsConfig().getThemeItem().setPulsator("default");
+				//Config.getOptionsConfig().getThemeItem().setPulsator("default");
 
 				initDefault();
 			}

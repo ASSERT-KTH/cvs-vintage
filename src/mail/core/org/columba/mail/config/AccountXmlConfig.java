@@ -19,13 +19,12 @@ import java.util.Vector;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Element;
 
 public class AccountXmlConfig extends DefaultXmlConfig {
-	private File file;
+	//private File file;
 
 	private AccountList list;
+	
 	public AccountXmlConfig(File file) {
 		super(file);
 	}
@@ -34,6 +33,7 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 	// if b==true add pop3 account
 	// else add imap4 account
 
+	/*
 	public AdapterNode add(boolean b) {
 		Element parent = createElementNode("account");
 
@@ -146,10 +146,7 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 		addElement(child, subChild);
 		subChild = createTextElementNode("esmtp", "");
 		addElement(child, subChild);
-		/*
-		subChild = createTextElementNode("uid","104");
-		addElement( child, subChild );
-		*/
+		
 		subChild = createTextElementNode("bccyourself", "");
 		addElement(child, subChild);
 		subChild = createTextElementNode("bccanother", "");
@@ -197,32 +194,38 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 
 		return new AdapterNode(parent);
 	}
-
+	*/
+	
 	public AccountList getAccountList() {
 
 		if (list == null) {
+			/*
 			AdapterNode node = new AdapterNode(getDocument());
 
 			AdapterNode parent = node.getChild(0);
-
-			list = new AccountList(this, parent, getDocument());
+			*/
+			
+			list = new AccountList(getRoot().getElement("/accountlist"));
 		}
 
 		return list;
 	}
 
 	public int count() {
+		return -1;
+		/*
 		AdapterNode node = new AdapterNode(getDocument());
 		AdapterNode parent = node.getChild(0);
 
 		int count = parent.getChildCount();
 
 		return count;
+		*/
 	}
 
 	// create uid list from all accounts
 	protected void getUids(Vector v, AdapterNode parent) {
-
+		
 		int childCount = parent.getChildCount();
 
 		if (childCount > 0) {
@@ -244,6 +247,7 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 
 	// find a free uid for a new account
 	protected String createUid() {
+		/*
 		Vector v = new Vector();
 
 		AdapterNode rootNode = new AdapterNode(getDocument());
@@ -272,6 +276,9 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 		Integer newUid = new Integer(result);
 
 		return newUid.toString();
+		*/
+		
+		return "";
 	}
 
 }

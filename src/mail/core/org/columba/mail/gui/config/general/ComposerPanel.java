@@ -31,46 +31,36 @@ import javax.swing.SwingConstants;
 
 import org.columba.mail.config.MailConfig;
 
-public class ComposerPanel extends JPanel implements ActionListener
-{
+public class ComposerPanel extends JPanel implements ActionListener {
 
 	JLabel spellLabel;
 	JButton spellButton;
 
 	JCheckBox emptySubjectCheckBox;
 
-	public ComposerPanel()
-	{
+	public ComposerPanel() {
 		initComponent();
 	}
 
-	public void updateComponents( boolean b )
-	{
+	public void updateComponents(boolean b) {
 
-		if (b == true)
-		{
+		if (b == true) {
 			String path =
-				MailConfig
-					.getComposerOptionsConfig()
-					.getSpellcheckItem()
-					.getAspellExecutable();
+				MailConfig.getComposerOptionsConfig().getSpellcheckItem().get(
+					"executable");
 			spellButton.setText(path);
-		}
-		else
-		{
-			MailConfig
-				.getComposerOptionsConfig()
-				.getSpellcheckItem()
-				.setAspellExecutable(spellButton.getText());
+		} else {
+			MailConfig.getComposerOptionsConfig().getSpellcheckItem().set(
+				"executable",
+				spellButton.getText());
 		}
 	}
 
-	protected void initComponent()
-	{
-		setLayout(new BorderLayout(0,5));
-		setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
-		JPanel spellPanel=new JPanel();
-		spellPanel.setLayout(new BoxLayout(spellPanel,BoxLayout.X_AXIS));
+	protected void initComponent() {
+		setLayout(new BorderLayout(0, 5));
+		setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		JPanel spellPanel = new JPanel();
+		spellPanel.setLayout(new BoxLayout(spellPanel, BoxLayout.X_AXIS));
 		//LOCALIZE
 		spellLabel = new JLabel("Path to aspell executable:");
 		spellPanel.add(spellLabel);
@@ -80,35 +70,35 @@ public class ComposerPanel extends JPanel implements ActionListener
 		spellButton.addActionListener(this);
 		spellLabel.setLabelFor(spellButton);
 		spellPanel.add(spellButton);
-		add(spellPanel,BorderLayout.NORTH);
-		JPanel centerPanel=new JPanel();
-		centerPanel.setLayout(new BoxLayout(centerPanel,BoxLayout.Y_AXIS));
+		add(spellPanel, BorderLayout.NORTH);
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		//LOCALIZE
 		emptySubjectCheckBox =
 			new JCheckBox("Ask when sending message with empty subject");
 		emptySubjectCheckBox.setEnabled(false);
 		centerPanel.add(emptySubjectCheckBox);
 		centerPanel.add(Box.createVerticalGlue());
-		add(centerPanel,BorderLayout.CENTER);
+		add(centerPanel, BorderLayout.CENTER);
 		//LOCALIZE
-		JLabel restartLabel = new JLabel("These options affect only new composer windows.",SwingConstants.CENTER);
-		add(restartLabel,BorderLayout.SOUTH);
+		JLabel restartLabel =
+			new JLabel(
+				"These options affect only new composer windows.",
+				SwingConstants.CENTER);
+		add(restartLabel, BorderLayout.SOUTH);
 	}
 
-	public void actionPerformed(ActionEvent event)
-	{
+	public void actionPerformed(ActionEvent event) {
 		String action = event.getActionCommand();
 
-		if (action.equals("PATH"))
-		{
+		if (action.equals("PATH")) {
 			final JFileChooser fc = new JFileChooser();
 
 			int returnVal = fc.showOpenDialog(this);
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-			{
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 
-				spellButton.setText( file.getPath() );
+				spellButton.setText(file.getPath());
 
 			}
 

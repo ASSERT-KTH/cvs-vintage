@@ -801,10 +801,7 @@ public class HeaderTableActionListener implements ActionListener {
 					.getSelection();
 			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-			MarkMessageCommand c =
-				new MarkMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+			MarkMessageCommand c = new MarkMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 
@@ -815,10 +812,7 @@ public class HeaderTableActionListener implements ActionListener {
 					.getSelection();
 			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
 
-			MarkMessageCommand c =
-				new MarkMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+			MarkMessageCommand c = new MarkMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 		} else if (command.equals(markAsExpungedAction.getActionCommand())) {
@@ -828,10 +822,7 @@ public class HeaderTableActionListener implements ActionListener {
 					.getSelection();
 			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-			MarkMessageCommand c =
-				new MarkMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+			MarkMessageCommand c = new MarkMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 		}
@@ -979,7 +970,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ReplyCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1009,7 +999,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ReplyToMailingListCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1029,7 +1018,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ReplyToAllCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1050,7 +1038,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ReplyAsAttachmentCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1069,7 +1056,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ForwardCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1088,7 +1074,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new ForwardInlineCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1096,10 +1081,7 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(moveMessageAction.getActionCommand())) {
 
 			SelectFolderDialog dialog =
-				MainInterface
-					.frameController
-					.treeController
-					.getSelectFolderDialog();
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 
@@ -1115,10 +1097,7 @@ public class HeaderTableActionListener implements ActionListener {
 
 				result[0] = r1[0];
 				result[1] = r2;
-				MoveMessageCommand c =
-					new MoveMessageCommand(
-						tableController.getMailFrameController(),
-						result);
+				MoveMessageCommand c = new MoveMessageCommand(result);
 
 				MainInterface.processor.addOp(c);
 
@@ -1133,10 +1112,7 @@ public class HeaderTableActionListener implements ActionListener {
 		} else if (command.equals(copyMessageAction.getActionCommand())) {
 
 			SelectFolderDialog dialog =
-				MainInterface
-					.frameController
-					.treeController
-					.getSelectFolderDialog();
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 
@@ -1152,10 +1128,7 @@ public class HeaderTableActionListener implements ActionListener {
 
 				result[0] = r1[0];
 				result[1] = r2;
-				CopyMessageCommand c =
-					new CopyMessageCommand(
-						tableController.getMailFrameController(),
-						result);
+				CopyMessageCommand c = new CopyMessageCommand(result);
 
 				MainInterface.processor.addOp(c);
 			}
@@ -1167,17 +1140,11 @@ public class HeaderTableActionListener implements ActionListener {
 					.getSelection();
 			r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-			MarkMessageCommand c =
-				new MarkMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+			MarkMessageCommand c = new MarkMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 
-			MainInterface.processor.addOp(
-				new ExpungeFolderCommand(
-					tableController.getMailFrameController(),
-					r));
+			MainInterface.processor.addOp(new ExpungeFolderCommand(r));
 		} else if (command.equals(nextAction.getActionCommand())) {
 
 			/*
@@ -1259,10 +1226,7 @@ public class HeaderTableActionListener implements ActionListener {
 				(FolderCommandReference[]) tableController
 					.getTableSelectionManager()
 					.getSelection();
-			PrintMessageCommand c =
-				new PrintMessageCommand(
-					tableController.getMailFrameController(),
-					r);
+			PrintMessageCommand c = new PrintMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 
@@ -1388,7 +1352,6 @@ public class HeaderTableActionListener implements ActionListener {
 					tableController.getTableSelectionManager().getSelection();
 				MainInterface.processor.addOp(
 					new OpenMessageWithComposerCommand(
-						tableController.getMailFrameController(),
 						tableController
 							.getTableSelectionManager()
 							.getSelection()));
@@ -1413,7 +1376,8 @@ public class HeaderTableActionListener implements ActionListener {
 
 		filter.setName(headerItem + ": " + pattern);
 
-		FilterDialog dialog = new FilterDialog(filter);
+		FilterDialog dialog =
+			new FilterDialog(folder.getFilterPluginHandler(), filter);
 
 	}
 

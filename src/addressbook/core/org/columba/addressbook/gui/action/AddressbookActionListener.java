@@ -14,38 +14,9 @@
 
 package org.columba.addressbook.gui.action;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
-import javax.swing.JFileChooser;
-import javax.swing.KeyStroke;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.config.AddressbookXmlConfig;
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.EditGroupDialog;
-import org.columba.addressbook.gui.dialog.contact.ContactDialog;
-import org.columba.addressbook.gui.dialog.importfilter.ImportWizard;
-import org.columba.addressbook.gui.util.AddAddressbookDialog;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.parser.VCardParser;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.action.BasicAction;
-
-//import org.columba.modules.mail.config.*;
-
-//import org.columba.modules.mail.gui.util.*;
+/*
 
 public class AddressbookActionListener implements ActionListener
 {
@@ -347,11 +318,6 @@ public class AddressbookActionListener implements ActionListener
 
 				dialog.updateComponents(card, null, false);
 
-				/*
-				AddressbookFolder folder =
-					(AddressbookFolder) addressbookInterface.tree.getSelectedFolder();
-				*/
-
 				folder.add(card);
 				addressbookInterface.table.setFolder(folder);
 			}
@@ -498,4 +464,6 @@ public class AddressbookActionListener implements ActionListener
 
 	}
 
+
 }
+*/

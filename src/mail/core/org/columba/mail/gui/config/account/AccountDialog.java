@@ -119,27 +119,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 		
 		receiveOptionsPanel = new ReceiveOptionsPanel( accountItem );
 		
-		if (accountItem.isPopAccount())
-		{
-			PopItem popItem = accountItem.getPopItem();
+		incomingServerPanel =
+				new IncomingServerPanel( accountItem, receiveOptionsPanel);
 
-			incomingServerPanel =
-				new IncomingServerPanel( accountItem, popItem, receiveOptionsPanel);
-			
-		}
-		else
-		{
-			ImapItem imapItem = accountItem.getImapItem();
-			incomingServerPanel =
-				new IncomingServerPanel( accountItem, imapItem, receiveOptionsPanel);
-			
-		}
-
-		SmtpItem smtpItem = accountItem.getSmtpItem();
-		outgoingServerPanel = new OutgoingServerPanel( accountItem, smtpItem);
-		
-		
-		
+		outgoingServerPanel = new OutgoingServerPanel( accountItem );
 
 		specialFoldersPanel =
 			new SpecialFoldersPanel(
@@ -379,7 +362,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener
 			if (accountItem.isPopAccount())
 			{
 				// update pop3 fetch menu
-				MainInterface.frameController.getMenu().updatePopServerMenu();
+				MainInterface.frameModel.updatePop3Menu();
 
 				int uid = accountItem.getUid();
 				POP3ServerController c = MainInterface.popServerCollection.uidGet(uid);

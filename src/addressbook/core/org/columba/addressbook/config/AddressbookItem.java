@@ -20,16 +20,16 @@ import java.util.Vector;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 
 public class AddressbookItem extends DefaultItem
 {
     private AdapterNode name, uid, list;
         
-    public AddressbookItem( Document doc )
+    public AddressbookItem( XmlElement root )
     {
-        super( doc );
+        super( root );
     }
     
         
@@ -59,13 +59,13 @@ public class AddressbookItem extends DefaultItem
     {
         Integer h = new Integer( i );
 
-        setTextValue( uid, h.toString() );
+	 //       setTextValue( uid, h.toString() );
     }
 
             
     public void setName( String str )
     {
-        setTextValue( name, str );
+      //  setTextValue( name, str );
     }
 
     
@@ -79,15 +79,20 @@ public class AddressbookItem extends DefaultItem
 
     public String getName()
     {
-        return getTextValue( name );
+        //return getTextValue( name );
+        return "";
     }
 
    
     public int getUid()
     {
+    	/*
         Integer i = new Integer(  getTextValue( uid ) );
         
         return i.intValue();
+        */
+        
+        return -1;
     }
 
 

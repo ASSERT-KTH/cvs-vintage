@@ -2,14 +2,12 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.main.MainInterface;
@@ -32,19 +30,16 @@ public class SaveMessageCommand extends FolderCommand {
 	 * @param frameController
 	 * @param references
 	 */
-	public SaveMessageCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public SaveMessageCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
 
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
 
-		frame.tableController.tableChanged(ev);
+		MainInterface.frameModel.tableChanged(ev);
 
 		MainInterface.treeModel.nodeChanged(folder);
 	}

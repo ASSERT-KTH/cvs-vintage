@@ -47,7 +47,7 @@ public class POP3ServerController implements ActionListener {
 			new BasicAction(
 				accountItem.getName()
 					+ " ("
-					+ accountItem.getIdentityItem().getAddress()
+					+ accountItem.getIdentityItem().get("address")
 					+ ")",
 				"",
 				"CHECK",
@@ -61,7 +61,7 @@ public class POP3ServerController implements ActionListener {
 			new BasicAction(
 				accountItem.getName()
 					+ " ("
-					+ accountItem.getIdentityItem().getAddress()
+					+ accountItem.getIdentityItem().get("address")
 					+ ")",
 				"",
 				"MANAGE",
@@ -86,8 +86,8 @@ public class POP3ServerController implements ActionListener {
 	public void restartTimer() {
 		PopItem item = getAccountItem().getPopItem();
 
-		if (item.isMailCheck() == true) {
-			int interval = item.getMailCheckInterval();
+		if (item.getBoolean("enable_mailcheck")) {
+			int interval = item.getInteger("mailcheck_interval");
 
 			timer = new Timer(ONE_SECOND * interval * 60, this);
 			timer.restart();
@@ -107,12 +107,12 @@ public class POP3ServerController implements ActionListener {
 		checkAction.setName(
 			getAccountItem().getName()
 				+ " ("
-				+ getAccountItem().getIdentityItem().getAddress()
+				+ getAccountItem().getIdentityItem().get("address")
 				+ ")");
 		manageAction.setName(
 			getAccountItem().getName()
 				+ " ("
-				+ getAccountItem().getIdentityItem().getAddress()
+				+ getAccountItem().getIdentityItem().get("address")
 				+ ")");
 		uid = getAccountItem().getUid();
 	}
@@ -145,7 +145,7 @@ public class POP3ServerController implements ActionListener {
 		r[0] = new POP3CommandReference(controller.getServer());
 
 		FetchNewMessagesCommand c =
-			new FetchNewMessagesCommand(MainInterface.frameController, r);
+			new FetchNewMessagesCommand( r);
 
 		MainInterface.processor.addOp(c);
 	}
@@ -157,7 +157,7 @@ public class POP3ServerController implements ActionListener {
 		r[0] = new POP3CommandReference(controller.getServer());
 
 		CheckForNewMessagesCommand c =
-			new CheckForNewMessagesCommand(MainInterface.frameController, r);
+			new CheckForNewMessagesCommand( r);
 
 		MainInterface.processor.addOp(c);
 	}

@@ -14,63 +14,132 @@
 
 package org.columba.core.config;
 
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.columba.core.xml.XmlElement;
 
-public class DefaultItem
-{
-	private Document document;
+public class DefaultItem {
+	XmlElement root;
+	//private Document document;
 
+	public DefaultItem(XmlElement root) {
+		this.root = root;
+	}
+
+	public XmlElement getRoot() {
+		return root;
+	}
+
+	/************************ composition pattern **********************/
+
+	public XmlElement getElement(String pathToElement) {
+		return getRoot().getElement(pathToElement);
+	}
+
+	public XmlElement getChildElement(int index) {
+		return getRoot().getElement(index);
+	}
+	
+	public int getChildCount()
+	{
+		return getRoot().count();
+	}
+
+	public XmlElement getChildElement(String pathToElement, int index) {
+		return getRoot().getElement(pathToElement).getElement(index);
+	}
+	
+	public boolean contains( String key)
+	{
+		return getRoot().getAttributes().containsKey(key);
+	}
+
+	public String get(String key) {
+		return getRoot().getAttribute(key);
+	}
+
+	public String get(String pathToElement, String key) {
+		return getElement(pathToElement).getAttribute(key);
+	}
+
+	public void set(String key, String newValue) {
+		getRoot().addAttribute(key, newValue);
+	}
+
+	public void set(String pathToElement, String key, String newValue) {
+		getElement(pathToElement).addAttribute(key, newValue);
+	}
+
+	/**************************** helper classes ***************************/
+
+	public int getInteger(String key) {
+		String value = get(key);
+
+		return Integer.parseInt(value);
+	}
+
+	public int getInteger(String pathToElement, String key) {
+		String value = get(pathToElement, key);
+
+		return Integer.parseInt(value);
+	}
+
+	public void set(String key, int value) {
+		set(key, Integer.toString(value));
+	}
+
+	public void set(String pathToElement, String key, int value) {
+		set(pathToElement, key, Integer.toString(value));
+	}
+
+	public boolean getBoolean(String key) {
+		String value = get(key);
+
+		return new Boolean(value).booleanValue();
+	}
+
+	public boolean getBoolean(String pathToElement, String key) {
+		String value = get(pathToElement, key);
+
+		return new Boolean(value).booleanValue();
+	}
+
+	public void set(String key, boolean value) {
+		set(key, Boolean.toString(value));
+	}
+
+	public void set(String pathToElement, String key, boolean value) {
+		set(pathToElement, key, Boolean.toString(value));
+	}
+
+	/*
 	public DefaultItem(Document doc)
 	{
 		this.document = doc;
 	}
+	*/
 
+	/*
 	public Document getDocument()
 	{
 		return document;
 	}
-
-	protected void parse()
-	{
-	}
-
-	protected void createMissingElements()
-	{
-	}
+	*/
 
 	/********************************** set / get *********************************/
 
+	/*
 	public String convertToString(String s)
 	{
 		//StringBuffer sb = new StringBuffer( s );
 		int index = -1;
-
-		/*
-		while ( ( index = s.indexOf("&lt;") ) != -1 )
-		{
-		    StringBuffer sb = new StringBuffer( s );
-		    sb.replace( index, index+3, "test" );
-		}
-		*/
-
-		/*
-		for (int j=0; j<sb.length(); j++)
-		{
+	
 		
-		}
-		
-		return sb.toString();
-		*/
-
 		return s;
 	}
-
+	
 	public String convertFromString(String s)
 	{
 		StringBuffer sb = new StringBuffer(s);
-
+	
 		for (int j = 0; j < sb.length(); j++)
 		{
 			if (sb.charAt(j) == '<')
@@ -104,21 +173,23 @@ public class DefaultItem
 				j += 5;
 			}
 		}
-
+	
 		return sb.toString();
 	}
+	*/
 
+	/*
 	public void setTextValue(AdapterNode node, String value)
 	{
 		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
-
+	
 		//System.out.println("length: "+ nodeList.getLength() +"  value: "+value +"  name: "+ node.getName() );
-
+	
 		if (nodeList.getLength() == 1)
 		{
 			org.w3c.dom.Node n = nodeList.item(0);
 			int type = n.getNodeType();
-
+	
 			n.setNodeValue(value);
 		}
 		else if (nodeList.getLength() == 0)
@@ -138,11 +209,11 @@ public class DefaultItem
 			//System.out.println("lenght3: "+ node.domNode.getChildNodes() );
 		}
 	}
-
+	
 	public void setCDATAValue(AdapterNode node, String value)
 	{
 		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
-
+	
 		if (nodeList.getLength() >= 1)
 		{
 			for (int i = 0; i < nodeList.getLength(); i++)
@@ -150,7 +221,7 @@ public class DefaultItem
 				org.w3c.dom.Node n = nodeList.item(i);
 				int type = n.getNodeType();
 				AdapterNode adpNode = new AdapterNode(n);
-
+	
 				if (type == AdapterNode.CDATA_TYPE)
 				{
 					n.setNodeValue(value);
@@ -165,23 +236,23 @@ public class DefaultItem
 			node.appendChild( e );
 		}
 	}
-
+	
 	public String getTextValue(AdapterNode node)
 	{
 		String s = new String("");
 		String t = new String();
-
+	
 		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
-
+	
 		if (nodeList.getLength() >= 1)
 		{
 			for (int i = 0; i < nodeList.getLength(); i++)
 			{
-
+	
 				org.w3c.dom.Node n = nodeList.item(i);
 				AdapterNode adpNode = new AdapterNode(n);
 				int type = n.getNodeType();
-
+	
 				if (type == AdapterNode.ENTITYREF_TYPE)
 				{
 					String value = adpNode.getValue();
@@ -194,20 +265,20 @@ public class DefaultItem
 					int x = t.indexOf("\n");
 					if (x >= 0)
 						t = t.substring(0, x);
-
+	
 				}
 				s += t;
 			}
 		}
-
+	
 		return s.trim();
 	}
-
+	
 	public String getCDATAValue(AdapterNode node)
 	{
 		String s = new String("");
 		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
-
+	
 		if (nodeList.getLength() >= 1)
 		{
 			for (int i = 0; i < nodeList.getLength(); i++)
@@ -215,58 +286,62 @@ public class DefaultItem
 				org.w3c.dom.Node n = nodeList.item(i);
 				int type = n.getNodeType();
 				AdapterNode adpNode = new AdapterNode(n);
-
+	
 				if (type == AdapterNode.CDATA_TYPE)
 				{
 					s += n.getNodeValue();
 				}
 			}
 		}
-
+	
 		return s.trim();
 	}
+	*/
 
 	/************************************** ADD **************************************/
 
+	/*
 	public void addElement(Element parent, Element child)
 	{
 		parent.appendChild(child);
 	}
-
+	
 	public void addCDATASection(Element parent, CDATASection child)
 	{
 		parent.appendChild(child);
 	}
+	*/
 
 	/***************************************** CREATE ***********************************/
 
+	/*
 	public Element createTextElementNode(String key, String value)
 	{
 		AdapterNode adpNode = new AdapterNode(document);
-
+	
 		Element newElement = (Element) document.createElement(key);
 		newElement.appendChild(document.createTextNode(value));
-
+	
 		return newElement;
 	}
-
+	
 	public CDATASection createCDATAElementNode(String key)
 	{
 		AdapterNode adpNode = new AdapterNode(document);
-
+	
 		CDATASection newElement = (CDATASection) document.createCDATASection(key);
-
+	
 		return newElement;
 	}
-
+	
 	public Element createElementNode(String key)
 	{
 		AdapterNode adpNode = new AdapterNode(document);
-
+	
 		Element newElement = (Element) document.createElement(key);
 		return newElement;
 	}
-
+	
 	public AdapterNode addKey(
 		AdapterNode parent,
 		String elementName,
@@ -274,10 +349,10 @@ public class DefaultItem
 	{
 		Element e = createTextElementNode(elementName, defaultValue);
 		AdapterNode newNode = new AdapterNode(e);
-
+	
 		parent.add(newNode);
-
+	
 		return newNode;
 	}
-
+	*/
 }

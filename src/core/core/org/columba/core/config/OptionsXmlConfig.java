@@ -20,14 +20,17 @@ import org.columba.mail.config.PGPItem;
 
 public class OptionsXmlConfig extends DefaultXmlConfig
 {
-    private File file;
+    //private File file;
 
+	protected ThemeItem themeItem;
+	GuiItem guiItem;
 
     public OptionsXmlConfig( File file )
     {
         super( file );
     }
 
+	/*
     public AdapterNode getRootNode()
     {
         AdapterNode node = new AdapterNode( getDocument() );
@@ -35,44 +38,69 @@ public class OptionsXmlConfig extends DefaultXmlConfig
         AdapterNode rootNode = node.getChild( 0 );
         return rootNode;
     }
+	*/
 
+	public GuiItem getGuiItem()
+		{
+			if ( guiItem == null )
+			{
+				guiItem = new GuiItem(getRoot().getElement("/options/gui"));
+			}
 
+			return guiItem;
+		}
 
     public ThemeItem getThemeItem()
     {
+        if ( themeItem == null )
+        {
+        	themeItem = new ThemeItem( getRoot().getElement("/options/gui/theme") );
+        }
         
-
+        
+		/*
         AdapterNode rootNode = getRootNode();
         AdapterNode guiNode = rootNode.getChild("gui");
-
+		
 	ThemeItem item = new ThemeItem( getDocument(), guiNode );
 
 	
 
         return item;
-
+		*/
+		
+		return themeItem;
     }
 
     public PGPItem getPGPItem()
     {
+    	/*
         AdapterNode rootNode = getRootNode();
         AdapterNode pgpNode = rootNode.getChild("pgp");
 
         PGPItem item = new PGPItem( getDocument(), pgpNode );
 
         return item;
+        */
+        
+        return null;
     }
 
 
     public AdapterNode getMimeTypeNode()
     {
+    	/*
         AdapterNode rootNode = getRootNode();
         AdapterNode node = rootNode.getChild("mimetypes");
 
         return node;
+        */
+        
+        return null;
     }
 
 
+	/*
     public int getIntegerGuiOptions( String name, int defaultValue )
     {
         AdapterNode rootNode = getRootNode();
@@ -178,7 +206,7 @@ public class OptionsXmlConfig extends DefaultXmlConfig
         	node.setValue(value);
         }
 	}
-
+	*/
 }
 
 

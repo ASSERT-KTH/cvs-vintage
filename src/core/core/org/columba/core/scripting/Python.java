@@ -1,7 +1,5 @@
 /*
- * 03/31/2002 - 15:18:02
- *
- * Copyright (C) 2001 Romain Guy
+ * 
  *
  * This	free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +19,7 @@
 package org.columba.core.scripting;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.plugin.DefaultPlugin;
 import org.python.core.Py;
 import org.python.core.PyModule;
 import org.python.core.PyObject;
@@ -28,6 +27,19 @@ import org.python.core.PySystemState;
 import org.python.core.imp;
 import org.python.util.PythonInterpreter;
 
+/**
+ * 
+ * 
+ * @author fdietz@users.sourceforge.net
+ * 
+ * Taken some stuff vom jext (Author: Roman Guy)
+ * 
+ *
+ * To change this generated comment edit the template variable "typecomment":
+ * Window>Preferences>Java>Templates.
+ * To enable and disable the creation of type comments go to
+ * Window>Preferences>Java>Code Generation.
+ */
 public final class Python {
 	private static PythonInterpreter parser;
 
@@ -39,7 +51,7 @@ public final class Python {
 	public static PythonInterpreter getPythonInterpreter(Object parent) {
 		if (parser == null) {
 			//parser =  new PythonInterpreter();
-			System.setProperty("python.path","ext/Lib");
+			System.setProperty("python.path", "ext/Lib");
 			/*
 			Properties props = new Properties();
 			props.setProperty("python.path", ConfigPath.getConfigDirectory()+ "/ext/Lib");
@@ -48,15 +60,14 @@ public final class Python {
 				props,
 				new String[] { "" });
 			*/
-			
-			
+
 			/*
 			Properties pyProps = new Properties();
 			pyProps.put("python.cachedir", ConfigPath.getConfigDirectory() + "pythoncache" + File.separator);
 			PythonInterpreter.initialize(System.getProperties(), pyProps, new String[0]);
 			*/
-			
-			parser =  new PythonInterpreter();
+
+			parser = new PythonInterpreter();
 
 			PyModule mod = imp.addModule("__main__");
 			//imp.addModule("/home/frd/apps/eclipse/workspace/TheColumbaProject/org/columba/modules/mail/config/copy.py");
@@ -65,7 +76,7 @@ public final class Python {
 
 			PySystemState sys = Py.getSystemState();
 			//sys.add_package("org.columba.modules.mail.config");
-			
+
 			/*
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 			                                   JFrame.class.getResourceAsStream("packages")));
@@ -77,8 +88,7 @@ public final class Python {
 			in.close(); 
 			} catch (IOException ioe) { }
 			*/
-			
-			
+
 		}
 
 		parser.set("__columba__", parent);
@@ -165,22 +175,17 @@ public final class Python {
 			parser = null;
 		}
 	}
-	
-	public static void runResource(String resource, Object parent )
-	{
-		try
-		{
-			String str= DiskIO.readStringFromResource( resource );
-		
+
+	public static void runResource(String resource, Object parent) {
+		try {
+			String str = DiskIO.readStringFromResource(resource);
+
 			//System.out.println("script-source:\n"+str);
-		
-			execute( str, parent );
-		}
-		catch ( Exception ex )
-		{
+
+			execute(str, parent);
+		} catch (Exception ex) {
 		}
 	}
-	
 
 	/**
 	 * Runs a Jext script from a file.
@@ -211,6 +216,57 @@ public final class Python {
 			// security ?
 			parser = null;
 		}
+	}
+
+	public static Object instanciate(
+		String fileName,
+		String className,
+		Object[] args,
+		Object parent) {
+
+		try {
+			PythonInterpreter parser = getPythonInterpreter(parent);
+			parser.execfile(fileName);
+			/*
+			PyObject pyObject = parser.eval(object+"()");
+			
+			Object javaObject = pyObject.__tojava__(c);
+			*/
+
+			System.out.println("constructor=" + className);
+
+			/*
+			PyObject pyObject = parser.eval(className+"()");
+			System.out.println("get instance of ="+fileName);
+			System.out.println("pyObject="+pyObject);
+			
+			Object javaObject = pyObject.__tojava__( DefaultPlugin.class);
+			*/
+
+			PyObject pyObject = parser.get(className);
+			if ( args==null || args.length == 0) {
+				pyObject = pyObject.__call__();
+			} else {
+				PyObject[] pyArgs = new PyObject[args.length];
+				for (int i = 0; i < args.length; i++) {
+					pyArgs[i] = Py.java2py(args[i]);
+				}
+
+				pyObject = pyObject.__call__(pyArgs);
+			}
+			System.out.println("pyObject=" + pyObject);
+
+			Object javaObject = pyObject.__tojava__(DefaultPlugin.class);
+			System.out.println("javaObject=" + javaObject);
+			//( (DefaultPlugin) javaObject).run("asdfljasf");
+
+			return javaObject;
+
+		} catch (Exception pe) {
+			pe.printStackTrace();
+		}
+
+		return null;
 	}
 }
 

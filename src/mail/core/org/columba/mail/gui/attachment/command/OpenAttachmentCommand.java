@@ -7,16 +7,15 @@ import java.io.FileOutputStream;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
-import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -35,8 +34,8 @@ public class OpenAttachmentCommand extends FolderCommand {
 	 * Constructor for OpenAttachmentCommand.
 	 * @param references
 	 */
-	public OpenAttachmentCommand(FrameController frame, DefaultCommandReference[] references) {
-		super(frame, references);
+	public OpenAttachmentCommand(DefaultCommandReference[] references) {
+		super(references);
 
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
@@ -47,7 +46,16 @@ public class OpenAttachmentCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MainInterface.frameController.attachmentController.open(part, tempFile);
+		MimeHeader header = part.getHeader();
+
+		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
+			//inline = true;
+			//openInlineMessage(part, tempFile);
+		} else {
+			//inline = false;
+			MimeTypeViewer viewer = new MimeTypeViewer();
+			viewer.open(header, tempFile);
+		}
 	}
 
 	/**

@@ -46,23 +46,20 @@ import javax.swing.border.AbstractBorder;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 
-import org.columba.core.config.Config;
 import org.columba.core.gui.button.CloseButton;
 import org.columba.core.gui.button.HelpButton;
-import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.filter.Search;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.main.MainInterface;
 
-public class SearchFrame implements ActionListener {
-	private JDialog dialog;
+public class SearchFrame extends JDialog implements ActionListener {
 
 	private JLabel folderLabel;
 	private JLabel nameLabel;
@@ -86,27 +83,28 @@ public class SearchFrame implements ActionListener {
 
 	private JComboBox condList;
 
-	private Search searchFilter;
+	MailFrameController frameController;
 
-	public SearchFrame(Folder folder) {
-		dialog = DialogStore.getDialog(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"searchdialog_title"));
+	public SearchFrame(MailFrameController frameController, Folder folder) {
+		super();
+		this.frameController = frameController;
+		setTitle(
+			MailResourceLoader.getString(
+				"dialog",
+				"filter",
+				"searchdialog_title"));
 
 		//this.folder = folder;
 		//this.vFolderNode = vFolderNode;
 
 		this.destFolder = (VirtualFolder) folder;
-		this.searchFilter = destFolder.getSearchFilter();
 
 		JPanel contentPane = new JPanel(new BorderLayout());
-		contentPane.setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
+		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		//contentPane.add(createTopPanel("Search messages","Specify your search criteria...",ImageLoader.getImageIcon("virtualfolder.png")));
-		contentPane.add(createCenterPanel(),BorderLayout.NORTH);
+		contentPane.add(createCenterPanel(), BorderLayout.NORTH);
 		JPanel bottom = new JPanel(new BorderLayout());
-		bottom.setBorder(BorderFactory.createEmptyBorder(17,0,0,0));
+		bottom.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
 		searchButton = new JButton("Search");
 		searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
@@ -123,27 +121,30 @@ public class SearchFrame implements ActionListener {
 		helpButton.setEnabled(false);
 		buttonPanel.add(helpButton);
 		bottom.add(buttonPanel, BorderLayout.EAST);
-		contentPane.add(bottom,BorderLayout.SOUTH);
-		dialog.setContentPane(contentPane);
-		dialog.getRootPane().setDefaultButton(searchButton);
-		dialog.getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+		contentPane.add(bottom, BorderLayout.SOUTH);
+		setContentPane(contentPane);
+		getRootPane().setDefaultButton(searchButton);
+		getRootPane().registerKeyboardAction(
+			this,
+			"CLOSE",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
 		updateComponents(true);
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-	}
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 
-	public void setVisible(boolean b) {
-		dialog.setVisible(b);
 	}
 
 	private JPanel createCenterPanel() {
 
 		JPanel rootPanel = new JPanel();
-		rootPanel.setLayout(new BorderLayout(0,10));
+		rootPanel.setLayout(new BorderLayout(0, 10));
 
 		JPanel folderPanel = new JPanel();
-		folderPanel.setLayout(new BoxLayout(folderPanel,BoxLayout.X_AXIS));
-		folderLabel = new JLabel(
+		folderPanel.setLayout(new BoxLayout(folderPanel, BoxLayout.X_AXIS));
+		folderLabel =
+			new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -162,7 +163,8 @@ public class SearchFrame implements ActionListener {
 		selectButton.addActionListener(this);
 		folderPanel.add(selectButton);
 		folderPanel.add(Box.createHorizontalGlue());
-		includeSubfolderButton = new JCheckBox(
+		includeSubfolderButton =
+			new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -174,10 +176,11 @@ public class SearchFrame implements ActionListener {
 				"include_subfolders"));
 		folderPanel.add(includeSubfolderButton);
 		rootPanel.add(folderPanel, BorderLayout.NORTH);
-		
+
 		JPanel middleIfPanel = new JPanel();
 		middleIfPanel.setLayout(new BorderLayout());
-		Border border = BorderFactory.createTitledBorder(
+		Border border =
+			BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(),
 				"If");
 		middleIfPanel.setBorder(
@@ -189,7 +192,8 @@ public class SearchFrame implements ActionListener {
 		ifPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		ifPanel.setLayout(new BoxLayout(ifPanel, BoxLayout.X_AXIS));
 
-		addButton = new JButton(
+		addButton =
+			new JButton(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -208,7 +212,8 @@ public class SearchFrame implements ActionListener {
 
 		ifPanel.add(Box.createHorizontalGlue());
 
-		nameLabel = new JLabel(
+		nameLabel =
+			new JLabel(
 				MailResourceLoader.getString(
 					"dialog",
 					"filter",
@@ -222,7 +227,9 @@ public class SearchFrame implements ActionListener {
 
 		ifPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
 
-		String[] cond ={MailResourceLoader.getString(
+		String[] cond =
+			{
+				MailResourceLoader.getString(
 					"dialog",
 					"filter",
 					"all_criteria"),
@@ -236,7 +243,10 @@ public class SearchFrame implements ActionListener {
 
 		middleIfPanel.add(ifPanel, BorderLayout.NORTH);
 
-		criteriaList = new CriteriaList(searchFilter.getFilter());
+		criteriaList =
+			new CriteriaList(
+				destFolder.getFilterPluginHandler(),
+				destFolder.getFilter());
 		criteriaList.setPreferredSize(new Dimension(500, 100));
 		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
 
@@ -294,20 +304,27 @@ public class SearchFrame implements ActionListener {
 	public void updateComponents(boolean b) {
 		if (b) {
 
-			FilterRule filterRule = searchFilter.getFilter().getFilterRule();
+			FilterRule filterRule = destFolder.getFilter().getFilterRule();
 			String value = filterRule.getCondition();
 			if (value.equals("matchall"))
 				condList.setSelectedIndex(0);
 			else
 				condList.setSelectedIndex(1);
 
-			boolean value2 = searchFilter.isInclude();
+			boolean isInclude =
+				(new Boolean(destFolder
+					.getFolderItem()
+					.get("property", "include_subfolders")))
+					.booleanValue();
+
+			boolean value2 = isInclude;
 			if (value2 == true)
 				includeSubfolderButton.setSelected(true);
 			else
 				includeSubfolderButton.setSelected(false);
 
-			int uid = searchFilter.getUid();
+			int uid =
+				destFolder.getFolderItem().getInteger("property", "source_uid");
 			Folder f = (Folder) MainInterface.treeModel.getFolder(uid);
 			String treePath = f.getTreePath();
 
@@ -318,7 +335,7 @@ public class SearchFrame implements ActionListener {
 		} else {
 			// get values from components
 
-			FilterRule filterRule = searchFilter.getFilter().getFilterRule();
+			FilterRule filterRule = destFolder.getFilter().getFilterRule();
 			int index = condList.getSelectedIndex();
 			if (index == 0)
 				filterRule.setCondition("matchall");
@@ -326,16 +343,21 @@ public class SearchFrame implements ActionListener {
 				filterRule.setCondition("matchany");
 
 			if (includeSubfolderButton.isSelected())
-				searchFilter.setInclude("true");
+				destFolder.getFolderItem().set(
+					"property",
+					"include_subfolders",
+					"true");
 			else
-				searchFilter.setInclude("false");
+				destFolder.getFolderItem().set(
+					"property",
+					"include_subfolders",
+					"false");
 
 			String path = selectButton.getText();
 			TreeNodeList list = new TreeNodeList(path);
-			Folder folder =
-				(Folder) MainInterface.treeModel.getFolder(list);
+			Folder folder = (Folder) MainInterface.treeModel.getFolder(list);
 			int uid = folder.getUid();
-			searchFilter.setUid(uid);
+			destFolder.getFolderItem().set("property", "source_uid", uid);
 
 			criteriaList.updateComponents(b);
 		}
@@ -355,8 +377,7 @@ public class SearchFrame implements ActionListener {
 		if (action.equals("CLOSE")) {
 
 			updateComponents(false);
-			Config.save();
-			dialog.setVisible(false);
+			setVisible(false);
 		} else if (action.equals("ADD_CRITERION")) {
 			//System.out.println( "add" );
 
@@ -365,7 +386,7 @@ public class SearchFrame implements ActionListener {
 		} else if (action.equals("SELECT")) {
 
 			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder folder = dialog.getSelectedFolder();
@@ -379,6 +400,8 @@ public class SearchFrame implements ActionListener {
 
 			setVisible(false);
 
+			frameController.treeController.setSelected(destFolder);
+			
 			// FIXME
 			/*
 			try {

@@ -335,7 +335,11 @@ public class ConfigFrame
 		String action = e.getActionCommand();
 		if (action.equals("CLOSE")) //$NON-NLS-1$
 			{
+				try {
 			Config.save();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			dialog.setVisible(false);
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
@@ -361,7 +365,7 @@ public class ConfigFrame
 			if (item.isPopAccount() == true) {
 				MainInterface.popServerCollection.removePopServer(
 					item.getUid());
-				MainInterface.frameController.getMenu().updatePopServerMenu();
+				MainInterface.frameModel.updatePop3Menu();
 			} else {
 				Folder folder =
 					(Folder) MainInterface.treeModel.getImapFolder(

@@ -14,53 +14,13 @@
 
 package org.columba.addressbook.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import javax.swing.border.AbstractBorder;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
-
-import org.columba.addressbook.config.AddressbookXmlConfig;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.gui.util.AddressbookDNDListView;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.addressbook.gui.util.AddressbookListRenderer;
-import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.AdapterNode;
-
+/*
 public class EditGroupDialog extends JDialog implements ActionListener
 {
 	private JDialog dialog;
 
-	private AddressbookXmlConfig config;
+	//private AddressbookXmlConfig config;
 	//private AddressbookTable addressbook;
 	private AddressbookDNDListView addressbook;
 	//private DefaultListModel addressbookModel;
@@ -109,10 +69,7 @@ public class EditGroupDialog extends JDialog implements ActionListener
 		getContentPane().setLayout(new BorderLayout());
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		/*
-		mainPanel.setBorder(BorderFactory.createTitledBorder(" Group " ) );
-		Border b = mainPanel.getBorder();
-		*/
+		
 		Border b = BorderFactory.createEmptyBorder(12, 12, 10, 11);
 		mainPanel.setBorder(b);
 
@@ -143,18 +100,7 @@ public class EditGroupDialog extends JDialog implements ActionListener
 
 		leftPanel.add(infoPanel, BorderLayout.NORTH);
 
-		/*
-		JPanel namePanel = new JPanel();
-		namePanel.setLayout(new BorderLayout());
-		namePanel.setBorder( BorderFactory.createEmptyBorder(0, 0, 10, 0));
-		
-		nameLabel = new JLabel("Name: ");
-		namePanel.add(nameLabel, BorderLayout.WEST);
-		
-		nameTextField = new JTextField();
-		
-		namePanel.add(nameTextField, BorderLayout.CENTER);
-		*/
+	
 
 		leftPanel.add(infoPanel, BorderLayout.NORTH);
 
@@ -213,20 +159,7 @@ public class EditGroupDialog extends JDialog implements ActionListener
 		margin = BorderFactory.createEmptyBorder(5, 10, 10, 10);
 		rightPanel.setBorder(new CompoundBorder(border, margin));
 
-		/*
-		addressbook = new AddressbookTable(addressbookInterface);
-		HeaderColumn c =
-			new HeaderColumn(
-				GlobalResourceLoader.getString("header", "displayname"),
-				"displayname");
-		addressbook.setupColumn(c);
-		String prefix = GlobalResourceLoader.getString("header", "email");
-		String suffix = GlobalResourceLoader.getString("header", "internet");
-		c = new HeaderColumn(prefix + "(" + suffix + ")", "email;internet");
-		addressbook.setupColumn(c);
-
-		addressbook.scrollPane.setPreferredSize(new Dimension(250, 200));
-		*/
+		
 		addressbook = new AddressbookDNDListView();
 		addressbook.setAcceptDrop(false);
 		JScrollPane scrollPane = new JScrollPane( addressbook );
@@ -392,4 +325,6 @@ public class EditGroupDialog extends JDialog implements ActionListener
 			return borderInsets;
 		}
 	}
+	
 }
+*/

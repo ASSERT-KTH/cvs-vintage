@@ -3,8 +3,8 @@ package org.columba.mail.gui.tree.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.main.MainInterface;
@@ -17,22 +17,22 @@ import org.columba.main.MainInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FetchSubFolderListCommand extends Command {
+public class FetchSubFolderListCommand extends FolderCommand {
 	FolderTreeNode treeNode;
 	
 	/**
 	 * Constructor for FetchSubFolderListCommand.
 	 * @param references
 	 */
-	public FetchSubFolderListCommand(FrameController frame, DefaultCommandReference[] references) {
-		super(frame, references);		
+	public FetchSubFolderListCommand( DefaultCommandReference[] references) {
+		super(references);		
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MainInterface.frameController.treeController.getModel().nodeStructureChanged(treeNode);
+		MainInterface.treeModel.nodeStructureChanged(treeNode);
 	}
 
 	/**

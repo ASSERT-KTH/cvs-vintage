@@ -11,14 +11,13 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
+import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.action.BasicAction;
-import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.util.EditFolderDialog;
@@ -325,12 +324,7 @@ public class FolderTreeActionListener implements ActionListener {
 
 		if (command.equals("CREATE_SUBFOLDER")) {
 
-			EditFolderDialog dialog =
-				MainInterface
-					.frameController
-					.treeController
-					.getEditFolderDialog(
-					"New Folder");
+			EditFolderDialog dialog = new EditFolderDialog("New Folder");
 			dialog.showDialog();
 
 			String name;
@@ -349,11 +343,34 @@ public class FolderTreeActionListener implements ActionListener {
 					.getSelection();
 			r[0].setFolderName(name);
 
-			MainInterface.processor.addOp(
-				new CreateSubFolderCommand(
-					treeController.getMailFrameController(),
-					r));
+			MainInterface.processor.addOp(new CreateSubFolderCommand(r));
 		} else if (command.equals("CREATE_VIRTUAL_SUBFOLDER")) {
+			EditFolderDialog dialog = new EditFolderDialog("New Folder");
+			dialog.showDialog();
+
+			String name;
+
+			if (dialog.success() == true) {
+				// ok pressed
+				name = dialog.getName();
+				
+				try
+				{
+					treeController.getTreeSelectionManager().getFolder().addFolder( name, VirtualFolder.class );
+					MainInterface.treeModel.nodeStructureChanged( treeController.getTreeSelectionManager().getFolder() );
+					
+				}
+				catch ( Exception ex )
+				{
+					ex.printStackTrace();
+				}
+			} else {
+				// cancel pressed
+				return;
+			}
+
+			
+			
 			// FIXME
 
 			/*
@@ -383,12 +400,7 @@ public class FolderTreeActionListener implements ActionListener {
 
 		} else if (command.equals("RENAME_FOLDER")) {
 
-			EditFolderDialog dialog =
-				MainInterface
-					.frameController
-					.treeController
-					.getEditFolderDialog(
-					"New Folder");
+			EditFolderDialog dialog = new EditFolderDialog("New Folder");
 			dialog.showDialog();
 
 			String name;
@@ -407,24 +419,18 @@ public class FolderTreeActionListener implements ActionListener {
 					.getSelection();
 			r[0].setFolderName(name);
 
-			MainInterface.processor.addOp(
-				new RenameFolderCommand(
-					treeController.getMailFrameController(),
-					r));
+			MainInterface.processor.addOp(new RenameFolderCommand(r));
 
 		} else if (command.equals("APPLYFILTER")) {
-			
+
 			FolderCommandReference[] r =
 				(FolderCommandReference[]) treeController
 					.getTreeSelectionManager()
 					.getSelection();
-					
+
 			//Folder folder = (Folder) r[0].getFolder();
-			MainInterface.processor.addOp(
-				new ApplyFilterCommand(
-					treeController.getMailFrameController(),
-					r));
-			
+			MainInterface.processor.addOp(new ApplyFilterCommand(r));
+
 			/*
 			Folder folder = treeController.getView().getSelected();
 			Object[] uids = folder.getUids();
@@ -453,10 +459,7 @@ public class FolderTreeActionListener implements ActionListener {
 				return;
 			}
 
-			MainInterface.processor.addOp(
-				new RemoveFolderCommand(
-					treeController.getMailFrameController(),
-					r));
+			MainInterface.processor.addOp(new RemoveFolderCommand(r));
 
 			/*
 			Folder folder = treeController.getView().getSelected();
@@ -493,7 +496,7 @@ public class FolderTreeActionListener implements ActionListener {
 			*/
 
 		} else if (command.equals("FILTER_PREFERENCES")) {
-			System.out.println("filter preferences");
+			
 
 			FolderCommandReference[] r =
 				(FolderCommandReference[]) treeController
@@ -508,19 +511,28 @@ public class FolderTreeActionListener implements ActionListener {
 			if (item == null)
 				return;
 
+			folder.showFilterDialog(treeController.getMailFrameController());
+
+			/*
+			org.columba.mail.gui.config.filter.ConfigFrame dialog =
+				new org.columba.mail.gui.config.filter.ConfigFrame(folder);
+			*/
+
+			/*
 			if ((item.getType().equals("columba"))
 				|| (item.getType().equals("imap"))) {
 				FilterList filterList = folder.getFilterList();
-
+			
 				org.columba.mail.gui.config.filter.ConfigFrame dialog =
 					new org.columba.mail.gui.config.filter.ConfigFrame(
 						filterList);
 			} else if (item.getType().equals("virtual")) {
 				//AdapterNode searchNode = folder.getNode();
-
+			
 				SearchFrame dialog = new SearchFrame(folder);
 				dialog.setVisible(true);
 			}
+			*/
 
 		} else if (command.equals("EXPUNGE_FOLDER")) {
 
@@ -548,10 +560,7 @@ public class FolderTreeActionListener implements ActionListener {
 			result[1] = new FolderCommandReference(trash);
 			*/
 
-			ExpungeFolderCommand c =
-				new ExpungeFolderCommand(
-					treeController.getMailFrameController(),
-					r);
+			ExpungeFolderCommand c = new ExpungeFolderCommand(r);
 
 			MainInterface.processor.addOp(c);
 

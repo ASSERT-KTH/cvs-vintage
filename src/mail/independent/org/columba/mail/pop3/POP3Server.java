@@ -77,7 +77,7 @@ public class POP3Server {
 
 	public Folder getFolder() {
 		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
-		String inboxStr = foldersItem.getInbox();
+		String inboxStr = foldersItem.get("inbox");
 		System.out.println("inbox-string=" + inboxStr);
 
 		int inboxInt = Integer.parseInt(inboxStr);

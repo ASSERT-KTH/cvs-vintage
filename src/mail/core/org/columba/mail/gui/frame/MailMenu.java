@@ -26,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
+import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
@@ -306,10 +307,10 @@ public class MailMenu extends JMenuBar {
 				frameController.globalActionCollection.viewToolbarAction);
 		cbMenuItem.addActionListener(frameController.getActionListener());
 		cbMenuItem.setActionCommand("VIEW_TOOLBAR");
-		if (MailConfig
-			.getMainFrameOptionsConfig()
-			.getWindowItem()
-			.isShowToolbar())
+		ViewItem viewItem = MailConfig
+					.getMainFrameOptionsConfig()
+					.getViewItem();
+		if ( viewItem.getBoolean("toolbars","main") )
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
 
@@ -318,10 +319,7 @@ public class MailMenu extends JMenuBar {
 				frameController.globalActionCollection.viewFilterToolbarAction);
 		cbMenuItem.addActionListener(frameController.getActionListener());
 		cbMenuItem.setActionCommand("VIEW_FILTERTOOLBAR");
-		if (MailConfig
-			.getMainFrameOptionsConfig()
-			.getWindowItem()
-			.isShowFilterToolbar())
+		if (viewItem.getBoolean("toolbars","filter"))
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
 
@@ -330,10 +328,7 @@ public class MailMenu extends JMenuBar {
 				frameController.globalActionCollection.viewFolderInfoAction);
 		cbMenuItem.addActionListener(frameController.getActionListener());
 		cbMenuItem.setActionCommand("VIEW_FOLDERINFO");
-		if (MailConfig
-			.getMainFrameOptionsConfig()
-			.getWindowItem()
-			.isShowFolderInfo())
+		if (viewItem.getBoolean("toolbars","folderinfo"))
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
 

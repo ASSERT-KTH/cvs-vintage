@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.util.ImageLoader;
@@ -51,11 +52,11 @@ public class FrameView extends JFrame {
 	private FolderInfoPanel folderInfoPanel;
 
 	public ResourceBundle guiLabels;
-	
+
 	private JPanel tablePanel;
-	
+
 	FilterToolbar filterToolbar;
-		HeaderView header;
+	HeaderView header;
 
 	public FrameView() {
 		//MainInterface.mainFrame = this;
@@ -63,6 +64,7 @@ public class FrameView extends JFrame {
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
 
 		//changeToolbars();
+		//MainInterface.frameModel.register(this);
 
 	}
 
@@ -76,23 +78,18 @@ public class FrameView extends JFrame {
 		//setExtendedState(MAXIMIZED_BOTH);
 
 	}
-	
-	public void showAttachmentViewer()
-	{
+
+	public void showAttachmentViewer() {
 		rightSplitPane.showAttachmentViewer();
 	}
-	
-	public void hideAttachmentViewer()
-	{
+
+	public void hideAttachmentViewer() {
 		rightSplitPane.hideAttachmentViewer();
 	}
-	
-	
+
 	public void setFolderInfoPanel(FolderInfoPanel f) {
 		this.folderInfoPanel = f;
 	}
-
-	
 
 	public void init(
 		TreeView tree,
@@ -103,8 +100,7 @@ public class FrameView extends JFrame {
 		StatusBar statusBar) {
 
 		this.filterToolbar = filterToolbar;
-	
-		
+
 		this.getContentPane().setLayout(new BorderLayout());
 		JPanel panel = (JPanel) this.getContentPane();
 
@@ -113,7 +109,7 @@ public class FrameView extends JFrame {
 		this.getContentPane().add(statusBar, BorderLayout.SOUTH);
 
 		this.statusBar = statusBar;
-		
+
 		mainSplitPane = new JSplitPane();
 		//mainSplitPane.setDividerSize(5);
 
@@ -126,23 +122,23 @@ public class FrameView extends JFrame {
 		mainSplitPane.add(new JScrollPane(tree), JSplitPane.LEFT);
 
 		JPanel messagePanel = new JPanel();
-		messagePanel.setLayout( new BorderLayout() );
+		messagePanel.setLayout(new BorderLayout());
 		//messagePanel.add( header, BorderLayout.NORTH );
-		messagePanel.add( message, BorderLayout.CENTER );
-		
+		messagePanel.add(message, BorderLayout.CENTER);
+
 		tablePanel = new JPanel();
-		tablePanel.setLayout( new BorderLayout() );
-		
-		if (MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowFilterToolbar()
-				== true)
-		tablePanel.add( filterToolbar, BorderLayout.NORTH );
-		
+		tablePanel.setLayout(new BorderLayout());
+
+		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
+		System.out.println(
+			"toolbar=" + item.getBoolean("toolbars", "show_filter"));
+
+		if (item.getBoolean("toolbars", "show_filter") == true)
+			tablePanel.add(filterToolbar, BorderLayout.NORTH);
+
 		JScrollPane tableScrollPane = new JScrollPane(table);
 		tableScrollPane.getViewport().setBackground(Color.white);
-		tablePanel.add( tableScrollPane, BorderLayout.CENTER );
+		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 		rightSplitPane =
 			new SplitPane(
 				tablePanel,
@@ -155,25 +151,12 @@ public class FrameView extends JFrame {
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
 		// same as menu
-		
 
-		if (MailConfig
-			.getMainFrameOptionsConfig()
-			.getWindowItem()
-			.isShowToolbar()
-			== true) {
+		if (item.getBoolean("toolbars", "show_main") == true)
 			pane.add(toolbar);
 
-		}
-
-		if (MailConfig
-			.getMainFrameOptionsConfig()
-			.getWindowItem()
-			.isShowFolderInfo()
-			== true) {
-
+		if (item.getBoolean("toolbars", "show_folderinfo") == true)
 			pane.add(folderInfoPanel);
-		}
 
 		getContentPane().add(pane, BorderLayout.NORTH);
 
@@ -184,22 +167,15 @@ public class FrameView extends JFrame {
 			rightSplitPane.setDividerLocation(150);
 		} else {
 			mainSplitPane.setDividerLocation(
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.getMainSplitPane());
+				item.getInteger("splitpanes", "main"));
 
 			rightSplitPane.setDividerLocation(
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.getRightSplitPane());
+				item.getInteger("splitpanes", "header"));
 		}
 
 	}
 
-	public void setToolBar( MailToolBar toolBar )
-	{
+	public void setToolBar(MailToolBar toolBar) {
 		this.toolbar = toolBar;
 	}
 
@@ -255,35 +231,45 @@ public class FrameView extends JFrame {
 		}
 
 	}
-	
-	public void showFilterToolbar()
-	{
-		tablePanel.add( filterToolbar, BorderLayout.NORTH );
+
+	public void showFilterToolbar() {
+		tablePanel.add(filterToolbar, BorderLayout.NORTH);
 		tablePanel.validate();
 		repaint();
 	}
-	
-	public void hideFilterToolbar()
-	{
-		tablePanel.remove(filterToolbar);	
+
+	public void hideFilterToolbar() {
+		tablePanel.remove(filterToolbar);
 		tablePanel.validate();
 		repaint();
 	}
-	
-	public void saveWindowPosition() {
 
-		java.awt.Dimension d =getSize();
-		//MailConfig.saveWindowPosition( 0, 0, d.width, d.height);
-		WindowItem item =
-			MailConfig.getMainFrameOptionsConfig().getWindowItem();
-		item.setXPosition(0);
-		item.setYPosition(0);
-		item.setWidth(d.width);
-		item.setHeight(d.height);
+	public void saveWindowPosition(ViewItem viewItem) {
 
-		item.setMainSplitPane(mainSplitPane.getDividerLocation());
-		item.setRightSplitPane(rightSplitPane.getDividerLocation());
+		java.awt.Dimension d = getSize();
 
+		WindowItem item = viewItem.getWindowItem();
+
+		item.set("x", 0);
+		item.set("y", 0);
+		item.set("width", d.width);
+		item.set("height", d.height);
+
+		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
+		viewItem.set(
+			"splitpanes",
+			"header",
+			rightSplitPane.getDividerLocation());
+
+	}
+
+	public void loadWindowPosition(ViewItem viewItem) {
+		int x = viewItem.getInteger("window", "width");
+		int y = viewItem.getInteger("window", "height");
+		Dimension dim = new Dimension(x, y);
+		setSize(dim);
+		
+		validate();
 	}
 
 }

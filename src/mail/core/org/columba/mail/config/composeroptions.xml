@@ -1,20 +1,16 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 
 <options> 
  <gui>
-  <window> 
-    <xposition>0</xposition> 
-    <yposition>0</yposition> 
-    <width>900</width> 
-    <height>800</height> 
-    <showfiltertoolbar>false</showfiltertoolbar> 
-    <showtoolbar>true</showtoolbar> 
-    <showfolderinfo>true</showfolderinfo> 
-    <mainsplitpane>100</mainsplitpane>
-    <headersplitpane>100</headersplitpane>
-    <attachmentsplitpane>100</attachmentsplitpane>    
-  </window> 
+  <view>
+    <window x="0" y="0" width="900" height="700"/> 
+    <toolbars show_main="true" show_filter="true" show_folderinfo="true" />
+    <splitpanes main="200" header="200" attachment="100" />
+    <addressbook enabled="false" />
+  </view>
  </gui>
+ <spellcheck executable="/usr/bin/aspell" />
+ <external_editor enabled="false" />
 </options>
 

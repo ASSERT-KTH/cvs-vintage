@@ -15,7 +15,6 @@
 package org.columba.mail.folder;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.FolderItem;
@@ -29,22 +28,20 @@ import org.columba.mail.parser.Rfc822Parser;
 
 public abstract class LocalFolder extends Folder {
 
-	protected int nextUid;
+	protected int nextMessageUid;
 	protected AbstractMessage aktMessage;
 	protected DataStorageInterface dataStorage;
 	protected LocalSearchEngine searchEngine;
 
-	public LocalFolder(AdapterNode node, FolderItem item) {
-		super(node, item);
+	public LocalFolder(FolderItem item) {
+		super(item);
 
-		nextUid = 0;
 	} // constructor
+
 
 	// use this constructor only with tempfolders
 	public LocalFolder(String name) {
 		super(name);
-
-		nextUid = 0;
 	} // constructor
 
 	public void removeFolder() throws Exception {
@@ -54,12 +51,12 @@ public abstract class LocalFolder extends Folder {
 			super.removeFolder();
 	}
 
-	protected Object generateNextUid() {
-		return new Integer(nextUid++);
+	protected Object generateNextMessageUid() {
+		return new Integer(nextMessageUid++);
 	}
 
-	public void setNextUid(int next) {
-		nextUid = next;
+	public void setNextMessageUid(int next) {
+		nextMessageUid = next;
 	}
 
 	/********************* datastorage methods ***************************/
@@ -78,7 +75,7 @@ public abstract class LocalFolder extends Folder {
 
 		getHeaderList(worker);
 
-		Object newUid = generateNextUid();
+		Object newUid = generateNextMessageUid();
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
 
@@ -93,7 +90,7 @@ public abstract class LocalFolder extends Folder {
 
 	public Object addMessage(String source, WorkerStatusController worker)
 		throws Exception {
-		Object newUid = generateNextUid();
+		Object newUid = generateNextMessageUid();
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
 

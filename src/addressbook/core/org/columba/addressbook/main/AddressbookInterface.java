@@ -15,7 +15,7 @@
 package org.columba.addressbook.main;
 
 import org.columba.core.command.TaskManager;
-import org.columba.addressbook.gui.action.AddressbookActionListener;
+
 import org.columba.addressbook.gui.frame.AddressbookView;
 import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
@@ -26,7 +26,7 @@ public class AddressbookInterface
 {
     public AddressbookView frame;
     public AddressbookMenu menu;
-    public AddressbookActionListener actionListener;
+    
     public AddressbookTable table;
     public AddressbookTree tree;
     //public AddressbookConfig config;

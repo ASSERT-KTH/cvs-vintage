@@ -356,9 +356,9 @@ public class PGPController {
 	public String sign(String pgpMessage, PGPItem item) {
 		exitVal = -1;
 
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
+		type = item.getInteger("type");
+		path = item.get("path");
+		id = item.get("id");
 
 		String passphrase = item.getPassphrase();
 		boolean save = false;
@@ -380,7 +380,7 @@ public class PGPController {
 			exitVal = utils[GPG].sign(item, pgpMessage);
 
 			if (exitVal == 2) {
-				JOptionPane.showMessageDialog(MainInterface.frameController.getView(), utils[GPG].getErrorString());
+				JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 				if (save == false)
 					item.clearPassphrase();
 
@@ -395,7 +395,7 @@ public class PGPController {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 
-			JOptionPane.showMessageDialog(MainInterface.frameController.getView(), utils[GPG].getErrorString());
+			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 
 			if (save == false)
 				item.clearPassphrase();

@@ -46,11 +46,8 @@ public class EditorView extends JTextPane  {
 		setStyledDocument(message);
 		setEditable(true);
 
-		Font font =
-			new Font(
-				Config.getOptionsConfig().getThemeItem().getTextFontName(),
-				Font.PLAIN,
-				Config.getOptionsConfig().getThemeItem().getTextFontSize());
+		Font font = Config.getOptionsConfig().getGuiItem().getTextFont();
+		
 		setFont(font);
 		
 		setPreferredSize(new Dimension(300, 200));

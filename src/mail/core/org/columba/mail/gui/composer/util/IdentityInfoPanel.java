@@ -84,8 +84,8 @@ public class IdentityInfoPanel extends CInfoPanel {
 		String accountName = item.getName();
 
 		IdentityItem identity = item.getIdentityItem();
-		String address = identity.getAddress();
-		String name = identity.getName();
+		String address = identity.get("address");
+		String name = identity.get("name");
 
 		if (item.isPopAccount())
 			label.setIcon(image1);

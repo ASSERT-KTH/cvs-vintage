@@ -2,7 +2,6 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilder;
@@ -29,10 +28,8 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 	 * @param frameController
 	 * @param references
 	 */
-	public OpenMessageWithComposerCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public OpenMessageWithComposerCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
@@ -46,12 +43,14 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		Folder folder = (Folder) ( (FolderCommandReference) getReferences()[0] ).getFolder();
-		Object[] uids = ( (FolderCommandReference) getReferences()[0] ).getUids();
+		Folder folder =
+			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
 		Message message = new Message();
 
-		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+		ColumbaHeader header =
+			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
 		message.setHeader(header);
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
 		message.setMimePartTree(mimePartTree);
@@ -59,11 +58,9 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		String source = folder.getMessageSource(uids[0], worker);
 		message.setSource(source);
 
-		controller = new ComposerController(frameController);
+		controller = new ComposerController();
 
-		MessageBuilder.openMessage(
-			message,
-			controller.getModel());
+		MessageBuilder.openMessage(message, controller.getModel());
 	}
 
 	/**

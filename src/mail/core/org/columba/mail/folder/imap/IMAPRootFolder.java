@@ -14,33 +14,45 @@
 
 package org.columba.mail.folder.imap;
 
-import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.ImapItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.Root;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.imap.parser.Imap4Parser;
 import org.columba.mail.imap.parser.ListInfo;
 import org.columba.mail.imap.protocol.IMAPProtocol;
+import org.columba.mail.message.AbstractMessage;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.MimePart;
+import org.columba.mail.message.MimePartTree;
+import org.columba.main.MainInterface;
 
-public class IMAPRootFolder extends FolderTreeNode //implements ActionListener 
+public class IMAPRootFolder extends Folder //implements ActionListener 
 {
+	protected final static ImageIcon imapRootIcon =
+		ImageLoader.getSmallImageIcon("remotehost.png");
+
 	private IMAPProtocol imap;
-	private ImapItem item;
 	//private boolean select=false;
 	private boolean fetch = false;
 	private Imap4Parser parser;
 	private StringBuffer cache;
 	private int state;
-	private int accountUid;
 	private Vector lsubList;
 
 	private final static int ONE_SECOND = 1000;
@@ -49,78 +61,101 @@ public class IMAPRootFolder extends FolderTreeNode //implements ActionListener
 	//    private ImapOperator operator;
 
 	private IMAPStore store;
+	
+	private Lock lock;
 
-	public IMAPRootFolder(
-		AdapterNode node,
-		FolderItem folderItem,
-		ImapItem item,
-		int accountUid) {
+	public IMAPRootFolder(FolderItem folderItem) {
 		//super(node, folderItem);
-		super(node);
+		super(folderItem);
 
-		this.item = item;
-		this.accountUid = accountUid;
+		AccountItem accountItem =
+			MailConfig.getAccountList().uidGet(
+				folderItem.getInteger("account_uid"));
 
-		//state = 0;
-
-		//lsubList = null;
-
-		//imap = new Imap4();
-
-		//restartTimer();
-
-		store = new IMAPStore(item, this);
-
+		store = new IMAPStore(accountItem.getImapItem(), this);
+		
+		lock = new Lock(this);
 	}
 	
 	
 
-	public Hashtable getAttributes() {
-		Hashtable attributes = new Hashtable();
+	public IMAPRootFolder(AccountItem accountItem) {
+		//super(node, folderItem);
+		super(
+			getDefaultItem(
+				"org.columba.mail.folder.imap.IMAPRootFolder",
+				getDefaultProperties()));
 
-		attributes.put("accessrights", "user");
-		attributes.put("messagefolder", "true");
-		attributes.put("type", "imap");
-		attributes.put("subfolder", "true");
-		attributes.put("accessrights", "true");
-		attributes.put("add", "true");
-		attributes.put("remove", "true");
-		attributes.put("accountuid", new Integer(accountUid));
+		getFolderItem().set("account_uid", accountItem.getInteger("uid"));
+		getFolderItem().set("property", "name", accountItem.get("name"));
 
-		return attributes;
+		((Root) MainInterface.treeModel.getRoot()).addWithXml(this);
+
+		store = new IMAPStore(accountItem.getImapItem(), this);
 	}
+
+	public ImageIcon getCollapsedIcon() {
+		return imapRootIcon;
+	}
+
+	public ImageIcon getExpandedIcon() {
+		return imapRootIcon;
+	}
+
+	/*
+	public String getName() {
+		String name = null;
+
+		FolderItem item = getFolderItem();
+		name = item.get("property", "name");
+
+		return name;
+	}
+	*/
+
+	/*
+	public void setName(String newName) {
+
+		FolderItem item = getFolderItem();
+		item.set("property", "name", newName);
+
+	}
+	*/
 	
-	public int getAccountUid()
-	{
-		return accountUid;
+	public Class getDefaultChild() {
+		return IMAPFolder.class;
 	}
 
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
-		return new IMAPFolder(node, item, this.item, this);
-	}
-
-	protected void addSubFolder(FolderTreeNode folder, String name) throws Exception{
+	protected void addIMAPSubFolder(FolderTreeNode folder, String name)
+		throws Exception {
 		ColumbaLogger.log.debug("addSubFolder=<" + name + ">");
 
 		if (name.indexOf(store.getDelimiter()) != -1) {
 
 			String subchild =
 				name.substring(0, name.indexOf(store.getDelimiter()));
-			FolderTreeNode subFolder = (FolderTreeNode) folder.getChild(subchild);
+			FolderTreeNode subFolder =
+				(FolderTreeNode) folder.getChild(subchild);
 
 			if (subFolder == null) {
 				ColumbaLogger.log.debug("creating folder=" + subchild);
 
+				/*
 				// folder does not exist, create new folder
+				subFolder = new IMAPFolder(imapItem, this); 
 				
-				Hashtable parameter = getAttributes();
-				parameter.put("name", subchild);
-				parameter.put("messagefolder","false");
-				subFolder = (IMAPFolder) folder.addSubFolder(parameter);
+				//(IMAPFolder) folder.addFolder(child);
 				
+				FolderItem child = subFolder.getFolderItem();
+				child.set("property", "name", subchild);
+				child.set("property", "messagefolder","false");
+				
+				folder.add(subFolder);
+				*/
+				folder.addFolder(subchild);
 			}
 
-			addSubFolder(
+			addIMAPSubFolder(
 				subFolder,
 				name.substring(name.indexOf(store.getDelimiter()) + 1));
 
@@ -128,35 +163,42 @@ public class IMAPRootFolder extends FolderTreeNode //implements ActionListener
 			ColumbaLogger.log.debug("no delimiters in mailbox-name found");
 
 			if (folder.getChild(name) == null) {
-				Hashtable parameter = getAttributes();
-				parameter.put("name", name);
-				folder.addSubFolder(parameter);
+				/*
+				FolderTreeNode subFolder = new IMAPFolder(imapItem, this);
+				FolderItem child = new FolderItem(subFolder.getNode());
+				child.set("property", "name", name);
+				folder.add(subFolder);
+				*/
+				folder.addFolder(name);
 			}
 		}
 	}
 
-	public void createChildren( WorkerStatusController  worker ) {
+	public void createChildren(WorkerStatusController worker) {
 		try {
+			getLock().tryToGetLock();
+			
 			ListInfo[] listInfo = getStore().lsub("", "*", worker);
 
 			for (int i = 0; i < listInfo.length; i++) {
 				ListInfo info = listInfo[i];
 				getStore().setDelimiter(info.getDelimiter());
-				
-				addSubFolder(this, info.getName().trim() );
+
+				addIMAPSubFolder(this, info.getName().trim());
 
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			getLock().release();
+		}
+		finally 
+		{
+			getLock().release();
 		}
 	}
 
 	public IMAPStore getStore() {
 		return store;
-	}
-
-	public ImapItem getImapItem() {
-		return item;
 	}
 
 	/*
@@ -580,5 +622,142 @@ public class IMAPRootFolder extends FolderTreeNode //implements ActionListener
 		return b;
 	}
 	*/
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
+	 */
+	public static XmlElement getDefaultProperties() {
+		XmlElement props = new XmlElement("property");
+		props.addAttribute("accessrights", "system");
+		props.addAttribute("subfolder", "true");
+
+		return props;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object addMessage(
+		AbstractMessage message,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object addMessage(String source, WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public boolean exists(Object uid, WorkerStatusController worker)
+		throws Exception {
+		return false;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+		throws Exception {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
+	 */
+	public HeaderList getHeaderList(WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public ColumbaHeader getMessageHeader(
+		Object uid,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public String getMessageSource(Object uid, WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object, java.lang.Integer, org.columba.core.command.WorkerStatusController)
+	 */
+	public MimePart getMimePart(
+		Object uid,
+		Integer[] address,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public MimePartTree getMimePartTree(
+		Object uid,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int, org.columba.core.command.WorkerStatusController)
+	 */
+	public void markMessage(
+		Object[] uids,
+		int variant,
+		WorkerStatusController worker)
+		throws Exception {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public void removeMessage(Object uid, WorkerStatusController worker)
+		throws Exception {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(
+		Filter filter,
+		Object[] uids,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
+	 */
+	public Object[] searchMessages(
+		Filter filter,
+		WorkerStatusController worker)
+		throws Exception {
+		return null;
+	}
+
+	/**
+	 * Returns the lock.
+	 * @return Lock
+	 */
+	public Lock getLock() {
+		return lock;
+	}
 
 }

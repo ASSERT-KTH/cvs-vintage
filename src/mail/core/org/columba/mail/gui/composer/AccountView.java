@@ -88,8 +88,8 @@ class AccountListRenderer extends JLabel implements ListCellRenderer
 			AccountItem item = (AccountItem) value;
 			String accountName = item.getName();
 			IdentityItem identity = item.getIdentityItem();
-			String address = identity.getAddress();
-			String name = identity.getName();
+			String address = identity.get("address");
+			String name = identity.get("name");
 
 			String result = accountName + ":   " + name + " <" + address + ">";
 

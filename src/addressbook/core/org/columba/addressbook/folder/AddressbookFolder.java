@@ -16,18 +16,17 @@ package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 
 public class AddressbookFolder extends LocalHeaderCacheFolder
 {
 
-	private HeaderTableItem headerTableItemList;
+	private TableItem headerTableItemList;
 
 	public AddressbookFolder(
-		FolderItem folderItem,
-		AddressbookInterface addressbookInterface)
+		FolderItem folderItem)
 	{
-		super(folderItem, addressbookInterface);
+		super(folderItem);
 
 		if ( isHeaderCacheAlreadyLoaded() == false )
 		{

@@ -57,7 +57,7 @@ public class SpecialFoldersPanel
 
 	private JLabel inboxLabel;
 	private JButton inboxButton;
-	
+
 	private JCheckBox defaultAccountCheckBox;
 
 	private SpecialFoldersItem item;
@@ -80,8 +80,7 @@ public class SpecialFoldersPanel
 	protected String getPath(String uid) {
 		Integer u = new Integer(uid);
 
-		Folder f =
-			(Folder) MainInterface.treeModel.getFolder(u.intValue());
+		Folder f = (Folder) MainInterface.treeModel.getFolder(u.intValue());
 
 		if (f == null)
 			return ""; //$NON-NLS-1$
@@ -108,56 +107,47 @@ public class SpecialFoldersPanel
 	protected void updateComponents(boolean b) {
 		if (b) {
 			if (!isPopAccount())
-				trashButton.setText(getPath(item.getTrash()));
+				trashButton.setText(getPath(item.get("trash")));
 
-			draftsButton.setText(getPath(item.getDrafts()));
-			templatesButton.setText(getPath(item.getTemplates()));
-			sentButton.setText(getPath(item.getSent()));
+			draftsButton.setText(getPath(item.get("drafts")));
+			templatesButton.setText(getPath(item.get("templates")));
+			sentButton.setText(getPath(item.get("sent")));
 
 			if (isPopAccount())
-				inboxButton.setText(getPath(item.getInbox()));
-				
-			if (item.isUseDefaultAccount())
-					defaultAccountCheckBox.setSelected(true);
-				else
-					defaultAccountCheckBox.setSelected(false);
-				
-			if (MailConfig
-					.getAccountList()
-					.getDefaultAccountUid()
-					== accountItem.getUid()) {
-					defaultAccountCheckBox.setEnabled(false);
-				} else {
-					defaultAccountCheckBox.setEnabled(true);
-				}
-				
-			if ( defaultAccountCheckBox.isEnabled() && defaultAccountCheckBox.isSelected() ) 
-			{
+				inboxButton.setText(getPath(item.get("inbox")));
+
+			defaultAccountCheckBox.setSelected(
+				item.getBoolean("use_default_account"));
+
+			defaultAccountCheckBox.setEnabled(
+				MailConfig.getAccountList().getDefaultAccountUid()
+					== accountItem.getInteger("uid"));
+
+			if (defaultAccountCheckBox.isEnabled()
+				&& defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
-			}
-			else
-			{
+			} else {
 				layoutComponents();
 			}
 		} else {
 			if (!isPopAccount())
-				item.setTrash(getUid(trashButton.getText()));
+				item.set("trash", getUid(trashButton.getText()));
 
-			item.setDrafts(getUid(draftsButton.getText()));
-			item.setTemplates(getUid(templatesButton.getText()));
-			item.setSent(getUid(sentButton.getText()));
+			item.set("drafts", getUid(draftsButton.getText()));
+			item.set("templates", getUid(templatesButton.getText()));
+			item.set("sent", getUid(sentButton.getText()));
 
 			if (isPopAccount())
-				item.setInbox(getUid(inboxButton.getText()));
-				
-			item.setUseDefaultAccount(
-					defaultAccountCheckBox.isSelected());
+				item.set("inbox", getUid(inboxButton.getText()));
+
+			item.set(
+				"use_default_account",
+				defaultAccountCheckBox.isSelected());
 
 		}
 	}
-	
-	protected void layoutComponents()
-	{
+
+	protected void layoutComponents() {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
@@ -168,12 +158,12 @@ public class SpecialFoldersPanel
 		mainConstraints.weightx = 1.0;
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
 		add(defaultAccountCheckBox);
-		
+
 		JPanel folderPanel = new JPanel();
 		Border b1 = BorderFactory.createEtchedBorder();
 		Border b2 =
@@ -196,8 +186,7 @@ public class SpecialFoldersPanel
 		c.anchor = GridBagConstraints.WEST;
 
 		if (isPopAccount()) {
-			
-			
+
 			c.weightx = 0.1;
 			c.gridwidth = GridBagConstraints.RELATIVE;
 			layout.setConstraints(inboxLabel, c);
@@ -209,7 +198,7 @@ public class SpecialFoldersPanel
 			folderPanel.add(inboxButton);
 
 		}
-		
+
 		c.weightx = 0.1;
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		layout.setConstraints(draftsLabel, c);
@@ -218,8 +207,8 @@ public class SpecialFoldersPanel
 		c.weightx = 0.9;
 		layout.setConstraints(draftsButton, c);
 		folderPanel.add(draftsButton);
-		
-			c.weightx = 0.1;
+
+		c.weightx = 0.1;
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		layout.setConstraints(templatesLabel, c);
 		folderPanel.add(templatesLabel);
@@ -227,7 +216,7 @@ public class SpecialFoldersPanel
 		c.weightx = 0.9;
 		layout.setConstraints(templatesButton, c);
 		folderPanel.add(templatesButton);
-		
+
 		c.weightx = 0.1;
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		layout.setConstraints(sentLabel, c);
@@ -236,10 +225,9 @@ public class SpecialFoldersPanel
 		c.weightx = 0.9;
 		layout.setConstraints(sentButton, c);
 		folderPanel.add(sentButton);
-		
+
 		if (!isPopAccount()) {
-			
-			
+
 			c.weightx = 0.1;
 			c.gridwidth = GridBagConstraints.RELATIVE;
 			layout.setConstraints(trashLabel, c);
@@ -249,12 +237,12 @@ public class SpecialFoldersPanel
 			layout.setConstraints(trashButton, c);
 			folderPanel.add(trashButton);
 		}
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 0, 0, 0);
 		mainLayout.setConstraints(folderPanel, mainConstraints);
 		add(folderPanel);
-		
+
 		mainConstraints.gridheight = GridBagConstraints.REMAINDER;
 		mainConstraints.weighty = 1.0;
 		mainConstraints.fill = GridBagConstraints.VERTICAL;
@@ -263,26 +251,23 @@ public class SpecialFoldersPanel
 		add(vglue);
 
 	}
-	
-	protected void showDefaultAccountWarning()
-	{
-		
-		
+
+	protected void showDefaultAccountWarning() {
+
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
 		GridBagConstraints mainConstraints = new GridBagConstraints();
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
 		mainConstraints.weightx = 1.0;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
 		add(defaultAccountCheckBox);
-		
-		
+
 		mainConstraints = new GridBagConstraints();
 		mainConstraints.weighty = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -293,40 +278,44 @@ public class SpecialFoldersPanel
 		mainConstraints.weightx = 1.0;
 		mainConstraints.weighty = 1.0;
 		*/
-		
-		JLabel label = new JLabel(MailResourceLoader.getString("dialog","account","using_default_account_settings") );
-		Font newFont = label.getFont().deriveFont( Font.BOLD );
-		label.setFont( newFont );
-		mainLayout.setConstraints( label, mainConstraints );
-		add( label );
-		
-		
-		
-			
+
+		JLabel label =
+			new JLabel(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"using_default_account_settings"));
+		Font newFont = label.getFont().deriveFont(Font.BOLD);
+		label.setFont(newFont);
+		mainLayout.setConstraints(label, mainConstraints);
+		add(label);
+
 	}
 
 	protected void initComponents() {
 
-		
-		
 		defaultAccountCheckBox =
 			new JCheckBox(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"use_default_account_settings"));
-		defaultAccountCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog","account","use_default_account_settings"));
+		defaultAccountCheckBox.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
+				"use_default_account_settings"));
 		//defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
-		
+
 		if (isPopAccount()) {
 			inboxLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "inbox_folder")); //$NON-NLS-1$
 			inboxLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "inbox_folder")); //$NON-NLS-1$
 			inboxButton = new JButton();
 			inboxButton.setActionCommand("INBOX"); //$NON-NLS-1$
 			inboxButton.addActionListener(this);
-			inboxLabel.setLabelFor( inboxButton );
+			inboxLabel.setLabelFor(inboxButton);
 		}
 
 		draftsLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "drafts_folder")); //$NON-NLS-1$
@@ -334,24 +323,21 @@ public class SpecialFoldersPanel
 		draftsButton = new JButton();
 		draftsButton.setActionCommand("DRAFTS"); //$NON-NLS-1$
 		draftsButton.addActionListener(this);
-		draftsLabel.setLabelFor( draftsButton );
-		
+		draftsLabel.setLabelFor(draftsButton);
 
 		templatesLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "templates_folder")); //$NON-NLS-1$
 		templatesLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "templates_folder")); //$NON-NLS-1$
 		templatesButton = new JButton();
 		templatesButton.setActionCommand("TEMPLATES"); //$NON-NLS-1$
 		templatesButton.addActionListener(this);
-		templatesLabel.setLabelFor( templatesButton );
-	
+		templatesLabel.setLabelFor(templatesButton);
 
 		sentLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "sent_folder")); //$NON-NLS-1$		
 		sentLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "sent_folder")); //$NON-NLS-1$
 		sentButton = new JButton();
 		sentButton.setActionCommand("SENT"); //$NON-NLS-1$
 		sentButton.addActionListener(this);
-		sentLabel.setLabelFor( sentButton );
-		
+		sentLabel.setLabelFor(sentButton);
 
 		if (!isPopAccount()) {
 			trashLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "trash_folder")); //$NON-NLS-1$			
@@ -359,15 +345,10 @@ public class SpecialFoldersPanel
 			trashButton = new JButton();
 			trashButton.setActionCommand("TRASH"); //$NON-NLS-1$
 			trashButton.addActionListener(this);
-			trashLabel.setLabelFor( trashButton );
-			
-			
+			trashLabel.setLabelFor(trashButton);
+
 		}
 
-		
-		
-		
-		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -376,7 +357,7 @@ public class SpecialFoldersPanel
 		if (action.equals("TRASH")) //$NON-NLS-1$
 			{
 			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -389,8 +370,8 @@ public class SpecialFoldersPanel
 			}
 		} else if (action.equals("INBOX")) //$NON-NLS-1$
 			{
-			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				SelectFolderDialog dialog =
+								MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -403,8 +384,8 @@ public class SpecialFoldersPanel
 			}
 		} else if (action.equals("DRAFTS")) //$NON-NLS-1$
 			{
-			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				SelectFolderDialog dialog =
+								MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -417,8 +398,8 @@ public class SpecialFoldersPanel
 			}
 		} else if (action.equals("TEMPLATES")) //$NON-NLS-1$
 			{
-			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				SelectFolderDialog dialog =
+								MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -431,8 +412,8 @@ public class SpecialFoldersPanel
 			}
 		} else if (action.equals("SENT")) //$NON-NLS-1$
 			{
-			SelectFolderDialog dialog =
-				MainInterface.frameController.treeController.getSelectFolderDialog();
+				SelectFolderDialog dialog =
+								MainInterface.treeModel.getSelectFolderDialog();
 
 			if (dialog.success()) {
 				Folder selectedFolder = dialog.getSelectedFolder();
@@ -443,25 +424,19 @@ public class SpecialFoldersPanel
 				//int uid = selectedFolder.getUid();
 				//item.setSent( new Integer(uid).toString() );
 			}
-		}
-		else if ( action.equals("DEFAULT_ACCOUNT") )
-		{
+		} else if (action.equals("DEFAULT_ACCOUNT")) {
 			removeAll();
-			
-			
-			if( defaultAccountCheckBox.isSelected() )
-			{
+
+			if (defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
-				
-			}
-			else
-			{
+
+			} else {
 				layoutComponents();
-				
+
 			}
-				
+
 			revalidate();
-			
+
 		}
 	}
 
@@ -492,5 +467,4 @@ public class SpecialFoldersPanel
 		return result;
 	}
 
-	
 }

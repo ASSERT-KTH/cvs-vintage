@@ -21,9 +21,14 @@ public abstract class FolderCommand extends Command {
 	 * @param references
 	 */
 	public FolderCommand(
-		FrameController frameController,
+		
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super( references);
+	}
+	
+	public FolderCommand( FrameController frame, DefaultCommandReference[] references)
+	{
+		super(frame, references);
 	}
 
 	/**

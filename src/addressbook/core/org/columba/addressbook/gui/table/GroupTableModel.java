@@ -18,9 +18,9 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.columba.addressbook.config.AddressbookXmlConfig;
 import org.columba.addressbook.config.GroupItem;
 import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
 
 
 public class GroupTableModel extends AbstractTableModel
@@ -38,12 +38,14 @@ public class GroupTableModel extends AbstractTableModel
 
     private int count;
 
-    private AddressbookXmlConfig config;
+    //private AddressbookXmlConfig config;
     
-    public GroupTableModel( AddressbookXmlConfig config)
+    protected DefaultXmlConfig config;
+    
+    public GroupTableModel( DefaultXmlConfig config)
     {
         super();
-        this.config = config;
+        //this.config = config;
         
         count=0;
         groupList = new Vector();
@@ -61,6 +63,7 @@ public class GroupTableModel extends AbstractTableModel
 
     public void update()
     {
+    	/*
         AdapterNode listNode = node.getChild("grouplist");
         count = listNode.getChildCount();
 
@@ -82,6 +85,7 @@ public class GroupTableModel extends AbstractTableModel
         }
         
         fireTableDataChanged();
+        */
     }
     
     public int getColumnCount()

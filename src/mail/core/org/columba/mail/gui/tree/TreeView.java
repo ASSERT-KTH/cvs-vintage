@@ -20,7 +20,6 @@ import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
 /**
  * this class does all the dirty work for the TreeController
@@ -63,9 +62,9 @@ public class TreeView extends JTree
 		    addTreeNodeChangeListener( rootFolder );
 		*/
 
-		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
-		setCellRenderer(renderer);
-
+		
+		
+		
 		setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 
 		expand();
@@ -78,12 +77,6 @@ public class TreeView extends JTree
 
 	
 
-	/*
-	public Folder getRootFolder()
-	{
-	    return rootFolder;
-	}
-	*/
 
 	public void expand() {
 		int rowCount = getRowCount();
@@ -97,224 +90,4 @@ public class TreeView extends JTree
 
 	}
 
-	/*
-	public void addTreeNodeChangeListener( Folder parent )
-	{
-	    int count = parent.getChildCount();
-	
-	    for ( int i=0; i<count; i++ )
-	    {
-	        Folder child = (Folder) parent.getChildAt( i );
-	        //child.addTreeNodeListener( this );
-	        addTreeNodeChangeListener( child );
-	    }
-	}
-	
-	
-	
-	
-	public Folder getSelected()
-	{
-	    //return selectedFolder;
-	    return (Folder) getTree().getLastSelectedPathComponent();
-	}
-	
-	
-	public void setSelected( Folder f )
-	{
-	    TreePath treePath = f.getSelectionTreePath();
-	    getTree().getSelectionModel().setSelectionPath( treePath );
-	
-	
-	}
-	
-	
-	
-	
-	public DefaultTreeModel getModel()
-	{
-	    return treeModel;
-	}
-	
-	
-	
-	public JTree getTree()
-	    {
-	        return tree;
-	    }
-	*/
-
-	/************************ tree structure methods ********************************/
-
-	/*
-	
-	
-	public Folder findFolder( Folder parentFolder, String str )
-	{
-	
-	int count = parentFolder.getChildCount();
-	    Folder child;
-	    Folder folder;
-	
-	    for (Enumeration e = parentFolder.children() ; e.hasMoreElements() ;)
-	    {
-	        child = (Folder) e.nextElement();
-	        //System.out.println( "child: "+child.getName());
-	    if ( child.getName().equals( str ) ) return child;
-	}
-	
-	return null;
-	}
-	
-	
-	
-	public void treeNodeChanged( TreeNodeEvent e )
-	{
-	
-	    int mode = e.getMode();
-	
-	
-	    Folder folder = (Folder) e.getSource();
-	    if ( folder == null ) return;
-	
-	    if ( mode == TreeNodeEvent.UPDATE )
-	       getModel().nodeChanged( folder );
-	    else if ( mode == TreeNodeEvent.STRUCTURE_CHANGED )
-	       getModel().nodeStructureChanged( folder );
-	
-	}
-	
-	class FolderTreeCellEditor extends DefaultCellEditor
-	{
-	
-	
-	  public FolderTreeCellEditor( JTextField textField )
-	  {
-	      super( textField );
-	      setClickCountToStart( 2 );
-	
-	  }
-	
-	  public Component getTreeCellEditorComponent( JTree tree, Object value,
-	         boolean isSelected, boolean expanded, boolean leaf, int row )
-	  {
-	    JTextField textField = (JTextField) editorComponent;
-	
-	    Folder folder = (Folder) value;
-	
-	    textField.setText( folder.getName() );
-	
-	    return textField;
-	  }
-	}
-	
-	
-	
-	public Folder getFolder( int uid )
-	{
-	    Folder root = getRootFolder();
-	
-	    for (Enumeration e = root.getPreorderEnumeration() ; e.hasMoreElements() ;)
-	    {
-	        Folder node = (Folder) e.nextElement();
-	
-	        FolderItem item = node.getFolderItem();
-	        if ( item == null ) continue;
-	
-	        int id = item.getUid();
-	
-	        if ( uid == id )
-	        {
-	            return node;
-	        }
-	
-	    }
-	    return null;
-	
-	}
-	
-	public Folder getImapFolder( int accountUid )
-	{
-	
-	    Folder root = (Folder) getRootFolder();
-	
-	    for (Enumeration e = root.getPreorderEnumeration() ; e.hasMoreElements() ;)
-	    {
-	        Folder node = (Folder) e.nextElement();
-	
-	        FolderItem item = node.getFolderItem();
-	        if ( item == null ) continue;
-	
-	        if ( item.getType().equals("imaproot") )
-	        {
-	            int account = item.getAccountUid();
-	
-	            if ( account == accountUid )
-	            {
-	                int uid = item.getUid();
-	
-	                return getFolder( uid );
-	            }
-	
-	        }
-	
-	
-	
-	
-	    }
-	    return null;
-	
-	}
-	
-	
-	
-	public Folder getFolder( TreeNodeList list )
-	{
-	
-	    Folder folder = null;
-	
-	    Folder parentFolder = getRootFolder() ;
-	
-	    if ( list == null ) return parentFolder;
-	
-	     if ( list.count() == 0 )
-	     {
-	         System.out.println("list count == null ");
-	
-	         return parentFolder;
-	     }
-	
-	Folder child = parentFolder;
-	for ( int i=0; i < list.count(); i++)
-	    {
-		String str = list.get(i);
-	            System.out.println( "str: "+ str );
-	            child = findFolder( child, str );
-	    }
-	
-	    return child;
-	
-	}
-	*/
-
-	/**
-	 *
-	 * return Folder where to save the messages from the specified popserver
-	 *
-	 *
-	 **/
-
-	/*
-	public Folder getFolder( POP3Server server )
-	{
-	  String uidString = server.getAccountItem().getSpecialFoldersItem().getInbox();
-	  int uid = new Integer(uidString).intValue();
-	
-	  //int uid = server.getPopItem().getUid();
-	
-	  Folder node = getFolder( uid );
-	
-	  return node;
-	}
-	*/
 }

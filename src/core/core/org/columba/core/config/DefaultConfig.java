@@ -16,6 +16,7 @@ package org.columba.core.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.columba.core.io.DiskIO;
 
@@ -51,6 +52,33 @@ public class DefaultConfig {
 
 		Config.registerPlugin(moduleName, id, plugin);
 	}
+	
+	protected static void registerTemplatePlugin(
+			String moduleName,
+			String id,
+			DefaultXmlConfig plugin) {
+		/*
+			File file = null;
+			
+			if (moduleName.equals("core")) {
+				file = ConfigPath.getConfigDirectory();
+				//copy(moduleName, id, file);
+			} else {
+				file = new File(ConfigPath.getConfigDirectory(), moduleName);
+
+				//copy("modules/" + moduleName, id, file);
+				//copy(moduleName, id, file);
+			}
+			*/
+			
+			String	hstr = "org/columba/" + moduleName + "/config/" + id;
+			URL url = DiskIO.getResourceURL(hstr);
+			
+			File file = new File( url.getFile() );
+			plugin.setFile(file);
+			Config.registerTemplatePlugin(moduleName, id, plugin);
+		}
+
 
 	/**
 	 * Method getPlugin.
@@ -61,6 +89,10 @@ public class DefaultConfig {
 	protected static DefaultXmlConfig getPlugin(String moduleName, String id) {
 		return Config.getPlugin(moduleName, id);
 	}
+	
+	protected static DefaultXmlConfig getTemplatePlugin(String moduleName, String id) {
+			return Config.getTemplatePlugin(moduleName, id);
+		}
 
 	/**
 	 * Method createConfigDir.

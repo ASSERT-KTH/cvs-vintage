@@ -15,58 +15,71 @@
 package org.columba.core.config;
 
 import java.awt.Color;
-import java.awt.Font;
 
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
-public class ThemeItem extends DefaultItem
-{
-    private AdapterNode mainFontName, mainFontSize, textFontName, textFontSize;
-
-    private AdapterNode theme;
-    
-    private AdapterNode foreground;
-    private AdapterNode background;
-
-    private AdapterNode iconset;
-    private AdapterNode pulsator;
-    
-    private AdapterNode rootNode;
-
-    public ThemeItem( Document doc, AdapterNode rootNode )
-    {
-        super( doc );
-
-	this.rootNode = rootNode;
-
-	parse();
-
-        createMissingElements();
-    }
-
-
-    protected void parse()
-    {
+public class ThemeItem extends DefaultItem {
+	/*
+	private AdapterNode mainFontName, mainFontSize, textFontName, textFontSize;
 	
+	private AdapterNode theme;
+	
+	private AdapterNode foreground;
+	private AdapterNode background;
+	
+	private AdapterNode iconset;
+	private AdapterNode pulsator;
+	
+	private AdapterNode rootNode;
+	*/
 
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
-        {
-            AdapterNode child = rootNode.getChildAt(i);
+	public ThemeItem(XmlElement root) {
+		super(root);
 
-            if ( child.getName().equals("mainfont") )
-            {
+	}
+
+	public Color getForeground() {
+		int r = getInteger("foreground", "r");
+		int g = getInteger("foreground", "g");
+		int b = getInteger("foreground", "b");
+
+		Color color = new Color(r, g, b);
+
+		return color;
+	}
+
+	public Color getBackground() {
+		int r = getInteger("background", "r");
+		int g = getInteger("background", "g");
+		int b = getInteger("background", "b");
+
+		Color color = new Color(r, g, b);
+		return color;
+	}
+
+	/*
+	protected void parse()
+	{
+	
+	
+	    for ( int i=0; i<rootNode.getChildCount(); i++ )
+	    {
+	        AdapterNode child = rootNode.getChildAt(i);
+	
+	        if ( child.getName().equals("mainfont") )
+	        {
 		AdapterNode subChild = child.getChild("name");
 		mainFontName = subChild;
 		subChild = child.getChild("size");
 		mainFontSize = subChild;
-            }
-            else if ( child.getName().equals("textfont") )
-            {
+	        }
+	        else if ( child.getName().equals("textfont") )
+	        {
 		AdapterNode subChild = child.getChild("name");
 		textFontName = subChild;
 		subChild = child.getChild("size");
 		textFontSize = subChild;
-            }
+	        }
 	    else if ( child.getName().equals("theme") )
 		{
 		    theme = child;
@@ -88,236 +101,231 @@ public class ThemeItem extends DefaultItem
 		    background = child;
 		}	      
 	}
-    }
-
-    protected void createMissingElements()
-    {
+	}
 	
-
+	protected void createMissingElements()
+	{
+	
+	
 	if ( theme == null ) theme = addKey( rootNode, "theme", "2");
 	if ( iconset == null ) iconset = addKey( rootNode, "iconset", "default");
 	if ( pulsator == null ) pulsator = addKey( rootNode, "pulsator", "default");
 	if ( foreground == null ) foreground = addKey( rootNode, "foreground", "16777215");
 	if ( background == null ) background = addKey( rootNode, "background", "13948");
+	
+	}
+	*/
 
-    }
+	/*
+	public void setThemeNode( AdapterNode node )
+	{
+	    theme = node;
+	}
+	
+	    
+	public void setMainFontNameNode( AdapterNode node )
+	{
+	    mainFontName = node;
+	}
+	
+	public void setMainFontSizeNode( AdapterNode node )
+	{
+	    mainFontSize = node;
+	}
+	
+	public void setTextFontNameNode( AdapterNode node )
+	{
+	    textFontName = node;
+	}
+	
+	public void setTextFontSizeNode( AdapterNode node )
+	{
+	    textFontSize = node;
+	}
+	*/
 
+	/******************************************** set ***************************************/
 
-    /*
-    public void setThemeNode( AdapterNode node )
-    {
-        theme = node;
-    }
-
-        
-    public void setMainFontNameNode( AdapterNode node )
-    {
-        mainFontName = node;
-    }
-
-    public void setMainFontSizeNode( AdapterNode node )
-    {
-        mainFontSize = node;
-    }
-    
-    public void setTextFontNameNode( AdapterNode node )
-    {
-        textFontName = node;
-    }
-
-    public void setTextFontSizeNode( AdapterNode node )
-    {
-        textFontSize = node;
-    }
-    */
-    
-
-
-      /******************************************** set ***************************************/
-
-
-
-    public void setMainFontName( String str )
-    {
-        setTextValue( mainFontName, str );
-    }
-
-    public void setMainFontSize( String str )
-    {
-        setTextValue( mainFontSize, str );
-    }
-
-    public void setTextFontSize( int i )
-    {
-        Integer size = new Integer( i );
-
-        setTextFontSize( size.toString() );    
-    }
-
-    public void setMainFontSize( int i )
-    {
-        Integer size = new Integer( i );
-
-        setMainFontSize( size.toString() );    
-    }
-    
-    public void setTextFontName( String str )
-    {
-        setTextValue( textFontName, str );
-    }
-
-    public void setTextFontSize( String str )
-    {
-        setTextValue( textFontSize, str );
-    }
-
-
-
-    public void setTheme( int i )
-    {
-        String str = ( new Integer(i) ).toString();
-        setTextValue( theme, str );
-    }
-
-
-    public void setIconset( String s )
-    {
+	/*
+	public void setMainFontName( String str )
+	{
+	    setTextValue( mainFontName, str );
+	}
+	
+	public void setMainFontSize( String str )
+	{
+	    setTextValue( mainFontSize, str );
+	}
+	
+	public void setTextFontSize( int i )
+	{
+	    Integer size = new Integer( i );
+	
+	    setTextFontSize( size.toString() );    
+	}
+	
+	public void setMainFontSize( int i )
+	{
+	    Integer size = new Integer( i );
+	
+	    setMainFontSize( size.toString() );    
+	}
+	
+	public void setTextFontName( String str )
+	{
+	    setTextValue( textFontName, str );
+	}
+	
+	public void setTextFontSize( String str )
+	{
+	    setTextValue( textFontSize, str );
+	}
+	
+	
+	
+	public void setTheme( int i )
+	{
+	    String str = ( new Integer(i) ).toString();
+	    setTextValue( theme, str );
+	}
+	
+	
+	public void setIconset( String s )
+	{
 	setTextValue( iconset, s );
-    }
-
-    public void setPulsator( String s )
-    {
+	}
+	
+	public void setPulsator( String s )
+	{
 	setTextValue( pulsator, s );
-    }
-
-    public void setForeground( Color c )
-    {
+	}
+	
+	public void setForeground( Color c )
+	{
 	Integer in = new Integer( c.getRGB() );
-
+	
 	setTextValue( foreground, in.toString() );
-    }
-
-    public void setBackground( Color c )
-    {
+	}
+	
+	public void setBackground( Color c )
+	{
 	Integer in = new Integer( c.getRGB() );
-
+	
 	setTextValue( background, in.toString() );
-    }
+	}
+	*/
 
-    
-      /**************************************************** get *********************************/
+	/**************************************************** get *********************************/
 
-    
-    public int getTheme()
-    {
-        String str = getTextValue( theme );
-        int i = Integer.parseInt( str );
+	/*
+	public int getTheme()
+	{
+	    String str = getTextValue( theme );
+	    int i = Integer.parseInt( str );
+	
+	    return i;
+	}
+	
+	public String getMainFontName()
+	{
+	    return getTextValue( mainFontName );
+	}
+	*/
+	/*
+	  public String getMainFontSize()
+	  {
+	  return getTextValue( mainFontSize );
+	  }
+	*/
+	/*
+	public int getMainFontSize()
+	{
+	    Integer i = new Integer(  getTextValue( mainFontSize ) );
+	    
+	    return i.intValue();
+	}
+	
+	public String getTextFontName()
+	{
+	    return getTextValue( textFontName );
+	}
+	*/
+	/*
+	  public String getTextFontSize()
+	  {
+	  return getTextValue( textFontSize );
+	  }
+	*/
 
-        return i;
-    }
-
-    public String getMainFontName()
-    {
-        return getTextValue( mainFontName );
-    }
-
-      /*
-        public String getMainFontSize()
-        {
-        return getTextValue( mainFontSize );
-        }
-      */
-    
-    public int getMainFontSize()
-    {
-        Integer i = new Integer(  getTextValue( mainFontSize ) );
-        
-        return i.intValue();
-    }
-    
-    public String getTextFontName()
-    {
-        return getTextValue( textFontName );
-    }
-
-      /*
-        public String getTextFontSize()
-        {
-        return getTextValue( textFontSize );
-        }
-      */
-
-    public int getTextFontSize()
-    {
-        Integer i = new Integer(  getTextValue( textFontSize ) );
-        
-        return i.intValue();
-    }
-    
-    
-    public String getIconset()
-    {
+	/*
+	public int getTextFontSize()
+	{
+	    Integer i = new Integer(  getTextValue( textFontSize ) );
+	    
+	    return i.intValue();
+	}
+	
+	
+	public String getIconset()
+	{
 	String str = getTextValue(iconset);
 	return str;
-    }
-
-    public String getPulsator()
-    {
+	}
+	
+	public String getPulsator()
+	{
 	String str = getTextValue(pulsator);
 	return str;
-    }
-
-    public Color getForeground()
-    {
+	}
+	
+	public Color getForeground()
+	{
 	String str = getTextValue(foreground);
 	
 	Color color = new Color( Integer.parseInt(str) );
-
+	
 	return color;
-    }
-
-    public Color getBackground()
-    {
+	}
+	
+	public Color getBackground()
+	{
 	String str = getTextValue(background);
 	Color color = new Color( Integer.parseInt(str) );
-
+	
 	return color;
-    }
-    
-
-    public Font getMainFont()
-    {
+	}
+	
+	
+	public Font getMainFont()
+	{
 	String mainName = getMainFontName();
 	int mainSize = getMainFontSize();
-
+	
 	Font mainFont = new Font( mainName, Font.PLAIN, mainSize );
-
+	
 	return mainFont;
-    }
-
-    public Font getTextFont()
-    {
+	}
+	
+	public Font getTextFont()
+	{
 	String textName = getTextFontName();
 	int textSize = getTextFontSize();
-
+	
 	Font textFont = new Font( textName, Font.PLAIN, textSize );
 	
 	return textFont;
-    }
-
-    public void setMainFont( Font f )
-    {
+	}
+	
+	public void setMainFont( Font f )
+	{
 	setMainFontName( f.getName() );
 	setMainFontSize( f.getSize() );
-    }
-
-    public void setTextFont( Font f )
-    {
+	}
+	
+	public void setTextFont( Font f )
+	{
 	setTextFontName( f.getName() );
 	setTextFontSize( f.getSize() );
-    }
+	}
+	*/
 }
-    
-
-
-

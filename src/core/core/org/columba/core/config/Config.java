@@ -21,7 +21,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.scripting.Python;
+import org.columba.core.xml.XmlElement;
 
 public class Config {
 
@@ -36,6 +36,7 @@ public class Config {
 	public static File loggerPropertyFile;
 
 	private static Hashtable pluginList;
+	private static Hashtable templatePluginList;
 
 	private static File optionsFile;
 
@@ -45,6 +46,7 @@ public class Config {
 	public Config() {
 
 		pluginList = new Hashtable();
+		templatePluginList = new Hashtable();
 
 		optionsFile = new File(ConfigPath.getConfigDirectory(), "options.xml");
 
@@ -53,8 +55,10 @@ public class Config {
 			optionsFile.getName(),
 			new OptionsXmlConfig(optionsFile));
 
+		/*
 		File file = new File(ConfigPath.getConfigDirectory(), "mail");
-
+		
+		
 		if (file.exists() == false) {
 			// convert to new config-schema
 			
@@ -62,31 +66,9 @@ public class Config {
 				"org/columba/mail/config/convert.py",
 				ConfigPath.getConfigDirectory().getPath());
 			
-
-			/*
-			StringBuffer buf = new StringBuffer();
-			try {
-				InputStream in =
-					DiskIO.getResourceStream(
-						"org/columba/modules/mail/config/convert.py");
-				InputStreamReader in_read = new InputStreamReader(in);
-
-				BufferedReader buf_read = new BufferedReader(in_read);
-
-				String line = null;
-				while ((line = buf_read.readLine()) != null)
-					buf.append(line);
-				buf_read.close();
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-				System.exit(1);
-			}
-
-			Python.execute(
-				buf.toString(),
-				ConfigPath.getConfigDirectory().getPath());
-			*/
+		
 		}
+		*/
 
 	}
 
@@ -125,6 +107,19 @@ public class Config {
 		addPlugin(moduleName, id, configPlugin);
 	}
 
+	public static void registerTemplatePlugin(
+		String moduleName,
+		String id,
+		DefaultXmlConfig configPlugin) {
+
+		if (!templatePluginList.containsKey(moduleName)) {
+			Hashtable table = new Hashtable();
+			templatePluginList.put(moduleName, table);
+		}
+
+		addTemplatePlugin(moduleName, id, configPlugin);
+	}
+
 	/**
 	 * Method getPlugin.
 	 * @param moduleName
@@ -135,6 +130,22 @@ public class Config {
 
 		if (pluginList.containsKey(moduleName)) {
 			Hashtable table = (Hashtable) pluginList.get(moduleName);
+
+			if (table.containsKey(id)) {
+				DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(id);
+				return plugin;
+			}
+		}
+
+		return null;
+	}
+
+	public static DefaultXmlConfig getTemplatePlugin(
+		String moduleName,
+		String id) {
+
+		if (templatePluginList.containsKey(moduleName)) {
+			Hashtable table = (Hashtable) templatePluginList.get(moduleName);
 
 			if (table.containsKey(id)) {
 				DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(id);
@@ -156,6 +167,17 @@ public class Config {
 		String id,
 		DefaultXmlConfig configPlugin) {
 		Hashtable table = (Hashtable) pluginList.get(moduleName);
+
+		if (table != null) {
+			table.put(id, configPlugin);
+		}
+	}
+
+	public static void addTemplatePlugin(
+		String moduleName,
+		String id,
+		DefaultXmlConfig configPlugin) {
+		Hashtable table = (Hashtable) templatePluginList.get(moduleName);
 
 		if (table != null) {
 			table.put(id, configPlugin);
@@ -190,10 +212,36 @@ public class Config {
 		return v;
 	}
 
+	public static Vector getTemplatePluginList() {
+		Vector v = new Vector();
+
+		for (Enumeration keys = templatePluginList.keys();
+			keys.hasMoreElements();
+			) {
+			String key = (String) keys.nextElement();
+			Hashtable table = (Hashtable) templatePluginList.get(key);
+
+			if (table != null) {
+				for (Enumeration keys2 = table.keys();
+					keys2.hasMoreElements();
+					) {
+					String key2 = (String) keys2.nextElement();
+					DefaultXmlConfig plugin =
+						(DefaultXmlConfig) table.get(key2);
+
+					v.add(plugin);
+				}
+			}
+
+		}
+
+		return v;
+	}
+
 	/**
 	 * Method save.
 	 */
-	public static void save() {
+	public static void save() throws Exception {
 
 		Vector v = getPluginList();
 		for (int i = 0; i < v.size(); i++) {
@@ -222,8 +270,22 @@ public class Config {
 
 		}
 
+		Vector v2 = getTemplatePluginList();
+		for (int i = 0; i < v2.size(); i++) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig) v2.get(i);
+			if (plugin == null)
+				continue;
+
+			plugin.load();
+
+		}
+
 	}
 
+	public static XmlElement get(String name) {
+		DefaultXmlConfig xml = DefaultConfig.getPlugin("core", name + ".xml");
+		return xml.getRoot();
+	}
 	/**
 	 * Method getOptionsConfig.
 	 * @return OptionsXmlConfig
@@ -244,21 +306,18 @@ public class Config {
 
 		loggerPropertyFile = new File(configDirectory, "log4j.properties");
 
-		File loggingDirectory = new File( configDirectory, "log");
+		File loggingDirectory = new File(configDirectory, "log");
 		DiskIO.ensureDirectory(loggingDirectory);
-		
+
 		if (loggerPropertyFile.exists() == false) {
-			String str = LogProperty.createPropertyString( loggingDirectory );
-			
+			String str = LogProperty.createPropertyString(loggingDirectory);
+
 			//DefaultConfig.copy("core", "log4j.properties", configDirectory);
 			loggerPropertyFile = new File(configDirectory, "log4j.properties");
-			
-			try
-			{
-				DiskIO.saveStringInFile(loggerPropertyFile, str );
-			}
-			catch ( IOException ex )
-			{
+
+			try {
+				DiskIO.saveStringInFile(loggerPropertyFile, str);
+			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}

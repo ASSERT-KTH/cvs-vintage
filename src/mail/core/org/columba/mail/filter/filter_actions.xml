@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionlist>
+ <action name="Move Message" main_class="org.columba.mail.filter.plugins.MoveMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
+ <action name="Copy Message" main_class="org.columba.mail.filter.plugins.CopyMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.FolderChooserActionRow" />
+ <action name="Delete Message" main_class="org.columba.mail.filter.plugins.DeleteMessageAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
+ <action name="Mark as Read" main_class="org.columba.mail.filter.plugins.MarkMessageAsReadAction" gui_class="org.columba.mail.gui.config.filter.plugins.DefaultActionRow" />
+</actionlist>

@@ -31,7 +31,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.config.AddressbookXmlConfig;
+
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
@@ -45,12 +45,12 @@ import org.columba.addressbook.gui.table.util.TypeHeaderColumn;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.AdapterNode;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 
 public class AddressbookTable extends JPanel implements ListSelectionListener
 {
 	private AddressbookInterface addressbookInterface;
-	private AddressbookXmlConfig config;
+	//private AddressbookXmlConfig config;
 
 	private JTable table;
 	private AddressbookTableModel addressbookModel;
@@ -68,7 +68,7 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 	{
 		this.addressbookInterface = i;
 
-		config = AddressbookConfig.getAddressbookConfig();
+	//	config = AddressbookConfig.getAddressbookConfig();
 
 		addressbookModel = new AddressbookTableModel();
 		
@@ -99,7 +99,7 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 
 	public void valueChanged(ListSelectionEvent e) 
 	{
-       	addressbookInterface.actionListener.changeActions();
+      // 	addressbookInterface.actionListener.changeActions();
     }
     
 	public AddressbookTableModel getTableModel()
@@ -195,15 +195,18 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 		th.addMouseListener(listMouseListener);
 	}
 	
-	public HeaderTableItem getHeaderTableItem()
+	public TableItem getHeaderTableItem()
 	{
-		return AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
+		// FIXME
+		return null;
+		//return AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
 			
 	}
 
 	public void setupRenderer()
 	{
-		HeaderTableItem headerItemList =
+		/*
+		TableItem headerItemList =
 			AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
 
 		HeaderColumn c;
@@ -251,11 +254,12 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 			name = name.toLowerCase();
 			setupColumn(name);
 		}
-
+		*/
 	}
 
 	public void setFolder(Folder folder)
 	{
+			/*
 		Folder f = (Folder) folder;
 		if ( f == null ) 
 		{
@@ -272,6 +276,7 @@ public class AddressbookTable extends JPanel implements ListSelectionListener
 
 			addressbookModel.setHeaderList(list);
 		}
+		*/
 	}
 
 	public void setHeaderItemList(HeaderItemList list)

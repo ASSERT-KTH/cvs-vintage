@@ -15,18 +15,13 @@
 package org.columba.addressbook.folder;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.parser.DefaultCardLoader;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 
 /**
  * 
@@ -40,8 +35,7 @@ import org.columba.core.config.HeaderTableItem;
  * 
  * 
  */
-public class LocalHeaderCacheFolder extends LocalFolder
-{
+public class LocalHeaderCacheFolder extends LocalFolder {
 	/**
 	 * 
 	 * keeps a list of HeaderItem's we need for the table-view
@@ -55,7 +49,7 @@ public class LocalHeaderCacheFolder extends LocalFolder
 	 *  these are the keys we save in our cache
 	 * 
 	 */
-	protected HeaderTableItem headerTableItemList;
+	protected TableItem headerTableItemList;
 
 	/**
 	 * 
@@ -71,28 +65,26 @@ public class LocalHeaderCacheFolder extends LocalFolder
 	 */
 	protected boolean headerCacheAlreadyLoaded;
 
-	public LocalHeaderCacheFolder(
-		FolderItem item,
-		AddressbookInterface addressbookInterface)
-	{
-		super(item, addressbookInterface);
+	public LocalHeaderCacheFolder(FolderItem item) {
+		super(item);
 
 		headerList = new HeaderItemList();
 
 		headerFile = new File(directoryFile.toString() + "/header");
 
+		// FIXME
+		/*
 		headerTableItemList =
-			AddressbookConfig.getAddressbookOptionsConfig().getHeaderTableItem();
-
-		if (headerFile.exists())
-		{
-			try
-			{
+			AddressbookConfig
+				.getAddressbookOptionsConfig()
+				.getHeaderTableItem();
+		*/
+		
+		if (headerFile.exists()) {
+			try {
 				load(null);
 				headerCacheAlreadyLoaded = true;
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				ex.printStackTrace();
 
 				headerCacheAlreadyLoaded = false;
@@ -100,12 +92,9 @@ public class LocalHeaderCacheFolder extends LocalFolder
 			}
 		}
 
-		
-
 	}
 
-	public void add(DefaultCard item)
-	{
+	public void add(DefaultCard item) {
 		super.add(item);
 
 		if (item instanceof ContactCard)
@@ -114,20 +103,19 @@ public class LocalHeaderCacheFolder extends LocalFolder
 			addHeaderItem((GroupListCard) item, item.getUid());
 	}
 
-	public boolean exists( String email )
-	{
-		for ( int i=0; i<getHeaderItemList().count(); i++ )
-		{
+	public boolean exists(String email) {
+		for (int i = 0; i < getHeaderItemList().count(); i++) {
 			HeaderItem item = getHeaderItemList().get(i);
 			String address = (String) item.get("email;internet");
-			
-			if ( email.equals(address) ) return true;
-			if ( address != null )
-			{
-				if ( address.indexOf( email ) != -1 ) return true;
+
+			if (email.equals(address))
+				return true;
+			if (address != null) {
+				if (address.indexOf(email) != -1)
+					return true;
 			}
 		}
-		
+
 		return false;
 	}
 	/*
@@ -139,64 +127,56 @@ public class LocalHeaderCacheFolder extends LocalFolder
 	}
 	*/
 
-	public void remove(Object uid)
-	{
+	public void remove(Object uid) {
 		headerList.uidRemove(uid);
 
 		super.remove(uid);
 	}
 
-	public void modify(DefaultCard card, Object uid)
-	{
+	public void modify(DefaultCard card, Object uid) {
 
 		super.modify(card, uid);
+
+		// FIXME
+		/*
 		
 		HeaderItem item = headerList.uidGet(uid);
-		
-		if ( card instanceof ContactCard )
-		{
-			
-			
+
+		if (card instanceof ContactCard) {
+
 			String column;
 			Object o;
-			for (int j = 0; j < headerTableItemList.count(); j++)
-			{
+			for (int j = 0; j < headerTableItemList.count(); j++) {
 
 				//item.setUid(uid);
 				column = (String) headerTableItemList.getName(j);
 				int index = column.indexOf(";");
 
-				if (index != -1)
-				{
+				if (index != -1) {
 					String prefix = column.substring(0, index);
-					String suffix = column.substring(index + 1, column.length());
+					String suffix =
+						column.substring(index + 1, column.length());
 
 					o = card.get(prefix, suffix);
 					item.add(column, o);
 
-				}
-				else
-				{
-					System.out.println("column:"+column);
-					
+				} else {
+					System.out.println("column:" + column);
+
 					o = card.get(column);
-					
+
 					item.add(column, o);
 				}
 
 			}
 
-			
-			item.add("type","contact");
-		}
-		else
-		{
-			item.add("displayname", card.get("displayname"));	
-			
+			item.add("type", "contact");
+		} else {
+			item.add("displayname", card.get("displayname"));
 
-			
 		}
-
+		*/
+		
 		/*
 		File file =
 				new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
@@ -233,47 +213,39 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		*/
 	}
 
-	public DataStorage getDataStorageInstance()
-	{
+	public DataStorage getDataStorageInstance() {
 
 		return dataStorage;
 	}
 
-	protected int getMessageFileCount()
-	{
+	protected int getMessageFileCount() {
 		File[] list = directoryFile.listFiles();
 		return list.length - 1;
 	}
 
-	public boolean isHeaderCacheAlreadyLoaded()
-	{
+	public boolean isHeaderCacheAlreadyLoaded() {
 		return headerCacheAlreadyLoaded;
 	}
 
-	public HeaderItemList getHeaderItemList()
-	{
+	public HeaderItemList getHeaderItemList() {
 		return headerList;
 	}
 
-	public HeaderItemList getHeaderItemList(Object[] uids)
-	{
+	public HeaderItemList getHeaderItemList(Object[] uids) {
 		HeaderItemList l = new HeaderItemList();
 
-		for (int i = 0; i < getHeaderItemList().count(); i++)
-		{
-			System.out.println("i="+i);
+		for (int i = 0; i < getHeaderItemList().count(); i++) {
+			System.out.println("i=" + i);
 			HeaderItem item = getHeaderItemList().get(i);
 			Integer uidInt = (Integer) item.getUid();
 			String uid = uidInt.toString();
-			
-			System.out.println("uid="+uid);
-			for (int j = 0; j < uids.length; j++)
-			{
-				System.out.println("  j="+j);
-				System.out.println("uids[j]="+uids[j]);
-				if ( uid.equals( (String) uids[j]) )
-				{
-					
+
+			System.out.println("uid=" + uid);
+			for (int j = 0; j < uids.length; j++) {
+				System.out.println("  j=" + j);
+				System.out.println("uids[j]=" + uids[j]);
+				if (uid.equals((String) uids[j])) {
+
 					l.add(item);
 					System.out.println("------->uid:" + uid);
 					break;
@@ -284,30 +256,27 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		return l;
 	}
 
-	protected void addHeaderItem(ContactCard card, Object uid)
-	{
+	protected void addHeaderItem(ContactCard card, Object uid) {
+		// FIXME
+		/*
 		System.out.println("addheaderItem() contact");
 		HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
 		String column;
 		Object o;
-		for (int j = 0; j < headerTableItemList.count(); j++)
-		{
+		for (int j = 0; j < headerTableItemList.count(); j++) {
 
 			//item.setUid(uid);
 			column = (String) headerTableItemList.getName(j);
 			int index = column.indexOf(";");
 
-			if (index != -1)
-			{
+			if (index != -1) {
 				String prefix = column.substring(0, index);
 				String suffix = column.substring(index + 1, column.length());
 
 				o = card.get(prefix, suffix);
 				item.add(column, o);
 
-			}
-			else
-			{
+			} else {
 				o = card.get(column);
 
 				item.add(column, o);
@@ -318,14 +287,14 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		item.setUid(uid);
 		item.add("type", "contact");
 		item.setFolder(this);
-		
+
 		headerList.add(item);
-		
-		nextUid = ( (Integer)uid ).intValue()+1;
+
+		nextUid = ((Integer) uid).intValue() + 1;
+		*/
 	}
 
-	protected void addHeaderItem(GroupListCard card, Object uid)
-	{
+	protected void addHeaderItem(GroupListCard card, Object uid) {
 		System.out.println("addheaderItem()gouplist");
 
 		/*
@@ -364,25 +333,22 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		item.setUid(uid);
 		item.add("type", "grouplist");
 		headerList.add(item);
-		
-		nextUid = ( (Integer)uid ).intValue()+1;
+
+		nextUid = ((Integer) uid).intValue() + 1;
 	}
 
-	public void load(WorkerStatusController worker) throws Exception
-	{
-		
+	public void load(WorkerStatusController worker) throws Exception {
 
+		// FIXME
+		/*
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
 
 		int capacity = p.readInt();
 
-		
-
 		//int capacity = getMessageFileCount();
 
-		if (capacity != getMessageFileCount())
-		{
+		if (capacity != getMessageFileCount()) {
 			// messagebox headercache-file is corrupted
 			System.out.println("Messagebox headercache-file is corrupted!");
 
@@ -399,8 +365,7 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		if (worker != null)
 			worker.setProgressBarMaximum(capacity);
 
-		for (int i = 1; i <= capacity; i++)
-		{
+		for (int i = 1; i <= capacity; i++) {
 
 			if (worker != null)
 				worker.setProgressBarValue(i);
@@ -416,8 +381,7 @@ public class LocalHeaderCacheFolder extends LocalFolder
 
 			String column;
 			Object o;
-			for (int j = 0; j < headerTableItemList.count(); j++)
-			{
+			for (int j = 0; j < headerTableItemList.count(); j++) {
 				column = (String) headerTableItemList.getName(j);
 				//int index = column.indexOf(";");
 
@@ -428,20 +392,21 @@ public class LocalHeaderCacheFolder extends LocalFolder
 
 			nextUid = uid.intValue() + 1;
 
-			item.setFolder( this );
+			item.setFolder(this);
 			headerList.add(item);
 
 		}
 
 		// close stream
 		p.close();
-
+		*/
+		
 	}
 
-	public void save(WorkerStatusController worker) throws Exception
-	{
-		
+	public void save(WorkerStatusController worker) throws Exception {
 
+		// FIXME
+		/*
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
 
@@ -452,15 +417,13 @@ public class LocalHeaderCacheFolder extends LocalFolder
 
 		//ContactCard card;
 		HeaderItem item;
-		
-		for (int i = 0; i < count; i++)
-		{
+
+		for (int i = 0; i < count; i++) {
 			p.writeInt(i + 1);
 
 			//card = (ContactCard) super.uidGet(new Integer(i));
 			item = headerList.get(i);
-			if (item == null)
-			{
+			if (item == null) {
 				System.out.println("there appears to be a card file,");
 				System.out.println("but associated card index in folder");
 				throw new Exception("addressbookfolder->save() == message is null!");
@@ -471,8 +434,7 @@ public class LocalHeaderCacheFolder extends LocalFolder
 			String column;
 			//HeaderItem item;
 			Object o;
-			for (int j = 0; j < headerTableItemList.count(); j++)
-			{
+			for (int j = 0; j < headerTableItemList.count(); j++) {
 				column = (String) headerTableItemList.getName(j);
 
 				o = item.get(column);
@@ -484,58 +446,54 @@ public class LocalHeaderCacheFolder extends LocalFolder
 		//p.flush();
 		p.close();
 
+		*/
 	}
 
-	public void recreateIndex()
-	{
+	public void recreateIndex() {
 		System.out.println("recreating index");
 
 		File[] list = directoryFile.listFiles();
 		Vector v = new Vector();
 
-		for (int i = 0; i < list.length; i++)
-		{
+		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
 			File renamedFile;
 			String name = file.getName();
 			int index = name.indexOf("header");
 
-			if (index == -1)
-			{
+			if (index == -1) {
 				// message file found
 				String number = name;
 				//                Integer numberString = new Integer( number );
 				//System.out.println("number: "+ number );
 
-				if ((file.exists()) && (file.length() > 0))
-				{
-					renamedFile = new File(file.getParentFile(), file.getName() + '~');
+				if ((file.exists()) && (file.length() > 0)) {
+					renamedFile =
+						new File(file.getParentFile(), file.getName() + '~');
 					file.renameTo(renamedFile);
 					System.out.println("renamed file:" + renamedFile);
 					v.add(renamedFile);
 				}
 
 				//System.out.println("v index: "+ v.indexOf( file ) );
-			}
-			else
-			{
+			} else {
 				// header file found
 				headerFile.delete();
 			}
 
 		}
 
-		for (int i = 0; i < v.size(); i++)
-		{
+		for (int i = 0; i < v.size(); i++) {
 			File file = (File) v.get(i);
 
 			File newFile =
-				new File(file.getParentFile(), (new Integer(i)).toString() + ".xml");
+				new File(
+					file.getParentFile(),
+					(new Integer(i)).toString() + ".xml");
 			file.renameTo(newFile);
 
 			System.out.println("rename result:" + newFile.toString());
-			try
-			{
+			try {
 				//String source = loadString( new Integer(i) );
 
 				//ContactCard card = VCardParser.parse(source);
@@ -543,45 +501,37 @@ public class LocalHeaderCacheFolder extends LocalFolder
 				DefaultCardLoader parser = new DefaultCardLoader(newFile);
 				parser.load();
 
-				if (parser.isContact() == true)
-				{
+				if (parser.isContact() == true) {
 					ContactCard card = parser.createContactCard();
 
 					addHeaderItem(card, new Integer(i));
-				}
-				else
-				{
+				} else {
 					GroupListCard card = parser.createGroupListCard();
 
 					addHeaderItem(card, new Integer(i));
 				}
 
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 
 		}
 
 	}
-	
-	public HeaderItemList searchPattern( String pattern )
-	{
+
+	public HeaderItemList searchPattern(String pattern) {
 		HeaderItemList searchResult = new HeaderItemList();
-		
-		for ( int i=0; i<getHeaderItemList().count(); i++ )
-		{
+
+		for (int i = 0; i < getHeaderItemList().count(); i++) {
 			HeaderItem item = (HeaderItem) getHeaderItemList().get(i);
-			
-			if ( item != null )
-			{
-				if ( item.matchPattern(pattern) == true ) searchResult.add(item);		
+
+			if (item != null) {
+				if (item.matchPattern(pattern) == true)
+					searchResult.add(item);
 			}
 		}
-		
+
 		return searchResult;
 	}
-	
-	
+
 }

@@ -73,10 +73,16 @@ public class ExternalEditor {
 
 		System.out.println("Setting Font to REALLY BIG!!! :-)");
 
+		/*
 		// Why doesn't this work???
 		EditView.setFont(
 			new Font(Config.getOptionsConfig().getThemeItem().getTextFontName(), Font.BOLD, 30));
-
+		*/
+		Font font = Config.getOptionsConfig().getGuiItem().getTextFont();
+		font = font.deriveFont(30);
+		
+		EditView.setFont(font);
+		
 		EditView.setText(
 			MailResourceLoader.getString(
 				"menu",

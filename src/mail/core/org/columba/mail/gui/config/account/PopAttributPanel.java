@@ -42,8 +42,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @version
  */
 
-public class PopAttributPanel extends JPanel implements ActionListener
-{
+public class PopAttributPanel extends JPanel implements ActionListener {
 
 	private PopItem item;
 
@@ -76,8 +75,7 @@ public class PopAttributPanel extends JPanel implements ActionListener
 
 	// private ConfigFrame frame;
 
-	public PopAttributPanel(PopItem item)
-	{
+	public PopAttributPanel(PopItem item) {
 		super();
 		this.item = item;
 		//this.frame = frame;
@@ -94,104 +92,33 @@ public class PopAttributPanel extends JPanel implements ActionListener
 	}
 	*/
 
-	public void updateComponents(boolean b)
-	{
+	public void updateComponents(boolean b) {
 		//mailCheckDialog.updateComponents(b);
 
-		if (b)
-		{
-			if (item.getLeaveMessage().equals("true")) //$NON-NLS-1$
-				leaveOnServerCheckBox.setSelected(true);
+		if (b) {
+			leaveOnServerCheckBox.setSelected(
+				item.getBoolean("leave_messages_on_server"));
 
-			/*
-			int uid = item.getUid();
-			Folder folder = MainInterface.treeViewer.getFolder( uid );
-			String treepath = folder.getTreePath();
-			destinationTextField.setText( treepath );
-			*/
+			excludeCheckBox.setSelected(
+				item.getBoolean("exlude_from_checkall"));
 
-			if (item.getExclude().equals("true")) //$NON-NLS-1$
-				excludeCheckBox.setSelected(true);
-			else
-				excludeCheckBox.setSelected(false);
+			limitMessageDownloadCheckBox.setSelected(
+				item.getBoolean("enable_download_limit"));
 
-			/*
-			if (item.getMailCheck().equals("true")) //$NON-NLS-1$
-			{
-				intervalCheckingCheckBox.setSelected(true);
+			limitMessageDownloadTextField.setText(item.get("download_limit"));
 
+		} else {
+			item.set("leave_messages_on_server", leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
 
-			}
-			else
-			{
-				intervalCheckingCheckBox.setSelected(false);
+			item.set("exlude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
 
-
-			}
-			*/
-
-
-
-
-			if (item.getLimit().equals("true")) //$NON-NLS-1$
-			{
-				limitMessageDownloadCheckBox.setSelected(true);
-			}
-			else
-				limitMessageDownloadCheckBox.setSelected(false);
-
-			limitMessageDownloadTextField.setText(item.getDownloadLimit());
-
-		}
-		else
-		{
-			if (leaveOnServerCheckBox.isSelected() == true)
-				item.setLeaveMessage("true"); //$NON-NLS-1$
-			else
-				item.setLeaveMessage("false"); //$NON-NLS-1$
-
-			/*
-			if ( storePasswordCheckBox.isSelected() == true )
-			item.setSavePassword("true");
-			else
-			item.setSavePassword("false");
-			*/
-
-
-
-			if (excludeCheckBox.isSelected() == true)
-				item.setExclude("true"); //$NON-NLS-1$
-			else
-				item.setExclude("false"); //$NON-NLS-1$
-
-			/*
-			String treepath = destinationTextField.getText();
-			TreeNodeList list = new TreeNodeList( treepath );
-			Folder folder = MainInterface.treeViewer.getFolder( list );
-			int uid = folder.getUid();
-
-			item.setUid( uid );
-			*/
-
-			/*
-			if (intervalCheckingCheckBox.isSelected())
-				item.setMailCheck("true"); //$NON-NLS-1$
-			else
-				item.setMailCheck("false"); //$NON-NLS-1$
-
-			if (limitMessageDownloadCheckBox.isSelected())
-				item.setLimit("true"); //$NON-NLS-1$
-			else
-				item.setLimit("false"); //$NON-NLS-1$
-			*/
-
-
-			item.setDownloadLimit(limitMessageDownloadTextField.getText());
+			item.set("download_limit", limitMessageDownloadTextField.getText());
+			
+			item.set("enable_download_limit", limitMessageDownloadCheckBox.isSelected());
 		}
 	}
 
-	private void initComponents()
-	{
+	private void initComponents() {
 		/*
 		setLayout(new BorderLayout());
 		setBorder(
@@ -202,21 +129,21 @@ public class PopAttributPanel extends JPanel implements ActionListener
 					
 					"_POP3_Settings")));
 		//$NON-NLS-1$
-
+		
 		JPanel innerPanel = new JPanel();
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 		innerPanel.setLayout(layout);
 		innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
+		
 		add(innerPanel, BorderLayout.NORTH);
 		*/
-		
+
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
-		
-		setLayout( layout );
-		
+
+		setLayout(layout);
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		c.gridx = 0;
@@ -225,8 +152,6 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(panel, c);
 		add(panel);
-
-
 
 		/*
 		intervalCheckingCheckBox = new JCheckBox();
@@ -246,7 +171,7 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		c.anchor = GridBagConstraints.WEST;
 		layout.setConstraints(intervalCheckingCheckBox, c);
 		innerPanel.add(intervalCheckingCheckBox);
-
+		
 		mailcheckButton = new JButton("Options..");
 		mailcheckButton.setMargin( new Insets(0,2,0,2) );
 		mailcheckButton.addActionListener(this);
@@ -258,14 +183,17 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		layout.setConstraints( mailcheckButton, c);
 		innerPanel.add( mailcheckButton );
 		*/
-		
+
 		leaveOnServerCheckBox = new JCheckBox();
 		leaveOnServerCheckBox.setText(
 			MailResourceLoader.getString(
-				"dialog","account",
+				"dialog",
+				"account",
 				"leave_messages_on_server"));
-		leaveOnServerCheckBox.setMnemonic(MailResourceLoader.getMnemonic(
-				"dialog","account",
+		leaveOnServerCheckBox.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
 				"leave_messages_on_server"));
 		//$NON-NLS-1$
 		c = new GridBagConstraints();
@@ -290,10 +218,13 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		limitMessageDownloadCheckBox.setEnabled(true);
 		limitMessageDownloadCheckBox.setText(
 			MailResourceLoader.getString(
-				"dialog","account",		
+				"dialog",
+				"account",
 				"limit_message_download_to"));
-		limitMessageDownloadCheckBox.setMnemonic(MailResourceLoader.getMnemonic(
-				"dialog","account",		
+		limitMessageDownloadCheckBox.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
 				"limit_message_download_to"));
 		//$NON-NLS-1$
 		limitMessageDownloadPanel.add(limitMessageDownloadCheckBox);
@@ -311,8 +242,8 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		limitMessageDownloadLabel2.setEnabled(true);
 		limitMessageDownloadLabel2.setText(
 			MailResourceLoader.getString(
-				"dialog","account",
-				
+				"dialog",
+				"account",
 				"KB_per_message"));
 		//$NON-NLS-1$
 		limitMessageDownloadPanel.add(limitMessageDownloadLabel2);
@@ -320,10 +251,13 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		excludeCheckBox = new JCheckBox();
 		excludeCheckBox.setText(
 			MailResourceLoader.getString(
-				"dialog","account",				
+				"dialog",
+				"account",
 				"exclude_from_fetch_all"));
-		excludeCheckBox.setMnemonic(MailResourceLoader.getMnemonic(
-				"dialog","account",				
+		excludeCheckBox.setMnemonic(
+			MailResourceLoader.getMnemonic(
+				"dialog",
+				"account",
 				"exclude_from_fetch_all"));
 		//$NON-NLS-1$
 		c = new GridBagConstraints();
@@ -336,8 +270,7 @@ public class PopAttributPanel extends JPanel implements ActionListener
 
 	}
 
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		/*
@@ -346,19 +279,19 @@ public class PopAttributPanel extends JPanel implements ActionListener
 		    SelectFolderDialog dialog = MainInterface.treeViewer.getSelectFolderDialog();
 		    //SelectFolderDialog dialog = new SelectFolderDialog( frame.mainInterface );
 		    dialog.show();
-
+		
 		    if ( dialog.success() )
 		    {
 		        Folder selectedFolder = dialog.getSelectedFolder();
 		        String path = selectedFolder.getTreePath();
-
+		
 		        destinationTextField.setText( path );
-
+		
 		        int uid = selectedFolder.getUid();
 		        //int uid = frame.mainInterface.treeViewer.getUid( path );
 		        item.setUid( uid );
 		    }
-
+		
 		}
 		*/
 

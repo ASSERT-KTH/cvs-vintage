@@ -20,123 +20,91 @@ import javax.swing.UIDefaults;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 
-import org.columba.core.config.ThemeItem;
+import org.columba.core.config.GuiItem;
 
-public class DefaultCTheme extends DefaultMetalTheme
-{
+public class DefaultCTheme extends DefaultMetalTheme {
 
-    Font mainFont;
-    Font messageFont;
+	Font mainFont;
+	Font messageFont;
 
-    private FontUIResource mainFontRessource;
-    private FontUIResource messageFontRessource;
+	private FontUIResource mainFontRessource;
+	private FontUIResource messageFontRessource;
 
-    protected ThemeItem themeItem;
+	protected GuiItem guiItem;
 
-    public DefaultCTheme( ThemeItem item )
-    {
-	this.themeItem = item;
+	public DefaultCTheme(GuiItem item) {
+		this.guiItem = item;
 
-	mainFont = new Font( themeItem.getMainFontName(),
-                             Font.PLAIN,
-                             themeItem.getMainFontSize() );
+		mainFont = guiItem.getMainFont();
 
-        messageFont = new Font( themeItem.getTextFontName(),
-                                Font.PLAIN,
-                                themeItem.getTextFontSize() );
+		messageFont = guiItem.getTextFont();
 
-	
-    }
+	}
 
-    public DefaultCTheme(Font mFont, Font eFont)
-    {
-        super();
+	public DefaultCTheme(Font mFont, Font eFont) {
+		super();
 
-        mainFont = mFont;
-        messageFont = eFont;
-    }
+		mainFont = mFont;
+		messageFont = eFont;
+	}
 
+	public void setMainFont(Font f) {
+		mainFont = f;
+		mainFontRessource = new FontUIResource(mainFont);
+	}
 
-    public void setMainFont( Font f )
-    {
-        mainFont = f;
-        mainFontRessource = new FontUIResource( mainFont );
-    }
+	public void setMessageFont(Font f) {
+		messageFont = f;
+		messageFontRessource = new FontUIResource(messageFont);
+	}
 
-    public void setMessageFont( Font f )
-    {
-        messageFont = f;
-        messageFontRessource = new FontUIResource( messageFont );
-    }
+	public String getName() {
+		return "Default Columba Look and Feel";
+	}
 
-    public String getName()
-    {
-        return "Default Columba Look and Feel";
-    }
+	public FontUIResource getMenuTextFont() {
+		if (mainFontRessource == null) {
+			mainFontRessource = new FontUIResource(mainFont);
+		}
 
-    public FontUIResource getMenuTextFont()
-    {
-        if ( mainFontRessource == null )
-        {
-            mainFontRessource = new FontUIResource( mainFont );
-        }
+		return mainFontRessource;
+	}
 
-        return mainFontRessource;
-    }
+	public FontUIResource getControlTextFont() {
+		if (mainFontRessource == null) {
+			mainFontRessource = new FontUIResource(mainFont);
+		}
 
+		return mainFontRessource;
+	}
 
-    public FontUIResource getControlTextFont()
-    {
-        if ( mainFontRessource == null )
-        {
-            mainFontRessource = new FontUIResource( mainFont );
-        }
+	public FontUIResource getSubTextFont() {
+		if (mainFontRessource == null) {
+			mainFontRessource = new FontUIResource(mainFont);
+		}
 
-        return mainFontRessource;
-    }
+		return mainFontRessource;
 
-    public FontUIResource getSubTextFont()
-    {
-        if ( mainFontRessource == null )
-        {
-            mainFontRessource = new FontUIResource( mainFont );
-        }
+	}
 
-        return mainFontRessource;
+	public FontUIResource getSystemTextFont() {
+		if (mainFontRessource == null) {
+			mainFontRessource = new FontUIResource(mainFont);
+		}
 
-    }
+		return mainFontRessource;
+	}
 
-    public FontUIResource getSystemTextFont()
-    {
-        if ( mainFontRessource == null )
-        {
-            mainFontRessource = new FontUIResource( mainFont );
-        }
+	public FontUIResource getUserTextFont() {
+		if (messageFontRessource == null) {
+			mainFontRessource = new FontUIResource(mainFont);
+		}
 
-        return mainFontRessource;
-    }
+		return mainFontRessource;
 
-    public FontUIResource getUserTextFont()
-    {
-        if ( messageFontRessource == null )
-        {
-            mainFontRessource = new FontUIResource( mainFont );
-        }
+	}
 
-        return mainFontRessource;
-
-    }
-
-    public void addCustomEntriesToTable(UIDefaults table)
-    {
-    }
+	public void addCustomEntriesToTable(UIDefaults table) {
+	}
 
 }
-
-
-
-
-
-
-
-

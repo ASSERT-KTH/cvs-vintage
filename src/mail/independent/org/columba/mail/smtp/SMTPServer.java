@@ -52,18 +52,19 @@ public class SMTPServer {
 
 		// Init Values
 
-		fromAddress = identityItem.getAddress();
+		fromAddress = identityItem.get("address");
 
 		SmtpItem smtpItem = accountItem.getSmtpItem();
-		String host = smtpItem.getHost();
+		String host = smtpItem.get("host");
 
 		SpecialFoldersItem specialFoldersItem =
 			accountItem.getSpecialFoldersItem();
-		Integer i = new Integer(specialFoldersItem.getSent());
+		Integer i = new Integer(specialFoldersItem.get("sent"));
 		int sentFolder = i.intValue();
 
-		authenticate = accountItem.getSmtpItem().getESmtp().equals("true");
-		String authType = accountItem.getSmtpItem().getLoginMethod();
+		String authType = accountItem.getSmtpItem().get("login_method");
+		authenticate = !authType.equals("NONE");
+
 		boolean popbeforesmtp = false;
 		if (authType.equalsIgnoreCase("POP before SMTP"))
 			popbeforesmtp = true;
@@ -96,7 +97,7 @@ public class SMTPServer {
 		// find host
 		//setText("Opening Port to " + host);
 		try {
-			smtpProtocol = new SMTPProtocol(host, smtpItem.getPort());
+			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
@@ -132,16 +133,16 @@ public class SMTPServer {
 			//setText("Authenticating");
 
 			System.out.println("authentication--->");
-			username = accountItem.getSmtpItem().getUser();
-			password = accountItem.getSmtpItem().getPassword();
-			method = accountItem.getSmtpItem().getLoginMethod();
+			username = accountItem.getSmtpItem().get("user");
+			password = accountItem.getSmtpItem().get("password");
+			method = accountItem.getSmtpItem().get("login_method");
 
 			if ((username.length() == 0) || (password.length() == 0)) {
 
 				passDialog.showDialog(
-					accountItem.getIdentityItem().getAddress(),
+					accountItem.getIdentityItem().get("address"),
 					password,
-					accountItem.getSmtpItem().isSavePassword());
+					accountItem.getSmtpItem().getBoolean("save_password"));
 
 				if (passDialog.success()) {
 
@@ -167,9 +168,9 @@ public class SMTPServer {
 					cont = false;
 
 					passDialog.showDialog(
-						accountItem.getIdentityItem().getAddress(),
+						accountItem.getIdentityItem().get("address"),
 						password,
-						accountItem.getSmtpItem().isSavePassword());
+						accountItem.getSmtpItem().getBoolean("save_password"));
 
 					if (!passDialog.success())
 						return false;
@@ -182,14 +183,11 @@ public class SMTPServer {
 				}
 			}
 
-			accountItem.getSmtpItem().setUser(username);
-			Boolean bool = new Boolean(passDialog.getSave());
-			accountItem.getSmtpItem().setSavePassword(bool.toString());
+			accountItem.getSmtpItem().set("user", username);
+
+			accountItem.getSmtpItem().set("save_password", passDialog.getSave());
 			//accountItem.getSmtpItem().setLoginMethod(method);
 
-			if (passDialog.getSave() == true) {
-				accountItem.getSmtpItem().setPassword(password);
-			}
 		}
 
 		return true;
@@ -222,13 +220,13 @@ public class SMTPServer {
 		PasswordDialog dialog = null;
 
 		while ((login == false) && (cancel == false)) {
-			if (item.getPassword().length() == 0) {
+			if (item.get("password").length() == 0) {
 				dialog = new PasswordDialog();
 
 				dialog.showDialog(
-					accountItem.getIdentityItem().getAddress(),
+					accountItem.getIdentityItem().get("address"),
 					password,
-					accountItem.getPopItem().isSavePassword());
+					accountItem.getPopItem().getBoolean("save_password"));
 
 				char[] name;
 
@@ -247,9 +245,9 @@ public class SMTPServer {
 					cancel = true;
 				}
 			} else {
-				password = item.getPassword();
+				password = item.get("password");
 				//user = item.getUser();
-				save = item.isSavePassword();
+				save = item.getBoolean("save_password");
 				//method = item.getLoginMethod();
 			}
 
@@ -263,18 +261,18 @@ public class SMTPServer {
 				POP3Protocol pop3Connection = new POP3Protocol();
 				// open socket, query for host
 				pop3Connection.openPort(
-					item.getHost(),
-					(new Integer(item.getPort())).intValue());
+					item.get("host"),
+					item.getInteger("port"));
 
 				pop3Connection.setLoginMethod(method);
-				login = pop3Connection.login(item.getUser(), password);
+				login = pop3Connection.login(item.get("user"), password);
 				//stopTimer();
 
 				if (login == false) {
 					NotifyDialog d = new NotifyDialog();
 					d.showDialog("Authentification failed");
 
-					item.setPassword("");
+					item.set("password","");
 				}
 
 			}
@@ -283,15 +281,13 @@ public class SMTPServer {
 
 		if (login) {
 			//item.setUser(user);
-			item.setSavePassword(save);
-			item.setLoginMethod(method);
+			item.set("save_password", save);
+			item.set("login_method",method);
 
 			if (save) {
-
 				// save plain text password in config file
 				// this is a security risk !!!
-				item.setPassword(password);
-
+				item.set("password", password);
 			}
 		}
 	}

@@ -163,21 +163,7 @@ public class IMAPInputStream extends BufferedInputStream {
 		sz += i;
 	}
 
-	/**
-	 * Method parseInt.
-	 * @param b
-	 * @param start
-	 * @param end
-	 * @return int
-	 * @throws NumberFormatException
-	 */
-	/**
-	 * Convert the bytes within the specified range of the given byte 
-	 * array into a signed integer in the given radix . The range extends 
-	 * from <code>start</code> till, but not including <code>end</code>. <p>
-	 *
-	 * Based on java.lang.Integer.parseInt()
-	 */
+	
 	public static int parseInt(byte[] b, int start, int end)
 		throws NumberFormatException {
 

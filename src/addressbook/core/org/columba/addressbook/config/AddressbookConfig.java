@@ -18,6 +18,7 @@ import java.io.File;
 
 import org.columba.core.config.DefaultConfig;
 import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.xml.XmlElement;
 
 /**
  * @version 	1.0
@@ -41,18 +42,23 @@ public class AddressbookConfig extends DefaultConfig {
 		addressbookFile = new File(configDirectory, "addressbook.xml");
 		registerPlugin(
 			addressbookFile.getName(),
-			new AddressbookXmlConfig(addressbookFile));
+			new DefaultXmlConfig(addressbookFile));
 
 		addressbookOptionsFile =
 			new File(configDirectory, "addressbookoptions.xml");
 		registerPlugin(
 			addressbookOptionsFile.getName(),
-			new AddressbookOptionsXmlConfig(addressbookOptionsFile));
+			new DefaultXmlConfig(addressbookOptionsFile));
 
 		folderFile = new File(configDirectory, "tree.xml");
-		registerPlugin(folderFile.getName(), new TreeXmlConfig(folderFile));
+		registerPlugin(folderFile.getName(), new DefaultXmlConfig(folderFile));
 
 	}
+	
+	public static XmlElement get(String name) {
+			DefaultXmlConfig xml = getPlugin(name + ".xml");
+			return xml.getRoot();
+		}
 
 	/**
 	 * Method registerPlugin.
@@ -76,28 +82,34 @@ public class AddressbookConfig extends DefaultConfig {
 	 * Method getAddressbookConfig.
 	 * @return AddressbookXmlConfig
 	 */
+	/*
 	public static AddressbookXmlConfig getAddressbookConfig() {
 		//return addressbookConfig;
 		return (AddressbookXmlConfig) getPlugin(addressbookFile.getName());
 	}
+	*/
 
 	/**
 	 * Method getAddressbookOptionsConfig.
 	 * @return AddressbookOptionsXmlConfig
 	 */
+	/*
 	public static AddressbookOptionsXmlConfig getAddressbookOptionsConfig() {
 		//return addressbookOptionsConfig;
 		return (AddressbookOptionsXmlConfig) getPlugin(
 			addressbookOptionsFile.getName());
 	}
-
+	*/
 	/**
 	 * Method getTreeConfig.
 	 * @return TreeXmlConfig
 	 */
+
+	/*
 	public static TreeXmlConfig getTreeConfig() {
 		//return treeConfig;
 		return (TreeXmlConfig) getPlugin(folderFile.getName());
 	}
+	*/
 
 }

@@ -14,16 +14,25 @@
 
 package org.columba.mail.folder;
 
-import org.columba.core.config.AdapterNode;
+import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.plugin.RemoteFilterPluginHandler;
+import org.columba.main.MainInterface;
 
 public abstract class RemoteFolder extends Folder {
 
 	protected RemoteSearchEngine searchEngine;
 
-	public RemoteFolder(AdapterNode node, FolderItem item) {
-		super(node, item);
+	public RemoteFolder(FolderItem item) {
+		super(item);
 
+	}
+
+	public AbstractPluginHandler getFilterPluginHandler() {
+		RemoteFilterPluginHandler pluginHandler =
+			(RemoteFilterPluginHandler) MainInterface.pluginManager.getHandler(
+				"filter_remote");
+		return pluginHandler;
 	}
 
 	public SearchEngineInterface getSearchEngine() {

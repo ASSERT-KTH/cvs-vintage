@@ -20,9 +20,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.CScrollPane;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -36,7 +36,6 @@ import org.columba.mail.gui.table.action.HeaderTableActionListener;
 import org.columba.mail.gui.table.action.HeaderTableDnd;
 import org.columba.mail.gui.table.action.HeaderTableFocusListener;
 import org.columba.mail.gui.table.action.HeaderTableMouseListener;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.menu.HeaderTableMenu;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
@@ -82,7 +81,7 @@ public class TableController
 	private HeaderItemActionListener headerItemActionListener;
 	private FilterActionListener filterActionListener;
 
-	private HeaderTableItem headerTableItem;
+	private TableItem headerTableItem;
 
 	private boolean folderChanged = false;
 
@@ -107,11 +106,12 @@ public class TableController
 		//setLayout(new BorderLayout());
 
 		headerTableItem =
-			(HeaderTableItem) MailConfig
+			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
-				.getHeaderTableItem()
-				.clone();
-		headerTableItem.removeEnabledItem();
+				.getTableItem();
+				
+				//.clone();
+		//headerTableItem.removeEnabledItem();
 
 		headerTableModel = new HeaderTableModel(headerTableItem);
 
@@ -193,6 +193,7 @@ public class TableController
 
 	public void folderSelectionChanged(FolderTreeNode newFolder) {
 
+		/*
 		ColumbaLogger.log.debug("selection=" + newFolder);
 
 		if (newFolder instanceof Folder) {
@@ -202,6 +203,7 @@ public class TableController
 					getTableSelectionManager().getSelection()));
 
 		}
+		*/
 	}
 
 	public HeaderTableMouseListener getHeaderTableMouseListener() {
@@ -223,7 +225,7 @@ public class TableController
 	/**
 	 * return HeaderTableItem
 	 */
-	public HeaderTableItem getHeaderTableItem() {
+	public TableItem getHeaderTableItem() {
 		return headerTableItem;
 	}
 
@@ -303,22 +305,26 @@ public class TableController
 	 */
 
 	public void saveColumnConfig() {
-		HeaderTableItem v =
-			(HeaderTableItem) MailConfig
+		TableItem tableItem =
+			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
-				.getHeaderTableItem()
-				.clone();
-		v.removeEnabledItem();
+				.getTableItem();
+				
+				//.clone();
+		//v.removeEnabledItem();
 
-		for (int i = 0; i < v.count(); i++) {
-			String c = (String) v.getName(i);
+		for (int i = 0; i < tableItem.getChildCount(); i++) {
+			HeaderItem v = tableItem.getHeaderItem(i);
+			 
+			String c = v.get("name");
+			
 			TableColumn tc = getView().getColumn(c);
 
-			v.setSize(i, tc.getWidth());
+			v.set("width", tc.getWidth());
 
 			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
-				v.setPosition(i, index);
+				v.set("position", index);
 			} catch (IllegalArgumentException ex) {
 				ex.printStackTrace();
 			}
@@ -434,10 +440,8 @@ public class TableController
 	public void showMessage() {
 
 		FolderCommandReference[] reference =
-			(FolderCommandReference[]) MainInterface
-				.frameController
-				.tableController
-				.getTableSelectionManager()
+			(FolderCommandReference[]) 
+				getTableSelectionManager()
 				.getSelection();
 
 		FolderTreeNode treeNode = reference[0].getFolder();
@@ -448,6 +452,8 @@ public class TableController
 		if (uids.length > 1)
 			return;
 
+		// FIXME
+		/*
 		MainInterface
 			.frameController
 			.attachmentController
@@ -458,7 +464,8 @@ public class TableController
 			.attachmentController
 			.getAttachmentSelectionManager()
 			.setUids(uids);
-
+		*/
+		
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(mailFrameController, reference));
 	}

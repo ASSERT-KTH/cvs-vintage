@@ -90,41 +90,37 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
 	protected void updateComponents(boolean b) {
 		if (b) {
 			accountnameTextField.setText(accountItem.getName());
-			nameTextField.setText(identityItem.getName());
-			addressTextField.setText(identityItem.getAddress());
-			replyaddressTextField.setText(identityItem.getReplyAddress());
-			organisationTextField.setText(identityItem.getOrganisation());
+			nameTextField.setText(identityItem.get("name"));
+			addressTextField.setText(identityItem.get("address"));
+			replyaddressTextField.setText(identityItem.get("reply_address"));
+			organisationTextField.setText(identityItem.get("organisation"));
 
-			selectSignatureButton.setText(identityItem.getSignatureFile());
+			selectSignatureButton.setText(identityItem.get("attach_file"));
 			/*
 			attachsignatureTextArea.setText(identityItem.getSignature());
 			*/
 
-			
-
 			attachsignatureCheckBox.setSelected(
-				identityItem.getAttachSignature());
+				identityItem.getBoolean("attach_signature"));
 
-			if (MailConfig.getAccountList().getDefaultAccountUid()
-				== accountItem.getUid()) {
-				defaultAccountCheckBox.setSelected(true);
-			} else {
-				defaultAccountCheckBox.setSelected(false);
-			}
+			defaultAccountCheckBox.setSelected(
+				MailConfig.getAccountList().getDefaultAccountUid()
+					== accountItem.getInteger("uid"));
 
 		} else {
 			if (nameTextField.getText() != null)
-				identityItem.setName(nameTextField.getText());
-			identityItem.setAddress(addressTextField.getText());
-			identityItem.setOrganisation(organisationTextField.getText());
-			identityItem.setReplyAddress(replyaddressTextField.getText());
+				identityItem.set("name", nameTextField.getText());
+				
+			identityItem.set("address", addressTextField.getText());
+			identityItem.set("organisation", organisationTextField.getText());
+			identityItem.set("reply_address", replyaddressTextField.getText());
 
-			identityItem.setSignatureFile(selectSignatureButton.getText());
+			identityItem.set("signature_file", selectSignatureButton.getText());
 			/*
 			identityItem.setSignature(attachsignatureTextArea.getText());
 			*/
 
-			identityItem.setAttachSignature(
+			identityItem.set("attach_signature", 
 				attachsignatureCheckBox.isSelected());
 
 			accountItem.setName(accountnameTextField.getText());

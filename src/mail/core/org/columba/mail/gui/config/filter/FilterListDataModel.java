@@ -62,7 +62,7 @@ class FilterListDataModel extends AbstractTableModel
         if ( col == 0 )
         {
             // description
-            String description = filter.getName();
+            String description = filter.get("description");
             if ( description == null ) return new String();
 
             return description;
@@ -70,10 +70,9 @@ class FilterListDataModel extends AbstractTableModel
         else
         {
             // enabled/disabled
-            Boolean enabled = filter.getEnabled();
-            if ( enabled == null ) return new String();
-
-            return enabled;
+            boolean enabled = filter.getBoolean("enabled");
+            
+            return new Boolean(enabled);
         }
     }
 
@@ -99,7 +98,7 @@ class FilterListDataModel extends AbstractTableModel
     public void setValueAt(Object value, int row, int col)
     {
         Filter filter = filterList.get(row);
-        filter.setEnabled( (Boolean) value );
+        filter.getEnabled();
     }
 
 }

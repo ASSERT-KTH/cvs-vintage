@@ -14,9 +14,8 @@
 
 package org.columba.mail.filter;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 public class FilterCriteria extends DefaultItem {
 	
@@ -48,21 +47,22 @@ public class FilterCriteria extends DefaultItem {
 	public final static int PRIORITY = 10;
 
 	// criteria: contains = 0, contains not=1, is=2, is not=3, begins with=4 , ends with=5
+	/*
 	private AdapterNode criteriaNode;
 	private AdapterNode headerItemNode;
 	private AdapterNode patternNode;
 	private AdapterNode typeNode;
 
 	private AdapterNode node;
+	*/
+	
+	public FilterCriteria(XmlElement root) {
+		super(root);
 
-	public FilterCriteria(AdapterNode node, Document doc) {
-		super(doc);
-
-		this.node = node;
-		if (node != null)
-			parseNode();
+		
 	}
 
+	/*
 	protected void parseNode() {
 		AdapterNode child;
 
@@ -79,9 +79,13 @@ public class FilterCriteria extends DefaultItem {
 				typeNode = child;
 		}
 	}
+*/
 
 	public String getCriteriaString() {
-		return getTextValue(criteriaNode);
+		return getRoot().getAttribute("criteria");
+		
+		//return getTextValue(criteriaNode);
+		//return "";
 	}
 
 	public int getCriteria() {
@@ -117,9 +121,47 @@ public class FilterCriteria extends DefaultItem {
 			c = SIZE_BIGGER;
 		return c;
 	}
+	
+	
+	public static int getCriteria( String condition) {
+			
+
+			int c = -1;
+			if (condition.equalsIgnoreCase("contains"))
+				c = CONTAINS;
+
+			else if (condition.equalsIgnoreCase("contains not"))
+				c = CONTAINS_NOT;
+
+			else if (condition.equalsIgnoreCase("is"))
+				c = IS;
+
+			else if (condition.equalsIgnoreCase("is not"))
+				c = IS_NOT;
+
+			else if (condition.equalsIgnoreCase("begins with"))
+				c = BEGINS_WITH;
+
+			else if (condition.equalsIgnoreCase("ends with"))
+				c = ENDS_WITH;
+			else if (condition.equalsIgnoreCase("before"))
+				c = DATE_BEFORE;
+
+			else if (condition.equalsIgnoreCase("after"))
+				c = DATE_AFTER;
+			else if (condition.equalsIgnoreCase("smaller"))
+				c = SIZE_SMALLER;
+
+			else if (condition.equalsIgnoreCase("bigger"))
+				c = SIZE_BIGGER;
+			return c;
+		}
 
 	public String getHeaderItemString() {
-		return getTextValue(headerItemNode);
+		return getRoot().getAttribute("headerfield");
+		
+		//return getTextValue(headerItemNode);
+		//return "";
 	}
 	
 	public int getHeaderItem()
@@ -141,29 +183,40 @@ public class FilterCriteria extends DefaultItem {
 		return result;
 	}
 
+	
 	public String getType() {
-		return getTextValue(typeNode);
+		return getRoot().getAttribute("type");
+		//return getTextValue(typeNode);
+		//return "";
+		
+		
 	}
 
 	public String getPattern() {
-
-		return getTextValue(patternNode);
+		return getRoot().getAttribute("pattern");
+		//return getTextValue(patternNode);
+		//return "";
 	}
 
 	public void setCriteria(String s) {
-		setTextValue(criteriaNode, s);
+		getRoot().addAttribute("criteria", s );
+		//setTextValue(criteriaNode, s);
+		
 	}
 
 	public void setHeaderItem(String s) {
-		setTextValue(headerItemNode, s);
+		getRoot().addAttribute("headerfield", s );
+		//setTextValue(headerItemNode, s);
 	}
 
 	public void setType(String s) {
-		setTextValue(typeNode, s);
+		getRoot().addAttribute("type", s );
+		//setTextValue(typeNode, s);
 	}
 
 	public void setPattern(String s) {
-		setTextValue(patternNode, s.trim());
+		getRoot().addAttribute("pattern", s );
+		//setTextValue(patternNode, s.trim());
 	}
 
 }

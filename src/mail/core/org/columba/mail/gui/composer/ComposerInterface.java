@@ -20,8 +20,7 @@ import javax.swing.JFrame;
 import org.columba.addressbook.gui.AddressbookPanel;
 import org.columba.core.command.TaskManager;
 import org.columba.core.config.Config;
-import org.columba.core.config.WindowItem;
-import org.columba.core.gui.FrameController;
+import org.columba.core.config.ViewItem;
 import org.columba.core.util.CharsetManager;
 import org.columba.mail.composer.MessageComposer;
 import org.columba.mail.folder.Folder;
@@ -66,10 +65,12 @@ public class ComposerInterface
 	
 	public CharsetManager charsetManager;
 	
-	public  WindowItem windowItem;
+	//public  WindowItem windowItem;
+	public ViewItem viewItem;
+	
 	public JFrame addressbookFrame;
 	
-	public FrameController frameController;
+	
 		
     public ComposerInterface( Config conf  )
         {

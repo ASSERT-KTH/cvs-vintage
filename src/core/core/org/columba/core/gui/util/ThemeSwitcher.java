@@ -21,9 +21,11 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.columba.core.config.Config;
+import org.columba.core.config.GuiItem;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.themes.thincolumba.ThinColumbaTheme;
 import org.columba.main.MainInterface;
+
 
 public class ThemeSwitcher {
 	public ThemeSwitcher() {
@@ -32,7 +34,7 @@ public class ThemeSwitcher {
 	public static void setTheme() {
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
 		try {
-			switch (item.getTheme()) {
+			switch (item.getInteger("id")) {
 				case 0 :
 					{
 						break;
@@ -50,7 +52,7 @@ public class ThemeSwitcher {
 						
 						
 						MainInterface.lookAndFeel = new MetalLookAndFeel();
-						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getThemeItem())
+						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem())
 							);
 						UIManager.setLookAndFeel(MainInterface.lookAndFeel);
 						
@@ -122,7 +124,7 @@ public class ThemeSwitcher {
 				"failure while trying to load theme: " + ex.getMessage());
 		}
 
-		setFonts(item);
+		setFonts(Config.getOptionsConfig().getGuiItem());
 
 	}
 
@@ -130,7 +132,7 @@ public class ThemeSwitcher {
 		SwingUtilities.updateComponentTreeUI(frame);
 	}
 
-	public static void setFonts(ThemeItem item) {
+	public static void setFonts(GuiItem item) {
 		FontUIResource mainFont = new FontUIResource(item.getMainFont());
 		FontUIResource textFont = new FontUIResource(item.getTextFont());
 

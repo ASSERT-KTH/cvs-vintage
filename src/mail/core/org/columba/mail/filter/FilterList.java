@@ -12,145 +12,127 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-
 package org.columba.mail.filter;
 
 import java.util.Vector;
 
-import org.columba.core.config.AdapterNode;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.Folder;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.xml.XmlElement;
 
+public class FilterList extends DefaultItem {
+	private Vector list;
+	// private Folder folder;
 
-public class FilterList
-{
-    private Vector list;
-    private Folder folder;
-
-
-    public FilterList( Folder folder )
-    {
-        this.folder = folder;
-        folder.setFilterList( this );
-        list = new Vector();
-
-        FolderItem item = folder.getFolderItem();
-        AdapterNode filterListNode = item.getFilterListNode();
-
-        if ( filterListNode != null )
-        {
-            AdapterNode child;
-            for ( int i=0; i< filterListNode.getChildCount(); i++)
-            {
-                child = (AdapterNode) filterListNode.getChild( i );
-                Filter filter = new Filter( child );
-                filter.setFolder( folder );
-                add( filter );
-            }
-        }
-    }
-
-    public void removeAllElements()
-    {
-        list.removeAllElements();
-        getFilterListNode().removeChildren();
-    }
-
-    public void clear()
-    {
-        if ( list.size() > 0 )
-            list.clear();
-    }
-
-    public Folder getFolder()
-    {
-        return folder;
-    }
-
-    public AdapterNode getFilterListNode()
-    {
-        FolderItem item = getFolder().getFolderItem();
-        AdapterNode filterListNode = item.getFilterListNode();
-
-        return filterListNode;
-    }
-
-
-    public Filter addEmtpyFilter()
-    {
-        //AdapterNode filterListNode = getFilterListNode();
-
-        AdapterNode node = MailConfig.getFolderConfig().addEmptyFilterNode( getFolder().getNode() );
-        Filter filter = new Filter( node );
-
-        add( filter );
-
-        return filter;
-    }
-
-    public void add( Filter f )
-    {
-        list.add( f );
-    }
-
-    public int count()
-    {
-        return list.size();
-
-    }
-
-    public Filter get( int index )
-    {
-        Filter filter = (Filter) list.get(index);
-
-        return filter;
-    }
-
-    public void remove( int index )
-    {
-        Filter filter = (Filter) list.remove( index );
-        AdapterNode node = filter.getRootNode();
-        getFilterListNode().removeChild( node );
-    }
-
+	public FilterList(XmlElement root) {
+		super(root);
+	}
 
 	/*
-    public boolean process( int i, Object[] uids ) throws Exception
-    {
-        Filter filter = (Filter) list.get(i);
-        filter.setFolder( getFolder() );
-        boolean result = false;
-
-        if ( filter.getNode() != null )
-            filter.processFilter( uids );
-
-        return result;
-    }
+	public FilterList( Folder folder )
+	{
+	    this.folder = folder;
+	    folder.setFilterList( this );
+	    list = new Vector();
+	
+	    FolderItem item = folder.getFolderItem();
+	    AdapterNode filterListNode = item.getFilterListNode();
+	
+	    if ( filterListNode != null )
+	    {
+	        AdapterNode child;
+	        for ( int i=0; i< filterListNode.getChildCount(); i++)
+	        {
+	            child = (AdapterNode) filterListNode.getChild( i );
+	            Filter filter = new Filter( child );
+	            filter.setFolder( folder );
+	            add( filter );
+	        }
+	    }
+	}
 	*/
 
+	public void removeAllElements() {
+		getRoot().removeAllElements();
+		/*
+		list.removeAllElements();
+		getFilterListNode().removeChildren();
+		*/
+	}
+
 	/*
-    public boolean processAll( Object[] uids) throws Exception
-    {
-          //System.out.println("processAll listsize: " + list.size() );
+	public void clear()
+	{
+		
+	    if ( list.size() > 0 )
+	        list.clear();
+	}
+	*/
 
-        boolean result = false;
+	public Filter addEmtpyFilter() {
+		XmlElement filter = new XmlElement("filter");
+		filter.addAttribute("description", "new filter");
+		filter.addAttribute("enabled","true");
+		XmlElement rules = new XmlElement("rules");
+		rules.addAttribute("condition", "match_all");
+		XmlElement criteria = new XmlElement("criteria");
+		criteria.addAttribute("type", "Subject");
+		criteria.addAttribute("headerfield", "Subject");
+		criteria.addAttribute("criteria", "contains");
+		criteria.addAttribute("pattern", "pattern");
+		rules.addElement(criteria);
+		filter.addElement(rules);
 
-        for ( int i=0; i<list.size(); i++)
-        {
-            if ( result == true )
-                break;
-            else
-                process( i, uids );
+		XmlElement actionList = new XmlElement("actionlist");
+		XmlElement action = new XmlElement("action");
+		/*
+		action.addAttribute(
+			"class",
+			"org.columba.mail.filter.action.MarkMessageAsReadFilterAction");
+		*/
+		
+		action.addAttribute("type","Mark as Read");
+		
+		actionList.addElement(action);
+		filter.addElement(actionList);
 
-        }
-        return result;
+		getRoot().addElement(filter);
+		
+		XmlElement.printNode(getRoot(),"");
+		
+		return new Filter(filter);
+		/*
+		//AdapterNode filterListNode = getFilterListNode();
+		
+		AdapterNode node = MailConfig.getFolderConfig().addEmptyFilterNode( getFolder().getNode() );
+		Filter filter = new Filter( node );
+		
+		add( filter );
+		
+		return filter;
+		*/
 
-    }
-    */
+	}
+
+	public void add(Filter f) {
+		list.add(f);
+	}
+
+	public int count() {
+
+		return getChildCount();
+
+	}
+
+	public Filter get(int index) {
+
+		Filter filter = new Filter(getRoot().getElement(index));
+
+		return filter;
+	}
+
+	public void remove(int index) {
+		getRoot().removeElement(index);
+
+	}
+
 }
-
-
-
-
-

@@ -14,10 +14,12 @@
 
 package org.columba.core.gui.themes.thincolumba;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.plaf.ColorUIResource;
 
+import org.columba.core.config.GuiItem;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.themes.DefaultCTheme;
 import org.columba.core.gui.util.ImageLoader;
@@ -45,12 +47,14 @@ public class ThinColumbaTheme extends DefaultCTheme {
 	protected static final String thinPackage =
 		"org.columba.core.gui.themes.thincolumba.";
 
-	public ThinColumbaTheme(ThemeItem item) {
+	public ThinColumbaTheme(GuiItem item) {
 		super(item);
 
-		foreground = new ColorUIResource(item.getForeground());
+		ThemeItem themeItem = new ThemeItem(item.getElement("theme"));
 
-		background = new ColorUIResource(item.getBackground());
+		foreground = new ColorUIResource(themeItem.getForeground());
+
+		background = new ColorUIResource(themeItem.getBackground());
 
 		// mainFont = mFont;
 		// messageFont = eFont;
@@ -165,6 +169,17 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put("TextArea.selectionForeground", foreground);
 		table.put("List.selectionForeground", foreground);
 
+		table.put("Menu.selectionBackground", background);
+		table.put("MenuItem.selectionBackground", background);
+		table.put("CheckBoxMenuItem.selectionBackground", background);
+		table.put("RadioButtonMenuItem.selectionBackground", background);
+
+		table.put("Menu.selectionForeground", foreground);
+		table.put("MenuItem.selectionForeground", foreground);
+		table.put("CheckBoxMenuItem.selectionForeground", foreground);
+		table.put("RadioButtonMenuItem.selectionForeground", foreground);
+
+		/*
 		table.put(
 			"Menu.selectionBackground",
 			new ColorUIResource(235, 235, 235));
@@ -177,55 +192,70 @@ public class ThinColumbaTheme extends DefaultCTheme {
 		table.put(
 			"RadioButtonMenuItem.selectionBackground",
 			new ColorUIResource(235, 235, 235));
+		*/
 
 		// set soft yellow background
-		table.put("ToolTip.background", new ColorUIResource(255,255,197));
-		Object toolTipBorder = new UIDefaults.ProxyLazyValue(
-			  "javax.swing.plaf.BorderUIResource$LineBorderUIResource",
-			  new Object[] {new ColorUIResource(0,0,0)});
-			  
-		table.put("ToolTip.border",toolTipBorder);
-		
+		table.put("ToolTip.background", new ColorUIResource(255, 255, 197));
+		Object toolTipBorder =
+			new UIDefaults.ProxyLazyValue(
+				"javax.swing.plaf.BorderUIResource$LineBorderUIResource",
+				new Object[] { new ColorUIResource(0, 0, 0)});
+
+		table.put("ToolTip.border", toolTipBorder);
+
 		table.put(
 			"SplitPane.border",
 			"javax.swing.plaf.metal.MetalBorders$TableHeaderBorder");
 		table.put("SplitPane.dividerSize", new Integer(5));
 		table.put("SplitPaneDivider.border", null);
-		
-		table.put("StatusBar.border", new ThinStatusBarBorder() );
+
+		table.put("StatusBar.border", new ThinStatusBarBorder());
 
 		table.put("ScrollBar.width", new Integer(17));
-		
+
 		table.put("MenuBar.border", new ThinDefaultBorder());
-		
+
 		table.put("ToolBar.border", new ThinDefaultBorder());
-		
+
 		/*
 		table.put("Menu.checkIcon", new ImageIcon("") );
 		table.put("MenuItem.checkIcon", new ImageIcon(""));
 		*/
-		
-		
+
 		table.put("CheckBoxMenuItem.checkIcon", new ImageIcon(""));
-		table.put("RadioButtonMenuItem.checkIcon", new ImageIcon("") );
-		
-		table.put("MenuItem.acceleratorForeground", getAcceleratorSelectedForeground() );
-        table.put("MenuItem.acceleratorSelectionForeground", getAcceleratorSelectedForeground() );
-            
-        table.put("OptionPane.errorIcon",ImageLoader.getImageIcon("stock_dialog_error_48.png"));
-        table.put("OptionPane.informationIcon",ImageLoader.getImageIcon("stock_dialog_info_48.png"));
-        table.put("OptionPane.warningIcon",ImageLoader.getImageIcon("stock_dialog_warning_48.png"));
-        table.put("OptionPane.questionIcon",ImageLoader.getImageIcon("stock_dialog_question_48.png"));
-        
-        
-		/*
-		table.put("CheckBoxMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1));
-		table.put("RadioButtonMenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1) );
-		table.put("MenuItem.border", BorderFactory.createEmptyBorder(1,1,1,1) );
-		table.put("Menu.border", BorderFactory.createEmptyBorder(2,2,2,2) );
-		*/
-		
-		
+		table.put("RadioButtonMenuItem.checkIcon", new ImageIcon(""));
+
+		table.put(
+			"MenuItem.acceleratorForeground",
+			getAcceleratorSelectedForeground());
+		table.put(
+			"MenuItem.acceleratorSelectionForeground",
+			getAcceleratorSelectedForeground());
+
+		table.put(
+			"OptionPane.errorIcon",
+			ImageLoader.getImageIcon("stock_dialog_error_48.png"));
+		table.put(
+			"OptionPane.informationIcon",
+			ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+		table.put(
+			"OptionPane.warningIcon",
+			ImageLoader.getImageIcon("stock_dialog_warning_48.png"));
+		table.put(
+			"OptionPane.questionIcon",
+			ImageLoader.getImageIcon("stock_dialog_question_48.png"));
+
+		table.put(
+			"CheckBoxMenuItem.border",
+			BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		table.put(
+			"RadioButtonMenuItem.border",
+			BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		table.put(
+			"MenuItem.border",
+			BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		table.put("Menu.border", BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
 		/*
 		table.put(
 			"SplitPaneUI",

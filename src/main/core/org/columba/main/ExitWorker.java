@@ -43,9 +43,9 @@ public class ExitWorker extends SwingWorker {
 		MainInterface.headerTableViewer.saveColumnConfig();
 		*/
 
-		MainInterface.frameController.getView().setVisible(false);
+		//MainInterface.frameController.getView().setVisible(false);
 
-		Config.save();
+		//Config.save();
 
 		initProgressBar();
 

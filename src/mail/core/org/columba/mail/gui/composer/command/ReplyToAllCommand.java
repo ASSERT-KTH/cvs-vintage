@@ -2,7 +2,7 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilder;
@@ -24,17 +24,14 @@ import org.columba.mail.message.MimePartTree;
  */
 public class ReplyToAllCommand extends FolderCommand {
 	ComposerController controller;
-	
 
 	/**
 	 * Constructor for ReplyToAllCommand.
 	 * @param frameController
 	 * @param references
 	 */
-	public ReplyToAllCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public ReplyToAllCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
@@ -48,26 +45,26 @@ public class ReplyToAllCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		Folder folder = (Folder) ( (FolderCommandReference) getReferences()[0] ).getFolder();
-		Object[] uids = ( (FolderCommandReference) getReferences()[0] ).getUids();
+		Folder folder =
+			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
 		Message message = new Message();
 
-		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+		ColumbaHeader header =
+			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
 		message.setHeader(header);
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
 		message.setMimePartTree(mimePartTree);
-		
-	
 
+		XmlElement html =
+			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+				"/options/html");
 		boolean viewhtml =
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.getHtmlViewer();
+			new Boolean(html.getAttribute("prefer")).booleanValue();
 
 		// Which Bodypart shall be shown? (html/plain)
-		MimePart bodyPart=null;
+		MimePart bodyPart = null;
 
 		if (viewhtml)
 			bodyPart = mimePartTree.getFirstTextPart("html");
@@ -78,12 +75,12 @@ public class ReplyToAllCommand extends FolderCommand {
 			bodyPart = new MimePart();
 			bodyPart.setBody(new String("<No Message-Text>"));
 		} else
-			bodyPart = folder.getMimePart(uids[0], bodyPart.getAddress(), worker);
-			
-			
+			bodyPart =
+				folder.getMimePart(uids[0], bodyPart.getAddress(), worker);
+
 		message.setBodyPart(bodyPart);
-			
-		controller = new ComposerController(frameController);
+
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,

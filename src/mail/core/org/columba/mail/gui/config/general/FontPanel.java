@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.ThemeItem;
+import org.columba.core.config.GuiItem;
 import org.columba.core.gui.util.FontSelectionDialog;
 
 public class FontPanel extends JPanel implements ActionListener
@@ -63,7 +63,7 @@ public class FontPanel extends JPanel implements ActionListener
 
 	public void updateComponents( boolean b )
 	{
-		ThemeItem item = Config.getOptionsConfig().getThemeItem();
+		GuiItem item = Config.getOptionsConfig().getGuiItem();
 
 		mainFont = item.getMainFont();
 		textFont = item.getTextFont();
@@ -78,8 +78,11 @@ public class FontPanel extends JPanel implements ActionListener
 		}
 		else
 		{
-			item.setTextFont(getTextFont());
-			item.setMainFont(getMainFont());
+			item.set("textfont","name", getTextFont().getName());
+			item.set("textfont","size", getTextFont().getSize());
+			item.set("mainfont","name", getMainFont().getName());
+			item.set("mainfont","size", getMainFont().getSize());
+			
 		}
 	}
 

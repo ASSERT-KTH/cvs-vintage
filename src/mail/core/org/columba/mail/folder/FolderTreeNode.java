@@ -1,15 +1,18 @@
 package org.columba.mail.folder;
 
+import java.lang.reflect.Method;
 import java.util.Hashtable;
 
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
-import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -23,18 +26,74 @@ public abstract class FolderTreeNode
 	extends DefaultMutableTreeNode
 	implements TreeNodeInterface {
 
-	protected AdapterNode node;
+	protected final static ImageIcon collapsedIcon =
+		ImageLoader.getSmallImageIcon("folder.png");
+
+	protected FolderItem node;
 	protected Lock myLock;
 
-	public FolderTreeNode(AdapterNode node) {
+	private static int nextUid = 0;
 
+	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
+	private final Class[] STRING_ARG = new Class[] { String.class };
+
+	public FolderTreeNode(FolderItem node) {
 		super();
-		this.node = node;
+		setNode(node);
 		myLock = new Lock(this);
 	}
 
+	public final static FolderItem getDefaultItem(
+		String className,
+		XmlElement props) {
+		XmlElement defaultElement = new XmlElement("folder");
+		defaultElement.addAttribute("class", className);
+		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
+
+		if (props != null)
+			defaultElement.addElement(props);
+
+		// FAILURE!!! 
+
+		/*
+		XmlElement filter = new XmlElement("filter");
+		defaultElement.addElement(filter);
+		*/
+
+		return new FolderItem(defaultElement);
+	}
+
+	/**
+		 * Method getSelectionTreePath.
+		 * @return TreePath
+		 */
+	public TreePath getSelectionTreePath() {
+		//TreeNodeList list = new TreeNodeList( getTreePath() );
+		TreeNode[] treeNodes = getPathToRoot(this, 0);
+		TreePath path = new TreePath(treeNodes[0]);
+
+		for (int i = 1; i < treeNodes.length; i++) {
+			Folder folder = (Folder) treeNodes[i];
+			path.pathByAddingChild(folder);
+		}
+
+		return path;
+	}
+
+	public static XmlElement getDefaultProperties() {
+		return null;
+	}
+
 	public int getUid() {
-		return -1;
+		return node.getInteger("uid");
+	}
+
+	public ImageIcon getCollapsedIcon() {
+		return collapsedIcon;
+	}
+
+	public ImageIcon getExpandedIcon() {
+		return collapsedIcon;
 	}
 
 	public CapabilityList getSupportedActions() {
@@ -66,13 +125,16 @@ public abstract class FolderTreeNode
 	public synchronized boolean tryToGetLock() {
 		return myLock.tryToGetLock();
 	}
-	
-	public void releaseLock()
-	{
+
+	public void releaseLock() {
 		myLock.release();
 	}
 
-	public AdapterNode getNode() {
+	public XmlElement getNode() {
+		return node.getRoot();
+	}
+
+	public FolderItem getFolderItem() {
 		return node;
 	}
 
@@ -88,96 +150,115 @@ public abstract class FolderTreeNode
 		return (String) this.getUserObject();
 	}
 
+	/*
 	public void insert(Folder newFolder, int newIndex) {
-
+	
 		Folder oldParent = (Folder) newFolder.getParent();
 		int oldIndex = oldParent.getIndex(newFolder);
 		oldParent.remove(oldIndex);
-
+	
 		AdapterNode oldParentNode = oldParent.getNode();
 		AdapterNode newChildNode = newFolder.getNode();
 		oldParentNode.removeChild(newChildNode);
-
+	
 		newFolder.setParent(this);
 		children.insertElementAt(newFolder, newIndex);
-
+	
 		AdapterNode newParentNode = node;
-
+	
 		int j = -1;
 		boolean inserted = false;
 		for (int i = 0; i < newParentNode.getChildCount(); i++) {
 			AdapterNode n = newParentNode.getChildAt(i);
 			String name = n.getName();
-
+	
 			if (name.equals("folder")) {
 				j++;
 			}
-
+	
 			if (j == newIndex) {
 				newParentNode.insert(newChildNode, i);
 				inserted = true;
 				System.out.println("------> adapternode insert correctly");
 			}
 		}
-
+	
 		if (inserted == false) {
 			if (j + 1 == newIndex) {
 				newParentNode.appendChild(newChildNode);
 				System.out.println("------> adapternode appended correctly");
 			}
 		}
-
+	
 		//oldParent.fireTreeNodeStructureUpdate();
 		//fireTreeNodeStructureUpdate();
 	}
+	*/
 
+	/*
 	public void removeFromParent() {
 		AdapterNode childAdapterNode = getNode();
 		childAdapterNode.remove();
-
+	
 		super.removeFromParent();
 	}
+	*/
 
 	public void removeFolder() throws Exception {
+		// remove XmlElement
+		getFolderItem().getRoot().getParent().removeElement(
+			getFolderItem().getRoot());
+
+		// remove DefaultMutableTreeNode
 		removeFromParent();
 	}
 
+	/*
 	public void remove(FolderTreeNode childNode) {
 		FolderTreeNode childFolder = (FolderTreeNode) childNode;
 		AdapterNode childAdapterNode = childFolder.getNode();
 		childAdapterNode.remove();
-
+	
 		int index = getIndex(childFolder);
 		children.removeElementAt(index);
 		//fireTreeNodeStructureUpdate();
-
+	
 		//return childFolder;
 	}
+	*/
 
-	public abstract Folder instanceNewChildNode(
-		AdapterNode node,
-		FolderItem item);
+	public abstract Class getDefaultChild();
 
-	public abstract Hashtable getAttributes();
+	final public Hashtable getAttributes() {
+		return node.getElement("property").getAttributes();
+	}
 
 	public abstract void createChildren(WorkerStatusController worker);
 
-	public FolderTreeNode addSubFolder(Hashtable attributes) throws Exception {
-		AdapterNode node = MainInterface.treeModel.addFolder(this, attributes);
-		FolderItem item = MainInterface.treeModel.getItem(node);
+	public void addFolder(String name, Class childClass) throws Exception {
+		Method m_getDefaultProperties =
+			childClass.getMethod("getDefaultProperties", null);
 
-		Folder subFolder = instanceNewChildNode(node, item);
-		add(subFolder);
+		XmlElement props =
+			(XmlElement) m_getDefaultProperties.invoke(null, null);
+		FolderItem childNode = getDefaultItem(childClass.getName(), props);
 
-		return subFolder;
+		childNode.set("property", "name", name);
+		// Put properties that should be copied from parent here
+
+		Folder subFolder =
+			(Folder) childClass.getConstructor(FOLDER_ITEM_ARG).newInstance(
+				new Object[] { childNode });
+		addWithXml(subFolder);
 	}
 
-	public boolean addFolder(String name) throws Exception {
-		Hashtable attributes = getAttributes();
-		attributes.put("name", name);
+	public void addFolder(String name) throws Exception {
+		addFolder(name, getDefaultChild());
+	}
 
-		FolderTreeNode folder = addSubFolder(attributes);
-		return true;
+	public void addWithXml(FolderTreeNode folder) {
+		add(folder);
+		this.getNode().addElement(folder.getNode());
 	}
 
 	/*
@@ -244,23 +325,40 @@ public abstract class FolderTreeNode
 		return null;
 	}
 
+	/*
 	public void append(Folder newFolder) {
 		Folder oldParent = (Folder) newFolder.getParent();
 		int oldIndex = oldParent.getIndex(newFolder);
 		oldParent.remove(oldIndex);
-
+	
 		AdapterNode oldParentNode = oldParent.getNode();
 		AdapterNode newChildNode = newFolder.getNode();
 		oldParentNode.removeChild(newChildNode);
-
+	
 		newFolder.setParent(this);
 		children.add(newFolder);
-
+	
 		AdapterNode newParentNode = node;
 		newParentNode.appendChild(newChildNode);
-
+	
 		// oldParent.fireTreeNodeStructureUpdate();
 		// fireTreeNodeStructureUpdate();
+	}
+	*/
+
+	/**
+	 * Sets the node.
+	 * @param node The node to set
+	 */
+	public void setNode(FolderItem node) {
+		this.node = node;
+
+		try {
+			if (node.getInteger("uid") >= nextUid)
+				nextUid = node.getInteger("uid") + 1;
+		} catch (NumberFormatException ex) {
+			node.set("uid", nextUid++);
+		}
 	}
 
 }

@@ -1,10 +1,8 @@
 package org.columba.mail.folder.mh;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalHeaderCache;
@@ -27,8 +25,8 @@ public class CachedMHFolder extends MHFolder {
 
 	protected LocalHeaderCache cache;
 
-	public CachedMHFolder(AdapterNode node, FolderItem item) {
-		super(node, item);
+	public CachedMHFolder(FolderItem item) {
+		super(item);
 
 		cache = new LocalHeaderCache(this);
 	}
@@ -228,20 +226,8 @@ public class CachedMHFolder extends MHFolder {
 		}
 	}
 
-	public Hashtable getAttributes() {
-		Hashtable attributes = new Hashtable();
-		attributes.put("accessrights", "user");
-		attributes.put("messagefolder", "true");
-		attributes.put("type", "columba");
-		attributes.put("subfolder", "true");
-		attributes.put("accessrights", "true");
-		attributes.put("add", "true");
-		attributes.put("remove", "true");
-		return attributes;
-	}
-
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
-		return new CachedMHFolder(node, item);
+	public Class getDefaultChild() {
+		return CachedMHFolder.class;
 	}
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {

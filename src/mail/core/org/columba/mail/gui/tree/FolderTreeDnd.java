@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.Autoscroll;
@@ -28,6 +29,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -298,19 +300,18 @@ public class FolderTreeDnd
 	/********************************** drag ********************************************/
 
 	public void dragGestureRecognized(DragGestureEvent e) {
-		/*
+
 		InputEvent event = e.getTriggerEvent();
 		int mod = event.getModifiers();
-		
-		if ((mod & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK)
-		{
+
+		if ((mod & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
 			System.out.println("drag n drop action initiated");
-		
-			sourceFolder = treeViewer.getSelected();
+
+			sourceFolder = (Folder) treeController.getSelected();
 			FolderItem item = sourceFolder.getFolderItem();
-			String access = item.getAccessRights();
-			String type = item.getType();
-		
+			String access = item.get("property", "accessrights");
+
+			/*
 			if ((access.equals("user"))
 				&& (!type.equals("imap"))
 				&& (!type.equals("imaproot")))
@@ -321,11 +322,14 @@ public class FolderTreeDnd
 				new StringSelection("folder"), // transferable
 				this); // drag source listener
 			}
-		
-		
-		
+			*/
+			e.startDrag(DragSource.DefaultMoveDrop,
+			//ImageLoader.getImageIcon("","folder1").getImage(),
+			//new Point(10,10), // cursor
+			new StringSelection("folder"), // transferable
+			this); // drag source listener
+
 		}
-		*/
 
 		Point ptDragOrigin = e.getDragOrigin();
 		TreePath path = tree.getPathForLocation(ptDragOrigin.x, ptDragOrigin.y);
@@ -336,13 +340,18 @@ public class FolderTreeDnd
 
 		Folder folder = (Folder) path.getLastPathComponent();
 		FolderItem item = folder.getFolderItem();
-		String access = item.getAccessRights();
-		String type = item.getType();
+		String access = item.get("property", "accessrights");
 
+		if (access.equals("system"))
+			return;
+		/*
+		String type = item.getType();
+		
 		if (access.equals("system"))
 			return;
 		if (type.equals("imaproot"))
 			return;
+		*/
 
 		// Work out the offset of the drag point from the TreePath bounding rectangle origin
 		Rectangle raPath = tree.getPathBounds(path);
@@ -351,11 +360,9 @@ public class FolderTreeDnd
 			ptDragOrigin.y - raPath.y);
 
 		// Get the cell renderer (which is a JLabel) for the path being dragged
-			JLabel lbl =
-				(JLabel) tree
-					.getCellRenderer()
-					.getTreeCellRendererComponent(tree,
-		// tree
+		JLabel lbl =
+			(JLabel) tree.getCellRenderer().getTreeCellRendererComponent(tree,
+			// tree
 		path.getLastPathComponent(), // value
 		false, // isSelected	(dont want a colored background)
 		tree.isExpanded(path), // isExpanded
@@ -664,63 +671,83 @@ public class FolderTreeDnd
 			for (int i = 0; i < flavors.length; i++) {
 				DataFlavor flavor = flavors[i];
 				if (flavor.equals(DataFlavor.stringFlavor)) {
-					
+
 					System.out.println("message dnd");
 					Point pt = e.getLocation();
-					TreePath pathTarget = tree.getClosestPathForLocation(pt.x, pt.y);
+					TreePath pathTarget =
+						tree.getClosestPathForLocation(pt.x, pt.y);
 					Folder target = (Folder) pathTarget.getLastPathComponent();
-					Folder sourceFolder = (Folder) treeController.getMailFrameController().tableController.getTableSelectionManager().getFolder();
-					
-					if ((target != sourceFolder) && (target.getFolderItem().isAddAllowed()))
-					{
-					
-						Object[] uids = treeController.getMailFrameController().tableController.getTableSelectionManager().getUids();
-					
-						if (e.getDropAction() == 1)
-						{
+					Folder sourceFolder =
+						(Folder) treeController
+							.getMailFrameController()
+							.tableController
+							.getTableSelectionManager()
+							.getFolder();
+
+					if ((target != sourceFolder)) {
+
+						Object[] uids =
+							treeController
+								.getMailFrameController()
+								.tableController
+								.getTableSelectionManager()
+								.getUids();
+
+						if (e.getDropAction() == 1) {
 							System.out.println("copy action");
-					
+
 							//treeViewer.setSelected(sourceFolder);
-					
+
+							/*
+							FolderCommandReference[] result =
+								new FolderCommandReference[2];
+							FolderCommandReference[] r1 =
+								(FolderCommandReference[]) tableController
+									.getTableSelectionManager()
+									.getSelection();
+							FolderCommandReference r2 =
+								new FolderCommandReference(destFolder);
+
+							result[0] = r1[0];
+							result[1] = r2;
+							CopyMessageCommand c =
+								new CopyMessageCommand(result);
+
+							MainInterface.processor.addOp(c);
+							*/
 							// FIXME
 							/*
 							FolderOperation op =
 								new FolderOperation(Operation.COPY, 0, uids, sourceFolder, target);
 							MainInterface.crossbar.operate(op);
 							*/
-							
+
 							e.dropComplete(true);
-					
-						}
-						else if (e.getDropAction() == 2)
-						{
+
+						} else if (e.getDropAction() == 2) {
 							System.out.println("move action");
-					
+
 							//treeViewer.setSelected(sourceFolder);
-					
+
 							// FIXME
 							/*
 							FolderOperation op =
 								new FolderOperation(Operation.MOVE, 0, uids, sourceFolder, target);
 							MainInterface.crossbar.operate(op);
 							*/
-							
+
 							e.dropComplete(true);
-					
-						}
-						else
-						{
+
+						} else {
 							System.out.println("drop action not supported");
 							break;
 						}
-					
-					}
-					else
-					{
+
+					} else {
 						JOptionPane.showMessageDialog(null, "Invalid Folder!");
 						break;
 					}
-					
+
 				} else if (
 					flavor.isMimeTypeEqual(
 						DataFlavor.javaJVMLocalObjectMimeType)) {
@@ -740,7 +767,7 @@ public class FolderTreeDnd
 						Folder source =
 							(Folder) pathSource.getLastPathComponent();
 						FolderItem item = source.getFolderItem();
-						String type = item.getType();
+						//String type = item.getType();
 						Folder dest =
 							(Folder) pathTarget.getLastPathComponent();
 
@@ -756,7 +783,7 @@ public class FolderTreeDnd
 
 							if ((sourceParent.equals(dest))
 								|| (source.isParent(dest))
-								|| (type.equals("imap"))) {
+								) {
 								// these drops don't make sense
 
 								JOptionPane.showMessageDialog(
@@ -975,9 +1002,8 @@ public class FolderTreeDnd
 		// row) visible as appropriate. If were at the absolute top or
 		// bottom, just return the first or last row respectively.
 
-			nRow =
-				(pt.y + raOuter.y <= AUTOSCROLL_MARGIN)
-		// Is row at top of screen?
+		nRow = (pt.y + raOuter.y <= AUTOSCROLL_MARGIN)
+			// Is row at top of screen?
 		? (nRow <= 0 ? 0 : nRow - 1) // Yes, scroll up one row
 	: (nRow < tree.getRowCount() - 1 ? nRow + 1 : nRow);
 		// No, scroll down one row

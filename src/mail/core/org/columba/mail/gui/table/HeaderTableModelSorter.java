@@ -41,11 +41,15 @@ public class HeaderTableModelSorter extends TableModelSorter
     {
         this.config = item;
 
-
-        sort = config.getSelectedHeader();
+		// FIXME
+        //sort = config.getSelectedHeader();
         if ( sort == null )
             sort = new String("Status");
-        ascending = config.getHeaderAscending();
+        
+        // FIXME
+            
+        //ascending = config.getHeaderAscending();
+        ascending = true;
 
 
         setSortingColumn( sort );
@@ -78,14 +82,16 @@ public class HeaderTableModelSorter extends TableModelSorter
     public void setSortingColumn(String str)
         {
             sort=str;
-            config.setSelectedHeader( sort );
+            // FIXME
+            //config.setSelectedHeader( sort );
 
         }
 
      public void setSortingOrder(boolean b)
         {
             ascending=b;
-            config.setHeaderAscending( ascending );
+            // FIXME
+            //config.setHeaderAscending( ascending );
 
         }
 

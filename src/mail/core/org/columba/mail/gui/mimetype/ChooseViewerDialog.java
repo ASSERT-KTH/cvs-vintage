@@ -15,7 +15,6 @@
 package org.columba.mail.gui.mimetype;
 
 import java.awt.BorderLayout;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,92 +33,100 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-public class ChooseViewerDialog extends JDialog implements ActionListener
-{
-    private JTextField viewerName;
-    private String viewer=null;
-    private JCheckBox saveCButton;
+import org.columba.core.gui.util.DialogStore;
 
-    public ChooseViewerDialog( Frame owner, String contentType, String contentSubtype, boolean save )
-    {
-	//LOCALIZE
-        super(owner,"Select Viewer for "+contentType+"/"+contentSubtype,true);
-        init(save);
-	setSize(300,150);
-	setLocationRelativeTo(null);
-        setVisible(true);
-    }
+public class ChooseViewerDialog implements ActionListener {
+	private JTextField viewerName;
+	private String viewer = null;
+	private JCheckBox saveCButton;
+	private JDialog dialog;
 
-    private void init(boolean save)
-    {
-	JPanel contentPane = new JPanel(new BorderLayout(0,0));
-	contentPane.setBorder(BorderFactory.createEmptyBorder(12,12,11,11));
-	JPanel viewerPanel = new JPanel();
-	viewerPanel.setLayout(new BoxLayout(viewerPanel,BoxLayout.X_AXIS));
-	//LOCALIZE
-        JLabel label = new JLabel( "Viewer:" );
-        viewerPanel.add( label );
-	viewerPanel.add(Box.createHorizontalStrut(5));
-        viewerName = new JTextField();
-        viewerName.setActionCommand("OK");
-        viewerName.addActionListener( this );
-	label.setLabelFor(viewerName);
-        viewerPanel.add( viewerName );
-	viewerPanel.add(Box.createHorizontalStrut(10));
-        JButton searchButton = new JButton( "..." );
-        searchButton.addActionListener(this);
-        searchButton.setActionCommand("SEARCH");
-        viewerPanel.add( searchButton );
-	contentPane.add(viewerPanel,BorderLayout.NORTH);
-	//LOCALIZE
-        saveCButton = new JCheckBox( "Always open with this Viewer", save );
-	saveCButton.setBorder(BorderFactory.createEmptyBorder(10,0,17,0));
-        contentPane.add( saveCButton, BorderLayout.CENTER );
-	JPanel bottomPanel = new JPanel(new BorderLayout(0,0));
-	JPanel buttonPanel = new JPanel(new GridLayout(1,2,5,0));
-	//LOCALIZE
-        JButton okButton = new JButton( "OK" );
-        okButton.addActionListener(this);
-        okButton.setActionCommand("OK");
-	buttonPanel.add(okButton);
-	//LOCALIZE
-	JButton cancelButton = new JButton("Cancel");
-	cancelButton.setActionCommand("CANCEL");
-	cancelButton.addActionListener(this);
-	buttonPanel.add(cancelButton);
-	bottomPanel.add(buttonPanel,BorderLayout.EAST);
-        contentPane.add( bottomPanel, BorderLayout.SOUTH );
-	setContentPane(contentPane);
-	getRootPane().setDefaultButton(okButton);
-	getRootPane().registerKeyboardAction(this,"CANCEL",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
-    }
+	public ChooseViewerDialog(
+		String contentType,
+		String contentSubtype,
+		boolean save) {
+		//LOCALIZE
+		// super(owner,"Select Viewer for "+contentType+"/"+contentSubtype,true);
 
-    public String getViewer()
-    {
-        return viewer;
-    }
-
-    public boolean saveViewer()
-    {
-        return saveCButton.isSelected();
-    }
-
-    public void actionPerformed( ActionEvent e )
-    {
-        String command = e.getActionCommand();
-        if( command.equals("SEARCH") ) {
-            JFileChooser fileChooser = new JFileChooser();
-	    //LOCALIZE
-            fileChooser.setDialogTitle("Choose Program");
-            int returnVal = fileChooser.showDialog( this, "OK");
-            if( returnVal == JFileChooser.APPROVE_OPTION ) {
-                viewerName.setText( fileChooser.getSelectedFile().toString() );
-            }
-        }else if( command.equals("OK") ) {
-	    viewer=viewerName.getText();
-            dispose();
-        }else if( command.equals("CANCEL") ){
-	    dispose();
+		dialog =
+			DialogStore.getDialog(
+				"Select Viewer for " + contentType + "/" + contentSubtype);
+		init(save);
+		dialog.setSize(300, 150);
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
-    }
+
+	private void init(boolean save) {
+		JPanel contentPane = new JPanel(new BorderLayout(0, 0));
+		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		JPanel viewerPanel = new JPanel();
+		viewerPanel.setLayout(new BoxLayout(viewerPanel, BoxLayout.X_AXIS));
+		//LOCALIZE
+		JLabel label = new JLabel("Viewer:");
+		viewerPanel.add(label);
+		viewerPanel.add(Box.createHorizontalStrut(5));
+		viewerName = new JTextField();
+		viewerName.setActionCommand("OK");
+		viewerName.addActionListener(this);
+		label.setLabelFor(viewerName);
+		viewerPanel.add(viewerName);
+		viewerPanel.add(Box.createHorizontalStrut(10));
+		JButton searchButton = new JButton("...");
+		searchButton.addActionListener(this);
+		searchButton.setActionCommand("SEARCH");
+		viewerPanel.add(searchButton);
+		contentPane.add(viewerPanel, BorderLayout.NORTH);
+		//LOCALIZE
+		saveCButton = new JCheckBox("Always open with this Viewer", save);
+		saveCButton.setBorder(BorderFactory.createEmptyBorder(10, 0, 17, 0));
+		contentPane.add(saveCButton, BorderLayout.CENTER);
+		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+		//LOCALIZE
+		JButton okButton = new JButton("OK");
+		okButton.addActionListener(this);
+		okButton.setActionCommand("OK");
+		buttonPanel.add(okButton);
+		//LOCALIZE
+		JButton cancelButton = new JButton("Cancel");
+		cancelButton.setActionCommand("CANCEL");
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+		dialog.setContentPane(contentPane);
+		dialog.getRootPane().setDefaultButton(okButton);
+		dialog.getRootPane().registerKeyboardAction(
+			this,
+			"CANCEL",
+			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+			JComponent.WHEN_IN_FOCUSED_WINDOW);
+	}
+
+	public String getViewer() {
+		return viewer;
+	}
+
+	public boolean saveViewer() {
+		return saveCButton.isSelected();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
+		if (command.equals("SEARCH")) {
+			JFileChooser fileChooser = new JFileChooser();
+			//LOCALIZE
+			fileChooser.setDialogTitle("Choose Program");
+			int returnVal = fileChooser.showDialog(dialog, "OK");
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				viewerName.setText(fileChooser.getSelectedFile().toString());
+			}
+		} else if (command.equals("OK")) {
+			viewer = viewerName.getText();
+			dialog.dispose();
+		} else if (command.equals("CANCEL")) {
+			dialog.dispose();
+		}
+	}
 }

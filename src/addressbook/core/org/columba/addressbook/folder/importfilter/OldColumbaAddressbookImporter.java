@@ -16,10 +16,6 @@ package org.columba.addressbook.folder.importfilter;
 
 import java.io.File;
 
-import org.columba.addressbook.config.AddressbookXmlConfig;
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.core.config.AdapterNode;
-
 /**
  * @version 	1.0
  * @author
@@ -30,6 +26,9 @@ public class OldColumbaAddressbookImporter extends DefaultAddressbookImporter
 	{
 		System.out.println("importing addressbook::::");
 		
+		// FIXME
+		
+		/*
 		AddressbookXmlConfig c = new AddressbookXmlConfig(file);
 		c.load();
 		
@@ -60,5 +59,6 @@ public class OldColumbaAddressbookImporter extends DefaultAddressbookImporter
 			saveContact( card );
 			
 		}
+		*/
 	}
 }

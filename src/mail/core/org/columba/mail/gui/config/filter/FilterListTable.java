@@ -12,7 +12,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-
 package org.columba.mail.gui.config.filter;
 
 import javax.swing.JTable;
@@ -26,52 +25,62 @@ import org.columba.mail.gui.config.filter.util.StringFilterRenderer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.main.MainInterface;
 
-class FilterListTable extends JTable
-{
-    private FilterListDataModel model;
-    private Config config;
-    private FilterList filterList;
+class FilterListTable extends JTable {
+	private FilterListDataModel model;
+	private Config config;
+	private FilterList filterList;
 
-    public FilterListTable( FilterList filterList, ConfigFrame frame )
-    {
-        super();
-	this.filterList = filterList;
-        config = MainInterface.config;
+	public FilterListTable(FilterList filterList, ConfigFrame frame) {
+		super();
+		this.filterList = filterList;
+		config = MainInterface.config;
 
-        setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+		model = new FilterListDataModel(filterList);
+		//update();
 
-        model = new FilterListDataModel( filterList );
-        //update();
+		setModel(model);
 
-        setModel( model );
+		setShowGrid(false);
+		setIntercellSpacing(new java.awt.Dimension(0, 0));
 
-        setShowGrid(false);
-        setIntercellSpacing(new java.awt.Dimension(0, 0));
+		TableColumn tc =
+			getColumn(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"enabled_tableheader"));
+		//tc.setCellRenderer( new BooleanFilterRenderer() );
+		tc.setHeaderRenderer(
+			new FilterHeaderRenderer(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"enabled_tableheader")));
+		tc.setMaxWidth(80);
+		tc.setMinWidth(80);
 
+		tc =
+			getColumn(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"description_tableheader"));
+		tc.setCellRenderer(new StringFilterRenderer());
+		tc.setHeaderRenderer(
+			new FilterHeaderRenderer(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"description_tableheader")));
 
-        TableColumn tc = getColumn( MailResourceLoader.getString("dialog", "filter", "enabled_tableheader") );
-        //tc.setCellRenderer( new BooleanFilterRenderer() );
-        tc.setHeaderRenderer( new FilterHeaderRenderer( MailResourceLoader.getString("dialog", "filter", "enabled_tableheader") ) );
-        tc.setMaxWidth(80);
-        tc.setMinWidth(80);
+		sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
+	}
 
-        tc = getColumn( MailResourceLoader.getString("dialog", "filter", "description_tableheader") );
-        tc.setCellRenderer( new StringFilterRenderer() );
-        tc.setHeaderRenderer( new FilterHeaderRenderer( MailResourceLoader.getString("dialog", "filter", "description_tableheader") ) );
+	public void update() {
+		model.fireTableDataChanged();
 
-
-        sizeColumnsToFit( AUTO_RESIZE_NEXT_COLUMN );
-    }
-
-    public void update()
-    {
-        model.fireTableDataChanged();
-
-    }
-
-
+	}
 
 }
-
-

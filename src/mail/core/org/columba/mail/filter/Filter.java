@@ -16,61 +16,59 @@ package org.columba.mail.filter;
 
 import java.util.Vector;
 
+import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.FrameController;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.filter.action.CopyMessageFilterAction;
-import org.columba.mail.filter.action.DeleteMessageFilterAction;
-import org.columba.mail.filter.action.MarkMessageAsReadFilterAction;
-import org.columba.mail.filter.action.MoveMessageFilterAction;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.main.MainInterface;
 
 public class Filter extends DefaultItem {
-	private AdapterNode node;
+
 	private Vector actionList;
 	private FilterRule rule;
 	private Folder folder;
+
+	/*
 	private AdapterNode actionListNode;
 	private AdapterNode nameNode;
 	private AdapterNode enabledNode;
+	*/
 
-	public Filter(AdapterNode node) {
-		super(MailConfig.getFolderConfig().getDocument());
-		this.node = node;
+	public Filter(XmlElement root) {
+		super(root);
+
 		actionList = new Vector();
 		//System.out.println("node: "+node);
 
-		if (node != null)
-			parseNode();
-
 	}
 
-	public AdapterNode getRootNode() {
-		return node;
-	}
-
+	/*
 	public AdapterNode getActionListNode() {
 		return actionListNode;
 	}
+	*/
 
+	/*
 	public void parseNode() {
 		AdapterNode child;
-
+	
 		for (int i = 0; i < node.getChildCount(); i++) {
 			child = node.getChild(i);
-
+	
 			if (child.getName().equals("actionlist")) {
 				actionListNode = child;
-
+	
 				for (int j = 0; j < child.getChildCount(); j++) {
 					AdapterNode subChild = child.getChild(j);
 					if (subChild.getName().equals("action"))
 						actionList.add(
 							new FilterAction(subChild, getDocument()));
 				}
-
+	
 			} else if (child.getName().equals("filterrule")) {
 				rule = new FilterRule(child, getDocument());
 			} else if (child.getName().equals("description")) {
@@ -79,125 +77,168 @@ public class Filter extends DefaultItem {
 				enabledNode = child;
 			}
 		}
+	
+	}
+	*/
 
+	public FilterActionList getFilterActionList() {
+		return new FilterActionList(getRoot().getElement("actionlist"));
 	}
 
 	public FilterRule getFilterRule() {
-		return rule;
+		return new FilterRule(getRoot().getElement("rules"));
 	}
 
-	public void addEmptyAction() {
-		AdapterNode n =
-			MailConfig.getFolderConfig().addEmptyFilterAction(
-				getActionListNode());
-
-		FilterAction action = new FilterAction(n, getDocument());
-
-		actionList.add(action);
-	}
-
-	public int getActionCount() {
-		return actionList.size();
-	}
-
-	public FilterAction getFilterAction(int index) {
-		return (FilterAction) actionList.get(index);
-	}
-
-	public void removeAction(int index) {
-		actionList.remove(index);
-
-		AdapterNode actionNode = getActionListNode().getChildAt(index);
-		actionNode.remove();
-	}
-
-	public void removeLastAction() {
-		int index = actionList.size() - 1;
-
-		removeAction(index);
-
-	}
-
+	/*
 	public void addEmptyCriteria() {
 		rule.addEmptyCriteria();
 	}
-
+	
 	public void removeCriteria(int index) {
 		rule.remove(index);
 	}
-
+	
 	public void removeLastCriteria() {
 		rule.removeLast();
 	}
+	*/
 
 	public void setFolder(Folder f) {
 		this.folder = f;
 	}
 
-	public AdapterNode getNode() {
-		return node;
-	}
-
-	public Boolean getEnabled() {
+	public boolean getEnabled() {
+		/*
 		String str = (String) getTextValue(enabledNode);
-
+		
 		Boolean b = new Boolean(str);
-
+		
 		return b;
+		*/
+
+		return getBoolean("enabled");
 	}
 
-	public void setEnabled(Boolean bool) {
-		setTextValue(enabledNode, bool.toString());
+	public void setEnabled(boolean bool) {
+		set("enabled", bool);
+		//setTextValue(enabledNode, bool.toString());
 	}
 
 	public void setName(String s) {
-		setTextValue(nameNode, s);
+		set("description", s);
+		//setTextValue(nameNode, s);
 	}
 	public String getName() {
-		return getTextValue(nameNode);
+		return get("description");
+
 	}
 
 	public CompoundCommand getCommand(
-		FrameController frameController,
 		Folder srcFolder,
-		Object[] uids) throws Exception{
+		Object[] uids)
+		throws Exception {
 		CompoundCommand c = new CompoundCommand();
 
-		for (int i = 0; i < getActionCount(); i++) {
-			FilterAction action = getFilterAction(i);
+		/*
+		FilterActionPluginList actionListItem =
+			MailConfig.getFilterActionConfig().getFilterActionList();
+		*/
+		FilterActionPluginHandler pluginHandler =
+			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
+				"filter_actions");
 
+		FilterActionList list = getFilterActionList();
+		for (int i = 0; i < list.getChildCount(); i++) {
+			FilterAction action = list.get(i);
+
+			String name = action.getAction();
+			AbstractFilterAction instance = null;
+
+			//Object[] args = { frameController, action, srcFolder, uids };
+
+			try {
+				instance =
+					(AbstractFilterAction)
+						(
+							(
+								AbstractFilterPluginHandler) pluginHandler)
+									.getActionPlugin(
+						name,
+						null);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+			Command command = instance.getCommand( action, srcFolder, uids);
+			
+			if ( command != null ) c.add(command);
+
+			/*
+			String className = actionListItem.getActionClassName(name);
+			Object[] args = { frameController, action, srcFolder, uids };
+			
+			try {
+				AbstractFilterAction instance =
+					(AbstractFilterAction) CClassLoader.instanciate(
+						className,
+						args);
+				c.add(instance.getCommand());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			*/
+
+			/*
+			ClassLoader loader = ClassLoader.getSystemClassLoader();
+			try {
+				Class actClass = loader.loadClass(className);
+			
+				Constructor[] constructors = actClass.getConstructors();
+				Constructor constructor = constructors[0];
+			
+				Object[] args = { frameController, action, srcFolder, uids };
+				
+				AbstractFilterAction instance = (AbstractFilterAction) constructor.newInstance(args);
+				
+				c.add( instance.getCommand() );
+			
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			*/
+			/*
 			switch (action.getActionInt()) {
-
+			
 				case 0 :
 					{
 						// move
-
+			
 						System.out.println("moving messages");
-
+			
 						c.add(
-							new MoveMessageFilterAction(
+							new MoveMessageAction(
 								frameController,
 								action,
 								srcFolder,
 								uids)
 								.getCommand());
-
+			
 						break;
 					}
 				case 1 :
 					{
 						// copy
 						System.out.println("copying messages");
-
+			
 						//System.out.println("treepath: "+ treePath );
-
-						c.add( new CopyMessageFilterAction(
+			
+						c.add( new CopyMessageAction(
 							frameController,
 							action,
 							srcFolder,
 							uids)
 							.getCommand());
-
+			
 						break;
 					}
 				case 2 :
@@ -209,74 +250,28 @@ public class Filter extends DefaultItem {
 							srcFolder,
 							uids)
 							.getCommand());
-
+			
 						break;
 					}
 				case 3 :
 					{
 						System.out.println("delete messages");
-						c.add(new DeleteMessageFilterAction(
+						c.add(new DeleteMessageAction(
 							frameController,
 							action,
 							srcFolder,
 							uids)
 							.getCommand());
-
+			
 						break;
 					}
+					
 			}
+			*/
+
 		}
-		
+
 		return c;
 	}
-	/*
-	public boolean getFilterResult(  Rfc822Header header )
-	{
-	    return rule.process( header );
-	}
-	*/
-
-	/*
-	public Object[] getFilterResult( Object[] uids ) throws Exception
-	{
-	    Vector v = rule.process( folder, uids );
-	
-	    return v.toArray();
-	}
-	*/
-
-	/*
-	public boolean processFilter( Object[] uids ) throws Exception
-	{
-	
-	
-	    if ( getEnabled().equals(Boolean.FALSE) ) return true;
-	
-	    Vector v = rule.process( folder, uids  );
-		if ( v.size() == 0 ) return true;
-	
-	          //System.out.println("rule is true");
-	    FilterAction action;
-	
-	          //System.out.println(" actionlist.size() = "+ actionList.size() );
-	    boolean moved = false;
-	
-	        for ( int i=0; i<actionList.size(); i++)
-	        {
-	            action = (FilterAction) actionList.get(i);
-	
-	            if ( action.processAction( folder, v ) )
-	                {
-	                    moved = true;
-	                    break;
-	                }
-	
-	
-	        }
-	        //return moved;
-	
-	    return true;
-	}
-	*/
 
 }

@@ -27,20 +27,23 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.action.FolderTreeMouseListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.menu.FolderTreeMenu;
-import org.columba.mail.gui.tree.util.EditFolderDialog;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.main.MainInterface;
 
 /**
  * this class shows the the folder hierarchy
  */
 
-public class TreeController implements TreeSelectionListener, TreeWillExpandListener//implements TreeNodeChangeListener 
+public class TreeController
+	implements
+		TreeSelectionListener,
+		TreeWillExpandListener //implements TreeNodeChangeListener
 {
 	private TreeView folderTree;
 	private boolean b = false;
@@ -58,54 +61,53 @@ public class TreeController implements TreeSelectionListener, TreeWillExpandList
 	private FolderTreeMenu menu;
 
 	private FolderTreeMouseListener mouseListener;
-	
+
 	protected TreeSelectionManager treeSelectionManager;
-	
+
 	private FolderTreeNode selectedFolder;
 
 	private TreeModel model;
-	
+
 	private TreeView view;
-	
+
 	private MailFrameController mailFrameController;
 
-	public TreeController( MailFrameController mailFrameController, TreeModel model ) {
+	public TreeController(
+		MailFrameController mailFrameController,
+		TreeModel model) {
 
 		this.model = model;
 		this.mailFrameController = mailFrameController;
 
+		view = new TreeView(model);
 
-		view = new TreeView( model );
-		
 		actionListener = new FolderTreeActionListener(this);
 
-		treeSelectionManager = new TreeSelectionManager();	
-		
-			
-			
+		treeSelectionManager = new TreeSelectionManager();
+
 		view.addTreeSelectionListener(this);
-		
+
 		//folderTreeActionListener = new FolderTreeActionListener(this);
 		view.addTreeWillExpandListener(this);
-		
+
 		mouseListener = new FolderTreeMouseListener(this);
-		
+
 		view.addMouseListener(mouseListener);
-		
-		
-		
+
 		FolderTreeDnd dnd = new FolderTreeDnd(this);
-		
+
 		//scrollPane = new JScrollPane(getFolderTree().getTree());
-		
-		
-		
+
 		menu = new FolderTreeMenu(this);
-		
+
+		FolderTreeCellRenderer renderer =
+			new FolderTreeCellRenderer(this, true);
+		view.setCellRenderer(renderer);
+
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
-		
+
 	}
-	
+
 	public void treeWillExpand(TreeExpansionEvent e)
 		throws ExpandVetoException {
 
@@ -113,13 +115,14 @@ public class TreeController implements TreeSelectionListener, TreeWillExpandList
 
 		FolderTreeNode treeNode =
 			(FolderTreeNode) e.getPath().getLastPathComponent();
-			
-		
+
+		if (treeNode == null)
+			return;
+
 		FolderCommandReference[] cr = new FolderCommandReference[1];
 		cr[0] = new FolderCommandReference(treeNode);
-		
-		MainInterface.processor.addOp(
-					new FetchSubFolderListCommand(mailFrameController, cr));
+
+		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
 
 	}
 
@@ -131,211 +134,76 @@ public class TreeController implements TreeSelectionListener, TreeWillExpandList
 	}
 
 	public TreeView getView() {
-		
-		
-		
-		
+
 		return view;
 	}
-	
-	public FolderTreeActionListener getActionListener()
-	{
+
+	public FolderTreeActionListener getActionListener() {
 		return actionListener;
 	}
 
-	// this method is called when the user selects another folder
-	
-	
-	
-	public void valueChanged(TreeSelectionEvent e) {
-		
-		// BUGFIX but don't know why that bug occurs 
-		if( view.getLastSelectedPathComponent() == null ) return;
-		
-		System.out.println("foldertree->valueChanged");
-		
-		System.out.println("treeController->selectFolderPath="+e.getNewLeadSelectionPath().toString() );
-		System.out.println("treeController->selectFolder="+view.getLastSelectedPathComponent() );
-		
-		
-		treeSelectionManager.fireFolderSelectionEvent( selectedFolder, (FolderTreeNode) view.getLastSelectedPathComponent() );
-		
-		selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
-		
+	public void setSelected(Folder folder) {
+		view.clearSelection();
+
+		TreePath path = folder.getSelectionTreePath();
+
+		view.requestFocus();
+		view.setLeadSelectionPath(path);
+		view.setAnchorSelectionPath(path);
+		view.expandPath(path);
+
+		//view.setSelectionRow( view.getRowForPath(path) );
+		treeSelectionManager.fireFolderSelectionEvent(selectedFolder, folder);
+
+		this.selectedFolder = folder;
+
+		//selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
+
 		getActionListener().changeActions();
-		
-		
+
+		MainInterface.processor.addOp(
+			new ViewHeaderListCommand(
+				getMailFrameController(),
+				treeSelectionManager.getSelection()));
+
+	}
+
+	// this method is called when the user selects another folder
+
+	public void valueChanged(TreeSelectionEvent e) {
+
+		// BUGFIX but don't know why that bug occurs 
+		if (view.getLastSelectedPathComponent() == null)
+			return;
+
+		treeSelectionManager.fireFolderSelectionEvent(
+			selectedFolder,
+			(FolderTreeNode) view.getLastSelectedPathComponent());
+
+		selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
+
+		getActionListener().changeActions();
+
 		//if (selectedFolder == null) return;
 	}
 
-	public SelectFolderDialog getSelectFolderDialog() {
-		
-		SelectFolderDialog dialog =
-			new SelectFolderDialog(MainInterface.frameController.getView(), this);
-		return dialog;
-		
-	}
-	
-	
-
-	/*
-	public void addUserFolder( String name )
-	{
-	    addUserFolder( getSelected(), name );
-	
-	}
-	*/
-
-	/*    
-	  public FolderTreeNode addVirtualFolder( String name )
-	{
-	    FolderTreeNode parentFolder = getSelected();
-	
-	    return addVirtualFolder( parentFolder, name );
-	
-	
-	}
-	*/
-
-	public EditFolderDialog getEditFolderDialog(String name) {
-		EditFolderDialog dialog =
-			new EditFolderDialog(getMailFrameController().getView(), name);
-
-		return dialog;
-	}
-
-	
 	public JPopupMenu getPopupMenu() {
 		return menu.getPopupMenu();
 	}
 
-	/*
-	public DefaultTreeModel getModel() {
-		return getFolderTree().getModel();
-	}
-	*/
-
-	/*
-	public void setSelected(FolderTreeNode folder) {
-		getFolderTree().setSelected(folder);
-	
-		MainInterface.headerTableViewer.setFolder(folder);
-	
-		GuiOperation op = new GuiOperation(Operation.HEADERLIST, 4, folder);
-		MainInterface.crossbar.operate(op);
-	
-	}
-	*/
-
-	/*
 	public FolderTreeNode getSelected() {
-	
-		FolderTreeNode folder =
-			(FolderTreeNode) getFolderTree().getTree().getLastSelectedPathComponent();
-	
-		return folder;
-	}
-	*/
-
-	public FolderTreeNode getSelected()
-	{
 		return selectedFolder;
 	}
-	
+
 	public void selectFolder() {
-		
-		/*
-		treeSelectionManager.fireFolderSelectionEvent( selectedFolder, (FolderTreeNode) view.getLastSelectedPathComponent() );
-		
-		selectedFolder = (FolderTreeNode) view.getLastSelectedPathComponent();
-		
-		getActionListener().changeActions();
-		*/
-		
-		//MainInterface.processor.addOp( new ViewHeaderListCommand( treeSelectionManager.getSelection() ), Command.FIRST_EXECUTION );
-		
-		/*
-		FolderTreeNode folder = getSelected();
-		if (folder == null)
-			return;
-	
-		if (folder.equals(oldSelected))
-			return;
-		else
-			oldSelected = folder;
-	
-		FolderItem item = folder.getFolderItem();
-		if (item == null)
-			return;
-	
-		getActionListener().changeActions();
-	
-		//MessageFolderInfo info = folder.getMessageFolderInfo();
-		//MainInterface.folderInfoPanel.set(item, info);
-	
-		if (item.isMessageFolder()) {
-			MainInterface.headerTableViewer.setFolder(folder);
-			GuiOperation op =
-				new GuiOperation(Operation.HEADERLIST, 20, folder);
-	
-			MainInterface.crossbar.operate(op);
-		} else {
-			MainInterface.headerTableViewer.setHeaderList(null);
-		}
-		*/
-	}
-	
 
-	
-	public void expandImapRootFolder() {
-		/*
-		FolderTreeNode folder = getSelected();
-		if (folder == null)
-			return;
-	
-		FolderItem item = folder.getFolderItem();
-	
-		if (item.getType().equals("imaproot")) {
-			ImapRootFolder root = (ImapRootFolder) folder;
-			FolderOperation op =
-				new FolderOperation(Operation.FOLDER_LIST, 20, root);
-			MainInterface.crossbar.operate(op);
-		}
-		*/
-	}
-	
+		MainInterface.processor.addOp(
+			new ViewHeaderListCommand(
+				getMailFrameController(),
+				treeSelectionManager.getSelection()));
 
-	/*
-	public void treeNodeChanged(TreeNodeEvent e) {
-		final TreeNodeEvent event = e;
-	
-		Runnable run = new Runnable() {
-			public void run() {
-				getFolderTree().treeNodeChanged(event);
-	
-				if (getSelected().equals(event.getSource())) {
-					if (MainInterface.folderInfoPanel != null) {
-						FolderTreeNode folder = (FolderTreeNode) event.getSource();
-						FolderItem item = folder.getFolderItem();
-						MessageFolderInfo info = folder.getMessageFolderInfo();
-	
-						MainInterface.folderInfoPanel.set(item, info);
-						//MainInterface.folderInfoPanel.update();
-					}
-				}
-			}
-		};
-		try {
-			if (!SwingUtilities.isEventDispatchThread())
-				SwingUtilities.invokeAndWait(run);
-			else
-				SwingUtilities.invokeLater(run);
-	
-		} catch (Exception ex) {
-		}
-	
 	}
-	*/
+
 	/**
 	 * Returns the treeSelectionManager.
 	 * @return TreeSelectionManager

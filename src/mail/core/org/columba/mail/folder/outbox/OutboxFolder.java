@@ -17,15 +17,12 @@ package org.columba.mail.folder.outbox;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.LocalHeaderCache;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -47,8 +44,8 @@ public class OutboxFolder extends MHFolder {
 
 	protected OutboxHeaderCache cache;
 
-	public OutboxFolder(AdapterNode node, FolderItem item) {
-		super(node, item);
+	public OutboxFolder(FolderItem item) {
+		super(item);
 
 		sendListManager[0] = new SendListManager();
 		sendListManager[1] = new SendListManager();
@@ -59,6 +56,7 @@ public class OutboxFolder extends MHFolder {
 		cache = new OutboxHeaderCache(this);
 
 	}
+
 	
 	// this method needs to be fixed for the sake of completness
 	// (we don't use it anyway)
@@ -241,22 +239,8 @@ public class OutboxFolder extends MHFolder {
 		return cache.getHeaderList(worker);
 	}
 
-	public Hashtable getAttributes() {
-		Hashtable attributes = new Hashtable();
-
-		attributes.put("accessrights", "user");
-		attributes.put("messagefolder", "true");
-		attributes.put("type", "columba");
-		attributes.put("subfolder", "true");
-		attributes.put("accessrights", "true");
-		attributes.put("add", "true");
-		attributes.put("remove", "true");
-
-		return attributes;
-	}
-
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
-		return new OutboxFolder(node, item);
+	public Class getDefaultChild() {
+		return OutboxFolder.class;
 	}
 
 	/*

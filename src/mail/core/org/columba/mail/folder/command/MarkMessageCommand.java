@@ -2,12 +2,10 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.main.MainInterface;
 
@@ -36,16 +34,15 @@ public class MarkMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public MarkMessageCommand(
-		FrameController frameController,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super( references);
 	}
 
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
+		
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.MARK, folder, uids, markVariant );
 		 
-		frame.tableController.tableChanged(ev);
+		MainInterface.frameModel.tableChanged(ev);
 		
 		MainInterface.treeModel.nodeChanged(folder);
 	}

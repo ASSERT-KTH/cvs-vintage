@@ -62,11 +62,17 @@ public class GeneralPanel extends JPanel implements ActionListener
 
 		if (b == true)
 		{
+			// FIXME
+			/*
 			String delay =
 				Config.getOptionsConfig().getStringGuiOptions(
 					"markasreaddelay",
 					"2");
 			System.out.println("delay=" + delay);
+			
+			
+			
+			
 			markTextField.setText(delay);
 
 			boolean preferhtml = MailConfig.getMainFrameOptionsConfig().getWindowItem().getHtmlViewer();
@@ -76,10 +82,12 @@ public class GeneralPanel extends JPanel implements ActionListener
 				preferHtmlCheckBox.setSelected(false);
 
 			toolbarComboBox.setSelectedIndex( item.getToolbarState() );
-
+			*/
 		}
 		else
 		{
+			// FIXME
+			/*
 			Config.getOptionsConfig().setStringGuiOption(
 				"markasreaddelay",
 		markTextField.getText());
@@ -90,7 +98,8 @@ public class GeneralPanel extends JPanel implements ActionListener
 				MailConfig.getMainFrameOptionsConfig().getWindowItem().setHtmlViewer(false);
 
 			item.setToolbarState( toolbarComboBox.getSelectedIndex() );
-
+			*/
+			
 		}
 	}
 

@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.ThemeSwitcher;
@@ -143,70 +144,30 @@ public class FrameActionListener implements ActionListener {
 					.globalActionCollection
 					.searchMessageAction
 					.getActionCommand())) {
-			Folder searchFolder = (Folder) MainInterface.treeModel.getFolder(106);
-				FolderCommandReference[] r = (FolderCommandReference[]) frameController.treeController.getTreeSelectionManager().getSelection();
-				
-				
-				//Folder folder = MainInterface.tableController.getFolder();
-				Folder folder = (Folder) r[0].getFolder();
-				System.out.println("folder:"+folder.getName() );
-
-				if ( folder == null ) return;
-
-				/*
-				frameController.treeViewer.getFolderTree().setSelected( folder );
-
-				FolderItem item = folder.getFolderItem();
-
-				if ( !(item.isMessageFolder()) )
-				{
-					folder = MainInterface.treeViewer.getFolderTree().getFolder(101);
-
-				}
-				*/
-
-				org.columba.mail.gui.config.search.SearchFrame frame =
-					new org.columba.mail.gui.config.search.SearchFrame(
-						searchFolder);
-
-				frame.setSourceFolder( folder );
-				frame.setVisible(true);
-			/*
-			System.out.println("search messages");
+			Folder searchFolder =
+				(Folder) MainInterface.treeModel.getFolder(106);
 			
-			VirtualFolder searchFolder =
-			(VirtualFolder) MainInterface
-			.treeViewer
-			.getFolderTree()
-			.getFolder(
-			106);
-			//System.out.println("searchfolder:"+ searchFolder.getName());
+			org.columba.mail.gui.config.search.SearchFrame frame =
+				new org.columba.mail.gui.config.search.SearchFrame(
+					frameController,
+					searchFolder);
+
 			
-			MainInterface.treeViewer.getFolderTree().setSelected(searchFolder);
-			//AdapterNode searchNode = searchFolder.getNode();
-			
-			//System.out.println("selectedfolder:"+ MainInterface.treeViewer.getSelected().getName());
-			
-			//TreeNodeList destList = new TreeNodeList( "/Local Message/Search Result" );
-			//VirtualFolder destFolder = (VirtualFolder) searchFolder.getFolder();
-			
-			org.columba.modules.mail.gui.config.search.SearchFrame frame =
-			new org.columba.modules.mail.gui.config.search.SearchFrame(
-			searchFolder);
-			frame.setVisible(true);
-			*/
 		} else if (action.equals("RECEIVESEND")) {
 			System.out.println("receive and send messages");
-			
-			POP3ServerController[] list = MainInterface.popServerCollection.getList();
+
+			POP3ServerController[] list =
+				MainInterface.popServerCollection.getList();
 
 			for (int i = 0; i < list.length; i++) {
-				POP3ServerController controller = (POP3ServerController) list[i];
+				POP3ServerController controller =
+					(POP3ServerController) list[i];
 
 				POP3CommandReference[] r = new POP3CommandReference[1];
-				r[0] = new POP3CommandReference(controller.getServer() );
+				r[0] = new POP3CommandReference(controller.getServer());
 
-				FetchNewMessagesCommand c = new FetchNewMessagesCommand(frameController, r);
+				FetchNewMessagesCommand c =
+					new FetchNewMessagesCommand( r);
 
 				MainInterface.processor.addOp(c);
 			}
@@ -214,15 +175,18 @@ public class FrameActionListener implements ActionListener {
 		} else if (action.equals("RECEIVE")) {
 			System.out.println("receive messages");
 
-			POP3ServerController[] list = MainInterface.popServerCollection.getList();
+			POP3ServerController[] list =
+				MainInterface.popServerCollection.getList();
 
 			for (int i = 0; i < list.length; i++) {
-				POP3ServerController controller = (POP3ServerController) list[i];
+				POP3ServerController controller =
+					(POP3ServerController) list[i];
 
 				POP3CommandReference[] r = new POP3CommandReference[1];
-				r[0] = new POP3CommandReference(controller.getServer() );
+				r[0] = new POP3CommandReference(controller.getServer());
 
-				FetchNewMessagesCommand c = new FetchNewMessagesCommand(frameController, r);
+				FetchNewMessagesCommand c =
+					new FetchNewMessagesCommand(r);
 
 				MainInterface.processor.addOp(c);
 			}
@@ -233,102 +197,68 @@ public class FrameActionListener implements ActionListener {
 
 		} else if (action.equals("SEND")) {
 			System.out.println("send messages");
-			
+
 			FolderCommandReference[] r = new FolderCommandReference[1];
-			OutboxFolder folder = (OutboxFolder) MainInterface.treeModel.getFolder(103);
-			
+			OutboxFolder folder =
+				(OutboxFolder) MainInterface.treeModel.getFolder(103);
+
 			r[0] = new FolderCommandReference(folder);
-			
-			SendAllMessagesCommand c = new SendAllMessagesCommand( frameController, r );
-			
-			MainInterface.processor.addOp( c );
-			
+
+			SendAllMessagesCommand c =
+				new SendAllMessagesCommand(frameController, r);
+
+			MainInterface.processor.addOp(c);
+
 		} else if (action.equals("VIEW_TOOLBAR")) {
 			System.out.println("show toolbar");
-
-			boolean folderInfo =
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.isShowFolderInfo();
-
-			if (MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowToolbar()
-				== true) {
+			ViewItem item =
+				MailConfig.getMainFrameOptionsConfig().getViewItem();
+			boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
+			boolean toolbar = item.getBoolean("toolbars", "show_main");
+			if (toolbar == true) {
 
 				frameController.getView().hideToolbar(folderInfo);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowToolbar(
-					"false");
+				item.set("toolbars", "show_main", false);
 			} else {
 
 				frameController.getView().showToolbar(folderInfo);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowToolbar(
-					"true");
+				item.set("toolbars", "show_main", true);
 			}
 
 		} else if (action.equals("VIEW_FILTERTOOLBAR")) {
-			
+
 			System.out.println("show filtertoolbar");
-			
-			if (MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowFilterToolbar()
-				== true) {
-			
+			ViewItem item =
+				MailConfig.getMainFrameOptionsConfig().getViewItem();
+			boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
+			boolean toolbar = item.getBoolean("toolbars", "show_main");
+			boolean filter = item.getBoolean("toolbars", "show_filter");
+			if (filter == true) {
+
 				frameController.getView().hideFilterToolbar();
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowFilterToolbar(
-					"false");
+				item.set("toolbars", "show_filter", false);
 			} else {
-			
+
 				frameController.getView().showFilterToolbar();
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowFilterToolbar(
-					"true");
+				item.set("toolbars", "show_filter", true);
 			}
-			
+
 		} else if (action.equals("VIEW_FOLDERINFO")) {
 			System.out.println("show folderinfo");
+			ViewItem item =
+				MailConfig.getMainFrameOptionsConfig().getViewItem();
+			boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
+			boolean toolbar = item.getBoolean("toolbars", "show_main");
+			boolean filter = item.getBoolean("toolbars", "show_filter");
 
-			boolean toolbar =
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.isShowToolbar();
-
-			if (MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowFolderInfo()
-				== true) {
+			if (folderInfo == true) {
 
 				frameController.getView().hideFolderInfo(toolbar);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowFolderInfo(
-					"false");
+				item.set("toolbars", "show_folderinfo", false);
 			} else {
 
 				frameController.getView().showFolderInfo(toolbar);
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.setShowFolderInfo(
-					"true");
+				item.set("toolbars", "show_folderinfo", true);
 			}
 
 		} else if (action.equals("USE_ADVANCEDVIEWER")) {
@@ -384,47 +314,54 @@ public class FrameActionListener implements ActionListener {
 				ThemeSwitcher.setTheme();
 				ThemeSwitcher.updateFrame(frameController.getView());
 			}
-		}  else if (action.equals("HOMEPAGE")) {
+		} else if (action.equals("HOMEPAGE")) {
 			URLController c = new URLController();
-			try{
+			try {
 				c.open(new URL("http://columba.sourceforge.net"));
-			}catch(MalformedURLException mue){}
+			} catch (MalformedURLException mue) {
+			}
 		} else if (action.equals("FAQ")) {
 			URLController c = new URLController();
-			try{
-				c.open(new URL("http://columba.sourceforge.net/index.php?page=faq"));
-			}catch(MalformedURLException mue){}
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/index.php?page=faq"));
+			} catch (MalformedURLException mue) {
+			}
 		} else if (action.equals("LICENSE")) {
 			URLController c = new URLController();
-			try{
-				c.open(new URL("http://columba.sourceforge.net/index.php?page=license"));
-			}catch(MalformedURLException mue){}
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/index.php?page=license"));
+			} catch (MalformedURLException mue) {
+			}
 		} else if (action.equals("BUGREPORT")) {
 			URLController c = new URLController();
-			try{
-				c.open(new URL("http://www.sourceforge.net/projects/columba/bugs"));
-			}catch(MalformedURLException mue){}
+			try {
+				c.open(
+					new URL("http://www.sourceforge.net/projects/columba/bugs"));
+			} catch (MalformedURLException mue) {
+			}
 		} else if (action.equals("SOURCEFORGE")) {
 			URLController c = new URLController();
-			try{
+			try {
 				c.open(new URL("http://www.sourceforge.net/projects/columba"));
-			}catch(MalformedURLException mue){}
-		}else if (action.equals("EXIT")) {
+			} catch (MalformedURLException mue) {
+			}
+		} else if (action.equals("EXIT")) {
 			/*
 			ExitWorker worker = new ExitWorker();
 			worker.register(MainInterface.taskManager);
 			worker.start();
 			*/
-			frameController.close();
+			MainInterface.frameModel.close();
 
 		} else if (action.equals("NEW_MESSAGE")) {
 
-			ComposerController controller = new ComposerController(frameController);
+			ComposerController controller = new ComposerController();
 			controller.showComposerWindow();
 
 		} else if (action.equals("OPEN_NEW_WINDOW")) {
-			MailFrameController c = new MailFrameController();
-			c.getView().show();
+			MainInterface.frameModel.openView();
 		}
 
 	}

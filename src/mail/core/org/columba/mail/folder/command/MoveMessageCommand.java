@@ -2,11 +2,9 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.main.MainInterface;
 
@@ -30,23 +28,21 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	 * @param references
 	 */
 	public MoveMessageCommand(
-		FrameController frameController,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(references);
 	}
 
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
 
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
 
-		frame.tableController.tableChanged(ev);
+		MainInterface.frameModel.tableChanged(ev);
 
 		TableChangedEvent ev2 =
 			new TableChangedEvent(TableChangedEvent.UPDATE, srcFolder);
 
-		frame.tableController.tableChanged(ev2);
+		MainInterface.frameModel.tableChanged(ev2);
 
 		MainInterface.treeModel.nodeChanged(destFolder);
 		MainInterface.treeModel.nodeChanged(srcFolder);
@@ -58,10 +54,6 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	public void execute(Worker worker) throws Exception {
 		super.execute(worker);
 		
-		
-		MailFrameController mailFrameController =
-			(MailFrameController) frameController;
-
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Object[] uids = r[0].getUids();

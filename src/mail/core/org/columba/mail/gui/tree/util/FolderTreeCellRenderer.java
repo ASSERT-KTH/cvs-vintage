@@ -14,7 +14,6 @@
 
 package org.columba.mail.gui.tree.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -23,12 +22,14 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.folder.MessageFolderInfo;
+import org.columba.mail.gui.tree.TreeController;
 
 public class FolderTreeCellRenderer
 	extends DefaultTreeCellRenderer //extends JLabel implements TreeCellRenderer
@@ -37,6 +38,7 @@ public class FolderTreeCellRenderer
 	Border selectedBorder = null;
 	boolean isBordered = true;
 	boolean bool;
+	TreeController treeController;
 
 	private ImageIcon image1,
 		image2,
@@ -51,9 +53,11 @@ public class FolderTreeCellRenderer
 
 	private Font plainFont, boldFont, italicFont;
 
-	public FolderTreeCellRenderer(boolean bool) {
+	public FolderTreeCellRenderer(TreeController treeController, boolean bool) {
 		super();
 
+		this.treeController = treeController;
+		
 		this.bool = bool;
 
 		boldFont = UIManager.getFont("Tree.font");
@@ -79,6 +83,20 @@ public class FolderTreeCellRenderer
 		int row,
 		boolean hasFocus) {
 
+		
+		FolderTreeNode treeNode = (FolderTreeNode) value;
+		TreePath path = treeNode.getSelectionTreePath();
+
+		FolderTreeNode selection = treeController.getSelected();
+		if( selection != null )
+		{
+		if ( treeNode.equals(selection) )
+			isSelected = true;
+		else
+			isSelected = false;
+		}
+		
+		
 		super.getTreeCellRendererComponent(
 			tree,
 			value,
@@ -90,12 +108,14 @@ public class FolderTreeCellRenderer
 
 		Folder folder = null;
 
+		/*
 		if (value instanceof IMAPRootFolder) {
 			setText(((IMAPRootFolder) value).getName());
 			setIcon(image9);
 			return this;
-
+		
 		}
+		*/
 
 		try {
 			folder = (Folder) value;
@@ -107,9 +127,8 @@ public class FolderTreeCellRenderer
 
 		if (folder != null) {
 
-			if (folder.getMessageFolderInfo().getRecent() > 0) {
-				
-				
+			if (((Folder) folder).getMessageFolderInfo().getRecent() > 0) {
+
 				setFont(boldFont);
 			} else {
 				setFont(plainFont);
@@ -121,32 +140,25 @@ public class FolderTreeCellRenderer
 		FolderItem item = folder.getFolderItem();
 
 		if (item != null) {
-			int uid = item.getUid();
+			int uid = item.getInteger("uid");
 
 			String name;
 
 			//name = folder.getName();
 
-			name = item.getName();
+			name = item.get("property", "name");
 
+			
+
+			MessageFolderInfo info = ((Folder) folder).getMessageFolderInfo();
 			if (folder != null) {
-				if (folder.getMessageFolderInfo().getUnseen() > 0)
-					name =
-						name
-							+ " ("
-							+ folder.getMessageFolderInfo().getUnseen()
-							+ ") ";
+				if (info.getUnseen() > 0)
+					name = name + " (" + info.getUnseen() + ") ";
 
 				StringBuffer buf = new StringBuffer();
-				buf.append(
-					"<html><body>&nbsp;Total: "
-						+ folder.getMessageFolderInfo().getExists());
-				buf.append(
-					"<br>&nbsp;Unseen: "
-						+ folder.getMessageFolderInfo().getUnseen());
-				buf.append(
-					"<br>&nbsp;Recent: "
-						+ folder.getMessageFolderInfo().getRecent());
+				buf.append("<html><body>&nbsp;Total: " + info.getExists());
+				buf.append("<br>&nbsp;Unseen: " + info.getUnseen());
+				buf.append("<br>&nbsp;Recent: " + info.getRecent());
 				buf.append("</body></html>");
 				setToolTipText(buf.toString());
 
@@ -157,30 +169,39 @@ public class FolderTreeCellRenderer
 
 			setText(name);
 
+			if (expanded == true) {
+				setIcon(folder.getExpandedIcon());
+			} else {
+				setIcon(folder.getCollapsedIcon());
+			}
+			// FIXME
+
+			/*
 			if (item.getType().equals("virtual")) {
 				setIcon(image10);
-
+			
 			} else if (
 				item.getType().equals("imaproot") && !item.isMessageFolder()) {
-
+			
 				setIcon(image9);
 			} else if (item.getAccessRights().equals("system")) {
 				if (item.getUid() == 100)
 					setIcon(image2);
 				else
 					setIcon(image1);
-
+			
 			} else if (item.getType().equals("imap")) {
 				if (item.getMessageFolder().equals("false")) {
 					setForeground(Color.darkGray);
 					setFont(italicFont);
-
+			
 				}
 				setIcon(image1);
 			} else {
-
+			
 				setIcon(image1);
 			}
+			*/
 		}
 		return this;
 	}

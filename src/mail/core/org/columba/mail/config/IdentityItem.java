@@ -14,133 +14,13 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 public class IdentityItem extends DefaultItem {
 
-	private AdapterNode name,
-		organisation,
-		address,
-		reply,
-		signature,
-		attachsignature,
-		signaturefile;
-
-	private AdapterNode rootNode;
-
-	public IdentityItem(AdapterNode rootNode, Document doc) {
-		super(doc);
-		this.rootNode = rootNode;
-
-		parse();
-
-		createMissingElements();
+	public IdentityItem(XmlElement e) {
+		super(e);
 	}
 
-	protected void parse() {
-		int count = getRootNode().getChildCount();
-		
-		for (int i = 0; i < count; i++) {
-			AdapterNode child = getRootNode().getChildAt(i);
-			String str = child.getName();
-			
-			if (str.equals("name")) {
-				name = child;
-			} else if (str.equals("organisation")) {
-				organisation = child;
-			} else if (str.equals("address")) {
-				address = child;
-			} else if (str.equals("replyaddress")) {
-				reply = child;
-			} else if (str.equals("signature")) {
-				signature = child;
-			} else if (str.equals("attachsignature")) {
-				attachsignature = child;
-			} else if (str.equals("signaturefile")) {
-				signaturefile = child;
-			}
-		}
-	}
-
-	protected void createMissingElements() {
-		if (signaturefile == null)
-			signaturefile = addKey(rootNode, "signaturefile", "~/.signature");
-	}
-
-	/*************************************************************************/
-
-	public AdapterNode getRootNode() {
-		return rootNode;
-	}
-
-	/******************************** set ************************************/
-
-	public void setName(String str) {
-		setTextValue(name, str);
-	}
-
-	public void setOrganisation(String str) {
-		setTextValue(organisation, str);
-	}
-
-	public void setAddress(String str) {
-		setTextValue(address, str);
-	}
-
-	public void setReplyAddress(String str) {
-		setTextValue(reply, str);
-	}
-
-	public void setSignature(String str) {
-		setCDATAValue(signature, str);
-	}
-
-	public void setAttachSignature(boolean b) {
-		if (b == true)
-			setTextValue(attachsignature, "true");
-		else
-			setTextValue(attachsignature, "false");
-	}
-	
-	public void setSignatureFile( String str )
-	{
-		setTextValue( signaturefile, str );
-	}
-
-	/********************************** get ***************************************/
-
-	public String getName() {
-		return getTextValue(name);
-	}
-
-	public String getOrganisation() {
-		return getTextValue(organisation);
-	}
-
-	public String getAddress() {
-		return getTextValue(address);
-	}
-
-	public String getReplyAddress() {
-		return getTextValue(reply);
-	}
-
-	public String getSignature() {
-		return getCDATAValue(signature);
-	}
-
-	public boolean getAttachSignature() {
-		String str = (String) getTextValue(attachsignature);
-
-		Boolean b = new Boolean(str);
-
-		return b.booleanValue();
-	}
-
-	public String getSignatureFile()
-	{
-		return getTextValue(signaturefile);
-	}
 }

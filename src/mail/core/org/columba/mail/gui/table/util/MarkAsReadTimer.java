@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import org.columba.core.config.Config;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -46,15 +45,19 @@ public class MarkAsReadTimer implements ActionListener {
 	private Object[] uids;
 
 	private TableController tableController;
-	
-	public MarkAsReadTimer( TableController tableController ) {
+
+	public MarkAsReadTimer(TableController tableController) {
 
 		this.tableController = tableController;
+
+		// FIXME
+		this.maxValue = 2;
+		/*
 		this.maxValue =
 			Config.getOptionsConfig().getIntegerGuiOptions(
 				"markasreaddelay",
 				2);
-
+		*/
 		timer = new Timer(ONE_SECOND * maxValue, this);
 
 	}
@@ -83,11 +86,8 @@ public class MarkAsReadTimer implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("value: " + value);
 
 		timer.stop();
-
-		System.out.println("timer starts markasread operation");
 
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) tableController
@@ -95,8 +95,7 @@ public class MarkAsReadTimer implements ActionListener {
 				.getSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-		MarkMessageCommand c =
-			new MarkMessageCommand(tableController.getMailFrameController(), r);
+		MarkMessageCommand c = new MarkMessageCommand(r);
 
 		MainInterface.processor.addOp(c);
 

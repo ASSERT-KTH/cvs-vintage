@@ -31,8 +31,10 @@ import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.config.Config;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.message.action.MessageActionListener;
@@ -72,7 +74,7 @@ public class MessageController
 	private MessageActionListener actionListener;
 
 	protected MailFrameController mailFrameController;
-	
+
 	protected URL url;
 
 	//private MessageSelectionManager messageSelectionManager;
@@ -99,11 +101,7 @@ public class MessageController
 		keys[3] = new String("To");
 		*/
 
-		Font mainFont =
-			new Font(
-				Config.getOptionsConfig().getThemeItem().getMainFontName(),
-				Font.PLAIN,
-				Config.getOptionsConfig().getThemeItem().getMainFontSize());
+		Font mainFont = Config.getOptionsConfig().getGuiItem().getMainFont();
 
 		menu = new MessageMenu(this);
 
@@ -175,7 +173,11 @@ public class MessageController
 	public void showMessage(HeaderInterface header, MimePart bodyPart)
 		throws Exception {
 
-		boolean htmlViewer = false;
+		XmlElement html =
+			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+				"/options/html");
+		boolean htmlViewer =
+			new Boolean(html.getAttribute("prefer")).booleanValue();
 
 		// Which Charset shall we use ?
 
@@ -306,8 +308,7 @@ public class MessageController
 	}
 
 	public void mouseReleased(MouseEvent event) {
-		
-		
+
 		if (event.isPopupTrigger()) {
 			processPopup(event);
 
@@ -343,43 +344,43 @@ public class MessageController
 			ex.printStackTrace();
 		}
 	}
-	
+
 	/*
-        private String getMapHREF(JEditorPane html, HTMLDocument hdoc,
-                                  Element elem, AttributeSet attr, int offset,
-                                  int x, int y) {
-            Object useMap = attr.getAttribute(HTML.Attribute.USEMAP);
-            if (useMap != null && (useMap instanceof String)) {
-                Map m = hdoc.getMap((String)useMap);
-                if (m != null && offset < hdoc.getLength()) {
-                    Rectangle bounds;
-                    TextUI ui = html.getUI();
-                    try {
-                        Shape lBounds = ui.modelToView(html, offset,
-                                                   Position.Bias.Forward);
-                        Shape rBounds = ui.modelToView(html, offset + 1,
-                                                   Position.Bias.Backward);
-                        bounds = lBounds.getBounds();
-                        bounds.add((rBounds instanceof Rectangle) ?
-                                    (Rectangle)rBounds : rBounds.getBounds());
-                    } catch (BadLocationException ble) {
-                        bounds = null;
-                    }
-                    if (bounds != null) {
-                        AttributeSet area = m.getArea(x - bounds.x,
-                                                      y - bounds.y,
-                                                      bounds.width,
-                                                      bounds.height);
-                        if (area != null) {
-                            return (String)area.getAttribute(HTML.Attribute.
-                                                             HREF);
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-    */
+	    private String getMapHREF(JEditorPane html, HTMLDocument hdoc,
+	                              Element elem, AttributeSet attr, int offset,
+	                              int x, int y) {
+	        Object useMap = attr.getAttribute(HTML.Attribute.USEMAP);
+	        if (useMap != null && (useMap instanceof String)) {
+	            Map m = hdoc.getMap((String)useMap);
+	            if (m != null && offset < hdoc.getLength()) {
+	                Rectangle bounds;
+	                TextUI ui = html.getUI();
+	                try {
+	                    Shape lBounds = ui.modelToView(html, offset,
+	                                               Position.Bias.Forward);
+	                    Shape rBounds = ui.modelToView(html, offset + 1,
+	                                               Position.Bias.Backward);
+	                    bounds = lBounds.getBounds();
+	                    bounds.add((rBounds instanceof Rectangle) ?
+	                                (Rectangle)rBounds : rBounds.getBounds());
+	                } catch (BadLocationException ble) {
+	                    bounds = null;
+	                }
+	                if (bounds != null) {
+	                    AttributeSet area = m.getArea(x - bounds.x,
+	                                                  y - bounds.y,
+	                                                  bounds.width,
+	                                                  bounds.height);
+	                    if (area != null) {
+	                        return (String)area.getAttribute(HTML.Attribute.
+	                                                         HREF);
+	                    }
+	                }
+	            }
+	        }
+	        return null;
+	    }
+	*/
 
 	protected String extractURL(MouseEvent event) {
 		JEditorPane pane = (JEditorPane) event.getSource();
@@ -395,9 +396,9 @@ public class MessageController
 			s = getMapHREF(pane, doc, e, a, pane.viewToModel(event.getPoint()), event.getX(), event.getY() );
 		else	
 		*/
-			
+
 		s = (String) anchor.getAttribute(HTML.Attribute.HREF);
-		
+
 		return s;
 	}
 
@@ -408,7 +409,7 @@ public class MessageController
 			URL url = new URL(s);
 			URLController c = new URLController();
 			JPopupMenu menu = c.createMenu(url);
-			menu.show(getView(),event.getX(), event.getY() );
+			menu.show(getView(), event.getX(), event.getY());
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

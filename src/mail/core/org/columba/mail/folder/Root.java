@@ -1,9 +1,7 @@
 package org.columba.mail.folder;
 
-import java.util.Hashtable;
-
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 
 /**
@@ -12,32 +10,22 @@ import org.columba.mail.config.FolderItem;
  */
 public class Root extends FolderTreeNode {
 
-	/**
-	 * Constructor for Root.
-	 * @param node
-	 */
-	public Root(AdapterNode node) {
-		super(node);
+	
+	FolderItem item;
+	public Root(XmlElement node) {
+			super(new FolderItem(node));
 	}
 
 	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
 	 */
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
+	public Class getDefaultChild() {
 		return null;
 	}
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#getParameter()
-	 */
-	public Hashtable getAttributes() {
-		return null;
+	public void createChildren(WorkerStatusController c) {
 	}
-	
-	public void createChildren( WorkerStatusController c )
-	{
-	}
-	
-	
+
+
 
 }

@@ -82,7 +82,8 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
 		FolderItem item = folder.getFolderItem();
 		if ( item==null ) return this;
 		
-		int uid = item.getUid();
+		//int uid = item.getUid();
+		int uid = 100;
 		
 		if ( uid == 100 )
 		{

@@ -83,13 +83,13 @@ public class OutgoingServerPanel
 
 	private SmtpItem item;
 	private AccountItem accountItem;
-	
-	public OutgoingServerPanel(AccountItem accountItem, SmtpItem item) {
+
+	public OutgoingServerPanel(AccountItem accountItem) {
 		super();
 
-		this.item = item;
 		this.accountItem = accountItem;
-		
+		item = accountItem.getSmtpItem();
+
 		initComponents();
 
 		updateComponents(true);
@@ -112,22 +112,21 @@ public class OutgoingServerPanel
 
 		if (b) {
 
-			hostTextField.setText(item.getHost());
+			hostTextField.setText(item.get("host"));
 
-			portTextField.setText( new Integer(item.getPort()).toString() );
+			portTextField.setText(item.get("port"));
 
-			loginTextField.setText(item.getUser());
+			loginTextField.setText(item.get("user"));
 
-			if (item.isSavePassword())
-				storePasswordCheckBox.setSelected(true);
+			storePasswordCheckBox.setSelected(item.getBoolean("save_password"));
 
-			if (item.isESmtp() == true) {
+			if (!item.get("login_method").equals("NONE")) {
 				needAuthCheckBox.setSelected(true);
 
 				storePasswordCheckBox.setEnabled(true);
 				loginLabel.setEnabled(true);
 				loginTextField.setEnabled(true);
-				String loginMethod = item.getLoginMethod();
+				String loginMethod = item.get("login_method");
 				authenticationComboBox.setSelectedItem(loginMethod);
 
 			} else {
@@ -140,64 +139,55 @@ public class OutgoingServerPanel
 				authenticationComboBox.setEnabled(false);
 
 			}
-			
-			if (MailConfig
-					.getAccountList()
-					.getDefaultAccountUid()
-					== accountItem.getUid()) {
-					defaultAccountCheckBox.setEnabled(false);
-				} else {
-					defaultAccountCheckBox.setEnabled(true);
-				}
-				
-			if (item.isUseDefaultAccount())
-					defaultAccountCheckBox.setSelected(true);
-				else
-					defaultAccountCheckBox.setSelected(false);
-				
-			if ( defaultAccountCheckBox.isEnabled() && defaultAccountCheckBox.isSelected() ) 
-			{
-				showDefaultAccountWarning();
+
+			if (MailConfig.getAccountList().getDefaultAccountUid()
+				== accountItem.getInteger("uid")) {
+				defaultAccountCheckBox.setEnabled(false);
+			} else {
+				defaultAccountCheckBox.setEnabled(true);
 			}
+
+			if (item.getBoolean("use_default_account"))
+				defaultAccountCheckBox.setSelected(true);
 			else
-			{
+				defaultAccountCheckBox.setSelected(false);
+
+			if (defaultAccountCheckBox.isEnabled()
+				&& defaultAccountCheckBox.isSelected()) {
+				showDefaultAccountWarning();
+			} else {
 				layoutComponents();
 			}
-			
-			
-			
+
 		} else {
-			item.setUser(loginTextField.getText());
+			item.set("user", loginTextField.getText());
 
-			if (storePasswordCheckBox.isSelected())
-				item.setSavePassword("true"); //$NON-NLS-1$
-			else
-				item.setSavePassword("false"); //$NON-NLS-1$
+			item.set("save_password", storePasswordCheckBox.isSelected()); //$NON-NLS-1$
 
-			item.setPort(portTextField.getText());
+			item.set("port", portTextField.getText());
 
-			item.setHost(hostTextField.getText());
+			item.set("host", hostTextField.getText());
 
 			if (needAuthCheckBox.isSelected()) {
-				item.setESmtp("true");
 
 				String loginMethod =
 					(String) authenticationComboBox.getSelectedItem();
-				item.setLoginMethod(loginMethod);
+				item.set("login_method", loginMethod);
 
 			} else {
 
-				item.setESmtp("false"); //$NON-NLS-1$
+				item.set("login_method", "NONE"); //$NON-NLS-1$
 
 			}
-			
-			item.setUseDefaultAccount(defaultAccountCheckBox.isSelected());
+
+			item.set(
+				"use_default_account",
+				defaultAccountCheckBox.isSelected());
 
 		}
 	}
-	
-	protected void layoutComponents()
-	{
+
+	protected void layoutComponents() {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
@@ -208,7 +198,7 @@ public class OutgoingServerPanel
 		mainConstraints.weightx = 1.0;
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
@@ -234,7 +224,7 @@ public class OutgoingServerPanel
 		mainConstraints.insets = new Insets(0, 0, 0, 0);
 		mainLayout.setConstraints(configPanel, mainConstraints);
 		add(configPanel);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weightx = 0.1;
@@ -275,7 +265,7 @@ public class OutgoingServerPanel
 		layout = new GridBagLayout();
 		c = new GridBagConstraints();
 		securityPanel.setLayout(layout);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.anchor = GridBagConstraints.NORTHWEST;
 		c.weightx = 1.0;
@@ -288,7 +278,7 @@ public class OutgoingServerPanel
 		c.insets = new Insets(0, 20, 0, 0);
 		layout.setConstraints(panel, c);
 		securityPanel.add(panel);
-		
+
 		JPanel panel2 = new JPanel();
 		panel2.setLayout(layout);
 
@@ -339,26 +329,23 @@ public class OutgoingServerPanel
 		mainLayout.setConstraints(vglue, mainConstraints);
 		add(vglue);
 	}
-	
-	protected void showDefaultAccountWarning()
-	{
-		
-		
+
+	protected void showDefaultAccountWarning() {
+
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
 		GridBagConstraints mainConstraints = new GridBagConstraints();
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
 		mainConstraints.weightx = 1.0;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
 		add(defaultAccountCheckBox);
-		
-		
+
 		mainConstraints = new GridBagConstraints();
 		mainConstraints.weighty = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -369,21 +356,21 @@ public class OutgoingServerPanel
 		mainConstraints.weightx = 1.0;
 		mainConstraints.weighty = 1.0;
 		*/
-		
-		JLabel label = new JLabel(MailResourceLoader.getString("dialog","account","using_default_account_settings") );
-		Font newFont = label.getFont().deriveFont( Font.BOLD );
-		label.setFont( newFont );
-		mainLayout.setConstraints( label, mainConstraints );
-		add( label );
-		
-		
-		
-			
+
+		JLabel label =
+			new JLabel(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"using_default_account_settings"));
+		Font newFont = label.getFont().deriveFont(Font.BOLD);
+		label.setFont(newFont);
+		mainLayout.setConstraints(label, mainConstraints);
+		add(label);
+
 	}
 
 	protected void initComponents() {
-
-		
 
 		defaultAccountCheckBox =
 			new JCheckBox(
@@ -399,7 +386,6 @@ public class OutgoingServerPanel
 		//defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
-		
 
 		hostLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
 		hostLabel.setDisplayedMnemonic(
@@ -411,8 +397,6 @@ public class OutgoingServerPanel
 			MailResourceLoader.getMnemonic("dialog", "account", "port"));
 		portTextField = new JTextField();
 		portLabel.setLabelFor(portTextField);
-
-		
 
 		needAuthCheckBox = new JCheckBox(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
 		needAuthCheckBox.setMnemonic(
@@ -434,8 +418,6 @@ public class OutgoingServerPanel
 		secureCheckBox.setText(MailResourceLoader.getString("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
 		secureCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
 		secureCheckBox.setEnabled(false);
-
-		
 
 		authenticationLabel =
 			new JLabel(
@@ -463,8 +445,6 @@ public class OutgoingServerPanel
 		loginTextField = new JTextField();
 		loginLabel.setLabelFor(loginTextField);
 
-		
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -478,27 +458,20 @@ public class OutgoingServerPanel
 			loginTextField.setEnabled(true);
 			storePasswordCheckBox.setEnabled(true);
 
-		} 
-		else if ( action.equals("DEFAULT_ACCOUNT") )
-		{
+		} else if (action.equals("DEFAULT_ACCOUNT")) {
 			removeAll();
-			
-			
-			if( defaultAccountCheckBox.isSelected() )
-			{
+
+			if (defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
-				
-			}
-			else
-			{
+
+			} else {
 				layoutComponents();
-				
+
 			}
-				
+
 			revalidate();
-			
-		}
-		else {
+
+		} else {
 
 			if (action.equals("AUTH")) {
 				if (needAuthCheckBox.isSelected()) {

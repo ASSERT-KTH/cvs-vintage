@@ -18,19 +18,21 @@ package org.columba.addressbook.config;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 
 public class ContactItem extends DefaultItem
 {
     private AdapterNode address, uid, firstname, lastname, displayName;
         
-    public ContactItem( Document doc )
+    
+    public ContactItem( XmlElement root )
     {
-        super( doc );
+        super( root );
     
     }
     
+    /*
         
     public void setAddressNode( AdapterNode node )
     {
@@ -58,9 +60,6 @@ public class ContactItem extends DefaultItem
     }
     
 
-
-      /******************************************** set ***************************************/
-    
     
     public void setUid( int i )
     {
@@ -90,9 +89,6 @@ public class ContactItem extends DefaultItem
         setTextValue( displayName, str );
     }
     
-    
-    
-      /**************************************************** get *********************************/
 
 
     
@@ -127,7 +123,8 @@ public class ContactItem extends DefaultItem
     {
         return getTextValue( displayName );
     }
-    
+
+    */    
 }
     
 

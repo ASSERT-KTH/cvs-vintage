@@ -3,10 +3,8 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
@@ -30,21 +28,21 @@ public class AddMessageCommand extends Command {
 	 * @param frameController
 	 * @param references
 	 */
-	public AddMessageCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public AddMessageCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
+		//MailFrameController frame = (MailFrameController) frameController;
 
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.ADD, folder, headerList);
 
-		frame.tableController.tableChanged(ev);
-
+		//frame.tableController.tableChanged(ev);
+		
 		MainInterface.treeModel.nodeChanged(folder);
+		
+		MainInterface.frameModel.tableChanged(ev);
 	}
 
 	/**

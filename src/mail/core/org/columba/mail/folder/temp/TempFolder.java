@@ -4,9 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
@@ -287,14 +285,7 @@ public class TempFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
 	 */
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#getAttributes()
-	 */
-	public Hashtable getAttributes() {
+	public Class getDefaultChild() {
 		return null;
 	}
 
@@ -305,4 +296,5 @@ public class TempFolder extends Folder {
 	public String toString() {
 		return (String) getUserObject();
 	}
+
 }

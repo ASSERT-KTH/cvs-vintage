@@ -28,8 +28,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Keymap;
 
 import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
@@ -37,6 +35,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.CharsetManager;
 import org.columba.core.util.CmdLineArgumentParser;
 import org.columba.core.util.TempFileStore;
@@ -48,8 +47,11 @@ import org.columba.mail.coder.QuotedPrintableEncoder;
 import org.columba.mail.composer.MimeTypeLookup;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizard;
-import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.frame.FrameModel;
 import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.plugin.FilterActionPluginHandler;
+import org.columba.mail.plugin.LocalFilterPluginHandler;
+import org.columba.mail.plugin.RemoteFilterPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -89,6 +91,23 @@ public class Main {
 
 	public static void main(String[] arg) {
 		final String[] args = arg;
+
+
+		/*
+		try {
+			
+			
+			Object[] list = new Object[3];
+			list[0] = "hallo";
+			list[1] = new DateFilter();
+			list[2] = new Integer(3);
+			Python.runScript("./plugins/HelloWorldFilterAction/HelloWorld.py", list);
+			
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		*/
 
 		ColumbaCmdLineArgumentParser cmdLineParser =
 			new ColumbaCmdLineArgumentParser();
@@ -140,7 +159,7 @@ public class Main {
 
 			public Object construct() {
 
-				MainInterface.addressbookInterface = new AddressbookInterface();
+				//MainInterface.addressbookInterface = new AddressbookInterface();
 
 				// enable logging 
 				new ColumbaLogger();
@@ -149,7 +168,7 @@ public class Main {
 
 				new MailConfig();
 
-				new AddressbookConfig();
+				//new AddressbookConfig();
 
 				Config.init();
 
@@ -175,46 +194,33 @@ public class Main {
 
 				MainInterface.charsetManager = new CharsetManager();
 
-				//MainInterface.focusManager = new FocusManager();
-
-				
-
-				//MainInterface.imageSequenceTimer = new ImageSequenceTimer();
-
-				//MainInterface.popServerCollection.enableMailCheckIcon();
-
-				
 				MainInterface.processor = new DefaultProcessor();
 				MainInterface.processor.start();
 
+				MainInterface.pluginManager = new PluginManager();
+				MainInterface.pluginManager.registerHandler(
+					new FilterActionPluginHandler());
+				MainInterface.pluginManager.registerHandler(
+					new LocalFilterPluginHandler());
+				MainInterface.pluginManager.registerHandler(
+					new RemoteFilterPluginHandler());
+
+				MainInterface.pluginManager.initPlugins();
+
 				frame.advance();
 
-				//MainInterface.headerTableViewer = new TableController();
-
-				
-
-				//MainInterface.attachmentViewer = new AttachmentController();
-
-				//MainInterface.messageViewer = new MessageController();
-				/*
-				MainInterface.charsetManager.addCharsetListener(
-					MainInterface.messageViewer);
-				*/
-
-				//MainInterface.treeController = new TreeView();
-
-				//MainInterface.globalActionCollection.addActionListeners();
-
-				AddressbookMain.main(null);
-				
+				//AddressbookMain.main(null);
 
 				doGuiInits();
 
-				MainInterface.treeModel = new TreeModel(MailConfig.getFolderConfig());
-				
+				MainInterface.treeModel =
+					new TreeModel(MailConfig.getFolderConfig());
+					
+				MainInterface.frameModel = new FrameModel();
+
 				frame.advance();
+
 				
-				MainInterface.frameController = new MailFrameController();
 
 				return null;
 			}

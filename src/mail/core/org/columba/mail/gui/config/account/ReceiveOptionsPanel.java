@@ -36,9 +36,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.MailCheckInterface;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -394,27 +394,27 @@ public class ReceiveOptionsPanel
 	}
 
 	public void updateComponents(boolean b) {
-		MailCheckInterface mailcheckInterface = null;
+		DefaultItem receiveItem;
 
 		if (item.isPopAccount())
-			mailcheckInterface = item.getPopItem();
+			receiveItem = item.getPopItem();
 		else 
-			mailcheckInterface = item.getImapItem();
+			receiveItem = item.getImapItem();
 		
 
 		if (b) {
 
 			intervalCheckingCheckBox.setSelected(
-				mailcheckInterface.isMailCheck());
+				receiveItem.getBoolean("enable_mailcheck"));
 
-			playsoundCheckBox.setSelected(mailcheckInterface.isPlaysound());
+			playsoundCheckBox.setSelected(receiveItem.getBoolean("enable_sound"));
 
 			autodownloadCheckBox.setSelected(
-				mailcheckInterface.isAutoDownload());
+				receiveItem.getBoolean("automatically_download_new_messages"));
 
-			intervalCheckingTextField.setText(mailcheckInterface.getInterval());
+			intervalCheckingTextField.setText(receiveItem.get("mailcheck_interval"));
 
-			String soundfile = mailcheckInterface.getSoundfile();
+			String soundfile = receiveItem.get("sound_file");
 
 			if (soundfile.equalsIgnoreCase("default"))
 				defaultRadioButton.setSelected(true);
@@ -433,17 +433,7 @@ public class ReceiveOptionsPanel
 
 			chooseButton.setText(soundfile);
 
-			boolean useDefault = false;
-
-			if (item.isPopAccount()) {
-				PopItem popItem = item.getPopItem();
-				if (popItem.isUseDefaultAccount())
-					useDefault = true;
-			} else {
-				ImapItem imapItem = item.getImapItem();
-				if (imapItem.isUseDefaultAccount())
-					useDefault = true;
-			}
+			boolean useDefault = receiveItem.getBoolean("use_default_account");
 
 			if (useDefault)
 				showDefaultAccountWarning();
@@ -454,27 +444,18 @@ public class ReceiveOptionsPanel
 
 		} else {
 
-			if (intervalCheckingCheckBox.isSelected() == true)
-				mailcheckInterface.setMailCheck("true");
-			else
-				mailcheckInterface.setMailCheck("false");
+			receiveItem.set("enable_mailcheck", intervalCheckingCheckBox.isSelected());
 
-			if (playsoundCheckBox.isSelected() == true)
-				mailcheckInterface.setPlaysound(true);
-			else
-				mailcheckInterface.setPlaysound(false);
+			receiveItem.set("enable_sound", playsoundCheckBox.isSelected());
 
-			if (autodownloadCheckBox.isSelected() == true)
-				mailcheckInterface.setAutodownload(true);
-			else
-				mailcheckInterface.setAutodownload(false);
+			receiveItem.set("automatically_download_new_messages", autodownloadCheckBox.isSelected());
 
-			mailcheckInterface.setInterval(intervalCheckingTextField.getText());
+			receiveItem.set("mailcheck_interval", intervalCheckingTextField.getText());
 
 			if (defaultRadioButton.isSelected())
-				mailcheckInterface.setSoundfile("default");
+				receiveItem.set("sound_file", "default");
 			else
-				mailcheckInterface.setSoundfile(chooseButton.getText());
+				receiveItem.set("sound_file", chooseButton.getText());
 		}
 
 		if (item.isPopAccount()) {

@@ -27,7 +27,7 @@ import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.FrameController;
+import org.columba.core.config.WindowItem;
 import org.columba.core.util.CharsetEvent;
 import org.columba.core.util.CharsetListener;
 import org.columba.core.util.CharsetManager;
@@ -51,19 +51,17 @@ public class ComposerController
 	ComposerView view;
 	ComposerModel model;
 
-	public ComposerController( FrameController frameController) {
+	public ComposerController() {
 		composerInterface = new ComposerInterface();
 		composerInterface.composerController = this;
-		composerInterface.frameController = frameController;
+		
 
 		composerInterface.composerActionListener =
 			new ComposerActionListener(composerInterface);
 
-		composerInterface.windowItem =
-			MailConfig
-				.getComposerOptionsConfig()
-				.getWindowItem();
-
+		composerInterface.viewItem = MailConfig.getComposerOptionsConfig().getViewItem();
+		
+		
 		model = new ComposerModel(composerInterface);
 
 		composerInterface.identityInfoPanel = new IdentityInfoPanel();
@@ -89,10 +87,13 @@ public class ComposerController
 		composerInterface.composerSpellCheck =
 			new ComposerSpellCheck(composerInterface);
 
+		/*
 		composerInterface.addressbookFrame =
 			AddressBookIC.createAddressbookListFrame(composerInterface);
 
 		composerInterface.addressbookFrame.addComponentListener(this);
+		*/
+		
 		composerInterface.composerFrame.addComponentListener(this);
 
 		//view.setVisible(true);	
@@ -126,28 +127,32 @@ public class ComposerController
 
 		java.awt.Dimension d = view.getSize();
 
-		composerInterface.windowItem.setXPosition(0);
-		composerInterface.windowItem.setYPosition(0);
-		composerInterface.windowItem.setWidth(d.width);
-		composerInterface.windowItem.setHeight(d.height);
+		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
+		
+		windowItem.set("x", 0);
+		windowItem.set("y", 0);
+		windowItem.set("width", d.width);
+		windowItem.set("height", d.height);
 
-		composerInterface.windowItem.setMainSplitPane(
+		composerInterface.viewItem.set("splitpanes","main",
 			view.getMainDividerLocation());
-		composerInterface.windowItem.setRightSplitPane(
+		composerInterface.viewItem.set("splitpanes","header",
 			view.getRightDividerLocation());
 
 	}
 
 	public void loadWindowPosition() {
-		java.awt.Point point = composerInterface.windowItem.getPoint();
-		java.awt.Dimension dim = composerInterface.windowItem.getDimension();
+		WindowItem windowItem = composerInterface.viewItem.getWindowItem();
+		
+		java.awt.Point point = windowItem.getPoint();
+		java.awt.Dimension dim = windowItem.getDimension();
 
 		view.setSize(dim);
 
 		view.setMainDividerLocation(
-			composerInterface.windowItem.getMainSplitPane());
+			composerInterface.viewItem.getInteger("splitpanes","main"));
 		view.setRightDividerLocation(
-			composerInterface.windowItem.getRightSplitPane());
+		composerInterface.viewItem.getInteger("splitpanes","header"));
 	}
 
 	protected void registerWindowListener() {
@@ -190,13 +195,16 @@ public class ComposerController
 
 		composerInterface.headerController.view.getTable().initFocus(
 			composerInterface.subjectController.view);
-		if (composerInterface.windowItem.isShowAddressbook())
+			
+		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true )
 			showAddressbookWindow();
 
 		view.setVisible(true);
 
+		/*
 		initAddressCompletion();
-
+		*/
+		
 		composerInterface.headerController.appendRow();
 	}
 
@@ -226,7 +234,7 @@ public class ComposerController
 
 	public void hideComposerWindow() {
 
-		if (composerInterface.windowItem.isShowAddressbook())
+		if (composerInterface.viewItem.getBoolean("addressbook","enabled") == true)
 			hideAddressbookWindow();
 
 		view.setVisible(false);
@@ -262,9 +270,11 @@ public class ComposerController
 	}
 
 	public void componentMoved(ComponentEvent e) {
+		/*
 		if (composerInterface.addressbookFrame.isVisible()) {
 			updateAddressbookFrame();
 		}
+		*/
 	}
 
 	protected void updateAddressbookFrame() {

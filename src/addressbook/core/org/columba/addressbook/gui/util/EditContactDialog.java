@@ -31,13 +31,13 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.config.AddressbookXmlConfig;
 import org.columba.addressbook.config.ContactItem;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.config.AdapterNode;
+import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.CPanel;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.xml.XmlElement;
 
 public class EditContactDialog implements ActionListener, DocumentListener
 {
@@ -61,34 +61,35 @@ public class EditContactDialog implements ActionListener, DocumentListener
 	private AddressbookInterface addressbookInterface;
 	private AdapterNode contactNode;
 
-	private AddressbookXmlConfig config;
+	private DefaultXmlConfig config;
 
-	public EditContactDialog(AddressbookInterface i, AdapterNode contactNode)
+	public EditContactDialog(XmlElement root)
 	{
 		dialog = DialogStore.getDialog();
 
-		this.addressbookInterface = i;
-		this.contactNode = contactNode;
+		//this.addressbookInterface = i;
+		//this.contactNode = contactNode;
 
-		config = AddressbookConfig.getAddressbookConfig();
+		//config = AddressbookConfig.get("addressbook");
 
 		init();
 
 	}
 
-	public EditContactDialog(AddressbookXmlConfig config, AdapterNode contactNode)
+	/*
+	public EditContactDialog(XmlElement root)
 	{
 		dialog = DialogStore.getDialog();
 
 		//this.addressbookXmlConfig = config;
-		this.contactNode = contactNode;
+		//this.contactNode = contactNode;
 
-		this.config = config;
+		//this.config = config;
 
 		init();
 
 	}
-
+	*/
 	protected void init()
 	{
 		JPanel panel = new JPanel();
@@ -212,6 +213,8 @@ public class EditContactDialog implements ActionListener, DocumentListener
 		dialog.pack();
 		dialog.setLocationRelativeTo(null);
 
+		// FIXME
+		/*
 		if (contactNode != null)
 		{
 			ContactItem item = config.getContactItem(contactNode);
@@ -222,7 +225,8 @@ public class EditContactDialog implements ActionListener, DocumentListener
 			displayNameTextField.setText(item.getDisplayName());
 
 		}
-
+		*/
+		
 		dialog.setVisible(true);
 	}
 

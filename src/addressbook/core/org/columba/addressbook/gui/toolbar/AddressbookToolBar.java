@@ -63,6 +63,7 @@ public class AddressbookToolBar extends JToolBar
 
 	    addSeparator();
 
+		/*
 	    button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
 	    addButton( button  );
 
@@ -79,7 +80,7 @@ public class AddressbookToolBar extends JToolBar
 
             addSeparator();
 
-
+		*/
         }
 
 

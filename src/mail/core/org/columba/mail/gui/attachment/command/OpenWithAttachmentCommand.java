@@ -7,16 +7,15 @@ import java.io.FileOutputStream;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.util.TempFileStore;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
-import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -26,25 +25,28 @@ import org.columba.main.MainInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class OpenWithAttachmentCommand extends FolderCommand{
+public class OpenWithAttachmentCommand extends FolderCommand {
 	MimePart part;
 	File tempFile;
-	
-	public OpenWithAttachmentCommand(FrameController frame, DefaultCommandReference[] references) {
-		super(frame, references);
+
+	public OpenWithAttachmentCommand(DefaultCommandReference[] references) {
+		super(references);
 
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.NORMAL_OPERATION;
 
 	}
-	
+
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MainInterface.frameController.attachmentController.openWith(part, tempFile);
+		MimeHeader header = part.getHeader();
+
+		MimeTypeViewer viewer = new MimeTypeViewer();
+		viewer.openWith(header, tempFile);
 	}
-		
+
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
@@ -56,7 +58,7 @@ public class OpenWithAttachmentCommand extends FolderCommand{
 		Integer[] address = r[0].getAddress();
 
 		part = folder.getMimePart(uids[0], address, worker);
-		
+
 		Decoder decoder;
 		MimeHeader header;
 		tempFile = null;

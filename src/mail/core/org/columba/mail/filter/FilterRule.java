@@ -18,132 +18,123 @@ import java.util.Vector;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.columba.mail.config.MailConfig;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 public class FilterRule extends DefaultItem {
-	
+
 	// Condition
 	public final static int MATCH_ALL = 0;
 	public final static int MATCH_ANY = 1;
-	
-	
+
 	// list of FilterCriteria
 	private Vector list;
-
-	private AdapterNode node;
 
 	// condition: match all (AND) = 0, match any (OR) = 1
 	private AdapterNode conditionNode;
 
-	public FilterRule(AdapterNode node, Document doc) {
-		super(doc);
+	public FilterRule(XmlElement root) {
+		super(root);
 
 		list = new Vector();
-		this.node = node;
 
-		if (node != null) {
-			parseNode();
-		} else {
-			System.out.println(" node == null ");
-
-		}
-
-	}
-
-	public AdapterNode getRootNode() {
-		return node;
 	}
 
 	public void addEmptyCriteria() {
+		XmlElement criteria = new XmlElement("criteria");
+		criteria.addAttribute("type", "Subject");
+		criteria.addAttribute("criteria", "contains");
+		criteria.addAttribute("pattern", "pattern");
+
+		getRoot().addElement(criteria);
+		/*
 		AdapterNode n =
 			MailConfig.getFolderConfig().addEmptyFilterCriteria(getRootNode());
 		FilterCriteria criteria = new FilterCriteria(n, getDocument());
-
+		
 		list.add(criteria);
+		*/
 	}
 
 	public void remove(int index) {
+		getRoot().removeElement(index);
+		/*
 		if ((index >= 0) && (index < list.size())) {
 			list.remove(index);
-
+		
 			int result = -1;
-
+		
 			for (int i = 0; i < getRootNode().getChildCount(); i++) {
 				AdapterNode child = (AdapterNode) getRootNode().getChildAt(i);
 				String name = child.getName();
-
+		
 				if (name.equals("filtercriteria"))
 					result++;
-
+		
 				if (result == index) {
 					child.remove();
 					break;
 				}
 			}
-
+		
 			//AdapterNode child = getRootNode().getChildAt(index);
-
+		
 		}
+		*/
 	}
 
 	public void removeAll() {
+		/*
 		for (int i = 0; i < count(); i++) {
 			remove(0);
 		}
+		*/
+		getRoot().removeAllElements();
 	}
 
 	public void removeLast() {
+		/*
 		int index = list.size() - 1;
-
+		
 		remove(index);
+		*/
+
+		getRoot().removeElement(getRoot().count() - 1);
+
 	}
 
 	public FilterCriteria get(int index) {
-		return (FilterCriteria) list.get(index);
+		return new FilterCriteria(getRoot().getElement(index));
 	}
 
 	public int count() {
-		return list.size();
-	}
-
-	public void parseNode() {
-		AdapterNode child;
-
-		//System.out.println("filter rule:  rule size = "+ node.getChildCount() );
-
-		for (int i = 0; i < node.getChildCount(); i++) {
-			child = node.getChild(i);
-			//System.out.println("filter rule: child-name: "+ child.getName() );
-
-			if (child.getName().equals("filtercriteria"))
-				list.add(new FilterCriteria(child, getDocument()));
-			else if (child.getName().equals("condition")) {
-				//System.out.println("condition value oops "+ child.getValue() );
-
-				conditionNode = child;
-			}
-
-		}
+		return getRoot().count();
 	}
 
 	public String getCondition() {
+		return getRoot().getAttribute("condition");
+		/*
 		if (conditionNode == null) {
 			System.out.println(
 				"---------------------------> failure: conditionNode == null !");
-
+		
 			return new String("matchany");
 		} else
 			return getTextValue(conditionNode);
+		*/
 	}
 
 	public void setCondition(String s) {
+		getRoot().addAttribute("condition", s);
+		/*
 		setTextValue(conditionNode, s);
+		*/
 	}
 
+	/*
 	public FilterCriteria getCriteria(int index) {
 		return (FilterCriteria) list.get(index);
 	}
+	*/
 
 	public int getConditionInt() {
 		//System.out.println("condigtion: "+ condition );
@@ -155,6 +146,4 @@ public class FilterRule extends DefaultItem {
 		return -1;
 	}
 
-	
-	
 }

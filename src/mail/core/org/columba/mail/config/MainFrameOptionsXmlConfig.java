@@ -20,20 +20,27 @@ import java.io.File;
 
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.GuiItem;
+import org.columba.core.config.TableItem;
+import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
 
 
 public class MainFrameOptionsXmlConfig extends DefaultXmlConfig
 {
-    private File file;
+   // private File file;
 
-
+	WindowItem windowItem;
+	GuiItem guiItem;
+	TableItem headerTableItem;
+	ViewItem viewItem;
+	
     public MainFrameOptionsXmlConfig( File file )
     {
         super( file );
     }
 
+	/*
     public AdapterNode getRootNode()
     {
         AdapterNode node = new AdapterNode( getDocument() );
@@ -41,9 +48,18 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig
         AdapterNode rootNode = node.getChild( 0 );
         return rootNode;
     }
-
-    public HeaderTableItem getHeaderTableItem()
+	*/
+	
+    public TableItem getTableItem()
     {
+    	if ( headerTableItem ==  null )
+    	{
+    		headerTableItem = new TableItem(getRoot().getElement("/options/gui/table"));
+    	}
+    	
+    	return headerTableItem;
+    	
+    	/*
 	HeaderTableItem headerTableItem = new HeaderTableItem();
 
         AdapterNode rootNode = getRootNode();
@@ -65,10 +81,14 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig
         }
 
 	return headerTableItem;
+	*/
+	
+	
     }
 
-    public HeaderTableItem getPop3HeaderTableItem()
+    public TableItem getPop3HeaderTableItem()
     {
+    	/*
 	HeaderTableItem headerTableItem = new HeaderTableItem();
 
         AdapterNode rootNode = getRootNode();
@@ -90,11 +110,40 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig
         }
 
 	return headerTableItem;
+	*/
+	
+	return null;
+    }
+    
+    public ViewItem getViewItem()
+    {
+    	if ( viewItem == null )
+    	{
+    		viewItem = new ViewItem( getRoot().getElement("/options/gui/viewlist/view") );
+    	}
+    	
+    	return viewItem;
     }
 
+	public GuiItem getGuiItem()
+	{
+		if ( guiItem == null )
+		{
+			guiItem = new GuiItem(getRoot().getElement("/options/gui"));
+		}
+		
+		return guiItem;
+	}
+	
     public WindowItem getWindowItem()
     {
-       
+    	if ( windowItem == null )
+    	{
+    		
+    		windowItem = new WindowItem(getRoot().getElement("/options/gui/viewlist/view/window"));
+    		
+    	}
+       /*
 
         AdapterNode rootNode = getRootNode();
         AdapterNode guiNode = rootNode.getChild("gui");
@@ -105,15 +154,22 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig
 
 
         return new WindowItem( getDocument(), windowNode );
+        */
+        
+        return windowItem;
 
     }
 
     public AdapterNode getMimeTypeNode()
     {
+    	/*
         AdapterNode rootNode = getRootNode();
         AdapterNode node = rootNode.getChild("mimetypes");
 
         return node;
+        */
+        
+        return null;
     }
 
 

@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
 import org.columba.core.print.cHGroup;
@@ -17,11 +16,11 @@ import org.columba.core.print.cParagraph;
 import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
@@ -41,70 +40,67 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject mailHeader;
 	private cPrintObject mailFooter;
 	private DateFormat mailDateFormat;
-	private String[] headerKeys = { "from", "to","date", "subject" };
-	
+	private String[] headerKeys = { "from", "to", "date", "subject" };
+
 	/**
 	 * Constructor for PrintMessageCommdn.
 	 * @param frameController
 	 * @param references
 	 */
-	public PrintMessageCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
-		
-		
+	public PrintMessageCommand(DefaultCommandReference[] references) {
+		super(references);
+
 		// Header
 
 		cParagraph columbaParagraph = new cParagraph();
-		columbaParagraph.setText( "The Columba Project");
-		columbaParagraph.setColor( Color.lightGray );
-		columbaParagraph.setFontStyle( Font.BOLD );
+		columbaParagraph.setText("The Columba Project");
+		columbaParagraph.setColor(Color.lightGray);
+		columbaParagraph.setFontStyle(Font.BOLD);
 
 		cParagraph link = new cParagraph();
 		link.setText(" - http://sourceforge.columba.net");
-		link.setTextAlignment( cParagraph.LEFT );
-		link.setLeftMargin( columbaParagraph.getSize(new cCmUnit(100)).getWidth() );
-		link.setColor( Color.lightGray );
+		link.setTextAlignment(cParagraph.LEFT);
+		link.setLeftMargin(
+			columbaParagraph.getSize(new cCmUnit(100)).getWidth());
+		link.setColor(Color.lightGray);
 
 		cPrintVariable date = new cPrintVariable();
-		date.setCodeString( "%DATE_TODAY%" );
-		date.setTextAlignment( cParagraph.RIGHT );
-		date.setColor( Color.lightGray );
-
+		date.setCodeString("%DATE_TODAY%");
+		date.setTextAlignment(cParagraph.RIGHT);
+		date.setColor(Color.lightGray);
 
 		cHGroup headerText = new cHGroup();
-		headerText.add( columbaParagraph );
-		headerText.add( link );
-		headerText.add( date );
-
+		headerText.add(columbaParagraph);
+		headerText.add(link);
+		headerText.add(date);
 
 		cLine headerLine = new cLine();
 
-		headerLine.setThickness( 1 );
-		headerLine.setColor( Color.lightGray );
-		headerLine.setTopMargin( new cCmUnit( 0.1 ) );
+		headerLine.setThickness(1);
+		headerLine.setColor(Color.lightGray);
+		headerLine.setTopMargin(new cCmUnit(0.1));
 
 		cVGroup header = new cVGroup();
-		header.add( headerText );
-		header.add( headerLine );
-		header.setBottomMargin( new cCmUnit( 0.5 ) );
+		header.add(headerText);
+		header.add(headerLine);
+		header.setBottomMargin(new cCmUnit(0.5));
 
 		mailHeader = header;
 
 		// Footer
 
 		cPrintVariable footer = new cPrintVariable();
-		footer.setTextAlignment( cParagraph.CENTER );
-		footer.setCodeString( "%PAGE_NR% / %PAGE_COUNT%" );
-		footer.setTopMargin( new cCmUnit( 0.5 ) );
-		footer.setColor( Color.lightGray );
+		footer.setTextAlignment(cParagraph.CENTER);
+		footer.setCodeString("%PAGE_NR% / %PAGE_COUNT%");
+		footer.setTopMargin(new cCmUnit(0.5));
+		footer.setColor(Color.lightGray);
 
 		mailFooter = footer;
 
 		// DateFormat
 
-		mailDateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
+		mailDateFormat =
+			DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
 	}
 
 	public cPrintObject getMailHeader() {
@@ -132,9 +128,6 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		
-		MailFrameController mailFrameController =
-			(MailFrameController) frameController;
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
@@ -152,11 +145,11 @@ public class PrintMessageCommand extends FolderCommand {
 
 			MimePartTree mimePartTree = srcFolder.getMimePartTree(uid, worker);
 
+			XmlElement html =
+				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+					"/options/html");
 			boolean viewhtml =
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.getHtmlViewer();
+				new Boolean(html.getAttribute("prefer")).booleanValue();
 
 			// Which Bodypart shall be shown? (html/plain)
 			MimePart bodyPart = null;
@@ -196,8 +189,7 @@ public class PrintMessageCommand extends FolderCommand {
 				}
 
 				if (value instanceof Date) {
-					hValue.setText(
-						getMailDateFormat().format((Date) value));
+					hValue.setText(getMailDateFormat().format((Date) value));
 				} else {
 					hValue.setText((String) value);
 				}
@@ -217,7 +209,7 @@ public class PrintMessageCommand extends FolderCommand {
 				messageDoc.print();
 			}
 		}
-		
+
 	}
 
 }

@@ -23,99 +23,63 @@ package org.columba.mail.config;
  * @version 1.0
  */
 
-import java.util.Vector;
-
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 public class AccountList extends DefaultItem {
-	private Vector list;
+	
+	int nextUid;
+	AccountItem defaultAccount;
 
-	private AdapterNode rootNode;
-	private AdapterNode defaultAccountNode;
-
-	//private Document document;
-
-	private AccountXmlConfig config;
-
-	//private AccountList instance;
-
-	public AccountList(
-		AccountXmlConfig config,
-		AdapterNode rootNode,
-		Document doc) {
-
-		super(doc);
-
-		this.rootNode = rootNode;
-
-		this.config = config;
-
-		list = new Vector();
-
-		if (rootNode != null)
-		{
-			parse();
-
-		createMissingElements();
-		}
-	}
-
-	protected void parse() {
-		AdapterNode child;
-
-		for (int i = 0; i < rootNode.getChildCount(); i++) {
-			child = (AdapterNode) rootNode.getChild(i);
-
-			if (child.getName().equals("account")) {
-				AccountItem item = new AccountItem(child, getDocument());
-				list.add(item);
-			} else if (child.getName().equals("default")) {
-				defaultAccountNode = child;
-			}
-		}
-	}
-
-	protected void createMissingElements() {
-		if (defaultAccountNode == null)
-			defaultAccountNode = addKey(rootNode, "default", "0");
-	}
-
-	/*
-	public AccountList getInstance()
-	{
-		if ( instance == null ) instance = new AccountList();
+	public AccountList(XmlElement root) {
+		super(root);
 		
-		return instance;
-	}
-	*/
-
-	public AdapterNode getRootNode() {
-		return rootNode;
+		AccountItem item;
+		
+		nextUid = -1;
+		
+		int uid;
+		
+		for( int i=0; i<count(); i++ ) {
+			item = get(i);
+			uid = item.getInteger("uid");
+			if( uid > nextUid) nextUid = uid;			
+		}
+		nextUid++;
 	}
 
 	public AccountItem get(int index) {
 
+		XmlElement e = getChildElement(index);
+		//XmlElement.printNode(e,"");
+
+		/*
 		if ((index >= 0) && (index < list.size()))
 			return (AccountItem) list.get(index);
-
+		
 		return null;
+		*/
+
+		return new AccountItem(e);
 	}
 
 	public AccountItem uidGet(int uid) {
+		XmlElement e;
+
 		for (int i = 0; i < count(); i++) {
-			AccountItem item = (AccountItem) get(i);
-			int u = item.getUid();
+			e = getChildElement(i);
+
+			int u = Integer.parseInt(e.getAttribute("uid"));
 
 			if (uid == u)
-				return item;
+				return new AccountItem(e);
 		}
 
 		return null;
 	}
-
+/*
 	public PGPItem getPGPItem(String to) {
+
 		System.out.println("------>to: " + to);
 
 		int result = -1;
@@ -135,45 +99,37 @@ public class AccountList extends DefaultItem {
 
 		return null;
 	}
-
+*/
 	public AccountItem hostGetAccount(String host, String address) {
-		System.out.println("------>host: " + host);
 
+		System.out.println("------>host: " + host);
+		XmlElement account, server, identity;
 		int result = -1;
 		if (address == null)
 			return get(0);
 
 		for (int i = 0; i < count(); i++) {
-			AccountItem item = (AccountItem) get(i);
-			String s = null;
-
-			if (item.isPopAccount()) {
-				PopItem pop = item.getPopItem();
-				s = pop.getHost();
-				System.out.println("string: " + s);
-			} else {
-				ImapItem imap = item.getImapItem();
-				s = imap.getHost();
-				System.out.println("string: " + s);
+			account = getChildElement(i);
+			
+			server = account.getElement("popserver");
+			if (server == null) {
+				server = account.getElement("imapserver");
 			}
-
-			if (s.equals(host))
-				result = i;
-
+			
+			if( server.getAttribute("host").equals(host))
+				return new AccountItem(account);
 		}
-
-		if (result != -1)
-			return get(result);
 
 		for (int i = 0; i < count(); i++) {
-			AccountItem item = (AccountItem) get(i);
-			String s = item.getIdentityItem().getAddress();
+			account = getChildElement(i);
 
-			if (address.indexOf(s) != -1)
-				result = i;
+			identity = account.getElement("identity");
+			if (identity.getAttribute("address").indexOf(address) != -1)
+				return new AccountItem(account);
 		}
 
-		return get(result);
+		return null;
+
 	}
 
 	/*
@@ -197,47 +153,61 @@ public class AccountList extends DefaultItem {
 	}
 	*/
 
-	// p == true -> pop3, else imap4
-	public AccountItem addEmptyAccount(boolean b) {
-		AdapterNode node = config.add(b);
-		AccountItem item = new AccountItem(node, getDocument());
+	public AccountItem addEmptyAccount(String type) {
+		AccountTemplateXmlConfig template = MailConfig.getAccountTemplateConfig();
+		
+		XmlElement emptyAccount = template.getRoot().getElement("/template/"+type+"/account");
+		
+		if( emptyAccount != null ) {
+			AccountItem newAccount = new AccountItem( (XmlElement) emptyAccount.clone() );
+			newAccount.set("uid", getNextUid() );
+			add(newAccount);
+			return newAccount;			
+		}
 
-		add(item);
-
-		return item;
+		return null;
 	}
 
 	public void add(AccountItem item) {
-		list.add(item);
+		getRoot().addSubElement(item.getRoot());
+		if( item.getInteger("uid") >= nextUid ) {
+			nextUid = item.getInteger("uid") + 1;
+		}
+		
+		if( count() == 1 ) {
+			setDefaultAccount(item.getInteger("uid"));	
+		}
 	}
 
 	public AccountItem remove(int index) {
-		AccountItem item = (AccountItem) list.remove(index);
-		AdapterNode node = item.getRootNode();
-		getRootNode().removeChild(node);
-
-		return item;
+		return new AccountItem( getRoot().removeElement(index) );
 	}
 
 	public int count() {
-		return list.size();
+		return getRoot().count();
+	}
+
+	protected int getNextUid() {
+		return nextUid++;
 	}
 
 	/**************************** default account ********************/
 
 	public void setDefaultAccount(int uid) {
-		defaultAccountNode.setValue((new Integer(uid)).toString());
+		set("default", uid);
+		defaultAccount = null;
 	}
 
 	public int getDefaultAccountUid() {
-		int uid = Integer.parseInt(defaultAccountNode.getValue());
-
-		return uid;
+		return getInteger("default");
 	}
 
 	public AccountItem getDefaultAccount() {
-
-		return uidGet(getDefaultAccountUid());
+		if(defaultAccount == null) {
+			defaultAccount = uidGet(getDefaultAccountUid()); 	
+		}
+		
+		return defaultAccount;
 	}
 
 }

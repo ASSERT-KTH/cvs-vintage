@@ -50,14 +50,14 @@ import javax.swing.event.ListSelectionListener;
 import org.columba.core.config.Config;
 import org.columba.core.gui.button.CloseButton;
 import org.columba.core.gui.button.HelpButton;
-import org.columba.core.gui.util.DialogStore;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.main.MainInterface;
 
-public class ConfigFrame implements ListSelectionListener, ActionListener {
-	private JDialog dialog;
+public class ConfigFrame extends JDialog implements ListSelectionListener, ActionListener {
+	
 
 	/*
 	private JTextField textField;
@@ -107,25 +107,29 @@ public class ConfigFrame implements ListSelectionListener, ActionListener {
 
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
-
-	public ConfigFrame(FilterList filterList) {
-		dialog = DialogStore.getDialog();
-		dialog.setTitle(
+	Folder folder;
+	
+	public ConfigFrame(Folder folder ) {
+		
+		super();
+		this.folder = folder;
+		
+		setTitle(
 			MailResourceLoader.getString("dialog", "filter", "dialog_title"));
-		this.filterList = filterList;
+		this.filterList = folder.getFilterList();
 
 		config = MainInterface.config;
 
-		dialog.addWindowListener(new WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				dialog.setVisible(false);
+				setVisible(false);
 			}
 		});
 
 		initComponents();
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 
 	}
 
@@ -141,7 +145,7 @@ public class ConfigFrame implements ListSelectionListener, ActionListener {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-		dialog.getContentPane().add(mainPanel);
+		getContentPane().add(mainPanel);
 
 		addButton.setText(
 			MailResourceLoader.getString("dialog", "filter", "add_filter"));
@@ -320,9 +324,9 @@ public class ConfigFrame implements ListSelectionListener, ActionListener {
 		helpButton = new HelpButton();
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		dialog.getRootPane().setDefaultButton(closeButton);
-		dialog.getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this,"CLOSE",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
@@ -355,16 +359,16 @@ public class ConfigFrame implements ListSelectionListener, ActionListener {
 
 		if (parent != null) {
 
-			FilterDialog dialog = new FilterDialog(parent);
+			FilterDialog dialog = new FilterDialog(folder.getFilterPluginHandler(), parent);
 
 			/*
 			java.awt.Dimension dim = new Dimension( 400,400 );
 			
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			
-			dialog.setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
+			setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
 			
-			dialog.showDialog();
+			showDialog();
 			*/
 
 		}
@@ -377,9 +381,10 @@ public class ConfigFrame implements ListSelectionListener, ActionListener {
 		if (action.equals("OK")) {
 			System.out.println("ok");
 		} else if (action.equals("CLOSE")) {
-			Config.save();
+			// FIXME
+			//Config.save();
 
-			dialog.setVisible(false);
+			setVisible(false);
 		} else if (action.equals("ADD")) {
 			System.out.println("add");
 

@@ -171,6 +171,9 @@ public class FolderInfoPanel extends CInfoPanel
 	{
 		if (item == null) return;
 
+		// FIXME
+		
+		/*
 		int uid = item.getUid();
 
 		int total = info.getExists();
@@ -229,6 +232,7 @@ public class FolderInfoPanel extends CInfoPanel
 				recentLabel.setText("");
 			}
 		}
+		*/
 	}
 
 	public void set(FolderItem item, MessageFolderInfo info)

@@ -182,6 +182,8 @@ public class ThemePanel extends JPanel implements ActionListener
 
 	public void updateComponents(boolean b)
 	{
+		// FIXME
+		/*
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
 
 		theme = item.getTheme();
@@ -248,6 +250,7 @@ public class ThemePanel extends JPanel implements ActionListener
 			item.setTheme(getTheme());
 
 		}
+		*/
 	}
 
 	public int getStatus()

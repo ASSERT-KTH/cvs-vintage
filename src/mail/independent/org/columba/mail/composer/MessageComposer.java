@@ -73,7 +73,7 @@ public class MessageComposer {
 		AccountItem item = controller.getModel().getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
 
-		header.set("From", identity.getAddress());
+		header.set("From", identity.get("address"));
 		header.set("X-Priority", model.getPriority());
 
 		/*
@@ -88,12 +88,12 @@ public class MessageComposer {
 
 		header.set("Mime-Version", "1.0");
 
-		String organisation = identity.getOrganisation();
+		String organisation = identity.get("organisation");
 		if (organisation.length() > 0)
 			header.set("Organisation", organisation);
 
 		// reply-to
-		String replyAddress = identity.getReplyAddress();
+		String replyAddress = identity.get("reply_address");
 		if (replyAddress.length() > 0)
 			header.set("Reply-To", replyAddress);
 
@@ -153,7 +153,7 @@ public class MessageComposer {
 	
 	protected String getSignature(IdentityItem item) {
 		
-		File file = new File(item.getSignatureFile());
+		File file = new File(item.get("signature_file"));
 		StringBuffer strbuf = new StringBuffer();
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
@@ -225,7 +225,7 @@ public class MessageComposer {
 
 		AccountItem item = controller.getModel().getAccountItem();
 		IdentityItem identity = item.getIdentityItem();
-		boolean appendSignature = identity.getAttachSignature();
+		boolean appendSignature = identity.getBoolean("attach_signature");
 
 		if (appendSignature == true) {
 			String signature = getSignature(identity);

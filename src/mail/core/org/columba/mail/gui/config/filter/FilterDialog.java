@@ -38,6 +38,7 @@ import org.columba.core.gui.button.HelpButton;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
+import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.util.MailResourceLoader;
@@ -61,12 +62,14 @@ public class FilterDialog implements ActionListener {
 	private ActionList actionList;
 
 	private JComboBox condList;
-
-	public FilterDialog(Filter filter) {
+	private AbstractPluginHandler pluginHandler;
+	
+	public FilterDialog(AbstractPluginHandler pluginHandler, Filter filter) {
 		dialog = DialogStore.getDialog();
 		dialog.setTitle(
 			MailResourceLoader.getString("dialog", "filter", "dialog_title"));
 		this.filter = filter;
+		this.pluginHandler = pluginHandler;
 
 		//System.out.println("filternode name: " + filter.getName());
 
@@ -146,7 +149,7 @@ public class FilterDialog implements ActionListener {
 
 		//middleIfPanel.add(Box.createRigidArea(new java.awt.Dimension(0, 10)));
 
-		criteriaList = new CriteriaList(filter);
+		criteriaList = new CriteriaList(pluginHandler, filter);
 		//JScrollPane scrollPane = new JScrollPane( criteriaList );
 		middleIfPanel.add(criteriaList, BorderLayout.CENTER);
 
@@ -235,9 +238,9 @@ public class FilterDialog implements ActionListener {
 			int index = condList.getSelectedIndex();
 			FilterRule filterRule = filter.getFilterRule();
 			if (index == 0)
-				filterRule.setCondition("matchall");
+				filterRule.set("conditon", "matchall");
 			else
-				filterRule.setCondition("matchany");
+				filterRule.set("condition","matchany");
 		}
 
 	}

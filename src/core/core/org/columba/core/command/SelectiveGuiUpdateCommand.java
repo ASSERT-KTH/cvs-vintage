@@ -16,6 +16,7 @@ package org.columba.core.command;
 
 import org.columba.core.gui.FrameController;
 
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
@@ -30,10 +31,14 @@ public abstract class SelectiveGuiUpdateCommand extends Command {
 	 * @param references
 	 */
 	public SelectiveGuiUpdateCommand(
-		FrameController frameController,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(references);
 	}
+	
+	public SelectiveGuiUpdateCommand(
+			FrameController frame, DefaultCommandReference[] references) {
+			super(frame, references);
+		}
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */

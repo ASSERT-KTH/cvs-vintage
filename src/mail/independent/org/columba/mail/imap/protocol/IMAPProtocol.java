@@ -491,7 +491,7 @@ public class IMAPProtocol {
 		args.add(messageSet);
 		args.add(mailbox);
 		
-		IMAPResponse[] responses = sendCommand("COPY", args);
+		IMAPResponse[] responses = sendCommand("UID COPY", args);
 
 		notifyResponseHandler(responses);
 

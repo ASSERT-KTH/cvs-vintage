@@ -15,12 +15,11 @@
 package org.columba.mail.folder.imap;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.AdapterNode;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.Filter;
@@ -48,8 +47,6 @@ public class IMAPFolder extends RemoteFolder {
 
 	//private StringBuffer cache;
 
-	private IMAPRootFolder parent;
-
 	private Object aktMessageUid;
 	private Message aktMessage;
 
@@ -64,41 +61,12 @@ public class IMAPFolder extends RemoteFolder {
 
 	protected RemoteSearchEngine searchEngine;
 
-	public IMAPFolder(
-		AdapterNode node,
-		FolderItem folderItem,
-		ImapItem item,
-		IMAPRootFolder parent) {
-		super(node, folderItem);
-
-		this.item = item;
-		this.parent = parent;
-
-		//uids = new Vector();
+	public IMAPFolder(FolderItem folderItem) {
+		super(folderItem);
 
 		cache = new RemoteHeaderCache(this);
 
-		/*
-		// this file caches all parsed header info
-		headerFile = new File(directoryFile, ".header");
-		
-		if (headerFile.exists()) {
-			try {
-				load();
-			} catch (Exception ex) {
-				System.out.println(
-					"Error while loading Folder: " + ex.getMessage());
-		
-				// clean up everything
-				removeAll();
-			}
-		
-		}
-		*/
-		//imap = null;
-
 		//setChanged(true);
-
 	}
 
 	public SearchEngineInterface getSearchEngineInstance() {
@@ -123,39 +91,17 @@ public class IMAPFolder extends RemoteFolder {
 		return getSearchEngineInstance().searchMessages(filter, worker);
 	}
 
-	public Hashtable getAttributes() {
-		Hashtable attributes = new Hashtable();
-
-		attributes.put("accessrights", "user");
-		attributes.put("messagefolder", "true");
-		attributes.put("type", "imap");
-		attributes.put("subfolder", "true");
-		attributes.put("accessrights", "true");
-		attributes.put("add", "true");
-		attributes.put("remove", "true");
-		attributes.put(
-			"accountuid",
-			new Integer(((IMAPRootFolder) getRootFolder()).getAccountUid()));
-
-		return attributes;
+	public Class getDefaultChild() {
+		return IMAPFolder.class;
 	}
 
-	public Folder instanceNewChildNode(AdapterNode node, FolderItem item) {
-		return new IMAPFolder(node, item, this.item, this.parent);
-	}
-	
-	
-
-	public boolean addFolder(String name) throws Exception {
+	public void addFolder(String name) throws Exception {
 
 		String path = getImapPath() + getStore().getDelimiter() + name;
 
 		boolean result = getStore().createFolder(path);
-		if (result == false)
-			return false;
 
-		return super.addFolder(name);
-
+		super.addFolder(name);
 	}
 
 	public void removeFolder() throws Exception {
@@ -215,30 +161,41 @@ public class IMAPFolder extends RemoteFolder {
 	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception {
 
-		headerList = cache.getHeaderList(worker);
+		try {
+			((IMAPRootFolder) getRootFolder()).getLock().tryToGetLock();
 
-		worker.setDisplayText("Fetching UID list...");
+			headerList = cache.getHeaderList(worker);
 
-		Vector newList = getStore().fetchUIDList(worker, getImapPath());
+			worker.setDisplayText("Fetching UID list...");
 
-		if (newList == null)
-			return new HeaderList();
+			Vector newList = getStore().fetchUIDList(worker, getImapPath());
 
-		Vector result = synchronize(headerList, newList);
+			if (newList == null)
+				return new HeaderList();
 
-		worker.setDisplayText("Fetching FLAGS list...");
+			Vector result = synchronize(headerList, newList);
 
-		IMAPFlags[] flags = getStore().fetchFlagsList(worker, getImapPath());
+			worker.setDisplayText("Fetching FLAGS list...");
 
-		worker.setDisplayText("Fetching header list ");
+			IMAPFlags[] flags =
+				getStore().fetchFlagsList(worker, getImapPath());
 
-		// if available -> fetch new headers
-		if ( result.size() > 0 )
-		{
-			getStore().fetchHeaderList(headerList, result, worker, getImapPath());
+			worker.setDisplayText("Fetching header list ");
+
+			// if available -> fetch new headers
+			if (result.size() > 0) {
+				getStore().fetchHeaderList(
+					headerList,
+					result,
+					worker,
+					getImapPath());
+			}
+
+			updateFlags(flags);
+		} finally {
+
+			((IMAPRootFolder) getRootFolder()).releaseLock();
 		}
-
-		updateFlags(flags);
 
 		return headerList;
 	}
@@ -370,9 +327,13 @@ public class IMAPFolder extends RemoteFolder {
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
-			
-		getStore().copy( ((IMAPFolder)destFolder).getImapPath(), uids, worker, getImapPath() );
-		
+
+		getStore().copy(
+			((IMAPFolder) destFolder).getImapPath(),
+			uids,
+			worker,
+			getImapPath());
+
 	}
 
 	public Object addMessage(
@@ -482,7 +443,7 @@ public class IMAPFolder extends RemoteFolder {
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash
 
-				ColumbaLogger.log.info(
+				ColumbaLogger.log.debug(
 					"moving message with UID " + uid + " to trash");
 
 				// remove message
@@ -556,5 +517,15 @@ public class IMAPFolder extends RemoteFolder {
 		*/
 	}
 
-	
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
+	 */
+	public static XmlElement getDefaultProperties() {
+		XmlElement props = new XmlElement("property");
+		props.addAttribute("accessrights", "user");
+		props.addAttribute("subfolder", "true");
+
+		return props;
+	}
+
 }

@@ -87,7 +87,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 				sentFolder =
 					(Folder) MainInterface.treeModel.getFolder(
 						Integer.parseInt(
-							accountItem.getSpecialFoldersItem().getSent()));
+							accountItem.getSpecialFoldersItem().get("sent")));
 				smtpServer = new SMTPServer(accountItem);
 
 				open = smtpServer.openConnection();
@@ -117,7 +117,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 			r[0] = new FolderCommandReference(outboxFolder, v.toArray() );
 			r[1] = new FolderCommandReference(sentFolder);
 
-			MoveMessageCommand c = new MoveMessageCommand(frameController, r);
+			MoveMessageCommand c = new MoveMessageCommand( r);
 
 			MainInterface.processor.addOp(c);
 		

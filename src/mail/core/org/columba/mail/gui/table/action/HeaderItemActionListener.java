@@ -18,16 +18,17 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.mail.gui.table.TableController;
 
 
 public class HeaderItemActionListener implements ActionListener
 {
     private TableController headerTableViewer;
-    private HeaderTableItem headerTableItem;
+    private TableItem headerTableItem;
 
-    public HeaderItemActionListener(TableController headerTableViewer, HeaderTableItem headerTableItem)
+    public HeaderItemActionListener(TableController headerTableViewer, TableItem headerTableItem)
     {
 	this.headerTableViewer = headerTableViewer;
         this.headerTableItem = headerTableItem;
@@ -37,7 +38,7 @@ public class HeaderItemActionListener implements ActionListener
     {
 	String action  = e.getActionCommand();
 
-        HeaderTableItem v = headerTableItem;
+        TableItem v = headerTableItem;
 
         String c;
 
@@ -60,8 +61,9 @@ public class HeaderItemActionListener implements ActionListener
         {
         for ( int i=0; i< v.count(); i++ )
         {
-            c = (String) v.getName(i);
-            boolean enabled = v.getEnabled(i);
+        	HeaderItem headerItem = v.getHeaderItem(i);
+            c = (String) headerItem.get("name");
+            boolean enabled = headerItem.getBoolean("enabled");
 
             if ( enabled == true )
             {

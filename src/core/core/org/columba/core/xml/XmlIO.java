@@ -33,6 +33,7 @@ package org.columba.core.xml;
 
 import java.io.CharArrayWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -43,229 +44,263 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 public class XmlIO extends DefaultHandler {
-  // List of sub-elements
-  Vector Elements;
-  // Top level element (Used to hold everything else)
-  XmlElement rootElement;
-  // The current element you are working on
-  XmlElement currentElement;
+	// List of sub-elements
+	Vector Elements;
+	// Top level element (Used to hold everything else)
+	XmlElement rootElement;
+	// The current element you are working on
+	XmlElement currentElement;
 
-  // For writing out the data
-  // Indent for each level
-  int writeIndent = 2;
-  // Maximum data to put on a "one liner"
-  int maxOneLineData = 20;
+	// For writing out the data
+	// Indent for each level
+	int writeIndent = 2;
+	// Maximum data to put on a "one liner"
+	int maxOneLineData = 20;
 
-  // The SAX 2 parser...
-  private XMLReader xr;
+	// The SAX 2 parser...
+	private XMLReader xr;
 
-  // Buffer for collecting data from
-  // the "characters" SAX event.
-  private CharArrayWriter contents = new CharArrayWriter();
+	// Buffer for collecting data from
+	// the "characters" SAX event.
+	private CharArrayWriter contents = new CharArrayWriter();
 
-  // Default constructor
-  public XmlIO(){
-  }
+	private File file;
 
-  // setup and load constructor
-  public XmlIO(String FilePath){
-    currentElement = null;
-    load(FilePath);
-  }
-  // setup and load constructor
-  public XmlIO(File F){
-    currentElement = null;
-    load(F.getAbsoluteFile());
-  }
+	/*
+	// Default constructor
+	public XmlIO() {
+	}
+	*/
 
-  public boolean load(File F){
-    return load(F.getAbsoluteFile());
-  }
+	/*
+	// setup and load constructor
+	public XmlIO(String FilePath) {
+		currentElement = null;
+		
+		
+	}
+	*/
 
-  // Load a file. This is what starts things off.
-  public boolean load(String inputFile){
-    Elements = new Vector();
-    rootElement = new XmlElement("__CULUMBA_XML_TREE_TOP__");
-    currentElement = rootElement;
+	public XmlIO(File f) {
+		super();
 
-    try{
-      // Use an instance of ourselves as the SAX event handler
-      DefaultHandler handler = this;
-      // Create the XML reader...
-      //      xr = XMLReaderFactory.createXMLReader();
-       SAXParserFactory factory = SAXParserFactory.newInstance();
-      // Set the ContentHandler...
-      //      xr.setContentHandler( this );
+		this.file = f;
+	}
 
-       SAXParser saxParser = factory.newSAXParser();
-      // Parse the file...
-      System.out.println("About to parse XML document." );
-      //xr.parse( in );
-      System.out.println(inputFile);
-      System.out.println(saxParser);
+	// setup and load constructor
+	public XmlIO() {
+		currentElement = null;
 
-      saxParser.parse( inputFile, this);
-      System.out.println("XML document parsing complete.");
-    }
-    catch(javax.xml.parsers.ParserConfigurationException ex){
-      System.out.println("XML config error while attempting to read XML file");
-      System.out.println(ex.toString());
-      ex.printStackTrace();
-      return(false);
-    }
-    catch(org.xml.sax.SAXException ex){
-      // Error
-      System.out.println("XML parse error while attempting to read XML file");
-      System.out.println(ex.toString());
-      ex.printStackTrace();
-      return(false);
-    }
-    catch(java.io.IOException ex){
-      System.out.println("File read error while attempting to read XML file");
-      System.out.println(ex.toString());
-      ex.printStackTrace();
-      return(false);
-    }
+	}
 
-    return(true);
-  }
+	public void setFile(File file) {
+		this.file = file;
+	}
 
-  // Implement the content hander methods that
-  // will delegate SAX events to the tag tracker network.
+	public boolean load() {
+		//this.file = F;
 
-  public void startElement( String namespaceURI,
-                            String localName,
-                            String qName,
-                            Attributes attrs ) throws SAXException {
+		return load(file.getPath());
+	}
 
-    // Resetting contents buffer.
-    // Assuming that tags either tag content or children, not both.
-    // This is usually the case with XML that is representing
-    // data strucutures in a programming language independant way.
-    // This assumption is not typically valid where XML is being
-    // used in the classical text mark up style where tagging
-    // is used to style content and several styles may overlap
-    // at once.
-    try{
-      contents.reset();
-      String Name = localName; // element name
-      if (Name.equals("")) Name = qName; // namespaceAware = false
+	// Load a file. This is what starts things off.
+	public boolean load(String inputFile) {
+		Elements = new Vector();
+		rootElement = new XmlElement("__CULUMBA_XML_TREE_TOP__");
+		currentElement = rootElement;
 
-      XmlElement P = currentElement;
+		try {
+			// Use an instance of ourselves as the SAX event handler
+			DefaultHandler handler = this;
+			// Create the XML reader...
+			//      xr = XMLReaderFactory.createXMLReader();
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			// Set the ContentHandler...
+			//      xr.setContentHandler( this );
 
-      currentElement = currentElement.addSubElement(Name);
-      currentElement.setParent(P);
+			SAXParser saxParser = factory.newSAXParser();
+			
+			
 
-      if (attrs != null) {
-        for (int i = 0; i < attrs.getLength(); i++) {
-          String aName = attrs.getLocalName(i); // Attr name
-          if (aName.equals("")) aName = attrs.getQName(i);
+			saxParser.parse(inputFile, this);
+			
+		} catch (javax.xml.parsers.ParserConfigurationException ex) {
+			ColumbaLogger.log.error(
+				"XML config error while attempting to read XML file");
+			ColumbaLogger.log.error(ex.toString());
+			ex.printStackTrace();
+			return (false);
+		} catch (org.xml.sax.SAXException ex) {
+			// Error
+			ColumbaLogger.log.error(
+				"XML parse error while attempting to read XML file");
+			ColumbaLogger.log.error(ex.toString());
+			ex.printStackTrace();
+			return (false);
+		} catch (java.io.IOException ex) {
+			ColumbaLogger.log.error(
+				"File read error while attempting to read XML file");
+			ColumbaLogger.log.error(ex.toString());
+			ex.printStackTrace();
+			return (false);
+		}
 
-          currentElement.addAttribute(aName,attrs.getValue(i));
-        }
-      }
-    }catch(java.lang.NullPointerException ex){
-      System.out.println("Null!!!");
-      System.out.println(ex.toString());
-      ex.printStackTrace();
-    }
-  }
+		//XmlElement.printNode( getRoot(), "");
 
-  public void endElement( String namespaceURI,
-                          String localName,
-                          String qName ) throws SAXException {
+		return (true);
+	}
 
-    currentElement.setData(contents.toString().trim());
-    contents.reset();
+	// Implement the content hander methods that
+	// will delegate SAX events to the tag tracker network.
 
-    currentElement = currentElement.getParent();
-  }
+	public void startElement(
+		String namespaceURI,
+		String localName,
+		String qName,
+		Attributes attrs)
+		throws SAXException {
 
+		// Resetting contents buffer.
+		// Assuming that tags either tag content or children, not both.
+		// This is usually the case with XML that is representing
+		// data strucutures in a programming language independant way.
+		// This assumption is not typically valid where XML is being
+		// used in the classical text mark up style where tagging
+		// is used to style content and several styles may overlap
+		// at once.
+		try {
+			contents.reset();
+			String Name = localName; // element name
+			if (Name.equals(""))
+				Name = qName; // namespaceAware = false
 
-  public void characters( char[] ch, int start, int length )
-    throws SAXException {
-    // accumulate the contents into a buffer.
-    contents.write( ch, start, length );
-  }
+			XmlElement P = currentElement;
 
-  public XmlElement getRoot(){
-    return(rootElement);
-  }
+			currentElement = currentElement.addSubElement(Name);
+			currentElement.setParent(P);
 
-  public void errorDialog(String Msg){
-    JOptionPane.showMessageDialog(null,
-                                  "Error: "+Msg);
+			if (attrs != null) {
+				for (int i = 0; i < attrs.getLength(); i++) {
+					String aName = attrs.getLocalName(i); // Attr name
+					if (aName.equals(""))
+						aName = attrs.getQName(i);
 
-  }
-  public void warningDialog(String Msg){
-    JOptionPane.showMessageDialog(null,
-                                  "Warning: "+Msg);
+					currentElement.addAttribute(aName, attrs.getValue(i));
+				}
+			}
+		} catch (java.lang.NullPointerException ex) {
+			ColumbaLogger.log.error("Null!!!");
+			ColumbaLogger.log.error(ex.toString());
+			ex.printStackTrace();
+		}
+	}
 
-  }
-  public void infoDialog(String Msg){
-    JOptionPane.showMessageDialog(null,
-                                  "Info: "+Msg);
+	public void endElement(String namespaceURI, String localName, String qName)
+		throws SAXException {
 
-  }
+		currentElement.setData(contents.toString().trim());
+		contents.reset();
 
-  //
-  // Writer interface
-  //
-  public void write(OutputStream out) throws IOException {
-    PrintWriter PW = new PrintWriter(out);
-    PW.println("<?xml version=\"1.0\"?>");
-    if(rootElement.SubElements.size() > 0){
-      for(int i = 0;i<rootElement.SubElements.size();i++){
-        _writeSubNode(PW,(XmlElement)rootElement.SubElements.get(i),0);
-      }
-    }
-    PW.flush();
-  }
+		currentElement = currentElement.getParent();
+	}
 
-  private void _writeSubNode(PrintWriter out,
-                             XmlElement Element,
-                             int indent) throws IOException {
-    _writeSpace(out,indent);
-    out.print("<"+Element.getName());
-    for (Enumeration e = Element.getAttributeNames();e.hasMoreElements();) {
-      String K = (String)e.nextElement();
-      out.print(K+"=\""+Element.getAttribute(K)+"\" ");
-    }
-    out.print(">");
-    String Data = Element.getData();
-    if(Data != null && ! Data.equals("")){
-      if(Data.length() > maxOneLineData){
-        out.println("");
-        _writeSpace(out,indent+writeIndent);
-      }
-      out.print(Data);
-    }
-    Vector SubElements = Element.getElements();
+	public void characters(char[] ch, int start, int length)
+		throws SAXException {
+		// accumulate the contents into a buffer.
+		contents.write(ch, start, length);
+	}
 
-    if(SubElements.size() > 0){
-      out.println("");
-      for(int i = 0;i<SubElements.size();i++){
-        _writeSubNode(out,(XmlElement)SubElements.get(i),indent+writeIndent);
-      }
-      _writeSpace(out,indent);
-    }
-    if(Data.length() > maxOneLineData){
-      out.println("");
-      _writeSpace(out,indent);
-    }
-    out.println("</"+Element.getName()+">");
-  }
+	public XmlElement getRoot() {
+		return (rootElement);
+	}
 
-  private void _writeSpace(PrintWriter out,int numSpaces) throws IOException{
-    for(int i=0;i<numSpaces;i++) out.print(" ");
-  }
+	public void errorDialog(String Msg) {
+		JOptionPane.showMessageDialog(null, "Error: " + Msg);
 
+	}
+	public void warningDialog(String Msg) {
+		JOptionPane.showMessageDialog(null, "Warning: " + Msg);
 
-}// End class XmlIO
+	}
+	public void infoDialog(String Msg) {
+		JOptionPane.showMessageDialog(null, "Info: " + Msg);
+
+	}
+
+	public void save() throws Exception {
+
+		write(new FileOutputStream(file));
+	}
+
+	//
+	// Writer interface
+	//
+	public void write(OutputStream out) throws IOException {
+		PrintWriter PW = new PrintWriter(out);
+		PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		if (rootElement.SubElements.size() > 0) {
+			for (int i = 0; i < rootElement.SubElements.size(); i++) {
+				_writeSubNode(
+					PW,
+					(XmlElement) rootElement.SubElements.get(i),
+					0);
+			}
+		}
+		PW.flush();
+	}
+
+	private void _writeSubNode(PrintWriter out, XmlElement Element, int indent)
+		throws IOException {
+		_writeSpace(out, indent);
+		out.print("<" + Element.getName());
+		for (Enumeration e = Element.getAttributeNames();
+			e.hasMoreElements();
+			) {
+			String K = (String) e.nextElement();
+			out.print(" " + K + "=\"" + Element.getAttribute(K) + "\"");
+		}
+
+		out.print(">");
+
+		String Data = Element.getData();
+
+		if (Data != null && !Data.equals("")) {
+			if (Data.length() > maxOneLineData) {
+				out.println("");
+				_writeSpace(out, indent + writeIndent);
+			}
+			out.print(Data);
+		}
+		Vector SubElements = Element.getElements();
+
+		if (SubElements.size() > 0) {
+			out.println("");
+			for (int i = 0; i < SubElements.size(); i++) {
+				_writeSubNode(
+					out,
+					(XmlElement) SubElements.get(i),
+					indent + writeIndent);
+			}
+			_writeSpace(out, indent);
+		}
+		if (Data.length() > maxOneLineData) {
+			out.println("");
+			_writeSpace(out, indent);
+		}
+		out.println("</" + Element.getName() + ">");
+	}
+
+	private void _writeSpace(PrintWriter out, int numSpaces)
+		throws IOException {
+		for (int i = 0; i < numSpaces; i++)
+			out.print(" ");
+	}
+
+} // End class XmlIO

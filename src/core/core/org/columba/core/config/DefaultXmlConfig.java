@@ -15,36 +15,33 @@
 package org.columba.core.config;
 
 import java.io.File;
-import java.io.IOException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import org.columba.core.xml.XmlIO;
 
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-public class DefaultXmlConfig {
+public class DefaultXmlConfig extends XmlIO{
+	/*
 	private Document document;
-	private File file;
+	*/
+	
+	//private File file;
 
 	public DefaultXmlConfig(File file) {
+		/*
 		this.file = file;
+		*/
+		
+		super(file);
+		
+		//printNode( getRoot(), "");
 	}
 	
+	/*
 	public File getFile()
 	{
 		return file;
 	}
-
+	*/
+	/*
 	public void save() {
 		try {
 
@@ -134,12 +131,7 @@ public class DefaultXmlConfig {
 		parent.appendChild(child);
 	}
 
-	/*
-	  public void setNodeValue( AdapterNode node, String value )
-	  {
-	  node.appendChild( document.createTextNode( value ) );
-	  }
-	*/
+	
 
 	public Element createTextElementNode(String key, String value) {
 		AdapterNode adpNode = new AdapterNode(document);
@@ -166,5 +158,5 @@ public class DefaultXmlConfig {
 		return newElement;
 	}
 	
-	
+	*/
 }

@@ -54,12 +54,12 @@ public class AccountController implements ItemListener {
 		AccountItem item = (AccountItem) view.getSelectedItem();
 
 		PGPItem pgpItem = item.getPGPItem();
-		if( pgpItem.getEnabled() ) {
+		if( pgpItem.getBoolean("enabled") ) {
 			signMenuItem.setEnabled(true);
 			encryptMenuItem.setEnabled(true);
 			
-			model.setSignMessage(pgpItem.getAlwaysSign());
-			model.setEncryptMessage(pgpItem.getAlwaysEncrypt());
+			model.setSignMessage(pgpItem.getBoolean("always_sign"));
+			model.setEncryptMessage(pgpItem.getBoolean("always_encrypt"));
 		}
 	}
 
@@ -69,11 +69,11 @@ public class AccountController implements ItemListener {
 			composerInterface.identityInfoPanel.set(item);
 
 			PGPItem pgpItem = item.getPGPItem();
-			signMenuItem.setEnabled(pgpItem.getEnabled());
-			signMenuItem.setSelected(pgpItem.getAlwaysSign());
+			signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
+			signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
 
-			encryptMenuItem.setEnabled(pgpItem.getEnabled());
-			encryptMenuItem.setSelected(pgpItem.getAlwaysEncrypt());
+			encryptMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
+			encryptMenuItem.setSelected(pgpItem.getBoolean("always_encrypt"));
 		}
 	}
 

@@ -5,8 +5,11 @@ import java.net.SocketException;
 import java.util.Date;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.MailConfig;
@@ -115,7 +118,7 @@ public class IMAPStore {
 		int portNumber = -1;
 
 		try {
-			portNumber = Integer.parseInt(item.getPort());
+			portNumber = item.getInteger("port");
 		} catch (NumberFormatException e) {
 			portNumber = -1;
 		}
@@ -123,9 +126,9 @@ public class IMAPStore {
 		try {
 
 			if (portNumber != -1)
-				openport = getProtocol().openPort(item.getHost(), portNumber);
+				openport = getProtocol().openPort(item.get("host"), portNumber);
 			else
-				openport = getProtocol().openPort(item.getHost());
+				openport = getProtocol().openPort(item.get("host"));
 		} catch (Exception e) {
 			if (e instanceof SocketException)
 				throw new IMAPException(e.getMessage());
@@ -139,8 +142,8 @@ public class IMAPStore {
 			while (cancel == false) {
 				if (first == true) {
 
-					if (item.getPassword().length() != 0) {
-						getProtocol().login(item.getUser(), item.getPassword());
+					if (item.get("password").length() != 0) {
+						getProtocol().login(item.get("user"), item.get("password"));
 
 						state = STATE_AUTHENTICATE;
 						answer = true;
@@ -153,9 +156,9 @@ public class IMAPStore {
 
 				dialog = new PasswordDialog();
 				dialog.showDialog(
-					item.getHost() + "@" + item.getUser(),
-					item.getPassword(),
-					item.isSavePassword());
+					item.get("host") + "@" + item.get("user"),
+					item.get("password"),
+					item.getBoolean("save_password"));
 
 				char[] name;
 
@@ -166,7 +169,7 @@ public class IMAPStore {
 					//String user = dialog.getUser();
 					boolean save = dialog.getSave();
 
-					getProtocol().login(item.getUser(), password);
+					getProtocol().login(item.get("user"), password);
 
 					answer = true;
 
@@ -179,10 +182,10 @@ public class IMAPStore {
 
 						state = STATE_AUTHENTICATE;
 
-						item.setSavePassword(save);
+						item.set("save_password", save);
 
 						if (save == true)
-							item.setPassword(password);
+							item.set("password", password);
 
 					} else
 						cancel = false;
@@ -255,6 +258,8 @@ public class IMAPStore {
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");
 			System.out.println("no messages on server");
+			state = STATE_AUTHENTICATE;
+			JOptionPane.showMessageDialog(null, "Error while selection mailbox: "+path);
 		} catch (CommandFailedException ex) {
 			System.out.println("command failed exception");
 			state = STATE_AUTHENTICATE;
@@ -750,12 +755,14 @@ public class IMAPStore {
 		Vector v = new Vector();
 		String buffer = new String();
 
-		HeaderTableItem items =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem items =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		StringBuffer headerFields = new StringBuffer();
 
 		for (int i = 0; i < items.count(); i++) {
-			String name = items.getName(i);
+			HeaderItem headerItem = items.getHeaderItem(i);
+			
+			String name = headerItem.get("name");
 			if ((!name.equals("Status"))
 				|| (!name.equals("Flagged"))
 				|| (!name.equals("Attachment"))
@@ -812,12 +819,14 @@ public class IMAPStore {
 		worker.setProgressBarMaximum(list.size());
 		MessageSet set = new MessageSet(list.toArray());
 
-		HeaderTableItem items =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
+		TableItem items =
+			MailConfig.getMainFrameOptionsConfig().getTableItem();
 		StringBuffer headerFields = new StringBuffer();
 
 		for (int i = 0; i < items.count(); i++) {
-			String name = items.getName(i);
+			HeaderItem headerItem = items.getHeaderItem(i);
+
+						String name = headerItem.get("name");
 			if ((!name.equals("Status"))
 				|| (!name.equals("Flagged"))
 				|| (!name.equals("Attachment"))
@@ -890,7 +899,7 @@ public class IMAPStore {
 						i++;
 						worker.setProgressBarValue(i);
 						worker.setDisplayText(
-							item.getHost()
+							item.get("host")
 								+ ": Fetching "
 								+ i
 								+ "/"

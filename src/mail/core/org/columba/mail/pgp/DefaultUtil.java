@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.StreamThread;
 import org.columba.mail.config.PGPItem;
 
@@ -59,7 +58,7 @@ public abstract class DefaultUtil {
 
 	protected String getCommandString(int type, PGPItem item) {
 		String rawCmd = getRawCommandString(type);
-		StringBuffer command = new StringBuffer(item.getPath());
+		StringBuffer command = new StringBuffer(item.get("path"));
 		command.append(" ");
 
 		int varStartIndex = rawCmd.indexOf("%");
@@ -85,7 +84,7 @@ public abstract class DefaultUtil {
 	private String getValue(String name, PGPItem item) {
 
 		if (name.equals("user")) {
-			return item.getId();
+			return item.get("id");
 		}
 		if (name.equals("input_file")) {
 			return inputFile.toString();

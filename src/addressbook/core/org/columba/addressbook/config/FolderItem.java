@@ -14,9 +14,8 @@
 
 package org.columba.addressbook.config;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 /**
  * @version 	1.0
@@ -24,24 +23,28 @@ import org.w3c.dom.Document;
  */
 public class FolderItem extends DefaultItem
 {
+	/*
 	AdapterNode name;
 	AdapterNode uid;
 	AdapterNode type;
 	AdapterNode rootNode;
-
-	public FolderItem(AdapterNode root, Document doc)
+	*/
+	
+	public FolderItem(XmlElement root)
 	{
-		super(doc);
+		super(root);
 
+		/*
 		this.rootNode = root;
 
 		parse();
 
 		createMissingElements();
-
+		*/
 		//filterList = new Vector();
 	}
 
+	/*
 	protected void parse()
 	{
 		for (int i = 0; i < getRootNode().getChildCount(); i++)
@@ -68,7 +71,7 @@ public class FolderItem extends DefaultItem
 	{
 
 	}
-
+	
 	public AdapterNode getRootNode()
 	{
 		return rootNode;
@@ -112,4 +115,5 @@ public class FolderItem extends DefaultItem
 	{
 		return getTextValue(type);
 	}
+	*/
 }

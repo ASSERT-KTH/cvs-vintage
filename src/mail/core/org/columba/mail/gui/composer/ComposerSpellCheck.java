@@ -29,8 +29,8 @@ public class ComposerSpellCheck
         spellCheckConfig = MailConfig
 					.getComposerOptionsConfig()
 					.getSpellcheckItem();
-        System.out.println("Filename is " + spellCheckConfig.getAspellExecutable());
-        ASpellInterface.setAspellExeFilename(spellCheckConfig.getAspellExecutable());
+        System.out.println("Filename is " + spellCheckConfig.get("executable"));
+        ASpellInterface.setAspellExeFilename(spellCheckConfig.get("executable"));
         
 	}
 

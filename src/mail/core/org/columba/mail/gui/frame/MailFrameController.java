@@ -2,16 +2,11 @@ package org.columba.mail.gui.frame;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
 
-import org.columba.core.config.Config;
+import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.mh.CachedMHFolder;
-import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.action.GlobalActionCollection;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.composer.HeaderController;
@@ -50,24 +45,31 @@ public class MailFrameController extends FrameController {
 	private MailMenu menu;
 
 	public GlobalActionCollection globalActionCollection;
-	
-	
 
-	public MailFrameController() {
+	protected String id;
+	
+	public MailFrameController( String id ) {
 		super();
-
-		view = new FrameView();
+		
+		this.id = id;
+		
+		
 
 		new DialogStore(view);
-		
-		
 
 		globalActionCollection = new GlobalActionCollection(this);
 
 		actionListener = new FrameActionListener(this);
+		
+		createView();
 
 		//selectionManager = new SelectionManager();
 
+	}
+
+	public void createView() {
+
+		view = new FrameView();
 		treeController = new TreeController(this, MainInterface.treeModel);
 		//treeController.setSelectionManager(selectionManager);
 
@@ -123,34 +125,47 @@ public class MailFrameController extends FrameController {
 
 		view.pack();
 
+		/*
 		int count = MailConfig.getAccountList().count();
 		if (count == 0) {
 			view.maximize();
 		} else {
 
-			java.awt.Dimension dim =
-				MailConfig
-					.getMainFrameOptionsConfig()
-					.getWindowItem()
-					.getDimension();
-			view.setSize(dim);
-		}
-		view.setVisible(true);
+			ViewItem viewItem =
+				MailConfig.getMainFrameOptionsConfig().getViewItem();
 
+			int x = viewItem.getInteger("window", "width");
+			int y = viewItem.getInteger("window", "height");
+			Dimension dim = new Dimension(x, y);
+			view.setSize(dim);
+		
+		}
+		*/
+		//view.setVisible(true);
 	}
 
 	public void close() {
+
+		MainInterface.frameModel.unregister(id);
+
+		getView().setVisible(false);
+
+		/*
 		view.saveWindowPosition();
-
+		
 		tableController.saveColumnConfig();
-
-		Config.save();
-
+		
+		try {
+			Config.save();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		MainInterface.popServerCollection.saveAll();
-
+		
 		saveAllFolders();
-
+		
 		System.exit(1);
+		*/
 
 	}
 
@@ -167,98 +182,31 @@ public class MailFrameController extends FrameController {
 	}
 
 	protected void changeToolbars() {
-		boolean folderInfo =
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowFolderInfo();
-		boolean toolbar =
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.isShowToolbar();
+		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
+
+		boolean folderInfo = item.getBoolean("toolbars", "show_folderinfo");
+		boolean toolbar = item.getBoolean("toolbars", "show_main");
 
 		if (toolbar == true) {
 
 			getView().hideToolbar(folderInfo);
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.setShowToolbar(
-				"false");
+			item.set("toolbars", "show_main", false);
 		} else {
 
 			getView().showToolbar(folderInfo);
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.setShowToolbar(
-				"true");
+			item.set("toolbars", "show_main", true);
 		}
 
 		if (folderInfo == true) {
 
 			getView().hideFolderInfo(toolbar);
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.setShowFolderInfo(
-				"false");
+			item.set("toolbars", "show_folderinfo", false);
 		} else {
 
 			getView().showFolderInfo(toolbar);
-			MailConfig
-				.getMainFrameOptionsConfig()
-				.getWindowItem()
-				.setShowFolderInfo(
-				"true");
+			item.set("toolbars", "show_folderinfo", true);
 		}
 
-	}
-
-	public void saveAllFolders() {
-		FolderTreeNode rootFolder =
-			(FolderTreeNode) MainInterface.treeModel.getRoot();
-
-		saveFolder(rootFolder);
-	}
-
-	public void saveFolder(FolderTreeNode parentFolder) {
-
-		int count = parentFolder.getChildCount();
-		FolderTreeNode child;
-		FolderTreeNode folder;
-
-		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-
-			child = (FolderTreeNode) e.nextElement();
-
-			if (child instanceof CachedMHFolder) {
-				CachedMHFolder mhFolder = (CachedMHFolder) child;
-				try {
-					mhFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else if (child instanceof OutboxFolder) {
-				OutboxFolder outboxFolder= (OutboxFolder) child;
-				try {
-					outboxFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else if (child instanceof IMAPFolder) {
-				IMAPFolder imapFolder = (IMAPFolder) child;
-
-				try {
-					imapFolder.save();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-
-			saveFolder(child);
-		}
 	}
 
 }

@@ -24,7 +24,7 @@ import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.config.TreeXmlConfig;
+
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.gui.tree.util.EditAddressbookFolderDialog;
@@ -37,7 +37,7 @@ public class AddressbookTree implements TreeSelectionListener
 	private AddressbookTreeNode root;
 	private JTree tree;
 	private AddressbookInterface addressbookInterface;
-	private AddressbookTreeModel model;
+	private TreeModel model;
 
 	public JScrollPane scrollPane;
 
@@ -49,7 +49,9 @@ public class AddressbookTree implements TreeSelectionListener
 
 		root = generateTree();
 
-		model = new AddressbookTreeModel(root);
+		
+		// FIXME
+		//model = new TreeModel(root);
 
 		tree = new JTree(model);
 		//tree.setPreferredSize( new Dimension( 200,300 ) );
@@ -87,6 +89,7 @@ public class AddressbookTree implements TreeSelectionListener
 
 	public Folder getFolder(int uid)
 	{
+		/*
 		Folder root = getRootFolder();
 
 		for (Enumeration e = root.depthFirstEnumeration(); e.hasMoreElements();)
@@ -105,6 +108,7 @@ public class AddressbookTree implements TreeSelectionListener
 			}
 
 		}
+		*/
 		return null;
 	}
 
@@ -122,10 +126,15 @@ public class AddressbookTree implements TreeSelectionListener
 		Folder child2 = new Folder("child2");
 		root.add( child2 );
 		*/
-
+		
+		
+/*
 		TreeXmlConfig config = AddressbookConfig.getTreeConfig();
 
 		return config.generateTree(addressbookInterface);
+		*/
+		
+		return null;
 	}
 
 	public JTree getTree()
@@ -144,7 +153,7 @@ public class AddressbookTree implements TreeSelectionListener
 		removeAll();
 		tree.setRootVisible( true );
 		
-		model = new AddressbookTreeModel( root );
+		model = new TreeModel( root );
 		
 		AddressbookXmlConfig config = addressbookInterface.mainInterface.config.getAddressbookConfig();
 		AdapterNode node, child;
@@ -179,6 +188,7 @@ public class AddressbookTree implements TreeSelectionListener
 
 	public AddressbookTreeNode add(AdapterNode node)
 	{
+		/*
 		String name = node.getChild("name").getValue();
 
 		AddressbookTreeNode child = new AddressbookTreeNode(name);
@@ -196,6 +206,9 @@ public class AddressbookTree implements TreeSelectionListener
 		}
 
 		return child;
+		*/
+		
+		return null;
 	}
 
 	public Folder getSelectedFolder()
@@ -206,6 +219,7 @@ public class AddressbookTree implements TreeSelectionListener
 	public void valueChanged(TreeSelectionEvent e)
 	{
 
+		/*
 		Folder folder = (Folder) tree.getLastSelectedPathComponent();
 		if (folder == null)
 			return;
@@ -228,7 +242,7 @@ public class AddressbookTree implements TreeSelectionListener
 
 			addressbookInterface.actionListener.changeActions();
 		}
-
+		*/
 	}
 
 }

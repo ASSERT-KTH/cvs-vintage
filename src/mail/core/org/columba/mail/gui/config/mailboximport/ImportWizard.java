@@ -147,6 +147,7 @@ public class ImportWizard implements ActionListener
 		}
 		else if (action.equals("DESTINATION"))
 		{
+			/*
 			SelectFolderDialog dialog =
 				MainInterface
 					.frameController
@@ -160,6 +161,7 @@ public class ImportWizard implements ActionListener
 
 				sourcePanel.setDestination(path);
 			}
+			*/
 			
 
 		}

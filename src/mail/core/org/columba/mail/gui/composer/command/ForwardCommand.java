@@ -2,7 +2,6 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilder;
@@ -28,10 +27,8 @@ public class ForwardCommand extends FolderCommand {
 	 * @param frameController
 	 * @param references
 	 */
-	public ForwardCommand(
-		FrameController frameController,
-		DefaultCommandReference[] references) {
-		super(frameController, references);
+	public ForwardCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	/**
@@ -52,14 +49,15 @@ public class ForwardCommand extends FolderCommand {
 
 		Message message = new Message();
 
-		ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+		ColumbaHeader header =
+			(ColumbaHeader) folder.getMessageHeader(uids[0], worker);
 		message.setHeader(header);
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
 		message.setMimePartTree(mimePartTree);
 		String source = folder.getMessageSource(uids[0], worker);
 		message.setSource(source);
 
-		controller = new ComposerController(frameController);
+		controller = new ComposerController();
 
 		MessageBuilder.getInstance().createMessage(
 			message,

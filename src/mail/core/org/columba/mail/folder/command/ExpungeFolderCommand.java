@@ -2,11 +2,9 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.main.MainInterface;
 
@@ -27,20 +25,19 @@ public class ExpungeFolderCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ExpungeFolderCommand(
-		FrameController frameController,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super( references);
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController)frameController;
+		
 		
 		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, srcFolder );
 		 
-		frame.tableController.tableChanged(ev);
+		MainInterface.frameModel.tableChanged(ev);
 		
 		MainInterface.treeModel.nodeChanged(srcFolder);
 		

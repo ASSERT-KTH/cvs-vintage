@@ -26,7 +26,6 @@ import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.main.MainInterface;
 
 /**
  * @author frd
@@ -198,7 +197,7 @@ public class ComposerMenu extends JMenuBar{
 
 		menuItem.setActionCommand("GENERAL_OPTIONS"); //$NON-NLS-1$
 		menuItem.addActionListener(
-			MainInterface.frameController.getActionListener() );
+		composerInterface.composerActionListener );
 		editMenu.add(menuItem);
 
 		JMenu viewMenu = new JMenu(MailResourceLoader.getString("menu","mainframe","menu_view")); //$NON-NLS-1$
@@ -210,7 +209,7 @@ public class ComposerMenu extends JMenuBar{
 		cbMenuItem.addActionListener(composerInterface.composerActionListener);
 		cbMenuItem.setActionCommand("VIEW_TOOLBAR"); //$NON-NLS-1$
 		cbMenuItem.setEnabled(false);
-		if (composerInterface.windowItem.isShowToolbar())
+		if (composerInterface.viewItem.getBoolean("toolbars","show_main") )
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
 
@@ -218,7 +217,7 @@ public class ComposerMenu extends JMenuBar{
 		cbMenuItem.addActionListener(composerInterface.composerActionListener);
 		cbMenuItem.setActionCommand("VIEW_ACCOUNTINFO"); //$NON-NLS-1$
 		cbMenuItem.setEnabled(false);
-		if (composerInterface.windowItem.isShowFolderInfo())
+		if (composerInterface.viewItem.getBoolean("toolbars","show_folderinfo") )
 			cbMenuItem.setSelected(true);
 		subMenu.add(cbMenuItem);
 
@@ -229,7 +228,7 @@ public class ComposerMenu extends JMenuBar{
 		cbMenuItem = new JCheckBoxMenuItem(MailResourceLoader.getString("menu","composer","menu_addressbook_panel")); //$NON-NLS-1$
 		cbMenuItem.setActionCommand("VIEW_ADDRESSBOOK"); //$NON-NLS-1$
 		cbMenuItem.addActionListener(composerInterface.composerActionListener);
-		if (composerInterface.windowItem.isShowAddressbook())
+		if (composerInterface.viewItem.getBoolean("addressbook","enabled") )
 			cbMenuItem.setSelected(true);
 		viewMenu.add(cbMenuItem);
 

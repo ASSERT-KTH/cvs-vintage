@@ -25,17 +25,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
+import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
+import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.main.MainInterface;
 
 public class CriteriaList extends JPanel implements ActionListener {
@@ -43,12 +47,14 @@ public class CriteriaList extends JPanel implements ActionListener {
 	private Config config;
 	private Filter filter;
 
-	private HeaderTableItem v;
+	private TableItem v;
 	private Vector list;
 	private JPanel panel;
+	private AbstractPluginHandler pluginHandler;
 
-	public CriteriaList(Filter filter) {
+	public CriteriaList(AbstractPluginHandler pluginHandler, Filter filter) {
 		super();
+		this.pluginHandler = pluginHandler;
 
 		this.config = MainInterface.config;
 		this.filter = filter;
@@ -57,7 +63,8 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 		panel = new JPanel();
 		JScrollPane scrollPane = new JScrollPane(panel);
-
+		setBorder(BorderFactory.createEmptyBorder(1,1,1,1) );
+		
 		scrollPane.setPreferredSize(new Dimension(500, 100));
 		setLayout(new BorderLayout());
 
@@ -79,7 +86,8 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 	public void add() {
 
-		filter.addEmptyCriteria();
+		FilterRule rule = filter.getFilterRule();
+		rule.addEmptyCriteria();
 
 		updateComponents(false);
 
@@ -94,7 +102,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 		if (rule.count() > 1) {
 			updateComponents(false);
 
-			filter.removeCriteria(i);
+			rule.remove(i);
 
 			update();
 		}
@@ -111,19 +119,12 @@ public class CriteriaList extends JPanel implements ActionListener {
 		GridBagConstraints c = new GridBagConstraints();
 		panel.setLayout(gridbag);
 
-		/*
-		c.fill = GridBagConstraints.NONE;
-		c.gridx = GridBagConstraints.RELATIVE;
-		c.weightx = 1.0;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		*/
-
 		FilterRule rule = filter.getFilterRule();
 
 		for (int i = 0; i < rule.count(); i++) {
 			FilterCriteria criteria = rule.get(i);
 			String type = criteria.getType();
-			DefaultCriteriaRow column;
+			DefaultCriteriaRow column = null;
 
 			c.fill = GridBagConstraints.NONE;
 			//c.fill = GridBagConstraints.HORIZONTAL;
@@ -131,11 +132,22 @@ public class CriteriaList extends JPanel implements ActionListener {
 			c.gridy = i;
 			c.weightx = 1.0;
 			c.anchor = GridBagConstraints.NORTHWEST;
-			c.insets = new Insets(0,0,0,0);
+			c.insets = new Insets(0, 0, 0, 0);
 			c.gridwidth = 1;
 
+			//String className = pluginList.getGuiClassName(type);
+
+			Object[] args = { pluginHandler, this, criteria };
+
+			try {
+				column = (DefaultCriteriaRow) ((AbstractFilterPluginHandler)pluginHandler).getGuiPlugin(type, args);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			/*
 			if (type.equalsIgnoreCase("Custom Headerfield")) {
-				column = new CustomHeaderCriteriaRow(this, criteria);
+				column = new CustomHeaderfieldCriteriaRow(this, criteria);
 				gridbag.setConstraints(column, c);
 			} else if (type.equalsIgnoreCase("Date")) {
 				column = new DateCriteriaRow(this, criteria);
@@ -154,24 +166,25 @@ public class CriteriaList extends JPanel implements ActionListener {
 				gridbag.setConstraints(column, c);
 			} else {
 				column = new HeaderCriteriaRow(this, criteria);
-				gridbag.setConstraints(column, c);
+				
 			}
+			*/
 
+			gridbag.setConstraints(column.getContentPane(), c);
 			list.add(column);
 
-			panel.add(column);
+			panel.add(column.getContentPane());
 
-		
-			JButton addButton = new JButton(ImageLoader.getSmallImageIcon("stock_add_16.png") );
+			JButton addButton =
+				new JButton(ImageLoader.getSmallImageIcon("stock_add_16.png"));
 			addButton.setActionCommand("ADD");
-			addButton.setMargin(new Insets(0,0,0,0) );
+			addButton.setMargin(new Insets(0, 0, 0, 0));
 			addButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					add();
 				}
 			});
-			
-			
+
 			/*
 			//c.insets = new Insets(1, 2, 1, 2);
 			c.gridx = GridBagConstraints.RELATIVE;
@@ -180,11 +193,11 @@ public class CriteriaList extends JPanel implements ActionListener {
 			gridbag.setConstraints(addButton, c);
 			panel.add(addButton);
 			*/
-			
+
 			JButton removeButton =
 				new JButton(
 					ImageLoader.getSmallImageIcon("stock_remove_16.png"));
-			removeButton.setMargin(new Insets(0,0,0,0) );
+			removeButton.setMargin(new Insets(0, 0, 0, 0));
 			removeButton.setActionCommand(new Integer(i).toString());
 			final int index = i;
 			removeButton.addActionListener(new ActionListener() {
@@ -192,11 +205,11 @@ public class CriteriaList extends JPanel implements ActionListener {
 					remove(index);
 				}
 			});
-			
+
 			JPanel buttonPanel = new JPanel();
-			buttonPanel.setLayout( new GridLayout(0,2,2,2) );			
-			buttonPanel.add( removeButton );
-			buttonPanel.add( addButton );
+			buttonPanel.setLayout(new GridLayout(0, 2, 2, 2));
+			buttonPanel.add(removeButton);
+			buttonPanel.add(addButton);
 
 			//c.insets = new Insets(1, 2, 1, 2);
 			c.gridx = GridBagConstraints.REMAINDER;

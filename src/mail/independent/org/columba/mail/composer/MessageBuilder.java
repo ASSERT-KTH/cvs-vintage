@@ -592,6 +592,8 @@ public class MessageBuilder {
 	 *
 	 */
 	public void addSenderToAddressbook(String sender) {
+		// FIXME
+		/*
 		if (sender != null) {
 			if (sender.length() > 0) {
 				org.columba.addressbook.folder.Folder selectedFolder =
@@ -614,6 +616,7 @@ public class MessageBuilder {
 				}
 			}
 		}
+		*/
 	}
 
 }

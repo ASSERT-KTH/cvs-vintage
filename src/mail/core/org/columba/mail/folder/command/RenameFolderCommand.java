@@ -3,7 +3,6 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -27,9 +26,9 @@ public class RenameFolderCommand extends Command {
 	 * @param references
 	 */
 	public RenameFolderCommand(
-		FrameController frameController,
+		
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(references);
 	}
 
 	/**

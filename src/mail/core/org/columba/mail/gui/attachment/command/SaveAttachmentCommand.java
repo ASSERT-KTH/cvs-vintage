@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.util.cFileChooser;
 import org.columba.core.util.cFileFilter;
 import org.columba.mail.coder.CoderRouter;
@@ -40,9 +39,8 @@ public class SaveAttachmentCommand extends FolderCommand {
 	 * @param references
 	 */
 	public SaveAttachmentCommand(
-		FrameController frameController,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(references);
 	}
 
 	/**

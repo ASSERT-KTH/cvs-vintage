@@ -3,12 +3,10 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.main.MainInterface;
 
@@ -31,20 +29,20 @@ public class CopyMessageCommand extends FolderCommand {
 	 * @param references
 	 */
 	public CopyMessageCommand(
-		FrameController frameController,
+		
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super( references);
 
 		commandType = Command.UNDOABLE_OPERATION;
 	}
 
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
+		
 
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
 
-		frame.tableController.tableChanged(ev);
+		MainInterface.frameModel.tableChanged(ev);
 
 		MainInterface.treeModel.nodeChanged(destFolder);
 	}
@@ -86,8 +84,7 @@ public class CopyMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		MailFrameController mailFrameController =
-			(MailFrameController) frameController;
+		
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 

@@ -26,7 +26,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.config.HeaderTableItem;
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.JTreeTable;
 import org.columba.mail.config.MailConfig;
@@ -103,6 +104,8 @@ public class TableView extends JTreeTable {
 		
 		try {
 			initRenderer(false);
+			headerTableModel.update();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -182,18 +185,24 @@ public class TableView extends JTreeTable {
 
 	protected void initRenderer(boolean b) throws Exception {
 		
-		HeaderTableItem v =
-			(HeaderTableItem) MailConfig
+		TableItem tableItem =
+			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
-				.getHeaderTableItem()
-				.clone();
-		v.removeEnabledItem();
+				.getTableItem();
+				
+				//.clone();
+		//v.removeEnabledItem();
 
-		for (int i = 0; i < v.count(); i++) {
-			String name = v.getName(i);
-			int size = v.getSize(i);
-			int position = v.getPosition(i);
-
+		for (int i = 0; i < tableItem.count(); i++) {
+			HeaderItem v = tableItem.getHeaderItem(i);
+			boolean enabled = v.getBoolean("enabled");
+			
+			if ( enabled == false ) continue;
+			
+			String name = v.get("name");
+			int size = v.getInteger("size");
+			int position = v.getInteger("position");
+	
 			if (name.equalsIgnoreCase("size")) {
 				registerRenderer(
 					"Size",

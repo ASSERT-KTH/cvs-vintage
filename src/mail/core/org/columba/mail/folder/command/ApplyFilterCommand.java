@@ -4,12 +4,10 @@ import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.main.MainInterface;
 
 /**
@@ -28,16 +26,16 @@ public class ApplyFilterCommand extends Command{
 	 * @param references
 	 */
 	public ApplyFilterCommand(
-		FrameController frameController,
+		
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super( references);
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		MailFrameController frame = (MailFrameController) frameController;
+		
 	}
 
 	/**
@@ -61,7 +59,7 @@ public class ApplyFilterCommand extends Command{
 			Object[] result = srcFolder.searchMessages(filter, worker);
 			if (result.length != 0) {
 				CompoundCommand command =
-					filter.getCommand(frameController, srcFolder, result);
+					filter.getCommand(srcFolder, result);
 
 				MainInterface.processor.addOp(command);
 			}

@@ -14,83 +14,19 @@
 
 package org.columba.mail.config;
 
-import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.columba.mail.spellcheck.ASpellInterface;
-import org.w3c.dom.Document;
+import org.columba.core.xml.XmlElement;
 
 /**
  * @version 	1.0
  * @author
  */
-public class SpellcheckItem extends DefaultItem
-{
-	private AdapterNode aspellExecutable;
-	private AdapterNode limit;
+public class SpellcheckItem extends DefaultItem {
+	
 
-	private AdapterNode rootNode;
+	public SpellcheckItem(XmlElement root) {
+		super(root);
 
-	public SpellcheckItem(AdapterNode rootNode, Document doc)
-	{
-		super(doc);
-
-		this.rootNode = rootNode;
-
-		parse();
-
-		createMissingElements();
-
-	}
-
-	public AdapterNode getRootNode()
-	{
-		return rootNode;
-	}
-
-	protected void parse()
-	{
-		for (int i = 0; i < getRootNode().getChildCount(); i++)
-		{
-			AdapterNode child = getRootNode().getChildAt(i);
-
-			if (child.getName().equals(ASpellInterface.ASPELL_EXE_PROP))
-			{
-				aspellExecutable = child;
-			}
-			else if (child.getName().equals("limit"))
-			{
-				limit = child;
-			}
-		}
-	}
-
-	protected void createMissingElements()
-	{
-		if (aspellExecutable == null)
-			aspellExecutable = addKey(rootNode, ASpellInterface.ASPELL_EXE_PROP, "aspell.exe");
-		if (limit == null)
-			limit = addKey(rootNode, "limit", "5");
-
-	}
-
-	public void setAspellExecutable(String str)
-	{
-		setTextValue(aspellExecutable, str);
-	}
-
-	public String getAspellExecutable()
-	{
-		return getTextValue(aspellExecutable);
-	}
-
-	public String getLimit()
-	{
-		return getTextValue(limit);
-	}
-
-	public void setLimit(String s)
-	{
-		setTextValue(limit, s);
 	}
 
 }

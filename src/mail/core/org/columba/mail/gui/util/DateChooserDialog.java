@@ -24,42 +24,41 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import org.columba.core.gui.util.DialogStore;
 
 /**
  * @version 	1.0
  * @author
  */
-public class DateChooserDialog extends JDialog implements ActionListener
-{
+public class DateChooserDialog implements ActionListener {
 	DateChooser dateChooser;
 	JButton okButton;
 	JButton cancelButton;
-	
+
 	JPanel panel;
-	
+
 	boolean success = false;
-	
-	public DateChooserDialog ( JFrame frame )
-	{
-		super( frame, true );
-		
-		setTitle( "Choose Date..." );
-		
+
+	JDialog dialog;
+
+	public DateChooserDialog() {
+		dialog = DialogStore.getDialog();
+
+		dialog.setTitle("Choose Date...");
+
 		dateChooser = new DateChooser();
-		
+
 		panel = new JPanel();
-		panel.setLayout( new BorderLayout() );
-		
-		getContentPane().add( panel, BorderLayout.CENTER );
-		
-		panel.setBorder( BorderFactory.createEmptyBorder(10,10,10,10) );
-		
-		panel.add( dateChooser, BorderLayout.CENTER );
-		
-		
-		
+		panel.setLayout(new BorderLayout());
+
+		dialog.getContentPane().add(panel, BorderLayout.CENTER);
+
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		panel.add(dateChooser, BorderLayout.CENTER);
+
 		JPanel bottomPanel = new JPanel();
 		/*
 		bottomPanel.setBorder(new WizardTopBorder());
@@ -68,12 +67,12 @@ public class DateChooserDialog extends JDialog implements ActionListener
 		bottomPanel.setBorder(new CompoundBorder(border, margin));
 		*/
 		bottomPanel.setLayout(new BorderLayout());
-		bottomPanel.setBorder( BorderFactory.createEmptyBorder(10,0,0,0) );
-		
+		bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		
+
 		cancelButton = new JButton("Cancel");
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
@@ -83,42 +82,39 @@ public class DateChooserDialog extends JDialog implements ActionListener
 
 		buttonPanel.add(cancelButton);
 		buttonPanel.add(okButton);
-		
-		panel.add( bottomPanel, BorderLayout.SOUTH );
-		
-		pack();
+
+		panel.add(bottomPanel, BorderLayout.SOUTH);
+
+		dialog.pack();
 	}
-	
-	public Date getDate()
-	{
+
+	public Date getDate() {
 		return dateChooser.getSelectedDate().getTime();
 	}
-	
-	public void setDate( Date d )
-	{
+
+	public void setDate(Date d) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
-		dateChooser.setSelectedDate( c );
+		dateChooser.setSelectedDate(c);
 	}
-	
-	public boolean success()
-	{
+
+	public boolean success() {
 		return success;
 	}
-	
-	public void actionPerformed( ActionEvent ev )
+
+	public void setVisible(boolean b )
 	{
+		dialog.setVisible(b);
+	}
+	public void actionPerformed(ActionEvent ev) {
 		String action = ev.getActionCommand();
-		
-		if ( action.equals("OK") )
-		{
+
+		if (action.equals("OK")) {
 			success = true;
-			setVisible(false);
-		}
-		else if ( action.equals("CANCEL") )
-		{
+			dialog.setVisible(false);
+		} else if (action.equals("CANCEL")) {
 			success = false;
-			setVisible(false);
+			dialog.setVisible(false);
 		}
 
 	}

@@ -24,43 +24,40 @@ import org.columba.core.util.Lock;
  * 
  */
 public abstract class Command {
-	
+
 	// Command Types
-	
+
 	// Commands that can be undone, e.g. move message
 	// line for constructor:
 	// commandType = Command.UNDOABLE_OPERATION;
-	public static final int UNDOABLE_OPERATION = 0; 
-	
+	public static final int UNDOABLE_OPERATION = 0;
+
 	// Commands that can not be undone but previous commands
 	// can be undone, e.g. view message (default) 
 	// line for constructor:
 	// commandType = Command.NORMAL_OPERATION;
-	public static final int NORMAL_OPERATION = 1; 
-	
+	public static final int NORMAL_OPERATION = 1;
+
 	// Commands that can not be undone and previous commands
 	// cannot be undone anymore, e.g. delete message from trash
 	// line for constructor:
 	// commandType = Command.NO_UNDO_OPERATION;
-	public static final int NO_UNDO_OPERATION = 2; 
-	
-	
+	public static final int NO_UNDO_OPERATION = 2;
+
 	// Priorities
-	
+
 	// Commands that are started by an automated process, e.g. auto-check
 	// for new messages
 	public static final int DAEMON_PRIORITY = -10;
-	
+
 	// Normal priority for e.g. copying (default)
 	public static final int NORMAL_PRIORITY = 0;
-	
+
 	// Commands that the user waits for to finish, e.g. view message
 	public static final int REALTIME_PRIORITY = 10;
-	
+
 	// Never Use this!! - internally highest priority
 	public static final int DEFINETLY_NEXT_OPERATION_PRIORITY = 20;
-
-
 
 	// Never use these!!! - for internal state control only
 
@@ -74,41 +71,48 @@ public abstract class Command {
 
 	protected int timeStamp;
 
-	protected Lock[] folderLocks;	
-	private DefaultCommandReference[] references;	
+	protected Lock[] folderLocks;
+	private DefaultCommandReference[] references;
 	private DefaultCommandReference[] undoReferences;
-	
+
 	protected FrameController frameController;
-	
-	public Command( FrameController frameController, DefaultCommandReference[] references ) {
-		this.references = references;	
-		this.frameController = frameController;
-		
-		
-		commandType = NORMAL_OPERATION;		
+
+	public Command(DefaultCommandReference[] references) {
+		this.references = references;
+
+		commandType = NORMAL_OPERATION;
 		priority = NORMAL_PRIORITY;
 	}
-	
-	public void process(Worker worker, int operationMode) throws Exception {		
-		setTimeStamp( worker.getTimeStamp() );
-		
-		switch( operationMode ) {
-			case FIRST_EXECUTION : 
-					execute(worker);
-					break;
+
+	public Command(
+		FrameController frameController,
+		DefaultCommandReference[] references) {
+		this.references = references;
+		this.frameController = frameController;
+
+		commandType = NORMAL_OPERATION;
+		priority = NORMAL_PRIORITY;
+	}
+
+	public void process(Worker worker, int operationMode) throws Exception {
+		setTimeStamp(worker.getTimeStamp());
+
+		switch (operationMode) {
+			case FIRST_EXECUTION :
+				execute(worker);
+				break;
 			case UNDO :
-					undo(worker);
-					break;
+				undo(worker);
+				break;
 			case REDO :
-					redo(worker);	
-					break;
-		}		
+				redo(worker);
+				break;
+		}
 	}
-	
-	public void updateGUI() throws Exception
-	{
+
+	public void updateGUI() throws Exception {
 	}
-	
+
 	/**
 	 * Command must implement this method
 	 * Executes the Command when run the first time
@@ -125,9 +129,9 @@ public abstract class Command {
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void undo(Worker worker) throws Exception
-	{}
-	
+	public void undo(Worker worker) throws Exception {
+	}
+
 	/**
 	 * Command must implement this method
 	 * Redos the command after command was undone.
@@ -135,44 +139,44 @@ public abstract class Command {
 	 * @param worker
 	 * @throws Exception
 	 */
-	public void redo(Worker worker) throws Exception
-	{}
+	public void redo(Worker worker) throws Exception {
+	}
 
 	public boolean canBeProcessed(int operationMode) {
-		DefaultCommandReference[] references = getReferences( operationMode );
-		int size = Array.getLength( references );
-		
+		DefaultCommandReference[] references = getReferences(operationMode);
+		int size = Array.getLength(references);
+
 		boolean success = true;
-		
-		for( int i=0; (i<size) && success; i++ ) {
-			success &= references[i].tryToGetLock();	
+
+		for (int i = 0;(i < size) && success; i++) {
+			success &= references[i].tryToGetLock();
 		}
-		
-		if( !success ) {
-			releaseAllFolderLocks(operationMode);		
+
+		if (!success) {
+			releaseAllFolderLocks(operationMode);
 		}
-		
+
 		return success;
 	}
 
 	public void releaseAllFolderLocks(int operationMode) {
-		DefaultCommandReference[] references = getReferences( operationMode );
-		int size = Array.getLength( references );
-		
-		for( int i=0; i<size; i++ ) {
-			references[i].releaseLock();	
-		}			
+		DefaultCommandReference[] references = getReferences(operationMode);
+		int size = Array.getLength(references);
+
+		for (int i = 0; i < size; i++) {
+			references[i].releaseLock();
+		}
 	}
 
 	/************* Methods for interacting with the Operator *************/
-	
+
 	public DefaultCommandReference[] getReferences(int operationMode) {
-		if( operationMode == UNDO )
+		if (operationMode == UNDO)
 			return getUndoReferences();
 		else
 			return getReferences();
 	}
-	
+
 	public int getCommandType() {
 		return commandType;
 	}
@@ -180,11 +184,11 @@ public abstract class Command {
 	public int getPriority() {
 		return priority;
 	}
-	
+
 	public void incPriority() {
-		priority++;	
+		priority++;
 	}
-	
+
 	public boolean isSynchronize() {
 		return synchronize;
 	}
@@ -192,7 +196,6 @@ public abstract class Command {
 	public void setSynchronize(boolean synchronize) {
 		this.synchronize = synchronize;
 	}
-
 
 	public void setPriority(int priority) {
 		this.priority = priority;
@@ -218,9 +221,11 @@ public abstract class Command {
 	 * Returns the frameController.
 	 * @return FrameController
 	 */
+	/*
 	public FrameController getFrameController() {
 		return frameController;
 	}
+	*/
 
 	/**
 	 * Sets the timeStamp.This method is for testing only!
@@ -245,10 +250,17 @@ public abstract class Command {
 	public DefaultCommandReference[] getUndoReferences() {
 		return undoReferences;
 	}
-	
-	public void finish() throws Exception{
-		updateGUI();	
+
+	public void finish() throws Exception {
+		updateGUI();
+	}
+
+	/**
+	 * Returns the frameController.
+	 * @return FrameController
+	 */
+	public FrameController getFrameController() {
+		return frameController;
 	}
 
 }
-

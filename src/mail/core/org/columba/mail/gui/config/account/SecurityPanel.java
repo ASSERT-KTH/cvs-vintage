@@ -69,24 +69,24 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 	protected void updateComponents(boolean b) {
 
 		if (b) {
-			idTextField.setText(item.getId());
-			pathButton.setText(item.getPath());
+			idTextField.setText(item.get("id"));
+			pathButton.setText(item.get("path"));
 
-			enableCheckBox.setSelected(item.getEnabled());
+			enableCheckBox.setSelected(item.getBoolean("enabled"));
 
-			alwaysSignCheckBox.setSelected(item.getAlwaysSign());
-			alwaysEncryptCheckBox.setSelected(item.getAlwaysEncrypt());
+			alwaysSignCheckBox.setSelected(item.getBoolean("always_sign"));
+			alwaysEncryptCheckBox.setSelected(item.getBoolean("always_encrypt"));
 
 			enablePGP(enableCheckBox.isSelected());
 
 		} else {
-			item.setId(idTextField.getText());
-			item.setPath(pathButton.getText());
+			item.set("id", idTextField.getText());
+			item.set("path", pathButton.getText());
 
-			item.setEnabled(enableCheckBox.isSelected());
+			item.set("enabled", enableCheckBox.isSelected());
 
-			item.setAlwaysSign(alwaysSignCheckBox.isSelected());
-			item.setAlwaysEncrypt(alwaysEncryptCheckBox.isSelected());
+			item.set("always_sign", alwaysSignCheckBox.isSelected());
+			item.set("always_encrypt", alwaysEncryptCheckBox.isSelected());
 
 		}
 	}

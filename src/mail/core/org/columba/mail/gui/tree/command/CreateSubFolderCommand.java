@@ -5,7 +5,6 @@ import java.util.Hashtable;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.FrameController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.main.MainInterface;
@@ -24,15 +23,13 @@ public class CreateSubFolderCommand extends Command {
 	 * Constructor for CreateSubFolderCommand.
 	 * @param references
 	 */
-	public CreateSubFolderCommand(
-		FrameController frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
+	public CreateSubFolderCommand(DefaultCommandReference[] references) {
+		super(references);
 
 		priority = Command.REALTIME_PRIORITY;
 		commandType = Command.UNDOABLE_OPERATION;
-		
-		success = false;
+
+		success = true;
 	}
 
 	/**
@@ -40,15 +37,11 @@ public class CreateSubFolderCommand extends Command {
 	 */
 	public void updateGUI() throws Exception {
 		// if creating of folder failed -> exit
-		if ( success == false ) return;
-		
+		if (success == false)
+			return;
+
 		// else update TreeModel
-		MainInterface
-			.frameController
-			.treeController
-			.getModel()
-			.nodeStructureChanged(
-			parentFolder);
+		MainInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	/**
@@ -56,15 +49,21 @@ public class CreateSubFolderCommand extends Command {
 	 */
 	public void execute(Worker worker) throws Exception {
 
-		parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
-		String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
+		parentFolder =
+			((FolderCommandReference) getReferences()[0]).getFolder();
+		String name =
+			((FolderCommandReference) getReferences()[0]).getFolderName();
 
 		/*
 		attributes = parentFolder.getAttributes();
 		attributes.put("name", name);
 		*/
-		
-		success = parentFolder.addFolder(name);
+		try {
+			parentFolder.addFolder(name);
+		} catch (Exception ex) {
+			success = false;
+			throw ex;
+		}
 	}
 
 	/**

@@ -21,7 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.addressbook.gui.SelectAddressDialog;
-import org.columba.core.config.WindowItem;
+import org.columba.core.config.ViewItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.ComposerCommandReference;
@@ -678,8 +678,7 @@ public class ComposerActionListener implements ActionListener {
 		command = e.getActionCommand();
 
 		if (command.equals("NEW")) {
-			ComposerController controller =
-				new ComposerController(composerInterface.frameController);
+			ComposerController controller = new ComposerController();
 			controller.showComposerWindow();
 
 		}
@@ -691,10 +690,9 @@ public class ComposerActionListener implements ActionListener {
 				return;
 			*/
 
-			
 			if (composerInterface.composerController.checkState() == false)
 				return;
-			
+
 			/*
 			ComposerOperation op =
 				new ComposerOperation(
@@ -704,31 +702,34 @@ public class ComposerActionListener implements ActionListener {
 			
 			MainInterface.crossbar.operate(op);
 			*/
-			
-			OutboxFolder outboxFolder = (OutboxFolder) MainInterface.treeModel.getFolder(103);
-			
+
+			OutboxFolder outboxFolder =
+				(OutboxFolder) MainInterface.treeModel.getFolder(103);
+
 			ComposerCommandReference[] r = new ComposerCommandReference[1];
-			r[0] = new ComposerCommandReference( composerInterface.composerController, outboxFolder );
-			
-			
-			SendMessageCommand c = new SendMessageCommand(composerInterface.frameController, r);
-			
+			r[0] =
+				new ComposerCommandReference(
+					composerInterface.composerController,
+					outboxFolder);
+
+			SendMessageCommand c = new SendMessageCommand(r);
+
 			MainInterface.processor.addOp(c);
 
 			return;
-			
+
 		}
 		if (command.equals("SENDLATER")) {
 			if (composerInterface.composerController.checkState() == false)
 				return;
-				
+
 			AccountItem item =
 				composerInterface
 					.composerController
 					.getModel()
 					.getAccountItem();
 			SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-			String str = folderItem.getDrafts();
+			String str = folderItem.get("drafts");
 			int destUid = Integer.parseInt(str);
 			OutboxFolder destFolder =
 				(OutboxFolder) MainInterface.treeModel.getFolder(103);
@@ -739,8 +740,7 @@ public class ComposerActionListener implements ActionListener {
 					composerInterface.composerController,
 					destFolder);
 
-			SaveMessageCommand c =
-				new SaveMessageCommand(composerInterface.frameController, r);
+			SaveMessageCommand c = new SaveMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 			/*
@@ -771,7 +771,7 @@ public class ComposerActionListener implements ActionListener {
 					.getModel()
 					.getAccountItem();
 			SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-			String str = folderItem.getDrafts();
+			String str = folderItem.get("drafts");
 			int destUid = Integer.parseInt(str);
 			Folder destFolder =
 				(Folder) MainInterface.treeModel.getFolder(destUid);
@@ -782,8 +782,7 @@ public class ComposerActionListener implements ActionListener {
 					composerInterface.composerController,
 					destFolder);
 
-			SaveMessageCommand c =
-				new SaveMessageCommand(composerInterface.frameController, r);
+			SaveMessageCommand c = new SaveMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 
@@ -808,7 +807,7 @@ public class ComposerActionListener implements ActionListener {
 					.getModel()
 					.getAccountItem();
 			SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-			String str = folderItem.getTemplates();
+			String str = folderItem.get("templates");
 			int destUid = Integer.parseInt(str);
 			Folder destFolder =
 				(Folder) MainInterface.treeModel.getFolder(destUid);
@@ -819,8 +818,7 @@ public class ComposerActionListener implements ActionListener {
 					composerInterface.composerController,
 					destFolder);
 
-			SaveMessageCommand c =
-				new SaveMessageCommand(composerInterface.frameController, r);
+			SaveMessageCommand c = new SaveMessageCommand(r);
 
 			MainInterface.processor.addOp(c);
 			/*
@@ -893,6 +891,7 @@ public class ComposerActionListener implements ActionListener {
 
 			System.out.println("addressbook");
 
+			/*
 			composerInterface.headerController.cleanupHeaderItemList();
 
 			SelectAddressDialog dialog =
@@ -902,17 +901,14 @@ public class ComposerActionListener implements ActionListener {
 					composerInterface.headerController.getHeaderItemLists());
 
 			org.columba.addressbook.folder.Folder folder =
-				MainInterface
-					.addressbookInterface
-					.tree
-					.getFolder(
-					101);
+				MainInterface.addressbookInterface.tree.getFolder(101);
 			dialog.setHeaderList(folder.getHeaderItemList());
 
 			dialog.setVisible(true);
 
 			composerInterface.headerController.setHeaderItemLists(
 				dialog.getHeaderItemLists());
+			*/
 
 		}
 		if (command.equals("SIGN")) {
@@ -923,17 +919,17 @@ public class ComposerActionListener implements ActionListener {
 		}
 		if (command.equals("VIEW_ADDRESSBOOK")) {
 
-			WindowItem item =
-				MailConfig.getComposerOptionsConfig().getWindowItem();
+			/*
+			ViewItem item = MailConfig.getComposerOptionsConfig().getViewItem();
 
-			if (item.isShowAddressbook() == true) {
+			if (item.getBoolean("addressbook", "enabled") == true) {
 				composerInterface.composerController.hideAddressbookWindow();
-				item.setShowAddressbook("false");
+				item.set("addressbook", "enabled", false);
 			} else {
 				composerInterface.composerController.showAddressbookWindow();
-				item.setShowAddressbook("true");
+				item.set("addressbook", "enabled", true);
 			}
-
+			*/
 		}
 
 		// 09/16/02 ALP

@@ -1,267 +1,78 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-
-
-
-  <tree>
-    <folder>
-      <name>Local Folders</name>
-      <accessrights>system</accessrights>
-      <messagefolder>false</messagefolder>
-      <type>columba</type>      
-      <subfolder>false</subfolder>
-      <add>false</add>
-      <remove>false</remove>
-      <uid>100</uid>
-     <folder>
-	<name>Inbox</name>
-       <accessrights>system</accessrights>
-	<messagefolder>true</messagefolder>
-	<type>columba</type>
-	<subfolder>true</subfolder>
-	<add>true</add>
-	<remove>true</remove>
-        <uid>101</uid>
-      <folder>
-<name>recent messages</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>19</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>is</criteria>
-<pattern>Recent</pattern>
-<type>Flags</type>
-</filtercriteria>
-<condition>matchall</condition>
-</filterrule>
-</filter>
-</search>
-</folder>
-<folder>
-<name>unread messages</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>20</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>is not</criteria>
-<pattern>Seen</pattern>
-<type>Flags</type>
-</filtercriteria>
-<condition>matchall</condition>
-</filterrule>
-</filter>
-</search>
-</folder>
-<folder>
-<name>flagged messages</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>26</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>is</criteria>
-<pattern>Flagged</pattern>
-<type>Flags</type>
-</filtercriteria>
-<condition>matchall</condition>
-</filterrule>
-</filter>
-</search>
-</folder>
-<folder>
-<name>high priority</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>24</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>is</criteria>
-<pattern>Highest</pattern>
-<type>Priority</type>
-</filtercriteria>
-<condition>matchany</condition>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>is</criteria>
-<pattern>High</pattern>
-<type>Priority</type>
-</filtercriteria>
-</filterrule>
-</filter>
-</search>
-</folder>
-<folder>
-<name>columba mailinglist</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>25</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>contains</criteria>
-<pattern>columba-users</pattern>
-<type>To or Cc</type>
-</filtercriteria>
-<condition>matchany</condition>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>contains</criteria>
-<pattern>columba-devel</pattern>
-<type>To or Cc</type>
-</filtercriteria>
-</filterrule>
-</filter>
-</search>
-</folder>
-<folder>
-<name>body contains "columba"</name>
-<accessrights>user</accessrights>
-<messagefolder>true</messagefolder>
-<subfolder>false</subfolder>
-<add>false</add>
-<remove>true</remove>
-<uid>23</uid>
-<type>virtual</type>
-<search>
-<include>true</include>
-<uid>101</uid>
-<filter>
-<filterrule>
-<filtercriteria>
-<headeritem>Subject</headeritem>
-<criteria>contains</criteria>
-<pattern>columba</pattern>
-<type>Body</type>
-</filtercriteria>
-<condition>matchall</condition>
-</filterrule>
-</filter>
-</search>
-</folder>
-     </folder>   
-     <folder>
-	<name>Drafts</name> 
-	<accessrights>system</accessrights> 
-	<messagefolder>true</messagefolder> 
-	<type>columba</type> 
-	<subfolder>false</subfolder>
-	<add>true</add>
-	<remove>true</remove>
-	<uid>102</uid> 
-      </folder> 
-      <folder> 
-      <name>Templates</name> 
-      <accessrights>system</accessrights> 
-      <messagefolder>true</messagefolder> 
-      <type>columba</type> 
-      <subfolder>false</subfolder> 
-      <add>true</add> 
-      <remove>true</remove> 
-      <uid>107</uid> 
-    </folder> 
-      <folder> 
-	<name>Outbox</name> 
-	<accessrights>system</accessrights> 
-	<messagefolder>true</messagefolder> 
-	<type>outbox</type> 
-	<subfolder>false</subfolder>
-	<add>false</add>
-	<remove>true</remove>
-        <uid>103</uid>
-      </folder>  
-      <folder> 
-	<name>Sent</name> 
-	<accessrights>system</accessrights> 
-	<messagefolder>true</messagefolder> 
-	<type>columba</type> 
-	<subfolder>false</subfolder>
-	<add>true</add>
-	<remove>true</remove>
-        <uid>104</uid>
-      </folder> 
-      <folder> 
-	<name>Trash</name> 
-	<accessrights>system</accessrights> 
-	<messagefolder>true</messagefolder> 
-	<type>columba</type> 
-	<subfolder>false</subfolder>
-	<add>true</add>
-	<remove>true</remove>
-        <uid>105</uid>
-      </folder> 
-      <folder> 
-	<name>Search Result</name> 
-	<accessrights>system</accessrights> 
-	<messagefolder>true</messagefolder> 
-	<subfolder>false</subfolder>
-	<add>false</add>
-	<remove>true</remove>
-	<type>virtual</type> 
-        <uid>106</uid>
-	<search> 
-	  <include>false</include> 
-	  <uid>101</uid>
-	  <filter> 
-	    <filterrule> 
-		<filtercriteria> 
-		<headeritem>Subject</headeritem> 
-		<criteria>contains</criteria> 
-		<pattern>pattern</pattern>
-		<type>Subject</type>
-	      </filtercriteria> 
-	      <condition>matchall</condition> 
-	    </filterrule> 
-	  </filter> 
-	</search> 
-      </folder> 
-    </folder>
-  </tree> 
+<tree>
+ <folder class="org.columba.mail.folder.LocalRootFolder" uid="100" >
+  <property name="Local Folders" accessrights="system" subfolder="true" />
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="101">
+   <property name="Inbox" accessrights="system" subfolder="true" />
+   <filterlist>
+    <filter description="new filter" enabled="true">
+     <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	 <actionlist>
+	  <action type="Mark as Read" />
+	 </actionlist>
+    </filter>
+   </filterlist>
+   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="19">
+    <property name="Recent Messages" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />	
+    <filter>
+     <rules condition="match_all">
+	  <criteria type="Flags" criteria="is" pattern="Recent" />
+	 </rules>
+    </filter>
+   </folder>
+   
+   <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="20">
+    <property name="Subject contains Columba" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+ 	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="Columba" />
+	 </rules>
+	</filter>
+   </folder>
+   
+  </folder> <!-- inbox -->
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="102">
+   <property name="Drafts" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="107">
+   <property name="Templates" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.outbox.OutboxFolder" uid="103">
+   <property name="Outbox" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="104">
+   <property name="Sent" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.mh.CachedMHFolder" uid="105">
+   <property name="Trash" accessrights="system" subfolder="true" />
+   <filterlist/>
+  </folder>
+  
+  <folder class="org.columba.mail.folder.virtual.VirtualFolder" uid="106">
+    <property name="Search Result" accessrights="system" subfolder="true" include_subfolders="true" source_uid="101" />
+	<filter>
+	 <rules condition="match_all">
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="pattern" />
+	 </rules>
+	</filter>
+  </folder>
+   
+ </folder> <!-- local folders -->
+  
+</tree>
 
 
 

@@ -33,10 +33,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
+import org.columba.core.config.DefaultItem;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -72,8 +71,8 @@ public class IncomingServerPanel
 	private PopAttributPanel popPanel;
 	private ImapAttributPanel imapPanel;
 
-	private PopItem popItem = null;
-	private ImapItem imapItem = null;
+	private DefaultItem serverItem = null;
+
 	private AccountItem accountItem;
 
 	private JCheckBox defaultAccountCheckBox;
@@ -81,32 +80,26 @@ public class IncomingServerPanel
 	private ReceiveOptionsPanel receiveOptionsPanel;
 	//private ConfigFrame frame;
 
-	public IncomingServerPanel(AccountItem account, PopItem item, ReceiveOptionsPanel receiveOptionsPanel) {
+	public IncomingServerPanel(
+		AccountItem account,
+		ReceiveOptionsPanel receiveOptionsPanel) {
 		super();
 		//super( frame, item );
 
 		//this.frame = frame;
 		this.accountItem = account;
-		this.popItem = item;
 		this.receiveOptionsPanel = receiveOptionsPanel;
+
+		if( account.isPopAccount()) {
+			serverItem = account.getPopItem();
+		} else {
+			serverItem = account.getImapItem();
+		}
 
 		initComponents();
 
 		updateComponents(true);
 
-	}
-
-	public IncomingServerPanel(AccountItem account, ImapItem item, ReceiveOptionsPanel receiveOptionsPanel) {
-		//super( frame, item );
-		super();
-		//this.frame = frame;
-		this.accountItem = account;
-		this.imapItem = item;
-		this.receiveOptionsPanel = receiveOptionsPanel;
-
-		initComponents();
-
-		updateComponents(true);
 	}
 
 	public String getHost() {
@@ -118,7 +111,7 @@ public class IncomingServerPanel
 	}
 
 	public boolean isPopAccount() {
-		if (popItem != null)
+		if (serverItem != null)
 			return true;
 		else
 			return false;
@@ -127,118 +120,71 @@ public class IncomingServerPanel
 	protected void updateComponents(boolean b) {
 
 		if (b) {
-			if (isPopAccount()) {
-				loginTextField.setText(popItem.getUser());
-				passwordTextField.setText(popItem.getPassword());
-				hostTextField.setText(popItem.getHost());
-				portTextField.setText(popItem.getPort());
+			loginTextField.setText(serverItem.get("user"));
+			passwordTextField.setText(serverItem.get("password"));
+			hostTextField.setText(serverItem.get("host"));
+			portTextField.setText(serverItem.get("port"));
 
-				if (popItem.isSavePassword())
-					storePasswordCheckBox.setSelected(true);
+			storePasswordCheckBox.setSelected(
+				serverItem.getBoolean("save_password"));
+
+			defaultAccountCheckBox.setSelected(
+				serverItem.getBoolean("use_default_account"));
+
+			if (isPopAccount()) {
 
 				authenticationComboBox.setSelectedItem(
-					popItem.getLoginMethod());
-
-				if (popItem.isUseDefaultAccount())
-					defaultAccountCheckBox.setSelected(true);
-				else
-					defaultAccountCheckBox.setSelected(false);
-
-				
-
-			} else {
-
-				loginTextField.setText(imapItem.getUser());
-				passwordTextField.setText(imapItem.getPassword());
-				hostTextField.setText(imapItem.getHost());
-				portTextField.setText(imapItem.getPort());
-
-				if (imapItem.isSavePassword())
-					storePasswordCheckBox.setSelected(true);
-
-				if (imapItem.isUseDefaultAccount())
-					defaultAccountCheckBox.setSelected(true);
-				else
-					defaultAccountCheckBox.setSelected(false);
+					serverItem.get("login_method"));
 
 			}
-			
-			if (MailConfig
-					.getAccountList()
-					.getDefaultAccountUid()
-					== accountItem.getUid()) {
-					defaultAccountCheckBox.setEnabled(false);
-				} else {
-					defaultAccountCheckBox.setEnabled(true);
-				}
-				
-			if ( defaultAccountCheckBox.isEnabled() && defaultAccountCheckBox.isSelected() ) 
-			{
+
+			defaultAccountCheckBox.setEnabled(
+				MailConfig.getAccountList().getDefaultAccountUid()
+					== accountItem.getInteger("uid"));
+
+			if (defaultAccountCheckBox.isEnabled()
+				&& defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
-			}
-			else
-			{
+			} else {
 				layoutComponents();
 			}
-				
-				
+
 		} else {
+			serverItem.set("user", loginTextField.getText());
+			serverItem.set("host", hostTextField.getText());
+			serverItem.set("password", passwordTextField.getText());
+			serverItem.set("port", portTextField.getText());
+
+			serverItem.set("save_password", storePasswordCheckBox.isSelected());
+
 			if (isPopAccount()) {
-				popItem.setUser(loginTextField.getText());
-				popItem.setHost(hostTextField.getText());
-				popItem.setPassword(passwordTextField.getText());
-				popItem.setPort(portTextField.getText());
-
-				if (storePasswordCheckBox.isSelected() == true)
-					popItem.setSavePassword("true"); //$NON-NLS-1$
-				else
-					popItem.setSavePassword("false"); //$NON-NLS-1$
-
-				popItem.setLoginMethod(
+				serverItem.set(
+					"login_method",
 					(String) authenticationComboBox.getSelectedItem());
-
-				popItem.setUseDefaultAccount(
-					defaultAccountCheckBox.isSelected());
-
-			} else {
-
-				imapItem.setUser(loginTextField.getText());
-				imapItem.setHost(hostTextField.getText());
-				imapItem.setPassword(passwordTextField.getText());
-				imapItem.setPort(portTextField.getText());
-
-				if (storePasswordCheckBox.isSelected() == true)
-					imapItem.setSavePassword("true"); //$NON-NLS-1$
-				else
-					imapItem.setSavePassword("false"); //$NON-NLS-1$
-
-				imapItem.setUseDefaultAccount(
-					defaultAccountCheckBox.isSelected());
-
 			}
+			serverItem.set(
+				"use_default_account",
+				defaultAccountCheckBox.isSelected());
 
 		}
 	}
-	
-	protected void showDefaultAccountWarning()
-	{
-		
-		
+
+	protected void showDefaultAccountWarning() {
+
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
 		GridBagConstraints mainConstraints = new GridBagConstraints();
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
 		mainConstraints.weightx = 1.0;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
 		add(defaultAccountCheckBox);
-		
-		
+
 		mainConstraints = new GridBagConstraints();
 		mainConstraints.weighty = 1.0;
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
@@ -249,20 +195,21 @@ public class IncomingServerPanel
 		mainConstraints.weightx = 1.0;
 		mainConstraints.weighty = 1.0;
 		*/
-		
-		JLabel label = new JLabel(MailResourceLoader.getString("dialog","account","using_default_account_settings") );
-		Font newFont = label.getFont().deriveFont( Font.BOLD );
-		label.setFont( newFont );
-		mainLayout.setConstraints( label, mainConstraints );
-		add( label );
-		
-		
-		
-			
+
+		JLabel label =
+			new JLabel(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"using_default_account_settings"));
+		Font newFont = label.getFont().deriveFont(Font.BOLD);
+		label.setFont(newFont);
+		mainLayout.setConstraints(label, mainConstraints);
+		add(label);
+
 	}
-	
-	protected void layoutComponents()
-	{
+
+	protected void layoutComponents() {
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		GridBagLayout mainLayout = new GridBagLayout();
@@ -273,7 +220,7 @@ public class IncomingServerPanel
 		mainConstraints.weightx = 1.0;
 
 		setLayout(mainLayout);
-		
+
 		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		mainConstraints.insets = new Insets(0, 10, 5, 0);
 		mainLayout.setConstraints(defaultAccountCheckBox, mainConstraints);
@@ -422,7 +369,6 @@ public class IncomingServerPanel
 	}
 
 	protected void initComponents() {
-		
 
 		defaultAccountCheckBox =
 			new JCheckBox(
@@ -437,7 +383,7 @@ public class IncomingServerPanel
 				"use_default_account_settings"));
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
-		
+
 		//defaultAccountCheckBox.setEnabled(false);
 		typeLabel =
 			new JLabel(
@@ -541,8 +487,6 @@ public class IncomingServerPanel
 
 		}
 
-		
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -552,27 +496,22 @@ public class IncomingServerPanel
 			{
 			System.out.println("selection changed");
 
-		}
-		else if ( action.equals("DEFAULT_ACCOUNT") )
-		{
+		} else if (action.equals("DEFAULT_ACCOUNT")) {
 			removeAll();
 			receiveOptionsPanel.removeAll();
-			
-			if( defaultAccountCheckBox.isSelected() )
-			{
+
+			if (defaultAccountCheckBox.isSelected()) {
 				showDefaultAccountWarning();
 				receiveOptionsPanel.showDefaultAccountWarning();
-			}
-			else
-			{
+			} else {
 				layoutComponents();
 				receiveOptionsPanel.layoutComponents();
 			}
-				
+
 			revalidate();
 			receiveOptionsPanel.revalidate();
 		}
-		
+
 	}
 
 	public boolean isFinished() {

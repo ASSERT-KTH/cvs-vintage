@@ -134,7 +134,7 @@ public class FolderCommandReference extends DefaultCommandReference {
 			ColumbaLogger.log.debug("released lock for: "+folder.getName() );
 		}
 		*/
-		
+		ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
 		folder.releaseLock();
 	}
 	/**

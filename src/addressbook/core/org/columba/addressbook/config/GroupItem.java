@@ -16,12 +16,9 @@
 
 package org.columba.addressbook.config;
 
-import java.util.Vector;
-
 import org.columba.core.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.columba.core.xml.XmlElement;
 
 
 public class GroupItem extends DefaultItem
@@ -29,12 +26,13 @@ public class GroupItem extends DefaultItem
     private AdapterNode name, uid, list;
 
     
-    public GroupItem( Document doc )
+    public GroupItem( XmlElement root)
     {
-        super( doc );
+        super( root );
     
     }
     
+    /*
         
     public void setNameNode( AdapterNode node )
     {
@@ -52,8 +50,6 @@ public class GroupItem extends DefaultItem
     }
     
 
-      /******************************************** set ***************************************/
-    
     
     public void setUid( int i )
     {
@@ -69,7 +65,6 @@ public class GroupItem extends DefaultItem
     }
 
     
-      /**************************************************** get *********************************/
     
     
 
@@ -143,7 +138,7 @@ public class GroupItem extends DefaultItem
     }
     
     
-    
+	*/    
     
 }
     
