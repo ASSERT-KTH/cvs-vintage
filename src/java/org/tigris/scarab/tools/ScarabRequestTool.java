@@ -1410,25 +1410,30 @@ try{
             Field minDate = searchGroup.get("MinDate");
             if (minDate != null && minDate.toString().length() > 0)
             { 
-                checkDate(search, minDate.toString());
+               searchSuccess =  checkDate(search, minDate.toString());
             }
             Field maxDate = searchGroup.get("MaxDate");
             if (maxDate != null && minDate.toString().length() > 0)
             { 
-                checkDate(search, minDate.toString());
+                searchSuccess = checkDate(search, minDate.toString());
             }
             Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
             if (stateChangeFromDate != null 
                 && stateChangeFromDate.toString().length() > 0)
             { 
-                checkDate(search, stateChangeFromDate.toString());
+                searchSuccess = checkDate(search, stateChangeFromDate.toString());
             }
             Field stateChangeToDate = searchGroup.get("StateChangeToDate");
             if (stateChangeToDate != null 
                 && stateChangeToDate.toString().length() > 0)
             { 
-                checkDate(search, stateChangeToDate.toString());
+                searchSuccess = checkDate(search, stateChangeToDate.toString());
             }
+            if (!searchSuccess)
+            {
+                setAlertMessage("Please enter dates in the format dd/mm/yyyy.");
+                return matchingIssueIds;
+             }
             searchGroup.setProperties(search);
 
             // Set attribute values to search on
@@ -1542,18 +1547,19 @@ try{
     /**
      * Attempts to parse a date passed in the query page.
     */
-    private void checkDate(IssueSearch search, String date)
+    private boolean checkDate(IssueSearch search, String date)
         throws Exception
     {
+        boolean success = true;
         try
         {
             search.parseDate(date, false);
         }
         catch (Exception e)
         {
-            setAlertMessage("Invalid date.");
-            throw new Exception("Invalid date.");
+            success = false;
         }
+        return success;
     }
 
     /**
