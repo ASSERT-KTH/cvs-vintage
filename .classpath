@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="output/parsers"/>
 	<classpathentry kind="src" path="src/main"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/jmx"/>
 	<classpathentry kind="src" path="/common"/>
 	<classpathentry kind="src" path="/system"/>
 	<classpathentry kind="src" path="/j2ee"/>
@@ -19,5 +18,7 @@
 	<classpathentry kind="lib" path="/thirdparty/apache-commons/lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/sun-servlet/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="/thirdparty/ibm-wsdl4j/lib/wsdl4j.jar"/>
+	<classpathentry kind="src" path="/j2se"/>
+	<classpathentry kind="src" path="/jmx"/>
 	<classpathentry kind="output" path="output/eclipse-classes"/>
 </classpath>
