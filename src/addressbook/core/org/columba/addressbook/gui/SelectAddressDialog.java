@@ -42,7 +42,6 @@ import java.util.List;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
 {
-
 	private AddressbookDNDListView toList;
 	private AddressbookDNDListView ccList;
 	private AddressbookDNDListView bccList;
@@ -444,22 +443,4 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			}
 		}
 	}
-
-	/*
-	public class WizardTopBorder extends AbstractBorder
-	{
-		protected Insets borderInsets = new Insets(2, 0, 0, 0);
-		public void paintBorder(Component c, Graphics g, int x, int y, int w, int h)
-		{
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y, x + w - 1, y);
-			g.setColor(Color.white);
-			g.drawLine(x, y + 1, x + w - 1, y + 1);
-		}
-		public Insets getBorderInsets(Component c)
-		{
-			return borderInsets;
-		}
-	}
-	*/
 }
