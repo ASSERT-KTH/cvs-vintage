@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="fix" issue="SCB1343" due-to="Peter Tillemans">
+        Whitespace from templates get squashed in emails
+      </action>        
       <action dev="hdabbous" type="fix">
         SCB1231 - NPE exception in ResourceBundle resolver, when Browser locale
         was not supported by Scarab. Problem occured only on Windows platforms.
