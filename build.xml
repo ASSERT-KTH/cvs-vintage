@@ -1,6 +1,10 @@
 <?xml version="1.0"?> 
 
-<!-- Emacs indentation & editting support
+<!-- Emacs indentation & editting support: 
+     edit XEMACS_HOME/xemacs-pacakges/etc/psgml/CATALOG
+     Add: "DOCTYPE project ant.dtd"
+     copy ant.dtd to .../etc/psgml/
+    ant.dtd is generated with:
     <antstructure output="ant.dtd"/>
 <!DOCTYPE ant SYSTEM "ant.dtd" >
 -->
@@ -17,6 +21,7 @@
 
   <property name="tomcat.build" value="../build/tomcat"/>
   <property name="tomcat.home" value="../dist/tomcat"/>
+  <property name="tomcat.dist" value="${tomcat.home}"/>
 
 
   <!-- External packages we depend on -->
@@ -57,7 +62,7 @@
   <!-- ==================== Initialization - guessing config ========== -->
   <target name="init">
     <available property="jsse.present" 
-      classname="javax.net.ssl.SSLServerSocket1111" />
+      classname="javax.net.ssl.SSLServerSocket" />
     <available property="jdk12.present"
       classname="java.security.PrivilegedAction" />
   </target>
@@ -270,6 +275,7 @@
       <include name="org/apache/tomcat/request/**" />    
       <include name="org/apache/tomcat/service/**" />    
       <include name="org/apache/tomcat/session/**" />    
+      <include name="org/apache/tomcat/modules/**" />    
       <exclude name="org/apache/tomcat/request/Jdk12Interceptor.java" 
 	unless="jdk12.present"/>
       <exclude name="org/apache/tomcat/context/LoaderInterceptor1.java" 
@@ -283,6 +289,7 @@
       <include name="org/apache/tomcat/request/**" /> 
       <include name="org/apache/tomcat/service/**" /> 
       <include name="org/apache/tomcat/session/**" /> 
+      <include name="org/apache/tomcat/modules/**" /> 
     </jar>
   </target>
 
@@ -368,6 +375,15 @@
   <!-- ==================== Build all web applications ==================== -->
 
   <target name="webapps" depends="prepare">
+    <!-- 
+    <property name="app.srcBase" value="./src" />
+    <ant 
+      antfile="src/etc/ant/webapp.xml" 
+      target="message" >
+      <property name="appName" value="prof" />
+      <property name="tomcat.home" value="${tomcat.build}" />
+    </ant>
+    -->
     <!-- Examples -->
     <mkdir dir="${tomcat.build}/webapps/examples"/>
     <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
@@ -378,6 +394,13 @@
     <javac srcdir="src/examples/jsp/plugin/applet"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+
+    <mkdir dir="${tomcat.build}/webapps/prof"/>
+    <copydir src="src/prof" dest="${tomcat.build}/webapps/prof"/>
+    <javac srcdir="src/prof/WEB-INF/src"
+      optimize="${optimize}"
+      destdir="${tomcat.build}/webapps/prof/WEB-INF/classes"
+      classpath="${tomcat.build}/classes;${servlet.jar}"/>
 
       <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
@@ -400,10 +423,10 @@
 
   <!-- ==================== Build the internal test app ==================== -->
   <target name="sanity-test" >
-    <mkdir dir="${tomcat.home}/lib/test"/>
-    <mkdir dir="${tomcat.home}/lib/test/Golden"/>
+    <mkdir dir="${tomcat.dist}/lib/test"/>
+    <mkdir dir="${tomcat.dist}/lib/test/Golden"/>
     <copydir src="src/tests/share/tests/jsp/Golden" 
-      dest="${tomcat.home}/lib/test/Golden"/>
+      dest="${tomcat.dist}/lib/test/Golden"/>
 
       <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
@@ -412,12 +435,12 @@
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
       classpath="${tomcat.build}/classes;${servlet.jar}"/>
-    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.home}/webapps/test"/>
+    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.dist}/webapps/test"/>
 
-    <jar   jarfile="${tomcat.home}/webapps/test.war"
-      basedir="${tomcat.home}/webapps/test"
+    <jar   jarfile="${tomcat.dist}/webapps/test.war"
+      basedir="${tomcat.dist}/webapps/test"
       includes="**" /> 
-    <deltree dir="${tomcat.home}/webapps/test"/>
+    <deltree dir="${tomcat.dist}/webapps/test"/>
 
 
   </target>
@@ -425,20 +448,20 @@
   <!-- ==================== Copy the files to distribution format ======== -->
   <target name="dist" depends="main,webapps,tomcat-compile,tomcat-jars">
 
-    <mkdir dir="${tomcat.home}"/>
-    <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
-    <copydir src="src/share/org" dest="${tomcat.home}/src/org"/>
-    <copydir src="src/facade22/org" dest="${tomcat.home}/src/org"/>
-    <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
-    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.home}/lib/jaxp.jar"/>
-    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.home}/lib/parser.jar"/>
+    <mkdir dir="${tomcat.dist}"/>
+    <copydir src="${tomcat.build}" dest="${tomcat.dist}"/>
+    <copydir src="src/share/org" dest="${tomcat.dist}/src/org"/>
+    <copyfile src="${servlet.jar}" dest="${tomcat.dist}/lib/servlet.jar"/>
+    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.dist}/lib/jaxp.jar"/>
+    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.dist}/lib/parser.jar"/>
+    <copydir src="src/facade22/org" dest="${tomcat.dist}/src/org"/>
 
     <!-- Add Tomcat internal javadoc -->
-    <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />
+    <mkdir dir="${tomcat.dist}/webapps/ROOT/javadoc" />
 <!--    <javadoc packagenames="org.apache.tomcat.*"-->
     <javadoc packagenames="org.apache.tomcat.core"
              sourcepath="src/share;src/facade22"
-             destdir="${tomcat.home}/webapps/ROOT/javadoc"
+             destdir="${tomcat.dist}/webapps/ROOT/javadoc"
              author="true"
              version="true"
              use="true"
@@ -447,38 +470,38 @@
              bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved."
     />
 
-    <deltree dir="${tomcat.home}/classes"/>
+    <deltree dir="${tomcat.dist}/classes"/>
 
 
     <!-- create webapp WARS -->
-    <jar   jarfile="${tomcat.home}/webapps/examples.war"
-      basedir="${tomcat.home}/webapps/examples"
+    <jar   jarfile="${tomcat.dist}/webapps/examples.war"
+      basedir="${tomcat.dist}/webapps/examples"
       excludes="jsp/snp/snoop.jsp"
       includes="**" /> 
-    <deltree dir="${tomcat.home}/webapps/examples"/>
+    <deltree dir="${tomcat.dist}/webapps/examples"/>
 
-    <jar   jarfile="${tomcat.home}/webapps/admin.war"
-      basedir="${tomcat.home}/webapps/admin"
+    <jar   jarfile="${tomcat.dist}/webapps/admin.war"
+      basedir="${tomcat.dist}/webapps/admin"
       includes="**" /> 
-    <deltree dir="${tomcat.home}/webapps/admin"/>
+    <deltree dir="${tomcat.dist}/webapps/admin"/>
 
-    <jar   jarfile="${tomcat.home}/webapps/ROOT.war"
-      basedir="${tomcat.home}/webapps/ROOT"
+    <jar   jarfile="${tomcat.dist}/webapps/ROOT.war"
+      basedir="${tomcat.dist}/webapps/ROOT"
       includes="**" />
-    <deltree dir="${tomcat.home}/webapps/ROOT"/>
+    <deltree dir="${tomcat.dist}/webapps/ROOT"/>
 
     <!-- Change permissions for unix -->
-    <chmod perm="+x" file="${tomcat.home}/bin/tomcat.sh"/>
-    <chmod perm="+x" file="${tomcat.home}/bin/jspc.sh"/>
-    <chmod perm="+x" file="${tomcat.home}/bin/startup.sh"/>
-    <chmod perm="+x" file="${tomcat.home}/bin/shutdown.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/tomcat.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/jspc.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/startup.sh"/>
+    <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.home}" 
+    <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" 
       includes="**"/>
   </target>
   
@@ -497,7 +520,7 @@
 
   <target name="clean" depends="init">
     <deltree dir="${tomcat.build}"/>
-    <deltree dir="${tomcat.home}"/>
+    <deltree dir="${tomcat.dist}"/>
   </target>
   
   <target name="all" depends="clean,dist"/>
