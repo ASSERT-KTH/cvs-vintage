@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -160,10 +160,14 @@ implements EntityPersistenceManager
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
-         } else
+         }
+         else if(e instanceof Exception)
          {
-            // Rethrow exception
             throw (Exception)e;
+         }
+         else
+         {
+            throw (Error)e;
          }
       }
 
@@ -215,10 +219,14 @@ implements EntityPersistenceManager
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
-         } else
+         }
+         else if(e instanceof Exception)
          {
-            // Rethrow exception
             throw (Exception)e;
+         }
+         else
+         {
+            throw (Error)e;
          }
       }
    }
@@ -501,10 +509,14 @@ implements EntityPersistenceManager
          {
             // Wrap runtime exceptions
             throw new EJBException((Exception)e);
-         } else
+         }
+         else if(e instanceof Exception)
          {
-            // Rethrow exception
             throw (Exception)e;
+         }
+         else
+         {
+            throw (Error)e;
          }
       }
 
