@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.22 2002/05/28 01:50:19 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.23 2002/05/28 03:01:22 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -43,14 +43,8 @@ public class FileVFS extends VFS
 	//{{{ FileVFS method
 	public FileVFS()
 	{
-		super("file");
-	} //}}}
-
-	//{{{ getCapabilities() method
-	public int getCapabilities()
-	{
-		return READ_CAP | WRITE_CAP | BROWSE_CAP | DELETE_CAP
-			| RENAME_CAP | MKDIR_CAP | LOW_LATENCY_CAP;
+		super("file",READ_CAP | WRITE_CAP | BROWSE_CAP | DELETE_CAP
+			| RENAME_CAP | MKDIR_CAP | LOW_LATENCY_CAP);
 	} //}}}
 
 	//{{{ getParentOfPath() method

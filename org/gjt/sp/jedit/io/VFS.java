@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Swing UI calls directly.
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.15 2002/05/28 01:50:19 spestov Exp $
+ * @author $Id: VFS.java,v 1.16 2002/05/28 03:01:22 spestov Exp $
  */
 public abstract class VFS
 {
@@ -59,7 +59,7 @@ public abstract class VFS
 
 	/**
 	 * If set, a menu item for this VFS will appear in the browser's
-	 * 'More' menu. If not set, it will still be possible to type in
+	 * 'Plugins' menu. If not set, it will still be possible to type in
 	 * URLs in this VFS in the browser, but there won't be a user-visible
 	 * way of doing this.
 	 * @since jEdit 2.6pre2
@@ -79,7 +79,7 @@ public abstract class VFS
 	public static final int RENAME_CAP = 1 << 4;
 
 	/**
-	 * Make directory file capability.
+	 * Make directory capability.
 	 * @since jEdit 2.6pre2
 	 */
 	public static final int MKDIR_CAP = 1 << 5;

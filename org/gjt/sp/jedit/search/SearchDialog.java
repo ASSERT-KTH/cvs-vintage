@@ -32,6 +32,7 @@ import java.io.File;
 import java.util.HashMap;
 import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.gui.*;
+import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.msg.SearchSettingsChanged;
 import org.gjt.sp.jedit.msg.ViewUpdate;
 import org.gjt.sp.jedit.*;
@@ -41,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.27 2002/05/28 02:53:27 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.28 2002/05/28 03:01:22 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -693,7 +694,8 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			String directory = this.directory.getText();
 			this.directory.addCurrentToHistory();
 
-			if(MiscUtilities.isURL(directory))
+			if((VFSManager.getVFSForPath(directory).getCapabilities()
+				& VFS.LOW_LATENCY_CAP) == 0)
 			{
 				if(cancel)
 					return false;
