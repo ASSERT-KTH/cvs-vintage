@@ -216,7 +216,7 @@ public class StopTomcat {
 	if( "".equals( secret ) )
 	    secret=null;
 		
-	System.out.println("Stoping tomcat on " + host + ":" +port +" "
+	System.out.println("Stopping tomcat on " + host + ":" +port +" "
 			   + secret);
 	InetAddress address=null;
 	if( host!=null && !"".equals( host )) {
