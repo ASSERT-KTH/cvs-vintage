@@ -1,4 +1,4 @@
-// $Id: UMLTreeCellRenderer.java,v 1.24 2003/09/29 18:51:52 alexb Exp $
+// $Id: UMLTreeCellRenderer.java,v 1.25 2003/10/05 14:27:46 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,11 +76,11 @@ public class UMLTreeCellRenderer extends DefaultTreeCellRenderer {
                 value = ((DefaultMutableTreeNode)value).getUserObject();
             }
             
-        if (TargetManager.getInstance().getTargets().contains(value)) {
-            sel = true;           
-        } else {
-            sel = false;          
-        }
+//        if (TargetManager.getInstance().getTargets().contains(value)) {
+//            sel = true;           
+//        } else {
+//            sel = false;          
+//        }
         
         Component r =
             super.getTreeCellRendererComponent(
