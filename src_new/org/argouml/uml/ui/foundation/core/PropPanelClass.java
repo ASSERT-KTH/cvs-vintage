@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.61 2004/10/14 05:48:19 linus Exp $
+// $Id: PropPanelClass.java,v 1.62 2004/11/01 10:57:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,9 +101,9 @@ public class PropPanelClass extends PropPanelClassifier {
         addButton(new PropPanelButton2(this,
                 new ActionNavigateNamespace()));
         addButton(new PropPanelButton2(this, 
-                        ActionAddAttribute.getSingleton()));
+                        new ActionAddAttribute()));
         addButton(new PropPanelButton2(this, 
-                        ActionAddOperation.getSingleton()));
+                        new ActionAddOperation()));
         addButton(new PropPanelButton2(this, getActionNewReception()));
         new PropPanelButton(this, getButtonPanel(), lookupIcon("InnerClass"), 
                 Translator.localize("button.new-inner-class"),

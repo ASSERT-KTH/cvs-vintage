@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.60 2004/10/26 18:56:04 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.61 2004/11/01 10:57:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -421,7 +421,7 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     private Action getActionAttribute() {
         if (actionAttribute == null) {
-            actionAttribute = ActionAddAttribute.getSingleton();
+            actionAttribute = new ActionAddAttribute();
         }
         return actionAttribute;
     }
@@ -431,7 +431,7 @@ public class UMLClassDiagram extends UMLDiagram {
      */
     private Action getActionOperation() {
         if (actionOperation == null) {
-            actionOperation = ActionAddOperation.getSingleton();
+            actionOperation = new ActionAddOperation();
         }
         return actionOperation;
     }
