@@ -18,7 +18,7 @@ import java.security.SecureRandom;
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class UUIDKeyGenerator
    implements KeyGenerator
@@ -102,7 +102,8 @@ public class UUIDKeyGenerator
       while(++i < bytes.length)
       {
          value <<= 8;
-         value |= bytes[i];
+         int b = bytes[i] & 0xff;
+         value |= b;
       }
       return value;
    }
