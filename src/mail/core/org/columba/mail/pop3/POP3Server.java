@@ -156,7 +156,7 @@ public class POP3Server {
 	        // set dirty flag
 	        setCacheChanged(true);
         } catch (POP3Exception e) {
-        	if( e.getResponse().isERR() ) {
+        	if( e.getResponse() != null && e.getResponse().isERR() ) {
         		// Message already deleted from server
         		headerCache.remove(uid);
         		setCacheChanged(true);
