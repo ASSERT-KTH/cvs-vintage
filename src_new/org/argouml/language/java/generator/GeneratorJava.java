@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.100 2004/09/11 09:25:57 mvw Exp $
+// $Id: GeneratorJava.java,v 1.101 2004/09/29 20:40:36 thn Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -483,11 +483,11 @@ public class GeneratorJava
         // pick out return type
         Object/*MParameter*/ rp =
 	    UmlHelper.getHelper().getCore().getReturnParameter(op);
-        if (rp != null) {
+        if (rp != null && !constructor) {
             Object/*MClassifier*/ returnType = ModelFacade.getType(rp);
-            if (returnType == null && !constructor) {
+            if (returnType == null) {
                 sb.append("void ");
-            } else if (returnType != null) {
+            } else {
                 sb.append(generateClassifierRef(returnType)).append(' ');
             }
         }

@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.93 2004/09/11 07:34:22 mvw Exp $
+// $Id: Modeller.java,v 1.94 2004/09/29 20:40:37 thn Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -745,7 +745,9 @@ public class Modeller
 	String typeName;
 	Object mClassifier;
 
-	if (returnType == null) {
+	if (returnType == null ||
+            ("void".equals(returnType) &&
+             name.equals(ModelFacade.getName(parseState.getClassifier())))) {
 	    // Constructor
 	    ModelFacade.setStereotype(mOperation, 
                 getStereotype(mOperation, "create", "BehavioralFeature" ));
