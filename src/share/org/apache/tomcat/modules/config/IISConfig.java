@@ -131,7 +131,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.11 $
+	@version $Revision: 1.12 $
  */
 public class IISConfig extends BaseJkConfig  { 
 
@@ -139,15 +139,40 @@ public class IISConfig extends BaseJkConfig  {
     public static final String URI_WORKERS_MAP_CONFIG = "/conf/auto/uriworkermap.properties";
     public static final String ISAPI_LOG_LOCATION = "/logs/iis_redirect.log";
     public static final String ISAPI_REG_FILE = "/conf/auto/iis_redirect.reg";    
+    public static final String ISAPI_PROP_FILE = "/conf/auto/isapi_redirect.properties";
+    public static final String ISAPI_REDIRECTOR = "isapi_redirect.dll";
 
     private File regConfig = null;
+    private File propConfig = null;
     private File uriConfig = null;
+
+    private String isapiRedirector = null;
 
     public IISConfig() 
     {
     }
 
     //-------------------- Properties --------------------
+
+    private void updatePropFile() {
+        propConfig=null;
+        if( isapiRedirector != null ) {
+            int idx=isapiRedirector.lastIndexOf('.');
+            if( idx > 0 ) {
+                String dir=(regConfig!=null) ?
+                        regConfig.toString().replace(File.separatorChar,'/') :
+                        ISAPI_REG_FILE;
+                int idx2=dir.lastIndexOf('/');
+                if( idx2 > 0 ) {
+                    dir = dir.substring(0,idx2 + 1);
+                } else {
+                    dir = "";
+                }
+                propConfig = new File(dir + isapiRedirector.substring(0,idx)
+                                          + ".properties");
+            }
+        }
+    }
     
     /**
         set the path to the output file for the auto-generated
@@ -159,6 +184,7 @@ public class IISConfig extends BaseJkConfig  {
     */
     public void setRegConfig(String path){
 	regConfig= (path==null)?null:new File(path);
+        updatePropFile();
     }
 
     /**
@@ -167,6 +193,11 @@ public class IISConfig extends BaseJkConfig  {
     */
     public void setUriConfig(String path){
         uriConfig= (path==null?null:new File(path));
+    }
+
+    public void setIsapiRedirector(String s) {
+        isapiRedirector=s;
+        updatePropFile();
     }
 
     // -------------------- Initialize/guess defaults --------------------
@@ -178,6 +209,7 @@ public class IISConfig extends BaseJkConfig  {
         super.initProperties(cm);
 
 	regConfig=FileUtil.getConfigFile( regConfig, configHome, ISAPI_REG_FILE);
+	propConfig=FileUtil.getConfigFile( propConfig, configHome, ISAPI_PROP_FILE);
 	workersConfig=FileUtil.getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
 	uriConfig=FileUtil.getConfigFile( uriConfig, configHome, URI_WORKERS_MAP_CONFIG);
 	jkLog=FileUtil.getConfigFile( jkLog, configHome, ISAPI_LOG_LOCATION);
@@ -200,11 +232,14 @@ public class IISConfig extends BaseJkConfig  {
 	    initWorker(cm);
 
             PrintWriter regfile = new PrintWriter(new FileWriter(regConfig));
+            PrintWriter propfile = new PrintWriter(new FileWriter(propConfig));
             PrintWriter uri_worker = new PrintWriter(new FileWriter(uriConfig));        
     	    log("Generating IIS registry file = "+regConfig );
+    	    log("Generating IIS properties file = "+propConfig );
     	    log("Generating IIS URI worker map file = "+uriConfig );
 
             generateRegistrySettings(regfile);
+            generatePropertySettings(propfile);
 
             generateUriWorkerHeader(uri_worker);            
 
@@ -227,6 +262,7 @@ public class IISConfig extends BaseJkConfig  {
             }
 
             regfile.close();
+            propfile.close();
             uri_worker.close();
 
         } catch(Exception ex) {
@@ -244,11 +280,26 @@ public class IISConfig extends BaseJkConfig  {
         regfile.println("REGEDIT4");
         regfile.println();
         regfile.println("[HKEY_LOCAL_MACHINE\\SOFTWARE\\Apache Software Foundation\\Jakarta Isapi Redirector\\1.0]");
-        regfile.println("\"extension_uri\"=\"/jakarta/isapi_redirect.dll\"");
+        regfile.println("\"extension_uri\"=\"/jakarta/"
+                + (isapiRedirector!=null?isapiRedirector:ISAPI_REDIRECTOR) + "\"");
         regfile.println("\"log_file\"=\"" + dubleSlash(jkLog.toString()) +"\"");
         regfile.println("\"log_level\"=\"" + jkDebug + "\"");
         regfile.println("\"worker_file\"=\"" + dubleSlash(workersConfig.toString()) +"\"");
         regfile.println("\"worker_mount_file\"=\"" + dubleSlash(uriConfig.toString()) +"\"");
+        regfile.println("\"uri_select\"=\"parsed\"");
+    }
+
+    /** Writes the registry settings required by the IIS connector
+     */
+    private void generatePropertySettings(PrintWriter propfile)
+    {
+        propfile.println("extension_uri=/jakarta/"
+                + (isapiRedirector!=null?isapiRedirector:ISAPI_REDIRECTOR));
+        propfile.println("log_file=" + jkLog.toString());
+        propfile.println("log_level=" + jkDebug);
+        propfile.println("worker_file=" + workersConfig.toString());
+        propfile.println("worker_mount_file=" + uriConfig.toString());
+        propfile.println("uri_select=parsed");
     }
 
     /** Writes the header information to the uriworkermap file
