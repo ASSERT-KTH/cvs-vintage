@@ -38,6 +38,7 @@ import org.omg.CORBA.ORB;
 
 import javax.ejb.EJBException;
 import javax.ejb.TimerService;
+import javax.ejb.spi.HandleDelegate;
 import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -76,7 +77,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.150 $
+ * @version $Revision: 1.151 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -885,9 +886,11 @@ public abstract class Container
       }
 
       ORB orb = null;
+      HandleDelegate hd = null;
       try
       {
          orb = (ORB) server.getAttribute(ORB_NAME, "ORB");
+         hd =  (HandleDelegate) server.getAttribute(ORB_NAME, "HandleDelegate");
       }
       catch (Throwable t)
       {
@@ -903,6 +906,9 @@ public abstract class Container
       {
          NonSerializableFactory.rebind(ctx, "ORB", orb);
          log.debug("Bound java:comp/ORB for EJB: " + getBeanMetaData().getEjbName());
+
+         NonSerializableFactory.rebind(ctx, "HandleDelegate", hd);
+         log.debug("Bound java:comp:/HandleDelegate for EJB: " + getBeanMetaData().getEjbName());
       }
       
       Context envCtx = ctx.createSubcontext("env");
@@ -1212,6 +1218,9 @@ public abstract class Container
       {
          NonSerializableFactory.unbind("ORB");
          log.debug("Unbound java:comp/ORB for EJB: " + getBeanMetaData().getEjbName());
+
+         NonSerializableFactory.unbind("HandleDelegate");
+         log.debug("Unbound java:comp/HandleDelegate for EJB: " + getBeanMetaData().getEjbName());
       }
       catch (NamingException ignored)
       {

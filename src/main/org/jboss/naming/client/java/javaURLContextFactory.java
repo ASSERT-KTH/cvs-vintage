@@ -27,7 +27,7 @@ import javax.naming.spi.ObjectFactory;
  * @see javax.naming.spi.ObjectFactory
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
@@ -125,6 +125,8 @@ public class javaURLContextFactory
          {
             if (name.size() == 2 && "ORB".equals(name.get(1)))
                return ORBFactory.getORBSingleton();
+            else if (name.size() == 2 && "HandleDelegate".equals(name.get(1)))
+               return HandleDelegateFactory.getHandleDelegateSingleton();
          }
          throw new NamingException("Name not found " + name);
       }
