@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.115 2004/10/19 05:40:04 linus Exp $
+// $Id: FigClass.java,v 1.116 2004/11/01 09:25:56 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -269,7 +269,7 @@ public class FigClass extends FigNodeModelElement
 
     /**
      * Build a collection of menu items relevant for a right-click
-     * popup menu on a Package.
+     * popup menu on a Class.
      *
      * @param     me     a mouse event
      * @return           a collection of menu items
@@ -278,8 +278,8 @@ public class FigClass extends FigNodeModelElement
         Vector popUpActions = super.getPopUpActions(me);
 
         ArgoJMenu addMenu = new ArgoJMenu("menu.popup.add");
-        addMenu.add(ActionAddAttribute.getSingleton());
-        addMenu.add(ActionAddOperation.getSingleton());
+        addMenu.add(new ActionAddAttribute());
+        addMenu.add(new ActionAddOperation());
         addMenu.add(ActionAddNote.getSingleton());
         popUpActions.insertElementAt(addMenu,
             popUpActions.size() - POPUP_ADD_OFFSET);
