@@ -2548,15 +2548,6 @@ try{
             ((ScarabUser)data.getUser()).setAssociatedUsersMap(assoUsers);
         }
     }
-    public void resetSelectedUsers() throws Exception
-    {
-        ScarabUser user = (ScarabUser)data.getUser();
-        HashMap selectedUsers = user.getSelectedUsersMap();
-        if (selectedUsers != null && selectedUsers.size() > 0)
-        {
-            user.setSelectedUsersMap(new HashMap());
-        }
-    }
 
     public List getAssignIssuesList()
         throws Exception
