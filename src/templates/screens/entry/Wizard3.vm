@@ -220,20 +220,20 @@ $page.setTitle("Enter issue")
     useful for users receiving the new issue email.  Also any information that
     did not fit within one of the attributes shown above can be added here.</small>
 #end
-
+<br />
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
    </td>
  </tr>
 
 <tr>
-<th width="120">After submit </th>
+<th width="120">After submit</th>
 <td><select name="$scarabG.Constant.NEXT_TEMPLATE">
 <option value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")">Enter new issue </option>
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
-  <option value="AssignIssue.vm"> Assign issue </option>         
+  <option value="AssignIssue.vm">Assign issue</option>
 #end
-<option value="ViewIssue.vm"> View this issue </option>         
-<option value="Index.vm"> Go to Start page </option>            
+<option value="ViewIssue.vm">View this issue</option>
+<option value="Index.vm">Go to Start page</option>
 </select></td>
 </tr>
 </table>
@@ -249,5 +249,3 @@ $page.setTitle("Enter issue")
 $intake.declareGroups()
 </form>
 </div>
-
-
