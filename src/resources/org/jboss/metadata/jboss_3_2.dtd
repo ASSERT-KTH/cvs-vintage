@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.5 2003/04/24 00:20:16 starksm Exp $
-$Revision: 1.5 $
+$Id: jboss_3_2.dtd,v 1.6 2003/04/30 17:13:01 starksm Exp $
+$Revision: 1.6 $
 
 Overview of the architecture of jboss.xml
 
@@ -719,7 +719,8 @@ container or ejb depends.
   
   Used in: container-configurations
 -->
-<!ELEMENT container-configuration (container-name , call-logging?, container-interceptors? ,
+<!ELEMENT container-configuration (container-name , call-logging?,
+ invoker-proxy-binding-name?, sync-on-commit-only?, container-interceptors? ,
  instance-pool? , instance-cache? ,  persistence-manager? , web-class-loader? ,
  locking-policy? ,  container-cache-conf? , container-pool-conf? ,
  commit-option? , optiond-refresh-rate? , security-domain?, cluster-config?,
@@ -733,7 +734,6 @@ the other duplicate configuration info.
             <container-name>Secure Stateless SessionBean</container-name>
             <security-domain>java:/jaas/other</security-domain>
         </container-configuration>
-
 -->
 <!ATTLIST container-configuration extends CDATA  #IMPLIED>
 
@@ -757,7 +757,7 @@ the other duplicate configuration info.
   The invoker-bindings element gives the invokers configuration for an
   ejb container.
 
-  Used in: entity, session, message-driven, container-configuration
+  Used in: entity, session, message-driven
 -->
 <!ELEMENT invoker-bindings (invoker+)>
 <!--
@@ -765,9 +765,17 @@ the other duplicate configuration info.
 <!ELEMENT invoker (invoker-proxy-binding-name, jndi-name?, ejb-ref*)>
 
 <!-- The invoker-proxy-binding-name elements maps to the name element of
-a invoker-proxy-binding definition.
+an invoker-proxy-binding definition.
+
+  Used in: container-configuration, invoker
 -->
 <!ELEMENT invoker-proxy-binding-name (#PCDATA)>
+
+<!-- The sync-on-commit-only element determines the behavior of ejbStore
+calls on finds, selects and removes. If set to true, ejbStore will only be
+called on transaction commit.
+-->
+<!ELEMENT sync-on-commit-only (#PCDATA)>
 
 <!--
   The container-interceptors element gives the chain of Interceptors
