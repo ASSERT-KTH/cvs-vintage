@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.72 2001/12/04 03:44:14 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.73 2001/12/13 20:44:38 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -270,6 +270,8 @@
     <column name="ISSUE_TYPE_ID" required="true" type="INTEGER"></column>
     <column name="ACTIVE" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
+    <column name="DEDUPE" required="false" type="BOOLEANINT" 
+        default="1" size="1"/>
     <column name="PREFERRED_ORDER" javaName="Order" required="false" 
             default="-1" type="INTEGER"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
@@ -825,8 +827,6 @@
     <!--
         Flag, which marks this attribute as being useful for deduping.
     -->
-    <column name="DEDUPE" required="true" type="BOOLEANINT" 
-        default="0" size="1"/>
     <!--
         Flag, which marks this attribute as being eligible for quick search.
     -->
@@ -845,9 +845,6 @@
 
     <index name="IX_REQUIRED">
         <index-column name="REQUIRED"/>
-    </index>
-    <index name="IX_DEDUPE">
-        <index-column name="DEDUPE"/>
     </index>
     <index name="IX_QUICKSEARCH">
         <index-column name="QUICK_SEARCH"/>
