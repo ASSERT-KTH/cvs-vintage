@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.27 2000/08/29 05:00:06 larryi Exp $
+rem $Id: tomcat.bat,v 1.28 2000/08/29 10:43:49 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -45,7 +45,7 @@ if not "%TOMCAT_HOME%" == "" goto gotTomcatHome
 set TOMCAT_HOME=.
 :gotTomcatHome
 
-set PATH=%JAVA_HOME%\bin;%PATH%
+set PATH="%JAVA_HOME%\bin";%PATH%
 
 
 rem ----- Set Up The Runtime Classpath --------------------------------------
