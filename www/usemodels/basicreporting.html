@@ -101,18 +101,117 @@
 <table bgcolor=#cccccc border=0 cellspacing=1 width="100%">
         <tbody>
         <tr>
-          <td align=right bgcolor=white valign=top><b>Name:</b></td>
+          <td align=right bgcolor=white valign=top><b>Name:</b></td>    
+    <TD bgColor=white vAlign=top>UC-19: User Creates a MyReports report 
+    </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top height="59"><B>Extends:</B></TD>
           
-    <td bgcolor=white valign=top>UC-19: User Views and Prints a MyReports report 
-    </td>
-        </tr>
-        <tr>
-          <td align=right bgcolor=white valign=top height="59"><b>Extends:</b></td>
-          <td bgcolor=white valign=top height="59">Use Case for creating a MyReport</td>
-        </tr>
-        <tr>
-          <td align=right bgcolor=white valign=top><b>Purpose:</b></td>
-          <td bgcolor=white valign=top>User can select a MyReports report and 
+    <TD bgColor=white vAlign=top height="59">UC-05</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Purpose:</B></TD>
+          <TD bgColor=white vAlign=top>User can create a MyReports report from a query and 
+            have the report available to them across all of their projects.</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Feature(s):</B></TD>
+          <TD bgColor=white vAlign=top><A 
+            href="http://www.tigris.org/features/feature.html">FeatureName</A></TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Direct Actors:</B></TD>
+          <TD bgColor=white vAlign=top>CompOwner: Component Owner (High Priority, 
+            High Frequency)<BR>
+            Scarab: The scarab system. </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Stakeholders:</B></TD>          <TD bgColor=white vAlign=top>CompOwner: <BR>
+          </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Prereq:</B></TD>
+          <TD bgColor=white vAlign=top>           
+            Logged In<BR>
+            Project set up<BR>
+            User has access to the project <br>
+      User needs to be in the <a href="IssueList.html">IssueList</a> to create a MyReport</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Results:</B></TD>
+          
+    <TD bgColor=white vAlign=top>User saves a query as a MyReport. Report would 
+      then be displayed in the <a href="ReportsPage.html">Reports Page</a> as 
+      a MyReports</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Data sets:</B></TD>
+          <TD bgColor=white vAlign=top><BR>
+          </TD></TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Notes/Questions:</B></TD>
+          
+    <TD bgColor=white vAlign=top> Allow user to save a query as a MyReport in 
+      the <a href="IssueList.html">IssueList </a>page<br>
+      May make sense to allow user to create a report from the <a href="ReportsPage.html">Reports 
+      Page</a> as well - a link from this page to the <a href="ProjectIssues.html">ProjectIssues</a> 
+      - may be a clumsy navigation?<br>
+			No anonymous users can view and print reports<BR>
+            MyReports reports are project specific? Or should they be across all 
+            of the user's projects? <br>
+			Should Scarab display a Print Confirmation window or message or just print?</TD>
+        </TR>
+        <TR>
+          
+    <TD bgColor=white colSpan=2 vAlign=top><B>Main Success Scenario:</B> 
+      <OL>
+        <LI>CompOwner: visit <a href="IssueList.html">IssueList</a> page after 
+          running a seach/query 
+        <LI>CompOwner: clicks a &quot;Save as MyReports&quot; button 
+        <LI>Scarab: display a dialogue box or confirmation window asking user 
+          to confirm parameters. 
+        <LI>CompOwner: confirms parameters 
+        <LI>Scarab: saves parameters and creates the saved query as a MyReports 
+        <LI>Scarab: takes user to <a href="IssueList.html">IssueList</a> page 
+          with a confirmation message.</LI>
+      </OL>
+          </TD></TR>
+        
+  <TR> 
+    <TD bgColor=white colSpan=2 vAlign=top><B>Alternative Scenario Extensions:</B> 
+      <ol>
+        <li>User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given 
+          project. Selects Reports page link 
+        <li> Scarab: display <a href="ReportsPage.html">Reports Page</a> 
+        <li>CompOwner: clicks a &quot;Create a MyReports&quot; link</li>
+        <li>Scarab: takes user to the <a href="ProjectIssues.html">ProjectIssues</a> 
+          page to build a query (see notes - clumsy navigation)</li>
+        <li>CompOwner: enters search parameters and clicks submit</li>
+        <li>Scarab: display IssueView</li>
+        <li>Same steps as above from Step 2 to Step 6</li>
+      </ol>
+      </TD>
+  </TR></TBODY></TABLE><BR>
+
+<br><hr><br>
+
+<!-- --------------------------------------------------------------- -->
+  <a name="UC-20"></a>
+<TABLE bgColor=#cccccc border=0 cellSpacing=1 width="100%">
+        <TBODY>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Name:</B></TD>
+          
+    <TD bgColor=white vAlign=top>UC-20: User Views and Prints a MyReports report 
+    </TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top height="59"><B>Extends:</B></TD>
+          
+    <TD bgColor=white vAlign=top height="59">UC-19</TD>
+        </TR>
+        <TR>
+          <TD align=right bgColor=white vAlign=top><B>Purpose:</B></TD>
+          <TD bgColor=white vAlign=top>User can select a MyReports report and 
             then view and/or print that report. The MyReports report allows the 
             use to view/print their own customized report. The report would have 
             been created earlier.</td>
@@ -181,11 +280,11 @@
 
 <br><hr><br>
 <!-- --------------------------------------------------------------- -->
-  <a name="UC-20"></a>
+  <a name="UC-21"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-    <td bgcolor="white" valign="top">UC-20: User Automates a Report </td>
+    <td bgcolor="white" valign="top">UC-21: User Automates a Report </td>
   </tr> 
 <tr>
     <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
@@ -202,21 +301,30 @@
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
-    <td bgcolor="white" valign="top">  </td>
+    <td bgcolor="white" valign="top">
+      CompOwner: Sets the parameters for report automation<br>
+      Scarab: The Scarab system       
+    </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
-    <td bgcolor="white" valign="top"> 
-    </td>
+    <td bgcolor="white" valign="top">
+	CompOwner<br>
+	Recipient(s) of report(s)<br>
+	ProjectOwner: see notes/comments </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Prereq:</b></td>
-    <td bgcolor="white" valign="top"> TBD 
-    </td>
+    <td bgcolor="white" valign="top"> Logged In<br>
+      Project set up<br>
+      User has access to the project <br>
+      Report has already been created and saved by user or exists as a predefined 
+      report within the project</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
-    <td bgcolor="white" valign="top">User selects a report to automate</td>
+    <td bgcolor="white" valign="top">User selects a report to automate and the 
+      report's parameters are saved.</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
@@ -224,13 +332,28 @@
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Notes/Questions:</b></td>
-    <td bgcolor="white" valign="top"> TBD
-    </td>
+    <td bgcolor="white" valign="top"> 
+	Should the Project Owner and/or Domain Admin 
+    have approval rights prior to an automated report being routed to somebody 
+    outside the project?<br>
+      More of a UI design note: have a checkbox next to each report that would 
+      allow user to either View, Print or Automate <br>
+	UI Design: A dialogue box or window allowing user to set automation parameters</td>
   </tr>
   <tr>
     <td bgcolor="white"  colspan="2" valign="top"><b>Main Success Scenario:</b> 
       <ol>
-        <li> TBD  </li>
+        <li>User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given 
+          project. Selects Reports page link </li>
+        <li> Scarab: display <a href="ReportsPage.html">Reports Page</a> 
+        <li>User selects the appropriate check box next to each report that they 
+          would like to batch and/or automate</li>
+        <li>User clicks a &quot;Automate/Batch&quot; button</li>
+        <li>Scarab: display a Automate/Batch window or confirmation dialogue box 
+          asking user to set: Time, Date, and email addressees</li>
+        <li>User enters information in the dialogue box</li>
+        <li>Scarab: saves parameters and returns User to <a href="ReportsPage.html">Reports Page</a> with a confirmation 
+          message </li>
       </ol>
     </td>
   </tr>
@@ -244,15 +367,15 @@
 </table>
 <br><hr><br>
 <!-- --------------------------------------------------------------- -->
-  <a name="UC-21"></a>
+  <a name="UC-22"></a>
 <table width="100%" border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
-    <td bgcolor="white" valign="top">UC-21: User Requests to Change a MyReport to a Predefined Report </td>
+    <td bgcolor="white" valign="top">UC-22: User Requests to Change a MyReport to a Predefined Report </td>
   </tr> 
 <tr>
     <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
-    <td bgcolor="white" valign="top">TBD</td>
+    <td bgcolor="white" valign="top">UC-20</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Purpose:</b></td>
@@ -264,21 +387,28 @@
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
-    <td bgcolor="white" valign="top">  </td>
+    <td bgcolor="white" valign="top">
+	CompOwner: sends request<br>
+	Project Owner: Needs to approve the report <br>
+	Project members: will have access to the report if approved </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Stakeholders:</b></td>
-    <td bgcolor="white" valign="top"> 
-    </td>
+    <td bgcolor="white" valign="top">CompOwner<br>
+      Project Owner<br>
+      All Project members </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Prereq:</b></td>
-    <td bgcolor="white" valign="top"> TBD 
-    </td>
+    <td bgcolor="white" valign="top"> Logged In<br>
+      Project set up<br>
+      User has access to the project <br>
+      Report has already been created and saved by user</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
-    <td bgcolor="white" valign="top">User selects a report to automate</td>
+    <td bgcolor="white" valign="top">User requests that their MyReport become 
+      a Predefined Report within the project</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Data sets:</b></td>
@@ -286,13 +416,24 @@
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Notes/Questions:</b></td>
-    <td bgcolor="white" valign="top"> TBD
-    </td>
+    <td bgcolor="white" valign="top"> Similar to having a saved query be considered 
+      a global query</td>
   </tr>
   <tr>
     <td bgcolor="white"  colspan="2" valign="top"><b>Main Success Scenario:</b> 
       <ol>
-        <li> TBD  </li>
+        <li>See UC-19 up to and including step 4.. </li>
+        <li>CompOwner: views selected report and clicks the checkbox next to one 
+          or several of their MyReport's
+        <li>CompOwner: clicks a &quot;Save as Predefined&quot; button
+        <li>Scarab: display a dialogue box or confirmation window asking user 
+          to confirm
+        <li>CompOwner: confirms reports to be changed
+        <li>Scarab: puts the report in a &quot;pended&quot; status and brings 
+          user back to <a href="ReportsPage.html">Reports Page</a> with a confirmation 
+          message 
+        <li>Scarab: sends pending status to Project Owner for viewing and approval 
+          (see Admin Use Cases)
       </ol>
     </td>
   </tr>
