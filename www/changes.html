@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.168 2002/06/12 21:29:22 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.169 2002/06/13 22:54:18 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -58,6 +58,10 @@
                      the report table. (JDM)</li>
                  <li>Switching over to using unique id's (i.e., PACS1) rather
                      than issue id's as a parameter. (EWD)</li>
+                 <li>Time zone is shown when displaying time of day. (JDM)</li>
+                 <li>Allow dates to be entered in ISO standard format as
+                     well as the US standard mm/dd/yy. (JDM)</li>
+                 <li>Improved the speed of report generation about 20X. (JDM)</li>
             </ul>
          </td>
     </tr>
@@ -115,11 +119,30 @@
                  <li>Show the number of issues in the issue list.
                     #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=344">
                     344</a>. (JSS)</li>
+                 <li>Updated commons-fileupload so that it does not use url 
+                     decoder on headers and form elements.  This was causing
+                     a bug where + and % were being misinterpreted when 
+                     entering text attributes.
+                     For more information, see Bug Reports
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=356">
+                    356</a>. (JDM)</li>
+                 <li>The module and issue type used for ViewIssue are the 
+                     module and issue type for the issue that is being viewed.
+                     The current issue type was being used resulting in a 
+                     possible mismatch of attributes. (JDM)</li>
+                 <li>Fixed an NPE that was occuring when moving an issue. 
+                     (JDM)</li>
+                 <li>Fixed cache bug when removing an issue type from a module.
+                     For more information, see Bug Reports
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=350">
+                    350</a>. (JDM)</li>
+                 <li>When formatting dates for display the DateFormat object
+                     was being used in a non-thread-safe manner.  This has
+                     been corrected. (JDM)</li>
                  <li>Fixed error in Enter Issue duplicate page. #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=360">360</a>(EWD)</li>
                  <li>Fixed error when cancelling from Enter Issue duplicate page. #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=364">364</a>(EWD)</li>
-                 
             </ul>
-         </td>
+       </td>
     </tr>
     <tr> 
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
@@ -172,7 +195,7 @@
                     edit saved reports.  It also contains a link to create
                     a new report (EWD, JSS, JDM).</li>
             </ul>
-        </td>
+      </td>
     </tr>
     <tr>
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
