@@ -18,10 +18,11 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -34,33 +35,49 @@ import org.columba.core.main.MainInterface;
 public class MoveMessageCommand extends CopyMessageCommand {
 
 	protected Folder destFolder;
-	protected Folder srcFolder;
-	protected Object[] uids;
+	
+
+	protected FolderCommandAdapter adapter;
 
 	/**
 	 * Constructor for MoveMessageCommand.
 	 * @param frameController
 	 * @param references
 	 */
-	public MoveMessageCommand(
-		DefaultCommandReference[] references) {
+	public MoveMessageCommand(DefaultCommandReference[] references) {
 		super(references);
 	}
 
 	public void updateGUI() throws Exception {
+		super.updateGUI();
+		
 
-		TableChangedEvent ev =
-			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		MainInterface.frameModel.tableChanged(ev);
+		TableChangedEvent ev;
+		for (int i = 0; i < r.length; i++) {
 
-		TableChangedEvent ev2 =
-			new TableChangedEvent(TableChangedEvent.UPDATE, srcFolder);
+			ev =
+				new TableChangedEvent(
+					TableChangedEvent.UPDATE,
+					r[i].getFolder());
 
-		MainInterface.frameModel.tableChanged(ev2);
+			MainInterface.frameModel.tableChanged(ev);
 
-		MainInterface.treeModel.nodeChanged(destFolder);
-		MainInterface.treeModel.nodeChanged(srcFolder);
+			MainInterface.treeModel.nodeChanged(r[i].getFolder());
+		}
+
+		FolderCommandReference u = adapter.getUpdateReferences();
+		if (u != null) {
+
+			ev = new TableChangedEvent(TableChangedEvent.UPDATE, u.getFolder());
+
+			MainInterface.frameModel.tableChanged(ev);
+
+			MainInterface.treeModel.nodeChanged(u.getFolder());
+		}
+
+	
 	}
 
 	/**
@@ -68,29 +85,35 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	 */
 	public void execute(Worker worker) throws Exception {
 		super.execute(worker);
-		
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = r[0].getUids();
+		adapter =
+			new FolderCommandAdapter(
+				(FolderCommandReference[]) getReferences());
 
-		srcFolder = (Folder) r[0].getFolder();
-		destFolder = (Folder) r[1].getFolder();
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+		destFolder = (Folder) adapter.getDestinationFolder();
 
-		ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
+		for (int i = 0; i < r.length; i++) {
 
-		worker.setDisplayText(
-			"Moving messages to " + destFolder.getName() + "...");
-		worker.setProgressBarMaximum(uids.length);
+			Object[] uids = r[i].getUids();
 
-		
+			Folder srcFolder = (Folder) r[i].getFolder();
+			uids = r[i].getUids();
 
-		srcFolder.markMessage(
-			uids,
-			MarkMessageCommand.MARK_AS_EXPUNGED,
-			worker);
+			ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
 
-		srcFolder.expungeFolder(uids, worker);
+			worker.setDisplayText(
+				"Moving messages to " + destFolder.getName() + "...");
+			worker.setProgressBarMaximum(uids.length);
+
+			srcFolder.markMessage(
+				uids,
+				MarkMessageCommand.MARK_AS_EXPUNGED,
+				worker);
+
+			srcFolder.expungeFolder(uids, worker);
+
+		}
 
 	}
-
 }

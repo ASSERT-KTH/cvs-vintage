@@ -389,33 +389,6 @@ public class VirtualFolder extends Folder {
 		return props;
 	}
 
-	/*
-	public static FolderItem getDefaultItem(String className, XmlElement props) {
-		
-		ColumbaLogger.log.debug("getDefaultItem");
-	
-		XmlElement defaultElement = new XmlElement("folder");
-		defaultElement.addAttribute("class", className);
-		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
-	
-		defaultElement.addElement(props);
-		
-		
-		XmlElement filter = new XmlElement("filter");
-		defaultElement.addElement(filter);
-		XmlElement rules = new XmlElement("rules");
-		rules.addAttribute("condition", "match_all");
-		XmlElement criteria = new XmlElement("criteria");
-		criteria.addAttribute("type", "Subject");
-		criteria.addAttribute("criteria", "contains");
-		criteria.addAttribute("pattern", "pattern");
-		rules.addElement(criteria);
-		filter.addElement(rules);
-	
-		return new FolderItem(defaultElement);
-	}
-	*/
-
 	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
 
 		FolderCommandReference[] newReference = null;
@@ -429,7 +402,7 @@ public class VirtualFolder extends Folder {
 				(VirtualHeader) headerList.get(uids[i]);
 			Folder srcFolder = virtualHeader.getSrcFolder();
 			Object srcUid = virtualHeader.getSrcUid();
-			//list.put(srcUid, srcFolder);
+
 			if (list.containsKey(srcFolder)) {
 				// bucket for this folder exists already
 			} else {
@@ -441,33 +414,46 @@ public class VirtualFolder extends Folder {
 			v.add(srcUid);
 		}
 
+		newReference = new FolderCommandReference[ list.size() +2 ];
+		int i = 0;
 		for (Enumeration e = list.keys(); e.hasMoreElements();) {
 			Folder srcFolder = (Folder) e.nextElement();
 			Vector v = (Vector) list.get(srcFolder);
 
 			int size = 1;
 
+			/*
 			// check if we need a destination folder 
 			if (r.length > 1)
 				newReference = new FolderCommandReference[2];
 			else
 				newReference = new FolderCommandReference[1];
+			*/
 
-			newReference[0] = new FolderCommandReference(srcFolder);
+			
+
+			newReference[i] = new FolderCommandReference(srcFolder);
 			Object[] uidArray = new Object[v.size()];
 			v.copyInto(uidArray);
-			newReference[0].setUids(uidArray);
-			newReference[0].setMarkVariant(r[0].getMarkVariant());
-			newReference[0].setMessage(r[0].getMessage());
-
-			if (r.length > 1)
-				newReference[1] =
-					new FolderCommandReference((Folder) r[1].getFolder());
+			newReference[i].setUids(uidArray);
+			newReference[i].setMarkVariant(r[0].getMarkVariant());
+			newReference[i].setMessage(r[0].getMessage());
+			
+			
 
 		}
 
-		return newReference;
+		if (r.length > 1)
+			newReference[i + 1] =
+				new FolderCommandReference((Folder) r[1].getFolder());
+		else
+			newReference[i + 1] = null;
 
+	
+		newReference[i + 2] = r[0];
+		
+		
+		return newReference;
 	}
 
 	/**

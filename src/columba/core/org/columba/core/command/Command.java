@@ -150,7 +150,8 @@ public abstract class Command {
 		boolean success = true;
 
 		for (int i = 0;(i < size) && success; i++) {
-			success &= references[i].tryToGetLock(this);			
+			if (references[i] != null)
+				success &= references[i].tryToGetLock(this);
 		}
 
 		if (!success) {
@@ -165,7 +166,8 @@ public abstract class Command {
 		int size = Array.getLength(references);
 
 		for (int i = 0; i < size; i++) {
-			references[i].releaseLock();
+			if (references[i] != null)
+				references[i].releaseLock();
 		}
 	}
 

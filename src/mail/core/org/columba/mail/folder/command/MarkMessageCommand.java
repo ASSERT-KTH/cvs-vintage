@@ -17,12 +17,12 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.TableChangedEvent;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -38,44 +38,75 @@ public class MarkMessageCommand extends FolderCommand {
 	public final static int MARK_AS_FLAGGED = 1;
 	public final static int MARK_AS_EXPUNGED = 2;
 	public final static int MARK_AS_ANSWERED = 3;
-	
-	protected Object[] uids;
-	protected Folder folder;
-	protected int markVariant;
+
+	protected FolderCommandAdapter adapter;
 
 	/**
 	 * Constructor for MarkMessageCommand.
 	 * @param frameController
 	 * @param references
 	 */
-	public MarkMessageCommand(
-		DefaultCommandReference[] references) {
-		super( references);
+	public MarkMessageCommand(DefaultCommandReference[] references) {
+		super(references);
 	}
 
 	public void updateGUI() throws Exception {
-		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.MARK, folder, uids, markVariant );
-		 
-		MainInterface.frameModel.tableChanged(ev);
-		
-		MainInterface.treeModel.nodeChanged(folder);
+
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+
+		TableChangedEvent ev;
+		for (int i = 0; i < r.length; i++) {
+
+			ev =
+				new TableChangedEvent(
+					TableChangedEvent.MARK,
+					r[i].getFolder(),
+					r[i].getUids(),
+					r[i].getMarkVariant());
+
+			MainInterface.frameModel.tableChanged(ev);
+
+			MainInterface.treeModel.nodeChanged(r[i].getFolder());
+		}
+
+		FolderCommandReference u = adapter.getUpdateReferences();
+		if (u != null) {
+
+			ev =
+				new TableChangedEvent(
+					TableChangedEvent.MARK,
+					u.getFolder(),
+					u.getUids(),
+					u.getMarkVariant());
+
+			MainInterface.frameModel.tableChanged(ev);
+			MainInterface.treeModel.nodeChanged(u.getFolder());
+		}
+
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		uids = r[0].getUids();
-		folder = (Folder) r[0].getFolder();
-		markVariant = r[0].getMarkVariant();
-		ColumbaLogger.log.debug("src=" + folder);
+		adapter =
+			new FolderCommandAdapter(
+				(FolderCommandReference[]) getReferences());
 
-		folder.markMessage(r[0].getUids(), markVariant , worker);
-		
-		
+		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+
+		for (int i = 0; i < r.length; i++) {
+
+			Object[] uids = r[i].getUids();
+
+			Folder srcFolder = (Folder) r[i].getFolder();
+
+			int markVariant = r[i].getMarkVariant();
+
+			srcFolder.markMessage(uids, markVariant, worker);
+		}
+
 	}
 
 }

@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: WizardPanelSequence.java,v $
+//Revision 1.2  2003/02/13 11:07:35  fdietz
+//[intern]more virtual folder framework fixes
+//
 //Revision 1.1  2003/02/03 14:58:41  fdietz
 //[intern]wizard fixes
 //
@@ -53,10 +56,12 @@ public class WizardPanelSequence {
 	}
 
 	public DefaultWizardPanel getFirstPanel() {
+
 		return (DefaultWizardPanel) list.get(0);
 	}
 
 	public DefaultWizardPanel getLastPanel() {
+
 		return (DefaultWizardPanel) list.get(list.size() - 1);
 	}
 

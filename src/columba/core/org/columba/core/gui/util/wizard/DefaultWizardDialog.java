@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.4  2003/02/13 11:07:35  fdietz
+//[intern]more virtual folder framework fixes
+//
 //Revision 1.3  2003/02/11 10:01:13  fdietz
 //[intern]added debug output
 //
@@ -58,7 +61,7 @@ import org.columba.core.logging.ColumbaLogger;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class DefaultWizardDialog implements ActionListener {
+public abstract class DefaultWizardDialog {
 
 	private JButton nextButton;
 	private JButton prevButton;
@@ -91,21 +94,21 @@ public class DefaultWizardDialog implements ActionListener {
 
 		nextButton = new JButton("Next >");
 		nextButton.setActionCommand("NEXT");
-		nextButton.addActionListener(this);
+		nextButton.addActionListener(new NextActionListener());
 
 		finishButton = new JButton("Finish");
 		finishButton.setActionCommand("FINISH");
-		finishButton.addActionListener(this);
+		finishButton.addActionListener(new FinishActionListener());
 		finishButton.setEnabled(true);
-		
+
 		prevButton = new JButton("< Prev");
 		prevButton.setActionCommand("PREV");
-		prevButton.addActionListener(this);
-		
+		prevButton.addActionListener(new PrevActionListener());
+
 		cancelButton = new JButton("Cancel");
 		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		
+		cancelButton.addActionListener(new CancelActionListener());
+
 		init(p);
 
 		dialog.getContentPane().add(p, BorderLayout.CENTER);
@@ -120,9 +123,8 @@ public class DefaultWizardDialog implements ActionListener {
 
 	}
 
-	public WizardPanelSequence getSequence() {
-		return null;
-	}
+	public abstract WizardPanelSequence getSequence();
+	
 
 	public JPanel createTopPanel(
 		String title,
@@ -245,40 +247,40 @@ public class DefaultWizardDialog implements ActionListener {
 
 	}
 
-	public void select() {
-	}
-
+	/*
 	public void actionPerformed(ActionEvent e) {
-		
+	
 		String action = e.getActionCommand();
-
-		ColumbaLogger.log.info("action="+action);
-		
+	
+		ColumbaLogger.log.info("action=" + action);
+	
 		if (action.equals("NEXT")) {
 			dialog.getContentPane().removeAll();
 			DefaultWizardPanel p = getSequence().getNextPanel();
-
+	
 			init(p);
-
+	
 			updateWindow(p);
-
+	
 		} else if (action.equals("PREV")) {
 			dialog.getContentPane().removeAll();
 			DefaultWizardPanel p = getSequence().getPreviousPanel();
-
+	
 			init(p);
 			updateWindow(p);
-			
-
+	
 		} else if (action.equals("CANCEL")) {
-
+	
 			dialog.setVisible(false);
-		} else if (action.equals("FINISH"))
-		{
+	
+			cancel();
+		} else if (action.equals("FINISH")) {
 			dialog.setVisible(false);
+	
+			finish();
 		}
 	}
-
+	*/
 	protected void updateWindow(DefaultWizardPanel p) {
 		//pack();
 
@@ -351,4 +353,65 @@ public class DefaultWizardDialog implements ActionListener {
 		
 	}
 	*/
+
+	public void cancel() {
+	}
+	public void finish() {
+	}
+
+	class CancelActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			String action = e.getActionCommand();
+			if (action.equals("CANCEL")) {
+
+				dialog.setVisible(false);
+
+				cancel();
+			}
+		}
+	}
+
+	class NextActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			String action = e.getActionCommand();
+			if (action.equals("NEXT")) {
+				dialog.getContentPane().removeAll();
+				DefaultWizardPanel p = getSequence().getNextPanel();
+
+				init(p);
+
+				updateWindow(p);
+			}
+		}
+	}
+	class PrevActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			String action = e.getActionCommand();
+			if (action.equals("PREV")) {
+
+				dialog.getContentPane().removeAll();
+				DefaultWizardPanel p = getSequence().getPreviousPanel();
+
+				init(p);
+				updateWindow(p);
+			}
+		}
+	}
+
+	class FinishActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+
+			String action = e.getActionCommand();
+			if (action.equals("FINISH")) {
+
+				dialog.setVisible(false);
+
+				finish();
+			}
+		}
+	}
+
 }

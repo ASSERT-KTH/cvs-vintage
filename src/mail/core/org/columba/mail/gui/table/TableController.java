@@ -512,7 +512,7 @@ public class TableController
 	public void tableChanged(TableChangedEvent event) throws Exception {
 		ColumbaLogger.log.info("event="+event);
 		
-		Folder folder = event.getSrcFolder();
+		Folder folder = (Folder) event.getSrcFolder();
 
 		if (folder == null) {
 			if (event.getEventType() == TableChangedEvent.UPDATE)
