@@ -27,21 +27,18 @@
          <div>
     Logged in: <strong class="username">Elicia David</strong>
    </div>
-            <div>
-   Current Module:
-   <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/SelectModule.vm"><strong>Turbine > Source</strong></a>
-</div>
-   <div>
-        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
-      | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Links.vm">Links</a>
-  | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/entry%2CWizard1.vm">Enter Issue</a>
-  | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
-   </div>
+
+   <div><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a></div>
   </div>
   </td>
   </tr>
   </table>
  </div>
+
+<div class="modbar">
+   <small><strong>Current Module:&nbsp;<a href="#">Turbine</a>&nbsp;&gt;&nbsp;<a href="#">Source</a></strong>
+</div>
+
 <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
@@ -83,24 +80,26 @@
 </td>
 <td width="100%" id="bodycol">
  <!-- Scarab - App -->
- <div id="topmodule">
+<div id="topmodule">
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
-                  <input type="text" name="id" size="15" maxlength="255" />&#160;
-        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
-        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
-        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     <small>
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
-     </small>
-   </form>
-   </td>
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
+        <option>Select query</option>
+        <option>---------------</option>
+        <option>Advanced</option>
+        <option>Custom</option>
+        <option>Most recent</option>
+        <option>---------------</option>
+        <option>Saved queries (personal)</option>
+        <option>&nbsp;&nbsp;My issues</option>
+        <option>Saved queries (project)</option>
+        <option>&nbsp;&nbsp;Dev issues</option>
+        <option>&nbsp;&nbsp;QA issues</option>
+        </select>&nbsp;<input type="submit" value="go" /></form></td>
   </tr>
   </table>
- </div>
+</div>
 	
 	
 	<!-- Scarab - App -->
@@ -116,6 +115,10 @@
 		<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
 
 		<h3>Search results</h3>
+		
+		<div class="colbar">
+		<small><a href="#">Add/remove attributes from view</a></small>
+		</div>
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
@@ -164,7 +167,6 @@
 		</div>
 		
 		<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
- <p><small>(<a href="#">add/remove attributes from view</a>)</small></p>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">

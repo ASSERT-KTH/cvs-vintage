@@ -75,21 +75,23 @@
 <div id="bodycol">
 
  <!-- Scarab - App -->
- <div id="topmodule">
+<div id="topmodule">
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
-                  <input type="text" name="id" size="15" maxlength="255" />&#160;
-        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
-        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
-        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     <small>
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
-     </small>
-   </form>
-   </td>
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
+        <option>Select query</option>
+        <option>---------------</option>
+        <option>Advanced</option>
+        <option>Custom</option>
+        <option>Most recent</option>
+        <option>---------------</option>
+        <option>Saved queries (personal)</option>
+        <option>&nbsp;&nbsp;My issues</option>
+        <option>Saved queries (project)</option>
+        <option>&nbsp;&nbsp;Dev issues</option>
+        <option>&nbsp;&nbsp;QA issues</option>
+        </select>&nbsp;<input type="submit" value="go" /></form></td>
   </tr>
   </table>
 </div>
@@ -99,52 +101,44 @@
 	<div class="app" id="divselect_module">
 		<h2>Artifact types (2.0.0.1)</h2>
         
-        <small><input type="radio" name="fav" value="fav" checked>&nbsp;Use the <strong>Artifact types</strong> index screen as my Scarab home screen</small>
-        <p><small>Select a favorite artifact type as your Scarab home screen</small></p>
-				
 		<h3>Artifact types in this module</h3>
         
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-        <th>Favorite</th>
         <th>Artifact type name</th>
         <th>Artifact type description</th>
         </tr>
 
         
         <tr class="a">
-        <td><input type="radio" name="fav" value="fav"></td>
         <td><a href="#">Defect</a></td>
         <td>This module helps Agent Scully keep track of clues that may help her find Agent Mulder</td>
         </tr>        
         
         <tr class="b">
-        <td><input type="radio" name="fav" value="fav"></td>
         <td><a href="#">Enhancement</a></td>
         <td>This module can penetrate paper, but is stopped by tin-foil</td>
         </tr>
         
         <tr class="a">
-        <td><input type="radio" name="fav" value="fav"></td>
         <td><a href="#">Feature</a></td>
         <td>This project was started by Bruce Banner</td>
         </tr>
         
         
         <tr class="b">
-        <td><input type="radio" name="fav" value="fav"></td>
         <td><a href="#">Patch</a></td>
         <td>Chuck Norris is the main contact for further information here</td>
         </tr>        
 
         
         <tr class="a">
-        <td><input type="radio" name="fav" value="fav"></td>
         <td><a href="#">Task</a></td>
         <td>The Epsilon team is planning a cinematic release using lots of greek text</td>
         </tr>
         
         </table>
+				
 
  	</div>
 </div>
@@ -153,12 +147,12 @@
 <!-- Structural Elements -->
 </td>
 
-<td id="rightcol" width="20%">
+<td id="rightcol" width="30%">
 	<div class="www">
 		
 		<p><img src="../csi/images/artifact.gif" width="113" height="72" alt="" border="0" /></p>
 		
-		<small> an artifact type is a unique instance of a Scarab database, including the following attributes:
+		<small>An artifact type is a unique instance of a Scarab database, including the following attributes:</small>
 		
 		<ul>
 		<li><small>a customizable set of attributes</small></li>
@@ -166,7 +160,7 @@
 		<li><small>a unique set of permissions per role</small></li>
 		</ul>
 		
-		<p>Once a user selects an artifact type, Scarab's navigation will indicate their selection state by dropping down a list of functions within that artifact type, giving authorized user's access to functionality such as:</p>
+		<p><small>Once a user selects an artifact type, Scarab's navigation will indicate their selection state by dropping down a list of functions within that artifact type, giving authorized user's access to functionality such as:</small></p>
 		
 		<ul>
 		<li><small>enter a new issue</small></li>
@@ -174,8 +168,8 @@
 		<li><small>run reports on database activity</small></li>
 		</ul>
 		
-		<p>The user's input remains confined to the selected artifact type until they select another artifact type from the left side-bar navigation, or from the artifact type index.</p>
-		</small>
+		<p><small>The user's input remains confined to the selected artifact type until they select another artifact type from the left side-bar navigation, or from the artifact type index.</small></p>
+		
 	</div>    
 </td>
 

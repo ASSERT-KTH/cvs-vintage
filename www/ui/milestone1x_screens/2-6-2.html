@@ -1,649 +1,1221 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
 <html>
+ <head>
+  <title>Issue detail long form (2.6.2)</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+<!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
+  <meta http-equiv="Content-type" content="text/html" />
 
-<head>
-	<title>Issue detail long form (2.6.2)</title>
-	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
-</head>
+  <style type="text/css">
+  @import url(../csi/style/ns4_toxins.css);
+  </style>
 
-<body>
-<form action="#" method="get">
+  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+ </head>
+<body marginwidth="0" marginheight="0">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+         <div>
+    Logged in: <strong class="username">Elicia David</strong>
+   </div>
+            
+   <div>
+        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
 
-	<!-- SourceCast -->
-	<div id="banner">
-		<table border="0" cellspacing="12" cellpadding="0" width="100%">
-		<tr>
-		
-		<td>
-		<div align="right" id="loginstatus">
-			<div>
-				Logged in as: <strong class="username">User XX</strong>
-			</div>
-			<div>
-				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
-			</div>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-
-	<!-- SourceCast -->
-	<div id="modulenav">
-		<table border="0" cellspacing="0" cellpadding="8" width="100%">
-		<tr>
-		
-		<td>
-			
-			<strong><small><a href="#">select module</a>&nbsp;&nbsp;|&nbsp;&nbsp;current module: <a href="#">Module X</a></small></strong>
-			
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- Structural Elements -->
-<table border="0" cellspacing="0" cellpadding="8" width="97%" id="main">
+<div class="modbar">
+   <small><strong>Current Module:&nbsp;<a href="#">Turbine</a>&nbsp;&gt;&nbsp;<a href="#">Source</a></strong>
+</div>
+<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
-<td id="leftcol" width="20%">
-<!-- Structural Elements -->
-	
-    <!-- SourceCast -->
+  <td id="leftcol" width="20%">
+ <div id="navcolumn">
 
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Index.vm">Index</a></strong></div>
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/SelectArtifactType.vm">Artifact types</a></strong>
+      <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/1">Defect</a></small></div>
+        <div><small><strong>Patch</strong></small>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/entry%2CWizard1.vm"> Enter new</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced Query</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom Query</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/QueryList.vm">Saved queries</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/TemplateList.vm">Template list</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/reports%2CStep1.vm">New report</a></small></div>
+    <div><small>Saved reports</small></div></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/5">Task</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/7">Feature</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/9">Enhancement</a></small></div>
+  </div>
 
-	<div id="navcolumn">
-
-<div><strong><small>Artifact types</small></strong>
-
-			<div><strong><small><a href="#">Index</a></small></strong></div>
-			<div><strong><small><a href="#">Defect</a></small></strong>
-			<div><a href="#"><small>Enter new</a></small></div>
-			<div><small><a href="#">Template list</a></small></div>
-			<div><small><a href="#">New report</a></small></div>
-			<div><small><a href="#">Saved reports</a></small></div>
-			</div>
-			
-			<div><small><a href="#">Enhancement</a></small></div>
-			<div><small><a href="#">Feature</a></small></div>
-			<div><small><a href="#">Patch</a></small></div>
-			<div><small><a href="#">Task</a></small></div>
 
 </div>
-
-   <div><strong><small><a href="#">Admin functions</a></small></strong></div>
+  <div id="helptext">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+ <tr>
+ <th>How do I...?</th>
+ </tr>
+ <tr>
+ <td>
+  <div>Learn
+ more about this project? </div> <div>Print this page...</div>
+<div>Troubleshoot...
 </div>
-	
-	<!-- SourceCast -->
-	
-		<div id="helptext">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-		<th>How do I...?</th>
-		</tr>
-		<tr>
-		<td>
-			<div> 
-				<a href="#">[Go to help index]</a>
-			</div>
-			<div> 
-				<a href="#">Use this page</a>...
-			</div>
-			<div>
-				<a href="#">Learn about a project</a>...
-			</div>
-			<div>
-				<a href="#">Join a project</a>...
-			</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-<!-- Structural Elements -->
+</td>
+</tr>
+</table>
+</div>
 </td>
 <td width="100%" id="bodycol">
-<!-- Structural Elements -->
-	
-	<!-- Scarab - App -->
-	<div id="topmodule">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-			<td nowrap="nowrap">
-			<select>
-			<option>saved queries</option>
-			<option>query one</option>
-			<option>query two</option>
-			</select> 
-			<input type="submit" name="query" value="Go" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<input type="text" size="15" name="" />
-			<input type="submit" name="query" value="Query" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
-			</td>			
-		</tr>
-		</table>
-	</div>
-	<!-- Scarab - App -->
-	
-	<!-- Scarab - App -->
-	<div class="app" id="div2-6-2">
-		<h2>Issue detail long form (2.6.2)</h2>
-		
-		<p>&#171; previous | 1 of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
-				
-		<h3>Issue id #120</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">issue id #</th>
-			<td>120</td>
-			</tr>
-			
-			<tr>
-			<th width="120">version</th>
-			<td>345</td>
-			</tr>
-			
-			<tr>
-			<th width="120">platform</th>
-			<td>commodore 64</td>
-			</tr>
-			
-			<tr>
-			<th width="120">os</th>
-			<td>plan9</td>
-			</tr>
-			
-			<tr>
-			<th width="120">found during</th>
-			<td>normal use, QA, Beta, etc</td>
-			</tr>
-			
-			<tr>
-			<th width="120">issue type</th>
-			<td>e.g. change requirements / bug / enhancement</td>
-			</tr>
-			
-			<tr>
-			<th width="120">functional area</th>
-			<td>eg. UI / setup / help</td>
-			</tr>
-			
-			<tr>
-			<th width="120">severity</th>
-			<td><select>
-			<option>
-			choice 1
-			</option>
-			<option>
-			choice 2
-			</option>		
-			<option>
-			choice 3
-			</option>
-			</select></td>
-			</tr>
-			
-			<tr>
-			<th width="120">priority</th>
-			<td><select>
-			<option>
-			choice 1
-			</option>
-			<option>
-			choice 2
-			</option>
-			<option>
-			choice 3
-			</option>
-			</select> </td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Personnel</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">committed by</th>
-			<td><a href="#">x (x@xxx.com)</a></td>
-			</tr>
-			
-			<tr>
-			<th width="120">assignee(s)</th>
-			<td>
-			<a href="#">x (x@xxx.com)</a>,&#160;<a href="#">y (y@xxx.com)</a> 
-			<p><input type="submit" value="edit assignees" /></p>
-			</td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Related links</h3>
-		
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-		<th>URL</th>
-		<th>description</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><input type="text" size="25" value="http://" /></td>
-		<td><input type="text" size="25" value="url description x" /></td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><input type="text" size="25" value="http://" /></td>
-		<td><input type="text" size="25" value="url description y" /></td>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><input type="text" size="25" value="http://" /></td>
-		<td><input type="text" size="25" value="url description z" /></td>
-		</tr>
-		</table>
-		
-		<p><input type="submit" value="add url" />&#160;<input type="submit" value="delete url" /></p>
-		
-		<h3>Parent issue</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">parent issue</th>
-			<td><a href="#">parent issue x: non-blocking</a></td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Child issues</h3>
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-		<th>issue id#</th>
-		<th>issue summary</th>
-		<th>dependency type</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><a href="#">xxx</a></td>
-		<td><a href="#">child issue x</a></td>
-		<td><select>
-		<option>
-		blocking
-		</option>		
-		<option>
-		non-blocking
-		</option>
-		</select></td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><a href="#">xxx</a></td>
-		<td><a href="#">child issue x</a></td>		
-		<td><select>
-		<option>
-		blocking
-		</option>		
-		<option>
-		non-blocking
-		</option>
-		</select></td>
-		</tr>
-		</table>
-		
-		<p><input type="submit" value="add child issue" /></p>
-		
-		<h3>Comments</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh		
-			<p><a href="#">view all comments (long form)</a></p>
-			</td>
-			</tr>
-			
-			<tr>
-			<th width="120">add comment</th>
-			<td>
-			<textarea rows="4" cols="40"></textarea> 
-			<p><input type="submit" value="submit comment" /></p>
-			</td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Issue history (up to first ten)</h3>
-		
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<th width="120">date stamp</th>
-		<th>action</th>
-		</tr>
-		
-		<tr class="a">
-		<td width="120">xx/xx/2001</td>
-		<td width="120">action descr. X</td>
-		</tr>
-		
-		<tr class="b">
-		<td width="120">xx/xx/2001</td>
-		<td>action descr. X</td>
-		</tr>
-		
-		<tr class="a">
-		<td width="120">xx/xx/2001</td>
-		<td>action descr. X</td>
-		</tr>
-		
-		<tr class="b">
-		<td width="120">xx/xx/2001</td>
-		<td>action descr. X</td>
-		</tr>
-		</table>
-		
-		<p><a href="#">view complete history</a></p>
-		
-		<p class="functnbar2"><input type="submit" value="save issue #120" />&#160;<input type="submit" value="cancel" /></p>
-		
-		<h3>Issue id #121</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">issue id #</th>
-			<td>121</td>
-			</tr>
-			
-			<tr>
-			<th width="120">version</th>
-			<td>345</td>
-			</tr>
-			
-			<tr>
-			<th width="120">platform</th>
-			<td>commodore 64</td>
-			</tr>
-			
-			<tr>
-			<th width="120">os</th>		
-			<td>plan9</td>
-			</tr>
-			
-			<tr>
-			<th width="120">found during</th>		
-			<td>normal use, QA, Beta, etc</td>
-			</tr>
-			
-			<tr>
-			<th width="120">issue type</th>		
-			<td>e.g. change requirements / bug / enhancement</td>
-			</tr>
-			
-			<tr>
-			<th width="120">functional area</th>		
-			<td>eg. UI / setup / help</td>
-			</tr>
-			
-			<tr>
-			<th width="120">severity</th>		
-			<td><select>
-			<option>
-			choice 1
-			</option>		
-			<option>
-			choice 2
-			</option>		
-			<option>
-			choice 3
-			</option>
-			</select></td>
-			</tr>
-			
-			<tr>
-			<th width="120">priority</th>		
-			<td><select>
-			<option>
-			choice 1
-			</option>		
-			<option>
-			choice 2
-			</option>		
-			<option>
-			choice 3
-			</option>
-			</select></td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Personnel</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">committed by</th>
-			<td><a href="#">x (x@xxx.com)</a></td>
-			</tr>
-			
-			<tr>
-			<th width="120">assignee(s)</th>		
-			<td>
-			<a href="#">x (x@xxx.com)</a>,&#160;<a href="#">y (y@xxx.com)</a>		
-			<p><input type="submit" value="edit assignees" /></p>
-			</td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Related links</h3>
-		
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
-		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-		<th>URL</th>		
-		<th>description</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="http://" /></td>		
-		<td><input type="text" size="25" value="url description x" /></td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="http://" /></td>		
-		<td><input type="text" size="25" value="url description y" /></td>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>		
-		<td><input type="text" size="25" value="http://" /></td>		
-		<td><input type="text" size="25" value="url description z" /></td>
-		</tr>
-		</table>
-		
-		<p><input type="submit" value="add url" />&#160;<input type="submit" value="delete url" /></p>
-		
-		<h3>Parent issue</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">parent issue</th>		
-			<td><a href="#">parent issue x: non-blocking</a></td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Child issues</h3>
+ <!-- Scarab - App -->
+<div id="topmodule">
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
+        <option>Select query</option>
+        <option>---------------</option>
+        <option>Advanced</option>
+        <option>Custom</option>
+        <option>Most recent</option>
+        <option>---------------</option>
+        <option>Saved queries (personal)</option>
+        <option>&nbsp;&nbsp;My issues</option>
+        <option>Saved queries (project)</option>
+        <option>&nbsp;&nbsp;Dev issues</option>
+        <option>&nbsp;&nbsp;QA issues</option>
+        </select>&nbsp;<input type="submit" value="go" /></form></td>
+  </tr>
+  </table>
+</div>
+ <!-- Scarab - App -->
+
+
+<div class="app" id="viewissue">
+
+
+  <form method="post" action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/ModifyIssue">
+   <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+
+    <input type="hidden" name="fullHistory" value="" />
+  <input type="hidden" name="id" value="TBNS1" />
+
+ 
+
+<h2>Issue ID: TBNS1</h2>
+
+<div class="functnbar">
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
+</div>
+
+<h3>Attribute group one</h3>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+      <tr>
+      <th>Summary</th>
+      <td>
+                               <input name= "attv116val"
+               value="test ting..." size="20" type="text" />
+                  </td>
+     </tr>
+                 <tr>
+      <th>Platform</th>
+      <td>
+            <select name="attv117optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="16">all</option>
+              <option selected="selected" value="17">DEC</option>
+              <option value="18">HP</option>
+              <option value="19">Macintosh</option>
+              <option value="20">PC</option>
+              <option value="21">SGI</option>
+              <option value="22">sun</option>
+              <option value="23">other</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Operating System</th>
+      <td>
+            <select name="attv118optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="25">windows 3.1</option>
+              <option selected="selected" value="26">windows 95</option>
+              <option value="27">windows 98</option>
+              <option value="28">windows ME</option>
+              <option value="29">windows 2000</option>
+              <option value="30">windows NT</option>
+              <option value="31">mac system 7</option>
+              <option value="32">mac system 7.5</option>
+              <option value="33">mac system 7.6.1</option>
+              <option value="34">mac system 8.0</option>
+              <option value="35">mac system 8.5</option>
+              <option value="36">mac system 8.6</option>
+              <option value="37">mac system 9.0</option>
+              <option value="38">Linux</option>
+              <option value="39">BSDI</option>
+              <option value="40">FreeBSD</option>
+              <option value="41">NetBSD</option>
+              <option value="42">OpenBSD</option>
+              <option value="43">AIX</option>
+              <option value="44">BeOS</option>
+              <option value="45">HP-UX</option>
+              <option value="46">IRIX</option>
+              <option value="50">OSF/1</option>
+              <option value="51">Solaris</option>
+              <option value="52">SunOS</option>
+              <option value="53">Other</option>
+              <option value="77">OSX</option>
+              <option value="84">Realtime/Embedded</option>
+              <option value="85">Handheld/PDA</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Description</th>
+      <td>
+                               <textarea name="attv119val" cols="60"
+               rows="5">teste teste teste
+</textarea>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Status</th>
+      <td>
+            <select name="attv__3optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="1">unconfirmed</option>
+              <option value="2">new</option>
+              <option value="3">assigned</option>
+              <option value="4">reopened</option>
+              <option value="5">resolved</option>
+              <option value="6">verified</option>
+              <option value="7">closed</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Resolution</th>
+      <td>
+            <select name="attv__4optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="8">fixed</option>
+              <option value="9">invalid</option>
+              <option value="10">wontfix</option>
+              <option value="11">later</option>
+              <option value="12">remind</option>
+              <option value="13">duplicate</option>
+              <option value="14">worksforme</option>
+              <option value="15">moved</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Priority</th>
+      <td>
+            <select name="attv__7optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="54">High</option>
+              <option value="55">Medium</option>
+              <option value="56">Low</option>
+              <option value="57">Undecided</option>
+      </select>
+                  </td>
+     </tr>
+     <tr>
+      <th>Functional Area</th>
+      <td>
+            <select name="attv__12optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="88">UI</option>
+              <option value="89">Setup</option>
+              <option value="90">Help</option>
+      </select>
+                  </td>
+     </tr>
+ </table>
+</div>
+
+<h4>Save changes</h4>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+    
+ <tr>
+   <th>Reason for change</th>
+   <td>Please enter a reason for the changes made above before saving
+   
+         <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
+   <input type="hidden" name="atchattCommentKeyn" value="comment" />
+   </td>
+ </tr>
+   
+ </table>
+</div>
+<div class="functnbar3">
+     <input type="submit" value="Save changes" name="eventSubmit_doSubmitattributes" />
+</div>
+
+
+		<h3>Personel associated with issue ID:6CP</h3>
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-		<th>issue id#</th>		
-		<th>issue summary</th>		
-		<th>dependency type</th>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Association</th>
 		</tr>
 		
 		<tr class="a">
-		<td><input type="checkbox" /></td>		
-		<td><a href="#">xxx</a></td>		
-		<td><a href="#">child issue x</a></td>		
-		<td><select>
-		<option>
-		blocking
-		</option>		
-		<option>
-		non-blocking
-		</option>
-		</select></td>
+		<td>&nbsp;</td>
+		<td><strong>Blackbelt Jones</strong></td>
+		<td><a href="#">bjones@test.net</a></td>
+		<td><strong>Committed by:</strong></td>
+  		</tr>
+
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><strong>Alan Smith</strong></td>
+		<td><a href="#">asmith@test.net</a></td>
+		<td>Assign to:</td>
+  		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><strong>Barbara Skoppke</strong></td>
+		<td><a href="#">bs@test.net</a></td>
+		<td>CC:</td>
 		</tr>
 		
 		<tr class="b">
-		<td><input type="checkbox" /></td>		
-		<td><a href="#">xxx</a></td>		
-		<td><a href="#">child issue x</a></td>		
-		<td><select>
-		<option>
-		blocking
-		</option>		
-		<option>
-		non-blocking
-		</option>
-		</select></td>
+		<td>&nbsp;</td>
+		<td><input type="text" name="" value="" /></td>
+		<td><input type="text" name="" value="" /></td>
+		<td><select name="#"
+   size=""><option value="">Assign to</option>
+            <option value="18">CC</option></select></td>
 		</tr>
-		</table>
+	     
+   </table>  
+
+<div class="functnbar3">
+    <input type="submit" value="Add new" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Delete selected" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
+</div>
+
+
+
+<h3>Related links</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Link</th>
+     <th>Link description</th>
+   </tr>
+         <tr class="a">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>
+         <tr class="b">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>         <tr class="a">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>
+       </table>
+  <div class="functnbar3">
+     <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
+     <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
+</div>
+
+
+
+<h3>Attachments</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Attachment name</th>
+     <th>Attachment description</th>
+     <th>Type</th>
+   </tr>
+     <tr class="a">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+     <tr class="b">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch2.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+       </table>
+
+<div class="functnbar3">
+<input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteurl" />
+</div>
+
+<h4>Add Attachment</h4>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+
+     <tr>
+      <th>File path</th>
+      <td>
+       <input type="file" name="atchd" size="45"
+            value="" />
+       <p>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</p>
+      </td>
+     </tr>
+     
+     <tr>
+      <th>Attachment description</th>
+      <td>
+       <textarea name="atchn" cols="45" rows="2"
+           ></textarea>
+      </td>
+     </tr>    </table>
+</div>  <div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
+</div>
+
+ <input type="hidden" name="depdependKeyori" value="104" />
+ <h3>Dependencies</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Issue ID #</th>
+     <th>Relationship</th>
+     <th>Dependency type</th>
+   </tr>
+   
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose relationship</option>
+          <option value="1">
+          Parent</option>
+          <option value="2">
+          Child</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose dependency type</option>
+          <option value="1">
+          blocking</option>
+          <option value="2">
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
+        </select>     </td>
+   </tr>
+       </table>
+
+<div class="functnbar3">
+ <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
+</div>
+
+
+<h3>Comments</h3>
+
+
+ <h4>xx/xx/200X&nbsp;|&nbsp;<a href="#">Jane Smith</a></h4>
+  
+  <div class="axial">
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">We try to build tomcat 4.0.1 on AIX 4.33 ML. When we run the build command (ant 
+dist), we get the following error:
+
+.....
+
+build-main:
+    [javac] Compiling 1 source file to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/build/classes
+    [javac] 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/src/share/org/apache/jasper/co
+mpiler/ParserXJspSax.java:147: Method getXMLReader() not found in class 
+javax.xml.parsers.SAXParser.
+    [javac]             XMLReader parser = saxParser.getXMLReader();
+    [javac]                                                      ^
+    [javac] 1 error
+
+BUILD FAILED
+-------------------------------------------------------------------------------
+We use the following components:
+jakarta-ant1.4.1.bin
+jakarta-regexp-1.1
+jakarta-servletapa-4-20011128
+jakarta-tomcat-4.01-src
+java_xml_pack_fall01
+xerces-jtool.1.4.4
+jsse-1.0.2
+jndi-1.2.1
+jmx-1-0-ri
+jsdk-1.3
+-------------------------------------------------------------------------------
+ </textarea>
+  </td>
+  </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+</div>
+    
+
+
+ <h4>xx/xx/200X&nbsp;|&nbsp;<a href="#">Bob Smith</a></h4>
+  
+  <div class="axial">
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. This field should be editable to certain folks who want to go in and change what they said; just in case they want to make themselves sound smarter, or perhaps more informed... It's sort of like an opportunity to rewrite history! Exciting, no? 
+  </textarea>
+  </td>
+  </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+</div>
+    
+
+
+<h4>Enter new comment</h4>    
+
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">
+  </textarea>
+  </td>
+  </tr>
+  </table>
+
+
+<div class="functnbar3">
+     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;
+</div>
+
+
+
+<h3>Issue change history</h3>
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">
+  <tr>
+    <th>Date stamp</th>
+    <th>Action</th>
+    <th>Reason</th>
+    <th>By</th>
+  </tr>
+           <tr class="a">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Summary set to test ting...
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="b">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Platform set to DEC
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="a">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Operating System set to windows 95
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="b">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Description set to teste teste teste
+
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+   </table>
+
+
+<div class="functnbar2">
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
+</div>
+
+
+
+ <input type="hidden" name="intake-grp" value="atch"/>
+<input type="hidden" name="atch" value="commentKey"/>
+<input type="hidden" name="intake-grp" value="dep"/>
+<input type="hidden" name="dep" value="dependKey"/>
+<input type="hidden" name="intake-grp" value="attv"/>
+<input type="hidden" name="attv" value="119"/>
+<input type="hidden" name="attv" value="118"/>
+<input type="hidden" name="attv" value="117"/>
+<input type="hidden" name="attv" value="116"/>
+<input type="hidden" name="attv" value="__8"/>
+<input type="hidden" name="attv" value="__7"/>
+<input type="hidden" name="attv" value="__12"/>
+<input type="hidden" name="attv" value="__4"/>
+<input type="hidden" name="atch" value="urlKey"/>
+<input type="hidden" name="attv" value="__3"/>
+<input type="hidden" name="atch" value="attCommentKey"/>
+
+ </form>
+
+
+<h2>Issue ID: TBNS2</h2>
+
+<div class="functnbar">
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
+</div>
+
+<h3>Attribute group one</h3>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+      <tr>
+      <th>Summary</th>
+      <td>
+                               <input name= "attv116val"
+               value="test ting..." size="20" type="text" />
+                  </td>
+     </tr>
+                 <tr>
+      <th>Platform</th>
+      <td>
+            <select name="attv117optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="16">all</option>
+              <option selected="selected" value="17">DEC</option>
+              <option value="18">HP</option>
+              <option value="19">Macintosh</option>
+              <option value="20">PC</option>
+              <option value="21">SGI</option>
+              <option value="22">sun</option>
+              <option value="23">other</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Operating System</th>
+      <td>
+            <select name="attv118optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="25">windows 3.1</option>
+              <option selected="selected" value="26">windows 95</option>
+              <option value="27">windows 98</option>
+              <option value="28">windows ME</option>
+              <option value="29">windows 2000</option>
+              <option value="30">windows NT</option>
+              <option value="31">mac system 7</option>
+              <option value="32">mac system 7.5</option>
+              <option value="33">mac system 7.6.1</option>
+              <option value="34">mac system 8.0</option>
+              <option value="35">mac system 8.5</option>
+              <option value="36">mac system 8.6</option>
+              <option value="37">mac system 9.0</option>
+              <option value="38">Linux</option>
+              <option value="39">BSDI</option>
+              <option value="40">FreeBSD</option>
+              <option value="41">NetBSD</option>
+              <option value="42">OpenBSD</option>
+              <option value="43">AIX</option>
+              <option value="44">BeOS</option>
+              <option value="45">HP-UX</option>
+              <option value="46">IRIX</option>
+              <option value="50">OSF/1</option>
+              <option value="51">Solaris</option>
+              <option value="52">SunOS</option>
+              <option value="53">Other</option>
+              <option value="77">OSX</option>
+              <option value="84">Realtime/Embedded</option>
+              <option value="85">Handheld/PDA</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Description</th>
+      <td>
+                               <textarea name="attv119val" cols="60"
+               rows="5">teste teste teste
+</textarea>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Status</th>
+      <td>
+            <select name="attv__3optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="1">unconfirmed</option>
+              <option value="2">new</option>
+              <option value="3">assigned</option>
+              <option value="4">reopened</option>
+              <option value="5">resolved</option>
+              <option value="6">verified</option>
+              <option value="7">closed</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Resolution</th>
+      <td>
+            <select name="attv__4optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="8">fixed</option>
+              <option value="9">invalid</option>
+              <option value="10">wontfix</option>
+              <option value="11">later</option>
+              <option value="12">remind</option>
+              <option value="13">duplicate</option>
+              <option value="14">worksforme</option>
+              <option value="15">moved</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Priority</th>
+      <td>
+            <select name="attv__7optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="54">High</option>
+              <option value="55">Medium</option>
+              <option value="56">Low</option>
+              <option value="57">Undecided</option>
+      </select>
+                  </td>
+     </tr>
+     <tr>
+      <th>Functional Area</th>
+      <td>
+            <select name="attv__12optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="88">UI</option>
+              <option value="89">Setup</option>
+              <option value="90">Help</option>
+      </select>
+                  </td>
+     </tr>
+ </table>
+</div>
+
+<h4>Save changes</h4>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+    
+ <tr>
+   <th>Reason for change</th>
+   <td>Please enter a reason for the changes made above before saving
+   
+         <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
+   <input type="hidden" name="atchattCommentKeyn" value="comment" />
+   </td>
+ </tr>
+   
+ </table>
+</div>
+<div class="functnbar3">
+     <input type="submit" value="Save changes" name="eventSubmit_doSubmitattributes" />
+</div>
+
+
+		<h3>Personel associated with issue ID:6CP</h3>
 		
-		<p><input type="submit" value="add child issue" /></p>
-		
-		<h3>Comments</h3>
-		
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh</td>
-			</tr>
-			
-			<tr>
-			<th width="120">xx/xx/01 <a href="mailto:x@xxx.com">author</a></th>		
-			<td>Comment Content: Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh		
-			<p><a href="#">view all comments (long form)</a></p>
-			</td>
-			</tr>
-			
-			<tr>
-			<th width="120">add comment</th>		
-			<td>
-			<textarea rows="4" cols="40"></textarea>		
-			<p><input type="submit" value="submit comment" /></p>
-			</td>
-			</tr>
-			</table>
-		</div>
-		
-		<h3>Issue history (up to first ten)</h3>
-		
-		<table width="100%" cellpadding="3" cellspacing="2" border="1">
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th width="120">date stamp</th>		
-		<th>action</th>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Association</th>
 		</tr>
 		
 		<tr class="a">
-		<td width="120">xx/xx/2001</td>		
-		<td width="120">action descr. X</td>
-		</tr>
-		
+		<td>&nbsp;</td>
+		<td><strong>Blackbelt Jones</strong></td>
+		<td><a href="#">bjones@test.net</a></td>
+		<td><strong>Committed by:</strong></td>
+  		</tr>
+
 		<tr class="b">
-		<td width="120">xx/xx/2001</td>		
-		<td>action descr. X</td>
-		</tr>
+		<td><input type="checkbox" /></td>
+		<td><strong>Alan Smith</strong></td>
+		<td><a href="#">asmith@test.net</a></td>
+		<td>Assign to:</td>
+  		</tr>
 		
 		<tr class="a">
-		<td width="120">xx/xx/2001</td>
-		<td>action descr. X</td>
+		<td><input type="checkbox" /></td>
+		<td><strong>Barbara Skoppke</strong></td>
+		<td><a href="#">bs@test.net</a></td>
+		<td>CC:</td>
 		</tr>
 		
 		<tr class="b">
-		<td width="120">xx/xx/2001</td>		
-		<td>action descr. X</td>
+		<td>&nbsp;</td>
+		<td><input type="text" name="" value="" /></td>
+		<td><input type="text" name="" value="" /></td>
+		<td><select name="#"
+   size=""><option value="">Assign to</option>
+            <option value="18">CC</option></select></td>
 		</tr>
-		</table>
-		
-		<p><a href="#">view complete history</a></p>
-		
-		<p class="functnbar2"><input type="submit" value="save issue #121" />&#160;<input type="submit" value="cancel" /></p>
-				
-		<p>issues per page:&#160; <input type="radio" name="foo" checked="checked" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100&#160;<input type="submit" value="refresh" /></p>
-				
-		<p>&#171; previous | 1 page of 3 | <a href="#">next</a> <a href="#">&#187;</a></p>
-	</div>
-	<!-- Scarab - App -->
+	     
+   </table>  
+
+<div class="functnbar3">
+    <input type="submit" value="Add new" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Delete selected" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
+</div>
+
+
+
+<h3>Related links</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Link</th>
+     <th>Link description</th>
+   </tr>
+         <tr class="a">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>
+         <tr class="b">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>         <tr class="a">
+     <td><input type="checkbox" /></td>
+          <td>
+     <input type="text" size="25" name="atchurlKeyn" value="" />
+          </td>
+     <td>
+     <input type="text" size="25" name="atchurlKeydas" value="" />
+          </td>
+   </tr>
+       </table>
+  <div class="functnbar3">
+     <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
+     <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
+</div>
+
+
+
+<h3>Attachments</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Attachment name</th>
+     <th>Attachment description</th>
+     <th>Type</th>
+   </tr>
+     <tr class="a">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+     <tr class="b">
+     <td><input type="checkbox" /></td>
+     <td>
+     <a href="#">test_patch2.txt</a>
+     </td>
+     <td>
+     documentation for issue #XXX
+     </td>
+     <td>
+     text
+     </td>
+   </tr>
+
+       </table>
+
+<div class="functnbar3">
+<input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteurl" />
+</div>
+
+<h4>Add Attachment</h4>
+<div class="axial">
+    <table cellpadding="3" cellspacing="2" border="0">
+
+     <tr>
+      <th>File path</th>
+      <td>
+       <input type="file" name="atchd" size="45"
+            value="" />
+       <p>Click Browse and select a file. If you do not see a Browse
+       button, your browser does not support file uploads. Windows
+       users, set Files of Type: to be All Files (*.*) to get a
+       complete file listing. The File field cannot be used to
+       rename files.</p>
+      </td>
+     </tr>
+     
+     <tr>
+      <th>Attachment description</th>
+      <td>
+       <textarea name="atchn" cols="45" rows="2"
+           ></textarea>
+      </td>
+     </tr>    </table>
+</div>  <div class="functnbar3">
+     <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
+</div>
+
+ <input type="hidden" name="depdependKeyori" value="104" />
+ <h3>Dependencies</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>
+     &nbsp;
+     </th>
+     <th>Issue ID #</th>
+     <th>Relationship</th>
+     <th>Dependency type</th>
+   </tr>
+   
+     <tr class="a">
+     <td>&nbsp;</td>
+     <td>
+     <input type="text" size="5">
+     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose relationship</option>
+          <option value="1">
+          Parent</option>
+          <option value="2">
+          Child</option>
+        </select>     </td>
+     <td>
+	<select name="depdependKeydti" class="select">
+    <option value="0">Choose dependency type</option>
+          <option value="1">
+          blocking</option>
+          <option value="2">
+          duplicate</option>
+          <option value="3">
+          non-blocking</option>
+        </select>     </td>
+   </tr>
+       </table>
+
+<div class="functnbar3">
+ <input type="submit" value="Save"  name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Add new" name="eventSubmit_doAdddependency" />&nbsp;<input type="submit" value="Delete selected"  name="eventSubmit_doAdddependency" />
+</div>
+
+
+<h3>Comments</h3>
+
+
+ <h4>xx/xx/200X&nbsp;|&nbsp;<a href="#">Jane Smith</a></h4>
+  
+  <div class="axial">
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">We try to build tomcat 4.0.1 on AIX 4.33 ML. When we run the build command (ant 
+dist), we get the following error:
+
+.....
+
+build-main:
+    [javac] Compiling 1 source file to 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/build/classes
+    [javac] 
+/usr/local/tomcat/jakarta-tomcat-4.0.1-src/jasper/src/share/org/apache/jasper/co
+mpiler/ParserXJspSax.java:147: Method getXMLReader() not found in class 
+javax.xml.parsers.SAXParser.
+    [javac]             XMLReader parser = saxParser.getXMLReader();
+    [javac]                                                      ^
+    [javac] 1 error
+
+BUILD FAILED
+-------------------------------------------------------------------------------
+We use the following components:
+jakarta-ant1.4.1.bin
+jakarta-regexp-1.1
+jakarta-servletapa-4-20011128
+jakarta-tomcat-4.01-src
+java_xml_pack_fall01
+xerces-jtool.1.4.4
+jsse-1.0.2
+jndi-1.2.1
+jmx-1-0-ri
+jsdk-1.3
+-------------------------------------------------------------------------------
+ </textarea>
+  </td>
+  </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+</div>
+    
+
+
+ <h4>xx/xx/200X&nbsp;|&nbsp;<a href="#">Bob Smith</a></h4>
+  
+  <div class="axial">
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">This is sample data. If it were a real comment, this information would be useful to others in determining what people's thoughts are on the progress of the issue. This field should be editable to certain folks who want to go in and change what they said; just in case they want to make themselves sound smarter, or perhaps more informed... It's sort of like an opportunity to rewrite history! Exciting, no? 
+  </textarea>
+  </td>
+  </tr>
+  </table>
+</div>
+
+<div class="functnbar3">
+     <input type="submit" value="Save Changes" name="eventSubmit_doSubmitcomment" />
+</div>
+    
+
+
+<h4>Enter new comment</h4>    
+
+ <table cellspacing="2" cellpadding="3" border="0">
+ <tr>
+  <td><textarea rows="10" cols="90" name ="atchcommentKeydas">
+  </textarea>
+  </td>
+  </tr>
+  </table>
+
+
+<div class="functnbar3">
+     <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&nbsp;
+</div>
+
+
+
+<h3>Issue change history</h3>
+  <table width="100%" cellpadding="3" cellspacing="2" border="1">
+  <tr>
+    <th>Date stamp</th>
+    <th>Action</th>
+    <th>Reason</th>
+    <th>By</th>
+  </tr>
+           <tr class="a">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Summary set to test ting...
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="b">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Platform set to DEC
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="a">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Operating System set to windows 95
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+           <tr class="b">
+      <td>
+            11/27/01
+          </td>
+     <td>attribute Description set to teste teste teste
+
+     </td>
+
+     <td>
+      &#160;      </td>
+     <td>
+          <a href="mailto:elicia@collab.net">Elicia David</a>
+     </td>
+    </tr>
+   </table>
+
+
+<div class="functnbar2">
+     <input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="#" />&nbsp;<input type="submit" value="Copy" name="#" />&nbsp;issue
+     <input type="hidden" name="otherTemplate" value="MoveIssue.vm" />
+</div>
+
+
+
+ <input type="hidden" name="intake-grp" value="atch"/>
+<input type="hidden" name="atch" value="commentKey"/>
+<input type="hidden" name="intake-grp" value="dep"/>
+<input type="hidden" name="dep" value="dependKey"/>
+<input type="hidden" name="intake-grp" value="attv"/>
+<input type="hidden" name="attv" value="119"/>
+<input type="hidden" name="attv" value="118"/>
+<input type="hidden" name="attv" value="117"/>
+<input type="hidden" name="attv" value="116"/>
+<input type="hidden" name="attv" value="__8"/>
+<input type="hidden" name="attv" value="__7"/>
+<input type="hidden" name="attv" value="__12"/>
+<input type="hidden" name="attv" value="__4"/>
+<input type="hidden" name="atch" value="urlKey"/>
+<input type="hidden" name="attv" value="__3"/>
+<input type="hidden" name="atch" value="attCommentKey"/>
+
+ </form>
 
 <!-- Structural Elements -->
 </td>
 </tr>
 </table>
-<!-- Structural Elements -->
+<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
 
-	<!-- SourceCast -->
-	<div id="footer">
-		<p>
-		<a href="#">Domain Home</a> |
-		<a href="#">Help</a> | 
-		<a href="#">Site FAQ</a> |
-		<a href="#">Feedback</a>
-		</p>
-	</div>
-	<!-- SourceCast -->
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
 
-</form>
-</body>
+</td></tr>
+</table>
+</div>
+
+ </body>
 </html>
-
-

@@ -81,25 +81,28 @@
 </td>
 <td width="100%" id="bodycol">
  <!-- Scarab - App -->
- <div id="topmodule">
+<div id="topmodule">
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
-                  <input type="text" name="id" size="15" maxlength="255" />&#160;
-        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
-        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
-        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     <small>
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
-      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
-     </small>
-   </form>
-   </td>
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post"><input type="text" name="id" size="15" maxlength="255" /><input type="hidden" name="nextTemplate" value="ViewIssue.vm" />&nbsp;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" />&nbsp;<img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<select class="select">
+        <option>Select query</option>
+        <option>---------------</option>
+        <option>Advanced</option>
+        <option>Custom</option>
+        <option>Most recent</option>
+        <option>---------------</option>
+        <option>Saved queries (personal)</option>
+        <option>&nbsp;&nbsp;My issues</option>
+        <option>Saved queries (project)</option>
+        <option>&nbsp;&nbsp;Dev issues</option>
+        <option>&nbsp;&nbsp;QA issues</option>
+        </select>&nbsp;<input type="submit" value="go" /></form></td>
   </tr>
   </table>
- </div>
- <!-- Scarab - App -->
+</div>
+
+<!-- Scarab - App -->
 
 
 <div class="app" id="viewissue">
@@ -279,24 +282,50 @@
      <input type="submit" value="Save changes" name="eventSubmit_doSubmitattributes" />
 </div>
 
-<h3>Assignee</h3>
-<div class="axial">
-<table cellpadding="3" cellspacing="2" border="0">
- <tr>
-  <th>Committed by</th>
-    <td><a href="mailTo:elicia@collab.net">Elicia David</a></td>
- </tr>
- <tr>
-  <th>Assignee(s)</th>
-  <td>
-       None assigned.
-    </td>
- </tr>
-</table>
-</div>
+		<h3>Personel associated with issue ID:6CP</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Association</th>
+		</tr>
+		
+		<tr class="a">
+		<td>&nbsp;</td>
+		<td><strong>Blackbelt Jones</strong></td>
+		<td><a href="#">bjones@test.net</a></td>
+		<td><strong>Committed by:</strong></td>
+  		</tr>
+
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><strong>Alan Smith</strong></td>
+		<td><a href="#">asmith@test.net</a></td>
+		<td>Assign to:</td>
+  		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><strong>Barbara Skoppke</strong></td>
+		<td><a href="#">bs@test.net</a></td>
+		<td>CC:</td>
+		</tr>
+		
+		<tr class="b">
+		<td>&nbsp;</td>
+		<td><input type="text" name="" value="" /></td>
+		<td><input type="text" name="" value="" /></td>
+		<td><select name="#"
+   size=""><option value="">Assign to</option>
+            <option value="18">CC</option></select></td>
+		</tr>
+	     
+   </table>  
 
 <div class="functnbar3">
-    <input type="submit" value="Edit assignees" name="eventSubmit_doEditassignees" />
+    <input type="submit" value="Add new" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Delete selected" name="eventSubmit_doEditassignees" />&nbsp;<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
 </div>
 
 <h3>Related links</h3>
