@@ -134,6 +134,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 		// set it only if nobody else did !
 		if( null == request.getSession( false ) ) {
 		    request.setSession( sess );
+		    request.setSessionId( sess.getId());
 		    //    log("Session set ");
 		}
 	    }
@@ -147,6 +148,13 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	ClassLoader newLoader = ctx.getClassLoader();
 	StandardManager sM = getManager( ctx );    
 	sM.handleReload(req, newLoader);
+	if (req.getSession(false) != null) {
+	    // replace the current session in the current request
+	    HttpSession newSession = 
+		(HttpSession)sessions.get(req.getRequestedSessionId());
+	    req.setSession(newSession);
+	    req.setSessionId( newSession.getId());
+	}
     }
     
     public int newSessionRequest( Request request, Response response) {
@@ -172,7 +180,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 	if( ctx==null ) return 0; 
 
 	StandardManager sm= getManager( ctx );
-	HttpSession sess=rrequest.getSession(false);
+	HttpSession sess=(HttpSession)rrequest.getSession(false);
 	if( sess == null ) return 0;
 	
 	sm.release( sess );

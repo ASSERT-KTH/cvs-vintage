@@ -61,8 +61,6 @@ package org.apache.tomcat.session;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.http.HttpSession;
-import org.apache.tomcat.core.Request;
 
 /**
 	This class manages the serialization of HttpSession object across
@@ -80,49 +78,40 @@ import org.apache.tomcat.core.Request;
 */
 public final class SessionSerializer
 {
-	/**
-		This is the method that does the serialization.
-	*/
-	public static final void doSerialization(Request req, ClassLoader cl, StandardManager sessionM) {
-		// get the hashtable of sessions
-		Hashtable sessions = sessionM.getSessions();
-		
-		try {
-			// writes the session data out, but loses the contexts
-			// because they cannot be serialized
-			ByteArrayOutputStream b = new ByteArrayOutputStream();
-			ObjectOutputStream o = new ObjectOutputStream(b);
+    /**
+       This is the method that does the serialization.
+    */
+    public static final void doSerialization(ClassLoader cl,
+					     Hashtable sessions)
+    {
+	// get the hashtable of sessions
+	try {
+	    // writes the session data out, but loses the contexts
+	    // because they cannot be serialized
+	    ByteArrayOutputStream b = new ByteArrayOutputStream();
+	    ObjectOutputStream o = new ObjectOutputStream(b);
+	    
+	    // write out the hashtable to the OOS
+	    o.writeObject(sessions);
+	    o.flush();
+	    
+	    // create the streams to read the sessions back in from.
+	    byte data[]=b.toByteArray();
+	    ByteArrayInputStream bIn = new ByteArrayInputStream (data);
+	    ObjectInputStream oOut= new ACLObjectInputStream(cl, bIn);
 			
-			// write out the hashtable to the OOS
-			o.writeObject(sessions);
-			o.flush();
-			
-			// create the streams to read the sessions back in from.
-			ByteArrayInputStream bIn = new ByteArrayInputStream (b.toByteArray());
-			ObjectInputStream oOut= new ACLObjectInputStream(cl, bIn);
-			
-			// unserialize the sessions
-			sessions = (Hashtable) oOut.readObject();
+	    // unserialize the sessions
+	    sessions = (Hashtable) oOut.readObject();
 
-                        // put the new sessions into the manager
-                        sessionM.setSessions(sessions);
-                        
-                        if (req.getSession(false) != null)
-                        {
-                            // replace the current session in the current request
-                            HttpSession newSession = 
-                                (HttpSession)sessions.get(req.getRequestedSessionId());
-                            req.setSession(newSession);
-                        }
-			
-		} catch (Exception e) {
-		    // log the error. there shouldn't be one here though.
-		    // XXX We should call Logger.log - this is a problem, but
-		    // it's better to have a bug ( writing to out instead of log)
-		    // than adding dependencies to context.
-		    System.out.println( "SessionSerializer: " + e );
-		}
+	    return sessions;
+	} catch (Exception e) {
+	    // log the error. there shouldn't be one here though.
+	    // XXX We should call Logger.log - this is a problem, but
+	    // it's better to have a bug ( writing to out instead of log)
+	    // than adding dependencies to context.
+	    System.out.println( "SessionSerializer: " + e );
 	}
+    }
 	
     /**
      * When deserializing the sessions during a class
@@ -135,13 +124,17 @@ public final class SessionSerializer
     private static final class ACLObjectInputStream extends ObjectInputStream {
 	ClassLoader loader;
 	
-        ACLObjectInputStream(ClassLoader loader, InputStream bIn) throws IOException {
+        ACLObjectInputStream(ClassLoader loader, InputStream bIn)
+	    throws IOException
+	{
             super(bIn);
 	    this.loader=loader;
         }
-        protected Class resolveClass(ObjectStreamClass v)
-            throws IOException, ClassNotFoundException {
-			// use our new loader instead of the system loader
+
+	protected Class resolveClass(ObjectStreamClass v)
+            throws IOException, ClassNotFoundException
+	{
+	    // use our new loader instead of the system loader
             return loader.loadClass(v.getName());
         }
     }

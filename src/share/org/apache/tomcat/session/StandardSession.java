@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.16 2000/08/11 21:20:42 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/08/11 21:20:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.17 2000/09/24 17:42:27 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/09/24 17:42:27 $
  *
  * ====================================================================
  *
@@ -97,7 +97,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.16 $ $Date: 2000/08/11 21:20:42 $
+ * @version $Revision: 1.17 $ $Date: 2000/09/24 17:42:27 $
  */
 
 final class StandardSession
@@ -826,31 +826,3 @@ final class StandardSession
 	}
 }
 
-/**
- * 
- * @author duncan@eng.sun.com
- */
-
- class SessionContextImpl implements HttpSessionContext {
-
-    /**
-     *
-     * @deprecated
-     */
-    
-    public HttpSession getSession(String sessionId) {
-        return null;
-    }
-
-    /**
-     *
-     * @deprecated
-     */
-
-    public Enumeration getIds() {
-        // cheap hack to get an empty enum
-        Vector v = new Vector();
-
-        return v.elements();
-    }
-}
