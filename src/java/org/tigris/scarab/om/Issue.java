@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.246 2002/12/20 21:37:46 elicia Exp $
+ * @version $Id: Issue.java,v 1.247 2002/12/21 00:18:00 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -505,12 +505,8 @@ public class Issue
                                   Attachment attachment, ScarabUser user)
         throws Exception
     {
-        attachment.setIssue(this);
-        attachment.setTypeId(Attachment.COMMENT__PK);
-        attachment.setName("comment");
-        attachment.setCreatedBy(user.getUserId());
-        attachment.setMimeType("text/plain");
-        attachment.save();
+        AttachmentManager.populate(attachment, this, Attachment.COMMENT__PK, 
+                            "comment", user, "text/plain");
 
         if (activitySet == null)
         {
@@ -3154,12 +3150,9 @@ public class Issue
         this.save();
 
         // this needs to be done after the issue is created.
-        attachment.setIssue(this);
-        attachment.setTypeId(Attachment.MODIFICATION__PK);
-        attachment.setName("reason");
-        attachment.setCreatedBy(user.getUserId());
-        attachment.setMimeType("text/plain");
-        attachment.save();
+        AttachmentManager.populate(attachment, this, 
+                                   Attachment.MODIFICATION__PK,
+                                   "reason", user, "text/plain");
         activitySet.setAttachment(attachment);
         activitySet.save();
         // need to clear the cache since this is after the 
