@@ -1,4 +1,4 @@
-// $Id: UMLReflectionBooleanProperty.java,v 1.8 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLReflectionBooleanProperty.java,v 1.9 2003/09/11 17:51:49 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,16 +93,16 @@ public class UMLReflectionBooleanProperty extends UMLBooleanProperty {
                     else {
                         _setMethod.invoke(element, _falseArg);
                     }
+                    
+                    // Having set a property, mark as needing saving
+
+                    Project p = ProjectManager.getManager().getCurrentProject();
+                    p.setNeedsSave(true);
                 }
             }
             catch (Exception e) {
                 cat.error(e.toString() + " in UMLReflectionBooleanProperty.setMethod()", e);
             }
-
-            // Having set a property, mark as needing saving
-
-            Project p = ProjectManager.getManager().getCurrentProject();
-            p.setNeedsSave(true);
         }
     }
     
