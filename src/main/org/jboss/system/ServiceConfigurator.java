@@ -42,12 +42,19 @@ import org.jboss.util.DOMWriter;
 *
 *
 * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>`
-* @version $Revision: 1.1 $
+* @author  <a href="mailto:hiram@jboss.org">Hiram Chirino</a>`
+* @version $Revision: 1.2 $
 *
 *   <p><b>20010830 marc fleury:</b>
 *   <ul>
 *      initial import
 *   <li> 
+*   </ul>
+*   <p><b>20010831 hiram chirino:</b>
+*   <ul>
+*   <li> Added suppport for org.w3c.dom.Element type mbean attributes.
+*        The first child Element of the &lt;attribute ...&gt; is used 
+*        to set the value of the attribute.
 *   </ul>
 */
 
@@ -184,10 +191,29 @@ public class ServiceConfigurator
 						} else {
 							typeClass = Class.forName(typeName);
 						}
-						PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
-						editor.setAsText(attributeValue);
-						Object value = editor.getValue();
 						
+						Object value = null;
+						
+						// HRC: Is the attribute type a org.w3c.dom.Element??
+						if( typeClass.equals(Element.class) ) {							
+							// Then we can pass the first child Element of this 
+							// attributeElement
+							NodeList nl = attributeElement.getChildNodes();
+							for(int i=0; i < nl.getLength(); i++) {
+								org.w3c.dom.Node n = nl.item(i);
+								if( n.getNodeType() == n.ELEMENT_NODE ) {
+									value = (Element)n;
+									break;
+								}
+							}
+						}
+						
+						if( value == null ) {
+							PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
+							editor.setAsText(attributeValue);
+							value = editor.getValue();
+						}
+							
 						log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
 						server.setAttribute(objectName, new Attribute(attributeName, value));
 						
@@ -291,6 +317,3 @@ public class ServiceConfigurator
 		return false;
 	}
 }
-
-
-
