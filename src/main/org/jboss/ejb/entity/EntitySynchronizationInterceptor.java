@@ -46,7 +46,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
@@ -57,158 +57,52 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
             (EntityEnterpriseContext)invocation.getEnterpriseContext();
       Transaction tx = invocation.getTransaction();
 
-      if(log.isTraceEnabled())
+      // mark the context as read only if this is a readonly method and the context 
+      // was not already readonly
+      boolean didSetReadOnly = false;
+      if(!ctx.isReadOnly() &&
+            (container.isReadOnly() || 
+             container.getBeanMetaData().isMethodReadOnly(invocation.getMethod()) ))
       {
-         log.trace("invoke called for ctx "+ctx+", tx="+tx);
+         ctx.setReadOnly(true);
+         didSetReadOnly = true;
       }
 
-      // If this is not a life cycle invocation (create, remove, load, store,
-      // activate, passivate) and the state is invalid, validate it.
-      if(!ctx.isValid() && !invocation.getType().isHome())
+      // if we have an id we need to register the invocation
+      Object id = ctx.getId();
+      if(id != null)
       {
-         try
-         {
-            // Not valid... tell the persistence manager to load the state
-            container.getPersistenceManager().loadEntity(ctx);
-         }
-         catch(Exception ex)
-         {
-            // readonly does not synchronize, lock or belong with transaction.
-            if(!container.isReadOnly()) 
-            {
-               Method method = invocation.getMethod();
-               if(method == null ||
-                     !container.getBeanMetaData().isMethodReadOnly(
-                        method.getName()))
-               {
-                  clearContextTx(
-                        "loadEntity Exception", 
-                        ctx, 
-                        tx);
-               }
-            }
-            throw ex;
-         }
-         // Now the state is valid
-         ctx.setValid(true);
+         EntityContainer.getEntityInvocationRegistry().beginInvocation(ctx, tx);
       }
 
-      // Invocation with a running Transaction
-      if(tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
-      {
-         // register for transaction callbacks if this is a post create life
-         // cycle event or if this is a read-write invocation.
-         if(invocation.getId() != null && !container.isReadOnly()) 
-         {
-            Method method = invocation.getMethod();
-            if(method == null ||
-                  !container.getBeanMetaData().isMethodReadOnly(method.getName()))
-            {
-               // register the wrapper with the transaction monitor (but only 
-               // register once). The transaction demarcation will trigger the 
-               // storage operations
-               register(ctx, tx);
-            }
-         }
-
-         // Invoke down the chain
-         return getNext().invoke(invocation);  
-      }
-      else
-      { 
-         // No transaction
-         try
-         {
-            InvocationResponse returnValue = getNext().invoke(invocation);
-
-            // Store after each invocation -- not on exception though, or 
-            // removal and skip reads too ("get" methods)
-            if(ctx.getId() != null && 
-               !container.isReadOnly())
-            {
-               container.storeEntity(ctx);
-            }
-            // Dain: shouldn't we apply the commit options here?
-            return returnValue;
-         }
-         catch(Exception e)
-         {
-            // Exception - force reload on next call
-            ctx.setValid(false);
-            throw e;
-         }
-      }
-   }
-
-   /**
-    *  Register a transaction synchronization callback with a context.
-    */
-   private void register(EntityEnterpriseContext ctx, Transaction tx)
-   {
-      if(log.isTraceEnabled())
-      {
-         log.trace("register, ctx="+ctx+", tx="+tx);
-      }
-
+      // invoke the next but remember if an exception is thrown
+      boolean exceptionThrown = false;
       try
       {
-         // associate the entity bean with the transaction so that
-         // we can do things like synchronizeEntitiesWithinTransaction
-         // do this after registerSynchronization, just in case there was 
-         // an exception
-         EntityContainer.getEntityInvocationRegistry().associate(ctx, tx);
-         ctx.hasTxSynchronization(true);
+         return getNext().invoke(invocation);  
       }
-      catch (Exception e)
+      catch(Exception e)
       {
-         // Something is seriously hosed. The state in the instance is to be discarded, 
-         // we force a reload of state
-         synchronized (ctx)
-         {
-            ctx.setValid(false);
-         }
-
-         // If anything goes wrong with the association remove the 
-         // ctx-tx association
-//         clearContextTx("Exception", ctx, tx);
-
-         if(e instanceof EJBException)
-         {
-            throw (EJBException)e;
-         }
-         throw new EJBException(e);
+         exceptionThrown = true;
+         ctx.setValid(false);
+         throw e;
       }
-   }
-
-   private void clearContextTx(
-         String msg, 
-         EntityEnterpriseContext ctx, 
-         Transaction tx)
-   {
-      BeanLock lock = getContainer().getLockManager().getLock(ctx.getId());
-      try 
+      finally
       {
-         lock.sync();
-         try
+         // if we registed we need to tell the registry 
+         // that the invocation is done
+         if(id != null)
          {
-            if(log.isTraceEnabled())
-            {
-               log.trace(msg + ", clear tx for ctx=" + ctx + ", tx=" + tx);
-            }
+            // we need to pass the original id into end Invocation because of the
+            // lame policy of setting id to null when removing an entity
+            EntityContainer.getEntityInvocationRegistry().endInvocation(exceptionThrown, id, ctx, tx);
+         }
 
-            // The context is no longer synchronized on the TX
-            ctx.hasTxSynchronization(false);
-            ctx.setTransaction(null);
-            lock.wontSynchronize(tx);
-         }
-         finally
+         // if we marked the context as read only we need to reset it
+         if(didSetReadOnly)
          {
-            lock.releaseSync();
+            ctx.setReadOnly(false);
          }
-      }
-      catch(InterruptedException e) 
-      {
-         log.error("Thread interrupted while clearing transaction context", e);
       }
    }
 }
