@@ -15,6 +15,10 @@
 	<pathelement 
 		path="../lib/ant.jar" />
 	<pathelement 
+		path="../lib/moo.jar" />
+	<pathelement 
+		path="../lib/client.jar" />
+	<pathelement 
 		path="../../../../lib/jaxp.jar" />
 	<pathelement 
 		path="../../../../lib/parser.jar" />
