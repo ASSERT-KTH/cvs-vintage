@@ -39,7 +39,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  *
  *   Revisions:
  *
@@ -451,7 +451,7 @@ public class WebServer
    {
       InputStream in = new BufferedInputStream(url.openStream());
       if (log.isDebugEnabled())
-         log.debug("Retrieving "+url.toString());
+         log.debug("Retrieving " + url);
       ByteArrayOutputStream out = new ByteArrayOutputStream();
       byte[] tmp = new byte[1024];
       int bytes;
@@ -459,6 +459,7 @@ public class WebServer
       {
          out.write(tmp, 0, bytes);
       }
+      in.close();
       return out.toByteArray();
    }
 
