@@ -1020,7 +1020,7 @@ e.printStackTrace();
         {
             String key = data.getParameters()
                 .getString("issuetypeid");
-            if (key == null) 
+            if (key == null)
             {
                 // get new issue type
                 issueType = new IssueType();
@@ -1034,7 +1034,7 @@ e.printStackTrace();
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    issueType = new IssueType();
                 }
             }
         }

@@ -9,6 +9,7 @@
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
    <input type="hidden" name="groupId" value="$groupId" />
+   <input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
 
    #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />

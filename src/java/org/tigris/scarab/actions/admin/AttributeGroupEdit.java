@@ -84,7 +84,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.50 2003/06/16 04:41:22 irk_tpt Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.51 2003/06/25 07:02:51 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -249,7 +249,14 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
         List attributes = ag.getAttributes();
-        IssueType issueType = scarabR.getIssueType();
+        IssueType issueType = null;
+        issueType = scarabR.getIssueType();
+        if (issueType.getIssueTypeId() == null)
+        {
+            scarabR.setAlertMessage(l10n.get("IssueTypeNotFound"));
+            return false;
+        }
+
         String msg = DEFAULT_MSG;
 
         if (intake.isAllValid())
