@@ -12,30 +12,29 @@
 
 <div class="functnbar">
 #if (!$issueTypes || !$issueTypes.isEmpty())
-  <input type="submit" value="Add issue type" name="eventSubmit_doSelectissueType" />&#160;
+  <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissueType" />&#160;
 #end
 #if ($canEditDomain)
-  <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
+  <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreateartifacttype" />&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
 #if ($issueTypes.isEmpty())
 
 <h3>Issue types</h3>
 
-<p class="alert">There are no more issue types to add to
-this module.</p>
+<p class="alert">$l10n.NoIssueTypes</p>
 
 #else
         
-<h3>Issue Types</h3>
+<h3>$l10n.IssueTypes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="70">Select</th>
-<th>Name</th>
-<th>Description</th>
+<th width="70">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Description</th>
 </tr>
         
 #foreach($issueType in $issueTypes)
@@ -53,12 +52,12 @@ this module.</p>
 
 <div class="functnbar2">
 #if (!$issueTypes.isEmpty())
-      <input type="submit" value="Add issue type" name="eventSubmit_doSelectissueType" />&#160;
+      <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectissueType" />&#160;
 #end
 #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
+      <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreateartifacttype" />&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
 </div>
 
 </form>
