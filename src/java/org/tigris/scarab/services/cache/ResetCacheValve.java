@@ -87,7 +87,6 @@ public class ResetCacheValve
                 data.getTarget() + " took: " + 
                 (System.currentTimeMillis() - start.longValue()) + " ms";
             log.debug(s);
-            System.out.println(s);
         }
         
 
