@@ -138,9 +138,9 @@ public class ContextManager {
 
     public void init()  throws TomcatException {
 
+	(new AutoSetup()).handleContextManagerInit(this);
 	// Initialize and check Context Manager 
 	(new DefaultCMSetter()).handleContextManagerInit(this);
-	(new AutoSetup()).handleContextManagerInit(this);
 	
     	// init contexts
 	Enumeration enum = getContextNames();
