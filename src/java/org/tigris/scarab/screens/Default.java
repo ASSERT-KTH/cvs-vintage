@@ -75,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.52 2002/06/04 01:11:49 jon Exp $
+ * @version $Id: Default.java,v 1.53 2002/06/05 22:20:14 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -98,10 +98,6 @@ public class Default extends TemplateSecureScreen
         catch (Exception ignore)
         {
         }
-        if (module != null && module.isInitializing()) 
-        {
-            data.setTarget("ModuleNotReady.vm");
-        }        
 
         // add the title text to the context.
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
