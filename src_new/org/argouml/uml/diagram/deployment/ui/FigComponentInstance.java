@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.29 2004/08/04 20:52:48 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.30 2004/10/12 07:31:45 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComponentInstance.java
 // Classes: FigComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponentInstance.java,v 1.29 2004/08/04 20:52:48 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.30 2004/10/12 07:31:45 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -404,7 +404,7 @@ public class FigComponentInstance extends FigNodeModelElement {
             }
         }
         if (isReadyToEdit()) {
-            if (nameStr == "" && baseStr == "")
+            if ((nameStr.length() == 0) && (baseStr.length() == 0))
                 getNameFig().setText("");
             else
                 getNameFig().setText(nameStr.trim() + " : " + baseStr);
