@@ -111,8 +111,9 @@ public class MailFrameView extends AbstractFrameView {
 
 		ViewItem viewItem = getFrameController().getViewItem();
 
-		if (viewItem.getBoolean("toolbars", "show_filter") == true)
-			tablePanel.add(filterToolbar, BorderLayout.NORTH);
+		
+		//if (viewItem.getBoolean("toolbars", "filter", true) == true)
+		tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
 		JScrollPane tableScrollPane = new JScrollPane(table);
 
