@@ -1,0 +1,58 @@
+<!-- $Id: HOWTO-release.html,v 1.1 2003/05/08 22:43:19 jon Exp $ -->
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Scarab: HOWTO Release</title>
+</head>
+<body bgcolor="#F0F0F0">
+
+<p>
+This documents the process for doing a release of Scarab.
+</p>
+
+<pre>
+#1. Check out a fresh copy of Scarab.
+
+    cvs co scarab
+
+#2. Edit scarab/build/default.properties and change the 
+    version number from the -dev to the final version number for the
+    release and check this file back into CVS.
+
+#3. Update the scarab/www/index.html file to announce the new release
+    as well as update the scarab/www/changelog.html file. 
+    Check both these files back into CVS.
+
+#4. Tag cvs with the release tag. Mail the dev@scarab mailing list to
+    let people know that they should hold off on commits until the message
+    comes through that you are done with the tag/release process.
+    Change the version number in the example below to the version of the 
+    current release.
+
+    cd scarab
+    cvs tag SCARAB_1_0_B15
+
+#5. Build a release. This will create a .tar.gz and a .zip file in
+    the scarab directory.
+
+    cd scarab/build
+    ant package
+
+#6. Edit scarab/build/default.properties and change the 
+    version number from the final version number  to the -dev
+    version and check this file back into CVS.
+
+#7. Log into the Scarab website with your account. Go to the
+    Downloads area (http://scarab.tigris.org/servlets/ProjectDocumentList)
+    and move the existing released files into the "Old releases" folder.
+
+#8. Upload the new releases into the "Top" folder.
+
+#9. Announce to the user@scarab,dev@scarab,announce@scarab mailing lists
+    that there is a new release available.
+
+#10. Post a new release on the freshmeat.net Scarab entry.
+</pre>
+</body>
+</html>
