@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.83 2003/05/14 16:49:10 slaboure Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.84 2003/05/14 23:16:16 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -20,6 +20,9 @@
 
   <mbean code="org.jboss.aop.deployment.AspectManagerService"
 	 name="jboss.aop:service=AspectManager">
+     <attribute name="MethodFilter">ALL</attribute>
+     <attribute name="FieldFilter">ALL</attribute>
+     <attribute name="ConstructorFilter">ALL</attribute>
   </mbean>
  
   <mbean code="org.jboss.aop.deployment.AspectDeployer"
