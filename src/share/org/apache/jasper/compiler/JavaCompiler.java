@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JavaCompiler.java,v 1.2 2000/01/21 04:17:21 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/21 04:17:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JavaCompiler.java,v 1.3 2001/01/14 20:45:40 larryi Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/01/14 20:45:40 $
  *
  * ====================================================================
  * 
@@ -96,6 +96,11 @@ public interface JavaCompiler {
      * Set where you want the compiler output (messages) to go 
      */ 
     void setMsgOutput(OutputStream out);
+
+    /**
+     * Set if you want debugging information in the class file 
+     */ 
+    void setClassDebugInfo(boolean classDebugInfo);
 
     /**
      * Execute the compiler

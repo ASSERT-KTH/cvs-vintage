@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.13 2001/01/14 20:45:40 larryi Exp $
+ * $Revision: 1.13 $
+ * $Date: 2001/01/14 20:45:40 $
+ *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -90,6 +94,11 @@ public interface Options {
      */
     public boolean getSendErrorToClient();
  
+    /**
+     * Should we include debug information in compiled class?
+     */
+    public boolean getClassDebugInfo();
+
     /**
      * Class ID for use in the plugin tag when the browser is IE. 
      */

@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.22 2001/01/14 20:45:40 larryi Exp $
+ * $Revision: 1.22 $
+ * $Date: 2001/01/14 20:45:40 $
+ *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -261,6 +265,7 @@ public class Compiler {
                             classpath + sep + ctxt.getOutputDir());
         javac.setOutputDir(ctxt.getOutputDir());
         javac.setMsgOutput(out);
+        javac.setClassDebugInfo(ctxt.getOptions().getClassDebugInfo());
 
         /**
          * Execute the compiler

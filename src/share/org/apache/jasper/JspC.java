@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.19 2001/01/14 20:45:40 larryi Exp $
+ * $Revision: 1.19 $
+ * $Date: 2001/01/14 20:45:40 $
+ *
  * ====================================================================
  * 
  * The Apache Software License, Version 1.1
@@ -169,6 +173,11 @@ public class JspC implements Options { //, JspCompilationContext {
         return true;
     }
  
+    public boolean getClassDebugInfo() {
+        // compile with debug info
+        return false;
+    }
+
     public String getIeClassId() {
         return ieClassId;
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SunJavaCompiler.java,v 1.2 2000/01/21 04:17:22 rubys Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/21 04:17:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/SunJavaCompiler.java,v 1.3 2001/01/14 20:45:40 larryi Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/01/14 20:45:40 $
  *
  * ====================================================================
  * 
@@ -80,6 +80,7 @@ public class SunJavaCompiler implements JavaCompiler {
     String compilerPath;
     String outdir;
     OutputStream out;
+    boolean classDebugInfo=false;
 
     /**
      * Specify where the compiler can be found
@@ -124,16 +125,35 @@ public class SunJavaCompiler implements JavaCompiler {
         this.out = out;
     }
     
+    /**
+     * Set if you want debugging information in the class file 
+     */ 
+    public void setClassDebugInfo(boolean classDebugInfo) {
+        this.classDebugInfo = classDebugInfo;
+    }
+
     public boolean compile(String source) {
         Main compiler = new Main(out, "jsp->javac");
+        String[] args;
 
-        String[] args = new String[]
-        {
-            "-encoding", encoding,
-            "-classpath", classpath,
-            "-d", outdir,
-            source
-        };
+        if (classDebugInfo) {
+            args = new String[]
+            {
+                "-g",
+                "-encoding", encoding,
+                "-classpath", classpath,
+                "-d", outdir,
+                source
+            };
+	} else {
+            args = new String[]
+            {
+                "-encoding", encoding,
+                "-classpath", classpath,
+                "-d", outdir,
+                source
+            };
+        }
 
         return compiler.compile(args);
     }
