@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.69 2003/04/16 23:56:22 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.70 2003/04/21 03:21:36 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -751,7 +751,7 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		final boolean loadingRoot, final String path,
 		final VFS.DirectoryEntry[] list)
 	{
-		SwingUtilities.invokeLater(new Runnable()
+		VFSManager.runInAWTThread(new Runnable()
 		{
 			public void run()
 			{

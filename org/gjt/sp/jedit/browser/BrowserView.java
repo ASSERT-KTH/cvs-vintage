@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.60 2003/04/16 23:56:22 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.61 2003/04/21 03:21:36 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -834,7 +834,9 @@ class BrowserView extends JPanel
 		//{{{ doTypeSelect() method
 		void doTypeSelect(String str, boolean ignoreCase)
 		{
-			if(getSelectionCount() == 0)
+			if(str.length() == 0)
+				setSelectionPaths(new TreePath[0]);
+			else if(getSelectionCount() == 0)
 				doTypeSelect(str,0,getRowCount(),ignoreCase);
 			else
 			{
