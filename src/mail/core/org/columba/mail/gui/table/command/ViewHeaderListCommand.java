@@ -54,7 +54,7 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 	public void updateGUI() throws Exception {
 
 		
-		((HeaderTableSelectionHandler)frameController.getSelectionManager().getHandler("mail.headertable")).setFolder(folder);
+		((HeaderTableSelectionHandler)frameController.getSelectionManager().getHandler("mail.table")).setFolder(folder);
 		((MailFrameController) frameController)
 			.tableController
 			.getHeaderTableModel()

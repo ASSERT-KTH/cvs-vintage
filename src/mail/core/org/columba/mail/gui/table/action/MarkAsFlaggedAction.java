@@ -14,6 +14,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -34,8 +37,7 @@ public class MarkAsFlaggedAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MarkAsFlaggedAction(
-		FrameController frameController) {
+	public MarkAsFlaggedAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -96,8 +98,13 @@ public class MarkAsFlaggedAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.table");	
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_FLAGGED);
+
+		MarkMessageCommand c = new MarkMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
 	}
 
 }

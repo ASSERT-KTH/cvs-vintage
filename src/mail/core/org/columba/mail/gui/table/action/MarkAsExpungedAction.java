@@ -8,12 +8,12 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -34,47 +34,7 @@ public class MarkAsExpungedAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MarkAsExpungedAction(
-		FrameController frameController) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasexpunged"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasexpunged_tooltip"),
-			"MARK_AS_EXPUNGED",
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
-			ImageLoader.getImageIcon("stock_delete-16.png"),
-			'E',
-			null);
-
-	}
-
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public MarkAsExpungedAction(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
+	public MarkAsExpungedAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -97,8 +57,15 @@ public class MarkAsExpungedAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController()
+				.getSelectionManager()
+				.getSelection("mail.table");
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+
+		MarkMessageCommand c = new MarkMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
 	}
 
 }

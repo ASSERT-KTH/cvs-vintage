@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JMenu;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.BasicAction;
@@ -618,7 +617,7 @@ public class HeaderTableActionListener
 				'0',
 				null);
 
-		viewThreadedAction.addActionListener(this);
+		//viewThreadedAction.addActionListener(this);
 		markAsReadAction.addActionListener(this);
 		markAsReadAction.setEnabled(false);
 		markAsFlaggedAction.addActionListener(this);
@@ -1347,6 +1346,7 @@ public class HeaderTableActionListener
 			}
 		
 		}*/
+		/*
 		else if (command.equals(viewThreadedAction.getActionCommand())) {
 
 			JMenu viewMenu =
@@ -1354,7 +1354,7 @@ public class HeaderTableActionListener
 					"VIEW");
 
 			boolean isEnabled = false; // = viewThreadedAction.is
-
+*/
 			/*
 			boolean isEnabled =
 				tableController
@@ -1384,7 +1384,8 @@ public class HeaderTableActionListener
 			*/
 
 			//headerTableView.getHeaderTableModel().setFolder( headerTableView.getFolder() );
-		} else if (
+		//} 
+		else if (
 			command.equals(openMessageWithComposerAction.getActionCommand())) {
 			Object[] uids = getUids();
 			Folder folder = getFolder();

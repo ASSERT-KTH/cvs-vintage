@@ -31,7 +31,7 @@ public class ViewMessageAction extends InternAction implements SelectionListener
 	 */
 	public ViewMessageAction(FrameController controller)  {
 		super(controller);
-		controller.getSelectionManager().registerSelectionListener("mail.headertable", this);
+		controller.getSelectionManager().registerSelectionListener("mail.table", this);
 	}
 
 	/* (non-Javadoc)

@@ -23,6 +23,9 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ViewMessageSourceAction extends FrameAction {
@@ -44,6 +47,21 @@ public class ViewMessageSourceAction extends FrameAction {
 			null,
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController()
+				.getSelectionManager()
+				.getSelection("mail.table");
+
+		ViewMessageSourceCommand c =
+			new ViewMessageSourceCommand(getFrameController(), r);
+
+		MainInterface.processor.addOp(c);
 	}
 
 }

@@ -36,6 +36,7 @@
 		<menuitem action="Reply" />
 		<menuitem action="ReplyToAll" />
 		<menuitem action="ReplyToList" />
+		<menuitem action="ReplyAsAttachment"/>
 		<menuitem action="Forward" />
 		<menuitem action="ForwardInline" />
 		<menuitem action="Bounce" />
@@ -55,12 +56,12 @@
 	</menu>
 	
 	<menu name="menu_utilities">
-	 <menu name="menu_message_filter">
+	 <menu name="menu_message_filteronmessage">
 	  <menuitem action="CreateFilterOnSubject"/>
 	  <menuitem action="CreateFilterOnFrom"/>
 	  <menuitem action="CreateFilterOnTo"/>
 	 </menu>
-	 <menu name="menu_message_vfolder">
+	 <menu name="menu_message_vfolderonmessage">
 	  <menuitem action="CreateVFolderOnSubject"/>
 	  <menuitem action="CreateVFolderOnFrom"/>
 	  <menuitem action="CreateVFolderOnTo"/>

@@ -11,6 +11,10 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.ExpungeFolderCommand;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -33,8 +37,7 @@ public class DeleteMessageAction extends FrameAction {
 	 * @param keyStroke
 	 * @param showToolbarText
 	 */
-	public DeleteMessageAction(
-		FrameController frameController) {
+	public DeleteMessageAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -62,8 +65,17 @@ public class DeleteMessageAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController()
+				.getSelectionManager()
+				.getSelection("mail.table");
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+
+		MarkMessageCommand c = new MarkMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
+
+		MainInterface.processor.addOp(new ExpungeFolderCommand(r));
 	}
 
 }

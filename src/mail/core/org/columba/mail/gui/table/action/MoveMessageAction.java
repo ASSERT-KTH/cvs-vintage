@@ -11,6 +11,11 @@ import java.awt.event.ActionEvent;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.MoveMessageCommand;
+import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -32,8 +37,7 @@ public class MoveMessageAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MoveMessageAction(
-		FrameController frameController) {
+	public MoveMessageAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -54,7 +58,6 @@ public class MoveMessageAction extends FrameAction {
 			'M',
 			null,
 			false);
-			
 
 	}
 
@@ -62,8 +65,28 @@ public class MoveMessageAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		SelectFolderDialog dialog =
+			MainInterface.treeModel.getSelectFolderDialog();
+
+		if (dialog.success()) {
+
+			Folder destFolder = dialog.getSelectedFolder();
+
+			FolderCommandReference[] result = new FolderCommandReference[2];
+			FolderCommandReference[] r1 =
+				(FolderCommandReference[]) getFrameController()
+					.getSelectionManager()
+					.getSelection("mail.table");
+			FolderCommandReference r2 = new FolderCommandReference(destFolder);
+
+			result[0] = r1[0];
+			result[1] = r2;
+			MoveMessageCommand c = new MoveMessageCommand(result);
+
+			MainInterface.processor.addOp(c);
+
+		}
+
 	}
 
 }

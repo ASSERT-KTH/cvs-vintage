@@ -17,6 +17,7 @@
  <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
  <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
  <action name="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
+ <action name="ReplyAsAttachment" class="org.columba.mail.gui.table.action.ReplyAsAttachmentAction"/>
  <action name="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
  <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
  <action name="Bounce" class="org.columba.mail.gui.table.action.BounceAction"/>
@@ -35,7 +36,7 @@
  <action name="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
  <action name="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
  <action name="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
- <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnFromTo"/>
+ <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnToAction"/>
  <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
  <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
 </actionlist>

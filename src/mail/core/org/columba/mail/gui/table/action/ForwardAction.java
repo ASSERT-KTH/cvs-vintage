@@ -14,6 +14,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -58,8 +61,11 @@ public class ForwardAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+				(FolderCommandReference[]) getFrameController()
+					.getSelectionManager()
+					.getSelection("mail.table");
+			MainInterface.processor.addOp(new ForwardCommand(r));
 	}
 
 }

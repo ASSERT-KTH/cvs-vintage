@@ -42,7 +42,7 @@ public class HeaderTableSelectionHandler extends SelectionHandler implements Tre
 	 * @param id
 	 */
 	public HeaderTableSelectionHandler(TableView view) {
-		super("mail.headertable");
+		super("mail.table");
 		this.view = view;
 		view.addTreeSelectionListener(this);
 		

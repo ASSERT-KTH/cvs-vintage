@@ -484,7 +484,7 @@ public class TableController
 		}
 
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) mailFrameController.getSelectionManager().getSelection("mail.headertable");				
+			(FolderCommandReference[]) mailFrameController.getSelectionManager().getSelection("mail.table");				
 		Folder srcFolder = (Folder) r[0].getFolder();
 
 		if (!folder.equals(srcFolder))

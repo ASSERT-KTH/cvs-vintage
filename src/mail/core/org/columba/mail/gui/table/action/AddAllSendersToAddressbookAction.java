@@ -10,6 +10,9 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.AddAllSendersToAddressbookCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -18,7 +21,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class AddAllSendersToAddressbook extends FrameAction {
+public class AddAllSendersToAddressbookAction extends FrameAction {
 
 	/**
 	 * @param frameController
@@ -30,7 +33,7 @@ public class AddAllSendersToAddressbook extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AddAllSendersToAddressbook(FrameController frameController) {
+	public AddAllSendersToAddressbookAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -53,8 +56,13 @@ public class AddAllSendersToAddressbook extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-		super.actionPerformed(evt);
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController()
+				.getSelectionManager()
+				.getSelection("mail.table");
+
+		MainInterface.processor.addOp(
+			new AddAllSendersToAddressbookCommand(getFrameController(), r));
 	}
 
 }

@@ -24,7 +24,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.PrintMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 public class PrintAction extends FrameAction {
@@ -51,12 +53,18 @@ public class PrintAction extends FrameAction {
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 	}
 
-	
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		ColumbaLogger.log.info("not yet implemented");
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController()
+				.getSelectionManager()
+				.getSelection("mail.table");
+
+		PrintMessageCommand c = new PrintMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
 	}
 
 }

@@ -703,7 +703,7 @@ public class FolderTreeDnd
 						(FolderCommandReference[]) treeController
 							.getMailFrameController()
 							.getSelectionManager()
-							.getSelection("mail.headertable");
+							.getSelection("mail.table");
 
 					/*
 					Folder sourceFolder =

@@ -14,6 +14,9 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -22,7 +25,7 @@ import org.columba.mail.util.MailResourceLoader;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MarkAsReadAction extends FrameAction{
+public class MarkAsReadAction extends FrameAction {
 
 	/**
 	 * @param frameController
@@ -34,8 +37,7 @@ public class MarkAsReadAction extends FrameAction{
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MarkAsReadAction(
-		FrameController frameController) {
+	public MarkAsReadAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
@@ -97,8 +99,14 @@ public class MarkAsReadAction extends FrameAction{
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		
-		
+		FolderCommandReference[] r =
+			(FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.table");				
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+
+		MarkMessageCommand c = new MarkMessageCommand(r);
+
+		MainInterface.processor.addOp(c);
+
 	}
 
 }
