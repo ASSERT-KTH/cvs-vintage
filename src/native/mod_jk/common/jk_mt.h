@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Multi thread portability code for JK                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                            *
  ***************************************************************************/
 
 #ifndef _JK_MT_H
@@ -96,13 +96,13 @@
             if(pthread_mutex_init(x, NULL)) rc = JK_FALSE; else rc = JK_TRUE; 
 
         #define JK_DELETE_CS(x, rc)\
-            if(pthread_mutex_lock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+            if(pthread_mutex_destroy(x)) rc = JK_FALSE; else rc = JK_TRUE; 
 
         #define JK_ENTER_CS(x, rc)\
-            if(pthread_mutex_unlock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+            if(pthread_mutex_lock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
 
         #define JK_LEAVE_CS(x, rc)\
-            if(pthread_mutex_destroy(x)) rc = JK_FALSE; else rc = JK_TRUE; 
+            if(pthread_mutex_unlock(x)) rc = JK_FALSE; else rc = JK_TRUE; 
     #endif /* Unix pthreads */
 
 #else /* Not an MT code */
