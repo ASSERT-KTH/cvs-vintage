@@ -10,6 +10,7 @@
  <action name="Receive" class="org.columba.mail.pop3.action.ReceiveMessagesAction"/>
  <action name="ReceiveMenu" class="org.columba.mail.pop3.menu.FetchMessageSubMenu"/>
  <action name="ManageServerMenu" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
+ <action name="SaveMessageSourceAs" class="org.columba.mail.gui.table.action.SaveMessageSourceAsAction"/>
  
  <!-- edit menu -->
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 

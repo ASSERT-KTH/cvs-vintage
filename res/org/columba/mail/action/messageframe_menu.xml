@@ -4,7 +4,8 @@
 	
 	
 	<menu name="menu_file" extensionpoint="top">
-		<menuitem action="SaveMessageBodyAs" />
+		<seperator/>
+		<menuitem action="SaveMessageSourceAs" />
 	</menu>
 	
 	
@@ -28,6 +29,7 @@
 	<menu name="menu_message">
 		<menuitem action="OpenMessageWithComposer" />
 		<menuitem action="OpenMessageWithMessageFrame" />
+		<menuitem action="SaveMessageBodyAs" />
 		<separator />
 		<menuitem action="Reply" />
 		<menuitem action="ReplyToAll" />

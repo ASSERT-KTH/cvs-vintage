@@ -196,8 +196,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 					confirm = JOptionPane.YES_OPTION;
 				}
 
-				if (confirm == JOptionPane.YES_OPTION)
-				{
+				if (confirm == JOptionPane.YES_OPTION) {
 					// store whether all headers should be incl.
 					boolean incl = inclHeaders.isSelected();
 					storeInclAllHeadersOption(incl);
@@ -205,11 +204,13 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
 					// save message
 					if (filter.getExtension().equals(htmlFilter.getExtension())) {
-						saveMsgBodyHtml(bodyPart, f);
+						saveMsgBodyAsHtml(header, bodyPart,
+								attachments, incl, f);
 					} else {
-						saveMsgAsText(header, bodyPart, attachments, incl, f);
+						saveMsgBodyAsText(header, bodyPart,
+								attachments, incl, f);
 					}
-				}				
+				}
 
 			}
 		} // end of for loop over uids to save 
@@ -380,91 +381,6 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	/**
 	 * Method for saving a message body as a html file.
 	 * No headers are saved with the message.
-	 * @param	bodyPart	Body of message
-	 * @param	file		File to output to
-	 */
-	private void saveMsgBodyHtml(MimePart bodyPart, File file) {
-		DocumentParser parser = new DocumentParser();
-
-		// decode message body with respect to charset
-		String decodedBody = getDecodedMessageBody(bodyPart);
-		
-		// determine type of body part
-		String mimesubtype = bodyPart.getHeader().getContentSubtype();
-		boolean ishtml = false;
-		if (mimesubtype.equals("html"))
-			ishtml = true;
-		
-		/*
-		 * if it is not a html message body - we have to fake one
-		 * by encapsulating the message body in html tags
-		 */ 
-		String body;
-		if (!ishtml) {
-			try {
-				// substitute special characters like:  <,>,&,\t,\n		
-				body = parser.substituteSpecialCharacters(decodedBody);
-
-				// parse for urls / email adr. and substite with HTML-code
-				body = parser.substituteURL(body);
-				body = parser.substituteEmailAddress(body);
-
-			} catch (Exception e) {
-				ColumbaLogger.log.error("Error parsing body", e);
-				body = "<em>Error parsing body!!!</em>";
-			}
-
-			/* 
-			 * substituteSpecialCharacters replaces all spaces with
-			 * &nbsp; This results in lines, which are not broken
-			 * nicely in a browser. Therefore revert them back to
-			 * spaces.
-			 * 
-			 * TODO: If substitueSpecialCharacters are changed, remove code below
-			 */  
-			StringBuffer buf = new StringBuffer();
-			int pos = 0;
-			while (pos < body.length()) {
-				char c = body.charAt(pos);
-				if (c == '&') {
-					if (body.substring(pos).startsWith("&nbsp;")) {
-						buf.append(' ');
-						pos = pos + 6;
-					} else {
-						buf.append(c);
-						pos++;
-					}
-				} else {
-					buf.append(c);
-					pos++;
-				}
-			}
-			body = buf.toString();
-
-			// encapsulate bodytext in html-code
-			body = "<html><head>" + nl +
-				"<title>E-mail saved by Columba</title>" + nl +  
-				"</head><body><p>" + nl + 
-				body + nl +
-				"</p></body></html>";
-		} else {
-			// use body as is
-			body = decodedBody;
-		}
-
-		// save message
-		try {
-			DiskIO.saveStringInFile(file, body);
-			ColumbaLogger.log.info("Html msg saved as " + 
-					file.getAbsolutePath());
-		} catch (IOException ioe) {
-			ColumbaLogger.log.error("Error saving message to file", ioe);
-		}
-	}
-
-	/**
-	 * Method for saving a message in a text file.
-	 * No headers are saved with the message.
 	 * @param	header			Message headers
 	 * @param	bodyPart		Body of message
 	 * @param	attachments		List of attachments as MimePart objects
@@ -473,11 +389,161 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 	 * 							false, only a small subset is included
 	 * @param	file			File to output to
 	 */
-	private void saveMsgAsText(ColumbaHeader header, 
-							   MimePart bodyPart,
-							   List attachments, 
-							   boolean inclAllHeaders, 
-							   File file) {
+	private void saveMsgBodyAsHtml(ColumbaHeader header,
+							       MimePart bodyPart, 
+							       List attachments,
+							       boolean inclAllHeaders,
+							       File file) {
+		DocumentParser parser = new DocumentParser();
+
+		// decode message body with respect to charset
+		String decodedBody = getDecodedMessageBody(bodyPart);
+		
+		/*
+		 * if it is not a html message body - we have to fake one
+		 * by encapsulating the message body in html tags
+		 */ 
+		String body;
+		if (!bodyPart.getHeader().getContentSubtype().equals("html")) {
+			try {
+				// substitute special characters like:  <,>,&,\t,\n		
+				body = parser.substituteSpecialCharacters(decodedBody);
+
+				// parse for urls / email adr. and substite with HTML-code
+				body = parser.substituteURL(body);
+				body = parser.substituteEmailAddress(body);
+
+				// mark quotings with special font
+				body = parser.markQuotings(body);
+				
+			} catch (Exception e) {
+				ColumbaLogger.log.error("Error parsing body", e);
+				body = "<em>Error parsing body!!!</em>";
+			}
+
+			// encapsulate bodytext in html-code
+			String css = getDefaultStyleSheet();
+			body = "<html><head>" + nl +
+				css + nl +
+				"<title>E-mail saved by Columba</title>" + nl +  
+				"</head><body><p class=\"bodytext\">" + nl + 
+				body + nl +
+				"</p></body></html>";
+
+		} else {
+			// use body as is
+			body = parser.validateHTMLString(decodedBody); 
+		}
+
+		// headers
+		String[][] headers = getHeadersToSave(header, attachments, 
+											  inclAllHeaders);
+		String msg = insertHtmlHeaderTable(body, headers);
+		
+		// save message
+		try {
+			DiskIO.saveStringInFile(file, msg);
+			ColumbaLogger.log.info("Html msg saved as " + 
+					file.getAbsolutePath());
+		} catch (IOException ioe) {
+			ColumbaLogger.log.error("Error saving message to file", ioe);
+		}
+	}
+
+	/**
+	 * Defines and returns a default stylesheet for use 
+	 * when text messages are saved as html.<br>
+	 * This stylesheet should be the same as the one defined
+	 * in BodyTextViewer for use when displaying text messages.
+	 */
+	private String getDefaultStyleSheet() {
+	
+		// read configuration from options.xml file
+		XmlElement textFont =
+			Config.get("options").getElement("/options/gui/textfont");
+		String name = textFont.getAttribute("name");
+		String size = textFont.getAttribute("size");
+
+		// create css-stylesheet string 
+		String css =
+			"<style type=\"text/css\"><!-- .bodytext {font-family:\""
+				+ name
+				+ "\"; font-size:\""
+				+ size
+				+ "pt; \"}"
+				+ ".quoting {color:#949494;}; --></style>";
+		return css;
+	}
+	
+	/**
+	 * Inserts a table with headers in a html message.
+	 * The table is inserted just after the body tag.
+	 * @param 	body	Original message body
+	 * @param 	headers	Array with headers (keys and values)
+	 * @return	message body with header table inserted
+	 */
+	private String insertHtmlHeaderTable(String body,
+									     String[][] headers) {
+		DocumentParser parser = new DocumentParser();
+
+		// create header table
+		StringBuffer buf = new StringBuffer();
+		String csskey =
+			"border: 1px solid black; font-size: 8pt; font-weight: bold;";
+		String cssval =
+			"border: 1px solid black; font-size: 8pt;";
+		buf.append(
+			"<table style=\"background-color: #dddddd;\" cellspacing=\"0\">");
+		buf.append(nl);
+		for(int i=0; i<headers[0].length; i++) {
+			// process header value
+			String val = headers[1][i];
+			try {
+				val = parser.substituteSpecialCharactersInHeaderfields(val);
+				val = parser.substituteURL(val);
+				val = parser.substituteEmailAddress(val);
+			} catch (Exception e) {
+				ColumbaLogger.log.error("Error parsing header value", e);
+			}
+			buf.append("<tr><td style=\"" + csskey + "\">");
+			buf.append(headers[0][i]);
+			buf.append("</td>");
+			buf.append("<td style=\"" + cssval + "\">");
+			buf.append(val);
+			buf.append("</td></tr>");
+			buf.append(nl);
+		}
+		buf.append("</table>");
+		buf.append("<br>" + nl);
+		String headertbl = buf.toString();
+		
+		// insert into message right after <body...>
+		int pos = body.toLowerCase().indexOf("<body");
+		pos = body.indexOf(">", pos);
+		pos++;
+		String msg = body.substring(0,pos) + 
+					 headertbl + 
+					 body.substring(pos);
+		
+		return msg;
+	}
+	
+	
+	/**
+	 * Method for saving a message in a text file.
+	 * @param	header			Message headers
+	 * @param	bodyPart		Body of message
+	 * @param	attachments		List of attachments as MimePart objects
+	 * @param	inclAllHeaders	If true all (except Content-Type and 
+	 * 							Mime-Version) headers are output. If 
+	 * 							false, only a small subset is included
+	 * @param	file			File to output to
+	 */
+	private void saveMsgBodyAsText(ColumbaHeader header, 
+							       MimePart bodyPart,
+							   	   List attachments, 
+							   	   boolean inclAllHeaders, 
+							   	   File file) {
 		DocumentParser parser = new DocumentParser();
 		
 		// decode message body with respect to charset

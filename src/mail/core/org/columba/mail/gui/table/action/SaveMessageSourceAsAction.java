@@ -1,5 +1,5 @@
 /*
- * Created on 11.03.2003
+ * Created on 15.06.2003
  */
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
@@ -21,7 +21,6 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
-import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -29,84 +28,59 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.command.SaveMessageBodyAsCommand;
+import org.columba.mail.folder.command.SaveMessageSourceAsCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Action for saving message source, i.e. for saving a message
+ * as-is incl. all headers.
+ * @author Karl Peder Olesen (karlpeder), 20030615
  */
-public class SaveMessageBodyAsAction
+public class SaveMessageSourceAsAction
 	extends FrameAction
 	implements SelectionListener {
 
-	/* Parameters for the super constructor used
-	 * 		@param frameController
-	 * 		@param name
-	 * 		@param longDescription
-	 * 		@param actionCommand
-	 * 		@param small_icon
-	 * 		@param big_icon
-	 * 		@param mnemonic
-	 * 		@param keyStroke
-	 */
-	public SaveMessageBodyAsAction(AbstractFrameController frameController) {
+	public SaveMessageSourceAsAction(AbstractFrameController controller) {
 		super(
-			frameController,
+			controller,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_message_save"),
+				"menu_file_save"),
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
-				"menu_message_save_tooltip"),
-			"SAVE",
+				"menu_file_save_tooltip"),
+			"SAVE_SOURCE",
 			ImageLoader.getSmallImageIcon("stock_save_as-16.png"),
 			ImageLoader.getImageIcon("stock_save.png"),
-			'0',
-			null);
-		// *20030614, karlpeder* only enabled when message(s) selected
+			'0', null);
 		setEnabled(false);
 		((AbstractMailFrameController) frameController)
 				.registerTableSelectionListener(this);
 	}
 
 	/**
-	 * Called for activation of the SaveMessageBodyAsAction
+	 * Executes this action - i.e. saves message source
+	 * by invocing the necessary command.
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		/*
-		 * *20030611, karlpeder* Added content to method
-		 * so command is activated
-		 */
-		ColumbaLogger.log.debug("Save Message As... activated");
-
-		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameController()).
-					getTableSelection();
+			((AbstractMailFrameController) getFrameController()).getTableSelection();
 
-		// get active charset - necessary to decode msg for saving
-		String charset = ((CharsetOwnerInterface) getFrameController())
-							.getCharsetManager()
-							.getSelectedCharset();
-
-		// add command for execution
-		SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
+		ColumbaLogger.log.debug("Save Message Source As... called");
+		SaveMessageSourceAsCommand c =
+			new SaveMessageSourceAsCommand(r);
+			
 		MainInterface.processor.addOp(c);
-
 	}
-	
-	
+
 	/**
-	 * Ensures that the action is only enabled when at least 
-	 * one message is selected in the GUI.
+	 * Handles enabling / disabling of menu/action depending
+	 * on selection
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
