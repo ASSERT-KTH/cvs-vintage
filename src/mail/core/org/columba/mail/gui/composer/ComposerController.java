@@ -627,6 +627,7 @@ public class ComposerController extends AbstractFrameController implements
                             JOptionPane.QUESTION_MESSAGE, null, options,
                             options[2]); //default button title
 
+            
             if (n == 2) {
                 // save changes
                 new SaveAsDraftAction(ComposerController.this)
