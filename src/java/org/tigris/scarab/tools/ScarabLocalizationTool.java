@@ -203,6 +203,43 @@ public class ScarabLocalizationTool
      * Formats a localized value using the provided objects.
      *
      * @param key The identifier for the localized text to retrieve,
+     * @param arg1 The object to use as {0} when formatting the localized text.
+     * @param arg2 The object to use as {1} when formatting the localized text.
+     * @param arg3 The object to use as {2} when formatting the localized text.
+     * @return Formatted localized text.
+     * @see #format(String, List)
+     */
+    public String format(String key, Object arg1, Object arg2, Object arg3)
+    {
+        String value = null;
+        Object[] args = new Object[] {arg1, arg2, arg3};
+        try
+        {
+            value =super.format(key, args);
+        }
+        catch (MissingResourceException tryAgain)
+        {
+            String prefix = getPrefix(null);
+            setPrefix(DEFAULT_SCOPE + '.');
+            try
+            {
+                value =super.format(key, args);
+            }
+            catch (MissingResourceException itsNotThere)
+            {
+                value = "ERROR! Missing resource (" + key + ")";
+                Log.get().error(
+                    "ScarabLocalizationTool: ERROR! Missing resource: " + key);
+            }
+            setPrefix(prefix);
+        }
+        return value;
+    }
+
+    /**
+     * Formats a localized value using the provided objects.
+     *
+     * @param key The identifier for the localized text to retrieve,
      * @param args The <code>MessageFormat</code> data used when
      * formatting the localized text.
      * @return Formatted localized text.
