@@ -12,8 +12,8 @@ import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
 import org.jboss.invocation.InvokerInterceptor;
-import org.jboss.invocation.http.interfaces.ClientMethodInterceptor;
 import org.jboss.naming.Util;
+import org.jboss.proxy.ClientMethodInterceptor;
 import org.jboss.proxy.GenericProxyFactory;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * is bound to. 
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JRMPProxyFactory extends ServiceMBeanSupport
    implements JRMPProxyFactoryMBean
