@@ -75,21 +75,23 @@ import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeOptionManager;
 
 
 /**
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.29 2002/05/03 01:32:24 elicia Exp $
+    @version $Id: TemplateList.java,v 1.30 2002/05/07 20:23:22 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
 
     /**
-        Saves template.
+        Creates new template.
     */
-    public void doSave( RunData data, TemplateContext context )
+    public void doCreatenew( RunData data, TemplateContext context )
          throws Exception
     {        
         IntakeTool intake = getIntakeTool(context);        
@@ -121,10 +123,10 @@ public class TemplateList extends RequireLoginFirstAction
             {
                 aval = (AttributeValue)avMap.get(iter.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                if ( group != null ) 
+                if ( group != null )
                 {
-                    group.setProperties(aval);
                     aval.startTransaction(transaction);
+                    group.setProperties(aval);
                 }                
             }
 
@@ -132,6 +134,12 @@ public class TemplateList extends RequireLoginFirstAction
             issue.setTypeId(scarabR.getCurrentIssueType().getTemplateId());
             issue.save();
 
+            // Save template info
+            infoGroup.setProperties(info);
+            info.setIssueId(issue.getIssueId());
+            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
+                new ContextAdapter(context));
+            data.getParameters().add("templateId", issue.getIssueId().toString());
         } 
         else
         {
@@ -139,17 +147,116 @@ public class TemplateList extends RequireLoginFirstAction
         }
     }
 
-    public void doSavetemplateinfo( RunData data, TemplateContext context )
-        throws Exception
-    {
+    /**
+        Edits template's attribute values.
+    */
+    public void doEditvalues( RunData data, TemplateContext context )
+         throws Exception
+    {        
         IntakeTool intake = getIntakeTool(context);        
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = scarabR.getIssueTemplate();
+
+        SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
+        AttributeValue aval = null;
+        Group group = null;
+        Group issueGroup = intake.get("Issue", issue.getQueryKey() );
+        issueGroup.setProperties(issue);
+
+        if (intake.isAllValid() ) 
+        {
+            // Save transaction record
+            Transaction transaction = new Transaction();
+            transaction.create(TransactionTypePeer.CREATE_ISSUE__PK, 
+                               user, null);
+
+            Iterator iter = avMap.iterator();
+            while (iter.hasNext()) 
+            {
+                aval = (AttributeValue)avMap.get(iter.next());
+                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                if ( group != null )
+                {
+                    NumberKey newOptionId = null;
+                    NumberKey oldOptionId = null;
+                    String newValue = "";
+                    String oldValue = "";
+                    if (aval instanceof OptionAttribute) 
+                    {
+                        newValue = group.get("OptionId").toString();
+                        oldValue = aval.getOptionIdAsString();
+                    
+                        if (!newValue.equals(""))
+                        {
+                            newOptionId = new NumberKey(newValue);
+                            AttributeOption newAttributeOption = 
+                              AttributeOptionManager
+                              .getInstance(new NumberKey(newValue));
+                            newValue = newAttributeOption.getName();
+                        }
+                        if (!oldValue.equals(""))
+                        {
+                            oldOptionId = aval.getOptionId();
+                            AttributeOption oldAttributeOption = 
+                              AttributeOptionManager
+                              .getInstance(oldOptionId);
+                            oldValue = oldAttributeOption.getName();
+                        }
+                        
+                    }
+                    else 
+                    {
+                        newValue = group.get("Value").toString();
+                        oldValue = aval.getValue();
+                    }
+
+                    if (!newValue.equals("") && 
+                        (oldValue == null  || !oldValue.equals(newValue)))
+                    {
+                        aval.startTransaction(transaction);
+                        group.setProperties(aval);
+                        aval.save();
+                    }
+                }                
+            }
+        } 
+        else
+        {
+            scarabR.setAlertMessage(ERROR_MESSAGE);
+        }
+    }
+
+
+    /**
+        Edits templates's basic information.
+    */
+    public void doEdittemplateinfo( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        IntakeTool intake = getIntakeTool(context);        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        Issue issue = scarabR.getIssueTemplate();
+
         IssueTemplateInfo info = scarabR.getIssueTemplateInfo();
         Group infoGroup = intake.get("IssueTemplateInfo", info.getQueryKey() );
-        infoGroup.setProperties(info);
-        info.saveAndSendEmail((ScarabUser)data.getUser(), scarabR.getCurrentModule(),
-                              new ContextAdapter(context));
-        //data.getParameters().add("templateId", issue.getIssueId().toString());
+        Field name = infoGroup.get("Name");
+        name.setRequired(true);
+
+        if (intake.isAllValid() ) 
+        {
+            // Save template info
+            infoGroup.setProperties(info);
+            info.setIssueId(issue.getIssueId());
+            info.saveAndSendEmail(user, scarabR.getCurrentModule(),
+                new ContextAdapter(context));
+            data.getParameters().add("templateId", issue.getIssueId().toString());
+        } 
+        else
+        {
+            scarabR.setAlertMessage(ERROR_MESSAGE);
+        }
     }
 
     public void doDeletetemplates( RunData data, TemplateContext context )
@@ -190,5 +297,11 @@ public class TemplateList extends RequireLoginFirstAction
         setTarget(data, template);
     }
     
+    public void doSave(RunData data, TemplateContext context)
+        throws Exception
+    {
+        doEditvalues(data, context);
+        doEdittemplateinfo(data, context);
+    }
 
 }
