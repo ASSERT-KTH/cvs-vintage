@@ -490,13 +490,12 @@ public abstract class AttributeValue
         return aAttribute;
     }
 
-    public RModuleAttribute getRModuleAttribute()
+    public RModuleAttribute getRModuleAttribute(IssueType issueType)
         throws Exception
     {
         ModuleEntity module = ModuleManager
             .getInstance(getIssue().getModuleId());
-        return module.getRModuleAttribute(getAttribute(), 
-                                          getIssue().getIssueType());
+        return module.getRModuleAttribute(getAttribute(), issueType); 
     }
 
     public void setAttribute(Attribute v) throws Exception
