@@ -355,7 +355,7 @@ Descriptive text.
 The query element contains the configuration of a query.
 -->
 <!ELEMENT query (description?, query-method,
-      (jboss-ql | dynamic-ql | declared-sql)?, read-ahead?)>
+      (jboss-ql | dynamic-ql | declared-sql)?, read-ahead?, ql-compiler?)>
 
 
 <!--
@@ -468,6 +468,12 @@ Example: <additional-columns>, join-table1.column1,
             join-table2.column2</additional-columns>
 -->
 <!ELEMENT additional-columns (#PCDATA)>
+
+
+<!--
+Fully qualified name of QL compiler implementation class.
+-->
+<!ELEMENT ql-compiler (#PCDATA)>
 
 
 <!--
