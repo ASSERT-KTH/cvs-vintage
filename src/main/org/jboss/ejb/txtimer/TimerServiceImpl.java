@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.7 2004/04/15 14:28:41 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TxManager;
@@ -202,7 +202,10 @@ public class TimerServiceImpl implements TimerService
     */
    public Collection getAllTimers()
    {
-      return new ArrayList(timers.values());
+      synchronized (timers)
+      {
+         return new ArrayList(timers.values());
+      }
    }
 
    /**
@@ -224,7 +227,10 @@ public class TimerServiceImpl implements TimerService
    {
       TimerImpl timer = (TimerImpl) timers.get(handle);
       if (timer != null)
+      {
+         removeTimer(timer);
          timer.killTimer();
+      }
    }
 
    /**

@@ -6,9 +6,10 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.6 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.7 2004/04/15 14:28:41 tdiesler Exp $
 
 import org.jboss.logging.Logger;
+import org.jboss.ejb.AllowedOperationsAssociation;
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -162,6 +163,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public void cancel() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
       assertTimedOut();
+      assertAllowedOperation("Timer.cancel");
       registerTimerWithTx();
       cancelInTx();
    }
@@ -192,6 +194,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public long getTimeRemaining() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
       assertTimedOut();
+      assertAllowedOperation("Timer.getTimeRemaining");
       return nextExpire - System.currentTimeMillis();
    }
 
@@ -208,6 +211,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public Date getNextTimeout() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
       assertTimedOut();
+      assertAllowedOperation("Timer.getNextTimeout");
       return new Date(nextExpire);
    }
 
@@ -225,6 +229,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public Serializable getInfo() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
       assertTimedOut();
+      assertAllowedOperation("Timer.getInfo");
       return info;
    }
 
@@ -242,6 +247,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public TimerHandle getHandle() throws IllegalStateException, NoSuchObjectLocalException, EJBException
    {
       assertTimedOut();
+      assertAllowedOperation("Timer.getHandle");
       return new TimerHandleImpl(this);
    }
 
@@ -353,8 +359,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       return timerService;
    }
 
-   /**
-    * Throws NoSuchObjectLocalException if the txtimer was canceled or has expired
+   /** Throws NoSuchObjectLocalException if the txtimer was canceled or has expired
     */
    private void assertTimedOut()
    {
@@ -362,6 +367,21 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
          throw new NoSuchObjectLocalException("Timer has expired");
       if (timerState == CANCELED_IN_TX || timerState == CANCELED)
          throw new NoSuchObjectLocalException("Timer was canceled");
+   }
+
+   /** Throws an IllegalStateException if the Timer method call is not allowed in the current context
+    */
+   private void assertAllowedOperation(String timerMethod)
+   {
+      AllowedOperationsAssociation.assertAllowedIn(timerMethod,
+              AllowedOperationsAssociation.IN_BUSINESS_METHOD |
+              AllowedOperationsAssociation.IN_EJB_TIMEOUT |
+              AllowedOperationsAssociation.IN_AFTER_BEGIN |
+              AllowedOperationsAssociation.IN_BEFORE_COMPLETION |
+              AllowedOperationsAssociation.IN_EJB_POST_CREATE |
+              AllowedOperationsAssociation.IN_EJB_REMOVE |
+              AllowedOperationsAssociation.IN_EJB_LOAD |
+              AllowedOperationsAssociation.IN_EJB_STORE);
    }
 
    // Synchronization **************************************************************************************************
