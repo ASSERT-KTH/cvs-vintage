@@ -247,6 +247,9 @@ public class BaseInterceptor
      * 
      *  WebXmlReader needs to be the first interceptor in
      *  the contextInit chain.
+     *
+     *  @exception If the interceptor throws exception the context will 
+     *             not be initialized ( state==NEW or ADDED or DISABLED ).
      */
     public void contextInit(Context ctx)
 	throws TomcatException
@@ -307,6 +310,8 @@ public class BaseInterceptor
     }
 
     /** Called when the ContextManger is started
+     *  @exception TomcatException The server will not start if any exception is thrown by
+     *  engineInit
      */
     public void engineInit(ContextManager cm)
 	throws TomcatException

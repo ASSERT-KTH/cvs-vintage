@@ -101,11 +101,14 @@ public class DependManager {
 	return checkCount;
     }
 
+    private static boolean noWarnBadVM=true;
     public boolean shouldReload() {
 	boolean b=shouldReload1();
-	if( b!=expired)
+	if( b!=expired && noWarnBadVM ) {
 	    log("BUG ( VM or Tomcat? ) shouldReload returns expired=" + b +
 		" and the real value is " + expired);
+	    noWarnBadVM=false;
+	}
 	return expired;
     }
 
@@ -173,7 +176,7 @@ public class DependManager {
 
     // -------------------- Private 
 
-    private static final int debug=10;
+    private static final int debug=0;
     
     void log( String s ) {
 	System.out.println("DependManager: " + s );

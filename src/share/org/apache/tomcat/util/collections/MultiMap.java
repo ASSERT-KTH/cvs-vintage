@@ -232,7 +232,7 @@ public class MultiMap {
 
     public int findNext( int startPos ) {
 	int next= fields[startPos].nextPos;
-	if( next != Field.NEED_NEXT ) {
+	if( next != MultiMap.NEED_NEXT ) {
 	    return next;
 	}
 
@@ -245,9 +245,13 @@ public class MultiMap {
 		return i;
 	    }
 	}
-	fields[startPos].nextPos= Field.LAST;
+	fields[startPos].nextPos= MultiMap.LAST;
         return -1;
     }
+
+    // workaround for JDK1.1.8/solaris
+    static final int NEED_NEXT=-2;
+    static final int LAST=-1;
 
     // -------------------- Internal representation --------------------
     final class Field {
@@ -258,8 +262,6 @@ public class MultiMap {
 	
 	//  multiple fields with same name - a linked list will
 	// speed up multiple name enumerations and search.
-	static final int NEED_NEXT=-2;
-	static final int LAST=-1;
 	int nextPos;
 
 	// hashkey
@@ -267,13 +269,13 @@ public class MultiMap {
 	Field nextSameHash;
 
 	Field() {
-	    nextPos=NEED_NEXT;
+	    nextPos=MultiMap.NEED_NEXT;
 	}
 	
 	void recycle() {
 	    name.recycle();
 	    value.recycle();
-	    nextPos=NEED_NEXT;
+	    nextPos=MultiMap.NEED_NEXT;
 	}
     }
 }

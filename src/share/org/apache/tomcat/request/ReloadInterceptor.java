@@ -125,6 +125,9 @@ public class ReloadInterceptor extends  BaseInterceptor
 
 	if( ! ctx.shouldReload() ) return 0;
 
+	if( debug> 0 )
+	    log( "Detected changes in " + ctx.toString());
+
 	try {
 	    // Reload context.	
 	    ContextManager cm=ctx.getContextManager();

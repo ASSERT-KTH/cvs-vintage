@@ -87,7 +87,21 @@ public final class Parameters extends MultiMap {
 	isSet=false;
 	isFormBased=false;
     }
-
+    // XXX need better name
+    public boolean isEvaluated() {
+	return isSet;
+    }
+    public void setEvaluated( boolean b ) {
+	isSet=b;
+    }
+    // XXX need better name
+    public boolean hasFormData() {
+	return isFormBased;
+    }
+    public void setFormData(boolean b ) {
+	isFormBased=b;
+    }
+    
     // duplicated
     public static int indexOf( byte bytes[], int off, int end, char qq )
     {
