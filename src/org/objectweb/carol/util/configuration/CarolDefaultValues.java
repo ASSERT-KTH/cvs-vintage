@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolDefaultValues.java,v 1.16 2005/03/03 16:06:40 benoitf Exp $
+ * $Id: CarolDefaultValues.java,v 1.17 2005/03/10 09:53:27 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -184,6 +184,9 @@ public class CarolDefaultValues {
     public static String getRMIProtocol(String url) {
         if (url != null) {
             StringTokenizer st = new StringTokenizer(url, "://");
+            if (!st.hasMoreTokens()) {
+                throw new IllegalArgumentException("The given url '" + url + "' is not on the format protocol://<something>.");
+            }
             String pref = st.nextToken().trim();
             return mapping.getProperty(pref, pref);
         } else {
