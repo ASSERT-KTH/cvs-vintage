@@ -71,6 +71,8 @@ public class Attachment
     public static final NumberKey COMMENT__PK = new NumberKey("2");
     public static final NumberKey URL__PK = new NumberKey("3");
     public static final NumberKey MODIFICATION__PK = new NumberKey("4");
+    
+    private FileItem fileItem;
 
     /**
      * Returns the data field converted to a string
@@ -101,7 +103,7 @@ public class Attachment
      */
     public FileItem getFile() 
     {
-        return null;
+        return fileItem;
     }
     
     /**
@@ -110,6 +112,7 @@ public class Attachment
      */
     public void setFile(FileItem  v) 
     {
+        fileItem = v;
         setData(v.get());
         if ( getMimeType() == null ) 
         {
