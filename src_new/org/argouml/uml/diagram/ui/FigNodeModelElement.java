@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.85 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: FigNodeModelElement.java,v 1.86 2003/11/11 18:25:45 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -814,6 +814,11 @@ public abstract class FigNodeModelElement
      */
     protected void updateStereotypeText() {
         Object stereotype = null;
+        if (getOwner() == null) {
+                cat.warn("Owner of [" + this.toString() + "/" + this.getClass() + "] is null.");
+                cat.warn("I return...");
+                return;
+        }
         if (ModelFacade.getStereotypes(getOwner()).size() > 0) {
             stereotype = ModelFacade.getStereotypes(getOwner()).iterator().next();
         }
