@@ -578,6 +578,18 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Build our version of Stratum easily                                -->
+    <!-- ================================================================== -->
+    <target name="build-stratum">
+        <exec executable="ant" dir="${stratum.dir}">
+            <arg line="clean"/>
+        </exec>
+        <exec executable="ant" dir="${stratum.dir}">
+            <arg line="install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Build our version of Flux easily                                   -->
     <!-- ================================================================== -->
     <target name="build-flux">
@@ -681,6 +693,22 @@
     </target>
 
     <!-- ================================================================== -->
+    <!-- Upgrade our version of Stratum easily                              -->
+    <!-- ================================================================== -->
+    <target name="upgrade-stratum" depends="build-stratum">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/stratum*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${stratum.dir}/bin">
+                <include name="**/stratum*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Upgrade our version of Flux easily                                 -->
     <!-- ================================================================== -->
     <target name="upgrade-flux" depends="build-flux">
@@ -752,7 +780,7 @@
             depends="upgrade-commons-collections,
                      upgrade-commons-sandbox-util,
                      upgrade-commons-sandbox-email,
-                     upgrade-torque,upgrade-fulcrum,
+                     upgrade-torque,upgrade-fulcrum,upgrade-stratum,
                      upgrade-turbine,upgrade-flux
                      ">
     </target>
@@ -763,6 +791,8 @@
     <target name="upgrade-jakarta-cvs">
         <echo>${fulcrum.dir}</echo>
         <cvs dest="${fulcrum.dir}" command="update"/>
+        <echo>${stratum.dir}</echo>
+        <cvs dest="${stratum.dir}" command="update"/>
         <echo>${torque.dir}</echo>
         <cvs dest="${torque.dir}" command="update"/>
         <echo>${turbine.dir}</echo>
