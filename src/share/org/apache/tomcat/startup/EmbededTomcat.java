@@ -441,6 +441,10 @@ public class EmbededTomcat {
 					 modules.elementAt( i ) );
 	    }
 	    contextM.init();
+	    Class shfc = containerCL.loadClass(
+		            "org.apache.tomcat.util.net.StreamHandlerFactory");
+       	    URL.setURLStreamHandlerFactory(
+				 (URLStreamHandlerFactory)shfc.newInstance());
 	} catch( Throwable ex ) {
 	    if( ex instanceof InvocationTargetException ) {
 		ex=((InvocationTargetException)ex).getTargetException();
@@ -462,6 +466,16 @@ public class EmbededTomcat {
 	contextM.start();
 	long time4=System.currentTimeMillis();
 	debug("Startup time " + ( time4-time3 ));
+    }
+
+    /** Shutdown contextM - <em>may</em> exit the VM.
+     *  This method is <b>intrinsically dangerous</b>, so use at your own
+     *  risk.  It is very possible that the entire VM will shut down after 
+     *  calling this method. You should only call this method if you need
+     *  to implement <em>advanced</em> functionality.
+     */
+    public void shutdown() throws TomcatException {
+	contextM.shutdown();
     }
 
     /** Stop contextM - will not exit the VM.
