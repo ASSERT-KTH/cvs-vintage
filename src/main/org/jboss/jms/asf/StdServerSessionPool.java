@@ -25,8 +25,13 @@ import javax.jms.ServerSession;
 import javax.jms.ServerSessionPool;
 import javax.jms.MessageListener;
 import javax.jms.TopicConnection;
+import javax.jms.XATopicConnection;
 import javax.jms.QueueConnection;
+import javax.jms.XAQueueConnection;
 import javax.jms.Session;
+import javax.jms.XASession;
+import javax.jms.XAQueueSession;
+import javax.jms.XATopicSession;
 
 import org.jboss.logging.Logger;
 /**
@@ -50,6 +55,11 @@ public class StdServerSessionPool implements ServerSessionPool {
     private ThreadPool threadPool = new ThreadPool();
     private Vector sessionPool = new Vector();
     
+	boolean isTransacted() {
+		return transacted;
+	}
+
+
     /**
      * Minimal constructor, could also have stuff for pool size
      */
@@ -125,15 +135,23 @@ public class StdServerSessionPool implements ServerSessionPool {
 		try {
 		    // Here is the meat, that MUST follow the spec
 		    Session ses = null;
-		    if (con instanceof TopicConnection) {
-			ses = ((TopicConnection)con).createTopicSession(transacted, ack);
+		    XASession xaSes = null;
 
+		    if (con instanceof XATopicConnection) {
+				xaSes = ((XATopicConnection)con).createXATopicSession();
+				ses = ((XATopicSession)xaSes).getTopicSession();
+		    } else if(con instanceof XAQueueConnection) {
+				xaSes = ((XAQueueConnection)con).createXAQueueSession();
+				ses = ((XAQueueSession)xaSes).getQueueSession();
+		    } else if (con instanceof TopicConnection) {
+				ses = ((TopicConnection)con).createTopicSession(transacted, ack);
+				Logger.error("WARNING: Using a non-XA TopicConnection.  It will not be able to participate in a Global UOW");
 		    } else if(con instanceof QueueConnection) {
-			ses = ((QueueConnection)con).createQueueSession(transacted, ack);
-			Logger.debug("Creating a QueueSession" + ses);
+				ses = ((QueueConnection)con).createQueueSession(transacted, ack);
+				Logger.error("WARNING: Using a non-XA QueueConnection.  It will not be able to participate in a Global UOW");
 		    } else {
-			Logger.debug("Error in getting session for con" + con);
-			throw new JMSException("Connection was not reconizable: " + con);
+				Logger.debug("Error in getting session for con: " + con);
+				throw new JMSException("Connection was not reconizable: " + con);
 		    }
 		    
 		    // This might not be totala spec compliant since it
@@ -142,7 +160,7 @@ public class StdServerSessionPool implements ServerSessionPool {
 		    Logger.debug("Setting listener for session");
 		    ses.setMessageListener(listener);
 		    sessionPool.addElement(
-					   new StdServerSession(this, ses)
+					   new StdServerSession(this, ses, xaSes)
 					       );   
 		}
                 catch (JMSException exception){

@@ -31,8 +31,8 @@ import javax.naming.NamingException;
  */
 
 public class SpyderMQProvider implements JMSProviderAdapter, java.io.Serializable{
-    public static final String TOPIC_CONNECTION_FACTORY="TopicConnectionFactory";
-    public static final String QUEUE_CONNECTION_FACTORY="QueueConnectionFactory";
+    public static final String TOPIC_CONNECTION_FACTORY="XATopicConnectionFactory";
+    public static final String QUEUE_CONNECTION_FACTORY="XAQueueConnectionFactory";
     
     private String name;
     private String url;

@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.5 $
+ *      @version $Revision: 1.6 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -152,7 +152,10 @@ ContainerInvoker, XmlLoadable
    {
 	
        MethodInvocation mi = new MethodInvocation(id, m, args, tx, identity, credential);
-       
+      
+	   // HC: Transaction are started in the run() of the server session
+	   // since the XAResource of the session might need to be elisted with the TM.
+	   /*
        if (acknowledgeMode == MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE) {
 	   // CMT with required
 	   // Create tx 
@@ -162,6 +165,7 @@ ContainerInvoker, XmlLoadable
 	   
 	   mi.setTransaction(txNew);
        }
+	   */
        
        // Set the right context classloader
        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -181,6 +185,14 @@ ContainerInvoker, XmlLoadable
 	   2. Or it should be made in the Listener, wich does not have acces
 	   to the transaction.
 	   */
+	   /* HC: This has to be done further down the chains since if the bean is
+	   is a CMT with transactions required, the message receipt should be
+	   part of the transaction (in other words the JMS session has to be transacted
+	   and it's commit or rollback will cause the ack or nack of the message)
+	   Refrence the ejb_2_0 spec section : 14.4.7
+	   */
+
+	   /*
 	   if (acknowledgeMode == MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE) {	   
 	       //DEBUG Logger.debug("Transaction: " + mi.getTransaction());
 	       
@@ -203,6 +215,7 @@ ContainerInvoker, XmlLoadable
 		   Logger.error("JMSContainerInvoker: Error in acking CMT Required " + ex);
 	       }
 	   }
+	   */
 	   
           Thread.currentThread().setContextClassLoader(oldCl);
        }
@@ -427,8 +440,8 @@ ContainerInvoker, XmlLoadable
 			       listenerMethod,
 			       //argument
 			       new Object[] {message},
-			       //Transaction - where do we get these
-			       null,
+			       //Transaction 
+	   				tm.getTransaction(),
 			       //Principal
 			       null,
 			       //Cred
