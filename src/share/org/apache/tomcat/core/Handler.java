@@ -154,6 +154,12 @@ public class Handler {
 	logger=module.getLog();
     }
 
+    public void setContextManager( ContextManager cm ) {
+	this.contextM=cm;
+	if( logger==null )
+	    logger=cm.getLog();
+    }
+
     public BaseInterceptor getModule() {
 	return module;
     }
@@ -195,6 +201,12 @@ public class Handler {
 
     // -------------------- Methods --------------------
 
+    public void init() throws TomcatException {
+    }
+
+    public void destroy() throws TomcatException {
+    }
+    
     /** Call the service method, and notify all listeners
      *
      * @exception Exception if an error happens during handling of
@@ -220,7 +232,7 @@ public class Handler {
 
 	Exception serviceException=null;
 	try {
-	    doService( req, res );
+	    invoke( req, res );
 	} catch( Exception ex ) {
 	    // save error state on request and response
 	    serviceException=ex;
@@ -343,6 +355,18 @@ public class Handler {
 
     public final Object getNote( int pos ) {
 	return notes[pos];
+    }
+
+    public Object getNote( String name ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.HANDLER_NOTE,
+				   name );
+	return getNote( id );
+    }
+
+    public void setNote( String name, Object value ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.HANDLER_NOTE,
+				   name );
+	setNote( id, value );
     }
 
 }
