@@ -41,8 +41,11 @@ import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.deployment.SubDeployer;
+import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.deployment.J2eeModuleMetaData;
+
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EjbRefMetaData;
@@ -148,13 +151,12 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.37 $
+@version $Revision: 1.38 $
 */
 public abstract class AbstractWebContainer 
-   extends ServiceMBeanSupport 
+   extends SubDeployerSupport
    implements AbstractWebContainerMBean
 {
-   
    public static interface WebDescriptorParser
    {
       /** This method is called as part of subclass performDeploy() method implementations
@@ -507,42 +509,6 @@ public abstract class AbstractWebContainer
    */
    public void setConfig(Element config)
    {
-   }
-
-   public void startService() throws Exception
-   {
-      try
-      {
-         // Register with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "addDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e)
-      {
-         log.error("Could not register with MainDeployer", e);
-      }
-   }
-
-   /**
-   * Implements the template method in superclass. This method stops all the
-   * applications in this server.
-   */
-   public void stopService()
-   {
-      try
-      {
-         // Register with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "removeDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
-   
    }
 
    /** This method is invoked from within subclass performDeploy() method

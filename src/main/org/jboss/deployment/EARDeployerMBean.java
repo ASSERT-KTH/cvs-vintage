@@ -19,10 +19,10 @@ import org.jboss.system.ServiceMBean;
  * The JMX management interface for the {@link EARDeployer} MBean.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface EARDeployerMBean
-   extends DeployerMBean
+   extends SubDeployerMBean
 {
    ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.j2ee:service=EARDeployer");
 }

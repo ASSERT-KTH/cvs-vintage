@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.ejb;
 
 import java.io.File;
@@ -28,8 +29,9 @@ import javax.transaction.TransactionManager;
 import org.apache.log4j.NDC;
 
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.DeployerMBean;
+import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.deployment.DeploymentException;
+
 import org.jboss.management.j2ee.J2EEDeployedObject;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
@@ -50,30 +52,27 @@ import org.w3c.dom.Element;
 //import org.jboss.management.j2ee.EjbModule;
 
 /**
-* A EJBDeployer is used to deploy EJB applications. It can be given a
-* URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
-* containers and make them available for invocation.
-*
-* <p>Now also works with message driven beans.
-*
-* @see Container
-*
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-* @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
-* @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-* @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
-* @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.16 $ 
-*/
+ * A EJBDeployer is used to deploy EJB applications. It can be given a
+ * URL to an EJB-jar or EJB-JAR XML file, which will be used to instantiate
+ * containers and make them available for invocation.
+ *
+ * <p>Now also works with message driven beans.
+ *
+ * @see Container
+ *
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ * @version $Revision: 1.17 $ 
+ */
 public class EJBDeployer
-extends ServiceMBeanSupport
-implements EJBDeployerMBean
+   extends SubDeployerSupport
+   implements EJBDeployerMBean
 {
-   // Constants -----------------------------------------------------
-   //private static final String SERVICE_CONTROLLER_NAME = "jboss.system:spine=ServiceController";
-   
    // Attributes ----------------------------------------------------
    
    private ServiceControllerMBean serviceController;
@@ -100,62 +99,48 @@ implements EJBDeployerMBean
    // Public --------------------------------------------------------
    
    /**
-   * Returns the deployed applications.
-   */
+    * Returns the deployed applications.
+    */
    public Iterator getDeployedApplications()
    {
       return deployments.values().iterator();
    }
    
    /**
-   * Implements the abstract <code>getObjectName()</code> method in superclass
-   * to return this service's name.
-   *
-   * @param server
-   * @param name
-   * @return
-   *
-   * @throws MalformedObjectNameException
-   */
+    * Implements the abstract <code>getObjectName()</code> method in superclass
+    * to return this service's name.
+    *
+    * @param server
+    * @param name
+    * @return
+    *
+    * @throws MalformedObjectNameException
+    */
    public ObjectName getObjectName( MBeanServer server, ObjectName name )
-   throws MalformedObjectNameException
+      throws MalformedObjectNameException
    {
       return OBJECT_NAME;
    }
    
    /**
-   * Implements the abstract <code>getName()</code> method in superclass to
-   * return the name of this object.
-   *
-   * @return <tt>'Container factory'</code>
-   */
-   public String getName()
-   {
-      return "Container factory";
-   }
-   
-   public void startService()
+    * Get a reference to the ServiceController
+    */
+   public void startService() throws Exception
    {
       serviceController = (ServiceControllerMBean)
 	 MBeanProxy.create(ServiceControllerMBean.class,
 			   ServiceControllerMBean.OBJECT_NAME,
 			   server);
-      try
-      {
-         // Register with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "addDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+
+      // register with MainDeployer
+      super.startService();
    }
+
    /**
-   * Implements the template method in superclass. This method stops all the
-   * applications in this server.
-   */
-   public void stopService() throws DeploymentException
+    * Implements the template method in superclass. This method stops all the
+    * applications in this server.
+    */
+   public void stopService() throws Exception
    {
       for (Iterator modules = deployments.values().iterator(); modules.hasNext(); )
       {
@@ -163,7 +148,8 @@ implements EJBDeployerMBean
          
          stop(di);
       }
-      //avoid concurrent modification exception
+
+      // avoid concurrent modification exception
       for (Iterator modules = new ArrayList(deployments.values()).iterator(); modules.hasNext(); )
       {
          DeploymentInfo di = (DeploymentInfo) modules.next();
@@ -171,21 +157,10 @@ implements EJBDeployerMBean
          destroy(di);
       }
       deployments.clear();
-    
-      try
-      {
-         // Unregister with the main deployer
-         server.invoke(
-            org.jboss.deployment.MainDeployerMBean.OBJECT_NAME,
-            "removeDeployer",
-            new Object[] {this},
-            new String[] {"org.jboss.deployment.DeployerMBean"});
-      }
-      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
-  
+
+      // deregister with MainDeployer
+      super.stopService();
    }
-   
-    
 
    /**
    * Enables/disables the application bean verification upon deployment.
@@ -436,7 +411,6 @@ implements EJBDeployerMBean
    {
       try 
       {
-         
          serviceController.stop(di.deployedObject);
       }
       catch (Exception e)

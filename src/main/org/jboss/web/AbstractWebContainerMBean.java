@@ -1,19 +1,26 @@
+/*
+ * JBoss, the OpenSource J2EE WebOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.web;
 
 import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
-import org.jboss.deployment.DeployerMBean;
+import org.jboss.deployment.SubDeployerMBean;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.system.ServiceMBean;
 
 /** A template pattern for web container integration into JBoss.
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.7 $
+@version $Revision: 1.8 $
 */
-public interface AbstractWebContainerMBean extends DeployerMBean
+public interface AbstractWebContainerMBean 
+   extends SubDeployerMBean
 {
     public boolean isDeployed(String warUrl);
    /** Returns the applications deployed by the container factory

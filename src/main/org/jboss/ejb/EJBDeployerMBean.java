@@ -13,9 +13,8 @@ import java.net.MalformedURLException;
 import javax.management.ObjectName;
 import org.jboss.util.jmx.ObjectNameFactory;
 
-import org.jboss.deployment.DeployerMBean;
+import org.jboss.deployment.SubDeployerMBean;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.system.ServiceMBean;
 
 /**
  * This is the interface of the EJBDeployer that is exposed
@@ -26,7 +25,7 @@ import org.jboss.system.ServiceMBean;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * 
  * <p><b>20011227 marc fleury:</b>
  * <ul>
@@ -34,7 +33,7 @@ import org.jboss.system.ServiceMBean;
  * </ul>
  */
 public interface EJBDeployerMBean
-   extends DeployerMBean
+   extends SubDeployerMBean
 {
    /** The default object name. */
    ObjectName OBJECT_NAME = ObjectNameFactory.create("jboss.ejb:service=EJBDeployer");
