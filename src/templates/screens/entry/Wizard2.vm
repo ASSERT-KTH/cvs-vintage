@@ -7,16 +7,6 @@ $page.setTitle("Identified as duplicate")
 #set ($issueType = $scarabR.CurrentIssueType)
 
 <h2>$page.Title</h2>
-
-<div class="tabs">
-  <table cellpadding="3" cellspacing="0" border="0">
-  <tr>
-  <td>1: Duplicate attributes</td>
-  <th>2: Duplicate check</td>
-  <td>3: Non-duplicate attributes</th>
-  </tr>
-  </table>
-</div>
 	
 #set ($templateId = $data.Parameters.getString("templateId"))
 <form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
