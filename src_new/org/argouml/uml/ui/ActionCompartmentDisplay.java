@@ -24,7 +24,7 @@
 // File: ActionCompartmentDisplay.java
 // Classes: ActionCompartmentDisplay
 // Original Author: your email address here
-// $Id: ActionCompartmentDisplay.java,v 1.2 2002/05/03 19:17:05 jeremybennett Exp $
+// $Id: ActionCompartmentDisplay.java,v 1.3 2002/07/16 16:16:49 thn Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // compartments for extension points on use cases.
@@ -216,11 +216,12 @@ public class ActionCompartmentDisplay extends UMLAction {
 	    else if (_compartment.equals("Hide Attribute Compartment")) {
 		((FigClass)f).setAttributeVisible(_display);
             }
-	    else if (_compartment.equals("Show Operation Compartment")) {
-		((FigClass)f).setOperationVisible(_display);
-            }
-	    else if (_compartment.equals("Hide Operation Compartment")) {
-		((FigClass)f).setOperationVisible(_display);
+	    else if (_compartment.equals("Show Operation Compartment") ||
+	             _compartment.equals("Hide Operation Compartment")) {
+		if (f instanceof FigClass)
+			((FigClass)f).setOperationVisible(_display);
+		if (f instanceof FigInterface)
+			((FigInterface)f).setOperationVisible(_display);
             }
 	    else if (_compartment.equals("Show Extension Point Compartment")) {
 		((FigUseCase)f).setExtensionPointVisible(_display);
@@ -250,8 +251,8 @@ public class ActionCompartmentDisplay extends UMLAction {
      *          in this implementation.
      */
 
-    public boolean shouldBeEnabled() { 
-	return true; 
+    public boolean shouldBeEnabled() {
+	return true;
     }
 
 } /* end class ActionCompartmentDisplay */
