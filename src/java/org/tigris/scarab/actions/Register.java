@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.22 2002/04/26 23:34:51 jmcnally Exp $
+ * @version $Id: Register.java,v 1.23 2002/05/07 17:51:49 jmcnally Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -346,33 +346,6 @@ public class Register extends ScarabTemplateAction
                         "Your account has been confirmed. Welcome to Scarab! " + 
                         "Please login now.");
                     setTarget(data, nextTemplate);
-
-                    // FIXME: Hack to give every new account a Developer Role
-                    // within every Group (ie: Module). This is a major major
-                    // major major major hole. The point however is to allow 
-                    // people using the runbox or downloading scarab a chance 
-                    // to be able to enter an issue without having to muck 
-                    // with Flux to get the right roles. Hopefully someone 
-                    // from the community will contribute code to clean this 
-                    // up. For more information, please read this thread:
-                    // http://scarab.tigris.org/servlets/ReadMsg?msgId=38339&listName=dev
-                    List allModules = ScarabModulePeer.getAllModules();
-                    Iterator itr = allModules.iterator();
-                    Role role = TurbineSecurity.getRole("Developer");
-                    while (itr.hasNext())
-                    {
-                        // have to use the full Group because of conflicts with
-                        // Intake Group
-                        org.apache.fulcrum.security.entity.Group group = 
-                            (org.apache.fulcrum.security.entity.Group) itr.next();
-                        // only give access to the non-global modules
-                        if (!group.getName()
-                            .equals(ScarabConstants.GLOBAL_MODULE_NAME))
-                        {
-                            group.grant((User)confirmedUser, role);
-                            ((Module)group).save();
-                        }
-                    }
                 }
                 else
                 {
