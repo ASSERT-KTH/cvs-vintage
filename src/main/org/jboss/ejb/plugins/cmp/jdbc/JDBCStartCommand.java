@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public final class JDBCStartCommand
 {
@@ -84,6 +85,86 @@ public final class JDBCStartCommand
    {
       boolean tableExisted = SQLUtil.tableExists(entity.getTableName(), entity.getDataSource());
       entity.setTableExisted(tableExisted);
+
+      if(tableExisted)
+      {
+         if(entityMetaData.getAlterTable())
+         {
+            java.util.Collection oldNames = SQLUtil.getOldColumnNames(entity.getTableName(), entity.getDataSource());
+            ArrayList newNames = new ArrayList();
+            JDBCFieldBridge[] fields = entity.getTableFields();
+            for(int i = 0 ; i < fields.length ; ++i)
+            {
+               JDBCFieldBridge field = fields[i];
+               String name = field.getJDBCType().getColumnNames()[0].toUpperCase();
+
+
+               newNames.add(name);
+
+               if(!oldNames.contains(name))
+               {
+                  // add new columns
+                  JDBCType type = field.getJDBCType();
+                  StringBuffer strType = new StringBuffer();
+                  addField(type, strType);
+                  String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + strType;
+                  alterTable(entity.getDataSource(), entity.getTableName(), sql);
+               }
+               else
+               {
+                  // alter existing columns
+                  JDBCType type = field.getJDBCType();
+                  if(field.isPrimaryKeyMember())
+                  {
+                     break;
+                  }
+                  StringBuffer strType = new StringBuffer();
+                  addField(type, strType);
+                  java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(strType.toString(), " ");
+                  int cnt = 0;
+                  String strAlter = "";
+                  while(tokenizer.hasMoreElements())
+                  {
+                     String token = (String) tokenizer.nextElement();
+                     strAlter += token;
+                     if(cnt == 0)
+                     {
+                        strAlter += " TYPE ";
+                     }
+                     else
+                     {
+                        strAlter += " ";
+                     }
+                     cnt++;
+                     if(cnt == 2)
+                        break;
+                  }
+                  String sql = "ALTER TABLE " + entity.getTableName() + " ALTER " + strAlter;
+                  try
+                  {
+                     alterTable(entity.getDataSource(), entity.getTableName(), sql);
+                  }
+                  catch(Exception e)
+                  {
+                     log.info("EXCEPTION ALTER :" + e.toString());
+                  }
+               }
+            } // for  int i;
+
+            // delete old columns
+            Iterator it = oldNames.iterator();
+            while(it.hasNext())
+            {
+               String name = (String) ( it.next() );
+               if(!newNames.contains(name))
+               {
+                  String sql = "ALTER TABLE " + entity.getTableName() + " DROP " + name;
+                  alterTable(entity.getDataSource(), entity.getTableName(), sql);
+               }
+            }
+
+         }
+      }
       // Create table if necessary
       if(!entity.getTableExists())
       {
@@ -134,6 +215,62 @@ public final class JDBCStartCommand
          {
             DataSource dataSource = relationMetaData.getDataSource();
 
+            boolean relTableExisted = SQLUtil.tableExists( cmrField.getTableName(), entity.getDataSource() );
+
+            if(relTableExisted)
+            {
+
+               if(relationMetaData.getAlterTable())
+               {
+                  java.util.Collection oldNames = SQLUtil.getOldColumnNames( cmrField.getTableName(), dataSource );
+                  ArrayList newNames = new ArrayList();
+                  JDBCCMPFieldBridge[] leftKeys = cmrField.getTableKeyFields();
+                  JDBCCMPFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
+                  JDBCFieldBridge[] fields = new JDBCFieldBridge[leftKeys.length + rightKeys.length];
+                  System.arraycopy( leftKeys, 0, fields, 0, leftKeys.length );
+                  System.arraycopy( rightKeys, 0, fields, leftKeys.length, rightKeys.length );
+                  // have to append field names to leftKeys, rightKeys...
+
+                  boolean different = false;
+                  for(int j = 0 ; j < fields.length ; j++)
+                  {
+                     JDBCFieldBridge field = fields[j];
+
+                     String name = field.getJDBCType().getColumnNames()[0].toUpperCase();
+                     newNames.add( name );
+
+                     if(!oldNames.contains( name ))
+                     {
+                        different = true;
+                        break;
+                     }
+
+
+                  } // for int j;
+
+                  if(!different)
+                  {
+                     Iterator it = oldNames.iterator();
+                     while(it.hasNext())
+                     {
+                        String name = (String) ( it.next() );
+                        if(!newNames.contains( name ))
+                        {
+                           different = true;
+                           break;
+                        }
+                     }
+                  }
+
+                  if(different)
+                  {
+                     SQLUtil.dropTable( entity.getDataSource(), cmrField.getTableName() );
+                  }
+
+               } // if alter-table
+
+            } // if existed
+
             // create the relation table
             if(relationMetaData.isTableMappingStyle() && !relationMetaData.isTableCreated())
             {
@@ -178,6 +315,71 @@ public final class JDBCStartCommand
             }
          }
       }
+   }
+
+   private void alterTable(DataSource dataSource,
+                           String tableName,
+                           String sql)
+      throws DeploymentException
+   {
+
+      // suspend the current transaction
+      TransactionManager tm = manager.getContainer().getTransactionManager();
+      Transaction oldTransaction;
+      try
+      {
+         oldTransaction = tm.suspend();
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException(COULDNT_SUSPEND + " alter table.", e);
+      }
+
+      try
+      {
+         Connection con = null;
+         Statement statement = null;
+         try
+         {
+            // execute sql
+            if(log.isDebugEnabled())
+               log.debug("Executing SQL: " + sql);
+
+            con = dataSource.getConnection();
+            statement = con.createStatement();
+            statement.executeUpdate(sql);
+         }
+         finally
+         {
+            // make sure to close the connection and statement before
+            // comitting the transaction or XA will break
+            JDBCUtil.safeClose(statement);
+            JDBCUtil.safeClose(con);
+         }
+      }
+      catch(Exception e)
+      {
+         log.debug("Could not alter table " + tableName);
+         throw new DeploymentException("Error while alter table " + tableName + " " + sql, e);
+      }
+      finally
+      {
+         try
+         {
+            // resume the old transaction
+            if(oldTransaction != null)
+            {
+               tm.resume(oldTransaction);
+            }
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException(COULDNT_REATTACH + "alter table");
+         }
+      }
+
+      // success
+      log.info("Alter table '" + tableName + "' successfully.");
    }
 
    private void createTable(DataSource dataSource, String tableName, String sql)
@@ -482,7 +684,7 @@ public final class JDBCStartCommand
             sql.append(entity.getTableName() + " (");
             SQLUtil.getColumnNamesClause(field, sql);
             sql.append(")");
-            
+
             createIndex(dataSource,
                entity.getTableName(),
                entity.getTableName() + IDX_POSTFIX + idxCount,

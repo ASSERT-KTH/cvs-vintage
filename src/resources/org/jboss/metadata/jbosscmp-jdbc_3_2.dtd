@@ -19,9 +19,9 @@ The optional defaults elements contains the default values for
 entities, and relationships.
 -->
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?,
-         remove-table?, post-table-create?, read-only?, read-time-out?, 
-         row-locking?,  pk-constraint?, fk-constraint?, 
-         preferred-relation-mapping?, read-ahead?, list-cache-max?, 
+         alter-table?, remove-table?, post-table-create?, read-only?, read-time-out?,
+         row-locking?, pk-constraint?, fk-constraint?,
+         preferred-relation-mapping?, read-ahead?, list-cache-max?,
          fetch-size?, unknown-pk?, entity-command?)>
 
 <!--
@@ -58,12 +58,21 @@ The remove-table element must be one of the two following:
 -->
 <!ELEMENT remove-table (#PCDATA)>
 
+<!--
+Should the persistence manager attempt to update the table structure at deployment
+
+The remove-table element must be one of the two following:
+         <alter-table>true</alter-table>
+         <alter-table>false</alter-table>
+-->
+<!ELEMENT alter-table (#PCDATA)>
+
 
 <!--
 Execute arbitrary SQL code directly after the database table is created.
 This command is only executed if create-table is true and the table
-did not previously exist.	
--->	
+did not previously exist.
+-->
 <!ELEMENT post-table-create (sql-statement+)>
 
 <!--
@@ -207,10 +216,10 @@ be configured.
 The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, (datasource, datasource-mapping)?, create-table?,
-         remove-table?, post-table-create?, read-only?, read-time-out?, 
-         row-locking?,pk-constraint?, read-ahead?, list-cache-max?, fetch-size?,
-         table-name?, cmp-field*, load-groups?, eager-load-group?, 
-         lazy-load-groups?, query*, unknown-pk?, entity-command?,  
+         remove-table?, post-table-create?, read-only?, read-time-out?,
+         row-locking?, pk-constraint?, read-ahead?, list-cache-max?, fetch-size?,
+         table-name?, cmp-field*, load-groups?, eager-load-group?,
+         lazy-load-groups?, query*, unknown-pk?, entity-command?,
          optimistic-locking?, audit?)>
 
 <!--
@@ -515,6 +524,7 @@ The presense of cascade-delete element in ejb-jar.xml for the matching
 ejb-relationship-role is mandatory.
 -->
 <!ELEMENT batch-cascade-delete EMPTY>
+
 
 <!--
 Name of the ejb-relationship-role being configured.  This must match

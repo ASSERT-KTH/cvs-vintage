@@ -11,14 +11,18 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.zip.CRC32;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.logging.Logger;
 
 import java.util.Vector;
 
@@ -27,7 +31,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class SQLUtil
 {
@@ -947,7 +951,104 @@ public final class SQLUtil
       {
          // This should not happen. A J2EE compatiable JDBC driver is
          // required fully support metadata.
-         throw new DeploymentException("Error while checking if table aleady exists", e);
+         throw new DeploymentException("Error while checking if table aleady exists" + tableName, e);
+      }
+      finally
+      {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
+   }
+
+   public static Collection getOldColumnNames(String tableName,
+                                              DataSource dataSource)
+      throws DeploymentException
+   {
+      Connection con = null;
+      ResultSet rs = null;
+      ArrayList columns = new ArrayList();
+      try
+      {
+         con = dataSource.getConnection();
+
+         // (a j2ee spec compatible jdbc driver has to fully
+         // implement the DatabaseMetaData)
+         DatabaseMetaData dmd = con.getMetaData();
+         String catalog = con.getCatalog();
+         String schema = null;
+         String quote = dmd.getIdentifierQuoteString();
+         if(tableName.startsWith(quote))
+         {
+            if(tableName.endsWith(quote) == false)
+            {
+               throw new DeploymentException("Mismatched quote in table name: " + tableName);
+            }
+            int quoteLength = quote.length();
+            tableName = tableName.substring(quoteLength, tableName.length() - quoteLength);
+            if(dmd.storesLowerCaseQuotedIdentifiers())
+               tableName = tableName.toLowerCase();
+            else if(dmd.storesUpperCaseQuotedIdentifiers())
+               tableName = tableName.toUpperCase();
+         }
+         else
+         {
+            if(dmd.storesLowerCaseIdentifiers())
+               tableName = tableName.toLowerCase();
+            else if(dmd.storesUpperCaseIdentifiers())
+               tableName = tableName.toUpperCase();
+         }
+         rs = dmd.getColumns(catalog, schema, tableName, null);
+         while(rs.next())
+         {
+            String name = rs.getString("COLUMN_NAME");
+            columns.add(name);
+         }
+         return columns;
+
+      }
+      catch(SQLException e)
+      {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new DeploymentException("Error while geting column names", e);
+      }
+      finally
+      {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
+   }
+
+   public static Collection getOldTableNames(DataSource dataSource)
+      throws DeploymentException
+   {
+      Connection con = null;
+      ResultSet rs = null;
+      ArrayList tables = new ArrayList();
+      try
+      {
+         con = dataSource.getConnection();
+
+         // (a j2ee spec compatible jdbc driver has to fully
+         // implement the DatabaseMetaData)
+         DatabaseMetaData dmd = con.getMetaData();
+         String catalog = con.getCatalog();
+         String schema = null;
+         String[] types = {"TABLE"};
+         rs = dmd.getTables(catalog, schema, null, types);
+         while(rs.next())
+         {
+            String name = rs.getString("TABLE_NAME");
+            tables.add(name);
+         }
+         return tables;
+
+      }
+      catch(SQLException e)
+      {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new DeploymentException("Error while geting table names", e);
       }
       finally
       {
@@ -964,5 +1065,37 @@ public final class SQLUtil
          return type;
       }
       return null;
+   }
+
+   public static void dropTable(DataSource dataSource,
+                                String tableName)
+      throws DeploymentException
+   {
+      Logger log = Logger.getLogger("CLEANER");
+      String sql = "DROP TABLE " + tableName;
+      try
+      {
+         Connection con = null;
+         Statement statement = null;
+         try
+         {
+            // execute sql
+            con = dataSource.getConnection();
+            statement = con.createStatement();
+            statement.executeUpdate(sql);
+         }
+         finally
+         {
+            // make sure to close the connection and statement before
+            // comitting the transaction or XA will break
+            JDBCUtil.safeClose(statement);
+            JDBCUtil.safeClose(con);
+         }
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Error while droping table " + tableName, e);
+      }
+      log.info("Dropped table " + tableName + " succesfuly");
    }
 }

@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public final class JDBCEntityMetaData
 {
@@ -104,6 +104,12 @@ public final class JDBCEntityMetaData
     * Should we drop the table when undeployed?
     */
    private final boolean removeTable;
+
+   /**
+    * Should we alter the table when deployed?
+    */
+   private final boolean alterTable;    
+    
 
    /**
     * What command should be issued directly after creation
@@ -322,6 +328,7 @@ public final class JDBCEntityMetaData
       datasourceMapping = null;
       createTable = false;
       removeTable = false;
+      alterTable = false;
       rowLocking = false;
       primaryKeyConstraint = false;
       readOnly = false;
@@ -492,6 +499,16 @@ public final class JDBCEntityMetaData
       {
          removeTable = defaultValues.getRemoveTable();
       }
+
+      // alter table?  If not provided, keep default.
+      String alterStr = MetaData.getOptionalChildContent(element, "alter-table");
+      if(alterStr != null)
+      {
+         alterTable = Boolean.valueOf(alterStr).booleanValue();
+      } else {
+          alterTable=defaultValues.getAlterTable();
+      }
+      
 
       // get the SQL command to execute after table creation
       Element posttc = MetaData.getOptionalChild(element, "post-table-create");
@@ -1125,6 +1142,15 @@ public final class JDBCEntityMetaData
    public boolean getRemoveTable()
    {
       return removeTable;
+   }
+
+   /**
+    * Gets the flag used to determine if the store manager should attempt to
+    * alter table when the entity is deployed.
+    */
+   public boolean getAlterTable()
+   {
+       return alterTable;
    }
 
    /**

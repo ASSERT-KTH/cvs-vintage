@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCRelationMetaData
 {
@@ -77,12 +77,15 @@ public final class JDBCRelationMetaData
    /** should we drop the table when deployed */
    private final boolean removeTable;
 
+    /** should we alter the table when deployed */
+    private final boolean alterTable;
+
    /**
 	* What commands should be issued directly after creation
 	* of a table?
 	*/
    private final ArrayList tablePostCreateCmd;
-   
+
    /** should we use 'SELECT ... FOR UPDATE' syntax? */
    private final boolean rowLocking;
 
@@ -129,6 +132,7 @@ public final class JDBCRelationMetaData
       datasourceMapping = null;
       createTable = false;
       removeTable = false;
+      alterTable = false;
       rowLocking = false;
       primaryKeyConstraint = false;
       readOnly = false;
@@ -179,23 +183,23 @@ public final class JDBCRelationMetaData
       mappingStyle = loadMappingStyle(element, defaultValues);
 
       // post-table-create commands
-	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");	  
-	  if (posttc!=null) {		  
+	  Element posttc = MetaData.getOptionalChild(element,"post-table-create");
+	  if (posttc!=null) {
 	 	Iterator it = MetaData.getChildrenByTagName(posttc,"sql-statement");
 		tablePostCreateCmd = new ArrayList();
 		while (it.hasNext()) {
-		  Element etmp = (Element)it.next();  	
+		  Element etmp = (Element)it.next();
 		  tablePostCreateCmd.add(MetaData.getElementContent(etmp));
 		}
-   
+
 	  }
 	  else {
-		 tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();  
+		 tablePostCreateCmd = defaultValues.getDefaultTablePostCreateCmd();
 	  }
-	      
-      
-      
-      
+
+
+
+
       // read-only
       String readOnlyString = MetaData.getOptionalChildContent(
          element, "read-only");
@@ -309,6 +313,17 @@ public final class JDBCRelationMetaData
       else
       {
          removeTable = defaultValues.getRemoveTable();
+      }
+
+        // alter table? If not provided, keep default.
+      String alterString = MetaData.getOptionalChildContent(mappingElement, "alter-table");
+      if (alterString!=null)
+      {
+         alterTable = Boolean.valueOf(alterString).booleanValue();
+      }
+      else
+      {
+         alterTable = defaultValues.getAlterTable();
       }
 
       // select for update
@@ -622,15 +637,15 @@ public final class JDBCRelationMetaData
    }
 
    /**
-    * Gets the (user-defined) SQL commands that should be 
+    * Gets the (user-defined) SQL commands that should be
     * issued to the db after table creation.
     * @return the SQL command
     */
    private ArrayList getDefaultTablePostCreateCmd() {
    		return tablePostCreateCmd;
    }
-   
-   /** 
+
+   /**
     * Does the table exist yet? This does not mean that table has been created
     * by the appilcation, or the the database metadata has been checked for the
     * existance of the table, but that at this point the table is assumed to
@@ -646,7 +661,7 @@ public final class JDBCRelationMetaData
    }
 
    /**
-    * Sets table exists flag.
+    * Sets table dropped flag.
     */
    public void setTableDropped() {
       this.tableDropped = true;
@@ -677,6 +692,13 @@ public final class JDBCRelationMetaData
    }
 
    /**
+     * Should the relation table be altered on deploy.
+     */
+    public boolean getAlterTable() {
+        return alterTable;
+    }
+
+    /**
     * When the relation table is created, should it have a primary key
     * constraint.
     * @return true if the store mananager should add a primary key constraint
