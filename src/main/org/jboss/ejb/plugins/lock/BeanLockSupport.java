@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -164,7 +164,7 @@ public abstract class BeanLockSupport
       Entrancy entrancy = (Entrancy)mi.getValue(Entrancy.ENTRANCY_KEY);
       if(entrancy == Entrancy.NON_ENTRANT)
       {
-         log.info("NON_ENTRANT invocation");
+         log.trace("NON_ENTRANT invocation");
          return true;
       }
   
