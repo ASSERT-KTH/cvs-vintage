@@ -18,7 +18,7 @@
 <div class="functnbar">
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160;
   <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 <h3>Attributes</h3>
@@ -69,7 +69,7 @@
 <div class="functnbar2">
   <input type="submit" value="Reset to default"  name="eventSubmit_doUsedefaults" />&#160; 
   <input type="submit" value="Done" name="eventSubmit_doDone" />&#160; 
-  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 $intake.declareGroups()
