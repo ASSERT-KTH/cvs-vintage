@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JNDIRemoteResource.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JNDIRemoteResource.java,v 1.3 2005/02/08 09:43:11 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.wrapping;
 
-// java import
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -37,13 +36,13 @@ import java.rmi.RemoteException;
  * serializable ressources wrapping. This wrapping provide simple way to
  * bind/lookup those ressource in the CORBA Name Service (like a CosNaming)
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public interface JNDIRemoteResource extends Remote {
 
     /**
      * Get the serializable ressource object
      * @return the serializable resource
+     * @throws RemoteException if the ressource cannot be obtained
      */
-    public Serializable getResource() throws RemoteException;
+    Serializable getResource() throws RemoteException;
 }

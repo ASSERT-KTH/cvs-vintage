@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JNDIReferenceWrapper.java,v 1.3 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JNDIReferenceWrapper.java,v 1.4 2005/02/08 09:43:11 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.wrapping;
 
-// java import
 import java.rmi.RemoteException;
 
 import javax.naming.Reference;
@@ -39,20 +38,19 @@ import com.sun.jndi.rmi.registry.RemoteReference;
  * implementation. This implementation make the reference wrapping to/from a
  * remote object
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class JNDIReferenceWrapper implements RemoteReference {
 
     /**
      * <code>Reference</code> reference to wrap
      */
-    protected Reference reference;
+    private Reference reference;
 
     /**
      * constructor, export this object
      * @param reference the <code>Reference</code> reference to wrap
      */
-    public JNDIReferenceWrapper(Reference reference) throws RemoteException {
+    public JNDIReferenceWrapper(Reference reference) {
         super();
         this.reference = reference;
     }
@@ -60,6 +58,7 @@ public class JNDIReferenceWrapper implements RemoteReference {
     /**
      * Get the <code>Reference</code> reference
      * @return the <code>Reference</code> reference
+     * @throws RemoteException if the reference cannot be returned
      */
     public Reference getReference() throws RemoteException {
         return reference;

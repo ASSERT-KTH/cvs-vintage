@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,12 +22,11 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JNDIResourceWrapper.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JNDIResourceWrapper.java,v 1.3 2005/02/08 09:43:11 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.wrapping;
 
-// java import
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
@@ -36,20 +35,19 @@ import java.rmi.RemoteException;
  * implementation. This implementation make the serializable resource wrapping
  * to/from a remote object
  * @author Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002
  */
 public class JNDIResourceWrapper implements JNDIRemoteResource {
 
     /**
      * <code>Serializable</code> resource to wrap
      */
-    protected Serializable resource;
+    private Serializable resource;
 
     /**
      * constructor, export this object
      * @param resource the <code>Serializable</code> resource to wrap
      */
-    public JNDIResourceWrapper(Serializable resource) throws RemoteException {
+    public JNDIResourceWrapper(Serializable resource) {
         super();
         this.resource = resource;
     }
@@ -57,6 +55,7 @@ public class JNDIResourceWrapper implements JNDIRemoteResource {
     /**
      * Get the <code>Serializable</code> resource
      * @return the <code>Serializable</code> resource
+     * @throws RemoteException if the resource cannot be returned
      */
     public Serializable getResource() throws RemoteException {
         return resource;
