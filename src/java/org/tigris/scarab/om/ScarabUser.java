@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.91 2003/09/11 18:32:49 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.92 2003/09/13 02:11:25 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -172,23 +172,6 @@ public interface ScarabUser extends User
     void setUserId(Integer v) throws Exception;
     ObjectKey getPrimaryKey();
     void setPrimaryKey(ObjectKey v) throws Exception;
-
-    /**
-     * Returns list of RModuleUserAttribute objects for this
-     * User and Module -- the attributes the user has selected
-     * To appear on the IssueList for this module.
-     */
-    List getRModuleUserAttributes(Module module, 
-                                         IssueType issueType)
-            throws Exception;
-
-    /**
-     * Returns an RModuleUserAttribute object.
-     */
-    RModuleUserAttribute getRModuleUserAttribute(Module module, 
-                                                        Attribute attribute,
-                                                        IssueType issueType)
-            throws Exception;
 
     /**
      * Implementation of the Retrievable interface because this object

@@ -1,7 +1,7 @@
-package org.tigris.scarab.om;
+package org.tigris.scarab.da;
 
 /* ================================================================
- * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
+ * Copyright (c) 2000 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -16,7 +16,7 @@ package org.tigris.scarab.om;
  * 
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
- * software developed by Collab.Net <http://www.Collab.Net/>."
+ * software developed by CollabNet (http://www.collab.net/)."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
  * 
@@ -24,9 +24,9 @@ package org.tigris.scarab.om;
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
  * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
- * prior written permission of Collab.Net.
+ * 5. Products derived from this software may not use the "Tigris" name
+ * nor may "Tigris" appear in their names without prior written
+ * permission of CollabNet.
  * 
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,26 +43,23 @@ package org.tigris.scarab.om;
  * ====================================================================
  * 
  * This software consists of voluntary contributions made by many
- * individuals on behalf of Collab.Net.
- */ 
-
-import org.apache.torque.om.Persistent;
-import org.apache.torque.util.Criteria;
-import org.tigris.scarab.services.security.ScarabSecurity;
-import org.apache.fulcrum.security.util.TurbineSecurityException;
-import org.tigris.scarab.util.ScarabConstants;
-import java.util.List;
-import java.util.Iterator;
-
-/** 
- * This class is for dealing with Attributes associated to Users and Modules.
- *
- * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: RModuleUserAttribute.java,v 1.12 2003/09/13 02:11:25 jmcnally Exp $
+ * individuals on behalf of CollabNet.
  */
-public  class RModuleUserAttribute 
-    extends org.tigris.scarab.om.BaseRModuleUserAttribute
-    implements Persistent
+
+import org.apache.commons.lang.exception.NestableRuntimeException;
+
+/**
+ * The unchecked exception thrown to indicate data access layer
+ * problems.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ */
+public class DAException
+    extends NestableRuntimeException
 {
+    public DAException(String msg, Throwable t)
+    {
+        super(msg, t);
+    }
 }

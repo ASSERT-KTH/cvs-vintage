@@ -80,6 +80,8 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.StringUtils;
 
 // Scarab
+import org.tigris.scarab.da.AttributeAccess;
+import org.tigris.scarab.da.DAFactory;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
@@ -664,7 +666,11 @@ public class ScarabRequestTool
                 {
                     Module module = currentList.getModule();
                     IssueType issueType = currentList.getIssueType();
-                    issueListColumns = user.getRModuleUserAttributes(module, issueType);
+                    
+                    issueListColumns = DAFactory.getAttributeAccess()
+                        .retrieveQueryColumnIDs(user.getUserId().toString(),
+                            module.getModuleId().toString(),
+                            issueType.getIssueTypeId().toString());
                     if (issueListColumns.isEmpty())
                     {
                         issueListColumns = module
@@ -679,7 +685,10 @@ public class ScarabRequestTool
 
             if (issueListColumns == null)
             {
-                issueListColumns = user.getRModuleUserAttributes(module, issueType);
+                issueListColumns = DAFactory.getAttributeAccess()
+                    .retrieveQueryColumnIDs(user.getUserId().toString(),
+                        module.getModuleId().toString(),
+                        issueType.getIssueTypeId().toString());
                 if (issueListColumns.isEmpty())
                 {
                     issueListColumns = module.getDefaultRModuleUserAttributes(issueType);

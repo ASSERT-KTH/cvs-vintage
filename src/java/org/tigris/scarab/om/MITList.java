@@ -57,6 +57,8 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 import org.apache.torque.TorqueRuntimeException;
+import org.tigris.scarab.da.DAFactory;
+import org.tigris.scarab.da.AttributeAccess;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.Log;
 
@@ -70,7 +72,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.36 2003/08/19 23:59:20 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.37 2003/09/13 02:11:25 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -627,62 +629,62 @@ public  class MITList
     public List getCommonRModuleUserAttributes()
         throws Exception
     {
-        List matchingRMUAs = new ArrayList();
-        List rmuas = getSavedRMUAs();
-        Iterator i = rmuas.iterator();
+        List matchingIDs = new ArrayList();
+        List ids = getSavedRMUAs();
+        Iterator i = ids.iterator();
         ScarabUser user = getScarabUser();
         while (i.hasNext())
         {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-            Attribute att = rmua.getAttribute();
+            String id = (String)i.next();
+            Attribute att = AttributeManager.getInstance(new Integer(id));
             if (isCommon(att, false))
             {
-                matchingRMUAs.add(rmua);   
+                matchingIDs.add(id);   
             }
         }
         
-        // None of the saved RMUAs are common for these pairs
+        // None of the saved IDs are common for these pairs
         // Delete them and seek new ones.
-        if (matchingRMUAs.isEmpty()) 
+        if (matchingIDs.isEmpty()) 
         {
-            i = rmuas.iterator();
-            while (i.hasNext())
-            {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                rmua.delete(user);
-            }
+            deleteSavedRMUAs();
             int sizeGoal = 3;
             int moreAttributes = sizeGoal;
 
-            // First try saved RMUAs for first module-issuetype pair
+            // First try saved IDs for first module-issuetype pair
             MITListItem item = getFirstItem();
             Module module = getModule(item);
             IssueType issueType = item.getIssueType();
-            rmuas = user.getRModuleUserAttributes(module, issueType);
-            // Next try default RMUAs for first module-issuetype pair
-            if (rmuas.isEmpty())
+            AttributeAccess aa = DAFactory.getAttributeAccess();
+            ids = aa.retrieveQueryColumnIDs(getUserId().toString(), null, 
+                module.getModuleId().toString(),
+                issueType.getIssueTypeId().toString());
+
+            // Next try default IDs for first module-issuetype pair
+            if (ids.isEmpty())
             {
-                rmuas = module.getDefaultRModuleUserAttributes(issueType);
+                ids = module.getDefaultRModuleUserAttributes(issueType);
             }
 
-            // Loop through these and if find common ones, save the RMUAs
-            i = rmuas.iterator();
+            // Loop through these and if find common ones, save the IDs
+            i = ids.iterator();
             while (i.hasNext() && moreAttributes > 0) 
             {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                Attribute att = rmua.getAttribute();
-                if (isCommon(att, false) && !matchingRMUAs.contains(rmua)) 
+                String id = (String)i.next();
+                Attribute att = AttributeManager.getInstance(new Integer(id));
+                if (isCommon(att, false) && !matchingIDs.contains(id)) 
                 {
+                    // FIXME make a da layer save/create method for this
                     RModuleUserAttribute newRmua = getNewRModuleUserAttribute(att);
                     newRmua.setOrder(1);
                     newRmua.save();
-                    matchingRMUAs.add(rmua);   
+                    matchingIDs.add(id);   
                     moreAttributes--;
                 }            
             }
 
             // if nothing better, go with random common attributes
-            moreAttributes = sizeGoal - matchingRMUAs.size();
+            moreAttributes = sizeGoal - matchingIDs.size();
             if (moreAttributes > 0) 
             {
                 Iterator attributes = getCommonAttributes(false).iterator();
@@ -691,11 +693,11 @@ public  class MITList
                 {
                     Attribute att = (Attribute)attributes.next();
                     boolean isInList = false;
-                    i = matchingRMUAs.iterator();
+                    i = matchingIDs.iterator();
                     while (i.hasNext()) 
                     {
-                        RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                        if (rmua.getAttribute().equals(att)) 
+                        String id = (String)i.next();
+                        if (id.equals(att.getAttributeId().toString())) 
                         {
                             isInList = true;
                             break;
@@ -707,14 +709,14 @@ public  class MITList
                             getNewRModuleUserAttribute(att);
                         rmua.setOrder(k++);
                         rmua.save();
-                        matchingRMUAs.add(rmua);
+                        matchingIDs.add(att.getAttributeId().toString());
                         moreAttributes--;
                     }
                 }
             } 
         }
         
-        return matchingRMUAs;
+        return matchingIDs;
     }
 
     protected RModuleUserAttribute getNewRModuleUserAttribute(
@@ -743,30 +745,53 @@ public  class MITList
     protected List getSavedRMUAs()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleUserAttributePeer.USER_ID, getUserId());
+        AttributeAccess aa = DAFactory.getAttributeAccess();
+        List ids;
+
         if (!isNew())
         {
-            crit.add(RModuleUserAttributePeer.LIST_ID, getListId());
+            ids = aa.retrieveQueryColumnIDs(String.valueOf(getUserId()), 
+                                            String.valueOf(getListId()),
+                                            null, null);
         }
         else if (isSingleModuleIssueType())        
         {
-            crit.add(RModuleUserAttributePeer.LIST_ID, null);
-            crit.add(RModuleUserAttributePeer.MODULE_ID, 
-                     getModule().getModuleId());
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID,
-                     getIssueType().getIssueTypeId());
+            ids = aa.retrieveQueryColumnIDs(getUserId().toString(), null, 
+                getModule().getModuleId().toString(),
+                getIssueType().getIssueTypeId().toString());
         }
         else 
         {
-            crit.add(RModuleUserAttributePeer.LIST_ID, null);
-            crit.add(RModuleUserAttributePeer.MODULE_ID, null);
-            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);            
+            ids = aa.retrieveQueryColumnIDs(getUserId().toString(), null, 
+                                            null, null);
         }
-        crit.addAscendingOrderByColumn(RModuleUserAttributePeer.PREFERRED_ORDER);
                 
-        return RModuleUserAttributePeer.doSelect(crit);
+        return ids;
     }
+
+    private void deleteSavedRMUAs()
+        throws Exception
+    {
+        AttributeAccess aa = DAFactory.getAttributeAccess();
+        if (!isNew())
+        {
+            aa.deleteQueryColumnIDs(getUserId().toString(), 
+                                    getListId().toString(),
+                                    null, null);
+        }
+        else if (isSingleModuleIssueType())        
+        {
+            aa.deleteQueryColumnIDs(getUserId().toString(), null, 
+                getModule().getModuleId().toString(),
+                getIssueType().getIssueTypeId().toString());
+        }
+        else 
+        {
+            aa.deleteQueryColumnIDs(getUserId().toString(), null, 
+                                    null, null);
+        }
+    }
+
 
     public List getCommonLeafRModuleOptions(Attribute attribute)
         throws Exception

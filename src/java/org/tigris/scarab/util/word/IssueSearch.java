@@ -116,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.111 2003/09/10 00:50:31 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.112 2003/09/13 02:11:26 jmcnally Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -2145,14 +2145,13 @@ public class IssueSearch
             boolean sortColumnAdded = false;
             for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-                Integer attrPK = rmua.getAttributeId();
+                String id = (String)i.next();
+                Integer attrPK = new Integer(id);
                 if (attrPK.equals(sortAttrId)) 
                 {
                     sortColumnAdded = true;
                 }
                 
-                String id = attrPK.toString();
                 String alias = AV + id;
                 // add column to SELECT column clause
                 partialSql.append(',').append(alias).append(DOT_VALUE);
