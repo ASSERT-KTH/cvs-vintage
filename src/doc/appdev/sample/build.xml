@@ -1,0 +1,65 @@
+<project name="Hello, World" default="compile" basedir=".">
+
+<!-- Simple "Hello, World" project to provide a concrete example of
+     the recommendations in the Application Developer's Guide.
+
+     NOTE:  Before using this file as is, you should review the
+     values for the properties described under the "init" target.
+     In particular, it is assumed that you wish to install this
+     application under context path "/myapp" in the Tomcat installation
+     defined by your TOMCAT_HOME environment variable.
+-->
+
+
+  <target name="init">
+    <!-- Property values defined here can be overridden by defining
+         corresponding Java system properties on the Ant command line.  -->
+    <property name="deploy.home"    value="${tomcat.home}/webapps/myapp"/>
+    <property name="dist.home"      value="${deploy.home}"/>
+    <property name="dist.src"       value="myapp.jar"/>
+    <property name="dist.war"       value="myapp.war"/>
+    <property name="javadoc.home"   value="${deploy.home}/javadoc"/>
+  </target>
+
+
+  <target name="prepare" init="init">
+    <mkdir dir="${deploy.home}"/>
+    <copydir src="web" dest="${deploy.home}"/>
+    <mkdir dir="${deploy.home}/WEB-INF"/>
+    <copyfile src="etc/web.xml" dest="${deploy.home}/WEB-INF/web.xml"/>
+    <mkdir dir="${deploy.home}/WEB-INF/classes"/>
+    <mkdir dir="${deploy.home}/WEB-INF/lib"/>
+    <copydir src="lib" dest="${deploy.home}/lib"/>
+    <mkdir dir="${javadoc.home}"/>
+  </target>
+
+
+  <target name="clean" init="init">
+    <deltree dir="${deploy.home}"/>
+  </target>
+
+
+  <target name="compile" depends="prepare" init="init">
+    <javac srcdir="src" destdir="${deploy.home}/WEB-INF/classes"
+           classpath="${deploy.home}/WEB-INF/classes"
+           debug="on" optimize="off" deprecation="off"/>
+  </target>
+
+
+  <target name="javadoc" depends="prepare" init="init">
+    <!-- TODO -->
+  </target>
+
+
+  <target name="all" depends="clean,prepare,compile,javadoc" init="init"/>
+
+
+  <target name="dist" depends="prepare,compile" init="init">
+    <jar jarfile="${dist.home}/${dist.src}"
+         basedir="." items="*"/>
+    <jar jarfile="${dist.home}/${dist.war}"
+         basedir="${deploy.home}" items="*"/>
+  </target>
+
+
+</project>
