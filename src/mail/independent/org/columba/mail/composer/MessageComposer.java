@@ -499,11 +499,13 @@ public class MessageComposer {
 		}
 
 		if (model.isSignMessage()) {
-			PGPItem item = model.getAccountItem().getPGPItem();
-			// Set id on from address
-			item.set(
-				"id",
-				model.getAccountItem().getIdentityItem().get("address"));
+		    PGPItem item = model.getAccountItem().getPGPItem();
+		    String idStr = item.get("id");
+            // if the id not currently set (for example in the security panel in the account-config
+		    if ((idStr == null) || (idStr.length() == 0 )) {
+		        //  Set id on from address
+		        item.set("id", model.getAccountItem().getIdentityItem().get("address"));
+		    }
 			PGPMimePart signPart =
 				new PGPMimePart(new MimeHeader("multipart", "signed"), item);
 

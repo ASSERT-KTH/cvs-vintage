@@ -281,7 +281,7 @@ public class PGPController {
 		throws PGPException {
 		exitVal = -1;
 		String error = null;
-
+		ColumbaLogger.log.debug("signing called");
         this.checkPassphrase(item);
 		try {
 		    exitVal = utils[GPG].sign(item, pgpStream);
@@ -289,11 +289,13 @@ public class PGPController {
 		    
 		    error = utils[GPG].parse(utils[GPG].getErrorString());
 		} catch (Exception e) {
+            ColumbaLogger.log.error(e);
 		    throw new PGPException(error);
 		}
 		
 		pgpMessage = new String(error);
 		if (exitVal != 0) {
+            ColumbaLogger.log.error(error);
 		    throw new PGPException(error);
 		}
 		return utils[GPG].getStreamResult();

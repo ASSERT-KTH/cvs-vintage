@@ -231,6 +231,7 @@ public class AccountDialog implements ActionListener {
 			incomingServerPanel.updateComponents(false);
 			receiveOptionsPanel.updateComponents(false);
 			outgoingServerPanel.updateComponents(false);
+            securityPanel.updateComponents(false);
 
 			if (accountItem.isPopAccount()) {
 

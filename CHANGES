@@ -1,3 +1,10 @@
+- fixing getting the right id for signing, if a id is given in the security panel it 
+  should be used instead of the sender
+- adding always sign feature to security panel (waffel)
+- fixed bug in security panel, now the settings are saved and remember 
+  correct (waffel)
+- fixed bug when hit Alt+D to delete a message (waffel)
+- added question dialog when delete a folder
 - fixed error in printing when no character set is specified
   in message (karlpeder)
 - the correct account is now selected when replying (karlpeder)

@@ -50,7 +50,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
 	public SecurityPanel(PGPItem item) {
 		super();
-
+		System.out.println("call Security Panel");
 		this.item = item;
 
 		initComponents();
@@ -84,7 +84,7 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 
 			item.set("always_sign", alwaysSignCheckBox.isSelected());
 			item.set("always_encrypt", alwaysEncryptCheckBox.isSelected());
-
+            System.out.println("update components saving "+ item.get("id"));
 		}
 	}
 
@@ -117,11 +117,10 @@ public class SecurityPanel extends DefaultPanel implements ActionListener {
 		builder.append(idTextField);
 		builder.nextLine();
 
-		// TODO: reactivate if feature is supported
-		/*
 		builder.append(alwaysSignCheckBox, 3);
 		builder.nextLine();
-		
+		//      TODO: reactivate if feature is supported
+		/*
 		builder.append(alwaysEncryptCheckBox, 3);
 		builder.nextLine();
 		*/
