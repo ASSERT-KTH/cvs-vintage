@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.syntax.*;
 /**
  * Class with several text utility functions.
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.20 2002/01/09 07:21:53 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.21 2002/01/12 09:17:41 spestov Exp $
  */
 public class TextUtilities
 {
@@ -300,6 +300,9 @@ public class TextUtilities
 	 */
 	public static float offsetToX(Chunk chunks, int offset)
 	{
+		if(offset < 0)
+			throw new ArrayIndexOutOfBoundsException(offset + " < 0");
+
 		float x = 0.0f;
 
 		while(chunks != null)

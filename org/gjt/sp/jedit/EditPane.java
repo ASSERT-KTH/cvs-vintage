@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.13 2001/12/21 07:02:14 spestov Exp $
+ * @version $Id: EditPane.java,v 1.14 2002/01/12 09:17:41 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -282,7 +282,7 @@ public class EditPane extends JPanel implements EBComponent
 
 		add(BorderLayout.CENTER,textArea);
 		markerHighlight = new MarkerHighlight(textArea);
-		textArea.getGutter().addCustomHighlight(markerHighlight);
+		textArea.getGutter().addExtension(markerHighlight);
 
 		propertiesChanged();
 

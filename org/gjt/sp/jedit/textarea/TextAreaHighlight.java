@@ -23,30 +23,23 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 
 /**
- * Highlight interface. Create implementations of this interface and
- * add them to the text area with <code>TextAreaPainter.addCustomHighlight()</code>
- * to paint custom highlights.
+ * @deprecated Use the new, soft wrap-aware, <code>TextAreaExtension</code>
+ * class instead.
  *
  * @author Slava Pestov
- * @version $Id: TextAreaHighlight.java,v 1.2 2001/10/04 07:41:15 spestov Exp $
+ * @version $Id: TextAreaHighlight.java,v 1.3 2002/01/12 09:17:41 spestov Exp $
  */
 public interface TextAreaHighlight
 {
 	/**
-	 * This should paint the highlight and delgate to the
-	 * next highlight painter.
-	 * @param gfx The graphics context
-	 * @param line The virtual line number
-	 * @param y The y co-ordinate of the line
+	 * @deprecated se the new, soft wrap-aware,
+	 * <code>TextAreaExtension</code> interface instead.
 	 */
 	void paintHighlight(Graphics gfx, int line, int y);
 
 	/**
-	 * Returns the tool tip to display at the specified
-	 * location. If this highlighter doesn't know what to
-	 * display, it should delegate to the next highlight
-	 * painter.
-	 * @param evt The mouse event
+	 * @deprecated se the new, soft wrap-aware,
+	 * <code>TextAreaExtension</code> class instead.
 	 */
 	String getToolTipText(MouseEvent evt);
 }
