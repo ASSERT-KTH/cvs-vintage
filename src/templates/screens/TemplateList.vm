@@ -37,8 +37,7 @@
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap">
-  </th>
+  <th nowrap="nowrap">Select</th>
   <th>
   <img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
    Template name</th>
