@@ -220,9 +220,9 @@ $l10n.NoComments
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-      <P>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)
+      <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
     #else
-        $comment.DataAsString
+        <p><source>$comment.DataAsString</source></p>
     #end
   #end
 
