@@ -70,7 +70,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.36 2004/12/04 23:51:41 jorgeuriarte Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.37 2004/12/27 22:43:34 jorgeuriarte Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -151,24 +151,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 }
             }
         }
-        RModuleAttribute rma =  module.getRModuleAttribute(scarabR.getAttribute(), scarabR.getIssueType());
-        Group group = intake.get("RModuleAttribute", rma.getQueryKey(), false);
-        rma.setAttributeRequirements(((Integer[])group.get("AttributeRequirements").getValue()));
-        rma.save();
-        ScarabCache.clear();
     }
 
-    public synchronized void doSaveRequiredOption (RunData data, TemplateContext context)
-    throws Exception
-    {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        IntakeTool intake = getIntakeTool(context);
-        RModuleAttribute rma = scarabR.getRModuleAttribute();
-        Group attrGroup = intake.get("RModuleAttribute", IntakeTool.DEFAULT_KEY);
-        Field requiredOptionId = attrGroup.get("RequiredOptionId");
-    }
-    
     /**
      * Unmaps attribute options to modules.
      */

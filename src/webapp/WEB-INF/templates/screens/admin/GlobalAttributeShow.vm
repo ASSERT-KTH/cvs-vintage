@@ -39,7 +39,7 @@
 ## INPUT FORM
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalAttributeShow.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">

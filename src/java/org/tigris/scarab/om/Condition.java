@@ -9,8 +9,8 @@ import org.apache.torque.om.Persistent;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-public  class RAttributeRequirement
-    extends org.tigris.scarab.om.BaseRAttributeRequirement
+public  class Condition
+    extends org.tigris.scarab.om.BaseCondition
     implements Persistent
 {
 }

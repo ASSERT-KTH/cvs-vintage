@@ -69,6 +69,9 @@ import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.parser.ParameterParser;
 import org.apache.fulcrum.parser.StringValueParser;
 import org.apache.fulcrum.pool.Recyclable;
+import org.apache.torque.NoRowsException;
+import org.apache.torque.TooManyRowsException;
+import org.apache.torque.TorqueException;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.SimpleKey;
@@ -116,6 +119,8 @@ import org.tigris.scarab.om.ReportManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScopePeer;
+import org.tigris.scarab.om.Transition;
+import org.tigris.scarab.om.TransitionPeer;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.tools.localization.L10NKeySet;
@@ -3080,10 +3085,25 @@ e.printStackTrace();
         return result;
     }
     
-    public List getSortedAttributeOptions() {
+    public List getSortedAttributeOptions()
+    {
         return AttributeOptionPeer.getSortedAttributeOptions();
     }
 
+    public Transition getTransition(Integer pk)
+    {
+        Transition tran = null;
+        try
+        {
+            tran = TransitionPeer.retrieveByPK(pk);
+        }
+        catch (Exception e)
+        {
+            // Nothing to do. Ignore.
+        }
+        return tran;
+    }
+    
     // ****************** Recyclable implementation ************************
     /**
      * Recycles the object by removing its disposed flag.

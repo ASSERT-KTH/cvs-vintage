@@ -115,5 +115,15 @@ public class RModuleAttributePeer
         }
         return result;
     }
+    
+    public static void doDelete(RModuleAttribute rma) throws TorqueException
+    {
+        Criteria crit = new Criteria();
+        crit.add(ConditionPeer.MODULE_ID, rma.getModuleId());
+        crit.add(ConditionPeer.ISSUE_TYPE_ID, rma.getIssueTypeId());
+        crit.add(ConditionPeer.ATTRIBUTE_ID, rma.getAttributeId());
+        ConditionPeer.doDelete(crit);
+        BaseTransitionPeer.doDelete(crit);
+    }    
 }
 

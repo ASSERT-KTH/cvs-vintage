@@ -409,7 +409,7 @@
     
     </target>
 
-    <target name="migrate-workflow" description="Make changes to an existing system, keeping the data, to allow migration to cheapworklow">
+    <target name="migrate-workflow" description="Make changes to an existing b19 system, keeping the data, to allow migration to cheapworklow">
         <sql
             driver="${scarab.database.jdbc.driver}"
             url="${scarab.database.url}"
@@ -419,7 +419,6 @@
             <classpath refid="classpath"/>
 	<transaction src="${src.sql.dir}/upgrade/${scarab.database.type}-upgrade-1.0b19-workflow-1.sql"/>
 	<transaction src="${src.sql.dir}/upgrade/${scarab.database.type}-upgrade-1.0b19-workflow-2.sql"/>
-	<transaction src="${src.sql.dir}/upgrade/${scarab.database.type}-upgrade-1.0b19-workflow-3.sql"/>
         </sql>
     </target>
 

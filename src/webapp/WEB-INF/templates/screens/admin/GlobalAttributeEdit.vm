@@ -10,7 +10,6 @@
 #if ($deleting)
    <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
-   <input type="hidden" name="attId" value="$attribute.AttributeId" />
    <input type="hidden" name="groupId" value="$groupId" />
    <input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
 
@@ -36,14 +35,12 @@
    #set ($createNew = true)
 #end
 
-<p>$l10n.GlobalAttributes </p>
-
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 #if (!$createNew)
    <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalAttributeShow.vm"))
+#set ($cancelTemplate = "admin,GlobalAttributeShow.vm")
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="groupId" value="$!data.Parameters.getString("groupId")" />
 <input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
@@ -126,25 +123,17 @@
  </tr>
 #end
 <tr>
-  <th>$l10n.RequiredIf:</th>
+  <th>$l10n.RequiredIf</th>
   <td>
-<select multiple="true" size="5" name="$attgroup.AttributeRequirements.Key">
-        <optgroup>
-        <option value="0">$l10n.RequiredNone</option>
-    #set ($attributeIdPrev = -1)
-	#foreach ($opt in $scarabR.sortedAttributeOptions)
-	  #set ($attributeId = $opt.attributeId)
-	  #if ($attributeId != $attributeIdPrev)
-	    #if ($!attributeIdPrev != -1)
-	      </optgroup>
-	    #end
-             <optgroup label="$opt.attribute.name">
-	  #end
-	  <option value="$opt.optionId" #if ($attribute.isRequiredIf($opt.optionId)) selected #end>$opt.name</option>
-	  #set ($attributeIdPrev = $attributeId)
-	#end
-</select>
-<p><em>$l10n.RequiredIfExplanation</em></p>
+  #if ($attribute.isConditioned())
+    #set ($requiredOptions = $attribute.Conditions)
+    #foreach ($o in $requiredOptions)
+      $o.attributeOption.attribute.name = $o.attributeOption.name<br/>
+    #end   
+  #set ($conditionsLink = $link.setPage("admin,ConditionEdit.vm").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("obj_type", $scarabG.Constant.GLOBAL_ATTRIBUTE_OBJECT).addPathInfo("attId", $attribute.attributeId))
+  #else
+	  <em>No conditions defined.</em>
+  #end
   </td>
 </tr> 
 
@@ -154,6 +143,9 @@
 
 <div class="functnbar3">
    <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveattributedata" />
+#if (!$createNew)
+   <input type="button" value="$l10n.EditConditions"  onClick="location.href='$link.setPage("admin,ConditionEdit.vm").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("obj_type", $scarabG.Constant.GLOBAL_ATTRIBUTE_OBJECT).addPathInfo("attId", $attribute.attributeId)'"  />
+#end
 </div>
 
 
@@ -280,11 +272,12 @@
 
 <div class="colbar">
 $l10n.TransitionsExplanation1<br/>
-$l10n.TransitionsExplanation2
+$l10n.TransitionsExplanation2<br/>
+$l10n.TransitionsExplanation3
 </div>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 #set ($transitions = $attribute.transitions)
-	<tr><th>$l10n.Delete</th><th>$l10n.TransitionsFrom</th><th>$l10n.TransitionsTo</th><th>$l10n.TransitionsRoleNeeded</th></tr>
+	<tr><th>$l10n.Delete</th><th>$l10n.TransitionsFrom</th><th>$l10n.TransitionsTo</th><th>$l10n.TransitionsRoleNeeded</th><th valign="middle" colspan="2">$l10n.TransitionsRequiredConditions</th></tr>
 #foreach ($transition in $transitions)
 	#set ($transitionId = $transition.transitionId)
 	<tr>
@@ -314,6 +307,26 @@ $l10n.TransitionsExplanation2
 	#else
 	  $l10n.TransitionsAnyRole
 	#end
+	</td>
+	<td>
+  #if ($transition.isConditioned())
+    #set ($requiredOptions = $transition.Conditions)
+    #foreach ($o in $requiredOptions)
+      $o.attributeOption.attribute.name = $o.attributeOption.name<br/>
+    #end   
+  #set ($conditionsLink = $link.setPage("admin,ConditionEdit.vm").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("obj_type", $scarabG.Constant.GLOBAL_ATTRIBUTE_OBJECT).addPathInfo("attId", $attribute.attributeId))
+  #else
+	  <em>No conditions defined.</em>
+  #end	
+	#if ($transition.isConditioned())
+	  #set ($msgCondition = $l10n.EditConditions)
+	#else
+	  #set ($msgCondition = $l10n.AddConditions)
+	#end
+    $link.init($data)
+    </td>
+    <td>
+	<input type="button" value="$l10n.EditConditions" onClick="location.href='$link.setPage("admin,ConditionEdit.vm").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE","admin,GlobalAttributeEdit.vm").addPathInfo("obj_type", $scarabG.Constant.TRANSITION_OBJECT).addPathInfo("attId", $attribute.attributeId).addPathInfo("transition_id", $transition.transitionId)'" />
 	</td>
 	</tr>
 #end
@@ -351,6 +364,7 @@ $l10n.TransitionsExplanation2
 	#end
 	</select>
 	</td>
+	<td colspan="2">&nbsp;</td>
 	</tr>
 </table>
 <div class="functnbar3">

@@ -127,3 +127,8 @@ color: rgb(208, 208, 208);
 {
 border: thin solid rgb(128, 128, 128);
 }
+
+div.textDisabled
+{
+color: rgb(208, 208, 208);
+}

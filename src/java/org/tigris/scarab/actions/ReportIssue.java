@@ -71,10 +71,10 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Condition;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.RAttributeRequirement;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.ScarabUser;
@@ -96,7 +96,7 @@ import org.tigris.scarab.util.word.QueryResult;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.190 2004/12/03 15:55:41 dep4b Exp $
+ * @version $Id: ReportIssue.java,v 1.191 2004/12/27 22:43:34 jorgeuriarte Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -351,13 +351,13 @@ public class ReportIssue extends RequireLoginFirstAction
                  * If the field has any conditional constraint, will be added to the collection
                  * in the hash.
                  */ 
-                List attributeRequirements = aval.getRModuleAttribute().getRAttributeRequirements(); 
-                if (attributeRequirements.size() > 0)
+                List conditions = aval.getRModuleAttribute().getConditions(); 
+                if (conditions.size() > 0)
                 {
-                    for (Iterator it = attributeRequirements.iterator(); it.hasNext(); )
+                    for (Iterator it = conditions.iterator(); it.hasNext(); )
                     {
-                        RAttributeRequirement requirement = (RAttributeRequirement)it.next();
-                        Integer id = requirement.getOptionId();
+                        Condition cond = (Condition)it.next();
+                        Integer id = cond.getOptionId();
                         List fields = (List)conditionallyRequiredFields.get(id);
                         if (fields == null)
                         {

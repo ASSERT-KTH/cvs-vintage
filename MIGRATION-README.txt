@@ -20,7 +20,7 @@ The upgrade procedure is easy, and should cause no problem. It will not
 change/delete any data, but in case you didn't notice the top of this
 file... BACKUP YOUR DATA FIRST!
 
-0. Change to Scarab's root directory
+0. Change to Scarab's build directory
 
 1. Run the database migration procedure.
 

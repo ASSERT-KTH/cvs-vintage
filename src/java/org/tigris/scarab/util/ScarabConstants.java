@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.67 2004/12/03 16:25:01 dep4b Exp $
+ * @version $Id: ScarabConstants.java,v 1.68 2004/12/27 22:43:35 jorgeuriarte Exp $
  */
 public interface ScarabConstants
 {
@@ -306,4 +306,9 @@ public interface ScarabConstants
     public static final String HTTP_SCHEME = "scarab.http.scheme";
     public static final String HTTP_SCRIPT_NAME = "scarab.http.scriptname";
     public static final String HTTP_PORT = "scarab.http.port";
+    
+    // Condition editor constants
+    public static int TRANSITION_OBJECT = 0;
+    public static int GLOBAL_ATTRIBUTE_OBJECT = 1;
+    public static int MODULE_ATTRIBUTE_OBJECT = 2;
 }    

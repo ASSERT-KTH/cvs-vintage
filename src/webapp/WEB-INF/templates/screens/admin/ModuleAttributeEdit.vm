@@ -5,10 +5,7 @@
 #set ($attTypeName = $attType.AttributeClass.Name)
 #set ($ria = $issueType.getRIssueTypeAttribute($attribute))
 #set ($rma = $module.getRModuleAttribute($attribute, $issueType))
-#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
-#if ($cancelTemplate.equals("admin,ModuleAttributeEdit.vm"))
-    #set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
-#end
+#set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
 
 #macro (ModuleAttributeEditBar $val)
 <div class="functnbar$val">
@@ -65,26 +62,33 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
  </tr>
 
 <tr>
-  <th>$l10n.RequiredIf: </th>
+  <th>$l10n.AlwaysRequired</th>
   <td>
-#set ($attGroup = $intake.RModuleAttribute.mapTo($rma))
-<select multiple="true" size="5" name="$attGroup.AttributeRequirements.Key">
-        <optgroup>
-        <option value="0">$l10n.RequiredNone</option>
-    #set ($attributeIdPrev = -1)
-	#foreach ($opt in $scarabR.sortedAttributeOptions)
-	  #set ($attributeId = $opt.attributeId)
-	  #if ($attributeId != $attributeIdPrev)
-	    #if ($!attributeIdPrev != -1)
-	      </optgroup>
-	    #end
-             <optgroup label="$opt.attribute.name">
-	  #end
-	  <option value="$opt.optionId" #if ($rma.isRequiredIf($opt.optionId)) selected #end>$opt.name</option>
-	  #set ($attributeIdPrev = $attributeId)
-	#end
-</select>
-<p><em>$l10n.RequiredIfExplanation</em></p>
+  #if ($rma.required)
+    $l10n.Yes
+    $l10n.ValueSupersedesRequiredIf
+  #else
+    $l10n.No
+  #end
+  </td>
+</tr>
+<tr>
+  <th>$l10n.RequiredIf</th>
+  <td >
+  #if ($rma.required)
+    <div class="textDisabled">
+  #else
+    <div>
+  #end
+  #if ($rma.isConditioned())
+    #set ($requiredOptions = $rma.Conditions)
+    #foreach ($o in $requiredOptions)
+      $o.attributeOption.attribute.name = $o.attributeOption.name<br/>
+    #end   
+  #else
+	  <em>$l10n.NoConditionsDefined</em>
+  #end
+  </div>
   </td>
 </tr> 
   #end
@@ -92,7 +96,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").</em></p>
 </table>
 </div>
 <div class="functnbar3">
-   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />
+   <input type="button" value="$l10n.EditConditions"  onClick="location.href='$link.setPage("admin,ConditionEdit.vm").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE","admin,ModuleAttributeEdit.vm").addPathInfo("groupId", $data.parameters.groupId).addPathInfo("obj_type", $scarabG.Constant.MODULE_ATTRIBUTE_OBJECT).addPathInfo("moduleId", $module.moduleId).addPathInfo("issueTypeId", $issueType.issueTypeId).addPathInfo("attId", $attribute.attributeId)'"  />   
 </div>
 
 #set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $issueType, false))

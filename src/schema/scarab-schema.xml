@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://db.apache.org/torque/dtd/database_3_1.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.4 2004/11/27 01:11:12 jorgeuriarte Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.5 2004/12/27 22:43:36 jorgeuriarte Exp $ -->
 
 <database name="scarab" defaultJavaType="object">
 <!--
@@ -313,7 +313,8 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_R_ATTRIBUTE_REQUIREMENT" idMethod="none" javaName="RAttributeRequirement">
+<table name="SCARAB_CONDITION" idMethod="none" javaName="Condition">
+    <column name="TRANSITION_ID" primaryKey="true" required="true" type="INTEGER"/>
     <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
 	<column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"/>	
@@ -322,6 +323,9 @@
 		<reference local="MODULE_ID" foreign="MODULE_ID"/>
 		<reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
 		<reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
+	</foreign-key>
+	<foreign-key foreignTable="SCARAB_TRANSITION">
+		<reference local="TRANSITION_ID" foreign="TRANSITION_ID"/>
 	</foreign-key>
 	<foreign-key foreignTable="SCARAB_ATTRIBUTE">
 		<reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
@@ -1073,11 +1077,6 @@
     -->
     <column name="DEFAULT_TEXT_FLAG" required="true" type="BOOLEANINT" 
         default="0" size="1" javaType="primitive"/>
-    <!--
-        A required option for this attribute to be active in this module
-    -->
-    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
-
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
@@ -1086,9 +1085,6 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
-        <reference local="REQUIRED_OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
 
     <index name="IX_MOD_ATTR_REQ">

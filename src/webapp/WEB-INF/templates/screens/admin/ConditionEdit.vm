@@ -1,0 +1,112 @@
+#set ($module = $scarabR.CurrentModule)
+#set ($groupId = $data.Parameters.getString("groupid"))
+## Set values depending on conditioned object
+#set ($objType = $data.Parameters.getInteger("obj_type"))
+#set ($transitionId = $data.Parameters.getInteger("transition_id"))
+#set ($attributeId = $data.Parameters.getInteger("attId"))
+
+#if ($objType==$scarabG.Constant.TRANSITION_OBJECT)
+  #set ($transition = $scarabR.getTransition($transitionId))
+  #set ($attribute = $transition.attribute)
+  #set ($object = $transition)
+  #set ($conditionMsg = $l10n.format('ConditionOnTransition', [$transition.attribute.Name]))
+#else
+  #if ($objType==$scarabG.Constant.GLOBAL_ATTRIBUTE_OBJECT)
+    #set ($attribute = $scarabR.getAttribute($attributeId))
+    #set ($object = $attribute)
+    #set ($conditionMsg = "$l10n.format('ConditionOnGlobalAttribute', [$attribute.Name])")
+  #else
+    #if ($objType==$scarabG.Constant.MODULE_ATTRIBUTE_OBJECT)
+      #set ($groupId = $data.Parameters.getString("groupId"))
+      #set ($attribute = $scarabR.getAttribute($attributeId))
+      #set ($issueType = $scarabR.getIssueType($data.getParameters().get("issueTypeId")))
+      #set ($rma = $module.getRModuleAttribute($attribute, $issueType))
+      #set ($object = $rma)
+      #set ($conditionMsg = "'$attribute.Name' attribute in module '$module.RealName'")
+      #set ($conditionMsg = $l10n.format('ConditionOnModuleAttribute', [$attribute.Name, $module.RealName]))
+    #end
+  #end
+#end
+#set ($attgroup = $intake.ConditionEdit.Default)
+
+<div class="app" id="div3-0-2-0">
+
+<form action="$link.setPage("admin,ConditionEdit.vm")" method="post">
+<input type="hidden" name="obj_type" value="$objType"/>
+<input type="hidden" name="transition_id" value="$transitionId"/>
+<input type="hidden" name="attId" value="$attributeId" />
+<input type="hidden" name="att_0id" value="$attributeId" />
+<input type="hidden" name="issueTypeId" value="$issueType.issueTypeId" />
+<input type="hidden" name="moduleId" value="$module.moduleId" />
+<input type="hidden" name="action" value="admin.ConditionEdit" />
+<input type="hidden" name="groupId" value="$groupId" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.parameters.cancelTemplate"/>
+
+<div class="functnbar">
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>
+
+<h3>Condition Definition</h3>
+<div class="colbar">
+$l10n.ConditionsExplanation1<br/>
+$l10n.ConditionsExplanation2<br/>
+</div>
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+  <th>$l10n.ConditionsSetOn</th>
+  <td>$conditionMsg</td>
+</tr>
+<tr>
+  <th>$l10n.ConditionsCurrentValue</th>
+  <td>
+#set ($requiredOptions = $object.Conditions)
+#foreach ($o in $requiredOptions)
+  $o.attributeOption.attribute.name = $o.attributeOption.name<br/>
+#end  
+  </td>
+</tr>
+<tr>
+  <th>$l10n.ConditionsNewValue</th>
+  <td>
+  <table>
+  <tr>
+#set ($attributeIdPrev = -1)
+#set ($col=1)
+#foreach ($opt in $scarabR.sortedAttributeOptions)
+  #set ($attributeId = $opt.attributeId)
+  #if ($attributeId != $attributeIdPrev)
+    #if ($!attributeIdPrev != -1)
+</select></td>
+      #if ($col == 3)
+        </tr>
+	#set ($col = 0)
+      #end
+      #set ($col = ($col + 1))
+    #end
+    <td><b>$opt.attribute.Name</b><br/>
+<select style="width:150px;" multiple="true" size="10" width="20" name="$attgroup.ConditionsArray.Key">
+  #end
+  <option value="$opt.optionId" #if ($object.isRequiredIf($opt.optionId)) selected #end>$opt.name</option>
+  #set ($attributeIdPrev = $attributeId)
+#end  
+</select></td></tr>
+</table>
+</td></tr> 
+<tr>
+
+</tr>
+
+</table>
+</div>
+
+<div class="functnbar3">
+   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />
+   <input type="submit" value="$l10n.ClearConditions"  name="eventSubmit_doDelete" onClick="return confirm('$l10n.SureYouWantToClearConditions');" />
+</div>
+
+<div class="functnbar2">
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
+</div>

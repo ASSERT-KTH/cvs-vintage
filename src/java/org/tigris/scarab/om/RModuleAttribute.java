@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 /* ================================================================
- * Copyright (c) 2000-2003 CollabNet.  All rights reserved.
+ * Copyright (c) 2000-2004 CollabNet.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -69,11 +69,11 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleAttribute relationship.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttribute.java,v 1.49 2004/11/27 01:11:12 jorgeuriarte Exp $
+ * @version $Id: RModuleAttribute.java,v 1.50 2004/12/27 22:43:35 jorgeuriarte Exp $
  */
 public class RModuleAttribute 
     extends BaseRModuleAttribute
-    implements Persistent
+    implements Persistent, Conditioned
 {
     private static final String R_MODULE_ATTTRIBUTE = 
         "RModuleAttribute";
@@ -369,28 +369,43 @@ public class RModuleAttribute
         }
         setDefaultTextFlag(b);
     }
+    
+    public List getConditions() throws TorqueException
+    {
+        if (collConditions == null)
+        {
+            Criteria crit = new Criteria();
+            crit.add(ConditionPeer.ATTRIBUTE_ID, this.getAttributeId());
+            crit.add(ConditionPeer.MODULE_ID, this.getModuleId());
+            crit.add(ConditionPeer.ISSUE_TYPE_ID, this.getIssueTypeId());
+            crit.add(ConditionPeer.TRANSITION_ID, new Integer(0));
+            collConditions = getConditions(crit);
+        }
+        return collConditions;
+    }
+    
     /**
      * Returns the array of attributeOptionIds that will force the requiment of this
      * attribute if set. Used by templates to load the combo.
      * @return
      */
-    public Integer[] getAttributeRequirements()
+    public Integer[] getConditionsArray()
     {
-        List requirements = new ArrayList();
+        List conditions = new ArrayList();
         Integer[] aIDs = null;
         try
         {
-            requirements = this.getRAttributeRequirements();
-            aIDs = new Integer[requirements.size()];
+            conditions = this.getConditions();
+            aIDs = new Integer[conditions.size()];
             int i=0;
-            for (Iterator iter = requirements.iterator(); iter.hasNext(); i++)
+            for (Iterator iter = conditions.iterator(); iter.hasNext(); i++)
             {
-                aIDs[i] = (Integer)iter.next();
+                aIDs[i] = ((Condition)iter.next()).getOptionId();
             }
         }
         catch (TorqueException e)
         {
-            this.getLog().error("getAttributeRequirements: " + e);
+            this.getLog().error("getConditionsArray: " + e);
         }
         return aIDs;
     }
@@ -399,24 +414,31 @@ public class RModuleAttribute
      * @param aOptionId
      * @throws Exception
      */
-    public void setAttributeRequirements(Integer aOptionId[]) throws Exception
+    public void setConditionsArray(Integer aOptionId[]) throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add(RAttributeRequirementPeer.ATTRIBUTE_ID, this.getAttributeId());
-        crit.add(RAttributeRequirementPeer.MODULE_ID, this.getModuleId());
-        crit.add(RAttributeRequirementPeer.ISSUE_TYPE_ID, this.getIssueTypeId());
-        RAttributeRequirementPeer.doDelete(crit);
-        this.getRAttributeRequirements().clear();
-        RAttributeRequirementManager.clear();
+        crit.add(ConditionPeer.ATTRIBUTE_ID, this.getAttributeId());
+        crit.add(ConditionPeer.MODULE_ID, this.getModuleId());
+        crit.add(ConditionPeer.ISSUE_TYPE_ID, this.getIssueTypeId());
+        crit.add(ConditionPeer.TRANSITION_ID, new Integer(0));
+        ConditionPeer.doDelete(crit);
+        this.getConditions().clear();
+        ConditionManager.clear();
         if (aOptionId != null)
         {
 	        for (int i=0; i<aOptionId.length; i++)
 	        {
-	            RAttributeRequirement r = new RAttributeRequirement();
-	            r.setAttribute(this.getAttribute());
-	            r.setOptionId(aOptionId[i]);
-	            this.addRAttributeRequirement(r);
-	            r.save();
+	            if (aOptionId[i].intValue() != 0)
+	            {
+		            Condition cond = new Condition();
+		            cond.setAttribute(this.getAttribute());
+		            cond.setOptionId(aOptionId[i]);
+		            cond.setTransitionId(new Integer(0));
+		            cond.setIssueTypeId(this.getIssueTypeId());
+		            cond.setModuleId(this.getModuleId());
+		            this.addCondition(cond);
+		            cond.save();
+	            }
 	        }
         }
     }
@@ -429,14 +451,28 @@ public class RModuleAttribute
      */
     public boolean isRequiredIf(Integer optionID) throws TorqueException
     {
-        RAttributeRequirement requirement = new RAttributeRequirement();
-        requirement.setAttribute(this.getAttribute());
-        requirement.setModuleId(this.getModuleId());
-        requirement.setIssueTypeId(this.getIssueTypeId());
-        requirement.setOptionId(optionID);
-        boolean bRdo = this.getRAttributeRequirements().contains(requirement);
-        if (bRdo)
-            System.out.println("");
+        Condition condition = new Condition();
+        condition.setAttribute(this.getAttribute());
+        condition.setModuleId(this.getModuleId());
+        condition.setIssueTypeId(this.getIssueTypeId());
+        condition.setTransitionId(new Integer(0));
+        condition.setOptionId(optionID);
+        return this.getConditions().contains(condition);
+    }
+    
+    /**
+     * Returns true if this object is conditioned (has related conditions)
+     * @return
+     */
+    public boolean isConditioned()
+    {
+        boolean bRdo = false;
+        try {
+        	bRdo = this.getConditions().size()>0;
+        } catch (TorqueException te)
+        {
+            // Nothing to do
+        }
         return bRdo;
     }
 }

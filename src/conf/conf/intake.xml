@@ -38,7 +38,10 @@
             <rule name="maxLength" value="255">intake_ActionMustBeLessThan255Characters</rule>
         </field>
         <field name="Deleted" key="del" type="boolean" />
-	<field name="AttributeRequirements" key="attributerequirements" type="int" multiValued="true"/>
+</group>
+
+<group name="ConditionEdit" key="cndtn" mapToObject="om.Condition">
+	<field name="ConditionsArray" key="conditionsarray" type="int" multiValued="true"/>
 </group>
 
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">
@@ -161,7 +164,6 @@
                 mapToProperty="Order">
            <rule name="minValue" value="1">intake_EnterValueGreaterThan0</rule>
         </field>
-        <field name="AttributeRequirements" key="attributerequirements" type="int" multiValued="true"/>
 </group>
 
 <group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">
