@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.2 2000/09/21 05:48:49 carnold Exp $
+// $Id: PropPanelAttribute.java,v 1.3 2000/10/20 07:26:59 carnold Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -49,7 +49,7 @@ public class PropPanelAttribute extends PropPanel {
         addField(new UMLTextField(this,new UMLTextProperty(mclass,"name","getName","setName")),0,0,0);
 
         addCaption(new JLabel("Type:"),1,0,0);
-        addField(new UMLClassifierComboBox(this,MClassifier.class,"type","getType","setType",false),1,0,0);
+        addField(new UMLClassifierComboBox(this,MClassifier.class,null,"type","getType","setType",false),1,0,0);
 
         addCaption(new JLabel("Multiplicity:"),2,0,0);
         addField(new UMLMultiplicityComboBox(this,MAttribute.class),2,0,0);
