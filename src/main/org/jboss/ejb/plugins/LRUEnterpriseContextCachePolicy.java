@@ -26,7 +26,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy
@@ -258,14 +258,17 @@ public class LRUEnterpriseContextCachePolicy
             ("Cannot remove a null cache entry");
       }
 
-      m_buffer.setLength(0);
-      m_buffer.append("Aging out from cache bean ");
-      m_buffer.append(m_cache.getContainer().getBeanMetaData().getEjbName());
-      m_buffer.append("with id = ");
-      m_buffer.append(entry.m_key);
-      m_buffer.append("; cache size = ");
-      m_buffer.append(getList().m_count);
-      log.debug(m_buffer.toString());
+      if( log.isTraceEnabled() )
+      {
+         m_buffer.setLength(0);
+         m_buffer.append("Aging out from cache bean ");
+         m_buffer.append(m_cache.getContainer().getBeanMetaData().getEjbName());
+         m_buffer.append("with id = ");
+         m_buffer.append(entry.m_key);
+         m_buffer.append("; cache size = ");
+         m_buffer.append(getList().m_count);
+         log.trace(m_buffer.toString());
+      }
 
       // This will schedule the passivation
       m_cache.release((EnterpriseContext)entry.m_object);
@@ -348,12 +351,15 @@ public class LRUEnterpriseContextCachePolicy
       
       private void log(int oldCapacity, int newCapacity) 
       {
-         m_buffer.setLength(0);
-         m_buffer.append(m_message);
-         m_buffer.append(oldCapacity);
-         m_buffer.append(", new capacity = ");
-         m_buffer.append(newCapacity);
-         log.debug(m_buffer.toString());
+         if( log.isTraceEnabled() )
+         {
+            m_buffer.setLength(0);
+            m_buffer.append(m_message);
+            m_buffer.append(oldCapacity);
+            m_buffer.append(", new capacity = ");
+            m_buffer.append(newCapacity);
+            log.trace(m_buffer.toString());
+         }
       }
    }
    
@@ -414,12 +420,15 @@ public class LRUEnterpriseContextCachePolicy
       
       private void log(Object key, int count) 
       {
-         m_buffer.setLength(0);
-         m_buffer.append(m_message);
-         m_buffer.append(key);
-         m_buffer.append(" - Cache size = ");
-         m_buffer.append(count);
-         log.debug(m_buffer.toString());
+         if( log.isTraceEnabled() )
+         {
+            m_buffer.setLength(0);
+            m_buffer.append(m_message);
+            m_buffer.append(key);
+            m_buffer.append(" - Cache size = ");
+            m_buffer.append(count);
+            log.trace(m_buffer.toString());
+         }
       }
       
       protected String getTaskLogMessage()
