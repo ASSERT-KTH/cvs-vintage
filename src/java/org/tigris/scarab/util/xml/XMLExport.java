@@ -70,7 +70,7 @@ import org.tigris.scarab.util.TurbineInitialization;
 
 /**
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExport.java,v 1.2 2001/12/13 00:38:23 jon Exp $
+ * @version $Id: XMLExport.java,v 1.3 2001/12/13 14:13:42 kminshull Exp $
  */
 public class XMLExport
 {
@@ -98,13 +98,13 @@ public class XMLExport
         }
         else
         {
-            configDir = path + "/../../../../../../../";
+            configDir = path + "/../../../../../../..";
         }
         
-        //args = new String[] {"PACS1,TBNS1-TBNS130"};
+        //args = new String[] {"pacs1,tbns1-TBNS3"};
         
         XMLExport exporter = new XMLExport();
-        TurbineInitialization.setUp(configDir, "/xmlexport.properties");
+        TurbineInitialization.setUp(configDir, "/WEB-INF/conf/xmlexport.properties");
         
         // validate input
         if (args.length != 1)
@@ -116,7 +116,7 @@ public class XMLExport
         FederatedId[] fids = exporter.parseIssueList(args[0]);
         String export = exporter.buildXMLExport(fids);
         
-        cat.debug("\n\n\n" + export);
+        System.out.println(export);
     }
     
     public String buildXMLExport(FederatedId[] fids)
@@ -269,7 +269,7 @@ public class XMLExport
         {
             if (issues[i].indexOf("-") == -1)
             {
-                addFederatedId(results, new FederatedId(issues[i]));
+                addFederatedId(results, issues[i]);
             }
             else
             {
@@ -278,9 +278,9 @@ public class XMLExport
                 {
                     throw new Exception("Federated id range not valid: " + issues[i]);
                 }
-                FederatedId fidStart = new FederatedId(issue[0]);
-                FederatedId fidStop = new FederatedId(issue[1]);
-                if (!fidStart.getPrefix().equals(fidStop.getPrefix()))
+                FederatedId fidStart = createFederatedId(issue[0]);
+                FederatedId fidStop = createFederatedId(issue[1]);
+                if (!fidStart.getPrefix().equalsIgnoreCase(fidStop.getPrefix()))
                 {
                     throw new Exception("Federated id prefix does not match: " + issues[i]);
                 }
@@ -293,13 +293,40 @@ public class XMLExport
                 addFederatedId(results, fidStart);
                 for (int j = fidStart.getCount() + 1; j < fidStop.getCount(); j++)
                 {
-                    addFederatedId(results, new FederatedId(fidStart.getPrefix() + j));
+                    addFederatedId(results, fidStart.getPrefix() + j);
                 }
                 addFederatedId(results, fidStop);
             }
         }
         
         return (FederatedId[])results.toArray(new FederatedId[results.size()]);
+    }
+    
+    /**
+     * Catches and rethrows parsing errors when creating the federated id.
+     */
+    private static FederatedId createFederatedId(String id)
+        throws Exception
+    {
+        FederatedId fid = null;
+        try
+        {
+            fid = new FederatedId(id);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Invaild federated id: " + id);
+        }
+        return fid;
+    }
+    
+    /**
+     * Adds the specified federated id to the array list
+     */
+    private static void addFederatedId(ArrayList al, String id)
+        throws Exception
+    {
+        addFederatedId(al, createFederatedId(id));
     }
     
     /**
