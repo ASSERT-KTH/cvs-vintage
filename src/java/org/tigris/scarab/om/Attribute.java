@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.73 2003/08/21 01:56:10 jmcnally Exp $
+  * @version $Id: Attribute.java,v 1.74 2003/12/17 22:41:23 thierrylach Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -160,16 +160,17 @@ public class Attribute
         throws Exception
     {
         Attribute result = null;
-        Object obj = ScarabCache.get(ATTRIBUTE, GET_INSTANCE, attributeName); 
+        Object obj = ScarabCache.get(ATTRIBUTE, GET_INSTANCE, attributeName.toLowerCase()); 
         if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
+            crit.setIgnoreCase(true);
             List attributes = AttributePeer.doSelect(crit);
             if (attributes.size() > 0)
             {
                 result = (Attribute) attributes.get(0);
-                ScarabCache.put(result, ATTRIBUTE, GET_INSTANCE, attributeName);
+                ScarabCache.put(result, ATTRIBUTE, GET_INSTANCE, attributeName.toLowerCase());
             } 
         }
         else 
