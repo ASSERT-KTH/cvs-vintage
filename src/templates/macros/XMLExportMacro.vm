@@ -46,6 +46,7 @@
 
   <module id="$module.ModuleId" parent="$module.ParentId">
     <name>$module.RealName</name>
+    <description>$module.Description</description>
     <code>$module.Code</code>
 #end
 
