@@ -7,6 +7,7 @@
 package org.jboss.deployment;
 
 import java.io.IOException;
+import java.io.FilenameFilter;
 import java.net.MalformedURLException;
 
 import org.jboss.util.ServiceMBean;
@@ -16,7 +17,7 @@ import org.jboss.util.ServiceMBean;
  *   components.
  *
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface DeployerMBean
    extends ServiceMBean
@@ -24,6 +25,17 @@ public interface DeployerMBean
    // Constants -----------------------------------------------------
     
    // Public --------------------------------------------------------
+   
+   /**
+    * Provides a filter that decides whether a file can be deployed by
+    * this deployer based on the filename.  This is for the benefit of
+    * the {@link org.jboss.ejb.AutoDeployer} service.
+    *
+    * @return a <code>FilenameFilter</code> that only
+    *         <code>accept</code>s files with names that can be
+    *         deployed by this deployer
+    */
+   FilenameFilter getDeployableFilter();
    
    void deploy (String url)
       throws MalformedURLException, IOException, DeploymentException;

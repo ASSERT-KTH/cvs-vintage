@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.MalformedURLException;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -17,30 +18,33 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
+import javax.management.ReflectionException;
 import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.ObjectName;
 
 import org.jboss.logging.Log;
-import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
-import org.jboss.deployment.J2eeDeployerMBean;
 
 
 /**
- *   The AutoDeployer is used to automatically deploy EJB-jars.
- *	  It can be used on either .jar or .xml files. The AutoDeployer can
- *	  be configured to "watch" one or more files. If they are updated they will
- *	  be redeployed.
+ *   The AutoDeployer is used to automatically deploy applications or
+ *   components thereof.
  *
- *	  If it is set to watch a directory instead of a single file, all files within that
- *	  directory will be watched separately.
+ *   <p> It can be used on either .jar or .xml files. The AutoDeployer
+ *   can be configured to "watch" one or more files. If they are
+ *   updated they will be redeployed.
  *
- *	  When a jar is to be deployed, the AutoDeployer will use a ContainerFactory to deploy it.
+ *   <p> If it is set to watch a directory instead of a single file,
+ *   all files within that directory will be watched separately.
  *
- *   @see ContainerFactory
+ *   <p> When a file is to be deployed, the AutoDeployer will use the
+ *   configured deployer to deploy it.
+ *
+ *   @see org.jboss.deployment.J2eeDeployer
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.12 $
+ *   @author Toby Allsopp (toby.allsopp@peace.com)
+ *   @version $Revision: 1.13 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -73,6 +77,10 @@ public class AutoDeployer
    
    // URL list
    String urlList = "";
+
+   /** Filter to decide which files are deployable and which should be
+       ignored */
+   FilenameFilter deployableFilter = null;
 
    // Static --------------------------------------------------------
 
@@ -136,18 +144,15 @@ public class AutoDeployer
                {
                   URL fileUrl = files[idx].toURL();
 
-                  // Check if it's a JAR or zip or ear or war
-                  if (!(fileUrl.getFile().endsWith(".jar") ||
-                        fileUrl.getFile().endsWith(".ear") ||
-                        fileUrl.getFile().endsWith(".war") ||
-                        fileUrl.getFile().endsWith(".zip")))
-                     continue; // Was not a JAR or zip - skip it...
+                  // Check if it's a deployable file
+                  if (!deployableFilter.accept(null, fileUrl.getFile()))
+                     continue; // Was not deployable - skip it...
 
                   if (deployedURLs.get(fileUrl) == null)
                   {
 							// This file has not been seen before
 							// Add to list of files to deploy automatically
-                     watchedURLs.add(new Deployment(fileUrl));
+                     watchedURLs.add(new Deployment(fileUrl, deployableFilter));
                      deployedURLs.put(fileUrl, fileUrl);
                   }
                }
@@ -256,6 +261,22 @@ public class AutoDeployer
    {
       // Save JMX name of EJB ContainerFactory
       factoryName = new ObjectName(namedDeployer);
+
+      // Ask the deployer for a filter to detect deployable files
+      try
+      {
+         deployableFilter = (FilenameFilter) server.invoke(
+            factoryName, "getDeployableFilter", new Object[0], new String[0]);
+      }
+      catch (ReflectionException re)
+      {
+         log.log("Deployer doesn't provide a filter - will try to deploy " +
+                 "all files");
+         deployableFilter = new FilenameFilter()
+            {
+               public boolean accept(File dir, String filename) { return true; }
+            };
+      }
       
       StringTokenizer urls = new StringTokenizer(urlList, ",");
 
@@ -273,7 +294,8 @@ public class AutoDeployer
             {
                try
                {
-                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
+                  watchedURLs.add(new Deployment(
+                     urlFile.getCanonicalFile().toURL(), deployableFilter));
                   log.log("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
@@ -293,16 +315,10 @@ public class AutoDeployer
             }
          } else if (urlFile.exists()) // It's a file
          {
-               // Check if it's a JAR or zip
-               if (!(url.endsWith(".jar") ||
-                     url.endsWith(".ear") ||
-                     url.endsWith(".war") ||
-                     url.endsWith(".zip")))
-                  continue; // Was not a JAR or zip - skip it...
-
                try
                {
-                  watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
+                  watchedURLs.add(new Deployment(
+                     urlFile.getCanonicalFile().toURL(), deployableFilter));
                   log.log("Auto-deploying "+urlFile.getCanonicalFile());
                } catch (Exception e)
                {
@@ -310,16 +326,9 @@ public class AutoDeployer
                }
          } else // It's a real URL (probably http:)
          {
-            // Check if it's a JAR or zip
-            if (!(url.endsWith(".jar") ||
-                  url.endsWith(".ear") ||
-                  url.endsWith(".war") ||
-                  url.endsWith(".zip")))
-               continue; // Was not a JAR or zip - skip it...
-
             try
             {
-               watchedURLs.add(new Deployment(new URL(url)));
+               watchedURLs.add(new Deployment(new URL(url), deployableFilter));
             } catch (MalformedURLException e)
             {
                // Didn't work
@@ -397,13 +406,11 @@ public class AutoDeployer
       URL url;
       URL watch;
 
-      Deployment(URL url)
+      Deployment(URL url, FilenameFilter deployableFilter)
          throws MalformedURLException
       {
          this.url = url;
-         if (url.getFile().endsWith(".jar") ||
-             url.getFile().endsWith(".ear") ||
-             url.getFile().endsWith(".war"))
+         if (deployableFilter.accept(null, url.getFile()))
             watch = url;
          else
             watch = new URL(url, "META-INF/ejb-jar.xml");

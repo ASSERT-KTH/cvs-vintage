@@ -11,9 +11,8 @@ package org.jboss.deployment;
  *   deployed.
  *
  *   @see DeployerMBean
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class DeploymentException
    extends Exception
@@ -21,7 +20,7 @@ public class DeploymentException
    // Attributes ----------------------------------------------------
 
    /** The root cause of this exception */
-   protected Exception cause;
+   protected Throwable cause;
    
    // Static --------------------------------------------------------
 
@@ -32,20 +31,20 @@ public class DeploymentException
       super(message);
    }
    
-   public DeploymentException(String message, Exception e)
+   public DeploymentException(String message, Throwable cause)
    {
       super(message);
       
-      cause = e;
+      this.cause = cause;
    }
    
    // Public --------------------------------------------------------
 
-   public Exception getCause() { return cause; }
+   public Throwable getCause() { return cause; }
    
    public String toString()
    {
       return cause == null ? super.toString()
-         : super.toString()+", Cause: "+cause;
+         : super.toString() + ", Cause: " + cause;
    }
 }

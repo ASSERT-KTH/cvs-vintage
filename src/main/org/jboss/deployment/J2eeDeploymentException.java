@@ -7,16 +7,16 @@
 package org.jboss.deployment;
 
 /**
- *	<description> 
+ * Exception thrown by {@link org.jboss.deployment.J2eeDeployer} on
+ * deployment problems.
  *      
- *	@author Daniel Schulze daniel.schulze@telekel.com
- *	@version $Revision: 1.3 $
+ * @author Daniel Schulze daniel.schulze@telekel.com
+ * @author Toby Allsopp (toby.allsopp@peace.com)
+ * @version $Revision: 1.4 $
  */
 public class J2eeDeploymentException 
-	extends Exception
+   extends DeploymentException
 {
-    Throwable exception;
-
     // Constructors --------------------------------------------------
     public J2eeDeploymentException (String message)
     {
@@ -25,13 +25,7 @@ public class J2eeDeploymentException
 
     public J2eeDeploymentException (String message, Throwable e)
     {
-        super (message);
-        this.exception = e;
-    }
-
-    public Throwable getException()
-    {
-        return exception;
+        super (message, e);
     }
 }
 

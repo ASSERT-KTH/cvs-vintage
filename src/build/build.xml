@@ -50,10 +50,12 @@
     <property name="build.util.classes.dir"     value="${build.dir}/util/classes/"/>
     <property name="build.metadata.classes.dir" value="${build.dir}/metadata/classes"/>
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
+    <property name="build.deployer.classes.dir" value="${build.dir}/deployer/classes/"/>
 
     <property name="verifier.classpath"         value="${build.verifier.classes.dir}"/>
 
     <property name="util.classpath"             value="${build.util.classes.dir};${src.lib.dir}/ejb.jar;${lib.dir}/jmxri.jar"/>
+    <property name="deployer.classpath"         value="${build.deployer.classes.dir};${lib.dir}/jmxri.jar"/>
 
     <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
 	The xml.jar is only here to support the ejx editor app.
@@ -253,6 +255,7 @@
      <mkdir dir="${dist.dir}/db"/>
      <mkdir dir="${dist.dir}/db/hypersonic"/>
      <mkdir dir="${dist.dir}/deploy"/>
+     <mkdir dir="${dist.dir}/deploy/lib"/>
      <mkdir dir="${dist.dir}/log"/>
      <mkdir dir="${dist.dir}/db"/>
      <mkdir dir="${dist.dir}/db/jbossmq"/>
@@ -299,6 +302,9 @@
      </copy>
      <copy todir="${dist.dir}/client">
         <fileset dir="${src.client.dir}"/>
+     </copy>
+     <copy todir="${dist.dir}/deploy/lib">
+        <fileset dir="${etc.dir}/deploy"/>
      </copy>
   </target>
 
@@ -459,6 +465,34 @@
          includes="org/jboss/util/**,
                    org/jboss/logging/**,
                    org/jboss/monitor/**"
+    />
+  </target>
+    
+  <!-- =================================================================== -->
+  <!-- Creates the JBoss Deployer lib.                                     -->
+  <!--                                                                     -->
+  <!-- This is needed (in addition to jboss-util.jar) by modules that      -->
+  <!-- implement a deployer.                                               -->
+  <!-- =================================================================== -->
+  <target name="jboss-deployer" depends="init">
+
+    <mkdir dir="${build.deployer.classes.dir}"/>
+   
+    <javac srcdir="${src.dir}"
+           destdir="${build.deployer.classes.dir}"
+           classpath="${deployer.classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="off"
+           includes="org/jboss/deployment/DeployerMBean.java,
+                     org/jboss/deployment/DeployerMBeanSupport.java,
+                     org/jboss/deployment/DeploymentException.java"
+    />
+    
+    <mkdir dir="${external.dir}"/>
+    <jar jarfile="${dist.dir}/external/jboss-deployer.jar"
+         basedir="${build.deployer.classes.dir}"
+         includes="org/jboss/deployment/**"
     />
   </target>
     

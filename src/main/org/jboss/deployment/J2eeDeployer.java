@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
@@ -65,7 +66,8 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.20 $
+*   @author Toby Allsopp (toby.allsopp@peace.com)
+*   @version $Revision: 1.21 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -146,8 +148,24 @@ implements J2eeDeployerMBean
    {
       return warDeployerName;
    }
-   
+
    // Public --------------------------------------------------------
+
+   public FilenameFilter getDeployableFilter()
+   {
+      return new FilenameFilter()
+         {
+            public boolean accept(File dir, String filename)
+            {
+               return
+                  filename.endsWith(".jar") ||
+                  filename.endsWith(".war") ||
+                  filename.endsWith(".ear") ||
+                  filename.endsWith(".zip");
+            }
+         };
+   }
+   
    /** Deploys the given URL independent if it is a EJB.jar, Web.war
    *   or Application.ear. In case of already deployed, it performes a
    *   redeploy.

@@ -14,10 +14,11 @@ import org.jboss.util.ServiceMBean;
 /**
  *   @see 
  *   @author Daniel Schulze (daniel.schulze@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author Toby Allsopp (toby.allsopp@peace.com)
+ *   @version $Revision: 1.4 $
  */
 public interface J2eeDeployerMBean
-	extends ServiceMBean
+   extends DeployerMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = "J2EE:service=J2eeDeployer";
@@ -31,10 +32,4 @@ public interface J2eeDeployerMBean
    
    public void setWarDeployerName(String warDeployerName);
    public String getWarDeployerName();
-   
-   public void deploy (String url) throws MalformedURLException, IOException, J2eeDeploymentException;
-
-   public void undeploy (String url) throws MalformedURLException, IOException, J2eeDeploymentException;
-
-   public boolean isDeployed (String url) throws MalformedURLException, J2eeDeploymentException;
 }
