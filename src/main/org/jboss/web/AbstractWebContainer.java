@@ -158,8 +158,10 @@ in the catalina module.
 @see org.jboss.security.SimplePrincipal;
 @see org.jboss.security.SecurityAssociation;
 
+@jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
+   
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.50 $
+@version $Revision: 1.51 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -520,8 +522,11 @@ public abstract class AbstractWebContainer
    */
    protected abstract void performUndeploy(String warUrl) throws Exception;
    
-   /** See if a war is deployed.
-   */
+   /**
+    * See if a war is deployed.
+    *
+    * @jmx:managed-attribute
+    */
    public boolean isDeployed(String warUrl)
    {
       return deploymentMap.containsKey(warUrl);
@@ -538,26 +543,37 @@ public abstract class AbstractWebContainer
       return appInfo;
    }
    
-   /** Returns the applications deployed by the web container subclasses.
-   @return An Iterator of WebApplication objects for the deployed wars.
-   */
+   /**
+    * Returns the applications deployed by the web container subclasses.
+    *
+    * @jmx:managed-attribute
+    * 
+    * @return An Iterator of WebApplication objects for the deployed wars.
+    */
    public Iterator getDeployedApplications()
    {
       return deploymentMap.values().iterator();
    }
    
-   /** An accessor for any configuration element set via setConfig. This
-   method always returns null and must be overriden by subclasses to
-   return a valid value.
-   */
+   /**
+    * An accessor for any configuration element set via setConfig. This
+    * method always returns null and must be overriden by subclasses to
+    * return a valid value.
+    *
+    * @jmx:managed-attribute
+    */
    public Element getConfig()
    {
       return null;
    }
-   /** This method is invoked to import an arbitrary XML configuration tree.
-   Subclasses should override this method if they support such a configuration
-   capability. This implementation does nothing.
-   */
+   
+   /**
+    * This method is invoked to import an arbitrary XML configuration tree.
+    * Subclasses should override this method if they support such a configuration
+    * capability. This implementation does nothing.
+    *
+    * @jmx:managed-attribute
+    */
    public void setConfig(Element config)
    {
    }
