@@ -4,7 +4,7 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-$Id: jboss-web_4_0.dtd,v 1.6 2004/06/19 14:05:16 starksm Exp $
+$Id: jboss-web_4_0.dtd,v 1.7 2004/08/10 14:26:53 tdiesler Exp $
 
   <!DOCTYPE jboss-web PUBLIC
     "-//JBoss//DTD Web Application 2.4//EN"
@@ -16,7 +16,7 @@ $Id: jboss-web_4_0.dtd,v 1.6 2004/06/19 14:05:16 starksm Exp $
 -->
 <!ELEMENT jboss-web (class-loading?, security-domain?, context-root?,
    virtual-host*, use-session-cookies?, replication-config?, resource-env-ref*,
-   resource-ref*, security-role*, ejb-ref*, ejb-local-ref*, service-ref*, depends*)>
+   resource-ref*, security-role*, ejb-ref*, ejb-local-ref*, service-ref*, webservice-description*, depends*)>
 
 <!-- The class-loading element allows one to override the default class
 loading behavior of the web container. You can specify the
@@ -336,3 +336,37 @@ properties supported by the jaxrpc Call implementation.
 <!-- The string value of a property value
 -->
 <!ELEMENT prop-value (#PCDATA)>
+
+<!--
+Runtime information about a web service.
+
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+
+-->
+<!ELEMENT webservice-description ( webservice-description-name, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>

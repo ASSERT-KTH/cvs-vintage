@@ -28,9 +28,9 @@ import org.w3c.dom.Element;
  *
  * @see XmlLoadable
  * @see org.jboss.web.AbstractWebContainer
- 
+ *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class WebMetaData extends MetaData
 {
@@ -70,6 +70,8 @@ public class WebMetaData extends MetaData
    private ArrayList virtualHosts = new ArrayList();
    /** The jboss-web.xml JNDI name of the security domain implementation */
    private String securityDomain;
+   /** A HashMap<String, String> for webservice description publish locations */
+   private HashMap webserviceDescriptions = new HashMap();
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
@@ -160,6 +162,12 @@ public class WebMetaData extends MetaData
    public void setContextRoot(String contextRoot)
    {
       this.contextRoot = contextRoot;
+   }
+
+   /** Get the optional wsdl publish location from jboss-web.xml. */
+   public String getWsdlPublishLocationByName(String name)
+   {
+      return (String) webserviceDescriptions.get(name);
    }
 
    public String getJaccContextID()
@@ -597,6 +605,16 @@ public class WebMetaData extends MetaData
                + " found in jboss-web.xml but not in web.xml");
          }
          refMetaData.importJBossXml(serviceRef);
+      }
+
+      // WebserviceDescriptions
+      iterator = getChildrenByTagName(jbossWeb, "webservice-description");
+      while (iterator.hasNext())
+      {
+         Element wsd = (Element)iterator.next();
+         String wsdName = getElementContent(getUniqueChild(wsd, "webservice-description-name"));
+         String wsdlPublishLocation = getOptionalChildContent(wsd, "wsdl-publish-location");
+         webserviceDescriptions.put(wsdName, wsdlPublishLocation);
       }
 
       // Parse the jboss-web/depends elements
