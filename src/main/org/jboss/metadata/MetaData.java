@@ -8,7 +8,6 @@ package org.jboss.metadata;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Collection;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -20,7 +19,7 @@ import org.jboss.deployment.DeploymentException;
  * An abstract base class for metadata containers.
  *
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public abstract class MetaData
    implements Cloneable, XmlLoadable
@@ -62,7 +61,7 @@ public abstract class MetaData
          Node currentChild = children.item(i);
          if (currentChild.getNodeType() == Node.ELEMENT_NODE && 
              ((Element)currentChild).getTagName().equals(tagName)) {
-            goodChildren.add((Element)currentChild);
+            goodChildren.add(currentChild);
          }
       }
       return goodChildren.iterator();
@@ -226,6 +225,21 @@ public abstract class MetaData
       }
 
       return false;
+   }
+
+   public static boolean isSystemProperty(String value)
+   {
+      return (value == null || value.trim().length() == 0) ? false : value.startsWith("${") && value.endsWith("}");
+   }
+
+   public static String resolveSystemProperty(String param)
+      throws DeploymentException
+   {
+      if(!isSystemProperty(param))
+         throw new DeploymentException("A system property should follow the syntax ${property_name}: " + param);
+
+      String propName = param.substring(2).substring(0, param.length() - 3);
+      return System.getProperty(propName);
    }
 
    // Constructors --------------------------------------------------
