@@ -1,38 +1,15 @@
 $page.setTitle("Select global attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
-#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
-#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($editIssueType))
-<table cellpadding="4" cellspacing="0" border="1">
-#if ($attributes.size() == 0)
-<tr>
-<td class="firstchild" nowrap="nowrap">
-<div>General functions</div>
+#if ($attributes.size() > 0)
+   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
+#end
 #if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>
- &#160;
+    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
 #end
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-</tr>
-#else
-<tr>
-<td class="firstchild">
-<div>Select items to</div>
-<input type="submit" value="Add to attribute group" name="eventSubmit_doSelectattribute" />
-</td>
-<td nowrap="nowrap">
-<div>General functions</div>
-#if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>
- &#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-</tr>
-#end
-</table>
 </div>
 #end
 
@@ -43,6 +20,9 @@ $page.setTitle("Select global attribute")
 #set ($rmaGroup = $intake.RModuleAttribute.Default)
 #set ($agGroup = $intake.AttributeGroup.Default)
 #set ($attGroup = $intake.Attribute.Default)
+#set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($editIssueType))
+
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
