@@ -94,7 +94,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -397,7 +397,7 @@ public class EjbModule
                ( metaData.isMessageDriven() ? 3 : 0 );
             ObjectName lEJB = EJB.create(
                server,
-               getModuleName().toString(),
+               getModuleName() + "",
                lType,
                metaData.getJndiName()
                );
