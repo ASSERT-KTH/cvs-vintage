@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.Collection;
@@ -30,6 +31,7 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityPersistenceStore;
+import org.jboss.metadata.EntityMetaData;
 
 /**
 *   The CMP Persistence Manager implements the semantics of the CMP
@@ -40,7 +42,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.15 $
+*   @version $Revision: 1.16 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -122,6 +124,55 @@ implements EntityPersistenceManager {
         // Get methods
         Method createMethod = (Method)createMethods.get(m);
     	Method postCreateMethod = (Method)postCreateMethods.get(m);
+
+    	// Reset all attributes to default value
+    	// The EJB 1.1 specification is not entirely clear about this,
+    	// the EJB 2.0 spec is, see page 169.
+    	// Robustness is more important than raw speed for most server
+    	// applications, and not resetting atrribute values result in 
+    	// *very* weird errors (old states re-appear in different instances and the
+    	// developer thinks he's on drugs).
+
+    		// first get cmp metadata of this entity
+    		Object instance = ctx.getInstance();
+    		Class ejbClass = instance.getClass();
+    		Field cmpField;
+    		Class cmpFieldType;
+			for (Iterator i= ((EntityMetaData)ctx.getContainer().getBeanMetaData()).getCMPFields();
+				i.hasNext();) {
+				try {
+					// get the field declaration
+					cmpField = ejbClass.getField((String)i.next());
+					cmpFieldType = cmpField.getType();
+					// find the type of the field and reset it
+					// to the default value
+					if (cmpFieldType.equals(boolean.class))  {
+						cmpField.setBoolean(instance,false);
+					} else if (cmpFieldType.equals(byte.class))  {
+						cmpField.setByte(instance,(byte)0);
+					} else if (cmpFieldType.equals(int.class))  {
+						cmpField.setInt(instance,0);
+					} else if (cmpFieldType.equals(long.class))  {
+						cmpField.setLong(instance,0L);
+					} else if (cmpFieldType.equals(short.class))  {
+						cmpField.setShort(instance,(short)0);
+					} else if (cmpFieldType.equals(char.class))  {
+						cmpField.setChar(instance,'\u0000');
+					} else if (cmpFieldType.equals(double.class))  {
+						cmpField.setDouble(instance,0d);
+					} else if (cmpFieldType.equals(float.class))  {
+						cmpField.setFloat(instance,0f);
+
+					//} else if (... cmr collection in ejb2.0...) {
+					//	cmpField.set(instance,someNewCollection?);
+
+					} else  {
+						cmpField.set(instance,null);
+					}
+				} catch (Exception e) {
+					throw new EJBException(e);
+				}
+			}
 
         // Call ejbCreate on the target bean
         try {
