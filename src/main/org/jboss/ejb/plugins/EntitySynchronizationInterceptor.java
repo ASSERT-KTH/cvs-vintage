@@ -1,9 +1,9 @@
 /**
- * JBoss, the OpenSource EJB server
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+* JBoss, the OpenSource EJB server
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
@@ -27,6 +27,8 @@ import javax.transaction.TransactionManager;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 
+import org.jboss.ejb.BeanLock;
+import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceManager;
@@ -54,7 +56,8 @@ import org.jboss.util.Sync;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.41 $
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.42 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -71,6 +74,18 @@ import org.jboss.util.Sync;
  *   <li>Fixed invalid use of the ctx.transaction in beforeCompletion
  *   <li>Added clearContextTx to make sure clean up of ctx.tx was done consistently
  *   <li>Clean up the EntityContainer cast-fest
+ * </ol>
+ * <p><b>2001/07/26: billb</b>
+ * <ol>
+ *   <li>Locking is now separate from EntityEnterpriseContext objects and is now
+ *   encapsulated in BeanLock and BeanLockManager.  Did this because the lifetime
+ *   of an EntityLock is sometimes longer than the lifetime of the ctx.
+ * </ol>
+ * <p><b>2001/08/01: marcf</b>
+ * <ol>
+ *   <li>Updated BeanLock to work in new interceptor and out of InstanceInterceptor so we update
+ *   here as well to use the new interceptor lock logic and the BeanLock that bill introduced
+ *   <li>Make use of clearContextTx in all exceptional cases
  * </ol>
  */
 public class EntitySynchronizationInterceptor
@@ -117,25 +132,25 @@ public class EntitySynchronizationInterceptor
    {
       this.container = (EntityContainer)container;
    }
-   
+ 
    public void init()
       throws Exception
    {
-      
+  
       try
       {         
          validContexts = new HashSet();
          ConfigurationMetaData configuration = container.getBeanMetaData().getContainerConfiguration();
          commitOption = configuration.getCommitOption();
          optionDRefreshRate = configuration.getOptionDRefreshRate();
-         
+   
          //start up the validContexts thread if commit option D
          if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION)
          {
             ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts, optionDRefreshRate);
             new Thread(vcr).start();
          }
-         
+   
          isModified = container.getBeanClass().getMethod("isModified", new Class[0]);
          if (!isModified.getReturnType().equals(Boolean.TYPE))
             isModified = null; // Has to have "boolean" as return type!
@@ -144,12 +159,12 @@ public class EntitySynchronizationInterceptor
          System.out.println(e.getMessage());
       }
    }
-   
+ 
    public Container getContainer()
    {
       return container;
    }
-   
+ 
    /**
     *  Register a transaction synchronization callback with a context.
     */
@@ -158,10 +173,10 @@ public class EntitySynchronizationInterceptor
       boolean trace = log.isTraceEnabled();
       if( trace )
          log.trace("register, ctx="+ctx+", tx="+tx);
-      
+  
       // Create a new synchronization
       InstanceSynchronization synch = new InstanceSynchronization(tx, ctx);
-      
+  
       EntityContainer ctxContainer = null;
       try
       {
@@ -169,24 +184,21 @@ public class EntitySynchronizationInterceptor
          // associate the entity bean with the transaction so that
          // we can do things like synchronizeEntitiesWithinTransaction
          ctxContainer.getTxEntityMap().associate(tx, ctx);
-
+   
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
-         
-         // marcf: rethink the need for synchronization here, who else uses it?
-         synchronized(ctx.getTxLock())
-         {ctx.setTxSynchronized(true);}
-         
+   
+         ctx.hasTxSynchronization(true);
       }
       catch (RollbackException e)
       {
          //Indicates that the transaction is already marked for rollback
          ctxContainer.getTxEntityMap().disassociate(tx, ctx);
-
+   
          // The state in the instance is to be discarded, we force a reload of state
          synchronized (ctx)
          {ctx.setValid(false);}
-         
+   
          // This is really a mistake from the JTA spec, the fact that the tx is marked rollback should not be relevant
          // We should still hear about the demarcation
          clearContextTx("RollbackException", ctx, tx, trace);         
@@ -200,11 +212,11 @@ public class EntitySynchronizationInterceptor
          throw new EJBException(e);
       }
    }
-
+ 
    /**
-    * As per the spec 9.6.4, entities must be synchronized with the datastore
-    * when an ejbFind<METHOD> is called.
-    */
+ * As per the spec 9.6.4, entities must be synchronized with the datastore
+ * when an ejbFind<METHOD> is called.
+ */
    private void synchronizeEntitiesWithinTransaction(Transaction tx) throws Exception
    {
       Object[] entities = container.getTxEntityMap().getEntities(tx);
@@ -214,7 +226,7 @@ public class EntitySynchronizationInterceptor
          storeEntity(ctx);
       }
    }
-   
+ 
    private void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
       if (ctx.getId() != null)
@@ -227,7 +239,7 @@ public class EntitySynchronizationInterceptor
             Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
             dirty = modified.booleanValue();
          }
-
+   
          // Store entity
          if (dirty)
          {
@@ -235,16 +247,16 @@ public class EntitySynchronizationInterceptor
          }
       }
    }
-   
+ 
    // Interceptor implementation --------------------------------------
-   
+ 
    public Object invokeHome(MethodInvocation mi)
       throws Exception
    {
-      
+  
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
       Transaction tx = mi.getTransaction();
-      
+  
       try
       {
          if (tx != null && mi.getMethod().getName().startsWith("find"))
@@ -253,35 +265,36 @@ public class EntitySynchronizationInterceptor
             // when an ejbFind<METHOD> is called.
             synchronizeEntitiesWithinTransaction(tx);
          }
-         
+   
          return getNext().invokeHome(mi);
-         
+  
       } finally
       {
-         
+   
          // An anonymous context was sent in, so if it has an id it is a real instance now
          if (ctx.getId() != null)
          {
-            
+    
             // Currently synched with underlying storage
             ctx.setValid(true);
-            
+    
             if (tx!= null) register(ctx, tx); // Set tx
          }
       }
    }
-   
+ 
    public Object invoke(MethodInvocation mi)
       throws Exception
    {
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
-      
+  
       // The Tx coming as part of the Method Invocation
       Transaction tx = mi.getTransaction();
+
       if( log.isTraceEnabled() )
          log.trace("invoke called for ctx "+ctx+", tx="+tx);
-      
+  
       //Commit Option D....
       if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION && !validContexts.contains(ctx.getId()))
       {
@@ -289,19 +302,28 @@ public class EntitySynchronizationInterceptor
          //so set valid to false so that we load...
          ctx.setValid(false);
       }
-      
+  
       // Is my state valid?
       if (!ctx.isValid())
       {
-         // If not tell the persistence manager to load the state
-         container.getPersistenceManager().loadEntity(ctx);
+         try
+         {
+            // If not tell the persistence manager to load the state
+            container.getPersistenceManager().loadEntity(ctx);
+         }
+         catch (Exception ex)
+         {
+            clearContextTx("loadEntity Exception", ctx, tx, log.isTraceEnabled());
+            throw ex;
+         }
 
+   
          // Now the state is valid
          ctx.setValid(true);
       }
-      
+  
       // So we can go on with the invocation
-      
+  
       // Invocation with a running Transaction
       if (tx != null && tx.getStatus() != Status.STATUS_NO_TRANSACTION)
       {
@@ -314,7 +336,7 @@ public class EntitySynchronizationInterceptor
          {
             //register the wrapper with the transaction monitor (but only register once).
             // The transaction demarcation will trigger the storage operations
-            if (!ctx.isTxSynchronized()) register(ctx,tx);
+            if (!ctx.hasTxSynchronization()) register(ctx,tx);
          }
       }
       //
@@ -322,18 +344,18 @@ public class EntitySynchronizationInterceptor
       { // No tx
          try
          {
-            
+    
             Object result = getNext().invoke(mi);
-            
+    
             // Store after each invocation -- not on exception though, or removal
             // And skip reads too ("get" methods)
             if (ctx.getId() != null)
             {
                storeEntity(ctx);
             }
-            
+    
             return result;
-            
+   
          }
          catch (Exception e)
          {
@@ -343,12 +365,12 @@ public class EntitySynchronizationInterceptor
          }
       }
    }
-   
-   
+ 
+ 
    // Protected  ----------------------------------------------------
-   
-   // Inner classes -------------------------------------------------
-   
+ 
+ // Inner classes -------------------------------------------------
+ 
    private class InstanceSynchronization
       implements Synchronization
    {
@@ -356,12 +378,17 @@ public class EntitySynchronizationInterceptor
        *  The transaction we follow.
        */
       private Transaction tx;
-      
+  
       /**
        *  The context we manage.
        */
       private EntityEnterpriseContext ctx;
-      
+  
+      /**
+       * The context lock
+       */
+      private BeanLock lock;
+  
       /**
        *  Create a new instance synchronization instance.
        */
@@ -369,23 +396,24 @@ public class EntitySynchronizationInterceptor
       {
          this.tx = tx;
          this.ctx = ctx;
+         this.lock = container.getLockManager().getLock(ctx.getCacheKey());
       }
-      
+  
       // Synchronization implementation -----------------------------
-      
+  
       public void beforeCompletion()
       {
          boolean trace = log.isTraceEnabled();
          if( trace )
             log.trace("beforeCompletion called for ctx "+ctx);
-         
+   
          if (ctx.getId() != null)
          {
             // This is an independent point of entry. We need to make sure the
             // thread is associated with the right context class loader
             ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(container.getClassLoader());
-            
+    
             try
             {
                try
@@ -409,7 +437,7 @@ public class EntitySynchronizationInterceptor
                         {
                         }
                      }
-
+       
                      if( trace )
                         log.trace("sync calling store on ctx "+ctx+", dirty="+dirty);
                      if (dirty)
@@ -449,17 +477,18 @@ public class EntitySynchronizationInterceptor
             }
          }
       }
-
+  
       public void afterCompletion(int status)
       {
          boolean trace = log.isTraceEnabled();
-         
+   
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-         
-         synchronized (ctx)
+   
+         lock.sync();
+         try
          {
             try
             {
@@ -468,93 +497,109 @@ public class EntitySynchronizationInterceptor
                {
                   // remove from the cache
                   container.getInstanceCache().remove(ctx.getCacheKey());
-                  
-                  // Wake all those waiting that the context is no longer in cache
-                  ctx.notifyAll();
-                  
                }
                else
                {
                   switch (commitOption)
                   {
                      // Keep instance cached after tx commit
-                     case ConfigurationMetaData.A_COMMIT_OPTION:
-                        // The state is still valid (only point of access is us)
-                        ctx.setValid(true);
-                        break;
-                        
-                        // Keep instance active, but invalidate state
-                     case ConfigurationMetaData.B_COMMIT_OPTION:
-                        // Invalidate state (there might be other points of entry)
-                        ctx.setValid(false);
-                        break;
-                        // Invalidate everything AND Passivate instance
-                     case ConfigurationMetaData.C_COMMIT_OPTION:
-                        try
-                        {
-                           container.getInstanceCache().release(ctx);
-                        }
-                        catch (Exception e)
-                        {
-                           log.debug(e);
-                        }
-                        break;
-                     case ConfigurationMetaData.D_COMMIT_OPTION:
-                        //if the local cache is emptied then valid is set to false(see invoke() )
-                        validContexts.add(ctx.getId());
-                        break;
+                  case ConfigurationMetaData.A_COMMIT_OPTION:
+                     // The state is still valid (only point of access is us)
+                     ctx.setValid(true);
+                     break;
+       
+                     // Keep instance active, but invalidate state
+                  case ConfigurationMetaData.B_COMMIT_OPTION:
+                     // Invalidate state (there might be other points of entry)
+                     ctx.setValid(false);
+                     break;
+                     // Invalidate everything AND Passivate instance
+                  case ConfigurationMetaData.C_COMMIT_OPTION:
+                     try
+                     {
+                        container.getInstanceCache().release(ctx);
+                     }
+                     catch (Exception e)
+                     {
+                        log.debug(e);
+                     }
+                     break;
+                  case ConfigurationMetaData.D_COMMIT_OPTION:
+                     //if the local cache is emptied then valid is set to false(see invoke() )
+                     validContexts.add(ctx.getId());
+                     break;
                   }
                }
             }
             finally
             {
                // finish the transaction association
-               EntityContainer ctxContainer = (EntityContainer) ctx.getContainer();
-               ctxContainer.getTxEntityMap().disassociate(tx, ctx);
-               clearContextTx("afterCompletion", ctx, tx, trace);
-               Thread.currentThread().setContextClassLoader(oldCl);               
+               container.getTxEntityMap().disassociate(tx, ctx);
+               if( trace )
+                  log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
+               // The context is no longer synchronized on the TX
+               ctx.hasTxSynchronization(false);
+     
+               ctx.setTransaction(null);
+     
+               // notify the lock of the end of the transaction
+               // it wakes up all the threads in the current transaction
+               // it wakes up at least one thread from the next transaction
+               // This next tx thread will set the transaction variable in the lock logic
+               lock.nextTransaction();
+     
+               if( trace )
+                  log.trace("afterCompletion, sent notifyAll on TxLock for ctx="+ctx);
             }
-         } // synchronized(ctx)
+         } // synchronized(lock)
+         finally
+         {
+            lock.releaseSync();
+            container.getLockManager().removeLockRef(lock.getId());
+            Thread.currentThread().setContextClassLoader(oldCl);               
+         }
       }
-
+ 
    }
-
-   /** All the threads waiting for the end of the transaction need to wake up and
-      go lock on the next thing, either ctx for those threads that will win the
-      transactional race or ctx.txLock for the rest of them (better luck next time)
-      no-one must stay on this txLock since the tx is going away so this is the one
-      and only call!.
-      So don't replace the following by "notify()" (!)
-   */
+ 
    private void clearContextTx(String msg, EntityEnterpriseContext ctx, Transaction tx, boolean trace)
    {
-      Object txLock = ctx.getTxLock();
-      synchronized(txLock)
+      BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
+      lock.sync();
+      try
       {
          if( trace )
             log.trace(msg+", clear tx for ctx="+ctx+", tx="+tx);
          // The context is no longer synchronized on the TX
-         ctx.setTxSynchronized(false);
+         ctx.hasTxSynchronization(false);
          ctx.setTransaction(null);
-
-         // Wake up threads waiting for the transaction demarcation, ain't gonna happen
-         if( trace )
-            log.trace(msg+", send notifyAll on TxLock for ctx="+ctx);
-         txLock.notifyAll();
+   
+   
+         // notify the lock this will set current transaction to null 
+         // it also wakes up at least one thread from the next transaction
+         // This thread will set the next transaction in the lock logic
+         lock.nextTransaction();
+  
+      }
+      finally
+      {
+         lock.releaseSync();
+   
+         container.getLockManager().removeLockRef(lock.getId());
       }
    }
-
+ 
    class ValidContextsRefresher implements Runnable
    {
       private HashSet validContexts;
       private long refreshRate;
-      
+  
       public ValidContextsRefresher(HashSet validContexts,long refreshRate)
       {
          this.validContexts = validContexts;
          this.refreshRate = refreshRate;
       }
-
+  
       public void run()
       {
          while(true)
