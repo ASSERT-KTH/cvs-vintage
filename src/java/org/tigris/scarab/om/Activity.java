@@ -64,7 +64,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.39 2002/12/14 00:12:48 elicia Exp $
+ * @version $Id: Activity.java,v 1.40 2002/12/17 21:39:49 elicia Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -142,7 +142,6 @@ public class Activity
     public void save(Connection dbCon)
         throws TorqueException
     {
-        // make sure to mark last related activity as done
         if (isNew()) 
         {
             Criteria crit = new Criteria();
@@ -152,7 +151,6 @@ public class Activity
             {
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
                 crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
-                crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
                 crit.add(ActivityPeer.END_DATE, null);
                 if (this.getOldUserId() != null)
                 {
@@ -166,27 +164,18 @@ public class Activity
             List result = ActivityPeer.doSelect(crit);
             if (result.size() > 0)
             {
-                Activity a = (Activity)result.get(0);
-                a.setEndDate(getActivitySet().getCreatedDate());
-                a.save(dbCon);
-            }
-            else 
-            {
-                // this is okay if the issue is new or has had no previous
-                // activity on this attribute.  Go ahead and check that
-                // database is not corrupt.
-                crit = new Criteria();
-                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
-                crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
-                result = ActivityPeer.doSelect(crit);
-                if (result.size() != 0) 
+                for (int i=0; i<result.size();i++)
                 {
-                    throw new TorqueException(
-                        new ScarabException("Previous activity has occured" 
-                        + " on the same attribute but none are active."));
+                    Activity a = (Activity)result.get(i);
+                    a.setEndDate(getActivitySet().getCreatedDate());
+                    a.save(dbCon);
                 }
             }
+        }
+        // If they have just deleted a user assignment, set end date
+        if (this.getNewUserId() == null && this.getOldUserId() != null)
+        {
+            this.setEndDate(getActivitySet().getCreatedDate());
         }
         super.save(dbCon);
     }
