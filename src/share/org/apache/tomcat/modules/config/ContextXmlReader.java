@@ -154,14 +154,37 @@ public class ContextXmlReader extends BaseInterceptor {
 	// Virtual host support - if Context is inside a <Host>
 	xh.addRule( "Host", xh.setVar( "current_host", "name"));
 	xh.addRule( "Host", xh.setProperties());
+	xh.addRule( "Alias", new XmlAction() {
+		public void start( SaxContext xctx) throws Exception {
+		    Vector aliases=(Vector)xctx.getVariable( "host_aliases" );
+		    if( aliases==null ) {
+			aliases=new Vector();
+			xctx.setVariable( "host_aliases", aliases );
+		    }
+		    String alias=(String)xctx.getCurrentAttributes().getValue("name");
+		    if( alias!=null ) 
+			aliases.addElement( alias );
+		}
+	    });
 
 	xh.addRule( "Context", new XmlAction() {
-		public void end( SaxContext ctx) throws Exception {
-		    Context tcCtx=(Context)ctx.currentObject();
-		    String host=(String)ctx.getVariable("current_host");
+		public void end( SaxContext xctx) throws Exception {
+		    Context tcCtx=(Context)xctx.currentObject();
+		    String host=(String)xctx.getVariable("current_host");
+		    Vector aliases=(Vector)xctx.getVariable( "host_aliases" );
 		    
-		    if( host!=null && ! "DEFAULT".equals( host )) 
+		    if( host!=null && ! "DEFAULT".equals( host )) {
 			    tcCtx.setHost( host );
+			    if( aliases!=null ) {
+				Enumeration alE=aliases.elements();
+				while( alE.hasMoreElements() ) {
+				    String alias=(String)alE.nextElement();
+				    tcCtx.addHostAlias( alias );
+				    if( tcCtx.getDebug() > 0 )
+					tcCtx.log( "Alias " + host  + " " + alias );
+				}
+			    }
+		    }
 		}
 	    });
 
