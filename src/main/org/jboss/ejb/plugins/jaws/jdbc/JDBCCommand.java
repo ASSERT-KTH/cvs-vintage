@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public abstract class JDBCCommand
 {
@@ -289,31 +289,45 @@ public abstract class JDBCCommand
                   value = new java.sql.Timestamp(((java.util.Date)value).getTime());
           }
           if (isBinaryType(jdbcType)) {
-              // ejb-reference: store the handle
-              if (value instanceof EJBObject) try {
-                  value = ((EJBObject)value).getHandle();
-              } catch (RemoteException e) {
-                  throw new SQLException("Cannot get Handle of EJBObject: "+e);
+              byte[] bytes = null;
+              if (isByteArray(jdbcType)) {
+                  bytes = (byte[])value;
+              } else {
+                  // ejb-reference: store the handle
+                  if (value instanceof EJBObject) try {
+                      value = ((EJBObject)value).getHandle();
+                  } catch (RemoteException e) {
+                      throw new SQLException
+                          ("Cannot get Handle of EJBObject: "+e);
+                  }
+
+                  try {
+                      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                      ObjectOutputStream oos = new ObjectOutputStream(baos);
+                      oos.writeObject(new MarshalledObject(value));
+                      bytes = baos.toByteArray();
+                      oos.close();
+                  } catch (IOException e) {
+                      throw new SQLException
+                          ("Can't serialize binary object: " + e);
+                  }
               }
 
-              try {
-                  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                  ObjectOutputStream oos = new ObjectOutputStream(baos);
-                  oos.writeObject(new MarshalledObject(value));
-                  byte[] bytes = baos.toByteArray();
-                  oos.close();
-
-                  // it's more efficient to use setBinaryStream for large streams, and
-                  // causes problems if not done on some DBMS implementations
-                  if (bytes.length < 2000) {
-                      stmt.setBytes(idx, bytes);
-                  } else {
-                      ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+              // it's more efficient to use setBinaryStream for large
+              // streams, and causes problems if not done on some DBMS
+              // implementations
+              if (bytes.length < 2000) {
+                  stmt.setBytes(idx, bytes);
+              } else {
+                  try {
+                      ByteArrayInputStream bais =
+                          new ByteArrayInputStream(bytes);
                       stmt.setBinaryStream(idx, bais, bytes.length);
                       bais.close();
+                  } catch (IOException e) {
+                      throw new SQLException
+                          ("Couldn't write binary object to DB: " + e);
                   }
-              } catch (IOException e) {
-                  throw new SQLException("Can't write Java object type to DB: " + e);
               }
           } else {
               stmt.setObject(idx, value, jdbcType);
@@ -536,7 +550,8 @@ public abstract class JDBCCommand
     * @return true if binary type, false otherwise
     */
    protected final boolean isBinaryType(int jdbcType) {
-       return (Types.BLOB == jdbcType ||
+       return (Types.BINARY == jdbcType ||
+               Types.BLOB == jdbcType ||
                Types.CLOB == jdbcType ||
                Types.JAVA_OBJECT == jdbcType ||
                Types.LONGVARBINARY == jdbcType ||
@@ -545,6 +560,17 @@ public abstract class JDBCCommand
                Types.VARBINARY == jdbcType);
    }
 
+   /**
+    * Returns true if the JDBC type represents a byte array.
+    *
+    * @param jdbcType the JDBC type
+    * @return true if the JDBC type represents a byte array
+    */
+   protected final boolean isByteArray(int jdbcType) {
+       return (Types.BINARY == jdbcType ||
+               Types.LONGVARBINARY == jdbcType ||
+               Types.VARBINARY == jdbcType);
+   }
 
    /**
     * Returns the comma-delimited list of primary key column names
