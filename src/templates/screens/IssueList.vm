@@ -1,5 +1,5 @@
 #set ($mitlist = $user.CurrentMITList)
-#set ($searchType = $data.Parameters.getString("searchType", ""))
+#set ($searchType = $data.Parameters.getString('searchType', ''))
 
 <div class="app" id="issuelist">
 #set ($user = $data.User)
@@ -10,10 +10,10 @@
 #set ($totalCount = $issueListSize)
 
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",25))
-#set ($pageNum = $data.Parameters.getInt("pageNum",1))
-#if ($resultsPerPage > 0 && $issueListSize > $resultsPerPage)
- #set ($paginated = "true")
+#set ($resultsPerPage = $data.Parameters.getInt('resultsPerPage', 25))
+#set ($pageNum = $data.Parameters.getInt('pageNum', 1))
+#set ($paginated = $resultsPerPage > 0 && $issueListSize > $resultsPerPage)
+#if ($paginated)
  #set ($queryResults = $scarabR.getPaginatedList($queryResults, $pageNum, $resultsPerPage))
  #set ($issueListSize = $queryResults.size())
 #end
@@ -33,11 +33,12 @@
 </div>
 #end
 #end
+
 #if ($issueListSize == 0)
 <h3>$page.Title</h3>
   <p><em>$l10n.NoMatchingIssues</em></p>
 #else
-<form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+<form action="$link.setPage('IssueList.vm').setAction('Search')" method="post">
 #if ($searchType)
   <input type="hidden" name="searchType" value="$searchType" />
 #end
@@ -62,7 +63,7 @@ $format.getNow($scarabR.DateFormat)
 #set ($noAttrs = true)
 <p><em>$l10n.NoCommonAttributesInList</em></p>
 #else
-$link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromView).setPathInfo("searchType","$searchType")
+$link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromView).setPathInfo('searchType', $searchType)
 #end
 </small>
 </div>
@@ -73,12 +74,12 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 #set ($sortPolarity = $searchGroup.get("SortPolarity").Value)
 
 ## PAGINATION
-#if( $paginated)
+#if ($paginated)
   #paginateIssueList($resultsPerPage $pageNum $sortColumn $sortPolarity $searchType)
 #end
 
 #macro (prepIssueListPageLink)
- #set ($dummy = $link.setPage("IssueList.vm").setPathInfo("resultsPerPage", "$resultsPerPage").setPathInfo("pageNum", "$pageNum"))
+ #set ($dummy = $link.setPage('IssueList.vm').setPathInfo('resultsPerPage', $resultsPerPage).setPathInfo('pageNum', $pageNum))
 #end
 
 ## TODO: Start a new table every 100 results to speed up rendering in
@@ -98,10 +99,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
  #end
   <th>
      #if (!$sortColumn || $sortColumn.length() == 0)
-        #if ($sortPolarity.equals("desc"))
+        #if ($sortPolarity.equals('desc'))
            #prepIssueListPageLink()
-           #set ($arrowLink = $link.setPathInfo("sortPolarity", "asc").addPathInfo("sortColumn", "").addPathInfo("searchType","$searchType"))
-           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
+           #set ($arrowLink = $link.setPathInfo('sortPolarity', 'asc').addPathInfo('sortColumn', '').addPathInfo('searchType', $searchType))
+           <a href="$arrowLink"><img src="$staticLink.setPath('/images/icon_downarrow_on.gif')" width="13" height="8" alt="$l10n.SortDescending" title="$l10n.SortDescending" border="0" /></a>&#160;
         #else
            #prepIssueListPageLink()
            #set ($arrowLink = $link.setPathInfo("sortPolarity", "desc").addPathInfo("sortColumn", "").addPathInfo("searchType","$searchType"))
