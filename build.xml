@@ -30,13 +30,16 @@
 		<fileset dir="${src}" includes="**/*.java"/>
 		</checkstyle>
 	</target>
+	
+	<target name="update">
+		<cvs command="update"/>
+	</target>
 
-	<!-- creating the destination directory -->
 	<target name="init">
 		<echo message="you run java with version ${ant.java.version}"/>
 		<mkdir dir="${dest}"/>
 	</target>
-
+	
 	<!-- copy required files for later tasks into the dest directory -->
 	<target name="copy-required">
 		<copy todir="${dest}">
