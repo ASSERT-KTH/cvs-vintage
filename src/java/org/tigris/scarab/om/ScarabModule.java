@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.99 2002/03/19 06:54:04 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.100 2002/03/19 17:55:15 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -333,31 +333,7 @@ public class ScarabModule
     {
         try
         {
-            boolean newModule = isNew();
-
-            // need to do this before the relationship save below
-            // in order to set the moduleid for the new module.
             super.save();
-
-            if (newModule)
-            {
-                if ( getOwnerId() == null ) 
-                {
-                    throw new TorqueException( new ScarabException(
-                        "Can't save a project without first assigning an owner."));
-                }
-                try
-                {
-                    grant (ScarabUserManager.getInstance(getOwnerId()), 
-                           TurbineSecurity.getRole("Project Owner"));
-            
-                    setInitialAttributesAndIssueTypes();
-                }
-                catch (Exception e)
-                {
-                    throw new TorqueException(e);
-                }
-            }
         }
         catch (Exception e)
         {
@@ -366,7 +342,10 @@ public class ScarabModule
     }
 
     /**
-     * Saves the module into the database
+     * Saves the module into the database. Note that this
+     * cannot be used within a transaction if the module isNew()
+     * because dbCon.commit() is called within the method. An
+     * update can be done within a transaction though.
      */
     public void save(DBConnection dbCon) 
         throws TorqueException
@@ -409,7 +388,27 @@ public class ScarabModule
                 }
             }
 
+            // need to do this before the relationship save below
+            // in order to set the moduleid for the new module.
             super.save(dbCon);
+            dbCon.commit();
+            
+            if ( getOwnerId() == null ) 
+            {
+                throw new TorqueException( new ScarabException(
+                    "Can't save a project without first assigning an owner."));
+            }
+            try
+            {
+                grant (ScarabUserManager.getInstance(getOwnerId()), 
+                       TurbineSecurity.getRole("Project Owner"));
+        
+                setInitialAttributesAndIssueTypes();
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
         }
         else
         {
@@ -424,7 +423,6 @@ public class ScarabModule
     // Turbine Group implementation get/setName and save are defined in
     // parent class AbstractScarabModule
     // *******************************************************************
-
 
     /**
      * Removes a group from the system.
