@@ -64,7 +64,7 @@
 
 <div class="colbar">
 <ul>
-$l10n.ChangesSavedOnDone
+<li>$l10n.ChangesSavedOnDone</li>
 </ul>
 </div>
 
