@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.6 2002/12/31 09:58:48 kataka Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.7 2003/01/01 16:06:38 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
         
-        JList baseList = new UMLLinkedList(this, new UMLAssociationEndRoleBaseListModel());
+        JList baseList = new UMLLinkedList(new UMLAssociationEndRoleBaseListModel());
         baseList.setVisibleRowCount(1);
         addField(Argo.localize("UMLMenu", "label.base"), 
             new JScrollPane(baseList));

@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationRole.java,v 1.17 2002/12/31 09:58:48 kataka Exp $
+// $Id: PropPanelAssociationRole.java,v 1.18 2003/01/01 16:06:38 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,11 +72,11 @@ public class PropPanelAssociationRole extends PropPanelModelElement {
     
     add(LabelledLayout.getSeperator());
        
-    JList assocEndList = new UMLLinkedList(this, new UMLAssociationRoleAssociationEndRoleListModel());
+    JList assocEndList = new UMLLinkedList(new UMLAssociationRoleAssociationEndRoleListModel());
     assocEndList.setVisibleRowCount(2); // only binary associationroles are allowed
     addField(Argo.localize("UMLMenu", "label.associationrole-ends"), new JScrollPane(assocEndList));
 
-    JList messageList = new UMLLinkedList(this, new UMLAssociationRoleMessageListModel());
+    JList messageList = new UMLLinkedList(new UMLAssociationRoleMessageListModel());
     addField(Argo.localize("UMLMenu", "label.messages"), 
         new JScrollPane(messageList));
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.21 2002/12/31 09:58:48 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.22 2003/01/01 16:06:38 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.21 2002/12/31 09:58:48 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.22 2003/01/01 16:06:38 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -62,7 +62,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     
     addField(Argo.localize("UMLMenu", "label.multiplicity"),new UMLMultiplicityComboBox(this,mclass));
     
-    JList baseList = new UMLMutableLinkedList(this, new UMLClassifierRoleBaseListModel(), ActionAddClassifierRoleBase.SINGLETON, null);
+    JList baseList = new UMLMutableLinkedList(new UMLClassifierRoleBaseListModel(), ActionAddClassifierRoleBase.SINGLETON, null);
     addField(Argo.localize("UMLMenu", "label.base"), new JScrollPane(baseList));
    
 
@@ -77,11 +77,11 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     
     add(LabelledLayout.getSeperator());
      
-    JList availableContentsList = new UMLLinkedList(this, new UMLClassifierRoleAvailableContentsListModel());
+    JList availableContentsList = new UMLLinkedList(new UMLClassifierRoleAvailableContentsListModel());
     addField(Argo.localize("UMLMenu", "label.available-contents"), 
         new JScrollPane(availableContentsList));   
         
-    JList availableFeaturesList = new UMLLinkedList(this, new UMLClassifierRoleAvailableFeaturesListModel());
+    JList availableFeaturesList = new UMLLinkedList(new UMLClassifierRoleAvailableFeaturesListModel());
     addField(Argo.localize("UMLMenu", "label.available-features"), 
         new JScrollPane(availableFeaturesList));   
     /* 

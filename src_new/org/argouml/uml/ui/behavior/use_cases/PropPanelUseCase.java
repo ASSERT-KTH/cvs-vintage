@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.22 2002/12/31 09:58:49 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.23 2003/01/01 16:06:38 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -93,7 +93,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
                    localize("root"), this);
 		addField(Argo.localize("UMLMenu", "label.modifiers"),mPanel);
             	
-    JList extensionPoints = new UMLMutableLinkedList(this, new UMLUseCaseExtensionPointListModel(), null, ActionNewUseCaseExtensionPoint.SINGLETON);
+    JList extensionPoints = new UMLMutableLinkedList(new UMLUseCaseExtensionPointListModel(), null, ActionNewUseCaseExtensionPoint.SINGLETON);
     addField(Argo.localize("UMLMenu", "label.extensionpoints"), 
         new JScrollPane(extensionPoints));
 		
@@ -102,11 +102,11 @@ public class PropPanelUseCase extends PropPanelClassifier {
     addField(Argo.localize("UMLMenu", "label.generalizations"), extendsScroll);
     addField(Argo.localize("UMLMenu", "label.specializations"), derivedScroll);
     	
-    JList extendsList = new UMLLinkedList(this, new UMLUseCaseExtendListModel());
+    JList extendsList = new UMLLinkedList(new UMLUseCaseExtendListModel());
     addField(Argo.localize("UMLMenu", "label.extends"), 
         new JScrollPane(extendsList));
     
-    JList includesList = new UMLLinkedList(this, new UMLUseCaseIncludeListModel());
+    JList includesList = new UMLLinkedList(new UMLUseCaseIncludeListModel());
     addField(Argo.localize("UMLMenu", "label.includes"), 
         new JScrollPane(includesList));
 
