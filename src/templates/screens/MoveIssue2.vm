@@ -74,26 +74,21 @@
  </tr>
 </table>
 
-<h3>Source module</h3>
-<p>
-$issue.Module.Name
-</p>
+#set($newModule = $scarabR.getModule("$moduleId"))
+#set ($userAction = $moveIssueGroup.Action)
 
-<h3>Destination module</h3>
-<p>
- #set($newModule = $scarabR.getModule("$moduleId"))
- $newModule.Name
-</p>
+<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th width="120">Destination module / issue type</th>
+<td>$newModule.Name</td>
+<tr>
+<th>Action</th>
+<td>$userAction</td>
+</tr>
+</table>
+</div>
 
-<h3>Action</h3>
 
-#set ($userAction = "$moveIssueGroup.Action")
-<p>
-<input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
-#if ($userAction.toString().equals("copy")) checked="checked" #end /> Copy
-<input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
-#if ($userAction.toString().equals("move")) checked="checked" #end /> Move
-</p>
 
 <h3>Attribute mapping results</h3>
 <div class="sidebyside">
