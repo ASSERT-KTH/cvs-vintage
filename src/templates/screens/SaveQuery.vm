@@ -2,7 +2,7 @@
 
 #asterisk()
 
-<h3>Saved query information</h3>
+<h3>$l10n.SavedQueryInfo</h3>
 
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query))
@@ -19,15 +19,15 @@
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">* Name</th>
+   <th width="120">* $l10n.Name</th>
    <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
   </tr>
   <tr>
-   <th width="120">Description</th>
+   <th width="120">$l10n.Description</th>
    <td>#textAreaMedium("$queryGroup.Description.Key" $queryGroup.Description)</td>
   </tr>
   <tr>
-   <th width="120">Availability</th>
+   <th width="120">$l10n.Availability</th>
    <td>
 #if (!$user.CurrentMITList || $user.CurrentMITList.isSingleModule())
     #queryTypeSelectBox ($query)
@@ -37,7 +37,7 @@
    </td>
   </tr>
   <tr>
-   <th width="120">Location</th>
+   <th width="120">$l10n.Location</th>
    <td>$module.Name</td>
    <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
@@ -52,9 +52,8 @@ $intake.declareGroups()
 </form>
 
 #else
-  <p class="alert">No query to save. Please <a
-  href="$link.setPage("AdvancedQuery.vm")">enter a
-  query.</a></p>
+  <p class="alert">$l10n.NoQueryToSave
+  <a href="$link.setPage("AdvancedQuery.vm")">$l10n.EnterAQuery</a></p>
 #end
 
 </div>

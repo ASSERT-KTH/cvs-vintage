@@ -1,6 +1,6 @@
 <div id="requestuser" class="app">
 
-<h3>Request roles</h3>
+<h3>$l10n.RequestRoles</h3>
 
 #set ($user = $data.User)
 #if (!$user.hasLoggedIn())
