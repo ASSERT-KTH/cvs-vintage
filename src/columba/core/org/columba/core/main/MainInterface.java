@@ -28,32 +28,55 @@ import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
 
+/**
+ * Main Interface keeping static instances of all objects
+ * which need to be accessed by other subsystems.
+ * <p>
+ *
+ * @author fdietz
+ */
 public class MainInterface {
 
+	// current version
 	public static final String version = "1.0 Milestone M1";
 
+	// if true, enables debugging output from org.columba.core.logging 
 	public static boolean DEBUG = false;
 
+	// configuration file management
 	public static Config config;
 
+	// POP3 servers 
+	// TODO: move this to the mail component
 	public static POP3ServerCollection popServerCollection;
 
+	// mailfolder treemodel
+	// TODO: move this to the mail component
 	public static TreeModel treeModel;
 
+	// addressbook treemodel
+	// TODO: move this to the addressbook component
 	public static AddressbookTreeModel addressbookTreeModel;
 
+	// scheduler
 	public static DefaultProcessor processor;
 
+	// PGP encryption package
 	public static PGPController pgpController;
 
 	public static PluginManager pluginManager;
 
+	// tasks which are executed on exiting Columba
 	public static ShutdownManager shutdownManager;
 	
+	// tasks which are executed by a timer in the background
+	// if the program is currently in idle mode
 	public static BackgroundTaskManager backgroundTaskManager;
 	
+	// every component using cut/copy/paste/etc. uses this manager
 	public static ClipboardManager clipboardManager;
 	
+	// focus manager needed for cut/copy/paste/etc.
 	public static FocusManager focusManager;
 
 	public MainInterface() {

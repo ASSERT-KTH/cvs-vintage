@@ -19,12 +19,10 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlIO;
 
 /**
- * @author freddy
+ * Responsible for loading the plugin.xml file found in every plugin
+ * package.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author freddy
  */
 public class PluginListConfig extends XmlIO {
 

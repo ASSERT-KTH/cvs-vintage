@@ -21,12 +21,12 @@ import org.columba.core.scripting.AbstractInterpreter;
 import org.columba.core.xml.XmlElement;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * This handler makes it possible to add new interpreter support
+ * in Columba.
+ * <p>
+ * This is the way we realized the python support for plugins.
+ * 
+ * @author fdietz
  */
 public class InterpreterHandler extends AbstractPluginHandler {
 
@@ -50,27 +50,7 @@ public class InterpreterHandler extends AbstractPluginHandler {
 		return null;
 	}
 
-	/*
-	public Object getPlugin(String name, String className, Object[] args)
-			throws Exception {
 	
-		ColumbaLogger.log.debug("trying to load interpreter plugin");
-		
-			try {
-				return loadPlugin(className, args);
-			} catch (ClassNotFoundException ex) {
-				
-				XmlElement parent = (XmlElement) externalPlugins.get(name);
-				XmlElement child = parent.getElement("runtime");
-				//String type = child.getAttribute("type");
-				
-				File file = (File) pluginFolders.get(name);
-	
-				return PluginLoader.loadExternalPlugin(className, "java", file, args);
-			}
-	
-		}
-	*/
 
 	public AbstractInterpreter getInterpreter(String type) {
 		return (AbstractInterpreter) interpreterTable.get(type);		

@@ -26,7 +26,14 @@ import java.util.Vector;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
+ * Opens a server socket to manage multiple sessions of Columba
+ * able to passing commands to the main session.
+ * <p>
+ * 
  * ideas taken from www.jext.org (author Roman Guy)
+ * 
+ * @author fdietz
+ * 
  */
 public class ColumbaLoader implements Runnable {
   public final static int COLUMBA_PORT = 50000;

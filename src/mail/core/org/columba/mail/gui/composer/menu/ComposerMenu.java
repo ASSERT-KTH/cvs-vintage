@@ -9,9 +9,9 @@ package org.columba.mail.gui.composer.menu;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
-import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 /**

@@ -26,12 +26,14 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.scripting.AbstractInterpreter;
 
 /**
- * @author freddy
+ * PluginLoader handles the different kinds of classloaders.
+ * <p>
+ * Possible candidates can be java classes in Columba or outside
+ * and classes, which are handled by the interpreter plugin.
+ * (python classes at this time only)
+ * 
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ *  @author freddy
  */
 public class PluginLoader {
 

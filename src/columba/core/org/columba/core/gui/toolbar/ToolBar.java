@@ -31,6 +31,14 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
+/**
+ * Toolbar which uses xml files to generate itself.
+ * <p>
+ * TODO: separate code which creates the toolbar from 
+ * the swing JToolBar.
+ *
+ * @author fdietz
+ */
 public class ToolBar extends JToolBar {
 
 	ResourceBundle toolbarLabels;

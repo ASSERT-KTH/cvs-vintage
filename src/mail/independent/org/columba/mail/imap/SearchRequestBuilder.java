@@ -25,12 +25,13 @@ import org.columba.ristretto.imap.protocol.Arguments;
 import org.columba.ristretto.imap.protocol.Atom;
 
 /**
- * @author freddy
+ * Builds IMAP search request strings, from {@link FilterList}
+ * instances.
+ * <p>
+ * Note, that we combine every {@link Filter} to one big search
+ * request.
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * @author fdietz
  */
 public class SearchRequestBuilder {
 

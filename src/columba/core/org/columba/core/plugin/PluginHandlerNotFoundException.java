@@ -7,10 +7,10 @@
 package org.columba.core.plugin;
 
 /**
- * @author frd
+ * {@link PluginManager} throws this exception if it can't 
+ * find the requested plugin handler.
  *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class PluginHandlerNotFoundException extends Exception {
 

@@ -34,24 +34,24 @@ import org.columba.core.xml.XmlElement;
  * 
  *
  * Every entrypoint is represented by this abstract handler class
- * 
+ * <p>
  * We use the Strategy Pattern here.
- * 
+ * <p>
  * The <class>AbstractPluginHandler</class> is the Context of the 
  * Strategy pattern.
- * 
+ * <p>
  * The plugins (<interface>PluginInterface</interface>) represent
  * the used strategy.
- * 
+ * <p>
  * Therefore, the context is responsible to set the appropriate 
  * strategy we use.
- * 
+ * <p>
  * In other words the plugin handler decides which plugin should be
  * executed and returns an instance of the plugin class.
- * 
+ * <p>
  * 
  * example of loading a plugin:
- * 
+ * <code>
  *   
  * ActionPluginHandler handler = (ActionPluginHandler) 
  *           MainInterface.pluginManager.getHandler("org.columba.core.action");
@@ -59,8 +59,8 @@ import org.columba.core.xml.XmlElement;
  * Object[] parameter = { myparam };
  * 
  * Action action = handler.getPlugin("MoveAction", parameter);
- * 
- * 
+ * </code>
+ * <p>
  * Please read the documentation of the corresponding methods for more
  * details.
  * 

@@ -18,12 +18,13 @@ package org.columba.core.loader;
 import java.lang.reflect.Constructor;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Classloader responsible for instanciating plugins which are
+ * located inside the Columba sources.
+ * <p>
+ * Note, that this classloader tries to find the correct
+ * constructor based on the arguments.
+ * 
+ * @author fdietz
  */
 public class DefaultClassLoader {
 

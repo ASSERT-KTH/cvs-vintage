@@ -11,9 +11,9 @@ import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.menu.CMenuItem;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
-import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.pop3.POP3ServerController;
 

@@ -27,6 +27,17 @@ All Rights Reserved.
 <body bgcolor="white">
 
 Swing Menus get generated using customizable XML configuration files
-
+<p>
+org.columba.core.action.menu.xml defines the core menu, mail and addressbook
+define their own menu.xml, which extend the core menu. 
+<p>
+We therefore added placeholders we called <b>extensionpoint</b>, which 
+are used by mail/addressbook to address the location where they plug 
+themselves in the core menu.
+<p>
+Note, that the swing menu code is kept separated from the code which actually
+creates the menu - the generator classes.
+<p>
+{@link MenuPluginHandler} is responsible to handle all the plugins.
 </body>
 </html>

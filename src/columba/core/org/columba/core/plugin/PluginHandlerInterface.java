@@ -18,14 +18,16 @@ import java.util.ListIterator;
 import org.columba.core.xml.XmlElement;
 
 /**
- * @author fdietz
+ * 
  *
  * The PluginHandler is responsible for managing a plugin
  * extension point.
- * 
+ * <p>
  * Plugins register at the plugin handler.
- * 
+ * <p>
  * Use the plugin handler to load a plugin.
+ * <p>
+ * @author fdietz
  * 
  */
 public interface PluginHandlerInterface {
@@ -39,7 +41,7 @@ public interface PluginHandlerInterface {
 	
 	/**
 	 * return top level xml tree node
-	 * 
+	 * <p>
 	 * all plugins are child nodes of this parent node
 	 * 
 	 * @return	<class>XmlElement</class> parent node

@@ -14,14 +14,23 @@
 //
 //All Rights Reserved.
 
-package org.columba.core.gui.menu;
+package org.columba.core.plugin;
 
 import java.util.Iterator;
 import java.util.ListIterator;
 
-import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.gui.menu.ContextMenu;
+import org.columba.core.gui.menu.Menu;
 import org.columba.core.xml.XmlElement;
 
+/**
+ * A basic core menu is initially created by this plugin-handler.
+ * <p>
+ * Mail and addressbook components plug themselves in this menu.
+ * 
+ *
+ * @author fdietz
+ */
 public class MenuPluginHandler extends AbstractPluginHandler {
 
 

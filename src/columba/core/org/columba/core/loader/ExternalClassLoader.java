@@ -21,12 +21,13 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Classloader responsible for instanciating plugins which 
+ * can also be outside.
+ * <p>
+ * Note, that this classloader tries to find the correct
+ * constructor based on the arguments.
+ * 
+ * @author fdietz
  */
 public class ExternalClassLoader extends URLClassLoader {
 

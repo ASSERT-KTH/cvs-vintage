@@ -24,6 +24,12 @@ import javax.swing.JProgressBar;
 
 import org.columba.core.util.SwingWorker;
 
+/**
+ * Dialog showing the progress while exiting Columba.
+ * 
+ *
+ * @author fdietz
+ */
 public class ExitWorker extends SwingWorker {
 	private JProgressBar bar;
 	private int value = 0;
@@ -32,12 +38,6 @@ public class ExitWorker extends SwingWorker {
 	public Object construct() {
 		showDialog();
 
-		//MainInterface.shutdownManager.shutdown();
-
-		//initProgressBar();
-
-		
-
 		return null;
 	}
 
@@ -45,10 +45,7 @@ public class ExitWorker extends SwingWorker {
 
 	public void showDialog() {
 		JFrame dialog = new JFrame("Saving Folders...");
-		//JButton label = new JButton("Saving Folders...");
-		//dialog.getContentPane().setLayout( new BorderLayout() );
-		//dialog.getContentPane().add( label, BorderLayout.CENTER );
-		//dialog.getContentPane().add( label );
+		
 		bar = new JProgressBar();
 		bar.setValue(0);
 		bar.setStringPainted(true);
@@ -68,34 +65,6 @@ public class ExitWorker extends SwingWorker {
 		
 	}
 
-	/*
-	protected void initProgressBar() {
-		Folder rootFolder = (Folder) MainInterface.treeModel.getRoot();
-		int c = getFolderCount(rootFolder);
-
-		int result = c + MainInterface.popServerCollection.count();
-		bar.setMaximum(result);
-
-		//System.out.println("folder count: "+ result );
-
-		bar.setValue(value++);
-	}
-
-	protected int getFolderCount(Folder parent) {
-
-		for (Enumeration e = parent.children(); e.hasMoreElements();) {
-			Folder child = (Folder) e.nextElement();
-
-			getFolderCount(child);
-
-			if (child.getChanged() == true)
-				count++;
-		}
-
-		return count;
-	}
-	*/
-	
 	
 	/**
 	 * @return

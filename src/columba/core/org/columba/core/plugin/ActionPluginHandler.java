@@ -27,6 +27,15 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
+/**
+ * Every action in Columba is handled by this class.
+ * <p>
+ * The core actions are listed in the org.columba.core.action.action.xml
+ * <p>
+ * These actions are used to generate the menu and the toolbar dynamically.
+ *
+ * @author fdietz
+ */
 public class ActionPluginHandler extends AbstractPluginHandler {
 
 	/**

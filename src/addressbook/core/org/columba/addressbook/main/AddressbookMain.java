@@ -20,10 +20,10 @@ import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
+import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 /**
