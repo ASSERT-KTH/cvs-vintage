@@ -106,6 +106,7 @@ public class Activity
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
                        Attachment attachment,
+                       NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue)
          throws Exception
     {
@@ -118,6 +119,8 @@ public class Activity
             setDescription(desc);
             setTransaction(transaction);
             if (attachment != null) setAttachment(attachment);
+            setOldOptionId(oldOptionId);
+            setNewOptionId(newOptionId);
             setOldValue(oldValue);
             setNewValue(newValue);
             save();
