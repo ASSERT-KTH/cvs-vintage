@@ -593,7 +593,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	if( useSessionEncoding ) {
 	    ServerSession sess=req.getSession( false );
 	    if( sess!=null ) {
-		String charset=res.getCharacterEncoding();
+		String charset=res.getCharacterEncoding(false);
 		if( charset!=null ) {
 		    sess.setNote( sessionEncodingNote, charset );
 		    if( debug > 0 )

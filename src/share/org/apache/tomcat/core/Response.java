@@ -117,6 +117,7 @@ public class Response {
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
+    protected boolean haveCharacterEncoding = false;
     protected Locale locale = DEFAULT_LOCALE;
 
     // -------------------- Constructor --------------------
@@ -251,6 +252,7 @@ public class Response {
 	    contentType = DEFAULT_CONTENT_TYPE;
 	    locale = DEFAULT_LOCALE;
 	    characterEncoding = DEFAULT_CHAR_ENCODING;
+	    haveCharacterEncoding = false;
 	    status = 200;
 	    headers.clear();
 	}
@@ -443,8 +445,14 @@ public class Response {
 	headers.setValue("Content-Language").setString( contentLanguage);
     }
 
+    public String getCharacterEncoding(boolean defaultOK) {
+	if(defaultOK || haveCharacterEncoding)
+	    return characterEncoding;
+	return null;
+    }
+
     public String getCharacterEncoding() {
-	return characterEncoding;
+	return getCharacterEncoding(true);
     }
 
     public void setContentType(String contentType) {
@@ -453,6 +461,7 @@ public class Response {
 	String encoding = ContentType.getCharsetFromContentType(contentType);
         if (encoding != null) {
 	    characterEncoding = encoding;
+	    haveCharacterEncoding = true;
         }
 	headers.setValue("Content-Type").setString( contentType);
     }
@@ -503,6 +512,7 @@ public class Response {
 	contentLanguage = null;
         locale = DEFAULT_LOCALE;
 	characterEncoding = DEFAULT_CHAR_ENCODING;
+	haveCharacterEncoding = false;
 	status = 200;
 	usingWriter = false;
 	usingStream = false;
