@@ -44,7 +44,7 @@ import org.gjt.sp.util.*;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.21 2002/05/17 04:54:29 spestov Exp $
+ * @version $Id: View.java,v 1.22 2002/05/19 03:34:01 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -970,7 +970,7 @@ public class View extends JFrame implements EBComponent
 		inputHandler = null;
 		recorder = null;
 
-		setContentPane(new JPanel());
+		getContentPane().removeAll();
 
 		VFSManager.getIOThreadPool().removeProgressListener(workThreadHandler);
 	} //}}}

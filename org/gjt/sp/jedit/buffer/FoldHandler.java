@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
 /**
  * Interface for obtaining the fold level of a specified label.
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.3 2002/02/09 09:13:20 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.4 2002/05/19 03:34:01 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
@@ -59,6 +59,20 @@ public abstract class FoldHandler
 	 */
 	public abstract int getFoldLevel(Buffer buffer, int lineIndex, Segment seg);
 	//}}}
+
+	//{{{ equals() method
+	/**
+	 * Returns if the specified fold handler is equal to this one.
+	 * @param o The object
+	 */
+	public boolean equals(Object o)
+	{
+		// Default implementation... subclasses can extend this.
+		if(o == null)
+			return false;
+		else
+			return getClass() == o.getClass();
+	} //}}}
 
 	//{{{ registerFoldHandler() method
 	/**

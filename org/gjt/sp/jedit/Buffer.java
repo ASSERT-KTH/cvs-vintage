@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.81 2002/05/17 06:41:08 spestov Exp $
+ * @version $Id: Buffer.java,v 1.82 2002/05/19 03:34:01 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3497,9 +3497,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 	{
 		FoldHandler oldFoldHandler = this.foldHandler;
 
-		//XXX: Will break with possible future plugin fold handlers
-		if(oldFoldHandler != null
-			&& oldFoldHandler.getClass() == foldHandler.getClass())
+		if(foldHandler.equals(oldFoldHandler))
 			return;
 
 		this.foldHandler = foldHandler;

@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.31 2002/05/17 09:00:13 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.32 2002/05/19 03:34:01 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -585,6 +585,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		{
 			timer.stop();
 			ToolTipManager.sharedInstance().unregisterComponent(this);
+			super.removeNotify();
 		} //}}}
 
 		//{{{ getToolTipText() method

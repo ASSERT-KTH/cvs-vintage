@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.7 2002/01/17 10:37:54 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.8 2002/05/19 03:34:01 spestov Exp $
  */
 public class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -375,11 +375,7 @@ public class OptionsDialog extends EnhancedDialog
 
 				if (label == null)
 				{
-					// hahaha, suckers!!!
-					Log.log(Log.WARNING,this,
-						"options." + name + ".label"
-						+ " property not defined");
-					setText(name);
+					setText("NO LABEL PROPERTY: " + name);
 				}
 				else
 				{

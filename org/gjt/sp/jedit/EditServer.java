@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.7 2002/03/14 10:20:19 spestov Exp $
+ * @version $Id: EditServer.java,v 1.8 2002/05/19 03:34:01 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -221,6 +221,13 @@ public class EditServer extends Thread
 
 			jEdit.openFiles(view,parent,args);
 
+			// Hack done to fix bringing the window to the front.
+			// At least on windows, Frame.toFront() doesn't cut it.
+			// Remove the isWindows check if it's broken under other
+			// OSes too.
+			if (OperatingSystem.isWindows())
+				view.setState(java.awt.Frame.ICONIFIED);
+			
 			// un-iconify using JDK 1.3 API
 			view.setState(java.awt.Frame.NORMAL);
 			view.requestFocus();
