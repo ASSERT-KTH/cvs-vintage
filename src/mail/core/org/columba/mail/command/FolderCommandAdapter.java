@@ -62,6 +62,15 @@ public class FolderCommandAdapter {
     }
 
     /**
+     * Get destination reference
+     *
+     * @return                destination reference
+     */
+    public FolderCommandReference getDestinationFolderReference() {
+        return c[length - 2];
+    }
+
+    /**
      * Get update reference
      *
      * @return                update reference
