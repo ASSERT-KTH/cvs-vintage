@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JrmpPRODelegate.java,v 1.13 2005/03/04 10:01:36 benoitf Exp $
+ * $Id: JrmpPRODelegate.java,v 1.14 2005/03/11 14:00:59 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -58,11 +58,6 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
     private int port;
 
     /**
-     * private local optimisation activation boolean
-     */
-    private boolean localOpt = false;
-
-    /**
      * private Interceptor for Context propagation
      */
     private JServerRequestInterceptor[] sis = null;
@@ -92,54 +87,66 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
     }
 
     /**
-     * Export a Remote Object
-     * @param Remote object to export
-     * @exception RemoteException exporting remote object problem
+     * Makes a server object ready to receive remote calls. Note
+     * that subclasses of PortableRemoteObject do not need to call this
+     * method, as it is called by the constructor.
+     * @param obj the server object to export.
+     * @exception RemoteException if export fails.
      */
     public void exportObject(Remote obj) throws RemoteException {
         JUnicastRemoteObject.exportObject(obj, port, sis, cis);
     }
 
     /**
-     * Method for unexport object
-     * @param Remote obj object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * Deregisters a server object from the runtime, allowing the object to become
+     * available for garbage collection.
+     * @param obj the object to unexport.
+     * @exception NoSuchObjectException if the remote object is not
+     * currently exported.
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
         JUnicastRemoteObject.unexportObject(obj, true);
     }
 
     /**
-     * Connection method
-     * @param target a remote object;
-     * @param source another remote object;
-     * @exception RemoteException if the connection fail
+     * Makes a Remote object ready for remote communication. This normally
+     * happens implicitly when the object is sent or received as an argument
+     * on a remote method call, but in some circumstances it is useful to
+     * perform this action by making an explicit call.  See the
+     * {@link Stub#connect} method for more information.
+     * @param target the object to connect.
+     * @param source a previously connected object.
+     * @throws RemoteException if <code>source</code> is not connected
+     * or if <code>target</code> is already connected to a different ORB than
+     * <code>source</code>.
      */
     public void connect(Remote target, Remote source) throws RemoteException {
         // do nothing
     }
 
     /**
-     * Narrow method
-     * @param Remote obj the object to narrow
-     * @param Class newClass the expected type of the result
-     * @return an object of type newClass
-     * @exception ClassCastException if the obj class is not compatible with a
-     *            newClass cast
+     * Checks to ensure that an object of a remote or abstract interface type
+     * can be cast to a desired type.
+     * @param narrowFrom the object to check.
+     * @param narrowTo the desired type.
+     * @return an object which can be cast to the desired type.
+     * @throws ClassCastException if narrowFrom cannot be cast to narrowTo.
      */
-    public Object narrow(Object obj, Class newClass) throws ClassCastException {
-        if (newClass.isAssignableFrom(obj.getClass())) {
-            return obj;
+    public Object narrow(Object narrowFrom, Class narrowTo) throws ClassCastException {
+        if (narrowTo.isAssignableFrom(narrowFrom.getClass())) {
+            return narrowFrom;
         } else {
-            throw new ClassCastException("Can't cast " + obj.getClass().getName() + " in " + newClass.getName());
+            throw new ClassCastException("Cannot cast '" + narrowFrom.getClass().getName() + "' in '" + narrowTo.getName() + "'.");
         }
     }
 
     /**
-     * To stub method
-     * @return the stub object
-     * @param Remote object to unexport
-     * @exception NoSuchObjectException if the object is not currently exported
+     * Returns a stub for the given server object.
+     * @param obj the server object for which a stub is required. Must either be a subclass
+     * of PortableRemoteObject or have been previously the target of a call to
+     * {@link #exportObject}.
+     * @return the most derived stub for the object.
+     * @exception NoSuchObjectException if a stub cannot be located for the given server object.
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
         return RemoteObject.toStub(obj);
