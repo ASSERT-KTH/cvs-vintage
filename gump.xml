@@ -25,6 +25,7 @@
     <depend project="jakarta-servletapi"/>
     <depend project="jakarta-tomcat-util"/>
     <depend project="jsse"/>
+    <depend project="mx4j"/>
     <work nested="build/tomcat/classes"/>
     <home nested="build/tomcat"/>
     <jar name="lib/common/tomcat_core.jar"/>
