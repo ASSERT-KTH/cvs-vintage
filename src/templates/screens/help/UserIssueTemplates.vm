@@ -14,7 +14,7 @@
                   <li><a href="#using">$l10n.UsingTemplates</a></li>
                 </ul>
               </li>
-              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues=Modifying issues</a></li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
             </ul>
           <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
           <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
