@@ -70,6 +70,7 @@ import java.util.Stack;
 
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
+import org.apache.tomcat.logging.*;
 
 /**
  * JspReader is an input buffer for the JSP parser. It should allow
@@ -91,6 +92,8 @@ public class JspReader {
     int size = 0;
     
     private JspCompilationContext context;
+
+    Logger.Helper loghelper = new Logger.Helper("JASPER_LOG", "JspReader");
     
     public String getFile(int fileid) {
 	return (String) sourceFiles.elementAt(fileid);
@@ -211,8 +214,7 @@ public class JspReader {
         } catch (FileNotFoundException fnfe) {
             throw fnfe;
 	} catch (Throwable ex) {
-            System.err.println("STACK TRACE: ");
-            ex.printStackTrace();
+	    loghelper.log("Exception parsing file " + file, ex);
 	    // Pop state being constructed:
 	    popFile();
 	    throw new ParseException(Constants.getString("jsp.error.file.cannot.read",

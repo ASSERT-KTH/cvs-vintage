@@ -174,7 +174,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    
 	    wrapper.setNote( jspInfoNOTE, jspInfo );
 	} catch( TomcatException ex ) {
-	    ex.printStackTrace();
+	    log("mapJspPage: request=" + req + ", jspInfo=" + jspInfo + ", servletName=" + servletName + ", classN=" + classN, ex);
 	    return ;
 	}
 	req.setWrapper( wrapper );
@@ -210,7 +210,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    if(debug>0)log( "Compiled to " + jspInfo.realClassPath );
 	    jspInfo.touch();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("compile: req="+req+", jspInfo=" + jspInfo, ex);
 	}
     }
     
@@ -299,6 +299,8 @@ public class JspInterceptor extends BaseInterceptor {
     later ( after we pass the experimental stage) 
  */
 class JspInfo {
+    Request request;
+    
     String uri; // path 
 
     int version; // version
@@ -349,7 +351,7 @@ class JspInfo {
 	    classN + ".java";
 	fullClassN = pkg +"." + classN;
 	
-// 	System.out.println("ClassN=" + classN +
+// 	log("ClassN=" + classN +
 // 			   " realClassPath=" + realClassPath +
 // 			   " javaFilePath=" + javaFilePath +
 // 			   " fullClassN =" + fullClassN);
@@ -360,6 +362,7 @@ class JspInfo {
     /** Compute various names used
      */
     void init(Request req ) {
+	this.request = req;
 	// 	String includeUri 
 	// 	    = (String) req.getAttribute(Constants.INC_SERVLET_PATH);
 	uri=req.getServletPath();
@@ -407,7 +410,7 @@ class JspInfo {
 	    updateVersionedPaths();
 	}
 
-// 	System.out.println("uri=" + uri +
+// 	log("uri=" + uri +
 // 			   //" outputDir=" + outputDir +
 // 			   //" jspSource=" + jspSource +
 // 			   " pkgDir=" + pkgDir +
@@ -429,10 +432,10 @@ class JspInfo {
 	try {
 	    FileInputStream fis=new FileInputStream( mapFile );
 	    version=(int)fis.read();
-// 	    System.out.println("Version=" + version );
+// 	    log("Version=" + version );
 	    fis.close();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("readVersion() mapPath=" + mapPath, ex);
 	}
     }
 
@@ -446,10 +449,10 @@ class JspInfo {
 	try {
 	    FileOutputStream fis=new FileOutputStream( mapFile );
 	    fis.write(version);
-// 	    System.out.println("WVersion=" + version );
+// 	    log("WVersion=" + version );
 	    fis.close();
 	} catch( Exception ex ) {
-	    ex.printStackTrace();
+	    log("writeVersion() mapPath=" + mapPath, ex);
 	}
     }
 
@@ -461,6 +464,25 @@ class JspInfo {
 	compileTime=0;
 	if( ! f.exists() ) return;
 	compileTime=f.lastModified();
+    }
+
+    void log(String s) {
+	if (request != null && request.getContext() != null) {
+	    request.getContext().log(s);
+	}
+	else {
+	    System.err.println(s);
+	}
+    }
+
+    void log(String s, Exception e) {
+	if (request != null && request.getContext() != null) {
+	    request.getContext().log(s, e);
+	}
+	else {
+	    System.err.println(s);
+	    e.printStackTrace();
+	}
     }
 }
 
@@ -503,17 +525,17 @@ class TomcatOptions implements Options {
     }
     
     public File getScratchDir() {
-	System.out.println("Options: getScratchDir " + scratchDir);
+	log("Options: getScratchDir " + scratchDir);
         return scratchDir;
     }
 
     public final Object getProtectionDomain() {
-	System.out.println("Options: GetPD" );
+	log("Options: GetPD" );
 	return protectionDomain;
     }
 
     public String getClassPath() {
-	System.out.println("Options: GetCP " + classpath  );
+	log("Options: GetCP " + classpath  );
         return classpath;
     }
 
@@ -524,6 +546,11 @@ class TomcatOptions implements Options {
     public String getJspCompilerPath() {
         return jspCompilerPath;
     }
+
+    void log(String s) {
+	System.err.println(s);
+    }
+    
 }
 
 
@@ -551,7 +578,7 @@ class JspEngineContext1 implements JspCompilationContext {
     }
 
     public HttpServletRequest getRequest() {
-	System.out.println("JspEngineContext1: getRequest " + req );
+	log("JspEngineContext1: getRequest " + req );
         return req.getFacade();
     }
     
@@ -560,7 +587,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Get the http response we are using now...
      */
     public HttpServletResponse getResponse() {
-	System.out.println("JspEngineContext1: getResponse " );
+	log("JspEngineContext1: getResponse " );
         return req.getResponse().getFacade();
     }
 
@@ -568,7 +595,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * The classpath that is passed off to the Java compiler. 
      */
     public String getClassPath() {
-	System.out.println("JspEngineContext1: getClassPath " +
+	log("JspEngineContext1: getClassPath " +
 			   req.getContext().getServletLoader().getClassPath());
 	return req.getContext().getServletLoader().getClassPath();
     }
@@ -577,7 +604,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Get the input reader for the JSP text. 
      */
     public JspReader getReader() {
-	System.out.println("JspEngineContext1: getReader " + reader );
+	log("JspEngineContext1: getReader " + reader );
         return reader;
     }
     
@@ -585,7 +612,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Where is the servlet being generated?
      */
     public ServletWriter getWriter() {
-	System.out.println("JspEngineContext1: getWriter " + writer );
+	log("JspEngineContext1: getWriter " + writer );
         return writer;
     }
     
@@ -593,7 +620,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * Get the ServletContext for the JSP we're processing now. 
      */
     public ServletContext getServletContext() {
-	System.out.println("JspEngineContext1: getCtx " +
+	log("JspEngineContext1: getCtx " +
 			   req.getContext().getFacade());
         return req.getContext().getFacade();
     }
@@ -603,12 +630,12 @@ class JspEngineContext1 implements JspCompilationContext {
      * this JSP? I don't think this is used right now -- akv. 
      */
     public ClassLoader getClassLoader() {
-	System.out.println("JspEngineContext1: getLoader " + loader );
+	log("JspEngineContext1: getLoader " + loader );
         return req.getContext().getServletLoader().getClassLoader();
     }
 
     public void addJar( String jar ) throws IOException {
-	System.out.println("Add jar " + jar);
+	log("Add jar " + jar);
 	//loader.addJar( jar );
     }
 
@@ -617,7 +644,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * errorpage? 
      */
     public boolean isErrorPage() {
-	System.out.println("JspEngineContext1: isErrorPage " + isErrPage );
+	log("JspEngineContext1: isErrorPage " + isErrPage );
         return isErrPage;
     }
     
@@ -627,7 +654,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * other places it is called outputDir.
      */
     public String getOutputDir() {
-	System.out.println("JspEngineContext1: getOutputDir " +
+	log("JspEngineContext1: getOutputDir " +
 			   req.getContext().getWorkDir().getAbsolutePath());
         return req.getContext().getWorkDir().getAbsolutePath();
     }
@@ -639,7 +666,7 @@ class JspEngineContext1 implements JspCompilationContext {
     public String getJspFile() {
 	String sP=req.getServletPath();
 	Context ctx=req.getContext();
-	System.out.println("JspEngineContext1: getJspFile " +
+	log("JspEngineContext1: getJspFile " +
 			   sP);//   ctx.getRealPath( sP ) );
 	//        return ctx.getRealPath( sP );
 	return sP;
@@ -650,7 +677,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * generated class. 
      */
     public String getServletClassName() {
-	System.out.println("JspEngineContext1: getServletClassName " +
+	log("JspEngineContext1: getServletClassName " +
 			   m.getClassName());
         return m.getClassName();
     }
@@ -659,7 +686,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * The package name into which the servlet class is generated. 
      */
     public String getServletPackageName() {
-	System.out.println("JspEngineContext1: getServletPackageName " +
+	log("JspEngineContext1: getServletPackageName " +
 			   servletPackageName );
         return servletPackageName;
     }
@@ -669,7 +696,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * class name. 
      */
     public final String getFullClassName() {
-	System.out.println("JspEngineContext1: getServletPackageName " +
+	log("JspEngineContext1: getServletPackageName " +
 			   servletPackageName + "." + servletClassName);
         if (servletPackageName == null)
             return servletClassName;
@@ -681,7 +708,7 @@ class JspEngineContext1 implements JspCompilationContext {
      * generated. 
      */
     public String getServletJavaFileName() {
-	System.out.println("JspEngineContext1: getServletPackageName " +
+	log("JspEngineContext1: getServletPackageName " +
 			   servletPackageName + "." + servletClassName);
         return servletJavaFileName;
     }
@@ -741,19 +768,19 @@ class JspEngineContext1 implements JspCompilationContext {
     }
 
     public Compiler createCompiler() throws JasperException {
-	System.out.println("JspEngineContext1: createCompiler ");
+	log("JspEngineContext1: createCompiler ");
 	return null;
     }
     
     public String resolveRelativeUri(String uri)
     {
-	System.out.println("JspEngineContext1: resolveRelativeUri " + uri);
+	log("JspEngineContext1: resolveRelativeUri " + uri);
 	return null;
     };    
 
     public java.io.InputStream getResourceAsStream(String res)
     {
-	System.out.println("JspEngineContext1: getRAS " + res);
+	log("JspEngineContext1: getRAS " + res);
         return req.getContext().getFacade().getResourceAsStream(res);
     };
 
@@ -763,10 +790,30 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public String getRealPath(String path)
     {
-	System.out.println("GetRP " + path + " " +
+	log("GetRP " + path + " " +
 			   req.getContext().getRealPath(path));
 	return req.getContext().getRealPath(path);
     };
+
+    void log(String s, Exception e) {
+	if (this.req != null && this.req.getContext() != null) {
+	    this.req.getContext().log(s, e);
+	}
+	else {
+	    System.err.println(s);
+	    e.printStackTrace();
+	}
+    }
+
+    void log(String s) {
+	if (req != null && req.getContext() != null) {
+	    req.getContext().log(s);
+	}
+	else {
+	    System.err.println(s);
+	}
+    }
+
 }
 
 
