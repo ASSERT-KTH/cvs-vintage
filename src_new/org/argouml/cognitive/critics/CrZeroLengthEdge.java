@@ -24,7 +24,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.3 2002/07/10 07:46:42 mkl Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -36,13 +36,13 @@ import org.tigris.gef.presentation.*;
 import org.argouml.cognitive.*;
 import org.argouml.uml.cognitive.critics.*;
 
-/** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
-
+/** A critic to detect when an edge is very short in order to suggest to
+ *  improve the layout of the diagram.
+ */
 public class CrZeroLengthEdge extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constants
-  public static int THRESHOLD = 12;
+  public static int THRESHOLD = 20;
   
   ////////////////////////////////////////////////////////////////
   // constructor
