@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.13 2002/08/19 20:43:49 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.14 2002/09/10 15:21:55 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -104,7 +104,7 @@ public class UMLStateDiagram extends UMLDiagram {
     try { setName(getNewDiagramName()); } catch (PropertyVetoException pve) { }
   }
 
-  public UMLStateDiagram(MClass m, MStateMachine sm) {
+  public UMLStateDiagram(MNamespace m, MStateMachine sm) {
       this();
 	if (m != null && m.getName() != null) {
         String name = null, diag_name = m.getName();
@@ -157,7 +157,7 @@ public class UMLStateDiagram extends UMLDiagram {
      *           deleting layers on the diagram...
      *           psager@tigris.org   Jan. 24, 2oo2
      */        
-  public void setup(MClass m, MStateMachine sm) {
+  public void setup(MNamespace m, MStateMachine sm) {
 	  setNamespace(m);
 	  StateDiagramGraphModel gm = new StateDiagramGraphModel();
 	  gm.setNamespace(m);
