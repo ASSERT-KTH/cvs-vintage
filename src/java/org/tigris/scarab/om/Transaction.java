@@ -216,7 +216,23 @@ public class Transaction
     public void sendEmail(TemplateContext context, Issue issue)
          throws Exception
     {
+        sendEmail(context, issue, null, null);
+    }
+
+    public void sendEmail(Issue issue)
+         throws Exception
+    {
         sendEmail(null, issue, null, null);
     }
 
+
+    /** 
+        Convenience method for emails that require no extra context info. 
+        @throws Exception
+    */
+    public void sendEmail(Issue issue, String subject, String template)
+         throws Exception
+    {
+        sendEmail(null, issue, subject, template);
+    }
 }
