@@ -108,9 +108,8 @@ Tomcat 3.3 Beta 1:
      3. Session recyling includes keeping the HttpSessionFacade.  I believe
         this represents a security risk.   May need to discard session
         facades, or at least discard them for untrusted web applications.
-     4. Update getRemoteHost() to be consistent with Tomcat 3.2.2, if
-        appropriate.  In Tomcat 3.2.2, it no longer does a reverse DNS
-        lookup.
+     4. Update getRemoteHost() to be consistent with Tomcat 3.2.2, which
+        does a reverse DNS lookup.
      5. Verify no reqressions.
      6. TBD...
 
