@@ -60,9 +60,6 @@
     <copydir src="src/share" dest="${tomcat.build}/classes">
       <include name="**/*.properties" />
     </copydir>
-
-    <rmic base="${tomcat.build}/classes"
-          classname="org.apache.tomcat.shell.AdminImpl"/>
   </target>
 
   <!-- ==================== Build all web applications ==================== -->

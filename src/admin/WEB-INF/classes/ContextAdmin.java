@@ -8,7 +8,6 @@ import org.apache.tomcat.core.Request;
 import org.apache.tomcat.core.HttpServletRequestFacade;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.core.ContextManager;
-import org.apache.tomcat.shell.deployment.ContextManagerConfig;
 import org.apache.tomcat.util.RequestUtil;
 
 /**
