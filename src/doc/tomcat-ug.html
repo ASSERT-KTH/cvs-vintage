@@ -1,10 +1,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.11 2001/08/27 13:54:39 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.12 2001/08/29 01:49:05 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Tomcat User's Guide</title>
     <!-- Changed by: Costin Manolache, 20-Mar-2000 -->
     <!-- Changed by: Gal Shachor, 27-Mar-2000 -->
@@ -276,35 +276,20 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
     
     <ul>
       <li><a href="http://jakarta.apache.org/site/binindex.html">Download</a> the
-        appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary file.</li>
+        appropriate jakarta-tomcat-<i>&lt;version&gt;</i> binary file.</li><p>
     
       <li>Unzip the file into some directory (say /usr/local or C:\). This
           should create a new subdirectory named
-          <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt>.</li>
+          <code>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</code>.</li><p>
     
       <li>In a shell or DOS window, change to the
-          <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt> directory
-          and set a new environment variable (<a name="tomcat_home_env">TOMCAT_HOME</a>)
-          to point to the root directory of your Tomcat hierarchy. The exact directory may
-          vary from system to system; check your local file system to be sure where Tomcat
-          is installed.
-          <ol>
-              <li>On Win32 systems you should type: <br>
-                <tt><big>set TOMCAT_HOME=c:\jakarta-tomcat-<i>&lt;version&gt;</i>
-  	      </big></tt></li>
-              <li>On UNIX (using bash/sh) you should type: <br>
-                <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
-  	      </big></tt></li>
-              <li>On UNIX (using tcsh) you should type: <br>
-                <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
-  	      </big></tt></li>
-          </ol></li>
+          <code>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</code> directory.</li><p>
 
-        <li>Set the environment variable JAVA_HOME to point to the root
+      <li>Set the environment variable JAVA_HOME to point to the root
           directory of your JDK hierarchy.  You may optionally add the Java
           interpreter to your PATH environment variable. The exact directory
           may vary from system to system. Check your local file system to be sure
-          where Java is installed.
+          where Java is installed.<p>
         	<ol>
           	<li>Win32:<br>
               	<tt><big>
@@ -324,7 +309,61 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
               	setenv PATH=$JAVA_HOME/bin:$PATH<br>
               	</big></tt>
               	</li>
-        	</ol></li>
+        	</ol></li><p>
+
+      <li>You may optionally set the TOMCAT_HOME environment variable.  If
+		  the supplied shell/batch scripts are executed from
+          <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt> or from
+          its &quot;bin&quot; subdirectory, then they will successfully set
+          TOMCAT_HOME for you if not already set.  If you wish to execute
+          these shell/batch scripts from other directories, you must set
+          TOMCAT_HOME explicitely.<p>
+        <ol>
+          <li>On Win32 systems you should type: <br>
+              <tt><big>set TOMCAT_HOME=c:\jakarta-tomcat-<i>&lt;version&gt;</i>
+              </big></tt></li>
+          <li>On UNIX (using bash/sh) you should type: <br>
+              <tt><big>TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i> ; export TOMCAT_HOME
+              </big></tt></li>
+          <li>On UNIX (using tcsh) you should type: <br>
+              <tt><big>setenv TOMCAT_HOME=/usr/local/jakarta-tomcat-<i>&lt;version&gt;</i>
+              </big></tt></li>
+        </ol></li><p>
+        
+      <li>If you are using Win9x, you will need to deal with the potential
+        &quot;Out of environment space&quot; problem, if you haven't already.
+        There are several ways to deal with this.<p>
+        <ol>
+          <li>A global solution is to add a &quot;SHELL&quot; command to your
+              <code>CONFIG.SYS</code> file.  Click Start -> Run and
+              enter <code>sysedit</code>.  Then click OK.  In the
+              <code>C:\CONFIG.SYS</code> window, add the line:
+              <pre>SHELL=C:\COMMAND.COM /E:4096 /P</pre>
+              and click File -> Save.  Then click File -> Exit and
+              reboot your system. The default amount of environment space will
+              now be 4096 bytes, more than enough for Tomcat.</li>
+          <li>If you plan on always starting Tomcat 3.3 from the
+              &quot;MS-DOS Prompt&quot;, open a &quot;MS-DOS Prompt&quot;.
+              Right click on the icon in the upper left corner of the DOS
+              window and select Properties.  In this dialog, select the Memory
+              tab and change the &quot;Initial environment:&quot; setting
+              to 4096.  Click OK and close the MS-DOS window. Now, when you
+              open an &quot;MS-DOS Prompt&quot;, you should be able to start
+              and stop Tomcat.</li>
+          <li>If you like double-clicking files in Windows Explorer, you can
+              execute <code>sysedit</code> as described in the first
+              method and add the <code>&quot;set JAVA_HOME ...&quot;</code> line
+              from above to the <code>AUTOEXEC.BAT</code> file.  Next in Windows
+              Explorer, navigate to Tomcat's <code>bin</code> directory.  Right
+              click on the <code>startup.bat</code> file and select Properties.
+              Set the &quot;Inital environment:&quot; as described in the second
+              method. Also select the Program tab and check the &quot;Close on
+              exit&quot; option. Repeat this procedure for the <code>shutdown.bat</code>
+              file. Reboot the system so the change to the <code>AUTOEXEC.BAT</code>
+              file can take effect.  Now you should be able to double-click
+              on the <code>startup.bat</code> and <code>shutdown.bat</code> files
+              in Windows Explorer to start and stop Tomcat.</li>
+        </ol></li>
     </ul>
 
 <p>That's it! You can now <a href="#starting_and_stopping">
@@ -723,59 +762,59 @@ based on what Tomcat 3.3 makes available by default.</p>
 Tomcat 3.3 creates when it starts up.  The classloader hierarchy built by
 Tomcat 3.3 looks like this:</p>
 
-<table align="center" class="cltable">
-  <tr class="clt_data"><td>
-    <table>
-      <tr class="clt_loader"><td>Server Classloader</td></tr>
-      <tr class="clt_label"><td>directory:</td></tr>
-      <tr class="clt_data"><td>lib/container</td></tr>
-      <tr class="clt_label"><td>default contents:</td></tr>
-      <tr class="clt_data">
-        <td>crimson.jar<br>facade22.jar<br>
+<table align="center" class="cltable" border="0" cellspacing="0">
+  <tr><td>
+    <table align="center">
+      <tr><td class="clt_loader">Server Classloader</td></tr>
+      <tr><td class="clt_label">directory:</td></tr>
+      <tr><td class="clt_data">lib/container</td></tr>
+      <tr><td class="clt_label">default contents:</td></tr>
+      <tr>
+        <td class="clt_data">crimson.jar<br>facade22.jar<br>
           jasper.jar<br>jaxp.jar<br>tomcat_modules.jar<br>tomcat_util.jar<br>
           tomcat-startup.jar<br>xalan.jar</td></tr>
-	  </table>
-    </td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>
-	<table>
-      <tr class="clt_loader"><td>Webapp Classloader(s)</td></tr>
-      <tr class="clt_label"><td>directory:</td></tr>
-      <tr class="clt_data"><td>WEB-INF/classes<br>WEB-INF/lib</td></tr>
-	  <tr class="clt_data"><td>|</td></tr>
-      <tr class="clt_loader"><td>Apps Classloader</td></tr>
-      <tr class="clt_label"><td>directory:</td></tr>
-      <tr class="clt_data"><td>lib/apps</td></tr>
-      <tr class="clt_label"><td>default contents:</td></tr>
-      <tr class="clt_data"><td><i>empty</i></td></tr>
+    </table></td>
+	<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>
+    <table align="center">
+      <tr><td class="clt_loader">Webapp Classloader(s)</td></tr>
+      <tr><td class="clt_label">directory:</td></tr>
+      <tr><td class="clt_data">WEB-INF/classes<br>WEB-INF/lib</td></tr>
+	  <tr><td align="center">|</td></tr>
+      <tr><td class="clt_loader">Apps Classloader</td></tr>
+      <tr><td class="clt_label">directory:</td></tr>
+      <tr><td class="clt_data">lib/apps</td></tr>
+      <tr><td class="clt_label">default contents:</td></tr>
+      <tr><td class="clt_data"><i>empty</i></td></tr>
 	  </table>
 	</td></tr>
-  <tr class="clt_data"><td>&nbsp;</td><td>\</td><td>&nbsp;</td><td>/</td><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td><td align="center">\</td><td>&nbsp;</td><td align="center">/</td><td>&nbsp;</td></tr>
   <tr><td>&nbsp;</td><td>&nbsp;</td><td>
-    <table>
-      <tr class="clt_loader"><td>Common Classloader</td></tr>
-      <tr class="clt_label"><td>directory:</td></tr>
-      <tr class="clt_data"><td>lib/common</td></tr>
-      <tr class="clt_label"><td>default contents:</td></tr>
-      <tr class="clt_data">
-        <td>connector_util.jar<br>core_util.jar<br>jasper-runtime.jar<br>
+    <table align="center">
+      <tr><td class="clt_loader">Common Classloader</td></tr>
+      <tr><td class="clt_label">directory:</td></tr>
+      <tr><td class="clt_data">lib/common</td></tr>
+      <tr><td class="clt_label">default contents:</td></tr>
+      <tr>
+        <td class="clt_data">connector_util.jar<br>core_util.jar<br>jasper-runtime.jar<br>
           servlet.jar<br>tomcat_core.jar</td></tr>
 	  </table>
 	</td>
 	<td>&nbsp;</td><td>&nbsp;</td></tr>
-  <tr class="clt_data"><td>&nbsp;</td><td>&nbsp;</td><td>|</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td><td>&nbsp;</td><td align="center">|</td><td>&nbsp;</td><td>&nbsp;</td></tr>
   <tr><td>&nbsp;</td><td>&nbsp;</td><td>
-    <table>
-      <tr class="clt_loader"><td>Application Classloader</td></tr>
-      <tr class="clt_data"><td>the CLASSPATH classloader</td></tr>
-      <tr class="clt_label"><td>default contents:</td></tr>
-      <tr class="clt_data"><td>tomcat.jar</td></tr>
+    <table align="center">
+      <tr><td class="clt_loader">Application Classloader</td></tr>
+      <tr><td class="clt_data">the CLASSPATH classloader</td></tr>
+      <tr><td class="clt_label">default contents:</td></tr>
+      <tr><td class="clt_data">tomcat.jar</td></tr>
 	</table>
     </td><td>&nbsp;</td><td>&nbsp;</td></tr>
-  <tr class="clt_data"><td>&nbsp;</td><td>&nbsp;</td><td>|</td><td>&nbsp;</td><td>&nbsp;</td></tr>
-  <tr class="clt_loader"><td>&nbsp;</td><td>&nbsp;</td><td>
-    <table>
-      <tr class="clt_loader"><td>JDK Extensions Classloader</td></tr>
-      <tr class="clt_label"><td>directory:</td></tr>
-      <tr class="clt_data"><td><i>jdk</i>/jre/lib/ext</td></tr>
+  <tr><td>&nbsp;</td><td>&nbsp;</td><td align="center">|</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+  <tr><td>&nbsp;</td><td>&nbsp;</td><td>
+    <table align="center">
+      <tr><td class="clt_loader">JDK Extensions Classloader</td></tr>
+      <tr><td class="clt_label">directory:</td></tr>
+      <tr><td class="clt_data"><i>jdk</i>/jre/lib/ext</td></tr>
 	  </table></td>
 	<td>&nbsp;</td><td>&nbsp;</td></tr>
 </table>
@@ -787,10 +826,11 @@ Tomcat 3.3, web applications do not have access to an XML parser by default.
 The <code>jaxp.jar</code> and <code>crimson.jar</code> are tucked away in the
 <b>Server Classloader</b> where they are accessible only within that classloader.</p>
 
-<p>Also note that if you have a jar containing classes which depend on
+<p>Also note that if you have a jar containing classes which depends on
 <code>servlet.jar</code>, putting it on the CLASSPATH wouldn't work.
 <code>servlet.jar</code> isn't accessible to the <b>Application Classloader</b>.
-This is why in Tomcat 3.3, your CLASSPATH envronment variable is ignored.</p>
+This is why in Tomcat 3.3, your CLASSPATH envronment variable is ignored.  You
+must put such a jar in the <b>Common Classloader</b> or above.</p>
 
 <p>For classes to are used solely by a web application, they should be placed
 in the web application's <code>WEB-INF/classes</code> or in a jar in the
@@ -849,8 +889,8 @@ instance. ContextManager is the controlling class for the Tomcat 3.3 server.</p>
 by the <strong>modules</strong> that are included by <code>server.xml</code>
 and associated files.  The primary example of this is <code>ContextXmlReader</code>.
 It is responsible for reading files containing Context declarations in the form:
-<pre>&lt;Context path="myapp" docBase="somepath" ... /></pre> or 
-<pre>&lt;Context path="myapp" docBase="somepath" ...&gt;
+<pre>&lt;Context path=&quot;myapp&quot; docBase=&quot;somepath&quot; ... /></pre> or 
+<pre>&lt;Context path=&quot;myapp&quot; docBase=&quot;somepath&quot; ...&gt;
     <i>context local modules</i>
 &lt;/Context&gt;</pre></p>
 
