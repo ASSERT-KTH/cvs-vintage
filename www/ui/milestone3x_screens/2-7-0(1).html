@@ -1,1 +1,207 @@
-<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN""http://collabnet.com/dtds/collabnet_transitional_10.dtd"><html> <head>  <title>copy / move issue (2.7.0)</title>  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" /> </head> <body>  <form action="#" method="get">   <div id="globalnav">    <p><a href="#">globalnav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>   </div>   <table border="0" cellspacing="0" cellpadding="0" width="95%">    <tr>     <td width="100" id="leftcol">      <div id="projnav">       <a href="#">projectnav</a>        <ul>        <li><a href="#">item1</a></li>        <li><a href="#">item2</a></li>       </ul>       <p><a href="http://collabnet.cleverchimp.com/dtds/validator.html">validate me</a></p>      </div>     </td>     <td id="bodycol">      <div id="featurenav">       <p class="crumbing"><a href="#">crumbing</a> &gt; <a href="#">item1</a> &gt; item2</p>       <p><a href="#">primaryfeaturenav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>      </div>      <div class="app" id="div2-6-1">      <h2>copy / move issue (2.7.0) step 1</h2>      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>	  <h3>issue to be copied / moved</h3>       <table width="100%" border="1" cellspacing="2" cellpadding="3">        <tr>         <th><a href="#" title="sort">issue summary:</a></th>         <th><a href="#" title="sort">date committed:</a></th>         <th><a href="#" title="sort">committed by:</a></th>        </tr>        <tr class="a">         <td>summary X</td>         <td>xx/xx/xxxx</td>         <td><a href="#">user@users.com</a></td>        </tr>        </table>	  	  <h3>destination project</h3>	  <p><select>          <option>select project</option>		  <option>-------------</option>		  <option>project X</option>		  <option>--project X.1</option>		  <option>--project X.2</option>		  <option>-------------</option>		  		  <option>project y</option>		  <option>--project Y.1</option>		  <option>-------------</option>		  <option>project Z</option>		  		 </select>	  </p>	  	  <h3>Action</h3>	  <p><input type="radio" name="action" value="copy" />&nbsp;copy	  </p>	  <p><input type="radio" name="action" value="move" />&nbsp;move	  </p>		  	  	  	<p class="functnbar"><input type="submit" value="map issue attributes" /></p>     </div></td>    </tr>   </table>  </form> </body></html>
+<!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
+"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+<html>
+
+<head>
+	<title>Copy/Move Issue (2.7.0)</title>
+	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+</head>
+
+<body>
+<form action="#" method="get">
+
+	<!-- SourceCast -->
+	<div id="banner">
+		<table border="0" cellspacing="12" cellpadding="0" width="100%">
+		<tr>
+		
+		<td>
+		<div align="right" id="loginstatus">
+			<div>
+				Logged in as: <strong class="username">User XX</strong>
+			</div>
+			<div>
+				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
+			</div>
+		</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- Structural Elements -->
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<td id="leftcol" nowrap="nowrap" width="20%">
+<!-- Structural Elements -->
+	
+	<!-- SourceCast -->
+	<div id="navcol">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+			<th>
+			<a href="#">Start page</a>
+			</th>
+			</tr>
+			<tr>
+			<th>
+			<a href="#">Projects</a>/<a href="#">Categories</a>
+			</th>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			Project tools
+			</th>
+			</tr>
+			<tr>
+			<td>
+			<div>&nbsp;&nbsp;<a href="#">Documents</a></div>
+			<div>&nbsp;&nbsp;Issue tracking</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Enter issue</div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Reports</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Vote management</a></div>
+			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#">Workflow options</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Mailing lists</a></div> 
+			<div>&nbsp;&nbsp;<a href="#">Members</a></div>  
+			<div>&nbsp;&nbsp;<a href="#">News</a></div>
+			<div>&nbsp;&nbsp;<a href="#">Source code</a></div>
+			</td>
+			</tr>
+			<tr>
+			<td>&nbsp;</td>
+			</tr>
+			<tr>
+			<th>
+			&nbsp;<a href="#">Admin Functions</a>
+			</th>
+			</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+	<!-- SourceCast -->
+	<div id="helptext">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+		<th>How do I...?</th>
+		</tr>
+		<tr>
+		<td>
+			<div> 
+				<a href="#">[Go to help index]</a>
+			</div>
+			<div> 
+				<a href="#">Use this page</a>...
+			</div>
+			<div>
+				<a href="#">Learn about a project</a>...
+			</div>
+			<div>
+				<a href="#">Join a project</a>...
+			</div>
+		</td>
+		</tr>
+		</table>
+	</div>
+	<!-- SourceCast -->
+	
+<!-- Structural Elements -->
+</td>
+<td id="bodycol">
+<!-- Structural Elements -->
+
+	<!-- Scarab - App -->
+	<div id="topmodule">
+		<table border="0" cellspacing="0" cellpadding="3" width="100%">
+		<tr>
+			<td nowrap="nowrap">
+			<select>
+			<option>saved queries</option>
+			<option>query one</option>
+			<option>query two</option>
+			</select> 
+			<input type="submit" name="query" value="Go" class="bttn" />
+			&nbsp;
+			<input type="text" size="15" name="" />
+			<input type="submit" name="query" value="Query" class="bttn" />
+			&nbsp;
+			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
+			</td>			
+		</tr>
+		</table>
+	</div>
+	<!-- Scarab - App -->
+	
+	<!-- Scarab - App -->
+	<div class="app" id="div2-6-1">
+		<h2>Copy/Move Issue (2.7.0) step 1</h2>
+		
+		<h3>Issue to be Copied/Moved</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th><a href="#" title="sort">issue summary:</a></th>
+		<th><a href="#" title="sort">date committed:</a></th>
+		<th><a href="#" title="sort">committed by:</a></th>
+		</tr>
+		
+		<tr class="a">
+		<td>summary X</td>
+		<td>xx/xx/xxxx</td>
+		<td><a href="#">user@users.com</a></td>
+		</tr>
+		</table>
+		
+		<h3>destination project</h3>
+		<p><select>
+		<option>select project</option>
+		<option>-------------</option>
+		<option>project X</option>
+		<option>--project X.1</option>
+		<option>--project X.2</option>
+		<option>-------------</option>		  
+		<option>project y</option>
+		<option>--project Y.1</option>
+		<option>-------------</option>
+		<option>project Z</option>		  
+		</select>
+		</p>
+		
+		<h3>Action</h3>
+		
+		<p><input type="radio" name="action" value="copy" />&nbsp;copy</p>
+		
+		<p><input type="radio" name="action" value="move" />&nbsp;move</p>	
+
+		<p id="functnbar"><input type="submit" value="map issue attributes" /></p>
+	</div>
+	<!-- Scarab - App -->
+
+<!-- Structural Elements -->
+</td>
+</tr>
+</table>
+<!-- Structural Elements -->
+
+	<!-- SourceCast -->
+	<div id="footer">
+		<p>
+		<a href="#">Domain Home</a> |
+		<a href="#">Help</a> | 
+		<a href="#">Site FAQ</a> |
+		<a href="#">Feedback</a>
+		</p>
+	</div>
+	<!-- SourceCast -->
+
+</form>
+</body>
+</html>
+
+
