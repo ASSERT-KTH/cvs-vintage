@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteUser.vm,v 1.6 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: DeleteUser.vm,v 1.7 2002/08/27 20:31:00 csjank Exp $
 *#
 
 #set ($state = $data.Parameters.getString("state"))
@@ -10,7 +10,7 @@
 
 <div id="deleteuser" class="app">
 
-<h3>Confirm delete user</h3>
+<h3>$l10n.ConfirmDeleteUser</h3>
 
 #set ($username = $data.Parameters.getString("username",""))
 
@@ -30,23 +30,23 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th>First name</th>
+ <th>$l10n.FirstName</th>
  <td>$firstNameData</td>
 </tr>
 <tr>
- <th>Last name</th>
+ <th>$l10n.LastName</th>
  <td>$lastNameData</td>
 </tr>
 <tr>
- <th>Email address</th>
+ <th>$l10n.Email</th>
  <td>$emailData</td>
 </tr>
 </table>
 </div>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doDeleteuser" value="Confirm delete" />&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doDeleteuser" value="$l10n.Delete" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 </form>

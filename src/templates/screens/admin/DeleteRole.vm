@@ -1,11 +1,11 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteRole.vm,v 1.6 2002/05/24 03:26:12 jmcnally Exp $
+@version $Id: DeleteRole.vm,v 1.7 2002/08/27 20:31:00 csjank Exp $
 *#
 
 <div id="deleterole" class="app">
 
-<h3>Confirm delete role</h3>
+<h3>$l10n.ConfirmDeleteRole</h3>
 
 <form name="EditUserForm" action="$link.setPage("admin,DeleteRole.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
@@ -19,15 +19,15 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th>Role</th>
+ <th>$l10n.Role</th>
  <td>$roleName</td>
 </tr>
 </table>
 </div>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doDeleterole" value="Confirm delete" />&#160;
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+ <input type="submit" name="eventSubmit_doDeleterole" value="$l10n.Delete" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 </form>
