@@ -170,6 +170,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	// consistent with Apache
 	if( welcomeFile==null && ! requestURI.endsWith("/") ) {
 	    String redirectURI= requestURI + "/";
+	    redirectURI=fixURLRewriting( req, redirectURI );
 	    req.setAttribute("javax.servlet.error.message",
 			     redirectURI);
 	    if( debug > 0) log( "Redirect " + redirectURI );
@@ -194,6 +195,8 @@ public class StaticInterceptor extends BaseInterceptor {
 	// request, but that's not a specified behavior
 	String redirectURI=null;
 	redirectURI=concatPath( requestURI, welcomeFile);
+	redirectURI=fixURLRewriting( req, redirectURI );
+
 	req.setAttribute("javax.servlet.error.message",
 			 redirectURI);
 	if( debug > 0) log( "Redirect " + redirectURI );
@@ -204,6 +207,18 @@ public class StaticInterceptor extends BaseInterceptor {
 	return 0;
     }
 
+    // Fix for URL rewriting 
+    private String fixURLRewriting(Request req, String redirectURI ) {
+	ServerSession session=req.getSession( false );
+	if( session != null &&
+	    Request.SESSIONID_FROM_URL.equals(req.getSessionIdSource()))  {
+	    String id=";jsessionid="+req.getSessionId() ;
+	    redirectURI += id ;
+	}
+	return redirectURI;
+    }
+
+    
     private static String concatPath( String s1, String s2 ) {
 	if( s1.endsWith( "/" ) ) {
 	    if( s2.startsWith( "/" ))

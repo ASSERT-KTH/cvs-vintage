@@ -459,6 +459,7 @@ class FormAuthHandler extends Handler {
 	ServerSession session=req.getSession( false );
 	// we didn't had a session
 	boolean noSession= ( session==null );
+	if( debug>0 ) log( "Form handler called with no session ");
 
 	String page=ctx.getFormLoginPage();
 	String errorPage=ctx.getFormErrorPage();
@@ -476,6 +477,7 @@ class FormAuthHandler extends Handler {
 	    session.removeAttribute( "j_password");
 	    req.setAttribute("javax.servlet.error.message",
 			     errorPage );
+	    if( debug>0) log( "Redirecting to " + errorPage );
 	    contextM.handleStatus( req, res, 302 ); // redirect
 	    return;
 	}
@@ -496,7 +498,7 @@ class FormAuthHandler extends Handler {
 			      originalLocation);
 	if( debug > 0 )
 	    log("Redirect1: " + page  + " originalUri=" +
-		req.requestURI().toString());
+		originalLocation );
 
 	req.setAttribute("javax.servlet.error.message",
 			 page );
