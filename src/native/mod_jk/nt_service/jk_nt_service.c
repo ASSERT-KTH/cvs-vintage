@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -670,13 +670,13 @@ static void stop_tomcat(short port,
                 }                                                    
             } else {
                 char b[] = {(char)254, (char)15};
-                int rc = send(sd, b, 2, 0);
+                rc = send(sd, b, 2, 0);
                 if(2 == rc) {
                     rc = JK_TRUE;
                 }
             }
             jk_close_socket(sd);
-            if(2 == rc) {
+            if(JK_TRUE == rc) {
                 if(WAIT_OBJECT_0 == WaitForSingleObject(hTomcat, 30*1000)) {
                     return;
                 }
@@ -737,6 +737,10 @@ static int start_tomcat(const char *name, HANDLE *hTomcat)
                                                             OPEN_ALWAYS,
                                                             FILE_ATTRIBUTE_NORMAL,
                                                             NULL);
+                        SetFilePointer(startupInfo.hStdOutput,
+                                       0,
+                                       NULL,
+                                       FILE_END);
                         startupInfo.hStdError = CreateFile(data.stderr_file,
                                                            GENERIC_WRITE,
                                                            FILE_SHARE_READ,
@@ -744,6 +748,10 @@ static int start_tomcat(const char *name, HANDLE *hTomcat)
                                                            OPEN_ALWAYS,
                                                            FILE_ATTRIBUTE_NORMAL,
                                                            NULL);
+                        SetFilePointer(startupInfo.hStdError,
+                                       0,
+                                       NULL,
+                                       FILE_END);
 
                         memset(&processInformation, 0, sizeof(processInformation));
                         
