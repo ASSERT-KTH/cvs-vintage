@@ -32,7 +32,7 @@
 
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
-    <property name="scarab.war.file" value="${build.webapps}/${project}.war"/>
+    <property name="scarab.war.file" value="${build.webapps}/${scarab.context}.war"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -168,6 +168,7 @@
         <unzip src="${src.html.dir}/${tigris-style}.zip" dest="${build.dir}"/>
 
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="SCARAB_HTML_REDIRECT" value="${scarab.html.redirect}"/>
 
         <copy todir="${build.project}/style" filtering="yes">
             <fileset dir="${build.dir}/${tigris-style}/css"
@@ -460,6 +461,7 @@
 
         <ant antfile="build-torque.xml"
              dir="${torque.dir.scarab}" target="sql"
+        <!-- move the generated .sql files into the target directory -->
              inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
             <property name="lib.dir" value="${build.project.webinf.lib}"/>
@@ -468,7 +470,6 @@
             <property name="idTableXMLFile" value=""/>
         </ant>
 
-        <!-- move the generated .sql files into the target directory -->
         <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${build.sql.scarab}/${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
@@ -522,9 +523,10 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Create DB from Torque                                              -->
+    <!-- Check for databases that could require alternate or more complex   -->
+    <!-- methods for schema creation                                        -->
     <!-- ================================================================== -->
-    <target name="db-type-check">
+    <target name="db-type-check" depends="sql">
         <condition property="auto.create.db">
         <not>
             <or>
@@ -535,6 +537,9 @@
         </condition>
     </target>
 
+    <!-- ================================================================== -->
+    <!-- Create database if not bypassed in "db-type-check"                 -->
+    <!-- ================================================================== -->
     <target name="create-db-schema" depends="db-type-check,sql" 
             if="auto.create.db">
 
@@ -556,11 +561,9 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Create DB from Torque                                              -->
+    <!-- Load default data                                                  -->
     <!-- ================================================================== -->
-    <target name="create-db" depends="create-db-schema">
-
-        <!-- populate with default and sample data -->
+    <target name="load-default-data" depends="create-db-schema">
         <echo message=
             "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
         <property name="file.prefix" value="${build.sql.scarab}/"/>
@@ -580,12 +583,39 @@
             <transaction src="${file.prefix}${project}-required-data.sql"/>
             <transaction src="${file.prefix}${project}-default-data.sql"/>
             <transaction src="${file.prefix}${project}-security.sql"/>
-            <transaction src="${file.prefix}${project}-sample-data.sql"/>
         </sql>
     </target>
 
     <!-- ================================================================== -->
     <!-- Generate Data DTD from Torque                                      -->
+    <!-- ================================================================== -->
+    <!-- Load seed data unless bypassed by setting "skip.seed.data"         -->
+    <!-- to any value in "build.properties"                                 -->
+    <!-- ================================================================== -->
+    <target name="load-seed-data" depends="load-default-data"
+            unless="skip.seed.data">
+        <!-- ============================================================== -->
+        <!-- Alternate initial data file may be specified                   -->
+        <!-- in "build.properties" by setting "seed.data.sql"               -->
+        <!-- to an alternate file.                                          -->
+        <!-- ============================================================== -->
+        <property name="seed.data.sql"
+            value="${file.prefix}${project}-sample-data.sql"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.database.url}"
+            userid="${scarab.database.admin.username}"
+            password="${scarab.database.admin.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${seed.data.sql}"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Create DB from Torque                                              -->
+    <!-- ================================================================== -->
+    <target name="create-db" depends="load-seed-data"/>
+
     <!-- ================================================================== -->
     <target name="datadtd-check">
         <echo message="checking: ${src.sql.dir}/${project}-data.dtd"/>
@@ -831,8 +861,8 @@ Index: project.xml
 RCS file: /home/cvs/jakarta-turbine-fulcrum/project.xml,v
 retrieving revision 1.26
 diff -u -r1.26 project.xml
---- project.xml	18 Apr 2002 17:17:17 -0000	1.26
-+++ project.xml	26 Apr 2002 19:23:56 -0000
+--- project.xml 18 Apr 2002 17:17:17 -0000  1.26
++++ project.xml 26 Apr 2002 19:23:56 -0000
 @@ -210,14 +210,8 @@
      <dependency>
        <name>xml-xerces</name>
@@ -892,8 +922,8 @@ Index: build.xml
 RCS file: /home/cvs/jakarta-turbine-jcs/build.xml,v
 retrieving revision 1.5
 diff -u -r1.5 build.xml
---- build.xml	19 Apr 2002 08:27:09 -0000	1.5
-+++ build.xml	26 Apr 2002 19:37:26 -0000
+--- build.xml   19 Apr 2002 08:27:09 -0000  1.5
++++ build.xml   26 Apr 2002 19:37:26 -0000
 @@ -46,12 +46,12 @@
    </target>
  
@@ -914,8 +944,8 @@ Index: project.xml
 RCS file: /home/cvs/jakarta-turbine-jcs/project.xml,v
 retrieving revision 1.5
 diff -u -r1.5 project.xml
---- project.xml	19 Apr 2002 08:26:27 -0000	1.5
-+++ project.xml	26 Apr 2002 19:37:27 -0000
+--- project.xml 19 Apr 2002 08:26:27 -0000  1.5
++++ project.xml 26 Apr 2002 19:37:27 -0000
 @@ -139,14 +139,6 @@
      <sourceDirectories>
        <sourceDirectory>src/java</sourceDirectory>
@@ -1340,12 +1370,14 @@ diff -u -r1.5 project.xml
     
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
+
     <!-- ================================================================== -->
     <target name="clean" depends="prepare-build-dir">
         <delete dir="${build.project}"/>
     </target>
     <target name="clean-all" depends="prepare-build-dir">
         <delete file="${scarab.log.file.turbine}"/>
+
         <delete file="${scarab.log.file.torque}"/>
         <delete file="${scarab.log.file.fulcrum}"/>
         <delete file="${scarab.log.file.stratum}"/>
