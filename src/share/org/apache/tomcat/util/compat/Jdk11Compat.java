@@ -172,6 +172,7 @@ public class Jdk11Compat {
     public static final String JAVA_1_1 = "1.1";
     public static final String JAVA_1_2 = "1.2";
     public static final String JAVA_1_3 = "1.3";
+    public static final String JAVA_1_4 = "1.4";
 
     static String javaVersion;
     static boolean java2=false;
@@ -195,6 +196,8 @@ public class Jdk11Compat {
             javaVersion = JAVA_1_2;
             Class.forName("java.lang.StrictMath");
             javaVersion = JAVA_1_3;
+	    Class.forName("java.lang.CharSequence");
+	    javaVersion = JAVA_1_4;
         } catch (ClassNotFoundException cnfe) {
             // swallow as we've hit the max class version that we have
         }
