@@ -61,6 +61,7 @@ import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.security.*;
 // Scarab Stuff
+import org.tigris.scarab.system.ScarabSystem;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
@@ -68,7 +69,7 @@ import org.tigris.scarab.util.ScarabConstants;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.2 2001/01/04 03:02:10 jon Exp $
+    @version $Id: Login.java,v 1.3 2001/01/24 01:20:08 jon Exp $
 */
 public class Login extends VelocityAction
 {
@@ -77,7 +78,7 @@ public class Login extends VelocityAction
     */
     public void doLogin( RunData data, Context context ) throws Exception
     {
-        if (! checkUser(data))
+        if (! checkUser(data, context))
             return;
         // if a next template is defined, then execute that instead of going to the 
         // Start.vm screen.    
@@ -89,11 +90,11 @@ public class Login extends VelocityAction
     /**
         Checks to make sure that the user exists, has been confirmed.
     */
-    public boolean checkUser(RunData data)
+    public boolean checkUser(RunData data, Context context)
         throws Exception
     {
-        String username = data.getParameters().getString ( "email", "" );
-        String password = data.getParameters().getString ( "password", "" );
+        String username = data.getParameters().getString ( "Email", "" );
+        String password = data.getParameters().getString ( "Password", "" );
         User user = null;
         try
         {
@@ -107,12 +108,19 @@ public class Login extends VelocityAction
             user = TurbineSecurity.getAuthenticatedUser( username, password );
         
             // check the CONFIRM_VALUE
-            // FIXME: deal with this better by not throwing an
-            // exception and instead showing the confirmation page.
-            // by using setTemplate(data,"Confirm.vm"); return;
-            // and creating an anonymous user
             if (!user.isConfirmed())
+            {
+                ScarabSystem ss = (ScarabSystem) context.get (ScarabConstants.SCARAB_SYSTEM);
+                if (ss != null)
+                {
+                    user = TurbineSecurity.getUserInstance();
+                    user.setEmail (username);
+                    ss.setUser(user);
+                }
+            
+                setTemplate(data, "Confirm.vm");
                 throw new TurbineSecurityException("User is not confirmed!");
+            }
 
             // store the user object
             data.setUser(user);
@@ -132,7 +140,8 @@ public class Login extends VelocityAction
             data.setMessage(e.getMessage());
             // Retrieve an anonymous user
             data.setUser (TurbineSecurity.getAnonymousUser());
-            setTemplate(data, "Login.vm");
+            setTemplate(data, 
+                data.getParameters().getString(ScarabConstants.TEMPLATE, "Login.vm"));
             return false;
         }
         return true;        

@@ -30,10 +30,12 @@ $page.setTitle("Welcome to Scarab")
     </TABLE>
 #end
 
-<form action="$link.setPage("Start.vm")" method="POST" name="login" >
+<form action="$link.setPage("Login.vm")" method="POST" name="login" >
     <input type="hidden" name="action" value="Login">
-    #if ($nextTemplate)
-        <input type="hidden" name="nextTemplate" value="$nextTemplate">
+    #if ($data.Parameters.nextTemplate)
+    <input type="hidden" name="nextTemplate" value="$data.Parameters.nextTemplate">
+    #else
+    <input type="hidden" name="nextTemplate" value="Start.vm">    
     #end
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
         <TR>
@@ -41,7 +43,7 @@ $page.setTitle("Welcome to Scarab")
         </TR>
         <TR>
                 <TD class="InputHeader">Email Address:</TD>
-                <TD class="PlainText"><INPUT name="email" value="$email" TYPE="text" SIZE="25"> Enter your email address.</TD>
+                <TD class="PlainText"><INPUT name="Email" value="$!data.Parameters.Email" TYPE="text" SIZE="25"> Enter your email address.</TD>
         </TR>
         <TR>
                 <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
@@ -54,7 +56,7 @@ $page.setTitle("Welcome to Scarab")
         </TR>
         <TR>
                 <TD class="InputHeader">Password:</TD>
-                <TD class="PlainText"><INPUT name="password" TYPE="password" SIZE="25" onChange="document.login.submit();"> Enter your password.</TD>
+                <TD class="PlainText"><INPUT name="Password" TYPE="password" SIZE="25" onChange="document.login.submit();"> Enter your password.</TD>
         </TR>
         <TR>
                 <TD HEIGHT="4" COLSPAN="2"><SPACER TYPE="block" HEIGHT="4"></TD>
