@@ -27,11 +27,12 @@
 // File: ModePlace.java
 // Classes: ModePlace
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModePlace.java,v 1.9 1998/10/20 00:23:18 jrobbins Exp $
+// $Id: ModePlace.java,v 1.10 1998/11/20 19:54:30 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
+import java.util.*;
 import java.awt.event.MouseEvent;
 
 import uci.graph.*;
@@ -141,6 +142,21 @@ public class ModePlace extends Mode {
     if (mgm.canAddNode(_node)) {
       _editor.add(_pers);
       mgm.addNode(_node);
+      Fig encloser = null;
+      Rectangle bbox = _pers.getBounds();
+      Layer lay = _editor.getLayerManager().getActiveLayer();
+      Vector otherFigs = lay.getContents();
+      Enumeration others = otherFigs.elements();
+      while (others.hasMoreElements()) {
+        Fig otherFig = (Fig) others.nextElement();
+        if (!(otherFig instanceof FigNode)) continue;
+        if (otherFig.equals(_pers)) continue;
+        Rectangle trap = otherFig.getTrapRect();
+        if ((trap.contains(bbox.x, bbox.y) &&
+             trap.contains(bbox.x + bbox.width, bbox.y + bbox.height))) 
+          encloser = otherFig;
+      }
+      _pers.setEnclosingFig(encloser);
       if (_node instanceof GraphNodeHooks)
 	((GraphNodeHooks)_node).postPlacement(_editor);
       _editor.getSelectionManager().select(_pers);

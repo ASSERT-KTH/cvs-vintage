@@ -27,7 +27,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.10 1998/10/20 00:23:04 jrobbins Exp $
+// $Id: Layer.java,v 1.11 1998/11/20 19:54:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -194,6 +194,7 @@ public abstract class Layer implements java.io.Serializable {
   public void bringForward(Fig f) { }
   public void sendBackward(Fig f) { }
   public void bringToFront(Fig f) { }
+  public void bringInFrontOf(Fig f1, Fig f2) { }
   public void reorder(Fig f, int function) { }
 
   ////////////////////////////////////////////////////////////////

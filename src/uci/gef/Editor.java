@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.19 1998/10/20 00:22:50 jrobbins Exp $
+// $Id: Editor.java,v 1.20 1998/11/20 19:54:25 jrobbins Exp $
 
 package uci.gef;
 
@@ -505,7 +505,16 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   public void removeGraphSelectionListener(GraphSelectionListener listener) {
     _selectionManager.removeGraphSelectionListener(listener);
   }
-  
+
+  /** Remember to notify listener whenever the mode changes. */
+  public void addModeChangeListener(ModeChangeListener listener) {
+    _modeManager.addModeChangeListener(listener);
+  }
+
+  /** Stop notifing listener of mode changes. */
+  public void removeModeChangeListener(ModeChangeListener listener) {
+    _modeManager.removeModeChangeListener(listener);
+  }
 
 
   ////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.10 1998/10/20 00:23:05 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.11 1998/11/20 19:54:28 jrobbins Exp $
 
 package uci.gef;
 
@@ -229,6 +229,18 @@ public class LayerDiagram extends Layer {
     Object nextFig = _contents.elementAt(i + 1);
     _contents.setElementAt(nextFig, i);
     _contents.setElementAt(f, i + 1);
+  }
+
+  /** Reorder the given Fig in this layer. */
+  public void bringInFrontOf(Fig f1, Fig f2) {
+    int i1 = _contents.indexOf(f1);
+    int i2 = _contents.indexOf(f2);
+    if (i1 == -1 || i1 == _contents.size()-1) return;
+    if (i2 == -1) return;
+    Object frontFig = _contents.elementAt(i1);
+    Object backFig = _contents.elementAt(i2);
+    _contents.setElementAt(frontFig, i2);
+    _contents.setElementAt(backFig, i1);
   }
 
   /** Reorder the given Fig in this layer. */
