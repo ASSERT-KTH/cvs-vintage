@@ -51,19 +51,19 @@ import java.util.HashMap;
 import java.util.WeakHashMap;
 import java.util.Iterator;
 import java.io.Serializable;
-import org.apache.log4j.Category;
 import org.apache.fulcrum.Service;
 import org.apache.fulcrum.BaseService;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.InitializationException;
 import org.apache.fulcrum.pool.TurbinePool;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class provides a simple Map cache that is available to the
  * current thread.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabCache.java,v 1.5 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: ScarabCache.java,v 1.6 2003/03/12 18:46:37 jmcnally Exp $
  */
 public class ScarabCache 
     extends BaseService
@@ -71,9 +71,6 @@ public class ScarabCache
 {
     /** The name of the service */
     public static final String SERVICE_NAME = "ScarabCache";
-
-    private static final Category log = 
-        Category.getInstance("org.tigris.scarab");
 
     //private Configuration props;
     private Map maps;
@@ -140,7 +137,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
         return result;
     }
@@ -158,7 +155,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
         return result;
     }
@@ -176,7 +173,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
         return result;
     }
@@ -195,7 +192,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
         return result;
     }
@@ -212,7 +209,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
         return result;
     }
@@ -229,7 +226,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
     }
 
@@ -245,7 +242,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
     }
 
@@ -261,7 +258,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
     }
 
@@ -278,7 +275,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
     }
 
@@ -293,7 +290,7 @@ public class ScarabCache
         }
         catch (Exception e)
         {
-            log.error(e);
+            Log.get().error(e);
         }
     }
 
@@ -330,7 +327,7 @@ public class ScarabCache
                              Serializable arg1, Serializable arg2,
                              Serializable arg3)
     {
-        return getService().getImpl(instanceOrClass, method, arg1, arg2);
+        return getService().getImpl(instanceOrClass, method, arg1, arg2, arg3);
     }
     public static Object get(Serializable[] keys)
     {
