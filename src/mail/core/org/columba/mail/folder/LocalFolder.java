@@ -59,7 +59,7 @@ import org.columba.ristretto.parser.ParserException;
  *
  * @author fdietz
  */
-public abstract class LocalFolder extends Folder implements MailboxInterface {
+public abstract class LocalFolder extends Folder {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
@@ -101,8 +101,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         filterList = new FilterList(filterListElement);
     }
-
-    // constructor
 
     /**
      * @param name the name of the folder.
@@ -168,7 +166,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
      */
     public abstract DataStorageInterface getDataStorageInstance();
 
-
     /**
      * @see org.columba.mail.folder.MailboxInterface#getMimePart(java.lang.Object, java.lang.Integer[])
      */
@@ -182,7 +179,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         return mimePart;
     }
 
-
     /**
      * @see org.columba.mail.folder.MailboxInterface#getMimePartTree(java.lang.Object)
      */
@@ -195,8 +191,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         return mptree;
     }
-
-    
 
     /** {@inheritDoc} */
     public InputStream getMessageSourceStream(Object uid) throws Exception {
@@ -353,7 +347,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     public boolean supportsMove() {
         return true;
     }
-
 
     /**
      * @param uid
@@ -554,6 +547,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
             return subHeader;
         }
     }
+    
     /**
      * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
      */
@@ -568,5 +562,4 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         
         super.expungeFolder();
     }
-   
 }
