@@ -1,4 +1,4 @@
-// $Id: CrConsiderSingleton.java,v 1.16 2003/06/30 18:00:22 linus Exp $
+// $Id: CrConsiderSingleton.java,v 1.17 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,14 @@
 
 package org.argouml.pattern.cognitive.critics;
 
-import java.util.*;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-import org.argouml.uml.*;
-import org.argouml.uml.cognitive.critics.*;
 
 // Use Model through ModelFacade.
-import org.argouml.model.ModelFacade;
+import org.argouml.uml.cognitive.critics.CrUML;
 
 /**
  * <p>A critic to detect when a class can never have more than one instance (of

@@ -1,4 +1,4 @@
-// $Id: NavigationHistory.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: NavigationHistory.java,v 1.6 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,11 @@
 
 package org.argouml.ui;
 
-import java.util.*;
-import java.lang.ref.*;
-
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import org.argouml.model.ModelFacade;
+
 
 /**
 *    This class implements a navigation history

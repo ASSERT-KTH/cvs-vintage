@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.33 2003/08/22 19:45:15 jjones Exp $
+// $Id: DisplayTextTree.java,v 1.34 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@
 
 package org.argouml.ui;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -354,7 +355,7 @@ public class DisplayTextTree extends JTree implements TargetListener {
 
         _reexpanding = true;
 
-        java.util.Enumeration enum = getExpandedPaths().elements();
+        Enumeration enum = getExpandedPaths().elements();
         while (enum.hasMoreElements()) {
             TreePath path = (TreePath) enum.nextElement();
             expandPath(path);

@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.4 2003/06/30 18:00:22 linus Exp $
+// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.5 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,14 +26,16 @@
 
 package org.argouml.pattern.cognitive.critics;
 
-import java.util.*;
+import java.util.Iterator;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-import org.argouml.uml.cognitive.critics.*;
-
+import org.argouml.cognitive.Designer;
+import org.argouml.uml.cognitive.critics.CrUML;
+import org.argouml.cognitive.ToDoItem;
 // Use Model through ModelFacade
 import org.argouml.model.ModelFacade;
+
+
+// Use Model through ModelFacade
 
 /**
  * A critic to detect whether a class violates the conditions required for

@@ -1,4 +1,4 @@
-// $Id: CmdSetPreferredSize.java,v 1.7 2003/06/30 18:00:24 linus Exp $
+// $Id: CmdSetPreferredSize.java,v 1.8 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,18 @@
 package org.argouml.ui.cmd;
 
 import java.awt.*;
-import java.util.*;
-
-import org.tigris.gef.base.*;
-import org.tigris.gef.presentation.*;
-
-import org.argouml.application.api.*;
-import org.argouml.uml.diagram.static_structure.ui.FigPackage;
+import java.util.Vector;
+import org.argouml.application.api.Argo;
 import org.argouml.uml.diagram.state.ui.FigCompositeState;
+import org.argouml.uml.diagram.static_structure.ui.FigPackage;
+
+
+import org.tigris.gef.base.Cmd;
+import org.tigris.gef.base.Editor;
+import org.tigris.gef.base.Globals;
+import org.tigris.gef.base.SelectionManager;
+import org.tigris.gef.presentation.Fig;
+
 
 /** A command to set selected figs to their preferred size or minimum size.
  * 

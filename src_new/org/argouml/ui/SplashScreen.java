@@ -1,4 +1,4 @@
-// $Id: SplashScreen.java,v 1.8 2003/06/30 18:00:24 linus Exp $
+// $Id: SplashScreen.java,v 1.9 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,16 @@
 
 package org.argouml.ui;
 
-import java.awt.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.border.*;
-
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.Vector;
+import javax.swing.JPanel;
+import javax.swing.JWindow;
+import javax.swing.border.EtchedBorder;
 import org.tigris.gef.ui.IStatusBar;
+
 // import org.tigris.gef.util.*;
 
 // JWindow? I don't want a frame or close widgets

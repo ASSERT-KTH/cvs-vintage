@@ -1,4 +1,4 @@
-// $Id: MultiToolbar.java,v 1.3 2003/06/29 23:47:02 linus Exp $
+// $Id: MultiToolbar.java,v 1.4 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,9 @@
 
 package org.argouml.ui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import javax.swing.JComponent;
 
 public class MultiToolbar extends JComponent {	
     

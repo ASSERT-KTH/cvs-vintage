@@ -1,4 +1,4 @@
-// $Id: ActionSaveConfiguration.java,v 1.9 2003/06/30 18:00:23 linus Exp $
+// $Id: ActionSaveConfiguration.java,v 1.10 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,10 +23,12 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui;
-import org.argouml.application.api.*;
-import org.argouml.uml.ui.*;
-import java.awt.event.*;
  
+import java.awt.event.ActionEvent;
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
+import org.argouml.uml.ui.UMLAction;
+
 /** Action for handling Argo configuration save
 *
 * @author Thierry Lach

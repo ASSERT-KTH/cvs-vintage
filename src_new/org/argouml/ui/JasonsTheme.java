@@ -1,4 +1,4 @@
-// $Id: JasonsTheme.java,v 1.4 2003/06/30 18:00:23 linus Exp $
+// $Id: JasonsTheme.java,v 1.5 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,10 @@
 
 package org.argouml.ui;
 
-import javax.swing.plaf.metal.*;
-import javax.swing.plaf.*;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Font;
+import javax.swing.plaf.ColorUIResource;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.metal.MetalTheme;
 
 /**
  * This class defines a variation on the default Metal Theme.

@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.23 2003/06/30 18:00:23 linus Exp $
+// $Id: AboutBox.java,v 1.24 2003/08/30 18:47:05 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,18 +23,24 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.ui;
-import org.argouml.application.api.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.ListIterator;
+import javax.swing.JDialog;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.event.*;
-import javax.swing.tree.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import org.tigris.gef.util.*;
+import javax.swing.tree.*;
+import org.argouml.application.api.AboutTabPanel;
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.PluggableAboutTab;
+import org.argouml.util.Tools;
 
 /** This is what you see after you click the About
  * button in the toolbar.
@@ -74,7 +80,7 @@ public class AboutBox extends JDialog {
 
 	StringBuffer versionBuf = new StringBuffer();
 	versionBuf.append("\n--- Generated version information: ---\n");
-	versionBuf.append(org.argouml.util.Tools.getVersionInfo());
+	versionBuf.append(Tools.getVersionInfo());
 	versionBuf.append(
 			  "\n" +
 			  "Intended for use with:\n" +
