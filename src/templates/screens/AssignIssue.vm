@@ -34,14 +34,19 @@
 </div>
 </form>
 
-#if ($issueList.size() > 0)
+#set ($icount = 0)
+#foreach ($issueId in $issueList)
+ #set ($icount = $icount + 1)
+#end
+
+#if ($icount == 1)
     #set($thisIssue = "this issue")
 #else
     #set($thisIssue = "these issues")
 #end
 
 <p>
-<a href="#add">Click here</a> to select users to associate with $thisIssue
+<a href="#add">Click here</a> to select users to associate with $thisIssue.
 </p>
 		
 
