@@ -2,6 +2,11 @@ $page.setTitle("Manage artifact types")
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 
+<form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name=$scarabG.Constant.NEXT_TEMPLATE value="admin,ManageArtifactTypes.vm" />
+<input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,ArtifactTypeSelect.vm" />
+
 #macro (ManageArtifactTypesBar $var)
 <div class="functnbar">
   <table cellpadding="4" cellspacing="0" border="1">
@@ -14,7 +19,7 @@ $page.setTitle("Manage artifact types")
 #if (!$issueTypes.isEmpty())
     <td nowrap="nowrap">
       <div>Artifact type management:</div>      
-      <input type="submit" value="Add existing" name="eventSubmit_doGotoartifactselect" />&#160;
+      <input type="submit" value="Add existing" name="eventSubmit_doGotoothertemplate" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>
@@ -28,9 +33,6 @@ $page.setTitle("Manage artifact types")
 
 <h2>$page.Title</h2>
 
-<form method="post" action="$link.setPage("admin,ManageArtifactTypes.vm")">
-<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabR.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 #ManageArtifactTypesBar("")
 

@@ -1,10 +1,10 @@
 $page.setTitle("Select global attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
-
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
+#set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($scarabR.CurrentIssueType))
 <table cellpadding="4" cellspacing="0" border="1">
-#if ($allAttributes.size() == 0)
+#if ($attributes.size() == 0)
 <tr>
 <td class="firstchild" nowrap="nowrap">
 <div>General functions</div>
@@ -39,21 +39,22 @@ $page.setTitle("Select global attribute")
 
 <h2>$page.Title</h2>
 
+#set ($rmaGroup = $intake.RModuleAttribute.Default)
+#set ($agGroup = $intake.AttributeGroup.Default)
+#set ($attGroup = $intake.Attribute.Default)
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
+<input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm" />
 
-#set ($allAttributes = $scarabR.CurrentModule.AvailableAttributes)
 
 #AttributeSelectBar("")
 
-#if ($allAttributes.size() == 0)
+#if ($attributes.size() == 0)
 
-<p><strong class="alert">There are no more global attributes that are not already
-associated with an attribute group in this module.</strong></p>
+<p><strong class="alert">There are no more global attributes that are not already associated with an attribute group in this module.</strong></p>
 
 #else
 
@@ -72,9 +73,9 @@ associated with an attribute group in this module.</strong></p>
 <th>Creation date</th>
 </tr>
 
-#foreach ($attribute in $allAttributes)
+#foreach ($attribute in $attributes)
  #indexedRows($velocityCount)
-  <td><input type="radio" name="attributeId" value="$attribute.AttributeId" /></td>
+  <td><input type="radio" name="$attGroup.Id.Key" value="$attribute.AttributeId" /></td>
   <td>$attribute.AttributeType.Name</td>
   <td>$attribute.Name</td>
   <td>$attribute.Description</td>

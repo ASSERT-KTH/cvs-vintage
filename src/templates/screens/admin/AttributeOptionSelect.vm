@@ -68,10 +68,10 @@ associated with this attribute in this module.</strong></p>
 <th>Option name</th>
 </tr>
 
+#set ($optionGroup = $intake.AttributeOption.Default)
 #foreach ($option in $availOptions)
-##set ($optionGroup = $intake.AttributeOption.mapTo($option))
  #indexedRows($velocityCount)
-  <td><input type="radio" name="optionId" value="$option.OptionId" /></td>
+  <td><input type="radio" name="$optionGroup.OptionId.Key" value="$option.OptionId" /></td>
   <td>$option.Name</td>
 #end
 </table>
