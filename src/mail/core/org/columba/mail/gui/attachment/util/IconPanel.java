@@ -31,10 +31,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.event.MouseInputListener;
+import java.util.List;
+import java.util.Iterator;
 
 public class IconPanel extends JPanel implements MouseInputListener {
 	int count;
-	Vector selection;
+	List selection;
 	ArrayList selectionListener;
 	Action doubleClickAction;
 	Dimension preferredIconSize;
@@ -105,7 +107,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 		super.removeAll();
 		count = 0;
 
-		selection.removeAllElements();
+		selection.clear();
 		labelFactory.reset();
 
 		revalidate();
@@ -113,13 +115,15 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	}
 
 	public void removeSelected() {
-		for (int i = 0; i < selection.size(); i++) {
-			super.remove((ClickableIcon) selection.get(i));
+		for (Iterator it = selection.iterator(); it.hasNext();) {
+			super.remove((ClickableIcon) it.next());
+		// for (int i = 0; i < selection.size(); i++) {
+			// super.remove((ClickableIcon) selection.get(i));
 		}
 
 		count -= selection.size();
 
-		selection.removeAllElements();
+		selection.clear();
 
 		revalidate();
 		repaint();
@@ -138,7 +142,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 
 	public int[] getSelection() {
 		int[] output = new int[selection.size()];
-
+			
 		for (int i = 0; i < selection.size(); i++) {
 			output[i] = ((ClickableIcon) selection.get(i)).getIndex();
 		}
@@ -190,12 +194,14 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	}
 
 	private void clearSelection() {
-		for (int i = 0; i < selection.size(); i++) {
-			((ClickableIcon) selection.get(i)).setSelection(false);
+		for (Iterator it = selection.iterator(); it.hasNext();) {
+			((ClickableIcon) it.next()).setSelection(false);
+		// for (int i = 0; i < selection.size(); i++) {
+			// ((ClickableIcon) selection.get(i)).setSelection(false);
 
 		}
 
-		selection.removeAllElements();
+		selection.clear();
 	}
 
 	public void mouseClicked(MouseEvent e) {

@@ -24,6 +24,8 @@ import java.util.Vector;
 import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.Flags;
 import org.columba.mail.message.HeaderInterface;
+import java.util.List;
+import java.util.Iterator;
 
 public class TableModelSorter extends TableModelPlugin {
 
@@ -115,7 +117,7 @@ public class TableModelSorter extends TableModelPlugin {
 					setDataSorting(true);
 
 					MessageNode rootNode = getHeaderTableModel().getRootNode();
-					Vector v = rootNode.getVector();
+					List v = rootNode.getVector();
 
 					
 					Collections.sort(
@@ -177,7 +179,7 @@ public class TableModelSorter extends TableModelPlugin {
 
 	public int getInsertionSortIndex(MessageNode newChild) {
 		MessageNode rootNode = getHeaderTableModel().getRootNode();
-		Vector v = rootNode.getVector();
+		List v = rootNode.getVector();
 
 		if (getSortingColumn().equals("In Order Received")) {
 			return rootNode.getChildCount();
@@ -197,9 +199,8 @@ public class TableModelSorter extends TableModelPlugin {
 		// no children !
 		if (v == null)
 			return 0;
-
 		for (int i = 0; i < v.size(); i++) {
-			child = (MessageNode) v.get(i);
+		  child = (MessageNode) v.get(i);
 			compare = comparator.compare(child, newChild);
 
 			if (compare == -1) {

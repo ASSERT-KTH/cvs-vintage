@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: WizardPanelSequence.java,v $
+//Revision 1.3  2003/06/24 16:15:40  waffel
+//[intern] changing declaration of Vector to Interface List. Improving performance by using now iterators
+//
 //Revision 1.2  2003/02/13 11:07:35  fdietz
 //[intern]more virtual folder framework fixes
 //
@@ -23,6 +26,8 @@
 package org.columba.core.gui.util.wizard;
 
 import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author frd
@@ -34,7 +39,7 @@ import java.util.Vector;
  */
 public class WizardPanelSequence {
 
-	protected Vector list;
+	protected List list;
 	protected int selected;
 
 	/**
@@ -107,7 +112,7 @@ public class WizardPanelSequence {
 
 	public boolean hasPredeccessor(DefaultWizardPanel p) {
 		for (int i = 0; i < count(); i++) {
-			DefaultWizardPanel panel = (DefaultWizardPanel) list.get(i);
+		 DefaultWizardPanel panel = (DefaultWizardPanel) list.get(i);
 
 			if (panel.equals(p)) {
 				if (i > 0)

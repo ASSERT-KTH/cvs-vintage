@@ -23,6 +23,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -177,9 +178,9 @@ public class AddressbookPanel
 
 	public void setHeaderList(HeaderItemList list)
 	{
-		Vector v = list.getVector();
+		List v = list.getVector();
 
-		addressbook.setListData(v);
+		addressbook.setListData((Vector)v);
 	}
 
 	public void actionPerformed(ActionEvent ev)

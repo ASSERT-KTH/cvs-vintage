@@ -24,6 +24,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.tree.selection.TreeSelectionListener;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author freddy
@@ -39,7 +41,7 @@ public class TableSelectionManager extends TreeSelectionManager implements TreeS
 	protected Object[] uids;
 	protected Object[] oldUids;
 	
-	protected Vector messageListenerList;
+	protected List messageListenerList;
 	
 	/**
 	 * Constructor for TableSelectionManager.
@@ -60,10 +62,12 @@ public class TableSelectionManager extends TreeSelectionManager implements TreeS
 		Object[] newUidList) {
 		oldUids = oldUidList;
 		uids = newUidList;
-
-		for (int i = 0; i < messageListenerList.size(); i++) {
+		for (Iterator it = messageListenerList.iterator(); it.hasNext();) {
 			MessageSelectionListener l =
-				(MessageSelectionListener) messageListenerList.get(i);
+				(MessageSelectionListener) it.next();
+		// for (int i = 0; i < messageListenerList.size(); i++) {
+			// MessageSelectionListener l =
+				// (MessageSelectionListener) messageListenerList.get(i);
 			l.messageSelectionChanged(uids);
 		}
 	}

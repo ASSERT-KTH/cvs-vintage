@@ -25,6 +25,7 @@ import java.util.Vector;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
+import java.util.List;
 
 public class TableModelSorter extends TableModelPlugin
 {
@@ -108,7 +109,7 @@ public class TableModelSorter extends TableModelPlugin
 
 					
 					//MessageNode rootNode = getHeaderTableModel().getRootNode();
-					Vector v = getTableModel().getHeaderList().getVector();
+					List v = getTableModel().getHeaderList().getVector();
 					
 					
 					

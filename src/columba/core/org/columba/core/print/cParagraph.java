@@ -26,6 +26,8 @@ import java.awt.geom.Point2D;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 
 public class cParagraph extends cPrintObject {
 
@@ -35,7 +37,7 @@ public class cParagraph extends cPrintObject {
 	public static final int BLOCK = 3;
 
 	private String original;
-	private Vector paragraphs;
+	private List paragraphs;
 	private int alignment;
 
 	private Font font;
@@ -61,8 +63,10 @@ public class cParagraph extends cPrintObject {
 	}	
 	
 	private void updateFont() {
-		for( int i=0; i<paragraphs.size(); i++ ) {
-			((AttributedString)paragraphs.get(i)).addAttribute(TextAttribute.FONT, font);
+		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+			((AttributedString) it.next()).addAttribute(TextAttribute.FONT, font);
+		// for( int i=0; i<paragraphs.size(); i++ ) {
+			// ((AttributedString)paragraphs.get(i)).addAttribute(TextAttribute.FONT, font);
 		}			
 	}
 	
@@ -159,12 +163,16 @@ public class cParagraph extends cPrintObject {
 		Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
 		double width = getDrawingSize().getWidth().getPoints();
-
-		for (int i = 0; i < paragraphs.size(); i++) {
+		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
 			LineBreakMeasurer lineBreaker =
 				new LineBreakMeasurer(
-					((AttributedString) paragraphs.get(i)).getIterator(),
+					((AttributedString) it.next()).getIterator(),
 					new FontRenderContext(null, true, true));
+		// for (int i = 0; i < paragraphs.size(); i++) {
+			// LineBreakMeasurer lineBreaker =
+				// new LineBreakMeasurer(
+					// ((AttributedString) paragraphs.get(i)).getIterator(),
+					// new FontRenderContext(null, true, true));
 
 			TextLayout layout;
 			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
@@ -184,12 +192,16 @@ public class cParagraph extends cPrintObject {
 		Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
 		double width = getDrawingSize().getWidth().getPoints();
-
-		for (int i = 0; i < paragraphs.size(); i++) {
+		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
 			LineBreakMeasurer lineBreaker =
 				new LineBreakMeasurer(
-					((AttributedString) paragraphs.get(i)).getIterator(),
+					((AttributedString) it.next()).getIterator(),
 					new FontRenderContext(null, true, true));
+		// for (int i = 0; i < paragraphs.size(); i++) {
+			// LineBreakMeasurer lineBreaker =
+				// new LineBreakMeasurer(
+					// ((AttributedString) paragraphs.get(i)).getIterator(),
+					// new FontRenderContext(null, true, true));
 
 			TextLayout layout;
 			float layoutX;
@@ -212,12 +224,16 @@ public class cParagraph extends cPrintObject {
 		Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
 		double width = getDrawingSize().getWidth().getPoints();
-
-		for (int i = 0; i < paragraphs.size(); i++) {
+		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
 			LineBreakMeasurer lineBreaker =
 				new LineBreakMeasurer(
-					((AttributedString) paragraphs.get(i)).getIterator(),
+					((AttributedString) it.next()).getIterator(),
 					new FontRenderContext(null, true, true));
+		// for (int i = 0; i < paragraphs.size(); i++) {
+			// LineBreakMeasurer lineBreaker =
+				// new LineBreakMeasurer(
+					// ((AttributedString) paragraphs.get(i)).getIterator(),
+					// new FontRenderContext(null, true, true));
 
 			TextLayout layout;
 
@@ -243,12 +259,16 @@ public class cParagraph extends cPrintObject {
 		Point2D.Double pen = new Point2D.Double(0.0, 0.0);
 
 		double width = w.sub(leftMargin).sub(rightMargin).getPoints();
-
-		for (int i = 0; i < paragraphs.size(); i++) {
+		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
 			LineBreakMeasurer lineBreaker =
 				new LineBreakMeasurer(
-					((AttributedString) paragraphs.get(i)).getIterator(),
+					((AttributedString) it.next()).getIterator(),
 					new FontRenderContext(null, true, true));
+		// for (int i = 0; i < paragraphs.size(); i++) {
+			// LineBreakMeasurer lineBreaker =
+				// new LineBreakMeasurer(
+					// ((AttributedString) paragraphs.get(i)).getIterator(),
+					// new FontRenderContext(null, true, true));
 
 			TextLayout layout;
 			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
@@ -281,9 +301,10 @@ public class cParagraph extends cPrintObject {
 		Point2D.Double pen = new Point2D.Double(0.0, topMargin.getPoints());
 
 		double width = w.sub(leftMargin).sub(rightMargin).getPoints();
-
-		for (int i = 0; i < paragraphs.size(); i++) {
-			it = ((AttributedString) paragraphs.get(i)).getIterator();
+		for (Iterator iter = paragraphs.iterator(); iter.hasNext();) {
+			it = ((AttributedString) iter.next()).getIterator();
+		// for (int i = 0; i < paragraphs.size(); i++) {
+			// it = ((AttributedString) paragraphs.get(i)).getIterator();
 
 			LineBreakMeasurer lineBreaker =
 				new LineBreakMeasurer(it, new FontRenderContext(null, true, true));

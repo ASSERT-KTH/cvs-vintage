@@ -25,12 +25,14 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PopItem;
+import java.util.List;
+import java.util.Iterator;
 
 public class POP3ServerCollection //implements ActionListener
 {
-	private Vector serverList;
+	private List serverList;
 	private POP3Server popServer;
-	private Vector listeners;
+	private List listeners;
 
 	public POP3ServerCollection() {
 		serverList = new Vector();
@@ -55,7 +57,7 @@ public class POP3ServerCollection //implements ActionListener
 	public POP3ServerController[] getList() {
 		POP3ServerController[] list = new POP3ServerController[count()];
 
-		serverList.copyInto(list);
+		((Vector)serverList).copyInto(list);
 
 		return list;
 	}
@@ -134,8 +136,10 @@ public class POP3ServerCollection //implements ActionListener
 	}
 
 	private void notifyListeners(ModelChangedEvent e) {
-		for (int i = 0; i < listeners.size(); i++) {
-			((ModelChangeListener) listeners.get(i)).modelChanged(e);
+		for (Iterator it = listeners.iterator(); it.hasNext();) {
+			((ModelChangeListener) it.next()).modelChanged(e);
+		// for (int i = 0; i < listeners.size(); i++) {
+			// ((ModelChangeListener) listeners.get(i)).modelChanged(e);
 		}
 	}
 }

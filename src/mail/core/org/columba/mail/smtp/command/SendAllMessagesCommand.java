@@ -34,6 +34,7 @@ import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.folder.outbox.SendListManager;
 import org.columba.mail.smtp.SMTPException;
 import org.columba.mail.smtp.SMTPServer;
+import java.util.List;
 
 /**
  * @author freddy
@@ -80,7 +81,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 		}
 
 		int actAccountUid = -1;
-		Vector sentList = new Vector();
+		List sentList = new Vector();
 		boolean open = false;
 		SMTPServer smtpServer = null;
 		Folder sentFolder = null;
@@ -132,7 +133,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 		}
 	}
 
-	protected void moveToSentFolder(Vector v, Folder sentFolder) {
+	protected void moveToSentFolder(List v, Folder sentFolder) {
 		FolderCommandReference[] r = new FolderCommandReference[2];
 			r[0] = new FolderCommandReference(outboxFolder, v.toArray() );
 			r[1] = new FolderCommandReference(sentFolder);

@@ -18,6 +18,8 @@ package org.columba.addressbook.parser;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.ContactCard;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @version 	1.0
@@ -31,8 +33,8 @@ public class VCardParser
 		//char[] chars = new char[ str.length() ];
 		ContactCard card = new ContactCard();
 
-		Vector keys = new Vector();
-		Vector values = new Vector();
+		List keys = new Vector();
+		List values = new Vector();
 		int pos = 0;
 		char ch;
 		StringBuffer line = new StringBuffer();
@@ -56,10 +58,12 @@ public class VCardParser
 					
 					if (key0.toLowerCase().equalsIgnoreCase("label"))
 					{
-						for (int i = 1; i < keys.size(); i++)
-						{
+						for (Iterator it = keys.iterator(); it.hasNext();) {
+							String keyi = (String)  it.next();
+						// for (int i = 1; i < keys.size(); i++)
+						// {
 
-							String keyi = (String) keys.get(i);
+							// String keyi = (String) keys.get(i);
 							System.out.println("label-key:"+keyi);
 							
 							card.formatSet(key0.toLowerCase(), keyi.toLowerCase(), valuebuf.toString());
@@ -69,10 +73,12 @@ public class VCardParser
 					}
 					else
 					{
-						for (int i = 1; i < keys.size(); i++)
-						{
+						for (Iterator it = keys.iterator(); it.hasNext();) {
+							String keyi = (String) it.next();
+						// for (int i = 1; i < keys.size(); i++)
+						// {
 
-							String keyi = (String) keys.get(i);
+							// String keyi = (String) keys.get(i);
 							card.set(key0.toLowerCase(), keyi.toLowerCase(), valuebuf.toString());
 							System.out.println("card:" + key0 + " - " + keyi + " :" + valuebuf.toString());
 

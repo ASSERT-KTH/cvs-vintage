@@ -17,6 +17,7 @@
 package org.columba.addressbook.gui.util;
 
 import java.util.Vector;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 
@@ -30,8 +31,8 @@ import org.columba.addressbook.gui.table.util.TableModelPlugin;
  */
 public class AddressbookListModel extends AbstractListModel
 {
-	private Vector listClone;
-	private Vector list;
+	private List listClone;
+	private List list;
 
 	private String patternString = new String();
 
@@ -73,7 +74,7 @@ public class AddressbookListModel extends AbstractListModel
 
 	public void addElement(Object item)
 	{
-		list.addElement(item);
+		list.add(item);
 		int index = list.indexOf(item);
 		
 		fireIntervalAdded( this, index, index );
@@ -84,7 +85,7 @@ public class AddressbookListModel extends AbstractListModel
 
 		System.out.println("list size:" + l.count());
 
-		list = (Vector) l.getVector().clone();
+		list = (List) ((Vector)l.getVector()).clone();
 
 		fireContentsChanged(this, 0, list.size() - 1);
 
@@ -131,7 +132,7 @@ public class AddressbookListModel extends AbstractListModel
 
 	public void remove(int index)
 	{
-		list.removeElementAt(index);
+		list.remove(index);
 		fireIntervalRemoved(this,index,index);
 	}
 
@@ -144,7 +145,7 @@ public class AddressbookListModel extends AbstractListModel
 
 	public boolean manipulateModel(int mode) throws Exception
 	{
-		listClone = (Vector) list.clone();
+		listClone = (Vector)((Vector)list).clone();
 
 		switch (mode)
 		{
@@ -171,7 +172,7 @@ public class AddressbookListModel extends AbstractListModel
 						{
 							//System.out.println("removing item:"+item);
 
-							list.removeElement(item);
+							list.remove(item);
 							i--;
 							/*
 							Object uid = list.getUid(i);

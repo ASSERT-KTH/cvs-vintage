@@ -24,6 +24,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -54,7 +56,7 @@ public class ActionList extends JPanel implements ActionListener {
 
 	private TableItem v;
 
-	private Vector list;
+	private List list;
 
 	private JPanel panel;
 
@@ -86,11 +88,14 @@ public class ActionList extends JPanel implements ActionListener {
 
 	public void updateComponents(boolean b) {
 		if (b == false) {
-
-			for (int i = 0; i < list.size(); i++) {
-				DefaultActionRow row = (DefaultActionRow) list.get(i);
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				DefaultActionRow row = (DefaultActionRow) it.next();
 				row.updateComponents(false);
 			}
+//			for (int i = 0; i < list.size(); i++) {
+//				DefaultActionRow row = (DefaultActionRow) list.get(i);
+//				row.updateComponents(false);
+//			}
 		}
 	}
 

@@ -33,6 +33,8 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.parser.text.HtmlParser;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author freddy
@@ -60,7 +62,7 @@ public class HeaderViewer extends JTextPane {
 	private String css = "";
 
 	// contains headerfields which are to be displayed
-	Vector keys;
+	List keys;
 
 	// *20030623, karlpeder* Replaced by HtmlParser
 	////	parser to transform text to html
@@ -159,9 +161,11 @@ public class HeaderViewer extends JTextPane {
 				+ OUTTER_TABLE_PROPERTIES
 				+ ">");
 
-		// for every existing headerfield 
-		for (int i = 0; i < keys.size(); i++) {
-			String key = (String) keys.get(i);
+		// for every existing headerfield
+		for (Iterator it = keys.iterator(); it.hasNext();) {
+			String key = (String) it.next();
+		// for (int i = 0; i < keys.size(); i++) {
+			// String key = (String) keys.get(i);
 			if (key == null)
 				continue;
 

@@ -17,10 +17,12 @@
 package org.columba.mail.message;
 
 import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 
 public class MimeTreeNode {
 	
-	private Vector childs;
+	private List childs;
 	private MimeTreeNode parent;
 	
 	public MimeTreeNode() {
@@ -32,7 +34,7 @@ public class MimeTreeNode {
 	 * @return Returns a Integer[]
 	 */
 	public Integer[] getAddress() {
-		Vector result = new Vector();
+		List result = new Vector();
 
 		if (parent == null)
 			result.add(new Integer(0));
@@ -41,7 +43,7 @@ public class MimeTreeNode {
 			MimeTreeNode nextChild = this;
 
 			while (nextParent != null) {
-				result.insertElementAt(new Integer( nextParent.getNumber(nextChild) ),0);
+				result.add(0, new Integer( nextParent.getNumber(nextChild) ));
 
 				nextChild = nextParent;
 				nextParent = nextParent.getParent();
@@ -49,6 +51,7 @@ public class MimeTreeNode {
 		}
 
 		Integer[] returnValue = new Integer[result.size()];
+			
 		for( int i=0; i<result.size(); i++ )
 			returnValue[i] = (Integer) result.get(i);
 
@@ -102,7 +105,7 @@ public class MimeTreeNode {
 		return childs.indexOf(child);
 	}
 
-	public Vector getChilds() {
+	public List getChilds() {
 		return childs;
 	}
 }

@@ -28,6 +28,7 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.Rfc822Parser;
+import java.util.List;
 
 public class Imap4Parser {
 
@@ -123,14 +124,14 @@ public class Imap4Parser {
 		return i;
 	}
 
-	public Vector parseUids(String s) {
+	public List parseUids(String s) {
 		String str, str2;
 		StringBuffer result;
 
 		StringTokenizer tok = new StringTokenizer(s, "\n");
 		StringTokenizer tok2;
 
-		Vector v = new Vector();
+		List v = new Vector();
 
 		//  System.out.println("parsing for UIDs");
 
@@ -164,12 +165,12 @@ public class Imap4Parser {
 		return v;
 	}
 
-	public static Vector parseLsub(String s) {
+	public static List parseLsub(String s) {
 		StringTokenizer tok = new StringTokenizer(s, "\n");
 
 		String str;
 
-		Vector v = new Vector();
+		List v = new Vector();
 		boolean firstTime = false;
 
 		while (tok.hasMoreElements()) {
@@ -790,8 +791,8 @@ public class Imap4Parser {
 		return result;
 	}
 
-	public static Vector parseSearch(String s) {
-		Vector result = new Vector();
+	public static List parseSearch(String s) {
+		List result = new Vector();
 
 		StringTokenizer tok = new StringTokenizer(s, "\n");
 		while (tok.hasMoreTokens()) {

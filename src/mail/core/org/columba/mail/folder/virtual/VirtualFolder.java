@@ -40,6 +40,7 @@ import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import java.util.List;
 
 public class VirtualFolder extends Folder {
 
@@ -551,7 +552,7 @@ public class VirtualFolder extends Folder {
 				list.put(srcFolder, new Vector());
 			}
 
-			Vector v = (Vector) list.get(srcFolder);
+			List v = (Vector) list.get(srcFolder);
 			v.add(srcUid);
 		}
 
@@ -559,7 +560,7 @@ public class VirtualFolder extends Folder {
 		int i = 0;
 		for (Enumeration e = list.keys(); e.hasMoreElements();) {
 			Folder srcFolder = (Folder) e.nextElement();
-			Vector v = (Vector) list.get(srcFolder);
+			List v = (Vector) list.get(srcFolder);
 
 			/*
 			// check if we need a destination folder 
@@ -571,7 +572,7 @@ public class VirtualFolder extends Folder {
 
 			newReference[i] = new FolderCommandReference(srcFolder);
 			Object[] uidArray = new Object[v.size()];
-			v.copyInto(uidArray);
+			((Vector)v).copyInto(uidArray);
 			newReference[i].setUids(uidArray);
 			newReference[i].setMarkVariant(r[0].getMarkVariant());
 			newReference[i].setMessage(r[0].getMessage());

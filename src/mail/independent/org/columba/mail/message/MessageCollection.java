@@ -19,10 +19,11 @@ package org.columba.mail.message;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.List;
 
 public class MessageCollection
 {
-    private Vector list;
+    private List list;
       //private Hashtable uidTable;
 
 
@@ -40,10 +41,10 @@ public class MessageCollection
 
 	public Enumeration getEnumeration()
 	{
-		return list.elements();
+		return ((Vector)list).elements();
 	}
 
-    public Vector getList()
+    public List getList()
         {
             return list;
 
@@ -112,7 +113,7 @@ public class MessageCollection
             if ( (number>list.size()-1) || ( number<0 ) )
                 return null;
             else
-                return (Message) list.elementAt(number);
+                return (Message) list.get(number);
 
         }
 
@@ -125,7 +126,7 @@ public class MessageCollection
                 return null;
             else
             {
-                item = (Message) list.elementAt(number);
+                item = (Message) list.get(number);
                 return item;
             }
 
@@ -193,7 +194,7 @@ public class MessageCollection
 
     public int add(Message message)
         {
-            list.addElement(message);
+            list.add(message);
 
               /*
                 Object uid = message.getUID();
@@ -206,7 +207,7 @@ public class MessageCollection
 
     public void insert(int index, Message message)
         {
-            list.insertElementAt(message, index);
+            list.add(index, message);
         }
 
     public int count()
@@ -223,7 +224,7 @@ public class MessageCollection
     public void replace( int index, Message message )
     {
         list.remove( index );
-        list.insertElementAt( message, index );
+        list.add(index, message );
     }
 
 

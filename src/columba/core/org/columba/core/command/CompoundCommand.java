@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -29,8 +31,8 @@ import org.columba.mail.folder.FolderTreeNode;
  * Window>Preferences>Java>Code Generation.
  */
 public class CompoundCommand extends Command {
-	protected Vector commandList;
-	protected Vector referenceList;
+	protected List commandList;
+	protected List referenceList;
 
 	/**
 	 * Constructor for CompoundCommand.
@@ -60,8 +62,10 @@ public class CompoundCommand extends Command {
 	
 	public void finish() throws Exception {
 		Command c;
-		for (int i = 0; i < commandList.size(); i++) {
-			c = (Command) commandList.get(i);
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
+//		for (int i = 0; i < commandList.size(); i++) {
+//			c = (Command) commandList.get(i);
 			c.finish();
 		}
 	}
@@ -71,8 +75,10 @@ public class CompoundCommand extends Command {
 	 */
 	public void execute(Worker worker) throws Exception {
 		Command c;
-		for (int i = 0; i < commandList.size(); i++) {
-			c = (Command) commandList.get(i);
+		for (Iterator it = commandList.iterator(); it.hasNext();) {
+			c = (Command) it.next();
+//		for (int i = 0; i < commandList.size(); i++) {
+//			c = (Command) commandList.get(i);
 			c.execute(worker);
 		}
 	}

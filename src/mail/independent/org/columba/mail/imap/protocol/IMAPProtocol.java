@@ -29,6 +29,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
+import java.util.List;
 
 /**
  *
@@ -230,7 +231,7 @@ public class IMAPProtocol {
 		String command,
 		Arguments args)
 		throws Exception {
-		Vector v = new Vector();
+		List v = new Vector();
 		boolean finished = false;
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
@@ -267,7 +268,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		v.copyInto(r);
+		((Vector)v).copyInto(r);
 
 		return r;
 
@@ -286,7 +287,7 @@ public class IMAPProtocol {
 		Arguments args,
 		WorkerStatusController worker)
 		throws Exception {
-		Vector v = new Vector();
+		List v = new Vector();
 		boolean finished = false;
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
@@ -321,7 +322,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		v.copyInto(r);
+		((Vector)v).copyInto(r);
 
 		return r;
 
@@ -342,7 +343,7 @@ public class IMAPProtocol {
 		int count,
 		WorkerStatusController worker)
 		throws Exception {
-		Vector v = new Vector();
+		List v = new Vector();
 		boolean finished = false;
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
@@ -384,7 +385,7 @@ public class IMAPProtocol {
 		}
 
 		IMAPResponse[] r = new IMAPResponse[v.size()];
-		v.copyInto(r);
+		((Vector)v).copyInto(r);
 
 		return r;
 

@@ -22,6 +22,8 @@ import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author freddy
@@ -35,7 +37,7 @@ public class TreeSelectionManager extends SelectionManager {
 
 	protected FolderTreeNode folder;
 	
-	protected Vector treeListenerList;
+	protected List treeListenerList;
 	
 	/**
 	 * Constructor for TreeSelectionManager.
@@ -57,10 +59,11 @@ public class TreeSelectionManager extends SelectionManager {
 		FolderTreeNode oldFolder,
 		FolderTreeNode newFolder) {
 		folder = newFolder;
-
-		for (int i = 0; i < treeListenerList.size(); i++) {
-			TreeSelectionListener l =
-				(TreeSelectionListener) treeListenerList.get(i);
+		for (Iterator it = treeListenerList.iterator(); it.hasNext();) {
+			TreeSelectionListener l = (TreeSelectionListener) it.next();
+		// for (int i = 0; i < treeListenerList.size(); i++) {
+			// TreeSelectionListener l =
+				// (TreeSelectionListener) treeListenerList.get(i);
 			l.folderSelectionChanged(newFolder);
 		}
 	}

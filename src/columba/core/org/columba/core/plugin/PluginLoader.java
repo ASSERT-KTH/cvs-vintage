@@ -23,6 +23,8 @@ import org.columba.core.loader.ExternalClassLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.scripting.AbstractInterpreter;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author freddy
@@ -67,7 +69,7 @@ public class PluginLoader {
 			// plugin-directory
 			String path = file.getPath();
 
-			Vector urlList = new Vector();
+			List urlList = new Vector();
 
 			
 			URL newURL = new File(path).toURL();
@@ -92,6 +94,7 @@ public class PluginLoader {
 			}
 
 			URL[] url = new URL[urlList.size()];
+				
 			for (int i = 0; i < urlList.size(); i++) {
 				url[i] = (URL) urlList.get(i);
 			}

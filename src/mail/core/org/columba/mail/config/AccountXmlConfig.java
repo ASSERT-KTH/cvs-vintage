@@ -16,6 +16,7 @@
 package org.columba.mail.config;
 
 import java.io.File;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.config.AdapterNode;
@@ -225,7 +226,7 @@ public class AccountXmlConfig extends DefaultXmlConfig {
 	}
 
 	// create uid list from all accounts
-	protected void getUids(Vector v, AdapterNode parent) {
+	protected void getUids(List v, AdapterNode parent) {
 		
 		int childCount = parent.getChildCount();
 

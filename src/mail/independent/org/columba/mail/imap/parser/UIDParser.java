@@ -18,6 +18,7 @@ package org.columba.mail.imap.parser;
 import java.util.Vector;
 
 import org.columba.mail.imap.IMAPResponse;
+import java.util.List;
 
 /**
  * @author freddy
@@ -29,8 +30,8 @@ import org.columba.mail.imap.IMAPResponse;
  */
 public class UIDParser {
 
-	public static Vector parse(IMAPResponse[] responses) {
-		Vector v = new Vector();
+	public static List parse(IMAPResponse[] responses) {
+		List v = new Vector();
 
 		for (int i = 0; i < responses.length - 1; i++) {
 			if (responses[i] == null)

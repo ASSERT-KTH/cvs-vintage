@@ -18,6 +18,7 @@ package org.columba.mail.message;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.List;
 
 /**
  * @author freddy
@@ -29,7 +30,7 @@ import java.util.Vector;
  */
 public class SendableHeader extends ColumbaHeader implements HeaderInterface{
 	
-	private Vector recipients;
+	private List recipients;
     private int accountUid;
     
 	public SendableHeader()
@@ -45,7 +46,7 @@ public class SendableHeader extends ColumbaHeader implements HeaderInterface{
     }
 
 
-    public Vector getRecipients()
+    public List getRecipients()
     {
         return recipients;
     }
@@ -55,7 +56,7 @@ public class SendableHeader extends ColumbaHeader implements HeaderInterface{
         accountUid = uid;
     }
 
-    public void setRecipients( Vector rcpt )
+    public void setRecipients( List rcpt )
     {
         recipients = rcpt;
     }

@@ -19,6 +19,7 @@ package org.columba.addressbook.gui.table.util;
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
+import java.util.List;
 
 public class TableModelFilteredView extends TableModelPlugin
 {
@@ -152,7 +153,7 @@ public class TableModelFilteredView extends TableModelPlugin
 							{
 								//System.out.println("removing item:"+item);
 								
-								list.getVector().removeElement(item);
+								list.getVector().remove(item);
 								i--;
 								/*
 								Object uid = list.getUid(i);

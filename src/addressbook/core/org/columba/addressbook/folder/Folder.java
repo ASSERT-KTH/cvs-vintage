@@ -28,18 +28,19 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.folder.FolderTreeNode;
+import java.util.List;
 
 public abstract class Folder extends AddressbookTreeNode {
 
 
-	protected Vector folderListeners;
+	protected List folderListeners;
 
 	/**
 	 *    Description of the Field
 	 *
 	 *@since
 	 */
-	protected Vector treeNodeListeners;
+	protected List treeNodeListeners;
 
 	/**
 	 *  unique identification number

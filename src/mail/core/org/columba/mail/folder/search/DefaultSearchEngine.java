@@ -21,6 +21,8 @@ import java.util.Vector;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author freddy
@@ -42,11 +44,10 @@ public class DefaultSearchEngine extends AbstractSearchEngine {
 	/********************** helper classes ****************************/
 
 	// only for debugging
-	protected void printList(Vector v) {
+	protected void printList(List v) {
 		System.out.println("print list:");
-
-		for (int i = 0; i < v.size(); i++) {
-			System.out.println(i + "->" + v.get(i));
+		 for (int i = 0; i < v.size(); i++) {
+			 System.out.println(i + "->" + v.get(i));
 		}
 	}
 

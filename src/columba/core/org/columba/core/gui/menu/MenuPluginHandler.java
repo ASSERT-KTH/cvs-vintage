@@ -20,10 +20,12 @@ import java.util.Vector;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
+import java.util.List;
+import java.util.Iterator;
 
 public class MenuPluginHandler extends AbstractPluginHandler {
 
-	Vector menuPlugins;
+	List menuPlugins;
 
 	public MenuPluginHandler( String handlerName ) {
 		super(handlerName,null);
@@ -39,14 +41,18 @@ public class MenuPluginHandler extends AbstractPluginHandler {
 	}
 
 	public void insertPlugins(Menu menu) {
-		for( int i=0; i<menuPlugins.size(); i++) {
-			menu.extendMenu((XmlElement)menuPlugins.get(i));
+		for (Iterator it = menuPlugins.iterator(); it.hasNext();) {
+			menu.extendMenu((XmlElement) it.next());
+		// for( int i=0; i<menuPlugins.size(); i++) {
+			// menu.extendMenu((XmlElement)menuPlugins.get(i));
 		}
 	}
 	
 	public void insertPlugins(ContextMenu menu) {
-			for( int i=0; i<menuPlugins.size(); i++) {
-				menu.extendMenu((XmlElement)menuPlugins.get(i));
+		for (Iterator it = menuPlugins.iterator(); it.hasNext();) {
+			menu.extendMenu((XmlElement) it.next());
+			// for( int i=0; i<menuPlugins.size(); i++) {
+				// menu.extendMenu((XmlElement)menuPlugins.get(i));
 			}
 		}
 

@@ -20,12 +20,13 @@ import java.awt.print.Paper;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 public class cDocument{
 
-	private Vector objects;
-	private Vector pages;
+	private List objects;
+	private List pages;
 
 	private cPrintObject header;
 	private cPrintObject footer;
@@ -117,7 +118,7 @@ public class cDocument{
 	private void createPages() {
 		pages.clear();
 
-		Enumeration objEnum = objects.elements();
+		Enumeration objEnum = ((Vector)objects).elements();
 
 		Paper paper = printJob.defaultPage().getPaper();
 

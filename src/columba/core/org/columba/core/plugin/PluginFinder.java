@@ -21,6 +21,7 @@ import java.util.Vector;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import java.util.List;
 
 /**
  * @author freddy
@@ -40,7 +41,7 @@ public class PluginFinder {
 	}
 
 	public static File[] searchPlugins() {
-		Vector v = new Vector();
+		List v = new Vector();
 		File[] programList = null;
 		File[] configList = null;
 

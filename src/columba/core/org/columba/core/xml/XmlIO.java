@@ -36,10 +36,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import java.util.List;
+import java.util.Iterator;
 
 public class XmlIO extends DefaultHandler {
 	// List of sub-elements
-	Vector elements;
+	List elements;
 	// Top level element (Used to hold everything else)
 	XmlElement rootElement;
 	// The current element you are working on
@@ -279,15 +281,20 @@ public class XmlIO extends DefaultHandler {
 			}
 			out.write(_escapeText(data));
 		}
-		Vector subElements = element.getElements();
+		List subElements = element.getElements();
 
 		if (subElements.size() > 0) {
 			out.write("\n");
-			for (int i = 0; i < subElements.size(); i++) {
+			for (Iterator it = subElements.iterator(); it.hasNext();) {
 				_writeSubNode(
 					out,
-					(XmlElement) subElements.get(i),
+					(XmlElement) it.next(),
 					indent + writeIndent);
+			// for (int i = 0; i < subElements.size(); i++) {
+				// _writeSubNode(
+					// out,
+					// (XmlElement) subElements.get(i),
+					// indent + writeIndent);
 			}
 			_writeSpace(out, indent);
 		}

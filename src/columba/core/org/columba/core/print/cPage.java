@@ -21,6 +21,8 @@ import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 
 public class cPage implements Printable {
 
@@ -35,7 +37,7 @@ public class cPage implements Printable {
 
 	private int orientation;
 
-	private Vector pageObjects;
+	private List pageObjects;
 
 	private cSize pageSize;
 
@@ -80,9 +82,10 @@ public class cPage implements Printable {
 			header.setPage( this );
 			header.print(g2d);
 		}
-
-		for (int i = 0; i < pageObjects.size(); i++) {
-			((cPrintObject) pageObjects.get(i)).print(g2d);
+		for (Iterator it = pageObjects.iterator(); it.hasNext();) {
+			((cPrintObject) it.next()).print(g2d);
+		// for (int i = 0; i < pageObjects.size(); i++) {
+			// ((cPrintObject) pageObjects.get(i)).print(g2d);
 		}
 
 		cPrintObject footer = document.getFooter();

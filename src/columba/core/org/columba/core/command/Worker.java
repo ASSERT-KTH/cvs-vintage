@@ -23,6 +23,8 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.SwingWorker;
+import java.util.List;
+import java.util.Iterator;
 
 public class Worker extends SwingWorker implements WorkerStatusController {
 	protected Command op;
@@ -35,7 +37,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 
 	protected boolean cancelled;
 
-	protected Vector workerStatusChangeListeners;
+	protected List workerStatusChangeListeners;
 
 	private int timeStamp;
 
@@ -203,11 +205,15 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	protected void fireWorkerStatusChanged(WorkerStatusChangedEvent e) {
-		for (int i = 0; i < workerStatusChangeListeners.size(); i++) {
-			(
-				(WorkerStatusChangeListener) workerStatusChangeListeners.get(
-					i)).workerStatusChanged(
-				e);
+		// if we use the commented statement, the exceptio java.util.ConcurrentModificationException
+		// is thrown ... is the worker not thread save?
+		// for (Iterator it = workerStatusChangeListeners.iterator(); it.hasNext();) {
+			// ((WorkerStatusChangeListener) it.next()).workerStatusChanged(e);
+		 for (int i = 0; i < workerStatusChangeListeners.size(); i++) {
+			 (
+				 (WorkerStatusChangeListener) workerStatusChangeListeners.get(
+					 i)).workerStatusChanged(
+				 e);
 		}
 	}
 

@@ -30,6 +30,8 @@ import javax.swing.Timer;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author freddy
@@ -47,7 +49,7 @@ public class ShutdownManager {
 
 	private static int currentDelay;
 
-	private static Vector list;
+	private static List list;
 
 	private static Timer delayedTimer;
 	private static Timer timer;
@@ -92,8 +94,10 @@ public class ShutdownManager {
 
 		// we start from the end, to be sure that
 		// the core-plugins are saved as last
-		for (int i = list.size() - 1; i >= 0; i--) {
-			TaskInterface plugin = (TaskInterface) list.get(i);
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			TaskInterface plugin = (TaskInterface) it.next();
+		// for (int i = list.size() - 1; i >= 0; i--) {
+			// TaskInterface plugin = (TaskInterface) list.get(i);
 
 			plugin.run();
 		}

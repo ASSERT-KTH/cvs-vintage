@@ -16,6 +16,7 @@
 package org.columba.mail.imap;
 
 import java.util.Vector;
+import java.util.List;
 
 /**
  * @author freddy
@@ -306,7 +307,7 @@ public class IMAPResponse {
 	}
 
 	public String[] getTokenList() {
-		Vector v = new Vector();
+		List v = new Vector();
 
 		String str = source;
 		for ( int i=0; i<str.length(); i++ )
@@ -318,7 +319,7 @@ public class IMAPResponse {
 		int size = v.size();
 		if (size > 0) {
 			String[] s = new String[size];
-			v.copyInto(s);
+			((Vector)v).copyInto(s);
 			return s;
 		} else 
 			return null;

@@ -16,12 +16,14 @@
 
 package org.columba.mail.coder;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 public class CoderRouter
 {
-    static Vector encoderList;
-    static Vector decoderList;
+    static List encoderList;
+    static List decoderList;
     static Decoder nullDecoder;
     static Encoder nullEncoder;
     
@@ -37,15 +39,16 @@ public class CoderRouter
 
     static public Decoder getDecoder( String encoding )
     {
-        int size = decoderList.size();
+//        int size = decoderList.size();
         Decoder actDecoder;
         
         if( encoding == null ) return (Decoder) nullDecoder.clone();
 
         encoding = encoding.toLowerCase();
-
-        for( int i=0; i<size; i++ ) {
-            actDecoder = (Decoder) decoderList.get(i);
+		for (Iterator it = decoderList.iterator(); it.hasNext();) {
+			actDecoder = (Decoder) it.next();
+//        for( int i=0; i<size; i++ ) {
+//            actDecoder = (Decoder) decoderList.get(i);
 
             if( actDecoder.getCoding().equals( encoding ) ) {
             return (Decoder) actDecoder.clone();
@@ -56,15 +59,16 @@ public class CoderRouter
     }
     static public Encoder getEncoder( String encoding )
     {
-        int size = encoderList.size();
+//        int size = encoderList.size();
         Encoder actEncoder;
 
         if( encoding == null ) return (Encoder) nullEncoder.clone();
 
         encoding = encoding.toLowerCase();
-        
-        for( int i=0; i<size; i++ ) {
-            actEncoder = (Encoder) encoderList.get(i);
+        for (Iterator it = encoderList.iterator(); it.hasNext();) {
+			actEncoder = (Encoder) it.next();
+//        for( int i=0; i<size; i++ ) {
+//            actEncoder = (Encoder) encoderList.get(i);
 
             if( actEncoder.getCoding().equals( encoding ) ) {
                 return (Encoder) actEncoder.clone();

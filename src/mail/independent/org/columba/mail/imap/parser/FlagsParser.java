@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.imap.IMAPResponse;
+import java.util.List;
 
 /**
  * @author freddy
@@ -31,7 +32,7 @@ import org.columba.mail.imap.IMAPResponse;
 public class FlagsParser {
 
 	public static Object[] parseUids(IMAPResponse[] responses) {
-		Vector v = new Vector();
+		List v = new Vector();
 
 		for (int i = 0; i < responses.length - 1; i++) {
 			if (responses[i] == null)
@@ -49,13 +50,13 @@ public class FlagsParser {
 		}
 
 		Object[] uids = new Object[v.size()];
-		v.copyInto(uids);
+		((Vector)v).copyInto(uids);
 
 		return uids;
 	}
 
 	public static IMAPFlags[] parseFlags(IMAPResponse[] responses) {
-		Vector v = new Vector();
+		List v = new Vector();
 
 		for (int i = 0; i < responses.length - 1; i++) {
 			if (responses[i] == null)
@@ -84,7 +85,7 @@ public class FlagsParser {
 		}
 
 		IMAPFlags[] flags = new IMAPFlags[v.size()];
-		v.copyInto(flags);
+		((Vector)v).copyInto(flags);
 
 		return flags;
 	}
@@ -136,7 +137,7 @@ public class FlagsParser {
 
 	public static String parseVariant(int variant) {
 		StringBuffer buf = new StringBuffer();
-		Vector arg = new Vector();
+		List arg = new Vector();
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 			case MarkMessageCommand.MARK_AS_UNREAD :

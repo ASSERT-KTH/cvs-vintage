@@ -19,13 +19,15 @@ import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Mutex;
+import java.util.Iterator;
+import java.util.List;
 
 public class DefaultProcessor extends Thread {
 
 	private final static int MAX_WORKERS = 5;
 
-	private Vector operationQueue;
-	private Vector worker;
+	private List operationQueue;
+	private List worker;
 
 	private Mutex operationMutex;
 	private Mutex workerMutex;
@@ -81,7 +83,7 @@ public class DefaultProcessor extends Thread {
 				break;
 		}
 
-		operationQueue.insertElementAt(new OperationItem(op,operationMode), p + 1);
+		operationQueue.add( p + 1, new OperationItem(op,operationMode));
         } finally {
             if (needToRelease) {
 		operationMutex.releaseMutex();
@@ -101,8 +103,8 @@ public class DefaultProcessor extends Thread {
         boolean needToRelease = false;
         try {
 		    needToRelease = operationMutex.getMutex();
-		for (int i = 0; i < operationQueue.size(); i++) {
-			nextOp = (OperationItem) operationQueue.get(i);
+		 for (int i = 0; i < operationQueue.size(); i++) {
+			 nextOp = (OperationItem) operationQueue.get(i);
 			if( ( i!=0 ) && (nextOp.operation.isSynchronize()) ) {
 				nextOp = null;
 				break;	
@@ -240,7 +242,7 @@ public class DefaultProcessor extends Thread {
 	 * Returns the operationQueue. This method is for testing only!
 	 * @return Vector
 	 */
-	public Vector getOperationQueue() {
+	public List getOperationQueue() {
 		return operationQueue;
 	}
 

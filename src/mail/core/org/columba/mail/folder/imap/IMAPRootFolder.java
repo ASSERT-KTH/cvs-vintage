@@ -48,6 +48,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import java.util.List;
 
 public class IMAPRootFolder extends Folder implements ActionListener {
 	protected final static ImageIcon imapRootIcon =
@@ -59,7 +60,7 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 	private Imap4Parser parser;
 	private StringBuffer cache;
 	private int state;
-	private Vector lsubList;
+	private List lsubList;
 
 	private final static int ONE_SECOND = 1000;
 	private Timer timer;

@@ -17,14 +17,15 @@ package org.columba.mail.pop3.parser;
 
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.List;
 
 public class UIDListParser
 {
     
 
-    public static Vector parse( String s )
+    public static List parse( String s )
     {
-        Vector list = new Vector();
+        List list = new Vector();
 
         String str,str2;
         StringTokenizer tok = new StringTokenizer( s, "\n" );

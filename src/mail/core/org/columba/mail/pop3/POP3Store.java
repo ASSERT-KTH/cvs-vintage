@@ -35,6 +35,7 @@ import org.columba.mail.pop3.parser.SizeListParser;
 import org.columba.mail.pop3.parser.UIDListParser;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
 import org.columba.mail.pop3.protocol.POP3Protocol;
+import java.util.List;
 
 /**
  * @author freddy
@@ -101,7 +102,7 @@ public class POP3Store {
 		this.state = state;
 	}
 
-	public Vector fetchUIDList(
+	public List fetchUIDList(
 		int totalMessageCount,
 		WorkerStatusController worker)
 		throws Exception {
@@ -111,12 +112,12 @@ public class POP3Store {
 		String str = protocol.fetchUIDList(totalMessageCount, worker);
 
 		// need to parse here
-		Vector v = UIDListParser.parse(str);
+		List v = UIDListParser.parse(str);
 
 		return v;
 	}
 
-	public Vector fetchMessageSizeList(WorkerStatusController worker)
+	public List fetchMessageSizeList(WorkerStatusController worker)
 		throws Exception {
 
 		isLogin(worker);
@@ -124,7 +125,7 @@ public class POP3Store {
 		String str = protocol.fetchMessageSizes();
 
 		// need to parse here
-		Vector v = SizeListParser.parse(str);
+		List v = SizeListParser.parse(str);
 
 		return v;
 	}
@@ -147,7 +148,7 @@ public class POP3Store {
 		 return protocol.deleteMessage(index);
 	}
 
-	/**
+	/** 
 	 * 
 	 * load the preprocessing filter pipe on message source
 	 * 

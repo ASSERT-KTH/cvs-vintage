@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
+import java.util.List;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -77,13 +78,13 @@ public class DefaultProcessorTest extends TestCase {
 		command5.setPriority(Command.NORMAL_PRIORITY);
 		processor.addOp(command5,Command.FIRST_EXECUTION);
 
-		Vector result = processor.getOperationQueue();
+		List result = processor.getOperationQueue();
 
-		assertTrue( ((OperationItem)result.elementAt(0)).operation == command3);
-		assertTrue( ((OperationItem)result.elementAt(1)).operation == command1);
-		assertTrue( ((OperationItem)result.elementAt(2)).operation == command2);
-		assertTrue( ((OperationItem)result.elementAt(3)).operation == command5);		
-		assertTrue( ((OperationItem)result.elementAt(4)).operation == command4);		
+		assertTrue( ((OperationItem)result.get(0)).operation == command3);
+		assertTrue( ((OperationItem)result.get(1)).operation == command1);
+		assertTrue( ((OperationItem)result.get(2)).operation == command2);
+		assertTrue( ((OperationItem)result.get(3)).operation == command5);		
+		assertTrue( ((OperationItem)result.get(4)).operation == command4);		
 	}
 
 	public void testAddOp_PriorityOrderingWithSynchronized() {
@@ -110,13 +111,13 @@ public class DefaultProcessorTest extends TestCase {
 		command5.setPriority(Command.NORMAL_PRIORITY);
 		processor.addOp(command5,Command.FIRST_EXECUTION);
 
-		Vector result = processor.getOperationQueue();
+		List result = processor.getOperationQueue();
 
-		assertTrue( ((OperationItem)result.elementAt(0)).operation == command1);
-		assertTrue( ((OperationItem)result.elementAt(1)).operation == command2);
-		assertTrue( ((OperationItem)result.elementAt(2)).operation == command3);
-		assertTrue( ((OperationItem)result.elementAt(3)).operation == command4);		
-		assertTrue( ((OperationItem)result.elementAt(4)).operation == command5);		
+		assertTrue( ((OperationItem)result.get(0)).operation == command1);
+		assertTrue( ((OperationItem)result.get(1)).operation == command2);
+		assertTrue( ((OperationItem)result.get(2)).operation == command3);
+		assertTrue( ((OperationItem)result.get(3)).operation == command4);		
+		assertTrue( ((OperationItem)result.get(4)).operation == command5);		
 	}
 
 

@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -50,7 +52,7 @@ public class AttributComboBox
 	JButton button;
 	JPopupMenu menu;
 
-	Vector list;
+	List list;
 	String selection;
 
 	Hashtable table;
@@ -59,9 +61,9 @@ public class AttributComboBox
 
 	String name;
 
-	Vector menuList;
+	List menuList;
 
-	public AttributComboBox(String name, Vector list, JTextComponent textField)
+	public AttributComboBox(String name, List list, JTextComponent textField)
 	{
 		super();
 
@@ -99,16 +101,22 @@ public class AttributComboBox
 
 		if (b == true)
 		{
-			for (int i = 0; i < list.size(); i++)
-			{
-				String str = (String) list.get(i);
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				String str = (String) it.next(); 
 				table.put(str, card.get(name, str));
-
 			}
+//			for (int i = 0; i < list.size(); i++)
+//			{
+//				String str = (String) list.get(i);
+//				table.put(str, card.get(name, str));
+//
+//			}
 
-			for (int i = 0; i < menuList.size(); i++)
-			{
-				JMenuItem item = (JMenuItem) menuList.get(i);
+			for (Iterator it = menuList.iterator(); it.hasNext();) {
+				JMenuItem item = (JMenuItem) it.next();
+//			for (int i = 0; i < menuList.size(); i++)
+//			{
+//				JMenuItem item = (JMenuItem) menuList.get(i);
 				String s = (String) table.get(item.getActionCommand());
 				if ((s != null))
 				{
@@ -166,10 +174,13 @@ public class AttributComboBox
 
 		selection = (String) list.get(0);
 
-		for (int i = 0; i < list.size(); i++)
-		{
-			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) list.get(i));
-			menuItem.setActionCommand((String) list.get(i));
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) it.next());
+			menuItem.setActionCommand((String) it.next());
+//		for (int i = 0; i < list.size(); i++)
+//		{
+//			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) list.get(i));
+//			menuItem.setActionCommand((String) list.get(i));
 			menuItem.addActionListener(this);
 			menu.add(menuItem);
 			menuList.add(menuItem);
@@ -182,10 +193,11 @@ public class AttributComboBox
 
 		if (action.equals("BUTTON"))
 		{
-
-			for (int i = 0; i < menuList.size(); i++)
-			{
-				JMenuItem item = (JMenuItem) menuList.get(i);
+			for (Iterator it= menuList.iterator(); it.hasNext();) {
+				JMenuItem item = (JMenuItem) it.next();
+//			for (int i = 0; i < menuList.size(); i++)
+//			{
+//				JMenuItem item = (JMenuItem) menuList.get(i);
 				String s = (String) table.get(item.getActionCommand());
 				if ((s != null))
 				{

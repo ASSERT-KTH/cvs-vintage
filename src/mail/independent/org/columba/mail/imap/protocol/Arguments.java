@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.imap.protocol;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -56,7 +57,7 @@ import java.util.Vector;
  */
 public class Arguments {
 
-	Vector v;
+	List v;
 
 	public Arguments() {
 		v = new Vector();

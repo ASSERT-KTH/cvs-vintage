@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 /**
@@ -145,24 +147,26 @@ public class AddressParser {
 	/**
 	 * to normalize Mail-addresses given in an Vector in
 	 *
-	 * for example there ar mails as strings in the vector with following formats:
+	 * for example there ar mails as strings in thelist with following formats:
 	 * Frederik Dietz <fdietz@gmx.de>
 	 * fdietz@gmx.de
 	 * <fdietz@gmx.de>
 	 * this formats must be normalized to <fdietz@gmx.de>. Formats in the form "name <name@de>"
 	 * never exists, while the " character alrady removed
-	 * @param in Vector of Strings with mailaddresses in any format
-	 * @return Vector of Strings with mailaddress in format <fdietz@gmx.de>
+	 * @param in List of Strings with mailaddresses in any format
+	 * @return List of Strings with mailaddress in format <fdietz@gmx.de>
 	*/
 
-	public static Vector normalizeRCPTVector(Vector in) {
+	public static List normalizeRCPTVector(List in) {
 		int v_size = in.size();
 		String mailaddress = "";
 		String new_address = "";
-		Vector out = new Vector();
-		for (int i = 0; i < v_size; i++) {
-			// get the String from the Vector
-			mailaddress = (String) in.elementAt(i);
+		List out = new Vector();
+		for (Iterator it = in.iterator(); it.hasNext();) {
+			mailaddress = (String) it.next();
+//		for (int i = 0; i < v_size; i++) {
+//			// get the String from the Vector
+//			mailaddress = (String) in.elementAt(i);
 			if (mailaddress == null)
 				continue;
 			if (mailaddress.length() == 0)
@@ -186,7 +190,7 @@ public class AddressParser {
 				}
 			}
 			System.out.println("[DEBUG2!!!!] newaddress: "+new_address);
-			out.addElement(new_address);
+			out.add(new_address);
 			new_address = "";
 		}
 		return out;
@@ -195,7 +199,6 @@ public class AddressParser {
 	public static String normalizeAddress(String mailaddress) {
 
 		String new_address = "";
-		Vector out = new Vector();
 
 		// System.out.println("[DEBUG!!!!] mailaddress: "+mailaddress);
 		StringTokenizer strToken = new StringTokenizer(mailaddress, "<");

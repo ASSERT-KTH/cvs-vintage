@@ -20,6 +20,7 @@ import java.util.Vector;
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
+import java.util.List;
 
 public class FilterRule extends DefaultItem {
 
@@ -28,7 +29,7 @@ public class FilterRule extends DefaultItem {
 	public final static int MATCH_ANY = 1;
 
 	// list of FilterCriteria
-	private Vector list;
+	private List list;
 
 	// condition: match all (AND) = 0, match any (OR) = 1
 	//private AdapterNode conditionNode;

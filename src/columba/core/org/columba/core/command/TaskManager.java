@@ -21,13 +21,15 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.util.Mutex;
 import org.columba.core.util.SwingWorker.ThreadVar;
+import java.util.List;
+import java.util.Iterator;
 
 public class TaskManager {
-	private Vector workerList;
+	private List workerList;
 
 	protected Mutex workerListMutex;
 
-	protected Vector workerListChangeListeners;
+	protected List workerListChangeListeners;
 
 
 	public TaskManager() {
@@ -38,7 +40,7 @@ public class TaskManager {
 		workerListChangeListeners = new Vector();
 	}
 
-	public Vector getWorkerList() {
+	public List getWorkerList() {
 		return workerList;
 	}
 	
@@ -50,11 +52,10 @@ public class TaskManager {
 	private void addWorker(Worker w) {
 		Worker compareWorker;
 		int workerPriority = w.getPriority();
-
 		for (int i = 0; i < workerList.size(); i++) {
-			compareWorker = (Worker) workerList.get(i);
+		  compareWorker = (Worker) workerList.get(i);
 			if (compareWorker.getPriority() < workerPriority) {
-				workerList.insertElementAt(w, i);
+				workerList.add(i, w);
 				return;
 			}
 		}
@@ -105,12 +106,13 @@ public class TaskManager {
             needToRelease = workerListMutex.getMutex();
 		int size = workerList.size();
 		e.setOldValue(size);
-
-		for (int i = 0; i < size; i++) {
-			worker = (Worker) workerList.get(i);
+		for (Iterator it = workerList.iterator(); it.hasNext();) {
+			worker = (Worker) it.next();
+		// for (int i = 0; i < size; i++) {
+			// worker = (Worker) workerList.get(i);
 
 			if (tvar == worker.getThreadVar()) {
-				workerList.remove(i);
+				workerList.remove(worker);
 				e.setNewValue(workerList.size());
 				break;
 			}
@@ -128,11 +130,13 @@ public class TaskManager {
 	}
 
 	protected void fireWorkerListChangedEvent(WorkerListChangedEvent e) {
-		for (int i = 0; i < workerListChangeListeners.size(); i++) {
-			(
-				(WorkerListChangeListener) workerListChangeListeners.get(
-					i)).workerListChanged(
-				e);
+		for (Iterator it = workerListChangeListeners.iterator(); it.hasNext();) {
+			((WorkerListChangeListener) it.next()).workerListChanged(e);
+		// for (int i = 0; i < workerListChangeListeners.size(); i++) {
+			// (
+				// (WorkerListChangeListener) workerListChangeListeners.get(
+					// i)).workerListChanged(
+				// e);
 		}
 	}
 }

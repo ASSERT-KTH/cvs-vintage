@@ -98,14 +98,14 @@ public class POP3Server {
 		getStore().close();
 	}
 
-	public Vector getUIDList(
+	public List getUIDList(
 		int totalMessageCount,
 		WorkerStatusController worker)
 		throws Exception {
 		return getStore().fetchUIDList(totalMessageCount, worker);
 	}
 
-	public Vector getMessageSizeList(WorkerStatusController worker)
+	public List getMessageSizeList(WorkerStatusController worker)
 		throws Exception {
 		return getStore().fetchMessageSizeList(worker);
 	}
@@ -128,10 +128,12 @@ public class POP3Server {
 		return false;
 	}
 
-	protected boolean existsRemotely(Object uid, Vector uidList)
+	protected boolean existsRemotely(Object uid, List uidList)
 		throws Exception {
-		for (int i = 0; i < uidList.size(); i++) {
-			Object serverUID = uidList.get(i);
+		for (Iterator it = uidList.iterator(); it.hasNext();) {
+			Object serverUID = it.next();
+		// for (int i = 0; i < uidList.size(); i++) {
+			// Object serverUID = uidList.get(i);
 
 			//System.out.println("server message uid: " + serverUID);
 			if (uid.equals(serverUID)) {

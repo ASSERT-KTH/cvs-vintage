@@ -28,6 +28,8 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
+import java.util.List;
+import java.util.Iterator;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;
@@ -210,17 +212,18 @@ public class SMTPProtocol {
 		}
 	}
 
-	public void setupMessage(String from, Vector to) throws Exception {
+	public void setupMessage(String from, List to) throws Exception {
 		int anzAdresses;
 
-		anzAdresses = to.size();
+		// anzAdresses = to.size();
 
 		sendString("MAIL FROM: " + from);
 
 		checkAnswer(in.readLine(), "2");
-
-		for (int i = 0; i < anzAdresses; i++) {
-			sendString("RCPT TO: " + to.get(i));
+		for (Iterator it = to.iterator(); it.hasNext();) {
+			sendString("RCPT TO: " + it.next());
+		// for (int i = 0; i < anzAdresses; i++) {
+			// sendString("RCPT TO: " + to.get(i));
 
 			checkAnswer(in.readLine(), "2");
 		}

@@ -21,6 +21,7 @@ import java.util.Vector;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.SendableHeader;
+import java.util.List;
 
 public class SendableMessage extends AbstractMessage {
 	SendableHeader header;
@@ -32,7 +33,7 @@ public class SendableMessage extends AbstractMessage {
 
 	}
 
-	public SendableMessage(int accountUid, Vector recipients, String message) {
+	public SendableMessage(int accountUid, List recipients, String message) {
 		super();
 		setSource(message);
 
@@ -54,7 +55,7 @@ public class SendableMessage extends AbstractMessage {
 		return ((SendableHeader) getHeader()).getAccountUid();
 	}
 
-	public Vector getRecipients() {
+	public List getRecipients() {
 		return ((SendableHeader) getHeader()).getRecipients();
 	}
 
@@ -62,7 +63,7 @@ public class SendableMessage extends AbstractMessage {
 		((SendableHeader) getHeader()).setAccountUid(uid);
 	}
 
-	public void setRecipients(Vector rcpt) {
+	public void setRecipients(List rcpt) {
 		((SendableHeader) getHeader()).setRecipients(rcpt);
 	}
 
@@ -73,7 +74,7 @@ public class SendableMessage extends AbstractMessage {
 
 		message.setSource(new String(getSource()));
 
-		message.setRecipients((Vector) getRecipients().clone());
+		message.setRecipients((List) ((Vector)getRecipients()).clone() );
 
 		message.setAccountUid(getAccountUid());
 

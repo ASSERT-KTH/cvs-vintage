@@ -22,13 +22,14 @@ import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.config.DefaultXmlConfig;
+import java.util.List;
 
 
 public class GroupTableModel extends AbstractTableModel
 {
     private AdapterNode node;
     
-    private Vector groupList;
+    private List groupList;
     
     private String[] columnNames = {"Display Name",
                                     "Address",

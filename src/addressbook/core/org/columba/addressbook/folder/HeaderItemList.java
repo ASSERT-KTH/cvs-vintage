@@ -16,116 +16,104 @@
 
 package org.columba.addressbook.folder;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
-
 
 /**
  * @version 	1.0
  * @author
  */
-public class HeaderItemList
-{
-	private Vector list;
-	
-	public HeaderItemList()
-	{
+public class HeaderItemList {
+	private List list;
+
+	public HeaderItemList() {
 		list = new Vector();
 	}
-	
-	public HeaderItemList( Vector v )
-	{
+
+	public HeaderItemList(List v) {
 		list = v;
 	}
-	
-	public void insertElementAt( HeaderItem item, int index )
-	{
-		list.insertElementAt(item, index );
+
+	public void insertElementAt(HeaderItem item, int index) {
+		list.set(index, item);
 	}
-	
-	public void remove( HeaderItem item )
-	{
-		list.remove( item  );
+
+	public void remove(HeaderItem item) {
+		list.remove(item);
 	}
-	
-	public int indexOf( HeaderItem item )
-	{
-		return list.indexOf( item );
+
+	public int indexOf(HeaderItem item) {
+		return list.indexOf(item);
 	}
-	
-	public Vector getVector()
-	{
+
+	public List getVector() {
 		return list;
 	}
-	
-	public void add( HeaderItem item )
-	{
-		if ( item != null )
-		{
-			
-			list.add( item );
-		}
-		else
-		{
+
+	public void add(HeaderItem item) {
+		if (item != null) {
+
+			list.add(item);
+		} else {
 			System.out.println("item == null!!!");
 		}
 	}
-	
-	public void replace( int index, HeaderItem item )
-	{
-		if ( ( index < list.size() ) && ( index >= 0 ) )
-		{
-		list.remove(index);
-		list.insertElementAt(item,index);
+
+	public void replace(int index, HeaderItem item) {
+		if ((index < list.size()) && (index >= 0)) {
+			list.remove(index);
+			list.set(index, item);
 		}
 	}
-	
-	public void uidRemove( Object uid )
-	{
-		for ( int i=0; i<count(); i++ )
-		{
+
+	public void uidRemove(Object uid) {
+		for (int i = 0; i < count(); i++) {
 			HeaderItem item = (HeaderItem) get(i);
 			Object u = item.getUid();
-			if ( u.equals(uid) ) 
-			{
+			if (u.equals(uid)) {
 				list.remove(i);
 				break;
 			}
 		}
-		
-		
+
 	}
-	
-	public HeaderItem uidGet( Object uid )
-	{
-		for ( int i=0; i<count(); i++ )
-		{
-			HeaderItem item = (HeaderItem) get(i);
+
+	public HeaderItem uidGet(Object uid) {
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			HeaderItem item = (HeaderItem) it.next();
 			Object u = item.getUid();
-			if ( u.equals(uid) ) 
-			{
+			if (u.equals(uid)) {
 				return item;
-				
-				
+
 			}
 		}
-		
+
 		return null;
+		//	}
+		//	for (int i = 0; i < count(); i++) {
+		//		HeaderItem item = (HeaderItem) get(i);
+		//		Object u = item.getUid();
+		//		if (u.equals(uid)) {
+		//			return item;
+		//
+		//		}
+		//	}
+		//
+		//	return null;
 	}
-		
-	public HeaderItem get( int index )
-	{
+
+	public HeaderItem get(int index) {
 		HeaderItem item = (HeaderItem) list.get(index);
-		
+
 		return item;
 	}
-	
-	public int count()
-	{
+
+	public int count() {
 		return list.size();
 	}
-	
-	public void clear()
-	{
+
+	public void clear() {
 		list.clear();
 	}
 

@@ -31,6 +31,8 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * 
@@ -478,7 +480,7 @@ public class LocalHeaderCacheFolder extends LocalFolder {
                 }
 
 		File[] list = directoryFile.listFiles();
-		Vector v = new Vector();
+		List v = new Vector();
 
 		for (int i = 0; i < list.length; i++) {
 			File file = list[i];
@@ -507,9 +509,8 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 			}
 
 		}
-
-		for (int i = 0; i < v.size(); i++) {
-			File file = (File) v.get(i);
+		 for (int i = 0; i < v.size(); i++) {
+			 File file = (File) v.get(i);
 
 			File newFile =
 				new File(

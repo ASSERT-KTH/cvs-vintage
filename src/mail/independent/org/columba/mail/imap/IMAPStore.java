@@ -56,6 +56,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.DateParser;
+import java.util.List;
 
 /**
  * @author freddy
@@ -71,7 +72,7 @@ public class IMAPStore {
 	public static final int STATE_AUTHENTICATE = 1;
 	public static final int STATE_SELECTED = 2;
 
-	private Vector capabilities;
+	private List capabilities;
 	private int state = STATE_NONAUTHENTICATE;
 	// non-authenticate=0, authenticate=1, selected=2,
 	private String selectedFolderPath;
@@ -330,12 +331,12 @@ public class IMAPStore {
 		return imap;
 	}
 
-	public Vector convertIndexToUid(Vector v, WorkerStatusController worker)
+	public List convertIndexToUid(List v, WorkerStatusController worker)
 		throws Exception {
 		if (v.size() == 0)
 			return v;
 
-		Vector result = new Vector();
+		List result = new Vector();
 		String messageSet = new MessageSet(v.toArray()).getString();
 
 		try {
@@ -377,7 +378,7 @@ public class IMAPStore {
 			IMAPResponse[] responses = getProtocol().lsub(reference, pattern);
 			//System.out.println("response-count="+responses.length);
 
-			Vector v = new Vector();
+			List v = new Vector();
 			ListInfo[] list = null;
 			for (int i = 0; i < responses.length - 1; i++) {
 				//System.out.println("responses[i]="+responses[i].getSource());
@@ -397,7 +398,7 @@ public class IMAPStore {
 
 			if (v.size() > 0) {
 				list = new ListInfo[v.size()];
-				v.copyInto(list);
+				((Vector)v).copyInto(list);
 
 				return list;
 			}
@@ -568,10 +569,10 @@ public class IMAPStore {
 
 	/**************************** selected state ****************************/
 
-	public Vector fetchUIDList(WorkerStatusController worker, String path)
+	public List fetchUIDList(WorkerStatusController worker, String path)
 		throws Exception {
 
-		Vector v = new Vector();
+		List v = new Vector();
 		String buffer = new String();
 
 		isLogin(worker);
@@ -877,7 +878,7 @@ public class IMAPStore {
 
 	public void fetchHeaderList(
 		HeaderList headerList,
-		Vector list,
+		List list,
 		WorkerStatusController worker,
 		String path)
 		throws Exception {

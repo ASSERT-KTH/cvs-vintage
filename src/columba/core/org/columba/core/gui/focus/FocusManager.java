@@ -20,6 +20,8 @@ import java.awt.event.FocusListener;
 import java.util.Vector;
 
 import org.columba.core.action.BasicAction;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author frd
@@ -31,7 +33,7 @@ import org.columba.core.action.BasicAction;
  */
 public class FocusManager implements FocusListener {
 
-	Vector list;
+	List list;
 	BasicAction cutAction;
 	BasicAction copyAction;
 	BasicAction pasteAction;
@@ -63,8 +65,10 @@ public class FocusManager implements FocusListener {
 	}
 
 	protected FocusOwner searchOwner(Object component) {
-		for (int i = 0; i < list.size(); i++) {
-			FocusOwner owner = (FocusOwner) list.get(i);
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			FocusOwner owner = (FocusOwner) it.next();
+		// for (int i = 0; i < list.size(); i++) {
+			// FocusOwner owner = (FocusOwner) list.get(i);
 			Object  c = owner.getComponent();
 
 			if (c.equals(component))

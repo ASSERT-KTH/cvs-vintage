@@ -19,11 +19,13 @@ package org.columba.core.gui.selection;
 import java.util.Vector;
 
 import org.columba.core.command.DefaultCommandReference;
+import java.util.List;
+import java.util.Iterator;
 
 public abstract class SelectionHandler {
 
 	protected String id;
-	protected Vector selectionListener;
+	protected List selectionListener;
 
 	public SelectionHandler(String id) {
 		this.id = id;
@@ -43,8 +45,10 @@ public abstract class SelectionHandler {
 	}
 	
 	protected void fireSelectionChanged(SelectionChangedEvent e) {
-		for( int i=0; i<selectionListener.size(); i++) {
-			((SelectionListener) selectionListener.get(i)).selectionChanged( e );
+		for (Iterator it = selectionListener.iterator(); it.hasNext();) {
+			((SelectionListener) it.next()).selectionChanged( e );
+		// for( int i=0; i<selectionListener.size(); i++) {
+			// ((SelectionListener) selectionListener.get(i)).selectionChanged( e );
 		}
 	}
 	

@@ -27,11 +27,12 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
+import java.util.List;
 
 public class UndoManager implements ActionListener, WorkerListChangeListener {
 
-	Vector undoQueue;
-	Vector redoQueue;
+	List undoQueue;
+	List redoQueue;
 	public BasicAction undoAction;
 	public BasicAction redoAction;
 
@@ -121,7 +122,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	 * @param vec
 	 * @param command
 	 */
-	protected void addCommand(Vector vec, Command command) {
+	protected void addCommand(List vec, Command command) {
 		Command nextCommand;
 
 		int p = 0;
@@ -137,7 +138,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 				break;
 		}
 
-		vec.insertElementAt(command, p);
+		vec.add(p, command);
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	 * Method getUndoQueue. This method is for testing only!
 	 * @return Vector
 	 */
-	public Vector getUndoQueue() {
+	public List getUndoQueue() {
 		return undoQueue;
 	}
 
@@ -215,7 +216,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 	 * Method getRedoQueue. This method is for testing only!
 	 * @return Vector
 	 */
-	public Vector getRedoQueue() {
+	public List getRedoQueue() {
 		return redoQueue;
 	}
 

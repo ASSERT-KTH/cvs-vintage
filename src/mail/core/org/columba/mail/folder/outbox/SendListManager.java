@@ -19,11 +19,13 @@ package org.columba.mail.folder.outbox;
 import java.util.Vector;
 
 import org.columba.mail.composer.SendableMessage;
+import java.util.List;
+import java.util.Iterator;
 
 
 public class SendListManager
 {
-    private Vector sendAccounts;
+    private List sendAccounts;
     private int counter;
 
     private boolean mutex;
@@ -66,10 +68,11 @@ public class SendListManager
         counter++;
 
 	System.out.println("SMTP_SEND::Adding message in sendlistManager");
-
-        for( int i=0; i<sendAccounts.size(); i++)
-        {
-            actList = (SendList) sendAccounts.get(i);
+				for (Iterator it = sendAccounts.iterator(); it.hasNext();) {
+					actList = (SendList) it.next();
+        // for( int i=0; i<sendAccounts.size(); i++)
+        // {
+            // actList = (SendList) sendAccounts.get(i);
 
             if( message.getAccountUid() == actList.getAccountUid() )
             {

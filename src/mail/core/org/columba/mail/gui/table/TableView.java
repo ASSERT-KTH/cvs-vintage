@@ -48,6 +48,7 @@ import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelThreadedView;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
+import java.util.List;
 
 /**
  * This widget is a mix between a JTable and a JTree
@@ -69,7 +70,7 @@ public class TableView extends TreeTable {
 
 	//private JTreeTable table;
 
-	private Vector tableModelPlugins;
+	private List tableModelPlugins;
 
 	protected TableModelFilteredView tableModelFilteredView;
 	protected HeaderTableModelSorter tableModelSorter;

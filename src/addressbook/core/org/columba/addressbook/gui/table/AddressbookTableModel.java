@@ -16,6 +16,7 @@
 
 package org.columba.addressbook.gui.table;
 
+import java.util.List;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -31,12 +32,12 @@ import org.columba.core.logging.ColumbaLogger;
 
 public class AddressbookTableModel extends AbstractTableModel {
 
-	private Vector columns;
+	private List columns;
 	private Hashtable table;
 
 	private HeaderItemList rows;
 
-	private Vector tableModelPlugins;
+	private List tableModelPlugins;
 
 	private HeaderItem selected;
 
@@ -177,7 +178,7 @@ public class AddressbookTableModel extends AbstractTableModel {
 		
 		ColumbaLogger.log.debug("list size="+list.count());
 
-		Vector clone = (Vector) list.getVector().clone();
+		List clone = (Vector) ((Vector)list.getVector()).clone();
 		rows = new HeaderItemList(clone);
 
 		if (tableModelPlugins.size() != 0)

@@ -39,6 +39,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import java.util.List;
 
 /**
  *    Abstract Basic Folder class. Is subclasses by every folder
@@ -70,7 +71,7 @@ public abstract class Folder extends FolderTreeNode {
 	/**
 	 *
 	 */
-	protected Vector folderListeners;
+	protected List folderListeners;
 
 	/**
 	 *
@@ -85,7 +86,7 @@ public abstract class Folder extends FolderTreeNode {
 	 *
 	 *@since
 	 */
-	protected Vector treeNodeListeners;
+	protected List treeNodeListeners;
 
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)

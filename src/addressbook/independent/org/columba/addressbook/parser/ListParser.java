@@ -15,12 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
+import java.util.List;
 
 /**
  * @version 	1.0
@@ -33,14 +36,15 @@ public class ListParser
 	{
 	}
 
-	public static Vector parseString(String list)
+	public static List parseString(String list)
 	{
-		Vector result = new Vector();
+		List result = new Vector();
 
 		int pos = 0;
 		boolean bracket = false;
 		StringBuffer buf = new StringBuffer();
-		while (pos < list.length())
+		int listLength = list.length();
+		while (pos < listLength)
 		{
 			char ch = list.charAt(pos);
 			//System.out.println("ch=" + ch);
@@ -81,15 +85,16 @@ public class ListParser
 		return result;
 	}
 
-	public static Vector parseVector(Vector list)
+	public static List parseVector(List list)
 	{
-		Vector result = new Vector();
+		List result = new Vector();
 
-		int size = list.size();
-
-		for (int i = 0; i < size; i++)
-		{
-			HeaderItem item = (HeaderItem) list.get(i);
+//		int size = list.size();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			HeaderItem item = (HeaderItem) it.next();
+//		for (int i = 0; i < size; i++)
+//		{
+//			HeaderItem item = (HeaderItem) list.get(i);
 			if ( item == null ) continue;
 			
 			if (item.isContact())
@@ -132,15 +137,16 @@ public class ListParser
 		return result;
 	}
 
-	public static String parse(Vector list)
+	public static String parse(List list)
 	{
 
 		StringBuffer output = new StringBuffer();
-		int size = list.size();
-
-		for (int i = 0; i < size; i++)
-		{
-			HeaderItem item = (HeaderItem) list.get(i);
+//		int size = list.size();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			HeaderItem item = (HeaderItem) it.next();
+//		for (int i = 0; i < size; i++)
+//		{
+//			HeaderItem item = (HeaderItem) list.get(i);
 			if ( item == null ) continue;
 			
 			if (item.isContact())

@@ -16,6 +16,8 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * @author frd
@@ -25,7 +27,7 @@ import org.columba.core.xml.XmlElement;
  */
 public class FrameModel {
 
-	protected static Vector list;
+	protected static List list;
 	protected static XmlElement viewList =
 		Config.get("options").getElement("/options/gui/viewlist");
 
@@ -81,9 +83,10 @@ public class FrameModel {
 	public static void saveAll() {
 
 		viewList.removeAllElements();
-
-		for (int i = 0; i < list.size(); i++) {
-			AbstractFrameController c = (AbstractFrameController) list.get(i);
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			AbstractFrameController c = (AbstractFrameController) it.next();
+		// for (int i = 0; i < list.size(); i++) {
+			// AbstractFrameController c = (AbstractFrameController) list.get(i);
 			ViewItem v = c.getViewItem();
 
 			viewList.addElement(v.getRoot());

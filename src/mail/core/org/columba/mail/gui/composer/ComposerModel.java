@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.addressbook.folder.HeaderItem;
@@ -39,11 +41,11 @@ public class ComposerModel {
 	String bodytext;
 	String charsetName;
 
-	Vector attachments;
+	List attachments;
 
-	Vector toList;
-	Vector ccList;
-	Vector bccList;
+	List toList;
+	List ccList;
+	List bccList;
 
 	boolean signMessage;
 	boolean encryptMessage;
@@ -103,9 +105,11 @@ public class ComposerModel {
 		}
 		*/
 
-		Vector v = ListParser.parseString(s);
-		for (int i = 0; i < v.size(); i++) {
-			String str = (String) v.get(i);
+		List v = ListParser.parseString(s);
+		for (Iterator it = v.iterator(); it.hasNext();) {
+			String str = (String) it.next();
+//		for (int i = 0; i < v.size(); i++) {
+//			String str = (String) v.get(i);
 
 			HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
 			item.add("displayname", AddressParser.getDisplayname(str));
@@ -125,27 +129,27 @@ public class ComposerModel {
 		return (String) message.getHeader().get(key);
 	}
 
-	public void setToList(Vector v) {
+	public void setToList(List v) {
 		this.toList = v;
 	}
 
-	public void setCcList(Vector v) {
+	public void setCcList(List v) {
 		this.ccList = v;
 	}
 
-	public void setBccList(Vector v) {
+	public void setBccList(List v) {
 		this.bccList = v;
 	}
 
-	public Vector getToList() {
+	public List getToList() {
 		return toList;
 	}
 
-	public Vector getCcList() {
+	public List getCcList() {
 		return ccList;
 	}
 
-	public Vector getBccList() {
+	public List getBccList() {
 		return bccList;
 	}
 
@@ -202,7 +206,7 @@ public class ComposerModel {
 		message.getHeader().set("Subject", s);
 	}
 
-	public Vector getAttachments() {
+	public List getAttachments() {
 		return attachments;
 	}
 
@@ -281,10 +285,10 @@ public class ComposerModel {
 	*/
 	
 
-	public Vector getRCPTVector() {
-		Vector output = new Vector();
+	public List getRCPTVector() {
+		List output = new Vector();
 
-		Vector v = ListParser.parseVector(getToList());
+		List v = ListParser.parseVector(getToList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
 		v = ListParser.parseVector(getCcList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));

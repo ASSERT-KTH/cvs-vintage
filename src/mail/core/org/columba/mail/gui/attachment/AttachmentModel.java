@@ -85,7 +85,7 @@ public class AttachmentModel {
 					.getHeader()
 					.contentSubtype
 					.equals("alternative")) {
-					Vector bodyParts = bodyParent.getChilds();
+					List bodyParts = bodyParent.getChilds();
 					displayedMimeParts.removeAll(bodyParts);
 				} else {
 					displayedMimeParts.remove(bodyPart);

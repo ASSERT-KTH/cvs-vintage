@@ -17,6 +17,7 @@
 package org.columba.addressbook.gui.dialog.contact;
 
 import java.awt.BorderLayout;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -94,7 +95,7 @@ public class AddressPanel extends JPanel
 		LabelTextFieldPanel panel = new LabelTextFieldPanel();
 		add( panel, BorderLayout.NORTH );
 		
-		Vector v = new Vector();
+		List v = new Vector();
 		v.add("home");
 		v.add("work");
 		v.add("pref");

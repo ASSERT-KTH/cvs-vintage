@@ -38,6 +38,7 @@ import org.columba.addressbook.gui.util.AddressbookDNDListView;
 import org.columba.addressbook.gui.util.AddressbookListModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.main.MainInterface;
+import java.util.List;
 
 public class SelectAddressDialog extends JDialog implements ActionListener
 {
@@ -283,9 +284,9 @@ public class SelectAddressDialog extends JDialog implements ActionListener
 			//members.addElement( item );
 		}
 		*/
-		Vector v = list.getVector();
+		List v = list.getVector();
 
-		addressbook.setListData(v);
+		addressbook.setListData((Vector)v);
 	}
 
 	public void updateComponents(

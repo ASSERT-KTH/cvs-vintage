@@ -38,6 +38,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MessageCollection;
+import java.util.List;
 
 public class HeaderTableModel extends AbstractTableModel {
 
@@ -54,7 +55,7 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	private MessageNode selectedMessageNode;
 
-	private Vector tableModelPlugins;
+	private List tableModelPlugins;
 
 	private Tree tree;
 	

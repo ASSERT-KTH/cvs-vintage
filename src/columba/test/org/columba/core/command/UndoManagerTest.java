@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.logging.ColumbaLogger;
+import java.util.List;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
@@ -85,11 +86,11 @@ public class UndoManagerTest extends TestCase {
 		command4.setTimeStamp(7);
 		undoManager.addToUndo(command4);
 		
-		Vector result = undoManager.getUndoQueue();
-		assertTrue( result.elementAt(0) == command1);
-		assertTrue( result.elementAt(1) == command3);
-		assertTrue( result.elementAt(2) == command2);
-		assertTrue( result.elementAt(3) == command4);
+		List result = undoManager.getUndoQueue();
+		assertTrue( result.get(0) == command1);
+		assertTrue( result.get(1) == command3);
+		assertTrue( result.get(2) == command2);
+		assertTrue( result.get(3) == command4);
 	}
 
 	public void testUndoLast() {
@@ -114,11 +115,11 @@ public class UndoManagerTest extends TestCase {
 		undoManager.undoLast();
 		undoManager.undoLast();
 		
-		Vector result = processor.getOperationQueue();
-		assertTrue( ((OperationItem)result.elementAt(0)).operation == command4);
-		assertTrue( ((OperationItem)result.elementAt(1)).operation == command2);
-		assertTrue( ((OperationItem)result.elementAt(2)).operation == command3);
-		assertTrue( ((OperationItem)result.elementAt(3)).operation == command1);		
+		List result = processor.getOperationQueue();
+		assertTrue( ((OperationItem)result.get(0)).operation == command4);
+		assertTrue( ((OperationItem)result.get(1)).operation == command2);
+		assertTrue( ((OperationItem)result.get(2)).operation == command3);
+		assertTrue( ((OperationItem)result.get(3)).operation == command1);		
 	}
 
 	public void testRedoLast() {
@@ -143,7 +144,7 @@ public class UndoManagerTest extends TestCase {
 		undoManager.undoLast();
 		undoManager.undoLast();
 		
-		Vector result = processor.getOperationQueue();
+		List result = processor.getOperationQueue();
 		result.clear();
 
 		undoManager.redoLast();
@@ -151,10 +152,10 @@ public class UndoManagerTest extends TestCase {
 		undoManager.redoLast();
 		undoManager.redoLast();		
 		
-		assertTrue( ((OperationItem)result.elementAt(0)).operation == command1);
-		assertTrue( ((OperationItem)result.elementAt(1)).operation == command3);
-		assertTrue( ((OperationItem)result.elementAt(2)).operation == command2);
-		assertTrue( ((OperationItem)result.elementAt(3)).operation == command4);		
+		assertTrue( ((OperationItem)result.get(0)).operation == command1);
+		assertTrue( ((OperationItem)result.get(1)).operation == command3);
+		assertTrue( ((OperationItem)result.get(2)).operation == command2);
+		assertTrue( ((OperationItem)result.get(3)).operation == command4);		
 	}
 
 

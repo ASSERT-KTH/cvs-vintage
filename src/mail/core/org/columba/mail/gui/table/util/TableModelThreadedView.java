@@ -28,6 +28,7 @@ import java.util.Vector;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.table.HeaderTableModel;
 import org.columba.mail.message.HeaderInterface;
+import java.util.List;
 
 
 /**
@@ -403,7 +404,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 			//if ( ( child.isLeaf() == false ) && ( !child.getParent().equals( node ) ) )
 			if (!child.isLeaf()) {
 				// has children
-				Vector v = child.getVector();
+				List v = child.getVector();
 				Collections.sort(
 					v,
 					new MessageHeaderComparator(

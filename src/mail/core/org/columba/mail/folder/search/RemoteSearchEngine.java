@@ -26,6 +26,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.message.AbstractMessage;
+import java.util.List;
 
 /**
  * @author freddy
@@ -241,7 +242,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 	protected String generateSearchString(
 		FilterRule rule,
-		Vector ruleStringList) {
+		List ruleStringList) {
 		StringBuffer searchString = new StringBuffer();
 
 		if (rule.count() > 1) {
@@ -279,7 +280,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 	
 	protected String generateSearchString( FilterRule rule )
 	{
-		Vector ruleStringList = new Vector();
+		List ruleStringList = new Vector();
 
 		for (int i = 0; i < rule.count(); i++) {
 			FilterCriteria criteria = rule.get(i);

@@ -36,6 +36,7 @@ import org.columba.mail.message.MimePart;
 import org.columba.mail.message.PgpMimePart;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.util.RFC822Date;
+import java.util.List;
 
 public class MessageComposer {
 	private ComposerModel model;
@@ -266,11 +267,11 @@ public class MessageComposer {
 		SendableHeader header = initHeader();
 		MimePart root=null;
 
-		Vector mimeParts = model.getAttachments();
+		List mimeParts = model.getAttachments();
 
 		MimePart body = composeTextMimePart();
 		if (body != null)
-			mimeParts.insertElementAt(body, 0);
+			mimeParts.add(0,body);
 
 		// Create Multipart/Mixed if necessary
 		if (mimeParts.size() > 1) {

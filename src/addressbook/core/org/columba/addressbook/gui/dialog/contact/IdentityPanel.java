@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import java.util.List;
 
 public class IdentityPanel extends JPanel
 implements ActionListener
@@ -53,7 +54,7 @@ implements ActionListener
 
 	AttributComboBox emailComboBox;
 	JTextField emailTextField;
-	Vector emailList;
+	List emailList;
 	
 	public FullNameDialog dialog;
 

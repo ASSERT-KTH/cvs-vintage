@@ -20,6 +20,7 @@ import java.util.Vector;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.mail.message.HeaderInterface;
+import java.util.List;
 
 /**
  * Title:
@@ -42,7 +43,7 @@ public class MessageNode extends DefaultMutableTreeNode {
 		this.uid = uid;
 	}
 
-	public Vector getVector() {
+	public List getVector() {
 		return children;
 	}
 

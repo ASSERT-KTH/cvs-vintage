@@ -9,6 +9,7 @@ package org.columba.core.gui.frame;
 import java.util.Vector;
 
 import org.columba.core.main.MainInterface;
+import java.util.List;
 
 /**
  * @author frd
@@ -18,7 +19,7 @@ import org.columba.core.main.MainInterface;
  */
 public class FrameModelManager {
 
-	Vector list;
+	List list;
 	
 	/**
 	 * 

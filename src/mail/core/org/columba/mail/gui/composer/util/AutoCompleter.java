@@ -19,6 +19,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -143,17 +144,17 @@ public class AutoCompleter implements KeyListener, ItemListener {
 
 		_options = AddressCollector.getAddresses();
 
-		Vector v = new Vector();
+		List v = new Vector();
 		for (int k = 0; k < _options.length; k++) {
 			String item = _options[k].toString().toLowerCase();
 
 			if (item.startsWith(str.toLowerCase())) {
 
-				v.addElement(_options[k]);
+				v.add(_options[k]);
 			}
 		}
 		if (v.isEmpty())
-			v.addElement(str);
+			v.add(str);
 		return v.toArray();
 	}
 

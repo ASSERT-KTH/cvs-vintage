@@ -27,6 +27,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.util.GlobalResourceLoader;
+import java.util.List;
 
 public class FontSelectionDialog implements ActionListener, ListSelectionListener
 {
@@ -213,11 +214,11 @@ public class FontSelectionDialog implements ActionListener, ListSelectionListene
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         //String envfonts[] = gEnv.getAvailableFontFamilyNames();
 	String envfonts[] = gEnv.getAvailableFontFamilyNames( java.util.Locale.getDefault() );
-        Vector vector = new Vector();
+        List vector = new Vector();
         for ( int i = 1; i < envfonts.length; i++ ) {
-            vector.addElement(envfonts[i]);
+            vector.add(envfonts[i]);
         }
-        fontList = new JList( vector );
+        fontList = new JList( (Vector) vector );
         fontList.setSelectedIndex(0);
 
         styleList = new JList(  new Object[]{

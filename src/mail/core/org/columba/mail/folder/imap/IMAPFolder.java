@@ -42,6 +42,8 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
+import java.util.List;
+import java.util.Iterator;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -231,12 +233,12 @@ public class IMAPFolder extends RemoteFolder {
 
 		worker.setDisplayText("Fetching UID list...");
 
-		Vector newList = getStore().fetchUIDList(worker, getImapPath());
+		List newList = getStore().fetchUIDList(worker, getImapPath());
 
 		if (newList == null)
 			return new HeaderList();
 
-		Vector result = synchronize(headerList, newList);
+		List result = synchronize(headerList, newList);
 
 		worker.setDisplayText("Fetching FLAGS list...");
 
@@ -321,9 +323,9 @@ public class IMAPFolder extends RemoteFolder {
 	 * @return Vector
 	 * @throws Exception
 	 */
-	public Vector synchronize(HeaderList headerList, Vector newList)
+	public List synchronize(HeaderList headerList, List newList)
 		throws Exception {
-		Vector result = new Vector();
+		List result = new Vector();
 
 		// delete old headers
 
@@ -339,9 +341,10 @@ public class IMAPFolder extends RemoteFolder {
 				headerList.remove(str);
 			}
 		}
-
-		for (int i = 0; i < newList.size(); i++) {
-			String str = (String) newList.get(i);
+		for (Iterator it = newList.iterator(); it.hasNext();) {
+			String str = (String) it.next();
+		// for (int i = 0; i < newList.size(); i++) {
+			// String str = (String) newList.get(i);
 
 			if (existsLocally(str, headerList) == false) {
 				// new message on server
@@ -363,10 +366,12 @@ public class IMAPFolder extends RemoteFolder {
 	protected boolean existsRemotely(
 		String uid,
 		int startIndex,
-		Vector uidList)
+		List uidList)
 		throws Exception {
-		for (int i = startIndex; i < uidList.size(); i++) {
-			String serverUID = (String) uidList.get(i);
+		for (Iterator it = uidList.iterator(); it.hasNext();) {
+			String serverUID = (String) it.next();
+		// for (int i = startIndex; i < uidList.size(); i++) {
+			// String serverUID = (String) uidList.get(i);
 
 			//System.out.println("server message uid: "+ serverUID );
 			if (uid.equals(serverUID)) {

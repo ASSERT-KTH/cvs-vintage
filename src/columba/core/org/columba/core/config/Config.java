@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.io.DiskIO;
@@ -187,10 +189,10 @@ public class Config {
 
 	/**
 	 * Method getPluginList.
-	 * @return Vector
+	 * @return List
 	 */
-	public static Vector getPluginList() {
-		Vector v = new Vector();
+	public static List getPluginList() {
+		List v = new Vector();
 
 		for (Enumeration keys = pluginList.keys(); keys.hasMoreElements();) {
 			String key = (String) keys.nextElement();
@@ -213,8 +215,8 @@ public class Config {
 		return v;
 	}
 
-	public static Vector getTemplatePluginList() {
-		Vector v = new Vector();
+	public static List getTemplatePluginList() {
+		List v = new Vector();
 
 		for (Enumeration keys = templatePluginList.keys();
 			keys.hasMoreElements();
@@ -244,9 +246,11 @@ public class Config {
 	 */
 	public static void save() throws Exception {
 
-		Vector v = getPluginList();
-		for (int i = 0; i < v.size(); i++) {
-			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
+		List v = getPluginList();
+		for (Iterator it = v.iterator(); it.hasNext();) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
+//		for (int i = 0; i < v.size(); i++) {
+//			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
 			if (plugin == null)
 				continue;
 
@@ -261,9 +265,11 @@ public class Config {
 	 */
 	public static void load() {
 
-		Vector v = getPluginList();
-		for (int i = 0; i < v.size(); i++) {
-			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
+		List v = getPluginList();
+		for (Iterator it = v.iterator(); it.hasNext();) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
+//		for (int i = 0; i < v.size(); i++) {
+//			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
 			if (plugin == null)
 				continue;
 
@@ -271,9 +277,11 @@ public class Config {
 
 		}
 
-		Vector v2 = getTemplatePluginList();
-		for (int i = 0; i < v2.size(); i++) {
-			DefaultXmlConfig plugin = (DefaultXmlConfig) v2.get(i);
+		List v2 = getTemplatePluginList();
+		for (Iterator it = v2.iterator(); it.hasNext();) {
+			DefaultXmlConfig plugin = (DefaultXmlConfig)  it.next();
+//		for (int i = 0; i < v2.size(); i++) {
+//			DefaultXmlConfig plugin = (DefaultXmlConfig) v2.get(i);
 			if (plugin == null)
 				continue;
 

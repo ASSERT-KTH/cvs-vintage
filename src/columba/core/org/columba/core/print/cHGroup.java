@@ -16,11 +16,13 @@
 package org.columba.core.print;
 
 import java.awt.Graphics2D;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 public class cHGroup extends cPrintObject {
 
-	Vector members;
+	List members;
 	
 	public cHGroup() {
 		members = new Vector();	
@@ -36,8 +38,10 @@ public class cHGroup extends cPrintObject {
 		
 		computePositionAndSize();
 		
-		for( int i=0; i<members.size(); i++ ) {
-			act = (cPrintObject) members.get( i );
+		for (Iterator it = members.iterator(); it.hasNext();) {
+			act = (cPrintObject) it.next();
+//		for( int i=0; i<members.size(); i++ ) {
+//			act = (cPrintObject) members.get( i );
 			act.setLocation( (cPoint) getDrawingOrigin().clone() );
 			act.setPage(page);
 			act.print( g );	

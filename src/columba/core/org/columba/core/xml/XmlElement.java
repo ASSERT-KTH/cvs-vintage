@@ -22,6 +22,8 @@ package org.columba.core.xml;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 /////////////////////////////////////////////////////////////////////////////
 //                                 CODE                                    //
 /////////////////////////////////////////////////////////////////////////////
@@ -36,7 +38,7 @@ public class XmlElement {
 	String name;
 	String data;
 	Hashtable attributes;
-	Vector subElements;
+	List subElements;
 	XmlElement parent;
 
 	/**
@@ -164,13 +166,13 @@ public class XmlElement {
 
 	public XmlElement removeElement(XmlElement e) {
 		XmlElement child = null;
-		for (int i = 0; i < subElements.size(); i++) {
-			child = (XmlElement) subElements.get(i);
+		 for (int i = 0; i < subElements.size(); i++) {
+			 child = (XmlElement) subElements.get(i);
 			// FIXME -- This will most likely not work.
 			//          You want the element removed if the contents are the same
 			//          Not just if the element reference is the same.
 			if (child == e) {
-				subElements.remove(i);
+				 subElements.remove(i);
 			}
 		}
 		return (child);
@@ -181,7 +183,7 @@ public class XmlElement {
 	}
 
 	public void removeAllElements() {
-		subElements.removeAllElements();
+		subElements.clear();
 	}
 	
 	/**
@@ -218,7 +220,7 @@ public class XmlElement {
 	{
 		e.removeFromParent();
 		
-		subElements.insertElementAt(e, index );
+		subElements.add(index, e);
 		e.setParent(this);
 	}
 
@@ -228,7 +230,7 @@ public class XmlElement {
 	 * @return  Vector
 	 *
 	 */
-	public Vector getElements() {
+	public List getElements() {
 		return subElements;
 	}
 
@@ -259,7 +261,7 @@ public class XmlElement {
 		}
 		int j;
 		for (j = 0; j < subElements.size(); j++) {
-			if (((XmlElement) subElements.get(j)).getName().equals(topName)) {
+			 if (((XmlElement) subElements.get(j)).getName().equals(topName)) {
 				if (subName != null) {
 					return (
 						((XmlElement) subElements.get(j)).getElement(subName));
@@ -462,10 +464,12 @@ public class XmlElement {
 			} else {
 				System.out.println(indent + node.getName() + " = '" + data + "'");
 			}
-			Vector subs = node.getElements();
+			List subs = node.getElements();
 			int i, j;
-			for (i = 0; i < subs.size(); i++) {
-				printNode((XmlElement) subs.get(i), indent + "    ");
+			for (Iterator it = subs.iterator(); it.hasNext();) {
+				printNode((XmlElement) it.next(), indent + "    ");
+			// for (i = 0; i < subs.size(); i++) {
+				// printNode((XmlElement) subs.get(i), indent + "    ");
 			}
 		}
 		
@@ -475,10 +479,12 @@ public class XmlElement {
 		clone.setAttributes((Hashtable)getAttributes().clone());
 		clone.setData(new String(getData()));
 		
-		Vector childs = getElements();
+		List childs = getElements();
 		XmlElement child;
-		for( int i=0; i<childs.size(); i++ ) {
-			child = (XmlElement) childs.get(i);
+		for (Iterator it = childs.iterator(); it.hasNext();) {
+			child = (XmlElement)  it.next();
+		// for( int i=0; i<childs.size(); i++ ) {
+			// child = (XmlElement) childs.get(i);
 			clone.addSubElement((XmlElement)child.clone());
 		}
 					

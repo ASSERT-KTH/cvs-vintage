@@ -30,6 +30,7 @@ import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.SendableHeader;
 import org.columba.mail.parser.Rfc822Parser;
+import java.util.List;
 
 public class OutboxFolder extends CachedMHFolder {
 
@@ -144,7 +145,7 @@ public class OutboxFolder extends CachedMHFolder {
 			int accountUid = p.readInt();
 			((SendableHeader) h).setAccountUid(accountUid);
 
-			Vector recipients = (Vector) p.readObject();
+			List recipients = (Vector) p.readObject();
 			((SendableHeader) h).setRecipients(recipients);
 
 		}

@@ -24,6 +24,8 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.event.TableModelEvent;
@@ -123,11 +125,14 @@ public class HeaderController
 		view.getTable().cleanupHeaderItemList();
 	}
 
-	protected void addVectorToTable(Vector v, int index) {
-		for (int i = 0; i < v.size(); i++) {
+	protected void addVectorToTable(List v, int index) {
+		for (Iterator it = v.iterator(); it.hasNext();) {
 			try {
-				
-				HeaderItem item = (HeaderItem) v.get(i);
+				HeaderItem item = (HeaderItem) it.next();
+//		for (int i = 0; i < v.size(); i++) {
+//			try {
+//				
+//				HeaderItem item = (HeaderItem) v.get(i);
 				ColumbaLogger.log.debug("item="+item.toString());
 				
 				String field = (String) item.get("field");

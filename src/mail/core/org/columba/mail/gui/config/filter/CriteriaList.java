@@ -44,6 +44,8 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
+import java.util.List;
+import java.util.Iterator;
 
 public class CriteriaList extends JPanel implements ActionListener {
 
@@ -51,7 +53,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 	private Filter filter;
 
 	private TableItem v;
-	private Vector list;
+	private List list;
 	private JPanel panel;
 	private AbstractPluginHandler pluginHandler;
 
@@ -87,9 +89,10 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 	public void updateComponents(boolean b) {
 		if (b == false) {
-
-			for (int i = 0; i < list.size(); i++) {
-				DefaultCriteriaRow row = (DefaultCriteriaRow) list.get(i);
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				DefaultCriteriaRow row = (DefaultCriteriaRow)  it.next();
+			// for (int i = 0; i < list.size(); i++) {
+				// DefaultCriteriaRow row = (DefaultCriteriaRow) list.get(i);
 				row.updateComponents(false);
 			}
 		}

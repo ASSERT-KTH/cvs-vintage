@@ -18,6 +18,7 @@
 package org.columba.addressbook.config;
 
 import java.util.Vector;
+import java.util.List;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
@@ -96,11 +97,11 @@ public class AddressbookItem extends DefaultItem
     }
 
 
-    public Vector getGroupList()
+    public List getGroupList()
     {
         
         int count = list.getChildCount();
-        Vector v = new Vector();
+        List v = new Vector();
 
         for ( int i=0; i<count; i++ )
         {

@@ -17,6 +17,7 @@
 package org.columba.addressbook.folder;
 
 import java.util.Vector;
+import java.util.List;
 
 /**
  * @version 	1.0
@@ -24,7 +25,7 @@ import java.util.Vector;
  */
 public class PropertySet
 {
-	Vector subkeys;
+	List subkeys;
 	Object value;
 
 	public PropertySet()

@@ -43,6 +43,8 @@ import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderList;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * This class shows the messageheaderlist
@@ -99,7 +101,7 @@ public class TableController implements TreeSelectionListener {
 
 	protected MarkAsReadTimer markAsReadTimer;
 
-	protected Vector tableChangedListenerList;
+	protected List tableChangedListenerList;
 
 	protected TableMenu menu;
 	public TableController(AbstractMailFrameController mailFrameController) {
@@ -171,9 +173,11 @@ public class TableController implements TreeSelectionListener {
 	}
 
 	public void fireTableChangedEvent(TableChangedEvent e) {
-		for (int i = 0; i < tableChangedListenerList.size(); i++) {
-			TableChangeListener l =
-				(TableChangeListener) tableChangedListenerList.get(i);
+		for (Iterator it = tableChangedListenerList.iterator(); it.hasNext();) {
+			TableChangeListener l =	(TableChangeListener) it.next();
+		// for (int i = 0; i < tableChangedListenerList.size(); i++) {
+			// TableChangeListener l =
+				// (TableChangeListener) tableChangedListenerList.get(i);
 			l.tableChanged(e);
 		}
 	}

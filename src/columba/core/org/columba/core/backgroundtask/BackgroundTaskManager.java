@@ -20,6 +20,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Timer;
@@ -46,7 +48,7 @@ public class BackgroundTaskManager implements ActionListener {
 
 	private Timer timer;
 
-	private Vector list;
+	private List list;
 
 	public BackgroundTaskManager() {
 		super();
@@ -83,10 +85,14 @@ public class BackgroundTaskManager implements ActionListener {
 	}
 
 	public void runTasks() {
-		for (Enumeration e = list.elements(); e.hasMoreElements();) {
-			TaskInterface task = (TaskInterface) e.nextElement();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			TaskInterface task = (TaskInterface) it.next();
 			task.run();
 		}
+//		for (Enumeration e = list.elements(); e.hasMoreElements();) {
+//			TaskInterface task = (TaskInterface) e.nextElement();
+//			task.run();
+//		}
 	}
 	
 	public void stop()

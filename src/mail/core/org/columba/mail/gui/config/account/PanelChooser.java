@@ -31,6 +31,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
+import java.util.List;
 
 /**
  * @author frd
@@ -51,14 +52,14 @@ public class PanelChooser extends JPanel {
 
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
 
-		Vector v = new Vector();
+		List v = new Vector();
 		v.add("identity");
 		v.add("incomingserver");
 		v.add("outgoingserver");
 		v.add("specialfolders");
 		v.add("security");
 
-		list = new JList(v);
+		list = new JList((Vector)v);
 		list.setCellRenderer(new ItemRenderer());
 
 		list.setSelectedIndex(0);

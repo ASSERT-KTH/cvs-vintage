@@ -16,6 +16,7 @@
 package org.columba.mail.gui.composer.util;
 
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ComboBoxModel;
@@ -55,8 +56,8 @@ public class AddressComboBox extends JComboBox
 	addCompleter();
     }
 
-    public AddressComboBox(Vector v) {
-	super(v);
+    public AddressComboBox(List v) {
+	super((Vector)v);
 	addCompleter();
     }
 
