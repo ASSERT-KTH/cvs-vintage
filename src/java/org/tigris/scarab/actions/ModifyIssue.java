@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.123 2002/10/02 05:11:35 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.124 2002/10/09 01:32:12 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -146,7 +146,6 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        IssueType issueType = issue.getIssueType();
         IntakeTool intake = getIntakeTool(context);       
         // Comment field is required to modify attributes
         Group commentGroup = intake.get("Attachment", "attCommentKey", false);
@@ -160,13 +159,11 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         // Set any other required flags
+        IssueType issueType = issue.getIssueType();
         List requiredAttributes = issue.getModule()
                                               .getRequiredAttributes(issueType);
         AttributeValue aval = null;
-        AttributeValue aval2 = null;
-        HashMap newAttVals = new HashMap();
         Group group = null;
-
         SequencedHashMap modMap = issue.getModuleAttributeValuesMap();
         Iterator iter = modMap.iterator();
         while (iter.hasNext()) 
@@ -200,6 +197,9 @@ public class ModifyIssue extends BaseModifyIssue
 
         if (intake.isAllValid()) 
         {
+            AttributeValue aval2 = null;
+            HashMap newAttVals = new HashMap();
+
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
             Iterator iter2 = avMap.iterator();
@@ -245,7 +245,7 @@ public class ModifyIssue extends BaseModifyIssue
             commentGroup.setProperties(attachment);
             try
             {
-                ActivitySet activitySet = issue.setAttributeValues(newAttVals, attachment, user);
+                ActivitySet activitySet = issue.setAttributeValues(null, newAttVals, attachment, user);
                 intake.removeAll();
                 sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
                 scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
