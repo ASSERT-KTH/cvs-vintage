@@ -424,12 +424,6 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>torque</groupId>
-      <artifactId>torque-gen</artifactId>
-      <version>3.1.1-dev</version>
-      <type>jar</type>
-    </dependency>    
-    <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
       <version>20040328.193346</version>
@@ -560,9 +554,9 @@
   <!-- End Database Dependencies -->    
   
     <dependency> 
-      <groupId>maven-torque-plugin</groupId> 
+      <groupId>maven-plugins</groupId> 
       <artifactId>maven-torque-plugin</artifactId> 
-      <version>3.1.1-dev</version> 
+      <version>3.2</version> 
       <url>http://db.apache.org/torque/maven-plugin/</url> 
       <type>plugin</type>
     </dependency> 
