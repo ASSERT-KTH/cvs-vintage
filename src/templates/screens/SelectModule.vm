@@ -13,7 +13,7 @@ $page.setTitle("Select Module")
 <table cellpadding="3" cellspacing="2" border="1" width="100%">
 <tr>
     <th>Module name</th>
-    <th>Module desc</th>
+    <th>Module description</th>
 </tr>
 <tr>
     <td>
@@ -45,7 +45,7 @@ $page.setTitle("Select Module")
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
     <th>Module name</th>
-    <th>Module desc</th>
+    <th>Module description</th>
 </tr>
 
 #set ($template = $data.Parameters.getString("template", ""))
