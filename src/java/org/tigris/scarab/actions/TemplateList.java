@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.11 2001/10/18 02:00:01 elicia Exp $
+    @version $Id: TemplateList.java,v 1.12 2001/10/19 01:02:02 jon Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -199,20 +199,26 @@ public class TemplateList extends RequireLoginFirstAction
     }
 
     /**
-        This manages clicking the Cancel button
-    */
+     * This manages clicking the Cancel button
+     */
     public void doCancel( RunData data, TemplateContext context ) throws Exception
     {
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Start.vm");
-        setTarget(data, template);
+        setTarget(data, getCancelTemplate(data, "SaveTemplate.vm"));
     }
+
     /**
-        calls doCancel()
-    */
+     * This manages clicking the Back button
+     */
+    public void doBack( RunData data, TemplateContext context ) throws Exception
+    {
+        setTarget(data, getBackTemplate(data, "TemplateList.vm"));
+    }
+
+    /**
+     * calls doCancel()
+     */
     public void doPerform( RunData data, TemplateContext context ) throws Exception
     {
         doCancel(data, context);
     }
-
 }

@@ -1,6 +1,5 @@
 $page.setTitle("Issue template")
 
-#set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($issueId = $data.Parameters.getString("issue_id"))
 #if ($issueId)
@@ -12,12 +11,37 @@ $page.setTitle("Issue template")
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($issue))
 
-<div class="app" id="savetemplate">
-<form method="post" action="$action">
+#macro (SaveTemplateBar $var)
+<div class="functnbar$var">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" value="Save" name="eventSubmit_doSubmit" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
+  </td>
+  <td>
+<input type="submit" value="Back" name="eventSubmit_doBack"  />&#160;
+  </td>
+ </tr>
+</table>
+</div>
+#end
 
-#if ($issueId) <input type="hidden" name="issue_id" value="$issueId" /> #end
+<div class="app" id="savetemplate">
 
 <h2>$page.Title</h2>
+
+<form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SaveTemplate.vm" />
+
+#if ($issueId)
+  <input type="hidden" name="issue_id" value="$issueId" />
+#end
+
+#SaveTemplateBar("")
+
+<h3>Template Details</h3>
 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
@@ -45,7 +69,7 @@ $page.setTitle("Issue template")
 </tr>
 #if ($issueId)
 <tr>
-  <th>Template author</th>
+  <th>Created by</th>
   #set ($createdUser = $issue.CreatedBy)
   <td>
   #if ($createduser)
@@ -102,16 +126,7 @@ $page.setTitle("Issue template")
 </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-<input type="submit" value="Save details" name="eventSubmit_doSubmit" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
-<input type="submit" value="Clear form" /></td>
-   </tr>
-</table>
-</div>
+#SaveTemplateBar("2")
 
 $intake.declareGroups()
 
