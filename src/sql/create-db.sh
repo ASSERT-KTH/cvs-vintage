@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.12 2002/07/09 23:02:05 jon Exp $
+# $Id: create-db.sh,v 1.13 2002/07/12 00:29:34 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -22,11 +22,12 @@ if [ -f "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}" ] ; then
 fi
 
 quiet=
+EMPTY=
 
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    --help|-\?)
+    --help|-\?|-h)
         usage=t
         break
         ;;
@@ -53,6 +54,9 @@ do
         shift;;
     --quiet|-q)
         quiet=t
+        ;;
+    --empty|-e)
+        EMPTY=t
         ;;
     -*)
         echo "$CMDNAME: invalid option: $1" 1>&2
@@ -102,6 +106,7 @@ if [ "${usage}" ] ; then
     echo "  -l, --loadorder=FILE       SQL file load order    (${LOAD_ORDER})"
     echo "  -s, --scripts=DIR          SQL file directory"
     echo "                               (${POPULATION_SCRIPT_DIR})"
+    echo "  -e, --empty                Create an empty database with only required data"
     echo "  -q, --quiet                Don't write any messages"
     echo "  -?, --help                 Usage"
     echo
@@ -141,6 +146,14 @@ if [ ! -z "$password" -a "${dbtype}" = 'mysql' ] ; then
     stty echo >/dev/null 2>&1
 	password="$FirstPw"
     echo
+fi
+
+if [ ! -z "${EMPTY}" ] ; then
+    LOAD_ORDER="LoadOrder-Empty.lst"
+fi
+
+if [ -z "${quiet}" ] ; then
+    echo "Importing sql files defined in ${LOAD_ORDER}..."
 fi
 
 ###############
