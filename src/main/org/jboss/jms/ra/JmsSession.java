@@ -22,238 +22,267 @@ import java.io.Serializable;
 import javax.jms.*;
 
 import javax.resource.spi.ConnectionEvent;
+
 /**
- * JmsSession.java
+ * Adapts the JMS QueueSession and TopicSession API to a JmsManagedConnection.
  *
- *
- * Created: Tue Apr 17 22:39:45 2001
+ * <p>Created: Tue Apr 17 22:39:45 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>.
+ * @version $Revision: 1.3 $
  */
+public class JmsSession
+   implements QueueSession, TopicSession
+{
+   /** The managed connection for this session. */
+   private JmsManagedConnection mc; // = null;
 
-public class JmsSession implements QueueSession, TopicSession {
-    private JmsManagedConnection mc = null;
-    public JmsSession(JmsManagedConnection mc) {
-	this.mc = mc;
-	
-    }
+   /**
+    * Construct a <tt>JmsSession</tt>.
+    *
+    * @param mc    The managed connection for this session.
+    */
+   public JmsSession(final JmsManagedConnection mc) {
+      this.mc = mc;
+   }
 
-    // ---- Session API
-    public BytesMessage createBytesMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createBytesMessage();
-    }
+   /**
+    * Ensure that the session is opened.
+    *
+    * @return    The session
+    *
+    * @throws javax.jms.IllegalStateException    The session is closed
+    */
+   private Session getSession() throws JMSException {
+      // ensure that the connection is opened
+      if (mc == null)
+         throw new javax.jms.IllegalStateException("The session is closed");
+
+      return mc.getSession();
+   }
+   
+   // ---- Session API
+
+   public BytesMessage createBytesMessage() throws JMSException
+   {
+      return getSession().createBytesMessage();
+   }
     
-    public MapMessage createMapMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createMapMessage();
-    }
+   public MapMessage createMapMessage() throws JMSException
+   {
+      return getSession().createMapMessage();
+   }
     
-    public Message createMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createMessage();
-    }
+   public Message createMessage() throws JMSException
+   {
+      return getSession().createMessage();
+   }
 
-    public ObjectMessage createObjectMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createObjectMessage();
-    }
-    public ObjectMessage createObjectMessage(Serializable object) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createObjectMessage(object);
-    }
+   public ObjectMessage createObjectMessage() throws JMSException
+   {
+      return getSession().createObjectMessage();
+   }
 
-    public StreamMessage createStreamMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createStreamMessage();
-    }
+   public ObjectMessage createObjectMessage(Serializable object)
+      throws JMSException
+   {
+      return getSession().createObjectMessage(object);
+   }
 
-    public TextMessage createTextMessage() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createTextMessage();
-    }
+   public StreamMessage createStreamMessage() throws JMSException
+   {
+      return getSession().createStreamMessage();
+   }
 
-    public TextMessage createTextMessage(String string) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().createTextMessage(string);
-    }
-    public boolean getTransacted() throws JMSException
-    { 
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return mc.getSession().getTransacted();
-    }
+   public TextMessage createTextMessage() throws JMSException
+   {
+      return getSession().createTextMessage();
+   }
 
-    public MessageListener getMessageListener() throws JMSException
-    {		
-	
-	throw new javax.jms.IllegalStateException("Methid not allowed in J2EE");	
-	
-    }
+   public TextMessage createTextMessage(String string) throws JMSException
+   {
+      return getSession().createTextMessage(string);
+   }
+   
+   public boolean getTransacted() throws JMSException
+   {
+      return getSession().getTransacted();
+   }
+
+   /**
+    * Always throws an Exception.
+    *
+    * @throws javax.jms.IllegalStateException     Method not allowed.
+    */
+   public MessageListener getMessageListener() throws JMSException
+   {
+      throw new javax.jms.IllegalStateException("Method not allowed");      
+   }
     
-    public void setMessageListener(MessageListener listener) throws JMSException
-    {
-	throw new javax.jms.IllegalStateException("Methid not allowed in J2EE");	
-    }
+   /**
+    * Always throws an Exception.
+    *
+    * @throws javax.jms.IllegalStateException     Method not allowed.
+    */
+   public void setMessageListener(MessageListener listener)
+      throws JMSException
+   {
+      throw new javax.jms.IllegalStateException("Method not allowed");
+   }
 
-    public void run()
-    {
-	throw new Error("Methid not allowed in J2EE");	
-    }
+   /**
+    * Always throws an Error.
+    *
+    * @throws Error    Method not allowed.
+    */
+   public void run() {
+      // should this really throw an Error?
+      throw new Error("Method not allowed");
+   }
 
-    public void close() throws JMSException
-    { 
-	mc.getLogger().log(Level.FINE, "Closing session");
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	// Special stuff FIXME
-	mc.removeHandle(this);
-	ConnectionEvent ev = new ConnectionEvent(mc, ConnectionEvent.CONNECTION_CLOSED);
-	ev.setConnectionHandle(this);
-	mc.sendEvent(ev);
-	mc = null;	
-    }
+   /**
+    * Closes the session.  Sends a ConnectionEvent.CONNECTION_CLOSED to the
+    * managed connection.
+    *
+    * @throws JMSException    Failed to close session.
+    */
+   public void close() throws JMSException
+   {
+      if (mc != null) {
+         mc.getLogger().log(Level.FINE, "Closing session");
+         // Special stuff FIXME
+         mc.removeHandle(this);
+         ConnectionEvent ev =
+            new ConnectionEvent(mc, ConnectionEvent.CONNECTION_CLOSED);
+         ev.setConnectionHandle(this);
+         mc.sendEvent(ev);
+         mc = null;
+      }
+   }
 
-    // FIXME - is this really OK, probably not
-    public void commit() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	mc.getSession().commit();
-    }
+   // FIXME - is this really OK, probably not
+   public void commit() throws JMSException
+   {
+      getSession().commit();
+   }
 
-    public void rollback() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	mc.getSession().rollback();
-    }
+   public void rollback() throws JMSException
+   {
+      getSession().rollback();
+   }
 
-    public synchronized void recover() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	mc.getSession().recover();
-    }
+   public synchronized void recover() throws JMSException
+   {
+      getSession().recover();
+   }
 
-    // --- TopicSession API
-    public Topic createTopic(String topicName) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createTopic(topicName);
-    }
+   // --- TopicSession API
+   
+   public Topic createTopic(String topicName) throws JMSException
+   {
+      return ((TopicSession)getSession()).createTopic(topicName);
+   }
 
-    public TopicSubscriber createSubscriber(Topic topic) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createSubscriber(topic);
-    }
+   public TopicSubscriber createSubscriber(Topic topic) throws JMSException
+   {
+      return ((TopicSession)getSession()).createSubscriber(topic);
+   }
 
-    public TopicSubscriber createSubscriber(Topic topic, String messageSelector, boolean noLocal) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createSubscriber(topic,messageSelector, noLocal);
-    }
+   public TopicSubscriber createSubscriber(Topic topic,
+                                           String messageSelector,
+                                           boolean noLocal)
+      throws JMSException
+   {
+      return ((TopicSession)getSession()).
+         createSubscriber(topic,messageSelector, noLocal);
+   }
 
-    public TopicSubscriber createDurableSubscriber(Topic topic, String name) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createDurableSubscriber(topic, name);
-    }
+   public TopicSubscriber createDurableSubscriber(Topic topic,
+                                                  String name)
+      throws JMSException
+   {
+      return ((TopicSession)getSession()).
+         createDurableSubscriber(topic, name);
+   }
 
-    public TopicSubscriber createDurableSubscriber(Topic topic, String name, String messageSelector, boolean noLocal) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createDurableSubscriber(topic,
-								       name,
-								       messageSelector,
-								       noLocal);					       
-    }
+   public TopicSubscriber createDurableSubscriber(Topic topic,
+                                                  String name,
+                                                  String messageSelector,
+                                                  boolean noLocal)
+      throws JMSException
+   {
+      return ((TopicSession)getSession()).
+         createDurableSubscriber(topic, name, messageSelector, noLocal);
+   }
 
-    public TopicPublisher createPublisher(Topic topic) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createPublisher(topic);
-    }
+   public TopicPublisher createPublisher(Topic topic) throws JMSException
+   {
+      return ((TopicSession)getSession()).createPublisher(topic);
+   }
 
-    public TemporaryTopic createTemporaryTopic() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((TopicSession)mc.getSession()).createTemporaryTopic();
-    }
+   public TemporaryTopic createTemporaryTopic() throws JMSException
+   {
+      return ((TopicSession)getSession()).createTemporaryTopic();
+   }
 
-    public void unsubscribe(String name) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	((TopicSession)mc.getSession()).unsubscribe(name);
-    }
+   public void unsubscribe(String name) throws JMSException
+   {
+      ((TopicSession)getSession()).unsubscribe(name);
+   }
 
-    //--- QueueSession API
-    public QueueBrowser createBrowser(Queue queue) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createBrowser(queue);
-    }
+   //--- QueueSession API
+   
+   public QueueBrowser createBrowser(Queue queue) throws JMSException
+   {
+      return ((QueueSession)getSession()).createBrowser(queue);
+   }
 
-    public QueueBrowser createBrowser(Queue queue,String messageSelector) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createBrowser(queue,messageSelector);
+   public QueueBrowser createBrowser(Queue queue,
+                                     String messageSelector)
+      throws JMSException
+   {
+      return ((QueueSession)getSession()).
+         createBrowser(queue,messageSelector);
+   }
 
-    }
+   public Queue createQueue(String queueName) throws JMSException
+   {
+      return ((QueueSession)getSession()).createQueue(queueName);
+   }
 
-    public Queue createQueue(String queueName) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createQueue(queueName);
-    }
+   public QueueReceiver createReceiver(Queue queue) throws JMSException
+   {
+      return ((QueueSession)getSession()).createReceiver(queue);
+   }
 
+   public QueueReceiver createReceiver(Queue queue, String messageSelector)
+      throws JMSException
+   {
+      return ((QueueSession)getSession()).
+         createReceiver(queue, messageSelector);
+   }
 
-    public QueueReceiver createReceiver(Queue queue) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createReceiver(queue);
-    }
+   public QueueSender createSender(Queue queue) throws JMSException
+   {
+      return ((QueueSession)getSession()).createSender(queue);
+   }
 
-    public QueueReceiver createReceiver(Queue queue, String messageSelector) throws JMSException
-    { 
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createReceiver(queue, messageSelector);
+   public TemporaryQueue createTemporaryQueue() throws JMSException
+   {
+      return ((QueueSession)getSession()).createTemporaryQueue();
+   }
 
-    }
+   // --- JmsManagedConnection api
+   
+   void setManagedConnection(final JmsManagedConnection mc) {
+      if (this.mc != null) {
+         this.mc.removeHandle(this);
+      }
+      this.mc = mc;	
+   }
 
-    public QueueSender createSender(Queue queue) throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createSender(queue);
-    }
-
-    public TemporaryQueue createTemporaryQueue() throws JMSException
-    {
-	if (mc == null) throw new javax.jms.IllegalStateException("The session is closed");
-	return ((QueueSession)mc.getSession()).createTemporaryQueue();
-    }
-
-    // --- JmsManagedConnection api
-    void setManagedConnection(JmsManagedConnection mc) {
-	if (this.mc !=null) {
-	    this.mc.removeHandle(this);
-	}
-	this.mc = mc;	
-    }
-
-    void destroy() {
-	mc = null;
-    }
-} // JmsSession
-
-
-
-
-
-
-
+   void destroy() {
+      mc = null;
+   }
+}

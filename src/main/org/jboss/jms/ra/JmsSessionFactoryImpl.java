@@ -40,12 +40,12 @@ import javax.jms.ConnectionMetaData;
 import org.jboss.jms.ra.client.JmsSessionFactory;
 
 /**
- * JmsSessionFactoryImpl.java
+ * Implements the JMS Connection API and produces {@link JmsSession} objects.
  *
  * <p>Created: Thu Mar 29 15:36:51 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JmsSessionFactoryImpl
    implements JmsSessionFactory, Serializable, Referenceable
@@ -133,11 +133,11 @@ public class JmsSessionFactoryImpl
       }
    }
     
-   public ConnectionConsumer
-      createConnectionConsumer(Queue queue,
-                               String messageSelector,
-                               ServerSessionPool sessionPool,
-                               int maxMessages) 
+   public ConnectionConsumer createConnectionConsumer
+      (Queue queue,
+       String messageSelector,
+       ServerSessionPool sessionPool,
+       int maxMessages) 
       throws JMSException 
    {
       throw new IllegalStateException(ISE);
@@ -170,29 +170,29 @@ public class JmsSessionFactoryImpl
          throw je;
       }				    
    }
-    
-   public ConnectionConsumer
-      createConnectionConsumer(Topic topic,
-                               String messageSelector,
-                               ServerSessionPool sessionPool,
-                               int maxMessages) 
+
+   public ConnectionConsumer createConnectionConsumer
+      (Topic topic,
+       String messageSelector,
+       ServerSessionPool sessionPool,
+       int maxMessages) 
       throws JMSException 
    {
       throw new IllegalStateException(ISE);
    }		       
 
-   public ConnectionConsumer
-      createDurableConnectionConsumer(Topic topic, 
-                                      String subscriptionName,
-                                      String messageSelector,
-                                      ServerSessionPool sessionPool, 
-                                      int maxMessages) 
+   public ConnectionConsumer createDurableConnectionConsumer
+      (Topic topic, 
+       String subscriptionName,
+       String messageSelector,
+       ServerSessionPool sessionPool, 
+       int maxMessages) 
       throws JMSException
    {
       throw new IllegalStateException(ISE);
    }
    
-   //--- Al the Connection methods
+   //--- All the Connection methods
    
    public String getClientID() throws JMSException {
       throw new IllegalStateException(ISE);
@@ -224,11 +224,9 @@ public class JmsSessionFactoryImpl
       throw new IllegalStateException(ISE);
    }
 
-   //
-   // Why is this synchronized ?
-   //
-   
-   public synchronized void close() throws JMSException {
-      throw new IllegalStateException(ISE);
+   public void close() throws JMSException {
+      //
+      // TODO: close all sessions, for now just do nothing.
+      //
    }
 }
