@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/ResourceReferenceImpl.java,v 1.1 1999/10/09 00:20:45 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/deployment/Attic/ResourceReferenceImpl.java,v 1.2 1999/12/31 01:18:36 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/31 01:18:36 $
  *
  * ====================================================================
  *
@@ -64,26 +64,34 @@
 
 package org.apache.tomcat.deployment;
 
-    /** Objects exhibiting this interface represent a specialization of a container property
-    * that is used for obtaining a database connection. 
-    * @author Danny Coward
-    */
+    /**
+     * Objects exhibiting this interface represent a specialization of a
+     * container property that is used for obtaining a database connection.
+     *
+     * @author Danny Coward
+     * @author Assaf Arkin <arkin@exoffice.com>
+     */
 
 class ResourceReferenceImpl extends ContextParameterImpl implements ResourceReference {
    
+    private String auth = CONTAINER_AUTHORIZATION;
+    private String desc;
+    private String type;
     
     public String getType() {
-	return null;
+	return type;
     }
     public void setType(String type) {
+	this.type = type;
     }
     public void setDescription(String description) {
+	this.desc = description;
     }
-    
     public String getAuthorization() {
-	return null;
+	return auth;
     }
     public void setAuthorization(String authorization) {
-    
+	this.auth = authorization;
     }
+
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Constants.java,v 1.1 1999/10/09 00:20:54 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Constants.java,v 1.2 1999/12/31 01:18:36 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/31 01:18:36 $
  *
  * ====================================================================
  *
@@ -102,6 +102,7 @@ public class Constants {
         public static final String CONNECTOR = "Connector";
         public static final String CONTEXT_MANAGER = "ContextManager";
         public static final String PARAMETER = "Parameter";
+	public static final String INTERCEPTOR = "Interceptor";
     }
 
     public static class Attribute {

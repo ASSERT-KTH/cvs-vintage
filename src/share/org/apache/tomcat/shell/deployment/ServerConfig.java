@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ServerConfig.java,v 1.1 1999/10/09 00:20:55 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ServerConfig.java,v 1.2 1999/12/31 01:18:37 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/31 01:18:37 $
  *
  * ====================================================================
  *
@@ -64,6 +64,8 @@
 
 package org.apache.tomcat.shell.deployment;
 
+import org.apache.tomcat.core.LifecycleInterceptor;
+import org.apache.tomcat.core.ServiceInterceptor;
 import org.apache.tomcat.shell.Constants;
 import org.apache.tomcat.util.XMLTree;
 import java.util.Vector;
@@ -172,6 +174,40 @@ public class ServerConfig {
 		           Constants.Attribute.IsWorkDirPersistent));
 
 		    contextManagerConfig.addContextConfig(contextConfig);
+		}
+
+		// [Arkin] This reads the interceptors information from the
+		//         server configuration file, creates an instance
+		//         for each interceptor based on it's class name and
+		//         registers it with all contexts that match the same
+		//         document base URL.
+		Enumeration interceptors = contextManager.getElements(
+		    Constants.Element.INTERCEPTOR).elements();
+		
+		while (interceptors.hasMoreElements()) {
+		    XMLTree interceptor = (XMLTree)interceptors.nextElement();
+		    String className = (String)interceptor.getAttribute(Constants.Attribute.CLASS_NAME);
+		    System.out.println("Adding Global Interceptor: " + className);
+		    try {
+			Object instance = Class.forName(className).newInstance();
+			String docBase=(String)interceptor.getAttribute(
+			    Constants.Attribute.DocumentBase);
+			for(Enumeration e=contextManagerConfig.getContextConfigs();
+			    e.hasMoreElements();) {
+			    ContextConfig contextConfig=(ContextConfig)e.nextElement();
+			    if(contextConfig.getDocumentBase().equals(docBase)||
+			       (docBase.endsWith("*") &&
+				contextConfig.getDocumentBase().toString().startsWith(
+				 docBase.substring(0,docBase.length()-1)))) {
+				if(instance instanceof ServiceInterceptor)
+				    contextConfig.addServiceInterceptor((ServiceInterceptor)instance);
+				else if(instance instanceof LifecycleInterceptor)
+				    contextConfig.addLifecycleInterceptor((LifecycleInterceptor)instance);
+			    }
+			}
+		    } catch ( Throwable except ) {
+			System.out.println("Error creating interceptor " + className + ": " + except);
+		    }
 		}
 
                 Enumeration connectors = contextManager.getElements(

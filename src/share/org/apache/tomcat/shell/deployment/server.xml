@@ -32,6 +32,11 @@ file for complete configuration information:
             isWARValidated="false" isInvokerEnabled="true"
             isWorkDirPersistent="false"/>
         
+<!--
+        <Interceptor className="com.mycompany.MyInterceptor"
+                     docBase="*" />
+  -->
+    
         <!-- Old TcpEndpoint-based HttpServer. Will be deprecated soon! 
         <Connector className="org.apache.tomcat.server.HttpServerConnector">
         </Connector>

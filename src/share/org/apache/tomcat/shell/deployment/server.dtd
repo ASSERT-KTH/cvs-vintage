@@ -5,7 +5,7 @@
     adminPort NMTOKEN "-1"
     workDir CDATA "work">
 
-<!ELEMENT ContextManager (Context+, Connector+)>
+<!ELEMENT ContextManager (Context+, Interceptor*, Connector+)>
 <!ATTLIST ContextManager
     port NMTOKEN "8080"
     hostName NMTOKEN ""
@@ -20,6 +20,11 @@
     isWARValidated (false | true) "false"
     isInvokerEnabled (true | false) "true"
     isWorkDirPersistent (false | true) "false">
+
+<!ELEMENT Interceptor EMPTY>
+<!ATTLIST Interceptor
+    className NMTOKEN #REQUIRED
+    docBase   CDATA #REQUIRED>    
 
 <!ELEMENT Connector (Parameter*)>
 <!ATTLIST Connector
