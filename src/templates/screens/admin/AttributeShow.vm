@@ -3,10 +3,10 @@ $page.setTitle("Attribute Editor")
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 
-<h1>Global Attributes</h1>
+<h1>Module Attributes</h1>
 
 <p>
-This page is for editing the Attributes which are defined globally.
+This page is for editing the Attributes which are defined for Module: $module.Name
 </p>
 
 <div class="functnbar">
@@ -58,9 +58,9 @@ This page is for editing the Attributes which are defined globally.
     #end
 </td>
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
-<td>x (x@xxx.com)</td>
+#set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+<td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
 <td>$attribute.CreatedDate</td>
-<td><a href="#">copy</a></td>
 </tr>
 #end
 </table>
