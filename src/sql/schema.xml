@@ -1,4 +1,4 @@
-<!-- $Id: schema.xml,v 1.4 2001/01/03 01:55:31 jmcnally Exp $ -->
+<!-- $Id: schema.xml,v 1.5 2001/01/03 02:46:26 jon Exp $ -->
 
 <app-data>
 <database>
@@ -332,7 +332,7 @@
     <!--
         Person that is the value of the attribute if attribute is person based.
     -->
-    <column name="VISITOR_ID" required="false" type="INTEGER"></column>
+    <column name="USER_ID" required="false" type="INTEGER"></column>
     <!--
         Display value of the attribute.
         This column should always contain a value which serves as a "summary value"
@@ -371,8 +371,8 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OPTION_ID" foreign="OPTION_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="VISITOR">
-        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+    <foreign-key foreignTable="TURBINE_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
@@ -477,7 +477,7 @@
 <!--
     Person associated with the module.
 -->
-<table name="SCARAB_R_MODULE_VISITOR" idMethod="none">
+<table name="SCARAB_R_MODULE_USER" idMethod="none">
     <!--
         Module.
     -->
@@ -485,7 +485,7 @@
     <!--
         Person.
     -->
-    <column name="VISITOR_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Flag, which marks that association has been deleted.
     -->
@@ -493,15 +493,15 @@
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="VISITOR">
-        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+    <foreign-key foreignTable="TURBINE_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
 <!--
     Person associated with the module.
 -->
-<table name="SCARAB_R_MODULE_VISITOR_ROLE" idMethod="none">
+<table name="SCARAB_R_MODULE_USER_ROLE" idMethod="none">
     <!--
         Module.
     -->
@@ -509,7 +509,7 @@
     <!--
         Person.
     -->
-    <column name="VISITOR_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Type of association.
     -->
@@ -518,9 +518,9 @@
         Flag, which marks that association has been deleted.
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" size="1"></column>
-    <foreign-key foreignTable="SCARAB_R_MODULE_VISITOR">
+    <foreign-key foreignTable="SCARAB_R_MODULE_USER">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
-        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+        <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
@@ -558,7 +558,7 @@
     <!--
         Person that cast vote.
     -->
-    <column name="VISITOR_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Option that person voted for.
     -->
@@ -570,21 +570,26 @@
         <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
-    <foreign-key foreignTable="VISITOR">
-        <reference local="VISITOR_ID" foreign="VISITOR_ID"/>
+    <foreign-key foreignTable="TURBINE_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
     </foreign-key>
 </table>
 
 <!--
-    Dummy table for TURBINE_USER 
+    Dummy table for where the USER_ID lives. In most cases, this will be a 
+    foreign table outside of the scope of Scarab itself. For example, if you are 
+    using Scarab with Turbine, then this will be defined as TURBINE_USER. For 
+    use in other systems, you will want to define this to be the name of your 
+    own USER table and update the FK references in this file to point at the new 
+    name. Then, all you need to do is regenerate the OR code to use the new 
+    table name.
 -->
-<table name="VISITOR" idMethod="none">
+<table name="TURBINE_USER" idMethod="none">
     <!--
         Unique identifier.
     -->
-    <column name="VISITOR_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
 </table>
 
 </database>
 </app-data>
-
