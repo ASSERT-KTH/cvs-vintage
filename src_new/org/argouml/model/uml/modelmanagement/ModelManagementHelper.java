@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.27 2003/07/18 18:34:59 d00mst Exp $
+// $Id: ModelManagementHelper.java,v 1.28 2003/08/10 14:51:37 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -364,6 +364,34 @@ public class ModelManagementHelper {
 	    obj1.getName() != null && !obj1.getName().equals(obj2.getName()))
 		return false;
 	return corresponds(obj1.getNamespace(), obj2.getNamespace());
+    }
+
+    /**
+     * Checks if a child for some ownershiprelationship (as in a
+     * namespace A is owned by a namespace B) is allready in the
+     * ownerhship relation.
+     * @param parent The current leaf for the ownership relation 
+     * @param child The child that should be owned by the parent
+     * @return true if the child is allready in the ownership relationship
+     */
+    public boolean isCyclicOwnership(Object parent, Object child) {
+        return (getOwnerShipPath(parent).contains(child) || parent == child);
+    }
+
+
+    private List getOwnerShipPath(Object elem) {
+        if (ModelFacade.isABase(elem)) {
+            List ownershipPath = new ArrayList();
+            Object parent = ModelFacade.getContainer(elem);
+            while (parent != null) {
+                ownershipPath.add(parent);
+                parent = ModelFacade.getContainer(parent);
+            }
+            return ownershipPath;
+        } else {
+            throw new IllegalArgumentException("Not a base");
+        }
+
     }
 }
 

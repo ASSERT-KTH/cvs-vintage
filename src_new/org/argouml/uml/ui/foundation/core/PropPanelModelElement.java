@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.65 2003/06/29 23:50:17 linus Exp $
+// $Id: PropPanelModelElement.java,v 1.66 2003/08/10 14:51:38 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,7 +133,8 @@ abstract public class PropPanelModelElement extends PropPanel {
      * the namespace combobox has this optimisation because it is a performance
      * bottleneck with large models > 100 classifiers.
      */
-    private static UMLModelElementNamespaceComboBoxModel namespaceComboBoxModel = UMLModelElementNamespaceComboBoxModel.getInstance();
+    private static UMLModelElementNamespaceComboBoxModel 
+	namespaceComboBoxModel = new UMLModelElementNamespaceComboBoxModel();
 
     private static UMLModelElementStereotypeComboBoxModel stereotypeComboBoxModel = new UMLModelElementStereotypeComboBoxModel();
     private static UMLModelElementNamespaceListModel namespaceListModel = new UMLModelElementNamespaceListModel();
