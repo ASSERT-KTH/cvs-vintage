@@ -38,14 +38,14 @@
 <div class="axial">
   <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>Issue type name</th>
+    <th>Name</th>
     <td>
        #fieldErrorMsg($itGroup.Name "")  
        <input type="text" size="25" name="$itGroup.Name.Key" value="$!itGroup.Name.Value"/>
     </td>
     </tr>
     <tr>
-    <th>Issue type description</th>
+    <th>Description</th>
     <td>
        #fieldErrorMsg($itGroup.Description "")  
        #textAreaMedium("$itGroup.Description.Key" $itGroup.Description.Value)</td>
