@@ -20,7 +20,6 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -30,6 +29,8 @@ import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.AddAllSendersToAddressbookCommand;
+import org.columba.mail.folder.command.AddSenderToAddressbookCommand;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -47,7 +48,6 @@ import org.columba.mail.gui.config.filter.FilterDialog;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
-import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.Message;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -715,7 +715,8 @@ public class HeaderTableActionListener implements ActionListener {
 			prevAction.setEnabled(false);
 
 			addSenderAction.setEnabled(false);
-
+			addAllSendersAction.setEnabled(false);
+			
 			viewSourceAction.setEnabled(false);
 			printAction.setEnabled(false);
 
@@ -752,6 +753,7 @@ public class HeaderTableActionListener implements ActionListener {
 			prevAction.setEnabled(true);
 
 			addSenderAction.setEnabled(true);
+			addAllSendersAction.setEnabled(true);
 
 			viewSourceAction.setEnabled(true);
 			printAction.setEnabled(true);
@@ -1173,43 +1175,19 @@ public class HeaderTableActionListener implements ActionListener {
 			*/
 		} else if (command.equals(addSenderAction.getActionCommand())) {
 
-			/*
-			SelectAddressbookFolderDialog dialog =
-				MainInterface
-					.addressbookInterface
-					.tree
-					.getSelectAddressbookFolderDialog();
-			
-			org.columba.modules.addressbook.folder.Folder selectedFolder =
-				dialog.getSelectedFolder();
-			
-			if (selectedFolder == null)
-				return;
-			
-			Object[] uids = getUids();
-			Folder folder = getFolder();
-			
-			Message message;
-			String sender;
-			
-			try {
-				message = folder.getMessage(uids[0]);
-				sender = (String) message.getHeader().get("From");
-			
-				if (sender != null) {
-					ContactCard card = new ContactCard();
-					card.set("fn", sender);
-					card.set("displayname", sender);
-					card.set("email", "internet", sender);
-			
-					selectedFolder.add(card);
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			*/
+			FolderCommandReference[] r =
+							(FolderCommandReference[]) tableController
+								.getTableSelectionManager()
+								.getSelection();
+			MainInterface.processor.addOp( new AddSenderToAddressbookCommand(tableController.getMailFrameController(), r) );
+						
 		} else if (command.equals(addAllSendersAction.getActionCommand())) {
-			System.out.println("not yet implemented");
+			FolderCommandReference[] r =
+							(FolderCommandReference[]) tableController
+								.getTableSelectionManager()
+								.getSelection();
+			MainInterface.processor.addOp( new AddAllSendersToAddressbookCommand(tableController.getMailFrameController(), r) );
+						
 		} else if (command.equals(viewSourceAction.getActionCommand())) {
 
 			FolderCommandReference[] r =

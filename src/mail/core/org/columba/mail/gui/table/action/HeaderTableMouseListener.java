@@ -40,7 +40,9 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
 	protected void processPopup(MouseEvent event) {
 		MessageNode[] nodes = headerTableViewer.getView().getSelectedNodes();
-
+		
+		headerTableViewer.getActionListener().changeMessageActions();
+		
 		if (nodes.length == 0) {
 			// select node
 
@@ -85,7 +87,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
 	}
 
 	public void mouseClicked(MouseEvent event) {
-
+		headerTableViewer.getActionListener().changeMessageActions();
 		headerTableViewer.showMessage();
 
 	}

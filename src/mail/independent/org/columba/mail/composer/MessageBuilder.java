@@ -21,6 +21,7 @@ import java.util.StringTokenizer;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.AccountItem;
@@ -32,7 +33,6 @@ import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.parser.BodyTextParser;
 import org.columba.mail.parser.Rfc822Parser;
-import org.columba.core.main.MainInterface;
 
 /**
  * 
@@ -440,7 +440,7 @@ public class MessageBuilder {
 	 * 
 	 */
 	public static void openMessage(Message message, ComposerModel model) {
-		ColumbaHeader header = (ColumbaHeader)message.getHeader();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		// copy every headerfield the original message contains
 		Hashtable hashtable = header.getHashtable();
@@ -474,7 +474,7 @@ public class MessageBuilder {
 			new Rfc822Parser().parse(
 				message.getSource(),
 				true,
-				(ColumbaHeader)message.getHeader(),
+				(ColumbaHeader) message.getHeader(),
 				0);
 
 		int count = parsedMessage.getMimePartTree().count();
@@ -520,7 +520,7 @@ public class MessageBuilder {
 	 * 
 	 */
 	public static void bounceMessage(Message message, ComposerModel model) {
-		ColumbaHeader header = (ColumbaHeader)message.getHeader();
+		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		// copy every headerfield the original message contains
 		Hashtable hashtable = header.getHashtable();
@@ -592,8 +592,7 @@ public class MessageBuilder {
 	 *
 	 */
 	public void addSenderToAddressbook(String sender) {
-		// FIXME
-		/*
+
 		if (sender != null) {
 			if (sender.length() > 0) {
 				org.columba.addressbook.folder.Folder selectedFolder =
@@ -616,7 +615,7 @@ public class MessageBuilder {
 				}
 			}
 		}
-		*/
+
 	}
 
 }

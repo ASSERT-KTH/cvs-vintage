@@ -421,7 +421,7 @@ public class TableController
 			return;
 		}
 
-		getActionListener().changeMessageActions();
+		//getActionListener().changeMessageActions();
 
 		if (nodes.length == 0)
 			return;
