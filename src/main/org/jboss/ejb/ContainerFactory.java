@@ -68,7 +68,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.94 $
+* @version $Revision: 1.95 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -424,6 +424,8 @@ public class ContainerFactory
       // this one dont has the contextclassloader as parent
       // in case of the contextclassloader has a ejb package in its
       // classpath the metadata of this package would be used.
+      // marcf: fine, just make sure that the rest of the code doesn't use this "localCL" for classes
+      // otherwise you are going to get runtime classcasts.
       ClassLoader localCl = new URLClassLoader( new URL[]{ url } );
       efm.setClassLoader( localCl );
 
@@ -793,6 +795,10 @@ public class ContainerFactory
     * add the indicated interceptors to the container depending on the container
     * transcation type and metricsEnabled flag.
     *
+    * FIXME marcf: frankly the transaction type stuff makes no sense to me, we have externalized
+    * the container stack construction in jbossxml and I don't see why or why there would be a 
+    * type missmatch on the transaction
+    * 
     * @param container   the container instance to setup.
     * @param transType   one of the BMT, CMT or ANY constants.
     * @param element     the container-interceptors element from the
@@ -816,6 +822,7 @@ public class ContainerFactory
          /* Check that the interceptor is configured for the transaction mode of the bean
             by comparing its 'transaction' attribute to the string representation
             of transType
+            FIXME: marcf, WHY???????
          */
          String transAttr = ielement.getAttribute("transaction");
          if( transAttr == null || transAttr.length() == 0 )
