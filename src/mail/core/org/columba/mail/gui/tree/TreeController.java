@@ -96,7 +96,9 @@ TreeWillExpandListener //, TreeNodeChangeListener
 
 		view.addMouseListener(mouseListener);
 
-		FolderTreeDnd dnd = new FolderTreeDnd(this);
+		// FIXME
+		
+		//FolderTreeDnd dnd = new FolderTreeDnd(this);
 
 		//scrollPane = new JScrollPane(getFolderTree().getTree());
 

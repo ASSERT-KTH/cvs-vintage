@@ -107,217 +107,6 @@ public class FolderTreeDnd
 
 	/****************************************** drop ***********************************/
 
-	/*
-	public void drop(DropTargetDropEvent event)
-	{
-	
-		final DropTargetDropEvent e = event;
-	
-		try
-		{
-			DataFlavor stringFlavor = DataFlavor.stringFlavor;
-			Transferable tr = e.getTransferable();
-			if (e.isDataFlavorSupported(stringFlavor))
-			{
-	
-				String filename = (String) tr.getTransferData(stringFlavor);
-				e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-	
-				System.out.println("string: " + filename);
-	
-				Point p = e.getLocation();
-	
-				final TreePath path =
-					treeViewer.getFolderTree().getTree().getPathForLocation(p.x, p.y);
-	
-	
-				// we have to use this dropComplete here:
-				if (path == null)
-				{
-					e.dropComplete(false);
-					return;
-				}
-	
-				else
-				{
-	
-					if (filename.equals("folder"))
-					{
-						// folder dnd operation
-	
-						Folder selectedFolder = treeViewer.getSelected();
-						//System.out.println( "folder name: "+ selectedFolder.getName() );
-	
-						if (selectedFolder.equals(sourceFolder))
-						{
-							//System.out.println( "source equals destination folder -> ABORTING" );
-							e.rejectDrop();
-							return;
-						}
-	
-						if (sourceFolder.isParent(selectedFolder))
-						{
-							//System.out.println( "source is parent folder -> ABORTING" );
-							e.rejectDrop();
-							return;
-						}
-	
-						selectedFolder.append(sourceFolder);
-						TreeNodeEvent updateEvent =
-							new TreeNodeEvent(selectedFolder.getParent(), TreeNodeEvent.STRUCTURE_CHANGED);
-						MainInterface.crossbar.fireTreeNodeChanged(updateEvent);
-						e.dropComplete(true);
-					}
-					else
-					{
-						// message dnd operation
-	
-						Folder selectedFolder = null;
-						Folder srcFolder = null;
-	
-						treeViewer.getFolderTree().getTree().setSelectionPath(path);
-	
-						selectedFolder = treeViewer.getSelected();
-	
-						if (selectedFolder != null)
-						{
-	
-							sourceFolder = MainInterface.headerTableViewer.getFolder();
-	
-							if (selectedFolder == null)
-							{
-								e.rejectDrop();
-								return;
-							}
-	
-							if ((selectedFolder != sourceFolder)
-								&& (selectedFolder.getFolderItem().isAddAllowed()))
-							{
-	
-								Object[] uids = MainInterface.headerTableViewer.getUids();
-	
-								if (e.getDropAction() == 1)
-								{
-									System.out.println("copy action");
-	
-									treeViewer.setSelected(sourceFolder);
-	
-									FolderOperation op =
-										new FolderOperation(Operation.COPY, 0, uids, sourceFolder, selectedFolder);
-									MainInterface.crossbar.operate(op);
-	
-									e.dropComplete(true);
-	
-								}
-								else if (e.getDropAction() == 2)
-								{
-									System.out.println("move action");
-	
-									treeViewer.setSelected(sourceFolder);
-	
-									FolderOperation op =
-										new FolderOperation(Operation.MOVE, 0, uids, sourceFolder, selectedFolder);
-									MainInterface.crossbar.operate(op);
-	
-									e.dropComplete(true);
-	
-								}
-								else
-								{
-									System.out.println("drop action not supported");
-									e.rejectDrop();
-								}
-	
-							}
-							else
-							{
-								JOptionPane.showMessageDialog(MainInterface.mainFrame, "Invalid Folder!");
-								e.rejectDrop();
-							}
-	
-						}
-						else
-						{
-							e.rejectDrop();
-						}
-	
-					}
-	
-				}
-	
-			}
-			else
-			{
-				e.rejectDrop();
-			}
-		}
-		catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-			e.rejectDrop();
-		}
-		catch (UnsupportedFlavorException ufe)
-		{
-			ufe.printStackTrace();
-			e.rejectDrop();
-		}
-	
-	}
-	
-	public void dragEnter(DropTargetDragEvent e)
-	{
-	
-	}
-	
-	public void dragExit(DropTargetEvent e)
-	{
-		System.out.println("dragExit lllllll");
-	}
-	
-	public void dragOver(DropTargetDragEvent e)
-	{
-	
-		Point p = e.getLocation();
-	
-		TreePath path =
-			treeViewer.getFolderTree().getTree().getPathForLocation(p.x, p.y);
-	
-		if (path == null)
-		{
-			System.out.println("no treepath");
-	
-			//e.rejectDrag();
-		}
-		else
-		{
-			treeViewer.getFolderTree().getTree().setSelectionPath(path);
-	
-	
-		}
-	
-		if (e.getDropAction() == 1)
-		{
-			//copy
-			System.out.println("copy");
-	
-		}
-		else if (e.getDropAction() == 2)
-		{
-			//movee
-	
-			System.out.println("move");
-		}
-		else
-		{
-	
-		}
-	}
-	
-	public void dropActionChanged(DropTargetDragEvent e)
-	{
-	}
-	*/
-
 	/********************************** drag ********************************************/
 
 	public void dragGestureRecognized(DragGestureEvent e) {
@@ -332,18 +121,6 @@ public class FolderTreeDnd
 			FolderItem item = sourceFolder.getFolderItem();
 			String access = item.get("property", "accessrights");
 
-			/*
-			if ((access.equals("user"))
-				&& (!type.equals("imap"))
-				&& (!type.equals("imaproot")))
-			{
-				e.startDrag(DragSource.DefaultMoveDrop,
-				//ImageLoader.getImageIcon("","folder1").getImage(),
-				//new Point(10,10), // cursor
-				new StringSelection("folder"), // transferable
-				this); // drag source listener
-			}
-			*/
 			e.startDrag(DragSource.DefaultMoveDrop,
 			//ImageLoader.getImageIcon("","folder1").getImage(),
 			//new Point(10,10), // cursor
@@ -365,14 +142,6 @@ public class FolderTreeDnd
 
 		if (access.equals("system"))
 			return;
-		/*
-		String type = item.getType();
-		
-		if (access.equals("system"))
-			return;
-		if (type.equals("imaproot"))
-			return;
-		*/
 
 		// Work out the offset of the drag point from the TreePath bounding rectangle origin
 		Rectangle raPath = tree.getPathBounds(path);
@@ -740,13 +509,6 @@ public class FolderTreeDnd
 
 							MainInterface.processor.addOp(c);
 
-							// FIXME
-							/*
-							FolderOperation op =
-								new FolderOperation(Operation.COPY, 0, uids, sourceFolder, target);
-							MainInterface.crossbar.operate(op);
-							*/
-
 							e.dropComplete(true);
 
 						} else if (e.getDropAction() == 2) {
@@ -756,14 +518,6 @@ public class FolderTreeDnd
 								new MoveMessageCommand(result);
 
 							MainInterface.processor.addOp(c);
-							//treeViewer.setSelected(sourceFolder);
-
-							// FIXME
-							/*
-							FolderOperation op =
-								new FolderOperation(Operation.MOVE, 0, uids, sourceFolder, target);
-							MainInterface.crossbar.operate(op);
-							*/
 
 							e.dropComplete(true);
 
@@ -788,18 +542,20 @@ public class FolderTreeDnd
 						TreePath pathSource =
 							(TreePath) transferable.getTransferData(flavor);
 
-						System.out.println(
-							"DROPPING: " + pathSource.getLastPathComponent());
 						javax.swing.tree.TreeModel model =
 							treeController.getModel();
 						TreePath pathNewChild = null;
 
 						Folder source =
 							(Folder) pathSource.getLastPathComponent();
+						ColumbaLogger.log.debug("source" + source.getName());
+						;
+
 						FolderItem item = source.getFolderItem();
 						//String type = item.getType();
 						Folder dest =
 							(Folder) pathTarget.getLastPathComponent();
+						ColumbaLogger.log.debug("dest" + dest.getName());
 
 						Rectangle raPath = tree.getPathBounds(pathTarget);
 
@@ -807,109 +563,119 @@ public class FolderTreeDnd
 						//raPath2.y = raPath2.y + 1;
 						raPath2.height = raPath2.height;
 						if (raPath2.contains(pt.x, pt.y)) {
+							ColumbaLogger.log.debug("append drop");
+
 							//System.out.println("direct collision");
 							Folder sourceParent = (Folder) source.getParent();
 							Folder destParent = (Folder) dest.getParent();
 
 							if (sourceParent.equals(dest)) {
+								ColumbaLogger.log.debug("sourceParent == dest");
 								// these drops don't make sense
 								JOptionPane.showMessageDialog(
 									null,
 									"No valid folder for drop!");
 							} else if (source.equals(dest)) {
+								ColumbaLogger.log.debug("source == dest");
 								//dnd-ing same folder doesn't make any sense!
 								JOptionPane.showMessageDialog(
 									null,
 									"No valid folder for drop!");
 							} else {
-
-								System.out.println(
-									"------------> append at="
-										+ dest.getName());
+								ColumbaLogger.log.debug("appending at:" + dest);
 
 								dest.append(source);
 
 								MainInterface.treeModel.nodeStructureChanged(
 									destParent);
-								//MainInterface.treeModel.nodeStructureChanged(sourceParent);
-								/*
-								TreeNodeEvent updateEvent =
-									new TreeNodeEvent(destParent, TreeNodeEvent.STRUCTURE_CHANGED);
-								MainInterface.crossbar.fireTreeNodeChanged(updateEvent);
-								*/
+
 							}
 						} else {
+							ColumbaLogger.log.debug("insert drop");
+
 							Folder destParent = (Folder) dest.getParent();
+							ColumbaLogger.log.debug(
+								"destParent" + destParent.getName());
 							int count = destParent.getChildCount();
 							int destIndex = destParent.getIndex(dest);
 							Folder sourceParent = (Folder) source.getParent();
-							int sourceIndex = sourceParent.getIndex(source);
 							ColumbaLogger.log.debug(
-								"source=" + source.getName());
-							ColumbaLogger.log.debug("dest=" + dest.getName());
+								"sourceParent" + sourceParent.getName());
+							int sourceIndex = sourceParent.getIndex(source);
 
 							if (source.getParent().equals(dest)) {
+								ColumbaLogger.log.debug("sourceParent == dest");
+
 								// these drops don't make sense
 								JOptionPane.showMessageDialog(
 									null,
 									"No valid folder for drop!");
 							} else if (sourceParent.equals(destParent)) {
 								ColumbaLogger.log.debug(
-									"-------------> insert at:" + destIndex);
+									"sourceParent == destParent");
+
 								ColumbaLogger.log.debug(
-									"-------------> insert from:"
-										+ sourceIndex);
+									"insert from:" + sourceIndex);
 
 								//destParent.insert(source, destIndex);
 
 								if (sourceIndex < destIndex) {
 									// move treenode up
 									destParent.insert(source, destIndex);
+
+									ColumbaLogger.log.debug(
+										"insert at:" + destIndex);
 								} else {
 									// move treenode down
 									destParent.insert(source, destIndex + 1);
+
+									ColumbaLogger.log.debug(
+										"insert at:" + (destIndex + 1));
 								}
 
 								MainInterface.treeModel.nodeStructureChanged(
 									destParent);
-								// FIXME
-								/*
-								TreeNodeEvent updateEvent =
-									new TreeNodeEvent(dest.getParent(), TreeNodeEvent.STRUCTURE_CHANGED);
-								ainInterface.crossbar.fireTreeNodeChanged(updateEvent);
-								*/
-							} else { /*
-																																			if (type.equals("imap"))
-																																			{
-																																				JOptionPane.showMessageDialog(
-																																					MainInterface.mainFrame,
-																																					"No valid folder for drop!");
-																																			}
-																																			else
-																																			*/
-								if (sourceParent.equals(dest)) {
-									// insert treenode at position 0
-									// FIXME
-									/*
-									dest.insert(source, 0);
-									TreeNodeEvent updateEvent =
-									new TreeNodeEvent(dest, TreeNodeEvent.STRUCTURE_CHANGED);
-									MainInterface.crossbar.fireTreeNodeChanged(updateEvent);
-									*/
-								} else { //destParent.append(source);
-									// FIXME
-									/*
-									destParent.insert(source, destIndex+1);
-									TreeNodeEvent updateEvent =
-										new TreeNodeEvent(dest.getParent(), TreeNodeEvent.STRUCTURE_CHANGED);
-									MainInterface.crossbar.fireTreeNodeChanged(updateEvent);
-									
-									TreeNodeEvent updateEvent2 =
-										new TreeNodeEvent(sourceParent, TreeNodeEvent.STRUCTURE_CHANGED);
-									MainInterface.crossbar.fireTreeNodeChanged(updateEvent2);
-									*/
-								}
+
 							}
+							/*
+							else {
+								ColumbaLogger.log.debug(
+									"sourceParent == destParent");
+							
+								if (type.equals("imap")) {
+									JOptionPane.showMessageDialog(
+										MainInterface.mainFrame,
+										"No valid folder for drop!");
+								} else
+																																																																
+									if (sourceParent.equals(dest)) {
+										// insert treenode at position 0
+										// FIXME
+							
+										dest.insert(source, 0);
+										MainInterface
+											.treeModel
+											.nodeStructureChanged(
+											dest);
+							
+									} else { 
+										// FIXME
+							
+										dest.insert(source, destIndex + 1);
+										MainInterface
+											.treeModel
+											.nodeStructureChanged(
+											dest.getParent());
+										MainInterface
+											.treeModel
+											.nodeStructureChanged(
+											sourceParent);
+							
+									}
+							
+							
+							}
+							*/
 
 						} // .
 						// .. Add your code here to ask your TreeModel to copy the node and act on the mouse gestures...
@@ -946,57 +712,20 @@ public class FolderTreeDnd
 			}
 
 			e.dropComplete(true);
-		} // Helpers...
+		} 
+		
+		// Helpers...
 		public boolean isDragAcceptable(DropTargetDragEvent e) { // Only accept COPY or MOVE gestures (ie LINK is not supported)
 			if ((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
 				return false;
-			/*
-			// Only accept this particular flavor
-			if (!e.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
-				return false;
-				*/ /*
-																			// Do this if you want to prohibit dropping onto the drag source...
-																			Point pt = e.getLocation();
-																			TreePath path = getClosestPathForLocation(pt.x, pt.y);
-																			if (path.equals(_pathSource))
-																				return false;
-																
-																*/ /*
-																			// Do this if you want to select the best flavor on offer...
-																			DataFlavor[] flavors = e.getCurrentDataFlavors();
-																			for (int i = 0; i < flavors.length; i++ )
-																			{
-																				DataFlavor flavor = flavors[i];
-																				if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-																					return true;
-																			}
-																*/
+																								
 			return true;
 		}
 
 		public boolean isDropAcceptable(DropTargetDropEvent e) { // Only accept COPY or MOVE gestures (ie LINK is not supported)
 			if ((e.getDropAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0)
 				return false;
-			/*
-			// Only accept this particular flavor
-			if (!e.isDataFlavorSupported(CTransferableTreePath.TREEPATH_FLAVOR))
-				return false;
-				*/ /*
-																			// Do this if you want to prohibit dropping onto the drag source...
-																			Point pt = e.getLocation();
-																			TreePath path = getClosestPathForLocation(pt.x, pt.y);
-																			if (path.equals(_pathSource))
-																				return false;
-																*/ /*
-																			// Do this if you want to select the best flavor on offer...
-																			DataFlavor[] flavors = e.getCurrentDataFlavors();
-																			for (int i = 0; i < flavors.length; i++ )
-																			{
-																				DataFlavor flavor = flavors[i];
-																				if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType))
-																					return true;
-																			}
-																*/
+			
 			return true;
 		}
 
@@ -1047,73 +776,9 @@ public class FolderTreeDnd
 				- raInner.x
 				+ raOuter.x
 				+ AUTOSCROLL_MARGIN);
-	} /*
-							// Use this method if you want to see the boundaries of the
-							// autoscroll active region. Toss it out, otherwise.
-							public void paintComponent(Graphics g)
-							{
-								super.paintComponent(g);
-								Rectangle raOuter = getBounds();
-								Rectangle raInner = getParent().getBounds();
-								g.setColor(Color.red);
-								g.drawRect(-raOuter.x + 12, -raOuter.y + 12,
-									raInner.width - 24, raInner.height - 24);
-							}
-						
-						*/ /*
-						
-						// TreeModelListener interface...
-						public void treeNodesChanged(TreeModelEvent e)
-						{
-						System.out.println("treeNodesChanged");
-						sayWhat(e);
-						// We dont need to reset the selection path, since it has not moved
-						}
-						
-						public void treeNodesInserted(TreeModelEvent e)
-						{
-						System.out.println("treeNodesInserted ");
-						sayWhat(e);
-						
-						// We need to reset the selection path to the node just inserted
-						int nChildIndex = e.getChildIndices()[0];
-						TreePath pathParent = e.getTreePath();
-						tree.setSelectionPath(getChildPath(pathParent, nChildIndex));
-						}
-						
-						public void treeNodesRemoved(TreeModelEvent e)
-						{
-						System.out.println("treeNodesRemoved ");
-						sayWhat(e);
-						}
-						
-						public void treeStructureChanged(TreeModelEvent e)
-						{
-						System.out.println("treeStructureChanged ");
-						sayWhat(e);
-						}
-						
-						*/ /*
-						
-						// More helpers...
-						private TreePath getChildPath(TreePath pathParent, int nChildIndex)
-						{
-							TreeModel model =  tree.getModel();
-							return pathParent.pathByAddingChild(model.getChild(pathParent.getLastPathComponent(), nChildIndex));
-						}
-						*/
+	}
 
 	private boolean isRootPath(TreePath path) {
 		return tree.isRootVisible() && tree.getRowForPath(path) == 0;
-	} /*
-							private void sayWhat(TreeModelEvent e)
-							{
-								System.out.println(e.getTreePath().getLastPathComponent());
-								int[] nIndex = e.getChildIndices();
-								for (int i = 0; i < nIndex.length ;i++ )
-								{
-									System.out.println(i+". "+nIndex[i]);
-								}
-							}
-							*/
+	}
 }

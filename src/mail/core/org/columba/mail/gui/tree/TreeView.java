@@ -17,7 +17,6 @@ package org.columba.mail.gui.tree;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
-import javax.swing.JTree;
 import javax.swing.ToolTipManager;
 
 import org.columba.mail.folder.Folder;
@@ -25,7 +24,7 @@ import org.columba.mail.folder.Folder;
 /**
  * this class does all the dirty work for the TreeController
  */
-public class TreeView extends JTree 
+public class TreeView extends DndTree 
 //, TreeNodeChangeListener
 {
 
